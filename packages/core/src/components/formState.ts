@@ -675,11 +675,6 @@ export interface FieldChange<T> {
    * `AnnouncedMove`
    */
   sourceKeyOf?: KeyMove;
-  /** For a field's write of a whole array or object, the path below it of a move a field there announced, when the
-   * write carries the value the move was announced with there, as a custom parent field forwards a child's option
-   * switch. The write moves nothing, but what it leaves there is the move's, not a clear of the parent's
-   */
-  forwardedMovePath?: FieldPathList;
   /** Whether a field announced the change as a move, as an added property is though it moves no key, so it reaches the
    * array or object at `fieldPath` rather than the fields inside it
    */
@@ -1618,27 +1613,19 @@ function withoutPathsUnder(paths: ReadonlySet<FieldPath>, prefix: FieldPathList)
 }
 
 /** The paths of the clears `written`, the array or object a field wrote at `path`, makes over `held`, the one it
- * replaced: each key or item it leaves without a value that held one there, but for those at or under `movedAt`
+ * replaced: each key or item it leaves without a value that held one there
  */
-function clearsWrittenOver(
-  written: unknown,
-  held: unknown,
-  path: FieldPathList,
-  movedAt: FieldPathList | undefined,
-): FieldPath[] {
+function clearsWrittenOver(written: unknown, held: unknown, path: FieldPathList): FieldPath[] {
   const isArrayPair = Array.isArray(written) && Array.isArray(held);
   if (Object.is(written, held) || !(isArrayPair || (isPlainObject(written) && isPlainObject(held)))) {
     return [];
   }
   return Object.keys(written).flatMap((key) => {
     const at = [...path, isArrayPair ? Number(key) : key];
-    if (movedAt && isPathPrefix(movedAt, at)) {
-      return [];
-    }
     if (holdsClear(written, key)) {
       return holdsValue(held, key) ? [fieldPathFromList(at)] : [];
     }
-    return clearsWrittenOver(Reflect.get(written, key), Reflect.get(held, key), at, movedAt);
+    return clearsWrittenOver(Reflect.get(written, key), Reflect.get(held, key), at);
   });
 }
 
@@ -1671,10 +1658,8 @@ function clearsOfCopies<T>(
  * field without a value, `undefined` or a `null` item, is a clear, and so is each key or item a field's write of an
  * array or object leaves without a value where the data held one. A key move drops the clear of the field it rewrites,
  * as an option switch leaving a scalar field without a value does, whose `undefined` is for the defaults to fill, and
- * gives each item it copies the clears of the item it copies. So does a move a field below announced, which a custom
- * parent field forwards in the array or object it writes, for the field the move rewrites. Data written from outside,
- * as `setFieldValue()` writes it, drops the clears at and under its path, so it is left to its defaults, while those
- * elsewhere stay. A `transformChange` rewrite records none of its own: it keeps those of the edit it stands for, while
+ * gives each item it copies the clears of the item it copies. Data written from outside, as `setFieldValue()` writes
+ * it, drops the clears at and under its path, so it is left to its defaults, while those elsewhere stay. A `transformChange` rewrite records none of its own: it keeps those of the edit it stands for, while
  * its data still holds them
  *
  * @param recorded - The clears recorded before the change
@@ -1692,7 +1677,7 @@ function clearsAfterChange<T>(
   path: FieldPathList,
 ): ReadonlySet<FieldPath> {
   const moved = withPathsMoved(recorded, dataMoveOf(change));
-  const { newValue, newKeyOf, isFieldEdit, editedPath, forwardedMovePath } = change;
+  const { newValue, newKeyOf, isFieldEdit, editedPath } = change;
   if (editedPath) {
     return moved;
   }
@@ -1705,11 +1690,7 @@ function clearsAfterChange<T>(
     return withPaths(kept, ...clearsOfCopies(recorded, change, written, path));
   }
   if (isObject(newValue) || Array.isArray(newValue)) {
-    const rewritten = forwardedMovePath && fieldPathFromList(forwardedMovePath);
-    return withPaths(
-      filterPaths(moved, (at) => at !== rewritten),
-      ...clearsWrittenOver(newValue, getAt<unknown>(committed, path), path, forwardedMovePath),
-    );
+    return withPaths(moved, ...clearsWrittenOver(newValue, getAt<unknown>(committed, path), path));
   }
   return holdsClearAt(written, path) ? withPaths(moved, fieldPath) : moved;
 }

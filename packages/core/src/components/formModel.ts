@@ -608,15 +608,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       moved = { move, outcome: { kind: 'refused' } };
     }
     const path = fieldPathToList(fieldPath);
-    const pending = move ? undefined : announced;
-    const pendingPath = pending && fieldPathToList(pending.fieldPath);
-    const forwardedMovePath =
-      pendingPath &&
-      pendingPath.length > path.length &&
-      isPathPrefix(path, pendingPath) &&
-      Object.is(getAt<unknown>(newValue, pendingPath.slice(path.length)), pending.value)
-        ? pendingPath
-        : undefined;
     // The selections and expansions under keys the change moves, or under a property it removes, move before it is
     // applied, so the sanitize reads them where the change puts the data; a change the form refuses puts them back
     const fieldChange: FieldChange<T> = {
@@ -627,7 +618,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       newOwnKeyOf: move?.newOwnKeyOf,
       sourceKeyOf: move?.sourceKeyOf,
       dropsOwnErrors: move?.dropsOwnErrors,
-      forwardedMovePath,
       isAnnouncedMove: move !== undefined,
       isFieldEdit,
     };

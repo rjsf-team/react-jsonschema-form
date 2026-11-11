@@ -3,7 +3,6 @@ import type {
   CustomValidator,
   DefaultFormStateBehavior,
   ErrorSchema,
-  FieldPath,
   FieldProps,
   RJSFSchema,
   UiSchema,
@@ -14,7 +13,6 @@ import {
   bracketNameGenerator,
   buttonId,
   dotNotationNameGenerator,
-  fieldPathToList,
   isPlainObject,
   optionalControlsId,
   toFieldPath,
@@ -4292,46 +4290,6 @@ describe('clearing a field with a schema default does not re-apply the default (
         rerender({ schema: withItemDefault, uiSchema, defaultFormStateBehavior });
 
         expect(getFormData()).toEqual({ list: [{ o: { x: undefined } }, { o: { x: undefined } }] });
-      });
-
-      it("fills an ancestor's default into a field whose option switch a custom parent field forwards", async () => {
-        const forwarded: RJSFSchema = {
-          type: 'object',
-          properties: {
-            o: {
-              type: 'object',
-              properties: {
-                p: {
-                  default: 'D',
-                  oneOf: [
-                    { title: 'S', type: 'string' },
-                    { title: 'L', type: 'string', maxLength: 2 },
-                  ],
-                },
-              },
-            },
-          },
-        };
-        function ForwardingField(props: FieldProps) {
-          const { registry, formData, onChange, fieldPath } = props;
-          const { ObjectField } = registry.fields;
-          const forward = (value: unknown, path: FieldPath) =>
-            onChange(
-              { ...(isPlainObject(formData) ? formData : {}), [String(fieldPathToList(path).at(-1))]: value },
-              fieldPath,
-            );
-          return <ObjectField {...props} onChange={forward} />;
-        }
-        const { node, onChange } = createFormComponent({
-          schema: forwarded,
-          defaultFormStateBehavior,
-          uiSchema: { o: { 'ui:field': ForwardingField } },
-          initialFormData: { o: { p: 'abc' } },
-        });
-
-        await user.selectOptions(elementOf(node, 'select#root_o_p__oneof_select'), 'L');
-
-        expect(onChange.mock.lastCall?.[0].formData).toEqual({ o: { p: 'D' } });
       });
 
       it('renders the data the form holds once a write drops a clear, under a merge mode that keeps clears', async () => {
