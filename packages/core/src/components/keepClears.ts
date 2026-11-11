@@ -28,9 +28,15 @@ export function holdsClearAt(data: unknown, path: FieldPathList): boolean {
   return path.length > 0 && holdsClear(getAt<unknown>(data, path.slice(0, -1)), path[path.length - 1]);
 }
 
-/** Whether `container` holds a value under `key` that a clear there would replace */
+/** Whether `container` holds a value under `key` that a clear there would replace: neither a clear nor `undefined`, as
+ * an item added without a default, or a hole, holds
+ */
 export function holdsValue(container: unknown, key: string | number): boolean {
-  return holdsKey(container, key) && !holdsClear(container, key);
+  if (!holdsKey(container, key)) {
+    return false;
+  }
+  const value = getAt<unknown>(container, [key]);
+  return value !== undefined && value !== emptyIn(container);
 }
 
 /** `derived` with each clear at `clearedPaths` that `written` still holds kept: a field the user cleared, in this change

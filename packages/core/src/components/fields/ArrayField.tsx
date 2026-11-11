@@ -1403,7 +1403,7 @@ export default function ArrayField<
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      const copyKey = String(newKeyedFormData.indexOf(newKeyedFormDataRow));
+      const copyKey = String(index + 1);
       commitRows(rows, newKeyedFormData, (key) => (key === copyKey ? String(index) : undefined));
     },
     [schema, commitRows, readRows, newRowId],

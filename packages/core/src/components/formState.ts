@@ -1193,10 +1193,11 @@ function resolveRetrievedSchema<T, S extends StrictRJSFSchema, F extends FormCon
 interface DeriveDataOptions {
   /** Sanitize the data against the field tree of the state before this pass, see `sanitizeFieldTree()` */
   isSanitized?: boolean;
-  /** Have the sanitize judge only the clears, for a disabled or read-only form: being disabled or read-only changes
-   * neither the values the data holds nor which clears are kept, and a clear gives way as in an enabled form
+  /** For a disabled or read-only form, the recorded clears, the only values the sanitize judges: being disabled or
+   * read-only changes neither the values the data holds nor which clears are kept, and a clear gives way as in an
+   * enabled form. With none recorded there is nothing to judge, so the pass isn't sanitized, see `sanitizes()`
    */
-  judgesOnlyClears?: boolean;
+  judgedClears?: ReadonlySet<FieldPath>;
   /** The change this pass is for, if any: the value at its path is the user's */
   edit?: FieldEdit;
   /** The path of the change this pass is for, if a field made it, whose field and the fields above it keep the options
@@ -1216,6 +1217,13 @@ interface DeriveDataOptions {
    * each round resolves describes the data with its clears
    */
   clears?: ReadonlySet<FieldPath>;
+}
+
+/** Whether a pass with `options` sanitizes its data: one asked to, unless it judges only the recorded clears and there
+ * are none
+ */
+function sanitizes(options: DeriveDataOptions): boolean {
+  return options.isSanitized === true && options.judgedClears?.size !== 0;
 }
 
 /** Settles the data for `props` and `inputFormData`: any missing required defaults are filled in, then, when asked,
@@ -1257,7 +1265,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   props: FormProps<T, S, F>,
   schemaUtils: SchemaUtilsType<T, S, F>,
 ): { formData: T | undefined; retrievedSchema: S } {
-  const { isSanitized = false, edit, heldPath, isReset = false, judgesOnlyClears } = options;
+  const { edit, heldPath, isReset = false, judgedClears } = options;
   const uiState = options.uiState ?? current?.uiState;
   const { uiSchema = {} } = props;
   // The data is shared against the committed data when there is some, so an unchanged subtree keeps the reference the
@@ -1292,14 +1300,14 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     uiSchema,
   });
   let tree = treeOf(formData);
-  if (isSanitized && current && uiState) {
+  if (sanitizes(options) && current && uiState) {
     const seen: string[] = [];
     let previous: FieldTree<T, S, F> = current;
     let roundEdit = edit;
     for (;;) {
       const sanitized = replaceEqualDeep(
         formData,
-        sanitizeFieldTree(previous, tree, uiState, fillAsFirstRender, roundEdit, judgesOnlyClears),
+        sanitizeFieldTree(previous, tree, uiState, fillAsFirstRender, roundEdit, judgedClears),
       );
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
@@ -1499,7 +1507,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // only the clears of a disabled or read-only form, as an edit there does
   const options = {
     isSanitized: true,
-    judgesOnlyClears: props.disabled || props.readonly,
+    judgedClears: props.disabled || props.readonly ? (current?.clearedPaths ?? NO_PATHS) : undefined,
     clears: fillsOverClears(props) ? current?.clearedPaths : undefined,
   };
   const { formData, context, areSchemaUtilsReused } = deriveFormData(current, inputFormData, options, props);
@@ -1556,11 +1564,17 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
   if (Object.is(baseline, current.formData)) {
     return formData;
   }
+  // The recorded clears are the data's, so the baseline of a disabled or read-only form holds none to judge
+  const baselineOptions: DeriveDataOptions = {
+    ...options,
+    judgedClears: options.judgedClears && NO_PATHS,
+    clears: undefined,
+  };
   const fromBaseline: FormState<T, S, F> = {
     ...current,
     formData: baseline,
     // Read only by the sanitize, as the tree the data is diffed against
-    retrievedSchema: options.isSanitized
+    retrievedSchema: sanitizes(baselineOptions)
       ? resolveRetrievedSchema(current, current.schemaUtils, baseline)
       : current.retrievedSchema,
   };
@@ -1568,8 +1582,7 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
     fromBaseline,
     baseline,
     {
-      ...options,
-      clears: undefined,
+      ...baselineOptions,
       uiState: withSelectionsHeldFor(current.uiState, current.baselineUiState, (at) => getAt(baseline, at)),
     },
     props,
@@ -1764,7 +1777,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
       formData,
       {
         isSanitized: editedPath !== undefined,
-        judgesOnlyClears: disabled || readonly,
+        judgedClears: disabled || readonly ? clearedPaths : undefined,
         edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
         heldPath: heldPathOf(change),
         clears: fillsOverClears(props) ? clearedPaths : undefined,

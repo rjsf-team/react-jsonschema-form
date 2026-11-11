@@ -3910,6 +3910,45 @@ describe('clearing a field with a schema default does not re-apply the default (
         expect(getFormData()).toEqual({ x: 'typed' });
       });
 
+      it.each(['readonly', 'disabled'] as const)(
+        "keeps a %s form's null item that a field change would drop",
+        (mode) => {
+          const listOf = (enumValues: (string | null)[]): RJSFSchema => ({
+            type: 'object',
+            properties: { list: { type: 'array', items: { type: ['string', 'null'], enum: enumValues } } },
+          });
+          const { rerender, getFormData } = createFormComponent({
+            schema: listOf(['a', null]),
+            defaultFormStateBehavior,
+            [mode]: true,
+            initialFormData: { list: [null, 'a'] },
+          });
+
+          rerender({ schema: listOf(['a', 'b']), defaultFormStateBehavior, [mode]: true });
+
+          expect(getFormData()).toEqual({ list: [null, 'a'] });
+        },
+      );
+
+      it.each(['readonly', 'disabled'] as const)(
+        "keeps a %s form's undefined the user didn't clear under the default merge mode",
+        (mode) => {
+          const withDefault = (x: string): RJSFSchema => ({
+            type: 'object',
+            properties: { x: { type: 'string', default: x } },
+          });
+          const { rerender, getFormData } = createFormComponent({
+            schema: withDefault('D'),
+            [mode]: true,
+            initialFormData: { x: undefined },
+          });
+
+          rerender({ schema: withDefault('E'), [mode]: true });
+
+          expect(getFormData()).toEqual({ x: undefined });
+        },
+      );
+
       it("gives way under the default merge mode too, once the field's default changes", async () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -4357,6 +4396,34 @@ describe('clearing a field with a schema default does not re-apply the default (
 
         expect(getFormData()).toEqual({ x: 'D' });
         expect(elementOf(node, 'input#root_x')).toHaveValue('D');
+      });
+
+      it('records no clear where a field writes a null item over an item without a value', async () => {
+        const listSchema = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
+        function NullingField({ onChange, fieldPath }: FieldProps) {
+          return (
+            <button type='button' onClick={() => onChange([null], fieldPath)}>
+              null the item
+            </button>
+          );
+        }
+        const nullingUiSchema: UiSchema = { list: { 'ui:field': NullingField } };
+        const { node, rerender, getFormData } = createFormComponent({
+          schema: listSchema({ type: 'array', items: { type: 'string' } }),
+          uiSchema: nullingUiSchema,
+          defaultFormStateBehavior,
+          initialFormData: { list: [undefined] },
+        });
+
+        await user.click(elementOf(node, 'button[type=button]'));
+        expect(getFormData()).toEqual({ list: [null] });
+        rerender({
+          schema: listSchema({ type: 'array', items: { type: 'string' }, default: ['D'] }),
+          uiSchema: nullingUiSchema,
+          defaultFormStateBehavior,
+        });
+
+        expect(getFormData()).toEqual({ list: ['D'] });
       });
 
       it('keeps a clear where it was when a transformChange undoes a reorder', async () => {
