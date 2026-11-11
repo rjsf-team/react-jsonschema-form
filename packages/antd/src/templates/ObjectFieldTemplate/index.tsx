@@ -119,6 +119,7 @@ export default function ObjectFieldTemplate<
                 onClick={onAddProperty}
                 uiSchema={uiSchema}
                 registry={registry}
+                title={title}
               />
             </Col>
           </Row>

@@ -103,6 +103,7 @@ export default function ObjectFieldTemplate<
             className='rjsf-object-property-expand'
             uiSchema={uiSchema}
             registry={registry}
+            title={title}
           />
         </Group>
       )}

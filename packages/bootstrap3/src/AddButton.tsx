@@ -9,7 +9,7 @@ export default function AddButton<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ id, className, onClick, disabled, registry }: IconButtonProps<T, S, F>) {
+>({ id, className, onClick, disabled, registry, title, ...otherProps }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   return (
     <div className='row'>
@@ -24,10 +24,15 @@ export default function AddButton<
           iconType='info'
           icon='plus'
           className='rjsf-btn-add col-xs-12'
-          title={translateString(TranslatableString.AddButton)}
+          title={
+            title
+              ? translateString(TranslatableString.AddNamedButton, [title])
+              : translateString(TranslatableString.AddItemButton)
+          }
           onClick={onClick}
           disabled={disabled}
           registry={registry}
+          {...otherProps}
         />
       </p>
     </div>

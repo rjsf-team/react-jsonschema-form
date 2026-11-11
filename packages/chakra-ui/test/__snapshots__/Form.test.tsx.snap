@@ -1626,6 +1626,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             <button
                               class="chakra-button rjsf-array-item-add emotion-61"
                               id="root_tasks__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -1648,7 +1649,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -2477,6 +2477,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                             <button
                               class="chakra-button rjsf-array-item-add emotion-35"
                               id="root_tags__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -2499,7 +2500,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -6792,6 +6792,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             <button
                               class="chakra-button rjsf-array-item-add emotion-61"
                               id="root_tasks__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -6814,7 +6815,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -7643,6 +7643,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                             <button
                               class="chakra-button rjsf-array-item-add emotion-35"
                               id="root_tags__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -7665,7 +7666,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -23609,6 +23609,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <button
                                         class="chakra-button rjsf-array-item-add emotion-48"
                                         id="root_nestedObjectOptional_deepArrayOptional__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -23631,7 +23632,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -23686,6 +23686,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <button
                                         class="chakra-button rjsf-array-item-add emotion-48"
                                         id="root_nestedObjectOptional_deepArrayOptional2__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -23708,7 +23709,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -23769,6 +23769,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <button
                                         class="chakra-button rjsf-array-item-add emotion-48"
                                         id="root_nestedObjectOptional_deepArray__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -23791,7 +23792,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -23851,6 +23851,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <button
                               class="chakra-button rjsf-array-item-add emotion-48"
                               id="root_nestedArrayOptional__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -23873,7 +23874,6 @@ exports[`single fields > optional data controls > does not show optional control
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -24023,6 +24023,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <button
                               class="chakra-button rjsf-array-item-add emotion-48"
                               id="root_nestedArray__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -24045,7 +24046,6 @@ exports[`single fields > optional data controls > does not show optional control
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -24633,6 +24633,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <button
                                         class="chakra-button rjsf-array-item-add emotion-48"
                                         id="root_optionalArrayWithAnyofs__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -24655,7 +24656,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -25687,6 +25687,7 @@ exports[`single fields > optional data controls > does not show optional control
                                         class="chakra-button rjsf-array-item-add emotion-48"
                                         disabled=""
                                         id="root_nestedObjectOptional_deepArrayOptional__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -25709,7 +25710,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -25765,6 +25765,7 @@ exports[`single fields > optional data controls > does not show optional control
                                         class="chakra-button rjsf-array-item-add emotion-48"
                                         disabled=""
                                         id="root_nestedObjectOptional_deepArrayOptional2__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -25787,7 +25788,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -25849,6 +25849,7 @@ exports[`single fields > optional data controls > does not show optional control
                                         class="chakra-button rjsf-array-item-add emotion-48"
                                         disabled=""
                                         id="root_nestedObjectOptional_deepArray__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -25871,7 +25872,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -25932,6 +25932,7 @@ exports[`single fields > optional data controls > does not show optional control
                               class="chakra-button rjsf-array-item-add emotion-48"
                               disabled=""
                               id="root_nestedArrayOptional__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -25954,7 +25955,6 @@ exports[`single fields > optional data controls > does not show optional control
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -26112,6 +26112,7 @@ exports[`single fields > optional data controls > does not show optional control
                               class="chakra-button rjsf-array-item-add emotion-48"
                               disabled=""
                               id="root_nestedArray__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -26134,7 +26135,6 @@ exports[`single fields > optional data controls > does not show optional control
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -26761,6 +26761,7 @@ exports[`single fields > optional data controls > does not show optional control
                                         class="chakra-button rjsf-array-item-add emotion-48"
                                         disabled=""
                                         id="root_optionalArrayWithAnyofs__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -26783,7 +26784,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -27775,6 +27775,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <button
                                         class="chakra-button rjsf-array-item-add emotion-49"
                                         id="root_nestedObjectOptional_deepArrayOptional__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -27797,7 +27798,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -27935,6 +27935,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <button
                                         class="chakra-button rjsf-array-item-add emotion-49"
                                         id="root_nestedObjectOptional_deepArray__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -27957,7 +27958,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -28152,6 +28152,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <button
                               class="chakra-button rjsf-array-item-add emotion-49"
                               id="root_nestedArrayOptional__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -28174,7 +28175,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -28324,6 +28324,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <button
                               class="chakra-button rjsf-array-item-add emotion-49"
                               id="root_nestedArray__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -28346,7 +28347,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -29370,6 +29370,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                         class="chakra-button rjsf-array-item-add emotion-43"
                                         disabled=""
                                         id="root_nestedObjectOptional_deepArrayOptional__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -29392,7 +29393,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -29502,6 +29502,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                         class="chakra-button rjsf-array-item-add emotion-43"
                                         disabled=""
                                         id="root_nestedObjectOptional_deepArray__add"
+                                        title="Add Item"
                                         type="button"
                                       >
                                         <svg
@@ -29524,7 +29525,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             d="M12 5v14"
                                           />
                                         </svg>
-                                        Add Item
                                       </button>
                                     </div>
                                   </div>
@@ -29690,6 +29690,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               class="chakra-button rjsf-array-item-add emotion-43"
                               disabled=""
                               id="root_nestedArrayOptional__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -29712,7 +29713,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -29870,6 +29870,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               class="chakra-button rjsf-array-item-add emotion-43"
                               disabled=""
                               id="root_nestedArray__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -29892,7 +29893,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -30817,6 +30817,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <button
                               class="chakra-button rjsf-array-item-add emotion-45"
                               id="root_nestedArray__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -30839,7 +30840,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -31670,6 +31670,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               class="chakra-button rjsf-array-item-add emotion-39"
                               disabled=""
                               id="root_nestedArray__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -31692,7 +31693,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>

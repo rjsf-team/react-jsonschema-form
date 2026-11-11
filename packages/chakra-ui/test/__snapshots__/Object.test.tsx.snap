@@ -1124,6 +1124,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
               <button
                 class="chakra-button rjsf-object-property-expand emotion-22"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -1146,7 +1147,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -2251,6 +2251,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             <button
                               class="chakra-button rjsf-array-item-add emotion-52"
                               id="root_tags__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -2273,7 +2274,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -4086,6 +4086,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             <button
                               class="chakra-button rjsf-array-item-add emotion-45"
                               id="root_items__add"
+                              title="Add Item"
                               type="button"
                             >
                               <svg
@@ -4108,7 +4109,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                   d="M12 5v14"
                                 />
                               </svg>
-                              Add Item
                             </button>
                           </div>
                         </div>
@@ -5076,6 +5076,7 @@ exports[`object fields > additionalProperties 1`] = `
               <button
                 class="chakra-button rjsf-object-property-expand emotion-17"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -5098,7 +5099,6 @@ exports[`object fields > additionalProperties 1`] = `
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -6140,6 +6140,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
               <button
                 class="chakra-button rjsf-object-property-expand emotion-36"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -6162,7 +6163,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -6648,6 +6648,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                               <button
                                 class="chakra-button rjsf-array-item-add emotion-17"
                                 id="root_foo__add"
+                                title="Add Item"
                                 type="button"
                               >
                                 <svg
@@ -6670,7 +6671,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                                     d="M12 5v14"
                                   />
                                 </svg>
-                                Add Item
                               </button>
                             </div>
                           </div>
@@ -6723,6 +6723,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
               <button
                 class="chakra-button rjsf-object-property-expand emotion-17"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -6745,7 +6746,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -7345,6 +7345,7 @@ exports[`object fields > additionalProperties, description 1`] = `
               <button
                 class="chakra-button rjsf-object-property-expand emotion-19"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -7367,7 +7368,6 @@ exports[`object fields > additionalProperties, description 1`] = `
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -7931,6 +7931,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
               <button
                 class="chakra-button rjsf-object-property-expand emotion-17"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -7953,7 +7954,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -8580,6 +8580,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
               <button
                 class="chakra-button rjsf-object-property-expand emotion-23"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -8602,7 +8603,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -9608,6 +9608,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
               <button
                 class="chakra-button rjsf-object-property-expand emotion-34"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -9630,7 +9631,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -10636,6 +10636,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
               <button
                 class="chakra-button rjsf-object-property-expand emotion-34"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -10658,7 +10659,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -11753,6 +11753,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
               <button
                 class="chakra-button rjsf-object-property-expand emotion-32"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -11775,7 +11776,6 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -13266,6 +13266,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
               <button
                 class="chakra-button rjsf-object-property-expand emotion-17"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -13288,7 +13289,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -13904,6 +13904,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
               <button
                 class="chakra-button rjsf-object-property-expand emotion-21"
                 id="root__add"
+                title="Add Test field"
                 type="button"
               >
                 <svg
@@ -13926,7 +13927,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -14992,6 +14992,7 @@ exports[`object fields > with title and description > show add button and fields
               <button
                 class="chakra-button rjsf-object-property-expand emotion-21"
                 id="root__add"
+                title="Add Test field"
                 type="button"
               >
                 <svg
@@ -15014,7 +15015,6 @@ exports[`object fields > with title and description > show add button and fields
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -15630,6 +15630,7 @@ exports[`object fields > with title and description from both > additionalProper
               <button
                 class="chakra-button rjsf-object-property-expand emotion-21"
                 id="root__add"
+                title="Add My Field"
                 type="button"
               >
                 <svg
@@ -15652,7 +15653,6 @@ exports[`object fields > with title and description from both > additionalProper
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -16718,6 +16718,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
               <button
                 class="chakra-button rjsf-object-property-expand emotion-21"
                 id="root__add"
+                title="Add My Field"
                 type="button"
               >
                 <svg
@@ -16740,7 +16741,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -17806,6 +17806,7 @@ exports[`object fields > with title and description from uiSchema > show add but
               <button
                 class="chakra-button rjsf-object-property-expand emotion-21"
                 id="root__add"
+                title="Add My Field"
                 type="button"
               >
                 <svg
@@ -17828,7 +17829,6 @@ exports[`object fields > with title and description from uiSchema > show add but
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -18349,6 +18349,7 @@ exports[`object fields > with title and description with global label off > addi
               <button
                 class="chakra-button rjsf-object-property-expand emotion-15"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -18371,7 +18372,6 @@ exports[`object fields > with title and description with global label off > addi
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>
@@ -19203,6 +19203,7 @@ exports[`object fields > with title and description with global label off > show
               <button
                 class="chakra-button rjsf-object-property-expand emotion-15"
                 id="root__add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -19225,7 +19226,6 @@ exports[`object fields > with title and description with global label off > show
                     d="M12 5v14"
                   />
                 </svg>
-                Add Item
               </button>
             </div>
           </div>

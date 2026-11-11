@@ -43,15 +43,19 @@ export function AddButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: AntdIconButtonProps<T, S, F>) {
-  const {
-    registry: { translateString },
-  } = props;
+  const { title, registry, ...otherProps } = props;
+  const { translateString } = registry;
   return (
     <IconButton
-      title={translateString(TranslatableString.AddItemButton)}
+      title={
+        title
+          ? translateString(TranslatableString.AddNamedButton, [title])
+          : translateString(TranslatableString.AddItemButton)
+      }
       iconType='primary'
       block
-      {...props}
+      registry={registry}
+      {...otherProps}
       icon={<PlusCircleOutlined />}
     />
   );

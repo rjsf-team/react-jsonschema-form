@@ -3759,7 +3759,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
                 id="root__add"
                 style="width: 100%;"
-                title="Add Item"
+                title="Add Test field"
                 type="button"
               >
                 <svg
@@ -4074,7 +4074,7 @@ exports[`object fields > with title and description > show add button and fields
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
                 id="root__add"
                 style="width: 100%;"
-                title="Add Item"
+                title="Add Test field"
                 type="button"
               >
                 <svg
@@ -4242,7 +4242,7 @@ exports[`object fields > with title and description from both > additionalProper
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
                 id="root__add"
                 style="width: 100%;"
-                title="Add Item"
+                title="Add My Field"
                 type="button"
               >
                 <svg
@@ -4557,7 +4557,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
                 id="root__add"
                 style="width: 100%;"
-                title="Add Item"
+                title="Add My Field"
                 type="button"
               >
                 <svg
@@ -4872,7 +4872,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
                 id="root__add"
                 style="width: 100%;"
-                title="Add Item"
+                title="Add My Field"
                 type="button"
               >
                 <svg

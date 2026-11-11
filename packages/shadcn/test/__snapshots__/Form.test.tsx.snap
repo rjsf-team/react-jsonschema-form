@@ -518,6 +518,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_tasks__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -545,7 +546,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -870,6 +870,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_tags__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -897,7 +898,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -2080,6 +2080,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_tasks__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -2107,7 +2108,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -2432,6 +2432,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_tags__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -2459,7 +2460,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -5430,6 +5430,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArrayOptional__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -5457,7 +5458,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -5494,6 +5494,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArrayOptional2__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -5521,7 +5522,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -5559,6 +5559,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArray__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -5586,7 +5587,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -5625,6 +5625,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArrayOptional__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -5652,7 +5653,6 @@ exports[`single fields > optional data controls > does not show optional control
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -5746,6 +5746,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -5773,7 +5774,6 @@ exports[`single fields > optional data controls > does not show optional control
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -5978,6 +5978,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_optionalArrayWithAnyofs__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -6005,7 +6006,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -6258,6 +6258,7 @@ exports[`single fields > optional data controls > does not show optional control
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -6285,7 +6286,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -6323,6 +6323,7 @@ exports[`single fields > optional data controls > does not show optional control
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional2__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -6350,7 +6351,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -6389,6 +6389,7 @@ exports[`single fields > optional data controls > does not show optional control
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArray__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -6416,7 +6417,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -6456,6 +6456,7 @@ exports[`single fields > optional data controls > does not show optional control
               data-slot="button"
               disabled=""
               id="root_nestedArrayOptional__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -6483,7 +6484,6 @@ exports[`single fields > optional data controls > does not show optional control
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -6579,6 +6579,7 @@ exports[`single fields > optional data controls > does not show optional control
               data-slot="button"
               disabled=""
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -6606,7 +6607,6 @@ exports[`single fields > optional data controls > does not show optional control
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -6814,6 +6814,7 @@ exports[`single fields > optional data controls > does not show optional control
                   data-slot="button"
                   disabled=""
                   id="root_optionalArrayWithAnyofs__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -6841,7 +6842,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -7133,6 +7133,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArrayOptional__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -7160,7 +7161,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -7262,6 +7262,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArray__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -7289,7 +7290,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -7445,6 +7445,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArrayOptional__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -7472,7 +7473,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -7566,6 +7566,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -7593,7 +7594,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -7962,6 +7962,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -7989,7 +7990,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -8064,6 +8064,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArray__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -8091,7 +8092,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -8213,6 +8213,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               data-slot="button"
               disabled=""
               id="root_nestedArrayOptional__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -8240,7 +8241,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -8336,6 +8336,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               data-slot="button"
               disabled=""
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -8363,7 +8364,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -8713,6 +8713,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -8740,7 +8741,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -9092,6 +9092,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               data-slot="button"
               disabled=""
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -9119,7 +9120,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>

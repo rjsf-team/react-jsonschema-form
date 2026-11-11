@@ -655,6 +655,57 @@ describe('ObjectField', () => {
       });
     });
 
+    describe('expandable object AddButton title', () => {
+      it('passes title to default AddButton', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          title: 'My Custom Title',
+          additionalProperties: true,
+        };
+        const { node } = createFormComponent({ schema });
+        const addButton = node.querySelector('.rjsf-object-property-expand');
+        expect(addButton).not.toBeNull();
+        expect(addButton).toHaveAttribute('title', 'Add My Custom Title');
+      });
+
+      it('falls back to default translated title when schema title is omitted', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: true,
+        };
+        const { node } = createFormComponent({ schema });
+        const addButton = node.querySelector('.rjsf-object-property-expand');
+        expect(addButton).not.toBeNull();
+        expect(addButton).toHaveAttribute('title', 'Add');
+      });
+
+      it('passes title to custom AddButton template', () => {
+        function CustomAddButton(props: { title?: string }) {
+          return (
+            <button type='button' id='custom-add' data-title={props.title}>
+              {props.title}
+            </button>
+          );
+        }
+        const schema: RJSFSchema = {
+          type: 'object',
+          title: 'Custom Title for Template',
+          additionalProperties: true,
+        };
+        const { node } = createFormComponent({
+          schema,
+          templates: {
+            ButtonTemplates: {
+              AddButton: CustomAddButton,
+            },
+          },
+        });
+        const customButton = node.querySelector('#custom-add');
+        expect(customButton).not.toBeNull();
+        expect(customButton).toHaveAttribute('data-title', 'Custom Title for Template');
+      });
+    });
+
     it('Check schema with if/then/else conditions and activate the then/else subschemas, the onChange event should reflect the actual validation errors', async () => {
       const schema: RJSFSchema = {
         type: 'object',

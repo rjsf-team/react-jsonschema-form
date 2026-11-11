@@ -2822,7 +2822,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
         <button
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
           id="root__add"
-          title="Add"
+          title="Add Test field"
           type="button"
         >
           <svg
@@ -3047,7 +3047,7 @@ exports[`object fields > with title and description > show add button and fields
         <button
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
           id="root__add"
-          title="Add"
+          title="Add Test field"
           type="button"
         >
           <svg
@@ -3175,7 +3175,7 @@ exports[`object fields > with title and description from both > additionalProper
         <button
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
           id="root__add"
-          title="Add"
+          title="Add My Field"
           type="button"
         >
           <svg
@@ -3400,7 +3400,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
         <button
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
           id="root__add"
-          title="Add"
+          title="Add My Field"
           type="button"
         >
           <svg
@@ -3625,7 +3625,7 @@ exports[`object fields > with title and description from uiSchema > show add but
         <button
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
           id="root__add"
-          title="Add"
+          title="Add My Field"
           type="button"
         >
           <svg

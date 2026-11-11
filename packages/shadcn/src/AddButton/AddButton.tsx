@@ -16,11 +16,21 @@ export default function AddButton<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ uiSchema, registry, className, ...props }: IconButtonProps<T, S, F>) {
+>({ uiSchema, registry, className, title, ...props }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   return (
-    <Button {...props} className={cn('flex w-fit gap-2', className)} variant='outline' type='button'>
-      <PlusCircle size={16} /> {translateString(TranslatableString.AddItemButton)}
+    <Button
+      {...props}
+      title={
+        title
+          ? translateString(TranslatableString.AddNamedButton, [title])
+          : translateString(TranslatableString.AddItemButton)
+      }
+      className={cn('flex w-fit gap-2', className)}
+      variant='outline'
+      type='button'
+    >
+      <PlusCircle size={16} />
     </Button>
   );
 }

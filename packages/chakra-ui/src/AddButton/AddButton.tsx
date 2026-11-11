@@ -7,12 +7,18 @@ export default function AddButton<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ registry, ...props }: IconButtonProps<T, S, F>) {
+>({ registry, title, ...props }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   return (
-    <Button {...props}>
+    <Button
+      title={
+        title
+          ? translateString(TranslatableString.AddNamedButton, [title])
+          : translateString(TranslatableString.AddItemButton)
+      }
+      {...props}
+    >
       <PlusIcon />
-      {translateString(TranslatableString.AddItemButton)}
     </Button>
   );
 }

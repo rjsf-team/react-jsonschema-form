@@ -24,7 +24,7 @@ exports[`array fields > array 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -216,7 +216,7 @@ exports[`array fields > array icons 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -771,7 +771,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -943,7 +943,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -1278,7 +1278,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       <button
                         class="btn btn-info rjsf-btn-add col-xs-12"
                         id="root_0__add"
-                        title="Add"
+                        title="Add Item"
                         type="button"
                       >
                         <i
@@ -1482,7 +1482,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       <button
                         class="btn btn-info rjsf-btn-add col-xs-12"
                         id="root_1__add"
-                        title="Add"
+                        title="Add Item"
                         type="button"
                       >
                         <i
@@ -1545,7 +1545,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -1801,7 +1801,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -1973,7 +1973,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -2199,7 +2199,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -2259,7 +2259,7 @@ exports[`with title and description > array 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -2508,7 +2508,7 @@ exports[`with title and description > array icons 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -2762,7 +2762,7 @@ exports[`with title and description from both > array 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -3011,7 +3011,7 @@ exports[`with title and description from both > array icons 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -3265,7 +3265,7 @@ exports[`with title and description from uiSchema > array 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -3514,7 +3514,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -3755,7 +3755,7 @@ exports[`with title and description with global label off > array 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -3949,7 +3949,7 @@ exports[`with title and description with global label off > array icons 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i

@@ -6783,7 +6783,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                           class="ant-btn css-dev-only-do-not-override-i19pbt css-var-root ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                           id="root__add"
                           style="padding-top: 4px;"
-                          title="Add Item"
+                          title="Add Test field"
                           type="button"
                         >
                           <span
@@ -7366,7 +7366,7 @@ exports[`object fields > with title and description > show add button and fields
                           class="ant-btn css-dev-only-do-not-override-i19pbt css-var-root ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                           id="root__add"
                           style="padding-top: 4px;"
-                          title="Add Item"
+                          title="Add Test field"
                           type="button"
                         >
                           <span
@@ -7658,7 +7658,7 @@ exports[`object fields > with title and description from both > additionalProper
                           class="ant-btn css-dev-only-do-not-override-i19pbt css-var-root ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                           id="root__add"
                           style="padding-top: 4px;"
-                          title="Add Item"
+                          title="Add My Field"
                           type="button"
                         >
                           <span
@@ -8241,7 +8241,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                           class="ant-btn css-dev-only-do-not-override-i19pbt css-var-root ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                           id="root__add"
                           style="padding-top: 4px;"
-                          title="Add Item"
+                          title="Add My Field"
                           type="button"
                         >
                           <span
@@ -8824,7 +8824,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                           class="ant-btn css-dev-only-do-not-override-i19pbt css-var-root ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                           id="root__add"
                           style="padding-top: 4px;"
-                          title="Add Item"
+                          title="Add My Field"
                           type="button"
                         >
                           <span

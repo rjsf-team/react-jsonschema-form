@@ -6385,7 +6385,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
             data-variant="subtle"
             id="root__add"
             style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-            title="Add Item"
+            title="Add Test field"
             type="button"
           >
             <span
@@ -6893,7 +6893,7 @@ exports[`object fields > with title and description > show add button and fields
             data-variant="subtle"
             id="root__add"
             style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-            title="Add Item"
+            title="Add Test field"
             type="button"
           >
             <span
@@ -7159,7 +7159,7 @@ exports[`object fields > with title and description from both > additionalProper
             data-variant="subtle"
             id="root__add"
             style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-            title="Add Item"
+            title="Add My Field"
             type="button"
           >
             <span
@@ -7667,7 +7667,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
             data-variant="subtle"
             id="root__add"
             style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-            title="Add Item"
+            title="Add My Field"
             type="button"
           >
             <span
@@ -8175,7 +8175,7 @@ exports[`object fields > with title and description from uiSchema > show add but
             data-variant="subtle"
             id="root__add"
             style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-            title="Add Item"
+            title="Add My Field"
             type="button"
           >
             <span
