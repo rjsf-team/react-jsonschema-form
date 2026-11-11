@@ -1015,13 +1015,11 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
   // Under `constAsDefaults: 'always'` a `const` a merging keyword the plan left unmerged brings in takes precedence over
-  // the data, as `formDataMatching()` applies it, so it is the value of a field the data leaves empty too, as a `const`
-  // of its own is
+  // the data, as `formDataMatching()` applies it, so it is the field's defaults, as a `const` of its own is, retrieved
+  // with the data so that a condition on it picks the `const`
   const constSchema =
-    rawFormData === undefined &&
-    defaultFormStateBehavior?.constAsDefaults === 'always' &&
-    holdsAnyOf(schema, MERGING_KEYWORDS)
-      ? retrieveField<S, F>(context, viewField<S>(view))
+    defaultFormStateBehavior?.constAsDefaults === 'always' && holdsAnyOf(schema, MERGING_KEYWORDS)
+      ? retrieveField<S, F>(context, viewField<S>(view), rawFormData)
       : schema;
   if (
     constSchema[CONST_KEY] !== undefined &&
@@ -1620,15 +1618,18 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     view.stubs && allowsAdditionalProperties<S, F>(context, view.schema)
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
-  const parentConst = schema[CONST_KEY];
+  const constsAlways = defaultFormStateBehavior?.constAsDefaults === 'always';
+  // An `allOf` the plan left unmerged holds a `const` that takes precedence over the data as one of the field's own
+  // does, so it is read from the merged schema, as `formDataMatching()` reads it
+  const constSchema =
+    constsAlways && !(CONST_KEY in schema) && ALL_OF_KEY in view.schema
+      ? retrieveField<S, F>(context, viewField<S>(view), formData)
+      : schema;
+  const parentConst = constSchema[CONST_KEY];
   // Under `constAsDefaults: 'always'` an object `const` takes precedence over the data, so an extra key it doesn't name
   // is dropped, whether the object stubs it among its properties or computes it from its `additionalProperties`
   const pinnedKeys =
-    defaultFormStateBehavior?.constAsDefaults === 'always' &&
-    isObjectData(parentConst) &&
-    !constIsAjvDataReference(schema)
-      ? parentConst
-      : undefined;
+    constsAlways && isObjectData(parentConst) && !constIsAjvDataReference(constSchema) ? parentConst : undefined;
   const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
@@ -1863,8 +1864,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
             (value === undefined || !schema.properties || !Object.hasOwn(schema.properties, key))))
       );
     });
+    // The keys an object `const` pins keep the data's values, as under a `const` of the field's own
     const unmerged = new Set(
-      ALL_OF_KEY in view.schema
+      ALL_OF_KEY in view.schema && !pinnedKeys
         ? kept.filter((key) => formData[key] !== undefined && !isObjectData(formData[key]))
         : [],
     );
