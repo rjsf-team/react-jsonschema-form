@@ -3,6 +3,7 @@ import type {
   CustomValidator,
   DefaultFormStateBehavior,
   ErrorSchema,
+  FieldPath,
   FieldProps,
   RJSFSchema,
   UiSchema,
@@ -13,6 +14,7 @@ import {
   bracketNameGenerator,
   buttonId,
   dotNotationNameGenerator,
+  fieldPathToList,
   isPlainObject,
   optionalControlsId,
   toFieldPath,
@@ -4248,6 +4250,134 @@ describe('clearing a field with a schema default does not re-apply the default (
         rerender({ ref, schema: withAncestorDefault, defaultFormStateBehavior });
 
         expect(getFormData()).toEqual({ o: { x: undefined } });
+      });
+    });
+
+    describe('where the clears come from', () => {
+      const uiSchema: UiSchema = { list: { 'ui:options': { copyable: true } } };
+      const items: RJSFSchema = {
+        type: 'object',
+        properties: { o: { type: 'object', properties: { x: { type: 'string' } } } },
+      };
+      const schema: RJSFSchema = { type: 'object', properties: { list: { type: 'array', items } } };
+      const withItemDefault: RJSFSchema = {
+        type: 'object',
+        properties: { list: { type: 'array', items: { ...items, default: { o: { x: 'D' } } } } },
+      };
+
+      it('fills a copied row as it fills the row it copies, where the user cleared neither', async () => {
+        const { node, rerender, getFormData } = createFormComponent({
+          schema,
+          uiSchema,
+          defaultFormStateBehavior,
+          initialFormData: { list: [{ o: { x: undefined } }] },
+        });
+
+        await user.click(elementOf(node, '.rjsf-array-item-copy'));
+        rerender({ schema: withItemDefault, uiSchema, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ list: [{ o: { x: 'D' } }, { o: { x: 'D' } }] });
+      });
+
+      it('keeps a copied row empty where the user cleared the row it copies', async () => {
+        const { node, rerender, getFormData } = createFormComponent({
+          schema,
+          uiSchema,
+          defaultFormStateBehavior,
+          initialFormData: { list: [{ o: { x: 'typed' } }] },
+        });
+
+        await user.clear(elementOf(node, 'input#root_list_0_o_x'));
+        await user.click(elementOf(node, '.rjsf-array-item-copy'));
+        rerender({ schema: withItemDefault, uiSchema, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ list: [{ o: { x: undefined } }, { o: { x: undefined } }] });
+      });
+
+      it("fills an ancestor's default into a field whose option switch a custom parent field forwards", async () => {
+        const forwarded: RJSFSchema = {
+          type: 'object',
+          properties: {
+            o: {
+              type: 'object',
+              properties: {
+                p: {
+                  default: 'D',
+                  oneOf: [
+                    { title: 'S', type: 'string' },
+                    { title: 'L', type: 'string', maxLength: 2 },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        function ForwardingField(props: FieldProps) {
+          const { registry, formData, onChange, fieldPath } = props;
+          const { ObjectField } = registry.fields;
+          const forward = (value: unknown, path: FieldPath) =>
+            onChange(
+              { ...(isPlainObject(formData) ? formData : {}), [String(fieldPathToList(path).at(-1))]: value },
+              fieldPath,
+            );
+          return <ObjectField {...props} onChange={forward} />;
+        }
+        const { node, onChange } = createFormComponent({
+          schema: forwarded,
+          defaultFormStateBehavior,
+          uiSchema: { o: { 'ui:field': ForwardingField } },
+          initialFormData: { o: { p: 'abc' } },
+        });
+
+        await user.selectOptions(elementOf(node, 'select#root_o_p__oneof_select'), 'L');
+
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ o: { p: 'D' } });
+      });
+
+      it('renders the data the form holds once a write drops a clear, under a merge mode that keeps clears', async () => {
+        const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string', default: 'D' } } };
+        const ref = createFormRef();
+        const { node, rerender, getFormData } = createFormComponent({ ref, schema, initialFormData: { x: 'typed' } });
+        await user.clear(elementOf(node, 'input#root_x'));
+        act(() => handleOf(ref).setFieldValue('x', undefined));
+
+        rerender({ ref, schema, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ x: 'D' });
+        expect(elementOf(node, 'input#root_x')).toHaveValue('D');
+      });
+
+      it('keeps a clear where it was when a transformChange undoes a reorder', async () => {
+        const reordered: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: { type: 'array', items: { type: 'string', default: 'D' } },
+            note: { type: 'string' },
+            b: { type: 'string' },
+          },
+        };
+        const isMoveUpOfItem1 = (next: unknown[], previous: unknown[]) =>
+          next.length === previous.length && next[0] === previous[1] && next[1] === previous[0];
+        const { node, onChange } = createFormComponent({
+          schema: reordered,
+          defaultFormStateBehavior,
+          initialFormData: { list: ['a', 'b', 'c'] },
+          transformChange: (next: unknown, previous: unknown) =>
+            isPlainObject(next) &&
+            isPlainObject(previous) &&
+            Array.isArray(next.list) &&
+            Array.isArray(previous.list) &&
+            isMoveUpOfItem1(next.list, previous.list)
+              ? { ...next, list: previous.list, note: 'order kept' }
+              : next,
+        });
+
+        await user.clear(elementOf(node, 'input#root_list_1'));
+        await user.click(node.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-up')[1]);
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ list: ['a', null, 'c'], note: 'order kept' });
+        await user.type(elementOf(node, 'input#root_b'), 'z');
+
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ list: ['a', null, 'c'], note: 'order kept', b: 'z' });
       });
     });
 

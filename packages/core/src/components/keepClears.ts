@@ -3,14 +3,24 @@ import { fieldPathFromList, fieldPathToList, isPlainObject, setByPath } from '@r
 
 import { copyAlongPath, getAt } from './dataPaths.ts';
 
-/** Whether `container` holds a clear under `key`: an object's own key holding `undefined`, or a `null` array item, as a
- * cleared item is written
- */
-export function holdsClear(container: unknown, key: string | number): boolean {
+/** Whether `container` holds an entry under `key`: an object's own key, or an item of an array */
+function holdsKey(container: unknown, key: string | number): boolean {
   if (Array.isArray(container)) {
-    return Number(key) < container.length && container[Number(key)] === null;
+    return Number(key) < container.length;
   }
-  return isPlainObject(container) && Object.hasOwn(container, key) && container[key] === undefined;
+  return isPlainObject(container) && Object.hasOwn(container, key);
+}
+
+/** The value `container` holds under `key` that stands for no value: `null` for an array item, as a cleared item is
+ * written, and `undefined` for an object's key
+ */
+function emptyIn(container: unknown): null | undefined {
+  return Array.isArray(container) ? null : undefined;
+}
+
+/** Whether `container` holds a clear under `key`: an object's own key holding `undefined`, or a `null` array item */
+export function holdsClear(container: unknown, key: string | number): boolean {
+  return holdsKey(container, key) && getAt<unknown>(container, [key]) === emptyIn(container);
 }
 
 /** Whether `data` holds a clear at `path`, see `holdsClear()`. The root holds none: it is no key of a container */
@@ -20,10 +30,7 @@ export function holdsClearAt(data: unknown, path: FieldPathList): boolean {
 
 /** Whether `container` holds a value under `key` that a clear there would replace */
 export function holdsValue(container: unknown, key: string | number): boolean {
-  if (Array.isArray(container)) {
-    return Number(key) < container.length && container[Number(key)] !== null;
-  }
-  return isPlainObject(container) && Object.hasOwn(container, key) && container[key] !== undefined;
+  return holdsKey(container, key) && !holdsClear(container, key);
 }
 
 /** `derived` with each clear at `clearedPaths` that `written` still holds kept: a field the user cleared, in this change
@@ -34,18 +41,19 @@ export function holdsValue(container: unknown, key: string | number): boolean {
  * @param derived - The data the derivation filled
  * @param written - The data the derivation filled it from
  * @param clearedPaths - The paths of the clears to keep
- * @returns - `derived`, sharing every subtree that holds no kept clear
+ * @returns - `derived`, sharing every subtree that holds no kept clear, with each container copied at most once
  */
 export function keepRecordedClears<V>(derived: V, written: unknown, clearedPaths: Iterable<FieldPath>): V {
   let kept = derived;
   if (Object.is(derived, written)) {
     return kept;
   }
+  const copies = new WeakSet<object>();
   for (const fieldPath of clearedPaths) {
     const path: FieldPathList = fieldPathToList(fieldPath);
     const container = getAt<unknown>(kept, path.slice(0, -1));
     if (holdsClearAt(written, path) && holdsValue(container, path[path.length - 1])) {
-      kept = setByPath(copyAlongPath(kept, path), path, Array.isArray(container) ? null : undefined);
+      kept = setByPath(copyAlongPath(kept, path, copies), path, emptyIn(container));
     }
   }
   return kept;

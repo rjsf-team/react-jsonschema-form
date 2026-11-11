@@ -49,7 +49,7 @@ import { copyAlongPath, getAt, isPathPrefix, replaceErrorSchemaNode } from './da
 import { schemaFieldDrawsControlsBesideOptions, schemaFieldFallbackType } from './fields/SchemaField.tsx';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
-import { clearsIn, holdsClear, holdsClearAt, holdsValue, keepRecordedClears } from './keepClears.ts';
+import { holdsClear, holdsClearAt, holdsValue, keepRecordedClears } from './keepClears.ts';
 import { keyMoveOf, moveErrorKeys, moveErrorSchemaKeys, movedPaths, withKeysMoved } from './keyMove.ts';
 import type { ContainerKeyMove, KeyMove, MoveFate } from './keyMove.ts';
 import type { FieldTree, FirstRenderFill } from './sanitizeFieldTree.ts';
@@ -358,10 +358,17 @@ function isPathDropped(fieldPath: FieldPath, previous: unknown, next: unknown): 
  * @returns - The paths still held, `paths` itself when none was dropped
  */
 function withoutDroppedPaths(paths: ReadonlySet<FieldPath>, previous: unknown, next: unknown): ReadonlySet<FieldPath> {
-  if (paths.size === 0 || Object.is(previous, next)) {
+  return Object.is(previous, next)
+    ? paths
+    : filterPaths(paths, (fieldPath) => !isPathDropped(fieldPath, previous, next));
+}
+
+/** `paths` without those `keep` turns down, `paths` itself when it turns none down */
+function filterPaths(paths: ReadonlySet<FieldPath>, keep: (fieldPath: FieldPath) => boolean): ReadonlySet<FieldPath> {
+  if (paths.size === 0) {
     return paths;
   }
-  const kept = [...paths].filter((fieldPath) => !isPathDropped(fieldPath, previous, next));
+  const kept = [...paths].filter(keep);
   return kept.length === paths.size ? paths : new Set(kept);
 }
 
@@ -397,11 +404,24 @@ function withRevealed(
     : { ...revealed, fields, containers };
 }
 
-/** `state` with the touched and revealed paths under the keys of `container` settled after a move `transformChange`
- * rewrote, as `fateOf` says of each key: a path under a key holding what the move put there stays where the move put
- * it, one under a key holding what it held before the move comes back from `unmoved`, the marks before the move, and
+/** `moved`, the paths a move left, with those under the keys of `container` settled after `transformChange` rewrote
+ * the move, as `fateOf` says of each key: a path under a key holding what the move put there stays where the move put
+ * it, one under a key holding what it held before the move comes back from `unmoved`, the paths before the move, and
  * any other is dropped
  */
+export function settledPaths(
+  moved: ReadonlySet<FieldPath>,
+  unmoved: ReadonlySet<FieldPath>,
+  container: FieldPath,
+  fateOf: (key: string) => MoveFate,
+): ReadonlySet<FieldPath> {
+  return sameMembersOr(
+    moved,
+    settledEntries(moved, unmoved, (path) => path, container, fateOf),
+  );
+}
+
+/** `state` with the touched and revealed paths settled after a move `transformChange` rewrote, see `settledPaths()` */
 export function withMarksSettled<T, S extends StrictRJSFSchema, F extends FormContextType>(
   state: FormState<T, S, F>,
   unmoved: Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'>,
@@ -409,10 +429,7 @@ export function withMarksSettled<T, S extends StrictRJSFSchema, F extends FormCo
   fateOf: (key: string) => MoveFate,
 ): FormState<T, S, F> {
   const settle = (moved: ReadonlySet<FieldPath>, before: ReadonlySet<FieldPath>) =>
-    sameMembersOr(
-      moved,
-      settledEntries(moved, before, (path) => path, container, fateOf),
-    );
+    settledPaths(moved, before, container, fateOf);
   const { revealed } = state;
   return {
     ...state,
@@ -437,14 +454,18 @@ type DataMarks<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
 >;
 
 /** `paths` without the clears `formData` no longer holds, see `holdsClear()`: a clear holds only while the key is there
- * holding `undefined`, or the item `null`, so a key dropped or given a value starts again from its defaults
+ * holding `undefined`, or the item `null`, so a key dropped or given a value starts again from its defaults. Skipped
+ * for the clears `current` holds while its data is unchanged, since those held for that data. The rest are each
+ * checked, wherever the change was: the defaults and the sanitize a change runs can drop or fill a key anywhere
  */
-function heldClears(paths: ReadonlySet<FieldPath>, formData: unknown): ReadonlySet<FieldPath> {
-  if (paths.size === 0) {
-    return paths;
-  }
-  const kept = [...paths].filter((fieldPath) => holdsClearAt(formData, fieldPathToList(fieldPath)));
-  return kept.length === paths.size ? paths : new Set(kept);
+function heldClears<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  paths: ReadonlySet<FieldPath>,
+  formData: unknown,
+): ReadonlySet<FieldPath> {
+  return paths === current.clearedPaths && Object.is(formData, current.formData)
+    ? paths
+    : filterPaths(paths, (fieldPath) => holdsClearAt(formData, fieldPathToList(fieldPath)));
 }
 
 /** The touched fields, the revealed ones and the recorded clears once the data went from `current`'s to `formData`:
@@ -463,7 +484,7 @@ function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContext
   clearedPaths = withPathsMoved(current.clearedPaths, move),
 ): DataMarks<T, S, F> {
   const { touchedPaths, revealed } = current;
-  const clears = heldClears(clearedPaths, formData);
+  const clears = heldClears(current, clearedPaths, formData);
   if (touchedPaths.size === 0 && revealed.fields.size === 0 && revealed.containers.size === 0) {
     return { touchedPaths, revealed, clearedPaths: clears };
   }
@@ -650,6 +671,15 @@ export interface FieldChange<T> {
   newOwnKeyOf?: KeyMove;
   /** For a change that moved keys, whether the errors raised at `fieldPath` itself go too; see `AnnouncedMove` */
   dropsOwnErrors?: boolean;
+  /** For a change that moved keys, the key whose value, before the change, each key it added copies; see
+   * `AnnouncedMove`
+   */
+  sourceKeyOf?: KeyMove;
+  /** For a field's write of a whole array or object, the path below it of a move a field there announced, when the
+   * write carries the value the move was announced with there, as a custom parent field forwards a child's option
+   * switch. The write moves nothing, but what it leaves there is the move's, not a clear of the parent's
+   */
+  forwardedMovePath?: FieldPathList;
   /** Whether a field announced the change as a move, as an added property is though it moves no key, so it reaches the
    * array or object at `fieldPath` rather than the fields inside it
    */
@@ -1584,53 +1614,68 @@ function fillsOverClears<T, S extends StrictRJSFSchema, F extends FormContextTyp
 
 /** `paths` without the path `prefix` and those under it */
 function withoutPathsUnder(paths: ReadonlySet<FieldPath>, prefix: FieldPathList): ReadonlySet<FieldPath> {
-  const kept = [...paths].filter((fieldPath) => !isPathPrefix(prefix, fieldPathToList(fieldPath)));
-  return kept.length === paths.size ? paths : new Set(kept);
+  return filterPaths(paths, (fieldPath) => !isPathPrefix(prefix, fieldPathToList(fieldPath)));
 }
 
 /** The paths of the clears `written`, the array or object a field wrote at `path`, makes over `held`, the one it
- * replaced: each key or item it leaves without a value that held one there
+ * replaced: each key or item it leaves without a value that held one there, but for those at or under `movedAt`
  */
-function clearsWrittenOver(written: unknown, held: unknown, path: FieldPathList): FieldPath[] {
+function clearsWrittenOver(
+  written: unknown,
+  held: unknown,
+  path: FieldPathList,
+  movedAt: FieldPathList | undefined,
+): FieldPath[] {
   const isArrayPair = Array.isArray(written) && Array.isArray(held);
   if (Object.is(written, held) || !(isArrayPair || (isPlainObject(written) && isPlainObject(held)))) {
     return [];
   }
   return Object.keys(written).flatMap((key) => {
     const at = [...path, isArrayPair ? Number(key) : key];
+    if (movedAt && isPathPrefix(movedAt, at)) {
+      return [];
+    }
     if (holdsClear(written, key)) {
       return holdsValue(held, key) ? [fieldPathFromList(at)] : [];
     }
-    return clearsWrittenOver(Reflect.get(written, key), Reflect.get(held, key), at);
+    return clearsWrittenOver(Reflect.get(written, key), Reflect.get(held, key), at, movedAt);
   });
 }
 
-/** The paths of the clears in the items a key move added to the array at `path`, such as a copy: an item no item the
- * array held before moved to holds what the field put there, its clears included
+/** The clears `recorded` holds under each item the move at `path` copied, recorded again under the copy, see
+ * `FieldChange.sourceKeyOf`. An item the move added that copies none, as an added one, holds none
  */
-function clearsInAddedItems(committed: unknown, written: unknown, path: FieldPathList, newKeyOf: KeyMove): FieldPath[] {
-  const held = getAt<unknown>(committed, path);
+function clearsOfCopies<T>(
+  recorded: ReadonlySet<FieldPath>,
+  { sourceKeyOf }: FieldChange<T>,
+  written: unknown,
+  path: FieldPathList,
+): FieldPath[] {
   const items = getAt<unknown>(written, path);
-  if (!Array.isArray(held) || !Array.isArray(items)) {
+  if (!sourceKeyOf || !Array.isArray(items)) {
     return [];
   }
-  const movedTo = new Set(held.map((_, index) => newKeyOf(String(index))));
-  return items.flatMap((item, index) => {
-    if (movedTo.has(String(index))) {
-      return [];
-    }
-    return item === null ? [fieldPathFromList([...path, index])] : clearsIn(item, [...path, index]);
+  return items.flatMap((_, index) => {
+    const source = sourceKeyOf(String(index));
+    const copy = [...path, index];
+    return source === undefined
+      ? []
+      : [...movedPaths(recorded, path, (key) => (key === source ? String(index) : undefined))].filter((at) =>
+          isPathPrefix(copy, fieldPathToList(at)),
+        );
   });
 }
 
 /** The clears the form records once `change` wrote `written` over `committed`, before any defaults merge in: those
  * recorded before, moved with the keys the change moved, and the ones the change made. A field's edit that leaves its
  * field without a value, `undefined` or a `null` item, is a clear, and so is each key or item a field's write of an
- * array or object leaves without a value where the data held one. A key move records only the clears in the items it added, as a copy, and drops the
- * clear of the field it rewrites, as an option switch leaving a scalar field without a value does, whose `undefined`
- * is for the defaults to fill. Data written from outside, as `setFieldValue()` writes it, drops the clears at and
- * under its path, so it is left to its defaults, while those elsewhere stay. A `transformChange` rewrite records none
- * of its own: it keeps those of the edit it stands for, while its data still holds them
+ * array or object leaves without a value where the data held one. A key move drops the clear of the field it rewrites,
+ * as an option switch leaving a scalar field without a value does, whose `undefined` is for the defaults to fill, and
+ * gives each item it copies the clears of the item it copies. So does a move a field below announced, which a custom
+ * parent field forwards in the array or object it writes, for the field the move rewrites. Data written from outside,
+ * as `setFieldValue()` writes it, drops the clears at and under its path, so it is left to its defaults, while those
+ * elsewhere stay. A `transformChange` rewrite records none of its own: it keeps those of the edit it stands for, while
+ * its data still holds them
  *
  * @param recorded - The clears recorded before the change
  * @param change - The change
@@ -1647,7 +1692,7 @@ function clearsAfterChange<T>(
   path: FieldPathList,
 ): ReadonlySet<FieldPath> {
   const moved = withPathsMoved(recorded, dataMoveOf(change));
-  const { newValue, newKeyOf, isFieldEdit, editedPath } = change;
+  const { newValue, newKeyOf, isFieldEdit, editedPath, forwardedMovePath } = change;
   if (editedPath) {
     return moved;
   }
@@ -1656,12 +1701,15 @@ function clearsAfterChange<T>(
   }
   const fieldPath = fieldPathFromList(path);
   if (newKeyOf) {
-    const kept = new Set(moved);
-    kept.delete(fieldPath);
-    return withPaths(kept, ...clearsInAddedItems(committed, written, path, newKeyOf));
+    const kept = filterPaths(moved, (at) => at !== fieldPath);
+    return withPaths(kept, ...clearsOfCopies(recorded, change, written, path));
   }
   if (isObject(newValue) || Array.isArray(newValue)) {
-    return withPaths(moved, ...clearsWrittenOver(newValue, getAt<unknown>(committed, path), path));
+    const rewritten = forwardedMovePath && fieldPathFromList(forwardedMovePath);
+    return withPaths(
+      filterPaths(moved, (at) => at !== rewritten),
+      ...clearsWrittenOver(newValue, getAt<unknown>(committed, path), path, forwardedMovePath),
+    );
   }
   return holdsClearAt(written, path) ? withPaths(moved, fieldPath) : moved;
 }

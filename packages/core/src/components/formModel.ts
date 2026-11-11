@@ -39,6 +39,7 @@ import {
   isLiveValidated,
   omitExtraDataOf,
   seedOf,
+  settledPaths,
   shareState,
   toEventFormData,
   toFormStatus,
@@ -553,18 +554,23 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     };
     // Unvalidated, the change still moves its errors with the keys it moved and settles the fields' own errors, which
     // the rewrite then carries through its one validation
-    const withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
-    let rewrittenData = applyChangeToData(withEditErrors, rewrite, props);
-    // The rewrite moves no key, so the marks the change moved are settled by what the rewrite kept under each key,
-    // before the validation that hides the errors of the fields they don't reveal
+    let withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
+    // The rewrite moves no key, so the marks the change moved are settled by what the rewrite kept under each key: the
+    // clears before its pass, whose fills keep them, and the touched and revealed fields before the validation that
+    // hides the errors of the fields they don't reveal
     const move = keyMoveOf(change);
+    const fateUnder = (kept: unknown, container: FieldPath) => {
+      const at = fieldPathToList(container);
+      return moveFateOf(getAt(kept, at), getAt(edited.formData, at), getAt(base.formData, at));
+    };
     if (move) {
-      const at = fieldPathToList(move.container);
-      const fateOf = moveFateOf(
-        getAt(rewrittenData.formData, at),
-        getAt(edited.formData, at),
-        getAt(base.formData, at),
-      );
+      const fateOf = fateUnder(transformed, move.container);
+      const clearedPaths = settledPaths(withEditErrors.clearedPaths, base.clearedPaths, move.container, fateOf);
+      withEditErrors = { ...withEditErrors, clearedPaths };
+    }
+    let rewrittenData = applyChangeToData(withEditErrors, rewrite, props);
+    if (move) {
+      const fateOf = fateUnder(rewrittenData.formData, move.container);
       rewrittenData = withMarksSettled(rewrittenData, base, move.container, fateOf);
     }
     const rewritten = applyChangeToErrorsOf(rewrittenData, edited.formData, rewrite, props, isValidated);
@@ -602,6 +608,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       moved = { move, outcome: { kind: 'refused' } };
     }
     const path = fieldPathToList(fieldPath);
+    const pending = move ? undefined : announced;
+    const pendingPath = pending && fieldPathToList(pending.fieldPath);
+    const forwardedMovePath =
+      pendingPath &&
+      pendingPath.length > path.length &&
+      isPathPrefix(path, pendingPath) &&
+      Object.is(getAt<unknown>(newValue, pendingPath.slice(path.length)), pending.value)
+        ? pendingPath
+        : undefined;
     // The selections and expansions under keys the change moves, or under a property it removes, move before it is
     // applied, so the sanitize reads them where the change puts the data; a change the form refuses puts them back
     const fieldChange: FieldChange<T> = {
@@ -610,7 +625,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       newErrorSchema,
       newKeyOf: move?.newKeyOf,
       newOwnKeyOf: move?.newOwnKeyOf,
+      sourceKeyOf: move?.sourceKeyOf,
       dropsOwnErrors: move?.dropsOwnErrors,
+      forwardedMovePath,
       isAnnouncedMove: move !== undefined,
       isFieldEdit,
     };

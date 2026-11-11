@@ -53,13 +53,22 @@ export function replaceErrorSchemaNode<T>(
  *
  * @param data - The data to copy along `path`
  * @param path - The path whose containers are copied
+ * @param [copies] - The copies made by earlier calls for the same write, which are written into rather than copied
+ *   again, and which this call adds its own to, so a write at many paths copies each container once
  * @returns - The copied data, or `data` itself when it holds no containers to copy
  */
-export function copyAlongPath<T>(data: T, path: FieldPathList): T {
+export function copyAlongPath<T>(data: T, path: FieldPathList, copies?: WeakSet<object>): T {
   if (!isObject(data) && !Array.isArray(data)) {
     return data;
   }
-  const copyOf = (container: object) => (Array.isArray(container) ? [...container] : { ...container });
+  const copyOf = (container: object) => {
+    if (copies?.has(container)) {
+      return container;
+    }
+    const copy = Array.isArray(container) ? [...container] : { ...container };
+    copies?.add(copy);
+    return copy;
+  };
   const root = copyOf(data as object) as Record<PropertyKey, unknown>;
   let container = root;
   for (const segment of path.slice(0, -1)) {
