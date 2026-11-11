@@ -215,14 +215,14 @@ function keptTypeIn(setup: FallbackTypeSetup, kept: KeptFallbackType | undefined
  * @param setup - What the type is worked out from, see `fallbackTypeSetup()`.
  * @param formData - The form data being rendered.
  * @param selectedType - The type the selector was last on, if any.
- * @param isOwnValue - Whether the form data is what the field's own last change to its value was stored as.
+ * @param isOwnClear - Whether the form data is the echo of a clear the field sent itself.
  * @param emptyValue - The `ui:emptyValue` the field's input reports being cleared as.
  */
 function getShownType(
   { types, defaultType, keepsWidget }: FallbackTypeSetup,
   formData: unknown,
   selectedType: JSONSchema7TypeName | undefined,
-  isOwnValue: boolean,
+  isOwnClear: boolean,
   emptyValue: unknown,
 ): JSONSchema7TypeName {
   // Neither of the two ways a value reports being cleared says anything about the type it was cleared from, so both
@@ -236,15 +236,14 @@ function getShownType(
   // from under the user. Only the types that stand in for one another survive this on their own; every other one, a
   // `false` among them, would otherwise take the selector with it the moment the user cleared the field
   const isClearedInput = emptiesToNothing && emptyValue !== undefined && formData === emptyValue;
-  // Data that arrives as the field's own last change is the user's own edit made on the type the selector is on, not
-  // data of the type it resembles, so the selection must survive it rather than go back to `string`, `null` or its
-  // default
-  const isKeptOwnValue = emptiesToNothing && isOwnValue;
+  // A clear the field sent itself is the empty state of the type the selector is on, not data of the type it
+  // resembles, so the selection must survive it rather than go back to `string`, `null` or its default
+  const isKeptOwnClear = emptiesToNothing && isOwnClear;
   const isSelectionUsable =
     selectedType !== undefined &&
     types.includes(selectedType) &&
     (formData === undefined ||
-      isKeptOwnValue ||
+      isKeptOwnClear ||
       isClearedInput ||
       canShowDataAsType(selectedType, guessType(formData)));
   return isSelectionUsable ? selectedType : getInitialType(formData, types, defaultType, keepsWidget);
@@ -491,28 +490,31 @@ function FallbackUiField<
   const { label } = { ...globalUiOptions, ...uiOptions };
   const { uiState } = useUiState();
   const isAdditionalEntry = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) || isEntryPath;
-  // The value this field's own last change to its value was stored as, as `storedValue()` has its container store it:
-  // a cleared value as `null` in an array item and as `''` in an `additionalProperties` entry. The same `null` or `''`
-  // put there from outside the field, by `setFieldValue()`, `reset()` or a container keeping it as data, is data like
-  // any other, which the selector follows
-  const [ownValue, setOwnValue] = useState<unknown>();
-  const [lastFormData, setLastFormData] = useState(formData);
-  if (formData !== lastFormData) {
-    setLastFormData(formData);
-    if (ownValue !== undefined && formData !== ownValue) {
-      setOwnValue(undefined);
-    }
+  // What the container stores this field's value as once it is cleared: `null` in an array item, `''` in an
+  // `additionalProperties` entry, nothing in an object property. `storedValue()` is the rule `ArrayField` and
+  // `ObjectField` store a change with, so a container that stores a clear its own way doesn't echo this value back,
+  // and the selector then follows that data as it follows any other
+  const clearedValue = storedValue<unknown>(undefined, fieldPath, isAdditionalEntry);
+  // A clear this field sent itself, from its input or by a switch to a type the value has no reading in, arrives back
+  // as `clearedValue`. The same value put there from outside the field, by `setFieldValue()`, `reset()` or a container
+  // keeping it as data, is data like any other, which the selector follows. So the clear is remembered, with the data
+  // it was sent over, only until data other than its echo arrives, using React's "store information from previous
+  // renders" pattern. Only a clear is remembered: any other value the field sends is data the selector reads as it
+  // reads data from outside
+  const [ownClear, setOwnClear] = useState<{ over: unknown }>();
+  if (ownClear && !Object.is(formData, ownClear.over)) {
+    setOwnClear(Object.is(formData, clearedValue) ? { over: formData } : undefined);
   }
   const sendOwnValue = useCallback(
     (value: unknown, changedFieldPath: FieldPath, errorSchema?: ErrorSchema<T>, changedId?: string) => {
       if (changedFieldPath === fieldPath) {
-        setOwnValue(storedValue<unknown>(value, fieldPath, isAdditionalEntry));
+        setOwnClear(value === undefined && clearedValue !== undefined ? { over: formData } : undefined);
       }
       onChange(value, changedFieldPath, errorSchema, changedId);
     },
-    [fieldPath, isAdditionalEntry, onChange],
+    [fieldPath, clearedValue, formData, onChange, setOwnClear],
   );
-  const isOwnValue = ownValue !== undefined && formData === ownValue;
+  const isOwnClear = ownClear !== undefined && Object.is(formData, clearedValue);
   // Lives as long as this field does, an `<Activity>` hiding it included, so a field mounting at this path later starts
   // on the type its data starts it on rather than on one kept for the field before it. The form's ui:required check
   // reads the kept type whoever kept it, since a hidden field still holds its pick
@@ -523,7 +525,7 @@ function FallbackUiField<
   const readShownType = () => {
     const kept = uiState.fallbackType(fieldPath, selector);
     const selectedType = kept?.owner === owner ? keptTypeIn(setup, kept) : undefined;
-    return getShownType(setup, formData, selectedType, isOwnValue, uiOptions.emptyValue);
+    return getShownType(setup, formData, selectedType, isOwnClear, uiOptions.emptyValue);
   };
   const type = useSyncExternalStore(uiState.subscribe, readShownType, readShownType);
   // Keeping the type the selector is showing stops a selection the user can no longer see from coming back: with the old
@@ -611,8 +613,7 @@ function FallbackUiField<
       uiState.selectFallbackType(fieldPath, selector, { type: selected, typeList, owner });
       // The errors raised against the old value describe a type it no longer has, so an empty raise takes them off:
       // passing none would leave them standing
-      const canHoldNothing = storedValue<unknown>(undefined, fieldPath, isAdditionalEntry) === undefined;
-      sendOwnValue(castToNewType(formData, selected, canHoldNothing), fieldPath, {}, id);
+      sendOwnValue(castToNewType(formData, selected, clearedValue === undefined), fieldPath, {}, id);
     }
   };
 
