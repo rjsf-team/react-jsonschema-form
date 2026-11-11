@@ -209,20 +209,20 @@ function keptTypeIn(setup: FallbackTypeSetup, kept: KeptFallbackType | undefined
  * Whether `formData` is the echo of a clear `kept` says the field sent itself
  * @param kept - What the form keeps for the selector
  * @param formData - The field's form data
- * @param clearedValue - What the field's container stores its value as once it is cleared, see `storedValue()`
  */
-function isOwnClearEcho(kept: KeptFallbackType | undefined, formData: unknown, clearedValue: unknown) {
-  return kept?.clear === true && Object.is(formData, clearedValue);
+function isOwnClearEcho(kept: KeptFallbackType | undefined, formData: unknown) {
+  return kept?.ownClear !== undefined && Object.is(formData, kept.ownClear);
 }
 
 /**
- * Whether a value the field sends is a clear: one its container stores as it stores a clear
+ * Gets what a value the field sends arrives back as if it is a clear: one its container stores as it stores a clear
  * @param value - The value the field sends
  * @param clearedValue - What the field's container stores its value as once it is cleared, see `storedValue()`, which
  *   stores any value but `undefined` as it is
+ * @returns - `clearedValue` for a clear, otherwise `undefined`
  */
-function isClearOf(value: unknown, clearedValue: unknown) {
-  return clearedValue !== undefined && (value === undefined || Object.is(value, clearedValue));
+function ownClearOf(value: unknown, clearedValue: unknown) {
+  return value === undefined || Object.is(value, clearedValue) ? clearedValue : undefined;
 }
 
 /**
@@ -271,8 +271,9 @@ function getShownType(
 
 /**
  * Gets the type the fallback UI's selector is on for the field at `fieldPath`, as the form keeps it in `uiState`, for
- * the readers that walk the fields on screen without rendering them. Such a reader sees an additional property's value
- * only by the marker on its schema, not by the entry a layout grid names
+ * the readers that walk the fields on screen without rendering them. The echo of the field's own clear is read from
+ * what the field kept, since the schema such a reader is handed doesn't always say the field is an
+ * `additionalProperties` entry, as an `anyOf` option's at an entry doesn't
  * @param registry - The registry the form renders with
  * @param uiState - The form's option selections, cycle expansions and fallback UI types
  * @param fieldPath - The path of the field
@@ -294,14 +295,7 @@ export function fallbackUiType<T, S extends StrictRJSFSchema, F extends FormCont
   const { widget, emptyValue } = getUiOptions<T, S, F>(uiSchema);
   const setup = fallbackTypeSetup<T, S, F>(schema, widget, registry.widgets, depth);
   const kept = uiState.fallbackType(fieldPath, setup.selector);
-  const clearedValue = storedValue<unknown>(undefined, fieldPath, hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG));
-  return getShownType(
-    setup,
-    formData,
-    keptTypeIn(setup, kept),
-    isOwnClearEcho(kept, formData, clearedValue),
-    emptyValue,
-  );
+  return getShownType(setup, formData, keptTypeIn(setup, kept), isOwnClearEcho(kept, formData), emptyValue);
 }
 
 /**
@@ -535,7 +529,7 @@ function FallbackUiField<
     (value: unknown, changedFieldPath: FieldPath, errorSchema?: ErrorSchema<T>, changedId?: string) => {
       const kept = uiState.fallbackType(fieldPath, selector);
       if (changedFieldPath === fieldPath && kept?.owner === owner) {
-        uiState.keepFallbackType(fieldPath, selector, { ...kept, clear: isClearOf(value, clearedValue) });
+        uiState.keepFallbackType(fieldPath, selector, { ...kept, ownClear: ownClearOf(value, clearedValue) });
       }
       onChange(value, changedFieldPath, errorSchema, changedId);
     },
@@ -546,13 +540,7 @@ function FallbackUiField<
   const readShownType = () => {
     const kept = uiState.fallbackType(fieldPath, selector);
     const own = kept?.owner === owner ? kept : undefined;
-    return getShownType(
-      setup,
-      formData,
-      keptTypeIn(setup, own),
-      isOwnClearEcho(own, formData, clearedValue),
-      uiOptions.emptyValue,
-    );
+    return getShownType(setup, formData, keptTypeIn(setup, own), isOwnClearEcho(own, formData), uiOptions.emptyValue);
   };
   const type = useSyncExternalStore(uiState.subscribe, readShownType, readShownType);
   // Keeping the type the selector is showing stops a selection the user can no longer see from coming back: with the old
@@ -560,11 +548,11 @@ function FallbackUiField<
   // the data is the data it was sent over or its echo, so the first data of any other value drops it
   useLayoutEffect(() => {
     const kept = uiState.fallbackType(fieldPath, selector);
-    const clear =
-      kept?.owner === owner &&
-      kept.clear === true &&
-      (Object.is(formData, kept.rendered) || Object.is(formData, clearedValue));
-    uiState.keepFallbackType(fieldPath, selector, { type, typeList, owner, rendered: formData, clear });
+    const ownClear =
+      kept?.owner === owner && (Object.is(formData, kept.lastFormData) || Object.is(formData, kept.ownClear))
+        ? kept.ownClear
+        : undefined;
+    uiState.keepFallbackType(fieldPath, selector, { type, typeList, owner, lastFormData: formData, ownClear });
   });
 
   const typesOptionSchema = useMemo(
@@ -650,8 +638,8 @@ function FallbackUiField<
         type: selected,
         typeList,
         owner,
-        rendered: formData,
-        clear: isClearOf(value, clearedValue),
+        lastFormData: formData,
+        ownClear: ownClearOf(value, clearedValue),
       });
       // The errors raised against the old value describe a type it no longer has, so an empty raise takes them off:
       // passing none would leave them standing

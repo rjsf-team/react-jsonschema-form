@@ -580,8 +580,40 @@ describe('SchemaField', () => {
         await submitForm(node, user);
 
         expect(typeOf(node, 'root_list_0')).toBe('number');
-        expect(onError).toHaveBeenLastCalledWith(
-          expect.not.arrayContaining([expect.objectContaining({ property: '.list.0.a' })]),
+        expect(onError.mock.calls.flatMap(([errors]: unknown[]) => errors)).not.toContainEqual(
+          expect.objectContaining({ property: '.list.0.a' }),
+        );
+      });
+
+      it("should require nothing of the object an entry's option left for boolean, over the '' its widget clears to", async () => {
+        const EmptyWidget = ({ id, onChange }: WidgetProps) => (
+          <button type='button' id={id} onClick={() => onChange('')}>
+            Send empty
+          </button>
+        );
+        // The option's schema carries no marker of the entry it renders at, which only the field knows
+        const { node, onError } = createFormComponent({
+          schema: {
+            type: 'object',
+            additionalProperties: {
+              anyOf: [
+                { title: 'One', type: ['object', 'boolean'], properties: { a: { type: 'string' } } },
+                { title: 'Two', type: 'number' },
+              ],
+            },
+          },
+          uiSchema: { additionalProperties: { 'ui:widget': 'EmptyWidget', a: { 'ui:required': true } } },
+          widgets: { EmptyWidget },
+          initialFormData: { x: true },
+          useFallbackUiForUnsupportedType: true,
+          noHtml5Validate: true,
+        });
+        await user.click(elementOf(node, '#root_x', HTMLButtonElement));
+        await submitForm(node, user);
+
+        expect(typeOf(node, 'root_x')).toBe('boolean');
+        expect(onError.mock.calls.flatMap(([errors]: unknown[]) => errors)).not.toContainEqual(
+          expect.objectContaining({ property: '.x.a' }),
         );
       });
 

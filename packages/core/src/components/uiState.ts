@@ -360,9 +360,12 @@ export interface KeptFallbackType {
   readonly typeList: string;
   readonly owner: object;
   /** The data the field last rendered, which a clear it sends is sent over */
-  readonly rendered?: unknown;
-  /** Whether the field sent a clear itself over `rendered`, which keeps the type over the clear's echo */
-  readonly clear?: boolean;
+  readonly lastFormData?: unknown;
+  /** What a clear the field sent itself over `lastFormData` arrives back as, which keeps the type over that echo:
+   * `null` in an array item, `''` in an `additionalProperties` entry. The field works it out from where it renders,
+   * which the form's ui:required check can't always see from the schema. `undefined` when the field's last change was
+   * no clear */
+  readonly ownClear?: unknown;
 }
 
 /** The selections and expansions of a form at one moment, see `save()` */
