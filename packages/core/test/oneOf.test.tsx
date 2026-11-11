@@ -1727,6 +1727,21 @@ describe('oneOf', () => {
     expect(Object.keys(onChange.mock.lastCall?.[0].formData.x)).toEqual([]);
   });
 
+  it('fills a null array item with the new items default when switching to items of another type', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { list: { type: 'array', items: { type: 'number' } } } },
+        { title: 'B', properties: { list: { type: 'array', items: { type: 'string', default: 'x' } } } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { list: [null] } });
+
+    await user.selectOptions(elementOf(node, 'select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ list: ['x'] });
+  });
+
   it('drops a cleared key only the old option declares when a condition of the new one fills it back in', async () => {
     const schema: RJSFSchema = {
       type: 'object',

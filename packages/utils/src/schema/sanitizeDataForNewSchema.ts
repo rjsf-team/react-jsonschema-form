@@ -1,11 +1,20 @@
-import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, PROPERTIES_KEY } from '../constants.ts';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  CONST_KEY,
+  DEFAULT_KEY,
+  GUESSED_TYPE_FLAG,
+  PROPERTIES_KEY,
+  REF_KEY,
+} from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
+import { getKnownTypes } from '../getUnionTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
+import isConstantSelect from '../isConstantSelect.ts';
 import isContainerValue from '../isContainerValue.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
@@ -70,7 +79,7 @@ function itemSchemaAt<S extends StrictRJSFSchema = RJSFSchema>(schema: S, index:
 /** How the items at one position of an array are sanitized: the raw and resolved schemas each side declares there, or
  * `false` where both reject any item there, which keeps one for validation to report */
 type ItemPosition<S> =
-  | { newRaw: S; oldRaw: S; newItems: S; itemsType: string | undefined; isContainer: boolean }
+  | { newRaw: S; oldRaw: S; newItems: S; schemaType: string | undefined; listedTypes: string[]; isWholeSelect: boolean }
   | false;
 
 function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): unknown[] | undefined {
@@ -209,12 +218,81 @@ function isSameType(oldType: unknown, newType: unknown): boolean {
   return oldTypes.size === newTypes.size && oldType.every((type) => newTypes.has(type));
 }
 
+/** Says whether `newType` names every type `oldType` names, so that it allows any value of the old type. A `number`
+ * names `integer` too, since it allows every integer. This is how `sanitizeDataForNewSchema()` and `Form` decide that an
+ * array item's type didn't change
+ *
+ * @param oldType - The `type` a schema declared before the change, a type name or a list of them
+ * @param newType - The `type` it declares after the change, a type name or a list of them
+ * @returns - Whether `newType` allows every type `oldType` allows
+ */
+export function namesEveryType(oldType: unknown, newType: unknown): boolean {
+  const newTypes = new Set<unknown>(Array.isArray(newType) ? newType : [newType]);
+  return (Array.isArray(oldType) ? oldType : [oldType]).every(
+    (type) => newTypes.has(type) || (type === 'integer' && newTypes.has('number')),
+  );
+}
+
 /** What `formValue`, data holding no object, is sanitized to against the object schema `schema`: an empty object in
  * place of a value of another type where it declares `properties`, and otherwise nothing. Absent data stays absent, so
  * the defaults decide whether the object is added, as they do when the form mounts
  */
 function emptyObjectFor<S extends StrictRJSFSchema>(schema: S, formValue: unknown): object | undefined {
   return formValue !== undefined && schema[PROPERTIES_KEY] ? {} : undefined;
+}
+
+/** What a property's or an item's `formValue` takes from the new `default` that differs from it, as `Form` judges a
+ * field whose constraints changed: the new `default` where the value is the old one, or where `isNewClear`, a newly
+ * entered property's clear, and, for a scalar or a select property, `undefined` where a `readOnly` new `default` stands
+ * in for a `const`. `Form` clears no array or object it walks as a container for one. `NO_VALUE` keeps the value
+ */
+function defaultReplacement<S extends StrictRJSFSchema>(
+  newSchema: S,
+  oldSchema: S,
+  formValue: unknown,
+  isNewClear: boolean,
+  isScalar: boolean,
+): unknown {
+  const newDefault = getByPath(newSchema, DEFAULT_KEY, NO_VALUE);
+  if (newDefault === NO_VALUE || deepEquals(newDefault, formValue)) {
+    return NO_VALUE;
+  }
+  if (isNewClear || deepEquals(getByPath(oldSchema, DEFAULT_KEY, NO_VALUE), formValue)) {
+    return ownValue(newDefault);
+  }
+  return isScalar && newSchema.readOnly === true ? undefined : NO_VALUE;
+}
+
+/** `schema` read as the `array` its type list names, as `Form` walks an array value a type list holds whichever type
+ * `getSchemaType()` renders the list as, and without the `properties` an `object` beside it declares, which would read
+ * the array as an object. A schema naming no `array`, such as an old one that held no array, or one already read as an
+ * `array` without `properties`, such as `['array', 'null']`, is returned as it is, so that no copy is made per item
+ */
+function asArraySchema<S extends StrictRJSFSchema>(schema: S): S {
+  const namesArray = schema.type === 'array' || getKnownTypes<S>(schema).includes('array');
+  return namesArray && (schema[PROPERTIES_KEY] || getSchemaType<S>(schema) !== 'array')
+    ? { ...schema, type: 'array', [PROPERTIES_KEY]: undefined }
+    : schema;
+}
+
+/** Whether `schema` renders an object the defaults fill key by key: an `object` one, or an untyped one declaring
+ * `properties` of its own or through an option, as `Form` fills one. An untyped one declaring only
+ * `additionalProperties` or `patternProperties` has no keys for a `default` to fill, the stubs `retrieveSchema()` adds
+ * for the data's extra keys aside */
+function rendersProperties<S extends StrictRJSFSchema>(schema: S): boolean {
+  if (schema.type !== undefined) {
+    return getSchemaType<S>(schema) === 'object';
+  }
+  return (
+    Object.values(schema[PROPERTIES_KEY] ?? {}).some(
+      (property) => !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG),
+    ) ||
+    (getXxxOfOptions<S>(schema)?.options.some(
+      // shortcut: an option's `$ref` counts as an object unresolved; resolve it if one naming a scalar matters
+      (option) => isObject(option) && (REF_KEY in option || rendersProperties<S>(option)),
+    ) ??
+      false)
+  );
 }
 
 function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: unknown) {
@@ -250,9 +328,12 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *     - Retrieve the schema for any refs within each `oldKeySchema` and/or `newKeySchema`
  *     - Get the types of the old and new keyed schemas and if the old doesn't exist or the old & new are the same then:
  *       - Delete the key from `discardedKeys`, since the new schema has the same property
- *       - If type of the key in the new schema is `object`, or `array` with array data, and the key isn't a select
- *         over object or array constants (see `isWholeValueSelect()`):
- *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`, or, for data that
+ *       - If type of the key in the new schema is `object`, or its type or type list names `object` with plain
+ *         object data or `array` with array data, and the key isn't a select (see `isConstantSelect()`):
+ *         - Data equal to the old `default` takes a new one that differs, unless it is an object `getSchemaType()`
+ *           reads as `object`, whose `default` the defaults fill key by key. A `readOnly` `default` clears no container
+ *         - Otherwise, store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`, array data
+ *           against both schemas read as `array` (see `asArraySchema()`), or, for data that
  *           holds a value other than an object, an empty object when the new schema declares `properties`. Data the
  *           key does not hold is left out, and a `null` is removed, for the defaults to fill as they do on mount. What
  *           the new `const` rejects once sanitized, as below, takes the new `const` or is cleared
@@ -286,20 +367,26 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *     `false`, which shaped no element there. The items of an old schema declaring no type are read without the `type`
  *     they declare
  *   - The array is cleared where the old type was guessed from the data and the two schemas declare different items,
- *     or where an element reaches a position only the new side declares `false` at, or whose `type`s the two sides declare
- *     differently, the old one declaring none counting as the same. A position no element reaches clears nothing,
- *     and an `undefined` element past the new prefix reaching one whose `type`s differ is dropped instead. Each
+ *     or where an element reaches a position only the new side declares `false` at, or a prefix position whose new
+ *     `type`s leave out one the old side declares, either declaring none counting as allowing any and a `number` as
+ *     naming `integer`. An element past the
+ *     new prefix reaching such a position is dropped instead. A position no element reaches clears nothing. Each
  *     position's schemas are retrieved against the `data` as an element first reaches it
- *   - Otherwise, for each element in the `data`, stopping at `maxItems` if specified:
+ *   - Otherwise, for each element in the `data`, stopping at `maxItems` where it differs from the old schema's, since
+ *     data already past an unchanged one is left for validation to report, an element past it clearing nothing:
  *     - An element at a position both sides declare `false` is kept as it is, for validation to report
- *     - Where the new position's type, read through `getSchemaType()`, is "object" or "array" and it isn't a select
+ *     - A `null` element at a position whose constraints changed, where the new position declares a `default` and
+ *       doesn't allow `null`, is a cleared row, which becomes `undefined` for the defaults to fill
+ *     - Where the new position's type, read through `getSchemaType()`, is "object" or "array", or its type list names
+ *       "object" or "array", and it isn't a select
  *       over object or array constants (see `isWholeValueSelect()`), retrieve its schemas for that element
  *     - Keep an element that is one of the new position's `enum` or constant options as it is, dropping one that is
- *       none of them
+ *       none of them other than `undefined`, which stays a hole
  *     - Otherwise, under "object" or "array", an object element whose new schema declares `properties` is recursively
  *       sanitized against them, and any other object element is kept as it is. A value that is not an object, other
  *       than `undefined`, is dropped where the new position declares `type: 'object'`, except a `null` that
- *       `nullable: true` allows. An array element is recursively sanitized, and kept as it is when that returns
+ *       `nullable: true` allows. An array element is recursively sanitized against both schemas read as `array`
+ *       (see `asArraySchema()`), and kept as it is when that returns
  *       `undefined`. An element that is not an array is kept as it is under "array", as is one that is not an object
  *       under a type list naming object, such as a `null` the list allows
  *     - An element the new position's `const` rejects once sanitized, as below or as a scalar the `const` isn't, takes
@@ -400,18 +487,20 @@ export default function sanitizeDataForNewSchema<
         }
         // If it is an object, we'll recurse and store the resulting sanitized data for the key. A select over object or
         // array constants holds one of them as a whole, so it's checked against its options like any other select
-        // A container is read through `getSchemaType()`, as the array branch below reads it, so one whose type list also
-        // allows `null` is sanitized as a plain array or object is, when it holds one: a `null` it allows stays as it
-        // is. Only a declared type counts: `getSchemaType()` guesses `array` from a typeless `const` array, which has no
-        // `items` to sanitize its value against and would be cleared
-        const containerType = newSchemaTypeForKey === undefined ? undefined : getSchemaType<S>(newKeyedSchema);
-        const isArrayValue = containerType === 'array' && Array.isArray(formValue);
+        // A container is read by what it holds, as `Form` walks it: an array as an array and a plain object as an object
+        // where the type list names that type, whichever type `getSchemaType()` renders the list as, so a `null` a type
+        // list allows stays as it is. Only a declared type counts, not one `getSchemaType()` guesses, such as `array`
+        // from a typeless `const` array, which has no `items` to sanitize its value against and would be cleared
+        const declaredTypes = [newSchemaTypeForKey].flat();
+        const isArrayValue = Array.isArray(formValue) && declaredTypes.includes('array');
         // A `null` that `nullable: true` allows stays as it is, as one a type list allows does
         const isAllowedNull = formValue === null && newKeyedSchema.nullable === true;
         const isObjectValue =
           (newSchemaTypeForKey === 'object' && !isAllowedNull) ||
-          (containerType === 'object' && isPlainObject(formValue));
-        const isContainer = (isObjectValue || isArrayValue) && !isWholeValueSelect<S>(newKeyedSchema);
+          (isPlainObject(formValue) && declaredTypes.includes('object'));
+        // Any select, not only one `isWholeValueSelect()` reads as one, since a type list rendered as a scalar, such as
+        // `['string', 'object']`, still holds an object or array it lists as a whole
+        const isContainer = (isObjectValue || isArrayValue) && !isConstantSelect<S>(newKeyedSchema);
         if (isContainer && formValue === null) {
           // `null` holds no object, as the Optional Data Controls read it, so it is removed as absent data is left out,
           // for the defaults to fill, rather than replaced by an empty object that shows the object as added, unless it
@@ -424,13 +513,31 @@ export default function sanitizeDataForNewSchema<
             nestedData[key] = replacement;
           }
         } else if (isContainer) {
+          // A container holding the old `default` takes the new one whole, as a scalar does, rather than being
+          // sanitized into neither, unless it is an object, whose `default` the defaults fill in key by key
+          const defaultValue =
+            formValue === undefined || (isObjectValue && getSchemaType<S>(newKeyedSchema) === 'object')
+              ? NO_VALUE
+              : defaultReplacement<S>(newKeyedSchema, oldKeyedSchema, formValue, false, false);
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. Data holding no object
           // has no properties to sanitize. Descending into it would sanitize the absent properties of every level a
           // recursive `$ref` reaches, without end
-          const sanitizedData: unknown =
-            isArrayValue || isPlainObject(formValue)
+          let sanitizedData: unknown;
+          if (defaultValue !== NO_VALUE) {
+            sanitizedData = defaultValue;
+          } else if (isArrayValue) {
+            sanitizedData = sanitizeDataForNewSchema<T, S, F>(
+              context,
+              rootSchema,
+              asArraySchema<S>(newKeyedSchema),
+              asArraySchema<S>(oldKeyedSchema),
+              formValue,
+            );
+          } else {
+            sanitizedData = isPlainObject(formValue)
               ? sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newKeyedSchema, oldKeyedSchema, formValue)
               : emptyObjectFor<S>(newKeyedSchema, formValue);
+          }
           // What the new `const` rejects, the empty object standing in for data of another type or the data itself
           // where there is none, takes the new `const` where the data holds the old one, and is otherwise cleared
           const replacement =
@@ -447,20 +554,11 @@ export default function sanitizeDataForNewSchema<
           // Ok, the non-object types match, let's make sure that a default or a const of a different value is replaced
           // with the new default or const. This allows the case where two schemas differ that only by the default/const
           // value to be properly selected
-          const newOptionDefault = getByPath(newKeyedSchema, DEFAULT_KEY, NO_VALUE);
-          const oldOptionDefault = getByPath(oldKeyedSchema, DEFAULT_KEY, NO_VALUE);
-          if (newOptionDefault !== NO_VALUE && !deepEquals(newOptionDefault, formValue)) {
-            // A clear the same constraints held stays one, even where the key is new to the new schema's `properties`
-            if (
-              (isNewProperty && formValue === undefined && !keptClears.has(key)) ||
-              deepEquals(oldOptionDefault, formValue)
-            ) {
-              // Initialize a newly entered property or replace an old default with the new default.
-              replacements[key] = newOptionDefault;
-            } else if (newKeyedSchema.readOnly === true) {
-              // If the new schema has the default set to read-only, treat it like a const and remove the value
-              replacements[key] = undefined;
-            }
+          // A clear the same constraints held stays one, even where the key is new to the new schema's `properties`
+          const isNewClear = isNewProperty && formValue === undefined && !keptClears.has(key);
+          const replacement = defaultReplacement<S>(newKeyedSchema, oldKeyedSchema, formValue, isNewClear, true);
+          if (replacement !== NO_VALUE) {
+            replacements[key] = replacement;
           }
 
           const newOptionConst = getByPath(newKeyedSchema, CONST_KEY, NO_VALUE);
@@ -516,6 +614,11 @@ export default function sanitizeDataForNewSchema<
     // read without them, as the untyped old schema itself is, so that the keys only they declare are still removed
     const oldIsUntyped = oldSchema.type === undefined;
     const withOldType = (schema: S): S => (oldIsUntyped ? { ...schema, type: undefined } : schema);
+    /** The old schema of an item, resolved against it as `newItemSchema`, the new one, is */
+    const oldItemSchemaOf = (oldRaw: S, newRaw: S, newItemSchema: S, aValue: unknown): S =>
+      withOldType(
+        oldRaw === newRaw ? newItemSchema : retrieveSchema<unknown, S, F>(context, oldRaw, rootSchema, aValue),
+      );
     const newPrefixLength = getPrefixLength<S>(newSchema);
     // The position past the longer prefix stands for every item after both
     const positionCount = Math.max(getPrefixLength<S>(oldSchema), newPrefixLength) + 1;
@@ -527,9 +630,37 @@ export default function sanitizeDataForNewSchema<
       !(Array.isArray(oldSchema.items) || Array.isArray(newSchema.items) ? TUPLE_KEYWORDS : ITEMS_KEYWORDS).every(
         (key) => deepEquals((oldSchema as GenericObjectType)[key], (newSchema as GenericObjectType)[key]),
       );
-    /** The schemas of the position at `index`, or `undefined` where the two sides describe it so that an item there
-     * clears the array. Asked only of the positions an item reaches, so data that fits is never cleared by a position
-     * it doesn't fill, and no schema is resolved for one */
+    /** Whether a `null` item at `index` is a cleared row, as `Form` reads one: its position's constraints changed, and
+     * the new position declares a `default` to fill the row with and doesn't allow `null`. The row is kept empty for
+     * the defaults to fill, rather than judged. Every `null` item at a position reads the same schemas, so each
+     * position is asked once */
+    const clearedRows = new Map<number, boolean>();
+    const isClearedRow = (index: number): boolean => {
+      const known = clearedRows.get(index);
+      if (known !== undefined) {
+        return known;
+      }
+      const newRaw = itemSchemaAt<S>(newSchema, index);
+      let cleared = false;
+      if (newRaw !== false) {
+        const newItem = retrieveSchema<unknown, S, F>(context, newRaw, rootSchema, null);
+        if (newItem.default !== undefined) {
+          const declaredOldRaw = itemSchemaAt<S>(oldSchema, index);
+          const oldRaw = declaredOldRaw === false ? (ANY_ITEM as S) : declaredOldRaw;
+          const oldItem = oldItemSchemaOf(oldRaw, newRaw, newItem, null);
+          // An untyped old schema's item types mark nothing as stale, so they count as the new one's
+          const oldConstraints = oldIsUntyped ? { ...oldItem, type: newItem.type } : oldItem;
+          cleared =
+            !constrainsAlike<S>(oldConstraints, newItem, undefined, undefined) &&
+            !context.validator.isValid(newItem, null, rootSchema);
+        }
+      }
+      clearedRows.set(index, cleared);
+      return cleared;
+    };
+    /** The schemas of the position at `index`, or `undefined` where the two sides describe it so that an item there is
+     * rejected: a prefix item clears the array, and one past the prefix is dropped. Asked only of the positions an item
+     * reaches, so data that fits is never cleared by a position it doesn't fill, and no schema is resolved for one */
     const positionAt = (index: number): ItemPosition<S> | undefined => {
       const newRaw = itemSchemaAt<S>(newSchema, index);
       const declaredOldRaw = itemSchemaAt<S>(oldSchema, index);
@@ -549,16 +680,17 @@ export default function sanitizeDataForNewSchema<
       const oldType = oldIsUntyped
         ? undefined
         : (oldRaw === newRaw ? newItems : retrieveSchema<unknown, S, F>(context, oldRaw, rootSchema, data)).type;
-      if (oldType !== undefined && !isSameType(oldType, newItems.type)) {
+      // A new position declaring no type, or every type the old one declares, rejects no item by its type
+      if (oldType !== undefined && newItems.type !== undefined && !namesEveryType(oldType, newItems.type)) {
         return undefined;
       }
-      // Items whose type list also allows `null` are read through `getSchemaType()`, as a property is above, so an
-      // object one holds is sanitized as an object item is and a `null` it allows stays as it is. An item picked from
-      // object constants is one of them as a whole, so it's checked against the options rather than sanitized property
-      // by property, which would find no properties and drop it
-      const itemsType = newItems.type === undefined ? undefined : getSchemaType<S>(newItems);
-      const isContainer = (itemsType === 'object' || itemsType === 'array') && !isWholeValueSelect<S>(newItems);
-      return { newRaw, oldRaw, newItems, itemsType, isContainer };
+      // An item a type list allows is read by what it holds, see `sanitizeItem`, so an object one holds is sanitized as
+      // an object item is and a `null` it allows stays as it is. An item picked from object constants is one of them as
+      // a whole, so it's checked against the options rather than sanitized property by property, which would find no
+      // properties and drop it
+      const schemaType = newItems.type === undefined ? undefined : getSchemaType<S>(newItems);
+      const listedTypes = getKnownTypes<S>(newItems);
+      return { newRaw, oldRaw, newItems, schemaType, listedTypes, isWholeSelect: isWholeValueSelect<S>(newItems) };
     };
     /** What `aValue` is sanitized to at `position`, or `NO_VALUE` where it is dropped. A prefix item dropped would move
      * the items after it into positions that describe others, so where `isPrefix` it is `NO_VALUE` only where the array
@@ -567,35 +699,55 @@ export default function sanitizeDataForNewSchema<
      * A `default` decides no item's validity, so it is left out of that, and an untyped old schema's item types mark
      * nothing as stale, so they count as the new one's */
     const sanitizeItem = (position: ItemPosition<S>, aValue: unknown, isPrefix: boolean): unknown => {
-      // `positionAt()` already cleared the array where the old side typed a position the new one constrains nothing at,
-      // so an item reaching one here, or one both sides close, is kept as it is, with nothing to resolve per item
+      // A position the new side constrains nothing at, or both sides close, keeps its item as it is, with nothing to
+      // resolve per item
       if (!position || position.newRaw === ANY_ITEM) {
         return aValue;
       }
-      const { newRaw, oldRaw, newItems, itemsType, isContainer } = position;
+      const { newRaw, oldRaw, newItems, schemaType, listedTypes, isWholeSelect } = position;
+      // A type list holds an object item as an object and an array item as an array where it names that type, as `Form`
+      // walks them, whichever type `getSchemaType()` renders the list as. Any other item, a hole included, is a scalar,
+      // as a hole under `array` items is: `Form` keeps it there, where under `object` items it fills an empty object
+      let itemsType = schemaType;
+      if (listedTypes.length > 0) {
+        const itemType = Array.isArray(aValue) ? 'array' : 'object';
+        itemsType =
+          (itemType === 'array' || isPlainObject(aValue)) && listedTypes.includes(itemType) ? itemType : undefined;
+      } else if (aValue === undefined && schemaType === 'array') {
+        itemsType = undefined;
+      }
+      const isContainer = (itemsType === 'object' || itemsType === 'array') && !isWholeSelect;
       // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional nested inside
       // `items` picks the branch that matches this element rather than the whole array (#5250), the `const` and options
       // a scalar item is checked by included
       const newItemSchema = retrieveSchema<unknown, S, F>(context, newRaw, rootSchema, aValue);
+      // The old item schema, resolved only where something reads it
       let oldItemSchema: S | undefined;
-      /** The old item schema, resolved only where something reads it */
-      const oldItemSchemaOf = (): S => {
-        oldItemSchema ??= withOldType(
-          oldRaw === newRaw ? newItemSchema : retrieveSchema<unknown, S, F>(context, oldRaw, rootSchema, aValue),
-        );
-        return oldItemSchema;
-      };
-      const sanitizedValue = (): unknown => {
-        const listedValues = enumValuesForSchema<S>(newItemSchema);
-        if (listedValues) {
-          // An item its options list is one of them as a whole, so it is kept as it is, and one they don't list is
-          // dropped, whatever the old schema listed
-          return listedValues.some((value) => deepEquals(value, aValue)) ? aValue : NO_VALUE;
+      // An item holding its old `default` takes the new one, as a property does, unless it is an object rendered as
+      // `object`, which the defaults fill key by key, though a select over objects holds one whole. Untyped items are
+      // filled so only by an object `default`, through their `properties` or an option's, see `rendersProperties()`.
+      // `Form` clears no item for a `readOnly` new `default`
+      const isFilledByKey =
+        schemaType === undefined
+          ? isPlainObject(newItemSchema.default) && rendersProperties<S>(newItemSchema)
+          : schemaType === 'object';
+      if (newItemSchema.default !== undefined && !(isPlainObject(aValue) && !isWholeSelect && isFilledByKey)) {
+        oldItemSchema = oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
+        const defaultValue = defaultReplacement<S>(newItemSchema, oldItemSchema, aValue, false, false);
+        if (defaultValue !== NO_VALUE) {
+          return defaultValue;
         }
+      }
+      let itemValue: unknown;
+      const listedValues = enumValuesForSchema<S>(newItemSchema);
+      if (listedValues) {
+        // An item its options list is one of them as a whole, so it is kept as it is, and one they don't list is
+        // dropped, whatever the old schema listed. A hole is no option, and stays one, as `Form` keeps it
+        itemValue = aValue === undefined || listedValues.some((value) => deepEquals(value, aValue)) ? aValue : NO_VALUE;
+      } else if (!isContainer && newItemSchema.const === undefined) {
         // Only a new `const` can reject a scalar item here
-        if (!isContainer && newItemSchema.const === undefined) {
-          return aValue;
-        }
+        itemValue = aValue;
+      } else {
         // A `null` that `nullable: true` allows stays as it is, as it does for a property, unless the new `const`
         // below rejects it
         const isAllowedNull = aValue === null && newItemSchema.nullable === true;
@@ -608,30 +760,38 @@ export default function sanitizeDataForNewSchema<
           // `type: 'object'` items can't hold a value that is no object, whatever the old items allowed, so it is
           // dropped rather than given an empty object, a row the user never filled, unless it is the old `const`
           const isObjectless = itemsType === 'object' && aValue !== undefined && !isPlainObject(aValue);
-          // An array element whose items the two sides describe differently is kept as it is: the shared array rule
-          // clears it even where the new items accept it
+          oldItemSchema ??= oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
+          // An array element the call clears, by an item at a position the new items close or a rejected prefix item,
+          // is kept as it is, as `Form` keeps it. A `const` the call rejects is checked again below, which drops the
+          // item. An array item is sanitized as an array, see `asArraySchema()`
+          const isArrayItem = itemsType === 'array';
           sanitizedItem = isObjectless
             ? undefined
-            : (sanitizeDataForNewSchema<unknown, S, F>(context, rootSchema, newItemSchema, oldItemSchemaOf(), aValue) ??
-              aValue);
+            : (sanitizeDataForNewSchema<unknown, S, F>(
+                context,
+                rootSchema,
+                isArrayItem ? asArraySchema<S>(newItemSchema) : newItemSchema,
+                isArrayItem ? asArraySchema<S>(oldItemSchema) : oldItemSchema,
+                aValue,
+              ) ?? aValue);
         } else if (isContainerItem) {
           // An object item declaring no `properties` has none to prune, so it is kept as it is
           sanitizedItem = isPlainObject(aValue) ? aValue : undefined;
         }
         // An item the new `const` rejects once sanitized takes it where it holds the old one, and is dropped otherwise.
         // An `undefined` a scalar position holds is a hole the array already has, and stays one
-        const replacement =
-          newItemSchema.const === undefined || (aValue === undefined && !isContainer)
-            ? NO_VALUE
-            : itemConstReplacement(newItemSchema, oldItemSchemaOf(), sanitizedItem ?? aValue, aValue);
+        let replacement: unknown = NO_VALUE;
+        if (newItemSchema.const !== undefined && (aValue !== undefined || isContainer)) {
+          oldItemSchema ??= oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
+          replacement = itemConstReplacement<S>(newItemSchema, oldItemSchema, sanitizedItem ?? aValue, aValue);
+        }
         const value = replacement === NO_VALUE ? sanitizedItem : replacement;
-        return value === undefined && (isContainer || replacement !== NO_VALUE) ? NO_VALUE : value;
-      };
-      const itemValue = sanitizedValue();
+        itemValue = value === undefined && (isContainer || replacement !== NO_VALUE) ? NO_VALUE : value;
+      }
       if (itemValue !== NO_VALUE || !isPrefix) {
         return itemValue;
       }
-      const oldConstraints = oldItemSchemaOf();
+      const oldConstraints = oldItemSchema ?? oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
       const isAlike = constrainsAlike<S>(
         { ...oldConstraints, type: oldIsUntyped ? newItemSchema.type : oldConstraints.type, default: undefined },
         { ...newItemSchema, default: undefined },
@@ -640,37 +800,40 @@ export default function sanitizeDataForNewSchema<
       );
       return isAlike ? aValue : NO_VALUE;
     };
-    const maxItems = newSchema.maxItems ?? Infinity;
+    // An unchanged `maxItems` the data already exceeds was failing it before the change, so it leaves the items past it
+    // for validation to report: none of them clears the array, as `Form` keeps it. Only a changed one trims, at `bound`
+    const limit = newSchema.maxItems ?? Infinity;
+    const bound = oldSchema.maxItems === newSchema.maxItems ? Infinity : limit;
     const sanitizedItems: unknown[] = [];
     // The position at `positionCount - 1` stands for every item after both prefixes, so it is read once
     let position: ItemPosition<S> | undefined = false;
     let positionIndex = -1;
-    // A dropped prefix item clears the array, as an item of a type its position doesn't allow clears it. `maxItems` of
-    // 0 allows no item at all
-    for (let index = 0; !isCleared && index < data.length && sanitizedItems.length < maxItems; index++) {
+    // A dropped prefix item clears the array, rather than move the items after it into positions describing others.
+    // `maxItems` of 0 allows no item at all
+    for (let index = 0; !isCleared && index < data.length && sanitizedItems.length < bound; index++) {
       const isPrefix = index < newPrefixLength;
-      const isHole = data[index] === undefined;
-      if (isPrefix && isHole) {
+      const at = Math.min(index, positionCount - 1);
+      if (isPrefix && data[index] === undefined) {
         // An unfilled prefix item stays a hole whatever its position now declares, so it reaches none. Each prefix
         // index has a position of its own, so the next item still reaches its own
         sanitizedItems.push(undefined);
+      } else if (data[index] === null && isClearedRow(at)) {
+        sanitizedItems.push(undefined);
       } else {
-        const at = Math.min(index, positionCount - 1);
         if (at !== positionIndex) {
           position = positionAt(at);
           positionIndex = at;
         }
-        if (position === undefined) {
-          // A hole past the prefix holds nothing its position's types reject, so it is dropped, as `Form` drops it, and
-          // the next item there still clears the array. One where no item is allowed clears it, as any item there does
-          isCleared = !isHole || itemSchemaAt<S>(newSchema, at) === false;
+        // An item past the prefix whose position's types differ is dropped, as `Form` drops it, a hole included. One
+        // where no item is allowed clears the array, as any item there does
+        const itemValue = position === undefined ? NO_VALUE : sanitizeItem(position, data[index], isPrefix);
+        const clears = isPrefix || (position === undefined && itemSchemaAt<S>(newSchema, at) === false);
+        if (itemValue !== NO_VALUE) {
+          sanitizedItems.push(itemValue);
+        } else if (clears && index >= limit) {
+          sanitizedItems.push(data[index]);
         } else {
-          const itemValue = sanitizeItem(position, data[index], isPrefix);
-          if (itemValue !== NO_VALUE) {
-            sanitizedItems.push(itemValue);
-          } else {
-            isCleared = isPrefix;
-          }
+          isCleared = clears;
         }
       }
     }

@@ -1,6 +1,6 @@
 import { createRef, useState } from 'react';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
-import { buttonId, getByPath } from '@rjsf/utils';
+import { buttonId, createSchemaUtils, getByPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -2121,5 +2121,502 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         expect(Object.getPrototypeOf(p)).toBe(Object.prototype);
       },
     );
+  });
+});
+
+describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () => {
+  const ABSENT = Symbol('absent');
+  const typedItems = (type: 'string' | 'number' | 'integer'): RJSFSchema => ({ type: 'array', items: { type } });
+  const prefix = (...prefixItems: (RJSFSchema | boolean)[]): RJSFSchema => ({ type: 'array', prefixItems });
+  const TYPE_LISTS_NAMING_ARRAY: RJSFSchema['type'][] = [
+    ['object', 'array'],
+    ['string', 'array'],
+    ['array', 'object'],
+  ];
+  it.each<{
+    name: string;
+    from: RJSFSchema;
+    to: RJSFSchema;
+    data: unknown[];
+    expected: unknown;
+    formExpected?: unknown;
+  }>([
+    {
+      name: 'keeps the items at a position that now declares nothing',
+      from: typedItems('string'),
+      to: { type: 'array' },
+      data: ['a', 'b'],
+      expected: ['a', 'b'],
+    },
+    {
+      name: 'keeps the items past a prefix with no items after it',
+      from: typedItems('string'),
+      to: prefix({ type: 'string' }),
+      data: ['a', 'b'],
+      expected: ['a', 'b'],
+    },
+    {
+      name: 'keeps the items whose position now also allows null',
+      from: typedItems('string'),
+      to: { type: 'array', items: { type: ['string', 'null'] } },
+      data: ['a', 'b'],
+      expected: ['a', 'b'],
+    },
+    {
+      name: 'keeps the items whose type widens from integer to number',
+      from: typedItems('integer'),
+      to: typedItems('number'),
+      data: [1, 2],
+      expected: [1, 2],
+    },
+    {
+      name: 'keeps a prefix item whose type widens from integer to number',
+      from: prefix({ type: 'integer' }),
+      to: prefix({ type: 'number' }),
+      data: [1],
+      expected: [1],
+    },
+    {
+      name: 'keeps the items whose type widens from integer to a list naming number',
+      from: typedItems('integer'),
+      to: { type: 'array', items: { type: ['number', 'null'] } },
+      data: [1],
+      expected: [1],
+    },
+    {
+      name: 'drops the items whose type narrows from number to integer, as any type change does',
+      from: typedItems('number'),
+      to: typedItems('integer'),
+      data: [1, 1.5],
+      expected: [],
+    },
+    {
+      name: 'drops each item past the prefix whose type changed, keeping the array',
+      from: typedItems('number'),
+      to: typedItems('string'),
+      data: [1, 2],
+      expected: [],
+    },
+    {
+      name: 'drops the items past the prefix whose type changed, keeping the prefix',
+      from: { type: 'array', prefixItems: [{ type: 'string' }], items: { type: 'number' } },
+      to: { type: 'array', prefixItems: [{ type: 'string' }], items: { type: 'string' } },
+      data: ['a', 1, 2],
+      expected: ['a'],
+    },
+    {
+      // `Form` renders an array declaring no type as unsupported, so it doesn't read the old items without their types
+      name: 'differs on an old array declaring no type: utils keeps the items, Form removes the array',
+      from: { prefixItems: [{ type: 'number', enum: ['a'] }] },
+      to: prefix({ type: 'string', enum: ['a'] }),
+      data: ['b'],
+      expected: ['b'],
+      formExpected: ABSENT,
+    },
+    {
+      // `Form` judges no field whose constraints didn't change, and utils checks a scalar item as a scalar property is
+      name: 'differs on an unchanged scalar const: Form keeps the item it rejects, utils drops it',
+      from: { type: 'array', title: 'Old', items: { type: 'string', const: 'a' } },
+      to: { type: 'array', title: 'New', items: { type: 'string', const: 'a' } },
+      data: ['b', 'a'],
+      expected: ['a'],
+      formExpected: ['b', 'a'],
+    },
+    {
+      name: 'keeps a prefix item whose position becomes true',
+      from: prefix({ type: 'string' }),
+      to: prefix(true),
+      data: ['a'],
+      expected: ['a'],
+    },
+    {
+      name: 'keeps a prefix item whose position becomes {}',
+      from: prefix({ type: 'string' }),
+      to: prefix({}),
+      data: ['a'],
+      expected: ['a'],
+    },
+    {
+      name: 'clears the array where the new schema rejects a prefix item an old false position held',
+      from: prefix(false),
+      to: prefix({ enum: ['x'] }),
+      data: ['y'],
+      expected: ABSENT,
+    },
+    {
+      name: 'keeps a prefix item whose selected option changed, which neither looks inside',
+      from: prefix({ anyOf: [{ type: 'string', enum: ['a'] }, { type: 'number' }] }),
+      to: prefix({ anyOf: [{ type: 'string', enum: ['b'] }, { type: 'number' }] }),
+      data: ['a'],
+      expected: ['a'],
+    },
+    {
+      name: 'keeps the items past an unchanged maxItems, for validation to report',
+      from: { type: 'array', title: 'Old', maxItems: 1, items: { type: 'string' } },
+      to: { type: 'array', title: 'New', maxItems: 1, items: { type: 'string' } },
+      data: ['a', 'b'],
+      expected: ['a', 'b'],
+    },
+    {
+      name: 'keeps a prefix item past an unchanged maxItems the new schema rejects, for validation to report',
+      from: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }, { type: 'string', enum: ['b'] }] },
+      to: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }, { type: 'string', enum: ['a'] }] },
+      data: ['x', 'b'],
+      expected: ['x', 'b'],
+    },
+    {
+      name: 'keeps a prefix item past an unchanged maxItems whose position changes type, for validation to report',
+      from: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }, { type: 'string' }] },
+      to: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }, { type: 'number' }] },
+      data: ['x', 'b'],
+      expected: ['x', 'b'],
+    },
+    {
+      name: 'keeps an item past an unchanged maxItems at a position the new schema closes, for validation to report',
+      from: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }], items: { type: 'string' } },
+      to: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }], items: false },
+      data: ['x', 'b'],
+      expected: ['x', 'b'],
+    },
+    {
+      name: 'clears the array where the new schema rejects a prefix item the old one declared no items for',
+      from: { type: 'array' },
+      to: prefix({ type: 'string', enum: ['a'] }),
+      data: ['b', 'c'],
+      expected: ABSENT,
+    },
+    {
+      name: 'clears the array where the new schema rejects a tuple item an old true items held',
+      from: { type: 'array', items: true },
+      to: { type: 'array', items: [{ enum: ['a'] }] },
+      data: ['b'],
+      expected: ABSENT,
+      // The defaults fill the cleared tuple with a hole at each position
+      formExpected: [undefined],
+    },
+    {
+      name: 'drops an item past the prefix the new schema rejects where the old one declared no items',
+      from: { type: 'array' },
+      to: { type: 'array', items: { enum: ['a'] } },
+      data: ['b', 'a'],
+      expected: ['a'],
+    },
+    {
+      // utils leaves the row for the defaults, which `Form` and an option switch fill
+      name: 'empties a null item for the new default to fill, where its position changes and allows no null',
+      from: typedItems('number'),
+      to: { type: 'array', items: { type: 'string', default: 'x' } },
+      data: [null],
+      expected: [undefined],
+      formExpected: ['x'],
+    },
+    {
+      name: 'prunes an object item whose new type list names object beside another type',
+      from: { type: 'array', items: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } } },
+      to: { type: 'array', items: { type: ['string', 'object'], properties: { a: { type: 'number' } } } },
+      data: [{ a: 1, b: 2 }],
+      expected: [{ a: 1 }],
+    },
+    {
+      name: 'prunes an object prefix item whose new type list names object beside another type',
+      from: prefix({ type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } }),
+      to: prefix({ type: ['string', 'object'], properties: { a: { type: 'number' } } }),
+      data: [{ a: 1, b: 2 }],
+      expected: [{ a: 1 }],
+    },
+    {
+      name: 'prunes an object item whose new type list names object after array',
+      from: { type: 'array', items: { type: 'object', properties: { a: {}, b: {} } } },
+      to: { type: 'array', items: { type: ['array', 'object'], properties: { a: {} } } },
+      data: [{ a: 1, b: 2 }],
+      expected: [{ a: 1 }],
+    },
+    {
+      // utils leaves the hole for the defaults, which `Form` and an option switch fill
+      name: 'keeps a hole under a type list naming object beside a type it renders first',
+      from: {
+        type: 'array',
+        title: 'Old',
+        items: { type: ['string', 'object'], properties: { a: { type: 'number' } } },
+      },
+      to: {
+        type: 'array',
+        title: 'New',
+        items: { type: ['string', 'object'], properties: { a: { type: 'number' } }, default: 'z' },
+      },
+      data: ['a', undefined, 'b'],
+      expected: ['a', undefined, 'b'],
+      formExpected: ['a', 'z', 'b'],
+    },
+    {
+      name: 'keeps a hole under a type list it renders as an object',
+      from: { type: 'array', items: { type: ['object', 'string'], properties: { a: {}, b: {} } } },
+      to: { type: 'array', items: { type: ['object', 'string'], properties: { a: {} } } },
+      data: ['a', undefined, 'b'],
+      expected: ['a', undefined, 'b'],
+      formExpected: ['a', {}, 'b'],
+    },
+    {
+      name: 'keeps a hole under a type list it renders as an array',
+      from: { type: 'array', items: { type: ['array', 'string'], items: { type: 'number' } } },
+      to: { type: 'array', items: { type: ['array', 'string'], items: { type: 'number' }, title: 'New' } },
+      data: ['a', undefined, 'b'],
+      expected: ['a', undefined, 'b'],
+    },
+    {
+      name: 'keeps a hole under array items',
+      from: { type: 'array', title: 'Old', items: { type: 'array', items: { type: 'number' } } },
+      to: { type: 'array', title: 'New', items: { type: 'array', items: { type: 'number' } } },
+      data: [[1], undefined, [2]],
+      expected: [[1], undefined, [2]],
+    },
+    {
+      name: 'keeps a hole under enum items',
+      from: { type: 'array', title: 'Old', items: { type: 'string', enum: ['a'] } },
+      to: { type: 'array', title: 'New', items: { type: 'string', enum: ['a'] } },
+      data: ['a', undefined, 'a'],
+      expected: ['a', undefined, 'a'],
+    },
+    {
+      name: 'keeps an array item under a type list naming object first',
+      from: {
+        type: 'array',
+        title: 'Old',
+        items: { type: ['object', 'array'], properties: { a: {} }, items: { type: 'number' } },
+      },
+      to: {
+        type: 'array',
+        title: 'New',
+        items: { type: ['object', 'array'], properties: { a: {} }, items: { type: 'number' } },
+      },
+      data: [[1, 2]],
+      expected: [[1, 2]],
+    },
+    {
+      name: 'keeps an array item under a type list naming array first',
+      from: {
+        type: 'array',
+        title: 'Old',
+        items: { type: ['array', 'object'], properties: { a: {} }, items: { type: 'number' } },
+      },
+      to: {
+        type: 'array',
+        title: 'New',
+        items: { type: ['array', 'object'], properties: { a: {} }, items: { type: 'number' } },
+      },
+      data: [[1, 2]],
+      expected: [[1, 2]],
+    },
+    {
+      name: 'keeps an array item whose items become a type list naming object and array',
+      from: { type: 'array', items: { type: 'object', properties: { a: {} } } },
+      to: { type: 'array', items: { type: ['object', 'array'], properties: { a: {} }, items: { type: 'number' } } },
+      data: [[1, 2]],
+      expected: [[1, 2]],
+    },
+    ...TYPE_LISTS_NAMING_ARRAY.map((type) => ({
+      name: `sanitizes an array item under ${JSON.stringify(type)} items as an array`,
+      from: { type: 'array', items: { type, properties: { a: {} }, items: { type: 'string' } } } satisfies RJSFSchema,
+      to: { type: 'array', items: { type, properties: { a: {} }, items: { type: 'number' } } } satisfies RJSFSchema,
+      data: [['a', 'b']],
+      expected: [[]],
+    })),
+    {
+      name: 'sanitizes an array item as an array where its items become a type list naming object first',
+      from: { type: 'array', items: { type: 'array', items: { type: 'string' } } },
+      to: { type: 'array', items: { type: ['object', 'array'], properties: { a: {} }, items: { type: 'number' } } },
+      data: [['x']],
+      expected: [[]],
+    },
+    {
+      name: 'swaps the old default of a scalar item for the new one',
+      from: { type: 'array', items: { type: 'string', default: 'x' } },
+      to: { type: 'array', items: { type: 'string', default: 'y' } },
+      data: ['x', 'q'],
+      expected: ['y', 'q'],
+    },
+    {
+      name: 'swaps the old default of a prefix item for the new one',
+      from: prefix({ type: 'string', default: 'x' }),
+      to: prefix({ type: 'string', default: 'y' }),
+      data: ['x', 'q'],
+      expected: ['y', 'q'],
+    },
+    {
+      name: 'swaps the old default of an array item for the new one',
+      from: { type: 'array', items: { type: 'array', items: { type: 'string' }, default: ['x'] } },
+      to: { type: 'array', items: { type: 'array', items: { type: 'string' }, default: ['y'] } },
+      data: [['x'], ['q']],
+      expected: [['y'], ['q']],
+    },
+    {
+      // `Form` reads an old `default: null` as no default, so the item keeps its `null`
+      name: 'swaps an item holding an old null default for the new one',
+      from: { type: 'array', items: { type: ['string', 'null'], default: null } },
+      to: { type: 'array', items: { type: ['string', 'null'], default: 'y' } },
+      data: [null, 'q'],
+      expected: ['y', 'q'],
+      formExpected: [null, 'q'],
+    },
+    {
+      name: 'keeps a scalar item a readOnly new default differs from',
+      from: typedItems('string'),
+      to: { type: 'array', items: { type: 'string', default: 'y', readOnly: true } },
+      data: ['z'],
+      expected: ['z'],
+    },
+    {
+      // utils leaves the object for the defaults, which `Form` fills key by key
+      name: 'keeps an object item holding its old default, for the defaults to fill key by key',
+      from: { type: 'array', items: { type: 'object', properties: { x: {}, y: {} }, default: { x: 1 } } },
+      to: { type: 'array', items: { type: 'object', properties: { x: {}, y: {} }, default: { y: 1 } } },
+      data: [{ x: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
+    },
+    {
+      name: 'keeps an untyped object item holding its old default, for the defaults to fill key by key',
+      from: { type: 'array', items: { properties: { x: {}, y: {} }, default: { x: 1 } } },
+      to: { type: 'array', items: { properties: { x: {}, y: {} }, default: { y: 1 } } },
+      data: [{ x: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
+    },
+    {
+      name: 'keeps an object item of object options holding its old default, for the defaults to fill key by key',
+      from: { type: 'array', items: { anyOf: [{ type: 'object', properties: { x: {}, y: {} } }], default: { x: 1 } } },
+      to: { type: 'array', items: { anyOf: [{ type: 'object', properties: { x: {}, y: {} } }], default: { y: 1 } } },
+      data: [{ x: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
+    },
+    {
+      name: 'swaps the old default of an object item for the new one where its options render no object',
+      from: { type: 'array', items: { anyOf: [{ type: 'object', properties: { x: {}, y: {} } }], default: { x: 1 } } },
+      to: { type: 'array', items: { anyOf: [{ type: 'string' }], default: 'b' } },
+      data: [{ x: 1 }],
+      expected: ['b'],
+    },
+    {
+      name: 'keeps an untyped object item of its own properties beside untyped options holding its old default',
+      from: {
+        type: 'array',
+        items: { properties: { x: {}, y: {} }, anyOf: [{ required: ['x'] }, { required: ['y'] }], default: { x: 1 } },
+      },
+      to: {
+        type: 'array',
+        items: { properties: { x: {}, y: {} }, anyOf: [{ required: ['x'] }, { required: ['y'] }], default: { y: 1 } },
+      },
+      data: [{ x: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
+    },
+    {
+      name: 'swaps the old default of an object item of object options for a scalar new one',
+      from: {
+        type: 'array',
+        items: { anyOf: [{ type: 'string' }, { type: 'object', properties: { x: {}, y: {} } }], default: { x: 1 } },
+      },
+      to: {
+        type: 'array',
+        items: { anyOf: [{ type: 'string' }, { type: 'object', properties: { x: {}, y: {} } }], default: 'b' },
+      },
+      data: [{ x: 1 }],
+      expected: ['b'],
+    },
+    {
+      name: 'swaps the old default of an untyped object item declaring only extra keys for the new one',
+      from: { type: 'array', items: { additionalProperties: { type: 'number' }, default: { x: 1 } } },
+      to: { type: 'array', items: { additionalProperties: { type: 'number' }, default: { y: 1 } } },
+      data: [{ x: 1 }],
+      expected: [{ y: 1 }],
+    },
+    {
+      name: 'swaps the old default of an item picked from object options for the new one',
+      from: { type: 'array', items: { type: 'object', enum: [{ a: 1 }, { a: 2 }], default: { a: 1 } } },
+      to: { type: 'array', items: { type: 'object', enum: [{ a: 1 }, { a: 2 }], default: { a: 2 } } },
+      data: [{ a: 1 }],
+      expected: [{ a: 2 }],
+    },
+  ])('$name', ({ from, to, data, expected, formExpected = expected }) => {
+    const wrap = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
+    const ref = createRef<FormRef<{ list?: unknown }>>();
+    const props = { validator, initialFormData: { list: data } };
+    const { rerender } = render(<Form ref={ref} schema={wrap(from)} {...props} />);
+
+    rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
+
+    const formData = handleOf(ref).getFormData();
+    expect(Object.hasOwn(formData, 'list') ? formData.list : ABSENT).toEqual(formExpected);
+    const sanitized = createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, from, data);
+    expect(sanitized === undefined ? ABSENT : sanitized).toEqual(expected);
+  });
+  // A property under a type list is sanitized through the object holding it, as the array table's items are through the
+  // array, where the top-level call would read the list through `getSchemaType()` alone
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; data: unknown; expected: unknown }>([
+    ...TYPE_LISTS_NAMING_ARRAY.map((type) => ({
+      name: `sanitizes an array property under ${JSON.stringify(type)} as an array`,
+      from: { type, properties: { a: {} }, items: { type: 'string' } } satisfies RJSFSchema,
+      to: { type, properties: { a: {} }, items: { type: 'number' } } satisfies RJSFSchema,
+      data: ['a', 'b'],
+      expected: [],
+    })),
+    ...(['array', 'string'] as const).map((first) => ({
+      name: `prunes an object property under a type list naming ${first} first`,
+      from: { type: [first, 'object'], title: 'Old', properties: { a: {}, b: {} } } satisfies RJSFSchema,
+      to: { type: [first, 'object'], title: 'New', properties: { a: {} } } satisfies RJSFSchema,
+      data: { a: 1, b: 2 },
+      expected: { a: 1 },
+    })),
+    ...(['array', ['string', 'array']] satisfies RJSFSchema['type'][]).flatMap((type) => [
+      {
+        name: `swaps the old default of an array property under ${JSON.stringify(type)} for the new one`,
+        from: { type, items: { type: 'string' }, default: ['x'] } satisfies RJSFSchema,
+        to: { type, items: { type: 'string' }, default: ['y'] } satisfies RJSFSchema,
+        data: ['x'],
+        expected: ['y'],
+      },
+      {
+        name: `keeps an array property under ${JSON.stringify(type)} a readOnly new default differs from`,
+        from: { type, items: { type: 'string' } } satisfies RJSFSchema,
+        to: { type, items: { type: 'string' }, default: ['y'], readOnly: true } satisfies RJSFSchema,
+        data: ['z'],
+        expected: ['z'],
+      },
+    ]),
+    {
+      name: 'swaps the old default of an object property under a type list rendered as another type',
+      from: { type: ['string', 'object'], properties: { x: {}, y: {} }, default: { x: 1 } },
+      to: { type: ['string', 'object'], properties: { x: {}, y: {} }, default: { y: 1 } },
+      data: { x: 1 },
+      expected: { y: 1 },
+    },
+    {
+      name: 'replaces an object an enum under a type list rendered as a string no longer lists',
+      from: { type: ['string', 'object'], properties: { a: {} }, enum: [{ a: 1 }, 'x'] },
+      to: { type: ['string', 'object'], properties: { a: {} }, enum: [{ a: 2 }, 'x'], default: 'x' },
+      data: { a: 1 },
+      expected: 'x',
+    },
+    {
+      name: 'replaces an array an enum under a type list rendered as a string no longer lists',
+      from: { type: ['string', 'array'], items: {}, enum: [['a'], 'x'] },
+      to: { type: ['string', 'array'], items: {}, enum: [['b'], 'x'], default: 'x' },
+      data: ['a'],
+      expected: 'x',
+    },
+  ])('$name', ({ from, to, data, expected }) => {
+    const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
+    const ref = createRef<FormRef<{ value?: unknown }>>();
+    const props = { validator, initialFormData: { value: data } };
+    const { rerender } = render(<Form ref={ref} schema={wrap(from)} {...props} />);
+
+    rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ value: expected });
+    const sanitized = createSchemaUtils({ validator }, wrap(to)).sanitizeDataForNewSchema(wrap(to), wrap(from), {
+      value: data,
+    });
+    expect(sanitized).toEqual({ value: expected });
   });
 });

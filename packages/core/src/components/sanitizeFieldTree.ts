@@ -28,6 +28,7 @@ import {
   isPlainObject,
   isSchemaObject,
   isWholeValueSelect,
+  namesEveryType,
   rendersOwnFieldBesideOption,
   RJSF_REF_CYCLE_KEY,
   setOwn,
@@ -394,7 +395,12 @@ function judge<S extends StrictRJSFSchema>(
   if (isOldDefault && newDefault !== undefined) {
     return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
   }
-  if (before.type !== undefined && !deepEquals(before.type, now.type)) {
+  // An item is rejected by its type only where the new schema declares one that leaves out an old type, as
+  // `sanitizeDataForNewSchema()` reads it, since dropping a prefix item clears its array
+  const isTypeChange = isItem
+    ? now.type !== undefined && !namesEveryType(before.type, now.type)
+    : !deepEquals(before.type, now.type);
+  if (before.type !== undefined && isTypeChange) {
     return DROP;
   }
   if (now.const !== undefined && !deepEquals(now.const, value)) {
@@ -429,6 +435,9 @@ function propertiesOf<S extends StrictRJSFSchema>(layers: readonly S[]): Map<str
   }
   return properties;
 }
+
+/** The old schema of an item at a position the old schema declared `true` or `false` at, which constrained none */
+const UNCONSTRAINED_ITEM = {};
 
 /** The keywords that describe an array's items */
 const ITEMS_KEYWORDS = ['items', 'prefixItems', 'additionalItems'];
@@ -717,8 +726,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       const judged = walk(
         ctx,
         {
-          // An old `false` allowed no item there, so it shaped none, and the item is kept as one no old schema held
-          oldRaw: typeof oldItem === 'boolean' ? undefined : oldItem,
+          // An old `true` or `false` constrained no item there, so the item is judged by the new schema alone, as
+          // `sanitizeDataForNewSchema()` judges it
+          oldRaw: typeof oldItem === 'boolean' ? (UNCONSTRAINED_ITEM as S) : oldItem,
           newRaw: newItem,
           oldValue: hasPrevious ? valueAt(oldValue, previousIndex) : item,
           newValue: item,
