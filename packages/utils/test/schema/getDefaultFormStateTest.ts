@@ -2277,7 +2277,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { const: { kind: 'b', v: 1 }, properties: { kind: { const: 'b' } } },
           ],
         };
-        const definitions = { Color: COLOR, Shape: SHAPE, Kind: KIND };
+        const NESTED: RJSFSchema = { type: 'object', properties: { q: { enum: ['a', 'b'], default: 'a' } } };
+        const definitions = { Color: COLOR, Shape: SHAPE, Kind: KIND, Nested: NESTED };
         it.each<[string, RJSFSchema, unknown, unknown]>([
           ['keeps a valid value of a $ref', { allOf: [{ $ref: '#/definitions/Color' }] }, 'green', 'green'],
           [
@@ -2336,10 +2337,40 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             'b',
           ],
           [
-            'replaces a value outside the enum of a property declared inside the allOf, its default skipped',
+            'leaves out a value outside the enum of a property declared inside the allOf, its default skipped',
             { allOf: [{ type: 'object', properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
             { c: 'purple', d: 1 },
-            { c: undefined, d: 1 },
+            { d: 1 },
+          ],
+          [
+            "replaces a value outside the enum of a property declared inside the allOf with the field's default",
+            { allOf: [{ type: 'object', properties: { c: { enum: ['red', 'green'] } } }], default: { c: 'red' } },
+            { c: 'purple' },
+            { c: 'red' },
+          ],
+          [
+            'leaves out a value outside the enum nested in a $ref property declared inside the allOf',
+            { allOf: [{ properties: { n: { $ref: '#/definitions/Nested' } } }] },
+            { n: { q: 'z' }, d: 1 },
+            { n: {}, d: 1 },
+          ],
+          [
+            'keeps a valid value nested in a $ref property declared inside the allOf',
+            { allOf: [{ properties: { n: { $ref: '#/definitions/Nested' } } }] },
+            { n: { q: 'b' } },
+            { n: { q: 'b' } },
+          ],
+          [
+            "leaves out a value outside the enum of a property declared inside an object field's allOf",
+            { type: 'object', allOf: [{ properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
+            { c: 'purple', d: 1 },
+            { d: 1 },
+          ],
+          [
+            "keeps a valid value of a property declared inside an object field's allOf",
+            { type: 'object', allOf: [{ properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
+            { c: 'green', d: 1 },
+            { c: 'green', d: 1 },
           ],
           [
             'keeps a valid value of a property declared inside the allOf',
@@ -2455,6 +2486,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toStrictEqual({ color: expected });
         });
 
+        it('keeps a null the enum leaves out under populateDefaults too', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { color: { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' } },
+            definitions,
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+              { schema, formData: { color: null } },
+            ),
+          ).toStrictEqual({ color: null });
+        });
+
         it('replaces the data with the const an allOf holds under constAsDefaults always', () => {
           const schema: RJSFSchema = { type: 'object', properties: { color: { allOf: [{ const: 'red' }] } } };
           expect(
@@ -2463,6 +2508,45 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { schema, formData: { color: 'blue' } },
             ),
           ).toEqual({ color: 'red' });
+        });
+
+        it('replaces the data of a property declared inside the allOf with its const under constAsDefaults always', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { color: { allOf: [{ properties: { c: { const: 'red' } } }] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { color: { c: 'blue' } } },
+            ),
+          ).toStrictEqual({ color: { c: 'red' } });
+        });
+
+        it("keeps the data of an object field whose allOf's const is no object under constAsDefaults always", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { color: { type: 'object', allOf: [{ const: 'k' }] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { color: { d: 1 } } },
+            ),
+          ).toStrictEqual({ color: { d: 1 } });
+        });
+
+        it('fills an empty field with the const an allOf holds under constAsDefaults always', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { plain: { const: 'red' }, wrapped: { allOf: [{ const: 'red' }] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: {} },
+            ),
+          ).toStrictEqual({ plain: 'red', wrapped: 'red' });
         });
 
         it.each([0, false, '', null])('replaces the data with a const of %j under constAsDefaults always', (value) => {
