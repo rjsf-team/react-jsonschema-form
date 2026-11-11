@@ -32,3 +32,31 @@ describe('withSelectionsAsOf()', () => {
     expect(uiState.selection(path, '#/definitions')?.holdsFor[0]).toBe(before);
   });
 });
+
+describe('fallback UI types', () => {
+  const at = (index: number) => fieldPathFromList(['pets', index]);
+  const owner = {};
+
+  it('follow the array items they were picked for as the items move, and come back on restore()', () => {
+    const uiState = createUiState();
+    const kept = { type: 'number', typeList: 'object,number', owner } as const;
+    uiState.selectFallbackType(at(0), '1', kept);
+    const before = uiState.save();
+
+    uiState.move(fieldPathFromList(['pets']), (key) => String(1 - Number(key)));
+    expect(uiState.fallbackType(at(0), '1')).toBeUndefined();
+    expect(uiState.fallbackType(at(1), '1')).toEqual(kept);
+
+    uiState.restore(before);
+    expect(uiState.fallbackType(at(0), '1')).toEqual(kept);
+  });
+
+  it('keep the type of each selector at a path apart', () => {
+    const uiState = createUiState();
+    uiState.selectFallbackType(at(0), '1', { type: 'number', typeList: 'object,number', owner });
+    uiState.keepFallbackType(at(0), '2', { type: 'boolean', typeList: 'string,boolean', owner });
+
+    expect(uiState.fallbackType(at(0), '1')?.type).toBe('number');
+    expect(uiState.fallbackType(at(0), '2')?.type).toBe('boolean');
+  });
+});

@@ -11,15 +11,14 @@ import type {
 } from '../../src/index.ts';
 import { createSchemaUtils, fieldPathFromList, getDefaultFormState, isObject, noop } from '../../src/index.ts';
 import {
-  AdditionalItemsHandling,
   computeDefaultBasedOnSchemaTypeAndDefaults,
   computeDefaults,
   getArrayDefaults,
   getDefaultBasedOnSchemaType,
-  getInnerSchemaForArrayItem,
   getObjectDefaults,
   ensureFormDataMatchingSchema,
 } from '../../src/schema/getDefaultFormState.ts';
+import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from '../../src/schema/getInnerSchemaForArrayItem.ts';
 import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import {
   PET_RESOURCE_DEEP_SCHEMA,

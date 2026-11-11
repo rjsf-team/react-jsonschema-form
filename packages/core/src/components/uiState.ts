@@ -11,6 +11,8 @@ import {
   deepEquals,
   fieldPathToList,
   getByPath,
+  getDiscriminatorFieldFromSchema,
+  getRenderedOptionSchema,
   getValidationTarget,
   getXxxOfOptions,
   isConstantOptionList,
@@ -18,7 +20,10 @@ import {
   isSchemaObject,
   PROPERTIES_KEY,
   REQUIRED_KEY,
+  ROOT_FIELD_PATH,
+  toFieldPath,
 } from '@rjsf/utils';
+import type { JSONSchema7TypeName } from 'json-schema';
 
 import { isPathPrefix } from './dataPaths.ts';
 import { movedPath, movedPaths } from './keyMove.ts';
@@ -208,7 +213,7 @@ export function asFieldValue(value: unknown): unknown {
  *        they do when the form renders the edit
  * @param [drawsControlsBesideOptions] - Where the form's fields draw the controls, passed in by the caller so this
  *        module needn't import `SchemaField`, which imports it
- * @param [rendersFallbackUi] - Which fields the fallback UI renders, passed in for the same reason
+ * @param [fallbackType] - The type the fallback UI shows at a field it renders, passed in for the same reason
  * @returns - The field state
  */
 export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -216,12 +221,12 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
   schemaUtils: SchemaUtilsType<T, S, F>,
   editedPath?: FieldPathList,
   drawsControlsBesideOptions?: FormFieldState<S>['drawsControlsBesideOptions'],
-  rendersFallbackUi?: FormFieldState<S>['rendersFallbackUi'],
+  fallbackType?: FormFieldState<S>['fallbackType'],
 ): FormFieldState<S> {
   const rootSchema = schemaUtils.getRootSchema();
   return {
     ...(drawsControlsBesideOptions && { drawsControlsBesideOptions }),
-    ...(rendersFallbackUi && { rendersFallbackUi }),
+    ...(fallbackType && { fallbackType }),
     selectedOption: (fieldPath, options, formData, discriminator) =>
       shownOption<T, S, F>(
         schemaUtils,
@@ -232,6 +237,74 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
         editedPath !== undefined && isPathPrefix(fieldPathToList(fieldPath), editedPath),
       ),
     isExpanded: (fieldPath) => uiState.isExpanded(fieldPath),
+  };
+}
+
+/** Whether the form still renders a field at a path for `formData`, shown or hidden. Under an `anyOf`/`oneOf`, the
+ * option followed is the one the field shows, the user's pick among them, where `findFieldInSchema()` alone would take
+ * the one the data matches best. Each path prefix is walked once, however many of the paths asked about share it
+ *
+ * @param uiState - The form's option selections and cycle expansions
+ * @param schemaUtils - The schema utilities the form renders with
+ * @param schema - The retrieved root schema
+ * @param formData - The form's data
+ * @returns - Whether a field is rendered at a given path
+ */
+export function fieldsRendered<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiState: UiStateReader,
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  schema: S,
+  formData: T | undefined,
+): (path: FieldPathList) => boolean {
+  const fieldState = fieldStateOf<T, S, F>(uiState, schemaUtils);
+  // The schema and data found at each path prefix walked
+  const reached = new Map<FieldPath, { parent: S | undefined; data: unknown }>();
+  return (path) => {
+    let parent: S | undefined = schema;
+    let data: unknown = formData;
+    let at = ROOT_FIELD_PATH;
+    for (const key of path) {
+      const next = toFieldPath(key, at);
+      const known = reached.get(next);
+      if (known) {
+        ({ parent, data } = known);
+      } else if (isSchemaObject<S>(parent)) {
+        const fieldData = asFieldValue<T>(data);
+        const view = schemaUtils.retrieveSchema(parent, fieldData);
+        let holder = view;
+        let shown = -1;
+        const xxxOf = getXxxOfOptions<S>(view);
+        const options = xxxOf && retrievedOptionsOf<T, S, F>(schemaUtils, view, fieldData);
+        if (xxxOf && options) {
+          shown = fieldState.selectedOption(at, options, data, getDiscriminatorFieldFromSchema<S>(view));
+          // The shown option alone, which `findFieldInSchema()` then can't match the data against another for
+          holder = { ...view, [xxxOf.key]: [options[shown]] };
+          Reflect.deleteProperty(holder, 'discriminator');
+        }
+        const option = options?.[shown];
+        const stubIn = (taker: S) => {
+          const stub = taker.properties?.[key];
+          return isSchemaObject<S>(stub) ? stub : undefined;
+        };
+        // A key `additionalProperties: true` lets in is no field to `findFieldInSchema()`, yet the form renders it, from
+        // the stub retrieving puts in `properties` of the field taking the extra keys: the object's, which only knows
+        // the shown option when told, or, where that option offers options in turn, the option's own (see
+        // `getRenderedOptionSchema()`). Retrieved only for a key no field is found for, since each is a walk of its own
+        // shortcut: options nested below it match the data, not the user's pick, as in `findFieldInSchema()`
+        parent =
+          schemaUtils.findFieldInSchema(holder, [key], fieldData).field ??
+          (isSchemaObject<S>(option)
+            ? (stubIn(schemaUtils.retrieveSchema(parent, fieldData, false, shown)) ??
+              stubIn(schemaUtils.retrieveSchema(getRenderedOptionSchema<S>(view, option), fieldData)))
+            : stubIn(view));
+        data = getByPath(data, [key]);
+        reached.set(next, { parent, data });
+      } else {
+        return false;
+      }
+      at = next;
+    }
+    return parent !== undefined;
   };
 }
 
@@ -278,33 +351,74 @@ function holdForRendered(
   }
 }
 
+/** The type a fallback UI's selector was on, and the field that kept it: a token the field holds as long as it lives, so
+ * a field mounting at the path later knows the type for another's, which an `<Activity>` hiding the field doesn't end
+ */
+export interface KeptFallbackType {
+  readonly type: JSONSchema7TypeName;
+  /** The types the selector offered, so a schema that swaps them for others and back doesn't bring the type back */
+  readonly typeList: string;
+  readonly owner: object;
+}
+
 /** The selections and expansions of a form at one moment, see `save()` */
 export interface UiStateSnapshot {
   selections: Map<FieldPath, Map<string, OptionSelection>>;
+  fallbackTypes: Map<FieldPath, Map<string, KeptFallbackType>>;
   expanded: Set<FieldPath>;
 }
 
+/** `entries` under the paths they take once the keys of the array or object at `container` moved as `newKeyOf` says,
+ * without the ones under a key that went
+ */
+function movedEntries<V>(entries: Map<FieldPath, V>, container: FieldPathList, newKeyOf: KeyMove): Map<FieldPath, V> {
+  const moved = new Map<FieldPath, V>();
+  for (const [path, value] of entries) {
+    const to = movedPath(path, container, newKeyOf);
+    if (to !== undefined) {
+      moved.set(to, value);
+    }
+  }
+  return moved;
+}
+
+/** A copy of `entries` whose inner maps can be written without changing the original's */
+function copyOfLists<V>(entries: Map<FieldPath, Map<string, V>>): Map<FieldPath, Map<string, V>> {
+  return new Map([...entries].map(([path, lists]) => [path, new Map(lists)]));
+}
+
 /** The state of a form that is about what it shows rather than the data: the option selected for each option list, by
- * the path of the field offering it and the list, and which collapsed `$ref` cycles are expanded, by path. It lives as
- * long as the form, so a field that unmounts and mounts again finds its selection, and follows the moves of array items
- * and object keys the form is told of, as the errors do.
+ * the path of the field offering it and the list, the type each fallback UI's selector is on, by the same, and which
+ * collapsed `$ref` cycles are expanded, by path. It lives as long as the form, so a field that unmounts and mounts
+ * again finds its selection, and follows the moves of array items and object keys the form is told of, as the errors
+ * do.
  */
 export function createUiState() {
   // Read only through the methods below, never handed out, so the maps are written in place
   let selections = new Map<FieldPath, Map<string, OptionSelection>>();
+  // The type each fallback UI's selector is on, by its field's path and its depth there: a field's value can offer a
+  // type list of its own, whose selector sits at the same path
+  let fallbackTypes = new Map<FieldPath, Map<string, KeptFallbackType>>();
   let expanded = new Set<FieldPath>();
   let picks = 0;
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach((listener) => listener());
   const selectionAt = (path: FieldPath, list: string) => selections.get(path)?.get(list);
-  const setSelection = (path: FieldPath, list: string, selection: OptionSelection) => {
-    const lists = selections.get(path);
+  const setIn = <V>(entries: Map<FieldPath, Map<string, V>>, path: FieldPath, list: string, value: V) => {
+    const lists = entries.get(path);
     if (lists) {
-      lists.set(list, selection);
+      lists.set(list, value);
     } else {
-      selections.set(path, new Map([[list, selection]]));
+      entries.set(path, new Map([[list, value]]));
     }
   };
+  const setSelection = (path: FieldPath, list: string, selection: OptionSelection) =>
+    setIn(selections, path, list, selection);
+  /** Records the type the fallback UI's selector showed as React commits, where nothing may render, so it tells no
+   * field
+   */
+  const keepFallbackType = (path: FieldPath, selector: string, kept: KeptFallbackType) =>
+    setIn(fallbackTypes, path, selector, kept);
   return {
     subscribe: (listener: () => void) => {
       listeners.add(listener);
@@ -375,19 +489,39 @@ export function createUiState() {
      * it changes no option a field shows for the data it rendered and tells no field
      */
     rendered: (dataAt: (path: FieldPathList) => unknown) => holdForRendered(selections, dataAt),
+    /** The type the fallback UI's selector at depth `selector` of `path` was last on, its types and its field */
+    fallbackType: (path: FieldPath, selector: string) => fallbackTypes.get(path)?.get(selector),
+    /** Puts the fallback UI's selector at depth `selector` of `path` on the type `kept` holds, as the user picked it */
+    selectFallbackType: (path: FieldPath, selector: string, kept: KeptFallbackType) => {
+      keepFallbackType(path, selector, kept);
+      notify();
+    },
+    keepFallbackType,
+    /** Forgets the fallback UI types kept at the paths `isGone` says no field reaches any more, so a field the schema
+     * brings back starts on the type its data starts it on for the readers that walk it before it renders. A field an
+     * `<Activity>` hides is still reached, so it keeps its type
+     */
+    dropFallbackTypes: (isGone: (path: FieldPathList) => boolean) => {
+      for (const at of fallbackTypes.keys()) {
+        if (isGone(fieldPathToList(at))) {
+          fallbackTypes.delete(at);
+        }
+      }
+    },
     isExpanded: (path: FieldPath) => expanded.has(path),
     expand: (path: FieldPath) => {
       expanded.add(path);
       notify();
     },
-    /** The selections and expansions as they are, for `restore()` to put back */
+    /** The selections, fallback UI types and expansions as they are, for `restore()` to put back */
     save: (): UiStateSnapshot => ({
-      selections: new Map([...selections].map(([path, lists]) => [path, new Map(lists)])),
+      selections: copyOfLists(selections),
+      fallbackTypes: copyOfLists(fallbackTypes),
       expanded: new Set(expanded),
     }),
     /** Puts back what `save()` returned, as a change the form refused leaves it */
     restore: (snapshot: UiStateSnapshot) => {
-      ({ selections, expanded } = snapshot);
+      ({ selections, fallbackTypes, expanded } = snapshot);
       notify();
     },
     /** Settles a move at `container` that `transformChange` rewrote, key by key, as `fateOf` says of each: one the
@@ -396,20 +530,17 @@ export function createUiState() {
      */
     settleMove: (container: FieldPath, unmoved: UiStateSnapshot, fateOf: (key: string) => MoveFate) => {
       selections = new Map(settledEntries(selections, unmoved.selections, ([path]) => path, container, fateOf));
+      fallbackTypes = new Map(
+        settledEntries(fallbackTypes, unmoved.fallbackTypes, ([path]) => path, container, fateOf),
+      );
       expanded = new Set(settledEntries(expanded, unmoved.expanded, (path) => path, container, fateOf));
       notify();
     },
-    /** Moves the selections and expansions under the array or object at `container` as its keys moved */
+    /** Moves the selections, fallback types and expansions under the array or object at `container` as its keys did */
     move: (container: FieldPath, newKeyOf: KeyMove) => {
       const containerSegments = fieldPathToList(container);
-      const movedSelections = new Map<FieldPath, Map<string, OptionSelection>>();
-      for (const [path, lists] of selections) {
-        const to = movedPath(path, containerSegments, newKeyOf);
-        if (to !== undefined) {
-          movedSelections.set(to, lists);
-        }
-      }
-      selections = movedSelections;
+      selections = movedEntries(selections, containerSegments, newKeyOf);
+      fallbackTypes = movedEntries(fallbackTypes, containerSegments, newKeyOf);
       expanded = movedPaths(expanded, containerSegments, newKeyOf);
       notify();
     },

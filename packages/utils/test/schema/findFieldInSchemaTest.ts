@@ -316,6 +316,74 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
         expect(schemaUtils.findFieldInSchema({ type: 'object' }, 'x')).toEqual(NOT_FOUND);
       });
     });
+    describe('an index of an array', () => {
+      it('finds a property of an item, whether or not the array holds the item, and never as required', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            arr: { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } }, required: ['a'] } },
+          },
+          required: ['arr'],
+        };
+        expect(schemaUtils.findFieldInSchema(schema, ['arr', 0, 'a'], { arr: [{}] })).toEqual({
+          field: { type: 'string' },
+          isRequired: true,
+        });
+        expect(schemaUtils.findFieldInSchema(schema, 'arr.3', {}).isRequired).toBe(false);
+      });
+      it('finds the item of a tuple at its index, then the additional items', () => {
+        const schema: RJSFSchema = { type: 'array', items: [{ type: 'string' }], additionalItems: { type: 'number' } };
+        expect(schemaUtils.findFieldInSchema(schema, '0').field).toEqual({ type: 'string' });
+        expect(schemaUtils.findFieldInSchema(schema, '1').field).toEqual({ type: 'number' });
+      });
+      it('follows an item that is a $ref', () => {
+        const utils = createSchemaUtils({ validator: testValidator }, { definitions: { item: simpleSchema } });
+        expect(utils.findFieldInSchema({ type: 'array', items: { $ref: '#/definitions/item' } }, '0.name')).toEqual({
+          field: { type: 'string' },
+          isRequired: true,
+        });
+      });
+      it.each<[string, RJSFSchema]>([
+        ['an allOf', { allOf: [{ type: 'array' }, { items: { type: 'string' } }] }],
+        [
+          'the then of an if the data meets',
+          { type: 'array', if: { minItems: 0 }, then: { items: { type: 'string' } } },
+        ],
+        ['the selected option', { type: 'array', anyOf: [{ items: { type: 'string' } }] }],
+      ])('finds the item of an array whose items come from %s', (_, schema) => {
+        expect(schemaUtils.findFieldInSchema(schema, '0', ['x']).field).toEqual({ type: 'string' });
+      });
+      it("meets the selected option's items with the array's own", () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: { type: 'object' },
+          oneOf: [{ items: { properties: { a: { type: 'string' } } } }],
+        };
+        expect(schemaUtils.findFieldInSchema(schema, '0.a', [{}]).field).toEqual({ type: 'string' });
+      });
+      it('reads an index key of object data as an extra key, beside the items of a type list', () => {
+        const schema: RJSFSchema = {
+          type: ['object', 'array'],
+          items: { type: 'number' },
+          additionalProperties: { type: 'string' },
+        };
+        expect(schemaUtils.findFieldInSchema(schema, '0', { 0: 'x' }).field).toEqual({ type: 'string' });
+        expect(schemaUtils.findFieldInSchema(schema, '0', [1]).field).toEqual({ type: 'number' });
+      });
+      it('does not read a key that is not an index as an item', () => {
+        expect(schemaUtils.findFieldInSchema({ type: 'array', items: { type: 'string' } }, 'x')).toEqual(NOT_FOUND);
+      });
+    });
+    it('finds a property and its required state through an allOf', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { obj: { allOf: [{ properties: { a: { type: 'string' } } }, { required: ['a'] }] } },
+      };
+      expect(schemaUtils.findFieldInSchema(schema, 'obj.a', { obj: {} })).toEqual({
+        field: { type: 'string' },
+        isRequired: true,
+      });
+    });
     it('applies the required of the parent to a property of its selected option', () => {
       expect(schemaUtils.findFieldInSchema(testOneOfSchema, 'answer', { answer: '2' }).isRequired).toBe(true);
     });

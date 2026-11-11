@@ -327,10 +327,18 @@ export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
    * more keys, see `hasOwnContentBesideOptions()`
    */
   drawsControlsBesideOptions?(fieldPath: FieldPath, schema: S, uiSchema: GenericObjectType, formData: unknown): boolean;
-  /** Whether the fallback UI renders the field at `fieldPath`, whose `type` is a list, so the field on screen is the one
-   * for the type of its value. Without it, none does
+  /** The type the fallback UI's selector is on at `fieldPath`, so the field on screen is the one for that type, or
+   * `undefined` where the fallback UI doesn't render the field. `depth` counts the type selectors at the path, from 1
+   * for the outermost, since an `anyOf`/`oneOf` option offering types of its own renders one below the field's.
+   * Without it, none does
    */
-  rendersFallbackUi?(fieldPath: FieldPath, schema: S, uiSchema: GenericObjectType, formData: unknown): boolean;
+  fallbackType?(
+    fieldPath: FieldPath,
+    schema: S,
+    uiSchema: GenericObjectType,
+    formData: unknown,
+    depth: number,
+  ): string | undefined;
 }
 
 declare const FIELD_PATH_BRAND: unique symbol;
