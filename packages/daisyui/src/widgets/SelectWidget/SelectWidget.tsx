@@ -18,6 +18,7 @@ import {
   getControlFallbackName,
   groupEnumOptions,
   isEnumOptionsGroup,
+  listboxAriaProps,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
@@ -456,6 +457,8 @@ export default function SelectWidget<
           onKeyDown={handleKeyDown}
           // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
           role='listbox'
+          // Named only while shown, so the closed listbox, which is always rendered, isn't found by the field's name too
+          {...(expanded && !dismissed ? listboxAriaProps<T, S, F>(props, ariaProps) : undefined)}
           aria-multiselectable={isMultiple || undefined}
           className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'
         >

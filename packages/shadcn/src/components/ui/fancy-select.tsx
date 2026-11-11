@@ -5,6 +5,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
 import { cn } from '../../lib/utils.ts';
+import type { CommandListNameProps } from './command.tsx';
 import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
 
 /**
@@ -60,6 +61,8 @@ interface FancySelectInterface {
   ariaLabel?: string;
   /** The ids of the elements naming the combobox, for a select whose label's `for` names another element */
   ariaLabelledby?: string;
+  /** The props naming the listbox, from `commandListNameProps()` */
+  listProps: CommandListNameProps;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
   /** Whether the select is invalid, which the combobox says through `aria-invalid` */
@@ -182,6 +185,7 @@ export function FancySelect({
   placeholder,
   ariaLabel,
   ariaLabelledby,
+  listProps,
   ariaDescribedby,
   ariaInvalid,
   ariaPlaceholder,
@@ -310,6 +314,7 @@ export function FancySelect({
   return (
     <Command
       ref={containerRef}
+      withoutInput
       className={cn('overflow-visible bg-transparent', className)}
       aria-disabled={disabled}
       onBlur={handleBlur}
@@ -394,7 +399,7 @@ export function FancySelect({
             className='absolute w-full z-10 rounded-md border bg-popover text-popover-foreground shadow-md outline-none'
           >
             {sections ? (
-              <CommandList ref={listboxRef} className='h-full overflow-auto'>
+              <CommandList ref={listboxRef} {...listProps} className='h-full overflow-auto'>
                 {sections.map((section) => (
                   <CommandGroup
                     key={section.label === undefined ? UNGROUPED_SECTION_KEY : `optgroup-${section.label}`}
@@ -406,7 +411,9 @@ export function FancySelect({
               </CommandList>
             ) : (
               <CommandGroup className='h-full overflow-auto'>
-                <CommandList ref={listboxRef}>{items.map(renderItem)}</CommandList>
+                <CommandList ref={listboxRef} {...listProps}>
+                  {items.map(renderItem)}
+                </CommandList>
               </CommandGroup>
             )}
           </div>

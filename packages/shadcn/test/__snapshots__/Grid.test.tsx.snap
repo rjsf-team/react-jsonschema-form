@@ -525,7 +525,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_q_"
                             id="radix-_r_p_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
@@ -907,7 +906,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_11_"
                     id="radix-_r_10_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -1493,7 +1491,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_16_"
                             id="radix-_r_15_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
@@ -1906,7 +1903,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_1d_"
                     id="radix-_r_1c_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -2492,7 +2488,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_1i_"
                             id="radix-_r_1h_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
@@ -3313,7 +3308,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_e_"
                             id="radix-_r_d_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
@@ -3695,7 +3689,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_l_"
                     id="radix-_r_k_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -4264,7 +4257,6 @@ exports[`Three even column grid > renders person and address in three columns, n
               >
                 <label
                   cmdk-label=""
-                  for="radix-_r_9_"
                   id="radix-_r_8_"
                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                 />
@@ -4836,7 +4828,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
               >
                 <label
                   cmdk-label=""
-                  for="radix-_r_4_"
                   id="radix-_r_3_"
                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                 />

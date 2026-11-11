@@ -8,6 +8,7 @@ import {
   getErrorsToDraw,
   hasWidgetErrors,
   isNamedByTemplateLabel,
+  listboxAriaProps,
   resolveFieldPresentation,
   templateDrawsDescription,
   templateDrawsLabel,
@@ -228,6 +229,38 @@ describe('getControlFallbackName()', () => {
   it('names a control with no label by its placeholder before the prompt', () => {
     expect(getControlFallbackName({ label: '', placeholder: 'Pick one', registry })).toBe('Pick one');
     expect(getControlFallbackName({ label: 'Color', placeholder: 'Pick one', registry })).toBe('Color');
+  });
+});
+
+describe('listboxAriaProps()', () => {
+  const registry = { translateString: englishStringTranslator } as Registry;
+  it('names the list of options by the elements naming the combobox, and by nothing else', () => {
+    expect(listboxAriaProps({ label: 'Color', registry }, { 'aria-labelledby': 'a b', 'aria-label': 'Hue' })).toEqual({
+      'aria-labelledby': 'a b',
+    });
+  });
+  it("names the list of options by the combobox's aria-label unless it is empty", () => {
+    expect(listboxAriaProps({ label: 'Color', registry }, { 'aria-label': 'Hue' })).toEqual({
+      'aria-label': 'Hue',
+    });
+    expect(listboxAriaProps({ label: 'Color', registry }, { 'aria-label': '' })).toEqual({
+      'aria-label': 'Color',
+    });
+  });
+  it("points the list of options at the label's text where the plan says a label outside the widget names it", () => {
+    const presentation = plan();
+    expect(listboxAriaProps({ label: 'Foo', presentation, registry }, {})).toEqual({
+      'aria-labelledby': presentation.label.id,
+    });
+    expect(listboxAriaProps({ label: 'Foo', presentation: plan({ showLabel: false }), registry }, {})).toEqual({
+      'aria-label': 'Foo',
+    });
+  });
+  it("names the list of options without a plan by the field's label, else its placeholder", () => {
+    expect(listboxAriaProps({ label: 'Color', registry }, {})).toEqual({ 'aria-label': 'Color' });
+    expect(listboxAriaProps({ label: '', placeholder: 'Pick one', registry }, {})).toEqual({
+      'aria-label': 'Pick one',
+    });
   });
 });
 

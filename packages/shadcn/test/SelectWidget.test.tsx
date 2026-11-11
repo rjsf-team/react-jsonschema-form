@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import type { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
 import Form from '../src/index.ts';
 import SelectWidget from '../src/SelectWidget/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
@@ -539,6 +540,88 @@ describe('SelectWidget', () => {
 
     expect(ungrouped).toEqual(['a', 'c', 'b']);
     expect(grouped).toEqual(ungrouped);
+  });
+
+  // A required field's `*` is part of the label naming the combobox through its `for`, but not of the label's text the
+  // list is named by, as it isn't the list that is required
+  test.each<[string, RJSFSchema, UiSchema, string, string?]>([
+    ['titled single', { type: 'string', title: 'Color', enum: ['a', 'b'] }, {}, 'Color'],
+    [
+      'required single',
+      {
+        type: 'object',
+        required: ['color'],
+        properties: { color: { type: 'string', title: 'Color', enum: ['a', 'b'] } },
+      },
+      {},
+      'Color*',
+      'Color',
+    ],
+    ['hidden-label single', { type: 'string', title: 'Color', enum: ['a', 'b'] }, { 'ui:label': false }, 'Color'],
+    ['untitled single', { type: 'string', enum: ['a', 'b'] }, { 'ui:placeholder': 'Pick one' }, 'Pick one'],
+    ['unnamed single', { type: 'string', enum: ['a', 'b'] }, {}, 'Select ...'],
+    [
+      'titled multiple',
+      { type: 'array', title: 'Colors', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
+      {},
+      'Colors',
+    ],
+    ['grouped single', { type: 'string', title: 'Color', enum: ['a', 'b'] }, { 'ui:optgroups': { G: ['a'] } }, 'Color'],
+    [
+      'grouped multiple',
+      { type: 'array', title: 'Colors', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
+      { 'ui:optgroups': { G: ['a'] } },
+      'Colors',
+    ],
+    [
+      'oneOf option',
+      {
+        title: 'Shape',
+        oneOf: [
+          { title: 'Circle', type: 'object', properties: { radius: { type: 'number' } } },
+          { title: 'Square', type: 'object', properties: { side: { type: 'number' } } },
+        ],
+      },
+      {},
+      'Shape',
+    ],
+  ])(
+    "%s select references only elements on the page and names its listbox by the field's label, else its placeholder, else the prompt",
+    async (_, schema, uiSchema, name, listName = name) => {
+      const user = userEvent.setup();
+      render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+      expectReferencesResolve(document.body);
+      expect(screen.getByRole('combobox')).toHaveAccessibleName(name);
+
+      await user.click(screen.getByRole('combobox'));
+
+      expectReferencesResolve(document.body);
+      expect(screen.getByRole('combobox')).toHaveAccessibleName(name);
+      expect(screen.getByRole('listbox')).toHaveAccessibleName(listName);
+    },
+  );
+
+  test("points the open list at the text of the label naming the combobox, rather than copying the field's label", async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['color'],
+          properties: { color: { type: 'string', title: 'Color', enum: ['a', 'b'] } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+
+    expect(screen.getByRole('listbox')).toHaveAttribute(
+      'aria-labelledby',
+      screen.getByText('Color', { selector: 'label span[id]' }).id,
+    );
+    expect(screen.getByRole('listbox')).toHaveAttribute('aria-label', '');
   });
 });
 

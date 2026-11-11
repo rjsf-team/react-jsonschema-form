@@ -9,6 +9,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import { duplicateIds } from '../../../testing/duplicateIds.ts';
 import { elementOf } from '../../../testing/elementOf.ts';
+import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
 import Form from '../src/index.ts';
 import { errorLines, renderErrors } from '../src/utils.tsx';
 import WrappedForm from './WrappedForm.tsx';
@@ -99,22 +100,6 @@ const widgetCases: [string, RJSFSchema, UiSchema?, number?][] = [
   ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 3],
   ['alt-datetime', { type: 'string' }, { 'ui:widget': 'alt-datetime' }, 6],
 ];
-
-/** Checks that every id a `for`, an `aria-labelledby` or an `aria-describedby` in `container` names belongs to an element
- * there
- */
-function expectReferencesResolve(container: HTMLElement) {
-  container.querySelectorAll('label[for]').forEach((label) => {
-    expect(container.querySelector(`[id="${label.getAttribute('for')}"]`)).toBeInTheDocument();
-  });
-  container.querySelectorAll('[aria-labelledby], [aria-describedby]').forEach((element) => {
-    [element.getAttribute('aria-labelledby'), element.getAttribute('aria-describedby')]
-      .join(' ')
-      .split(/\s+/)
-      .filter(Boolean)
-      .forEach((referencedId) => expect(container.querySelector(`[id="${referencedId}"]`)).toBeInTheDocument());
-  });
-}
 
 describe('aria-describedby', () => {
   test.each(widgetCases)(

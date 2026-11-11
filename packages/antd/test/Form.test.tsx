@@ -18,27 +18,12 @@ import { userEvent } from '@testing-library/user-event';
 import { ConfigProvider, theme } from 'antd';
 
 import { elementOf } from '../../../testing/elementOf.ts';
+import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import FieldTemplate from '../src/templates/FieldTemplate/index.tsx';
 import CheckboxWidget from '../src/widgets/CheckboxWidget/index.tsx';
 
 const user = userEvent.setup();
-
-/** Checks that every id a `for`, an `aria-labelledby` or an `aria-describedby` in `container` names belongs to an element
- * there
- */
-function expectReferencesResolve(container: HTMLElement) {
-  container.querySelectorAll('label[for]').forEach((label) => {
-    expect(container.querySelector(`[id="${label.getAttribute('for')}"]`)).toBeInTheDocument();
-  });
-  container.querySelectorAll('[aria-labelledby], [aria-describedby]').forEach((element) => {
-    [element.getAttribute('aria-labelledby'), element.getAttribute('aria-describedby')]
-      .join(' ')
-      .split(/\s+/)
-      .filter(Boolean)
-      .forEach((referencedId) => expect(container.querySelector(`[id="${referencedId}"]`)).toBeInTheDocument());
-  });
-}
 
 formTests(Form);
 themeTests({ generateTemplates, generateTheme, generateWidgets });

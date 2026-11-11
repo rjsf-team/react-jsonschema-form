@@ -2620,6 +2620,23 @@ Some themes require may `false` and others may require an empty string.
 
 - undefined | false | string | ReactElement: `fallback` if `hideLabel` is true, otherwise `label`
 
+### listboxAriaProps()
+
+Gets the name of the list of options a `SelectWidget` shows, which a `<label for>` naming its combobox can't name: the elements its combobox's `aria-labelledby` lists, else its combobox's `aria-label` unless it is empty, else, where its field's plan says a label outside the widget names the combobox, that label's text, through the id its plan gives it, `presentation.label.id`.
+A required field's marker is drawn outside that text, as it is for a group, since the list isn't what is required.
+Otherwise it is the name [getControlFallbackName()](#getcontrolfallbackname) gives it.
+Exactly one of the two attributes is returned, never empty.
+A theme's `SelectWidget` that renders its own list of options gives it the result while the list is shown.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'label' | 'placeholder' | 'presentation' | 'registry'> - The widget's `label`, `placeholder`, `presentation` and `registry`
+- controlAttributes: \{ 'aria-labelledby'?: string, 'aria-label'?: string } - The `aria-labelledby` and `aria-label` [widgetAriaProps()](#widgetariaprops) gives the combobox
+
+#### Returns
+
+- \{ 'aria-labelledby'?: string, 'aria-label'?: string }: The `aria-labelledby` or the `aria-label` to give the list of options
+
 ### localTimeToOffsetTime()
 
 Appends the browser's current local UTC offset to a bare `time` string (`HH:MM` or `HH:MM:SS`), producing a `time` compliant with the JSON Schema `time` format (RFC 3339 `full-time`), which requires a timezone. The wall-clock value itself is left untouched; only the offset annotation is added.

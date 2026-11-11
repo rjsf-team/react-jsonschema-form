@@ -20,27 +20,12 @@ import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
+import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
-
-/** Checks that every id a `for`, an `aria-labelledby` or an `aria-describedby` in `container` names belongs to an element
- * there
- */
-function expectReferencesResolve(container: HTMLElement) {
-  container.querySelectorAll('label[for]').forEach((label) => {
-    expect(container.querySelector(`[id="${label.getAttribute('for')}"]`)).toBeInTheDocument();
-  });
-  container.querySelectorAll('[aria-labelledby], [aria-describedby]').forEach((element) => {
-    [element.getAttribute('aria-labelledby'), element.getAttribute('aria-describedby')]
-      .join(' ')
-      .split(/\s+/)
-      .filter(Boolean)
-      .forEach((referencedId) => expect(container.querySelector(`[id="${referencedId}"]`)).toBeInTheDocument());
-  });
-}
 
 function BareFieldTemplate({ children }: { children?: ReactNode }) {
   return <div>{children}</div>;
@@ -1117,9 +1102,7 @@ describe('chakra-ui labels the core widgets that draw no label of their own', ()
       expect(label).toHaveTextContent('When');
       expect(label).not.toHaveAttribute('for');
       expect(screen.getByRole('button', { name: 'Now' }).closest('fieldset')).toHaveAccessibleName('When');
-      container.querySelectorAll('label[for]').forEach((labelFor) => {
-        expect(container.querySelector(`[id="${labelFor.getAttribute('for')}"]`)).toBeInTheDocument();
-      });
+      expectReferencesResolve(container);
     },
   );
 });

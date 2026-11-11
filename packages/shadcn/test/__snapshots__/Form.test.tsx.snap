@@ -1406,7 +1406,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
             >
               <label
                 cmdk-label=""
-                for="radix-_r_3l_"
                 id="radix-_r_3k_"
                 style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
               />
@@ -2718,7 +2717,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
             >
               <label
                 cmdk-label=""
-                for="radix-_r_3u_"
                 id="radix-_r_3t_"
                 style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
               />
@@ -3071,7 +3069,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_4a_"
                     id="radix-_r_49_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -3130,7 +3127,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_4e_"
                     id="radix-_r_4d_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -3210,7 +3206,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
         >
           <label
             cmdk-label=""
-            for="radix-_r_4m_"
             id="radix-_r_4l_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -3287,7 +3282,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
         >
           <label
             cmdk-label=""
-            for="radix-_r_46_"
             id="radix-_r_45_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -3364,7 +3358,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
         >
           <label
             cmdk-label=""
-            for="radix-_r_4i_"
             id="radix-_r_4h_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -3441,7 +3434,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_42_"
             id="radix-_r_41_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -3518,7 +3510,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
         >
           <label
             cmdk-label=""
-            for="radix-_r_4q_"
             id="radix-_r_4p_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -3595,7 +3586,6 @@ exports[`select widget with options sharing a String() in the realValue format (
         >
           <label
             cmdk-label=""
-            for="radix-_r_52_"
             id="radix-_r_51_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -5833,7 +5823,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_2a_"
                     id="radix-_r_29_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -5946,7 +5935,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_2e_"
                     id="radix-_r_2d_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -6676,7 +6664,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_31_"
                     id="radix-_r_30_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -6790,7 +6777,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_35_"
                     id="radix-_r_34_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -9839,7 +9825,6 @@ exports[`single fields > select field 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_3_"
             id="radix-_r_2_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -9916,7 +9901,6 @@ exports[`single fields > select field multiple choice 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_8_"
             id="radix-_r_7_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -9983,7 +9967,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_s_"
             id="radix-_r_r_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -10197,7 +10180,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_1g_"
             id="radix-_r_1f_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -10328,7 +10310,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_d_"
             id="radix-_r_c_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -10395,7 +10376,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_h_"
             id="radix-_r_g_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -10691,7 +10671,6 @@ exports[`single fields > select field single choice formData 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_1b_"
             id="radix-_r_1a_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -10768,7 +10747,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_11_"
             id="radix-_r_10_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -10845,7 +10823,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
         >
           <label
             cmdk-label=""
-            for="radix-_r_15_"
             id="radix-_r_14_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -11049,7 +11026,6 @@ exports[`single fields > select widget with description in schema and FieldTempl
         >
           <label
             cmdk-label=""
-            for="radix-_r_1m_"
             id="radix-_r_1l_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -11126,7 +11102,6 @@ exports[`single fields > select widget with selected oneOf option description 1`
         >
           <label
             cmdk-label=""
-            for="radix-_r_1q_"
             id="radix-_r_1p_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -11210,7 +11185,6 @@ exports[`single fields > select widget with selected oneOf option description an
         >
           <label
             cmdk-label=""
-            for="radix-_r_1u_"
             id="radix-_r_1t_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -11293,7 +11267,6 @@ exports[`single fields > select widget with selected oneOf option description be
         >
           <label
             cmdk-label=""
-            for="radix-_r_5c_"
             id="radix-_r_5b_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -12252,7 +12225,6 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
             >
               <label
                 cmdk-label=""
-                for="radix-_r_4u_"
                 id="radix-_r_4t_"
                 style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
               />
