@@ -65,8 +65,9 @@ const deliverToCaller: Deliver = (operation) => operation();
 
 /** Whether a render of the `Form` reads a member that differs between `committed` and `shown`, directly or through
  * `deriveState()`: any but the touched marks, which only `getStatus()` and the events report. A commit that changes
- * none of them, such as a blur that only touches a field, re-renders nothing. Every other member is compared, so one
- * added to the state is never missed
+ * none of them, such as a blur that only touches a field, re-renders nothing. The recorded clears count, since the fill
+ * a prop change runs in `deriveState()` reads them. Every other member is compared, so one added to the state is never
+ * missed
  */
 function isRenderedChange(committed: object, shown: object): boolean {
   return Object.keys({ ...shown, ...committed }).some(

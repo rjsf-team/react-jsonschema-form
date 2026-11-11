@@ -193,6 +193,28 @@ describe('render cost of a blur', () => {
     expect(onRender).not.toHaveBeenCalled();
   });
 
+  it('commits only for the first of repeated clears a widget makes of a field already without a value', async () => {
+    function ClearingWidget({ onChange }: WidgetProps) {
+      return (
+        <button type='button' onClick={() => onChange(undefined)}>
+          clear
+        </button>
+      );
+    }
+    const { container, onRender } = renderCounted({
+      uiSchema: { name: { 'ui:widget': ClearingWidget } },
+      initialFormData: { name: undefined },
+    });
+    const button = elementOf(container, 'button[type=button]');
+    await user.click(button);
+    onRender.mockClear();
+
+    await user.click(button);
+    await user.click(button);
+
+    expect(onRender).not.toHaveBeenCalled();
+  });
+
   it('keeps the touch it did not render through a later prop change that derives the state again', async () => {
     const ref = createFormRef();
     const element = (current: RJSFSchema) => <Form ref={ref} schema={current} validator={validator} />;
