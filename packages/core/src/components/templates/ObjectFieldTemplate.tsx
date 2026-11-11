@@ -86,6 +86,7 @@ export default function ObjectFieldTemplate<
           disabled={disabled || readonly}
           uiSchema={uiSchema}
           registry={registry}
+          title={title}
         />
       )}
     </fieldset>

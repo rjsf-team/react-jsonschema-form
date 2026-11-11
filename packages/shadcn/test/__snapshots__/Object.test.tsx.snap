@@ -338,6 +338,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -365,7 +366,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -806,6 +806,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_tags__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -833,7 +834,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -1490,6 +1490,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
               class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_items__add"
+              title="Add Item"
               type="button"
             >
               <svg
@@ -1517,7 +1518,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -1767,6 +1767,7 @@ exports[`object fields > additionalProperties 1`] = `
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -1794,7 +1795,6 @@ exports[`object fields > additionalProperties 1`] = `
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -1980,6 +1980,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -2007,7 +2008,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -2097,6 +2097,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_foo__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -2124,7 +2125,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -2181,6 +2181,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -2208,7 +2209,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -2352,6 +2352,7 @@ exports[`object fields > additionalProperties, description 1`] = `
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -2379,7 +2380,6 @@ exports[`object fields > additionalProperties, description 1`] = `
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -2516,6 +2516,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -2543,7 +2544,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -2708,6 +2708,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -2735,7 +2736,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -2914,6 +2914,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -2941,7 +2942,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -3120,6 +3120,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -3147,7 +3148,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -3490,6 +3490,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -3517,7 +3518,6 @@ exports[`object fields > patternProperties, a key additionalProperties false for
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -3803,6 +3803,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -3830,7 +3831,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -3992,6 +3992,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Test field"
           type="button"
         >
           <svg
@@ -4019,7 +4020,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -4304,6 +4304,7 @@ exports[`object fields > with title and description > show add button and fields
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Test field"
           type="button"
         >
           <svg
@@ -4331,7 +4332,6 @@ exports[`object fields > with title and description > show add button and fields
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -4493,6 +4493,7 @@ exports[`object fields > with title and description from both > additionalProper
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add My Field"
           type="button"
         >
           <svg
@@ -4520,7 +4521,6 @@ exports[`object fields > with title and description from both > additionalProper
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -4805,6 +4805,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add My Field"
           type="button"
         >
           <svg
@@ -4832,7 +4833,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -5117,6 +5117,7 @@ exports[`object fields > with title and description from uiSchema > show add but
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add My Field"
           type="button"
         >
           <svg
@@ -5144,7 +5145,6 @@ exports[`object fields > with title and description from uiSchema > show add but
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -5267,6 +5267,7 @@ exports[`object fields > with title and description with global label off > addi
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -5294,7 +5295,6 @@ exports[`object fields > with title and description with global label off > addi
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>
@@ -5483,6 +5483,7 @@ exports[`object fields > with title and description with global label off > show
           class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-object-property-expand"
           data-slot="button"
           id="root__add"
+          title="Add Item"
           type="button"
         >
           <svg
@@ -5510,7 +5511,6 @@ exports[`object fields > with title and description with global label off > show
               d="M12 8v8"
             />
           </svg>
-           Add Item
         </button>
       </fieldset>
     </div>

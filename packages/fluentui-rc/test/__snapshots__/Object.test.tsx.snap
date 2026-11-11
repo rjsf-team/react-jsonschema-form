@@ -4038,7 +4038,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
             <button
               class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
-              title="Add Item"
+              title="Add Test field"
               type="button"
             >
               <span
@@ -4362,7 +4362,7 @@ exports[`object fields > with title and description > show add button and fields
             <button
               class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
-              title="Add Item"
+              title="Add Test field"
               type="button"
             >
               <span
@@ -4541,7 +4541,7 @@ exports[`object fields > with title and description from both > additionalProper
             <button
               class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
-              title="Add Item"
+              title="Add My Field"
               type="button"
             >
               <span
@@ -4865,7 +4865,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
             <button
               class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
-              title="Add Item"
+              title="Add My Field"
               type="button"
             >
               <span
@@ -5189,7 +5189,7 @@ exports[`object fields > with title and description from uiSchema > show add but
             <button
               class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
-              title="Add Item"
+              title="Add My Field"
               type="button"
             >
               <span

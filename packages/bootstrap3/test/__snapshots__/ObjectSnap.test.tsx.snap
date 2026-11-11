@@ -251,7 +251,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -532,7 +532,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 <button
                   class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_tags__add"
-                  title="Add"
+                  title="Add Item"
                   type="button"
                 >
                   <i
@@ -1011,7 +1011,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 <button
                   class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_items__add"
-                  title="Add"
+                  title="Add Item"
                   type="button"
                 >
                   <i
@@ -1216,7 +1216,7 @@ exports[`object fields > additionalProperties 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -1350,7 +1350,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -1436,7 +1436,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     <button
                       class="btn btn-info rjsf-btn-add col-xs-12"
                       id="root_foo__add"
-                      title="Add"
+                      title="Add Item"
                       type="button"
                     >
                       <i
@@ -1474,7 +1474,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -1593,7 +1593,7 @@ exports[`object fields > additionalProperties, description 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -1702,7 +1702,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -1826,7 +1826,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -1950,7 +1950,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -2074,7 +2074,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -2330,7 +2330,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -2531,7 +2531,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -2653,7 +2653,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Test field"
               type="button"
             >
               <i
@@ -2874,7 +2874,7 @@ exports[`object fields > with title and description > show add button and fields
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Test field"
               type="button"
             >
               <i
@@ -2996,7 +2996,7 @@ exports[`object fields > with title and description from both > additionalProper
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add My Field"
               type="button"
             >
               <i
@@ -3217,7 +3217,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add My Field"
               type="button"
             >
               <i
@@ -3438,7 +3438,7 @@ exports[`object fields > with title and description from uiSchema > show add but
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add My Field"
               type="button"
             >
               <i
@@ -3532,7 +3532,7 @@ exports[`object fields > with title and description with global label off > addi
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i
@@ -3680,7 +3680,7 @@ exports[`object fields > with title and description with global label off > show
             <button
               class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
-              title="Add"
+              title="Add Item"
               type="button"
             >
               <i

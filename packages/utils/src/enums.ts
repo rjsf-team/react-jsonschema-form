@@ -26,6 +26,8 @@ export const TranslatableString = {
   AddButton: 'Add',
   /** Add button title, used by AddButton */
   AddItemButton: 'Add Item',
+  /** Add button title for an element named through its schema `title`, where %1 is its name; used by AddButton */
+  AddNamedButton: 'Add %1',
   /** Copy button title, used by IconButton */
   CopyButton: 'Copy',
   /** Expand cycle button title */

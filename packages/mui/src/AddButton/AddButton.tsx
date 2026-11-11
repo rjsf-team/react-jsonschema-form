@@ -12,7 +12,7 @@ export default function AddButton<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ uiSchema, registry, ...props }: IconButtonProps<T, S, F>) {
+>({ uiSchema, registry, title, ...props }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const muiProps = getMuiProps<T, S, F, MuiIconButtonProps>(uiOptions, [
@@ -25,7 +25,16 @@ export default function AddButton<
   ]);
 
   return (
-    <IconButton title={translateString(TranslatableString.AddItemButton)} {...props} color='primary' {...muiProps}>
+    <IconButton
+      title={
+        title
+          ? translateString(TranslatableString.AddNamedButton, [title])
+          : translateString(TranslatableString.AddItemButton)
+      }
+      {...props}
+      color='primary'
+      {...muiProps}
+    >
       <AddIcon />
     </IconButton>
   );

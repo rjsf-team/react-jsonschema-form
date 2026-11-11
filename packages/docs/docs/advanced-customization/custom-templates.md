@@ -1413,9 +1413,9 @@ const schema: RJSFSchema = {
 };
 
 function AddButton(props: IconButtonProps) {
-  const { icon, iconType, ...btnProps } = props;
+  const { icon, iconType, title, ...btnProps } = props;
   return (
-    <button {...btnProps}>
+    <button title={title} {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Add' />
     </button>
   );
