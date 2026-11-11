@@ -814,11 +814,11 @@ const schema: RJSFSchema = {
 };
 
 function CustomFieldTemplate(props: FieldTemplateProps) {
-  const { id, classNames, style, label, help, required, description, errors, children } = props;
+  const { id, classNames, style, label, help, required, description, errors, children, presentation } = props;
   return (
     <div className={classNames} style={style}>
       <label htmlFor={id}>
-        {label}
+        <span id={presentation?.label.id}>{label}</span>
         {required ? '*' : null}
       </label>
       {description}
@@ -883,6 +883,7 @@ The following props are passed to a custom field template component:
 - `disabled`: A boolean value stating if the field is disabled.
 - `displayLabel`: A boolean value stating if the template renders the label: true only where the field's plan says the template draws it, so it is false where the widget draws its own label, and where `ui:label: false` turns it off. Deprecated, and kept through v7 for a template rendered without a plan: read `presentation.label.by === 'template'` instead, or [`templateDrawsLabel()`](../api-reference/utility-functions.md#templatedrawslabel), which falls back to `displayLabel` without a plan.
 - `presentation`: The field's plan, built by `SchemaField`: who draws its label, description, help and errors, under which ids, and the attributes its control carries. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
+  Where the template draws the label, render the label's text, without the required marker, in an element with the id `presentation.label.id`, as core's `FieldLabel` does with its `labelId`. A `<label for>` names only the control it points at, so a control or a group whose plan gives it `aria-labelledby`, and the open list of options of `@rjsf/daisyui`'s and `@rjsf/shadcn`'s `SelectWidget`, are named through that id, and without it they have no name.
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
 - `onChange`: The value change event handler; Can be called with a new value to change the value for this field.
