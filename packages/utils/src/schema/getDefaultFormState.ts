@@ -1748,9 +1748,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   }
   const additionalProperties = absentKeywordAllows<S, F>(context, schema) || schema.additionalProperties;
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
-  // extra keys are. Where the object takes no other extra key, the user can't add, remove or rename one, so the guards
-  // that keep a key they removed or renamed from coming back don't hold back the keys the `const` names
-  const closingConst = additionalProperties ? undefined : objectConst;
+  // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or
+  // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the
+  // `const` names. A `patternProperties` or `unevaluatedProperties` that takes extra keys leaves the guards in place
+  const closingConst = allowsAdditionalProperties<S, F>(context, schema) ? undefined : objectConst;
   if ((additionalProperties && !initialDefaultsGenerated) || closingConst) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
@@ -1787,7 +1788,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         // A property added by `additionalProperties` is one the user added, so it is populated whatever the form's
         // `emptyObjectFields` says about the properties the schema names
         'populateAllDefaults',
-        Object.hasOwn(objectConst ?? {}, key),
+        // A `ui:initialValue` the object defaults to in place of the `const` can leave a key it names with no value
+        value !== undefined && Object.hasOwn(objectConst ?? {}, key),
       );
     });
   }

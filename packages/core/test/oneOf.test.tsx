@@ -6051,25 +6051,36 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(node.querySelector('#root_a__key') !== null).toBe(expected?.a !== undefined);
     });
 
-    // The sanitize clears data the new option's object `const` or `enum` rejects, which the switch leaves as v7 does
-    it.each<{ declares: string; option: RJSFSchema; expected: unknown }>([
-      { declares: 'a const beside properties', option: { properties: { b: {} }, const: { b: 1 } }, expected: { b: 1 } },
-      { declares: 'a const alone', option: { const: { b: 1 } }, expected: { b: 1 } },
-      { declares: 'an enum alone', option: { enum: [{ b: 1 }] }, expected: undefined },
-    ])('leaves the data $declares clears as it was, keeping no extra key', async ({ option, expected }) => {
-      const schema: RJSFSchema = {
-        type: 'object',
-        [keyword]: [
-          { title: 'S', properties: { a: { type: 'string' } } },
-          { title: 'T', ...option },
-        ],
-        additionalProperties: true,
-      };
-      const { node, formData } = await selectT(schema, { initialFormData: { a: 'x' } });
+    // The sanitize clears data the new option's object `const` or `enum` rejects. The switch then defaults the object to
+    // the option's `const`, whose key is an extra key where the option doesn't declare it, and leaves an `enum`'s clear
+    // as v7 does
+    it.each<{ declares: string; option: RJSFSchema; expected: unknown; extraKey: boolean }>([
+      {
+        declares: 'a const beside properties',
+        option: { properties: { b: {} }, const: { b: 1 } },
+        expected: { b: 1 },
+        extraKey: false,
+      },
+      { declares: 'a const alone', option: { const: { b: 1 } }, expected: { b: 1 }, extraKey: true },
+      { declares: 'an enum alone', option: { enum: [{ b: 1 }] }, expected: undefined, extraKey: false },
+    ])(
+      "clears the key $declares rejects and defaults to the option's const, if any",
+      async ({ option, expected, extraKey }) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          [keyword]: [
+            { title: 'S', properties: { a: { type: 'string' } } },
+            { title: 'T', ...option },
+          ],
+          additionalProperties: true,
+        };
+        const { node, formData } = await selectT(schema, { initialFormData: { a: 'x' } });
 
-      expect(formData).toEqual(expected);
-      expect(node.querySelector('#root_a__key')).toBeNull();
-    });
+        expect(formData).toEqual(expected);
+        expect(node.querySelector('#root_a__key')).toBeNull();
+        expect(node.querySelector('#root_b__key') !== null).toBe(extraKey);
+      },
+    );
 
     // As when the new option declares a property, which the sanitize keeps the object's own keys beside, whether or not
     // the form's sanitize keeps the key the switch leaves beside them

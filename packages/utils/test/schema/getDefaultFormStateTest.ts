@@ -148,11 +148,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(extra).getDefaultFormState(extra, {}, false, true)).toEqual({});
           expect(utils(extra).getDefaultFormState(extra, { c: 2 }, false, true)).toEqual({ c: 2 });
         });
+        it('seeds no key of the const where patternProperties or unevaluatedProperties let the user add, remove or rename keys', () => {
+          const patterned: RJSFSchema = {
+            type: 'object',
+            patternProperties: { '^x': { type: 'number' } },
+            const: { x1: 1 },
+          };
+          const unevaluated: RJSFSchema = {
+            type: 'object',
+            unevaluatedProperties: { type: 'number' },
+            const: { a: 1 },
+          };
+          expect(utils(patterned).getDefaultFormState(patterned, {})).toStrictEqual({});
+          expect(utils(patterned).getDefaultFormState(patterned, { x2: 1 })).toStrictEqual({ x2: 1 });
+          expect(utils(patterned).getDefaultFormState(patterned, {}, false, true)).toStrictEqual({});
+          expect(utils(unevaluated).getDefaultFormState(unevaluated, {})).toStrictEqual({});
+        });
         it('fills the keys of a const that closes the object whatever the data holds, and once the defaults were generated', () => {
           const two: RJSFSchema = { type: 'object', const: { a: 1, b: 2 } };
           expect(utils(two).getDefaultFormState(two, { a: 3 })).toEqual({ a: 3, b: 2 });
           expect(utils(two, { constAsDefaults: 'always' }).getDefaultFormState(two, { a: 1 })).toEqual({ a: 1, b: 2 });
           expect(utils(bare).getDefaultFormState(bare, {}, false, true)).toEqual({ a: 1 });
+          const unevaluatedClosed: RJSFSchema = { ...bare, unevaluatedProperties: false };
+          expect(utils(unevaluatedClosed).getDefaultFormState(unevaluatedClosed, {}, false, true)).toEqual({ a: 1 });
           const regenerated = utils(withoutParentDefault).getDefaultFormState(
             withoutParentDefault,
             undefined,
@@ -170,7 +188,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         it('seeds no key of a ui:initialValue that the const closing the object does not name', () => {
           const closed: RJSFSchema = { type: 'object', const: { a: 1 }, additionalProperties: false };
           const uiSchema = { 'ui:initialValue': { z: 1 } };
-          expect(utils(closed).getDefaultFormState(closed, undefined, false, false, uiSchema)).toEqual({});
+          expect(utils(closed).getDefaultFormState(closed, undefined, false, false, uiSchema)).toStrictEqual({});
         });
         it("fills a mixed oneOf option's const under skipOneOf, whether or not the option declares its keys", () => {
           const skipOneOf: DefaultFormStateBehavior = { constAsDefaults: 'skipOneOf' };
