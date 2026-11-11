@@ -161,8 +161,8 @@ function focusForId(
   entersContainer: boolean,
 ): void {
   const partPrefix = partId(elementId, '');
+  const addId = buttonId(elementId, 'add');
   if (exact) {
-    const addId = buttonId(elementId, 'add');
     const isContainer = () =>
       exact instanceof view.HTMLFieldSetElement ||
       findElement(
@@ -176,7 +176,12 @@ function focusForId(
   }
   findElement(
     formElement.querySelectorAll('input[id], button[id]'),
-    (element) => element.id.startsWith(partPrefix) && !tried.has(element) && takesFocus(element, view),
+    // A container's add button stands in for none of its controls, so its own error doesn't focus it either
+    (element) =>
+      element.id.startsWith(partPrefix) &&
+      (entersContainer || element.id !== addId) &&
+      !tried.has(element) &&
+      takesFocus(element, view),
   );
 }
 

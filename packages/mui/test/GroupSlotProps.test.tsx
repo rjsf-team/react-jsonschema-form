@@ -46,7 +46,7 @@ describe('the group slots a form author gives', () => {
     };
     render(<Form schema={arraySchema} uiSchema={uiSchema} initialFormData={{ pets: ['a'] }} validator={validator} />);
 
-    expect(screen.getByRole('region', { name: 'Pets' })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Pets' })).toHaveAttribute('id', 'root_pets');
     expect(screen.queryByRole('group', { name: 'Pets' })).not.toBeInTheDocument();
   });
 

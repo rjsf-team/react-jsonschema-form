@@ -262,8 +262,8 @@ export function presentationContractTests(
       act(() => container.querySelector<HTMLElement>('[type="submit"]')!.click());
 
       await waitFor(() => expect(container.querySelector('[id$="__error"]')).toBeInTheDocument());
-      // Neither one of its fields nor a part of it, such as its add button
-      expect(document.activeElement?.id ?? '').not.toMatch(/^root_field_/);
+      // Neither one of its fields nor a part of it, such as its add button, whatever id the theme gives it
+      expect(document.body).toHaveFocus();
     });
   });
 }

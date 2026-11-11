@@ -292,7 +292,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         expect(typeSelector).toHaveAttribute('aria-describedby', 'root_x__error root_x__help');
         expect(typeSelector).toHaveAttribute('aria-invalid', 'true');
         const group = elementOf(node, 'fieldset#root_x');
-        expect(group).toHaveAttribute('aria-describedby', 'root_x__error root_x__help root_x__description');
+        expect(group).toHaveAttribute('aria-describedby', 'root_x__error root_x__description root_x__help');
         expect(group).not.toHaveAttribute('aria-invalid');
       });
     });
