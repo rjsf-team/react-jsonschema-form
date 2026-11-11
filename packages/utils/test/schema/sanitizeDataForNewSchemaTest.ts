@@ -1766,6 +1766,46 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         }),
       ).toStrictEqual({ value: { x: 1 } });
     });
+    it('swaps the old default of a scalar, prefix or array item for the new one, and keeps a readOnly or object one', () => {
+      const items = (extra: RJSFSchema): RJSFSchema => ({ type: 'array', items: { type: 'string', ...extra } });
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(items({ default: 'y' }), items({ default: 'x' }), ['x', 'q']),
+      ).toStrictEqual(['y', 'q']);
+      const prefixed = (extra: RJSFSchema): RJSFSchema => ({
+        type: 'array',
+        prefixItems: [{ type: 'string', ...extra }],
+      });
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(prefixed({ default: 'y' }), prefixed({ default: 'x' }), ['x', 'q']),
+      ).toStrictEqual(['y', 'q']);
+      const arrays = (defaultValue: string[]): RJSFSchema => ({
+        type: 'array',
+        items: { type: 'array', items: { type: 'string' }, default: defaultValue },
+      });
+      expect(schemaUtils.sanitizeDataForNewSchema(arrays(['y']), arrays(['x']), [['x'], ['q']])).toStrictEqual([
+        ['y'],
+        ['q'],
+      ]);
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(items({ default: 'y', readOnly: true }), items({}), ['z']),
+      ).toStrictEqual(['z']);
+      // An object's `default` the defaults fill in key by key, so the object keeps its own
+      const objects = (defaultValue: RJSFSchema['default']): RJSFSchema => ({
+        type: 'array',
+        items: { type: 'object', properties: { x: {}, y: {} }, default: defaultValue },
+      });
+      expect(schemaUtils.sanitizeDataForNewSchema(objects({ y: 1 }), objects({ x: 1 }), [{ x: 1 }])).toStrictEqual([
+        { x: 1 },
+      ]);
+      // A select over objects holds its option whole, so it swaps as a scalar does
+      const picked = (defaultValue: RJSFSchema['default']): RJSFSchema => ({
+        type: 'array',
+        items: { type: 'object', enum: [{ a: 1 }, { a: 2 }], default: defaultValue },
+      });
+      expect(schemaUtils.sanitizeDataForNewSchema(picked({ a: 2 }), picked({ a: 1 }), [{ a: 1 }])).toStrictEqual([
+        { a: 2 },
+      ]);
+    });
     it('keeps an object item its enum option lists as it is, rather than filling its absent object properties', () => {
       const schema: RJSFSchema = {
         type: 'array',

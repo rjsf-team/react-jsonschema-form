@@ -234,10 +234,10 @@ function emptyObjectFor<S extends StrictRJSFSchema>(schema: S, formValue: unknow
   return formValue !== undefined && schema[PROPERTIES_KEY] ? {} : undefined;
 }
 
-/** What a property's `formValue` takes from the new `default` that differs from it, as `Form` judges a field whose
- * constraints changed: the new `default` where the value is the old one, or where `isNewClear`, a newly entered
- * property's clear, and, for a scalar or a select, `undefined` where a `readOnly` new `default` stands in for a
- * `const`. `Form` clears no array or object it walks as a container for one. `NO_VALUE` keeps the value
+/** What a property's or an item's `formValue` takes from the new `default` that differs from it, as `Form` judges a
+ * field whose constraints changed: the new `default` where the value is the old one, or where `isNewClear`, a newly
+ * entered property's clear, and, for a scalar or a select property, `undefined` where a `readOnly` new `default` stands
+ * in for a `const`. `Form` clears no array or object it walks as a container for one. `NO_VALUE` keeps the value
  */
 function defaultReplacement<S extends StrictRJSFSchema>(
   newSchema: S,
@@ -696,6 +696,19 @@ export default function sanitizeDataForNewSchema<
       const newItemSchema = retrieveSchema<unknown, S, F>(context, newRaw, rootSchema, aValue);
       // The old item schema, resolved only where something reads it
       let oldItemSchema: S | undefined;
+      // An item holding its old `default` takes the new one, as a property does, unless it is an object rendered as
+      // `object`, which the defaults fill key by key, though a select over objects holds one whole. `Form` clears no item
+      // for a `readOnly` new `default`
+      if (
+        newItemSchema.default !== undefined &&
+        !(isPlainObject(aValue) && schemaType === 'object' && !isWholeSelect)
+      ) {
+        oldItemSchema = oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
+        const defaultValue = defaultReplacement<S>(newItemSchema, oldItemSchema, aValue, false, false);
+        if (defaultValue !== NO_VALUE) {
+          return defaultValue;
+        }
+      }
       let itemValue: unknown;
       const listedValues = enumValuesForSchema<S>(newItemSchema);
       if (listedValues) {

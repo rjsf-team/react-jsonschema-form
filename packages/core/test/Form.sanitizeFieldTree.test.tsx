@@ -2428,6 +2428,59 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: [['x']],
       expected: [[]],
     },
+    {
+      name: 'swaps the old default of a scalar item for the new one',
+      from: { type: 'array', items: { type: 'string', default: 'x' } },
+      to: { type: 'array', items: { type: 'string', default: 'y' } },
+      data: ['x', 'q'],
+      expected: ['y', 'q'],
+    },
+    {
+      name: 'swaps the old default of a prefix item for the new one',
+      from: prefix({ type: 'string', default: 'x' }),
+      to: prefix({ type: 'string', default: 'y' }),
+      data: ['x', 'q'],
+      expected: ['y', 'q'],
+    },
+    {
+      name: 'swaps the old default of an array item for the new one',
+      from: { type: 'array', items: { type: 'array', items: { type: 'string' }, default: ['x'] } },
+      to: { type: 'array', items: { type: 'array', items: { type: 'string' }, default: ['y'] } },
+      data: [['x'], ['q']],
+      expected: [['y'], ['q']],
+    },
+    {
+      // `Form` reads an old `default: null` as no default, so the item keeps its `null`
+      name: 'swaps an item holding an old null default for the new one',
+      from: { type: 'array', items: { type: ['string', 'null'], default: null } },
+      to: { type: 'array', items: { type: ['string', 'null'], default: 'y' } },
+      data: [null, 'q'],
+      expected: ['y', 'q'],
+      formExpected: [null, 'q'],
+    },
+    {
+      name: 'keeps a scalar item a readOnly new default differs from',
+      from: typedItems('string'),
+      to: { type: 'array', items: { type: 'string', default: 'y', readOnly: true } },
+      data: ['z'],
+      expected: ['z'],
+    },
+    {
+      // utils leaves the object for the defaults, which `Form` fills key by key
+      name: 'keeps an object item holding its old default, for the defaults to fill key by key',
+      from: { type: 'array', items: { type: 'object', properties: { x: {}, y: {} }, default: { x: 1 } } },
+      to: { type: 'array', items: { type: 'object', properties: { x: {}, y: {} }, default: { y: 1 } } },
+      data: [{ x: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
+    },
+    {
+      name: 'swaps the old default of an item picked from object options for the new one',
+      from: { type: 'array', items: { type: 'object', enum: [{ a: 1 }, { a: 2 }], default: { a: 1 } } },
+      to: { type: 'array', items: { type: 'object', enum: [{ a: 1 }, { a: 2 }], default: { a: 2 } } },
+      data: [{ a: 1 }],
+      expected: [{ a: 2 }],
+    },
   ])('$name', ({ from, to, data, expected, formExpected = expected }) => {
     const wrap = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
     const ref = createRef<FormRef<{ list?: unknown }>>();
