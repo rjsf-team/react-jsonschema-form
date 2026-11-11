@@ -2358,6 +2358,57 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: ['a', undefined, 'b'],
       expected: ['a', undefined, 'b'],
     },
+    {
+      name: 'keeps a hole under array items',
+      from: { type: 'array', title: 'Old', items: { type: 'array', items: { type: 'number' } } },
+      to: { type: 'array', title: 'New', items: { type: 'array', items: { type: 'number' } } },
+      data: [[1], undefined, [2]],
+      expected: [[1], undefined, [2]],
+    },
+    {
+      name: 'keeps a hole under enum items',
+      from: { type: 'array', title: 'Old', items: { type: 'string', enum: ['a'] } },
+      to: { type: 'array', title: 'New', items: { type: 'string', enum: ['a'] } },
+      data: ['a', undefined, 'a'],
+      expected: ['a', undefined, 'a'],
+    },
+    {
+      name: 'keeps an array item under a type list naming object first',
+      from: {
+        type: 'array',
+        title: 'Old',
+        items: { type: ['object', 'array'], properties: { a: {} }, items: { type: 'number' } },
+      },
+      to: {
+        type: 'array',
+        title: 'New',
+        items: { type: ['object', 'array'], properties: { a: {} }, items: { type: 'number' } },
+      },
+      data: [[1, 2]],
+      expected: [[1, 2]],
+    },
+    {
+      name: 'keeps an array item under a type list naming array first',
+      from: {
+        type: 'array',
+        title: 'Old',
+        items: { type: ['array', 'object'], properties: { a: {} }, items: { type: 'number' } },
+      },
+      to: {
+        type: 'array',
+        title: 'New',
+        items: { type: ['array', 'object'], properties: { a: {} }, items: { type: 'number' } },
+      },
+      data: [[1, 2]],
+      expected: [[1, 2]],
+    },
+    {
+      name: 'keeps an array item whose items become a type list naming object and array',
+      from: { type: 'array', items: { type: 'object', properties: { a: {} } } },
+      to: { type: 'array', items: { type: ['object', 'array'], properties: { a: {} }, items: { type: 'number' } } },
+      data: [[1, 2]],
+      expected: [[1, 2]],
+    },
   ])('$name', ({ from, to, data, expected, formExpected = expected }) => {
     const wrap = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
     const ref = createRef<FormRef<{ list?: unknown }>>();

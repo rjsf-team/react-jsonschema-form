@@ -316,7 +316,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *       "object", and it isn't a select
  *       over object or array constants (see `isWholeValueSelect()`), retrieve its schemas for that element
  *     - Keep an element that is one of the new position's `enum` or constant options as it is, dropping one that is
- *       none of them
+ *       none of them other than `undefined`, which stays a hole
  *     - Otherwise, under "object" or "array", an object element whose new schema declares `properties` is recursively
  *       sanitized against them, and any other object element is kept as it is. A value that is not an object, other
  *       than `undefined`, is dropped where the new position declares `type: 'object'`, except a `null` that
@@ -629,12 +629,15 @@ export default function sanitizeDataForNewSchema<
       }
       const { newRaw, oldRaw, newItems, schemaType, listedTypes, isWholeSelect } = position;
       // A type list holds an object item as an object and an array item as an array where it names that type, as `Form`
-      // walks them, whichever type `getSchemaType()` renders the list as. Any other item, a hole included, is a scalar
+      // walks them, whichever type `getSchemaType()` renders the list as. Any other item, a hole included, is a scalar,
+      // as a hole under `array` items is: `Form` keeps it there, where under `object` items it fills an empty object
       let itemsType = schemaType;
       if (listedTypes.length > 0) {
         const itemType = Array.isArray(aValue) ? 'array' : 'object';
         itemsType =
           (itemType === 'array' || isPlainObject(aValue)) && listedTypes.includes(itemType) ? itemType : undefined;
+      } else if (aValue === undefined && schemaType === 'array') {
+        itemsType = undefined;
       }
       const isContainer = (itemsType === 'object' || itemsType === 'array') && !isWholeSelect;
       // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional nested inside
@@ -647,8 +650,8 @@ export default function sanitizeDataForNewSchema<
       const listedValues = enumValuesForSchema<S>(newItemSchema);
       if (listedValues) {
         // An item its options list is one of them as a whole, so it is kept as it is, and one they don't list is
-        // dropped, whatever the old schema listed
-        itemValue = listedValues.some((value) => deepEquals(value, aValue)) ? aValue : NO_VALUE;
+        // dropped, whatever the old schema listed. A hole is no option, and stays one, as `Form` keeps it
+        itemValue = aValue === undefined || listedValues.some((value) => deepEquals(value, aValue)) ? aValue : NO_VALUE;
       } else if (!isContainer && newItemSchema.const === undefined) {
         // Only a new `const` can reject a scalar item here
         itemValue = aValue;
@@ -668,10 +671,15 @@ export default function sanitizeDataForNewSchema<
           oldItemSchema ??= oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
           // An array element the call clears, by an item at a position the new items close or a rejected prefix item,
           // is kept as it is, as `Form` keeps it. A `const` the call rejects is checked again below, which drops the
-          // item
+          // item. An array item is sanitized without the `properties` a type list naming `object` declares beside it,
+          // which would read it as an object
+          const itemSchema =
+            itemsType === 'array' && newItemSchema[PROPERTIES_KEY]
+              ? { ...newItemSchema, [PROPERTIES_KEY]: undefined }
+              : newItemSchema;
           sanitizedItem = isObjectless
             ? undefined
-            : (sanitizeDataForNewSchema<unknown, S, F>(context, rootSchema, newItemSchema, oldItemSchema, aValue) ??
+            : (sanitizeDataForNewSchema<unknown, S, F>(context, rootSchema, itemSchema, oldItemSchema, aValue) ??
               aValue);
         } else if (isContainerItem) {
           // An object item declaring no `properties` has none to prune, so it is kept as it is

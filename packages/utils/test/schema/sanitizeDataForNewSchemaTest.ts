@@ -1693,6 +1693,32 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         schemaUtils.sanitizeDataForNewSchema({ type: 'array', items: row({ type: 'number' }) }, oldSchema, [['1']]),
       ).toEqual([[]]);
     });
+    it('keeps a hole under array items, rather than moving the items after it into its row', () => {
+      const rows = (title: string): RJSFSchema => ({ type: 'array', title, items: { type: 'array', items: {} } });
+      expect(schemaUtils.sanitizeDataForNewSchema(rows('New'), rows('Old'), [[1], undefined, [2]])).toStrictEqual([
+        [1],
+        undefined,
+        [2],
+      ]);
+    });
+    it('keeps a hole under enum items, rather than moving the items after it into its place', () => {
+      const letters = (title: string): RJSFSchema => ({ type: 'array', title, items: { type: 'string', enum: ['a'] } });
+      expect(schemaUtils.sanitizeDataForNewSchema(letters('New'), letters('Old'), ['a', undefined, 'a'])).toStrictEqual(
+        ['a', undefined, 'a'],
+      );
+    });
+    it.each<{ type: RJSFSchema['type'] }>([{ type: ['object', 'array'] }, { type: ['array', 'object'] }])(
+      'keeps an array item under $type items an array, rather than an object of their properties',
+      ({ type }) => {
+        const items: RJSFSchema = { type, properties: { a: {} }, items: { type: 'number' } };
+        const schema: RJSFSchema = { type: 'array', items };
+        const objects: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: {} } } };
+        expect(schemaUtils.sanitizeDataForNewSchema(schema, { ...schema, title: 'Old' }, [[1, 2]])).toStrictEqual([
+          [1, 2],
+        ]);
+        expect(schemaUtils.sanitizeDataForNewSchema(schema, objects, [[1, 2]])).toStrictEqual([[1, 2]]);
+      },
+    );
     it('keeps an object item its enum option lists as it is, rather than filling its absent object properties', () => {
       const schema: RJSFSchema = {
         type: 'array',
