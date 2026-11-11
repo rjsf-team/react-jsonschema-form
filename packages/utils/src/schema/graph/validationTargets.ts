@@ -907,22 +907,14 @@ function derive<S extends StrictRJSFSchema>(
  */
 function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: ReadonlySet<object>, container: string): S {
   const written = new Map<object, unknown>();
-  // Whether an object is or holds, however deep, one of the `shared` copies
+  // Whether an object is or holds, however deep, one of the `shared` copies, and whether the object being written
+  // holds one among what it has written so far
   const reaching = new Map<object, boolean>();
+  let holding = false;
   const contents = new Map<string, string>();
   const definitions: GenericObjectType = {};
   // A copy is held only where a keyword holds subschemas, so the data a `const`, `enum` or `default` holds is kept
   // as it is, unwalked
-  const subschemasIn = (key: string, value: unknown): unknown[] => {
-    const shape = keywordShape(key, value);
-    if (shape === 'array' && Array.isArray(value)) {
-      return value;
-    }
-    if (shape === 'map' && isObject(value)) {
-      return Object.values(value);
-    }
-    return shape === 'single' ? [value] : [];
-  };
   const writeKeyword = (key: string, value: unknown): unknown => {
     const shape = keywordShape(key, value);
     if (shape === 'array' && Array.isArray(value)) {
@@ -943,13 +935,16 @@ function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: Readonl
     }
     const known = written.get(value);
     if (known !== undefined) {
+      holding ||= reaching.get(value) === true;
       return known;
     }
+    const outer = holding;
+    holding = false;
     const entries = Object.entries(value).map(([key, sub]) => [key, writeKeyword(key, sub)] as const);
-    const holdsShared = Object.entries(value)
-      .flatMap(([key, sub]) => subschemasIn(key, sub))
-      .some((sub) => isObject(sub) && reaching.get(sub) === true);
-    reaching.set(value, holdsShared || shared.has(value));
+    const holdsShared = holding;
+    const reaches = holdsShared || shared.has(value);
+    reaching.set(value, reaches);
+    holding = outer || reaches;
     if (!shared.has(value) || !holdsShared) {
       const kept = entries.every(([key, sub]) => sub === value[key]) ? value : Object.fromEntries(entries);
       written.set(value, kept);

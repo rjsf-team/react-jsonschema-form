@@ -1,5 +1,6 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { schemaKey, getValidationSchemas } from '@rjsf/utils';
+import AjvDraft04 from 'ajv-draft-04';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import uri from 'ajv/dist/runtime/uri.js';
 
@@ -9,7 +10,9 @@ import pointerValidationTests, {
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
-import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
+import sharedCopyScoringTests, {
+  draft04SharedCopyScoringTests,
+} from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { compiledSchemas as compiled } from '../src/compileSchemaValidatorsCode.ts';
 import createAjvInstance from '../src/createAjvInstance.ts';
@@ -29,6 +32,14 @@ function compiledSchemas(rootSchema: RJSFSchema): Record<string, RJSFSchema> {
   return compiled(getValidationSchemas(rootSchema), schemaKey(rootSchema), uri.default).schemas;
 }
 
+/** Expects the Ajv instance `compileSchemaValidatorsCode()` last created to hold each of `schemas` under its key */
+function expectRegistered(schemas: Record<string, RJSFSchema>): void {
+  const created = vi.mocked(createAjvInstance).mock.results.at(-1);
+  const ajv = created?.type === 'return' ? created.value : undefined;
+  expect(Object.keys(schemas).filter((key) => ajv?.schemas[key] === undefined)).toEqual([]);
+  expect(Object.keys(schemas)).not.toEqual([]);
+}
+
 describe('compileSchemaValidatorsCode()', () => {
   describe('compiling without additional options', () => {
     let schemas: Record<string, RJSFSchema>;
@@ -38,10 +49,7 @@ describe('compileSchemaValidatorsCode()', () => {
       expectWarn(() => compileSchemaValidatorsCode(superSchema), expect.stringContaining('unknown format'));
     });
     it('create AJV instance was called with the expected options', () => {
-      const expectedCompileOpts = {
-        code: { source: true, lines: true },
-        schemas,
-      };
+      const expectedCompileOpts = { code: { source: true, lines: true } };
       expect(createAjvInstance).toHaveBeenCalledWith(
         undefined,
         undefined,
@@ -50,6 +58,7 @@ describe('compileSchemaValidatorsCode()', () => {
         undefined,
         undefined,
       );
+      expectRegistered(schemas);
     });
   });
   describe('compiling WITH additional options', () => {
@@ -70,7 +79,6 @@ describe('compileSchemaValidatorsCode()', () => {
       const expectedCompileOpts = {
         ...ajvOptionsOverrides,
         code: { source: true, lines: false },
-        schemas,
       };
       expect(createAjvInstance).toHaveBeenCalledWith(
         additionalMetaSchemas,
@@ -80,6 +88,7 @@ describe('compileSchemaValidatorsCode()', () => {
         AjvClass,
         extenderFn,
       );
+      expectRegistered(schemas);
     });
   });
   it('compiles the options of a root whose $id ends in an empty fragment, their local $refs naming the root', () => {
@@ -118,6 +127,14 @@ describe('compileSchemaValidatorsCode()', () => {
     return createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema, options)), rootSchema);
   };
   sharedCopyScoringTests(precompiledFor);
+  describe('compiled by ajv-draft-04, which reads only draft-04 identifiers', () => {
+    draft04SharedCopyScoringTests((rootSchema) =>
+      createPrecompiledValidator(
+        evalValidatorCode(compileSchemaValidatorsCode(rootSchema, { AjvClass: AjvDraft04.default })),
+        rootSchema,
+      ),
+    );
+  });
   nestedResourceTests(precompiledFor);
   mergedResourceViewTests(precompiledFor, false);
 });

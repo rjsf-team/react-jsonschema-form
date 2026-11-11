@@ -44,6 +44,26 @@ function deepData(levels: number, leaf: unknown): object {
   return { v: data };
 }
 
+/** Checks that the options of the root `chainedDefinitions(DEEP_CHAIN)` gives, under `dialect`, are matched in time,
+ * the part every path reaches still checked, against the validator `buildValidator` returns for the root
+ */
+function expectChainMatched(
+  buildValidator: (rootSchema: RJSFSchema) => ValidatorType,
+  id: string | undefined,
+  dialect: string | undefined,
+): void {
+  const chained = chainedDefinitions(DEEP_CHAIN, id);
+  const { options } = chained;
+  const root = dialect === undefined ? chained.root : { $schema: dialect, ...chained.root };
+  const validator = buildValidator(root);
+  const match = (data: unknown) => getFirstMatchingOption({ validator }, data, options, root);
+
+  expect(match(deepData(DEEP_CHAIN, 'leaf'))).toBe(0);
+  // The last definition, reached along every path, is still checked
+  expect(match(deepData(DEEP_CHAIN, 5))).toBe(1);
+  expect(match({ v: { a: 'not an object' } })).toBe(1);
+}
+
 /** Runs the suite checking that an option reaching a part of the data along many paths is matched in time and still
  * checks that part, against the validator `buildValidator` returns for a root: the live one or one precompiled from it
  *
@@ -57,18 +77,17 @@ export default function sharedCopyScoringTests(buildValidator: (rootSchema: RJSF
       ['a 2020-12 root', undefined, 'https://json-schema.org/draft/2020-12/schema'],
     ])(
       `matches the option of ${DEEP_CHAIN} levels of definitions naming the next twice, for %s`,
-      (_case, id, dialect) => {
-        const chained = chainedDefinitions(DEEP_CHAIN, id);
-        const { options } = chained;
-        const root = dialect === undefined ? chained.root : { $schema: dialect, ...chained.root };
-        const validator = buildValidator(root);
-        const match = (data: unknown) => getFirstMatchingOption({ validator }, data, options, root);
-
-        expect(match(deepData(DEEP_CHAIN, 'leaf'))).toBe(0);
-        // The last definition, reached along every path, is still checked
-        expect(match(deepData(DEEP_CHAIN, 5))).toBe(1);
-        expect(match({ v: { a: 'not an object' } })).toBe(1);
-      },
+      (_case, id, dialect) => expectChainMatched(buildValidator, id, dialect),
     );
   });
+}
+
+/** Runs the suite of `sharedCopyScoringTests()` for a draft-04 root, against a validator `buildValidator` returns that
+ * reads an identifier from draft-04's `id` alone
+ *
+ * @param buildValidator - Returns the validator to match the options of the root with
+ */
+export function draft04SharedCopyScoringTests(buildValidator: (rootSchema: RJSFSchema) => ValidatorType): void {
+  it(`matches the option of ${DEEP_CHAIN} levels of definitions naming the next twice, for a draft-04 root`, () =>
+    expectChainMatched(buildValidator, undefined, 'http://json-schema.org/draft-04/schema#'));
 }

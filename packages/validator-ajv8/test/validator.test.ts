@@ -20,6 +20,7 @@ import {
   SHARED_COPY_ID,
 } from '@rjsf/utils';
 import type { Ajv, ErrorObject, SchemaValidateFunction } from 'ajv';
+import AjvDraft04 from 'ajv-draft-04';
 import ajvI18n from 'ajv-i18n';
 import { Ajv2019 } from 'ajv/dist/2019.js';
 import { Ajv2020 } from 'ajv/dist/2020.js';
@@ -36,7 +37,10 @@ import pointerValidationTests, {
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
-import sharedCopyScoringTests, { chainedDefinitions } from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
+import sharedCopyScoringTests, {
+  chainedDefinitions,
+  draft04SharedCopyScoringTests,
+} from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import * as pkg from '../src/index.ts';
@@ -3689,6 +3693,9 @@ absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());
 sharedCopyScoringTests(() => customizeValidator());
+describe('a validator built by ajv-draft-04, which reads only draft-04 identifiers', () => {
+  draft04SharedCopyScoringTests(() => customizeValidator({ AjvClass: AjvDraft04.default }));
+});
 
 describe('the parts an option scoring copy holds once', () => {
   it('are removed from Ajv with the copy holding them when the root changes', () => {

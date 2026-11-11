@@ -18,6 +18,7 @@ import { changesData, copyForValidation } from './dataForValidation.ts';
 import localizeErrors from './localizeErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
+import withPartIdsUnder from './withPartIdsUnder.ts';
 
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */
@@ -314,10 +315,9 @@ export default class AJV8Validator<
         // Ajv keys a schema by its `$id` without an empty trailing fragment, so it is removed under that key
         this.subschemaIds.add(schemaId.replace(/#$/, ''));
       }
+      const forAjv = withPartIdsUnder(schemaWithIdRefPrefix, this.ajv.opts.schemaId);
       const compiledValidator =
-        registered ??
-        this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ??
-        this.ajv.compile(schemaWithIdRefPrefix);
+        registered ?? this.ajv.addSchema(forAjv, schemaId).getSchema(schemaId) ?? this.ajv.compile(forAjv);
       compiled = true;
       let changes = this.changesDataOf.get(compiledValidator);
       if (changes === undefined) {

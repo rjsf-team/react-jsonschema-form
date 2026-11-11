@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@rjsf/utils": "workspace:^",
+    "ajv-draft-04": "^1.0.0",
     "ajv-i18n": "^4.2.0"
   },
   "publishConfig": {
