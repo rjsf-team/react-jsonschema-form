@@ -2450,13 +2450,18 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expected: [['y'], ['q']],
     },
     {
-      // `Form` reads an old `default: null` as no default, so the item keeps its `null`
-      name: 'swaps an item holding an old null default for the new one',
+      name: 'swaps an item holding an old null default for the new one (#5815)',
       from: { type: 'array', items: { type: ['string', 'null'], default: null } },
       to: { type: 'array', items: { type: ['string', 'null'], default: 'y' } },
       data: [null, 'q'],
       expected: ['y', 'q'],
-      formExpected: [null, 'q'],
+    },
+    {
+      name: 'swaps an item holding the old default for a new null one (#5815)',
+      from: { type: 'array', items: { type: ['string', 'null'], default: 'x' } },
+      to: { type: 'array', items: { type: ['string', 'null'], default: null } },
+      data: ['x', 'q'],
+      expected: [null, 'q'],
     },
     {
       name: 'keeps a scalar item a readOnly new default differs from',
@@ -2605,6 +2610,38 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: ['a'],
       expected: 'x',
     },
+    {
+      name: 'swaps a property holding an old null default for the new one (#5815)',
+      from: { type: ['string', 'null'], default: null },
+      to: { type: ['string', 'null'], default: 'y' },
+      data: null,
+      expected: 'y',
+    },
+    {
+      name: 'swaps a property holding the old default for a new null one (#5815)',
+      from: { type: ['string', 'null'], default: 'x' },
+      to: { type: ['string', 'null'], default: null },
+      data: 'x',
+      expected: null,
+    },
+    // A property's own `default: null` is what the defaults fill it with, not the default its parent's `default` gives it
+    ...[
+      { data: { v: null }, expected: { v: 'y' } },
+      { data: { v: 'x' }, expected: { v: 'x' } },
+    ].map(({ data, expected }) => {
+      const withOwn = (own: string | null): RJSFSchema => ({
+        type: 'object',
+        properties: { v: { type: ['string', 'null'], default: own } },
+        default: { v: 'x' },
+      });
+      return {
+        name: `reads a property's own null default over its parent's, holding ${JSON.stringify(data.v)} (#5815)`,
+        from: withOwn(null),
+        to: withOwn('y'),
+        data,
+        expected,
+      };
+    }),
   ])('$name', ({ from, to, data, expected }) => {
     const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
     const ref = createRef<FormRef<{ value?: unknown }>>();
@@ -2618,5 +2655,22 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       value: data,
     });
     expect(sanitized).toEqual({ value: expected });
+  });
+  it("keeps a clear of a property holding its own null default when its parent's default changes (#5815)", () => {
+    const schemaWith = (parentDefault: string): RJSFSchema => ({
+      type: 'object',
+      default: { v: parentDefault },
+      properties: { v: { type: ['string', 'null'], default: null }, w: { type: 'string' } },
+    });
+    const from = schemaWith('x');
+    const to = schemaWith('z');
+    const data = { v: undefined, w: 'k' };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} validator={validator} initialFormData={data} />);
+
+    rerender(<Form ref={ref} schema={to} validator={validator} initialFormData={data} />);
+
+    expect(handleOf(ref).getFormData()).toStrictEqual(data);
+    expect(createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, from, data)).toStrictEqual(data);
   });
 });

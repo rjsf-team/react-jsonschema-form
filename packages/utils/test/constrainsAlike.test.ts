@@ -21,4 +21,11 @@ describe('constrainsAlike()', () => {
     expect(constrainsAlike(field, field, 'a', 'b')).toBe(false);
     expect(constrainsAlike({ ...field, default: 'b' }, field, 'a', 'b')).toBe(true);
   });
+
+  it('reads a null default of its own over the one the schema holding the field declares (#5815)', () => {
+    const field: RJSFSchema = { type: ['string', 'null'] };
+
+    expect(constrainsAlike({ ...field, default: null }, field, 'a', 'a')).toBe(false);
+    expect(constrainsAlike({ ...field, default: null }, { ...field, default: null }, 'a', 'b')).toBe(true);
+  });
 });

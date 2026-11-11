@@ -175,7 +175,8 @@ function itemConstReplacement<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as
- * `oldSchema`, a `default` the schema holding it declares for it standing in for its own as it does for the defaults.
+ * `oldSchema`, a `default` the schema holding it declares for it standing in where it declares none, a `null` one
+ * counting, as it does for the defaults.
  * A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the schema, so it is read as no
  * type. These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across
  * a schema change, or gives way to the new schema's defaults, as `sanitizeDataForNewSchema()` and an `anyOf`/`oneOf`
@@ -198,7 +199,10 @@ export function constrainsAlike<S extends StrictRJSFSchema = RJSFSchema>(
     isSameType(declaredType(oldSchema), declaredType(newSchema)) &&
     deepEquals(oldSchema.const, newSchema.const) &&
     oldSchema.maxItems === newSchema.maxItems &&
-    deepEquals(oldSchema.default ?? oldInheritedDefault, newSchema.default ?? newInheritedDefault) &&
+    deepEquals(
+      getByPath(oldSchema, DEFAULT_KEY, oldInheritedDefault),
+      getByPath(newSchema, DEFAULT_KEY, newInheritedDefault),
+    ) &&
     deepEquals(enumValuesForSchema<S>(oldSchema), enumValuesForSchema<S>(newSchema))
   );
 }
