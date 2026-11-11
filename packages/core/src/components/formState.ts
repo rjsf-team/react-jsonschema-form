@@ -53,7 +53,7 @@ import { holdsClear, holdsClearAt, holdsValue, keepRecordedClears } from './keep
 import { keyMoveOf, moveErrorKeys, moveErrorSchemaKeys, movedPaths, withKeysMoved } from './keyMove.ts';
 import type { ContainerKeyMove, KeyMove, MoveFate } from './keyMove.ts';
 import type { FieldTree, FirstRenderFill } from './sanitizeFieldTree.ts';
-import sanitizeFieldTree from './sanitizeFieldTree.ts';
+import sanitizeFieldTree, { undefinedKeysIn } from './sanitizeFieldTree.ts';
 import type { UiStateReader } from './uiState.ts';
 import {
   asFieldValue,
@@ -1193,9 +1193,10 @@ function resolveRetrievedSchema<T, S extends StrictRJSFSchema, F extends FormCon
 interface DeriveDataOptions {
   /** Sanitize the data against the field tree of the state before this pass, see `sanitizeFieldTree()` */
   isSanitized?: boolean;
-  /** For a disabled or read-only form, the recorded clears, the only values the sanitize judges: being disabled or
-   * read-only changes neither the values the data holds nor which clears are kept, and a clear gives way as in an
-   * enabled form. With none recorded there is nothing to judge, so the pass isn't sanitized, see `sanitizes()`
+  /** For a disabled or read-only form, the recorded clears: the sanitize judges only those and the keys holding
+   * `undefined`, see `sanitizeFieldTree()`. Being disabled or read-only changes neither the values the data holds nor
+   * which clears are kept, and a clear gives way as in an enabled form. With neither there is nothing to judge, so the
+   * pass isn't sanitized, see `sanitizes()`
    */
   judgedClears?: ReadonlySet<FieldPath>;
   /** The change this pass is for, if any: the value at its path is the user's */
@@ -1219,11 +1220,13 @@ interface DeriveDataOptions {
   clears?: ReadonlySet<FieldPath>;
 }
 
-/** Whether a pass with `options` sanitizes its data: one asked to, unless it judges only the recorded clears and there
- * are none
+/** Whether a pass with `options` sanitizes `data`: one asked to, unless it judges only the recorded clears and the keys
+ * holding `undefined`, and there are none. The check walks the data alone, which costs far less than the sanitize's
+ * schema resolution per field
  */
-function sanitizes(options: DeriveDataOptions): boolean {
-  return options.isSanitized === true && options.judgedClears?.size !== 0;
+function sanitizes(options: DeriveDataOptions, data: unknown): boolean {
+  const { isSanitized = false, judgedClears } = options;
+  return isSanitized && (judgedClears === undefined || judgedClears.size > 0 || undefinedKeysIn(data).length > 0);
 }
 
 /** Settles the data for `props` and `inputFormData`: any missing required defaults are filled in, then, when asked,
@@ -1300,7 +1303,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     uiSchema,
   });
   let tree = treeOf(formData);
-  if (sanitizes(options) && current && uiState) {
+  if (current && uiState && sanitizes(options, formData)) {
     const seen: string[] = [];
     let previous: FieldTree<T, S, F> = current;
     let roundEdit = edit;
@@ -1564,7 +1567,8 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
   if (Object.is(baseline, current.formData)) {
     return formData;
   }
-  // The recorded clears are the data's, so the baseline of a disabled or read-only form holds none to judge
+  // The recorded clears are the data's, so the baseline of a disabled or read-only form has only its keys holding
+  // `undefined` to judge
   const baselineOptions: DeriveDataOptions = {
     ...options,
     judgedClears: options.judgedClears && NO_PATHS,
@@ -1574,7 +1578,7 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
     ...current,
     formData: baseline,
     // Read only by the sanitize, as the tree the data is diffed against
-    retrievedSchema: sanitizes(baselineOptions)
+    retrievedSchema: sanitizes(baselineOptions, baseline)
       ? resolveRetrievedSchema(current, current.schemaUtils, baseline)
       : current.retrievedSchema,
   };

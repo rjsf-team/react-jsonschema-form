@@ -68,7 +68,9 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   /** The previous tree, which a fill of the previous data is made as */
   oldTree: FieldTree<T, S, F>;
   fillAsFirstRender: FirstRenderFill<T, S, F>;
-  /** For a disabled or read-only form, the clears the form recorded, the only values judged, see `sanitizeFieldTree()` */
+  /** For a disabled or read-only form, the paths of the only values judged, see `sanitizeFieldTree()`: each key holding
+   * `undefined` and each `null` item the form recorded as a clear
+   */
   judgedClears: readonly FieldPathList[] | undefined;
 }
 
@@ -98,9 +100,9 @@ function isEdited<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return editedPath !== undefined && isPathPrefix(path, editedPath);
 }
 
-/** Whether `value`, at `path`, is judged: any value is, and with `judgedClears` only a clear the form recorded there that
- * the data still holds, a key holding `undefined` or a `null` item, so a recorded path a later round re-indexed onto a
- * value leaves that value alone
+/** Whether `value`, at `path`, is judged: any value is, and with `judgedClears` only a key holding `undefined`, or a
+ * `null` item the form recorded as a clear, so a recorded path a later round re-indexed onto a value leaves that value
+ * alone
  */
 function judgesAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
   { judgedClears }: TreeContext<T, S, F>,
@@ -113,6 +115,21 @@ function judgesAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
     (value === (isItem ? null : undefined) &&
       judgedClears.some((clear) => clear.length === path.length && isPathPrefix(path, clear)))
   );
+}
+
+/** The paths of the keys holding `undefined` in `value`, at `path`, those of its items and keys included: in a disabled
+ * or read-only form, these are judged as an enabled form judges them, whoever left them without a value
+ */
+export function undefinedKeysIn(value: unknown, path: FieldPathList = []): FieldPathList[] {
+  if (!Array.isArray(value) && !isPlainObject(value)) {
+    return [];
+  }
+  const isArray = Array.isArray(value);
+  return Object.keys(value).flatMap((key) => {
+    const at = [...path, isArray ? Number(key) : key];
+    const child: unknown = Reflect.get(value, key);
+    return !isArray && child === undefined ? [at] : undefinedKeysIn(child, at);
+  });
 }
 
 /** Where the value of each key of the array or object at `path` was before the change: under the key the change moved
@@ -538,7 +555,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     shownAbove,
   } = pair;
   const { judgedClears } = ctx;
-  // Only the recorded clears are judged, so a subtree holding none keeps every value it holds
+  // Only the keys holding `undefined` and the recorded clears are judged, so a subtree holding neither keeps every value
   if (judgedClears && !judgedClears.some((clear) => isPathPrefix(path, clear))) {
     return newValue;
   }
@@ -728,9 +745,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * it. The value of the field being edited, and of the fields holding it, is the user's, and only what they hold is
  * judged. Both trees show the option the new data is shown under, so an option switch, by the selector or by matching,
  * changes no field's constraints: the data a switch sends is `formDataForNewOption()`'s. With `judgedClears`, as for a
- * disabled or read-only form, only the clears the form recorded are judged, by the same rule, so a clear gives way where
- * it would in an enabled form and every other value the data holds, an `undefined` or a `null` the user didn't clear
- * included, stays as it is.
+ * disabled or read-only form, only the keys holding `undefined` and the `null` items the form recorded as clears are
+ * judged, by the same rule, so each gives way where it would in an enabled form and every value the data holds, a `null`
+ * item the user didn't clear included, stays as it is.
  *
  * @param previous - The previous tree: the schema utilities it is built with, its data, and the root schema retrieved
  *        for that data
@@ -739,7 +756,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param fillAsFirstRender - How the form fills data on its first render, which a field's defaults are judged by
  * @param [edit] - The change being made, if any: its path, and where it moved the keys of the array or object there,
  *        so each item or property is paired with its own previous value
- * @param [judgedClears] - The clears the form recorded, to judge only those
+ * @param [judgedClears] - The clears the form recorded, to judge only those and the keys holding `undefined`
  * @returns - The sanitized data, sharing everything it left alone with `data`
  */
 export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -760,7 +777,10 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       oldData: previous.formData,
       oldTree: previous,
       fillAsFirstRender,
-      judgedClears: judgedClears && Array.from(judgedClears, (clear) => fieldPathToList(clear)),
+      judgedClears: judgedClears && [
+        ...Array.from(judgedClears, (clear) => fieldPathToList(clear)),
+        ...undefinedKeysIn(next.formData),
+      ],
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),

@@ -3931,7 +3931,7 @@ describe('clearing a field with a schema default does not re-apply the default (
       );
 
       it.each(['readonly', 'disabled'] as const)(
-        "keeps a %s form's undefined the user didn't clear under the default merge mode",
+        "fills a %s form's undefined the user didn't clear once its field's default changes, as an enabled form does",
         (mode) => {
           const withDefault = (x: string): RJSFSchema => ({
             type: 'object',
@@ -3945,7 +3945,7 @@ describe('clearing a field with a schema default does not re-apply the default (
 
           rerender({ schema: withDefault('E'), [mode]: true });
 
-          expect(getFormData()).toEqual({ x: undefined });
+          expect(getFormData()).toEqual({ x: 'E' });
         },
       );
 
