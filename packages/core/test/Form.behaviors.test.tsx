@@ -3856,6 +3856,60 @@ describe('clearing a field with a schema default does not re-apply the default (
         expect(onChange.mock.lastCall?.[0].formData).toEqual({ mode: 'b', x: null });
       });
 
+      it.each(['readonly', 'disabled'] as const)('stays cleared through a prop change in a %s form', async (mode) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { x: { type: 'string', default: 'D' }, y: { type: 'string' } },
+        };
+        const { node, rerender, getFormData } = createFormComponent({
+          schema,
+          defaultFormStateBehavior,
+          initialFormData: { x: 'typed' },
+        });
+
+        await user.clear(elementOf(node, 'input#root_x'));
+        rerender({ schema: { ...schema, title: 'Saving' }, defaultFormStateBehavior, [mode]: true });
+        rerender({ schema: { ...schema, title: 'Saved' }, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ x: undefined });
+      });
+
+      it.each<[string, RJSFSchema]>([
+        ['default', { type: 'string', default: 'E' }],
+        ['enum', { type: 'string', default: 'D', enum: ['D', 'E'] }],
+      ])('gives way in a disabled form once its field gets another %s, as in an enabled one', async (_, x) => {
+        const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string', default: 'D' } } };
+        const changed: RJSFSchema = { type: 'object', properties: { x } };
+        const enabled = createFormComponent({ schema, defaultFormStateBehavior, initialFormData: { x: 'typed' } });
+        const disabled = createFormComponent({ schema, defaultFormStateBehavior, initialFormData: { x: 'typed' } });
+        await user.clear(elementOf(enabled.node, 'input#root_x'));
+        await user.clear(elementOf(disabled.node, 'input#root_x'));
+
+        enabled.rerender({ schema: changed, defaultFormStateBehavior });
+        disabled.rerender({ schema: changed, defaultFormStateBehavior, disabled: true });
+
+        expect(disabled.getFormData()).toEqual(enabled.getFormData());
+        expect(disabled.getFormData()).not.toEqual({ x: undefined });
+      });
+
+      it.each(['readonly', 'disabled'] as const)("keeps a %s form's values that a field change would drop", (mode) => {
+        const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+        const { rerender, getFormData } = createFormComponent({
+          schema,
+          defaultFormStateBehavior,
+          [mode]: true,
+          initialFormData: { x: 'typed' },
+        });
+
+        rerender({
+          schema: { type: 'object', properties: { x: { type: 'number' } } },
+          defaultFormStateBehavior,
+          [mode]: true,
+        });
+
+        expect(getFormData()).toEqual({ x: 'typed' });
+      });
+
       it("gives way under the default merge mode too, once the field's default changes", async () => {
         const schema: RJSFSchema = {
           type: 'object',

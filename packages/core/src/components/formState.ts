@@ -1193,6 +1193,10 @@ function resolveRetrievedSchema<T, S extends StrictRJSFSchema, F extends FormCon
 interface DeriveDataOptions {
   /** Sanitize the data against the field tree of the state before this pass, see `sanitizeFieldTree()` */
   isSanitized?: boolean;
+  /** Have the sanitize judge only the clears, for a disabled or read-only form: being disabled or read-only changes
+   * neither the values the data holds nor which clears are kept, and a clear gives way as in an enabled form
+   */
+  judgesOnlyClears?: boolean;
   /** The change this pass is for, if any: the value at its path is the user's */
   edit?: FieldEdit;
   /** The path of the change this pass is for, if a field made it, whose field and the fields above it keep the options
@@ -1209,8 +1213,7 @@ interface DeriveDataOptions {
   /** The option selections to settle under, in place of the state's own, as for the baseline, see `baselineUiState` */
   uiState?: UiStateReader;
   /** The paths of the clears this pass keeps, see `keepRecordedClears()`. They are kept by every fill, so the schema
-   * each round resolves describes the data with its clears. A disabled or read-only form keeps none: it isn't
-   * sanitized, and only the sanitize lets a clear give way once its field changes
+   * each round resolves describes the data with its clears
    */
   clears?: ReadonlySet<FieldPath>;
 }
@@ -1254,7 +1257,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   props: FormProps<T, S, F>,
   schemaUtils: SchemaUtilsType<T, S, F>,
 ): { formData: T | undefined; retrievedSchema: S } {
-  const { isSanitized = false, edit, heldPath, isReset = false } = options;
+  const { isSanitized = false, edit, heldPath, isReset = false, judgesOnlyClears } = options;
   const uiState = options.uiState ?? current?.uiState;
   const { uiSchema = {} } = props;
   // The data is shared against the committed data when there is some, so an unchanged subtree keeps the reference the
@@ -1296,7 +1299,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     for (;;) {
       const sanitized = replaceEqualDeep(
         formData,
-        sanitizeFieldTree(previous, tree, uiState, fillAsFirstRender, roundEdit),
+        sanitizeFieldTree(previous, tree, uiState, fillAsFirstRender, roundEdit, judgesOnlyClears),
       );
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
@@ -1492,10 +1495,13 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   inputFormData: T | undefined,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
-  // A schema change sanitizes the data for the new schema's tree, as an edit does for the tree it leads to, and leaves
-  // the data of a disabled or read-only form as it is, as an edit there does
-  const isSanitized = !props.disabled && !props.readonly;
-  const options = { isSanitized, clears: fillsOverClears(props) && isSanitized ? current?.clearedPaths : undefined };
+  // A schema change sanitizes the data for the new schema's tree, as an edit does for the tree it leads to, and judges
+  // only the clears of a disabled or read-only form, as an edit there does
+  const options = {
+    isSanitized: true,
+    judgesOnlyClears: props.disabled || props.readonly,
+    clears: fillsOverClears(props) ? current?.clearedPaths : undefined,
+  };
   const { formData, context, areSchemaUtilsReused } = deriveFormData(current, inputFormData, options, props);
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   const baseline = current ? rederiveBaseline(current, formData, options, props, context.schemaUtils) : formData;
@@ -1757,10 +1763,11 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
       current,
       formData,
       {
-        isSanitized: editedPath !== undefined && !disabled && !readonly,
+        isSanitized: editedPath !== undefined,
+        judgesOnlyClears: disabled || readonly,
         edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
         heldPath: heldPathOf(change),
-        clears: fillsOverClears(props) && !disabled && !readonly ? clearedPaths : undefined,
+        clears: fillsOverClears(props) ? clearedPaths : undefined,
       },
       props,
     );

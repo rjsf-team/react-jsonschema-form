@@ -66,6 +66,8 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   /** The previous tree, which a fill of the previous data is made as */
   oldTree: FieldTree<T, S, F>;
   fillAsFirstRender: FirstRenderFill<T, S, F>;
+  /** Judge only the clears, as for a disabled or read-only form, see `sanitizeFieldTree()` */
+  judgesOnlyClears: boolean;
 }
 
 /** The options a field of the previous tree showed, by each list's `optionListKey()`, at its path in the previous data,
@@ -519,6 +521,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const edited = isEdited(ctx, path);
   // A property holding `undefined` is a clear, which is judged as the field around it changes
   const isClear = newValue === undefined && !isItem;
+  const judgesValue = !ctx.judgesOnlyClears || isClear || (isItem && newValue === null);
   if (oldRaw === undefined || (isClear ? edited : !hasOld)) {
     return newValue;
   }
@@ -540,7 +543,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const oldDefault = oldOwnDefault ?? oldInherited;
   const newDefault = newOwnDefault ?? newInherited;
   // The edited value and the values holding it are the user's
-  if (!edited) {
+  if (!edited && judgesValue) {
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
     const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, (value) =>
       isOldFill(ctx, oldLayers, oldDefault, oldPath, shownHere, value),
@@ -582,7 +585,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           },
           childPath,
         );
-      } else if (newChild === undefined && oldChild !== undefined && !isEdited(ctx, childPath)) {
+      } else if (
+        newChild === undefined &&
+        oldChild !== undefined &&
+        !isEdited(ctx, childPath) &&
+        (!ctx.judgesOnlyClears || newValue[key] === undefined)
+      ) {
         next = DROP;
       }
       if (next !== newValue[key]) {
@@ -598,14 +606,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
     // An object kept as a guessed extra key whose keys all dropped holds what an empty one does, which is dropped
     const isEmptied = result !== newValue && Object.keys(result).length === 0;
-    return isEmptied && !edited && turnsGuessed(oldLayers, newLayers) ? DROP : result;
+    return isEmptied && !edited && !ctx.judgesOnlyClears && turnsGuessed(oldLayers, newLayers) ? DROP : result;
   }
   if (Array.isArray(newValue)) {
     const newItemsLayer = itemsLayerOf(newLayers);
     const oldItemsLayer = itemsLayerOf(oldLayers);
     const prefixLength = newItemsLayer ? getPrefixLength<S>(newItemsLayer) : 0;
     const maxItems = keywordOf(newLayers, 'maxItems');
-    const isNewBound = !edited && !deepEquals(keywordOf(oldLayers, 'maxItems'), maxItems);
+    const isNewBound = !edited && !ctx.judgesOnlyClears && !deepEquals(keywordOf(oldLayers, 'maxItems'), maxItems);
     // No prefix item is dropped, so one at or past `maxItems` is past the items the array may hold. A new `maxItems`
     // cuts it off with the items after it; an unchanged one leaves the array as it is, for validation to report
     const limit = typeof maxItems === 'number' ? maxItems : Infinity;
@@ -625,7 +633,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (newItem === false) {
         // One the old schema allowed none at too is kept for validation to report, as is one of the array being
         // edited, which is the user's, and an unfilled prefix item, which stays a hole
-        rejectsArray ||= oldItem !== false && !edited && index < limit && !(item === undefined && index < prefixLength);
+        rejectsArray ||=
+          !ctx.judgesOnlyClears &&
+          oldItem !== false &&
+          !edited &&
+          index < limit &&
+          !(item === undefined && index < prefixLength);
         return item;
       }
       if (newItem === true) {
@@ -662,6 +675,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // `sanitizeDataForNewSchema()` keeps it
       if (
         edited ||
+        ctx.judgesOnlyClears ||
         item === undefined ||
         index >= limit ||
         (typeof oldItem === 'object' && constrainsItemAlike(ctx, oldItem, newItem, item))
@@ -693,7 +707,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * one, written in place. A field whose constraints did not change keeps its value, so an edit elsewhere never re-judges
  * it. The value of the field being edited, and of the fields holding it, is the user's, and only what they hold is
  * judged. Both trees show the option the new data is shown under, so an option switch, by the selector or by matching,
- * changes no field's constraints: the data a switch sends is `formDataForNewOption()`'s.
+ * changes no field's constraints: the data a switch sends is `formDataForNewOption()`'s. With `judgesOnlyClears`, as
+ * for a disabled or read-only form, only the clears are judged, by the same rule, so a clear gives way where it would
+ * in an enabled form and every value the data holds stays as it is.
  *
  * @param previous - The previous tree: the schema utilities it is built with, its data, and the root schema retrieved
  *        for that data
@@ -702,6 +718,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param fillAsFirstRender - How the form fills data on its first render, which a field's defaults are judged by
  * @param [edit] - The change being made, if any: its path, and where it moved the keys of the array or object there,
  *        so each item or property is paired with its own previous value
+ * @param [judgesOnlyClears] - Judge only the clears: the properties holding `undefined` and the `null` items
  * @returns - The sanitized data, sharing everything it left alone with `data`
  */
 export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -710,6 +727,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
   uiState: UiStateReader,
   fillAsFirstRender: FirstRenderFill<T, S, F>,
   edit?: FieldEdit,
+  judgesOnlyClears = false,
 ): T | undefined {
   const sanitized = walk(
     {
@@ -721,6 +739,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       oldData: previous.formData,
       oldTree: previous,
       fillAsFirstRender,
+      judgesOnlyClears,
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),
