@@ -16,6 +16,7 @@ import sanitizeDataForNewSchema, {
   constrainsAlike,
   getItemSchema,
   getPrefixLength,
+  namesEveryType,
 } from './sanitizeDataForNewSchema.ts';
 import { constrainsValue } from './schemaKeywords.ts';
 
@@ -40,6 +41,7 @@ export {
   isMultiSelect,
   isSelect,
   isValueEmpty,
+  namesEveryType,
   omitExtraData,
   resolveConstantOptions,
   retrieveSchema,
