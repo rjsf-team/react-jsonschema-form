@@ -27,6 +27,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -45,10 +46,12 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_person__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_person"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -116,10 +119,12 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_person_address__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_person_address"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -314,6 +319,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -599,6 +605,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -804,6 +811,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_tags__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_tags"
@@ -1267,6 +1275,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -1496,6 +1505,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -1514,10 +1524,12 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_person__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_person"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -1585,10 +1597,12 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_person_address__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_person_address"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -1745,6 +1759,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -1893,6 +1908,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_items__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_items"
@@ -2356,6 +2372,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -2585,6 +2602,7 @@ exports[`object fields > additionalProperties 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -2832,6 +2850,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -3240,6 +3259,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -3319,6 +3339,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_4u_"
                     >
                       <fieldset
+                        aria-labelledby="root_foo__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_foo"
@@ -3524,6 +3545,7 @@ exports[`object fields > additionalProperties, description 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -3795,6 +3817,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -4042,6 +4065,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -4121,10 +4145,12 @@ exports[`object fields > additionalProperties, object type 1`] = `
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_3s_"
                     >
                       <div
+                        aria-labelledby="root_foo__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_foo"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -4326,6 +4352,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -4713,6 +4740,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -5100,6 +5128,7 @@ exports[`object fields > object 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -5291,6 +5320,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -5838,10 +5868,12 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
           class="rjsf-field rjsf-field-object"
         >
           <div
+            aria-labelledby="root__title"
             class="m_7485cace mantine-Container-root"
             data-fluid="true"
             data-strategy="block"
             id="root"
+            role="group"
             style="padding: 0rem;"
           >
             <h3
@@ -5954,6 +5986,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -6197,10 +6230,13 @@ exports[`object fields > with title and description > additionalProperties 1`] =
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -6463,10 +6499,13 @@ exports[`object fields > with title and description > object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -6705,10 +6744,13 @@ exports[`object fields > with title and description > show add button and fields
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -6971,10 +7013,13 @@ exports[`object fields > with title and description from both > additionalProper
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -7237,10 +7282,13 @@ exports[`object fields > with title and description from both > object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -7479,10 +7527,13 @@ exports[`object fields > with title and description from uiSchema > additionalPr
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -7745,10 +7796,13 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -7987,10 +8041,13 @@ exports[`object fields > with title and description from uiSchema > show add but
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -8257,6 +8314,7 @@ exports[`object fields > with title and description with global label off > addi
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -8488,6 +8546,7 @@ exports[`object fields > with title and description with global label off > obje
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -8663,6 +8722,7 @@ exports[`object fields > with title and description with global label off > show
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style

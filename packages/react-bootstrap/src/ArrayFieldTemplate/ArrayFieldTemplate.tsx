@@ -1,5 +1,12 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { buttonId, getArrayDescription, getTemplates, getUiOptions, titleDrawsOptionalDataControl } from '@rjsf/utils';
+import {
+  buttonId,
+  getArrayDescription,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  titleDrawsOptionalDataControl,
+} from '@rjsf/utils';
 import { Col, Container, Row } from 'react-bootstrap';
 
 export default function ArrayFieldTemplate<
@@ -31,7 +38,7 @@ export default function ArrayFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-    <div>
+    <div id={id} role='group' {...getContainerAttributes(presentation, id, title)}>
       <Row className='p-0 m-0'>
         <Col className='p-0 m-0'>
           <ArrayFieldTitleTemplate

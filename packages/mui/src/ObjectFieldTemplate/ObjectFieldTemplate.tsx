@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import type { GridProps } from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
 import type {
@@ -9,6 +10,7 @@ import type {
 } from '@rjsf/utils';
 import {
   descriptionId,
+  getContainerAttributes,
   getTemplates,
   getUiOptions,
   titleDrawsOptionalDataControl,
@@ -74,7 +76,13 @@ export default function ObjectFieldTemplate<
   } = getMuiProps<T, S, F, ObjectFieldTemplateMuiProps>(uiOptions);
 
   return (
-    <>
+    // A column, as the `FormControl` around it lays out its parts, so their margins don't collapse into one another
+    <Box
+      id={id}
+      role='group'
+      sx={{ display: 'flex', flexDirection: 'column' }}
+      {...getContainerAttributes(presentation, id, title)}
+    >
       {title && (
         <TitleFieldTemplate
           id={titleId(id)}
@@ -137,6 +145,6 @@ export default function ObjectFieldTemplate<
           </Grid>
         </Grid>
       )}
-    </>
+    </Box>
   );
 }

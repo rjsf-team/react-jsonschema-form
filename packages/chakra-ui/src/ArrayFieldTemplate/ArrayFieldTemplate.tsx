@@ -1,6 +1,13 @@
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 import type { ArrayFieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getArrayDescription, getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
+import {
+  getArrayDescription,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  buttonId,
+  titleDrawsOptionalDataControl,
+} from '@rjsf/utils';
 
 export default function ArrayFieldTemplate<
   T = unknown,
@@ -31,7 +38,7 @@ export default function ArrayFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-    <Box>
+    <Box id={id} role='group' {...getContainerAttributes(presentation, id, title)}>
       <ArrayFieldTitleTemplate
         id={id}
         title={title}

@@ -332,6 +332,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_tasks__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-object"
                                     id="root_tasks"
                                   >
@@ -390,6 +391,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                         class="ant-form-item-control-input-content"
                                                       >
                                                         <fieldset
+                                                          aria-labelledby="root_tasks_0__title"
                                                           id="root_tasks_0"
                                                         >
                                                           <div
@@ -665,6 +667,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                         class="ant-form-item-control-input-content"
                                                       >
                                                         <fieldset
+                                                          aria-labelledby="root_tasks_1__title"
                                                           id="root_tasks_1"
                                                         >
                                                           <div
@@ -1046,6 +1049,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_tags__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                     id="root_tags"
                                   >
@@ -1719,6 +1723,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_person__title"
                                     id="root_person"
                                   >
                                     <div
@@ -1888,6 +1893,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_person_address__title"
                                                       id="root_person_address"
                                                     >
                                                       <div
@@ -2803,6 +2809,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_tasks__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-object"
                                     id="root_tasks"
                                   >
@@ -2861,6 +2868,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                         class="ant-form-item-control-input-content"
                                                       >
                                                         <fieldset
+                                                          aria-labelledby="root_tasks_0__title"
                                                           id="root_tasks_0"
                                                         >
                                                           <div
@@ -3136,6 +3144,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                         class="ant-form-item-control-input-content"
                                                       >
                                                         <fieldset
+                                                          aria-labelledby="root_tasks_1__title"
                                                           id="root_tasks_1"
                                                         >
                                                           <div
@@ -3517,6 +3526,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_tags__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                     id="root_tags"
                                   >
@@ -4020,6 +4030,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_person__title"
                                     id="root_person"
                                   >
                                     <div
@@ -4189,6 +4200,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_person_address__title"
                                                       id="root_person_address"
                                                     >
                                                       <div
@@ -5693,6 +5705,8 @@ exports[`single fields > Cyclic schema 1`] = `
                 class="ant-form-item-control-input-content"
               >
                 <fieldset
+                  aria-describedby="root__description"
+                  aria-labelledby="root__title"
                   id="root"
                 >
                   <div
@@ -5742,6 +5756,8 @@ exports[`single fields > Cyclic schema 1`] = `
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-describedby="root_child__description"
+                                    aria-labelledby="root_child__title"
                                     id="root_child"
                                   >
                                     <div
@@ -8033,6 +8049,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="ant-form-item-control-input-content"
               >
                 <fieldset
+                  aria-labelledby="root__title"
                   id="root"
                 >
                   <div
@@ -8082,6 +8099,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObjectOptional__title"
                                     id="root_nestedObjectOptional"
                                   >
                                     <div
@@ -8191,6 +8209,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                                                       id="root_nestedObjectOptional_deepObjectOptional"
                                                     >
                                                       <div
@@ -8309,6 +8328,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepObject__title"
                                                       id="root_nestedObjectOptional_deepObject"
                                                     >
                                                       <div
@@ -8427,6 +8447,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                                       id="root_nestedObjectOptional_deepArrayOptional"
                                                     >
@@ -8539,6 +8560,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                                       id="root_nestedObjectOptional_deepArrayOptional2"
                                                     >
@@ -8651,6 +8673,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArray__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                                       id="root_nestedObjectOptional_deepArray"
                                                     >
@@ -8772,6 +8795,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArrayOptional__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                     id="root_nestedArrayOptional"
                                   >
@@ -8884,6 +8908,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObject__title"
                                     id="root_nestedObject"
                                   >
                                     <div
@@ -9002,6 +9027,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArray__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                     id="root_nestedArray"
                                   >
@@ -9515,6 +9541,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="ant-form-item-control-input-content"
               >
                 <fieldset
+                  aria-labelledby="root__title"
                   id="root"
                 >
                   <div
@@ -9564,6 +9591,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObjectOptional__title"
                                     id="root_nestedObjectOptional"
                                   >
                                     <div
@@ -9675,6 +9703,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                                                       id="root_nestedObjectOptional_deepObjectOptional"
                                                     >
                                                       <div
@@ -9795,6 +9824,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepObject__title"
                                                       id="root_nestedObjectOptional_deepObject"
                                                     >
                                                       <div
@@ -9915,6 +9945,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                                       id="root_nestedObjectOptional_deepArrayOptional"
                                                     >
@@ -10028,6 +10059,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                                       id="root_nestedObjectOptional_deepArrayOptional2"
                                                     >
@@ -10141,6 +10173,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArray__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                                       id="root_nestedObjectOptional_deepArray"
                                                     >
@@ -10263,6 +10296,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArrayOptional__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                     id="root_nestedArrayOptional"
                                   >
@@ -10376,6 +10410,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObject__title"
                                     id="root_nestedObject"
                                   >
                                     <div
@@ -10496,6 +10531,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArray__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                     id="root_nestedArray"
                                   >
@@ -11015,6 +11051,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="ant-form-item-control-input-content"
               >
                 <fieldset
+                  aria-labelledby="root__title"
                   id="root"
                 >
                   <div
@@ -11064,6 +11101,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObjectOptional__title"
                                     id="root_nestedObjectOptional"
                                   >
                                     <div
@@ -11218,6 +11256,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                                                       id="root_nestedObjectOptional_deepObjectOptional"
                                                     >
                                                       <div
@@ -11324,6 +11363,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepObject__title"
                                                       id="root_nestedObjectOptional_deepObject"
                                                     >
                                                       <div
@@ -11442,6 +11482,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                                       id="root_nestedObjectOptional_deepArrayOptional"
                                                     >
@@ -11554,6 +11595,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                                                       id="root_nestedObjectOptional_deepArrayOptional2"
                                                     >
@@ -11665,6 +11707,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArray__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                                       id="root_nestedObjectOptional_deepArray"
                                                     >
@@ -11786,6 +11829,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArrayOptional__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                                     id="root_nestedArrayOptional"
                                   >
@@ -12051,6 +12095,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObject__title"
                                     id="root_nestedObject"
                                   >
                                     <div
@@ -12169,6 +12214,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArray__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                     id="root_nestedArray"
                                   >
@@ -12300,6 +12346,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                 class="ant-form-item-control-input-content"
                                               >
                                                 <fieldset
+                                                  aria-labelledby="root_optionalObjectWithOneofs__title"
                                                   id="root_optionalObjectWithOneofs"
                                                 >
                                                   <div
@@ -12432,6 +12479,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                 class="ant-form-item-control-input-content"
                                               >
                                                 <fieldset
+                                                  aria-labelledby="root_optionalArrayWithAnyofs__title"
                                                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                                                   id="root_optionalArrayWithAnyofs"
                                                 >
@@ -12571,6 +12619,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="ant-form-item-control-input-content"
               >
                 <fieldset
+                  aria-labelledby="root__title"
                   id="root"
                 >
                   <div
@@ -12620,6 +12669,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObjectOptional__title"
                                     id="root_nestedObjectOptional"
                                   >
                                     <div
@@ -12735,6 +12785,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                                                       id="root_nestedObjectOptional_deepObjectOptional"
                                                     >
                                                       <div
@@ -12803,6 +12854,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepObject__title"
                                                       id="root_nestedObjectOptional_deepObject"
                                                     >
                                                       <div
@@ -12923,6 +12975,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                                       id="root_nestedObjectOptional_deepArrayOptional"
                                                     >
@@ -13036,6 +13089,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                                                       id="root_nestedObjectOptional_deepArrayOptional2"
                                                     >
@@ -13105,6 +13159,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <fieldset
+                                                      aria-labelledby="root_nestedObjectOptional_deepArray__title"
                                                       class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                                       id="root_nestedObjectOptional_deepArray"
                                                     >
@@ -13227,6 +13282,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArrayOptional__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                                     id="root_nestedArrayOptional"
                                   >
@@ -13451,6 +13507,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObject__title"
                                     id="root_nestedObject"
                                   >
                                     <div
@@ -13571,6 +13628,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArray__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                     id="root_nestedArray"
                                   >
@@ -13703,6 +13761,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                 class="ant-form-item-control-input-content"
                                               >
                                                 <fieldset
+                                                  aria-labelledby="root_optionalObjectWithOneofs__title"
                                                   id="root_optionalObjectWithOneofs"
                                                 >
                                                   <div
@@ -13797,6 +13856,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                 class="ant-form-item-control-input-content"
                                               >
                                                 <fieldset
+                                                  aria-labelledby="root_optionalArrayWithAnyofs__title"
                                                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                                                   id="root_optionalArrayWithAnyofs"
                                                 >
@@ -13894,6 +13954,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="ant-form-item-control-input-content"
               >
                 <fieldset
+                  aria-labelledby="root__title"
                   id="root"
                 >
                   <div
@@ -13943,6 +14004,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObjectOptional__title"
                                     id="root_nestedObjectOptional"
                                   >
                                     <div
@@ -14049,6 +14111,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArrayOptional__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                                     id="root_nestedArrayOptional"
                                   >
@@ -14160,6 +14223,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObject__title"
                                     id="root_nestedObject"
                                   >
                                     <div
@@ -14278,6 +14342,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArray__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                     id="root_nestedArray"
                                   >
@@ -14409,6 +14474,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                 class="ant-form-item-control-input-content"
                                               >
                                                 <fieldset
+                                                  aria-labelledby="root_optionalObjectWithOneofs__title"
                                                   id="root_optionalObjectWithOneofs"
                                                 >
                                                   <div
@@ -14541,6 +14607,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                 class="ant-form-item-control-input-content"
                                               >
                                                 <fieldset
+                                                  aria-labelledby="root_optionalArrayWithAnyofs__title"
                                                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                                                   id="root_optionalArrayWithAnyofs"
                                                 >
@@ -14680,6 +14747,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="ant-form-item-control-input-content"
               >
                 <fieldset
+                  aria-labelledby="root__title"
                   id="root"
                 >
                   <div
@@ -14729,6 +14797,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObjectOptional__title"
                                     id="root_nestedObjectOptional"
                                   >
                                     <div
@@ -14797,6 +14866,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArrayOptional__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                                     id="root_nestedArrayOptional"
                                   >
@@ -14866,6 +14936,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedObject__title"
                                     id="root_nestedObject"
                                   >
                                     <div
@@ -14985,6 +15056,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <fieldset
+                                    aria-labelledby="root_nestedArray__title"
                                     class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                                     id="root_nestedArray"
                                   >
@@ -15117,6 +15189,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                 class="ant-form-item-control-input-content"
                                               >
                                                 <fieldset
+                                                  aria-labelledby="root_optionalObjectWithOneofs__title"
                                                   id="root_optionalObjectWithOneofs"
                                                 >
                                                   <div
@@ -15211,6 +15284,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                 class="ant-form-item-control-input-content"
                                               >
                                                 <fieldset
+                                                  aria-labelledby="root_optionalArrayWithAnyofs__title"
                                                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                                                   id="root_optionalArrayWithAnyofs"
                                                 >
@@ -18810,6 +18884,7 @@ exports[`single fields > title field 1`] = `
                 class="ant-form-item-control-input-content"
               >
                 <fieldset
+                  aria-labelledby="root__title"
                   id="root"
                 >
                   <div

@@ -11,7 +11,14 @@ import type {
   StrictRJSFSchema,
   GenericObjectType,
 } from '@rjsf/utils';
-import { getArrayDescription, getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
+import {
+  getArrayDescription,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  buttonId,
+  titleDrawsOptionalDataControl,
+} from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
@@ -76,7 +83,7 @@ export default function ArrayFieldTemplate<
   } = getMuiProps<T, S, F, ArrayFieldTemplateMuiProps>(uiOptions);
 
   return (
-    <Paper elevation={2} {...arrayPaper}>
+    <Paper elevation={2} id={id} role='group' {...getContainerAttributes(presentation, id, title)} {...arrayPaper}>
       <Box {...arrayBox} sx={computeSxProps<BoxProps>({ p: 2 }, arrayBox)}>
         <ArrayFieldTitleTemplate
           id={id}

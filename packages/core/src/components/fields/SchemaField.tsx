@@ -1491,6 +1491,7 @@ export function useSchemaFieldPlan<
     errors: ownErrors,
     hideError,
     hidden: hidden || isOptedOut,
+    concealed: hidden,
     required: effectiveRequired,
     inherited: inheritedPresentation?.plan,
     shownOptionField: optionsRenderedAbove ? null : shownOptionField,

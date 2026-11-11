@@ -17,8 +17,10 @@ export interface InheritedPresentation {
 }
 
 /** Carries a field's plan to the field below it rendering the same id. `SchemaField` provides it around the field it
- * renders and reads it by id, so a field with an id of its own, such as an array item or a type selector, builds its
- * plan from scratch, and a replaced `AnyOfField`, `OneOfField` or `FallbackField` has nothing to forward
+ * renders and reads it by id, so a field with an id of its own, such as an array item, builds its plan from scratch, and
+ * a replaced `AnyOfField`, `OneOfField` or `FallbackField` has nothing to forward. The one exception is the fallback
+ * UI's type selector beside a value with a heading of its own, which `FallbackField` hands, under the selector's id, the
+ * parts of its field's plan that describe it
  */
 const PresentationContext = createContext<InheritedPresentation | undefined>(undefined);
 

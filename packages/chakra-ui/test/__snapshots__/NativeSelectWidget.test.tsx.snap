@@ -739,17 +739,28 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
 }
 
 .emotion-2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: var(--chakra-spacing-4);
+}
+
+.emotion-3 {
   display: grid;
   gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-5 {
+.emotion-6 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -768,7 +779,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -788,13 +799,13 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
     user-select: none;
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-7 {
+  .emotion-8 {
     height: -webkit-fit-content;
     height: -moz-fit-content;
     height: fit-content;
@@ -809,7 +820,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     width: 100%;
     min-width: 0;
     outline: 0;
@@ -834,17 +845,17 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
     border-color: var(--chakra-colors-border);
   }
 
-  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-8:is(:focus-visible, [data-focus-visible]) {
+  .emotion-9:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -852,19 +863,19 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
     border-color: var(--focus-ring-color);
   }
 
-  .emotion-8>option,
-  .emotion-8>optgroup {
+  .emotion-9>option,
+  .emotion-9>optgroup {
     background: var(--chakra-colors-bg);
     --bg-currentcolor: var(--chakra-colors-bg);
   }
 
-  .emotion-8:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     border-color: var(--chakra-colors-border-emphasized);
   }
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     position: absolute;
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
@@ -891,21 +902,21 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
     inset-inline-end: var(--chakra-spacing-2);
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 
-  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     color: var(--chakra-colors-fg-error);
   }
 
-  .emotion-9 :where(svg) {
+  .emotion-10 :where(svg) {
     width: 1em;
     height: 1em;
   }
 }
 
-.emotion-10 {
+.emotion-11 {
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -913,12 +924,12 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
   stroke-linejoin: round;
 }
 
-.emotion-11 {
+.emotion-12 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-13 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -966,19 +977,19 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-12 :where(svg) {
+  .emotion-13 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -986,14 +997,14 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-12:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-13:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-12:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-13:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -1018,85 +1029,91 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
         >
           <div
             class="emotion-2"
+            id="root"
+            role="group"
           >
-            <div>
-              <div
-                class="rjsf-field rjsf-field-string"
-              >
-                <fieldset
-                  aria-labelledby=""
-                  class="fieldset__root emotion-0"
-                  data-part="root"
-                  data-scope="fieldset"
+            <div
+              class="emotion-3"
+            >
+              <div>
+                <div
+                  class="rjsf-field rjsf-field-string"
                 >
-                  <div
-                    class="fieldset__content emotion-1"
+                  <fieldset
+                    aria-labelledby=""
+                    class="fieldset__root emotion-0"
+                    data-part="root"
+                    data-scope="fieldset"
                   >
                     <div
-                      class="chakra-field__root emotion-5"
-                      data-part="root"
-                      data-scope="field"
-                      id="field::root_color"
-                      role="group"
+                      class="fieldset__content emotion-1"
                     >
-                      <label
-                        class="chakra-field__label emotion-6"
-                        data-part="label"
-                        data-scope="field"
-                        for="root_color"
-                        id="field::root_color::label"
-                      >
-                        color
-                      </label>
                       <div
-                        class="chakra-native-select__root emotion-7"
+                        class="chakra-field__root emotion-6"
+                        data-part="root"
+                        data-scope="field"
+                        id="field::root_color"
+                        role="group"
                       >
-                        <select
-                          class="chakra-native-select__field emotion-8"
-                          data-part="select"
+                        <label
+                          class="chakra-field__label emotion-7"
+                          data-part="label"
                           data-scope="field"
-                          id="root_color"
-                          name="root_color"
+                          for="root_color"
+                          id="field::root_color::label"
                         >
-                          <option
-                            disabled=""
-                            hidden=""
-                            value=""
-                          >
-                            Pick something
-                          </option>
-                          <option
-                            value="0"
-                          >
-                            red
-                          </option>
-                          <option
-                            value="1"
-                          >
-                            green
-                          </option>
-                          <option
-                            value="2"
-                          >
-                            blue
-                          </option>
-                        </select>
+                          color
+                        </label>
                         <div
-                          class="chakra-native-select__indicator emotion-9"
+                          class="chakra-native-select__root emotion-8"
                         >
-                          <svg
-                            class="emotion-10"
-                            viewBox="0 0 24 24"
+                          <select
+                            class="chakra-native-select__field emotion-9"
+                            data-part="select"
+                            data-scope="field"
+                            id="root_color"
+                            name="root_color"
                           >
-                            <path
-                              d="m6 9 6 6 6-6"
-                            />
-                          </svg>
+                            <option
+                              disabled=""
+                              hidden=""
+                              value=""
+                            >
+                              Pick something
+                            </option>
+                            <option
+                              value="0"
+                            >
+                              red
+                            </option>
+                            <option
+                              value="1"
+                            >
+                              green
+                            </option>
+                            <option
+                              value="2"
+                            >
+                              blue
+                            </option>
+                          </select>
+                          <div
+                            class="chakra-native-select__indicator emotion-10"
+                          >
+                            <svg
+                              class="emotion-11"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="m6 9 6 6 6-6"
+                              />
+                            </svg>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </fieldset>
+                  </fieldset>
+                </div>
               </div>
             </div>
           </div>
@@ -1104,10 +1121,10 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-11"
+      class="emotion-12"
     >
       <button
-        class="chakra-button emotion-12"
+        class="chakra-button emotion-13"
         type="submit"
       >
         Submit

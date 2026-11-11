@@ -1,14 +1,16 @@
 import { createRef, useRef } from 'react';
 import type {
+  ArrayFieldTemplateProps,
   ErrorListProps,
   ErrorSchema,
   FieldProps,
   FormValidation,
+  ObjectFieldTemplateProps,
   RJSFSchema,
   RJSFValidationError,
   WidgetProps,
 } from '@rjsf/utils';
-import { noop, partId, toFieldPath } from '@rjsf/utils';
+import { buttonId, noop, partId, toFieldPath } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -481,6 +483,64 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await submitForm(node, user, true);
 
         expect(node.querySelector('#root_pet__optionalRemove')).not.toHaveFocus();
+        expect(document.body).toHaveFocus();
+      });
+
+      it("focuses nothing inside an object's group that isn't a fieldset for its own minProperties error", async () => {
+        // As a theme's group that is no `<fieldset>` renders it, carrying the field's id
+        const DivObject = ({ id, properties }: ObjectFieldTemplateProps) => (
+          <div id={id} role='group'>
+            {properties.map((property) => property.content)}
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              pet: {
+                type: 'object',
+                minProperties: 2,
+                properties: { name: { type: 'string' }, age: { type: 'number' } },
+              },
+            },
+          },
+          templates: { ObjectFieldTemplate: DivObject },
+          initialFormData: { pet: { name: 'Rex' } },
+          focusOnFirstError: true,
+        });
+
+        // Submitting without clicking the button, which would take focus itself, so focus left in place stays on the body
+        await submitForm(node, user, true);
+
+        expect(node.querySelector('#root_pet_name')).not.toHaveFocus();
+        expect(document.body).toHaveFocus();
+      });
+
+      it("focuses no add button for an array's own minItems error where no element carries the field's id", async () => {
+        // As a custom template, or an author's slot props replacing the id, leaves the group without it
+        const IdlessArray = ({ id, items, canAdd, onAddClick }: ArrayFieldTemplateProps) => (
+          <div>
+            {items}
+            {canAdd && (
+              <button type='button' id={buttonId(id, 'add')} onClick={onAddClick}>
+                Add
+              </button>
+            )}
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { pets: { type: 'array', minItems: 2, items: { type: 'string' } } },
+          },
+          templates: { ArrayFieldTemplate: IdlessArray },
+          initialFormData: { pets: ['a'] },
+          focusOnFirstError: true,
+        });
+
+        // Submitting without clicking the button, which would take focus itself, so focus left in place stays on the body
+        await submitForm(node, user, true);
+
         expect(document.body).toHaveFocus();
       });
 

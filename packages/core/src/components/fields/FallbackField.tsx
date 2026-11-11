@@ -5,7 +5,6 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   fallbackTypeSelectorId,
-  getSchemaOwnTypes,
   getFieldTypeForWidget,
   getTemplates,
   getUiOptions,
@@ -13,7 +12,6 @@ import {
   GUESSED_TYPE_FLAG,
   guessType,
   hasSchemaMarker,
-  JSON_SCHEMA_TYPES,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
@@ -28,18 +26,11 @@ import type { JSONSchema7TypeName } from 'json-schema';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
-import { fallbackValueKeepsWidget, withoutUiWidget } from './fieldWidgetUtils.ts';
+import { fallbackValueKeepsWidget, getFallbackTypes, withoutUiWidget } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
+import type { InheritedPresentation } from './PresentationContext.ts';
+import PresentationContext from './PresentationContext.ts';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
-
-/**
- * Get the types the type selection component offers for a schema: the ones the schema allows, or every JSON Schema
- * type for a schema that allows no particular one.
- * @param schema - The schema being rendered by the fallback UI.
- */
-function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): JSONSchema7TypeName[] {
-  return getSchemaOwnTypes<S>(schema) ?? [...JSON_SCHEMA_TYPES];
-}
 
 /** Whether the fallback UI renders its type selector for `schema`, above the value: only where it offers a choice of
  * types, since one type is not a choice to be made
@@ -434,6 +425,30 @@ function FallbackUiField<
     () => ({ ...selectorsAbove, type: typeSelectorDepth }),
     [selectorsAbove, typeSelectorDepth],
   );
+  const typeSelectorId = fallbackTypeSelectorId(id, typeSelectorDepth);
+  // A value with a heading of its own leaves the field no control for its errors and help to describe, so the type
+  // selector beside it is described by them and marked invalid while errors show, as an option selector beside a
+  // container is. Its plan is built from the parts that describe alone, so its label, description and help stay its own,
+  // and a part `FieldPresentation` gains later isn't handed on
+  const typeSelectorDescribers = useMemo<InheritedPresentation | undefined>(
+    () =>
+      presentation && presentation.control === undefined && (type === 'object' || type === 'array')
+        ? {
+            id: typeSelectorId,
+            plan: {
+              label: { text: '', by: 'none', id: presentation.label.id, requiredMarker: false },
+              description: { text: '', by: 'none', id: presentation.description.id },
+              help: { by: 'none', id: presentation.help.id },
+              errors: presentation.errors,
+              describedBy: presentation.describedBy,
+              showLabel: presentation.showLabel,
+            },
+            title: '',
+            schemaDescription: '',
+          }
+        : undefined,
+    [presentation, type, typeSelectorId],
+  );
 
   // One type is not a choice to be made, so the value field renders alone: without a control that can only be left as
   // it is, and without the template that lays that control out above it, whose wrapper would otherwise put a theme's
@@ -462,20 +477,22 @@ function FallbackUiField<
       schema={schema}
       registry={registry}
       typeSelector={
-        <SchemaField
-          fieldPath={typeSelectorFieldPath}
-          id={fallbackTypeSelectorId(id, typeSelectorDepth)}
-          name={`${name}__fallback_type`}
-          schema={typesOptionSchema as S}
-          uiSchema={typeSelectorUiSchema}
-          formData={type as T}
-          onChange={onTypeChange}
-          onBlur={handleTypeSelectorBlur}
-          onFocus={onFocus}
-          registry={registry}
-          disabled={disabled}
-          readonly={readonly}
-        />
+        <PresentationContext value={typeSelectorDescribers}>
+          <SchemaField
+            fieldPath={typeSelectorFieldPath}
+            id={typeSelectorId}
+            name={`${name}__fallback_type`}
+            schema={typesOptionSchema as S}
+            uiSchema={typeSelectorUiSchema}
+            formData={type as T}
+            onChange={onTypeChange}
+            onBlur={handleTypeSelectorBlur}
+            onFocus={onFocus}
+            registry={registry}
+            disabled={disabled}
+            readonly={readonly}
+          />
+        </PresentationContext>
       }
       schemaField={<SelectorsAboveContext value={selectorsBelow}>{valueField}</SelectorsAboveContext>}
     />

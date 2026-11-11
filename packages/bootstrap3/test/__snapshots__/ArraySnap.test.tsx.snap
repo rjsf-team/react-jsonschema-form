@@ -2231,6 +2231,8 @@ exports[`with title and description > array 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
         id="root"
       >
@@ -2291,6 +2293,8 @@ exports[`with title and description > array icons 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
         id="root"
       >
@@ -2600,6 +2604,8 @@ exports[`with title and description > fixed array 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
         id="root"
       >
@@ -2734,6 +2740,8 @@ exports[`with title and description from both > array 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
         id="root"
       >
@@ -2794,6 +2802,8 @@ exports[`with title and description from both > array icons 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
         id="root"
       >
@@ -3103,6 +3113,8 @@ exports[`with title and description from both > fixed array 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
         id="root"
       >
@@ -3237,6 +3249,8 @@ exports[`with title and description from uiSchema > array 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
         id="root"
       >
@@ -3297,6 +3311,8 @@ exports[`with title and description from uiSchema > array icons 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
         id="root"
       >
@@ -3606,6 +3622,8 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
         id="root"
       >

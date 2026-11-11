@@ -9,7 +9,10 @@ exports[`array fields > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -89,7 +92,10 @@ exports[`array fields > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -456,38 +462,43 @@ exports[`array fields > empty errors array 1`] = `
     >
       <div>
         <div
-          class="p-0 container-fluid"
+          id="root"
+          role="group"
         >
           <div
-            class="row"
-            style="margin-bottom: 10px;"
+            class="p-0 container-fluid"
           >
             <div
-              class="col-12"
+              class="row"
+              style="margin-bottom: 10px;"
             >
-               
               <div
-                class="rjsf-field rjsf-field-string"
+                class="col-12"
               >
-                <div>
-                  <label
-                    class="form-label"
-                    for="root_name"
-                  >
-                    <span
-                      id="root_name__label"
+                 
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_name"
                     >
-                      name
-                    </span>
-                  </label>
-                  <input
-                    class="form-control"
-                    id="root_name"
-                    name="root_name"
-                    placeholder=""
-                    type="text"
-                    value=""
-                  />
+                      <span
+                        id="root_name__label"
+                      >
+                        name
+                      </span>
+                    </label>
+                    <input
+                      class="form-control"
+                      id="root_name"
+                      name="root_name"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -516,7 +527,10 @@ exports[`array fields > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -637,54 +651,59 @@ exports[`array fields > has errors 1`] = `
     >
       <div>
         <div
-          class="p-0 container-fluid"
+          id="root"
+          role="group"
         >
           <div
-            class="row"
-            style="margin-bottom: 10px;"
+            class="p-0 container-fluid"
           >
             <div
-              class="col-12"
+              class="row"
+              style="margin-bottom: 10px;"
             >
-               
               <div
-                class="rjsf-field rjsf-field-string rjsf-field-error"
+                class="col-12"
               >
-                <div>
-                  <label
-                    class="text-danger form-label"
-                    for="root_name"
-                  >
-                    <span
-                      id="root_name__label"
+                 
+                <div
+                  class="rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <div>
+                    <label
+                      class="text-danger form-label"
+                      for="root_name"
                     >
-                      name
-                    </span>
-                  </label>
-                  <input
-                    aria-describedby="root_name__error"
-                    aria-invalid="true"
-                    class="form-control is-invalid"
-                    id="root_name"
-                    name="root_name"
-                    placeholder=""
-                    type="text"
-                    value=""
-                  />
-                  <ul
-                    class="list-group"
-                    id="root_name__error"
-                  >
-                    <li
-                      class="border-0 m-0 p-0 list-group-item"
-                    >
-                      <small
-                        class="m-0 text-danger"
+                      <span
+                        id="root_name__label"
                       >
-                        Bad input
-                      </small>
-                    </li>
-                  </ul>
+                        name
+                      </span>
+                    </label>
+                    <input
+                      aria-describedby="root_name__error"
+                      aria-invalid="true"
+                      class="form-control is-invalid"
+                      id="root_name"
+                      name="root_name"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                    <ul
+                      class="list-group"
+                      id="root_name__error"
+                    >
+                      <li
+                        class="border-0 m-0 p-0 list-group-item"
+                      >
+                        <small
+                          class="m-0 text-danger"
+                        >
+                          Bad input
+                        </small>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -714,38 +733,43 @@ exports[`array fields > no errors 1`] = `
     >
       <div>
         <div
-          class="p-0 container-fluid"
+          id="root"
+          role="group"
         >
           <div
-            class="row"
-            style="margin-bottom: 10px;"
+            class="p-0 container-fluid"
           >
             <div
-              class="col-12"
+              class="row"
+              style="margin-bottom: 10px;"
             >
-               
               <div
-                class="rjsf-field rjsf-field-string"
+                class="col-12"
               >
-                <div>
-                  <label
-                    class="form-label"
-                    for="root_name"
-                  >
-                    <span
-                      id="root_name__label"
+                 
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_name"
                     >
-                      name
-                    </span>
-                  </label>
-                  <input
-                    class="form-control"
-                    id="root_name"
-                    name="root_name"
-                    placeholder=""
-                    type="text"
-                    value=""
-                  />
+                      <span
+                        id="root_name__label"
+                      >
+                        name
+                      </span>
+                    </label>
+                    <input
+                      class="form-control"
+                      id="root_name"
+                      name="root_name"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -774,7 +798,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -796,75 +823,80 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       >
                         <div>
                           <div
-                            class="p-0 container-fluid"
+                            id="root_0"
+                            role="group"
                           >
                             <div
-                              class="row"
-                              style="margin-bottom: 10px;"
+                              class="p-0 container-fluid"
                             >
                               <div
-                                class="col-12"
+                                class="row"
+                                style="margin-bottom: 10px;"
                               >
-                                 
                                 <div
-                                  class="rjsf-field rjsf-field-string"
+                                  class="col-12"
                                 >
-                                  <div>
-                                    <label
-                                      class="form-label"
-                                      for="root_0_name"
-                                    >
-                                      <span
-                                        id="root_0_name__label"
+                                   
+                                  <div
+                                    class="rjsf-field rjsf-field-string"
+                                  >
+                                    <div>
+                                      <label
+                                        class="form-label"
+                                        for="root_0_name"
                                       >
-                                        name
-                                      </span>
-                                    </label>
-                                    <input
-                                      class="form-control"
-                                      id="root_0_name"
-                                      name="root[0][name]"
-                                      placeholder=""
-                                      type="text"
-                                      value="Item 1"
-                                    />
+                                        <span
+                                          id="root_0_name__label"
+                                        >
+                                          name
+                                        </span>
+                                      </label>
+                                      <input
+                                        class="form-control"
+                                        id="root_0_name"
+                                        name="root[0][name]"
+                                        placeholder=""
+                                        type="text"
+                                        value="Item 1"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="row"
-                              style="margin-bottom: 10px;"
-                            >
                               <div
-                                class="col-12"
+                                class="row"
+                                style="margin-bottom: 10px;"
                               >
-                                 
                                 <div
-                                  class="rjsf-field rjsf-field-number"
+                                  class="col-12"
                                 >
-                                  <div>
-                                    <label
-                                      class="form-label"
-                                      for="root_0_value"
-                                    >
-                                      <span
-                                        id="root_0_value__label"
+                                   
+                                  <div
+                                    class="rjsf-field rjsf-field-number"
+                                  >
+                                    <div>
+                                      <label
+                                        class="form-label"
+                                        for="root_0_value"
                                       >
-                                        value
-                                      </span>
-                                    </label>
-                                    <input
-                                      class="form-control"
-                                      id="root_0_value"
-                                      inputmode="decimal"
-                                      name="root[0][value]"
-                                      pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                                      placeholder=""
-                                      title="Enter a number"
-                                      type="text"
-                                      value="10"
-                                    />
+                                        <span
+                                          id="root_0_value__label"
+                                        >
+                                          value
+                                        </span>
+                                      </label>
+                                      <input
+                                        class="form-control"
+                                        id="root_0_value"
+                                        inputmode="decimal"
+                                        name="root[0][value]"
+                                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                                        placeholder=""
+                                        title="Enter a number"
+                                        type="text"
+                                        value="10"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -956,75 +988,80 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       >
                         <div>
                           <div
-                            class="p-0 container-fluid"
+                            id="root_1"
+                            role="group"
                           >
                             <div
-                              class="row"
-                              style="margin-bottom: 10px;"
+                              class="p-0 container-fluid"
                             >
                               <div
-                                class="col-12"
+                                class="row"
+                                style="margin-bottom: 10px;"
                               >
-                                 
                                 <div
-                                  class="rjsf-field rjsf-field-string"
+                                  class="col-12"
                                 >
-                                  <div>
-                                    <label
-                                      class="form-label"
-                                      for="root_1_name"
-                                    >
-                                      <span
-                                        id="root_1_name__label"
+                                   
+                                  <div
+                                    class="rjsf-field rjsf-field-string"
+                                  >
+                                    <div>
+                                      <label
+                                        class="form-label"
+                                        for="root_1_name"
                                       >
-                                        name
-                                      </span>
-                                    </label>
-                                    <input
-                                      class="form-control"
-                                      id="root_1_name"
-                                      name="root[1][name]"
-                                      placeholder=""
-                                      type="text"
-                                      value="Item 2"
-                                    />
+                                        <span
+                                          id="root_1_name__label"
+                                        >
+                                          name
+                                        </span>
+                                      </label>
+                                      <input
+                                        class="form-control"
+                                        id="root_1_name"
+                                        name="root[1][name]"
+                                        placeholder=""
+                                        type="text"
+                                        value="Item 2"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="row"
-                              style="margin-bottom: 10px;"
-                            >
                               <div
-                                class="col-12"
+                                class="row"
+                                style="margin-bottom: 10px;"
                               >
-                                 
                                 <div
-                                  class="rjsf-field rjsf-field-number"
+                                  class="col-12"
                                 >
-                                  <div>
-                                    <label
-                                      class="form-label"
-                                      for="root_1_value"
-                                    >
-                                      <span
-                                        id="root_1_value__label"
+                                   
+                                  <div
+                                    class="rjsf-field rjsf-field-number"
+                                  >
+                                    <div>
+                                      <label
+                                        class="form-label"
+                                        for="root_1_value"
                                       >
-                                        value
-                                      </span>
-                                    </label>
-                                    <input
-                                      class="form-control"
-                                      id="root_1_value"
-                                      inputmode="decimal"
-                                      name="root[1][value]"
-                                      pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                                      placeholder=""
-                                      title="Enter a number"
-                                      type="text"
-                                      value="20"
-                                    />
+                                        <span
+                                          id="root_1_value__label"
+                                        >
+                                          value
+                                        </span>
+                                      </label>
+                                      <input
+                                        class="form-control"
+                                        id="root_1_value"
+                                        inputmode="decimal"
+                                        name="root[1][value]"
+                                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                                        placeholder=""
+                                        title="Enter a number"
+                                        type="text"
+                                        value="20"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -1174,7 +1211,10 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -1488,7 +1528,10 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -1618,7 +1661,10 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -1639,7 +1685,10 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         class="rjsf-field rjsf-field-array"
                       >
                         <div>
-                          <div>
+                          <div
+                            id="root_0"
+                            role="group"
+                          >
                             <div
                               class="p-0 m-0 row"
                             >
@@ -1969,7 +2018,10 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         class="rjsf-field rjsf-field-array"
                       >
                         <div>
-                          <div>
+                          <div
+                            id="root_1"
+                            role="group"
+                          >
                             <div
                               class="p-0 m-0 row"
                             >
@@ -2358,7 +2410,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -2380,75 +2435,80 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       >
                         <div>
                           <div
-                            class="p-0 container-fluid"
+                            id="root_0"
+                            role="group"
                           >
                             <div
-                              class="row"
-                              style="margin-bottom: 10px;"
+                              class="p-0 container-fluid"
                             >
                               <div
-                                class="col-12"
+                                class="row"
+                                style="margin-bottom: 10px;"
                               >
-                                 
                                 <div
-                                  class="rjsf-field rjsf-field-string"
+                                  class="col-12"
                                 >
-                                  <div>
-                                    <label
-                                      class="form-label"
-                                      for="root_0_name"
-                                    >
-                                      <span
-                                        id="root_0_name__label"
+                                   
+                                  <div
+                                    class="rjsf-field rjsf-field-string"
+                                  >
+                                    <div>
+                                      <label
+                                        class="form-label"
+                                        for="root_0_name"
                                       >
-                                        name
-                                      </span>
-                                    </label>
-                                    <input
-                                      class="form-control"
-                                      id="root_0_name"
-                                      name="root.0.name"
-                                      placeholder=""
-                                      type="text"
-                                      value="Item 1"
-                                    />
+                                        <span
+                                          id="root_0_name__label"
+                                        >
+                                          name
+                                        </span>
+                                      </label>
+                                      <input
+                                        class="form-control"
+                                        id="root_0_name"
+                                        name="root.0.name"
+                                        placeholder=""
+                                        type="text"
+                                        value="Item 1"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="row"
-                              style="margin-bottom: 10px;"
-                            >
                               <div
-                                class="col-12"
+                                class="row"
+                                style="margin-bottom: 10px;"
                               >
-                                 
                                 <div
-                                  class="rjsf-field rjsf-field-number"
+                                  class="col-12"
                                 >
-                                  <div>
-                                    <label
-                                      class="form-label"
-                                      for="root_0_value"
-                                    >
-                                      <span
-                                        id="root_0_value__label"
+                                   
+                                  <div
+                                    class="rjsf-field rjsf-field-number"
+                                  >
+                                    <div>
+                                      <label
+                                        class="form-label"
+                                        for="root_0_value"
                                       >
-                                        value
-                                      </span>
-                                    </label>
-                                    <input
-                                      class="form-control"
-                                      id="root_0_value"
-                                      inputmode="decimal"
-                                      name="root.0.value"
-                                      pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                                      placeholder=""
-                                      title="Enter a number"
-                                      type="text"
-                                      value="10"
-                                    />
+                                        <span
+                                          id="root_0_value__label"
+                                        >
+                                          value
+                                        </span>
+                                      </label>
+                                      <input
+                                        class="form-control"
+                                        id="root_0_value"
+                                        inputmode="decimal"
+                                        name="root.0.value"
+                                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                                        placeholder=""
+                                        title="Enter a number"
+                                        type="text"
+                                        value="10"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -2540,75 +2600,80 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       >
                         <div>
                           <div
-                            class="p-0 container-fluid"
+                            id="root_1"
+                            role="group"
                           >
                             <div
-                              class="row"
-                              style="margin-bottom: 10px;"
+                              class="p-0 container-fluid"
                             >
                               <div
-                                class="col-12"
+                                class="row"
+                                style="margin-bottom: 10px;"
                               >
-                                 
                                 <div
-                                  class="rjsf-field rjsf-field-string"
+                                  class="col-12"
                                 >
-                                  <div>
-                                    <label
-                                      class="form-label"
-                                      for="root_1_name"
-                                    >
-                                      <span
-                                        id="root_1_name__label"
+                                   
+                                  <div
+                                    class="rjsf-field rjsf-field-string"
+                                  >
+                                    <div>
+                                      <label
+                                        class="form-label"
+                                        for="root_1_name"
                                       >
-                                        name
-                                      </span>
-                                    </label>
-                                    <input
-                                      class="form-control"
-                                      id="root_1_name"
-                                      name="root.1.name"
-                                      placeholder=""
-                                      type="text"
-                                      value="Item 2"
-                                    />
+                                        <span
+                                          id="root_1_name__label"
+                                        >
+                                          name
+                                        </span>
+                                      </label>
+                                      <input
+                                        class="form-control"
+                                        id="root_1_name"
+                                        name="root.1.name"
+                                        placeholder=""
+                                        type="text"
+                                        value="Item 2"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="row"
-                              style="margin-bottom: 10px;"
-                            >
                               <div
-                                class="col-12"
+                                class="row"
+                                style="margin-bottom: 10px;"
                               >
-                                 
                                 <div
-                                  class="rjsf-field rjsf-field-number"
+                                  class="col-12"
                                 >
-                                  <div>
-                                    <label
-                                      class="form-label"
-                                      for="root_1_value"
-                                    >
-                                      <span
-                                        id="root_1_value__label"
+                                   
+                                  <div
+                                    class="rjsf-field rjsf-field-number"
+                                  >
+                                    <div>
+                                      <label
+                                        class="form-label"
+                                        for="root_1_value"
                                       >
-                                        value
-                                      </span>
-                                    </label>
-                                    <input
-                                      class="form-control"
-                                      id="root_1_value"
-                                      inputmode="decimal"
-                                      name="root.1.value"
-                                      pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                                      placeholder=""
-                                      title="Enter a number"
-                                      type="text"
-                                      value="20"
-                                    />
+                                        <span
+                                          id="root_1_value__label"
+                                        >
+                                          value
+                                        </span>
+                                      </label>
+                                      <input
+                                        class="form-control"
+                                        id="root_1_value"
+                                        inputmode="decimal"
+                                        name="root.1.value"
+                                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                                        placeholder=""
+                                        title="Enter a number"
+                                        type="text"
+                                        value="20"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -2758,7 +2823,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -3026,7 +3094,10 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -3048,38 +3119,43 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                       >
                         <div>
                           <div
-                            class="p-0 container-fluid"
+                            id="root_0"
+                            role="group"
                           >
                             <div
-                              class="row"
-                              style="margin-bottom: 10px;"
+                              class="p-0 container-fluid"
                             >
                               <div
-                                class="col-12"
+                                class="row"
+                                style="margin-bottom: 10px;"
                               >
-                                 
                                 <div
-                                  class="rjsf-field rjsf-field-string"
+                                  class="col-12"
                                 >
-                                  <div>
-                                    <label
-                                      class="form-label"
-                                      for="root_0_name"
-                                    >
-                                      <span
-                                        id="root_0_name__label"
+                                   
+                                  <div
+                                    class="rjsf-field rjsf-field-string"
+                                  >
+                                    <div>
+                                      <label
+                                        class="form-label"
+                                        for="root_0_name"
                                       >
-                                        name
-                                      </span>
-                                    </label>
-                                    <input
-                                      class="form-control"
-                                      id="root_0_name"
-                                      name="root_0_name"
-                                      placeholder=""
-                                      type="text"
-                                      value="report.pdf"
-                                    />
+                                        <span
+                                          id="root_0_name__label"
+                                        >
+                                          name
+                                        </span>
+                                      </label>
+                                      <input
+                                        class="form-control"
+                                        id="root_0_name"
+                                        name="root_0_name"
+                                        placeholder=""
+                                        type="text"
+                                        value="report.pdf"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -3197,38 +3273,43 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                       >
                         <div>
                           <div
-                            class="p-0 container-fluid"
+                            id="root_1"
+                            role="group"
                           >
                             <div
-                              class="row"
-                              style="margin-bottom: 10px;"
+                              class="p-0 container-fluid"
                             >
                               <div
-                                class="col-12"
+                                class="row"
+                                style="margin-bottom: 10px;"
                               >
-                                 
                                 <div
-                                  class="rjsf-field rjsf-field-string"
+                                  class="col-12"
                                 >
-                                  <div>
-                                    <label
-                                      class="form-label"
-                                      for="root_1_name"
-                                    >
-                                      <span
-                                        id="root_1_name__label"
+                                   
+                                  <div
+                                    class="rjsf-field rjsf-field-string"
+                                  >
+                                    <div>
+                                      <label
+                                        class="form-label"
+                                        for="root_1_name"
                                       >
-                                        name
-                                      </span>
-                                    </label>
-                                    <input
-                                      class="form-control"
-                                      id="root_1_name"
-                                      name="root_1_name"
-                                      placeholder=""
-                                      type="text"
-                                      value="invoice.pdf"
-                                    />
+                                        <span
+                                          id="root_1_name__label"
+                                        >
+                                          name
+                                        </span>
+                                      </label>
+                                      <input
+                                        class="form-control"
+                                        id="root_1_name"
+                                        name="root_1_name"
+                                        placeholder=""
+                                        type="text"
+                                        value="invoice.pdf"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -3404,7 +3485,12 @@ exports[`with title and description > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -3507,7 +3593,12 @@ exports[`with title and description > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -3966,7 +4057,12 @@ exports[`with title and description > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -4133,7 +4229,12 @@ exports[`with title and description from both > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -4236,7 +4337,12 @@ exports[`with title and description from both > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -4695,7 +4801,12 @@ exports[`with title and description from both > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -4862,7 +4973,12 @@ exports[`with title and description from uiSchema > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -4965,7 +5081,12 @@ exports[`with title and description from uiSchema > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -5424,7 +5545,12 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -5591,7 +5717,10 @@ exports[`with title and description with global label off > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -5671,7 +5800,10 @@ exports[`with title and description with global label off > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >
@@ -6039,7 +6171,10 @@ exports[`with title and description with global label off > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="p-0 m-0 row"
           >

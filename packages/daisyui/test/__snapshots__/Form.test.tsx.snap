@@ -111,6 +111,8 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -125,7 +127,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_tasks__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
+                    id="root_tasks"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -152,7 +157,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <div
+                                aria-labelledby="root_tasks_0__title"
                                 class="form-control "
+                                id="root_tasks_0"
+                                role="group"
                               >
                                 <div
                                   class="title-field mb-6"
@@ -336,7 +344,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <div
+                                aria-labelledby="root_tasks_1__title"
                                 class="form-control "
+                                id="root_tasks_1"
+                                role="group"
                               >
                                 <div
                                   class="title-field mb-6"
@@ -573,6 +584,8 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -587,7 +600,10 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_tags__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    id="root_tags"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -904,6 +920,8 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -1023,6 +1041,8 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -1037,7 +1057,10 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_person__title"
                     class="form-control "
+                    id="root_person"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -1136,7 +1159,10 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_person_address__title"
                               class="form-control "
+                              id="root_person_address"
+                              role="group"
                             >
                               <div
                                 class="title-field mb-6"
@@ -1264,6 +1290,8 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -1365,6 +1393,8 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -1506,6 +1536,8 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -1641,6 +1673,8 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -1706,6 +1740,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -1720,7 +1756,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_tasks__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
+                    id="root_tasks"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -1747,7 +1786,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <div
+                                aria-labelledby="root_tasks_0__title"
                                 class="form-control "
+                                id="root_tasks_0"
+                                role="group"
                               >
                                 <div
                                   class="title-field mb-6"
@@ -1931,7 +1973,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <div
+                                aria-labelledby="root_tasks_1__title"
                                 class="form-control "
+                                id="root_tasks_1"
+                                role="group"
                               >
                                 <div
                                   class="title-field mb-6"
@@ -2168,6 +2213,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -2182,7 +2229,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_tags__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    id="root_tags"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -2499,6 +2549,8 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -2513,7 +2565,10 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_person__title"
                     class="form-control "
+                    id="root_person"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -2612,7 +2667,10 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_person_address__title"
                               class="form-control "
+                              id="root_person_address"
+                              role="group"
                             >
                               <div
                                 class="title-field mb-6"
@@ -2740,6 +2798,8 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -2881,6 +2941,8 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -3085,6 +3147,8 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -3859,7 +3923,11 @@ exports[`single fields > Cyclic schema 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="title-field mb-6"
@@ -3896,7 +3964,11 @@ exports[`single fields > Cyclic schema 1`] = `
                   class="field-template mb-3"
                 >
                   <div
+                    aria-describedby="root_child__description"
+                    aria-labelledby="root_child__title"
                     class="form-control "
+                    id="root_child"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -4554,6 +4626,8 @@ exports[`single fields > field with description 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -4628,6 +4702,8 @@ exports[`single fields > field with description in uiSchema 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -4702,6 +4778,8 @@ exports[`single fields > field with markdown description 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -4782,6 +4860,8 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -5121,6 +5201,8 @@ exports[`single fields > hidden field 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -5292,7 +5374,10 @@ exports[`single fields > optional data controls > does not show optional control
         class="field-template mb-3"
       >
         <div
+          aria-labelledby="root__title"
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="title-field mb-6"
@@ -5323,7 +5408,10 @@ exports[`single fields > optional data controls > does not show optional control
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedObjectOptional__title"
                     class="form-control "
+                    id="root_nestedObjectOptional"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -5388,7 +5476,10 @@ exports[`single fields > optional data controls > does not show optional control
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                               class="form-control "
+                              id="root_nestedObjectOptional_deepObjectOptional"
+                              role="group"
                             >
                               <div
                                 class="title-field mb-6"
@@ -5458,7 +5549,10 @@ exports[`single fields > optional data controls > does not show optional control
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepObject__title"
                               class="form-control "
+                              id="root_nestedObjectOptional_deepObject"
+                              role="group"
                             >
                               <div
                                 class="title-field mb-6"
@@ -5533,7 +5627,10 @@ exports[`single fields > optional data controls > does not show optional control
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                              id="root_nestedObjectOptional_deepArrayOptional"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -5598,7 +5695,10 @@ exports[`single fields > optional data controls > does not show optional control
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                              id="root_nestedObjectOptional_deepArrayOptional2"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -5663,7 +5763,10 @@ exports[`single fields > optional data controls > does not show optional control
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArray__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                              id="root_nestedObjectOptional_deepArray"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -5738,7 +5841,10 @@ exports[`single fields > optional data controls > does not show optional control
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedArrayOptional__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    id="root_nestedArrayOptional"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -5803,7 +5909,10 @@ exports[`single fields > optional data controls > does not show optional control
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedObject__title"
                     class="form-control "
+                    id="root_nestedObject"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -5878,7 +5987,10 @@ exports[`single fields > optional data controls > does not show optional control
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedArray__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    id="root_nestedArray"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -6057,6 +6169,8 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="form-control "
+                          id="root_optionalObjectWithOneofs"
+                          role="group"
                         >
                           <div
                             class="grid grid-cols-1 gap-4 mb-4"
@@ -6223,6 +6337,8 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                          id="root_optionalArrayWithAnyofs"
+                          role="group"
                         >
                           <div
                             class="flex flex-col gap-4"
@@ -6299,7 +6415,10 @@ exports[`single fields > optional data controls > does not show optional control
         class="field-template mb-3"
       >
         <div
+          aria-labelledby="root__title"
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="title-field mb-6"
@@ -6330,7 +6449,10 @@ exports[`single fields > optional data controls > does not show optional control
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedObjectOptional__title"
                     class="form-control "
+                    id="root_nestedObjectOptional"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -6396,7 +6518,10 @@ exports[`single fields > optional data controls > does not show optional control
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                               class="form-control "
+                              id="root_nestedObjectOptional_deepObjectOptional"
+                              role="group"
                             >
                               <div
                                 class="title-field mb-6"
@@ -6467,7 +6592,10 @@ exports[`single fields > optional data controls > does not show optional control
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepObject__title"
                               class="form-control "
+                              id="root_nestedObjectOptional_deepObject"
+                              role="group"
                             >
                               <div
                                 class="title-field mb-6"
@@ -6543,7 +6671,10 @@ exports[`single fields > optional data controls > does not show optional control
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                              id="root_nestedObjectOptional_deepArrayOptional"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -6609,7 +6740,10 @@ exports[`single fields > optional data controls > does not show optional control
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                              id="root_nestedObjectOptional_deepArrayOptional2"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -6675,7 +6809,10 @@ exports[`single fields > optional data controls > does not show optional control
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArray__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                              id="root_nestedObjectOptional_deepArray"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -6751,7 +6888,10 @@ exports[`single fields > optional data controls > does not show optional control
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedArrayOptional__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    id="root_nestedArrayOptional"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -6817,7 +6957,10 @@ exports[`single fields > optional data controls > does not show optional control
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedObject__title"
                     class="form-control "
+                    id="root_nestedObject"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -6893,7 +7036,10 @@ exports[`single fields > optional data controls > does not show optional control
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedArray__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    id="root_nestedArray"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -7077,6 +7223,8 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="form-control "
+                          id="root_optionalObjectWithOneofs"
+                          role="group"
                         >
                           <div
                             class="grid grid-cols-1 gap-4 mb-4"
@@ -7247,6 +7395,8 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                          id="root_optionalArrayWithAnyofs"
+                          role="group"
                         >
                           <div
                             class="flex flex-col gap-4"
@@ -7324,7 +7474,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         class="field-template mb-3"
       >
         <div
+          aria-labelledby="root__title"
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="title-field mb-6"
@@ -7355,7 +7508,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedObjectOptional__title"
                     class="form-control "
+                    id="root_nestedObjectOptional"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -7455,7 +7611,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                               class="form-control "
+                              id="root_nestedObjectOptional_deepObjectOptional"
+                              role="group"
                             >
                               <div
                                 class="title-field mb-6"
@@ -7525,7 +7684,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepObject__title"
                               class="form-control "
+                              id="root_nestedObjectOptional_deepObject"
+                              role="group"
                             >
                               <div
                                 class="title-field mb-6"
@@ -7600,7 +7762,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                              id="root_nestedObjectOptional_deepArrayOptional"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -7665,7 +7830,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+                              id="root_nestedObjectOptional_deepArrayOptional2"
+                              role="group"
                             >
                               <div
                                 class="flex flex-col"
@@ -7728,7 +7896,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArray__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                              id="root_nestedObjectOptional_deepArray"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -7803,7 +7974,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedArrayOptional__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+                    id="root_nestedArrayOptional"
+                    role="group"
                   >
                     <div
                       class="flex flex-col"
@@ -7962,7 +8136,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedObject__title"
                     class="form-control "
+                    id="root_nestedObject"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -8037,7 +8214,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedArray__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    id="root_nestedArray"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -8116,7 +8296,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="field-template mb-3"
                       >
                         <div
+                          aria-labelledby="root_optionalObjectWithOneofs__title"
                           class="form-control "
+                          id="root_optionalObjectWithOneofs"
+                          role="group"
                         >
                           <div
                             class="title-field mb-6"
@@ -8198,7 +8381,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="field-template mb-3"
                       >
                         <div
+                          aria-labelledby="root_optionalArrayWithAnyofs__title"
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+                          id="root_optionalArrayWithAnyofs"
+                          role="group"
                         >
                           <div
                             class="flex flex-col"
@@ -8282,7 +8468,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         class="field-template mb-3"
       >
         <div
+          aria-labelledby="root__title"
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="title-field mb-6"
@@ -8313,7 +8502,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedObjectOptional__title"
                     class="form-control "
+                    id="root_nestedObjectOptional"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -8379,7 +8571,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                               class="form-control "
+                              id="root_nestedObjectOptional_deepObjectOptional"
+                              role="group"
                             >
                               <div
                                 class="title-field mb-6"
@@ -8420,7 +8615,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepObject__title"
                               class="form-control "
+                              id="root_nestedObjectOptional_deepObject"
+                              role="group"
                             >
                               <div
                                 class="title-field mb-6"
@@ -8496,7 +8694,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                              id="root_nestedObjectOptional_deepArrayOptional"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -8562,7 +8763,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+                              id="root_nestedObjectOptional_deepArrayOptional2"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -8599,7 +8803,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="field-template mb-3"
                           >
                             <div
+                              aria-labelledby="root_nestedObjectOptional_deepArray__title"
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                              id="root_nestedObjectOptional_deepArray"
+                              role="group"
                             >
                               <h3
                                 class="text-2xl font-bold"
@@ -8675,7 +8882,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedArrayOptional__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+                    id="root_nestedArrayOptional"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -8806,7 +9016,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedObject__title"
                     class="form-control "
+                    id="root_nestedObject"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -8882,7 +9095,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedArray__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    id="root_nestedArray"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -8962,7 +9178,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="field-template mb-3"
                       >
                         <div
+                          aria-labelledby="root_optionalObjectWithOneofs__title"
                           class="form-control "
+                          id="root_optionalObjectWithOneofs"
+                          role="group"
                         >
                           <div
                             class="title-field mb-6"
@@ -9015,7 +9234,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="field-template mb-3"
                       >
                         <div
+                          aria-labelledby="root_optionalArrayWithAnyofs__title"
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+                          id="root_optionalArrayWithAnyofs"
+                          role="group"
                         >
                           <h3
                             class="text-2xl font-bold"
@@ -9073,7 +9295,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         class="field-template mb-3"
       >
         <div
+          aria-labelledby="root__title"
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="title-field mb-6"
@@ -9104,7 +9329,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedObjectOptional__title"
                     class="form-control "
+                    id="root_nestedObjectOptional"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -9174,7 +9402,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedArrayOptional__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+                    id="root_nestedArrayOptional"
+                    role="group"
                   >
                     <div
                       class="flex flex-col"
@@ -9237,7 +9468,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedObject__title"
                     class="form-control "
+                    id="root_nestedObject"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -9312,7 +9546,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   class="field-template mb-3"
                 >
                   <div
+                    aria-labelledby="root_nestedArray__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    id="root_nestedArray"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -9391,7 +9628,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         class="field-template mb-3"
                       >
                         <div
+                          aria-labelledby="root_optionalObjectWithOneofs__title"
                           class="form-control "
+                          id="root_optionalObjectWithOneofs"
+                          role="group"
                         >
                           <div
                             class="title-field mb-6"
@@ -9473,7 +9713,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         class="field-template mb-3"
                       >
                         <div
+                          aria-labelledby="root_optionalArrayWithAnyofs__title"
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+                          id="root_optionalArrayWithAnyofs"
+                          role="group"
                         >
                           <div
                             class="flex flex-col"
@@ -9558,7 +9801,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         disabled=""
       >
         <div
+          aria-labelledby="root__title"
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="title-field mb-6"
@@ -9590,7 +9836,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   disabled=""
                 >
                   <div
+                    aria-labelledby="root_nestedObjectOptional__title"
                     class="form-control "
+                    id="root_nestedObjectOptional"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -9632,7 +9881,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   disabled=""
                 >
                   <div
+                    aria-labelledby="root_nestedArrayOptional__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+                    id="root_nestedArrayOptional"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -9670,7 +9922,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   disabled=""
                 >
                   <div
+                    aria-labelledby="root_nestedObject__title"
                     class="form-control "
+                    id="root_nestedObject"
+                    role="group"
                   >
                     <div
                       class="title-field mb-6"
@@ -9748,7 +10003,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   disabled=""
                 >
                   <div
+                    aria-labelledby="root_nestedArray__title"
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    id="root_nestedArray"
+                    role="group"
                   >
                     <h3
                       class="text-2xl font-bold"
@@ -9830,7 +10088,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         disabled=""
                       >
                         <div
+                          aria-labelledby="root_optionalObjectWithOneofs__title"
                           class="form-control "
+                          id="root_optionalObjectWithOneofs"
+                          role="group"
                         >
                           <div
                             class="title-field mb-6"
@@ -9885,7 +10146,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         disabled=""
                       >
                         <div
+                          aria-labelledby="root_optionalArrayWithAnyofs__title"
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+                          id="root_optionalArrayWithAnyofs"
+                          role="group"
                         >
                           <h3
                             class="text-2xl font-bold"
@@ -10135,6 +10399,8 @@ exports[`single fields > required checkbox field 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -10199,6 +10465,8 @@ exports[`single fields > required checkbox field, default true 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -12884,7 +13152,10 @@ exports[`single fields > title field 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-labelledby="root__title"
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="title-field mb-6"
@@ -13104,6 +13375,8 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "

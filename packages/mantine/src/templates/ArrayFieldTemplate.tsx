@@ -1,6 +1,13 @@
 import { Fieldset, Box, Group } from '@mantine/core';
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getArrayDescription, getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
+import {
+  getArrayDescription,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  buttonId,
+  titleDrawsOptionalDataControl,
+} from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -50,7 +57,7 @@ export default function ArrayFieldTemplate<
   );
 
   return (
-    <Fieldset legend={legend} className={className} id={id}>
+    <Fieldset legend={legend} className={className} id={id} {...getContainerAttributes(presentation, id, title)}>
       {shownDescription && (
         <ArrayFieldDescriptionTemplate
           description={shownDescription}

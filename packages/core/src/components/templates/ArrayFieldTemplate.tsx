@@ -1,5 +1,6 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
+  getContainerAttributes,
   getArrayDescription,
   getTemplates,
   getUiOptions,
@@ -44,7 +45,11 @@ export default function ArrayFieldTemplate<
   } = registry.templates;
   const { classMap } = registry;
   return (
-    <fieldset className={joinClassNames(className, classMap.arrayFieldset) || undefined} id={id}>
+    <fieldset
+      className={joinClassNames(className, classMap.arrayFieldset) || undefined}
+      id={id}
+      {...getContainerAttributes(presentation, id, title)}
+    >
       <ArrayFieldTitleTemplate
         id={id}
         title={title}

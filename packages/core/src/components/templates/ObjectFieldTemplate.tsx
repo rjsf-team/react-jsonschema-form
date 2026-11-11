@@ -6,6 +6,7 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
+  getContainerAttributes,
   descriptionId,
   getTemplates,
   getUiOptions,
@@ -54,7 +55,11 @@ export default function ObjectFieldTemplate<
   } = registry.templates;
   const { schemaUtils, classMap } = registry;
   return (
-    <fieldset className={joinClassNames(className, classMap.objectFieldset) || undefined} id={id}>
+    <fieldset
+      className={joinClassNames(className, classMap.objectFieldset) || undefined}
+      id={id}
+      {...getContainerAttributes(presentation, id, title)}
+    >
       {title && (
         <TitleFieldTemplate
           id={titleId(id)}

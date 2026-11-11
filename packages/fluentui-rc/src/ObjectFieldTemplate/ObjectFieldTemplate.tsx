@@ -2,6 +2,7 @@ import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   descriptionId,
+  getContainerAttributes,
   getTemplates,
   getUiOptions,
   titleDrawsOptionalDataControl,
@@ -45,7 +46,8 @@ export default function ObjectFieldTemplate<
   } = registry.templates;
   const { schemaUtils } = registry;
   return (
-    <>
+    // A column, as the `Field` around it lays out its parts, so their margins don't collapse into one another
+    <Flex column id={id} role='group' {...getContainerAttributes(presentation, id, title)}>
       {title && (
         <TitleFieldTemplate
           id={titleId(id)}
@@ -92,6 +94,6 @@ export default function ObjectFieldTemplate<
           </Flex>
         )}
       </Flex>
-    </>
+    </Flex>
   );
 }

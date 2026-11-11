@@ -86,6 +86,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_tasks__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_tasks"
           >
@@ -118,6 +119,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
                 >
                   <fieldset
+                    aria-labelledby="root_tasks_0__title"
                     class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                     id="root_tasks_0"
                   >
@@ -307,6 +309,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
                 >
                   <fieldset
+                    aria-labelledby="root_tasks_1__title"
                     class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                     id="root_tasks_1"
                   >
@@ -580,6 +583,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_tags__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_tags"
           >
@@ -1066,6 +1070,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_person__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_person"
           >
@@ -1146,6 +1151,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_person_address__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_person_address"
               >
@@ -1648,6 +1654,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_tasks__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_tasks"
           >
@@ -1680,6 +1687,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
                 >
                   <fieldset
+                    aria-labelledby="root_tasks_0__title"
                     class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                     id="root_tasks_0"
                   >
@@ -1869,6 +1877,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
                 >
                   <fieldset
+                    aria-labelledby="root_tasks_1__title"
                     class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                     id="root_tasks_1"
                   >
@@ -2142,6 +2151,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_tags__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_tags"
           >
@@ -2494,6 +2504,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_person__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_person"
           >
@@ -2574,6 +2585,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_person_address__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_person_address"
               >
@@ -3649,6 +3661,8 @@ exports[`single fields > Cyclic schema 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -3681,6 +3695,8 @@ exports[`single fields > Cyclic schema 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-describedby="root_child__description"
+            aria-labelledby="root_child__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_child"
           >
@@ -5211,6 +5227,7 @@ exports[`single fields > optional data controls > does not show optional control
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -5237,6 +5254,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObjectOptional__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
@@ -5290,6 +5308,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObjectOptional"
               >
@@ -5345,6 +5364,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepObject__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObject"
               >
@@ -5401,6 +5421,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
@@ -5465,6 +5486,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
@@ -5529,6 +5551,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArray__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
@@ -5596,6 +5619,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArrayOptional__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
@@ -5660,6 +5684,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObject__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
@@ -5716,6 +5741,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArray__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
@@ -6035,6 +6061,7 @@ exports[`single fields > optional data controls > does not show optional control
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -6061,6 +6088,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObjectOptional__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
@@ -6115,6 +6143,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObjectOptional"
               >
@@ -6171,6 +6200,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepObject__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObject"
               >
@@ -6228,6 +6258,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
@@ -6293,6 +6324,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
@@ -6358,6 +6390,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArray__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
@@ -6426,6 +6459,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArrayOptional__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
@@ -6491,6 +6525,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObject__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
@@ -6548,6 +6583,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArray__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
@@ -6871,6 +6907,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -6897,6 +6934,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObjectOptional__title"
             class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
@@ -6987,6 +7025,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                 class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObjectOptional"
               >
@@ -7048,6 +7087,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepObject__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObject"
               >
@@ -7104,6 +7144,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
@@ -7168,6 +7209,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
@@ -7232,6 +7274,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArray__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
@@ -7299,6 +7342,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArrayOptional__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
@@ -7480,6 +7524,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObject__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
@@ -7536,6 +7581,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArray__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
@@ -7607,6 +7653,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_optionalObjectWithOneofs__title"
                 class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_optionalObjectWithOneofs"
               >
@@ -7676,6 +7723,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_optionalArrayWithAnyofs__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
@@ -7762,6 +7810,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -7788,6 +7837,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObjectOptional__title"
             class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
@@ -7842,6 +7892,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                 class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObjectOptional"
               >
@@ -7875,6 +7926,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepObject__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObject"
               >
@@ -7932,6 +7984,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
@@ -7997,6 +8050,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
@@ -8033,6 +8087,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedObjectOptional_deepArray__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
@@ -8101,6 +8156,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArrayOptional__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
@@ -8248,6 +8304,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObject__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
@@ -8305,6 +8362,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArray__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
@@ -8377,6 +8435,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_optionalObjectWithOneofs__title"
                 class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_optionalObjectWithOneofs"
               >
@@ -8418,6 +8477,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_optionalArrayWithAnyofs__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
@@ -8476,6 +8536,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -8502,6 +8563,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObjectOptional__title"
             class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
@@ -8563,6 +8625,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArrayOptional__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
@@ -8627,6 +8690,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObject__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
@@ -8683,6 +8747,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArray__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
@@ -8754,6 +8819,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_optionalObjectWithOneofs__title"
                 class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_optionalObjectWithOneofs"
               >
@@ -8823,6 +8889,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_optionalArrayWithAnyofs__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
@@ -8909,6 +8976,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -8935,6 +9003,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObjectOptional__title"
             class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
@@ -8968,6 +9037,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArrayOptional__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
@@ -9004,6 +9074,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_nestedObject__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
@@ -9061,6 +9132,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_nestedArray__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
@@ -9133,6 +9205,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_optionalObjectWithOneofs__title"
                 class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_optionalObjectWithOneofs"
               >
@@ -9174,6 +9247,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_optionalArrayWithAnyofs__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
@@ -11937,6 +12011,7 @@ exports[`single fields > title field 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >

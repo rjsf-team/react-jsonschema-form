@@ -6,7 +6,14 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { getTemplates, getUiOptions, titleId, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
+import {
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  titleId,
+  buttonId,
+  titleDrawsOptionalDataControl,
+} from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 
 import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
@@ -42,6 +49,7 @@ export default function ObjectFieldTemplate<
     schema,
     title,
     uiSchema,
+    presentation,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { TitleFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
@@ -84,7 +92,7 @@ export default function ObjectFieldTemplate<
   const labelColClassName = headingLabelColClassName(prefixCls, formContext);
 
   return (
-    <fieldset id={id}>
+    <fieldset id={id} {...getContainerAttributes(presentation, id, title)}>
       <Row gutter={rowGutter}>
         {title && (
           <Col className={labelColClassName} span={24}>

@@ -17,12 +17,14 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
+  JSON_SCHEMA_TYPES,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   fieldPathEndsWithIndex,
   getDescribedControlAttributes,
   getSchemaType,
   getSelectFieldType,
+  getSchemaOwnTypes,
   getUiOptions,
   getXxxOfKey,
   guessType,
@@ -45,6 +47,15 @@ import {
 import type { JSONSchema7TypeName } from 'json-schema';
 
 import { getFirstOption, getSelectorField, resolveSelectorWidget } from './layoutMultiSchemaFieldSelector.ts';
+
+/**
+ * Get the types the type selection component offers for a schema: the ones the schema allows, or every JSON Schema
+ * type for a schema that allows no particular one.
+ * @param schema - The schema being rendered by the fallback UI.
+ */
+export function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): JSONSchema7TypeName[] {
+  return getSchemaOwnTypes<S>(schema) ?? [...JSON_SCHEMA_TYPES];
+}
 
 /** How `ArrayField` renders an array: as one widget (`multiSelect`, `customWidget`, `files`), as a list of items
  * (`fixed`, `normal`), or as the unsupported-field template when the schema declares no `items`

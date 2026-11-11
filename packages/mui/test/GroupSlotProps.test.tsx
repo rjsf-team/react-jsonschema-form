@@ -36,6 +36,20 @@ describe('the group slots a form author gives', () => {
     expect(screen.getByRole('list')).toHaveAttribute('id', 'root_colors');
   });
 
+  it("gives an array's group the author's arrayPaper role over the plan's", () => {
+    const arraySchema: RJSFSchema = {
+      type: 'object',
+      properties: { pets: { type: 'array', title: 'Pets', items: { type: 'string' } } },
+    };
+    const uiSchema: UiSchema = {
+      pets: { 'ui:options': { mui: { rjsfSlotProps: { arrayPaper: { role: 'region' } } } } },
+    };
+    render(<Form schema={arraySchema} uiSchema={uiSchema} initialFormData={{ pets: ['a'] }} validator={validator} />);
+
+    expect(screen.getByRole('region', { name: 'Pets' })).toHaveAttribute('id', 'root_pets');
+    expect(screen.queryByRole('group', { name: 'Pets' })).not.toBeInTheDocument();
+  });
+
   it("puts an author's radio required on each radio's input without marking each option's label", () => {
     const uiSchema: UiSchema = {
       color: { 'ui:widget': 'radio', 'ui:options': { mui: { rjsfSlotProps: { radio: { required: true } } } } },

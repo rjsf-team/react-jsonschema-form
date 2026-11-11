@@ -1,6 +1,7 @@
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   descriptionId,
+  getContainerAttributes,
   getTemplates,
   getUiOptions,
   titleId,
@@ -54,7 +55,12 @@ export default function ObjectFieldTemplate<
   const isRoot = id === 'root';
 
   return (
-    <div className={`form-control ${isRoot ? 'bg-base-100 p-6 rounded-xl shadow-lg' : ''}`}>
+    <div
+      className={`form-control ${isRoot ? 'bg-base-100 p-6 rounded-xl shadow-lg' : ''}`}
+      id={id}
+      role='group'
+      {...getContainerAttributes(presentation, id, title)}
+    >
       {title && (
         <TitleFieldTemplate
           id={titleId(id)}
