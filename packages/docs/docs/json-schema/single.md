@@ -239,6 +239,7 @@ render(<Form schema={schema} validator={validator} useFallbackUiForUnsupportedTy
 
 Switching the type converts the value that is already there where it can — a number becomes its string spelling, a string becomes the number it reads as — and starts from an empty value where it cannot, such as when switching to an object or an array, or to a number from text that reads as no number at all.
 Text is read as a number only in the notation a number field accepts, so `0x10` and a value naming an infinity start from an empty value rather than becoming a number nobody typed.
+A `boolean` that starts from an empty value in an array item or an `additionalProperties` entry, which can't be left out, starts as `false`, the value its unchecked checkbox shows.
 
 Everything else the schema says still applies to the value: a union that also declares `properties` renders them for its `object` type, and keywords such as `items`, `format` and `minimum` are honored by the field for the type in effect.
 The field for an `object` type whose schema names no `properties`, `patternProperties` or `additionalProperties` takes any key/value pair, so it offers a button for adding them.
