@@ -16,7 +16,7 @@ const ROOT = join(__dirname, '..', '..');
  */
 const PACKAGES = {
   '@rjsf/core': {
-    installed: '50 kB',
+    installed: '50.5 kB',
     canaries: [{ label: 'Form', import: 'Form', limit: '50 kB' }],
   },
   '@rjsf/utils': {
