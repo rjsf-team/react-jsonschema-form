@@ -269,7 +269,7 @@ function keptAsGuessedExtraKey<T, S extends StrictRJSFSchema, F extends FormCont
  * of its value. The extra keys are stubbed with the new option's own `additionalProperties` joined to the object's, as
  * the field renders them, and a key the new option declares, through `allOf` or a condition, is its field's. A new
  * option declaring no `properties`, `const` or `enum` gets nothing from the sanitize, and is handed the data without the
- * keys the old option declares, as the sanitize hands an option declaring properties, so the object's own fields and
+ * keys only the old option declares, so the object's own fields, a field the old option re-declares among them, and its
  * extra keys stay beside the kept ones; any other `undefined` the sanitize returns, as for an object `const` the data
  * fails, is a clear and stays one.
  *
@@ -304,28 +304,35 @@ function withGuessedExtraKeys<T, S extends StrictRJSFSchema, F extends FormConte
     return sanitized;
   }
   const oldProperties: GenericObjectType = renderedOldOption?.properties ?? {};
+  // The object arrives with the extra keys of its data stubbed for the old option among its `properties`, which a
+  // retrieval would read as declared, and a fill as fields of their own
+  const parentProperties = parentSchema.properties ?? {};
   const declaresNoProperties =
     renderedNewOption !== undefined &&
     renderedNewOption.properties === undefined &&
     !(CONST_KEY in renderedNewOption) &&
     renderedNewOption.enum === undefined &&
     getSchemaType<S>(renderedNewOption) === 'object';
+  // A key the object declares stays its own field, even where the old option declares it again, as to narrow it
   const base =
     sanitized === undefined && declaresNoProperties
-      ? Object.fromEntries(Object.entries(formData).filter(([key]) => !Object.hasOwn(oldProperties, key)))
+      ? Object.fromEntries(
+          Object.entries(formData).filter(
+            ([key]) => !Object.hasOwn(oldProperties, key) || declaresProperty<S>(parentProperties, key),
+          ),
+        )
       : sanitized;
   if (!isPlainObject(base)) {
     return sanitized;
   }
+  // `Object.hasOwn()`, so an old property named `constructor` or `toString` the data doesn't hold isn't answered for by
+  // the member every object inherits under that name
   const discarded = Object.keys(oldProperties).filter(
-    (key) => formData[key] !== undefined && !Object.hasOwn(base, key),
+    (key) => Object.hasOwn(formData, key) && formData[key] !== undefined && !Object.hasOwn(base, key),
   );
   if (discarded.length === 0) {
     return sanitized;
   }
-  // The object arrives with the extra keys of its data stubbed for the old option, which a retrieval would read as
-  // declared, and a fill as fields of their own
-  const parentProperties = parentSchema.properties ?? {};
   const declaredOnly: S = {
     ...parentSchema,
     properties: Object.fromEntries(

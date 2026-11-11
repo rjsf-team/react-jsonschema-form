@@ -5572,10 +5572,18 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
 
     // As when the new option declares a property, which the sanitize keeps the object's own keys beside. Where no key is
     // kept, the switch leaves the sanitize's clear of the whole object, as v7 does
-    it.each<{ case: string; a: RJSFSchema; initial: string; expected?: KindData }>([
+    it.each<{ case: string; a: RJSFSchema; name?: RJSFSchema; initial: string; expected?: KindData }>([
       {
         case: "keeps the object's own fields and extra keys beside the kept key",
         a: { type: 'string' },
+        initial: 'x',
+        expected: { name: 'N', a: 'x', foo: 'y' },
+      },
+      // The old option narrowing the object's own field still leaves it the object's
+      {
+        case: "keeps the object's own field where the old option re-declares it",
+        a: { type: 'string' },
+        name: { type: 'string', maxLength: 9 },
         initial: 'x',
         expected: { name: 'N', a: 'x', foo: 'y' },
       },
@@ -5585,11 +5593,11 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
         initial: 'd',
         expected: undefined,
       },
-    ])('$case, when the new option declares nothing', async ({ a, initial, expected }) => {
+    ])('$case, when the new option declares nothing', async ({ a, name, initial, expected }) => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: { name: { type: 'string' } },
-        [keyword]: [{ title: 'S', properties: { a } }, { title: 'T' }],
+        [keyword]: [{ title: 'S', properties: { a, ...(name && { name }) } }, { title: 'T' }],
         additionalProperties: true,
       };
       const { node, formData } = await selectT(schema, { initialFormData: { name: 'N', a: initial, foo: 'y' } });
