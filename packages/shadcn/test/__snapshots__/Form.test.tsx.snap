@@ -10139,6 +10139,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
               >
                 foo
                 <button
+                  aria-label="Remove foo"
                   class="rtl:mr-1 ltr:ml-1 ring-offset-background rounded-full outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1"
                   type="button"
                 >
@@ -10170,6 +10171,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
               >
                 bar
                 <button
+                  aria-label="Remove bar"
                   class="rtl:mr-1 ltr:ml-1 ring-offset-background rounded-full outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1"
                   type="button"
                 >

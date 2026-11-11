@@ -40,6 +40,8 @@ interface FancyMultiSelectProps {
   ariaInvalid?: boolean;
   /** Visible placeholder text for the search input */
   placeholder?: string;
+  /** The accessible name of the button removing a selected item, given the item's label */
+  removeItemLabel: (label: string) => string;
   /** Whether a selection is required, exposed as `aria-required` on the combobox input */
   required?: boolean;
   /** Additional className for styling */
@@ -92,6 +94,7 @@ export function FancyMultiSelect({
   ariaDescribedby,
   ariaInvalid,
   placeholder,
+  removeItemLabel,
   required,
   onFocus,
   onBlur,
@@ -296,6 +299,7 @@ export function FancyMultiSelect({
                 }}
                 onClick={() => handleUnselect(item)}
                 disabled={disabled}
+                aria-label={removeItemLabel(item.label)}
               >
                 <X
                   className={cn(

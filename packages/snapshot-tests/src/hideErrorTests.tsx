@@ -5,34 +5,7 @@ import type { RegistryWidgetsType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { cleanup, render } from '@testing-library/react';
 
-/** The schema each widget needs in order to be the one that renders. Keyed by the name a widget is registered
- * under, which is also what `ui:widget` resolves against, so a theme adding a widget only has to add an entry here,
- * or, from outside this repo, hand one to `hideErrorTests()` as its `fixtures` argument.
- */
-const WIDGET_FIXTURES: Record<string, RJSFSchema> = {
-  AltDateTimeWidget: { type: 'string', format: 'date-time' },
-  AltDateWidget: { type: 'string', format: 'date' },
-  CheckboxWidget: { type: 'boolean' },
-  CheckboxesWidget: { type: 'array', items: { type: 'string', enum: ['north', 'south'] }, uniqueItems: true },
-  ColorWidget: { type: 'string', format: 'color' },
-  DateTimeWidget: { type: 'string', format: 'date-time' },
-  DateWidget: { type: 'string', format: 'date' },
-  EmailWidget: { type: 'string', format: 'email' },
-  FileWidget: { type: 'string', format: 'data-url' },
-  HiddenWidget: { type: 'string' },
-  NativeSelectWidget: { type: 'string', enum: ['primary', 'secondary'] },
-  PasswordWidget: { type: 'string' },
-  RadioWidget: { type: 'string', enum: ['gold', 'silver'] },
-  RangeWidget: { type: 'number', minimum: 0, maximum: 10 },
-  RatingWidget: { type: 'number', minimum: 0, maximum: 5 },
-  SelectWidget: { type: 'string', enum: ['primary', 'secondary'] },
-  TextareaWidget: { type: 'string' },
-  TextWidget: { type: 'string' },
-  TimeWidget: { type: 'string', format: 'time' },
-  toggle: { type: 'boolean' },
-  UpDownWidget: { type: 'number' },
-  URLWidget: { type: 'string', format: 'uri' },
-};
+import { WIDGET_FIXTURES } from './widgetFixtures.ts';
 
 /** `useId` counts up for the lifetime of the module, so the second render of a pair names its ids differently
  * however identical it is otherwise. Every spelling React has given those ids across this package's `react >=19`
@@ -97,8 +70,8 @@ function renderBothWays(Form: ComponentType<FormProps>, widgetName: string, fixt
  *
  * @param Form - The theme's `Form` component
  * @param widgets - The widgets the theme registers, merged over core's defaults to decide the cases that run
- * @param [fixtures] - Schemas for widgets this file does not know, keyed the same way, for a theme registering a
- *        widget of its own
+ * @param [fixtures] - Schemas for widgets `widgetFixtures.ts` does not know, keyed the same way, for a theme
+ *        registering a widget of its own
  */
 export function hideErrorTests(
   Form: ComponentType<FormProps>,

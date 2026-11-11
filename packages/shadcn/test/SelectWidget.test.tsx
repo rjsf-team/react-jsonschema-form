@@ -1735,7 +1735,7 @@ describe("the multiple select's combobox input", () => {
 
     await user.click(screen.getByRole('combobox'));
     await user.tab({ shift: true });
-    const remove = screen.getByRole('button', { name: '' });
+    const remove = screen.getByRole('button', { name: 'Remove red' });
     expect(remove).toHaveFocus();
     await user.keyboard('{ArrowDown}');
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
