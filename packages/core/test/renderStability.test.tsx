@@ -257,6 +257,24 @@ describe('render stability across sibling fields', () => {
     expect(renderCount('root_1')).toBe(otherBefore);
   });
 
+  it('typing in a property of a multi-type item on `object` does not re-render the other properties', async () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'array',
+        items: { type: ['object', 'number'], properties: { first: { type: 'string' }, second: { type: 'string' } } },
+      },
+      initialFormData: [{ first: '', second: '' }],
+      useFallbackUiForUnsupportedType: true,
+      templates: { FieldTemplate: CountingFieldTemplate },
+    });
+    const secondBefore = renderCount('root_0_second');
+    expect(secondBefore).toBeGreaterThan(0);
+
+    await user.type(input(node, 'root_0_first'), 'abc');
+
+    expect(renderCount('root_0_second')).toBe(secondBefore);
+  });
+
   // A schema with a nested conditional sanitizes on every change, whether or not a branch actually swapped, and the
   // search for a swapped-away branch's stale defaults runs on that same path
   it('typing in a field of a schema with a nested conditional re-renders no sibling', async () => {

@@ -1,4 +1,4 @@
-import { use, useCallback, useLayoutEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { use, useCallback, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import type {
   ErrorSchema,
   FallbackFieldProps,
@@ -500,19 +500,29 @@ function FallbackUiField<
   // keeping it as data, is data like any other, which the selector follows. So the clear is remembered, with the data
   // it was sent over, only until data other than its echo arrives, using React's "store information from previous
   // renders" pattern. Only a clear is remembered: any other value the field sends is data the selector reads as it
-  // reads data from outside
+  // reads data from outside. A value the container stores as it stores a clear, such as a widget's own `''` in an entry,
+  // is a clear too
   const [ownClear, setOwnClear] = useState<{ over: unknown }>();
   if (ownClear && !Object.is(formData, ownClear.over)) {
     setOwnClear(Object.is(formData, clearedValue) ? { over: formData } : undefined);
   }
+  // Read by `sendOwnValue` rather than closed over: a handler that changed with the data would hand the value field a
+  // new `onChange` on every edit, re-rendering every property of an `object` below it. Written from a layout Effect of
+  // every commit, so the handler reads the data the last commit showed, which is what render compares `over` with
+  const renderedFormData = useRef<unknown>(formData);
+  useLayoutEffect(() => {
+    renderedFormData.current = formData;
+  });
   const sendOwnValue = useCallback(
     (value: unknown, changedFieldPath: FieldPath, errorSchema?: ErrorSchema<T>, changedId?: string) => {
       if (changedFieldPath === fieldPath) {
-        setOwnClear(value === undefined && clearedValue !== undefined ? { over: formData } : undefined);
+        const isClear =
+          clearedValue !== undefined && Object.is(storedValue(value, fieldPath, isAdditionalEntry), clearedValue);
+        setOwnClear(isClear ? { over: renderedFormData.current } : undefined);
       }
       onChange(value, changedFieldPath, errorSchema, changedId);
     },
-    [fieldPath, clearedValue, formData, onChange, setOwnClear],
+    [fieldPath, clearedValue, isAdditionalEntry, onChange, setOwnClear],
   );
   const isOwnClear = ownClear !== undefined && Object.is(formData, clearedValue);
   // Lives as long as this field does, an `<Activity>` hiding it included, so a field mounting at this path later starts
