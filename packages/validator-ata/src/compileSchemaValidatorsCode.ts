@@ -16,6 +16,7 @@ import {
   SCHEMA_KEY,
   schemaKey,
   getValidationSchemas,
+  SHARED_COPY_ID,
 } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
@@ -228,33 +229,29 @@ function locate(resource: Resource, fragment: string, laterDialect: boolean): [u
   return [node, base];
 }
 
-/** A resource a schema `getValidationSchemas()` lists holds that no resource of the root has the URI of, which only a
- * part a scoring target names once is, and the resource around it, which its `$ref`s are read against, as
- * `withRootIdRefPrefix()` reads those of a subschema the root does not hold. A scoring target names such a part whole.
+/** A part an option's scoring copy holds once, which the copy gives an `$id` starting with `SHARED_COPY_ID`, and the
+ * resource around it, which its `$ref`s are read against, as `withRootIdRefPrefix()` reads those of a subschema the
+ * root does not hold
  */
 interface OwnResource {
   readonly schema: unknown;
   readonly around: Resource;
 }
 
-/** Returns the resources `schema` holds below its top that no resource of the root has the URI of, by `documentKey()`
- * of their URI, each read in the resource around it, see `OwnResource`
+/** Returns the parts a schema `getValidationSchemas()` lists holds once, see `OwnResource`, by `documentKey()` of their
+ * URI. Every other `$id` is read as `standalone()` reads it, the top's own one where it is not the resource `start` is,
+ * so a part below it resolves against the same base in both.
  */
-function ownResourcesOf(
-  schema: unknown,
-  start: Resource,
-  { resources, laterDialect }: Pick<RootReading, 'resources' | 'laterDialect'>,
-): Map<string, OwnResource> {
+function ownResourcesOf(schema: unknown, start: Resource, laterDialect: boolean): Map<string, OwnResource> {
   const own = new Map<string, OwnResource>();
   const visit = (node: unknown, around: Resource) => {
     if (!isObject(node)) {
       return;
     }
-    const resource = node === schema ? undefined : resourceAt(node, around.base, laterDialect);
-    const key = resource === undefined ? undefined : documentKey(resource.base);
-    const isOwn = key !== undefined && !resources.has(key);
-    if (isOwn && !own.has(key)) {
-      own.set(key, { schema: node, around });
+    const resource = node === start.schema ? undefined : resourceAt(node, around.base, laterDialect);
+    const isOwn = resource !== undefined && resourceIdOf(node, laterDialect)?.startsWith(SHARED_COPY_ID) === true;
+    if (isOwn && !own.has(documentKey(resource.base))) {
+      own.set(documentKey(resource.base), { schema: node, around });
     }
     const inner = isOwn ? around : (resource ?? around);
     subschemasOf(node).forEach((subschema) => visit(subschema, inner));
@@ -386,7 +383,7 @@ function standalone(
   const names = new Map<unknown, Map<string, string>>();
   const pending: [string, unknown, Resource][] = [];
   let count = 0;
-  const own = ownResourcesOf(schema, start, { resources, laterDialect });
+  const own = ownResourcesOf(schema, start, laterDialect);
   const ownSchemas = new Set([...own.values()].map((resource) => resource.schema));
   const nameOf = (holder: unknown, fragment: string, subschema: unknown, base: Resource): string => {
     const known = names.get(holder) ?? new Map<string, string>();
@@ -402,7 +399,11 @@ function standalone(
   };
   const renamed = (ref: string, around: Resource): string => {
     const [document] = ref.split('#', 1);
-    const ownTarget = document === '' ? undefined : own.get(documentKey(resolveUri(around.base, document)));
+    // A scoring copy names such a part only whole. A `$ref` with a fragment into one is read as any other: it names a
+    // subschema of the root where the root holds that resource, and otherwise nothing the module compiles, which it
+    // reports when first validated against rather than validate the whole part in its place
+    const whole = ref.length <= document.length + 1;
+    const ownTarget = document === '' || !whole ? undefined : own.get(documentKey(resolveUri(around.base, document)));
     if (ownTarget !== undefined) {
       return nameOf(ownTarget.schema, '#', ownTarget.schema, ownTarget.around);
     }

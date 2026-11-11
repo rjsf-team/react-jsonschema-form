@@ -52,17 +52,23 @@ function deepData(levels: number, leaf: unknown): object {
 export default function sharedCopyScoringTests(buildValidator: (rootSchema: RJSFSchema) => ValidatorType): void {
   describe('scoring an option that reaches a part along many paths (#5771)', () => {
     it.each([
-      ['a root without an $id', undefined],
-      ['a root with an $id', 'https://example.com/root.json'],
-    ])(`matches the option of ${DEEP_CHAIN} levels of definitions naming the next twice, for %s`, (_case, id) => {
-      const { root, options } = chainedDefinitions(DEEP_CHAIN, id);
-      const validator = buildValidator(root);
-      const match = (data: unknown) => getFirstMatchingOption({ validator }, data, options, root);
+      ['a root without an $id', undefined, undefined],
+      ['a root with an $id', 'https://example.com/root.json', undefined],
+      ['a 2020-12 root', undefined, 'https://json-schema.org/draft/2020-12/schema'],
+    ])(
+      `matches the option of ${DEEP_CHAIN} levels of definitions naming the next twice, for %s`,
+      (_case, id, dialect) => {
+        const chained = chainedDefinitions(DEEP_CHAIN, id);
+        const { options } = chained;
+        const root = dialect === undefined ? chained.root : { $schema: dialect, ...chained.root };
+        const validator = buildValidator(root);
+        const match = (data: unknown) => getFirstMatchingOption({ validator }, data, options, root);
 
-      expect(match(deepData(DEEP_CHAIN, 'leaf'))).toBe(0);
-      // The last definition, reached along every path, is still checked
-      expect(match(deepData(DEEP_CHAIN, 5))).toBe(1);
-      expect(match({ v: { a: 'not an object' } })).toBe(1);
-    });
+        expect(match(deepData(DEEP_CHAIN, 'leaf'))).toBe(0);
+        // The last definition, reached along every path, is still checked
+        expect(match(deepData(DEEP_CHAIN, 5))).toBe(1);
+        expect(match({ v: { a: 'not an object' } })).toBe(1);
+      },
+    );
   });
 }

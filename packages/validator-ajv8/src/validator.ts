@@ -9,7 +9,7 @@ import type {
   ValidatorType,
   RawValidationResult,
 } from '@rjsf/utils';
-import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, SHARED_COPY_ID, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import ajvRootSchemaId from './ajvRootSchemaId.ts';
@@ -130,8 +130,17 @@ export default class AJV8Validator<
     }
   }
 
-  /** Removes the schemas `isValid()` added, which were compiled against the root registered when they were added */
+  /** Removes the schemas `isValid()` added, which were compiled against the root registered when they were added, and
+   * the parts an option's scoring copy holds once, whose `$id`, a query starting with `SHARED_COPY_ID`, Ajv registers
+   * resolved against the id of the schema holding it, and which removing that schema leaves in place
+   */
   private removeSubschemas() {
+    for (const ref of Object.keys(this.ajv.refs)) {
+      const query = ref.indexOf(SHARED_COPY_ID);
+      if (query > 0 && this.subschemaIds.has(ref.slice(0, query))) {
+        this.ajv.removeSchema(ref);
+      }
+    }
     this.subschemaIds.forEach((id) => this.ajv.removeSchema(id));
     this.subschemaIds.clear();
   }

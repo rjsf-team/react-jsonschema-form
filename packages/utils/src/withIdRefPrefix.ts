@@ -1,9 +1,8 @@
-import { ID_KEY, REF_KEY, ROOT_SCHEMA_PREFIX } from './constants.ts';
+import { ID_KEY, REF_KEY, ROOT_SCHEMA_PREFIX, SHARED_COPY_ID } from './constants.ts';
 import isObject from './isObject.ts';
 import parseSchemaGraph from './schema/graph/parseSchemaGraph.ts';
 import type { AdoptedSchema, SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
 import { readProvenance } from './schema/graph/provenance.ts';
-import { SHARED_COPY_ID } from './schema/graph/validationTargets.ts';
 import { declaringSeed } from './schema/retrieveSchema.ts';
 import { isSubschemaKeyword, keywordShape, resolveUri } from './schemaUri.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';

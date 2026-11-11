@@ -23,6 +23,7 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
   REQUIRED_KEY,
+  SHARED_COPY_ID,
   THEN_KEY,
   UNEVALUATED_ITEMS_KEY,
   UNEVALUATED_PROPERTIES_KEY,
@@ -689,11 +690,11 @@ function pointed<S extends StrictRJSFSchema>(
  */
 type Dependence = Map<string | NodeId, boolean>;
 
-/** The copies `derive()` makes for one scoring target: `made`, the last made for each place, loosening and cut, with
+/** The copies `derive()` makes for one scoring target: `made`, those made for each place, loosening and cut, each with
  * what it depends on, see `Dependence`, and `shared`, those the target holds in more than one place
  */
 interface Copies<S extends StrictRJSFSchema> {
-  readonly made: Map<string, { readonly copy: S; readonly dependence: Dependence }>;
+  readonly made: Map<string, { readonly copy: S; readonly dependence: Dependence }[]>;
   readonly shared: Set<object>;
 }
 
@@ -753,37 +754,44 @@ function derive<S extends StrictRJSFSchema>(
       }
     }
     const childKey = placeKey(childNode.id, at);
-    let copy: S;
+    const kept = (copy: S) => (below === 'conjuncts' && Object.keys(copy).length === 0 ? undefined : copy);
     if (holds(childKey) || (!viaRef && holds(childNode.id))) {
-      copy = targetAt(graph, childNode.id, at);
-    } else {
-      // A copy is made once per place, loosening, cut and what it depends on, so a part reached along many paths, as
-      // definitions that each name the next twice over reach one, is copied once rather than once per path
-      const childAbove = viaRef ? new Set<NodeId>() : innerAbove;
-      const key = [childKey, as.required, as.additionalProperties, below].join(' ');
-      let known = copies.made.get(key);
-      if (
-        known === undefined ||
-        ![...known.dependence].every(
-          ([reached, held]) =>
-            (typeof reached === 'string' ? innerPath.has(reached) : childAbove.has(reached)) === held,
-        )
-      ) {
-        const on: Dependence = new Map();
-        known = { copy: derive(graph, childNode, at, as, innerPath, childAbove, below, copies, on), dependence: on };
-        copies.made.set(key, known);
-      } else {
-        copies.shared.add(known.copy);
-      }
-      // What the copy of the child depends on, the copy of this node depends on too, but for this node itself
-      for (const reached of known.dependence.keys()) {
-        if (typeof reached === 'string' || !viaRef) {
-          holds(reached);
+      return kept(targetAt(graph, childNode.id, at));
+    }
+    // A copy is made once per place, loosening, cut and what it depends on, so a part reached along many paths, as
+    // definitions that each name the next twice over reach one, is copied once rather than once per path
+    const childAbove = viaRef ? new Set<NodeId>() : innerAbove;
+    const key = [childKey, as.required, as.additionalProperties, below].join(' ');
+    const made = copies.made.get(key) ?? [];
+    copies.made.set(key, made);
+    // A part reached along routes that put another place on the way to it in some and not in others is copied once
+    // for each, so each copy is kept rather than replacing the one made before
+    let known = made.find(({ dependence: on }) => {
+      for (const [reached, held] of on) {
+        if ((typeof reached === 'string' ? innerPath.has(reached) : childAbove.has(reached)) !== held) {
+          return false;
         }
       }
-      copy = known.copy;
+      return true;
+    });
+    const reused = known !== undefined;
+    if (known === undefined) {
+      const on: Dependence = new Map();
+      known = { copy: derive(graph, childNode, at, as, innerPath, childAbove, below, copies, on), dependence: on };
+      made.push(known);
     }
-    return below === 'conjuncts' && Object.keys(copy).length === 0 ? undefined : copy;
+    // What the copy of the child depends on, the copy of this node depends on too, but for this node itself
+    for (const reached of known.dependence.keys()) {
+      if (typeof reached === 'string' || !viaRef) {
+        holds(reached);
+      }
+    }
+    const copy = kept(known.copy);
+    // A copy left out where nothing is left of it is held nowhere, however many places reach it
+    if (reused && copy !== undefined) {
+      copies.shared.add(copy);
+    }
+    return copy;
   };
   const unplaced = (value: unknown, child: NodeId) =>
     pointerTo(graph, child) ?? sub(value, child, undefined, false, KEPT, 'none');
@@ -882,21 +890,14 @@ function derive<S extends StrictRJSFSchema>(
   return schemaFrom(graph.rawRoot, copy);
 }
 
-/** The start of the `$id` that names a copy a scoring target holds once, see `withSharedCopies()`. Only a query, it
- * resolves against the `$id` around it, so a `$ref` to the root, which a validator prefixes with the id it registers the
- * root under, resolves inside the copy as it does outside it, as long as that id names its document by no more than
- * its last path segment.
- */
-export const SHARED_COPY_ID = '?rjsf-copy=';
-
 /** Returns `target` with each of the `shared` copies it holds in more than one place written once, as a resource of its
- * own under the `definitions` of an `allOf` holding the target, and named by its `$id` wherever the target holds it.
+ * own under the `container` of an `allOf` holding the target, and named by its `$id` wherever the target holds it.
  * Definitions that each name the next twice over reach the last along a number of paths that doubles with each level,
  * so a target writing the copy of it out at each would grow as fast, which no validator could compile. Each `$id` is
  * hashed from what the copy holds, so a target lists the same ids however the root holding it was reached, which a
  * precompiled validator finds it by; two copies hashing alike are told apart by a count.
  */
-function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: ReadonlySet<object>): S {
+function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: ReadonlySet<object>, container: string): S {
   const written = new Map<object, unknown>();
   const contents = new Map<string, string>();
   const definitions: GenericObjectType = {};
@@ -935,7 +936,7 @@ function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: Readonl
     written.set(value, ref);
     return ref;
   };
-  return schemaFrom(target, { [ALL_OF_KEY]: [write(target)], [DEFINITIONS_KEY]: definitions });
+  return schemaFrom(target, { [ALL_OF_KEY]: [write(target)], [container]: definitions });
 }
 
 /** Returns what the `anyOf`/`oneOf` option `id` reached at `place` is scored with: `{ $ref }` naming the place, or,
@@ -967,7 +968,8 @@ function scoringTargetAt<S extends StrictRJSFSchema>(
 }
 
 /** Returns the copy `derive()` makes of the option `node` reached at `place`, each part it reaches along several paths
- * written once, see `withSharedCopies()`
+ * written once, see `withSharedCopies()`, under the container the root's dialect gives its identifiers a place in:
+ * 2019-09 and later make no keyword of `definitions`, so a validator need not find an `$id` below it
  */
 function scoringCopy<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -977,7 +979,9 @@ function scoringCopy<S extends StrictRJSFSchema>(
 ): S {
   const copies: Copies<S> = { made: new Map(), shared: new Set() };
   const copy = derive(graph, node, place, loosening, new Set(), new Set(), 'parts', copies, new Map());
-  return copies.shared.size === 0 ? copy : withSharedCopies(copy, copies.shared);
+  return copies.shared.size === 0
+    ? copy
+    : withSharedCopies(copy, copies.shared, graph.laterDialect ? '$defs' : DEFINITIONS_KEY);
 }
 
 /** Returns what an `anyOf`/`oneOf` option is scored with, see `scoringTargetAt()`, the option named where the root

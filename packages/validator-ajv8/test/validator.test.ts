@@ -17,6 +17,7 @@ import {
   isSchemaObject,
   noop,
   retrieveSchema,
+  SHARED_COPY_ID,
 } from '@rjsf/utils';
 import type { Ajv, ErrorObject, SchemaValidateFunction } from 'ajv';
 import ajvI18n from 'ajv-i18n';
@@ -35,7 +36,7 @@ import pointerValidationTests, {
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
-import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
+import sharedCopyScoringTests, { chainedDefinitions } from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import * as pkg from '../src/index.ts';
@@ -3688,6 +3689,25 @@ absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());
 sharedCopyScoringTests(() => customizeValidator());
+
+describe('the parts an option scoring copy holds once', () => {
+  it('are removed from Ajv with the copy holding them when the root changes', () => {
+    const validator = customizeValidator();
+    const copyRefs = () => Object.keys(validator.ajv.refs).filter((ref) => ref.includes(SHARED_COPY_ID));
+    const match = (levels: number) => {
+      const { root, options } = chainedDefinitions(levels);
+      getFirstMatchingOption({ validator }, { v: {} }, options, root);
+    };
+
+    match(2);
+    const first = copyRefs();
+    expect(first).not.toEqual([]);
+    match(3);
+    const second = copyRefs();
+    expect(second).not.toEqual([]);
+    expect(second.filter((ref) => first.includes(ref))).toEqual([]);
+  });
+});
 
 describe('AJV8Validator', () => {
   const validatorFor = (rootSchema: RJSFSchema) =>

@@ -113,13 +113,11 @@ describe('compileSchemaValidatorsCode()', () => {
   sharedSubschemaValidationTests((compiledFrom, runWith) =>
     createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(compiledFrom)), runWith),
   );
-  sharedCopyScoringTests((rootSchema) =>
-    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema),
-  );
   const precompiledFor = (rootSchema: RJSFSchema) => {
     const options = String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {};
     return createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema, options)), rootSchema);
   };
+  sharedCopyScoringTests(precompiledFor);
   nestedResourceTests(precompiledFor);
   mergedResourceViewTests(precompiledFor, false);
 });

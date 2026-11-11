@@ -91,6 +91,10 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
   readonly root: NodeId;
   /** The graph this one extends with a schema from outside the root, for a graph `adoptSchema()` returned */
   readonly base?: SchemaGraph<S>;
+  /** Whether the root is draft 2019-09 or 2020-12, under which `$anchor` names a location, an `$id` beside a `$ref`
+   * starts a resource, and `$defs` holds definitions
+   */
+  readonly laterDialect: boolean;
   /** How many nodes the graph holds: every id from 0 below it names one */
   readonly size: number;
   node(id: NodeId): SchemaNode<S>;
@@ -268,10 +272,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   readonly rawRoot: S;
   readonly root: NodeId;
   readonly base?: Graph<S>;
-  /** Whether the root is draft 2019-09 or 2020-12, under which `$anchor` names a location and an `$id` beside a `$ref`
-   * starts a resource: a draft-07 `$ref` ignores it
-   */
-  private readonly laterDialect: boolean;
+  readonly laterDialect: boolean;
   private readonly rootBase: string;
   private readonly offset: number;
   private readonly own: SchemaNode<S>[] = [];
