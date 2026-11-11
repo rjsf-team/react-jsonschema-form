@@ -25,6 +25,7 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
+import { commandListNameProps } from '../components/ui/command.tsx';
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select.tsx';
 import type { FancySelectItem, FancySelectSection } from '../components/ui/fancy-select.tsx';
 import { FancySelect } from '../components/ui/fancy-select.tsx';
@@ -119,7 +120,9 @@ export default function SelectWidget<
     'aria-invalid': ariaInvalid,
   } = widgetAriaProps(props);
 
-  const listName = listboxAriaProps<T, S, F>(props, { 'aria-labelledby': ariaLabelledby, 'aria-label': ariaLabel });
+  const listProps = commandListNameProps(
+    listboxAriaProps<T, S, F>(props, { 'aria-labelledby': ariaLabelledby, 'aria-label': ariaLabel }),
+  );
 
   const cnClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className);
 
@@ -142,7 +145,7 @@ export default function SelectWidget<
           placeholder={placeholderText}
           ariaLabel={ariaLabel}
           ariaLabelledby={ariaLabelledby}
-          listName={listName}
+          listProps={listProps}
           ariaInvalid={ariaInvalid}
           className={cnClassName}
           onFocus={handleFancyFocus}
@@ -154,7 +157,7 @@ export default function SelectWidget<
           id={id}
           ariaLabel={ariaLabel}
           ariaLabelledby={ariaLabelledby}
-          listName={listName}
+          listProps={listProps}
           placeholder={placeholderText}
           removeItemLabel={(label) => registry.translateString(TranslatableString.RemoveItemButton, [label])}
           autoFocus={autofocus}

@@ -1102,9 +1102,7 @@ describe('chakra-ui labels the core widgets that draw no label of their own', ()
       expect(label).toHaveTextContent('When');
       expect(label).not.toHaveAttribute('for');
       expect(screen.getByRole('button', { name: 'Now' }).closest('fieldset')).toHaveAccessibleName('When');
-      container.querySelectorAll('label[for]').forEach((labelFor) => {
-        expect(container.querySelector(`[id="${labelFor.getAttribute('for')}"]`)).toBeInTheDocument();
-      });
+      expectReferencesResolve(container);
     },
   );
 });

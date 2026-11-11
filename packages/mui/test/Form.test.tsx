@@ -1479,9 +1479,7 @@ describe('mui labels the core widgets that draw no label of their own', () => {
     const label = document.getElementById('root_when__label');
     expect(label).toHaveTextContent('When');
     expect(label).not.toHaveAttribute('for');
-    container.querySelectorAll('label[for]').forEach((labelFor) => {
-      expect(container.querySelector(`[id="${labelFor.getAttribute('for')}"]`)).toBeInTheDocument();
-    });
+    expectReferencesResolve(container);
     expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
   });
 });

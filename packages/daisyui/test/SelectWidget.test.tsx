@@ -1078,8 +1078,18 @@ describe('SelectWidget listbox name', () => {
     ],
   };
 
-  test.each<[string, RJSFSchema, UiSchema, string]>([
+  const requiredSchema: RJSFSchema = {
+    type: 'object',
+    required: ['color'],
+    properties: { color: { type: 'string', title: 'Color', enum: ['a', 'b'] } },
+  };
+
+  // A required field's `*` is part of the label naming the combobox through its `for`, but not of the label's text the
+  // list is named by, as it isn't the list that is required
+  test.each<[string, RJSFSchema, UiSchema, string, string?]>([
     ['the field label', { type: 'string', title: 'Color', enum: ['a', 'b'] }, {}, 'Color'],
+    ["a required field's label text", requiredSchema, {}, 'Color*', 'Color'],
+    ['the hidden label', { type: 'string', title: 'Color', enum: ['a', 'b'] }, { 'ui:label': false }, 'Color'],
     ['the placeholder', { type: 'string', enum: ['a', 'b'] }, { 'ui:placeholder': 'Pick one' }, 'Pick one'],
     ['the prompt', { type: 'string', enum: ['a', 'b'] }, {}, 'Select ...'],
     [
@@ -1089,7 +1099,7 @@ describe('SelectWidget listbox name', () => {
       'Colors',
     ],
     ['the label of a oneOf option selector', oneOfSchema, {}, 'Shape'],
-  ])('is %s while shown, and none while closed', async (_, schema, uiSchema, name) => {
+  ])('is %s while shown, and none while closed', async (_, schema, uiSchema, name, listName = name) => {
     render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
     const combobox = screen.getByRole('combobox');
     const listbox = screen.getByRole('listbox', { hidden: true });
@@ -1103,10 +1113,21 @@ describe('SelectWidget listbox name', () => {
     expectReferencesResolve(document.body);
     expect(combobox).toHaveAttribute('aria-expanded', 'true');
     expect(combobox).toHaveAccessibleName(name);
-    expect(listbox).toHaveAccessibleName(name);
+    expect(listbox).toHaveAccessibleName(listName);
 
     await user.keyboard('{Escape}');
 
     expect(listbox).toHaveAccessibleName('');
+  });
+
+  test("points the shown list at the text of the label naming the combobox, rather than copying the field's label", async () => {
+    render(<Form schema={requiredSchema} validator={validator} />);
+
+    await user.click(screen.getByRole('combobox'));
+
+    expect(screen.getByRole('listbox')).toHaveAttribute(
+      'aria-labelledby',
+      screen.getByText('Color', { selector: 'label span[id]' }).id,
+    );
   });
 });

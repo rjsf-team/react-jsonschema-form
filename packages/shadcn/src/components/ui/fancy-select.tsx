@@ -5,6 +5,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
 import { cn } from '../../lib/utils.ts';
+import type { CommandListNameProps } from './command.tsx';
 import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
 
 /**
@@ -60,8 +61,8 @@ interface FancySelectInterface {
   ariaLabel?: string;
   /** The ids of the elements naming the combobox, for a select whose label's `for` names another element */
   ariaLabelledby?: string;
-  /** The `aria-labelledby` or the `aria-label` naming the listbox, from `listboxAriaProps()` */
-  listName: { 'aria-labelledby'?: string; 'aria-label'?: string };
+  /** The props naming the listbox, from `commandListNameProps()` */
+  listProps: CommandListNameProps;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
   /** Whether the select is invalid, which the combobox says through `aria-invalid` */
@@ -184,7 +185,7 @@ export function FancySelect({
   placeholder,
   ariaLabel,
   ariaLabelledby,
-  listName,
+  listProps,
   ariaDescribedby,
   ariaInvalid,
   ariaPlaceholder,
@@ -309,10 +310,6 @@ export function FancySelect({
       </CommandItem>
     );
   }
-
-  // cmdk writes the listbox's `label` as its `aria-label`, defaulting to "Suggestions", so a listbox `aria-labelledby`
-  // names gets an empty one, which its accessible name ignores
-  const listProps = { label: listName['aria-label'] ?? '', 'aria-labelledby': listName['aria-labelledby'] };
 
   return (
     <Command

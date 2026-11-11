@@ -1,7 +1,8 @@
 'use client';
 
 import type { ComponentProps } from 'react';
-import { useCallback, useImperativeHandle, useRef } from 'react';
+import { useCallback, useRef } from 'react';
+import type { ControlAttributes } from '@rjsf/utils';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 
@@ -27,9 +28,7 @@ const Command = ({
   // cmdk always renders a label for its own input, with no prop to omit it or its `for`, so where no `CommandInput` is
   // rendered the `for` is removed from the DOM React rendered, and put back once `withoutInput` turns false. It is cmdk's
   // stable generated id, so React never sets it again by itself. Server-rendered markup keeps it until hydration
-  const root = useRef<HTMLDivElement>(null);
   const removedFor = useRef<string | null>(null);
-  useImperativeHandle(ref, () => root.current as HTMLDivElement, []);
   const rootRef = useCallback(
     (element: HTMLDivElement | null) => {
       const label = element?.querySelector(':scope > label[cmdk-label]');
@@ -41,9 +40,15 @@ const Command = ({
         label.setAttribute('for', removedFor.current);
         removedFor.current = null;
       }
-      root.current = element;
+      if (typeof ref === 'function') {
+        return ref(element);
+      }
+      if (ref) {
+        // oxlint-disable-next-line no-param-reassign -- an object ref is set by assigning its `current`, as React sets one
+        ref.current = element;
+      }
     },
-    [withoutInput],
+    [withoutInput, ref],
   );
 
   return (
@@ -138,6 +143,21 @@ function CommandList({ className, ...props }: ComponentProps<typeof CommandPrimi
   );
 }
 
+/** The props naming a `CommandList` */
+type CommandListNameProps = Required<Pick<ComponentProps<typeof CommandPrimitive.List>, 'label'>> &
+  Pick<ComponentProps<typeof CommandPrimitive.List>, 'aria-labelledby'>;
+
+/** Gets the props naming a `CommandList` from the `aria-labelledby` or the `aria-label` naming it, as
+ * `listboxAriaProps()` gives them. cmdk writes the list's `label` as its `aria-label` after the props it spreads,
+ * defaulting to "Suggestions", so a list `aria-labelledby` names is given an empty one, which its accessible name skips
+ *
+ * @param name - The `aria-labelledby` or the `aria-label` naming the list
+ * @returns - The `label` and `aria-labelledby` to give the `CommandList`
+ */
+function commandListNameProps(name: Pick<ControlAttributes, 'aria-labelledby' | 'aria-label'>): CommandListNameProps {
+  return { label: name['aria-label'] ?? '', 'aria-labelledby': name['aria-labelledby'] };
+}
+
 /**
  * Displayed when no results are found
  */
@@ -225,6 +245,8 @@ export {
   CommandInput,
   CommandItem,
   CommandList,
+  commandListNameProps,
   CommandSeparator,
   CommandShortcut,
 };
+export type { CommandListNameProps };

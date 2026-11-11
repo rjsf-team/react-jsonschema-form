@@ -2622,13 +2622,15 @@ Some themes require may `false` and others may require an empty string.
 
 ### listboxAriaProps()
 
-Gets the name of the list of options a `SelectWidget` shows, which a `<label for>` naming its combobox can't name: the elements its combobox's `aria-labelledby` lists, else its combobox's `aria-label`, else the name [getControlFallbackName()](#getcontrolfallbackname) gives it, which is what that label says.
-Exactly one of the two attributes is returned.
+Gets the name of the list of options a `SelectWidget` shows, which a `<label for>` naming its combobox can't name: the elements its combobox's `aria-labelledby` lists, else its combobox's `aria-label` unless it is empty, else, where its field's plan says a label outside the widget names the combobox, that label's text, through the id [getLabelId()](#getlabelid) gives it.
+A required field's marker is drawn outside that text, as it is for a group, since the list isn't what is required.
+Otherwise it is the name [getControlFallbackName()](#getcontrolfallbackname) gives it.
+Exactly one of the two attributes is returned, never empty.
 A theme's `SelectWidget` that renders its own list of options gives it the result while the list is shown.
 
 #### Parameters
 
-- props: Pick&lt;WidgetProps&lt;T, S, F>, 'label' | 'placeholder' | 'registry'> - The widget's `label`, `placeholder` and `registry`
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'label' | 'placeholder' | 'presentation' | 'registry'> - The widget's `id`, `label`, `placeholder`, `presentation` and `registry`
 - controlAttributes: \{ 'aria-labelledby'?: string, 'aria-label'?: string } - The `aria-labelledby` and `aria-label` [widgetAriaProps()](#widgetariaprops) gives the combobox
 
 #### Returns

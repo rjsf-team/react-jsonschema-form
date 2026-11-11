@@ -542,8 +542,22 @@ describe('SelectWidget', () => {
     expect(grouped).toEqual(ungrouped);
   });
 
-  test.each<[string, RJSFSchema, UiSchema, string]>([
+  // A required field's `*` is part of the label naming the combobox through its `for`, but not of the label's text the
+  // list is named by, as it isn't the list that is required
+  test.each<[string, RJSFSchema, UiSchema, string, string?]>([
     ['titled single', { type: 'string', title: 'Color', enum: ['a', 'b'] }, {}, 'Color'],
+    [
+      'required single',
+      {
+        type: 'object',
+        required: ['color'],
+        properties: { color: { type: 'string', title: 'Color', enum: ['a', 'b'] } },
+      },
+      {},
+      'Color*',
+      'Color',
+    ],
+    ['hidden-label single', { type: 'string', title: 'Color', enum: ['a', 'b'] }, { 'ui:label': false }, 'Color'],
     ['untitled single', { type: 'string', enum: ['a', 'b'] }, { 'ui:placeholder': 'Pick one' }, 'Pick one'],
     ['unnamed single', { type: 'string', enum: ['a', 'b'] }, {}, 'Select ...'],
     [
@@ -573,7 +587,7 @@ describe('SelectWidget', () => {
     ],
   ])(
     "%s select references only elements on the page and names its listbox by the field's label, else its placeholder, else the prompt",
-    async (_, schema, uiSchema, name) => {
+    async (_, schema, uiSchema, name, listName = name) => {
       const user = userEvent.setup();
       render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
 
@@ -584,9 +598,31 @@ describe('SelectWidget', () => {
 
       expectReferencesResolve(document.body);
       expect(screen.getByRole('combobox')).toHaveAccessibleName(name);
-      expect(screen.getByRole('listbox')).toHaveAccessibleName(name);
+      expect(screen.getByRole('listbox')).toHaveAccessibleName(listName);
     },
   );
+
+  test("points the open list at the text of the label naming the combobox, rather than copying the field's label", async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['color'],
+          properties: { color: { type: 'string', title: 'Color', enum: ['a', 'b'] } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+
+    expect(screen.getByRole('listbox')).toHaveAttribute(
+      'aria-labelledby',
+      screen.getByText('Color', { selector: 'label span[id]' }).id,
+    );
+    expect(screen.getByRole('listbox')).toHaveAttribute('aria-label', '');
+  });
 });
 
 describe('multiple SelectWidget options', () => {

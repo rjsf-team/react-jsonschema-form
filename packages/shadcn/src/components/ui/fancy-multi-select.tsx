@@ -8,6 +8,7 @@ import { X } from 'lucide-react';
 
 import { cn } from '../../lib/utils.ts';
 import { Badge } from './badge.tsx';
+import type { CommandListNameProps } from './command.tsx';
 import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
 import { scrollOptionIntoView, UNGROUPED_SECTION_KEY, useCmdkIds, useEscapeKeptFromDialog } from './fancy-select.tsx';
 import type { FancySelectItem, FancySelectSection } from './fancy-select.tsx';
@@ -22,8 +23,8 @@ interface FancyMultiSelectProps {
   ariaLabel?: string;
   /** The ids of the elements naming the combobox input, for a select whose label's `for` names another element */
   ariaLabelledby?: string;
-  /** The `aria-labelledby` or the `aria-label` naming the listbox, from `listboxAriaProps()` */
-  listName: { 'aria-labelledby'?: string; 'aria-label'?: string };
+  /** The props naming the listbox, from `commandListNameProps()` */
+  listProps: CommandListNameProps;
   /** Whether multiple items can be selected */
   multiple: boolean;
   /** Array of items to display in the dropdown */
@@ -87,7 +88,7 @@ export function FancyMultiSelect({
   multiple,
   ariaLabel,
   ariaLabelledby,
-  listName,
+  listProps,
   items = NO_ITEMS,
   sections,
   selected,
@@ -266,10 +267,6 @@ export function FancyMultiSelect({
       </CommandItem>
     );
   }
-
-  // cmdk writes the listbox's `label` as its `aria-label`, defaulting to "Suggestions", so a listbox `aria-labelledby`
-  // names gets an empty one, which its accessible name ignores
-  const listProps = { label: listName['aria-label'] ?? '', 'aria-labelledby': listName['aria-labelledby'] };
 
   return (
     // The options are filtered here, as the search is typed in an input cmdk doesn't own
