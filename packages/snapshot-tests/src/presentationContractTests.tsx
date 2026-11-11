@@ -102,10 +102,11 @@ function expectContract(container: HTMLElement, { presentsNothing }: ContractCas
   expect(screen.queryAllByText(ERROR)).toHaveLength(errored ? shown : 0);
 }
 
-/** Pins the presentation contract every theme's fields keep, the same way in core and every theme: one label and one
- * accessible name per control, including an option selector's and each date part's, one description, help and error
- * per field, every id a label, `aria-labelledby` or `aria-describedby` names on the page, `aria-invalid` wherever an
- * error describes a control, and no id carried twice (#5592). Each case is drawn once clean and once with an error.
+/** Pins the presentation contract every theme's fields keep, the same way in core and every theme: an accessible name
+ * and at most one label per control, including an option selector's and each date part's, one description, help and
+ * error per field, every id a label or an ARIA reference names on the page, `aria-invalid` on each control an error
+ * describes, or on its radio group, and nowhere while clean, and no id carried twice (#5592). Each case is drawn once
+ * clean and once with an error.
  *
  * @param Form - The theme's `Form` component
  * @param widgets - The widgets the theme registers, merged over core's defaults to decide the widgets that render
