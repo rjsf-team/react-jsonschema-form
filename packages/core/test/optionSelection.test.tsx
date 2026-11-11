@@ -450,7 +450,7 @@ describe('option selection as form state', () => {
     expect(node.querySelector('.rjsf-object-property-expand')).not.toBeNull();
   });
 
-  it('renders no field for a key a switch of options discards from an object allowing any extra key', async () => {
+  it('renders a key a switch of options leaves to an object allowing any extra key once, as an extra key (#5782)', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       additionalProperties: true,
@@ -464,13 +464,11 @@ describe('option selection as form state', () => {
     await user.type(elementOf(node, '#root_a'), 'x');
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
 
-    expect(node.querySelector('#root_a__key')).toBeNull();
-    expect(ids(node, '#root_a')).toHaveLength(0);
-    const { formData } = onChange.mock.lastCall?.[0] ?? {};
-    expect(formData).not.toHaveProperty('a');
+    expect(node.querySelector('#root_a__key')).not.toBeNull();
+    expect(ids(node, '#root_a')).toHaveLength(1);
     // The defaults are B's, the option on screen: under A, which `b` fits as well, `b` is an extra key whose `null`
     // fills it. `toEqual()` reads a key holding `undefined` as missing, so that `null` fails it
-    expect(formData).toEqual({ b: undefined });
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'x', b: undefined });
   });
 
   it('computes the defaults of a root switch from the option switched to, where the old one takes the new key as an extra one', async () => {
@@ -487,9 +485,9 @@ describe('option selection as form state', () => {
     await user.type(elementOf(node, '#root_a'), 'x');
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
 
-    // `{ b: undefined }` fits A too, as an extra key of A whose `null` fills it, so matching the data again would pick
+    // The data fits A too, `b` as an extra key of A whose `null` fills it, so matching the data again would pick
     // A. `toEqual()` reads a key holding `undefined` as missing, so that `null` fails it
-    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'x', b: undefined });
   });
 
   it("gives an object union one heading and one add button of its own under additionalPropertiesWhenAbsent 'allow'", async () => {
@@ -514,8 +512,8 @@ describe('option selection as form state', () => {
     await user.type(node.querySelector('#root_a')!, 'x');
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
 
-    expect(node.querySelector('#root_a__key')).toBeNull();
-    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
+    expect(node.querySelector('#root_a__key')).not.toBeNull();
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'x', b: undefined });
   });
 
   it.each([
