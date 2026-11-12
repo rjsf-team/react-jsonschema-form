@@ -3,10 +3,10 @@ import type { JSONSchema7TypeName } from 'json-schema';
 /** Below are the list of all the keys into various elements of a RJSFSchema or UiSchema that are used by the various
  * utility functions. In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG`,
  * `GUESSED_TYPE_FLAG`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY` and `RJSF_PROVENANCE_KEY` Symbols that are added to a
- * schema under certain conditions by the `retrieveSchema()` utility, and the `EXTRA_KEYS_ELSEWHERE_FLAG` Symbol that
- * `getRenderedOptionSchema()` adds. Using Symbols keeps these internal
- * markers invisible to JSON serialisation and JSON Schema validators (AJV, ATA, etc.), which only enumerate
- * string-keyed properties.
+ * schema under certain conditions by the `retrieveSchema()` utility, the `EXTRA_KEYS_ELSEWHERE_FLAG` Symbol that
+ * `getRenderedOptionSchema()` adds, and the `PINNED_TYPE_FLAG` Symbol that the fallback UI adds. Using Symbols keeps
+ * these internal markers invisible to JSON serialisation and JSON Schema validators (AJV, ATA, etc.), which only
+ * enumerate string-keyed properties.
  */
 export const ADDITIONAL_ITEMS_KEY = 'additionalItems';
 export const ADDITIONAL_PROPERTY_FLAG = Symbol('__additional_property');
@@ -36,6 +36,11 @@ export const ITEMS_KEY = 'items';
 export const NOT_KEY = 'not';
 export const ONE_OF_KEY = 'oneOf';
 export const PATTERN_PROPERTIES_KEY = 'patternProperties';
+/** Marks a schema whose `type` the fallback UI's type selector pinned to the one it is on, so that an `anyOf`/`oneOf`
+ * option of another type still takes the whole field, as it does under the type list the schema was pinned from (see
+ * `rendersOwnFieldBesideOption()`)
+ */
+export const PINNED_TYPE_FLAG = Symbol('__pinned_type');
 export const PREFIX_ITEMS_KEY = 'prefixItems';
 export const PROPERTIES_KEY = 'properties';
 export const READONLY_KEY = 'readonly';

@@ -97,7 +97,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   const optionUiSchema =
     getRenderedOptionUiSchema<T, S, F>(schema, option, uiSchema, getOptionUiSchema<T, S, F>(uiSchema, key, index)) ??
     {};
-  if (!rendersOwnFieldBesideOption<S>(schema)) {
+  if (!rendersOwnFieldBesideOption<S>(schema, option)) {
     return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema };
   }
   return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema };

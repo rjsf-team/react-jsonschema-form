@@ -274,7 +274,9 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (index < 0) {
     return [view];
   }
-  const own = rendersOwnFieldBesideOption<S>(view) ? schemaUtils.retrieveSchema(schema, data, false, index) : view;
+  const own = rendersOwnFieldBesideOption<S>(view, options[index])
+    ? schemaUtils.retrieveSchema(schema, data, false, index)
+    : view;
   const optionSchema = getRenderedOptionSchema<S>(view, options[index]);
   return [own, ...layersOf(ctx, schemaUtils, uiState, optionSchema, value, path, shown)];
 }

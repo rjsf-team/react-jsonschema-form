@@ -1337,9 +1337,9 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     ALL_OF_KEY in remaining && typeof getSchemaType<S>(remaining) !== 'string'
       ? retrieveSchema<unknown, S, F>(context, remaining, rootSchema, props.rawFormData)
       : remaining;
-  const rendersOwnField = rendersOwnFieldBesideOption<S>(fieldSchema);
-  const optionUiSchema = getOptionUiSchema<T, S, F>(props.uiSchema, key, index);
   const listedOption: unknown = options[index];
+  const rendersOwnField = rendersOwnFieldBesideOption<S>(fieldSchema, listedOption);
+  const optionUiSchema = getOptionUiSchema<T, S, F>(props.uiSchema, key, index);
   const branchProps = {
     ...props,
     // An option whose field takes the object's extra keys is asked as the field renders it, retrieved for the data, and

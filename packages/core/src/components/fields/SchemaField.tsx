@@ -1423,12 +1423,14 @@ export function useSchemaFieldPlan<
   // An object below a named field stubs its extra keys with the option shown beside it there, as one rendering the
   // options does, so a key the option declares is left to the option rather than rendered twice
   const optionBeside = fieldShownOption?.selectedOption ?? -1;
+  const optionShown = fieldShownOption?.options[optionBeside];
+  const rendersFieldBesideShown = rendersOwnFieldBesideOption<S>(schema, optionShown);
   const fieldSchema = useMemo(
     () =>
-      optionBeside >= 0 && rendersOwnFieldBesideOption<S>(schema)
+      optionBeside >= 0 && rendersFieldBesideShown
         ? schemaUtils.retrieveSchema(_schema, formData, false, optionBeside)
         : schema,
-    [optionBeside, schema, schemaUtils, _schema, formData],
+    [optionBeside, rendersFieldBesideShown, schema, schemaUtils, _schema, formData],
   );
   // An object with nothing of its own to render beside its options, a pure union, is planned like a withheld field as
   // the field that renders its options, whose template labels it. `fieldSchema` carries the option shown, so an object
@@ -1436,11 +1438,7 @@ export function useSchemaFieldPlan<
   // So is a `type` list's object while the option shown holds another type, whether the list is on the schema or pinned
   // by the fallback UI's selector above: there is no object for its field to render, and an edit in it would replace the
   // option's value with one
-  const optionShown = fieldShownOption?.options[optionBeside];
-  const optionHoldsNoObject =
-    (getUnionTypes<S>(schema) !== undefined || selectorsAbove.type > 0) &&
-    isSchemaObject<S>(optionShown) &&
-    getSchemaOwnTypes<S>(optionShown)?.includes('object') === false;
+  const optionHoldsNoObject = isSchemaObject<S>(optionShown) && !rendersFieldBesideShown;
   const isPureUnion =
     fieldToRender?.yieldsToOptions === true &&
     (optionHoldsNoObject || !hasOwnContentBesideOptions<T, S, F>(schemaUtils, fieldSchema, fieldUiSchema, formData));

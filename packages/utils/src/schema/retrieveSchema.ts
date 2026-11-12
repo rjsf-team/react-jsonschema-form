@@ -846,10 +846,11 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       // the option's extra keys with its own; any other field leaves the option to stub them. An option naming no type
       // is rendered with the type of an object offering it (see `getRenderedOptionSchema()`), so it renders such a field
       // too, though its own schema names no object
-      const stubsOwnExtraKeys = !(
-        rendersOwnFieldBesideOption<S>(merged) ||
-        (merged.type === undefined && field.stubsOwnExtraKeys === false)
-      );
+      const stubsOwnExtraKeys = (option: S) =>
+        !(
+          rendersOwnFieldBesideOption<S>(merged, option) ||
+          (merged.type === undefined && field.stubsOwnExtraKeys === false)
+        );
       Reflect.set(
         merged,
         keyword,
@@ -864,7 +865,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
               seeds: [{ node: adopted.node, refPath: [] }],
               chain: optionChain,
               optionOf: { setKey: plan.setKey, set: plan.set },
-              stubsOwnExtraKeys,
+              stubsOwnExtraKeys: stubsOwnExtraKeys(option),
             },
             adopted.graph,
           );

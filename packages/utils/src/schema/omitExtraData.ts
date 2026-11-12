@@ -406,7 +406,7 @@ export default function omitExtraData<
     const option = isSchemaObject<S>(winning)
       ? withoutStubs<S>(retrieveSchema<unknown, S, F>(context, winning, rootSchema, source))
       : schemaOfBoolean(Boolean(winning), rootSchema);
-    if (!rendersOwnFieldBesideOption<S>(childSchema)) {
+    if (!rendersOwnFieldBesideOption<S>(childSchema, option)) {
       return omit(option, source, path, target, false);
     }
     // An object's field takes the extra keys of the object and its option, unless the option's own field takes them in

@@ -3,6 +3,7 @@ import type { RJSFMarkedSchema, RJSFSchema } from '../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   getRenderedOptionSchema,
+  PINNED_TYPE_FLAG,
   rendersOwnFieldBesideOption,
   RJSF_REF_KEY,
 } from '../src/index.ts';
@@ -487,6 +488,24 @@ describe('getRenderedOptionSchema()', () => {
         [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
       });
     });
+    test('passes on everything to the option of another type of an object-first type list, as a string-first one does', () => {
+      const option: RJSFSchema = { type: 'string' };
+      const rendered = getRenderedOptionSchema({ type: ['object', 'string'], format: 'email', properties }, option);
+      expect(rendered).toMatchObject({ type: 'string', format: 'email' });
+      expect(rendered).toEqual(
+        getRenderedOptionSchema({ type: ['string', 'object'], format: 'email', properties }, option),
+      );
+    });
+    test('passes on the pinned type of a pinned object with its marker to an option naming no type', () => {
+      const pinned: RJSFMarkedSchema = { type: 'object', properties, [PINNED_TYPE_FLAG]: true };
+      expect(getRenderedOptionSchema(pinned, { required: ['a'] })).toEqual({
+        type: 'object',
+        required: ['a'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
+        [PINNED_TYPE_FLAG]: true,
+      });
+      expect(Reflect.get(getRenderedOptionSchema(pinned, { type: 'object' }), PINNED_TYPE_FLAG)).toBeUndefined();
+    });
   });
 });
 
@@ -498,6 +517,21 @@ describe('rendersOwnFieldBesideOption()', () => {
     ['a typeless schema', {}, false],
   ])('reads %s as rendering its own field: %s', (_, schema, expected) => {
     expect(rendersOwnFieldBesideOption(schema)).toBe(expected);
+  });
+  const objectFirst: RJSFSchema = { type: ['object', 'string'] };
+  const pinned: RJSFMarkedSchema = { type: 'object', [PINNED_TYPE_FLAG]: true };
+  test.each<[string, RJSFSchema, RJSFSchema, boolean]>([
+    ["a type list's option of another type", objectFirst, { type: 'string' }, false],
+    ["a type list's option listing another type and null", objectFirst, { type: ['string', 'null'] }, false],
+    ["a type list's object option", objectFirst, { type: 'object' }, true],
+    ["a type list's option naming no type", objectFirst, { title: 'A' }, true],
+    ["a type list's option implying an object", objectFirst, { properties: { a: { type: 'string' } } }, true],
+    ["a plain object's option of another type", { type: 'object' }, { type: 'string' }, true],
+    ["a string-first type list's object option", { type: ['string', 'object'] }, { type: 'object' }, false],
+    ["an object pinned from a type list's option of another type", pinned, { type: 'string' }, false],
+    ["an object pinned from a type list's object option", pinned, { type: 'object' }, true],
+  ])('reads %s as rendering its own field: %s', (_, schema, option, expected) => {
+    expect(rendersOwnFieldBesideOption(schema, option)).toBe(expected);
   });
 });
 

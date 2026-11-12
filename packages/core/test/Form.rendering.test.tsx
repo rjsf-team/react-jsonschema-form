@@ -1095,6 +1095,69 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
           expect(node.querySelector('#root_val_shared')).toBeInTheDocument();
         });
+
+        it.each<{ type: RJSFSchema['type']; fallback: boolean }>([
+          { type: ['object', 'string'], fallback: true },
+          { type: ['object', 'string'], fallback: false },
+          { type: ['string', 'object'], fallback: true },
+          { type: ['string', 'object'], fallback: false },
+        ])(
+          'passes the keywords of $type on to an option of another type, fallback UI $fallback',
+          ({ type, fallback }) => {
+            const { node } = createFormComponent({
+              schema: withVal({ type, format: 'email', oneOf: [{ type: 'object' }, { type: 'string' }] }),
+              initialFormData: { val: 'abc' },
+              useFallbackUiForUnsupportedType: fallback,
+            });
+
+            expect(elementOf(node, '#root_val')).toHaveAttribute('type', 'email');
+          },
+        );
+
+        it("passes the union's keywords on to an option of another type chosen with the type selector on object", async () => {
+          const { node } = createFormComponent({
+            schema: withVal({
+              type: ['object', 'string'],
+              format: 'email',
+              oneOf: [{ title: 'O' }, { title: 'S', type: 'string' }],
+            }),
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          await user.selectOptions(elementOf(node, '#root_val__oneof_select'), 'S');
+
+          expect(elementOf(node, TYPE_SELECTOR)).toHaveDisplayValue('object');
+          expect(elementOf(node, '#root_val')).toHaveAttribute('type', 'email');
+        });
+
+        it.each([true, false])(
+          "leaves a typeless option's properties off beside its own option of another type, fallback UI %s",
+          async (fallback) => {
+            const { node } = createFormComponent({
+              schema: withVal({
+                type: ['object', 'string'],
+                oneOf: [
+                  { title: 'O', type: 'object' },
+                  {
+                    title: 'S',
+                    properties: { sp: { type: 'string' } },
+                    oneOf: [
+                      { title: 'SO', type: 'object' },
+                      { title: 'SS', type: 'string' },
+                    ],
+                  },
+                ],
+              }),
+              useFallbackUiForUnsupportedType: fallback,
+            });
+
+            await user.selectOptions(elementOf(node, '#root_val__oneof_select'), 'S');
+            await user.selectOptions(elementOf(node, '#root_val__oneof_select2'), 'SS');
+
+            expect(node.querySelector('#root_val_sp')).not.toBeInTheDocument();
+            expect(elementOf(node, '#root_val')).toBeInTheDocument();
+          },
+        );
       });
 
       it('leaves the fields beside the one being typed in alone, whatever the options retrieve', async () => {
