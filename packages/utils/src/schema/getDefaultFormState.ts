@@ -1868,12 +1868,14 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const unmerged = new Set(
       ALL_OF_KEY in view.schema && !pinnedKeys ? kept.filter((key) => formData[key] !== undefined) : [],
     );
+    const matchedSchema = viewMatchedSchema<S, F>(context, view);
     const matched =
       unmerged.size > 0
         ? matchProperties<S, F>(
             context,
             mergedSchemaOf<S, F>(context, view),
-            viewMatchedSchema<S, F>(context, view),
+            matchedSchema,
+            declarationsOf<S>(matchedSchema),
             rootSchema,
             formData,
             !populatesAllOf,
@@ -2666,6 +2668,7 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
       context,
       readSchema,
       matched,
+      declarations,
       rootSchema,
       validFormData,
       nestedUnfolded,
@@ -2687,14 +2690,16 @@ function declarationsOf<S extends StrictRJSFSchema>({ field, chains }: MatchedSc
 
 /** Returns the object data `data` with each property `readSchema` declares matched to the schema of that property, as
  * `formDataMatching()` matches it, where it may reject the value: a value that doesn't match is left out, so the
- * property takes its defaults as one the data lacks does. `unfolded` says the fold computed none of the properties, see
- * `formDataMatching()`, `retrievesAll` that every property is retrieved, as `allOf: 'populateDefaults'` retrieves them,
- * and `keys`, where given, names the only properties matched, the others kept as the data holds them
+ * property takes its defaults as one the data lacks does. `declarations` gives the declarations of `matchedSchema`, see
+ * `declarationsOf()`, `unfolded` says the fold computed none of the properties, see `formDataMatching()`, `retrievesAll`
+ * that every property is retrieved, as `allOf: 'populateDefaults'` retrieves them, and `keys`, where given, names the
+ * only properties matched, the others kept as the data holds them
  */
 function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   readSchema: S,
   matchedSchema: MatchedSchema<S>,
+  declarations: () => Seeding<S>,
   rootSchema: S,
   data: GenericObjectType,
   unfolded: boolean,
@@ -2705,7 +2710,6 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
     return data;
   }
   const { field } = matchedSchema;
-  const declarations = declarationsOf<S>(matchedSchema);
   const matched: GenericObjectType = { ...data };
   const rootGraph = parseSchemaGraph<S>(rootSchema);
   // A property `retrieveSchema()` handed out is the field it was handed out for, and any other is declared where the
