@@ -2890,6 +2890,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toStrictEqual({ o: expected });
           },
         );
+
+        it.each([false, true])(
+          'keeps a value the options of an allOf leave out where the field has no default, as a plain enum does, initialDefaultsGenerated %s',
+          (initialDefaultsGenerated) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                plain: { type: 'string', enum: ['r', 'g'] },
+                wrapped: { allOf: [{ type: 'string', enum: ['r', 'g'] }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { plain: 'zz', wrapped: 'zz' }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ plain: 'zz', wrapped: 'zz' });
+          },
+        );
       });
 
       it("skips the constant default of a schema's anyOf under skipOneOf when it also has a oneOf", () => {

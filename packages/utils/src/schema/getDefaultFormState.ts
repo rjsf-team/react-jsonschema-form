@@ -1732,12 +1732,14 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     if (shouldMergeDefaultsIntoFormData && Object.hasOwn(formData, key) && formData[key] !== undefined) {
       // A property the data holds is the user's, so it is kept with its defaults merged in, as its field computed it,
       // whatever the form's settings say about adding defaults. Where its field takes none of the data, an `allOf` the
-      // property is read through decides it holds nothing, object data its schema can't take is left out, and any other
-      // value is kept as the user left it, as a select keeps a value its options no longer offer, and an extra key
-      // stubbed among the properties keeps the data `extraKeyKeepsData()` says it does
-      const retrievesProperty = populatesAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty);
+      // property is read through decides object data holds nothing, as `populateDefaults` decides any value does, object
+      // data its schema can't take is left out, and any other value is kept as the user left it, as a select keeps a
+      // value its options no longer offer, its options in an `allOf` or not, and an extra key stubbed among the
+      // properties keeps the data `extraKeyKeepsData()` says it does
+      const dropsData =
+        populatesAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty && isObjectData(formData[key]));
       const keepsData = addedByAdditionalProperty && extraKeyKeepsData(formData[key], property.value);
-      if ((property.value !== undefined || retrievesProperty) && !keepsData) {
+      if ((property.value !== undefined || dropsData) && !keepsData) {
         setOwn(computed, key, property.value);
       } else if (addedByAdditionalProperty || !isObjectData(formData[key])) {
         setOwn(computed, key, formData[key]);

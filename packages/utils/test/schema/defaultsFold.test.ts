@@ -923,7 +923,7 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     expect(defaultsOf(withField({ allOf: [{ title: 'P' }] }), { p: 'z' }, behavior)).toEqual({ p: 'b' });
   });
 
-  it('drops data a $ref property names a select without, at a root offering options it has not chosen', () => {
+  it('keeps data a $ref property names a select without, at a root offering options it has not chosen', () => {
     const withRoot = (beside: RJSFSchema): RJSFSchema => ({
       definitions: { s: { type: 'string', allOf: [{ enum: ['a', 'b'] }] } },
       type: 'object',
@@ -931,8 +931,8 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       ...beside,
     });
     const options: RJSFSchema = { anyOf: [{ required: ['k'] }, { required: ['x'] }] };
-    expect(defaultsOf(withRoot({}), { k: 'z' })).toStrictEqual({ k: undefined });
-    expect(defaultsOf(withRoot(options), { k: 'z' })).toStrictEqual({ k: undefined });
+    expect(defaultsOf(withRoot({}), { k: 'z' })).toStrictEqual({ k: 'z' });
+    expect(defaultsOf(withRoot(options), { k: 'z' })).toStrictEqual({ k: 'z' });
   });
 
   it.each<[string, RJSFSchema]>([
