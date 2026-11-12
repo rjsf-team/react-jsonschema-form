@@ -1803,13 +1803,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const readsInitialValue = closingConst && getUiOptions<T, S, F>(uiSchema).initialValue !== undefined;
   const constDefaults =
     closingConst && isObject(defaults) && !(readsInitialValue && initialDefaultsGenerated) ? defaults : undefined;
+  // Where the `const` closes the object, nothing else seeds an extra key: `additionalProperties` is falsy there
   const closingKeys =
-    closingConst &&
-    new Set(
-      constDefaults
-        ? Object.keys(closingConst).filter((key) => Object.hasOwn(constDefaults, key) && !rendersDeclared(key))
-        : [],
-    );
+    closingConst && constDefaults
+      ? new Set(Object.keys(closingConst).filter((key) => Object.hasOwn(constDefaults, key) && !rendersDeclared(key)))
+      : undefined;
   if (closingKeys) {
     for (const key of closingKeys) {
       // No field renders a key of a `const` that closes the object, so no user fills, clears or fixes it: the `const`
