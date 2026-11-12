@@ -2629,6 +2629,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it.each([false, true])(
+          "keeps the data of the keys an untyped field's allOf const names under constAsDefaults always as for its own const, initialDefaultsGenerated %s",
+          (initialDefaultsGenerated) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { own: { const: { a: 1 } }, wrapped: { allOf: [{ const: { a: 1 } }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { own: { a: 2, b: 3 }, wrapped: { a: 2, b: 3 } }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ own: { a: 2 }, wrapped: { a: 2 } });
+          },
+        );
+
         it.each<[string, GenericObjectType, GenericObjectType]>([
           ['drops a key it does not name', { a: 'y', extra: 1 }, { a: 'y' }],
           ['fills a property it names that the data lacks', {}, { a: 'x' }],

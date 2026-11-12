@@ -2192,8 +2192,10 @@ function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return 'whole';
   }
   // A `ui:widget` that `SchemaField` renders through another listed type's field takes that type's default, so a
-  // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
-  const { schema } = view;
+  // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show.
+  // A field whose `const` a merge brings in is typed from the schema it takes that `const` from, as a field is by a
+  // `const` of its own, so an untyped field pinned to an object `const` is folded as an object
+  const schema = constSchemaOf<S, F>(context, view);
   // A value of another type a `type` list names is left as it is, as `omitExtraData()` leaves it: an object held by a
   // `['null', 'array', 'object']` has no array items spread into it, and a `null` held by a `['null', 'object']` is not
   // filled in with the object's defaults. With no value, a default of another listed type is kept the same way, so a
