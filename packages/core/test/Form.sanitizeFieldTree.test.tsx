@@ -2558,7 +2558,14 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
   });
   // A property under a type list is sanitized through the object holding it, as the array table's items are through the
   // array, where the top-level call would read the list through `getSchemaType()` alone
-  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; data: unknown; expected: unknown }>([
+  it.each<{
+    name: string;
+    from: RJSFSchema;
+    to: RJSFSchema;
+    data: unknown;
+    expected: unknown;
+    formExpected?: unknown;
+  }>([
     ...TYPE_LISTS_NAMING_ARRAY.map((type) => ({
       name: `sanitizes an array property under ${JSON.stringify(type)} as an array`,
       from: { type, properties: { a: {} }, items: { type: 'string' } } satisfies RJSFSchema,
@@ -2642,7 +2649,23 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
         expected,
       };
     }),
-  ])('$name', ({ from, to, data, expected }) => {
+    {
+      name: "differs on an own null default giving way to its parent's: Form swaps it, utils keeps it (#5818)",
+      from: { type: 'object', properties: { v: { type: ['string', 'null'], default: null } } },
+      to: { type: 'object', properties: { v: { type: ['string', 'null'] } }, default: { v: 'z' } },
+      data: { v: null },
+      expected: { v: null },
+      formExpected: { v: 'z' },
+    },
+    {
+      name: "differs on a parent's default giving way to an own null one: Form swaps it, utils keeps it (#5818)",
+      from: { type: 'object', properties: { v: { type: ['string', 'null'] } }, default: { v: 'x' } },
+      to: { type: 'object', properties: { v: { type: ['string', 'null'], default: null } } },
+      data: { v: 'x' },
+      expected: { v: 'x' },
+      formExpected: { v: null },
+    },
+  ])('$name', ({ from, to, data, expected, formExpected = expected }) => {
     const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
     const ref = createRef<FormRef<{ value?: unknown }>>();
     const props = { validator, initialFormData: { value: data } };
@@ -2650,7 +2673,7 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
 
     rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
 
-    expect(handleOf(ref).getFormData()).toEqual({ value: expected });
+    expect(handleOf(ref).getFormData()).toEqual({ value: formExpected });
     const sanitized = createSchemaUtils({ validator }, wrap(to)).sanitizeDataForNewSchema(wrap(to), wrap(from), {
       value: data,
     });
