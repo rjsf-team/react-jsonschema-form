@@ -105,8 +105,8 @@ import retrieveSchema, {
   optionNode as offeredOption,
   resolveMergedOwnRef,
   retrieveField,
+  joinOptionExtraKeys,
   stubExistingAdditionalProperties,
-  withOptionExtraKeys,
 } from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
@@ -558,9 +558,10 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
   fieldPath?: FoldPath;
-  /** The object parent of the `anyOf`/`oneOf` option the field is, without its options. Its `ObjectField` renders the
-   * option's extra keys, with the option's extra-key keywords joined to its own (see `withOptionExtraKeys()`), so it
-   * decides whether the user can add, remove or rename one, whatever `const` the option holds
+  /** The object parent of the `anyOf`/`oneOf` option the field is, without its options. The field that renders the
+   * option's extra keys, the parent's `ObjectField` or, where the option offers options of its own, the option's, takes
+   * them as the parent with the option's extra-key keywords joined (see `joinOptionExtraKeys()`), so the two decide
+   * whether the user can add, remove or rename one, whatever `const` the option holds
    */
   optionParent?: S;
 }
@@ -1595,12 +1596,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
   const parentConst = view.schema[CONST_KEY];
-  // An option's `const` is not its parent's, whose field renders the option's extra keys and asks whether the user can
-  // add one of the parent with the option's extra-key keywords joined to it. Only a `const` changes the answer, so the
-  // join is spared every other option
+  // An option's `const` is not its parent's. The field that renders the option's extra keys, its parent's or, where
+  // the option offers options of its own, the option's, asks whether the user can add one of the parent with the
+  // option's extra-key keywords joined to it. Only a `const` changes the answer, so the join is spared every other option
   const extraKeysField =
     props.optionParent && parentConst !== undefined
-      ? withOptionExtraKeys<S>(props.optionParent, view.schema)
+      ? joinOptionExtraKeys<S>(props.optionParent, view.schema)
       : view.schema;
   // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it
   const takesExtraKeys = allowsAdditionalProperties<S, F>(context, extraKeysField);

@@ -246,6 +246,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const closed = createSchemaUtils({ validator: testValidator }, options);
         expect(closed.getDefaultFormState(options, {}, false, true)).toStrictEqual({ b: 1 });
       });
+      test("keeps the guards for an option's const where the option offers options of its own", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: true,
+          oneOf: [
+            {
+              const: { b: 1 },
+              anyOf: [
+                { properties: { x: { type: 'string' } } },
+                { properties: { y: { type: 'number' } }, required: ['y'] },
+              ],
+            },
+            { properties: { z: { type: 'string' } }, required: ['z'] },
+          ],
+        };
+        const utils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(utils.getDefaultFormState(schema, {}, false, true)).toStrictEqual({});
+        expect(utils.getDefaultFormState(schema, { c: 1 }, false, true)).toStrictEqual({ c: 1 });
+      });
       test('computeDefaults gives the const without data, which getDefaultFormState merges in', () => {
         expect(computeDefaults({ validator: testValidator }, bare, { rawFormData: { a: 3 } })).toEqual({ a: 1 });
       });
