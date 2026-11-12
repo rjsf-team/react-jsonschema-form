@@ -2469,9 +2469,10 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
 /** Whether a merge from the node `start`, by `mergeReachesConst()`, reaches a `const`, by graph and node */
 const constReach = new WeakMap<object, Map<NodeId, boolean>>();
 
-/** Whether any subschema retrieving the node `from` may merge in declares a `const`: one its `$ref`s, `allOf`, options,
- * `if` branches or `dependencies` lead to. A merge brings in no `const` none of them declares, so where none does the
- * field's schema is read without being merged
+/** Whether any subschema retrieving the node `from` may merge in declares a `const`: one its `$ref`s, `allOf`, `if`
+ * branches or `dependencies` lead to, or an `anyOf`/`oneOf` option where the merge reaches `dependencies`, the only
+ * place retrieving the field merges an option in. A merge brings in no `const` none of them declares, so where none
+ * does the field's schema is read without being merged
  */
 function mergeReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, from: NodeId): boolean {
   const byNode = constReach.get(graph) ?? new Map<NodeId, boolean>();
@@ -2480,8 +2481,11 @@ function mergeReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, fr
   if (known !== undefined) {
     return known;
   }
-  // A set hands out what is added to it while it is walked, so each node the merge leads to is read once
+  // A set hands out what is added to it while it is walked, so each node the merge leads to is read once. The options
+  // met before the merge reaches `dependencies` wait until it does, and are never read where it doesn't
   const seen = new Set<NodeId>([from]);
+  const options: NodeId[] = [];
+  let mergesOptions = false;
   let reaches = false;
   for (const id of seen) {
     const node = graph.node(id);
@@ -2491,10 +2495,15 @@ function mergeReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, fr
         node.ref,
         node.conjunction,
         ...[IF_KEY, THEN_KEY, ELSE_KEY].map((keyword) => graph.child(id, keyword)),
-        ...[ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY].flatMap((keyword) =>
-          graph.subschemas(id, keyword).map(([, next]) => next),
-        ),
+        ...[ALL_OF_KEY, DEPENDENCIES_KEY].flatMap((keyword) => graph.subschemas(id, keyword).map(([, next]) => next)),
       ];
+      options.push(
+        ...[ANY_OF_KEY, ONE_OF_KEY].flatMap((keyword) => graph.subschemas(id, keyword).map(([, next]) => next)),
+      );
+      mergesOptions ||= Object.hasOwn(node.raw, DEPENDENCIES_KEY);
+      if (mergesOptions) {
+        nexts.push(...options.splice(0));
+      }
       for (const next of nexts) {
         if (next !== undefined) {
           seen.add(next);
