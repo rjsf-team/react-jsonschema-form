@@ -2271,6 +2271,20 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           ),
         ).toStrictEqual({ k: 'u' });
       });
+      it.each<[string, RJSFSchema]>([
+        ['an unchanged readOnly default', { type: 'string', default: 'n', readOnly: true }],
+        ['a default made readOnly', { type: 'string', default: 'n' }],
+      ])('keeps a value %s differs from, as Form does', (_, oldK) => {
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            objectWith({ type: 'string', default: 'n', readOnly: true }),
+            objectWith(oldK),
+            {
+              k: 'u',
+            },
+          ),
+        ).toStrictEqual({ k: 'u' });
+      });
       it('keeps an array whose items change type, without the items', () => {
         const oldK: RJSFSchema = { type: 'array', items: { type: 'number' } };
         const newK: RJSFSchema = { type: 'array', items: { type: 'string' } };

@@ -96,6 +96,8 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   isDefaultsChanged: boolean;
   /** Whether the previous tree's uiSchema declares a `ui:initialValue` anywhere, worked out once on first asking */
   oldDeclaresInitialValue: () => boolean;
+  /** Whether the previous tree's `ui:definitions` declare a `ui:initialValue`, worked out once on first asking */
+  oldDefinitionsDeclareInitialValue: () => boolean;
 }
 
 /** The values a disabled or read-only form's sanitize judges, see `sanitizeFieldTree()`: each key holding `undefined`,
@@ -1058,11 +1060,10 @@ function initialValueReaches<T, S extends StrictRJSFSchema, F extends FormContex
   ctx: TreeContext<T, S, F>,
   path: FieldPathList,
 ): boolean {
-  const root = ctx.oldTree.uiSchema;
-  if (!ctx.oldDeclaresInitialValue() || declaresInitialValue(root?.[UI_DEFINITIONS_KEY])) {
+  if (!ctx.oldDeclaresInitialValue() || ctx.oldDefinitionsDeclareInitialValue()) {
     return ctx.oldDeclaresInitialValue();
   }
-  let reached = withOptionUiSchemas([root]);
+  let reached = withOptionUiSchemas([ctx.oldTree.uiSchema]);
   for (const key of path) {
     if (reached.some(ownsInitialValue)) {
       return true;
@@ -1178,6 +1179,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       itemMoves,
       isDefaultsChanged,
       oldDeclaresInitialValue: once(() => declaresInitialValue(previous.uiSchema)),
+      oldDefinitionsDeclareInitialValue: once(() => declaresInitialValue(previous.uiSchema?.[UI_DEFINITIONS_KEY])),
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),

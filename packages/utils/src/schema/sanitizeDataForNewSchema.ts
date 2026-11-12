@@ -299,7 +299,9 @@ function defaultReplacement<S extends StrictRJSFSchema>(
   if (isNewClear || (oldDefault !== undefined && deepEquals(oldDefault, formValue))) {
     return ownValue(newDefault);
   }
-  return isScalar && oldDefault !== undefined && newSchema.readOnly === true ? undefined : NO_VALUE;
+  return isScalar && oldDefault !== undefined && !deepEquals(oldDefault, newDefault) && newSchema.readOnly === true
+    ? undefined
+    : NO_VALUE;
 }
 
 /** `schema` read as the `array` its type list names, as `Form` walks an array value a type list holds whichever type
