@@ -533,6 +533,15 @@ interface DefaultsView<S extends StrictRJSFSchema> {
   readonly conditions: boolean;
   readonly data: unknown;
   readonly depData: unknown;
+  /** The field's schema as last merged, see `mergedSchemaOf()` */
+  readonly merged: MergedSchema<S>;
+}
+
+/** The schema a field was last merged into, and the context and data it was merged with */
+interface MergedSchema<S extends StrictRJSFSchema> {
+  context?: object;
+  data?: unknown;
+  schema?: S;
 }
 
 /** The options selected for a field: the option chosen from each list, by the node holding it, and the lists chosen
@@ -716,6 +725,7 @@ function planView<S extends StrictRJSFSchema, F extends FormContextType>(
     conditions,
     data,
     depData,
+    merged: {},
   };
 }
 
@@ -738,6 +748,7 @@ function ownView<S extends StrictRJSFSchema>(field: DefaultsField<S>, schema: S,
     conditions: true,
     data,
     depData: data,
+    merged: {},
   };
 }
 
@@ -1014,19 +1025,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
-  // Under `constAsDefaults: 'always'` a `const` a merging keyword the plan left unmerged brings in takes precedence over
-  // the data, as `formDataMatching()` applies it, so it is the field's defaults, as a `const` of its own is, retrieved
-  // with the data so that a condition on it picks the `const`
-  const constSchema =
-    defaultFormStateBehavior?.constAsDefaults === 'always' && holdsAnyOf(schema, MERGING_KEYWORDS)
-      ? retrieveField<S, F>(context, viewField<S>(view), rawFormData)
-      : schema;
-  if (
-    constSchema[CONST_KEY] !== undefined &&
-    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-    !constIsAjvDataReference(constSchema)
-  ) {
-    defaults = ownValue(constSchema[CONST_KEY]);
+  // The `const` that takes precedence over the data is the field's defaults, as a `const` of its own is
+  const fieldConst =
+    defaultFormStateBehavior?.constAsDefaults === 'never'
+      ? undefined
+      : constValueOf<S>(constSchemaOf<S, F>(context, view, rawFormData));
+  if (fieldConst !== undefined) {
+    defaults = ownValue(fieldConst);
   } else if (
     isObject(defaults) &&
     isObject(schema.default) &&
@@ -1618,18 +1623,13 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     view.stubs && allowsAdditionalProperties<S, F>(context, view.schema)
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
-  const constsAlways = defaultFormStateBehavior?.constAsDefaults === 'always';
-  // An `allOf` the plan left unmerged holds a `const` that takes precedence over the data as one of the field's own
-  // does, so it is read from the merged schema, as `formDataMatching()` reads it
-  const constSchema =
-    constsAlways && !(CONST_KEY in schema) && ALL_OF_KEY in view.schema
-      ? retrieveField<S, F>(context, viewField<S>(view), formData)
-      : schema;
-  const parentConst = constSchema[CONST_KEY];
   // Under `constAsDefaults: 'always'` an object `const` takes precedence over the data, so an extra key it doesn't name
   // is dropped, whether the object stubs it among its properties or computes it from its `additionalProperties`
-  const pinnedKeys =
-    constsAlways && isObjectData(parentConst) && !constIsAjvDataReference(constSchema) ? parentConst : undefined;
+  const constSchema = constSchemaOf<S, F>(context, view, rawFormData);
+  const parentConst = constSchema[CONST_KEY];
+  const pinningConst =
+    defaultFormStateBehavior?.constAsDefaults === 'always' ? constValueOf<S>(constSchema) : undefined;
+  const pinnedKeys = isObjectData(pinningConst) ? pinningConst : undefined;
   const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
@@ -2406,6 +2406,45 @@ export function ensureFormDataMatchingSchema<
   return formDataMatching<T, S, F>(context, { schema, field, chains }, rootSchema, formData);
 }
 
+/** The schema of the field `view` stands for, merged for `data` as `retrieveSchema()` merges it. The fold, the object
+ * defaults and the data match of a field read it with the same data, so it is merged once for them
+ */
+function mergedSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  data: unknown,
+): S {
+  const { merged } = view;
+  if (merged.schema === undefined || merged.context !== context || !Object.is(merged.data, data)) {
+    merged.schema = retrieveField<S, F>(context, viewField<S>(view), data);
+    merged.context = context;
+    merged.data = data;
+  }
+  return merged.schema;
+}
+
+/** The schema whose `const` the field `view` stands for takes for `data`. Under `constAsDefaults: 'always'` a `const`
+ * a merging keyword the plan left unmerged brings in takes precedence over the data as one of the field's own does, so
+ * it is read from the schema merged with the data, so that a condition on it picks the `const`, as
+ * `formDataMatching()` reads it
+ */
+function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  data: unknown,
+): S {
+  return context.defaultFormStateBehavior?.constAsDefaults === 'always' && holdsAnyOf(view.schema, MERGING_KEYWORDS)
+    ? mergedSchemaOf<S, F>(context, view, data)
+    : view.schema;
+}
+
+/** The value the `const` of `schema` gives a field, none for an AJV `$data` one, which names another value of the data
+ * rather than being one
+ */
+function constValueOf<S extends StrictRJSFSchema>(schema: S): unknown {
+  return constIsAjvDataReference<S>(schema) ? undefined : schema[CONST_KEY];
+}
+
 /** The field `view` stands for: its schema holds the options the fold selected for it, so the field is seeded by them
  * too, each merged over the field's own seeds as the fold merged it
  */
@@ -2435,7 +2474,12 @@ function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormConte
   };
   return formDataMatching<T, S, F>(
     context,
-    { schema: view.schema, field, chains: () => view.chains },
+    {
+      schema: view.schema,
+      field,
+      chains: () => view.chains,
+      retrieve: (data) => mergedSchemaOf<S, F>(context, view, data),
+    },
     view.graph.rawRoot,
     formData,
     false,
@@ -2452,6 +2496,8 @@ interface MatchedSchema<S extends StrictRJSFSchema> {
   readonly field: () => Provenance<S>;
   /** The chains the properties of `schema` are declared in */
   readonly chains: () => readonly Keywords<S>[];
+  /** Retrieves the field for some data, `retrieveField()` where not given */
+  readonly retrieve?: (data: unknown) => S;
 }
 
 /** Whether `value` is an object as JSON Schema reads data: a plain object, `null`-prototype ones included, with no
@@ -2499,7 +2545,7 @@ export function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unkno
  */
 function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  { schema, field, chains }: MatchedSchema<S>,
+  { schema, field, chains, retrieve = (data) => retrieveField<S, F>(context, field(), data) }: MatchedSchema<S>,
   rootSchema: S,
   formData: T | undefined,
   unfolded = false,
@@ -2507,7 +2553,7 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
 ): T | T[] | undefined {
   const { defaultFormStateBehavior } = context;
   const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior);
-  const schemaToMatch = shouldRetrieveAllOf ? retrieveField<S, F>(context, field(), formData) : schema;
+  const schemaToMatch = shouldRetrieveAllOf ? retrieve(formData) : schema;
   let declaredIn: Seeding<S> | undefined;
   const declarations = () => {
     declaredIn ??= { graph: field().graph, chains: chains() };
@@ -2521,7 +2567,7 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   // depends on the data is planned again for it. A merge that leaves one value is a constant, whose data is kept as it
   // is for a field that declares one, and as `populateDefaults` keeps it, as long as the field's own options take it
   const mergesForData = !shouldRetrieveAllOf && formData !== undefined && holdsAnyOf(schemaToMatch, MERGING_KEYWORDS);
-  const readSchema = mergesForData ? retrieveField<S, F>(context, field(), formData) : schemaToMatch;
+  const readSchema = mergesForData ? retrieve(formData) : schemaToMatch;
   const nestedUnfolded = unfolded || mergesForData;
   let selectSchema: S | undefined;
   if (formData !== undefined && !isConstant<S>(readSchema)) {
@@ -2550,14 +2596,10 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
     validFormData = undefined;
   }
 
-  // Override the formData with the const if the constAsDefaults is set to always. An AJV `$data` const names another
-  // value of the data rather than being one, so it replaces nothing, as `foldView()` takes no default from it
-  const constTakesPrecedence =
-    readSchema[CONST_KEY] !== undefined &&
-    defaultFormStateBehavior?.constAsDefaults === 'always' &&
-    !constIsAjvDataReference<S>(readSchema);
-  if (constTakesPrecedence) {
-    validFormData = readSchema.const;
+  // Override the formData with the const if the constAsDefaults is set to always
+  const fieldConst = defaultFormStateBehavior?.constAsDefaults === 'always' ? constValueOf<S>(readSchema) : undefined;
+  if (fieldConst !== undefined) {
+    validFormData = fieldConst;
   } else if (isObject(validFormData) && isObject(readSchema.properties)) {
     const matched: GenericObjectType = { ...validFormData };
     const rootGraph = parseSchemaGraph<S>(rootSchema);

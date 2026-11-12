@@ -2607,6 +2607,31 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it.each<[string, GenericObjectType, GenericObjectType]>([
+          ['drops a key it does not name', { a: 'y', extra: 1 }, { a: 'y' }],
+          ['fills a property it names that the data lacks', {}, { a: 'x' }],
+        ])(
+          '%s, for an object const a condition left unmerged holds under constAsDefaults always',
+          (_name, formData, expected) => {
+            const field: RJSFSchema = {
+              type: 'object',
+              properties: { a: { type: 'string' } },
+              if: { properties: { a: { type: 'string' } } },
+              then: { const: { a: 'x' } },
+            };
+            const schema: RJSFSchema = { type: 'object', properties: { field } };
+            expect(
+              getDefaultFormState(
+                {
+                  validator: testValidator,
+                  defaultFormStateBehavior: { constAsDefaults: 'always', emptyObjectFields: 'skipEmptyDefaults' },
+                },
+                { schema, formData: { field: formData } },
+              ),
+            ).toStrictEqual({ field: expected });
+          },
+        );
+
         it('fills an empty field with the const a condition left unmerged holds under constAsDefaults always', () => {
           const schema: RJSFSchema = {
             type: 'object',
