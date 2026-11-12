@@ -153,23 +153,30 @@ export default function LayoutMultiSchemaField<
     // never carries the root's `ui:definitions` itself.
     const newOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex);
     const oldOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex);
-    const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
+    const switched = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
       newOptionUiSchema,
       oldOptionUiSchema,
       uiSchemaDefinitions,
       globalUiOptions,
     });
-    if (newFormData) {
-      setByPath(newFormData, selectorField, opt);
+    if (switched.formData) {
+      setByPath(switched.formData, selectorField, opt);
     }
     // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to
     selectOption(newOptionIndex);
     let sentData: unknown;
     const outcome = sendOptionSwitch(
       schema,
-      { oldOption, newOption, oldUiSchema: oldOptionUiSchema, newUiSchema: newOptionUiSchema },
+      {
+        oldOption,
+        newOption,
+        oldUiSchema: oldOptionUiSchema,
+        newUiSchema: newOptionUiSchema,
+        // The option `oldOption` is, in the list the selection is stored by. Without options there is no selection
+        oldIndex: options ? oldOptionIndex : -1,
+      },
       formData,
-      newFormData,
+      switched,
       (sent) => {
         sentData = sent;
         // Pass the component name in the path

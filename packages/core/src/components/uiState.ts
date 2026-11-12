@@ -641,3 +641,38 @@ export function withSelectionsAsOf(uiState: UiState, dataAt: (path: FieldPathLis
   holdForRendered(selections, dataAt);
   return { selection: (path, list) => selections.get(path)?.get(list), isExpanded: uiState.isExpanded };
 }
+
+/** The selections and expansions `snapshot` saved, read with the switch at `path` undone: the latest pick there, which
+ * is the selection the switching field made just before it sent the switch, shows `oldIndex` again, holding for the
+ * data from before the switch. The snapshot itself is left as it is, so the one a refused change restores can serve.
+ * No option list has to be named, so a list a custom field keys differently, or one with no place in the root, is
+ * found all the same
+ *
+ * @param snapshot - The selections and expansions saved before the switch's key move
+ * @param path - The switched field's path
+ * @param oldIndex - The option switched away from
+ * @param oldData - The switched field's data before the switch
+ * @returns - The selections and expansions as the form showed them before the switch
+ */
+export function withSwitchUndone(
+  { selections, expanded }: UiStateSnapshot,
+  path: FieldPath,
+  oldIndex: number,
+  oldData: unknown,
+): UiStateReader {
+  let latest: [string, OptionSelection] | undefined;
+  for (const entry of selections.get(path) ?? []) {
+    if (!latest || entry[1].pick > latest[1].pick) {
+      latest = entry;
+    }
+  }
+  const undone = latest && {
+    list: latest[0],
+    selection: { ...latest[1], index: oldIndex, holdsFor: [oldData], isReleased: false },
+  };
+  return {
+    selection: (at, list) =>
+      undone && at === path && list === undone.list ? undone.selection : selections.get(at)?.get(list),
+    isExpanded: (at) => expanded.has(at),
+  };
+}

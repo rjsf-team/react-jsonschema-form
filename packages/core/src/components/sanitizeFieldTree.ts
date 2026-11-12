@@ -37,7 +37,7 @@ import {
 } from '@rjsf/utils';
 
 import { copyAlongPath, isPathPrefix } from './dataPaths.ts';
-import type { FieldEdit } from './formState.ts';
+import type { FieldEdit, SwitchedFrom } from './formState.ts';
 import { clearsIn, emptyValue } from './keepClears.ts';
 import type { ContainerKeyMove, KeyMove } from './keyMove.ts';
 import { moveOfItems } from './keyMove.ts';
@@ -60,12 +60,18 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   /** The schema utilities the new tree is built with */
   schemaUtils: SchemaUtilsType<T, S, F>;
   uiState: UiStateReader;
+  /** The selections and expansions the previous tree is read with: `uiState`, except below a key an option switch
+   * left, which is read as the form showed it before the switch
+   */
+  oldUiState: UiStateReader;
   /** The path of the change being made, if there is one: the value there is the user's, and the selections at or
    * above it hold
    */
   editedPath?: FieldPathList;
   /** Where the change moved the keys of the array or object at `editedPath`, if it moved any */
   newKeyOf?: KeyMove;
+  /** For an option switch that left keys only the old option declared, the switched field, that option and the keys */
+  switchedFrom?: SwitchedFrom;
   /** The data the previous tree is built for */
   oldData: unknown;
   /** The previous tree, which a fill of the previous data is made as */
@@ -213,8 +219,8 @@ function valueAt(container: unknown, key: string | undefined): unknown {
   return key === undefined ? undefined : getByPath(container, key);
 }
 
-/** A value the diff removes from the data, and that `formDataForNewOption()` drops from what a switch carries */
-export const DROP = Symbol('drop');
+/** A value the diff removes from the data */
+const DROP = Symbol('drop');
 
 /** A value the diff leaves without a value, for the defaults to fill */
 const UNSET = Symbol('unset');
@@ -225,18 +231,18 @@ const UNSET = Symbol('unset');
  * `CyclicSchemaField` as far as the schema decides them: no `uiSchema` is read, so a field whose `uiSchema` keeps its
  * options from rendering, as `ui:fieldReplacesAnyOrOneOf` does, is still taken to show one. `retrieved` is `raw` retrieved for `value`, when
  * the caller has it. `shown` maps each option list, by `optionListKey()`, to the option shown from it: an entry is
- * taken in place of the selection, and a list without one is added with the option shown for `value`.
+ * taken in place of the selection `uiState` holds, and a list without one is added with the option shown for `value`.
  */
 function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   schemaUtils: SchemaUtilsType<T, S, F>,
+  uiState: UiStateReader,
   raw: S,
   value: unknown,
   path: FieldPathList,
   shown: Map<string, number>,
   retrieved?: S,
 ): S[] {
-  const { uiState } = ctx;
   const rootSchema = schemaUtils.getRootSchema();
   const data = asFieldValue<T>(value);
   let schema = raw;
@@ -269,7 +275,8 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return [view];
   }
   const own = rendersOwnFieldBesideOption<S>(view) ? schemaUtils.retrieveSchema(schema, data, false, index) : view;
-  return [own, ...layersOf(ctx, schemaUtils, getRenderedOptionSchema<S>(view, options[index]), value, path, shown)];
+  const optionSchema = getRenderedOptionSchema<S>(view, options[index]);
+  return [own, ...layersOf(ctx, schemaUtils, uiState, optionSchema, value, path, shown)];
 }
 
 /** The innermost layer's `keyword`, which is the one the value is rendered under */
@@ -283,7 +290,7 @@ function keywordOf<S extends StrictRJSFSchema>(layers: readonly S[], keyword: st
 }
 
 /** Whether a field is an extra key whose schema is guessed from its data, which constrains nothing */
-export function isGuessed<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
+function isGuessed<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
   return layers.some((layer) => hasSchemaMarker(layer, GUESSED_TYPE_FLAG));
 }
 
@@ -331,10 +338,9 @@ function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declare
 }
 
 /** Whether a guessed extra key's stub renders `value`: a scalar, or an object whose every key the stub takes as an
- * extra key of its own. Not an array, since the stub declares no `items`. An option switch keeps a value its old option
- * declared by the same rule, see `formDataForNewOption()`
+ * extra key of its own. Not an array, since the stub declares no `items`
  */
-export function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: readonly S[]): boolean {
+function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: readonly S[]): boolean {
   if (Array.isArray(value)) {
     return false;
   }
@@ -514,9 +520,9 @@ function oldFieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextTyp
   ctx: TreeContext<T, S, F>,
   shownAbove: ShownAbove | undefined,
 ): FormFieldState<S> {
-  const { oldSchemaUtils, uiState, editedPath } = ctx;
+  const { oldSchemaUtils, oldUiState, editedPath } = ctx;
   const rootSchema = oldSchemaUtils.getRootSchema();
-  const form = fieldStateOf(uiState, oldSchemaUtils, editedPath);
+  const form = fieldStateOf(oldUiState, oldSchemaUtils, editedPath);
   const oldShown = new Map<string, ReadonlyMap<string, number>>();
   for (let link = shownAbove; link; link = link.above) {
     oldShown.set(fieldPathFromList(link.oldPath), link.shown);
@@ -605,14 +611,20 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return newValue;
   }
   // The old side shows the options the new side shows from the same lists: which option the data is shown under is
-  // the selection's, or the match's, and a switch's data is `formDataForNewOption()`'s, so no switch drops a value
+  // the selection's, or the match's, so a switch changes no field's constraints. The keys a switch left that only the
+  // old option declared are the exception: they are laid out on the old side under that option, which declared them,
+  // and below them as the form showed them before the switch, so each is judged as a field a conditional stops
+  // declaring is
   const shown = new Map<string, number>();
-  const newLayers = layersOf(ctx, ctx.schemaUtils, newRaw, newValue, path, shown, newRetrieved);
-  const oldLayers = layersOf(ctx, ctx.oldSchemaUtils, oldRaw, oldValue, path, shown, oldRetrieved);
+  const newLayers = layersOf(ctx, ctx.schemaUtils, ctx.uiState, newRaw, newValue, path, shown, newRetrieved);
+  const oldLayers = layersOf(ctx, ctx.oldSchemaUtils, ctx.oldUiState, oldRaw, oldValue, path, shown, oldRetrieved);
   if (newLayers.length === 0) {
     return newValue;
   }
   const shownHere = oldPath === undefined ? shownAbove : { oldPath, shown, above: shownAbove };
+  const { switchedFrom } = ctx;
+  const isSwitched =
+    switchedFrom !== undefined && path.length === switchedFrom.path.length && isPathPrefix(path, switchedFrom.path);
   const oldOwnDefault = keywordOf(oldLayers, DEFAULT_KEY);
   const newOwnDefault = keywordOf(newLayers, DEFAULT_KEY);
   const oldDefault = oldOwnDefault ?? oldInherited;
@@ -634,29 +646,70 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const oldProperties = propertiesOf(oldLayers);
     const newProperties = propertiesOf(newLayers);
     const previousKeyOf = previousKeys(ctx, path, oldValue);
+    // The keys a switch left keep their own value through it, under the option switched away from
+    let leftSide:
+      | {
+          keys: ReadonlySet<string>;
+          properties: Map<string, S | true>;
+          ownDefault: unknown;
+          shownHere?: ShownAbove;
+          ctx: TreeContext<T, S, F>;
+        }
+      | undefined;
+    if (isSwitched && switchedFrom.leftKeys.size > 0) {
+      // The form as it was before the switch: its selections, with the option switched away from at the switched field,
+      // which holds there and above it as for an edit made there, so the fill of the old data reads it too. Every list
+      // at the path is read from them afresh, since `shown` holds the options the new side shows
+      const leftCtx: TreeContext<T, S, F> = {
+        ...ctx,
+        oldUiState: switchedFrom.uiState,
+        newKeyOf: undefined,
+        switchedFrom: undefined,
+      };
+      const leftShown = new Map<string, number>();
+      const leftLayers = layersOf(
+        leftCtx,
+        ctx.oldSchemaUtils,
+        switchedFrom.uiState,
+        oldRaw,
+        oldValue,
+        path,
+        leftShown,
+        oldRetrieved,
+      );
+      leftSide = {
+        keys: switchedFrom.leftKeys,
+        properties: propertiesOf(leftLayers),
+        ownDefault: keywordOf(leftLayers, DEFAULT_KEY),
+        shownHere: oldPath === undefined ? shownAbove : { oldPath, shown: leftShown, above: shownAbove },
+        ctx: leftCtx,
+      };
+    }
     let result: Record<string, unknown> = newValue;
     for (const key of Object.keys(newValue)) {
       const childPath = [...path, key];
       const newChild = newProperties.get(key);
-      const oldChild = oldProperties.get(key);
+      const from = leftSide?.keys.has(key) ? leftSide : undefined;
+      const oldChild = (from?.properties ?? oldProperties).get(key);
       let next: unknown = newValue[key];
       // A `true` property holds the value whatever it is, so there is nothing to judge it by
       if (newChild !== undefined && newChild !== true) {
-        const previousKey = previousKeyOf(key);
+        const previousKey = from ? key : previousKeyOf(key);
         const previousValue = valueAt(oldValue, previousKey);
+        const oldParentDefault = from ? from.ownDefault : oldOwnDefault;
         next = walk(
-          ctx,
+          from?.ctx ?? ctx,
           {
             oldRaw: oldChild === true ? undefined : oldChild,
             newRaw: newChild,
             oldValue: previousValue,
             newValue: newValue[key],
-            oldInherited: isPlainObject(oldOwnDefault) ? getByPath(oldOwnDefault, key) : undefined,
+            oldInherited: isPlainObject(oldParentDefault) ? getByPath(oldParentDefault, key) : undefined,
             newInherited: isPlainObject(newOwnDefault) ? getByPath(newOwnDefault, key) : undefined,
             isItem: false,
             hasOld: previousValue !== undefined,
             oldPath: oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined,
-            shownAbove: shownHere,
+            shownAbove: from ? from.shownHere : shownHere,
           },
           childPath,
         );
@@ -796,7 +849,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * one, written in place. A field whose constraints did not change keeps its value, so an edit elsewhere never re-judges
  * it. The value of the field being edited, and of the fields holding it, is the user's, and only what they hold is
  * judged. Both trees show the option the new data is shown under, so an option switch, by the selector or by matching,
- * changes no field's constraints: the data a switch sends is `formDataForNewOption()`'s. With `judgedClears`, as for a
+ * changes no field's constraints: the data a switch sends is `formDataForNewOption()`'s. A key it leaves that only the
+ * option switched away from declared is judged against that option, as a field a conditional stops declaring is. With
+ * `judgedClears`, as for a
  * disabled or read-only form, only the keys holding `undefined` and the `null` items the form recorded as clears are
  * judged, by the same rule, so each gives way where it would in an enabled form and every value the data holds, a `null`
  * item the user didn't clear included, stays as it is. Dropping an item moves the items after it down, which the result
@@ -807,8 +862,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param next - The new tree, likewise, whose data is the data to sanitize
  * @param uiState - The form's option selections and cycle expansions
  * @param fillAsFirstRender - How the form fills data on its first render, which a field's defaults are judged by
- * @param [edit] - The change being made, if any: its path, and where it moved the keys of the array or object there,
- *        so each item or property is paired with its own previous value
+ * @param [edit] - The change being made, if any: its path, where it moved the keys of the array or object there, so
+ *        each item or property is paired with its own previous value, and the option a switch there left
  * @param [judgedClears] - For a disabled or read-only form, the only values judged, see `judgedClearsIn()`
  * @returns - The sanitized data, sharing everything it left alone with `data`, and where each array it dropped items of
  *   moved the rest, an inner array's first, with the paths of the arrays holding it as they were before
@@ -827,8 +882,10 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       oldSchemaUtils: previous.schemaUtils,
       schemaUtils: next.schemaUtils,
       uiState,
+      oldUiState: uiState,
       editedPath: edit?.path,
       newKeyOf: edit?.newKeyOf,
+      switchedFrom: edit?.switchedFrom,
       oldData: previous.formData,
       oldTree: previous,
       fillAsFirstRender,

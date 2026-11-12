@@ -431,10 +431,11 @@ describe('option selection as form state', () => {
     expect(customValidate.mock.lastCall?.[0]).toEqual({ kind: 'a', a: 'x', b: 'y' });
   });
 
-  it('counts no key a switch of options discards against maxProperties', async () => {
+  it('counts no key a switch of options discards for failing the extra-key schema against maxProperties', async () => {
     const schema: RJSFSchema = {
       type: 'object',
-      additionalProperties: { type: 'string' },
+      // A string extra key would keep `a`, which only A declares, as a branch keeps it
+      additionalProperties: { type: 'number' },
       maxProperties: 2,
       anyOf: [
         { title: 'A', properties: { a: { type: 'string' } } },

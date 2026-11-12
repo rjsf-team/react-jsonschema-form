@@ -693,14 +693,29 @@ export interface FieldChange<T> {
    * `setFieldValue()` sets it, is matched again
    */
   isFieldEdit?: boolean;
+  /** For an option switch that left keys only the old option declared, that option, the keys, and the selections the
+   * form held before the switch
+   */
+  switchedFrom?: SwitchedFrom;
 }
 
-/** A change being made to the data: its path, and where it moved the keys of the array or object there, if it moved
- * any
+/** The keys a switch the form took put back, see `SwitchedOption`, at `path`, the switched field's, with the selections
+ * and expansions the form showed the data under before it, which the field tree before the switch is read with below
+ * those keys. The path is the change's own, or below it where a parent field sent the switch's data at its own path
+ */
+export interface SwitchedFrom {
+  path: FieldPathList;
+  leftKeys: ReadonlySet<string>;
+  uiState: UiStateReader;
+}
+
+/** A change being made to the data: its path, where it moved the keys of the array or object there, if it moved any,
+ * and the option it switched away from, if it is a switch that left keys only that option declared
  */
 export interface FieldEdit {
   path: FieldPathList;
   newKeyOf?: KeyMove;
+  switchedFrom?: SwitchedFrom;
 }
 
 /** The part of the state that rendering derives from the props and the data alone: the schema utilities, the root and
@@ -1630,7 +1645,11 @@ export function freezeFormData(data: unknown) {
  * `setFieldValue()` sets it at any path, holds none, so it is matched again, as the render matches it
  */
 function heldPathOf<T>(change: FieldChange<T>): FieldPathList | undefined {
-  return change.isFieldEdit ? (change.editedPath ?? fieldPathToList(change.fieldPath)) : undefined;
+  if (!change.isFieldEdit) {
+    return undefined;
+  }
+  // A switch a parent field forwarded holds at the switched field, as the switch's own change would
+  return change.switchedFrom?.path ?? change.editedPath ?? fieldPathToList(change.fieldPath);
 }
 
 /** Whether the form's defaults can replace an own `undefined`: only this mode's fill does, so under the others the
@@ -1771,10 +1790,10 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
 
   if (isContainer) {
     // Only the data and its context are derived here; the errors are reconciled below. A root write is sanitized only
-    // where it stands for an edit, as the data a `transformChange` writes over one does. The `undefined` a clear leaves
-    // is stripped from the copy the validator gets, so AJV never sees `{ [key]: undefined }` for a `string` field
-    // (#4518)
-    const editedPath = change.editedPath ?? (isRootPath ? undefined : path);
+    // where it stands for an edit, as the data a `transformChange` writes over one does, or where it is an option
+    // switch that left keys for the sanitize to judge. The `undefined` a clear leaves is stripped from the copy the
+    // validator gets, so AJV never sees `{ [key]: undefined }` for a `string` field (#4518)
+    const editedPath = change.editedPath ?? (isRootPath && !change.switchedFrom ? undefined : path);
     const derived = deriveFormData(
       current,
       formData,
@@ -1782,7 +1801,13 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
         isSanitized: editedPath !== undefined,
         clearedPaths,
         judgesOnlyClears: disabled || readonly,
-        edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
+        // A switch a parent field sent at its own path is still an edit at the switched field, which holds the user's
+        // value and the selections at and above it; the parent's write moves no key
+        edit: editedPath && {
+          path: change.switchedFrom?.path ?? editedPath,
+          newKeyOf: change.editedPath ? undefined : change.newKeyOf,
+          switchedFrom: change.switchedFrom,
+        },
         heldPath: heldPathOf(change),
         keepsClears: fillsOverClears(props),
       },

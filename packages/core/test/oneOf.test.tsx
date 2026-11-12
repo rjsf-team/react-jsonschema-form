@@ -9,16 +9,17 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getByPath, isPlainObject, noop, optionDescriptionId } from '@rjsf/utils';
+import { getByPath, isPlainObject, noop, optionDescriptionId, ROOT_FIELD_PATH } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import { createPrecompiledValidator, customizeValidator } from '@rjsf/validator-ajv8';
 import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
-import { act, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRequire } from 'node:module';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
+import { getTestRegistry } from '../src/testing.ts';
 import {
   createFormComponent,
   createFormRef,
@@ -5545,13 +5546,13 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
         expected: { a: 'x' },
       },
       { declares: 'nothing', t: { title: 'T' }, a: { type: 'string' }, initial: 'x', expected: { a: 'x' } },
-      // What the old option's default filled in still drops, leaving the field as the sanitize left it
+      // What the old option's default filled in still drops
       {
         declares: 'nothing, for a default',
         t: { title: 'T' },
         a: { type: 'string', default: 'd' },
         initial: 'd',
-        expected: undefined,
+        expected: {},
       },
     ])('judges a value as an extra key when the new option declares $declares', async ({ t, a, initial, expected }) => {
       const schema: RJSFSchema = {
@@ -5585,8 +5586,8 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(node.querySelector('#root_a__key')).toBeNull();
     });
 
-    // As when the new option declares a property, which the sanitize keeps the object's own keys beside. Where no key is
-    // kept, the switch leaves the sanitize's clear of the whole object, as v7 does
+    // As when the new option declares a property, which the sanitize keeps the object's own keys beside, whether or not
+    // the form's sanitize keeps the key the switch leaves beside them
     it.each<{ case: string; a: RJSFSchema; name?: RJSFSchema; initial: string; expected?: KindData }>([
       {
         case: "keeps the object's own fields and extra keys beside the kept key",
@@ -5603,10 +5604,10 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
         expected: { name: 'N', a: 'x', foo: 'y' },
       },
       {
-        case: "leaves the sanitize's clear where the key drops",
+        case: "keeps the object's own fields and extra keys where the key drops",
         a: { type: 'string', default: 'd' },
         initial: 'd',
-        expected: undefined,
+        expected: { name: 'N', foo: 'y' },
       },
     ])('$case, when the new option declares nothing', async ({ a, name, initial, expected }) => {
       const schema: RJSFSchema = {
@@ -5618,8 +5619,42 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       const { node, formData } = await selectT(schema, { initialFormData: { name: 'N', a: initial, foo: 'y' } });
 
       expect(formData).toEqual(expected);
-      expect(node.querySelector('#root_a__key') !== null).toBe(expected !== undefined);
+      expect(node.querySelector('#root_a__key') !== null).toBe(expected?.a !== undefined);
     });
+
+    // With no key for the switch to leave, the object's own fields stay as they do beside a kept or dropped key. The data
+    // matches T, so S is picked first
+    it("keeps the object's own fields and extra keys when no key is left, when the new option declares nothing", async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+        [keyword]: [{ title: 'S', properties: { a: { type: 'string' } } }, { title: 'T' }],
+        additionalProperties: true,
+      };
+      const { node, formData } = await selectT(schema, {
+        initialFormData: { name: 'N', foo: 'y' },
+        beforeSwitch: (form) => user.selectOptions(elementOf(form, selectorId), 'S'),
+      });
+
+      expect(formData).toEqual({ name: 'N', foo: 'y' });
+      expect(node.querySelector('#root_a__key')).toBeNull();
+    });
+
+    // Only where the object takes extra keys does `a` stay for the form's sanitize to judge
+    it.each([{ ap: undefined }, { ap: false }, { ap: true }])(
+      "keeps the object's own fields when the new option declares nothing, additionalProperties $ap",
+      async ({ ap }) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { name: { type: 'string' } },
+          [keyword]: [{ title: 'S', properties: { a: { type: 'string' } } }, { title: 'T' }],
+          ...(ap !== undefined && { additionalProperties: ap }),
+        };
+        const { formData } = await selectT(schema, { initialFormData: { name: 'N', a: 'x' } });
+
+        expect(formData).toEqual(ap ? { name: 'N', a: 'x' } : { name: 'N' });
+      },
+    );
 
     // Without `a` the `if` holds vacuously and fills `n`; with `kind: 'B'` beside it nothing fills `n`
     it('judges a nested value by the fill made with its siblings in place', async () => {
@@ -5818,6 +5853,265 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(formData).toEqual({ kind: 't', a: { b: 'x' } });
       expect(input(node, 'root_a_b').value).toBe('x');
       expect(node.querySelector('#root_a_c__key')).toBeNull();
+    });
+
+    // The form fills the option field from the root, whose `default` reaches it from above (#5812)
+    it('drops what a default declared above the option field filled in', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { pet: unionOf({ additionalProperties: true }) },
+        default: { pet: { kind: 's', a: 'p' } },
+      };
+      const { node, onChange, getFormData } = createFormComponent({ schema });
+      expect(getFormData()).toEqual({ pet: { kind: 's', a: 'p' } });
+
+      await user.selectOptions(elementOf(node, `#root_pet__${keyword.toLowerCase()}_select`), 'T');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ pet: { kind: 't' } });
+      expect(node.querySelector('#root_pet_a__key')).toBeNull();
+    });
+
+    // Both options fit `{ b: 'y' }`, which matches the first, so only the selection says Y filled it (#5812)
+    it('drops what the option the user picked inside the value filled in', async () => {
+      const schema = unionOf(
+        {},
+        {
+          type: 'object',
+          anyOf: [
+            { title: 'X', properties: { b: { type: 'string', default: 'x' } } },
+            { title: 'Y', properties: { b: { type: 'string', default: 'y' } } },
+          ],
+        },
+      );
+      const { node, before, formData } = await selectT(schema, {
+        whenAbsent: 'allow',
+        initialFormData: { kind: 's' },
+        beforeSwitch: (form) => user.selectOptions(elementOf(form, '#root_a__anyof_select'), 'Y'),
+      });
+
+      expect(before).toEqual({ kind: 's', a: { b: 'y' } });
+      expect(formData).toEqual({ kind: 't' });
+      expect(node.querySelector('#root_a__key')).toBeNull();
+    });
+
+    /** A parent field that sends each property's change as the whole object at its own path, as one that keeps the data
+     * does, with the property's value as `copy` makes it */
+    function objectFieldSendingWhole(copy: (value: unknown) => unknown) {
+      return function WholeObjectSendingField(props: FieldProps<GenericObjectType>) {
+        const { ObjectField: InnerObjectField } = props.registry.fields;
+        return (
+          <InnerObjectField
+            {...props}
+            onChange={(value, fieldPath, errorSchema, id) =>
+              props.onChange({ ...props.formData, [String(fieldPath)]: copy(value) }, props.fieldPath, errorSchema, id)
+            }
+          />
+        );
+      };
+    }
+    const WholeObjectField = objectFieldSendingWhole((value) => value);
+
+    // The second row has no `const`, so the old data without `a` matches T, and only the option switched away from
+    // fills `a` there
+    it.each<{
+      case: string;
+      pet: RJSFSchema;
+      rootDefault?: RJSFSchema['default'];
+      initialFormData?: KindData;
+      filled: KindData;
+      switched: KindData;
+    }>([
+      {
+        case: "the old option's default",
+        pet: unionOf({ additionalProperties: true }, { type: 'string', default: 'd' }),
+        initialFormData: { pet: { kind: 's' } },
+        filled: { pet: { kind: 's', a: 'd' } },
+        switched: { pet: { kind: 't' } },
+      },
+      {
+        case: 'a root default, for options told apart by required alone',
+        pet: {
+          type: 'object',
+          additionalProperties: true,
+          [keyword]: [
+            { title: 'S', properties: { a: { type: 'string' } }, required: ['a'] },
+            { title: 'T', properties: { b: { type: 'string' } } },
+          ],
+        },
+        rootDefault: { pet: { a: 'p' } },
+        filled: { pet: { a: 'p' } },
+        switched: { pet: {} },
+      },
+    ])('drops what $case filled in when a parent field sends the switch at its own path', async (row) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { pet: row.pet },
+        ...(row.rootDefault && { default: row.rootDefault }),
+      };
+      const { node, onChange, getFormData } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:field': WholeObjectField },
+        initialFormData: row.initialFormData,
+      });
+      expect(getFormData()).toEqual(row.filled);
+
+      await user.selectOptions(elementOf(node, `#root_pet__${keyword.toLowerCase()}_select`), 'T');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual(row.switched);
+      expect(node.querySelector('#root_pet_a__key')).toBeNull();
+    });
+
+    // The form takes a parent's change as the switch only where it holds the value the switch sent, so a copy of it
+    // leaves the keys out, as outside a `Form`, while the switch itself has the typed key judged and kept
+    it.each([
+      { sends: 'the value the switch sent', copy: (value: unknown) => value, expected: { kind: 't', a: 'x' } },
+      { sends: 'a copy of it', copy: (value: unknown) => structuredClone(value), expected: { kind: 't' } },
+    ])('judges a typed key the switch leaves where a parent field sends $sends', async ({ copy, expected }) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { pet: unionOf({ additionalProperties: true }, { type: 'string', default: 'd' }) },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:field': objectFieldSendingWhole(copy) },
+        initialFormData: { pet: { kind: 's', a: 'x' } },
+      });
+
+      await user.selectOptions(elementOf(node, `#root_pet__${keyword.toLowerCase()}_select`), 'T');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ pet: expected });
+      expect(node.querySelector('#root_pet_a__key') !== null).toBe('a' in expected);
+    });
+
+    // `{}` fits T as it fits S, so only the form's refusal, which the field now hears of, shows S again
+    it('shows the option switched away from when transformChange refuses a switch a parent field sends', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          pet: {
+            type: 'object',
+            [keyword]: [
+              { title: 'S', properties: { a: { type: 'string' } } },
+              { title: 'T', properties: { b: { type: 'string' } } },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:field': WholeObjectField },
+        initialFormData: { pet: {} },
+        transformChange: (_next, previous) => previous,
+      });
+      const selector = elementOf(node, `#root_pet__${keyword.toLowerCase()}_select`);
+      expect(selector).toHaveValue('0');
+
+      await user.selectOptions(selector, 'T');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ pet: {} });
+      expect(selector).toHaveValue('0');
+    });
+
+    // Without a `const`, the key `a` the switch leaves makes the data match S again, so the fill holds T at the switched
+    // field as for the field's own switch, and writes none of S's defaults, in a `transformChange` rewrite too
+    it.each<{ rewrite: string; transformChange?: (next: unknown) => unknown; extra?: object }>([
+      { rewrite: 'no rewrite' },
+      {
+        rewrite: 'a transformChange rewrite',
+        transformChange: (next) => ({ ...(isPlainObject(next) ? next : {}), other: 1 }),
+        extra: { other: 1 },
+      },
+    ])(
+      'fills no default of the option switched away from where a parent field sends a switch that leaves a key, with $rewrite',
+      async ({ transformChange, extra }) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            pet: {
+              type: 'object',
+              additionalProperties: true,
+              [keyword]: [
+                { title: 'S', properties: { a: { type: 'string' }, c: { type: 'string', default: 'cd' } } },
+                { title: 'T', properties: { b: { type: 'string' } } },
+              ],
+            },
+          },
+        };
+        const { node, onChange, getFormData } = createFormComponent({
+          schema,
+          uiSchema: { 'ui:field': WholeObjectField },
+          initialFormData: { pet: { a: 'x' } },
+          transformChange,
+        });
+        expect(getFormData()).toEqual({ pet: { a: 'x', c: 'cd' } });
+        const selector = elementOf(node, `#root_pet__${keyword.toLowerCase()}_select`);
+
+        await user.selectOptions(selector, 'T');
+
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ pet: { a: 'x' }, ...extra });
+        expect(selector).toHaveValue('1');
+      },
+    );
+
+    // Neither list has a place in the root, so both key their selection by `''`, and only the inner one switches
+    it('judges a key the inner of two option lists at one path leaves against the inner old option', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          pet: {
+            type: 'object',
+            additionalProperties: true,
+            [keyword]: [
+              { title: 'C', properties: { c: { type: 'string' } }, required: ['c'] },
+              {
+                title: 'Inner',
+                anyOf: [
+                  { title: 'A', properties: { a: { type: 'string', default: 'd' } } },
+                  { title: 'B', properties: { b: { type: 'string' } } },
+                ],
+              },
+            ],
+          },
+        },
+      };
+      const { node, onChange, getFormData } = createFormComponent({ schema, initialFormData: { pet: {} } });
+      expect(getFormData()).toEqual({ pet: { a: 'd' } });
+
+      const innerSelector = keyword === 'anyOf' ? '#root_pet__anyof_select2' : '#root_pet__anyof_select';
+      await user.selectOptions(elementOf(node, innerSelector), 'B');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ pet: {} });
+      expect(node.querySelector('#root_pet_a__key')).toBeNull();
+    });
+
+    // Nothing outside a `Form` judges the key, so the switch leaves it out, as the sanitize did
+    it('leaves out a key only the old option declares outside a Form', async () => {
+      const schema = unionOf({ additionalProperties: true });
+      const onChange = vi.fn();
+      render(
+        <SchemaField
+          name=''
+          id='root'
+          fieldPath={ROOT_FIELD_PATH}
+          schema={schema}
+          uiSchema={{}}
+          formData={{ kind: 's', a: 'x' }}
+          errorSchema={{}}
+          registry={getTestRegistry(schema)}
+          required={false}
+          readonly={false}
+          disabled={false}
+          autofocus={false}
+          hideError={false}
+          onChange={onChange}
+          onBlur={noop}
+          onFocus={noop}
+        />,
+      );
+
+      await user.selectOptions(screen.getByRole('combobox'), 'T');
+
+      expect(onChange.mock.lastCall?.[0]).toEqual({ kind: 't' });
     });
   });
 });

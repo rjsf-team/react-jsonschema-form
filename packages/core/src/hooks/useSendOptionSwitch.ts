@@ -16,6 +16,7 @@ import {
 
 import AdditionalEntryContext from '../components/fields/AdditionalEntryContext.ts';
 import { declaresProperty, storedValue } from '../components/fields/fieldWidgetUtils.ts';
+import type { OptionSwitchData } from '../components/fields/formDataForNewOption.ts';
 import type { MoveOutcome } from '../components/keyMove.ts';
 import type { OptionSelectionState } from './useOptionSelection.ts';
 import useSendMove from './useSendMove.ts';
@@ -32,6 +33,10 @@ interface OptionSwitch<T, S extends StrictRJSFSchema, F extends FormContextType>
   oldUiSchema: UiSchema<T, S, F> | undefined;
   /** The uiSchema the field of the option switched to renders with */
   newUiSchema: UiSchema<T, S, F> | undefined;
+  /** The index of the option switched away from, in the list the field stores its selection by, -1 where none was
+   * shown
+   */
+  oldIndex: number;
 }
 
 /** Whether the field of an option as it is rendered renders a field per item. A select over whole arrays renders one
@@ -86,6 +91,11 @@ function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextT
  * options declare. `send` is handed the value to send, the new option's data as the field's container stores it, see
  * `storedValue()`, which is the value the move is announced with. What it returns says what became of the change, see
  * `FormDataAccess.sendMove()`.
+ *
+ * The keys only the old option declared that `formDataForNewOption()` left out stay out of the value sent, and the move
+ * carries them with the option switched away from. A form that takes the change as the switch puts them back, and its
+ * sanitize judges them against that option as it judges a field a conditional stops declaring; anything else, such as
+ * a field outside a `Form` or a parent field that sends other data, leaves them out.
  */
 export default function useSendOptionSwitch(fieldPath: FieldPath) {
   const sendMove = useSendMove(fieldPath);
@@ -95,10 +105,10 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       schema: S,
       optionSwitch: OptionSwitch<T, S, F>,
       formData: unknown,
-      newFormData: V,
-      send: (value: V) => void,
+      { formData: newFormData, left }: OptionSwitchData<V>,
+      send: (value: V | undefined) => void,
     ) => {
-      const { oldOption, newOption } = optionSwitch;
+      const { oldOption, newOption, oldIndex } = optionSwitch;
       const kept = schema.properties ?? {};
       // An item only keeps its errors while it still holds what it held: one an option's `default` replaced is another
       // value under the same index
@@ -142,6 +152,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
           newKeyOf: (key) => (gone.has(key) && !Object.hasOwn(declaredByNew, key) ? undefined : key),
           newOwnKeyOf: (key) => (gone.has(key) ? undefined : key),
           dropsOwnErrors: true,
+          ...(oldIndex >= 0 && { switchedFrom: { index: oldIndex, left } }),
         },
         () => send(value),
       );
