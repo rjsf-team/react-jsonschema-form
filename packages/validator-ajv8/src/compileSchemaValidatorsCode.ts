@@ -75,10 +75,12 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     ajvOptionsOverrides.uriResolver ?? uri.default,
   );
 
+  // The overrides' `schemas` are left out, since the schemas compiled here are added below under the same keys
+  const { schemas: _schemas, ...overrides } = ajvOptionsOverrides;
   // Allow users to turn off the `lines: true` feature in their own overrides, but NOT the `source: true`
   const compileOptions = {
-    ...ajvOptionsOverrides,
-    code: { lines: true, ...ajvOptionsOverrides.code, source: true },
+    ...overrides,
+    code: { lines: true, ...overrides.code, source: true },
   };
   const ajv = createAjvInstance(
     additionalMetaSchemas,

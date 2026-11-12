@@ -110,6 +110,19 @@ describe('compileSchemaValidatorsCode()', () => {
     expect(validateRoot({ v: { k: 3 } })).toBe(true);
     expect(validateRoot({ v: { k: true } })).toBe(false);
   });
+  it('compiles the root it is given in place of the schemas the Ajv options name', () => {
+    const rootSchema: RJSFSchema = {
+      $id: 'https://e.com/root.json',
+      type: 'object',
+      properties: { a: { type: 'string' } },
+    };
+    const validateFns = evalValidatorCode(
+      compileSchemaValidatorsCode(rootSchema, { ajvOptionsOverrides: { schemas: [rootSchema] } }),
+    );
+    const validateRoot = validateFns[schemaKey(rootSchema)];
+    expect(validateRoot({ a: 'a' })).toBe(true);
+    expect(validateRoot({ a: 1 })).toBe(false);
+  });
   precompiledCoverageTests((rootSchema, options) =>
     createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema, options),
   );
