@@ -70,6 +70,7 @@ import buildPlan, {
   cachedPolicy,
   childSeeds,
   declaresKeyword,
+  emptySchema,
   ownChains,
   seedsAt,
   seedsKey,
@@ -825,7 +826,8 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Returns the child of `view` that `seeds` seed, reached through `edge`. A subschema the schema's own keywords stand
  * in for, `fallback`, such as the stub of a key whose type is guessed from its data where `additionalProperties` is
- * `true`, is read as it stands where no seed is more than a boolean.
+ * `true`, is read as it stands where no seed is more than a boolean: the same object on every call, so a pass of a
+ * field's fixed point reuses what an earlier pass computed for the child.
  */
 function defaultsChild<S extends StrictRJSFSchema>(
   view: DefaultsView<S>,
@@ -834,14 +836,8 @@ function defaultsChild<S extends StrictRJSFSchema>(
   fallback?: unknown,
 ): DefaultsField<S> {
   const { graph, expanded } = view.field;
-  const useFallback = isObject(fallback) && seeds.every(({ node }) => graph.node(node).kind === 'boolean');
-  return {
-    graph,
-    seeds: useFallback ? [] : seeds,
-    expanded,
-    edge,
-    fallback: useFallback ? schemaFrom(graph.rawRoot, fallback) : undefined,
-  };
+  const useFallback = isSchemaObject<S>(fallback) && seeds.every(({ node }) => graph.node(node).kind === 'boolean');
+  return { graph, seeds: useFallback ? [] : seeds, expanded, edge, fallback: useFallback ? fallback : undefined };
 }
 
 /** Computes the defaults of `field` from the fold's state at it. A field whose plan has `dependencies` is planned again
@@ -1507,7 +1503,7 @@ function innerItem<S extends StrictRJSFSchema>(
   if (additionalItems !== AdditionalItemsHandling.Ignore && isObject(additional)) {
     return { seeds: seedsAt(view, 'additionalItems'), edge: 'item', fallback: additional };
   }
-  return { seeds: [], edge: 'item', fallback: {} };
+  return { seeds: [], edge: 'item', fallback: emptySchema<S>() };
 }
 
 /** The `null` fills to compute the defaults of a property of an object with: `nullFills` itself, or, for an optional
@@ -1808,11 +1804,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       );
     }
   } else if (additionalProperties && !initialDefaultsGenerated) {
-    // as per spec additionalProperties may be either schema or boolean
-    const additionalPropertiesSchema = schemaFrom(
-      rootSchema,
-      isObject(additionalProperties) ? additionalProperties : {},
-    );
     const formDataRequired = Object.keys(formData).filter((key) => !isDeclared(key));
     // Only seed keys from schema defaults when formData has no additionalProperties of its own.
     // If the user already has data (e.g. after a key rename), injecting default keys would
@@ -1823,7 +1814,13 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       const { value, holdsNull } = foldReporting(
         context,
         `additional:${key}`,
-        defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
+        // as per spec additionalProperties may be either schema or boolean
+        defaultsChild(
+          view,
+          seedsAt(view, ADDITIONAL_PROPERTIES_KEY),
+          'additionalKey',
+          isObject(additionalProperties) ? additionalProperties : emptySchema<S>(),
+        ),
         // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
         // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
         childProps(key, ADDITIONAL_PROPERTIES_KEY),
