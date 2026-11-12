@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
-import { RJSF_PROVENANCE_KEY } from '../../src/constants.ts';
 import {
+  RJSF_PROVENANCE_KEY,
   RJSF_REF_CYCLE_KEY,
   findSelectedOptionInXxxOf,
   getDefaultFormState,

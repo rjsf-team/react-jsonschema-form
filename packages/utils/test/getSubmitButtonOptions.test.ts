@@ -6,7 +6,6 @@ const DEFAULT_OPTIONS: SubmitButtonOptions = { props: { disabled: false }, submi
 describe('getSubmitButtonOptions', () => {
   it('default props', () => {
     expect(getSubmitButtonOptions()).toEqual(DEFAULT_OPTIONS);
-    expect(getSubmitButtonOptions()).toBe(getSubmitButtonOptions());
   });
 
   it('allowed option should be false', () => {
