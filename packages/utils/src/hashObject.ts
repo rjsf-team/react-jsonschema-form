@@ -61,7 +61,7 @@ export function hashObject(object: unknown): string {
  * `getValidationSchemas()` maps it into the compiled set under: its `$id` when it names something, and the hash of its
  * content otherwise. An empty `$id` names nothing, so a schema carrying one is keyed by its hash rather than sharing
  * the empty key with every other such schema. Two schemas sharing a key must validate the same way, so a schema derived
- * from another in a way that changes its meaning drops or derives the `$id` -- see `withVariantId()`.
+ * from another in a way that changes its meaning drops or derives the `$id`.
  *
  * @param schema - The schema for which the validator cache key is desired
  * @returns - The `$id` of the schema if it has a non-empty one, otherwise the hash of the schema

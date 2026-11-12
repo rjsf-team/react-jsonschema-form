@@ -765,7 +765,7 @@ export interface GlobalUISchemaOptionsKeys {
   deprecatedHandling?: 'hide' | 'disable' | 'label';
 }
 
-/** The templates `getTemplate()` reads from a field's options: every one `DeclaredTemplatesType` declares but
+/** The templates `getTemplates()` reads from a field's options: every one `DeclaredTemplatesType` declares but
  * `ButtonTemplates`. Derived rather than listed, so that a template a later release declares fails typecheck until
  * `RESERVED_UI_OPTION_NAMES` lists it
  */

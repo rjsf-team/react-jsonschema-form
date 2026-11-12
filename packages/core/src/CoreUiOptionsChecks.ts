@@ -39,7 +39,7 @@ interface EnumUiOptions {
  * This is intentionally a starting set covering the options `UIOptionsType` declares - it does not
  * attempt to model every widget/option combination (for example, per-widget options like `RangeWidget`'s min/max
  * come from the JSON Schema itself, not from `ui:options`, so they are not repeated here). Widget names include both
- * the registered PascalCase component name and the lowercase alias(es) `getWidget` resolves for that schema type
+ * the registered PascalCase component name and the lowercase alias(es) `resolveWidget()` resolves for that schema type
  * (`WidgetAliasFor`), since either spelling is a valid `ui:widget` value at runtime.
  */
 export type CoreUiOptionsChecks =

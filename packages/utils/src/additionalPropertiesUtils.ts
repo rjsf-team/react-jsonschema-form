@@ -232,8 +232,8 @@ function describesKey<S extends StrictRJSFSchema>(schema: S, key: string, readsU
  * one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the
  * caller to resolve into the one schema that describes it, the same object for every key the same patterns match; a
  * `false` among them rejects the key whatever the others allow, since no value satisfies it. A key no pattern matches
- * is `additionalProperties`' to describe, `false` and `true` included, which `additionalPropertiesKeyword()` reads with
- * the precedence the keywords have.
+ * is `additionalProperties`' to describe, `false` and `true` included, read with the precedence
+ * `additionalProperties` and `unevaluatedProperties` have.
  *
  * A schema `retrieveSchema()` joined with the option selected beside it answers for the object and for the option
  * apart, and conjoins the two: the object's `unevaluatedProperties` says nothing about a key the option evaluates.

@@ -653,8 +653,8 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
  * discriminator property's `const` or `enum` holds the data's value wins outright. Otherwise the index of the one option
  * that matches the data, as `getFirstMatchingOption()` matches an option, is returned when exactly one does.
  *
- * Otherwise the options that match, or all of them when none does, are the candidates: each is scored by calling
- * `calculateIndexScore()` on it, and the candidate with the best score is returned. A tie goes to the `selectedOption`
+ * Otherwise the options that match, or all of them when none does, are the candidates: each is scored by how
+ * closely its properties and type match the data, and the candidate with the best score is returned. A tie goes to the `selectedOption`
  * when it is a candidate and to the first candidate otherwise, so an option that does not match the data is never
  * returned while one does.
  *

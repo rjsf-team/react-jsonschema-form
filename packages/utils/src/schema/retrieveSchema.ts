@@ -409,8 +409,8 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
 }
 
 /** Returns the schema a validator checks `schema` with as the subschema it stands for: a `{ $ref }` naming its place in
- * `rootSchema`, see `pointerTo()`, which the validator resolves against the root it is handed, or, for a schema with no
- * place there, the schema itself under an `$id` derived from its own, see `withVariantId()`, which a validator reads a
+ * `rootSchema`, which the validator resolves against the root it is handed, or, for a schema with no
+ * place there, the schema itself under an `$id` derived from its own, which a validator reads a
  * `$ref` that is only a fragment against the root under, as it reads every one it is handed. A schema
  * `retrieveSchema()` handed out from one subschema stands for it, so it is checked as JSON Schema reads that subschema
  * rather than as the form merged it; one merged from several is checked as merged.

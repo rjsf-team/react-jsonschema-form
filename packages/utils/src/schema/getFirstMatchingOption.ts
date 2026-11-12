@@ -218,7 +218,7 @@ export function firstMatchingOption<
 
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
  * Always returns the first option if there is nothing that matches. Each option is matched as the subschema of the
- * root it stands for, see `optionMatches()`.
+ * root it stands for.
  *
  * @param context - The `SchemaContext` whose `validator` is used to match the options
  * @param formData - The current formData, if any, used to figure out a match

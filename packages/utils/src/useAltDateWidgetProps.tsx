@@ -55,7 +55,7 @@ export type DateElementProps<
   /** The label of the field, which leads the accessible name of each date element, such as `When, year` */
   label?: string;
   /** The translated name of the date element, for a caller that already translated it to display it. Defaults to
-   * `dateElementLabel(type, translateString)`
+   * the translated name of `type`, such as `TranslatableString.YearLabel`
    */
   elementLabel?: string;
   /** The selector function for a specific prop within the `DateObject`, for a value */
