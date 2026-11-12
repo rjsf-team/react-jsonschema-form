@@ -234,4 +234,4 @@ Apache-2.0
 [contributors-shield]: https://img.shields.io/github/contributors/rjsf-team/react-jsonschema-form.svg?style=flat-square
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
-[license-url]: https://github.com/rjsf-team/react-jsonschema-form/blob/main/LICENSE
+[license-url]: https://github.com/rjsf-team/react-jsonschema-form/blob/main/LICENSE.md
