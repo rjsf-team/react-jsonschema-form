@@ -1587,10 +1587,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
+  // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it
+  const takesExtraKeys = allowsAdditionalProperties<S, F>(context, view.schema);
   // A field resolved the way `retrieveSchema()` resolves a schema has the extra keys of its data stubbed among its
   // `properties`
   const schema =
-    view.stubs && allowsAdditionalProperties<S, F>(context, view.schema)
+    view.stubs && takesExtraKeys
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
   const parentConst = schema[CONST_KEY];
@@ -1754,9 +1756,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // `ui:initialValue` takes priority over the `const` as the object's default, so none of its keys are seeded beside one,
   // on the first pass or once the defaults were generated
   const closingConst =
-    objectConst &&
-    getUiOptions<T, S, F>(uiSchema).initialValue === undefined &&
-    !allowsAdditionalProperties<S, F>(context, schema)
+    objectConst && getUiOptions<T, S, F>(uiSchema).initialValue === undefined && !takesExtraKeys
       ? objectConst
       : undefined;
   if ((additionalProperties && !initialDefaultsGenerated) || closingConst) {
