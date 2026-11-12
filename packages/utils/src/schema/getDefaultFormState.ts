@@ -2470,21 +2470,20 @@ function mergeReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, fr
   let reaches = false;
   for (let id = pending.pop(); id !== undefined && !reaches; id = pending.pop()) {
     const node = graph.node(id);
-    if (seen.has(id) || node.kind !== 'schema') {
-      continue;
+    if (!seen.has(id) && node.kind === 'schema') {
+      seen.add(id);
+      reaches = Object.hasOwn(node.raw, CONST_KEY);
+      pending.push(
+        ...[
+          node.ref,
+          node.conjunction,
+          ...[IF_KEY, THEN_KEY, ELSE_KEY].map((keyword) => graph.child(id, keyword)),
+        ].filter((next) => next !== undefined),
+        ...[ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY].flatMap((keyword) =>
+          graph.subschemas(id, keyword).map(([, next]) => next),
+        ),
+      );
     }
-    seen.add(id);
-    reaches = Object.hasOwn(node.raw, CONST_KEY);
-    pending.push(
-      ...[
-        node.ref,
-        node.conjunction,
-        ...[IF_KEY, THEN_KEY, ELSE_KEY].map((keyword) => graph.child(id, keyword)),
-      ].filter((next) => next !== undefined),
-      ...[ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY].flatMap((keyword) =>
-        graph.subschemas(id, keyword).map(([, next]) => next),
-      ),
-    );
   }
   byNode.set(from, reaches);
   return reaches;
