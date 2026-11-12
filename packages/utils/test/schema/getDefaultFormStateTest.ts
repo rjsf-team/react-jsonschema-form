@@ -152,6 +152,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const withDefault: RJSFSchema = { ...extra, const: undefined, default: { b: 2 } };
           expect(utils(withDefault).getDefaultFormState(withDefault, { c: 2 })).toStrictEqual({ c: 2, b: 2 });
         });
+        it('seeds the keys of a nested open object const beside the extra keys the data holds on the first pass', () => {
+          const nested: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', additionalProperties: { type: 'number' }, const: { b: 2 } } },
+          };
+          expect(utils(nested).getDefaultFormState(nested, { x: { c: 3 } })).toStrictEqual({ x: { c: 3, b: 2 } });
+          expect(utils(nested).getDefaultFormState(nested, { x: { c: 3 } }, false, true)).toStrictEqual({
+            x: { c: 3 },
+          });
+        });
         it('seeds no key of the const where patternProperties or unevaluatedProperties let the user add, remove or rename keys', () => {
           const patterned: RJSFSchema = {
             type: 'object',

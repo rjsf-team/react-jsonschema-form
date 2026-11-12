@@ -1851,8 +1851,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const formDataRequired = Object.keys(formData).filter((key) => !isComputed(key));
     // Only seed keys from schema defaults when formData has no additionalProperties of its own.
     // If the user already has data (e.g. after a key rename), injecting default keys would
-    // re-add stale entries that no longer exist in formData.
-    const seeded = isObject(defaults) && formDataRequired.length === 0 ? Object.keys(defaults) : [];
+    // re-add stale entries that no longer exist in formData. A `const` is the object's whole value, so its keys are
+    // seeded beside the data's on the first pass, whether or not the object's data is stubbed among its properties
+    const seeded =
+      isObject(defaults) && (formDataRequired.length === 0 || objectConst !== undefined) ? Object.keys(defaults) : [];
     const keys = new Set([...formDataRequired, ...seeded.filter((key) => !isComputed(key))]);
     [...keys].filter(isPinned).forEach((key) => {
       const { value, holdsNull } = foldReporting(
