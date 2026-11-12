@@ -9,6 +9,7 @@ import {
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
+import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getSchemaType from '../getSchemaType.ts';
 import { getKnownTypes } from '../getUnionTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
@@ -423,8 +424,10 @@ export default function sanitizeDataForNewSchema<
   // By default, we will clear the form data
   let newFormData;
   const newProperties = newSchema?.[PROPERTIES_KEY];
-  // If the new schema is of type object and that object contains a list of properties
-  if (newProperties) {
+  // If the new schema is of type object and that object contains a list of properties. One whose types leave out
+  // `object`, such as a nullable object's `null` option rendered with the object's `properties` (see
+  // `getRenderedOptionSchema()`), holds no object to keep them in
+  if (newSchema && newProperties && getSchemaOwnTypes<S>(newSchema)?.includes('object') !== false) {
     // An object of the values replacing the data's own. It and `nestedData` are without a prototype, so that a
     // `__proto__` key is written as a plain key, and the spread into `newFormData` copies it as an own one
     const replacements: GenericObjectType = Object.create(null);

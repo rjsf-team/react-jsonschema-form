@@ -406,8 +406,10 @@ export default function omitExtraData<
     const option = isSchemaObject<S>(winning)
       ? withoutStubs<S>(retrieveSchema<unknown, S, F>(context, winning, rootSchema, source))
       : schemaOfBoolean(Boolean(winning), rootSchema);
-    if (!rendersOwnFieldBesideOption<S>(childSchema)) {
-      return omit(option, source, path, target, false);
+    // The option takes the whole field, rendered with the keywords it inherits, such as the `items` of a type list
+    // naming `object` first, which the object's own omit leaves unapplied
+    if (!rendersOwnFieldBesideOption<S>(childSchema, option)) {
+      return omit(getRenderedOptionSchema<S>(childSchema, option), source, path, target, false);
     }
     // An object's field takes the extra keys of the object and its option, unless the option's own field takes them in
     // its place, rendered with the object's extra-key keywords joined to its own

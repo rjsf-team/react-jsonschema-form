@@ -9,7 +9,7 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 ## Constants
 
 The `@rjsf/utils` package exports a set of constants that represent the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
-In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility.
+In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility, and the `PINNED_TYPE_FLAG` flag that `FallbackField` adds to the schema whose `type` its type selector pins.
 `GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or a schema with no keyword that asserts something about the value, such as `enum`, `const`, `format`, a length, a range, `properties`, `items` or a subschema keyword like `allOf` or `not`: its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all when the schema it is compared against is equally unconstrained, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it.
 An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
@@ -18,7 +18,7 @@ There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defin
 `WIDGET_FIELD_PRESENTATION` is the `PresentationDeclaration` of a field that renders its value with a single widget and leaves every part to whoever that widget says draws it, for a theme or `@rjsf/core` to declare such a field with (see [getPresentationDeclaration()](#getpresentationdeclaration)). It is defined in [getPresentationDeclaration.ts](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getPresentationDeclaration.ts) rather than with the other constants.
 `DEFAULT_BOOLEAN_WIDGET` is the registry key the `checkbox` alias of a `boolean` resolves to (`CheckboxWidget`), so a theme can read that widget from its registry, as `registry.widgets[DEFAULT_BOOLEAN_WIDGET]`, without copying the key. It is defined next to the widget map in [getWidget.tsx](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getWidget.tsx) rather than with the other constants.
 
-The constants it exports from `constants.ts` are `ADDITIONAL_PROPERTY_FLAG`, `ADDITIONAL_PROPERTIES_KEY`, `ALL_OF_KEY`, `ANY_OF_KEY`, `CONST_KEY`, `DEFAULT_KEY`, `ELSE_KEY`, `ERRORS_KEY`, `GUESSED_TYPE_FLAG`, `ID_KEY`, `ITEMS_KEY`, `ONE_OF_KEY`, `PATTERN_PROPERTIES_KEY`, `PROPERTIES_KEY`, `READONLY_KEY`, `REQUIRED_KEY`, `SUBMIT_BTN_OPTIONS_KEY`, `REF_KEY`, `THEN_KEY`, `UNEVALUATED_PROPERTIES_KEY`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`, `SCHEMA_KEY`, `DEFAULT_ID_PREFIX`, `DEFAULT_ID_SEPARATOR`, `LOOKUP_MAP_NAME`, `RJSF_ADDITIONAL_PROPERTIES_FLAG`, `ROOT_SCHEMA_PREFIX`, `UI_FIELD_KEY`, `UI_WIDGET_KEY`, `UI_OPTIONS_KEY`, `UI_GLOBAL_OPTIONS_KEY`, `UI_DEFINITIONS_KEY`, `JSON_SCHEMA_DRAFT_2019_09`, `JSON_SCHEMA_DRAFT_2020_12` and `JSON_SCHEMA_TYPES`; that file also holds keys only RJSF's own code reads.
+The constants it exports from `constants.ts` are `ADDITIONAL_PROPERTY_FLAG`, `ADDITIONAL_PROPERTIES_KEY`, `ALL_OF_KEY`, `ANY_OF_KEY`, `CONST_KEY`, `DEFAULT_KEY`, `ELSE_KEY`, `ERRORS_KEY`, `GUESSED_TYPE_FLAG`, `ID_KEY`, `ITEMS_KEY`, `ONE_OF_KEY`, `PATTERN_PROPERTIES_KEY`, `PINNED_TYPE_FLAG`, `PROPERTIES_KEY`, `READONLY_KEY`, `REQUIRED_KEY`, `SUBMIT_BTN_OPTIONS_KEY`, `REF_KEY`, `THEN_KEY`, `UNEVALUATED_PROPERTIES_KEY`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`, `SCHEMA_KEY`, `DEFAULT_ID_PREFIX`, `DEFAULT_ID_SEPARATOR`, `LOOKUP_MAP_NAME`, `RJSF_ADDITIONAL_PROPERTIES_FLAG`, `ROOT_SCHEMA_PREFIX`, `UI_FIELD_KEY`, `UI_WIDGET_KEY`, `UI_OPTIONS_KEY`, `UI_GLOBAL_OPTIONS_KEY`, `UI_DEFINITIONS_KEY`, `JSON_SCHEMA_DRAFT_2019_09`, `JSON_SCHEMA_DRAFT_2020_12` and `JSON_SCHEMA_TYPES`; that file also holds keys only RJSF's own code reads.
 
 ## Types
 
@@ -1461,7 +1461,7 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 ### getRenderedOptionSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
-An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
+An object parent renders its own `ObjectField` beside the option, unless a `type` list or the fallback UI's type selector leaves it an option of another type (see [`rendersOwnFieldBesideOption()`](#rendersownfieldbesideoptions-extends-strictrjsfschema--rjsfschema)). That field shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
 That field also stubs the extra keys of the data, for the parent and the selected option together (see [`retrieveSchema()`](#retrieveschemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype)), so the option is rendered without its own `additionalProperties`, `patternProperties` and `unevaluatedProperties`, and marked with a flag, so its own field offers no extra key beside the parent's, even in a form that reads an absent `additionalProperties` as taking any key. The marker says nothing to a validator, and an option offering options of its own still takes the extra keys one of them names.
 An option that offers options of its own renders a field of its own beside them, which takes the extra keys in the parent's field's place, so that they render once: it keeps its own extra-key keywords, joined with the parent's as the parent's field would join them, so that a key is still judged by each of them apart, and is not marked. It also carries the names of the properties the parent and the fields above it declare, which its field leaves to them rather than rendering them as extra keys, and the parent's bounds on the object's keys, which its add button now answers to: the stricter `maxProperties` of the two, and both `propertyNames`. Its uiSchema takes the parent's say over the extra keys likewise, see [`getRenderedOptionUiSchema()`](#getrenderedoptionuischema). A `ui:field` the option's uiSchema names renders it all the same, handed the extra keys in its `schema` and `formData`, so the field renders them where it renders the option's schema.
 Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
@@ -1476,7 +1476,7 @@ An option's `items` schema beside the parent's tuple applies to each of its posi
 A `not`, or a conditional (`if`, `then` and `else` together), that the option declares replaces the parent's as a whole: `not: true` rejects every value, and one schema's `if` with the other's `then` is a condition neither declared.
 Any other keyword both declare, such as a `format`, a `pattern`, a `multipleOf`, an `enum` or a `const` or `default` object, is the option's. An `enum` is the option's list as it stands, since its `ui:enumNames` are read by position against it, so a value the parent doesn't list stays, for validation to reject.
 A pair of subschemas either of which holds a `$ref` is returned as an `allOf` of the two, since the `$ref` is resolved only where the subschema is rendered, against the root schema, and the keywords met in beside it would be layered over the ones it names; the field's `allOf` merge meets them once it is resolved.
-An option naming no `type` takes the parent's, every type of a type list included, and an object parent that names none, such as one with only `properties`, passes on `object`.
+An option naming no `type` takes the parent's, every type of a type list included, unless it takes the whole field and pins its value with a `const` or `enum`, which takes only the listed types its values have; an object parent that names none, such as one with only `properties`, passes on `object`.
 
 #### Parameters
 
@@ -1879,12 +1879,12 @@ One with neither renders as the field holding its options, which leaves the cont
 
 Whether `schema` carries the flag `marker` the schema utilities set on the schemas they build, such as the `ADDITIONAL_PROPERTY_FLAG` `retrieveSchema()` sets on a property an `additionalProperties` adds.
 A boolean subschema, which can stand wherever a schema can, carries none.
-It takes only the markers that hold a flag: `ADDITIONAL_PROPERTY_FLAG`, `GUESSED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`. A flag set to `undefined` or `false` reads as unset.
+It takes only the markers that hold a flag: `ADDITIONAL_PROPERTY_FLAG`, `GUESSED_TYPE_FLAG`, `PINNED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`. A flag set to `undefined` or `false` reads as unset.
 
 #### Parameters
 
 - schema: unknown - The schema to check, which may be a boolean subschema
-- marker: SchemaFlagMarker - The symbol of the flag marker, one of `ADDITIONAL_PROPERTY_FLAG`, `GUESSED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`
+- marker: SchemaFlagMarker - The symbol of the flag marker, one of `ADDITIONAL_PROPERTY_FLAG`, `GUESSED_TYPE_FLAG`, `PINNED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`
 
 #### Returns
 
@@ -2664,10 +2664,13 @@ Returns the values of the stars a rating widget draws: one for each whole number
 Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's `ObjectField` does ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
 Such a field shows its own properties and other keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option as [getRenderedOptionSchema()](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema) renders it.
 `getRenderedOptionSchema()`, the defaults `getDefaultFormState()` computes, the `getUiRequiredErrorSchema()` walk and `MultiSchemaField` all read it to choose between the two, so none of them renders one option and seeds or walks another.
+A `type` list holding `object` and another type, `null` included, renders no such field beside an option whose own types leave out `object`, wherever `object` sits in the list, and neither does an object the fallback UI's type selector pinned, which it marks `PINNED_TYPE_FLAG` ([#5725](https://github.com/rjsf-team/react-jsonschema-form/issues/5725)).
+An option whose own types list `object` beside another type keeps that field beside it even while its own type selector is on the other type, so for such an option the list's order still decides: a list whose first type besides `null` is `object` renders the object's properties beside it, and any other order leaves the whole field to the option.
 
 #### Parameters
 
 - schema: S - The schema holding the options
+- [option]: unknown - The option shown, without which, or for a boolean one, the answer is the schema's alone. One whose `$ref` is unresolved names no type, so it reads as an object
 
 #### Returns
 

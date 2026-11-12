@@ -1095,6 +1095,155 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
           expect(node.querySelector('#root_val_shared')).toBeInTheDocument();
         });
+
+        it.each<{ type: RJSFSchema['type']; fallback: boolean }>([
+          { type: ['object', 'string'], fallback: true },
+          { type: ['object', 'string'], fallback: false },
+          { type: ['string', 'object'], fallback: true },
+          { type: ['string', 'object'], fallback: false },
+        ])(
+          'passes the keywords of $type on to an option of another type, fallback UI $fallback',
+          ({ type, fallback }) => {
+            const { node } = createFormComponent({
+              schema: withVal({ type, format: 'email', oneOf: [{ type: 'object' }, { type: 'string' }] }),
+              initialFormData: { val: 'abc' },
+              useFallbackUiForUnsupportedType: fallback,
+            });
+
+            expect(elementOf(node, '#root_val')).toHaveAttribute('type', 'email');
+          },
+        );
+
+        it("passes the union's keywords on to an option of another type chosen with the type selector on object", async () => {
+          const { node } = createFormComponent({
+            schema: withVal({
+              type: ['object', 'string'],
+              format: 'email',
+              oneOf: [{ title: 'O' }, { title: 'S', type: 'string' }],
+            }),
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          await user.selectOptions(elementOf(node, '#root_val__oneof_select'), 'S');
+
+          expect(elementOf(node, TYPE_SELECTOR)).toHaveDisplayValue('object');
+          expect(elementOf(node, '#root_val')).toHaveAttribute('type', 'email');
+        });
+
+        it.each([true, false])(
+          "leaves a typeless option's properties off beside its own option of another type, fallback UI %s",
+          async (fallback) => {
+            const { node } = createFormComponent({
+              schema: withVal({
+                type: ['object', 'string'],
+                oneOf: [
+                  { title: 'O', type: 'object' },
+                  {
+                    title: 'S',
+                    properties: { sp: { type: 'string' } },
+                    oneOf: [
+                      { title: 'SO', type: 'object' },
+                      { title: 'SS', type: 'string' },
+                    ],
+                  },
+                ],
+              }),
+              useFallbackUiForUnsupportedType: fallback,
+            });
+
+            await user.selectOptions(elementOf(node, '#root_val__oneof_select'), 'S');
+            await user.selectOptions(elementOf(node, '#root_val__oneof_select2'), 'SS');
+
+            expect(node.querySelector('#root_val_sp')).not.toBeInTheDocument();
+            expect(elementOf(node, '#root_val')).toBeInTheDocument();
+          },
+        );
+
+        it.each<{ type: RJSFSchema['type']; fallback: boolean }>([
+          { type: ['object', 'string'], fallback: true },
+          { type: ['object', 'string'], fallback: false },
+          { type: ['string', 'object'], fallback: true },
+          { type: ['string', 'object'], fallback: false },
+        ])(
+          'renders a const option of another type under $type as its own type, fallback UI $fallback',
+          ({ type, fallback }) => {
+            const { node } = createFormComponent({
+              schema: withVal({
+                type,
+                format: 'email',
+                properties: { p: { type: 'string' } },
+                oneOf: [{ type: 'object' }, { const: 'a@b.c' }, { const: 'x@b.c' }],
+              }),
+              initialFormData: { val: 'a@b.c' },
+              useFallbackUiForUnsupportedType: fallback,
+            });
+
+            expect(node.querySelector('#root_val_p')).not.toBeInTheDocument();
+            expect(elementOf(node, '#root_val')).toHaveAttribute('type', 'email');
+          },
+        );
+
+        it.each([true, false])(
+          "renders a nullable object's null option without the object's properties, fallback UI %s",
+          (fallback) => {
+            const { node } = createFormComponent({
+              schema: withVal({
+                type: ['object', 'null'],
+                properties: { p: { type: 'string' } },
+                oneOf: [
+                  { title: 'O', type: 'object' },
+                  { title: 'N', type: 'null' },
+                ],
+              }),
+              initialFormData: { val: null },
+              useFallbackUiForUnsupportedType: fallback,
+            });
+
+            expect(elementOf(node, '#root_val__oneof_select')).toHaveDisplayValue('N');
+            expect(node.querySelector('#root_val_p')).not.toBeInTheDocument();
+          },
+        );
+
+        it("clears a nullable object's value on a switch to its null option", async () => {
+          const { node, getFormData } = createFormComponent({
+            schema: withVal({
+              type: ['object', 'null'],
+              properties: { p: { type: 'string' } },
+              oneOf: [
+                { title: 'O', type: 'object' },
+                { title: 'N', type: 'null' },
+              ],
+            }),
+            initialFormData: { val: { p: 'a' } },
+          });
+
+          await user.selectOptions(elementOf(node, '#root_val__oneof_select'), 'N');
+
+          expect(getFormData()).toEqual({});
+        });
+
+        it.each<[string, RJSFSchema, UiSchema?]>([
+          ['a ui:field', {}, { val: { 'ui:field': 'FallbackField' } }],
+          ['a $id', { $id: 'FallbackField' }],
+        ])(
+          'renders a plain object named the fallback field by %s beside an option of another type',
+          (_, extra, uiSchema) => {
+            const { node } = createFormComponent({
+              schema: withVal({
+                type: 'object',
+                properties: { a: { type: 'string' } },
+                format: 'email',
+                oneOf: [{ type: 'object' }, { type: 'string' }],
+                ...extra,
+              }),
+              uiSchema,
+              initialFormData: { val: 'abc' },
+              useFallbackUiForUnsupportedType: true,
+            });
+
+            expect(elementOf(node, '#root_val_a')).toBeInTheDocument();
+          },
+        );
       });
 
       it('leaves the fields beside the one being typed in alone, whatever the options retrieve', async () => {
