@@ -505,6 +505,12 @@ function judge<S extends StrictRJSFSchema>(
     if (isItem) {
       return DROP;
     }
+    // A list of one leaves nothing to choose, so its value is the field's. Where the list offers a choice, a value a
+    // person entered stays for validation to report and for them to change: a default swapped in would pass for
+    // their answer
+    if (values.length > 1 && origin === 'entered') {
+      return undefined;
+    }
     if (values.some((offered) => deepEquals(offered, newDefault))) {
       return structuredClone(newDefault);
     }

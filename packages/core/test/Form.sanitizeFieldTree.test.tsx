@@ -669,6 +669,55 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     });
   });
 
+  describe('a value the user entered that an `enum` stops listing', () => {
+    const picking = (values: string[]): RJSFSchema => ({
+      type: 'object',
+      properties: { a: { type: 'string', enum: values, default: values[0] } },
+    });
+    /** Mounts `from` seeded with `initialFormData`, lets `enter` act, re-renders with `to`, and reads the data */
+    function relisted(from: RJSFSchema, to: RJSFSchema, initialFormData: object, enter?: (form: FormRef) => void) {
+      const ref = createRef<FormRef>();
+      const element = (schema: RJSFSchema) => (
+        <Form schema={schema} validator={validator} initialFormData={initialFormData} ref={ref} />
+      );
+      const { rerender } = render(element(from));
+      act(() => {
+        if (ref.current) {
+          enter?.(ref.current);
+        }
+      });
+      rerender(element(to));
+      return ref.current;
+    }
+
+    it('stays, for validation to report, where the new list offers a choice', () => {
+      const form = relisted(picking(['d', 'e']), picking(['d', 'f']), {}, (entering) =>
+        entering.setFieldValue(['a'], 'e'),
+      );
+      expect(form?.getFormData()).toEqual({ a: 'e' });
+      let isValid: boolean | undefined;
+      act(() => {
+        isValid = form?.validateForm();
+      });
+      expect(isValid).toBe(false);
+    });
+
+    it('takes the one value a new list of one offers', () => {
+      const form = relisted(picking(['d', 'e']), picking(['f']), {}, (entering) => entering.setFieldValue(['a'], 'e'));
+      expect(form?.getFormData()).toEqual({ a: 'f' });
+    });
+
+    it('is told from the default the form filled in, which takes the new default', () => {
+      const form = relisted(picking(['d', 'e']), picking(['f', 'g']), {});
+      expect(form?.getFormData()).toEqual({ a: 'f' });
+    });
+
+    it('is told from a value the seed held, which takes the new default as before', () => {
+      const form = relisted(picking(['d', 'e']), picking(['d', 'f']), { a: 'e' });
+      expect(form?.getFormData()).toEqual({ a: 'd' });
+    });
+  });
+
   describe('a value whose field goes away', () => {
     const branches: RJSFSchema = {
       type: 'object',
@@ -1183,7 +1232,9 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     act(() => handleOf(ref).setFieldValue('', { mode: 'advanced', color: 'c', colors: ['c'] }));
     await user.selectOptions(elementOf(container, '#root_mode'), ['0']);
     const last = events[events.length - 1].formData;
-    expect(last?.color).toBeUndefined();
+    // The value written from outside is entered, so it stays for validation to report where the list offers a choice.
+    // An item the list no longer offers is still dropped
+    expect(last?.color).toBe('c');
     expect(last?.colors).toEqual([]);
   });
 

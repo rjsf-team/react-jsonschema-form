@@ -1184,7 +1184,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // properties were computed as from that wins, as an `if`/`then` `const` does
       defaultsWithFormData = mergeDefaultsWithFormData(
         defaultsWithFormData,
-        viewFormDataMatching<unknown, S, F>(context, view, rawFormData),
+        // A value a person entered stays where the options of a select stop offering it, for validation to report
+        viewFormDataMatching<unknown, S, F>(
+          context,
+          view,
+          rawFormData,
+          () => props.fieldState?.isEntered?.(fieldPathFromList(pathListOf(props.fieldPath))) === true,
+        ),
         mergeExtraDefaults,
         // A value missing or `NaN` takes the defaults, as does a `null` the whole form data is; a `null` the user left in
         // an object or array, and a key of object data the user left `undefined`, keep it unless
@@ -2485,6 +2491,7 @@ function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormConte
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   formData: T | undefined,
+  keepsUnlisted?: () => boolean,
 ): T | T[] | undefined {
   let provenance: Provenance<S> | undefined;
   const field = () => {
@@ -2502,6 +2509,7 @@ function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormConte
     { schema: view.schema, field, chains: () => view.chains },
     view.graph.rawRoot,
     formData,
+    keepsUnlisted,
   );
 }
 
@@ -2554,12 +2562,15 @@ export function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unkno
   return typeAllows(getSchemaOwnTypes<S>(schema), value);
 }
 
-/** Returns `formData` matched to `matched.schema` as `ensureFormDataMatchingSchema()` matches it */
+/** Returns `formData` matched to `matched.schema` as `ensureFormDataMatchingSchema()` matches it. `keepsUnlisted` says
+ * whether a value of a select that its options do not offer is kept as it is, asked only of such a value
+ */
 function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   { schema, field, chains }: MatchedSchema<S>,
   rootSchema: S,
   formData: T | undefined,
+  keepsUnlisted?: () => boolean,
 ): T | T[] | undefined {
   const { defaultFormStateBehavior } = context;
   const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior);
@@ -2592,12 +2603,11 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
     const selectorField = getDiscriminatorFieldFromSchema<S>(schemaToMatch);
     const selected = selectorField && isObjectData(formData) ? getByPath(formData, selectorField) : undefined;
     if (getOptionsList?.length !== 0) {
-      validFormData = getOptionsList?.some(
+      const isListed = getOptionsList?.some(
         (option) =>
           deepEquals(option.value, formData) || (selected !== undefined && deepEquals(option.value, selected)),
-      )
-        ? formData
-        : undefined;
+      );
+      validFormData = isListed || keepsUnlisted?.() ? formData : undefined;
     }
   } else if (isObjectData(formData) && !takesValueOf<S>(schemaToMatch, formData)) {
     // Object data can never validate against a schema whose types leave out `object`, so it is no value of the field

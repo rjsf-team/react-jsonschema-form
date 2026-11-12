@@ -1424,7 +1424,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // mount fills the data under the option every later pass will show it under (#5832)
   const fieldState = {
     ...fieldStateOf(uiState ?? NO_SELECTIONS, schemaUtils, heldPath),
-    ...(knowsOrigins && { isFilled }),
+    ...(knowsOrigins && { isFilled, isEntered: (fieldPath: FieldPath) => origins.entered.has(fieldPath) }),
   };
   const defaultsOf = (
     utils: SchemaUtilsType<T, S, F>,

@@ -11375,6 +11375,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema, data, fieldState)).toEqual({ a: { b: 'y' } });
       });
 
+      it('keeps a value of a select its options stop offering where the fieldState says a person entered it', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string', enum: ['d', 'f'], default: 'd' } },
+        };
+        const entered: FormFieldState = {
+          selectedOption: () => 0,
+          isExpanded: () => false,
+          isEntered: (fieldPath) => fieldPath === fieldPathFromList(['a']),
+        };
+        expect(fill(schema, { a: 'e' }, entered)).toEqual({ a: 'e' });
+        expect(fill(schema, { a: 'e' }, filledAt())).toEqual({ a: 'd' });
+      });
+
       it('stays where it is an extra key, an array or object, a `null`, or the value of a field offering options', () => {
         const schema: RJSFSchema = {
           type: 'object',

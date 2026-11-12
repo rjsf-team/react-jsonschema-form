@@ -358,6 +358,11 @@ export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
    * the value follows whichever default gives it now. Without it, no value is taken for a filled one
    */
   isFilled?(fieldPath: FieldPath): boolean;
+  /** Whether a person entered the value the data holds at `fieldPath` through the form. A value of a select that its
+   * options no longer offer is then kept as it is, for validation to report, where the defaults would otherwise take
+   * its place. Without it, no value is taken for an entered one
+   */
+  isEntered?(fieldPath: FieldPath): boolean;
 }
 
 declare const FIELD_PATH_BRAND: unique symbol;
