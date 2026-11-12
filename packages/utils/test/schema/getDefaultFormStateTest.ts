@@ -183,6 +183,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           );
           expect(regenerated).toEqual({ x: { a: 2 } });
         });
+        it('getObjectDefaults seeds only the keys of the const that the defaults it is handed hold', () => {
+          const context = { validator: testValidator, ...absent };
+          expect(getObjectDefaults(context, bare, { includeUndefinedValues: true })).toStrictEqual({});
+          expect(getObjectDefaults(context, bare, { includeUndefinedValues: true }, { a: 1 })).toStrictEqual({ a: 1 });
+        });
         it('keeps an empty object the const holds', () => {
           const emptyMeta: RJSFSchema = { type: 'object', const: { meta: {} } };
           expect(utils(emptyMeta).getDefaultFormState(emptyMeta)).toStrictEqual({ meta: {} });

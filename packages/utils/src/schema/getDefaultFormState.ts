@@ -1566,6 +1566,21 @@ function itemField<S extends StrictRJSFSchema>(
   return defaultsChild(view, seeds, edge, fallback);
 }
 
+/** The schema the keys of a `const` that closes an object are folded through, by the root of the graph it is typed as */
+const closingKeySchemas = new WeakMap<object, object>();
+
+/** Returns the child of the object field `view` a key of a `const` that closes the object is folded as: one with no
+ * keywords of its own, the same schema for every key and every call, so a pass of the object's fixed point reuses what
+ * an earlier pass computed for the key
+ */
+function closingKeyField<S extends StrictRJSFSchema>(view: DefaultsView<S>): DefaultsField<S> {
+  const { graph, expanded } = view.field;
+  const known = closingKeySchemas.get(graph.rawRoot);
+  const fallback = isSchemaObject<S>(known) ? known : schemaFrom(graph.rawRoot, {});
+  closingKeySchemas.set(graph.rawRoot, fallback);
+  return { graph, seeds: [], expanded, edge: 'additionalKey', fallback };
+}
+
 /** Computes the default value for objects.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -1596,30 +1611,29 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
   const parentConst = view.schema[CONST_KEY];
+  // An object `const` the field defaults to, read under the checks `foldView()` reads it under
+  const objectConst =
+    isObjectData(parentConst) &&
+    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    !constIsAjvDataReference(view.schema)
+      ? parentConst
+      : undefined;
   // An option's `const` is not its parent's. The field that renders the option's extra keys, its parent's or, where
   // the option offers options of its own, the option's, asks whether the user can add one of the parent with the
-  // option's extra-key keywords joined to it. Only a `const` changes the answer, so the join is spared every other option
+  // option's extra-key keywords joined to it. Only a `const` the field defaults to changes what is computed from the
+  // answer, so the join is spared every other option
   const extraKeysField =
-    props.optionParent && parentConst !== undefined
-      ? joinOptionExtraKeys<S>(props.optionParent, view.schema)
-      : view.schema;
+    props.optionParent && objectConst ? joinOptionExtraKeys<S>(props.optionParent, view.schema) : view.schema;
   // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it, and only of an
-  // object that stubs them or holds an object `const`, the two that need the answer
+  // object that stubs them or defaults to an object `const`, the two that need the answer
   const takesExtraKeys =
-    (view.stubs || isObjectData(parentConst)) && allowsAdditionalProperties<S, F>(context, extraKeysField);
+    (view.stubs || objectConst !== undefined) && allowsAdditionalProperties<S, F>(context, extraKeysField);
   // A field resolved the way `retrieveSchema()` resolves a schema has the extra keys of its data stubbed among its
   // `properties`
   const schema =
     view.stubs && takesExtraKeys
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
-  // An object `const` the field defaults to, read under the checks `foldView()` reads it under
-  const objectConst =
-    isObjectData(parentConst) &&
-    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-    !constIsAjvDataReference(schema)
-      ? parentConst
-      : undefined;
   // Under `constAsDefaults: 'always'` an object `const` takes precedence over the data, so an extra key it doesn't name
   // is dropped, whether the object stubs it among its properties or computes it from its `additionalProperties`
   const pinnedKeys = defaultFormStateBehavior?.constAsDefaults === 'always' ? objectConst : undefined;
@@ -1773,13 +1787,14 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the
   // `const` names. A `patternProperties` or `unevaluatedProperties` that takes extra keys leaves the guards in place. A
   // `ui:initialValue` takes priority over the `const` as the object's default, so beside one only the keys of the
-  // `const` it gives are seeded, read from it on the first pass, the one it is the default of, as a declared key is
+  // `const` it gives are seeded, read from it on the first pass, the one it is the default of, as a declared key is.
+  // Only a key the defaults hold has a value to seed
   const closingConst = objectConst && !takesExtraKeys ? objectConst : undefined;
   const readsInitialValue = closingConst && getUiOptions<T, S, F>(uiSchema).initialValue !== undefined;
   const closingKeys =
     closingConst &&
     Object.keys(closingConst).filter(
-      (key) => !readsInitialValue || (!initialDefaultsGenerated && isObject(defaults) && Object.hasOwn(defaults, key)),
+      (key) => isObject(defaults) && Object.hasOwn(defaults, key) && !(readsInitialValue && initialDefaultsGenerated),
     );
   if ((additionalProperties && !initialDefaultsGenerated) || (closingKeys && closingKeys.length > 0)) {
     // as per spec additionalProperties may be either schema or boolean
@@ -1802,12 +1817,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         context,
         `additional:${key}`,
         // The keys of a `const` that closes the object take no extra-key schema, which the object doesn't render them with
-        defaultsChild(
-          view,
-          closingKeys ? [] : seedsAt(view, ADDITIONAL_PROPERTIES_KEY),
-          'additionalKey',
-          additionalPropertiesSchema,
-        ),
+        closingKeys
+          ? closingKeyField(view)
+          : defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
         closingKeys ? { ...extraKeyProps, uiSchema: undefined } : extraKeyProps,
       );
       // Added whatever the form's settings say, below, so its `null` only has to reach the objects above
