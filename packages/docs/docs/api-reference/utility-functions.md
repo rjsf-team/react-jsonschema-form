@@ -33,7 +33,7 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`SchemaContext`** — The settings every [validator-based utility function](#validator-based-utility-functions) resolves schemas with: the `validator`, and the optional `customMergeAllOf`, `defaultFormStateBehavior`, `additionalPropertiesWhenAbsent` and `widgets`, the form's registered widgets, as a widget registered under a built-in alias keeps a `type` list on the type it resolves to (see the `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof), [defaultFormStateBehavior](./form-props.md#defaultformstatebehavior) and [additionalPropertiesWhenAbsent](./form-props.md#additionalpropertieswhenabsent) props). Each of those functions takes it as its first parameter and passes it along whole to every schema function it calls.
 
-**`PropertyPlacement`** — Where a property sits, which decides whether the defaults write its default under `emptyObjectFields`: `isRequired`, whether its object lists it in `required`, and `isParentRequired`, whether that object is required itself, left out for the root or an object the defaults reach with no `required` of its own. [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) and `constrainsAlike()` read a field with one as a property.
+**`PropertyPlacement`** — Where a property sits, which decides whether the defaults write its default under `emptyObjectFields`: `isRequired`, whether its object lists it in `required`, left out where that object lists no `required`, so the property's own properties read their requiredness as the root's do, and `isParentRequired`, whether that object is required itself, left out for the root or an object the defaults reach with no `required` of its own. [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) and `constrainsAlike()` read a field with one as a property.
 
 **`FieldFill`** — What the defaults hand the field holding the data [`sanitizeDataForNewSchema()`](#sanitizedatafornewschemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) sanitizes, which they fill its properties by: `inheritedDefault`, the default the fields above it hand it, and `isRequired`, whether it is required where it sits, an array item being required where its array is. Both are left out for the root.
 
@@ -259,6 +259,7 @@ These are the constraints that decide whether a field the data holds as `undefin
 - context: SchemaContext&lt;S, F> - The `SchemaContext` whose `defaultFormStateBehavior` says which default fills the field
 - oldSchema: S - The field's schema before the change
 - newSchema: S - The field's schema after the change
+- rootSchema: S - The root schema, which `getFilledDefault()` resolves properties against
 - oldInheritedDefault: unknown - The default the field holding `oldSchema` was filled with for it
 - newInheritedDefault: unknown - The default the field holding `newSchema` is filled with for it
 - [oldPlacement]: PropertyPlacement | undefined - Where the field sat as a property before the change, if it is one
@@ -1213,7 +1214,7 @@ Returns the `default` the defaults fill the field `schema` describes with, given
 The field's own `default`, a `null` one included, wins over the inherited one, unless the `context`'s `nestedDefaultsPrecedence` is `'ancestorWins'` and the field's type can hold the inherited one.
 Two object defaults are merged instead, the winner's keys over the other's, except for a select over object or array constants, which holds one of them whole.
 A property is filled with it only where `emptyObjectFields` lets the defaults write it there, as its `placement` decides: none is under `'skipDefaults'`, and under `'populateRequiredDefaults'` only one whose object is required, or that is required itself where its object is the root, and a value other than an object only where it is required as well.
-An object field's object default is first cut down key by key, as the fill builds it: each key its `properties` declare keeps only what the defaults write into that property, any other key only where `additionalProperties` seeds it, so an empty object is left where they write none of its keys.
+An object field's object default is first cut down key by key, as the fill builds it: each key its `properties` declare keeps only what the defaults write into that property, read as the fill reads it, its `$ref`s and `allOf` resolved against `rootSchema` and its conditions and `dependencies` applied as for a property holding no data, and any other key only where `additionalProperties` seeds it, so an empty object is left where they write none of its keys.
 Without a `placement` it is returned as computed: the root and an array item are always filled, and a field hands its properties the default it computes whether or not it is written itself.
 A form's components ask `registry.schemaUtils.getFilledDefault(schema, inheritedDefault, placement)`, which passes the form's own `context`.
 
@@ -1221,6 +1222,7 @@ A form's components ask `registry.schemaUtils.getFilledDefault(schema, inherited
 
 - context: SchemaContext&lt;S, F> - The `SchemaContext` whose `defaultFormStateBehavior` says which of the two defaults wins, and whether a property is filled at all
 - schema: S - The field's schema, already retrieved
+- rootSchema: S - The root schema, which the properties an object default is cut down by are resolved against
 - inheritedDefault: unknown - The default the field holding this one was filled with for it, if any
 - [placement]: PropertyPlacement | undefined - Where the field sits as a property, left out for the root or an array item
 

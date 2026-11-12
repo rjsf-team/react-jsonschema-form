@@ -634,7 +634,33 @@ function filledDefaultOf<T, S extends StrictRJSFSchema, F extends FormContextTyp
       Object.hasOwn(layer, DEFAULT_KEY) ? mergeSchemas(merged, { [DEFAULT_KEY]: layer[DEFAULT_KEY] }) : merged,
     {},
   );
-  return schemaUtils.getFilledDefault({ ...layers[layers.length - 1], ...ownDefault }, inherited, placement);
+  return schemaUtils.getFilledDefault({ ...fieldSchemaOf(layers), ...ownDefault }, inherited, placement);
+}
+
+/** The innermost of `layers` with the keywords its default is cut down by read from them all, as the fill reads the
+ * field: each layer's `properties` and `required`, and the innermost `type` and `additionalProperties` declared
+ */
+function fieldSchemaOf<S extends StrictRJSFSchema>(layers: readonly S[]): S {
+  if (layers.length === 1) {
+    return layers[0];
+  }
+  const field: S = { ...layers[layers.length - 1] };
+  for (const keyword of ['type', 'additionalProperties']) {
+    const value = keywordOf(layers, keyword);
+    if (value !== undefined) {
+      setOwn(field, keyword, value);
+    }
+  }
+  // A later layer's property over an earlier one's, a `false` one kept rather than dropped as `propertiesOf()` drops
+  // it: the fill still writes the default of a key an option declares `false`
+  if (layers.some((layer) => layer.properties !== undefined)) {
+    field.properties = Object.assign({}, ...layers.map((layer) => layer.properties));
+  }
+  const required = requiredOf(layers);
+  if (required) {
+    field.required = [...required];
+  }
+  return field;
 }
 
 /** The keys a field rendered with `layers` lists in `required`, each layer's, since an option adds to the field's.
@@ -716,13 +742,13 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
     const oldDefault = isProperty
       ? filledDefaultOf(ctx.oldSchemaUtils, oldLayers, oldInherited, {
-          isRequired: oldRequired ?? false,
+          isRequired: oldRequired,
           isParentRequired: oldParentRequired,
         })
       : oldComputed;
     const newDefault = isProperty
       ? filledDefaultOf(ctx.schemaUtils, newLayers, newInherited, {
-          isRequired: newRequired ?? false,
+          isRequired: newRequired,
           isParentRequired: newParentRequired,
         })
       : newComputed;

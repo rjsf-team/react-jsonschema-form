@@ -2875,6 +2875,185 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     const utils = createSchemaUtils({ validator, defaultFormStateBehavior }, to);
     expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual({ w: 'k' });
   });
+  // The fill applies a property's conditions as for no data, not against its default, so a key they make required is
+  // written, and its change gives way to a clear, only where they apply to a property holding nothing
+  it.each<{ name: string; c: RJSFSchema; cDefault: (v: string) => Record<string, string>; refills: boolean }>([
+    {
+      name: 'an if its default fails, whose then requires the key',
+      c: {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        if: { properties: { a: { const: 'z' } } },
+        then: { required: ['a'] },
+      },
+      cDefault: (a) => ({ a }),
+      refills: true,
+    },
+    {
+      name: 'an if its default meets, whose then declares and requires the key',
+      c: {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        if: { required: ['a'] },
+        then: { properties: { b: { type: 'string' } }, required: ['b'] },
+      },
+      cDefault: (b) => ({ a: 'k', b }),
+      refills: false,
+    },
+    {
+      name: 'a dependency its default meets, which requires the key',
+      c: {
+        type: 'object',
+        properties: { a: { type: 'string' }, b: { type: 'string' } },
+        dependencies: { a: ['b'] },
+      },
+      cDefault: (b) => ({ a: 'k', b }),
+      refills: false,
+    },
+  ])(
+    "judges a clear of an object by the key a property's $name makes required, under emptyObjectFields: 'populateRequiredDefaults'",
+    ({ c, cDefault, refills }) => {
+      const schemaWith = (v: string): RJSFSchema => ({
+        type: 'object',
+        required: ['o'],
+        properties: { o: { type: 'object', default: { c: cDefault(v) }, properties: { c } }, w: { type: 'string' } },
+      });
+      const from = schemaWith('x');
+      const to = schemaWith('y');
+      const data = { o: undefined, w: 'k' };
+      const defaultFormStateBehavior: DefaultFormStateBehavior = { emptyObjectFields: 'populateRequiredDefaults' };
+      const props = { validator, initialFormData: data, defaultFormStateBehavior };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { rerender } = render(<Form ref={ref} schema={from} {...props} />);
+
+      rerender(<Form ref={ref} schema={to} {...props} />);
+
+      const utils = createSchemaUtils({ validator, defaultFormStateBehavior }, to);
+      const filled = utils.getDefaultFormState(to, { w: 'k' }) as Record<string, unknown>;
+      expect(handleOf(ref).getFormData()).toStrictEqual(refills ? filled : data);
+      expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual(refills ? { w: 'k' } : data);
+    },
+  );
+  // The defaults write an optional key of an optional property nowhere, a `$ref` one included, so a change to its
+  // default leaves a clear of the object holding it alone
+  it("keeps a clear of an object whose $ref property's default changes but is never written, under emptyObjectFields: 'populateRequiredDefaults'", () => {
+    const schemaWith = (a: number): RJSFSchema => ({
+      type: 'object',
+      required: ['o'],
+      definitions: { C: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'string' } } } },
+      properties: {
+        o: { type: 'object', default: { c: { a } }, properties: { c: { $ref: '#/definitions/C' } } },
+        w: { type: 'string' },
+      },
+    });
+    const from = schemaWith(1);
+    const to = schemaWith(2);
+    const data = { o: undefined, w: 'k' };
+    const defaultFormStateBehavior: DefaultFormStateBehavior = { emptyObjectFields: 'populateRequiredDefaults' };
+    const props = { validator, initialFormData: data, defaultFormStateBehavior };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} {...props} />);
+
+    rerender(<Form ref={ref} schema={to} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toStrictEqual(data);
+    const utils = createSchemaUtils({ validator, defaultFormStateBehavior }, to);
+    expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual(data);
+  });
+  // The default the defaults write into an object is built key by key, so a cleared object gives way once a key they
+  // write changes, wherever its key or its requiredness is declared
+  it.each<{
+    name: string;
+    schemaWith: (v: string) => RJSFSchema;
+    filled: (v: string) => unknown;
+    behavior?: DefaultFormStateBehavior;
+    /** Whether the object sits in a required object listing no `required` of its own, rather than in the root */
+    inRequiredObject?: boolean;
+  }>([
+    {
+      name: 'a key its own properties declare beside its oneOf',
+      schemaWith: (a) => ({
+        type: 'object',
+        properties: {
+          o: {
+            type: 'object',
+            default: { a },
+            properties: { a: { type: 'string' } },
+            oneOf: [{ properties: { z: { type: 'string' } } }],
+          },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (a) => ({ a }),
+    },
+    // The fill writes the default of a key whatever schema declares it, a `false` one an option declares included
+    ...([{}, { b: { type: 'string' } }] as Record<string, RJSFSchema>[]).map((others) => ({
+      name: `a key its oneOf declares false${Object.keys(others).length ? ' beside another' : ''}`,
+      schemaWith: (a: string): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          o: {
+            type: 'object',
+            default: { a },
+            properties: { a: { type: 'string' }, ...others },
+            oneOf: [{ properties: { a: false } }],
+          },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (a: string) => ({ a }),
+    })),
+    {
+      // The defaults hand an object its parent lists no `required` for none, so they fill its required keys as the root's
+      name: "a required key of an object a required object lists no required for, under emptyObjectFields: 'populateRequiredDefaults'",
+      schemaWith: (g) => ({
+        type: 'object',
+        required: ['o'],
+        properties: {
+          o: {
+            type: 'object',
+            default: { c: { g } },
+            properties: { c: { type: 'object', required: ['g'], properties: { g: { type: 'string' } } } },
+          },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (g) => ({ c: { g } }),
+      behavior: { emptyObjectFields: 'populateRequiredDefaults' },
+    },
+    {
+      name: "a required key of an object in a required object listing no required, under emptyObjectFields: 'populateRequiredDefaults'",
+      schemaWith: (a) => ({
+        type: 'object',
+        properties: {
+          o: { type: 'object', required: ['a'], default: { a }, properties: { a: { type: 'string' } } },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (a) => ({ a }),
+      behavior: { emptyObjectFields: 'populateRequiredDefaults' },
+      inRequiredObject: true,
+    },
+  ])(
+    'gives way a clear of an object whose written default changes in $name',
+    ({ schemaWith, filled, behavior, inRequiredObject }) => {
+      const wrap = <V,>(inner: V) => (inRequiredObject ? { p: inner } : inner);
+      const rootWith = (v: string): RJSFSchema =>
+        inRequiredObject ? { type: 'object', required: ['p'], properties: { p: schemaWith(v) } } : schemaWith(v);
+      const from = rootWith('x');
+      const to = rootWith('y');
+      const data = wrap({ o: undefined, w: 'k' });
+      const props = { validator, initialFormData: data, defaultFormStateBehavior: behavior };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { rerender } = render(<Form ref={ref} schema={from} {...props} />);
+
+      rerender(<Form ref={ref} schema={to} {...props} />);
+
+      expect(handleOf(ref).getFormData()).toStrictEqual(wrap({ o: filled('y'), w: 'k' }));
+      const utils = createSchemaUtils({ validator, defaultFormStateBehavior: behavior }, to);
+      expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual(wrap({ w: 'k' }));
+    },
+  );
   // The defaults still fill the root under `skipDefaults`, so its default is still its own
   it("swaps a root holding its old default for the new one under emptyObjectFields: 'skipDefaults'", () => {
     const ref = createRef<FormRef<string>>();

@@ -171,6 +171,7 @@ class SchemaUtils<
       this.context,
       oldSchema,
       newSchema,
+      this.rootSchema,
       oldInheritedDefault,
       newInheritedDefault,
       oldPlacement,
@@ -258,7 +259,7 @@ class SchemaUtils<
    * @returns - The default the field is filled with, or `undefined` where there is none
    */
   getFilledDefault(schema: S, inheritedDefault: unknown, placement?: PropertyPlacement): unknown {
-    return getFilledDefault<S, F>(this.context, schema, inheritedDefault, placement);
+    return getFilledDefault<S, F>(this.context, schema, this.rootSchema, inheritedDefault, placement);
   }
 
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`

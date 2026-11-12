@@ -222,8 +222,10 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
  * `getFilledDefault()`
  */
 export interface PropertyPlacement {
-  /** Whether the object holding the property lists it in its `required` */
-  isRequired: boolean;
+  /** Whether the object holding the property lists it in its `required`, undefined where that object lists no
+   * `required`, so its own properties read their requiredness as the root's do
+   */
+  isRequired?: boolean;
   /** Whether that object is required itself, undefined for the root or an object the defaults reach with no
    * `required` of its own
    */

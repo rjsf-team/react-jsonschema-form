@@ -137,7 +137,7 @@ function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType
     option && getByPath(schemaUtils.getFilledDefault(option, fill.inheritedDefault), key);
   // A rendered option already carries the `required` of the field holding it
   const placementIn = (option: S | undefined) => ({
-    isRequired: option?.required?.includes(key) === true,
+    isRequired: option?.required?.includes(key),
     isParentRequired: fill.isRequired,
   });
   return (

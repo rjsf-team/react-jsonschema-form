@@ -193,6 +193,7 @@ function itemConstReplacement<S extends StrictRJSFSchema = RJSFSchema>(
  * @param context - The `SchemaContext` whose `defaultFormStateBehavior` says which default fills the field
  * @param oldSchema - The field's schema before the change
  * @param newSchema - The field's schema after the change
+ * @param rootSchema - The root schema, which `getFilledDefault()` resolves properties against
  * @param oldInheritedDefault - The default the field holding `oldSchema` was filled with for it
  * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
  * @param [oldPlacement] - Where the field sat as a property before the change, if it is one
@@ -203,6 +204,7 @@ export function constrainsAlike<S extends StrictRJSFSchema = RJSFSchema, F exten
   context: SchemaContext<S, F>,
   oldSchema: S,
   newSchema: S,
+  rootSchema: S,
   oldInheritedDefault: unknown,
   newInheritedDefault: unknown,
   oldPlacement?: PropertyPlacement,
@@ -214,8 +216,8 @@ export function constrainsAlike<S extends StrictRJSFSchema = RJSFSchema, F exten
     deepEquals(oldSchema.const, newSchema.const) &&
     oldSchema.maxItems === newSchema.maxItems &&
     deepEquals(
-      getFilledDefault<S, F>(context, oldSchema, oldInheritedDefault, oldPlacement),
-      getFilledDefault<S, F>(context, newSchema, newInheritedDefault, newPlacement),
+      getFilledDefault<S, F>(context, oldSchema, rootSchema, oldInheritedDefault, oldPlacement),
+      getFilledDefault<S, F>(context, newSchema, rootSchema, newInheritedDefault, newPlacement),
     ) &&
     deepEquals(enumValuesForSchema<S>(oldSchema), enumValuesForSchema<S>(newSchema))
   );
@@ -496,8 +498,9 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
     // so the new defaults reach it as a top-level clear's do in `formDataForNewOption()`
     const keptClears = new Set<string>();
     // What each side computes for the object, whose keys are the defaults each property inherits
-    const oldObjectDefault = oldSchema && getFilledDefault<S, F>(context, oldSchema, oldFill.inheritedDefault);
-    const newObjectDefault = getFilledDefault<S, F>(context, newSchema, newFill.inheritedDefault);
+    const oldObjectDefault =
+      oldSchema && getFilledDefault<S, F>(context, oldSchema, rootSchema, oldFill.inheritedDefault);
+    const newObjectDefault = getFilledDefault<S, F>(context, newSchema, rootSchema, newFill.inheritedDefault);
     keys.forEach((key) => {
       const oldInherited = getByPath(oldObjectDefault, key);
       const newInherited = getByPath(newObjectDefault, key);
@@ -505,11 +508,11 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
       const isOldRequired = oldSchema?.required?.includes(key);
       const isNewRequired = newSchema.required?.includes(key);
       const oldPlacement: PropertyPlacement = {
-        isRequired: isOldRequired ?? false,
+        isRequired: isOldRequired,
         isParentRequired: oldFill.isRequired,
       };
       const newPlacement: PropertyPlacement = {
-        isRequired: isNewRequired ?? false,
+        isRequired: isNewRequired,
         isParentRequired: newFill.isRequired,
       };
       const formValue = getByPath(data, key);
@@ -530,8 +533,8 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
       const replacementFor = (isNewClear: boolean, isScalar: boolean) =>
         defaultReplacement<S>(
           newKeyedSchema,
-          getFilledDefault<S, F>(context, newKeyedSchema, newInherited, newPlacement),
-          getFilledDefault<S, F>(context, oldKeyedSchema, oldInherited, oldPlacement),
+          getFilledDefault<S, F>(context, newKeyedSchema, rootSchema, newInherited, newPlacement),
+          getFilledDefault<S, F>(context, oldKeyedSchema, rootSchema, oldInherited, oldPlacement),
           formValue,
           isNewClear,
           isScalar,
@@ -555,6 +558,7 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
             context,
             oldKeyedSchema,
             newKeyedSchema,
+            rootSchema,
             oldInherited,
             newInherited,
             oldPlacement,
@@ -597,7 +601,7 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
             formValue === undefined ||
             (isObjectValue &&
               getSchemaType<S>(newKeyedSchema) === 'object' &&
-              isPlainObject(getFilledDefault<S, F>(context, newKeyedSchema, newInherited, newPlacement)))
+              isPlainObject(getFilledDefault<S, F>(context, newKeyedSchema, rootSchema, newInherited, newPlacement)))
               ? NO_VALUE
               : replacementFor(false, false);
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. Data holding no object
@@ -667,6 +671,7 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
             const filledDefault = getFilledDefault<S, F>(
               context,
               newKeyedSchema,
+              rootSchema,
               newInherited,
               formValue === undefined ? newPlacement : undefined,
             );
@@ -758,7 +763,7 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
           // An untyped old schema's item types mark nothing as stale, so they count as the new one's
           const oldConstraints = oldIsUntyped ? { ...oldItem, type: newItem.type } : oldItem;
           cleared =
-            !constrainsAlike<S, F>(context, oldConstraints, newItem, undefined, undefined) &&
+            !constrainsAlike<S, F>(context, oldConstraints, newItem, rootSchema, undefined, undefined) &&
             !context.validator.isValid(newItem, null, rootSchema);
         }
       }
@@ -911,6 +916,7 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
         context,
         { ...oldConstraints, type: oldIsUntyped ? newItemSchema.type : oldConstraints.type, default: undefined },
         { ...newItemSchema, default: undefined },
+        rootSchema,
         undefined,
         undefined,
       );
