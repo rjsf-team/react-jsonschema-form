@@ -1884,7 +1884,8 @@ otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only t
 - [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read an alternate template
 - [entryLabel]: () => string - Builds the label of the uiSchema entry the field is rendered from, so one entry
   warns once however many rows or extra keys render it; omitted by callers that only resolve, which stay silent, and
-  called only when an override is invalid
+  called only when an override is invalid. It is read once per function while the override stays the same, so pass a
+  new function when the label changes
 
 #### Returns
 

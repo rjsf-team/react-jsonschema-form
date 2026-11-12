@@ -2,10 +2,9 @@ import { useMemo, useSyncExternalStore } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { expandRefCycle, getTemplates, getUiOptions } from '@rjsf/utils';
 
-import { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import { createIsSchemaFieldHidden } from './SchemaField.tsx';
-import useAdditionalDepths from './useAdditionalDepths.ts';
+import { useTemplateWarnEntry } from './TemplateWarnEntryContext.ts';
 
 /** The `CyclicSchemaField` component renders a field `retrieveSchema()` collapsed as a `$ref` cycle (marked with
  * `RJSF_REF_CYCLE_KEY`): an Expand button until the field is expanded, and then the field resolved one level further,
@@ -36,13 +35,11 @@ export default function CyclicSchemaField<
   const isFieldHidden = useMemo(() => createIsSchemaFieldHidden<T, S, F>(), []);
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  // The entry label is built here rather than handed down by `SchemaField`: a prop would leak through to the
-  // expanded field's own `SchemaField` (and from it onto the field it renders), and a fresh label each parent render
-  // would defeat that `SchemaField`'s memo
-  const additionalDepths = useAdditionalDepths(schema, fieldPath);
-  const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions, () =>
-    entryLabelForLog(fieldPath, registry.globalFormOptions, additionalDepths),
-  );
+  // The entry is built here rather than handed down by `SchemaField`, which renders this outside the entry it
+  // provides: a prop would leak through to the expanded field's own `SchemaField` (and from it onto the field it
+  // renders), and a fresh label each parent render would defeat that `SchemaField`'s memo
+  const entry = useTemplateWarnEntry(schema, fieldPath, registry.globalFormOptions);
+  const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions, entry.label);
   if (expandedSchema === undefined) {
     if (isFieldHidden(schema, uiSchema, formData, fieldPath, registry)) {
       return null;

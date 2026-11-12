@@ -18,4 +18,16 @@ describe('entryLabelForLog', () => {
 
     expect(entryLabelForLog(fieldPath, globalFormOptions)).toBe('"root_people_[]_first-_20name" (people[].first name)');
   });
+
+  it('writes the path below an option entry after that entry, collapsing indexes and extra keys past the option', () => {
+    const fieldPath = toFieldPath(
+      'title',
+      toFieldPath(0, toFieldPath('tasks', toFieldPath('key', toFieldPath('map')))),
+    );
+    const anchor = { depth: 2, prefix: 'uiSchema.anyOf[1]', owner: () => '"root_map_{}" (map{})' };
+
+    expect(entryLabelForLog(fieldPath, globalFormOptions, [1], anchor)).toBe(
+      'the uiSchema.anyOf[1].tasks[].title entry of "root_map_{}" (map{})',
+    );
+  });
 });

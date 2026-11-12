@@ -1377,6 +1377,44 @@ describe('SchemaField', () => {
         },
       );
 
+      it('warns once about an unusable ui:field in an additionalProperties entry, not once per extra key', () => {
+        createFormComponent({
+          schema: { type: 'object', additionalProperties: { type: 'string' } },
+          uiSchema: { additionalProperties: { 'ui:field': 'Typo' } },
+          initialFormData: { x: 'a', y: 'b' },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'ui:field for "root_{}" ({}) names no registered field (\'Typo\'), so it is ignored and the field is ' +
+            'rendered as though no ui:field were given.',
+        );
+      });
+
+      it("warns apart about the same unusable ui:field in two options' entries, naming each entry", async () => {
+        createFormComponent({
+          schema: {
+            anyOf: [
+              { title: 'A', type: 'object', properties: { b: { type: 'string' } } },
+              { title: 'B', type: 'object', properties: { b: { type: 'number' } } },
+            ],
+          },
+          uiSchema: { anyOf: [{ b: { 'ui:field': 'Typo' } }, { b: { 'ui:field': 'Typo' } }] },
+        });
+
+        await user.selectOptions(screen.getByRole('combobox'), 'B');
+
+        expect(consoleWarnSuppression.consoleSpy.mock.calls).toEqual([
+          [
+            'ui:field for the uiSchema.anyOf[0].b entry of "root" names no registered field (\'Typo\'), so it is ' +
+              'ignored and the field is rendered as though no ui:field were given.',
+          ],
+          [
+            'ui:field for the uiSchema.anyOf[1].b entry of "root" names no registered field (\'Typo\'), so it is ' +
+              'ignored and the field is rendered as though no ui:field were given.',
+          ],
+        ]);
+      });
+
       it('warns that a value that is neither a name nor a component is ignored', () => {
         const { node } = createFormComponent({
           schema: stringSchema,
@@ -3479,6 +3517,7 @@ describe('SchemaField', () => {
 
     describe('template-override warnings from SchemaField', () => {
       const consoleWarnSuppression = setupConsoleWarnSuppression();
+      const typo = 'Typo' as unknown as UiSchema['ui:FieldTemplate'];
 
       it('warns once for an invalid ui:FieldTemplate, naming the field, and renders the default', () => {
         createFormComponent({
@@ -3610,6 +3649,135 @@ describe('SchemaField', () => {
               'entry of "root" names no registered template (\'Inner\'), so it is ignored.',
           ],
         ]);
+      });
+
+      it('names a field below an option entry after that entry, so the same mistake in each option warns apart', async () => {
+        createFormComponent({
+          schema: {
+            anyOf: [
+              { title: 'A', type: 'object', properties: { b: { type: 'string' } } },
+              { title: 'B', type: 'object', properties: { b: { type: 'number' } } },
+            ],
+          },
+          uiSchema: { anyOf: [{ b: { 'ui:FieldTemplate': typo } }, { b: { 'ui:FieldTemplate': typo } }] },
+        });
+
+        await user.selectOptions(screen.getByRole('combobox'), 'B');
+
+        // Both `b`s render at the one path, so named by it alone the second option's warning would read as the first's
+        expect(consoleWarnSuppression.consoleSpy.mock.calls).toEqual([
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0].b entry of "root" names no ' +
+              "registered template ('Typo'), so it is ignored.",
+          ],
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[1].b entry of "root" names no ' +
+              "registered template ('Typo'), so it is ignored.",
+          ],
+        ]);
+      });
+
+      it('names a field below an option with no entry of its own by the field entry it renders from', () => {
+        createFormComponent({
+          schema: { anyOf: [{ type: 'object', properties: { b: { type: 'string' } } }] },
+          uiSchema: { b: { 'ui:FieldTemplate': typo } },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_b" (b) names no registered template (\'Typo\'), ' +
+            'so it is ignored.',
+        );
+      });
+
+      it('warns once for an items entry below an option entry, writing the index within the option as []', () => {
+        createFormComponent({
+          schema: {
+            anyOf: [
+              {
+                type: 'object',
+                properties: {
+                  tasks: { type: 'array', items: { type: 'object', properties: { title: { type: 'string' } } } },
+                },
+              },
+            ],
+          },
+          uiSchema: {
+            anyOf: [
+              {
+                tasks: { items: { title: { 'ui:FieldTemplate': typo } } },
+              },
+            ],
+          },
+          initialFormData: { tasks: [{ title: 'x' }, { title: 'y' }] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0].tasks[].title entry of "root" ' +
+            "names no registered template ('Typo'), so it is ignored.",
+        );
+      });
+
+      it("names an extra key an option takes from its field by the field's additionalProperties entry", () => {
+        const withOwnOptions = (title: string): RJSFSchema => ({
+          title,
+          type: 'object',
+          anyOf: [{ properties: { p: { type: 'string' } } }, { properties: { q: { type: 'string' } } }],
+        });
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            additionalProperties: { type: 'string' },
+            anyOf: [withOwnOptions('A'), withOwnOptions('B')],
+          },
+          uiSchema: {
+            additionalProperties: { 'ui:FieldTemplate': typo },
+            anyOf: [{ 'ui:title': 'A' }, { 'ui:title': 'B' }],
+          },
+          initialFormData: { extra: 'x' },
+        });
+
+        // The option's entry has no `additionalProperties`, so the extra key renders from the field's
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_{}" ({}) names no registered template (\'Typo\'), ' +
+            'so it is ignored.',
+        );
+      });
+
+      it('names an option entry below another option entry after both', () => {
+        createFormComponent({
+          schema: {
+            anyOf: [{ type: 'object', properties: { b: { oneOf: [{ type: 'string' }, { type: 'number' }] } } }],
+          },
+          uiSchema: {
+            anyOf: [{ b: { oneOf: [{ 'ui:FieldTemplate': typo }] } }],
+          },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.oneOf[0] entry of the uiSchema.anyOf[0].b ' +
+            'entry of "root" names no registered template (\'Typo\'), so it is ignored.',
+        );
+      });
+
+      it('names a field of a form nested below an option entry by the nested form alone', () => {
+        const NestedForm = () => (
+          <Form
+            schema={{ type: 'object', properties: { c: { type: 'string' } } }}
+            uiSchema={{ c: { 'ui:FieldTemplate': typo } }}
+            validator={validator}
+            idPrefix='inner'
+          />
+        );
+        createFormComponent({
+          schema: { anyOf: [{ type: 'object', properties: { b: { type: 'string' } } }] },
+          uiSchema: { anyOf: [{ b: { 'ui:field': NestedForm } }] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "inner_c" (c) names no registered template (\'Typo\'), ' +
+            'so it is ignored.',
+        );
       });
 
       it('warns once for an invalid override in an additionalProperties entry, not once per extra key', () => {

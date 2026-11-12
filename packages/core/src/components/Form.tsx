@@ -44,6 +44,7 @@ import { useFormStatus } from 'react-dom';
 
 import isDevelopment from '../isDevelopment.ts';
 import NamedFieldContext from './fields/NamedFieldContext.ts';
+import TemplateWarnEntryContext from './fields/TemplateWarnEntryContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
@@ -614,24 +615,27 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         <Attachment attach={model.attached} />
         <>
           {showErrorList === 'top' && renderErrors()}
+          {/* A form nested in a field of another starts its own entries rather than name them after the outer one's */}
           <NamedFieldContext value={undefined}>
-            <UiStateContext value={model.uiState}>
-              <SchemaFieldComponent
-                name=''
-                schema={schema}
-                uiSchema={uiSchema}
-                errorSchema={errorSchema}
-                fieldPath={ROOT_FIELD_PATH}
-                id={registry.globalFormOptions.idPrefix}
-                formData={formData}
-                onChange={model.handleChange}
-                onBlur={model.handleBlur}
-                onFocus={model.handleFocus}
-                registry={registry}
-                disabled={disabled}
-                readonly={readonly}
-              />
-            </UiStateContext>
+            <TemplateWarnEntryContext value={undefined}>
+              <UiStateContext value={model.uiState}>
+                <SchemaFieldComponent
+                  name=''
+                  schema={schema}
+                  uiSchema={uiSchema}
+                  errorSchema={errorSchema}
+                  fieldPath={ROOT_FIELD_PATH}
+                  id={registry.globalFormOptions.idPrefix}
+                  formData={formData}
+                  onChange={model.handleChange}
+                  onBlur={model.handleBlur}
+                  onFocus={model.handleFocus}
+                  registry={registry}
+                  disabled={disabled}
+                  readonly={readonly}
+                />
+              </UiStateContext>
+            </TemplateWarnEntryContext>
           </NamedFieldContext>
 
           {children || submitButton}
