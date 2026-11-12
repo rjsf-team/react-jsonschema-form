@@ -2,7 +2,7 @@ import { createContext, use, useMemo } from 'react';
 import { ADDITIONAL_PROPERTY_FLAG, fieldPathToList, hasSchemaMarker } from '@rjsf/utils';
 import type { FieldPath, GlobalFormOptions } from '@rjsf/utils';
 
-import { entryLabelForLog } from '../../fieldLabelForLog.ts';
+import { anchoredEntryLabel, entryLabelForLog } from '../../fieldLabelForLog.ts';
 import type { EntryAnchor } from '../../fieldLabelForLog.ts';
 
 /** The uiSchema entry a field at `fieldPath` renders from, for a warning about that entry. A shown `anyOf`/`oneOf`
@@ -109,6 +109,7 @@ export function useTemplateWarnEntry(
  * @param keysFromField - Whether the option renders the extra keys it takes from the field with the field's entry
  * @param xxxOfKey - The keyword holding the options
  * @param selectedOption - The index of the option shown
+ * @param [definition] - The `ui:definitions` key of the option's `$ref`, where `ui:definitions` has an entry for it
  * @returns - The option's entry
  */
 export function optionWarnEntry(
@@ -117,14 +118,19 @@ export function optionWarnEntry(
   keysFromField: boolean,
   xxxOfKey: string,
   selectedOption: number,
+  definition?: string,
 ): TemplateWarnEntry {
   const schemaLabel = lazyLabel(() => `the ${xxxOfKey}[${selectedOption}] option of ${entry.schemaLabel()}`);
   if (rendersFromField) {
     return { ...entry, schemaLabel };
   }
-  const prefix = `uiSchema.${xxxOfKey}[${selectedOption}]`;
-  const anchor = { depth: fieldPathToList(entry.fieldPath).length, prefix, owner: entry.label };
-  const label = lazyLabel(() => `the ${prefix} entry of ${entry.label()}`);
+  const anchor = {
+    depth: fieldPathToList(entry.fieldPath).length,
+    prefix: `uiSchema.${xxxOfKey}[${selectedOption}]`,
+    owner: entry.label,
+    definition,
+  };
+  const label = lazyLabel(() => anchoredEntryLabel(anchor));
   return { ...entry, label, schemaLabel, anchor, extraKeysFrom: keysFromField ? entry : undefined };
 }
 

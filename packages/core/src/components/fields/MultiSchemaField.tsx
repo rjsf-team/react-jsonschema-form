@@ -14,6 +14,7 @@ import {
   logOnce,
   optionSelectorId,
   resolveWidget,
+  RJSF_REF_KEY,
   selectOptionUiSchema,
   shouldRenderOptionalField,
   TranslatableString,
@@ -177,9 +178,16 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const keysFromField =
     optionUiSchema?.additionalProperties === undefined && optionFieldUiSchema?.additionalProperties !== undefined;
   const rendersFromField = optionUiSchema === uiSchema;
+  // `resolveUiSchema()` merges the `ui:definitions` entry of the option's `$ref` under its entry, which can't be told
+  // apart here from what the `uiSchema` gave it, so the labels name both
+  const optionRef: unknown = option ? (Reflect.get(option, RJSF_REF_KEY) ?? option.$ref) : undefined;
+  const definition =
+    typeof optionRef === 'string' && uiSchemaDefinitions && Object.hasOwn(uiSchemaDefinitions, optionRef)
+      ? optionRef
+      : undefined;
   const optionEntry = useMemo(
-    () => optionWarnEntry(entry, rendersFromField, keysFromField, xxxOfKey, selectedOption),
-    [entry, rendersFromField, keysFromField, xxxOfKey, selectedOption],
+    () => optionWarnEntry(entry, rendersFromField, keysFromField, xxxOfKey, selectedOption, definition),
+    [entry, rendersFromField, keysFromField, xxxOfKey, selectedOption, definition],
   );
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated

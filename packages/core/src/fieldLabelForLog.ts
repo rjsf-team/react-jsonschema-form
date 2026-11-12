@@ -34,6 +34,22 @@ export interface EntryAnchor {
   prefix: string;
   /** Builds the label of the entry the option's entry sits in */
   owner: () => string;
+  /** The `ui:definitions` key of the option's `$ref`, whose entry `resolveUiSchema()` merges under the option's own, so
+   * a mistake below it may sit in either, and the label names both
+   */
+  definition?: string;
+}
+
+/** Names an entry at or below an option's entry, after that entry and, where the option's `$ref` has one, its
+ * `ui:definitions` entry
+ *
+ * @param anchor - The option entry the entry sits at or beneath
+ * @param [below] - Writes the entry's path within the option after the base it is given
+ * @returns - The entry named as `the uiSchema.anyOf[1].b entry of "root" (or ui:definitions['#/$defs/Foo'].b)`
+ */
+export function anchoredEntryLabel(anchor: EntryAnchor, below: (base: string) => string = (base) => base): string {
+  const definition = anchor.definition ? ` (or ${below(`ui:definitions['${anchor.definition}']`)})` : '';
+  return `the ${below(anchor.prefix)} entry of ${anchor.owner()}${definition}`;
 }
 
 /** Names a field the way `fieldLabelForLog()` does, but with each array index written as `[]`, for a warning about
@@ -65,16 +81,17 @@ export function entryLabelForLog(
     return collapsedKeys?.includes(index) ? '{}' : undefined;
   };
   const start = anchor?.depth ?? 0;
-  const path = segments.slice(start).reduce<string>((entryPath, segment, offset) => {
-    const collapsed = marker(start + offset, segment);
-    return collapsed ? `${entryPath}${collapsed}` : toFieldPath(segment, entryPath as FieldPath);
-  }, anchor?.prefix ?? ROOT_FIELD_PATH);
+  const pathFrom = (base: string) =>
+    segments.slice(start).reduce<string>((entryPath, segment, offset) => {
+      const collapsed = marker(start + offset, segment);
+      return collapsed ? `${entryPath}${collapsed}` : toFieldPath(segment, entryPath as FieldPath);
+    }, base);
   if (anchor) {
-    return `the ${path} entry of ${anchor.owner()}`;
+    return anchoredEntryLabel(anchor, pathFrom);
   }
   const { idPrefix, idSeparator } = globalFormOptions;
   const id = [idPrefix, ...segments.map((segment, index) => marker(index, segment) ?? idSegment(String(segment)))].join(
     idSeparator,
   );
-  return formatLabel(id, path);
+  return formatLabel(id, pathFrom(ROOT_FIELD_PATH));
 }

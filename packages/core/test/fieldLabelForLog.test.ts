@@ -30,4 +30,13 @@ describe('entryLabelForLog', () => {
       'the uiSchema.anyOf[1].tasks[].title entry of "root_map_{}" (map{})',
     );
   });
+
+  it("names the option's ui:definitions entry beside its own, with the same path below each", () => {
+    const fieldPath = toFieldPath('title', toFieldPath(0, toFieldPath('tasks')));
+    const anchor = { depth: 0, prefix: 'uiSchema.anyOf[0]', owner: () => '"root"', definition: '#/$defs/Foo' };
+
+    expect(entryLabelForLog(fieldPath, globalFormOptions, undefined, anchor)).toBe(
+      'the uiSchema.anyOf[0].tasks[].title entry of "root" (or ui:definitions[\'#/$defs/Foo\'].tasks[].title)',
+    );
+  });
 });

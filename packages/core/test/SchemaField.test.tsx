@@ -3744,6 +3744,41 @@ describe('SchemaField', () => {
         );
       });
 
+      describe("an option whose $ref has a ui:definitions entry, which is merged under the option's own", () => {
+        const schema: RJSFSchema = {
+          $defs: { Foo: { type: 'object', properties: { b: { type: 'string' } } } },
+          anyOf: [{ $ref: '#/$defs/Foo' }, { type: 'number' }],
+        };
+
+        it('names both places for a mistake in the option entry', () => {
+          createFormComponent({
+            schema,
+            uiSchema: { 'ui:definitions': { '#/$defs/Foo': { 'ui:FieldTemplate': typo } } },
+          });
+
+          // No `uiSchema.anyOf` is written, but `resolveUiSchema()` fills `uiSchema.anyOf[0]` in from the definition
+          expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root" (or ' +
+              "ui:definitions['#/$defs/Foo']) names no registered template ('Typo'), so it is ignored.",
+          );
+        });
+
+        it('names both places for a mistake below the option entry, beside keys the uiSchema gives it', () => {
+          createFormComponent({
+            schema,
+            uiSchema: {
+              'ui:definitions': { '#/$defs/Foo': { b: { 'ui:FieldTemplate': typo } } },
+              anyOf: [{ 'ui:title': 'Foo' }],
+            },
+          });
+
+          expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0].b entry of "root" (or ' +
+              "ui:definitions['#/$defs/Foo'].b) names no registered template ('Typo'), so it is ignored.",
+          );
+        });
+      });
+
       it('names an option entry below another option entry after both', () => {
         createFormComponent({
           schema: {
