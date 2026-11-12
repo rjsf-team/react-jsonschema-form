@@ -5983,7 +5983,7 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(node.querySelector('#root_pet_a__key') !== null).toBe('a' in expected);
     });
 
-    // `{}` fits T as it fits S, so only the form's refusal, which the field now hears of, shows S again
+    // `{}` fits T as it fits S, so only the form's refusal, which the field hears of, shows S again
     it('shows the option switched away from when transformChange refuses a switch a parent field sends', async () => {
       const schema: RJSFSchema = {
         type: 'object',
