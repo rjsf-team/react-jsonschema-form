@@ -29,7 +29,7 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
 import guessType from '../../guessType.ts';
-import { hashObject, hashString, sortedJSONStringify } from '../../hashForSchema.ts';
+import { hashObject, hashString, sortedJSONStringify } from '../../hashObject.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import { getByPath } from '../../pathUtils.ts';
 import { keywordShape } from '../../schemaUri.ts';

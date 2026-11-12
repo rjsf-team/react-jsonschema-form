@@ -95,7 +95,7 @@ import getXxxOfOptions from './getXxxOfOptions.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hasAdditionalKeyLabel from './hasAdditionalKeyLabel.ts';
-import { hashObject, schemaKey } from './hashForSchema.ts';
+import { hashObject, schemaKey } from './hashObject.ts';
 import hasSchemaMarker from './hasSchemaMarker.ts';
 import type { SchemaFlagMarker } from './hasSchemaMarker.ts';
 import type { VisibleErrorsProps } from './hasVisibleErrors.ts';

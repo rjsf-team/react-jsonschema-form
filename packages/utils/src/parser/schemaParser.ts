@@ -1,6 +1,6 @@
 import { ID_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import { schemaKey } from '../hashForSchema.ts';
+import { schemaKey } from '../hashObject.ts';
 import parseSchemaGraph from '../schema/graph/parseSchemaGraph.ts';
 import { validationTargets } from '../schema/graph/validationTargets.ts';
 import type { RJSFSchema, StrictRJSFSchema } from '../types.ts';
