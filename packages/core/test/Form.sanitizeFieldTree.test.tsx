@@ -2968,6 +2968,18 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: { o: { a: 'x' } },
       expected,
     })),
+    {
+      // An object with a `true` property is judged whole, against the default the defaults write once they leave its
+      // optional keys out
+      name: 'keeps an optional key of a required object with a true property, holding its old default',
+      withDefault: (a) => ({
+        type: 'object',
+        required: ['o'],
+        properties: { o: { type: 'object', default: { a }, properties: { a: true } } },
+      }),
+      data: { o: { a: 'x' } },
+      expected: { o: { a: 'x' } },
+    },
   ])("$name under emptyObjectFields: 'populateRequiredDefaults'", ({ withDefault, data, expected }) => {
     const from = withDefault('x');
     const to = withDefault('y');

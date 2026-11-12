@@ -72,3 +72,84 @@ describe('getFilledDefault()', () => {
     },
   );
 });
+
+describe('getFilledDefault() cuts an object default down key by key, as the fill builds it', () => {
+  const populateRequired: SchemaContext = {
+    ...descendantWins,
+    defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
+  };
+  const optional = { isRequired: false, isParentRequired: true };
+  const required = { isRequired: true, isParentRequired: true };
+
+  it.each<{ name: string; context: SchemaContext; schema: RJSFSchema; placement: typeof optional; expected: unknown }>([
+    {
+      name: 'an optional key under populateRequiredDefaults leaves an optional object nothing to write',
+      context: populateRequired,
+      schema: { type: 'object', properties: { a: { type: 'number' } }, default: { a: 1 } },
+      placement: optional,
+      expected: undefined,
+    },
+    {
+      name: 'an optional key under populateRequiredDefaults leaves a required object empty',
+      context: populateRequired,
+      schema: { type: 'object', properties: { a: { type: 'number' } }, default: { a: 1 } },
+      placement: required,
+      expected: {},
+    },
+    {
+      name: 'a required key of a required object is written',
+      context: populateRequired,
+      schema: { type: 'object', properties: { a: { type: 'number' } }, required: ['a'], default: { a: 1 } },
+      placement: required,
+      expected: { a: 1 },
+    },
+    {
+      name: 'a true property is a key like any other',
+      context: populateRequired,
+      schema: { type: 'object', properties: { a: true }, default: { a: 1 } },
+      placement: required,
+      expected: {},
+    },
+    {
+      name: 'an empty optional object below leaves an optional object nothing to write',
+      context: descendantWins,
+      schema: { type: 'object', properties: { b: { type: 'object', properties: {} } }, default: { b: {} } },
+      placement: optional,
+      expected: undefined,
+    },
+    {
+      name: 'a key no property declares is dropped',
+      context: descendantWins,
+      schema: { type: 'object', default: { a: 1 } },
+      placement: required,
+      expected: {},
+    },
+    {
+      name: 'a key additionalProperties seeds is kept, whatever emptyObjectFields says',
+      context: populateRequired,
+      schema: {
+        type: 'object',
+        properties: { a: { type: 'number' } },
+        additionalProperties: true,
+        default: { a: 1, x: 2 },
+      },
+      placement: optional,
+      expected: { x: 2 },
+    },
+    {
+      name: 'an untyped field with no properties is written whole',
+      context: populateRequired,
+      schema: { default: { a: 1 } },
+      placement: required,
+      expected: { a: 1 },
+    },
+  ])('$name', ({ context, schema, placement, expected }) => {
+    expect(getFilledDefault(context, schema, undefined, placement)).toEqual(expected);
+  });
+
+  it('leaves the object default whole without a placement', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'number' } }, default: { a: 1 } };
+
+    expect(getFilledDefault(populateRequired, schema, undefined)).toEqual({ a: 1 });
+  });
+});
