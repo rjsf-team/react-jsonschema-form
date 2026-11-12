@@ -515,6 +515,10 @@ export {
  * schema written by hand
  */
 export { RJSF_PROVENANCE_KEY } from './constants.ts';
+/** @public The start of the `$id` an option's scoring copy gives a part it holds once, by which a custom validator
+ * recognises such a part, as `sharedCopyParts()` does
+ */
+export { SHARED_COPY_ID } from './constants.ts';
 /** @public Ids RJSF renders that no other RJSF package's source needs, by which consumers' code and tests find those
  * parts
  */
