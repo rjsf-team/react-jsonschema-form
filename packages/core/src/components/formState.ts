@@ -52,14 +52,7 @@ import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from
 import { clearsWrittenOver, holdsClearAt, keepRecordedClears } from './keepClears.ts';
 import { keyMoveOf, moveErrorKeys, moveErrorSchemaKeys, movedPaths, withKeysMoved } from './keyMove.ts';
 import type { ContainerKeyMove, KeyMove, MoveFate } from './keyMove.ts';
-import type {
-  ClassifiedValue,
-  DataOrigins,
-  DroppedValue,
-  FieldTree,
-  FirstRenderFill,
-  JudgedClears,
-} from './sanitizeFieldTree.ts';
+import type { ClassifiedValue, DroppedValue, FieldTree, FirstRenderFill, JudgedClears } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree, { alongOf, judgedClearsIn, takesValue } from './sanitizeFieldTree.ts';
 import type { UiStateReader } from './uiState.ts';
 import {
@@ -74,6 +67,8 @@ import {
   withSelectionsHeldFor,
   withSelectionsHeldForValidated,
 } from './uiState.ts';
+import type { Origins } from './valueOrigins.ts';
+import { alongOrigins, filterOrigins, movedOrigins, NO_ORIGINS, withOrigins } from './valueOrigins.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
  */
@@ -303,12 +298,6 @@ export type TouchedPaths = ReadonlySet<FieldPath>;
 /** The fields the user cleared, see `FormState.clearedPaths` */
 export type ClearedPaths = ReadonlySet<FieldPath>;
 
-/** The values a person entered through the form, see `FormState.enteredPaths` */
-export type EnteredPaths = ReadonlySet<FieldPath>;
-
-/** The values the seed held, see `FormState.seededPaths` */
-export type SeededPaths = ReadonlySet<FieldPath>;
-
 /** A value set aside when its field went away, see `FormState.orphans` */
 export interface Orphan {
   fieldPath: FieldPath;
@@ -374,10 +363,9 @@ export interface BlurAtData<T> extends FieldBlur {
 
 const NO_PATHS: ReadonlySet<FieldPath> = new Set();
 
-const NO_ORIGINS: DataOrigins = { entered: NO_PATHS, seeded: NO_PATHS };
-
-/** The entered and seeded paths of the data `of` */
-interface RecordedOrigins extends DataOrigins {
+/** The origins of the values of the data `of` */
+interface RecordedOrigins {
+  origins: Origins;
   of: unknown;
 }
 
@@ -430,17 +418,12 @@ function filterPaths(paths: ReadonlySet<FieldPath>, keep: (fieldPath: FieldPath)
   return kept.length === paths.size ? paths : new Set(kept);
 }
 
-/** `origins` once the sanitize worked out where the seeded values in `classified` came from: each leaves the seeded
- * paths, an array or object with every seeded path it holds, and one a person must have entered joins the entered ones
+/** `origins` once the sanitize worked out where the seeded values in `classified` came from: each is seeded no more,
+ * an array or object with every seeded value it holds, and one a person must have entered is entered
  */
-function withClassified(origins: DataOrigins, classified: readonly ClassifiedValue[]): DataOrigins {
-  if (classified.length === 0) {
-    return origins;
-  }
-  const settled: FieldPath[] = [];
-  classified.forEach(({ path, value }) => collectPathsWithin(value, path, settled));
+function withClassified(origins: Origins, classified: readonly ClassifiedValue[]): Origins {
   const entered = classified.filter(({ origin }) => origin === 'entered').map(({ path }) => fieldPathFromList(path));
-  return { entered: withPaths(origins.entered, ...entered), seeded: withoutPaths(origins.seeded, settled) };
+  return withOrigins(origins, pathsWithin(classified), entered, 'seeded');
 }
 
 /** Adds to `into` the path of `value`, at `path`, and of every value it holds, an array's and an object's own included */
@@ -453,26 +436,18 @@ function collectPathsWithin(value: unknown, path: FieldPathList, into: FieldPath
   }
 }
 
-/** `origins` without the paths at and under each of `taken`, the values the sanitize or the fill took out of the data
- * or wrote another over: what the data holds there now, if anything, is no value a person entered or a seed held
- */
-function withoutTaken(origins: DataOrigins, taken: readonly DroppedValue[]): DataOrigins {
-  if (taken.length === 0 || (origins.entered.size === 0 && origins.seeded.size === 0)) {
-    return origins;
-  }
-  const gone: FieldPath[] = [];
-  taken.forEach(({ path, value }) => collectPathsWithin(value, path, gone));
-  return { entered: withoutPaths(origins.entered, gone), seeded: withoutPaths(origins.seeded, gone) };
+/** The path of each of `values` and of every value it holds, see `collectPathsWithin()` */
+function pathsWithin(values: readonly DroppedValue[]): FieldPath[] {
+  const paths: FieldPath[] = [];
+  values.forEach(({ path, value }) => collectPathsWithin(value, path, paths));
+  return paths;
 }
 
-/** `paths` without `removed`, `paths` itself when it holds none of them */
-function withoutPaths(paths: ReadonlySet<FieldPath>, removed: readonly FieldPath[]): ReadonlySet<FieldPath> {
-  if (!removed.some((path) => paths.has(path))) {
-    return paths;
-  }
-  const kept = new Set(paths);
-  removed.forEach((path) => kept.delete(path));
-  return kept;
+/** `origins` without the origins at and under each of `taken`, the values the sanitize or the fill took out of the data
+ * or wrote another over: what the data holds there now, if anything, is no value a person entered or a seed held
+ */
+function withoutTaken(origins: Origins, taken: readonly DroppedValue[]): Origins {
+  return origins.size === 0 ? origins : withOrigins(origins, pathsWithin(taken));
 }
 
 /** Adds to `into` each value `before` holds that `after` does not hold as the same value: one written over or gone,
@@ -509,32 +484,13 @@ function collectOrigins(value: unknown, path: FieldPathList, into: FieldPath[], 
   );
 }
 
-/** The paths a seed's values are recorded at, see `collectOrigins()` */
-function seededPathsOf(seed: unknown): ReadonlySet<FieldPath> {
+/** The origins of a seed's values, each seeded at the path `collectOrigins()` records it at */
+function seededOrigins(seed: unknown): Origins {
   const paths: FieldPath[] = [];
   if (seed !== undefined) {
     collectOrigins(seed, [], paths, false);
   }
-  return paths.length === 0 ? NO_PATHS : new Set(paths);
-}
-
-/** `paths` without `removed` and with `added`, `paths` itself when that leaves it holding what it held, as an edit of a
- * value a person entered before does
- */
-function withPathsReplaced(
-  paths: ReadonlySet<FieldPath>,
-  removed: readonly FieldPath[],
-  added: readonly FieldPath[],
-): ReadonlySet<FieldPath> {
-  const kept = new Set(added);
-  const isSame = added.every((path) => paths.has(path)) && !removed.some((path) => paths.has(path) && !kept.has(path));
-  if (isSame) {
-    return paths;
-  }
-  const next = new Set(paths);
-  removed.forEach((path) => next.delete(path));
-  added.forEach((path) => next.add(path));
-  return next;
+  return new Map(paths.map((path) => [path, 'seeded']));
 }
 
 /** `paths` with `added` in it, `paths` itself when it holds them already */
@@ -612,10 +568,10 @@ function isRevealedByField<T, S extends StrictRJSFSchema, F extends FormContextT
   return props.liveErrors === 'field' && (isLiveValidated(props) || isBlurValidated(props));
 }
 
-/** The marks that follow the data: the touched fields, the revealed ones and the recorded clears */
+/** The marks that follow the data: the touched fields, the revealed ones, the recorded clears and the origins */
 type DataMarks<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
   FormState<T, S, F>,
-  'touchedPaths' | 'revealed' | 'clearedPaths' | 'enteredPaths' | 'seededPaths'
+  'touchedPaths' | 'revealed' | 'clearedPaths' | 'origins'
 >;
 
 /** `paths` without the clears `formData` no longer holds, see `holdsClear()`: a clear holds only while the key is there
@@ -641,29 +597,25 @@ function heldClears<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param formData - The data after it
  * @param [move] - Where the change moved the keys of a container
  * @param [clearedPaths] - The clears recorded through the change, already moved, in place of `current`'s
- * @param [origins] - The entered and seeded paths recorded through the change, already moved, in place of `current`'s,
- *   with the data they are recorded for
+ * @param [recorded] - The origins recorded through the change, already moved, in place of `current`'s, with the data
+ *   they are recorded for
  */
 function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   formData: T | undefined,
   move?: ContainerKeyMove,
   clearedPaths = withPathsMoved(current.clearedPaths, move),
-  origins: RecordedOrigins = {
-    entered: withPathsMoved(current.enteredPaths, move),
-    seeded: withPathsMoved(current.seededPaths, move),
-    of: current.formData,
-  },
+  recorded: RecordedOrigins = { origins: movedOrigins(current.origins, move), of: current.formData },
 ): DataMarks<T, S, F> {
   const { touchedPaths, revealed } = current;
   const clears = heldClears(current, clearedPaths, formData);
   // The settle hands back the origins of the data it settled, so only what was taken out of that data since, as the
   // extra data an omit drops, is looked for, and only where the two differ
   const goneSince: DroppedValue[] = [];
-  collectWrittenOver(origins.of, formData, [], goneSince);
-  const { entered: enteredPaths, seeded: seededPaths } = withoutTaken(origins, goneSince);
+  collectWrittenOver(recorded.of, formData, [], goneSince);
+  const origins = withoutTaken(recorded.origins, goneSince);
   if (touchedPaths.size === 0 && revealed.fields.size === 0 && revealed.containers.size === 0) {
-    return { touchedPaths, revealed, clearedPaths: clears, enteredPaths, seededPaths };
+    return { touchedPaths, revealed, clearedPaths: clears, origins };
   }
   // The moved paths are checked against the earlier data with the same keys moved, so a path a move re-keyed is checked
   // against the value that moved with it
@@ -676,8 +628,7 @@ function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContext
     touchedPaths: follow(touchedPaths),
     revealed: withRevealed(revealed, follow(revealed.fields), follow(revealed.containers)),
     clearedPaths: clears,
-    enteredPaths,
-    seededPaths,
+    origins,
   };
 }
 
@@ -701,10 +652,10 @@ function marksAfterChange<T, S extends StrictRJSFSchema, F extends FormContextTy
   formData: T | undefined,
   props: FormProps<T, S, F>,
   clearedPaths: ReadonlySet<FieldPath>,
-  origins: RecordedOrigins,
+  recorded: RecordedOrigins,
 ): DataMarks<T, S, F> {
   const move = dataMoveOf(change);
-  const followed = marksFollowingData(current, formData, move, clearedPaths, origins);
+  const followed = marksFollowingData(current, formData, move, clearedPaths, recorded);
   let { revealed } = followed;
   if (isRevealedByField(props) && !change.editedPath) {
     const container = move?.container ?? (change.isAnnouncedMove ? change.fieldPath : undefined);
@@ -1361,8 +1312,8 @@ interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> 
   formData: T | undefined;
   /** The pass's `clearedPaths`, moved with the items the sanitize dropped, see `settleFormData()` */
   clearedPaths: ReadonlySet<FieldPath>;
-  /** The pass's entered and seeded paths, moved the same way */
-  origins: DataOrigins;
+  /** The pass's origins, moved the same way */
+  origins: Origins;
   /** The orphans after the pass: those it was handed, without the ones it brought back, and the values it dropped */
   orphans: Orphans;
   /** The render context for `formData`, carrying the schema resolved for it and the utilities that resolved it.
@@ -1407,15 +1358,14 @@ interface DeriveDataOptions {
    * the clears with them, so the pass hands them back moved, see `settleFormData()`
    */
   clearedPaths?: ReadonlySet<FieldPath>;
-  /** The entered and seeded paths of the data the pass starts from, which tell where each of its values came from,
-   * and are handed back moved as the clears are
+  /** The origins of the data the pass starts from, which tell where each of its values came from, and are handed back
+   * moved as the clears are
    */
-  origins?: DataOrigins;
-  /** The entered and seeded paths once the change this pass is for wrote its data, when they differ from `origins`:
-   * the first round's sanitize diffs against the data before the change, and every later one against data the change
-   * wrote
+  origins?: Origins;
+  /** The origins once the change this pass is for wrote its data, when they differ from `origins`: the first round's
+   * sanitize diffs against the data before the change, and every later one against data the change wrote
    */
-  originsAfterEdit?: DataOrigins;
+  originsAfterEdit?: Origins;
   /** The values set aside before the pass, which it brings back where their field shows again */
   orphans?: Orphans;
   /** Whether the pass leaves the orphans where they are: one that has just brought some back does, so a value whose
@@ -1508,7 +1458,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   formData: T | undefined;
   retrievedSchema: S;
   clearedPaths: ReadonlySet<FieldPath>;
-  origins: DataOrigins;
+  origins: Origins;
   orphans: Orphans;
 } {
   const { isSanitized, edit, heldPath, isReset = false, judgesOnlyClears, keepsClears } = options;
@@ -1531,17 +1481,12 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   let pickedAlong: ReadonlySet<FieldPath> | undefined;
   const isFilled = (fieldPath: FieldPath) => {
     pickedAlong ??= alongOf(new Set(current?.uiState.pickedPaths()));
-    if (
-      alongOf(origins.entered).has(fieldPath) ||
-      alongOf(origins.seeded).has(fieldPath) ||
-      alongOf(clearedPaths).has(fieldPath) ||
-      pickedAlong.has(fieldPath)
-    ) {
+    if (alongOrigins(origins).has(fieldPath) || alongOf(clearedPaths).has(fieldPath) || pickedAlong.has(fieldPath)) {
       return false;
     }
     const path = fieldPathToList(fieldPath);
     return !path.some(
-      (key, depth) => typeof key === 'number' && origins.entered.has(fieldPathFromList(path.slice(0, depth))),
+      (key, depth) => typeof key === 'number' && origins.get(fieldPathFromList(path.slice(0, depth))) === 'entered',
     );
   };
   // A pass told nothing of where its values came from takes none for a filled one
@@ -1612,7 +1557,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         tree,
         uiState,
         fillAsFirstRender,
-        { ...diffedOrigins, refilled },
+        { recorded: diffedOrigins, refilled },
         roundEdit,
         judged,
       );
@@ -1626,10 +1571,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         break;
       }
       clearedPaths = round.itemMoves.reduce(withPathsMoved, clearedPaths);
-      origins = {
-        entered: round.itemMoves.reduce(withPathsMoved, origins.entered),
-        seeded: round.itemMoves.reduce(withPathsMoved, origins.seeded),
-      };
+      origins = round.itemMoves.reduce(movedOrigins, origins);
       diffedOrigins = origins;
       const hash = hashObject({ formData: sanitized });
       if (seen.includes(hash)) {
@@ -1681,7 +1623,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       edit: undefined,
       clearedPaths,
       origins,
-      originsAfterEdit: { entered: withPaths(origins.entered, ...entered), seeded: origins.seeded },
+      originsAfterEdit: withOrigins(origins, [], entered),
       orphans: remaining,
       keepsOrphans: true,
     },
@@ -1711,7 +1653,7 @@ function returningOrphans<T, S extends StrictRJSFSchema, F extends FormContextTy
   schemaUtils: SchemaUtilsType<T, S, F>,
   retrievedSchema: S,
   formData: T | undefined,
-  origins: DataOrigins,
+  origins: Origins,
 ): Orphan[] {
   if (orphans.size === 0) {
     return [];
@@ -1727,7 +1669,7 @@ function returningOrphans<T, S extends StrictRJSFSchema, F extends FormContextTy
       // for the path, which returns as the first leaves
       const schema = !under && droppedNow.has(fieldPath) ? undefined : schemaAt(path);
       const held = getAt<unknown>(formData, path);
-      const isHeld = held !== undefined && (origins.entered.has(fieldPath) || origins.seeded.has(fieldPath));
+      const isHeld = held !== undefined && origins.has(fieldPath);
       return schema !== undefined && !isHeld && takesValue<S>(schema, value);
     })
     .sort((a, b) => a.fieldPath.length - b.fieldPath.length);
@@ -1909,7 +1851,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const options: DeriveDataOptions = {
     isSanitized: true,
     clearedPaths: current?.clearedPaths,
-    origins: current ? originsOf(current) : { entered: NO_PATHS, seeded: seededPathsOf(inputFormData) },
+    origins: current ? current.origins : seededOrigins(inputFormData),
     orphans: current?.orphans,
     judgesOnlyClears: props.disabled || props.readonly,
     keepsClears: fillsOverClears(props),
@@ -1927,14 +1869,8 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const isDataPassed = current ? current.isDataPassed : inputFormData !== undefined;
   // On construction what the data holds of the seed is seeded, and nobody has entered anything
   const marks = current
-    ? marksFollowingData(current, formData, undefined, clearedPaths, { ...origins, of: formData })
-    : {
-        touchedPaths: NO_PATHS,
-        revealed: NOTHING_REVEALED,
-        clearedPaths: NO_PATHS,
-        enteredPaths: NO_PATHS,
-        seededPaths: origins.seeded,
-      };
+    ? marksFollowingData(current, formData, undefined, clearedPaths, { origins, of: formData })
+    : { touchedPaths: NO_PATHS, revealed: NOTHING_REVEALED, clearedPaths: NO_PATHS, origins };
   const errors = reconcileErrors(current, props, context, formData, {
     isSchemaChanged,
     revealed: marks.revealed,
@@ -1950,7 +1886,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     formData,
     baseline,
     baselineUiState: current?.baselineUiState ?? withoutSelections(context.uiState),
-    baselineSeededPaths: current?.baselineSeededPaths ?? origins.seeded,
+    baselineOrigins: current?.baselineOrigins ?? origins,
     orphans,
     ...marks,
     isDataPassed,
@@ -1990,7 +1926,7 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
     {
       ...options,
       clearedPaths: NO_PATHS,
-      origins: { entered: NO_PATHS, seeded: current.baselineSeededPaths },
+      origins: current.baselineOrigins,
       keepsClears: false,
       uiState: withSelectionsHeldFor(current.uiState, current.baselineUiState, (at) => getAt(baseline, at)),
     },
@@ -2142,7 +2078,7 @@ function withSwitchedAway<T, S extends StrictRJSFSchema, F extends FormContextTy
     return withOrphans(kept, [{ ...whole, under }]);
   }
   const after = getAt<unknown>(settled, switchAt.path);
-  const origins = [...current.enteredPaths, ...current.seededPaths].map(fieldPathToList);
+  const origins = Array.from(current.origins.keys(), fieldPathToList);
   const setAside: Orphan[] = [];
   for (const [key, value] of Object.entries(before)) {
     const path = [...switchAt.path, key];
@@ -2164,15 +2100,7 @@ function withSwitchedAway<T, S extends StrictRJSFSchema, F extends FormContextTy
   return withOrphans(kept, setAside);
 }
 
-/** The entered and seeded paths `state` holds */
-function originsOf<T, S extends StrictRJSFSchema, F extends FormContextType>({
-  enteredPaths,
-  seededPaths,
-}: FormState<T, S, F>): DataOrigins {
-  return { entered: enteredPaths, seeded: seededPaths };
-}
-
-/** The entered and seeded paths once `change` wrote `written` over `committed`, before any defaults merge in: those
+/** The origins once `change` wrote `written` over `committed`, before any defaults merge in: those
  * recorded before, moved with the keys the change moved, without those of the values the change took out or wrote
  * over, and with those it entered.
  *
@@ -2185,22 +2113,21 @@ function originsOf<T, S extends StrictRJSFSchema, F extends FormContextType>({
  * new key or option, which the defaults give. An array or object whose keys it moved, added or removed is entered
  * itself, so it does not pass for one the defaults filled in whole.
  *
- * @param recorded - The entered and seeded paths recorded before the change
+ * @param recorded - The origins recorded before the change
  * @param change - The change
  * @param committed - The data before the change
  * @param written - The data the change wrote, before any defaults
  * @param path - The path of the change
- * @returns - The paths recorded through the change, for the data it wrote
+ * @returns - The origins recorded through the change, for the data it wrote
  */
 function originsAfterChange<T>(
-  recorded: DataOrigins,
+  recorded: Origins,
   change: FieldChange<T>,
   committed: T | undefined,
   written: T | undefined,
   path: FieldPathList,
-): DataOrigins {
-  const move = dataMoveOf(change);
-  const moved = { entered: withPathsMoved(recorded.entered, move), seeded: withPathsMoved(recorded.seeded, move) };
+): Origins {
+  const moved = movedOrigins(recorded, dataMoveOf(change));
   const fieldPath = fieldPathFromList(path);
   const has = path.every((_key, depth) => hasByPath(getAt<unknown>(committed, path.slice(0, depth)), path[depth]));
   const before = has ? getAt<unknown>(committed, path) : undefined;
@@ -2211,12 +2138,12 @@ function originsAfterChange<T>(
       const segments = fieldPathToList(at);
       return !isPathPrefix(path, segments) || getAt<unknown>(written, segments) !== undefined;
     };
-    return { entered: filterPaths(moved.entered, isHeld), seeded: filterPaths(moved.seeded, isHeld) };
+    return filterOrigins(moved, isHeld);
   }
   const isKeyRemoval = change.newValue === ADDITIONAL_PROPERTY_KEY_REMOVE;
   if ((change.newKeyOf || change.isAnnouncedMove) && !isKeyRemoval) {
     const isRestructured = Array.isArray(before) || isPlainObject(before);
-    return isRestructured ? { ...moved, entered: withPaths(moved.entered, fieldPath) } : moved;
+    return isRestructured ? withOrigins(moved, [], [fieldPath]) : moved;
   }
   const entered: FieldPath[] = [];
   const taken: DroppedValue[] = [];
@@ -2235,9 +2162,7 @@ function originsAfterChange<T>(
       entered.push(fieldPathFromList(path.slice(0, -1)));
     }
   }
-  const gone: FieldPath[] = [];
-  taken.forEach(({ path: at, value }) => collectPathsWithin(value, at, gone));
-  return { entered: withPathsReplaced(moved.entered, gone, entered), seeded: withoutPaths(moved.seeded, gone) };
+  return withOrigins(moved, pathsWithin(taken), entered);
 }
 
 /** The clears the form records once `change` wrote `written` over `committed`, before any defaults merge in: those
@@ -2336,7 +2261,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     }
   }
   let clearedPaths = clearsAfterChange(current.clearedPaths, change, oldFormData, formData, path);
-  let origins = originsAfterChange(originsOf(current), change, oldFormData, formData, path);
+  let origins = originsAfterChange(current.origins, change, oldFormData, formData, path);
   let { orphans } = current;
 
   if (isContainer) {
@@ -2351,8 +2276,8 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
       {
         isSanitized: editedPath !== undefined,
         clearedPaths,
-        // The sanitize diffs against the data before the change, whose entered paths are the committed ones
-        origins: originsOf(current),
+        // The sanitize diffs against the data before the change, whose origins are the committed ones
+        origins: current.origins,
         originsAfterEdit: origins,
         orphans,
         judgesOnlyClears: disabled || readonly,
@@ -2386,7 +2311,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     ...current,
     ...context,
     ...omitted,
-    ...marksAfterChange(current, change, omitted.formData, props, clearedPaths, { ...origins, of: formData }),
+    ...marksAfterChange(current, change, omitted.formData, props, clearedPaths, { origins, of: formData }),
     orphans,
     // An edit is data the user made, whose errors they have earned, so a prop change live-validates it from now on
     isDataPassed: true,
@@ -2504,10 +2429,9 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
   const { formData, context, origins } = deriveFormData(
     current,
     seed,
-    { isReset: true, origins: { entered: NO_PATHS, seeded: seededPathsOf(seed) } },
+    { isReset: true, origins: seededOrigins(seed) },
     props,
   );
-  const seededPaths = origins.seeded;
   return {
     ...current,
     ...context,
@@ -2517,9 +2441,8 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     touchedPaths: NO_PATHS,
     revealed: NOTHING_REVEALED,
     clearedPaths: NO_PATHS,
-    enteredPaths: NO_PATHS,
-    seededPaths,
-    baselineSeededPaths: seededPaths,
+    origins,
+    baselineOrigins: origins,
     orphans: NO_ORPHANS,
     isDataPassed: seed !== undefined,
     ...extraErrorsAlone(props.extraErrors),

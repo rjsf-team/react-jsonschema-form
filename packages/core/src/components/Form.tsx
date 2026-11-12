@@ -48,11 +48,12 @@ import TemplateWarnEntryContext from './fields/TemplateWarnEntryContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
-import type { ClearedPaths, EnteredPaths, Orphans, RevealedPaths, SeededPaths, TouchedPaths } from './formState.ts';
+import type { ClearedPaths, Orphans, RevealedPaths, TouchedPaths } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState, UiStateReader } from './uiState.ts';
 import UiStateContext from './UiStateContext.ts';
+import type { Origins } from './valueOrigins.ts';
 
 /** `T` itself for any concrete type, but not a position TypeScript infers `T` from. `FormProps` wraps the configuration
  * props and handlers in it, so `T` is inferred from `formData`/`initialFormData` (or a typed `ref`) and an unannotated
@@ -332,23 +333,20 @@ export interface FormState<
    * the keys the form moved, and dropped once the data no longer holds the clear
    */
   clearedPaths: ClearedPaths;
-  /** The paths of the values a person entered through the form, or a write from outside the fields such as
-   * `setFieldValue()` wrote: each value that is no array or object, each empty array or object, each key written as
-   * `undefined`, and each array or object itself whose rows or keys were moved, added or removed, or that a write wrote
-   * whole. Such a value is theirs even where it equals a default. Moved with the keys the form moved, and dropped where
-   * the data stops holding the value: with a key the data drops, and where the sanitize or the defaults write another
-   * value over it, which is then one the defaults filled in
+  /** Where each value of `formData` came from, by its path: one a person entered through the form, or a write from
+   * outside the fields such as `setFieldValue()` wrote, is entered, and one the seed held that nobody has entered over
+   * since is seeded. A value with no origin here is one the defaults filled in. Recorded for each value that is no array
+   * or object, each empty array or object and each key written as `undefined`, and as entered for each array or object
+   * itself whose rows or keys were moved, added or removed, or that a write wrote whole. An entered value is theirs
+   * even where it equals a default. A seed doesn't say whether a person or a default put a value in it, so the origin
+   * of a seeded value is not known until a change asks: one the sanitize keeps is then entered where it is not what
+   * the defaults filled the field with, and has no origin where it is. Moved with the keys the form moved, and dropped
+   * where the data stops holding the value: with a key the data drops, and where the sanitize or the defaults write
+   * another value over it, which is then one the defaults filled in
    */
-  enteredPaths: EnteredPaths;
-  /** The paths of the values the seed held that nobody has entered over since, recorded as `enteredPaths` records a
-   * value. A seed doesn't say whether a person or a default put a value in it, so the origin of these is not known
-   * until a change asks: one the sanitize keeps then leaves these paths, for `enteredPaths` where it is not what the
-   * defaults filled the field with. A value at neither set of paths is one the defaults filled in. Follows the data as
-   * `enteredPaths` does
-   */
-  seededPaths: SeededPaths;
-  /** The seeded paths of the baseline: those of the seed it was derived from */
-  baselineSeededPaths: SeededPaths;
+  origins: Origins;
+  /** The origins of the baseline's values: those of the seed it was derived from */
+  baselineOrigins: Origins;
   /** The values a person entered or the seed held whose field went away, each with the path it was at and, for one an
    * option switch left out, the option it was entered under. None is in the data, and each returns to it when a field
    * whose type, `const` and `enum` take it shows at its path again, under that option, holding no value a person

@@ -55,6 +55,8 @@ import type { ContainerKeyMove, KeyMove } from './keyMove.ts';
 import { moveOfItems } from './keyMove.ts';
 import type { UiStateReader } from './uiState.ts';
 import { asFieldValue, fieldStateOf, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
+import type { Origins, RecordedOrigin } from './valueOrigins.ts';
+import { alongOrigins } from './valueOrigins.ts';
 
 /** The data the form fills `data` with on its first render, with the schema utilities and uiSchema `tree` is built
  * with, under the options `fieldState` says its fields show
@@ -68,20 +70,13 @@ export type FirstRenderFill<T, S extends StrictRJSFSchema, F extends FormContext
 /** Where a value in the data came from: a person `'entered'` it, the defaults `'filled'` it in, or a seed held it, which
  * says nothing of which of the two it was
  */
-export type ValueOrigin = 'entered' | 'filled' | 'seeded';
-
-/** The paths of the values a person entered and of those a seed held, in the data a tree is built for. A value at
- * neither is one the defaults filled in
- */
-export interface DataOrigins {
-  entered: ReadonlySet<FieldPath>;
-  seeded: ReadonlySet<FieldPath>;
-}
+export type ValueOrigin = RecordedOrigin | 'filled';
 
 /** Where the values of the data a tree was built for came from, and the paths the fill has written another value at
  * since, in the data being sanitized: what is there now is the fill's, whatever the value before it was
  */
-export interface DiffedOrigins extends DataOrigins {
+export interface DiffedOrigins {
+  recorded: Origins;
   refilled: ReadonlySet<FieldPath>;
 }
 
@@ -123,11 +118,10 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
    * one of a JSON type its field under the new option cannot hold goes, whether or not the field's constraints differ
    */
   isBelowSwitch?: boolean;
-  /** The path, in the data the previous tree is built for, of each value a person entered and of each array or object
-   * holding one, and the same for each value a seed held
+  /** The origin, by its path in the data the previous tree is built for, of each value a person entered or a seed held
+   * and of each array or object holding one, see `alongOrigins()`
    */
-  enteredAlong: ReadonlySet<FieldPath>;
-  seededAlong: ReadonlySet<FieldPath>;
+  originAlong: Origins;
   /** The paths, in the data being sanitized, the fill wrote another value at than the previous data held there */
   refilled: ReadonlySet<FieldPath>;
   /** The data the previous tree is built for */
@@ -735,11 +729,7 @@ function originOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (oldPath === undefined) {
     return 'entered';
   }
-  const at = fieldPathFromList(oldPath);
-  if (ctx.enteredAlong.has(at)) {
-    return 'entered';
-  }
-  return ctx.seededAlong.has(at) ? 'seeded' : 'filled';
+  return ctx.originAlong.get(fieldPathFromList(oldPath)) ?? 'filled';
 }
 
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -1242,8 +1232,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       editedPath: edit?.path,
       newKeyOf: edit?.newKeyOf,
       switchedFrom: edit?.switchedFrom,
-      enteredAlong: alongOf(origins.entered),
-      seededAlong: alongOf(origins.seeded),
+      originAlong: alongOrigins(origins.recorded),
       refilled: origins.refilled,
       oldData: previous.formData,
       oldTree: previous,

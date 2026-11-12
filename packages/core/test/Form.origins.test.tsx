@@ -262,3 +262,22 @@ describe('where a value came from, as a schema, a branch or a write changes the 
     });
   });
 });
+
+describe('an array holding an item the user cleared', () => {
+  it('is theirs, so it does not take a new default whole', async () => {
+    const schemaWith = (fallback: (string | null)[]): RJSFSchema => ({
+      type: 'object',
+      properties: { list: { type: 'array', default: fallback, items: { type: ['string', 'null'] } } },
+    });
+    const ref = createFormRef();
+    const form = (schema: RJSFSchema) => <Form schema={schema} validator={validator} ref={ref} />;
+    const { container, rerender } = render(form(schemaWith([null, 'b'])));
+    const first = elementOf(container, '#root_list_0', HTMLInputElement);
+    await user.type(first, 'x');
+    await user.clear(first);
+
+    rerender(form(schemaWith(['c'])));
+
+    expect(handleOf(ref).getFormData()).toEqual({ list: [null, 'b'] });
+  });
+});
