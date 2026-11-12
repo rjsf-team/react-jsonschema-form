@@ -259,6 +259,7 @@ export {
   getItemSchema,
   getPrefixLength,
   getValidationTarget,
+  namesEveryType,
 } from './schema/index.ts';
 /** @public The validator-based API that `createSchemaUtils()` binds, which consumers call directly with a validator */
 export {
