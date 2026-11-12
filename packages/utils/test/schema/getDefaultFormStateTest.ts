@@ -2730,6 +2730,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           o: { b: 2 },
         });
       });
+      it("defaults a oneOf select to the constant matching its own null default over its parent's (#5817)", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { o: { a: 1 } },
+          properties: { o: { default: null, oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }, { const: null }] } },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({ o: null });
+      });
       it('keeps its own default when constants are never defaults', () => {
         const schema: RJSFSchema = {
           type: 'object',

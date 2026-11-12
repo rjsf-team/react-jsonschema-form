@@ -8,7 +8,9 @@ import {
   findSelectedOptionInXxxOf,
   getDefaultFormState,
   getDisplayLabel,
+  constrainsAlike,
   getClosestMatchingOption,
+  getFilledDefault,
   getFirstMatchingOption,
   getFromSchema,
   getUiRequiredErrorSchema,
@@ -144,6 +146,19 @@ class SchemaUtils<
     return canExpand<T, S, F>(this.context, schema, uiSchema, formData);
   }
 
+  /** Says whether `newSchema` constrains a field as `oldSchema` did, each `default` read as the one the defaults fill
+   * the field with under the `context`'s `defaultFormStateBehavior`, see `constrainsAlike()`
+   *
+   * @param oldSchema - The field's schema before the change
+   * @param newSchema - The field's schema after the change
+   * @param oldInheritedDefault - The default the field holding `oldSchema` was filled with for it
+   * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
+   * @returns - Whether both schemas constrain the field alike
+   */
+  constrainsAlike(oldSchema: S, newSchema: S, oldInheritedDefault: unknown, newInheritedDefault: unknown): boolean {
+    return constrainsAlike<S, F>(this.context, oldSchema, newSchema, oldInheritedDefault, newInheritedDefault);
+  }
+
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
    * field is in the `required` list for its parent and if so, it is marked as required on return. At each key of the
@@ -213,6 +228,18 @@ class SchemaUtils<
       uiSchemaDefinitions,
       fieldState,
     });
+  }
+
+  /** Returns the `default` the defaults fill the field `schema` describes with, given the one the field holding it was
+   * filled with for it, under the `context`'s `defaultFormStateBehavior`, see `getFilledDefault()`
+   *
+   * @param schema - The field's schema, already retrieved
+   * @param inheritedDefault - The default the field holding this one was filled with for it, if any
+   * @param isProperty - Whether the field is a property of an object, rather than the root or an array item
+   * @returns - The default the field is filled with, or `undefined` where there is none
+   */
+  getFilledDefault(schema: S, inheritedDefault: unknown, isProperty: boolean): unknown {
+    return getFilledDefault<S, F>(this.context, schema, inheritedDefault, isProperty);
   }
 
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`

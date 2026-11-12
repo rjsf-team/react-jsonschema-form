@@ -243,18 +243,20 @@ Tests that expect such a throw need to catch the timer's error themselves; this 
 
 - callback: () => void - The consumer's callback to call
 
-### constrainsAlike&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### constrainsAlike&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Says whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as `oldSchema`, the `default` the schema holding a field declares for it standing in where the field declares none, a `null` one counting, as it does for the defaults.
+Says whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as `oldSchema`, each `default` read as the one the defaults fill the field, a property, with under the `context`, see [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype).
+A form's components ask `registry.schemaUtils.constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault)`, which passes the form's own `context`.
 A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the schema, so it is read as no type.
 These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across a schema change or gives way to the new schema's defaults, as `sanitizeDataForNewSchema()` and an `anyOf`/`oneOf` switch decide it.
 
 #### Parameters
 
+- context: SchemaContext&lt;S, F> - The `SchemaContext` whose `defaultFormStateBehavior` says which default fills the field
 - oldSchema: S - The field's schema before the change
 - newSchema: S - The field's schema after the change
-- oldInheritedDefault: unknown - The default the schema holding `oldSchema` declares for it
-- newInheritedDefault: unknown - The default the schema holding `newSchema` declares for it
+- oldInheritedDefault: unknown - The default the field holding `oldSchema` was filled with for it
+- newInheritedDefault: unknown - The default the field holding `newSchema` is filled with for it
 
 #### Returns
 
@@ -1198,6 +1200,25 @@ Gets the type of the field `SchemaField` renders a schema with its `ui:widget` b
 #### Returns
 
 - string | undefined: The type of the field that renders the widget
+
+### getFilledDefault&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns the `default` the defaults fill the field `schema` describes with, given the one the field holding it was filled with for it, as `getDefaultFormState()` reads the two.
+The field's own `default`, a `null` one included, wins over the inherited one, unless the `context`'s `nestedDefaultsPrecedence` is `'ancestorWins'` and the field's type can hold the inherited one.
+Two object defaults are merged instead, the winner's keys over the other's, except for a select over object or array constants, which holds one of them whole.
+Under `emptyObjectFields: 'skipDefaults'` the defaults fill no property, so a property is filled with none, while the root and an array item keep theirs.
+A form's components ask `registry.schemaUtils.getFilledDefault(schema, inheritedDefault, isProperty)`, which passes the form's own `context`.
+
+#### Parameters
+
+- context: SchemaContext&lt;S, F> - The `SchemaContext` whose `defaultFormStateBehavior` says which of the two defaults wins, and whether a property is filled at all
+- schema: S - The field's schema, already retrieved
+- inheritedDefault: unknown - The default the field holding this one was filled with for it, if any
+- isProperty: boolean - Whether the field is a property of an object, rather than the root or an array item
+
+#### Returns
+
+- unknown: The default the field is filled with, or `undefined` where there is none
 
 ### getFreePropertyNames&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -3759,7 +3780,7 @@ A property cleared this way, by the new `const`, its `enum` or a `readOnly` `def
 ### createSchemaUtils&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Creates a `SchemaUtilsType` interface that is based around the given `context` and `rootSchema` parameters.
-The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs, among them `allowsAdditionalProperties(schema)` and `canExpand(schema, uiSchema, formData)`.
+The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs, among them `allowsAdditionalProperties(schema)`, `canExpand(schema, uiSchema, formData)`, `constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault)` and `getFilledDefault(schema, inheritedDefault, isProperty)`.
 The `rootSchema` is parsed once per object and treated as immutable: a change made to it in place is not seen, even by a new `createSchemaUtils()`, so pass a new object to change it.
 
 #### Parameters

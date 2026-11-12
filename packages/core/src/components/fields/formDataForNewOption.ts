@@ -9,7 +9,6 @@ import type {
   UiSchemaDefinitions,
 } from '@rjsf/utils';
 import {
-  constrainsAlike,
   CONST_KEY,
   deepEquals,
   DEFAULT_KEY,
@@ -124,7 +123,7 @@ function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType
   return (
     !isSchemaObject<S>(oldProperty) ||
     !isSchemaObject<S>(newProperty) ||
-    constrainsAlike<S>(
+    schemaUtils.constrainsAlike(
       schemaUtils.retrieveSchema(oldProperty),
       schemaUtils.retrieveSchema(newProperty),
       optionDefaultFor<S>(oldOption, key),

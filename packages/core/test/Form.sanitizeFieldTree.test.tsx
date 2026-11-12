@@ -1,5 +1,5 @@
 import { createRef, useState } from 'react';
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { DefaultFormStateBehavior, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { buttonId, createSchemaUtils, getByPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -2140,6 +2140,7 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     data: unknown[];
     expected: unknown;
     formExpected?: unknown;
+    behavior?: DefaultFormStateBehavior;
   }>([
     {
       name: 'keeps the items at a position that now declares nothing',
@@ -2552,17 +2553,30 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: [{ a: 1 }],
       expected: [{ a: 2 }],
     },
-  ])('$name', ({ from, to, data, expected, formExpected = expected }) => {
+    // The defaults still fill an empty row under `skipDefaults`, so an item's default is still its own
+    {
+      name: "swaps the old default of an item for the new one under emptyObjectFields: 'skipDefaults'",
+      from: { type: 'array', items: { type: 'string', default: 'x' } },
+      to: { type: 'array', items: { type: 'string', default: 'y' } },
+      data: ['x', 'q'],
+      expected: ['y', 'q'],
+      behavior: { emptyObjectFields: 'skipDefaults' },
+    },
+  ])('$name', ({ from, to, data, expected, formExpected = expected, behavior }) => {
     const wrap = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
     const ref = createRef<FormRef<{ list?: unknown }>>();
-    const props = { validator, initialFormData: { list: data } };
+    const props = { validator, initialFormData: { list: data }, defaultFormStateBehavior: behavior };
     const { rerender } = render(<Form ref={ref} schema={wrap(from)} {...props} />);
 
     rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
 
     const formData = handleOf(ref).getFormData();
     expect(Object.hasOwn(formData, 'list') ? formData.list : ABSENT).toEqual(formExpected);
-    const sanitized = createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, from, data);
+    const sanitized = createSchemaUtils({ validator, defaultFormStateBehavior: behavior }, to).sanitizeDataForNewSchema(
+      to,
+      from,
+      data,
+    );
     expect(sanitized === undefined ? ABSENT : sanitized).toEqual(expected);
   });
   // A property under a type list is sanitized through the object holding it, as the array table's items are through the
@@ -2573,7 +2587,7 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     to: RJSFSchema;
     data: unknown;
     expected: unknown;
-    formExpected?: unknown;
+    behavior?: DefaultFormStateBehavior;
   }>([
     ...TYPE_LISTS_NAMING_ARRAY.map((type) => ({
       name: `sanitizes an array property under ${JSON.stringify(type)} as an array`,
@@ -2658,32 +2672,92 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
         expected,
       };
     }),
+    // Under `ancestorWins` the parent's default fills a property that declares one of its own, so that is the one held
+    ...['q', null].map((own) => {
+      const withParent = (parent: string): RJSFSchema => ({
+        type: 'object',
+        default: { v: parent },
+        properties: { v: { type: ['string', 'null'], default: own }, w: { type: 'string' } },
+      });
+      return {
+        name: `swaps a property holding its parent's old default over its own ${JSON.stringify(own)} under ancestorWins (#5817)`,
+        from: withParent('x'),
+        to: withParent('z'),
+        data: { v: 'x', w: 'k' },
+        expected: { v: 'z', w: 'k' },
+        behavior: { nestedDefaultsPrecedence: 'ancestorWins' } satisfies DefaultFormStateBehavior,
+      };
+    }),
+    // A default reaches every level below the one declaring it, as the defaults hand it down
+    ...[
+      {
+        where: 'on an ancestor, through an object declaring none',
+        withDefault: (b: string): RJSFSchema => ({
+          type: 'object',
+          default: { a: { b } },
+          properties: {
+            a: { type: 'object', properties: { b: { type: 'string' }, d: { type: 'number' } } },
+          },
+        }),
+      },
+      {
+        where: 'on its parent',
+        withDefault: (b: string): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            a: { type: 'object', default: { b }, properties: { b: { type: 'string' }, d: { type: 'number' } } },
+          },
+        }),
+      },
+    ].map(({ where, withDefault }) => ({
+      name: `swaps a property holding the old default declared ${where} for the new one (#5818)`,
+      from: withDefault('x'),
+      to: withDefault('y'),
+      data: { a: { b: 'x', d: 1 } },
+      expected: { a: { b: 'y', d: 1 } },
+    })),
+    // Under `skipDefaults` the defaults fill no property, so a value equal to its default is the user's
     {
-      name: "differs on an own null default giving way to its parent's: Form swaps it, utils keeps it (#5818)",
+      name: "keeps a property holding its old default under emptyObjectFields: 'skipDefaults'",
+      from: { type: 'string', default: 'x' },
+      to: { type: 'string', default: 'y' },
+      data: 'x',
+      expected: 'x',
+      behavior: { emptyObjectFields: 'skipDefaults' },
+    },
+    {
+      name: "keeps a property holding its parent's old default under emptyObjectFields: 'skipDefaults'",
+      from: { type: 'object', default: { v: 'x' }, properties: { v: { type: 'string' } } },
+      to: { type: 'object', default: { v: 'y' }, properties: { v: { type: 'string' } } },
+      data: { v: 'x' },
+      expected: { v: 'x' },
+      behavior: { emptyObjectFields: 'skipDefaults' },
+    },
+    {
+      name: "swaps an own null default giving way to its parent's for the parent's (#5818)",
       from: { type: 'object', properties: { v: { type: ['string', 'null'], default: null } } },
       to: { type: 'object', properties: { v: { type: ['string', 'null'] } }, default: { v: 'z' } },
       data: { v: null },
-      expected: { v: null },
-      formExpected: { v: 'z' },
+      expected: { v: 'z' },
     },
     {
-      name: "differs on a parent's default giving way to an own null one: Form swaps it, utils keeps it (#5818)",
+      name: "swaps a parent's default giving way to an own null one for the null (#5818)",
       from: { type: 'object', properties: { v: { type: ['string', 'null'] } }, default: { v: 'x' } },
       to: { type: 'object', properties: { v: { type: ['string', 'null'], default: null } } },
       data: { v: 'x' },
-      expected: { v: 'x' },
-      formExpected: { v: null },
+      expected: { v: null },
     },
-  ])('$name', ({ from, to, data, expected, formExpected = expected }) => {
+  ])('$name', ({ from, to, data, expected, behavior }) => {
     const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
     const ref = createRef<FormRef<{ value?: unknown }>>();
-    const props = { validator, initialFormData: { value: data } };
+    const props = { validator, initialFormData: { value: data }, defaultFormStateBehavior: behavior };
     const { rerender } = render(<Form ref={ref} schema={wrap(from)} {...props} />);
 
     rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
 
-    expect(handleOf(ref).getFormData()).toEqual({ value: formExpected });
-    const sanitized = createSchemaUtils({ validator }, wrap(to)).sanitizeDataForNewSchema(wrap(to), wrap(from), {
+    expect(handleOf(ref).getFormData()).toEqual({ value: expected });
+    const utils = createSchemaUtils({ validator, defaultFormStateBehavior: behavior }, wrap(to));
+    const sanitized = utils.sanitizeDataForNewSchema(wrap(to), wrap(from), {
       value: data,
     });
     expect(sanitized).toEqual({ value: expected });
@@ -2704,5 +2778,35 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
 
     expect(handleOf(ref).getFormData()).toStrictEqual(data);
     expect(createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, from, data)).toStrictEqual(data);
+  });
+  it("gives way a clear of a property holding its own null default when its parent's default changes under ancestorWins (#5817)", () => {
+    const schemaWith = (parentDefault: string): RJSFSchema => ({
+      type: 'object',
+      default: { v: parentDefault },
+      properties: { v: { type: ['string', 'null'], default: null }, w: { type: 'string' } },
+    });
+    const from = schemaWith('x');
+    const to = schemaWith('z');
+    const data = { v: undefined, w: 'k' };
+    const defaultFormStateBehavior: DefaultFormStateBehavior = { nestedDefaultsPrecedence: 'ancestorWins' };
+    const props = { validator, initialFormData: data, defaultFormStateBehavior };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} {...props} />);
+
+    rerender(<Form ref={ref} schema={to} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toStrictEqual({ v: 'z', w: 'k' });
+    const utils = createSchemaUtils({ validator, defaultFormStateBehavior }, to);
+    expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual({ w: 'k' });
+  });
+  // The defaults still fill the root under `skipDefaults`, so its default is still its own
+  it("swaps a root holding its old default for the new one under emptyObjectFields: 'skipDefaults'", () => {
+    const ref = createRef<FormRef<string>>();
+    const props = { validator, defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' } as const };
+    const { rerender } = render(<Form ref={ref} schema={{ type: 'string', default: 'x' }} {...props} />);
+
+    rerender(<Form ref={ref} schema={{ type: 'string', default: 'y' }} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toBe('y');
   });
 });

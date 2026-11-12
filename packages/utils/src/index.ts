@@ -252,7 +252,6 @@ export { RESERVED_UI_OPTION_NAMES } from './globalUiOptionsKeys.ts';
 export type { SchemaMap } from './parser/schemaParser.ts';
 export { getValidationSchemas } from './parser/schemaParser.ts';
 export {
-  constrainsAlike,
   constrainsValue,
   expandRefCycle,
   getAdditionalPropertyType,
@@ -264,11 +263,13 @@ export {
 } from './schema/index.ts';
 /** @public The validator-based API that `createSchemaUtils()` binds, which consumers call directly with a validator */
 export {
+  constrainsAlike,
   findFieldInSchema,
   findSelectedOptionInXxxOf,
   getClosestMatchingOption,
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   getDisplayLabel,
+  getFilledDefault,
   getFirstMatchingOption,
   getFromSchema,
   getUiRequiredErrorSchema,

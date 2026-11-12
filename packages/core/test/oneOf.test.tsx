@@ -513,6 +513,30 @@ describe('oneOf', () => {
     expect(Object.hasOwn(onChange.mock.lastCall![0].formData, 'value')).toBe(true);
   });
 
+  it("should fill a clear of a property holding its own null default with the new option's default for it under ancestorWins (#5817)", async () => {
+    const optionFor = (name: string): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      default: { value: name },
+      properties: {
+        kind: { type: 'string', const: name, default: name },
+        value: { type: ['string', 'null'], default: null },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a'), optionFor('b')] },
+      defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' },
+    });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_value')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', value: 'b' } }),
+      'root__oneof_select',
+    );
+  });
+
   describe('keeps a value the new option declares but the fill would not write', () => {
     // What an option declares and what `computeDefaults()` acts on are not the same set, and the deletion is only
     // safe where they agree. `sanitizeDataForNewSchema()` has already put the right value in each of these, so

@@ -23,6 +23,7 @@ import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { ownValue } from './getDefaultFormState.ts';
+import getFilledDefault from './getFilledDefault.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, { ownRefResolves } from './retrieveSchema.ts';
 
@@ -175,20 +176,21 @@ function itemConstReplacement<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as
- * `oldSchema`, a `default` the schema holding it declares for it standing in where it declares none, a `null` one
- * counting, as it does for the defaults.
+ * `oldSchema`, each `default` read as the one the defaults fill the field, a property, with, see `getFilledDefault()`.
  * A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the schema, so it is read as no
  * type. These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across
  * a schema change, or gives way to the new schema's defaults, as `sanitizeDataForNewSchema()` and an `anyOf`/`oneOf`
  * switch decide it
  *
+ * @param context - The `SchemaContext` whose `defaultFormStateBehavior` says which default fills the field
  * @param oldSchema - The field's schema before the change
  * @param newSchema - The field's schema after the change
- * @param oldInheritedDefault - The default the schema holding `oldSchema` declares for it
- * @param newInheritedDefault - The default the schema holding `newSchema` declares for it
+ * @param oldInheritedDefault - The default the field holding `oldSchema` was filled with for it
+ * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
  * @returns - Whether both schemas constrain the field alike
  */
-export function constrainsAlike<S extends StrictRJSFSchema = RJSFSchema>(
+export function constrainsAlike<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
   oldSchema: S,
   newSchema: S,
   oldInheritedDefault: unknown,
@@ -200,8 +202,8 @@ export function constrainsAlike<S extends StrictRJSFSchema = RJSFSchema>(
     deepEquals(oldSchema.const, newSchema.const) &&
     oldSchema.maxItems === newSchema.maxItems &&
     deepEquals(
-      getByPath(oldSchema, DEFAULT_KEY, oldInheritedDefault),
-      getByPath(newSchema, DEFAULT_KEY, newInheritedDefault),
+      getFilledDefault<S, F>(context, oldSchema, oldInheritedDefault, true),
+      getFilledDefault<S, F>(context, newSchema, newInheritedDefault, true),
     ) &&
     deepEquals(enumValuesForSchema<S>(oldSchema), enumValuesForSchema<S>(newSchema))
   );
@@ -246,23 +248,24 @@ function emptyObjectFor<S extends StrictRJSFSchema>(schema: S, formValue: unknow
   return formValue !== undefined && schema[PROPERTIES_KEY] ? {} : undefined;
 }
 
-/** What a property's or an item's `formValue` takes from the new `default` that differs from it, as `Form` judges a
- * field whose constraints changed: the new `default` where the value is the old one, or where `isNewClear`, a newly
- * entered property's clear, and, for a scalar or a select property, `undefined` where a `readOnly` new `default` stands
- * in for a `const`. `Form` clears no array or object it walks as a container for one. `NO_VALUE` keeps the value
+/** What a property's or an item's `formValue` takes from `newDefault`, the default the new schema fills it with, where
+ * that differs from it, as `Form` judges a field whose constraints changed: the new default where the value is
+ * `oldDefault`, the one the old schema filled it with, or where `isNewClear`, a newly entered property's clear, and,
+ * for a scalar or a select property, `undefined` where a `readOnly` new `default` stands in for a `const`. `Form` clears
+ * no array or object it walks as a container for one. `NO_VALUE` keeps the value
  */
 function defaultReplacement<S extends StrictRJSFSchema>(
   newSchema: S,
-  oldSchema: S,
+  newDefault: unknown,
+  oldDefault: unknown,
   formValue: unknown,
   isNewClear: boolean,
   isScalar: boolean,
 ): unknown {
-  const newDefault = getByPath(newSchema, DEFAULT_KEY, NO_VALUE);
-  if (newDefault === NO_VALUE || deepEquals(newDefault, formValue)) {
+  if (newDefault === undefined || deepEquals(newDefault, formValue)) {
     return NO_VALUE;
   }
-  if (isNewClear || deepEquals(getByPath(oldSchema, DEFAULT_KEY, NO_VALUE), formValue)) {
+  if (isNewClear || (oldDefault !== undefined && deepEquals(oldDefault, formValue))) {
     return ownValue(newDefault);
   }
   return isScalar && newSchema.readOnly === true ? undefined : NO_VALUE;
@@ -420,6 +423,21 @@ export default function sanitizeDataForNewSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: unknown = {}): T {
+  return sanitizeWithDefaults<T, S, F>(context, rootSchema, newSchema, oldSchema, data, undefined, undefined);
+}
+
+/** `sanitizeDataForNewSchema()` for a value whose field the field holding it filled with `oldInheritedDefault` before
+ * the change and `newInheritedDefault` after it, see `getFilledDefault()`
+ */
+function sanitizeWithDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  newSchema: S | undefined,
+  oldSchema: S | undefined,
+  data: unknown,
+  oldInheritedDefault: unknown,
+  newInheritedDefault: unknown,
+): T {
   // Data equal to the new `const` is the one value the schema allows, so sanitizing it could only change it into one the
   // `const` rejects. A scalar is left to the rules below
   if (newSchema?.const !== undefined && isContainerValue(data) && deepEquals(newSchema.const, data)) {
@@ -453,7 +471,12 @@ export default function sanitizeDataForNewSchema<
     // The keys the data holds as `undefined` that both schemas constrain alike. Any other key left `undefined` is removed,
     // so the new defaults reach it as a top-level clear's do in `formDataForNewOption()`
     const keptClears = new Set<string>();
+    // What each side fills the object with, whose keys are the defaults each property inherits
+    const oldObjectDefault = oldSchema && getFilledDefault<S, F>(context, oldSchema, oldInheritedDefault, false);
+    const newObjectDefault = getFilledDefault<S, F>(context, newSchema, newInheritedDefault, false);
     keys.forEach((key) => {
+      const oldInherited = getByPath(oldObjectDefault, key);
+      const newInherited = getByPath(newObjectDefault, key);
       const formValue = getByPath(data, key);
       const isNewProperty = !hasByPath(oldSchema, [PROPERTIES_KEY, key]);
       const oldRawKeyedSchema = getPropertySchema<S>(oldSchema, key);
@@ -483,12 +506,7 @@ export default function sanitizeDataForNewSchema<
         if (
           formValue === undefined &&
           hasByPath(data, key) &&
-          constrainsAlike<S>(
-            oldKeyedSchema,
-            newKeyedSchema,
-            getByPath(oldSchema?.[DEFAULT_KEY], key),
-            getByPath(newSchema[DEFAULT_KEY], key),
-          )
+          constrainsAlike<S, F>(context, oldKeyedSchema, newKeyedSchema, oldInherited, newInherited)
         ) {
           keptClears.add(key);
         }
@@ -525,7 +543,14 @@ export default function sanitizeDataForNewSchema<
           const defaultValue =
             formValue === undefined || (isObjectValue && getSchemaType<S>(newKeyedSchema) === 'object')
               ? NO_VALUE
-              : defaultReplacement<S>(newKeyedSchema, oldKeyedSchema, formValue, false, false);
+              : defaultReplacement<S>(
+                  newKeyedSchema,
+                  getFilledDefault<S, F>(context, newKeyedSchema, newInherited, true),
+                  getFilledDefault<S, F>(context, oldKeyedSchema, oldInherited, true),
+                  formValue,
+                  false,
+                  false,
+                );
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. Data holding no object
           // has no properties to sanitize. Descending into it would sanitize the absent properties of every level a
           // recursive `$ref` reaches, without end
@@ -542,7 +567,15 @@ export default function sanitizeDataForNewSchema<
             );
           } else {
             sanitizedData = isPlainObject(formValue)
-              ? sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newKeyedSchema, oldKeyedSchema, formValue)
+              ? sanitizeWithDefaults<T, S, F>(
+                  context,
+                  rootSchema,
+                  newKeyedSchema,
+                  oldKeyedSchema,
+                  formValue,
+                  oldInherited,
+                  newInherited,
+                )
               : emptyObjectFor<S>(newKeyedSchema, formValue);
           }
           // What the new `const` rejects, the empty object standing in for data of another type or the data itself
@@ -563,7 +596,14 @@ export default function sanitizeDataForNewSchema<
           // value to be properly selected
           // A clear the same constraints held stays one, even where the key is new to the new schema's `properties`
           const isNewClear = isNewProperty && formValue === undefined && !keptClears.has(key);
-          const replacement = defaultReplacement<S>(newKeyedSchema, oldKeyedSchema, formValue, isNewClear, true);
+          const replacement = defaultReplacement<S>(
+            newKeyedSchema,
+            getFilledDefault<S, F>(context, newKeyedSchema, newInherited, true),
+            getFilledDefault<S, F>(context, oldKeyedSchema, oldInherited, true),
+            formValue,
+            isNewClear,
+            true,
+          );
           if (replacement !== NO_VALUE) {
             replacements[key] = replacement;
           }
@@ -657,9 +697,17 @@ export default function sanitizeDataForNewSchema<
           const oldItem = oldItemSchemaOf(oldRaw, newRaw, newItem, null);
           // An untyped old schema's item types mark nothing as stale, so they count as the new one's
           const oldConstraints = oldIsUntyped ? { ...oldItem, type: newItem.type } : oldItem;
-          cleared =
-            !constrainsAlike<S>(oldConstraints, newItem, undefined, undefined) &&
-            !context.validator.isValid(newItem, null, rootSchema);
+          // `constrainsAlike()` reads a property's defaults, so an item's own `default` is compared apart from it
+          const isAlike =
+            deepEquals(oldConstraints.default, newItem.default) &&
+            constrainsAlike<S, F>(
+              context,
+              { ...oldConstraints, default: undefined },
+              { ...newItem, default: undefined },
+              undefined,
+              undefined,
+            );
+          cleared = !isAlike && !context.validator.isValid(newItem, null, rootSchema);
         }
       }
       clearedRows.set(index, cleared);
@@ -740,7 +788,14 @@ export default function sanitizeDataForNewSchema<
           : schemaType === 'object';
       if (newItemSchema.default !== undefined && !(isPlainObject(aValue) && !isWholeSelect && isFilledByKey)) {
         oldItemSchema = oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
-        const defaultValue = defaultReplacement<S>(newItemSchema, oldItemSchema, aValue, false, false);
+        const defaultValue = defaultReplacement<S>(
+          newItemSchema,
+          newItemSchema.default,
+          oldItemSchema.default,
+          aValue,
+          false,
+          false,
+        );
         if (defaultValue !== NO_VALUE) {
           return defaultValue;
         }
@@ -799,7 +854,8 @@ export default function sanitizeDataForNewSchema<
         return itemValue;
       }
       const oldConstraints = oldItemSchema ?? oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
-      const isAlike = constrainsAlike<S>(
+      const isAlike = constrainsAlike<S, F>(
+        context,
         { ...oldConstraints, type: oldIsUntyped ? newItemSchema.type : oldConstraints.type, default: undefined },
         { ...newItemSchema, default: undefined },
         undefined,

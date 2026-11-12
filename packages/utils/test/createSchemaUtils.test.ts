@@ -55,6 +55,18 @@ describe('createSchemaUtils()', () => {
     });
   });
 
+  it("constrainsAlike() and getFilledDefault() read the defaults under the context's precedence", () => {
+    const ancestorWins = createSchemaUtils(
+      { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' } },
+      rootSchema,
+    );
+    const field: RJSFSchema = { type: 'string', default: 'own' };
+    expect(schemaUtils.getFilledDefault(field, 'inherited', true)).toBe('own');
+    expect(ancestorWins.getFilledDefault(field, 'inherited', true)).toBe('inherited');
+    expect(schemaUtils.constrainsAlike(field, field, 'x', 'z')).toBe(true);
+    expect(ancestorWins.constrainsAlike(field, field, 'x', 'z')).toBe(false);
+  });
+
   it('getUiRequiredErrorSchema()', () => {
     const requiredSchema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
     const requiredUtils = createSchemaUtils({ validator: testValidator }, requiredSchema);

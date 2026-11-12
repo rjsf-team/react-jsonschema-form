@@ -3,6 +3,7 @@ import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import getDefaultFormState from './getDefaultFormState.ts';
 import getDisplayLabel from './getDisplayLabel.ts';
+import getFilledDefault from './getFilledDefault.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import getFromSchema from './getFromSchema.ts';
 import getUiRequiredErrorSchema from './getUiRequiredErrorSchema.ts';
@@ -30,6 +31,7 @@ export {
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   getDisplayLabel,
   getClosestMatchingOption,
+  getFilledDefault,
   getFirstMatchingOption,
   getFromSchema,
   getItemSchema,

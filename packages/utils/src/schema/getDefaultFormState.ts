@@ -1284,7 +1284,8 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const ancestorPicks =
     preferParentDefaults &&
     options.some((option, index) => optionTakesValueOf<S, F>(context, view, key, index, option, defaults));
-  const inheritedDefault = ancestorPicks ? defaults : (schema.default ?? defaults);
+  // A `default: null` of its own is a default, which wins over the inherited one as it does for any other field
+  const inheritedDefault = ancestorPicks || schema.default === undefined ? defaults : schema.default;
   const valueToMatch = rawFormData ?? (picksWholeOption || ancestorPicks ? inheritedDefault : schema.default);
   // A constant option equal to the value is the one it picked, whatever the validator makes of the others
   const equalOptionIndex = picksWholeOption
