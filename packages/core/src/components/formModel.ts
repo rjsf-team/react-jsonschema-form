@@ -53,6 +53,7 @@ import {
 import type { RJSFFormStatus } from './IChangeEvent.ts';
 import { keyMoveOf, moveFateOf } from './keyMove.ts';
 import type { AnnouncedMove, MoveOutcome } from './keyMove.ts';
+import { fieldFillAt } from './sanitizeFieldTree.ts';
 import { asFieldValue, fieldStateOf, fieldsRendered, withSwitchUndone } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
@@ -1018,6 +1019,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     /** The latest value at `path`: an edit made since the form last rendered included */
     readField: <D>(path: FieldPath) => getAt<D>(current().formData, fieldPathToList(path)),
     readRenderedField: <D>(path: FieldPath) => getAt<D>(rendered.formData, fieldPathToList(path)),
+    readFieldFill: (path: FieldPath) => fieldFillAt(current(), uiState, fieldPathToList(path)),
     uiState,
     getSnapshot: () => shown,
     subscribe: (listener: () => void) => {

@@ -218,6 +218,30 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
   readonly widgets?: Readonly<Record<string, unknown>>;
 }
 
+/** Where a property sits, which decides whether the defaults write its default under `emptyObjectFields`, see
+ * `getFilledDefault()`
+ */
+export interface PropertyPlacement {
+  /** Whether the object holding the property lists it in its `required` */
+  isRequired: boolean;
+  /** Whether that object is required itself, undefined for the root or an object the defaults reach with no
+   * `required` of its own
+   */
+  isParentRequired?: boolean;
+}
+
+/** What the defaults hand the field holding the data `sanitizeDataForNewSchema()` sanitizes, which they fill its
+ * properties by
+ */
+export interface FieldFill {
+  /** The default the field holding this one was filled with for it */
+  inheritedDefault?: unknown;
+  /** Whether the field is required where it sits, as the defaults hand it `required`: an array item is where its array
+   * is. Undefined for the root
+   */
+  isRequired?: boolean;
+}
+
 /** The props for the `getDefaultFormState()` schema function */
 export interface GetDefaultFormStateProps<
   T = unknown,
@@ -2659,9 +2683,18 @@ export interface SchemaUtilsType<
    * @param newSchema - The field's schema after the change
    * @param oldInheritedDefault - The default the field holding `oldSchema` was filled with for it
    * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
+   * @param [oldPlacement] - Where the field sat as a property before the change, if it is one
+   * @param [newPlacement] - Where the field sits as a property after the change, if it is one
    * @returns - Whether both schemas constrain the field alike
    */
-  constrainsAlike(oldSchema: S, newSchema: S, oldInheritedDefault: unknown, newInheritedDefault: unknown): boolean;
+  constrainsAlike(
+    oldSchema: S,
+    newSchema: S,
+    oldInheritedDefault: unknown,
+    newInheritedDefault: unknown,
+    oldPlacement?: PropertyPlacement,
+    newPlacement?: PropertyPlacement,
+  ): boolean;
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
    * field is in the `required` list for its parent and if so, it is marked as required on return. At each key of the
@@ -2730,10 +2763,10 @@ export interface SchemaUtilsType<
    *
    * @param schema - The field's schema, already retrieved
    * @param inheritedDefault - The default the field holding this one was filled with for it, if any
-   * @param isProperty - Whether the field is a property of an object, rather than the root or an array item
+   * @param [placement] - Where the field sits as a property, left out for the root or an array item
    * @returns - The default the field is filled with, or `undefined` where there is none
    */
-  getFilledDefault(schema: S, inheritedDefault: unknown, isProperty: boolean): unknown;
+  getFilledDefault(schema: S, inheritedDefault: unknown, placement?: PropertyPlacement): unknown;
   /** Determines which of the given `options` provided most closely matches the `formData`.
    * Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
    *
@@ -2848,9 +2881,11 @@ export interface SchemaUtilsType<
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+   * @param [fill] - What the defaults hand the field holding the data, for one below the root, such as the field an
+   *        `anyOf`/`oneOf` switch is made in
    * @returns - The new form data, without the fields uniquely associated with the old schema. Will return `undefined`
    *      if the new schema is not an object containing properties, or where its object or array `const` rejects the
    *      data, and a copy of that `const` where the data holds the old schema's
    */
-  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown): T;
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown, fill?: FieldFill): T;
 }

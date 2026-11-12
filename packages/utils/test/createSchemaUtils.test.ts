@@ -61,10 +61,19 @@ describe('createSchemaUtils()', () => {
       rootSchema,
     );
     const field: RJSFSchema = { type: 'string', default: 'own' };
-    expect(schemaUtils.getFilledDefault(field, 'inherited', true)).toBe('own');
-    expect(ancestorWins.getFilledDefault(field, 'inherited', true)).toBe('inherited');
+    expect(schemaUtils.getFilledDefault(field, 'inherited')).toBe('own');
+    expect(ancestorWins.getFilledDefault(field, 'inherited')).toBe('inherited');
     expect(schemaUtils.constrainsAlike(field, field, 'x', 'z')).toBe(true);
     expect(ancestorWins.constrainsAlike(field, field, 'x', 'z')).toBe(false);
+    const skipDefaults = createSchemaUtils(
+      { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' } },
+      rootSchema,
+    );
+    const placement = { isRequired: false };
+    expect(skipDefaults.getFilledDefault(field, 'inherited', placement)).toBeUndefined();
+    expect(skipDefaults.constrainsAlike(field, { ...field, default: 'other' }, 'x', 'z', placement, placement)).toBe(
+      true,
+    );
   });
 
   it('getUiRequiredErrorSchema()', () => {

@@ -217,39 +217,58 @@ function maybeAddDefaultToObject<T = unknown>(
       setOwn(acc, key, computedDefault);
     }
     // If computedDefault is an empty object {}, don't add it - let the field stay undefined
-  } else if (emptyObjectFields !== 'skipDefaults') {
-    // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
-    // the field key itself in the `requiredField` list
-    const isSelfOrParentRequired = isParentRequired ?? requiredFields.includes(key);
-
-    if (isObject(computedDefault)) {
-      // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
-      if (emptyObjectFields === 'skipEmptyDefaults') {
-        if (Object.keys(computedDefault).length > 0) {
-          setOwn(acc, key, computedDefault);
-        }
-      } // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
-      // Condition 1: If computedDefault is not empty or if the key is a required field
-      // Condition 2: If the parent object is required or emptyObjectFields is not 'populateRequiredDefaults'
-      else if (
-        (Object.keys(computedDefault).length > 0 || requiredFields.includes(key)) &&
-        (isSelfOrParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
-      ) {
-        setOwn(acc, key, computedDefault);
-      }
-    } else if (
-      // Store computedDefault if it's a defined primitive (e.g., true) and satisfies certain conditions
-      // Condition 1: computedDefault is not undefined
-      // Condition 2: If emptyObjectFields is 'populateAllDefaults' or 'skipEmptyDefaults)
-      // Or if isSelfOrParentRequired is 'true' and the key is a required field
-      computedDefault !== undefined &&
-      (emptyObjectFields === 'populateAllDefaults' ||
-        emptyObjectFields === 'skipEmptyDefaults' ||
-        (isSelfOrParentRequired && requiredFields.includes(key)))
-    ) {
-      setOwn(acc, key, computedDefault);
-    }
+  } else if (
+    writesPropertyDefault(computedDefault, requiredFields.includes(key), isParentRequired, emptyObjectFields)
+  ) {
+    setOwn(acc, key, computedDefault);
   }
+}
+
+/** Whether the defaults write `computedDefault` into a property, as `emptyObjectFields` decides it for
+ * `maybeAddDefaultToObject()` where neither `includeUndefinedValues`, a `const` nor a `null` fill adds it regardless
+ *
+ * @param computedDefault - The default computed for the property
+ * @param isRequired - Whether the object holding the property lists it in its `required`
+ * @param isParentRequired - Whether that object is required itself, undefined for the root or an object the
+ *        defaults reach with no `required` of its own
+ * @param [emptyObjectFields='populateAllDefaults'] - How to treat an empty object field
+ * @returns - Whether the default is written into the property
+ */
+export function writesPropertyDefault(
+  computedDefault: unknown,
+  isRequired: boolean,
+  isParentRequired: boolean | undefined,
+  emptyObjectFields: NonNullable<DefaultFormStateBehavior['emptyObjectFields']> = 'populateAllDefaults',
+): boolean {
+  if (emptyObjectFields === 'skipDefaults') {
+    return false;
+  }
+  // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
+  // the field key itself in the `requiredField` list
+  const isSelfOrParentRequired = isParentRequired ?? isRequired;
+  if (isObject(computedDefault)) {
+    // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
+    if (emptyObjectFields === 'skipEmptyDefaults') {
+      return Object.keys(computedDefault).length > 0;
+    }
+    // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
+    // Condition 1: If computedDefault is not empty or if the key is a required field
+    // Condition 2: If the parent object is required or emptyObjectFields is not 'populateRequiredDefaults'
+    return (
+      (Object.keys(computedDefault).length > 0 || isRequired) &&
+      (isSelfOrParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
+    );
+  }
+  // Store computedDefault if it's a defined primitive (e.g., true) and satisfies certain conditions
+  // Condition 1: computedDefault is not undefined
+  // Condition 2: If emptyObjectFields is 'populateAllDefaults' or 'skipEmptyDefaults)
+  // Or if isSelfOrParentRequired is 'true' and the key is a required field
+  return (
+    computedDefault !== undefined &&
+    (emptyObjectFields === 'populateAllDefaults' ||
+      emptyObjectFields === 'skipEmptyDefaults' ||
+      (isSelfOrParentRequired && isRequired))
+  );
 }
 
 // The forwarded props are inherited rather than restated, so the two shapes cannot drift apart as options are added.
@@ -2411,8 +2430,11 @@ function optionTakesValueOf<S extends StrictRJSFSchema, F extends FormContextTyp
   return takesValueOf<S>(read, value);
 }
 
-/** Whether `schema` takes a value of the type `value` has, as its own types say them, see `typeAllows()` */
-function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
+/** Whether `schema` takes a value of the type `value` has, as its own types say them, see `typeAllows()`. It decides
+ * whether an ancestor's default can win under `nestedDefaultsPrecedence: 'ancestorWins'`, here and in
+ * `getFilledDefault()`
+ */
+export function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
   return typeAllows(getSchemaOwnTypes<S>(schema), value);
 }
 

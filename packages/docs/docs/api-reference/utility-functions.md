@@ -33,6 +33,10 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`SchemaContext`** — The settings every [validator-based utility function](#validator-based-utility-functions) resolves schemas with: the `validator`, and the optional `customMergeAllOf`, `defaultFormStateBehavior`, `additionalPropertiesWhenAbsent` and `widgets`, the form's registered widgets, as a widget registered under a built-in alias keeps a `type` list on the type it resolves to (see the `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof), [defaultFormStateBehavior](./form-props.md#defaultformstatebehavior) and [additionalPropertiesWhenAbsent](./form-props.md#additionalpropertieswhenabsent) props). Each of those functions takes it as its first parameter and passes it along whole to every schema function it calls.
 
+**`PropertyPlacement`** — Where a property sits, which decides whether the defaults write its default under `emptyObjectFields`: `isRequired`, whether its object lists it in `required`, and `isParentRequired`, whether that object is required itself, left out for the root or an object the defaults reach with no `required` of its own. [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) and `constrainsAlike()` read a field with one as a property.
+
+**`FieldFill`** — What the defaults hand the field holding the data [`sanitizeDataForNewSchema()`](#sanitizedatafornewschemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) sanitizes, which they fill its properties by: `inheritedDefault`, the default the fields above it hand it, and `isRequired`, whether it is required where it sits, an array item being required where its array is. Both are left out for the root.
+
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
 **`FormFieldState`** — What a form shows beyond its schema and data, which [`getUiRequiredErrorSchema()`](#getuirequirederrorschemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) and [`omitExtraData()`](#omitextradatat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) read to walk the fields on screen, and [`getDefaultFormState()`](#getdefaultformstatet--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) reads, through its `fieldState` prop, to compute a field's defaults from the option it shows: `selectedOption(fieldPath, options, formData, discriminator?)` returns the index of the `anyOf`/`oneOf` option the field at `fieldPath` shows among its `options`, each retrieved for `formData`, `isExpanded(fieldPath)` whether the user expanded the collapsed `$ref` cycle there, and the optional `drawsControlsBesideOptions(fieldPath, schema, uiSchema, formData)` whether the object field there draws its Optional Data Controls beside its `anyOf`/`oneOf` options, keeping its selected option off screen until Add; without it, one whose uiSchema names no `ui:field` does when [`hasOwnContentBesideOptions()`](#hasowncontentbesideoptions) says so, and the optional `fallbackType(fieldPath, schema, uiSchema, formData, depth)` the type the fallback UI's type selector is on for the field there, so the field on screen is the one for that type, or `undefined` where the fallback UI doesn't render it; `depth` counts the type selectors at the path from 1 for the outermost, since an `anyOf`/`oneOf` option offering types of its own renders one below the field's, and the optional `rendersArrayWidget(fieldPath, schema, uiSchema, formData)` whether `ArrayField` renders the field there as one widget, whose `[]` `ui:required` turns down; without it, an array with `items` does where its schema is a multiple select or a files array, or its uiSchema names a widget and no field other than `ArrayField` or `SchemaField`. `Form` passes its own option selections, cycle expansions and fallback UI types, and answers where the controls are drawn and which arrays render as one widget from the field its registry renders.
@@ -245,8 +249,8 @@ Tests that expect such a throw need to catch the timer's error themselves; this 
 
 ### constrainsAlike&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Says whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as `oldSchema`, each `default` read as the one the defaults fill the field, a property, with under the `context`, see [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype).
-A form's components ask `registry.schemaUtils.constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault)`, which passes the form's own `context`.
+Says whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as `oldSchema`, each `default` read as the one the defaults fill the field with under the `context`, as a property where a placement is given, see [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype).
+A form's components ask `registry.schemaUtils.constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault, oldPlacement, newPlacement)`, which passes the form's own `context`.
 A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the schema, so it is read as no type.
 These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across a schema change or gives way to the new schema's defaults, as `sanitizeDataForNewSchema()` and an `anyOf`/`oneOf` switch decide it.
 
@@ -257,6 +261,8 @@ These are the constraints that decide whether a field the data holds as `undefin
 - newSchema: S - The field's schema after the change
 - oldInheritedDefault: unknown - The default the field holding `oldSchema` was filled with for it
 - newInheritedDefault: unknown - The default the field holding `newSchema` is filled with for it
+- [oldPlacement]: PropertyPlacement | undefined - Where the field sat as a property before the change, if it is one
+- [newPlacement]: PropertyPlacement | undefined - Where the field sits as a property after the change, if it is one
 
 #### Returns
 
@@ -1206,15 +1212,16 @@ Gets the type of the field `SchemaField` renders a schema with its `ui:widget` b
 Returns the `default` the defaults fill the field `schema` describes with, given the one the field holding it was filled with for it, as `getDefaultFormState()` reads the two.
 The field's own `default`, a `null` one included, wins over the inherited one, unless the `context`'s `nestedDefaultsPrecedence` is `'ancestorWins'` and the field's type can hold the inherited one.
 Two object defaults are merged instead, the winner's keys over the other's, except for a select over object or array constants, which holds one of them whole.
-Under `emptyObjectFields: 'skipDefaults'` the defaults fill no property, so a property is filled with none, while the root and an array item keep theirs.
-A form's components ask `registry.schemaUtils.getFilledDefault(schema, inheritedDefault, isProperty)`, which passes the form's own `context`.
+A property is filled with it only where `emptyObjectFields` lets the defaults write it there, as its `placement` decides: none is under `'skipDefaults'`, and under `'populateRequiredDefaults'` only a required one whose object is required or is the root.
+Without a `placement` it is returned as computed: the root and an array item are always filled, and a field hands its properties the default it computes whether or not it is written itself.
+A form's components ask `registry.schemaUtils.getFilledDefault(schema, inheritedDefault, placement)`, which passes the form's own `context`.
 
 #### Parameters
 
 - context: SchemaContext&lt;S, F> - The `SchemaContext` whose `defaultFormStateBehavior` says which of the two defaults wins, and whether a property is filled at all
 - schema: S - The field's schema, already retrieved
 - inheritedDefault: unknown - The default the field holding this one was filled with for it, if any
-- isProperty: boolean - Whether the field is a property of an object, rather than the root or an array item
+- [placement]: PropertyPlacement | undefined - Where the field sits as a property, left out for the root or an array item
 
 #### Returns
 
@@ -3759,6 +3766,7 @@ An array is sanitized item by item, each item against the schemas the two sides 
 A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
 A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
 A value outside the new `enum` or constant options is replaced with the new `default` when that is an option, with the only option when there is one, or cleared; array items outside them are dropped, an `undefined` one staying a hole.
+Each property's `default` is read as the one the defaults fill it with (see [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype)), from its own, its object's and `fill`'s inherited one, and under `emptyObjectFields` only where they write it there.
 A property or an array item holding the old `default` takes the new one, an array or an object under a type list rendered as another type included, while an object rendered as one keeps its value, for the defaults to fill key by key; a `readOnly` new `default` clears only a scalar or a select's property value, and no item.
 A property cleared this way, by the new `const`, its `enum` or a `readOnly` `default`, or as an array the new schema can't hold, is removed rather than set to `undefined`, for the defaults to fill in. A property the data already holds as `undefined` keeps it where the old schema declares the same type, `const`, `enum` or constant options, `maxItems` and `default` for it, the `default` the object declares for it included, and is otherwise removed too unless a value replaces it, as a top-level clear is when `anyOf`/`oneOf` options are switched.
 `Form` does not call this to sanitize its data: it diffs the field trees before and after a change and judges only the fields whose constraints the change altered.
@@ -3770,6 +3778,7 @@ A property cleared this way, by the new `const`, its `enum` or a `readOnly` `def
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
 - [data=\{}]: unknown - The form data associated with the schema, defaulting to an empty object when undefined
+- [fill=\{}]: FieldFill - What the defaults hand the field holding the data, the same before and after the change, for one below the root, such as the field an `anyOf`/`oneOf` switch is made in
 
 #### Returns
 
@@ -3780,7 +3789,7 @@ A property cleared this way, by the new `const`, its `enum` or a `readOnly` `def
 ### createSchemaUtils&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Creates a `SchemaUtilsType` interface that is based around the given `context` and `rootSchema` parameters.
-The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs, among them `allowsAdditionalProperties(schema)`, `canExpand(schema, uiSchema, formData)`, `constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault)` and `getFilledDefault(schema, inheritedDefault, isProperty)`.
+The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs, among them `allowsAdditionalProperties(schema)`, `canExpand(schema, uiSchema, formData)`, `constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault, oldPlacement, newPlacement)` and `getFilledDefault(schema, inheritedDefault, placement)`.
 The `rootSchema` is parsed once per object and treated as immutable: a change made to it in place is not seen, even by a new `createSchemaUtils()`, so pass a new object to change it.
 
 #### Parameters

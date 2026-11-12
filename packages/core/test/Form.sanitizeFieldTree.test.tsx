@@ -2809,4 +2809,103 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
 
     expect(handleOf(ref).getFormData()).toBe('y');
   });
+  // The schema holds the same objects, so only the settings say the field is filled with another default
+  it('swaps a property holding the default the old settings filled in when only defaultFormStateBehavior changes', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      default: { v: 'x' },
+      properties: { v: { type: 'string', default: 'q' }, w: { type: 'string' } },
+    };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={schema} validator={validator} />);
+    expect(handleOf(ref).getFormData()).toEqual({ v: 'q' });
+
+    rerender(
+      <Form
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        defaultFormStateBehavior={{ nestedDefaultsPrecedence: 'ancestorWins' }}
+      />,
+    );
+
+    expect(handleOf(ref).getFormData()).toEqual({ v: 'x' });
+  });
+  // Under `populateRequiredDefaults` the defaults fill a property only where it is required and so is its object, or its
+  // object is the root, so a value equal to the default of any other is the user's
+  it.each<{ name: string; withDefault: (v: string) => RJSFSchema; data: Record<string, unknown>; expected: unknown }>([
+    {
+      name: 'keeps an optional property holding its old default',
+      withDefault: (v) => ({ type: 'object', properties: { v: { type: 'string', default: v } } }),
+      data: { v: 'x' },
+      expected: { v: 'x' },
+    },
+    {
+      name: 'swaps a required property of the root holding its old default',
+      withDefault: (v) => ({ type: 'object', required: ['v'], properties: { v: { type: 'string', default: v } } }),
+      data: { v: 'x' },
+      expected: { v: 'y' },
+    },
+    {
+      name: 'keeps a required property of an optional object holding its old default',
+      withDefault: (v) => ({
+        type: 'object',
+        required: [],
+        properties: { o: { type: 'object', required: ['v'], properties: { v: { type: 'string', default: v } } } },
+      }),
+      data: { o: { v: 'x' } },
+      expected: { o: { v: 'x' } },
+    },
+    {
+      // The defaults hand such an object no `required`, so they fill its required properties as the root's
+      name: 'swaps a required property of an object its parent lists no required for, holding its old default',
+      withDefault: (v) => ({
+        type: 'object',
+        properties: { o: { type: 'object', required: ['v'], properties: { v: { type: 'string', default: v } } } },
+      }),
+      data: { o: { v: 'x' } },
+      expected: { o: { v: 'y' } },
+    },
+    {
+      name: 'swaps a required property of a required object holding its old default',
+      withDefault: (v) => ({
+        type: 'object',
+        required: ['o'],
+        properties: { o: { type: 'object', required: ['v'], properties: { v: { type: 'string', default: v } } } },
+      }),
+      data: { o: { v: 'x' } },
+      expected: { o: { v: 'y' } },
+    },
+  ])("$name under emptyObjectFields: 'populateRequiredDefaults'", ({ withDefault, data, expected }) => {
+    const from = withDefault('x');
+    const to = withDefault('y');
+    const defaultFormStateBehavior: DefaultFormStateBehavior = { emptyObjectFields: 'populateRequiredDefaults' };
+    const props = { validator, initialFormData: data, defaultFormStateBehavior };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} {...props} />);
+
+    rerender(<Form ref={ref} schema={to} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual(expected);
+    const utils = createSchemaUtils({ validator, defaultFormStateBehavior }, to);
+    expect(utils.sanitizeDataForNewSchema(to, from, data)).toEqual(expected);
+  });
+  // The option renders as the field showing it, so the field's own default is no ancestor's the option gives way to
+  it.each<DefaultFormStateBehavior['nestedDefaultsPrecedence']>(['ancestorWins', undefined])(
+    "swaps a property holding its option's old default over the field's own under nestedDefaultsPrecedence %s",
+    (nestedDefaultsPrecedence) => {
+      const schemaWith = (optionDefault: string): RJSFSchema => ({
+        type: 'object',
+        properties: { x: { default: 'a', oneOf: [{ type: 'string', default: optionDefault }] } },
+      });
+      const ref = createRef<FormRef<{ x?: string }>>();
+      const props = { validator, defaultFormStateBehavior: { nestedDefaultsPrecedence } };
+      const { rerender } = render(<Form ref={ref} schema={schemaWith('b')} {...props} />);
+      expect(handleOf(ref).getFormData()).toEqual({ x: 'b' });
+
+      rerender(<Form ref={ref} schema={schemaWith('c')} {...props} />);
+
+      expect(handleOf(ref).getFormData()).toEqual({ x: 'c' });
+    },
+  );
 });

@@ -1,4 +1,4 @@
-import type { RJSFMarkedSchema, SchemaUtilsType, RJSFSchema } from '../../src/index.ts';
+import type { FieldFill, RJSFMarkedSchema, SchemaUtilsType, RJSFSchema } from '../../src/index.ts';
 import {
   createSchemaUtils,
   getItemSchema,
@@ -168,6 +168,41 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       // is cleared rather than left sitting in a number field
       expect(schemaUtils.sanitizeDataForNewSchema(typedSchema, freeFormSchema, { aKey: 'text' })).toEqual({});
     });
+    it("keeps a clear the field's fill makes alike, reading the default the field holding the data inherits (#5817)", () => {
+      const context = {
+        validator: testValidator,
+        defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' as const },
+      };
+      const optionWith = (a: number): RJSFSchema => ({
+        type: 'object',
+        default: { a },
+        properties: { a: { type: 'number' } },
+      });
+      const sanitize = (fill?: FieldFill) =>
+        sanitizeDataForNewSchema(context, optionWith(3), optionWith(3), optionWith(2), { a: undefined }, fill);
+
+      expect(sanitize()).toStrictEqual({});
+      expect(sanitize({ inheritedDefault: { a: 1 } })).toStrictEqual({ a: undefined });
+    });
+    it("reads an object its parent lists no `required` for as the defaults do under 'populateRequiredDefaults'", () => {
+      const context = {
+        validator: testValidator,
+        defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' as const },
+      };
+      const withDefault = (fill: string): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          inner: { type: 'object', required: ['a'], properties: { a: { type: 'string', default: fill } } },
+        },
+      });
+      const filled = createSchemaUtils(context, withDefault('x')).getDefaultFormState(withDefault('x'), { inner: {} });
+
+      expect(filled).toEqual({ inner: { a: 'x' } });
+      expect(sanitizeDataForNewSchema(context, withDefault('y'), withDefault('y'), withDefault('x'), filled)).toEqual({
+        inner: { a: 'y' },
+      });
+    });
+
     describe('keys and objects the new schema does not take', () => {
       const withX = (x: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { x } });
       const xWith = (key: string, extra?: RJSFSchema): RJSFSchema => ({
