@@ -2954,6 +2954,43 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toStrictEqual({ o: expected });
           },
         );
+
+        it.each<[string, RJSFSchema]>([
+          ['no if', { type: 'object' }],
+          ['an if testing a const', { type: 'object', if: { const: {} }, then: {} }],
+        ])('folds an untyped field whose allOf holds %s alike under constAsDefaults always', (_name, member) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { f: { default: { d: 1 }, allOf: [member] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { f: { a: 2 } } },
+            ),
+          ).toStrictEqual({ f: { d: 1, a: 2 } });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['no const', {}],
+          ['a const', { const: { k: 'e' } }],
+        ])(
+          "folds an untyped field whose allOf's else, which the data doesn't take, holds %s alike under constAsDefaults always",
+          (_name, otherwise) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                f: { default: { d: 1 }, allOf: [{ type: 'object' }, { if: true, then: {}, else: otherwise }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { f: { a: 2 } } },
+              ),
+            ).toStrictEqual({ f: { d: 1, a: 2 } });
+          },
+        );
       });
 
       it("skips the constant default of a schema's anyOf under skipOneOf when it also has a oneOf", () => {

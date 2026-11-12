@@ -2458,25 +2458,29 @@ function mergedSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** The schema whose `const` the field `view` stands for takes. Under `constAsDefaults: 'always'` a `const` a merging
  * keyword the plan left unmerged brings in takes precedence over the data as one of the field's own does, so it is
- * read from the merged schema, so that a condition on the data picks the `const`, as `formDataMatching()` reads it
+ * read from the merged schema, so that a condition on the data picks the `const`, as `formDataMatching()` reads it.
+ * A merged schema left with no `const`, as where the branch holding it isn't taken, gives the field nothing, so the
+ * field is read as it stands
  */
 function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
 ): S {
+  if (context.defaultFormStateBehavior?.constAsDefaults !== 'always' || !holdsAnyOf(view.schema, MERGING_KEYWORDS)) {
+    return view.schema;
+  }
   const { graph, seeds } = fieldOfView<S>(view);
-  return context.defaultFormStateBehavior?.constAsDefaults === 'always' &&
-    holdsAnyOf(view.schema, MERGING_KEYWORDS) &&
-    seeds.some(({ node }) => mergeReachesConst<S>(graph, node))
+  const merged = seeds.some(({ node }) => mergeReachesConst<S>(graph, node))
     ? mergedSchemaOf<S, F>(context, view)
     : view.schema;
+  return constValueOf<S>(merged) === undefined ? view.schema : merged;
 }
 
 /** Whether a merge from the node `start`, by `mergeReachesConst()`, reaches a `const`, by graph and node */
 const constReach = new WeakMap<object, Map<NodeId, boolean>>();
 
-/** Whether any subschema retrieving the node `from` may merge in declares a `const`: one its `$ref`s, `allOf`, `if`
- * branches or `dependencies` lead to, or an `anyOf`/`oneOf` option where the merge reaches `dependencies`, the only
+/** Whether any subschema retrieving the node `from` may merge in declares a `const`: one its `$ref`s, `allOf`,
+ * `then`/`else` branches or `dependencies` lead to, but not an `if`, a condition never merged into the field, or an `anyOf`/`oneOf` option where the merge reaches `dependencies`, the only
  * place retrieving the field merges an option in. A merge brings in no `const` none of them declares, so where none
  * does the field's schema is read without being merged
  */
@@ -2500,7 +2504,7 @@ function mergeReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, fr
       const nexts = [
         node.ref,
         node.conjunction,
-        ...[IF_KEY, THEN_KEY, ELSE_KEY].map((keyword) => graph.child(id, keyword)),
+        ...[THEN_KEY, ELSE_KEY].map((keyword) => graph.child(id, keyword)),
         ...[ALL_OF_KEY, DEPENDENCIES_KEY].flatMap((keyword) => graph.subschemas(id, keyword).map(([, next]) => next)),
       ];
       options.push(
