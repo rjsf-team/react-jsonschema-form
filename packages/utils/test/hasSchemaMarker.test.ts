@@ -1,8 +1,8 @@
-import { EXTRA_KEYS_ELSEWHERE_FLAG, RJSF_PROVENANCE_KEY } from '../src/constants.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   GUESSED_TYPE_FLAG,
   hasSchemaMarker,
+  RJSF_PROVENANCE_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
 } from '../src/index.ts';
@@ -22,10 +22,9 @@ describe('hasSchemaMarker', () => {
     expect(hasSchemaMarker(undefined, ADDITIONAL_PROPERTY_FLAG)).toBe(false);
   });
   it('takes only the markers that hold a flag', () => {
-    const marked = { [GUESSED_TYPE_FLAG]: true, [EXTRA_KEYS_ELSEWHERE_FLAG]: true, [RJSF_REF_KEY]: '' };
+    const marked = { [GUESSED_TYPE_FLAG]: true, [RJSF_REF_KEY]: '' };
 
     expect(hasSchemaMarker(marked, GUESSED_TYPE_FLAG)).toBe(true);
-    expect(hasSchemaMarker(marked, EXTRA_KEYS_ELSEWHERE_FLAG)).toBe(true);
     // @ts-expect-error TS2345, RJSF_REF_KEY holds a `$ref`, which an empty one would read as unset
     expect(hasSchemaMarker(marked, RJSF_REF_KEY)).toBe(false);
     // @ts-expect-error TS2345, RJSF_PROVENANCE_KEY holds a value, not a flag
