@@ -28,6 +28,12 @@ export interface TemplateWarnEntry {
   additionalDepths?: readonly number[];
   /** The option entry this one sits beneath, which the labels of the entries below it are written after */
   anchor?: EntryAnchor;
+  /** The option schema this one sits beneath, which the schema labels of the fields below it are written after */
+  schemaAnchor?: EntryAnchor;
+  /** Set on a shown option's entry: the entry of the field holding the option, whose schema label the option's own extra
+   * keys take, since their schema comes from that field's extra-key keywords, alone or joined with the option's
+   */
+  optionFieldEntry?: TemplateWarnEntry;
   /** Set on an option's entry whose extra keys render from the `additionalProperties` entry of the field holding the
    * option, which `getRenderedOptionUiSchema()` copies into the option's: that field's entry, whose anchor they take.
    * Only the option's extra keys read it, since every field below builds an entry of its own without it
@@ -71,11 +77,14 @@ export function templateWarnEntry(
   const depthsAbove = entryAbove?.additionalDepths;
   const additionalDepths = isAdditional ? [...(depthsAbove ?? []), fieldPathToList(fieldPath).length - 1] : depthsAbove;
   const anchor = isAdditional && entryAbove?.extraKeysFrom ? entryAbove.extraKeysFrom.anchor : entryAbove?.anchor;
-  const schemaLabel = lazyLabel(() => entryLabelForLog(fieldPath, globalFormOptions, additionalDepths));
-  const label = anchor
-    ? lazyLabel(() => entryLabelForLog(fieldPath, globalFormOptions, additionalDepths, anchor))
-    : schemaLabel;
-  return { fieldPath, label, schemaLabel, additionalDepths, anchor };
+  const schemaAnchor =
+    isAdditional && entryAbove?.optionFieldEntry ? entryAbove.optionFieldEntry.schemaAnchor : entryAbove?.schemaAnchor;
+  const anchoredTo = (labelAnchor?: EntryAnchor) =>
+    lazyLabel(() => entryLabelForLog(fieldPath, globalFormOptions, additionalDepths, labelAnchor));
+  const plainLabel = anchoredTo();
+  const label = anchor ? anchoredTo(anchor) : plainLabel;
+  const schemaLabel = schemaAnchor ? anchoredTo(schemaAnchor) : plainLabel;
+  return { fieldPath, label, schemaLabel, additionalDepths, anchor, schemaAnchor };
 }
 
 /** The entry of the field at `fieldPath`, as `templateWarnEntry()` builds it from the one above. Memoized on whether
@@ -101,7 +110,8 @@ export function useTemplateWarnEntry(
 }
 
 /** Returns the entry a shown `anyOf`/`oneOf` option renders from: its field's own where it has no `uiSchema` entry of its
- * own, otherwise its `uiSchema.anyOf[i]`/`uiSchema.oneOf[i]` entry, which the fields below it are named after. A
+ * own, otherwise its `uiSchema.anyOf[i]`/`uiSchema.oneOf[i]` entry, which the fields below it are named after. Its
+ * schema is its own either way, so the schema labels of the fields below it are written after `anyOf[i]`/`oneOf[i]`. A
  * module-level function, so the labels capture only what they read rather than the render they are built in
  *
  * @param entry - The entry of the field holding the option
@@ -121,11 +131,15 @@ export function optionWarnEntry(
   definition?: string,
 ): TemplateWarnEntry {
   const schemaLabel = lazyLabel(() => `the ${xxxOfKey}[${selectedOption}] option of ${entry.schemaLabel()}`);
+  const depth = fieldPathToList(entry.fieldPath).length;
+  const schemaAnchor = { depth, prefix: `${xxxOfKey}[${selectedOption}]`, owner: entry.schemaLabel, noun: 'schema' };
+  // An option nested in an option at the same path takes its extra keys from the outer one's field
+  const optionFieldEntry = entry.optionFieldEntry ?? entry;
   if (rendersFromField) {
-    return { ...entry, schemaLabel };
+    return { ...entry, schemaLabel, schemaAnchor, optionFieldEntry };
   }
   const anchor = {
-    depth: fieldPathToList(entry.fieldPath).length,
+    depth,
     prefix: `uiSchema.${xxxOfKey}[${selectedOption}]`,
     owner: entry.label,
     definition,
@@ -133,7 +147,7 @@ export function optionWarnEntry(
   const label = lazyLabel(() => anchoredEntryLabel(anchor));
   // A field that is itself an option taking its own field's extra keys hands on that field's entry, which they render from
   const extraKeysFrom = keysFromField ? (entry.extraKeysFrom ?? entry) : undefined;
-  return { ...entry, label, schemaLabel, anchor, extraKeysFrom };
+  return { ...entry, label, schemaLabel, anchor, extraKeysFrom, schemaAnchor, optionFieldEntry };
 }
 
 export default TemplateWarnEntryContext;

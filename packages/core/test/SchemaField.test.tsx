@@ -2592,6 +2592,52 @@ describe('SchemaField', () => {
         ]);
       });
 
+      it('should name the option schema above a field with the mistake, so two options warn separately', async () => {
+        const objectOption = { type: 'object', properties: { b: enumBesideTitles } } satisfies RJSFSchema;
+        const { node } = createFormComponent({ schema: { anyOf: [objectOption, objectOption] } });
+
+        await user.selectOptions(node.querySelector('select')!, 'Option 2');
+
+        // Both `b`s render at the one path, so named by it alone the second option's warning would read as the first's
+        expect(consoleWarnSuppression.consoleSpy.mock.calls.map(([message]) => String(message).slice(0, 45))).toEqual([
+          'the anyOf[0].b schema of "root" has an `enum`',
+          'the anyOf[1].b schema of "root" has an `enum`',
+        ]);
+      });
+
+      it('should name an option below an option schema after both', () => {
+        createFormComponent({
+          schema: {
+            anyOf: [{ type: 'object', properties: { b: { anyOf: [enumBesideTitles, otherOption] } } }, otherOption],
+          },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('the anyOf[0] option of the anyOf[0].b schema of "root" has an `enum` beside'),
+        );
+      });
+
+      it('should name an extra key an option takes from its field by the field', () => {
+        const withOwnOptions: RJSFSchema = {
+          type: 'object',
+          anyOf: [{ properties: { p: { type: 'string' } } }, { properties: { q: { type: 'string' } } }],
+        };
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            additionalProperties: enumBesideTitles,
+            anyOf: [withOwnOptions, withOwnOptions],
+          },
+          initialFormData: { extra: 'a' },
+        });
+
+        // Its schema comes from the field's `additionalProperties`, joined with any of the option's own
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('"root_{}" ({}) has an `enum` beside'),
+        );
+      });
+
       it('should warn once for an option an items entry renders many of', () => {
         createFormComponent({
           schema: { type: 'array', items: { anyOf: [enumBesideTitles, otherOption] } },

@@ -39,4 +39,13 @@ describe('entryLabelForLog', () => {
       'the uiSchema.anyOf[0].tasks[].title entry of "root" (or ui:definitions[\'#/$defs/Foo\'].tasks[].title)',
     );
   });
+
+  it('names a schema below an option schema with the noun its anchor gives', () => {
+    const fieldPath = toFieldPath('b', toFieldPath('x'));
+    const anchor = { depth: 1, prefix: 'anyOf[1]', owner: () => '"root_x" (x)', noun: 'schema' };
+
+    expect(entryLabelForLog(fieldPath, globalFormOptions, undefined, anchor)).toBe(
+      'the anyOf[1].b schema of "root_x" (x)',
+    );
+  });
 });

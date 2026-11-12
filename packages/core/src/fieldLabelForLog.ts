@@ -30,8 +30,10 @@ function formatLabel(id: string, path: string): string {
 export interface EntryAnchor {
   /** How many path segments the option's field has; an entry below it is named by the segments past these */
   depth: number;
-  /** The option's entry, such as `uiSchema.anyOf[1]` */
+  /** The option's entry, such as `uiSchema.anyOf[1]`, or its schema, such as `anyOf[1]` */
   prefix: string;
+  /** What the label names, `entry` unless given */
+  noun?: string;
   /** Builds the label of the entry the option's entry sits in */
   owner: () => string;
   /** The `ui:definitions` key of the option's `$ref`, whose entry `resolveUiSchema()` merges under the option's own, so
@@ -49,7 +51,7 @@ export interface EntryAnchor {
  */
 export function anchoredEntryLabel(anchor: EntryAnchor, below: (base: string) => string = (base) => base): string {
   const definition = anchor.definition ? ` (or ${below(`ui:definitions['${anchor.definition}']`)})` : '';
-  return `the ${below(anchor.prefix)} entry of ${anchor.owner()}${definition}`;
+  return `the ${below(anchor.prefix)} ${anchor.noun ?? 'entry'} of ${anchor.owner()}${definition}`;
 }
 
 /** Names a field the way `fieldLabelForLog()` does, but with each array index written as `[]`, for a warning about
