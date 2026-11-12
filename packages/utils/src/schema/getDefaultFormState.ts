@@ -1756,7 +1756,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
     mayHoldNullType(view.schema, rootSchema)
   ) {
-    branchNullFills<T, S, F>(context, view, schema, props, foldReporting).forEach(({ key, value }) => {
+    branchNullFills<T, S, F>(context, view, schema, props, computed, foldReporting).forEach(({ key, value }) => {
       setOwn(computed, key, value);
       fillOverUndefined(nullFills, rawFormData, key, value);
       onNullFill?.();
@@ -1884,6 +1884,8 @@ function extraKeyKeepsData(data: unknown, value: unknown): boolean {
  * @param view - The object field's view
  * @param schema - The object's schema, its extra keys stubbed where the field stubs them
  * @param props - The props of the object field
+ * @param computed - The defaults computed for the object's own properties, which decide a branch's `if` under the
+ *        data as the same values in the data do
  * @param foldReporting - Computes a child's defaults, reporting whether they hold a `null` fill
  * @returns - The defaults of those properties that hold such a `null`
  */
@@ -1892,6 +1894,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
   view: DefaultsView<S>,
   schema: S,
   props: FoldProps<T, S, F>,
+  computed: GenericObjectType,
   foldReporting: (
     childContext: SchemaContext<S, F>,
     memoKey: string,
@@ -1901,7 +1904,8 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
 ): { key: string; value: unknown }[] {
   const { rawFormData, uiSchema, uiSchemaDefinitions, nullFills } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
-  const retrieved = settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
+  const depData = { ...(isObject(view.depData) ? view.depData : {}), ...computed, ...formData };
+  const retrieved = settle(context, { ...view.field, retrieves: true }, view.data, depData, view.options);
   const rendered = allowsAdditionalProperties<S, F>(context, retrieved.schema)
     ? stubExistingAdditionalProperties<unknown, S, F>(context, retrieved.schema, view.graph.rawRoot, formData)
     : retrieved.schema;

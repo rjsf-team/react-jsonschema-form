@@ -11180,6 +11180,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema)).toEqual({ q: { k: 'x', t: 2 } });
       });
 
+      it('fills the `null` of a field the `else` of an unmerged `allOf` entry brings in for a default', () => {
+        // The mock validator cannot evaluate an `if`: this one fails wherever the fill checks it, since `k` is `'y'`
+        testValidator.setReturnValues({ isValid: Array.from({ length: 8 }, () => false) });
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            r: {
+              type: 'object',
+              properties: { k: { type: 'string', default: 'y' } },
+              allOf: [{ if: { properties: { k: { const: 'x' } } }, else: { properties: { e: { type: 'null' } } } }],
+            },
+          },
+        };
+        const filled = fill(schema);
+        expect(filled).toEqual({ r: { k: 'y', e: null } });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
       it('keeps the branch the data selects over the one the default would', () => {
         expect(fill(elseSchema(), { k: 'x' })).toEqual({ k: 'x', t: 2 });
       });
