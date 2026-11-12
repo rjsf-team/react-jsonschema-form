@@ -3459,6 +3459,18 @@ const data = {};
 setOwn(data, '__proto__', { x: 1 }); // data has an own __proto__ key, and its prototype is still Object.prototype
 ```
 
+### sharedCopyParts()
+
+Returns the parts an option's scoring target holds once: each entry of the `definitions` or `$defs` at the target's top whose `$id` starts with the value of the `SHARED_COPY_ID` constant, `?rjsf-copy=`. A target holds them nowhere else, so a validator that has to treat them specially, such as one reading an identifier from draft-04's `id`, reads them from here. A schema that is no such target holds none.
+
+#### Parameters
+
+- schema: unknown - A schema handed to a validator, such as one `getValidationSchemas()` lists
+
+#### Returns
+
+- SharedCopyPart[]: Each part, with the `container` (`definitions` or `$defs`) holding it, the object `held` under that keyword, the `name` it is held under and its `id`, none where the schema holds none
+
 ### shouldRenderOptionalField&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines whether the field information from the combination of `schema` and `required` along with the

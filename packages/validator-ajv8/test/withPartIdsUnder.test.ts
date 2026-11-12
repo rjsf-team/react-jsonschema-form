@@ -12,6 +12,7 @@ describe('withPartIdsUnder()', () => {
       other: { $id: 'other.json' },
       plain: { type: 'number' },
       no: false,
+      h2: { $id: `${part}2`, type: 'number' },
     },
     $defs: { h: { $id: part, type: 'string' } },
     properties: { kept: { $id: part } },
@@ -27,6 +28,7 @@ describe('withPartIdsUnder()', () => {
         other: { $id: 'other.json' },
         plain: { type: 'number' },
         no: false,
+        h2: { id: `${part}2`, type: 'number' },
       },
       $defs: { h: { id: part, type: 'string' } },
     });

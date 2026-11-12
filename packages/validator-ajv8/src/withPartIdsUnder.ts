@@ -1,10 +1,9 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { DEFINITIONS_KEY, getByPath, ID_KEY, isObject, SHARED_COPY_ID } from '@rjsf/utils';
+import { ID_KEY, sharedCopyParts } from '@rjsf/utils';
 
-/** Returns `schema` with the `$id` of each part an option's scoring target holds once, see `SHARED_COPY_ID`, written
- * under `schemaId`, the keyword the Ajv instance reads an identifier from: one built by `ajv-draft-04`, or with
- * `schemaId: 'id'`, reads only `id`, so a `$ref` to such a part would name nothing. A scoring target holds the parts in
- * the `definitions` or `$defs` of its top alone, so nothing else is read.
+/** Returns `schema` with the `$id` of each part an option's scoring target holds once, see `sharedCopyParts()`,
+ * written under `schemaId`, the keyword the Ajv instance reads an identifier from: one built by `ajv-draft-04`, or with
+ * `schemaId: 'id'`, reads only `id`, so a `$ref` to such a part would name nothing.
  *
  * @param schema - The schema Ajv is to compile
  * @param schemaId - The `schemaId` option of the Ajv instance
@@ -14,23 +13,10 @@ export default function withPartIdsUnder<S extends StrictRJSFSchema = RJSFSchema
   if (schemaId === ID_KEY) {
     return schema;
   }
-  const renamed = (part: unknown) => {
-    const id = isObject(part) ? part[ID_KEY] : undefined;
-    if (!isObject(part) || typeof id !== 'string' || !id.startsWith(SHARED_COPY_ID)) {
-      return part;
-    }
+  const containers = new Map<string, object>();
+  for (const { container, held, name, id, part } of sharedCopyParts(schema)) {
     const { [ID_KEY]: _id, ...rest } = part;
-    return { ...rest, [schemaId]: id };
-  };
-  let written = schema;
-  for (const container of [DEFINITIONS_KEY, '$defs']) {
-    const held: unknown = getByPath(schema, [container]);
-    if (isObject(held)) {
-      written = {
-        ...written,
-        [container]: Object.fromEntries(Object.entries(held).map(([name, part]) => [name, renamed(part)])),
-      };
-    }
+    containers.set(container, { ...(containers.get(container) ?? held), [name]: { ...rest, [schemaId]: id } });
   }
-  return written;
+  return { ...schema, ...Object.fromEntries(containers) };
 }

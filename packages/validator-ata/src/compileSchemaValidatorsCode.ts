@@ -16,7 +16,7 @@ import {
   SCHEMA_KEY,
   schemaKey,
   getValidationSchemas,
-  SHARED_COPY_ID,
+  sharedCopyParts,
 } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
@@ -238,23 +238,16 @@ interface OwnResource {
   readonly around: Resource;
 }
 
-/** Returns the parts a schema `getValidationSchemas()` lists holds once, see `OwnResource`, by `documentKey()` of their
- * URI. A scoring copy holds them only in the `definitions` or `$defs` of its top, which is read as `standalone()` reads
- * it, so a part resolves against the same base in both: against the top's own `$id` where it is not the resource
- * `start` is.
+/** Returns the parts a schema `getValidationSchemas()` lists holds once, see `OwnResource` and `sharedCopyParts()`, by
+ * `documentKey()` of their URI. The top holding them is read as `standalone()` reads it, so a part resolves against
+ * the same base in both: against the top's own `$id` where it is not the resource `start` is.
  */
 function ownResourcesOf(schema: unknown, start: Resource, laterDialect: boolean): Map<string, OwnResource> {
   const own = new Map<string, OwnResource>();
   const around = schema === start.schema ? start : (resourceAt(schema, start.base, laterDialect) ?? start);
-  for (const container of ['definitions', '$defs']) {
-    const held: unknown = getByPath(schema, [container]);
-    for (const part of isObject(held) ? Object.values(held) : []) {
-      const resource = resourceAt(part, around.base, laterDialect);
-      // A scoring copy gives each part an `$id` of its own, see `SHARED_COPY_ID`, so none is found twice
-      if (resource !== undefined && resourceIdOf(part, laterDialect)?.startsWith(SHARED_COPY_ID) === true) {
-        own.set(documentKey(resource.base), { schema: part, around });
-      }
-    }
+  // A scoring copy gives each part an `$id` of its own, see `SHARED_COPY_ID`, so none is found twice
+  for (const { id, part } of sharedCopyParts(schema)) {
+    own.set(documentKey(resolveUri(around.base, id)), { schema: part, around });
   }
   return own;
 }
@@ -364,10 +357,10 @@ function readRoot(rootSchema: object, extras: ReadonlyMap<string, object>): Root
  * which is carried in the container too, once however many `$ref`s name it. One into another document is given that
  * resolved URI, its fragment kept as written, for ata to resolve against the extra schemas compiled into the module
  * beside it, since the document holding it is compiled under an `$id` of its own, unless only the `$ref` as written
- * names one of them, which ata falls back to, as for an extra under a relative `$id`. One that names nothing there or in them leaves ata nothing to
- * compile and the module reporting it when the schema is first validated against. No subschema of the document keeps
- * an `$id` or a container, which only the renamed `$ref`s could need. Only the keywords holding subschemas are
- * rewritten, never the data a `const` or a `default` holds.
+ * names one of them, which ata falls back to, as for an extra under a relative `$id`. One that names nothing there or
+ * in them leaves ata nothing to compile and the module reporting it when the schema is first validated against. No
+ * subschema of the document keeps an `$id` or a container, which only the renamed `$ref`s could need. Only the
+ * keywords holding subschemas are rewritten, never the data a `const` or a `default` holds.
  *
  * @param schema - A schema `getValidationSchemas()` lists, or a subschema of the root
  * @param reading - The `RootReading` of the root it was listed for
