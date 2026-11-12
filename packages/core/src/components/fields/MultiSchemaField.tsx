@@ -1,6 +1,7 @@
 import { use, useCallback, useMemo } from 'react';
 import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
@@ -13,11 +14,13 @@ import {
   isFormDataAvailable,
   logOnce,
   optionSelectorId,
+  PATTERN_PROPERTIES_KEY,
   resolveWidget,
   RJSF_REF_KEY,
   selectOptionUiSchema,
   shouldRenderOptionalField,
   TranslatableString,
+  UNEVALUATED_PROPERTIES_KEY,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
@@ -39,6 +42,9 @@ import NamedFieldContext from './NamedFieldContext.ts';
 import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import TemplateWarnEntryContext, { optionWarnEntry, useTemplateWarnEntry } from './TemplateWarnEntryContext.ts';
+
+/** The keywords describing an object's extra keys */
+const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY];
 
 /** The widgets the option index has an implementation of that would show the index as a number to edit */
 const VALUE_ENTRY_WIDGETS = new Set<unknown>(['text', 'updown', 'range', 'TextWidget', 'UpDownWidget', 'RangeWidget']);
@@ -186,9 +192,11 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const keysFromField =
     optionUiSchema?.additionalProperties === undefined && optionFieldUiSchema?.additionalProperties !== undefined;
   const rendersFromField = optionUiSchema === uiSchema;
+  const keySchemaFromField = EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(schema, keyword));
   const optionEntry = useMemo(
-    () => optionWarnEntry(entry, rendersFromField, keysFromField, xxxOfKey, selectedOption, definition),
-    [entry, rendersFromField, keysFromField, xxxOfKey, selectedOption, definition],
+    () =>
+      optionWarnEntry(entry, rendersFromField, keysFromField, keySchemaFromField, xxxOfKey, selectedOption, definition),
+    [entry, rendersFromField, keysFromField, keySchemaFromField, xxxOfKey, selectedOption, definition],
   );
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated

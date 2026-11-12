@@ -2638,6 +2638,22 @@ describe('SchemaField', () => {
         );
       });
 
+      it("should name an extra key of an option's own additionalProperties after the option", async () => {
+        const objectOption = { type: 'object', additionalProperties: enumBesideTitles } satisfies RJSFSchema;
+        const { node } = createFormComponent({
+          schema: { anyOf: [objectOption, objectOption] },
+          initialFormData: { extra: 'a' },
+        });
+
+        await user.selectOptions(node.querySelector('select')!, 'Option 2');
+
+        // The field declares no extra-key keyword, so each option's extra key renders a schema of that option's own
+        expect(consoleWarnSuppression.consoleSpy.mock.calls.map(([message]) => String(message).slice(0, 46))).toEqual([
+          'the anyOf[0]{} schema of "root" has an `enum` ',
+          'the anyOf[1]{} schema of "root" has an `enum` ',
+        ]);
+      });
+
       it('should warn once for an option an items entry renders many of', () => {
         createFormComponent({
           schema: { type: 'array', items: { anyOf: [enumBesideTitles, otherOption] } },

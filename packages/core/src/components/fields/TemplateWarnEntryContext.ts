@@ -30,8 +30,9 @@ export interface TemplateWarnEntry {
   anchor?: EntryAnchor;
   /** The option schema this one sits beneath, which the schema labels of the fields below it are written after */
   schemaAnchor?: EntryAnchor;
-  /** Set on a shown option's entry: the entry of the field holding the option, whose schema label the option's own extra
-   * keys take, since their schema comes from that field's extra-key keywords, alone or joined with the option's
+  /** Set on a shown option's entry where the field holding the option declares extra-key keywords: that field's entry,
+   * whose schema label the option's own extra keys take, since their schema comes from those keywords, alone or joined
+   * with the option's
    */
   optionFieldEntry?: TemplateWarnEntry;
   /** Set on an option's entry whose extra keys render from the `additionalProperties` entry of the field holding the
@@ -117,6 +118,7 @@ export function useTemplateWarnEntry(
  * @param entry - The entry of the field holding the option
  * @param rendersFromField - Whether the option renders from the field's own `uiSchema` entry
  * @param keysFromField - Whether the option renders the extra keys it takes from the field with the field's entry
+ * @param keySchemaFromField - Whether the field declares extra-key keywords, which the option's extra keys are described by
  * @param xxxOfKey - The keyword holding the options
  * @param selectedOption - The index of the option shown
  * @param [definition] - The `ui:definitions` key of the option's `$ref`, where `ui:definitions` has an entry for it
@@ -126,6 +128,7 @@ export function optionWarnEntry(
   entry: TemplateWarnEntry,
   rendersFromField: boolean,
   keysFromField: boolean,
+  keySchemaFromField: boolean,
   xxxOfKey: string,
   selectedOption: number,
   definition?: string,
@@ -133,8 +136,9 @@ export function optionWarnEntry(
   const schemaLabel = lazyLabel(() => `the ${xxxOfKey}[${selectedOption}] option of ${entry.schemaLabel()}`);
   const depth = fieldPathToList(entry.fieldPath).length;
   const schemaAnchor = { depth, prefix: `${xxxOfKey}[${selectedOption}]`, owner: entry.schemaLabel, noun: 'schema' };
-  // An option nested in an option at the same path takes its extra keys from the outer one's field
-  const optionFieldEntry = entry.optionFieldEntry ?? entry;
+  // An option nested in an option at the same path takes its extra keys from the outer one's field. Where the field
+  // declares no extra-key keyword, the option's extra keys are described by its own alone, and so named after it
+  const optionFieldEntry = keySchemaFromField ? (entry.optionFieldEntry ?? entry) : undefined;
   if (rendersFromField) {
     return { ...entry, schemaLabel, schemaAnchor, optionFieldEntry };
   }
