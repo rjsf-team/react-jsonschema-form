@@ -7,11 +7,13 @@ import {
   CONST_KEY,
   DEFAULT_KEY,
   DEPENDENCIES_KEY,
+  ELSE_KEY,
   ENUM_KEY,
   IF_KEY,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  THEN_KEY,
   UI_DEFINITIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
 } from '../constants.ts';
@@ -2439,9 +2441,51 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
 ): S {
-  return context.defaultFormStateBehavior?.constAsDefaults === 'always' && holdsAnyOf(view.schema, MERGING_KEYWORDS)
+  const { graph, seeds } = fieldOfView<S>(view);
+  return context.defaultFormStateBehavior?.constAsDefaults === 'always' &&
+    holdsAnyOf(view.schema, MERGING_KEYWORDS) &&
+    seeds.some(({ node }) => mergeReachesConst<S>(graph, node))
     ? mergedSchemaOf<S, F>(context, view)
     : view.schema;
+}
+
+/** Whether a merge from the node `start`, by `mergeReachesConst()`, reaches a `const`, by graph and node */
+const constReach = new WeakMap<object, Map<NodeId, boolean>>();
+
+/** Whether any subschema retrieving the node `from` may merge in declares a `const`: one its `$ref`s, `allOf`, options,
+ * `if` branches or `dependencies` lead to. A merge brings in no `const` none of them declares, so where none does the
+ * field's schema is read without being merged
+ */
+function mergeReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, from: NodeId): boolean {
+  const byNode = constReach.get(graph) ?? new Map<NodeId, boolean>();
+  constReach.set(graph, byNode);
+  const known = byNode.get(from);
+  if (known !== undefined) {
+    return known;
+  }
+  const seen = new Set<NodeId>();
+  const pending = [from];
+  let reaches = false;
+  for (let id = pending.pop(); id !== undefined && !reaches; id = pending.pop()) {
+    const node = graph.node(id);
+    if (seen.has(id) || node.kind !== 'schema') {
+      continue;
+    }
+    seen.add(id);
+    reaches = Object.hasOwn(node.raw, CONST_KEY);
+    pending.push(
+      ...[
+        node.ref,
+        node.conjunction,
+        ...[IF_KEY, THEN_KEY, ELSE_KEY].map((keyword) => graph.child(id, keyword)),
+      ].filter((next) => next !== undefined),
+      ...[ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY].flatMap((keyword) =>
+        graph.subschemas(id, keyword).map(([, next]) => next),
+      ),
+    );
+  }
+  byNode.set(from, reaches);
+  return reaches;
 }
 
 /** The field `view` stands for, see `viewField()`, built once for the view */

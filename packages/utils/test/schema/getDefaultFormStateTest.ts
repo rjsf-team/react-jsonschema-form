@@ -2699,6 +2699,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toStrictEqual({ a: 'x', b: 'y' });
         });
 
+        it.each<[string, RJSFSchema, string]>([
+          ['no const', { type: 'string', enum: ['a', 'b'] }, 'b'],
+          ['a const', { const: 'a' }, 'a'],
+        ])(
+          'reads a field whose allOf reaches one definition twice beside a boolean entry and %s under constAsDefaults always',
+          (_name, definition, expected) => {
+            const schema: RJSFSchema = {
+              definitions: { d: definition },
+              type: 'object',
+              properties: { a: { allOf: [true, { $ref: '#/definitions/d' }, { $ref: '#/definitions/d' }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { a: 'b' } },
+              ),
+            ).toStrictEqual({ a: expected });
+          },
+        );
+
         it('keeps the data of a field beside an allOf whose const is undefined under constAsDefaults always', () => {
           const schema: RJSFSchema = {
             type: 'object',
