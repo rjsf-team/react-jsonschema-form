@@ -1763,7 +1763,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       onNullFill?.();
     });
   }
-  const additionalProperties = absentKeywordAllows<S, F>(context, extraKeysField) || schema.additionalProperties;
+  // Read from the field that decides whether the object takes extra keys, so the keys seeded are folded as it takes them
+  const additionalProperties =
+    absentKeywordAllows<S, F>(context, extraKeysField) || extraKeysField.additionalProperties;
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
   // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or
   // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the
@@ -1793,7 +1795,13 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       const { value, holdsNull } = foldReporting(
         context,
         `additional:${key}`,
-        defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
+        // The keys of a `const` that closes the object take no extra-key schema, which the object doesn't render them with
+        defaultsChild(
+          view,
+          closingKeys ? [] : seedsAt(view, ADDITIONAL_PROPERTIES_KEY),
+          'additionalKey',
+          additionalPropertiesSchema,
+        ),
         // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
         // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
         childProps(key, ADDITIONAL_PROPERTIES_KEY),

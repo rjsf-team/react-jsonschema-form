@@ -265,6 +265,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(utils.getDefaultFormState(schema, {}, false, true)).toStrictEqual({});
         expect(utils.getDefaultFormState(schema, { c: 1 }, false, true)).toStrictEqual({ c: 1 });
       });
+      test("folds the keys of an option's const through the extra-key schema of the field that decides they close the object", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: false,
+          oneOf: [
+            { const: { b: 1 }, additionalProperties: { type: 'number', default: 7 } },
+            { properties: { z: { type: 'string' } }, required: ['z'] },
+          ],
+        };
+        const utils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(utils.getDefaultFormState(schema, {})).toStrictEqual({ b: 1 });
+        expect(utils.getDefaultFormState(schema, {}, false, true)).toStrictEqual({ b: 1 });
+      });
       test('computeDefaults gives the const without data, which getDefaultFormState merges in', () => {
         expect(computeDefaults({ validator: testValidator }, bare, { rawFormData: { a: 3 } })).toEqual({ a: 1 });
       });
