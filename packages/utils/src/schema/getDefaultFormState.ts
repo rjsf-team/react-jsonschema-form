@@ -43,6 +43,7 @@ import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
 import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
+import replaceEqualDeep from '../replaceEqualDeep.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import setOwn from '../setOwn.ts';
 import { isCollapsedByOptionalDataControls } from '../shouldRenderOptionalField.ts';
@@ -555,6 +556,11 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * would be computed from the same inputs again
    */
   memo?: Map<string, MemoEntry>;
+  /** Returns the object field as rendered, retrieved or joined with an option, sharing what is equal with the one the
+   * last pass of the field's fixed point read. Each pass plans the field anew, so it retrieves anew, and the extra-key
+   * schema it hands its children keeps its identity, so their memo hits
+   */
+  shareRendered?: (rendered: S) => S;
   /** The option each field shows, which a field offering `anyOf`/`oneOf` options computes its defaults from */
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
@@ -887,7 +893,12 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const onNullFill = () => {
     holdsNull = true;
   };
-  const passProps = { ...props, memo: new Map<string, MemoEntry>(), track, onNullFill };
+  let lastRendered: S | undefined;
+  const shareRendered = (rendered: S) => {
+    lastRendered = replaceEqualDeep(lastRendered, rendered);
+    return lastRendered;
+  };
+  const passProps = { ...props, memo: new Map<string, MemoEntry>(), shareRendered, track, onNullFill };
   const fold = (passView: DefaultsView<S>) => {
     holdsNull = false;
     return foldView(context, passView, passProps);
@@ -1636,6 +1647,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     MERGING_KEYWORDS.some((keyword) => Object.hasOwn(view.schema, keyword))
   ) {
     extraKeysField = retrieveSchema<unknown, S, F>(context, view.schema, rootSchema, rawFormData);
+  }
+  if (extraKeysField !== view.schema && props.shareRendered) {
+    extraKeysField = props.shareRendered(extraKeysField);
   }
   // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it, and only of an
   // object that stubs them or defaults to an object `const`, the two that need the answer
