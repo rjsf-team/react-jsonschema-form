@@ -353,16 +353,15 @@ export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
     formData: unknown,
     depth: number,
   ): string | undefined;
-  /** Whether the value the data holds at `fieldPath` is one the defaults filled in, rather than one a person entered or
-   * a seed held. The defaults of a property the schema declares are then computed as if the data held nothing there, so
-   * the value follows whichever default gives it now. Without it, no value is taken for a filled one
+  /** Whether the value the data holds at `fieldPath` is one the defaults filled in whole: no person entered, and no
+   * seed held, it or anything it holds. The defaults of a property the schema declares are then computed as if the data
+   * held nothing there, so the value follows whichever default gives it now, an array or object only where a `default`
+   * is declared for it. Without it, no value is taken for a filled one
+   *
+   * @internal The channel through which `@rjsf/core`'s `Form` tells `getDefaultFormState()` where its values came
+   *   from. It is no part of the documented API and may change in any release
    */
   isFilled?(fieldPath: FieldPath): boolean;
-  /** Whether a person entered the value the data holds at `fieldPath` through the form. A value of a select that its
-   * options no longer offer is then kept as it is, for validation to report, where the defaults would otherwise take
-   * its place. Without it, no value is taken for an entered one
-   */
-  isEntered?(fieldPath: FieldPath): boolean;
 }
 
 declare const FIELD_PATH_BRAND: unique symbol;

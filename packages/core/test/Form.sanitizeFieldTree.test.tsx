@@ -669,7 +669,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     });
   });
 
-  describe('a value the user entered that an `enum` stops listing', () => {
+  describe('a value an `enum` stops listing', () => {
     const picking = (values: string[]): RJSFSchema => ({
       type: 'object',
       properties: { a: { type: 'string', enum: values, default: values[0] } },
@@ -690,16 +690,11 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       return ref.current;
     }
 
-    it('stays, for validation to report, where the new list offers a choice', () => {
+    it('takes the new default where the new list offers a choice', () => {
       const form = relisted(picking(['d', 'e']), picking(['d', 'f']), {}, (entering) =>
         entering.setFieldValue(['a'], 'e'),
       );
-      expect(form?.getFormData()).toEqual({ a: 'e' });
-      let isValid: boolean | undefined;
-      act(() => {
-        isValid = form?.validateForm();
-      });
-      expect(isValid).toBe(false);
+      expect(form?.getFormData()).toEqual({ a: 'd' });
     });
 
     it('takes the one value a new list of one offers', () => {
@@ -707,12 +702,12 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(form?.getFormData()).toEqual({ a: 'f' });
     });
 
-    it('is told from the default the form filled in, which takes the new default', () => {
+    it('takes the new default where the form filled it in', () => {
       const form = relisted(picking(['d', 'e']), picking(['f', 'g']), {});
       expect(form?.getFormData()).toEqual({ a: 'f' });
     });
 
-    it('is told from a value the seed held, which takes the new default as before', () => {
+    it('takes the new default where the seed held it', () => {
       const form = relisted(picking(['d', 'e']), picking(['d', 'f']), { a: 'e' });
       expect(form?.getFormData()).toEqual({ a: 'd' });
     });
@@ -943,12 +938,12 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         properties: { list: { type: 'array', items: { type: 'string' }, default: [first, 'w'] } },
       });
 
-      it("takes the array's new default for its row, beside a row the user added (#5826)", () => {
+      it('keeps every row of an array written whole, as `setFieldValue()` writes one', () => {
         const { mounted, changed } = reschema(listOf('x'), listOf('y'), {}, undefined, (form) =>
           form.setFieldValue(['list'], ['x', 'w', 'k']),
         );
         expect(mounted).toEqual({ list: ['x', 'w'] });
-        expect(changed).toEqual({ list: ['y', 'w', 'k'] });
+        expect(changed).toEqual({ list: ['x', 'w', 'k'] });
       });
 
       it('leaves every row as it is once the user moved, added or removed one', async () => {
@@ -1251,9 +1246,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     act(() => handleOf(ref).setFieldValue('', { mode: 'advanced', color: 'c', colors: ['c'] }));
     await user.selectOptions(elementOf(container, '#root_mode'), ['0']);
     const last = events[events.length - 1].formData;
-    // The value written from outside is entered, so it stays for validation to report where the list offers a choice.
-    // An item the list no longer offers is still dropped
-    expect(last?.color).toBe('c');
+    expect(last?.color).toBeUndefined();
     expect(last?.colors).toEqual([]);
   });
 

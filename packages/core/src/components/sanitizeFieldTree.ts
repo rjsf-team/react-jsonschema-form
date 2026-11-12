@@ -78,17 +78,25 @@ export interface DataOrigins {
   seeded: ReadonlySet<FieldPath>;
 }
 
-/** A value a person entered or a seed held that the sanitize took out of the data, with the path it was at */
+/** Where the values of the data a tree was built for came from, and the paths the fill has written another value at
+ * since, in the data being sanitized: what is there now is the fill's, whatever the value before it was
+ */
+export interface DiffedOrigins extends DataOrigins {
+  refilled: ReadonlySet<FieldPath>;
+}
+
+/** A value the sanitize or the fill took out of the data or wrote another over, with the path it was at */
 export interface DroppedValue {
   path: FieldPathList;
   value: unknown;
 }
 
-/** A value a seed held whose origin the diff worked out: `filled` where it is what the defaults filled the old field
- * with, and `entered` where it is not, so the question is asked of it once
+/** A value a seed held that the diff kept, whose origin it worked out: `filled` where it is what the defaults filled
+ * the old field with, and `entered` where it is not, so the question is asked of it once
  */
 export interface ClassifiedValue {
   path: FieldPathList;
+  value: unknown;
   origin: 'entered' | 'filled';
 }
 
@@ -120,6 +128,8 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
    */
   enteredAlong: ReadonlySet<FieldPath>;
   seededAlong: ReadonlySet<FieldPath>;
+  /** The paths, in the data being sanitized, the fill wrote another value at than the previous data held there */
+  refilled: ReadonlySet<FieldPath>;
   /** The data the previous tree is built for */
   oldData: unknown;
   /** The previous tree, which a fill of the previous data is made as */
@@ -131,7 +141,11 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   itemMoves: ContainerKeyMove[];
   /** Each value the walk dropped that a person entered or a seed held, outside any array */
   dropped: DroppedValue[];
-  /** Each value a seed held that the walk asked the old defaults about */
+  /** Each value the walk dropped or wrote another over, whose path holds no value of the origin it had. An array's
+   * items are left to `itemMoves`
+   */
+  released: DroppedValue[];
+  /** Each value a seed held that the walk kept after asking the old defaults about it */
   classified: ClassifiedValue[];
 }
 
@@ -403,6 +417,18 @@ function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declare
   };
 }
 
+/** Whether a field of `schema` holds `value` by the keywords `judge()` rejects a value by: its type, its `const` and
+ * the values it offers
+ */
+export function takesValue<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
+  const { const: constant, values } = constraintsOf([schema], undefined);
+  return (
+    takesTypeOf<S>(schema, value) &&
+    (constant === undefined || deepEquals(constant, value)) &&
+    (values === undefined || values.some((offered) => deepEquals(offered, value)))
+  );
+}
+
 /** Whether a guessed extra key's stub renders `value`: a scalar, or an object whose every key the stub takes as an
  * extra key of its own. Not an array, since the stub declares no `items`
  */
@@ -501,12 +527,6 @@ function judge<S extends StrictRJSFSchema>(
   if (values && !values.some((offered) => deepEquals(offered, value))) {
     if (isItem) {
       return DROP;
-    }
-    // A list of one leaves nothing to choose, so its value is the field's. Where the list offers a choice, a value a
-    // person entered stays for validation to report and for them to change: a default swapped in would pass for
-    // their answer
-    if (values.length > 1 && origin === 'entered') {
-      return undefined;
     }
     if (values.some((offered) => deepEquals(offered, newDefault))) {
       return structuredClone(newDefault);
@@ -684,21 +704,34 @@ function addAlong(along: Set<FieldPath>, path: FieldPathList): void {
   }
 }
 
-/** Each of `paths` with the path of every array and object holding it, the root's included */
-function pathsAlong(paths: ReadonlySet<FieldPath>): ReadonlySet<FieldPath> {
-  const along = new Set<FieldPath>();
-  paths.forEach((path) => addAlong(along, fieldPathToList(path)));
+const pathsAlong = new WeakMap<ReadonlySet<FieldPath>, ReadonlySet<FieldPath>>();
+
+/** Each of `paths` with the path of every array and object holding it, the root's included. Built once for a set, which
+ * is never changed once made, so a change that leaves the set as it was builds nothing
+ */
+export function alongOf(paths: ReadonlySet<FieldPath>): ReadonlySet<FieldPath> {
+  let along = pathsAlong.get(paths);
+  if (!along) {
+    const built = new Set<FieldPath>();
+    paths.forEach((path) => addAlong(built, fieldPathToList(path)));
+    along = built;
+    pathsAlong.set(paths, along);
+  }
   return along;
 }
 
-/** Where the value at `oldPath` of the previous data came from, an array or object taking the origin of what it holds:
- * entered if a person entered any of it, or else seeded if a seed held any of it. A value with no place in the
- * previous data is one the change itself wrote
+/** Where the value at `path`, which was at `oldPath` of the previous data, came from, an array or object taking the
+ * origin of what it holds: entered if a person entered any of it, or else seeded if a seed held any of it. A value with
+ * no place in the previous data is one the change itself wrote, and one the fill wrote over the previous value is filled
  */
 function originOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   oldPath: FieldPathList | undefined,
+  path: FieldPathList,
 ): ValueOrigin {
+  if (ctx.refilled.size > 0 && ctx.refilled.has(fieldPathFromList(path))) {
+    return 'filled';
+  }
   if (oldPath === undefined) {
     return 'entered';
   }
@@ -802,14 +835,15 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         isScalar &&
         givesAnotherDefault &&
         keywordOf(newLayers, 'readOnly') === true &&
-        originOf(ctx, oldPath) !== 'entered' &&
+        originOf(ctx, oldPath, path) !== 'entered' &&
         !deepEquals(newDefault, newValue)
       ) {
         return DROP;
       }
     }
-    const origin = originOf(ctx, oldPath);
+    const origin = originOf(ctx, oldPath, path);
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
+    let isOldFillOfSeed: boolean | undefined;
     const judged = judge(
       oldLayers,
       newLayers,
@@ -825,14 +859,23 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         const isFill = isOldFill(below, oldLayers, oldDefault, oldPath, shownHere, isSwitched ? oldValue : value);
         // An array or object that is not the old fill whole can still hold values that are
         if (origin === 'seeded' && (isFill || (!isObject(newValue) && !Array.isArray(newValue)))) {
-          ctx.classified.push({ path, origin: isFill ? 'filled' : 'entered' });
+          isOldFillOfSeed = isFill;
         }
         return isFill;
       },
       isSwitched,
     );
     if (judged !== undefined) {
+      // A value written over leaves no value of its origin at its path, as one dropped does, which the object or
+      // array holding it reports
+      if (judged !== DROP) {
+        ctx.released.push({ path, value: newValue });
+      }
       return judged === UNSET ? undefined : judged;
+    }
+    // The comparison says where a seeded value came from only of one that is kept
+    if (isOldFillOfSeed !== undefined) {
+      ctx.classified.push({ path, value: newValue, origin: isOldFillOfSeed ? 'filled' : 'entered' });
     }
   }
   if (newLayers.some((layer) => isWholeValueSelect<S>(layer))) {
@@ -903,9 +946,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           // back with its field. A row has no place to come back to once its array's rows move, so none is kept
           const previousKey = previousKeyOf(key);
           const droppedFrom = oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined;
-          if (!childPath.some((at) => typeof at === 'number') && originOf(ctx, droppedFrom) !== 'filled') {
-            ctx.dropped.push({ path: childPath, value: newValue[key] });
+          const dropped = { path: childPath, value: newValue[key] };
+          if (!childPath.some((at) => typeof at === 'number') && originOf(ctx, droppedFrom, childPath) !== 'filled') {
+            ctx.dropped.push(dropped);
           }
+          ctx.released.push(dropped);
           delete result[key];
         } else {
           setOwn(result, key, next);
@@ -1013,11 +1058,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
     const kept = items.filter((item) => item !== DROP);
     const bounded = kept.length > bound ? kept.slice(0, bound) : kept;
-    if (kept.length < items.length) {
-      // The items after a dropped one move down, and what the form keeps by path of them moves with them
+    if (bounded.length < items.length) {
+      // The items after a dropped one move down, and what the form keeps by path of them moves with them. One cut off
+      // goes as a dropped one does
       let next = 0;
       const newIndexes = items.map((item) => {
-        if (item === DROP) {
+        if (item === DROP || next >= bound) {
           return undefined;
         }
         next += 1;
@@ -1160,26 +1206,32 @@ function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
  * @param next - The new tree, likewise, whose data is the data to sanitize
  * @param uiState - The form's option selections and cycle expansions
  * @param fillAsFirstRender - How the form fills data on its first render, which a seeded value is judged by
- * @param origins - Where the values of the data of `previous` came from
+ * @param origins - Where the values of the data of `previous` came from, and where the fill has written since
  * @param [edit] - The change being made, if any: its path, where it moved the keys of the array or object there, so
  *        each item or property is paired with its own previous value, and the field whose option it switched
  * @param [judgedClears] - For a disabled or read-only form, the only values judged, see `judgedClearsIn()`
- * @param [isDefaultsChanged=false] - Whether the `defaultFormStateBehavior` the defaults are computed by changed since
- *        `previous`, so every field is judged again, however little its schema and value changed
- * @returns - The sanitized data, sharing everything it left alone with `data`, and where each array it dropped items of
- *   moved the rest, an inner array's first, with the paths of the arrays holding it as they were before
+ * @returns - The sanitized data, sharing everything it left alone with `data`; where each array it dropped items of
+ *   moved the rest, an inner array's first, with the paths of the arrays holding it as they were before; each value it
+ *   set aside, each it dropped or wrote over, and each seeded value it kept whose origin it worked out
  */
 export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F extends FormContextType>(
   previous: FieldTree<T, S, F>,
   next: FieldTree<T, S, F>,
   uiState: UiStateReader,
   fillAsFirstRender: FirstRenderFill<T, S, F>,
-  origins: DataOrigins,
+  origins: DiffedOrigins,
   edit?: FieldEdit,
   judgedClears?: JudgedClears,
-): { formData: T | undefined; itemMoves: ContainerKeyMove[]; dropped: DroppedValue[]; classified: ClassifiedValue[] } {
+): {
+  formData: T | undefined;
+  itemMoves: ContainerKeyMove[];
+  dropped: DroppedValue[];
+  released: DroppedValue[];
+  classified: ClassifiedValue[];
+} {
   const itemMoves: ContainerKeyMove[] = [];
   const dropped: DroppedValue[] = [];
+  const released: DroppedValue[] = [];
   const classified: ClassifiedValue[] = [];
   const sanitized = walk(
     {
@@ -1190,14 +1242,16 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       editedPath: edit?.path,
       newKeyOf: edit?.newKeyOf,
       switchedFrom: edit?.switchedFrom,
-      enteredAlong: pathsAlong(origins.entered),
-      seededAlong: pathsAlong(origins.seeded),
+      enteredAlong: alongOf(origins.entered),
+      seededAlong: alongOf(origins.seeded),
+      refilled: origins.refilled,
       oldData: previous.formData,
       oldTree: previous,
       fillAsFirstRender,
       judgedClears,
       itemMoves,
       dropped,
+      released,
       classified,
     },
     {
@@ -1219,5 +1273,14 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
     },
     [],
   );
-  return { formData: sanitized === DROP ? undefined : asFieldValue<T>(sanitized), itemMoves, dropped, classified };
+  if (sanitized === DROP) {
+    released.push({ path: [], value: next.formData });
+  }
+  return {
+    formData: sanitized === DROP ? undefined : asFieldValue<T>(sanitized),
+    itemMoves,
+    dropped,
+    released,
+    classified,
+  };
 }

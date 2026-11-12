@@ -80,7 +80,8 @@ export interface FormProps<
    * the form mounts and when `reset()` is called. It is only a seed: the form owns its data after that, so passing back
    * what `onChange` reported changes nothing, and passing another value, such as a record that arrives after mount, is
    * ignored, with a warning in development only. To show other data, remount the form with a `key`, or call
-   * `setFieldValue('', data)` on its ref.
+   * `reset(data)` on its ref, which seeds the form with it. `setFieldValue('', data)` writes the data as values entered
+   * through the form, which no default changes afterwards.
    *
    * @deprecated Use `initialFormData`, which this is another name for. The form reads it only on mount and on
    * `reset()`, which the name `formData` hides by reading as a controlled value.
@@ -331,20 +332,27 @@ export interface FormState<
    * the keys the form moved, and dropped once the data no longer holds the clear
    */
   clearedPaths: ClearedPaths;
-  /** The paths of the values a person entered through the form, each a value that is no array or object. Such a value
-   * is theirs even where it equals a default. Moved with the keys the form moved, and dropped with a key the data drops
+  /** The paths of the values a person entered through the form, or a write from outside the fields such as
+   * `setFieldValue()` wrote: each value that is no array or object, each empty array or object, each key written as
+   * `undefined`, and each array or object itself whose rows or keys were moved, added or removed, or that a write wrote
+   * whole. Such a value is theirs even where it equals a default. Moved with the keys the form moved, and dropped where
+   * the data stops holding the value: with a key the data drops, and where the sanitize or the defaults write another
+   * value over it, which is then one the defaults filled in
    */
   enteredPaths: EnteredPaths;
-  /** The paths of the values the seed held that nobody has entered over since. A seed doesn't say whether a person or
-   * a default put a value in it, so the origin of these is not known. A value at neither set of paths is one the
-   * defaults filled in. Follows the data as `enteredPaths` does
+  /** The paths of the values the seed held that nobody has entered over since, recorded as `enteredPaths` records a
+   * value. A seed doesn't say whether a person or a default put a value in it, so the origin of these is not known
+   * until a change asks: one the sanitize keeps then leaves these paths, for `enteredPaths` where it is not what the
+   * defaults filled the field with. A value at neither set of paths is one the defaults filled in. Follows the data as
+   * `enteredPaths` does
    */
   seededPaths: SeededPaths;
   /** The seeded paths of the baseline: those of the seed it was derived from */
   baselineSeededPaths: SeededPaths;
   /** The values a person entered or the seed held whose field went away, each with the path it was at and, for one an
    * option switch left out, the option it was entered under. None is in the data, and each returns to it when a field
-   * that can hold it shows at its path again, under that option. Emptied by a reset
+   * whose type, `const` and `enum` take it shows at its path again, under that option, holding no value a person
+   * entered or a seed held. Emptied by a reset
    */
   orphans: Orphans;
   /** Where `liveValidate`'s trigger fired, which decides the errors `liveErrors: 'field'` shows */

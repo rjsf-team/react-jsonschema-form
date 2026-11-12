@@ -456,6 +456,8 @@ export function createUiState() {
       };
     },
     selection: selectionAt,
+    /** The path of each field holding a selection */
+    pickedPaths: (): FieldPath[] => [...selections.keys()],
     /** The option list at `path` the user picked from last, if they picked from any there */
     lastPickedList: (path: FieldPath): string | undefined => {
       let last: { list: string; pick: number } | undefined;

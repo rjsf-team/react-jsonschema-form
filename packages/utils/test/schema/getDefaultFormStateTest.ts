@@ -11433,35 +11433,81 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
-      it('keeps a value of a select its options stop offering where the fieldState says a person entered it', () => {
+      it('stays where it is an extra key, a `null`, or the value of a field offering options', () => {
         const schema: RJSFSchema = {
           type: 'object',
-          properties: { a: { type: 'string', enum: ['d', 'f'], default: 'd' } },
-        };
-        const entered: FormFieldState = {
-          selectedOption: () => 0,
-          isExpanded: () => false,
-          isEntered: (fieldPath) => fieldPath === fieldPathFromList(['a']),
-        };
-        expect(fill(schema, { a: 'e' }, entered)).toEqual({ a: 'e' });
-        expect(fill(schema, { a: 'e' }, filledAt())).toEqual({ a: 'd' });
-      });
-
-      it('stays where it is an extra key, an array or object, a `null`, or the value of a field offering options', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          default: { extra: 'e', list: ['l'], obj: { o: 'o' }, nil: 'n', pick: 'p' },
+          default: { extra: 'e', nil: 'n', pick: 'p' },
           properties: {
-            list: { type: 'array', items: { type: 'string' } },
-            obj: { type: 'object' },
             nil: { type: ['string', 'null'] },
             pick: { oneOf: [{ type: 'string' }, { type: 'number' }] },
           },
           additionalProperties: { type: 'string' },
         };
-        const data = { extra: 'x', list: ['x'], obj: { o: 'x' }, nil: null, pick: 'x' };
-        const fieldState = filledAt(['extra'], ['list'], ['obj'], ['nil'], ['pick']);
+        const data = { extra: 'x', nil: null, pick: 'x' };
+        const fieldState = filledAt(['extra'], ['nil'], ['pick']);
         expect(fill(schema, data, fieldState)).toEqual(data);
+      });
+
+      describe('an array or object filled whole', () => {
+        const holding = (tags?: string[], box?: Record<string, number>): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            tags: { type: 'array', items: { type: 'string' }, ...(tags && { default: tags }) },
+            box: { type: 'object', additionalProperties: { type: 'number' }, ...(box && { default: box }) },
+          },
+        });
+        const data = { tags: ['a', 'b'], box: { w: 1, h: 2 } };
+        const whole = filledAt(['tags'], ['box']);
+
+        it('takes the `default` its field declares now, whatever its length or keys', () => {
+          expect(fill(holding(['c'], { w: 3 }), data, whole)).toEqual({ tags: ['c'], box: { w: 3 } });
+          expect(fill(holding(['d', 'e', 'f'], { w: 3, h: 4, d: 5 }), data, whole)).toEqual({
+            tags: ['d', 'e', 'f'],
+            box: { w: 3, h: 4, d: 5 },
+          });
+        });
+
+        it('takes the default an object above it declares for it, and the one a `$ref` names', () => {
+          const inherited: RJSFSchema = { ...holding(), default: { tags: ['c'], box: { w: 3 } } };
+          expect(fill(inherited, data, whole)).toEqual({ tags: ['c'], box: { w: 3 } });
+          const referenced: RJSFSchema = {
+            type: 'object',
+            definitions: { tags: { type: 'array', items: { type: 'string' }, default: ['c'] } },
+            properties: { tags: { $ref: '#/definitions/tags' }, flag: true },
+          };
+          expect(fill(referenced, { tags: ['a', 'b'], flag: ['x'] }, filledAt(['tags'], ['flag']))).toEqual({
+            tags: ['c'],
+            flag: ['x'],
+          });
+        });
+
+        it('stays as the data holds it where no `default` is declared for it', () => {
+          expect(fill(holding(), data, whole)).toEqual(data);
+        });
+
+        it('is merged with its default, row by row, where the fieldState does not say it is filled whole', () => {
+          expect(fill(holding(['c'], { w: 3 }), data, filledAt(['tags', 0]))).toEqual({
+            tags: ['c', 'b'],
+            box: data.box,
+          });
+        });
+
+        it('takes the `default` the root declares, where the root is one', () => {
+          const root: RJSFSchema = { type: 'array', items: { type: 'string' }, default: ['c'] };
+          expect(fill(root, ['a', 'b'], filledAt([]))).toEqual(['c']);
+          expect(fill(root, ['a', 'b'], filledAt())).toEqual(['a', 'b']);
+          expect(fill({ type: 'array', items: { type: 'string' } }, ['a', 'b'], filledAt([]))).toEqual(['a', 'b']);
+        });
+
+        it('stays as the data holds it where the root offers options, or declares a `null` default', () => {
+          const offering: RJSFSchema = {
+            default: ['c'],
+            oneOf: [{ type: 'array', items: { type: 'string' } }, { type: 'string' }],
+          };
+          expect(fill(offering, ['a', 'b'], filledAt([]))).toEqual(['a', 'b']);
+          const nullable: RJSFSchema = { type: ['array', 'null'], items: { type: 'string' }, default: null };
+          expect(fill(nullable, ['a', 'b'], filledAt([]))).toEqual(['a', 'b']);
+        });
       });
     });
   });

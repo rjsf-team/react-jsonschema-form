@@ -884,8 +884,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     });
 
     // A required boolean's `false` and a required array's `[]` are the fill's work rather than a default the old branch
-    // asked for. The form knows it filled the `false` in, so it gives way to a default the new branch declares. A
-    // value in an array is left as the data holds it, so the `[]` stays
+    // asked for. The form knows it filled each in, so each gives way to a default the new branch declares
     describe('a value only the old branch computed a default for', () => {
       it('gives a required boolean the old branch declared no default for the default the new branch declares', async () => {
         const { node, onChange } = createFormComponent({
@@ -900,7 +899,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', agree: true }, 'root_mode');
       });
 
-      it('leaves a required array the old branch declared no default for alone', async () => {
+      it('gives a required array the old branch declared no default for the default the new branch declares', async () => {
         const { node, onChange } = createFormComponent({
           schema: modeSwap(
             { required: ['nums'], properties: { nums: { type: 'array', items: { type: 'number' } } } },
@@ -910,7 +909,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
         await selectMode(node, 'b');
 
-        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', nums: [] }, 'root_mode');
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', nums: [7] }, 'root_mode');
       });
     });
 
