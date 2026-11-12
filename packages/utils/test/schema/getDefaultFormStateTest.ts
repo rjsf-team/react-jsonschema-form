@@ -278,6 +278,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(utils.getDefaultFormState(schema, {})).toStrictEqual({ b: 1 });
         expect(utils.getDefaultFormState(schema, {}, false, true)).toStrictEqual({ b: 1 });
       });
+      test('folds the keys of a const that closes the object without the uiSchema of its additional properties', () => {
+        const schema: RJSFSchema = { type: 'object', const: { a: 1 } };
+        const uiSchema = { additionalProperties: { 'ui:initialValue': 7 } };
+        const utils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(utils.getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({ a: 1 });
+        expect(utils.getDefaultFormState(schema, {}, false, true, uiSchema)).toStrictEqual({ a: 1 });
+      });
       test('computeDefaults gives the const without data, which getDefaultFormState merges in', () => {
         expect(computeDefaults({ validator: testValidator }, bare, { rawFormData: { a: 3 } })).toEqual({ a: 1 });
       });

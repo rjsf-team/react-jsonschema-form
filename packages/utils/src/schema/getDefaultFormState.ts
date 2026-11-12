@@ -1792,6 +1792,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const seeded = closingKeys ?? (isObject(defaults) && formDataRequired.length === 0 ? Object.keys(defaults) : []);
     const keys = new Set([...formDataRequired, ...seeded.filter((key) => !isDeclared(key))]);
     [...keys].filter(isPinned).forEach((key) => {
+      // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
+      // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`. No such
+      // field renders the keys of a `const` that closes the object, so its uiSchema doesn't apply to them
+      const extraKeyProps = childProps(key, ADDITIONAL_PROPERTIES_KEY);
       const { value, holdsNull } = foldReporting(
         context,
         `additional:${key}`,
@@ -1802,9 +1806,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
           'additionalKey',
           additionalPropertiesSchema,
         ),
-        // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
-        // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
-        childProps(key, ADDITIONAL_PROPERTIES_KEY),
+        closingKeys ? { ...extraKeyProps, uiSchema: undefined } : extraKeyProps,
       );
       // Added whatever the form's settings say, below, so its `null` only has to reach the objects above
       if (holdsNull) {
