@@ -10,7 +10,6 @@ import isMultiSelectTest from './isMultiSelectTest.ts';
 import isSelectTest from './isSelectTest.ts';
 import omitExtraDataTest from './omitExtraDataTest.ts';
 import retrieveSchemaTest from './retrieveSchemaTest.ts';
-import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest.ts';
 
 export type * from './types.ts';
 
@@ -27,5 +26,4 @@ export {
   isSelectTest,
   omitExtraDataTest,
   retrieveSchemaTest,
-  sanitizeDataForNewSchemaTest,
 };

@@ -1276,7 +1276,7 @@ function copiedValue(value: unknown, copies: WeakMap<object, unknown>): unknown 
  * which can be the merged schema of a memoized plan, is shared across calls, and the caller may change the defaults it
  * is handed
  */
-export function ownValue<V>(value: V): V {
+function ownValue<V>(value: V): V {
   return asDeclared<V>(copiedValue(value, new WeakMap()));
 }
 

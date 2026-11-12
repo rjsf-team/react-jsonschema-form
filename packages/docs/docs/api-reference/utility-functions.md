@@ -9,8 +9,8 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 ## Constants
 
 The `@rjsf/utils` package exports a set of constants that represent the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
-In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility, and the `PINNED_TYPE_FLAG` flag that `FallbackField` adds to the schema whose `type` its type selector pins.
-`GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or a schema with no keyword that asserts something about the value, such as `enum`, `const`, `format`, a length, a range, `properties`, `items` or a subschema keyword like `allOf` or `not`: its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all when the schema it is compared against is equally unconstrained, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it.
+In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility.
+`GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or a schema with no keyword that asserts something about the value, such as `enum`, `const`, `format`, a length, a range, `properties`, `items` or a subschema keyword like `allOf` or `not`: its `type` was guessed from the data the property holds rather than declared by the schema, so `constrainsAlike()` reads it as no type at all, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it.
 An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
 `RJSF_PROVENANCE_KEY` is the Symbol `retrieveSchema()` adds to every subschema it hands out, recording where the subschema came from. Only `retrieveSchema()` writes or reads what it holds. It is exported so that a test can strip it, as RJSF's own test setup does, and compare a retrieved schema with the same schema written by hand.
@@ -250,7 +250,7 @@ Tests that expect such a throw need to catch the timer's error themselves; this 
 Says whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as `oldSchema`, each `default` read as the one the defaults fill the field with under the `context`, as a property where a placement is given, see [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype).
 A form's components ask `registry.schemaUtils.constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault, oldPlacement, newPlacement)`, which passes the form's own `context`.
 A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the schema, so it is read as no type.
-These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across a schema change or gives way to the new schema's defaults, as `sanitizeDataForNewSchema()` and an `anyOf`/`oneOf` switch decide it.
+These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across a schema change or gives way to the new schema's defaults.
 
 #### Parameters
 
@@ -1336,7 +1336,7 @@ return (
 
 Returns the schema an array schema declares for its item at `index`: the `prefixItems` or tuple `items` entry there, and past them its `items`, or the `additionalItems` beside a tuple.
 A position it declares nothing at, or something other than a schema at, constrains nothing and is `true`, as is one under an array `items` beside `prefixItems`, which mixes the two ways of writing a tuple.
-`sanitizeDataForNewSchema()` and `Form`'s sanitize of a schema change read an array's items position by position through it.
+`Form`'s sanitize of a schema change reads an array's items position by position through it.
 
 #### Parameters
 
@@ -1789,7 +1789,7 @@ Gets the type whose field renders a widget for a schema, matching the widget's a
 Returns the keyword whose options are rendered for the `schema`. Only a non-empty array offers options: a keyword left
 `undefined` by a schema assembled in code, or holding an empty list, describes nothing to choose between, so the schema
 reads as one without it and is handled through its own type. `anyOf` wins when both keywords offer options.
-Every reader of the options (`isSelect()`, `optionsList()`, `sanitizeDataForNewSchema()`, `findFieldInSchema()` and
+Every reader of the options (`isSelect()`, `optionsList()`, `findFieldInSchema()` and
 the fields in `@rjsf/core`) goes through it, so they all agree on the one list that is on screen.
 
 #### Parameters
@@ -2396,7 +2396,7 @@ The top layer that declares a `selectedOptionDescription` gives it, and so does 
 
 Says whether `newType` names every type `oldType` names, so that it allows any value of the old type.
 A `number` names `integer` too, since it allows every integer.
-This is how `sanitizeDataForNewSchema()` and `Form` decide that an array item's type didn't change.
+This is how `Form` decides that an array item's type didn't change.
 
 #### Parameters
 
@@ -3769,36 +3769,6 @@ An optional object whose filtered content is all empty is pruned, and an `anyOf`
 #### Returns
 
 - T | undefined: The new form data, with any fields not defined in the schema removed
-
-### sanitizeDataForNewSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`.
-If the new schema does not contain any properties, then `undefined` is returned to clear all the form data.
-Due to the nature of schemas, this sanitization happens recursively for nested objects of data.
-Also, any properties in the old schema that are non-existent in the new schema, or that it declares with another type, are removed from the data at every level.
-An object property the data doesn't hold, or holds as `null` where neither its type list nor `nullable: true` allows `null`, is left out, for the defaults to fill in.
-An object property under a type list is sanitized by what it holds, an object as an object where the list names `object` and an array as an array where it names `array`, whichever type the list renders as; at the top level, `data` is read through `getSchemaType()` alone.
-An object or array equal to the new schema's `const` is kept as it is. One the new `const` rejects once sanitized takes the new `const` where it holds the old one, and is otherwise cleared, or dropped as an array item, unless the old schema declared the same `const`.
-An array is sanitized item by item, each item against the schemas the two sides declare at its position: a `prefixItems` or tuple `items` entry, and past them `items`, or `additionalItems` beside a tuple. A position an old schema declares nothing, `true` or `false` at constrains nothing, since an old `false` shaped no item there, and an old schema declaring no type has its items read without the `type` they declare. The array is cleared where its old type was guessed from the data and the new schema describes its items otherwise, where an item reaches a position only the new side declares `false` at, or where an item the new `prefixItems` or tuple describes is dropped, as one is at a position whose new `type` leaves out one the old side declares there, a `number` counting as naming `integer`, which would move the items after it, unless the item is `undefined`, which stays a hole, or both sides constrain its position alike, as `constrainsAlike()` reads them, the defaults aside, which keeps it for validation to report. Past the prefix, an item at such a position is dropped and the array kept, and a `maxItems` cuts the array only where it differs from the old schema's, an item past an unchanged one clearing nothing. A `null` item at a position whose constraints changed becomes `undefined`, a row for the defaults to fill, where the new position fills it with a `default`, its own or an `anyOf`/`oneOf` option's, and doesn't allow `null`. An object item is sanitized as an object wherever its new type list names `object`, and an array item as an array wherever it names `array`, without the `properties` the list declares, unless the old items named no `array`, which keeps it as it is, and an `undefined` item under a type list or `type: 'array'` items stays a hole, for the defaults to fill. An item that isn't an object is dropped where the new items declare `type: 'object'`, unless it is a `null` that `nullable: true` allows, and one the new items' `const` rejects is dropped unless it holds the old `const`, which takes the new one.
-A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
-A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
-A value outside the new `enum` or constant options is replaced with the new `default` when that is an option, with the only option when there is one, or cleared; array items outside them are dropped, an `undefined` one staying a hole.
-Each property's `default` is read as the one the defaults fill it with (see [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype)), from its own and the one its object and the objects above it hand down, and under `emptyObjectFields` only where they write it there.
-A property or an array item holding the old `default` takes the new one, an array or an object under a type list rendered as another type included, while an object rendered as one keeps its value, for the defaults to fill key by key; a `readOnly` new `default` replacing an old one clears only a scalar or a select's property value, and no item, while one the old schema declared no `default` for keeps its value.
-A property cleared this way, by the new `const`, its `enum` or a `readOnly` `default`, or as an array the new schema can't hold, is removed rather than set to `undefined`, for the defaults to fill in. A property the data already holds as `undefined` keeps it where the old schema declares the same type, `const`, `enum` or constant options, `maxItems` and `default` for it, the `default` the object declares for it included, and is otherwise removed too unless a value replaces it, as a top-level clear is when `anyOf`/`oneOf` options are switched.
-`Form` does not call this to sanitize its data: it diffs the field trees before and after a change and judges only the fields whose constraints the change altered.
-
-#### Parameters
-
-- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
-- rootSchema: S - The root JSON schema of the entire form
-- [newSchema]: S | undefined - The new schema for which the data is being sanitized
-- [oldSchema]: S | undefined - The old schema from which the data originated
-- [data=\{}]: unknown - The form data associated with the schema, defaulting to an empty object when undefined
-
-#### Returns
-
-- T: The new form data, without the fields uniquely associated with the old schema. Will return `undefined` if the new schema is not an object containing properties, or where its `const` rejects object or array data, and a copy of that `const` where the data holds the old schema's.
 
 ## Schema utils creation function
 

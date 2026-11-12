@@ -50,4 +50,37 @@ describe('constrainsAlike()', () => {
     expect(constrainsAlike(context, field, field, {}, 'x', 'z')).toBe(true);
     expect(constrainsAlike(ancestorWins, field, field, {}, 'x', 'z')).toBe(false);
   });
+
+  it.each<[string, unknown, unknown, boolean]>([
+    ['the same list in another order', ['string', 'null'], ['null', 'string'], true],
+    ['a list naming another type', ['string', 'null'], ['string', 'number'], false],
+    ['a longer list', ['string'], ['string', 'null'], false],
+    ['a list beside a single type', ['string'], 'string', false],
+  ])('compares type lists by what they name: %s', (_, oldType, newType, expected) => {
+    expect(
+      constrainsAlike({ type: oldType } as RJSFSchema, { type: newType } as RJSFSchema, undefined, undefined),
+    ).toBe(expected);
+  });
+
+  it.each<[string, RJSFSchema, RJSFSchema, boolean]>([
+    [
+      'an enum and constant options listing the same values',
+      { enum: ['a', 'b'] },
+      { oneOf: [{ const: 'a' }, { enum: ['b'] }] },
+      true,
+    ],
+    ['enums listing other values', { enum: ['a'] }, { enum: ['b'] }, false],
+    ['an empty enum and no enum', { enum: [] }, {}, true],
+    ['options listing no value and no options', { anyOf: [{ enum: [] }] }, {}, true],
+    ['an option open to any string and no options', { anyOf: [{ const: 'a' }, { type: 'string' }] }, {}, true],
+    ['a boolean option and no options', { anyOf: [{ const: 'a' }, true] }, {}, true],
+    [
+      'constant options and an enum listing fewer values',
+      { anyOf: [{ const: 'a' }, { const: 'b' }] },
+      { enum: ['a'] },
+      false,
+    ],
+  ])('compares the values listed by %s', (_, oldSchema, newSchema, expected) => {
+    expect(constrainsAlike(oldSchema, newSchema, undefined, undefined)).toBe(expected);
+  });
 });
