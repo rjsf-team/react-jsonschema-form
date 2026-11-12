@@ -137,6 +137,13 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // The entry this field renders from, which the `SchemaField` rendering it provides, so an option nested in another
   // option's entry names both
   const entry = useTemplateWarnEntry(schema, fieldPath, globalFormOptions);
+  // `resolveUiSchema()` merges the `ui:definitions` entry of the option's `$ref` under its entry, which can't be told
+  // apart here from what the `uiSchema` gave it, so the labels name both
+  const optionRef: unknown = option ? (Reflect.get(option, RJSF_REF_KEY) ?? option.$ref) : undefined;
+  const definition =
+    typeof optionRef === 'string' && uiSchemaDefinitions && Object.hasOwn(uiSchemaDefinitions, optionRef)
+      ? optionRef
+      : undefined;
   // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't
   // tell apart from a `uiSchema` it inherits, so a field the option's own entry names is warned about here instead,
   // unless it is `SchemaField`, which renders the option the same either way
@@ -145,7 +152,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     const optionField = getUiOptions<T, S, F>(optionUiSchema).field;
     if (optionField && lookUpUiField<T, S, F>(optionField, fields) !== fields.SchemaField) {
       logOnce(
-        `ui:field in uiSchema.${xxxOfKey}[${selectedOption}] for ${entry.label()} is ` +
+        `ui:field in uiSchema.${xxxOfKey}[${selectedOption}]` +
+          `${definition ? ` (or ui:definitions['${definition}'])` : ''} for ${entry.label()} is ` +
           'ignored, since a field is already named for that path, so the option is rendered as though no ui:field ' +
           'were given.',
       );
@@ -178,13 +186,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const keysFromField =
     optionUiSchema?.additionalProperties === undefined && optionFieldUiSchema?.additionalProperties !== undefined;
   const rendersFromField = optionUiSchema === uiSchema;
-  // `resolveUiSchema()` merges the `ui:definitions` entry of the option's `$ref` under its entry, which can't be told
-  // apart here from what the `uiSchema` gave it, so the labels name both
-  const optionRef: unknown = option ? (Reflect.get(option, RJSF_REF_KEY) ?? option.$ref) : undefined;
-  const definition =
-    typeof optionRef === 'string' && uiSchemaDefinitions && Object.hasOwn(uiSchemaDefinitions, optionRef)
-      ? optionRef
-      : undefined;
   const optionEntry = useMemo(
     () => optionWarnEntry(entry, rendersFromField, keysFromField, xxxOfKey, selectedOption, definition),
     [entry, rendersFromField, keysFromField, xxxOfKey, selectedOption, definition],

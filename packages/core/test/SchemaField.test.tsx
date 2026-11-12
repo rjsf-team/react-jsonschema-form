@@ -2234,6 +2234,24 @@ describe('SchemaField', () => {
       expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
     });
 
+    it("names the option's ui:definitions entry beside its own, which resolveUiSchema() merges under it", () => {
+      const { node } = createFormComponent({
+        schema: {
+          $defs: { Foo: { minLength: 2 } },
+          type: 'string',
+          anyOf: [{ $ref: '#/$defs/Foo' }, { maxLength: 5 }],
+        },
+        uiSchema: { 'ui:field': 'MyField', 'ui:definitions': { '#/$defs/Foo': { 'ui:field': 'OptionField' } } },
+        fields,
+      });
+
+      expect(node.querySelector('.option-field')).not.toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        'ui:field in uiSchema.anyOf[0] (or ui:definitions[\'#/$defs/Foo\']) for "root" is ignored, since a field is ' +
+          'already named for that path, so the option is rendered as though no ui:field were given.',
+      );
+    });
+
     it('warns once for an option entry below a wrapper that renders SchemaField for its own data', () => {
       function Wrapper(props: FieldProps) {
         const { SchemaField: InnerSchemaField } = props.registry.fields;
@@ -3738,6 +3756,38 @@ describe('SchemaField', () => {
         });
 
         // The option's entry has no `additionalProperties`, so the extra key renders from the field's
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_{}" ({}) names no registered template (\'Typo\'), ' +
+            'so it is ignored.',
+        );
+      });
+
+      it("names an extra key an option below an option takes from the field by the field's additionalProperties entry", () => {
+        const withOwnOptions = (title: string): RJSFSchema => ({
+          title,
+          type: 'object',
+          anyOf: [{ properties: { p: { type: 'string' } } }, { properties: { q: { type: 'string' } } }],
+        });
+        const withNestedOptions = (title: string): RJSFSchema => ({
+          title,
+          type: 'object',
+          anyOf: [withOwnOptions(`${title}1`), withOwnOptions(`${title}2`)],
+        });
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            additionalProperties: { type: 'string' },
+            anyOf: [withNestedOptions('A'), withNestedOptions('B')],
+          },
+          uiSchema: {
+            additionalProperties: { 'ui:FieldTemplate': typo },
+            anyOf: [{ 'ui:title': 'A', anyOf: [{ 'ui:title': 'A1' }, { 'ui:title': 'A2' }] }, { 'ui:title': 'B' }],
+          },
+          initialFormData: { extra: 'x' },
+        });
+
+        // Neither option's entry has `additionalProperties`, so the extra key renders from the field's
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
           'FieldTemplate (ui:FieldTemplate or ui:options) for "root_{}" ({}) names no registered template (\'Typo\'), ' +
             'so it is ignored.',

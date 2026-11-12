@@ -131,7 +131,9 @@ export function optionWarnEntry(
     definition,
   };
   const label = lazyLabel(() => anchoredEntryLabel(anchor));
-  return { ...entry, label, schemaLabel, anchor, extraKeysFrom: keysFromField ? entry : undefined };
+  // A field that is itself an option taking its own field's extra keys hands on that field's entry, which they render from
+  const extraKeysFrom = keysFromField ? (entry.extraKeysFrom ?? entry) : undefined;
+  return { ...entry, label, schemaLabel, anchor, extraKeysFrom };
 }
 
 export default TemplateWarnEntryContext;
