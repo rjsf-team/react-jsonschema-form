@@ -1183,6 +1183,45 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           },
         );
 
+        it.each([true, false])(
+          "renders a nullable object's null option without the object's properties, fallback UI %s",
+          (fallback) => {
+            const { node } = createFormComponent({
+              schema: withVal({
+                type: ['object', 'null'],
+                properties: { p: { type: 'string' } },
+                oneOf: [
+                  { title: 'O', type: 'object' },
+                  { title: 'N', type: 'null' },
+                ],
+              }),
+              initialFormData: { val: null },
+              useFallbackUiForUnsupportedType: fallback,
+            });
+
+            expect(elementOf(node, '#root_val__oneof_select')).toHaveDisplayValue('N');
+            expect(node.querySelector('#root_val_p')).not.toBeInTheDocument();
+          },
+        );
+
+        it("clears a nullable object's value on a switch to its null option", async () => {
+          const { node, getFormData } = createFormComponent({
+            schema: withVal({
+              type: ['object', 'null'],
+              properties: { p: { type: 'string' } },
+              oneOf: [
+                { title: 'O', type: 'object' },
+                { title: 'N', type: 'null' },
+              ],
+            }),
+            initialFormData: { val: { p: 'a' } },
+          });
+
+          await user.selectOptions(elementOf(node, '#root_val__oneof_select'), 'N');
+
+          expect(getFormData()).toEqual({});
+        });
+
         it.each<[string, RJSFSchema, UiSchema?]>([
           ['a ui:field', {}, { val: { 'ui:field': 'FallbackField' } }],
           ['a $id', { $id: 'FallbackField' }],

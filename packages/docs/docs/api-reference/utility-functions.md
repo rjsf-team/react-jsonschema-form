@@ -2664,7 +2664,7 @@ Returns the values of the stars a rating widget draws: one for each whole number
 Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's `ObjectField` does ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
 Such a field shows its own properties and other keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option as [getRenderedOptionSchema()](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema) renders it.
 `getRenderedOptionSchema()`, the defaults `getDefaultFormState()` computes, the `getUiRequiredErrorSchema()` walk and `MultiSchemaField` all read it to choose between the two, so none of them renders one option and seeds or walks another.
-A `type` list holding `object` and another type than `null` renders no such field beside an option whose own types leave out `object`, wherever `object` sits in the list, and neither does an object the fallback UI's type selector pinned, which it marks `PINNED_TYPE_FLAG` ([#5725](https://github.com/rjsf-team/react-jsonschema-form/issues/5725)).
+A `type` list holding `object` and another type, `null` included, renders no such field beside an option whose own types leave out `object`, wherever `object` sits in the list, and neither does an object the fallback UI's type selector pinned, which it marks `PINNED_TYPE_FLAG` ([#5725](https://github.com/rjsf-team/react-jsonschema-form/issues/5725)).
 
 #### Parameters
 

@@ -540,6 +540,9 @@ describe('rendersOwnFieldBesideOption()', () => {
     ["a type list's option implying an object", objectFirst, { properties: { a: { type: 'string' } } }, true],
     ["a plain object's option of another type", { type: 'object' }, { type: 'string' }, true],
     ["a string-first type list's object option", { type: ['string', 'object'] }, { type: 'object' }, false],
+    ["a nullable object's null option", { type: ['object', 'null'] }, { type: 'null' }, false],
+    ["a nullable object's object option", { type: ['object', 'null'] }, { type: 'object' }, true],
+    ["a one-entry list's option of another type", { type: ['object'] }, { type: 'string' }, true],
     ["an object pinned from a type list's option of another type", pinned, { type: 'string' }, false],
     ["an object pinned from a type list's object option", pinned, { type: 'object' }, true],
   ])('reads %s as rendering its own field: %s', (_, schema, option, expected) => {

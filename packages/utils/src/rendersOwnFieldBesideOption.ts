@@ -1,7 +1,7 @@
 import { PINNED_TYPE_FLAG } from './constants.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
-import getUnionTypes from './getUnionTypes.ts';
+import { getKnownTypes } from './getUnionTypes.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
 import hasSchemaMarker from './hasSchemaMarker.ts';
 import isConstantSelect from './isConstantSelect.ts';
@@ -12,9 +12,10 @@ import type { FormContextType, RJSFSchema, SchemaUtilsType, StrictRJSFSchema, Ui
  * `ObjectField` does (see `getFieldComponent()` in `SchemaField`). Such a field shows its own properties and other
  * keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option
  * as `getRenderedOptionSchema()` renders it. Everything that picks between the two reads this, so that none of them
- * renders one option and seeds or walks another. A `type` list holding `object` and another type than `null` renders no
- * such field beside an option whose own types leave out `object`, since there is no object for it to render while that
- * option is shown, so that option takes the whole field as any other field's does, wherever `object` sits in the list.
+ * renders one option and seeds or walks another. A `type` list holding `object` and another type, `null` included,
+ * renders no such field beside an option whose own types leave out `object`, since there is no object for it to render
+ * while that option is shown, so that option takes the whole field as any other field's does, wherever `object` sits in
+ * the list.
  * So does an object the fallback UI's type selector pinned, which it marks `PINNED_TYPE_FLAG`.
  *
  * @param schema - The schema holding the options
@@ -31,7 +32,7 @@ export default function rendersOwnFieldBesideOption<S extends StrictRJSFSchema =
   }
   if (
     !isSchemaObject<S>(option) ||
-    (getUnionTypes<S>(schema) === undefined && !hasSchemaMarker(schema, PINNED_TYPE_FLAG))
+    (getKnownTypes<S>(schema).length < 2 && !hasSchemaMarker(schema, PINNED_TYPE_FLAG))
   ) {
     return true;
   }

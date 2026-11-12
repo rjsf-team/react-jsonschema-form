@@ -31,6 +31,13 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
     it('returns undefined when the new schema does not contain a "property" object', () => {
       expect(sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, {}, {})).toBeUndefined();
     });
+    it('returns undefined for a new schema whose type holds no object, though it declares properties', () => {
+      const newSchema: RJSFSchema = { type: 'null', properties: { p: { type: 'string' } } };
+      const oldSchema: RJSFSchema = { type: 'object', properties: { p: { type: 'string' } } };
+      expect(
+        sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, oldSchema, { p: 'a' }),
+      ).toBeUndefined();
+    });
     it('returns input formData when the old schema is not an object', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
       expect(
