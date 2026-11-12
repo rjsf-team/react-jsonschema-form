@@ -133,7 +133,7 @@ function placeText<Text>(
  *   same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control
  *   a second time. A level with no control, such as a container whose label is its own heading, keeps its label only
  *   when no field above already draws its text, or else is `above` under the id of the label that does. A label of its
- *   own with a control to name takes `optionLabelId()` when a field above draws a label under the id it would take,
+ *   own with a control to name takes an option's label id when a field above draws a label under the id it would take,
  *   numbered by how many fields above draw one. The control points `aria-labelledby` at a label its template draws, or
  *   one above, when its declaration says so, when the control above was pointed at that label too, since its template
  *   may then draw it with no `for`, or when its id isn't the one that label's `for` names. Its `requiredMarker` follows
