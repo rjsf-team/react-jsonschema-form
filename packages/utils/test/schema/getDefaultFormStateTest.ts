@@ -2641,6 +2641,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ),
           ).toStrictEqual({ plain: value, wrapped: value });
         });
+
+        it.each<[string, GenericObjectType, boolean]>([
+          ['a key', { c: undefined }, false],
+          ['a key nested one level deeper', { n: { c: undefined } }, false],
+          ['a key', { c: undefined }, true],
+        ])(
+          'keeps %s the user left undefined below an allOf whose enum declares it, initialDefaultsGenerated %s',
+          (_name, value, initialDefaultsGenerated) => {
+            const enumProperty: RJSFSchema = { properties: { c: { enum: ['a', 'b'] } } };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { obj: { allOf: [{ properties: { ...enumProperty.properties, n: enumProperty } }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { obj: value }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ obj: value });
+          },
+        );
       });
 
       it("skips the constant default of a schema's anyOf under skipOneOf when it also has a oneOf", () => {
