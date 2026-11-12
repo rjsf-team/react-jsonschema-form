@@ -111,8 +111,8 @@ interface GetGroupAndOptionProps<
  *
  * A reference is all a group has, so a replacement `FieldTemplate` has to draw its label under the id the group points
  * at: under a plan, the plan's label id, which `getLabelId()` reads and which is an option's numbered label id rather
- * than `fieldLabelId()`'s beneath a label drawn above with the same id; without one, `fieldLabelId()`. A custom group widget
- * takes these props, or `getGroupAndOptionProps()`', handed the field's `presentation`, rather than pointing at
+ * than `fieldLabelId()`'s beneath a label drawn above with the same id; without one, `fieldLabelId()`. A custom group
+ * widget takes these props, or `getGroupAndOptionProps()`', handed the field's `presentation`, rather than pointing at
  * `fieldLabelId()` itself, so it follows the plan as the built-in ones do.
  *
  * @param id - The widget's `id`, which the label's `htmlFor` targets and `fieldLabelId()` derives the label's id from

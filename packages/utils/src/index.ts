@@ -515,5 +515,7 @@ export {
  * schema written by hand
  */
 export { RJSF_PROVENANCE_KEY } from './constants.ts';
-/** @public Ids RJSF renders that no other RJSF package's source needs, by which consumers' code and tests find those parts */
+/** @public Ids RJSF renders that no other RJSF package's source needs, by which consumers' code and tests find those
+ * parts
+ */
 export { optionDescriptionId, optionHelpId, selectedOptionDescriptionId } from './idGenerators.ts';

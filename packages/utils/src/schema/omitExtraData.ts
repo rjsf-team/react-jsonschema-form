@@ -116,9 +116,9 @@ function dataOf(value: unknown): unknown {
 
 /** A recursive, schema-driven filter that walks `schema` and `formData` in lockstep, keeping only
  * values that are described by the schema. Handles `$ref`, `allOf`, `anyOf`, `oneOf`, `if/then/else`,
- * `patternProperties`, `additionalProperties`, `propertyNames`, and `dependencies`. Optional object
- * properties whose schema-filtered content is entirely empty (`null`, `undefined`, `''`, or an array or object holding only such values) are pruned; required
- * properties and scalar values are always kept when schema-defined.
+ * `patternProperties`, `additionalProperties`, `propertyNames`, and `dependencies`. Optional object properties whose
+ * schema-filtered content is entirely empty (`null`, `undefined`, `''`, or an array or object holding only such values)
+ * are pruned; required properties and scalar values are always kept when schema-defined.
  *
  * An object's shown `anyOf`/`oneOf` option is read as its field renders it, retrieved for the data, and the object's
  * extra keys are judged once, as the one field taking them stubs them: by the keywords of the object and the option

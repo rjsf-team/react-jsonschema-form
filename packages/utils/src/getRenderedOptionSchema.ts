@@ -253,8 +253,9 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * An option naming no `type` takes the parent's, and an object parent that names none is read as an object, the type
  * its `ObjectField` was picked for. A parent allowing several types passes all of them on, since the option is one
  * branch of the choice made there rather than a narrowing of what the parent accepts: a field reading `schema.type`,
- * such as the one choosing the props of `BaseInputTemplate`'s `<input>`, which withholds the numeric `pattern` from a union precisely because the other types do
- * not have to match it, would otherwise be told the value is of a type the parent never pinned it to.
+ * such as the one choosing the props of `BaseInputTemplate`'s `<input>`, which withholds the numeric `pattern` from a
+ * union precisely because the other types do not have to match it, would otherwise be told the value is of a type the
+ * parent never pinned it to.
  *
  * The result is the same object for the same `parent` and `option`, so a reader keying its work on the schema it is
  * handed, as `retrieveSchema()` does, finds it again rather than taking a new copy for content to compare.
