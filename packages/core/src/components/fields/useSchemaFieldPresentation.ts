@@ -31,6 +31,7 @@ import getFieldWidget, {
   getBooleanFieldWidget,
   getFallbackTypes,
   withoutDescribers,
+  withoutUiWidget,
 } from './fieldWidgetUtils.ts';
 
 /** The fields of core's that render no control for a template label to name: a container, whose label is its own
@@ -318,6 +319,32 @@ export default function useSchemaFieldPresentation<
   const usesFallbackUi = Boolean(globalFormOptions.useFallbackUiForUnsupportedType);
   const arrayMissesItems = plannedField === fields.ArrayField && !hidden && !(ITEMS_KEY in schema);
   const rendersUnsupportedTemplate = (fallbackDrawsNoControl || arrayMissesItems) && !usesFallbackUi;
+  // `ArrayField` renders the field as one widget, or the fallback UI's value field while it holds an array, which keeps
+  // the field's `ui:widget` only as the fallback UI hands it down
+  const rendersArrayWidget = useMemo(() => {
+    if (field === fields.ArrayField) {
+      return widget !== undefined;
+    }
+    if (
+      plannedField !== fields.FallbackField ||
+      !usesFallbackUi ||
+      headingType !== 'array' ||
+      !getFallbackTypes<S>(schema).includes('array')
+    ) {
+      return false;
+    }
+    const valueUiSchema = fallbackValueKeepsWidget<T, S, F>(
+      schema,
+      'array',
+      getUiOptions<T, S, F>(uiSchema).widget,
+      registry.widgets,
+    )
+      ? uiSchema
+      : withoutUiWidget<T, S, F>(uiSchema);
+    return (
+      getFieldWidget<T, S, F>(fields.ArrayField, { ...schema, type: 'array' }, valueUiSchema, registry) !== undefined
+    );
+  }, [field, plannedField, fields, widget, usesFallbackUi, headingType, schema, uiSchema, registry]);
   // A field with no control of its own to name hands its label and description to the field below it rendering the same
   // id, which draws them as its heading: the field rendering withheld options, and the fallback UI's field while its
   // value is one that draws its own heading or label
@@ -365,7 +392,8 @@ export default function useSchemaFieldPresentation<
   // A field rendering its options is required as the option shown is, since that option's control holds its value. An
   // option holding nothing fails the form whatever its control accepts left alone, as a checkbox just switched to does,
   // which nothing seeds a `false` for, and so does a field its own `ui:required` asks of, whether or not its parent is
-  // there, which the schema's `required` only demands where it is
+  // there, which the schema's `required` only demands where it is, and so does an array rendered as one widget, which
+  // accepts only the `[]` it holds left alone
   const holdsNoValue = formData === undefined;
   const controlRequired = useMemo(() => {
     // An option drawing the unsupported-field template has no control to answer its own `ui:required` with, and the field
@@ -374,14 +402,8 @@ export default function useSchemaFieldPresentation<
       return (
         required &&
         !(rendersUnsupportedTemplate && inherited !== undefined) &&
-        ((holdsNoValue && uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) === true) ||
-          demandsAnswer<T, S, F>(
-            declaration,
-            field === fields.ArrayField && widget !== undefined,
-            schema,
-            uiSchema,
-            registry,
-          ))
+        ((holdsNoValue && (uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) === true || rendersArrayWidget)) ||
+          demandsAnswer<T, S, F>(declaration, rendersArrayWidget, schema, uiSchema, registry))
       );
     }
     const { field: optionField, schema: optionSchema, uiSchema: optionUiSchema } = shownOptionField;
@@ -408,9 +430,8 @@ export default function useSchemaFieldPresentation<
     rendersUnsupportedTemplate,
     inherited,
     declaration,
-    field,
+    rendersArrayWidget,
     fields,
-    widget,
     schema,
     uiSchema,
     registry,

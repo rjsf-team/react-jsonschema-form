@@ -1885,6 +1885,46 @@ describe('ArrayField', () => {
 
         expect(node.querySelector('.rjsf-required')).toBeInTheDocument();
       });
+
+      it('requires a multiple select holding no value until it holds `[]`', async () => {
+        const { node } = createFormComponent({
+          schema: requiredArray(enumItems),
+          defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' },
+        });
+        const select = screen.getByRole('listbox');
+
+        expect(select).toBeRequired();
+        expect(node.querySelector('label .rjsf-required')).toBeInTheDocument();
+        await user.selectOptions(select, 'a');
+        await user.deselectOptions(select, 'a');
+        expect(select).not.toBeRequired();
+        expect(node.querySelector('label .rjsf-required')).not.toBeInTheDocument();
+      });
+
+      it('marks a group of checkboxes holding no value', () => {
+        const { node } = createFormComponent({
+          schema: requiredArray(enumItems),
+          uiSchema: { c: { 'ui:widget': 'checkboxes' } },
+          defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' },
+        });
+
+        expect(node.querySelector('.rjsf-required')).toBeInTheDocument();
+      });
+
+      it('leaves the fallback UI label unmarked while its multiple select holds `[]`', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            required: ['c'],
+            properties: { c: { type: ['string', 'array'], title: 'Colors', items: enumItems, uniqueItems: true } },
+          },
+          initialFormData: { c: [] },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(screen.getByRole('listbox')).not.toBeRequired();
+        expect(node.querySelector('.rjsf-required')).not.toBeInTheDocument();
+      });
     });
   });
 

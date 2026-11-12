@@ -275,10 +275,6 @@ describe('ui:required enforcement', () => {
       });
     });
 
-    it('blocks a submit with nothing chosen in a multiple select (#5744)', async () => {
-      await expectSubmitBlocked(colors({}, ['c']), { c: { 'ui:required': true } });
-    });
-
     it('blocks a submit with no box checked, on a group an option renders', async () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -420,6 +416,10 @@ describe('ui:required enforcement', () => {
     const colors: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true };
     const withC = (c: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { c } });
 
+    it('blocks a submit with nothing chosen in a required multiple select (#5744)', async () => {
+      await expectSubmitBlocked({ ...withC(colors), required: ['c'] }, { c: { 'ui:required': true } });
+    });
+
     it.each<[string, UiSchema]>([
       ['a `ui:field` given as the `ArrayField` component', { 'ui:field': ArrayField, 'ui:required': true }],
       ['a `ui:field` naming no registered field, which renders by type', { 'ui:field': 'Nope', 'ui:required': true }],
@@ -450,6 +450,18 @@ describe('ui:required enforcement', () => {
       await submitForm(node, user, true);
       expect(onSubmit).not.toHaveBeenCalled();
       expect(onError).toHaveBeenCalled();
+    });
+
+    it('submits `[]` from the list of items the fallback UI renders where it drops a `ui:widget` no array takes', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: withC({ type: ['string', 'array'], items: { type: 'string' } }),
+        uiSchema: { c: { 'ui:widget': 'textarea', 'ui:required': true } },
+        initialFormData: { c: [] },
+        useFallbackUiForUnsupportedType: true,
+      });
+      expect(node.querySelector('textarea')).not.toBeInTheDocument();
+      await submitForm(node, user, true);
+      expect(onSubmit).toHaveBeenCalled();
     });
 
     it('submits `[]` from a multiple select its `deprecatedHandling` hides', async () => {
