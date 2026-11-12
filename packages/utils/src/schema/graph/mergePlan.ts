@@ -17,6 +17,7 @@ import {
   RJSF_REF_KEY,
   THEN_KEY,
 } from '../../constants.ts';
+import { hashObject } from '../../hashForSchema.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
@@ -73,6 +74,12 @@ export interface PlanEntry {
   readonly node: NodeId;
   readonly edge: PlanEdge;
   readonly refPath: RefPath;
+}
+
+/** An `if` a plan checked, by its node, and whether the data it was checked against satisfied it */
+export interface CheckedCondition {
+  readonly node: NodeId;
+  readonly satisfied: boolean;
 }
 
 /** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
@@ -174,6 +181,8 @@ export interface MergePlan<S extends StrictRJSFSchema = RJSFSchema> {
    */
   readonly chains: readonly Keywords<S>[];
   readonly choices: readonly OptionChoice[];
+  /** Each `if` the plan checked, in the order it checked them */
+  readonly checked: readonly CheckedCondition[];
   /** Whether the plan was built from the data, which it is only where it checked a condition, qualified a dependency or
    * asked for an option; a plan that was not holds for any data
    */
@@ -185,13 +194,45 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   readonly context: SchemaContext<S, F>;
   readonly graph: SchemaGraph<S>;
   readonly seeds: readonly Seed[];
-  /** The field's data, which an `if` and option choice read */
+  /** The field's data, which an option choice reads */
   readonly data?: unknown;
-  /** The data `dependencies` qualify against, the field's data unless given: the defaults view passes the defaults
-   * accumulated so far under the data
+  /** The data an `if` is checked against and `dependencies` qualify against, the field's data unless given: the
+   * defaults view passes the defaults accumulated so far under the data, so a default decides a condition as the same
+   * value in the data does
    */
   readonly depData?: unknown;
   readonly policy?: PlanPolicy<S>;
+}
+
+/** What each `if` last decided outside a plan, with a hash of the data it decided for */
+const decisionMemo = new KeyedMemo<{ readonly hash: string; readonly holds: boolean }>();
+
+/** Whether `data` satisfies the `if` at `node`, as a plan checks it: a field with no data is checked as an empty
+ * object, since `required` constrains only objects. The defaults a fill computes are new objects each time, so the
+ * last check is kept by a hash of its data, which answers for equal data without the validator and holds no object a
+ * caller may go on to change
+ *
+ * @param context - The `SchemaContext` whose validator checks the condition
+ * @param graph - The graph holding the condition
+ * @param node - The condition's node
+ * @param data - The data to check it against
+ * @returns - Whether the condition holds
+ */
+export function conditionHolds<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  graph: SchemaGraph<S>,
+  node: NodeId,
+  data: unknown,
+): boolean {
+  const keys = [context.validator, graph, node];
+  const hash = hashObject({ data });
+  const last = decisionMemo.peek(keys);
+  if (last?.hash === hash) {
+    return last.holds;
+  }
+  const holds = context.validator.isValid(targetOf(graph, node), data ?? {}, graph.rawRoot);
+  decisionMemo.set(keys, { hash, holds });
+  return holds;
 }
 
 const conditionMemo = new KeyedMemo<boolean>();
@@ -595,6 +636,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private readonly entries: PlanEntry[] = [];
   private readonly seen = new Set<NodeId>();
   private readonly choices: OptionChoice[] = [];
+  private readonly checked: CheckedCondition[] = [];
   private readonly context: SchemaContext<S, F>;
   private readonly graph: SchemaGraph<S>;
   private readonly data: unknown;
@@ -654,6 +696,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       schema: merged.schema,
       chains: merged.chains,
       choices: this.choices,
+      checked: this.checked,
       readsData: this.readsData,
     };
   }
@@ -818,9 +861,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return holds;
   }
 
-  /** Applies the `then` or `else` the `if` chooses on the field's own data, `{}` standing in for none. Inside a
-   * dependency, the `if` is checked against the data the dependency qualified on, and the branch's own `oneOf` is
-   * applied, as the dependency's are.
+  /** Applies the `then` or `else` the `if` chooses on the data the field's dependencies qualify on, `{}` standing in
+   * for none. Inside a dependency, the branch's own `oneOf` is applied, as the dependency's are.
    */
   private applyCondition(
     part: Part<S>,
@@ -841,12 +883,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // function for the schema it reads as
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(
-            `if:${condition}`,
-            targetOf(this.graph, condition),
-            dependencyKey === undefined ? this.data : this.depData,
-          )
+        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), this.depData)
         : conditionNode.kind !== 'boolean' || conditionNode.value;
+    if (conditionNode.kind === 'schema') {
+      this.checked.push({ node: condition, satisfied });
+    }
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);
     const branchNode = branchProvider && this.graph.child(branchProvider.node.id, branchKey);
