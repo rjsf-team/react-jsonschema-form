@@ -825,6 +825,21 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   return planView(context, expanded, planFor(seeds), options, data, depData);
 }
 
+/** Whether the field of `schema` defaults to its `const`, or to the `const` an ancestor gives it where `inherited` says
+ * there is one: unless `constAsDefaults` is `'never'` or the field's `const` is an Ajv `$data` reference
+ */
+function constIsDefault<S extends StrictRJSFSchema>(
+  schema: S,
+  defaultFormStateBehavior: DefaultFormStateBehavior | undefined,
+  inherited = false,
+): boolean {
+  return (
+    (inherited || schema[CONST_KEY] !== undefined) &&
+    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    !constIsAjvDataReference(schema)
+  );
+}
+
 /** Returns `compute`, which computes its value on the first call only */
 function computedOnce<V>(compute: () => V): () => V {
   let computed: { value: V } | undefined;
@@ -1016,11 +1031,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
-  if (
-    schema[CONST_KEY] !== undefined &&
-    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-    !constIsAjvDataReference(schema)
-  ) {
+  if (constIsDefault<S>(schema, defaultFormStateBehavior)) {
     defaults = ownValue(schema[CONST_KEY]);
   } else if (
     isObject(defaults) &&
@@ -1608,11 +1619,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const parentConst = view.schema[CONST_KEY];
   // An object `const` the field defaults to, read under the checks `foldView()` reads it under
   const objectConst =
-    isObjectData(parentConst) &&
-    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-    !constIsAjvDataReference(view.schema)
-      ? parentConst
-      : undefined;
+    isObjectData(parentConst) && constIsDefault<S>(view.schema, defaultFormStateBehavior) ? parentConst : undefined;
   // `ObjectField` asks whether the user can add a key of the field as it renders it, retrieved for the data, its `allOf`
   // and `if` merged. An option's `const` is not its parent's: the field that renders the option's extra keys, its
   // parent's or, where the option offers options of its own, the option's, asks it of the parent with the option's
@@ -1699,10 +1706,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
     // should always return the computedDefault since it's coming from the const.
     const hasParentConst = getByPath(parentConst, key) !== undefined;
-    const hasConst =
-      ((isObject(readProperty) && CONST_KEY in readProperty) || hasParentConst) &&
-      defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-      !constIsAjvDataReference(readProperty);
+    const hasConst = constIsDefault<S>(readProperty, defaultFormStateBehavior, hasParentConst);
     // A property stubbed by `stubExistingAdditionalProperties()` from `additionalProperties`/`patternProperties`
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.
