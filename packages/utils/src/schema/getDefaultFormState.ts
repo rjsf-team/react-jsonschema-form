@@ -1796,6 +1796,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     Object.keys(closingConst).filter(
       (key) => isObject(defaults) && Object.hasOwn(defaults, key) && !(readsInitialValue && initialDefaultsGenerated),
     );
+  const isClosingKey = (key: string) => closingKeys !== undefined && closingKeys.includes(key) && !isDeclared(key);
   if ((additionalProperties && !initialDefaultsGenerated) || (closingKeys && closingKeys.length > 0)) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
@@ -1820,7 +1821,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         closingKeys
           ? closingKeyField(view)
           : defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
-        closingKeys ? { ...extraKeyProps, uiSchema: undefined } : extraKeyProps,
+        // Nor does the user edit them, so the `const` fills what their data lacks on every pass, as on the first
+        closingKeys ? { ...extraKeyProps, uiSchema: undefined, initialDefaultsGenerated: false } : extraKeyProps,
       );
       // Added whatever the form's settings say, below, so its `null` only has to reach the objects above
       if (holdsNull) {
@@ -1872,11 +1874,13 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   }
   // The data is the user's: a key it holds as `undefined` stays so unless `mergeDefaultsIntoFormData` says a default
   // replaces that and one does, and one no property names and no additional property was computed for is kept as it
-  // is. A `null` it holds was kept or replaced by the field of the key, as in any other container
+  // is. A `null` it holds was kept or replaced by the field of the key, as in any other container. No field renders a
+  // key of a `const` that closes the object for the user to clear, so one held as `undefined` takes the `const`
   if (shouldMergeDefaultsIntoFormData) {
     for (const key of Object.keys(formData).filter(isPinned)) {
       const value = formData[key];
-      const keptUndefined = value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior);
+      const keptUndefined =
+        value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior) && !isClosingKey(key);
       const uncomputed = !Object.hasOwn(computed, key) && (value === undefined || !isDeclared(key));
       if (keptUndefined || uncomputed) {
         setOwn(computed, key, value);

@@ -183,6 +183,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           );
           expect(regenerated).toEqual({ x: { a: 2 } });
         });
+        it('refills a nested object of a const that closes the object where the data holds part of it', () => {
+          const nested: RJSFSchema = { type: 'object', const: { a: { b: 1, c: 2 } } };
+          expect(utils(nested).getDefaultFormState(nested, { a: { b: 1 } })).toStrictEqual({ a: { b: 1, c: 2 } });
+          expect(utils(nested).getDefaultFormState(nested, { a: { b: 1 } }, false, true)).toStrictEqual({
+            a: { b: 1, c: 2 },
+          });
+          expect(utils(nested).getDefaultFormState(nested, { a: { b: 3 } }, false, true)).toStrictEqual({
+            a: { b: 3, c: 2 },
+          });
+        });
+        it('fills a key of a const that closes the object where the data holds it as undefined, which a declared key keeps', () => {
+          expect(utils(bare).getDefaultFormState(bare, { a: undefined })).toStrictEqual({ a: 1 });
+          expect(utils(bare).getDefaultFormState(bare, { a: undefined }, false, true)).toStrictEqual({ a: 1 });
+          const declared: RJSFSchema = { ...bare, properties: { a: { type: 'number' } } };
+          expect(utils(declared).getDefaultFormState(declared, { a: undefined }, false, true)).toStrictEqual({
+            a: undefined,
+          });
+        });
         it('getObjectDefaults seeds only the keys of the const that the defaults it is handed hold', () => {
           const context = { validator: testValidator, ...absent };
           expect(getObjectDefaults(context, bare, { includeUndefinedValues: true })).toStrictEqual({});
