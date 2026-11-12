@@ -17,7 +17,7 @@ import {
   RJSF_REF_KEY,
   THEN_KEY,
 } from '../../constants.ts';
-import { hashObject } from '../../hashForSchema.ts';
+import { hashObject } from '../../hashObject.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';

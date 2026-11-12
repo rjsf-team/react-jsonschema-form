@@ -279,7 +279,6 @@ export {
   isSelect,
   omitExtraData,
   retrieveSchema,
-  sanitizeDataForNewSchema,
 } from './schema/index.ts';
 
 export type {
