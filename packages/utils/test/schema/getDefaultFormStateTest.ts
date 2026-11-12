@@ -2379,6 +2379,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { d: 1 },
           ],
           [
+            "replaces a value outside the enum of a property declared inside an object field's allOf with the field's default",
+            { type: 'object', allOf: [{ properties: { c: { enum: ['a', 'b'] } } }], default: { c: 'a' } },
+            { c: 'z' },
+            { c: 'a' },
+          ],
+          [
             "keeps a valid value of a property declared inside an object field's allOf",
             { type: 'object', allOf: [{ properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
             { c: 'green', d: 1 },

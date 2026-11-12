@@ -1873,10 +1873,14 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const matching =
       unmerged.size > 0 ? viewFormDataMatching<unknown, S, F>(context, view, formData, unmerged) : formData;
     const matched = isObject(matching) ? matching : formData;
+    // A value the merged schema rejects is left out, so the key takes the field's own defaults, as a property the fold
+    // computes does, since the fold computed none for it
     for (const key of kept) {
       const source = unmerged.has(key) ? matched : formData;
       if (Object.hasOwn(source, key)) {
         setOwn(computed, key, source[key]);
+      } else if (isObject(defaults) && Object.hasOwn(defaults, key)) {
+        setOwn(computed, key, defaults[key]);
       }
     }
   }
