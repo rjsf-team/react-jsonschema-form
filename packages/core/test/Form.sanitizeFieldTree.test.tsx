@@ -543,13 +543,13 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     });
 
     // Without `a` the inner `else` would fill `'e'`, which makes the `if` hold, so the fill settles on the `then` and
-    // its `'d'` (#5830). That is what the defaults fill in, whether they filled it or the user typed it
+    // its `'d'` (#5830). The fill's `'d'` leaves with the field, and the same value typed by the user is theirs to keep
     it.each([
-      { start: 'the fill', initialFormData: { kind: 's' }, typed: undefined },
-      { start: "the user's", initialFormData: { kind: 's', a: 'x' }, typed: 'd' },
+      { start: 'drops the value the fill gave', initialFormData: { kind: 's' }, typed: undefined, kept: undefined },
+      { start: 'keeps the same value the user typed', initialFormData: { kind: 's', a: 'x' }, typed: 'd', kept: 'd' },
     ])(
-      'drops a value the defaults fill in under another branch than the one that shows it, from $start',
-      async ({ initialFormData, typed }) => {
+      '$start, where the defaults fill it in under another branch than the one that shows it',
+      async ({ initialFormData, typed, kept }) => {
         const schema = kindOf({
           if: { properties: { kind: { const: 's' } } },
           then: {
@@ -570,27 +570,60 @@ describe('sanitize as a diff of the field trees before and after a change', () =
           },
         });
 
-        expect(formData).toEqual({ kind: 't' });
-        expect(container.querySelector('#root_a__key')).toBeNull();
+        expect(formData).toEqual(kept === undefined ? { kind: 't' } : { kind: 't', a: kept });
+        expect(container.querySelector('#root_a__key') !== null).toBe(kept !== undefined);
       },
     );
 
-    // No data tells a value the user picked apart from the same value the default filled in
-    it.each([
-      { picked: 'd', expected: { kind: 't' }, isKept: false },
-      { picked: 'e', expected: { kind: 't', a: 'e' }, isKept: true },
-    ])('keeps the pick $picked only when it is not the default', async ({ picked, expected, isKept }) => {
+    // The form records what the user picked, so a pick equal to the default is told apart from the default filled in
+    it.each([{ picked: 'd' }, { picked: 'e' }])(
+      'keeps the pick $picked, whether or not it is the default',
+      async ({ picked }) => {
+        const schema = kindOf({
+          ...ifThen({ type: 'string', enum: ['d', 'e'], default: 'd' }),
+          additionalProperties: true,
+        });
+        const { container, formData } = await selectT(schema, {
+          initialFormData: { kind: 's', a: picked === 'd' ? 'e' : 'd' },
+          beforeSwitch: (form) => user.selectOptions(elementOf(form, '#root_a'), picked),
+        });
+
+        expect(formData).toEqual({ kind: 't', a: picked });
+        expect(container.querySelector('#root_a__key')).not.toBeNull();
+      },
+    );
+
+    it('keeps a value `setFieldValue()` wrote, though it equals the default', () => {
+      const schema = kindOf({
+        ...ifThen({ type: 'string', enum: ['d', 'e'], default: 'd' }),
+        additionalProperties: true,
+      });
+      const ref = createRef<FormRef<KindData>>();
+      render(
+        <Form<KindData> schema={schema} validator={validator} initialFormData={{ kind: 's', a: 'e' }} ref={ref} />,
+      );
+
+      act(() => ref.current?.setFieldValue(['a'], 'd'));
+      act(() => ref.current?.setFieldValue(['kind'], 't'));
+
+      expect(ref.current?.getFormData()).toEqual({ kind: 't', a: 'd' });
+    });
+
+    it('drops the default the form filled in, which nobody picked', async () => {
       const schema = kindOf({
         ...ifThen({ type: 'string', enum: ['d', 'e'], default: 'd' }),
         additionalProperties: true,
       });
       const { container, formData } = await selectT(schema, {
-        initialFormData: { kind: 's', a: picked === 'd' ? 'e' : 'd' },
-        beforeSwitch: (form) => user.selectOptions(elementOf(form, '#root_a'), picked),
+        initialFormData: { kind: 's' },
+        // The select shows the default, `'d'`, by its index
+        beforeSwitch: async (form) => {
+          expect(elementOf(form, '#root_a')).toHaveValue('0');
+        },
       });
 
-      expect(formData).toEqual(expected);
-      expect(container.querySelector('#root_a__key') !== null).toBe(isKept);
+      expect(formData).toEqual({ kind: 't' });
+      expect(container.querySelector('#root_a__key')).toBeNull();
     });
   });
 

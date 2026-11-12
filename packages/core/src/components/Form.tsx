@@ -48,7 +48,7 @@ import TemplateWarnEntryContext from './fields/TemplateWarnEntryContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
-import type { ClearedPaths, RevealedPaths, TouchedPaths } from './formState.ts';
+import type { ClearedPaths, EnteredPaths, RevealedPaths, SeededPaths, TouchedPaths } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState, UiStateReader } from './uiState.ts';
@@ -331,6 +331,17 @@ export interface FormState<
    * the keys the form moved, and dropped once the data no longer holds the clear
    */
   clearedPaths: ClearedPaths;
+  /** The paths of the values a person entered through the form, each a value that is no array or object. Such a value
+   * is theirs even where it equals a default. Moved with the keys the form moved, and dropped with a key the data drops
+   */
+  enteredPaths: EnteredPaths;
+  /** The paths of the values the seed held that nobody has entered over since. A seed doesn't say whether a person or
+   * a default put a value in it, so the origin of these is not known. A value at neither set of paths is one the
+   * defaults filled in. Follows the data as `enteredPaths` does
+   */
+  seededPaths: SeededPaths;
+  /** The seeded paths of the baseline: those of the seed it was derived from */
+  baselineSeededPaths: SeededPaths;
   /** Where `liveValidate`'s trigger fired, which decides the errors `liveErrors: 'field'` shows */
   revealed: RevealedPaths;
   /** The option selections the baseline is derived under, whenever a prop change or an omission derives it again: none
