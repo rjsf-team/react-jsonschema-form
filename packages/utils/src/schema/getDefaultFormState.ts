@@ -1881,21 +1881,21 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const unmerged = new Set(
       ALL_OF_KEY in view.schema && !pinnedKeys ? kept.filter((key) => formData[key] !== undefined) : [],
     );
-    const matchedSchema = viewMatchedSchema<S, F>(context, view);
-    const matched =
-      unmerged.size > 0
-        ? matchProperties<S, F>(
-            context,
-            mergedSchemaOf<S, F>(context, view),
-            matchedSchema,
-            declarationsOf<S>(matchedSchema),
-            rootSchema,
-            formData,
-            !populatesAllOf,
-            populatesAllOf,
-            unmerged,
-          )
-        : formData;
+    let matched = formData;
+    if (unmerged.size > 0) {
+      const matchedSchema = viewMatchedSchema<S, F>(context, view);
+      matched = matchProperties<S, F>(
+        context,
+        mergedSchemaOf<S, F>(context, view),
+        matchedSchema,
+        declarationsOf<S>(matchedSchema),
+        rootSchema,
+        formData,
+        !populatesAllOf,
+        populatesAllOf,
+        unmerged,
+      );
+    }
     // A value the merged schema rejects is left out, so the key takes the field's own defaults, as a property the fold
     // computes does, since the fold computed none for it
     for (const key of kept) {
