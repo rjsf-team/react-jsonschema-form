@@ -1177,6 +1177,20 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // extra keys of an object field are (#3759), so a nested object they cleared isn't filled in again
       defaultsWithFormData = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
     } else if (!isObject(rawFormData) || foldedType === undefined) {
+      // A row the defaults filled in that they now give another value is not merged back over it, and neither is an
+      // object row, which was computed with its data already, the values the defaults give it now among them
+      const isFilledRow =
+        foldedType === 'array' && Array.isArray(rawFormData) ? filledRowTest<T, S, F>(view, props) : undefined;
+      const heldData =
+        isFilledRow && Array.isArray(rawFormData)
+          ? rawFormData.map((item: unknown, idx) => {
+              const computed = getByPath(defaultsWithFormData, idx);
+              const isComputed = isObject(item)
+                ? isObject(computed)
+                : isFilledRow(item, idx) && !Object.is(computed, item);
+              return isComputed ? undefined : item;
+            })
+          : rawFormData;
       // A value that is no object, and object data of an untyped field, are merged with the field's defaults here. Object
       // data of an object field is not: each of its properties was computed with its data already, its `allOf` merged
       // or not, so the data is matched once, by the field of each property, rather than again by every object it is
@@ -1188,7 +1202,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         viewFormDataMatching<unknown, S, F>(
           context,
           view,
-          rawFormData,
+          heldData,
           () => props.fieldState?.isEntered?.(fieldPathFromList(pathListOf(props.fieldPath))) === true,
         ),
         mergeExtraDefaults,
@@ -2069,6 +2083,32 @@ function withItemsResolved<S extends StrictRJSFSchema>(
   return resolved === items ? schema : { ...schema, items: resolved };
 }
 
+/** Returns the test of whether a row of the array field `view` holds a value the defaults filled in, as `fieldState`
+ * tells it, or undefined where no row can: only a row of a list whose items offer no options, holding a value that is
+ * no array or object, and under no `ui:initialValue`, see `filledKeysOf()`
+ */
+function filledRowTest<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  { schema }: DefaultsView<S>,
+  { fieldState, fieldPath, uiSchema, holdsInitialValue }: FoldProps<T, S, F>,
+): ((item: unknown, idx: number) => boolean) | undefined {
+  if (
+    fieldState?.isFilled === undefined ||
+    holdsInitialValue === true ||
+    getUiOptions<T, S, F>(uiSchema).initialValue !== undefined ||
+    !isSchemaObject<S>(schema.items) ||
+    getXxxOfOptions<S>(schema.items) !== undefined
+  ) {
+    return undefined;
+  }
+  const path = pathListOf(fieldPath);
+  return (item, idx) =>
+    item !== undefined &&
+    item !== null &&
+    !isObject(item) &&
+    !Array.isArray(item) &&
+    fieldState.isFilled?.(fieldPathFromList([...path, idx])) === true;
+}
+
 /** Computes the default value for arrays.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -2117,8 +2157,10 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     uiSchema: getItemUiSchemaForIndex<T, S, F>(schema, uiSchema, idx),
     uiSchemaDefinitions,
     nullFills,
+    holdsInitialValue: props.holdsInitialValue,
     ...childPathProps<T, S, F>(props, idx),
   });
+  const isFilledRow = filledRowTest<T, S, F>(view, props);
 
   // Inject defaults into existing array defaults
   if (Array.isArray(defaults)) {
@@ -2133,10 +2175,13 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
           context,
           `defaultRow:${idx}`,
           itemField(view, AdditionalItemsHandling.Ignore),
-          { ...itemProps(idx), rawFormData: item, shouldMergeDefaultsIntoFormData: true },
+          // What the default states for the row stands, so nothing below it is taken for a value to compute again
+          { ...itemProps(idx), rawFormData: item, shouldMergeDefaultsIntoFormData: true, holdsInitialValue: true },
           memo,
         );
       }
+      // A row the defaults filled in takes what the default gives its place now, so its old value is not merged in
+      const held = Array.isArray(rawFormData) ? rawFormData[idx] : undefined;
       return foldChild<T, S, F>(
         context,
         `default:${idx}`,
@@ -2144,7 +2189,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
         {
           ...itemProps(idx),
           parentDefaults: item,
-          rawFormData: Array.isArray(rawFormData) ? rawFormData[idx] : undefined,
+          rawFormData: isFilledRow?.(held, idx) ? undefined : held,
           // An item the data holds is one a field renders
           onNullFill: isHeld ? onNullFill : undefined,
         },
@@ -2158,16 +2203,37 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     if (neverPopulate) {
       defaults = rawFormData;
     } else {
-      const itemDefaults = rawFormData.map((item: unknown, idx) =>
-        foldChild<T, S, F>(
+      const itemDefaults = rawFormData.map((item: unknown, idx) => {
+        const field = itemField(view, AdditionalItemsHandling.Ignore);
+        // The array's default for the row, filled above as the row holding it is
+        const parentDefaults = getByPath(defaults, idx);
+        const isDefaultRow = parentDefaults !== undefined && parentDefaults !== null;
+        if (isFilledRow?.(item, idx)) {
+          // A row the defaults filled in takes what they give it now: the array's default for it, or else what a row
+          // holding no value is filled with. Where neither gives a value any more, the row stays as it is
+          const derived = isDefaultRow
+            ? parentDefaults
+            : foldChild<T, S, F>(context, `derivedRow:${idx}`, field, { ...itemProps(idx), required: false }, memo);
+          if (derived !== undefined && derived !== null) {
+            return derived;
+          }
+        }
+        // An item the data holds is one a field renders. What the array's default states for a row wins over the
+        // defaults of the items, so the values it filled in below the row are left as the data holds them
+        return foldChild<T, S, F>(
           context,
           `row:${idx}`,
-          itemField(view, AdditionalItemsHandling.Ignore),
-          // An item the data holds is one a field renders
-          { ...itemProps(idx), rawFormData: item, parentDefaults: getByPath(defaults, idx), onNullFill },
+          field,
+          {
+            ...itemProps(idx),
+            rawFormData: item,
+            parentDefaults,
+            onNullFill,
+            holdsInitialValue: props.holdsInitialValue === true || isDefaultRow,
+          },
           memo,
-        ),
-      );
+        );
+      });
 
       // If the populate 'requiredOnly' flag is set then we only merge and include extra defaults if they are required.
       // Or if populate 'all' is set we merge and include extra defaults.

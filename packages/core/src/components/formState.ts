@@ -1412,12 +1412,17 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // though this instance has generated defaults before.
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
   // The defaults of a field offering options are those of the option it shows, which is the form's to keep
-  // A value in an array is left as the data holds it: an array's `default` fills its rows by position, so one computed
-  // again after a row moved would land in another row
-  const isFilled = (fieldPath: FieldPath) =>
-    !origins.entered.has(fieldPath) &&
-    !origins.seeded.has(fieldPath) &&
-    !fieldPathToList(fieldPath).some((key) => typeof key === 'number');
+  // An array's `default` fills its rows by position, so a value in an array whose rows the person moved, added or
+  // removed is left as the data holds it: computed again, it would take what the default gives another row
+  const isFilled = (fieldPath: FieldPath) => {
+    if (origins.entered.has(fieldPath) || origins.seeded.has(fieldPath)) {
+      return false;
+    }
+    const path = fieldPathToList(fieldPath);
+    return !path.some(
+      (key, depth) => typeof key === 'number' && origins.entered.has(fieldPathFromList(path.slice(0, depth))),
+    );
+  };
   // A pass told nothing of where its values came from takes none for a filled one
   const knowsOrigins = options.origins !== undefined || options.originsAfterEdit !== undefined;
   // On construction the form holds no selection yet, and the option each field shows is asked for all the same, so the
@@ -1950,7 +1955,9 @@ function collectEntered(
     return;
   }
   if (Array.isArray(written) || isPlainObject(written)) {
-    const isSameKind = hasCommitted && Array.isArray(written) === Array.isArray(committed) && isObject(committed);
+    const isSameKind = Array.isArray(written)
+      ? hasCommitted && Array.isArray(committed)
+      : hasCommitted && isPlainObject(committed);
     for (const [key, value] of Object.entries(written)) {
       const at = Array.isArray(written) ? Number(key) : key;
       const has = isSameKind && hasByPath(committed, at);
@@ -2034,7 +2041,10 @@ function originsAfterChange<T>(
   const move = dataMoveOf(change);
   const moved = { entered: withPathsMoved(recorded.entered, move), seeded: withPathsMoved(recorded.seeded, move) };
   if (change.newKeyOf || change.isAnnouncedMove || change.switchedFrom) {
-    return moved;
+    // An array whose rows the change moved, added or removed is entered itself: its rows no longer sit where its
+    // `default` would fill them
+    const isRowChange = change.newKeyOf !== undefined && Array.isArray(getAt<unknown>(committed, path));
+    return isRowChange ? { ...moved, entered: withPaths(moved.entered, fieldPathFromList(path)) } : moved;
   }
   const entered: FieldPath[] = [];
   const has = path.every((_key, depth) => hasByPath(getAt<unknown>(committed, path.slice(0, depth)), path[depth]));

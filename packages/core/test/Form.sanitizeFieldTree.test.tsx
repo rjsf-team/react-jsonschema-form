@@ -943,6 +943,25 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         properties: { list: { type: 'array', items: { type: 'string' }, default: [first, 'w'] } },
       });
 
+      it("takes the array's new default for its row, beside a row the user added (#5826)", () => {
+        const { mounted, changed } = reschema(listOf('x'), listOf('y'), {}, undefined, (form) =>
+          form.setFieldValue(['list'], ['x', 'w', 'k']),
+        );
+        expect(mounted).toEqual({ list: ['x', 'w'] });
+        expect(changed).toEqual({ list: ['y', 'w', 'k'] });
+      });
+
+      it('leaves every row as it is once the user moved, added or removed one', async () => {
+        const ref = createRef<FormRef>();
+        const element = (schema: RJSFSchema) => <Form schema={schema} validator={validator} ref={ref} />;
+        const { container, rerender } = render(element(listOf('x')));
+        await user.click(elementOf(container, '.rjsf-array-item-move-down'));
+        expect(ref.current?.getFormData()).toEqual({ list: ['w', 'x'] });
+        rerender(element(listOf('y')));
+        // The rows no longer sit where the default would fill them, so none is computed again
+        expect(ref.current?.getFormData()).toEqual({ list: ['w', 'x'] });
+      });
+
       it('keeps a row the user wrote over', () => {
         const { changed } = reschema(listOf('x'), listOf('y'), {}, undefined, (form) =>
           form.setFieldValue(['list', 0], 'mine'),

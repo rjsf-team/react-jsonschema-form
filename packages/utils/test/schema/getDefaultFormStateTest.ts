@@ -11375,6 +11375,64 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema, data, fieldState)).toEqual({ a: { b: 'y' } });
       });
 
+      describe('in an array', () => {
+        const list = (items: RJSFSchema, rest: RJSFSchema = {}): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', items, ...rest } },
+        });
+
+        it("takes the array's default for its row, beside a row a person added (#5826)", () => {
+          const schema = list({ type: 'string' }, { default: ['y', 'w'] });
+          expect(fill(schema, { list: ['x', 'w', 'k'] }, filledAt(['list', 0], ['list', 1]))).toEqual({
+            list: ['y', 'w', 'k'],
+          });
+        });
+
+        it("takes the default of the items where the array's default gives its row none", () => {
+          const schema = list({ type: 'string', default: 'z' });
+          expect(fill(schema, { list: ['x', 'k'] }, filledAt(['list', 0]))).toEqual({ list: ['z', 'k'] });
+        });
+
+        it('stays where neither gives its row a value any more', () => {
+          const schema = list({ type: 'string' });
+          expect(fill(schema, { list: ['x'] }, filledAt(['list', 0]))).toEqual({ list: ['x'] });
+        });
+
+        it("leaves what the array's default states for a row as it is, below the row too", () => {
+          const schema = list(
+            { type: 'object', properties: { q: { type: 'number', default: 2 } } },
+            { default: [{ q: 1 }] },
+          );
+          expect(fill(schema, { list: [{ q: 1 }] }, filledAt(['list', 0, 'q']))).toEqual({ list: [{ q: 1 }] });
+          expect(fill(schema, undefined, filledAt(['list', 0, 'q']))).toEqual({ list: [{ q: 1 }] });
+        });
+
+        it('takes the default of a property of a row the items fill', () => {
+          const schema = list({ type: 'object', properties: { q: { type: 'number', default: 2 } } });
+          expect(fill(schema, { list: [{ q: 1 }] }, filledAt(['list', 0, 'q']))).toEqual({ list: [{ q: 2 }] });
+        });
+
+        it('stays in a tuple, under items offering options, and under a `ui:initialValue`', () => {
+          const filled = filledAt(['list', 0]);
+          const tuple: RJSFSchema = {
+            type: 'object',
+            properties: { list: { type: 'array', items: [{ type: 'string', default: 'z' }] } },
+          };
+          expect(fill(tuple, { list: ['x'] }, filled)).toEqual({ list: ['x'] });
+          const options = list({ oneOf: [{ type: 'string', default: 'z' }, { type: 'number' }] });
+          expect(fill(options, { list: ['x'] }, filled)).toEqual({ list: ['x'] });
+          const plain = list({ type: 'string', default: 'z' });
+          expect(fill(plain, { list: ['x'] }, filled, { list: { 'ui:initialValue': ['x'] } })).toEqual({ list: ['x'] });
+          expect(fill(plain, { list: ['x'] }, filled, { 'ui:initialValue': { list: ['x'] } })).toEqual({ list: ['x'] });
+        });
+
+        it('stays where it is a `null`, an object or an array', () => {
+          const schema = list({ default: 'z' });
+          const data = { list: [null, {}, []] };
+          expect(fill(schema, data, filledAt(['list', 0], ['list', 1], ['list', 2]))).toEqual(data);
+        });
+      });
+
       it('keeps a value of a select its options stop offering where the fieldState says a person entered it', () => {
         const schema: RJSFSchema = {
           type: 'object',
