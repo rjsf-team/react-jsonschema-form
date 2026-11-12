@@ -677,6 +677,55 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(changed).toEqual({ a: { b: 'mine', d: 1 } });
     });
 
+    it('gives way where the user cleared the field and the parent that fills it changes its default (#5817)', () => {
+      const schema = (v: string): RJSFSchema => ({
+        type: 'object',
+        default: { v },
+        properties: { v: { type: ['string', 'null'], default: null }, w: { type: 'string' } },
+      });
+      const { changed } = reschema(
+        schema('x'),
+        schema('z'),
+        { w: 'k' },
+        { nestedDefaultsPrecedence: 'ancestorWins' },
+        (form) => form.setFieldValue(['v'], undefined),
+      );
+      expect(changed).toEqual({ v: 'z', w: 'k' });
+    });
+
+    it('settles a default that decides an `if` on mount, as after an edit (#5830)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { k: { type: 'string', default: 'x' }, other: { type: 'string' } },
+        if: { properties: { k: { const: 'x' } }, required: ['k'] },
+        then: { properties: { t: { type: 'number', default: 2 } } },
+      };
+      const { mounted, changed } = reschema(schema, schema, {}, undefined, (form) =>
+        form.setFieldValue(['other'], 'v'),
+      );
+      expect(mounted).toEqual({ k: 'x', t: 2 });
+      expect(changed).toEqual({ k: 'x', t: 2, other: 'v' });
+    });
+
+    it("fills the items of an array's default on mount, as after an edit (#5831)", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          other: { type: 'string' },
+          list: {
+            type: 'array',
+            default: [{}],
+            items: { type: 'object', properties: { q: { type: 'number', default: 1 }, c: { const: 'c' } } },
+          },
+        },
+      };
+      const { mounted, changed } = reschema(schema, schema, {}, undefined, (form) =>
+        form.setFieldValue(['other'], 'v'),
+      );
+      expect(mounted).toEqual({ list: [{ q: 1, c: 'c' }] });
+      expect(changed).toEqual({ list: [{ q: 1, c: 'c' }], other: 'v' });
+    });
+
     describe('in an array', () => {
       const listOf = (first: string): RJSFSchema => ({
         type: 'object',
