@@ -736,6 +736,7 @@ function derive<S extends StrictRJSFSchema>(
   const ownKey = placeKey(id, place);
   const innerPath = new Set(path).add(ownKey);
   const innerAbove = new Set(above).add(id);
+  const reachesItself = onCycle(graph);
   const depends = (key: string | NodeId) => {
     if (key !== ownKey && key !== id) {
       dependence.set(key, onWay(key, path, above));
@@ -744,7 +745,7 @@ function derive<S extends StrictRJSFSchema>(
   // Whether `key`, a place or a node, of the node `at`, is on the way to or above the copy, which the copy depends on
   // where `at` can be on the way to what it reaches
   const holds = (key: string | NodeId, at: NodeId) => {
-    if (onCycle(graph, at)) {
+    if (reachesItself(at)) {
       depends(key);
     }
     return onWay(key, innerPath, innerAbove);
@@ -914,25 +915,27 @@ function derive<S extends StrictRJSFSchema>(
  */
 function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: ReadonlySet<object>, container: string): S {
   const written = new Map<object, unknown>();
-  // Whether an object is or holds, however deep, one of the `shared` copies, and whether the object being written
-  // holds one among what it has written so far
+  // Whether an object written is or holds, however deep, one of the `shared` copies
   const reaching = new Map<object, boolean>();
-  let holding = false;
+  const reaches = (value: unknown) => isObject(value) && reaching.get(value) === true;
   const contents = new Map<string, string>();
   const definitions: GenericObjectType = {};
-  // A copy is held only where a keyword holds subschemas, so the data a `const`, `enum` or `default` holds is kept
-  // as it is, unwalked
-  const writeKeyword = (key: string, value: unknown): unknown => {
+  // Returns the keyword written and whether a subschema it holds reaches a shared copy. A copy is held only where a
+  // keyword holds subschemas, so the data a `const`, `enum` or `default` holds is kept as it is, unwalked
+  const writeKeyword = (key: string, value: unknown): readonly [unknown, boolean] => {
     const shape = keywordShape(key, value);
     if (shape === 'array' && Array.isArray(value)) {
       const items = value.map(write);
-      return items.every((item, index) => item === value[index]) ? value : items;
+      return [items.every((item, index) => item === value[index]) ? value : items, value.some(reaches)];
     }
     if (shape === 'map' && isObject(value)) {
       const entries = Object.entries(value).map(([name, sub]) => [name, write(sub)] as const);
-      return entries.every(([name, sub]) => sub === value[name]) ? value : Object.fromEntries(entries);
+      return [
+        entries.every(([name, sub]) => sub === value[name]) ? value : Object.fromEntries(entries),
+        Object.values(value).some(reaches),
+      ];
     }
-    return shape === 'single' ? write(value) : value;
+    return shape === 'single' ? [write(value), reaches(value)] : [value, false];
   };
   // An object holding no copy written once is kept as it is, so a subschema of the root the target holds is still the
   // one the graph knows, see `withRootIdRefPrefix()`
@@ -942,16 +945,12 @@ function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: Readonl
     }
     const known = written.get(value);
     if (known !== undefined) {
-      holding ||= reaching.get(value) === true;
       return known;
     }
-    const outer = holding;
-    holding = false;
-    const entries = Object.entries(value).map(([key, sub]) => [key, writeKeyword(key, sub)] as const);
-    const holdsShared = holding;
-    const reaches = holdsShared || shared.has(value);
-    reaching.set(value, reaches);
-    holding = outer || reaches;
+    const keywords = Object.entries(value).map(([key, sub]) => [key, ...writeKeyword(key, sub)] as const);
+    const entries = keywords.map(([key, sub]) => [key, sub] as const);
+    const holdsShared = keywords.some(([, , reached]) => reached);
+    reaching.set(value, holdsShared || shared.has(value));
     if (!shared.has(value) || !holdsShared) {
       const kept = entries.every(([key, sub]) => sub === value[key]) ? value : Object.fromEntries(entries);
       written.set(value, kept);
@@ -1007,8 +1006,9 @@ function scoringTargetAt<S extends StrictRJSFSchema>(
 }
 
 /** Returns the copy `derive()` makes of the option `node` reached at `place`, each part it reaches along several paths
- * that holds another such part written once, see `withSharedCopies()`, under the container the root's dialect gives its identifiers a place in:
- * 2019-09 and later make no keyword of `definitions`, so a validator need not find an `$id` below it
+ * that holds another such part written once, see `withSharedCopies()`, under the container the root's dialect gives
+ * its identifiers a place in: 2019-09 and later make no keyword of `definitions`, so a validator need not find an
+ * `$id` below it
  */
 function scoringCopy<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -1555,25 +1555,34 @@ interface RecursiveChoices {
   narrows(id: NodeId): boolean;
 }
 
-/** Whether each node of a graph `onCycle()` has walked reaches itself */
-const onCycleMemo = new KeyedMemo<Map<NodeId, boolean>>();
+/** The `onCycle()` reader of each graph */
+const onCycleMemo = new KeyedMemo<(id: NodeId) => boolean>();
 
-/** Returns whether the node `id` of `graph` reaches itself through the subschemas it holds, under any keyword, its
+/** Returns a reader of whether a node of `graph` reaches itself through the subschemas it holds, under any keyword, its
  * `$ref` and its conjunction, so whether `derive()` can reach it again below a copy of it. Tarjan's strongly connected
- * components on a stack of frames, entering only the nodes no earlier walk closed. A node of the graph `graph` extends
- * is read from that graph, whose nodes never hold one added above them.
+ * components on a stack of frames, entering only the nodes no earlier walk closed, whose answers the reader keeps. A
+ * node of the graph `graph` extends is read from that graph, whose nodes never hold one added above them.
  */
-function onCycle<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): boolean {
-  const { base } = graph;
-  if (base !== undefined && id < base.size) {
-    return onCycle(base, id);
-  }
-  const closed = onCycleMemo.get([graph], () => new Map());
-  const known = closed.get(id);
-  if (known !== undefined) {
-    return known;
-  }
-  const start = base?.size ?? 0;
+function onCycle<S extends StrictRJSFSchema>(graph: SchemaGraph<S>): (id: NodeId) => boolean {
+  return onCycleMemo.get([graph], () => {
+    const { base } = graph;
+    const inBase = base === undefined ? undefined : onCycle(base);
+    const start = base?.size ?? 0;
+    const closed = new Map<NodeId, boolean>();
+    return (id) =>
+      inBase !== undefined && id < start ? inBase(id) : (closed.get(id) ?? walkCycles(graph, start, closed, id));
+  });
+}
+
+/** Walks `graph` from the node `id`, as `onCycle()` describes, adding whether each node it closes reaches itself to
+ * `closed`, and returns whether the node does
+ */
+function walkCycles<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  start: number,
+  closed: Map<NodeId, boolean>,
+  id: NodeId,
+): boolean {
   const open = new Map<NodeId, number>();
   const stack: NodeId[] = [];
   const frames: { readonly id: NodeId; readonly order: number; low: number; readonly next: NodeId[] }[] = [];
