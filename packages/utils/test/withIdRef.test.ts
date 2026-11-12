@@ -115,6 +115,61 @@ describe('withRootIdRefPrefix()', () => {
     const notASchema: RJSFSchema = JSON.parse('"root"');
     expect(withRootIdRefPrefix({ $ref: '#/a' }, notASchema)).toEqual({ $ref: `${ROOT_SCHEMA_PREFIX}#/a` });
   });
+  it('leaves a $ref to a part a scoring target holds once as written, and names the root by a local one inside it', () => {
+    const root: RJSFSchema = { $id: 'https://example.com/schemas/root.json' };
+    const schema: RJSFSchema = {
+      $id: 'top.json',
+      allOf: [
+        {
+          properties: {
+            a: { $ref: '?rjsf-copy=1' },
+            b: { $ref: '?rjsf-copy=1#/properties/x' },
+            c: { $ref: 'top.json' },
+          },
+        },
+        true,
+      ],
+      definitions: {
+        one: {
+          $id: '?rjsf-copy=1',
+          properties: { x: { $ref: '#/definitions/X' }, again: { $ref: '?rjsf-copy=1' } },
+          not: { $id: '#anchor', $ref: '#/definitions/Y' },
+        },
+      },
+      const: { $ref: '?rjsf-copy=1' },
+    };
+    expect(withRootIdRefPrefix(schema, root)).toEqual({
+      $id: 'top.json',
+      allOf: [
+        {
+          properties: {
+            a: { $ref: '?rjsf-copy=1' },
+            b: { $ref: '?rjsf-copy=1#/properties/x' },
+            c: { $ref: 'https://example.com/schemas/top.json' },
+          },
+        },
+        true,
+      ],
+      definitions: {
+        one: {
+          $id: '?rjsf-copy=1',
+          properties: {
+            x: { $ref: 'https://example.com/schemas/root.json#/definitions/X' },
+            again: { $ref: '?rjsf-copy=1' },
+          },
+          not: { $id: '#anchor', $ref: 'https://example.com/schemas/root.json#/definitions/Y' },
+        },
+      },
+      const: { $ref: '?rjsf-copy=1' },
+    });
+  });
+  it('resolves a relative $ref to a resource the schema handed over holds against the root, as any other', () => {
+    const root: RJSFSchema = { $id: 'https://example.com/root.json', $defs: { item: { $id: 'item.json' } } };
+    const schema: RJSFSchema = { properties: { a: { $id: 'item.json', type: 'string' }, b: { $ref: 'item.json' } } };
+    expect(withRootIdRefPrefix(schema, root)).toEqual({
+      properties: { a: { $id: 'item.json', type: 'string' }, b: { $ref: 'https://example.com/item.json' } },
+    });
+  });
   describe('a $ref the root holds below an $id of its own', () => {
     const kind: RJSFSchema = { $ref: '#/$defs/kind' };
     const relative: RJSFSchema = { $ref: 'kinds.json#/$defs/cat' };

@@ -200,6 +200,8 @@ import { keywordShape, normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
 import setOwn from './setOwn.ts';
+import type { SharedCopyPart } from './sharedCopyParts.ts';
+import sharedCopyParts from './sharedCopyParts.ts';
 import shouldRenderOptionalField, {
   getOptionalDataControlsType,
   isCollapsedByOptionalDataControls,
@@ -261,6 +263,7 @@ export type {
   PresentationSubject,
   SchemaFlagMarker,
   SelectedOptionDescriptionProps,
+  SharedCopyPart,
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
   UseOptionFocusHandlersResult,
@@ -462,6 +465,7 @@ export {
   SelectedOptionDescription,
   selectedOptionDescriptionId,
   selectOptionUiSchema,
+  sharedCopyParts,
   shouldRenderOptionalField,
   sortedJSONStringify,
   templateDrawsDescription,

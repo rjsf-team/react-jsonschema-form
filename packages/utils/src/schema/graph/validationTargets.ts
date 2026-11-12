@@ -6,6 +6,7 @@ import {
   ANY_OF_KEY,
   CONST_KEY,
   CONTAINS_KEY,
+  DEFINITIONS_KEY,
   DEPENDENCIES_KEY,
   DEPENDENT_REQUIRED_KEY,
   DEPENDENT_SCHEMAS_KEY,
@@ -22,12 +23,13 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
   REQUIRED_KEY,
+  SHARED_COPY_ID,
   THEN_KEY,
   UNEVALUATED_ITEMS_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
 import guessType from '../../guessType.ts';
-import hashForSchema from '../../hashForSchema.ts';
+import hashForSchema, { hashString, sortedJSONStringify } from '../../hashForSchema.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import { getByPath } from '../../pathUtils.ts';
 import { keywordShape } from '../../schemaUri.ts';
@@ -680,6 +682,29 @@ function pointed<S extends StrictRJSFSchema>(
   return value;
 }
 
+/** What a copy `derive()` makes depends on besides its node, place, loosening and cut: whether each place it reaches
+ * is on the way to it, by its `placeKey()`, and whether each node it reaches is above it, by its id, as the `path` and
+ * `above` it is made with say, which decides whether that place or node is named rather than copied. The places and
+ * nodes of the copy itself, which are on the way to and above what it reaches whatever it is reached along, are left
+ * out, and so are those of a node on no cycle, see `onCycle()`, which is never on the way to what it reaches.
+ */
+type Dependence = Map<string | NodeId, boolean>;
+
+/** The copies `derive()` makes for one scoring target: `made`, those made for each place, loosening and cut, each with
+ * what it depends on, see `Dependence`, and `shared`, those the target holds in more than one place
+ */
+interface Copies<S extends StrictRJSFSchema> {
+  readonly made: Map<string, { readonly copy: S; readonly dependence: Dependence }[]>;
+  readonly shared: Set<object>;
+}
+
+/** Returns whether `key`, a place by its `placeKey()` or a node by its id, is among the `places` on the way to a copy
+ * or the `nodes` above it, see `Dependence`
+ */
+function onWay(key: string | NodeId, places: ReadonlySet<string>, nodes: ReadonlySet<NodeId>): boolean {
+  return typeof key === 'string' ? places.has(key) : nodes.has(key);
+}
+
 /** Returns a copy of the node `id` reached at `place` without what `loosening` drops, from the node and from the nodes
  * `scopeOf()` lists, a dropped `additionalProperties: false` turned into `true`. A `$ref` among them is read as JSON
  * Schema reads one, as an `allOf` entry beside the keywords next to it, since a pointer cannot subtract from what it
@@ -693,7 +718,8 @@ function pointed<S extends StrictRJSFSchema>(
  * choice, see `recursiveChoices()`, is read as what `cutTo()` keeps of it where it is cut or recurs in the cycle of the
  * node holding it, a level of the data below, or as `{}` where nothing is left of it, and is copied in turn otherwise,
  * as is a subschema applied on top of the others below the option's scope, which is left out where nothing is left of
- * it; one leading to no choice is named where the root holds it.
+ * it; one leading to no choice is named where the root holds it. A copy `copies` already holds that would be made the
+ * same, as what it depends on says, is used again, and what the copy depends on is added to `dependence`.
  */
 function derive<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -703,10 +729,27 @@ function derive<S extends StrictRJSFSchema>(
   path: ReadonlySet<string>,
   above: ReadonlySet<NodeId>,
   cutting: Cut,
+  copies: Copies<S>,
+  dependence: Dependence,
 ): S {
   const { id } = node;
-  const innerPath = new Set(path).add(placeKey(id, place));
+  const ownKey = placeKey(id, place);
+  const innerPath = new Set(path).add(ownKey);
   const innerAbove = new Set(above).add(id);
+  const reachesItself = onCycle(graph);
+  const depends = (key: string | NodeId) => {
+    if (key !== ownKey && key !== id) {
+      dependence.set(key, onWay(key, path, above));
+    }
+  };
+  // Whether `key`, a place or a node, of the node `at`, is on the way to or above the copy, which the copy depends on
+  // where `at` can be on the way to what it reaches
+  const holds = (key: string | NodeId, at: NodeId) => {
+    if (reachesItself(at)) {
+      depends(key);
+    }
+    return onWay(key, innerPath, innerAbove);
+  };
   const choices = recursiveChoices(graph);
   // Below a part, a subschema is named where it leads to no recursive choice and the root holds it, read as what
   // `cutTo()` keeps of it where it is cut, and otherwise copied; undefined where nothing is left of it
@@ -724,11 +767,45 @@ function derive<S extends StrictRJSFSchema>(
         return cutTo(graph, childNode.id);
       }
     }
-    const copied =
-      innerPath.has(placeKey(childNode.id, at)) || (!viaRef && innerAbove.has(childNode.id))
-        ? targetAt(graph, childNode.id, at)
-        : derive(graph, childNode, at, as, innerPath, viaRef ? new Set() : innerAbove, below);
-    return below === 'conjuncts' && Object.keys(copied).length === 0 ? undefined : copied;
+    const childKey = placeKey(childNode.id, at);
+    const kept = (copy: S) => (below === 'conjuncts' && Object.keys(copy).length === 0 ? undefined : copy);
+    if (holds(childKey, childNode.id) || (!viaRef && holds(childNode.id, childNode.id))) {
+      return kept(targetAt(graph, childNode.id, at));
+    }
+    // A copy is made once per place, loosening, cut and what it depends on, so a part reached along many paths, as
+    // definitions that each name the next twice over reach one, is copied once rather than once per path
+    const childAbove = viaRef ? new Set<NodeId>() : innerAbove;
+    const key = [childKey, as.required, as.additionalProperties, below].join(' ');
+    const made = copies.made.get(key) ?? [];
+    copies.made.set(key, made);
+    // A part reached along routes that put another place on the way to it in some and not in others is copied once
+    // for each, so each copy is kept rather than replacing the one made before
+    let known = made.find(({ dependence: on }) => {
+      for (const [reached, held] of on) {
+        if (onWay(reached, innerPath, childAbove) !== held) {
+          return false;
+        }
+      }
+      return true;
+    });
+    const reused = known !== undefined;
+    if (known === undefined) {
+      const on: Dependence = new Map();
+      known = { copy: derive(graph, childNode, at, as, innerPath, childAbove, below, copies, on), dependence: on };
+      made.push(known);
+    }
+    // What the copy of the child depends on, the copy of this node depends on too, but for this node itself
+    for (const reached of known.dependence.keys()) {
+      if (typeof reached === 'string' || !viaRef) {
+        depends(reached);
+      }
+    }
+    const copy = kept(known.copy);
+    // A copy left out where nothing is left of it is held nowhere, however many places reach it
+    if (reused && copy !== undefined) {
+      copies.shared.add(copy);
+    }
+    return copy;
   };
   const unplaced = (value: unknown, child: NodeId) =>
     pointerTo(graph, child) ?? sub(value, child, undefined, false, KEPT, 'none');
@@ -827,6 +904,79 @@ function derive<S extends StrictRJSFSchema>(
   return schemaFrom(graph.rawRoot, copy);
 }
 
+/** Returns `target` with each of the `shared` copies it holds in more than one place that holds another such copy
+ * however deep written once, as a resource of its own under the `container` of an `allOf` holding the target, and
+ * named by its `$id` wherever the target holds it. Definitions that each name the next twice over reach the last along
+ * a number of paths that doubles with each level, so a target writing the copy of each out at every path would grow as
+ * fast, which no validator could compile. Writing out twice a copy that holds no other such copy grows the target by
+ * that copy alone, so such a copy is written out wherever the target holds it. Each `$id` is hashed from what
+ * the copy holds, so a target lists the same ids however the root holding it was reached, which a precompiled
+ * validator finds it by; two copies hashing alike are told apart by a count.
+ */
+function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: ReadonlySet<object>, container: string): S {
+  const written = new Map<object, unknown>();
+  // Whether an object written is or holds, however deep, one of the `shared` copies
+  const reaching = new Map<object, boolean>();
+  const reaches = (value: unknown) => isObject(value) && reaching.get(value) === true;
+  const contents = new Map<string, string>();
+  const definitions: GenericObjectType = {};
+  // Returns the keyword written and whether a subschema it holds reaches a shared copy. A copy is held only where a
+  // keyword holds subschemas, so the data a `const`, `enum` or `default` holds is kept as it is, unwalked
+  const writeKeyword = (key: string, value: unknown): readonly [unknown, boolean] => {
+    const shape = keywordShape(key, value);
+    if (shape === 'array' && Array.isArray(value)) {
+      const items = value.map(write);
+      return [items.every((item, index) => item === value[index]) ? value : items, value.some(reaches)];
+    }
+    if (shape === 'map' && isObject(value)) {
+      const entries = Object.entries(value).map(([name, sub]) => [name, write(sub)] as const);
+      return [
+        entries.every(([name, sub]) => sub === value[name]) ? value : Object.fromEntries(entries),
+        Object.values(value).some(reaches),
+      ];
+    }
+    return shape === 'single' ? [write(value), reaches(value)] : [value, false];
+  };
+  // An object holding no copy written once is kept as it is, so a subschema of the root the target holds is still the
+  // one the graph knows, see `withRootIdRefPrefix()`
+  const write = (value: unknown): unknown => {
+    if (!isObject(value)) {
+      return value;
+    }
+    const known = written.get(value);
+    if (known !== undefined) {
+      return known;
+    }
+    const keywords = Object.entries(value).map(([key, sub]) => [key, ...writeKeyword(key, sub)] as const);
+    const entries = keywords.map(([key, sub]) => [key, sub] as const);
+    const holdsShared = keywords.some(([, , reached]) => reached);
+    reaching.set(value, holdsShared || shared.has(value));
+    if (!shared.has(value) || !holdsShared) {
+      const kept = entries.every(([key, sub]) => sub === value[key]) ? value : Object.fromEntries(entries);
+      written.set(value, kept);
+      return kept;
+    }
+    const content = Object.fromEntries(entries);
+    const serialized = sortedJSONStringify(content);
+    const hash = hashString(serialized);
+    let name = hash;
+    for (let n = 1; (contents.get(name) ?? serialized) !== serialized; n += 1) {
+      name = `${hash}-${n}`;
+    }
+    contents.set(name, serialized);
+    const id = `${SHARED_COPY_ID}${name}`;
+    // A draft-07 `$ref` ignores the `$id` beside it, so a copy holding one is held by the resource instead
+    definitions[name] = REF_KEY in content ? { [ID_KEY]: id, [ALL_OF_KEY]: [content] } : { [ID_KEY]: id, ...content };
+    const ref = { [REF_KEY]: id };
+    written.set(value, ref);
+    return ref;
+  };
+  const writtenTarget = write(target);
+  return Object.keys(definitions).length === 0
+    ? target
+    : schemaFrom(target, { [ALL_OF_KEY]: [writtenTarget], [container]: definitions });
+}
+
 /** Returns what the `anyOf`/`oneOf` option `id` reached at `place` is scored with: `{ $ref }` naming the place, or,
  * where something in its scope states a `required`, lists names under `dependencies`, holds a part leading to a
  * recursive choice, see `recursiveChoices()`, or, with `relax`, sets `additionalProperties: false`, the copy `derive()`
@@ -852,7 +1002,25 @@ function scoringTargetAt<S extends StrictRJSFSchema>(
   };
   return place !== undefined && !scope.some(({ node: member }) => loosens(graph, member, loosening))
     ? targetAt(graph, id, place)
-    : derive(graph, node, place, loosening, new Set(), new Set(), 'parts');
+    : scoringCopy(graph, node, place, loosening);
+}
+
+/** Returns the copy `derive()` makes of the option `node` reached at `place`, each part it reaches along several paths
+ * that holds another such part written once, see `withSharedCopies()`, under the container the root's dialect gives
+ * its identifiers a place in: 2019-09 and later make no keyword of `definitions`, so a validator need not find an
+ * `$id` below it
+ */
+function scoringCopy<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  node: ObjectNode<S>,
+  place: Place,
+  loosening: Loosening,
+): S {
+  const copies: Copies<S> = { made: new Map(), shared: new Set() };
+  const copy = derive(graph, node, place, loosening, new Set(), new Set(), 'parts', copies, new Map());
+  return copies.shared.size === 0
+    ? copy
+    : withSharedCopies(copy, copies.shared, graph.laterDialect ? '$defs' : DEFINITIONS_KEY);
 }
 
 /** Returns what an `anyOf`/`oneOf` option is scored with, see `scoringTargetAt()`, the option named where the root
@@ -1385,6 +1553,80 @@ interface RecursiveChoices {
    * `unevaluatedItems` above it would then see less of
    */
   narrows(id: NodeId): boolean;
+}
+
+/** The `onCycle()` reader of each graph */
+const onCycleMemo = new KeyedMemo<(id: NodeId) => boolean>();
+
+/** Returns a reader of whether a node of `graph` reaches itself through the subschemas it holds, under any keyword, its
+ * `$ref` and its conjunction, so whether `derive()` can reach it again below a copy of it. Tarjan's strongly connected
+ * components on a stack of frames, entering only the nodes no earlier walk closed, whose answers the reader keeps. A
+ * node of the graph `graph` extends is read from that graph, whose nodes never hold one added above them.
+ */
+function onCycle<S extends StrictRJSFSchema>(graph: SchemaGraph<S>): (id: NodeId) => boolean {
+  return onCycleMemo.get([graph], () => {
+    const { base } = graph;
+    const inBase = base === undefined ? undefined : onCycle(base);
+    const start = base?.size ?? 0;
+    const closed = new Map<NodeId, boolean>();
+    return (id) =>
+      inBase !== undefined && id < start ? inBase(id) : (closed.get(id) ?? walkCycles(graph, start, closed, id));
+  });
+}
+
+/** Walks `graph` from the node `id`, as `onCycle()` describes, adding whether each node it closes reaches itself to
+ * `closed`, and returns whether the node does
+ */
+function walkCycles<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  start: number,
+  closed: Map<NodeId, boolean>,
+  id: NodeId,
+): boolean {
+  const open = new Map<NodeId, number>();
+  const stack: NodeId[] = [];
+  const frames: { readonly id: NodeId; readonly order: number; low: number; readonly next: NodeId[] }[] = [];
+  // A node holding itself is on a cycle, which a component of one would not show
+  const holdingItself = new Set<NodeId>();
+  let entered = 0;
+  const enter = (at: NodeId) => {
+    const node = graph.node(at);
+    const next = [
+      ...childrenOf(graph, at).map(([, child]) => child),
+      ...(node.kind === 'schema' ? [node.ref, node.conjunction].filter((child) => child !== undefined) : []),
+    ].filter((child) => child >= start);
+    if (next.includes(at)) {
+      holdingItself.add(at);
+    }
+    frames.push({ id: at, order: entered, low: entered, next });
+    open.set(at, entered);
+    stack.push(at);
+    entered += 1;
+  };
+  enter(id);
+  for (let frame = frames.at(-1); frame !== undefined; frame = frames.at(-1)) {
+    const child = frame.next.pop();
+    const order = child === undefined ? undefined : open.get(child);
+    if (order !== undefined) {
+      frame.low = Math.min(frame.low, order);
+    } else if (child === undefined) {
+      frames.pop();
+      const parent = frames.at(-1);
+      if (parent !== undefined) {
+        parent.low = Math.min(parent.low, frame.low);
+      }
+      if (frame.low === frame.order) {
+        const members = stack.splice(stack.lastIndexOf(frame.id));
+        members.forEach((member) => {
+          open.delete(member);
+          closed.set(member, members.length > 1 || holdingItself.has(member));
+        });
+      }
+    } else if (!closed.has(child)) {
+      enter(child);
+    }
+  }
+  return closed.get(id) === true;
 }
 
 /** The `RecursiveChoices` of each graph */

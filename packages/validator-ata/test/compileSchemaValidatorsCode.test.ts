@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '@rjsf/utils';
-import { createSchemaUtils, schemaKey } from '@rjsf/utils';
+import { createSchemaUtils, schemaKey, SHARED_COPY_ID } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
@@ -11,6 +11,7 @@ import pointerValidationTests, {
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
+import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import type { CustomValidatorOptionsType } from '../src/index.ts';
 import { createPrecompiledValidator, customizeValidator } from '../src/index.ts';
@@ -684,6 +685,42 @@ describe('compileSchemaValidatorsCode', () => {
       expect(agree(form, { x: 1, y: 2 }, options)).toBe(false);
     });
 
+    test("reads a resource nested in the subschema an extra names against that subschema's $id, as at runtime", () => {
+      // `cat.json` resolves against `pets/pet.json`, so its `#/$defs/meow` names its own `meow`, which `pet` lacks
+      const form = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://e.com/root.json',
+        $defs: {
+          pet: {
+            $id: 'pets/pet.json',
+            properties: {
+              kind: { $id: 'cat.json', $defs: { meow: { const: 'meow' } }, allOf: [{ $ref: '#/$defs/meow' }] },
+            },
+          },
+        },
+        type: 'object',
+        properties: { x: { $ref: 'https://e.com/x' } },
+      } as RJSFSchema;
+      const options = { ataOptionsOverrides: { schemas: [{ $id: 'https://e.com/x', $ref: 'root.json#/$defs/pet' }] } };
+      expect(agree(form, { x: { kind: 'meow' } }, options)).toBe(true);
+      expect(agree(form, { x: { kind: 'woof' } }, options)).toBe(false);
+    });
+    test.each([
+      ['a root with an $id', 'https://e.com/f'],
+      ['a root without one', undefined],
+    ])(
+      'reads a $ref with a fragment into a resource of %s whose $id starts as a scoring copy names its parts',
+      (_, $id) => {
+        const form = {
+          ...($id ? { $id } : {}),
+          definitions: { part: { $id: `${SHARED_COPY_ID}t`, properties: { x: { type: 'string' } } } },
+          type: 'object',
+          properties: { y: { $ref: `${SHARED_COPY_ID}t#/properties/x` } },
+        } as RJSFSchema;
+        expect(agree(form, { y: 'a' }, {})).toBe(true);
+        expect(agree(form, { y: 1 }, {})).toBe(false);
+      },
+    );
     test('ignores the $id beside a $ref in a draft-07 extra under a 2020-12 form, as at runtime', () => {
       const form = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -1042,6 +1079,9 @@ describe('compileSchemaValidatorsCode', () => {
   );
   sharedSubschemaValidationTests((compiledFrom, runWith) =>
     createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(compiledFrom)), runWith),
+  );
+  sharedCopyScoringTests((rootSchema) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
   test('compiles an option whose $ref leads to a boolean schema as what the boolean says', () => {
     for (const value of [true, false]) {

@@ -9,6 +9,7 @@ import ajvRootSchemaId from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
 import { changesData } from './dataForValidation.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
+import withPartIdsUnder from './withPartIdsUnder.ts';
 
 /** Returns the schemas Ajv compiles for the `schemaMap`, by the id each is registered under, and what each function
  * the module exports is compiled from, by the key a precompiled validator looks it up under. The root is registered
@@ -74,11 +75,12 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     ajvOptionsOverrides.uriResolver ?? uri.default,
   );
 
+  // The overrides' `schemas` are left out, since the schemas compiled here are added below under the same keys
+  const { schemas: _schemas, ...overrides } = ajvOptionsOverrides;
   // Allow users to turn off the `lines: true` feature in their own overrides, but NOT the `source: true`
   const compileOptions = {
-    ...ajvOptionsOverrides,
-    code: { lines: true, ...ajvOptionsOverrides.code, source: true },
-    schemas,
+    ...overrides,
+    code: { lines: true, ...overrides.code, source: true },
   };
   const ajv = createAjvInstance(
     additionalMetaSchemas,
@@ -88,6 +90,10 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     AjvClass,
     extenderFn,
   );
+  // The schemas are added once the instance says which keyword it reads an identifier from, see `withPartIdsUnder()`
+  for (const [key, compiled] of Object.entries(schemas)) {
+    ajv.addSchema(withPartIdsUnder(compiled, ajv.opts.schemaId), key);
+  }
 
   const code = standaloneCode.default(ajv, exportNames);
   if (!changesData(ajv)) {

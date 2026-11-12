@@ -17,8 +17,10 @@ import {
   isSchemaObject,
   noop,
   retrieveSchema,
+  SHARED_COPY_ID,
 } from '@rjsf/utils';
 import type { Ajv, ErrorObject, SchemaValidateFunction } from 'ajv';
+import AjvDraft04 from 'ajv-draft-04';
 import ajvI18n from 'ajv-i18n';
 import { Ajv2019 } from 'ajv/dist/2019.js';
 import { Ajv2020 } from 'ajv/dist/2020.js';
@@ -35,6 +37,10 @@ import pointerValidationTests, {
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
+import sharedCopyScoringTests, {
+  chainedDefinitions,
+  draft04SharedCopyScoringTests,
+} from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import * as pkg from '../src/index.ts';
@@ -3686,6 +3692,42 @@ pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());
+sharedCopyScoringTests(() => customizeValidator());
+describe('a validator built by ajv-draft-04, which reads only draft-04 identifiers', () => {
+  draft04SharedCopyScoringTests(() => customizeValidator({ AjvClass: AjvDraft04.default }));
+});
+
+describe('the parts an option scoring copy holds once', () => {
+  it('are removed from Ajv with the copy holding them when the root changes', () => {
+    const validator = customizeValidator();
+    const copyRefs = () => Object.keys(validator.ajv.refs).filter((ref) => ref.includes(SHARED_COPY_ID));
+    const match = (levels: number) => {
+      const { root, options } = chainedDefinitions(levels);
+      getFirstMatchingOption({ validator }, { v: {} }, options, root);
+    };
+
+    match(2);
+    const first = copyRefs();
+    expect(first).not.toEqual([]);
+    match(3);
+    const second = copyRefs();
+    expect(second).not.toEqual([]);
+    expect(second.filter((ref) => first.includes(ref))).toEqual([]);
+  });
+  it('are removed from Ajv with a copy holding them that does not compile', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const validator = customizeValidator();
+    const part = `${SHARED_COPY_ID}p`;
+    const schema: RJSFSchema = {
+      allOf: [{ properties: { a: { $ref: part }, b: { $ref: 'https://example.com/missing.json' } } }],
+      definitions: { p: { $id: part, type: 'string' } },
+    };
+    expect(validator.isValid(schema, { a: 'a' }, { type: 'object' })).toBe(false);
+    expect(warn).toHaveBeenCalled();
+    expect(Object.keys(validator.ajv.refs).filter((ref) => ref.includes(SHARED_COPY_ID))).toEqual([]);
+    warn.mockRestore();
+  });
+});
 
 describe('AJV8Validator', () => {
   const validatorFor = (rootSchema: RJSFSchema) =>

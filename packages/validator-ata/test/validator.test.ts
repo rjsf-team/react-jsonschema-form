@@ -25,6 +25,7 @@ import pointerValidationTests, {
   sharedObjectValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
+import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { CustomValidatorOptionsType } from '../src/index.ts';
 // Static import of the package surface so its top-level evaluation
@@ -759,6 +760,7 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
+sharedCopyScoringTests(() => customizeValidator());
 
 describe('ATAValidator', () => {
   nestedResourceTests(() => customizeValidator());

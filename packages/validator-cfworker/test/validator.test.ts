@@ -14,6 +14,7 @@ import pointerValidationTests, {
   absoluteRefValidationTests,
   sharedObjectValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
+import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import * as pkg from '../src/index.ts';
@@ -485,6 +486,7 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
+sharedCopyScoringTests(() => customizeValidator());
 
 describe('CFWorkerValidator', () => {
   const validatorFor = (rootSchema: RJSFSchema) =>

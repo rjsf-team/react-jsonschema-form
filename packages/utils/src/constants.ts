@@ -70,6 +70,16 @@ export const LOOKUP_MAP_NAME = 'layoutGridLookupMap';
 export const RJSF_PREFIX_KEY = '__rjsf';
 export const RJSF_ADDITIONAL_PROPERTIES_FLAG = `${RJSF_PREFIX_KEY}_additionalProperties`;
 export const ROOT_SCHEMA_PREFIX = `${RJSF_PREFIX_KEY}_rootSchema`;
+/** The start of the `$id` an option's scoring copy gives a part it holds once, and of every `$ref` naming it, which
+ * `withRootIdRefPrefix()` leaves as written. Only a query, it resolves against the `$id` around it, so a `$ref` to the
+ * root, which a validator prefixes with the id it registers the root under, resolves inside the part as it does
+ * outside it, as long as that id names its document by no more than its last path segment. Only a `$ref` naming such a
+ * part whole, `?rjsf-copy=<hash>`, is supported: the live and precompiled validators need not resolve one with a
+ * fragment after it alike. A `$recursiveRef` or `$dynamicRef` the part holds is copied as written, so it resolves
+ * against the part's `$id`, as one anywhere in a scoring target resolves against the target rather than the root:
+ * scoring doesn't resolve those keywords as the root does.
+ */
+export const SHARED_COPY_ID = '?rjsf-copy=';
 export const UI_FIELD_KEY = 'ui:field';
 export const UI_WIDGET_KEY = 'ui:widget';
 export const UI_OPTIONS_KEY = 'ui:options';

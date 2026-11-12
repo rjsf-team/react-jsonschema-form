@@ -16,6 +16,7 @@ import {
   SCHEMA_KEY,
   schemaKey,
   getValidationSchemas,
+  sharedCopyParts,
 } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
@@ -228,6 +229,29 @@ function locate(resource: Resource, fragment: string, laterDialect: boolean): [u
   return [node, base];
 }
 
+/** A part an option's scoring copy holds once, which the copy gives an `$id` starting with `SHARED_COPY_ID`, and the
+ * resource around it, which its `$ref`s are read against, as `withRootIdRefPrefix()` reads those of a subschema the
+ * root does not hold
+ */
+interface OwnResource {
+  readonly schema: unknown;
+  readonly around: Resource;
+}
+
+/** Returns the parts a schema `getValidationSchemas()` lists holds once, see `OwnResource` and `sharedCopyParts()`, by
+ * `documentKey()` of their URI. The top holding them is read as `standalone()` reads it, so a part resolves against
+ * the same base in both: against the top's own `$id` where it is not the resource `start` is.
+ */
+function ownResourcesOf(schema: unknown, start: Resource, laterDialect: boolean): Map<string, OwnResource> {
+  const own = new Map<string, OwnResource>();
+  const around = schema === start.schema ? start : (resourceAt(schema, start.base, laterDialect) ?? start);
+  // A scoring copy gives each part an `$id` of its own, see `SHARED_COPY_ID`, so none is found twice
+  for (const { id, part } of sharedCopyParts(schema)) {
+    own.set(documentKey(resolveUri(around.base, id)), { schema: part, around });
+  }
+  return own;
+}
+
 /** Returns `schema` as an object schema asserting what it says, since ata compiles no boolean schema, and no schema
  * holding no assertion it knows, such as `{ title: 'By email' }`. A `not` is an assertion it knows, so one that always
  * holds is added where the schema has none, unless it holds a `$ref`, which ata compiles only on its own.
@@ -329,13 +353,14 @@ function readRoot(rootSchema: object, extras: ReadonlyMap<string, object>): Root
  * carried in a single container of the document under a generated name the `$ref` is renamed to. A `$ref` is read
  * against the innermost resource around it, an option with an `$id` of its own included, as the schema graph reads the
  * root's resources: its document part is resolved against that resource's base URI and names whichever resource of the
- * root has that URI, however it is spelled. One into another document is given that resolved URI, its fragment kept as
- * written, for ata to resolve against the extra schemas compiled into the module beside it, since the document holding
- * it is compiled under an `$id` of its own, unless only the `$ref` as written names one of them, which ata falls back
- * to, as for an extra under a relative `$id`. One that names nothing there or in them leaves ata nothing to
- * compile and the module reporting it when the schema is first validated against. No subschema of the document keeps
- * an `$id` or a container, which only the renamed `$ref`s could need. Only the keywords holding subschemas are
- * rewritten, never the data a `const` or a `default` holds.
+ * root has that URI, however it is spelled, or else the resource of its own `schema` holds there, see `OwnResource`,
+ * which is carried in the container too, once however many `$ref`s name it. One into another document is given that
+ * resolved URI, its fragment kept as written, for ata to resolve against the extra schemas compiled into the module
+ * beside it, since the document holding it is compiled under an `$id` of its own, unless only the `$ref` as written
+ * names one of them, which ata falls back to, as for an extra under a relative `$id`. One that names nothing there or
+ * in them leaves ata nothing to compile and the module reporting it when the schema is first validated against. No
+ * subschema of the document keeps an `$id` or a container, which only the renamed `$ref`s could need. Only the
+ * keywords holding subschemas are rewritten, never the data a `const` or a `default` holds.
  *
  * @param schema - A schema `getValidationSchemas()` lists, or a subschema of the root
  * @param reading - The `RootReading` of the root it was listed for
@@ -350,10 +375,32 @@ function standalone(
   const names = new Map<unknown, Map<string, string>>();
   const pending: [string, unknown, Resource][] = [];
   let count = 0;
+  const own = ownResourcesOf(schema, start, laterDialect);
+  const ownSchemas = new Set([...own.values()].map((resource) => resource.schema));
+  const nameOf = (holder: unknown, fragment: string, subschema: unknown, base: Resource): string => {
+    const known = names.get(holder) ?? new Map<string, string>();
+    names.set(holder, known);
+    let name = known.get(fragment);
+    if (name === undefined) {
+      name = `rjsf:${count}`;
+      count += 1;
+      known.set(fragment, name);
+      pending.push([name, subschema, base]);
+    }
+    return `#/${container}/${name}`;
+  };
   const renamed = (ref: string, around: Resource): string => {
+    const [document] = ref.split('#', 1);
+    // A scoring copy names such a part only whole. A `$ref` with a fragment into one is read as any other: it names a
+    // subschema of the root where the root holds that resource, and otherwise nothing the module compiles, which it
+    // reports when first validated against rather than validate the whole part in its place
+    const whole = ref.length <= document.length + 1;
+    const ownTarget = document === '' || !whole ? undefined : own.get(documentKey(resolveUri(around.base, document)));
+    if (ownTarget !== undefined) {
+      return nameOf(ownTarget.schema, '#', ownTarget.schema, ownTarget.around);
+    }
     const target = referenced(ref, around, { id, resources });
     if (target === undefined) {
-      const [document] = ref.split('#', 1);
       const resolved = resolveUri(around.base, document);
       const asWritten = around.base === '' || (extras.has(documentKey(document)) && !extras.has(documentKey(resolved)));
       return asWritten ? ref : `${resolved}${ref.slice(document.length)}`;
@@ -363,22 +410,14 @@ function standalone(
     if (subschema === undefined) {
       return ref;
     }
-    const known = names.get(resource.schema) ?? new Map<string, string>();
-    names.set(resource.schema, known);
-    let name = known.get(fragment);
-    if (name === undefined) {
-      name = `rjsf:${count}`;
-      count += 1;
-      known.set(fragment, name);
-      pending.push([name, subschema, subschemaBase]);
-    }
-    return `#/${container}/${name}`;
+    return nameOf(resource.schema, fragment, subschema, subschemaBase);
   };
   const rewrite = (value: unknown, around: Resource): unknown => {
     if (!isObject(value)) {
       return value;
     }
-    const resource = value === around.schema ? undefined : resourceAt(value, around.base, laterDialect);
+    const resource =
+      value === around.schema || ownSchemas.has(value) ? undefined : resourceAt(value, around.base, laterDialect);
     const inner = resource ?? around;
     const copy = Object.fromEntries(
       Object.entries(value).flatMap(([key, child]) =>

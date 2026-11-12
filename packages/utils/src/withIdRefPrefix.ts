@@ -1,4 +1,4 @@
-import { ID_KEY, REF_KEY, ROOT_SCHEMA_PREFIX } from './constants.ts';
+import { ID_KEY, REF_KEY, ROOT_SCHEMA_PREFIX, SHARED_COPY_ID } from './constants.ts';
 import isObject from './isObject.ts';
 import parseSchemaGraph from './schema/graph/parseSchemaGraph.ts';
 import type { AdoptedSchema, SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
@@ -139,7 +139,11 @@ function withIdRefPrefixObject(
       const value = realObj[key];
       if (key === REF_KEY && typeof value === 'string') {
         if (!isData) {
-          realObj[key] = nestedRef ?? rootRef(value, rewrite.base, scope);
+          // A `$ref` to a part a scoring target holds once names it by the `$id` the target gives it, which
+          // resolves inside the target whatever the root is registered under, so it is left as written
+          if (!value.startsWith(SHARED_COPY_ID)) {
+            realObj[key] = nestedRef ?? rootRef(value, rewrite.base, scope);
+          }
         } else if (value.startsWith('#')) {
           realObj[key] = rewrite.base + value;
         }
