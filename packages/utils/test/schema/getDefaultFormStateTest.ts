@@ -2604,6 +2604,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toStrictEqual({ plain: 'red', wrapped: 'red' });
         });
 
+        it.each([[[]], [['plain', 'wrapped']]])(
+          'fills an empty object field with the object const its allOf holds under constAsDefaults always, as with its own, required %j',
+          (required) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              required,
+              properties: {
+                plain: { type: 'object', const: { a: 1 } },
+                wrapped: { type: 'object', allOf: [{ const: { a: 1 } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: {} },
+              ),
+            ).toStrictEqual({ plain: { a: 1 }, wrapped: { a: 1 } });
+          },
+        );
+
         it.each<[string, RJSFSchema, GenericObjectType, GenericObjectType]>([
           ['drops a key it does not name', { type: 'object' }, { b: 'x' }, {}],
           ['keeps the data of a key it names', { type: 'object' }, { a: 2, b: 'x' }, { a: 2 }],

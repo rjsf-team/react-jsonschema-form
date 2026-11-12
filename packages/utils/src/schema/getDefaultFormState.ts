@@ -1180,8 +1180,12 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // nested in. The data of an untyped field wins over its defaults, except where its `allOf` was merged: what its
       // properties were computed as from that wins, as an `if`/`then` `const` does. Object data the untyped field can't
       // take is no value of it, so its defaults stand, as a typed field's do above, before and after the form has
-      // generated its defaults
-      const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
+      // generated its defaults. Under `constAsDefaults: 'always'` a missing value takes the field's `const`, as the match
+      // gives a field its own one, wherever the merge brings it in
+      const matching =
+        rawFormData === undefined && defaultFormStateBehavior?.constAsDefaults === 'always' && fieldConst !== undefined
+          ? fieldConst
+          : viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
       if (isObject(rawFormData) && matching !== undefined && initialDefaultsGenerated && !mergedAllOf) {
         // Once the form has generated its defaults, the object data of an untyped field is the user's as it stands, as
         // the extra keys of an object field are (#3759), so a nested object they cleared isn't filled in again
