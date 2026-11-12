@@ -677,6 +677,60 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(changed).toEqual({ a: { b: 'mine', d: 1 } });
     });
 
+    describe('in an array', () => {
+      const listOf = (first: string): RJSFSchema => ({
+        type: 'object',
+        properties: { list: { type: 'array', items: { type: 'string' }, default: [first, 'w'] } },
+      });
+
+      it('keeps a row the user wrote over', () => {
+        const { changed } = reschema(listOf('x'), listOf('y'), {}, undefined, (form) =>
+          form.setFieldValue(['list', 0], 'mine'),
+        );
+        expect(changed).toEqual({ list: ['mine', 'w'] });
+      });
+
+      it('keeps a value the user wrote that equals the default, through a move of its row', async () => {
+        // The seed's rows hold other names, so the row the user writes `'a'` into is told from one holding the default
+        const rows = (name: string): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: { type: 'array', items: { type: 'object', properties: { name: { type: 'string', default: name } } } },
+          },
+        });
+        const ref = createRef<FormRef>();
+        const element = (schema: RJSFSchema) => (
+          <Form schema={schema} validator={validator} initialFormData={{ list: [{ name: 'p' }, {}] }} ref={ref} />
+        );
+        const { container, rerender } = render(element(rows('a')));
+        expect(ref.current?.getFormData()).toEqual({ list: [{ name: 'p' }, { name: 'a' }] });
+
+        act(() => ref.current?.setFieldValue(['list', 0, 'name'], 'a'));
+        await user.click(elementOf(container, '.rjsf-array-item-move-down'));
+        expect(ref.current?.getFormData()).toEqual({ list: [{ name: 'a' }, { name: 'a' }] });
+
+        rerender(element(rows('b')));
+        // The row the form filled in, now first, takes the new default; the one the user wrote, now second, keeps `'a'`
+        expect(ref.current?.getFormData()).toEqual({ list: [{ name: 'b' }, { name: 'a' }] });
+      });
+
+      it("takes the new default of a property of a row the array's default filled", () => {
+        const rows = (name: string): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              default: [{}],
+              items: { type: 'object', properties: { name: { type: 'string', default: name } } },
+            },
+          },
+        });
+        const { mounted, changed } = reschema(rows('a'), rows('b'), {});
+        expect(mounted).toEqual({ list: [{ name: 'a' }] });
+        expect(changed).toEqual({ list: [{ name: 'b' }] });
+      });
+    });
+
     it.each([{ own: 'q' }, { own: null }])(
       "takes the new default of a parent that wins over the field's own $own (#5817)",
       ({ own }) => {
