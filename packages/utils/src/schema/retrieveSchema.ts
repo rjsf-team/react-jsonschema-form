@@ -245,14 +245,29 @@ function mergesNothing<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds:
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param field - The provenance of the field
  * @param [data] - The field's data
+ * @param [depData] - The data its `dependencies` are read against, where it isn't `data`, as the defaults read them
+ *   against the data with the defaults computed for it
  * @returns - The field's schema
  */
 export function retrieveField<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   field: Provenance<S>,
   data?: unknown,
+  depData: unknown = data,
 ): S {
-  return buildView<S, F>(context, parseSchemaGraph<S>(field.graph.rawRoot), field, data, false);
+  const root = parseSchemaGraph<S>(field.graph.rawRoot);
+  const planned =
+    depData === data
+      ? undefined
+      : buildPlan({
+          context,
+          graph: field.graph,
+          seeds: field.seeds,
+          data,
+          depData,
+          policy: renderPolicy(context, root),
+        });
+  return buildView<S, F>(context, root, field, data, false, planned);
 }
 
 /** Returns the field `schema` is the schema of. An unstamped schema, or one stamped for another root, is a call root.

@@ -2654,6 +2654,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it("pins the data to an object field's dependencies const on a key only a default fills, beside an allOf", () => {
+          const field: RJSFSchema = {
+            type: 'object',
+            properties: { k: { type: 'string', default: 'd' } },
+            allOf: [{ properties: { a: { type: 'number' } } }],
+            dependencies: { k: { const: { k: 'd', a: 1 } } },
+          };
+          const schema: RJSFSchema = { type: 'object', properties: { field } };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { field: { a: 5, b: 6 } } },
+            ),
+          ).toStrictEqual({ field: { k: 'd', a: 5 } });
+        });
+
         it('fills an empty field with the const a condition left unmerged holds under constAsDefaults always', () => {
           const schema: RJSFSchema = {
             type: 'object',
