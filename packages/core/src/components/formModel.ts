@@ -4,6 +4,7 @@ import type {
   FieldPath,
   FieldPathList,
   FormContextType,
+  GenericObjectType,
   StrictRJSFSchema,
   RJSFValidationError,
 } from '@rjsf/utils';
@@ -18,7 +19,9 @@ import {
   fieldPathFromList,
   fieldPathToId,
   fieldPathToList,
+  isPlainObject,
   partId,
+  setByPath,
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
@@ -50,7 +53,7 @@ import {
 import type { RJSFFormStatus } from './IChangeEvent.ts';
 import { keyMoveOf, moveFateOf } from './keyMove.ts';
 import type { AnnouncedMove, MoveOutcome } from './keyMove.ts';
-import { asFieldValue, fieldStateOf, fieldsRendered } from './uiState.ts';
+import { asFieldValue, fieldStateOf, fieldsRendered, withSwitchUndone } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
 const HELD_SCALARS_LIMIT = 100;
@@ -544,8 +547,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       return { next: base };
     }
     // No field made the rewrite, so the errors the fields raised, the root's included, are carried through it as the
-    // edit left them
-    const path = fieldPathToList(change.fieldPath);
+    // edit left them. A switch a parent field forwarded is an edit at the switched field, which the rewrite holds as
+    // the edit did
+    const path = change.switchedFrom?.path ?? fieldPathToList(change.fieldPath);
     const rewrite: FieldChange<T> = {
       newValue: transformed,
       fieldPath: ROOT_FIELD_PATH,
@@ -602,17 +606,39 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       return;
     }
     const props = committedProps;
-    // Taken by the change it was announced for, so a second change at the path moves nothing again
-    const move = announced?.fieldPath === fieldPath && Object.is(announced.value, newValue) ? announced : undefined;
-    if (move) {
-      announced = undefined;
-      moved = { move, outcome: { kind: 'refused' } };
-    }
     const path = fieldPathToList(fieldPath);
+    // A parent field that sends a switch's data at its own path while the switch is being sent, holding the value the
+    // switch announced where the switch put it, sends the switch all the same, so it takes the switch as its own change
+    // does and the switching field learns what became of it. Only a switch is taken this way: a key move a parent sends
+    // another value for is its own change
+    const isForwarded = (sent: AnnouncedMove) => {
+      const at = fieldPathToList(sent.fieldPath);
+      return isPathPrefix(path, at) && Object.is(getAt<unknown>(newValue, at.slice(path.length)), sent.value);
+    };
+    const move = announced?.fieldPath === fieldPath && Object.is(announced.value, newValue) ? announced : undefined;
+    const forwarded = !move && announced?.switchedFrom && isForwarded(announced) ? announced : undefined;
+    // Taken by the change it was announced for, so a second change at the path moves nothing again
+    const taken = move ?? forwarded;
+    if (taken) {
+      announced = undefined;
+      moved = { move: taken, outcome: { kind: 'refused' } };
+    }
+    const takenAt = taken && fieldPathToList(taken.fieldPath);
+    // The switch leaves out the keys only the old option declared, which a change taken as the switch puts back for the
+    // sanitize to judge
+    let value = newValue;
+    let putBack: { fieldPath: FieldPath; at: FieldPathList; index: number; left: GenericObjectType } | undefined;
+    if (takenAt && taken?.switchedFrom?.left && isPlainObject(taken.value)) {
+      const { index, left } = taken.switchedFrom;
+      putBack = { fieldPath: taken.fieldPath, at: takenAt, index, left };
+      const at = putBack.at.slice(path.length);
+      const withLeft = { ...taken.value, ...left };
+      value = at.length === 0 ? asFieldValue<T>(withLeft) : setByPath(copyAlongPath(newValue, at), at, withLeft);
+    }
     // The selections and expansions under keys the change moves, or under a property it removes, move before it is
     // applied, so the sanitize reads them where the change puts the data; a change the form refuses puts them back
     const fieldChange: FieldChange<T> = {
-      newValue,
+      newValue: value,
       fieldPath,
       newErrorSchema,
       newKeyOf: move?.newKeyOf,
@@ -627,6 +653,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     deliver(() => {
       const before = containerPath && getAt<unknown>(current().formData, containerPath);
       const unmoved = uiMove && uiState.save();
+      // The field tree before a switch is read under the selections from before it, which the move drops under the keys
+      // the switch left
+      let applied = fieldChange;
+      if (putBack) {
+        const oldData = getAt<unknown>(current().formData, putBack.at);
+        const shownBefore = withSwitchUndone(unmoved ?? uiState.save(), putBack.fieldPath, putBack.index, oldData);
+        const leftKeys = new Set(Object.keys(putBack.left));
+        applied = { ...fieldChange, switchedFrom: { path: putBack.at, leftKeys, uiState: shownBefore } };
+      }
       if (uiMove) {
         uiState.move(uiMove.container, uiMove.newKeyOf);
       }
@@ -635,7 +670,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       try {
         const committed = commit(
           settled((base) => {
-            const { next, edited } = applyEdit(base, fieldChange, props);
+            const { next, edited } = applyEdit(base, applied, props);
             // `applyEdit()` hands `base` itself back only for an edit `transformChange` refused
             edit = { isRefused: next === base, edited };
             return next;
@@ -644,15 +679,19 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         if (isFieldEdit && !edit.isRefused) {
           uiState.edited(fieldPath, (at) => getAt(committed.formData, at));
         }
-        if (move) {
-          const kept = getAt<unknown>(committed.formData, path);
+        // The switching field's selection holds for what the form stored there, as for its own change
+        if (forwarded && !edit.isRefused) {
+          uiState.edited(forwarded.fieldPath, (at) => getAt(committed.formData, at));
+        }
+        if (taken && takenAt) {
+          const kept = getAt<unknown>(committed.formData, takenAt);
           let outcome: MoveOutcome = { kind: 'taken', kept };
           if (edit.isRefused) {
             outcome = { kind: 'refused' };
           } else if (edit.edited) {
-            outcome = { kind: 'rewritten', kept, edited: getAt<unknown>(edit.edited.formData, path) };
+            outcome = { kind: 'rewritten', kept, edited: getAt<unknown>(edit.edited.formData, takenAt) };
           }
-          moved = { move, outcome };
+          moved = { move: taken, outcome };
         }
         if (unmoved && edit.isRefused) {
           uiState.restore(unmoved);

@@ -1126,6 +1126,44 @@ describe('a cell in options with no discriminator', () => {
     expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
   });
 
+  // The form's sanitize judges a key only the old option declares, as for the option selector (#5812)
+  it.each([
+    { case: 'drops what its default filled in', typed: '', expected: { kind: 'b' } },
+    { case: 'keeps what the user typed', typed: 'q', expected: { kind: 'b', a: 'dq' } },
+  ])('$case from a key a selector cell switch leaves to an object taking extra keys', async ({ typed, expected }) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          type: 'object',
+          additionalProperties: true,
+          anyOf: [
+            {
+              title: 'Option A',
+              properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string', title: 'A', default: 'd' } },
+            },
+            {
+              title: 'Option B',
+              properties: { kind: { type: 'string', const: 'b' }, b: { type: 'string', title: 'B' } },
+            },
+          ],
+        },
+      },
+    };
+    const { onChange } = createFormComponent({
+      schema,
+      uiSchema: selectorUiSchema,
+      initialFormData: { thing: { kind: 'a' } },
+    });
+    if (typed) {
+      await user.type(screen.getByLabelText('A'), typed);
+    }
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Option B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ thing: expected });
+  });
+
   it('keeps the option shown through a cell edit after transformChange refuses a switch from data naming no option', async () => {
     let refuses = true;
     createFormComponent({

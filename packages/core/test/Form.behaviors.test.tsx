@@ -3310,10 +3310,17 @@ describe('initialFormData feature to prevent form reset', () => {
   const FormWrapper = ({ formData, initialFormData }: { formData?: ResetData; initialFormData?: ResetData }) => {
     const [isPending, setIsPending] = useState(false);
 
-    const handleSubmit = () => {
-      setIsPending(true);
-      setTimeout(() => setIsPending(false), 3000);
-    };
+    // Cleared on unmount: a test ends well inside the 3 seconds, and a timer firing after the file's environment is
+    // torn down sets state with no `window` left, which fails the run
+    useEffect(() => {
+      if (!isPending) {
+        return undefined;
+      }
+      const timer = setTimeout(() => setIsPending(false), 3000);
+      return () => clearTimeout(timer);
+    }, [isPending]);
+
+    const handleSubmit = () => setIsPending(true);
 
     const props: NoValFormProps = {
       schema,

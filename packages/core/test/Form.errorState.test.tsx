@@ -1033,7 +1033,7 @@ describe('Error state consistency when deriving from new props', () => {
     });
   });
 
-  it("drops the errors of a key an anyOf's switch deletes on an object that takes extra keys, and keeps an extra key's", async () => {
+  it("drops the errors of a key only the option an anyOf's switch leaves declares on an object that takes extra keys, and keeps an extra key's", async () => {
     const { container } = render(
       <Form
         schema={{
@@ -1055,8 +1055,9 @@ describe('Error state consistency when deriving from new props', () => {
 
     await user.selectOptions(screen.getByRole('combobox'), 'Invoice');
 
-    // The switch deletes `holder`, which only Card declares, while `extra` stays an extra key of the object
-    expect(container.querySelector('#root_holder')).toBeNull();
+    // `holder`, which only Card declares, stays as an extra key of the object, rendered by a field that raised nothing,
+    // while `extra` stays the extra key it was
+    expect(input(container, 'root_holder').value).toBe('ax');
     expect(errorListMessages(container)).toEqual(['.extra custom:by']);
     expect(fieldErrorsById(container)).toEqual({ root_extra: ['custom:by'] });
   });
