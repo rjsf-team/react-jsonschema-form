@@ -2311,6 +2311,15 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       formExpected: ['x'],
     },
     {
+      // utils leaves the row for the defaults, which `Form` and an option switch fill
+      name: 'empties a null item holding its old null default for the new default to fill, where its position allows no null',
+      from: { type: 'array', items: { type: 'string', default: null } },
+      to: { type: 'array', items: { type: 'string', default: 'y' } },
+      data: [null, 'q'],
+      expected: [undefined, 'q'],
+      formExpected: ['y', 'q'],
+    },
+    {
       name: 'prunes an object item whose new type list names object beside another type',
       from: { type: 'array', items: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } } },
       to: { type: 'array', items: { type: ['string', 'object'], properties: { a: { type: 'number' } } } },
