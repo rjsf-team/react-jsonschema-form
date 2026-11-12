@@ -107,24 +107,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const utils = (schema: RJSFSchema, defaultFormStateBehavior?: DefaultFormStateBehavior) =>
           createSchemaUtils({ validator: testValidator, defaultFormStateBehavior, ...absent }, schema);
         it('defaults a property to its const, beside a parent default and without one', () => {
-          expect(utils(withParentDefault).getDefaultFormState(withParentDefault)).toEqual({ x: { a: 2 } });
-          expect(utils(withoutParentDefault).getDefaultFormState(withoutParentDefault)).toEqual({ x: { a: 2 } });
+          expect(utils(withParentDefault).getDefaultFormState(withParentDefault)).toStrictEqual({ x: { a: 2 } });
+          expect(utils(withoutParentDefault).getDefaultFormState(withoutParentDefault)).toStrictEqual({ x: { a: 2 } });
         });
         it('defaults a bare object const to its value', () => {
-          expect(utils(bare).getDefaultFormState(bare)).toEqual({ a: 1 });
-          expect(utils(bare, { constAsDefaults: 'skipOneOf' }).getDefaultFormState(bare)).toEqual({ a: 1 });
+          expect(utils(bare).getDefaultFormState(bare)).toStrictEqual({ a: 1 });
+          expect(utils(bare, { constAsDefaults: 'skipOneOf' }).getDefaultFormState(bare)).toStrictEqual({ a: 1 });
           const prototypeNamed: RJSFSchema = { type: 'object', const: { toString: 1 } };
-          expect(utils(prototypeNamed).getDefaultFormState(prototypeNamed, {})).toEqual({ toString: 1 });
+          expect(utils(prototypeNamed).getDefaultFormState(prototypeNamed, {})).toStrictEqual({ toString: 1 });
         });
         it('fills the const into empty object data, and keeps the keys the data holds', () => {
-          expect(utils(withoutParentDefault).getDefaultFormState(withoutParentDefault, { x: {} })).toEqual({
+          expect(utils(withoutParentDefault).getDefaultFormState(withoutParentDefault, { x: {} })).toStrictEqual({
             x: { a: 2 },
           });
-          expect(utils(bare).getDefaultFormState(bare, { a: 3 })).toEqual({ a: 3 });
+          expect(utils(bare).getDefaultFormState(bare, { a: 3 })).toStrictEqual({ a: 3 });
         });
         it('keeps a nested object of the const whole', () => {
           const nested: RJSFSchema = { type: 'object', const: { a: { b: 1 } } };
-          expect(utils(nested).getDefaultFormState(nested)).toEqual({ a: { b: 1 } });
+          expect(utils(nested).getDefaultFormState(nested)).toStrictEqual({ a: { b: 1 } });
         });
         it('fills the keys no property declares beside the ones its properties compute', () => {
           const declared: RJSFSchema = {
@@ -132,7 +132,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             properties: { a: { type: 'number' } },
             const: { a: 1, b: 2 },
           };
-          expect(utils(declared).getDefaultFormState(declared)).toEqual({ a: 1, b: 2 });
+          expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ a: 1, b: 2 });
         });
         it('keeps what its properties and additionalProperties compute for a key, as their own defaults win', () => {
           const ownDefaults: RJSFSchema = {
@@ -141,16 +141,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             additionalProperties: { type: 'number', default: 6 },
             const: { a: 1, b: 2 },
           };
-          expect(utils(ownDefaults).getDefaultFormState(ownDefaults)).toEqual({ a: 5, b: 6 });
+          expect(utils(ownDefaults).getDefaultFormState(ownDefaults)).toStrictEqual({ a: 5, b: 6 });
         });
         it('leaves the extra keys the data holds once the defaults were generated, as for a default', () => {
           const extra: RJSFSchema = { type: 'object', additionalProperties: { type: 'number' }, const: { b: 2 } };
-          expect(utils(extra).getDefaultFormState(extra, {}, false, true)).toEqual({});
-          expect(utils(extra).getDefaultFormState(extra, { c: 2 }, false, true)).toEqual({ c: 2 });
+          expect(utils(extra).getDefaultFormState(extra, {}, false, true)).toStrictEqual({});
+          expect(utils(extra).getDefaultFormState(extra, { c: 2 }, false, true)).toStrictEqual({ c: 2 });
           // On the first pass the defaults are computed without the data and merged beneath it, as for a `default`
-          expect(utils(extra).getDefaultFormState(extra, { c: 2 })).toEqual({ c: 2, b: 2 });
+          expect(utils(extra).getDefaultFormState(extra, { c: 2 })).toStrictEqual({ c: 2, b: 2 });
           const withDefault: RJSFSchema = { ...extra, const: undefined, default: { b: 2 } };
-          expect(utils(withDefault).getDefaultFormState(withDefault, { c: 2 })).toEqual({ c: 2, b: 2 });
+          expect(utils(withDefault).getDefaultFormState(withDefault, { c: 2 })).toStrictEqual({ c: 2, b: 2 });
         });
         it('seeds no key of the const where patternProperties or unevaluatedProperties let the user add, remove or rename keys', () => {
           const patterned: RJSFSchema = {
@@ -170,18 +170,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
         it('fills the keys of a const that closes the object whatever the data holds, and once the defaults were generated', () => {
           const two: RJSFSchema = { type: 'object', const: { a: 1, b: 2 } };
-          expect(utils(two).getDefaultFormState(two, { a: 3 })).toEqual({ a: 3, b: 2 });
-          expect(utils(two, { constAsDefaults: 'always' }).getDefaultFormState(two, { a: 1 })).toEqual({ a: 1, b: 2 });
-          expect(utils(bare).getDefaultFormState(bare, {}, false, true)).toEqual({ a: 1 });
+          expect(utils(two).getDefaultFormState(two, { a: 3 })).toStrictEqual({ a: 3, b: 2 });
+          expect(utils(two, { constAsDefaults: 'always' }).getDefaultFormState(two, { a: 1 })).toStrictEqual({
+            a: 1,
+            b: 2,
+          });
+          expect(utils(bare).getDefaultFormState(bare, {}, false, true)).toStrictEqual({ a: 1 });
           const unevaluatedClosed: RJSFSchema = { ...bare, unevaluatedProperties: false };
-          expect(utils(unevaluatedClosed).getDefaultFormState(unevaluatedClosed, {}, false, true)).toEqual({ a: 1 });
+          expect(utils(unevaluatedClosed).getDefaultFormState(unevaluatedClosed, {}, false, true)).toStrictEqual({
+            a: 1,
+          });
           const regenerated = utils(withoutParentDefault).getDefaultFormState(
             withoutParentDefault,
             undefined,
             false,
             true,
           );
-          expect(regenerated).toEqual({ x: { a: 2 } });
+          expect(regenerated).toStrictEqual({ x: { a: 2 } });
         });
         it('refills a nested object of a const that closes the object where the data holds part of it', () => {
           const nested: RJSFSchema = { type: 'object', const: { a: { b: 1, c: 2 } } };
@@ -242,13 +247,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             type: 'object',
             oneOf: [{ const: { a: 1 }, properties: { a: { type: 'number' } } }, other],
           };
-          expect(utils(undeclared, skipOneOf).getDefaultFormState(undeclared)).toEqual({ a: 1 });
-          expect(utils(declared, skipOneOf).getDefaultFormState(declared)).toEqual({ a: 1 });
+          expect(utils(undeclared, skipOneOf).getDefaultFormState(undeclared)).toStrictEqual({ a: 1 });
+          expect(utils(declared, skipOneOf).getDefaultFormState(declared)).toStrictEqual({ a: 1 });
         });
         it('defaults to none of it when constants are never defaults', () => {
           const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
-          expect(utils(withoutParentDefault, never).getDefaultFormState(withoutParentDefault)).toEqual({});
-          expect(utils(bare, never).getDefaultFormState(bare)).toEqual({});
+          expect(utils(withoutParentDefault, never).getDefaultFormState(withoutParentDefault)).toStrictEqual({});
+          expect(utils(bare, never).getDefaultFormState(bare)).toStrictEqual({});
         });
       });
       test("keeps the guards for an option's const where the parent's field takes extra keys, as an explicit additionalProperties does", () => {
@@ -313,7 +318,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(utils.getDefaultFormState(schema, {}, false, true, uiSchema)).toStrictEqual({ a: 1 });
       });
       test('computeDefaults gives the const without data, which getDefaultFormState merges in', () => {
-        expect(computeDefaults({ validator: testValidator }, bare, { rawFormData: { a: 3 } })).toEqual({ a: 1 });
+        expect(computeDefaults({ validator: testValidator }, bare, { rawFormData: { a: 3 } })).toStrictEqual({ a: 1 });
       });
     });
     describe('an explicitly undefined property schema', () => {
