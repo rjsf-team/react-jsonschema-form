@@ -1780,8 +1780,21 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     );
     const keys = new Set<string>();
     const formDataRequired: string[] = [];
+    // A key a property in an `allOf` the plan left unmerged declares is no extra key of the field as rendered, so its
+    // data is matched to that property below, as it is once the form has generated its defaults
+    const declaredInAllOf = (key: string) => {
+      if (!(ALL_OF_KEY in view.schema)) {
+        return false;
+      }
+      const merged = mergedSchemaOf<S, F>(context, view);
+      return (
+        isObject(merged.properties) &&
+        Object.hasOwn(merged.properties, key) &&
+        !hasSchemaMarker(getPropertySchema<S>(merged, key), ADDITIONAL_PROPERTY_FLAG)
+      );
+    };
     Object.keys(formData)
-      .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
+      .filter((key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && !declaredInAllOf(key))
       .forEach((key) => {
         keys.add(key);
         formDataRequired.push(key);

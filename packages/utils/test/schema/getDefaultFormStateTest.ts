@@ -2866,6 +2866,30 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toStrictEqual({ o: value });
           },
         );
+
+        it.each<[string, string, boolean, GenericObjectType]>([
+          ['leaves out', 'zz', false, {}],
+          ['leaves out', 'zz', true, {}],
+          ['keeps', 'g', false, { c: 'g' }],
+          ['keeps', 'g', true, { c: 'g' }],
+        ])(
+          '%s a value %j of a key only the allOf of an object taking extra keys declares, as its enum offers it or not, initialDefaultsGenerated %s',
+          (_name, value, initialDefaultsGenerated, expected) => {
+            const o: RJSFSchema = {
+              type: 'object',
+              properties: { a: { type: 'string' } },
+              additionalProperties: true,
+              allOf: [{ properties: { c: { enum: ['r', 'g'] } } }],
+            };
+            const schema: RJSFSchema = { type: 'object', properties: { o } };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { o: { c: value } }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ o: expected });
+          },
+        );
       });
 
       it("skips the constant default of a schema's anyOf under skipOneOf when it also has a oneOf", () => {
