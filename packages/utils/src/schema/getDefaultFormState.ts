@@ -1767,24 +1767,27 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or
   // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the
   // `const` names. A `patternProperties` or `unevaluatedProperties` that takes extra keys leaves the guards in place. A
-  // `ui:initialValue` takes priority over the `const` as the object's default, so none of its keys are seeded beside one,
-  // on the first pass or once the defaults were generated
-  const closingConst =
-    objectConst && getUiOptions<T, S, F>(uiSchema).initialValue === undefined && !takesExtraKeys
-      ? objectConst
-      : undefined;
-  if ((additionalProperties && !initialDefaultsGenerated) || closingConst) {
+  // `ui:initialValue` takes priority over the `const` as the object's default, so beside one only the keys of the
+  // `const` it gives are seeded, read from it on the first pass, the one it is the default of, as a declared key is
+  const closingConst = objectConst && !takesExtraKeys ? objectConst : undefined;
+  const readsInitialValue = closingConst && getUiOptions<T, S, F>(uiSchema).initialValue !== undefined;
+  const closingKeys =
+    closingConst &&
+    Object.keys(closingConst).filter(
+      (key) => !readsInitialValue || (!initialDefaultsGenerated && isObject(defaults) && Object.hasOwn(defaults, key)),
+    );
+  if ((additionalProperties && !initialDefaultsGenerated) || (closingKeys && closingKeys.length > 0)) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
       rootSchema,
       isObject(additionalProperties) ? additionalProperties : {},
     );
-    const formDataRequired = closingConst ? [] : Object.keys(formData).filter((key) => !isDeclared(key));
+    const formDataRequired = closingKeys ? [] : Object.keys(formData).filter((key) => !isDeclared(key));
     // Only seed keys from schema defaults when formData has no additionalProperties of its own.
     // If the user already has data (e.g. after a key rename), injecting default keys would
     // re-add stale entries that no longer exist in formData.
-    const seeded = closingConst ?? (isObject(defaults) && formDataRequired.length === 0 ? defaults : {});
-    const keys = new Set([...formDataRequired, ...Object.keys(seeded).filter((key) => !isDeclared(key))]);
+    const seeded = closingKeys ?? (isObject(defaults) && formDataRequired.length === 0 ? Object.keys(defaults) : []);
+    const keys = new Set([...formDataRequired, ...seeded.filter((key) => !isDeclared(key))]);
     [...keys].filter(isPinned).forEach((key) => {
       const { value, holdsNull } = foldReporting(
         context,

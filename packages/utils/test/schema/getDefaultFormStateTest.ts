@@ -195,6 +195,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(bare).getDefaultFormState(bare, undefined, false, false, uiSchema)).toStrictEqual({});
           expect(utils(bare).getDefaultFormState(bare, {}, false, true, uiSchema)).toStrictEqual({});
         });
+        it('reads the keys of a const that closes the object from a ui:initialValue, as a declared key is', () => {
+          const uiSchema = { 'ui:initialValue': { a: 5, z: 1 } };
+          const closed: RJSFSchema = { ...bare, additionalProperties: false };
+          const declared: RJSFSchema = { ...bare, properties: { a: { type: 'number' } } };
+          const two: RJSFSchema = { type: 'object', const: { a: 1, b: 2 } };
+          for (const schema of [bare, closed, declared, two]) {
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({
+              a: 5,
+            });
+          }
+          expect(utils(two).getDefaultFormState(two, { a: 5 }, false, true, uiSchema)).toStrictEqual({ a: 5 });
+        });
         it("fills a mixed oneOf option's const under skipOneOf, whether or not the option declares its keys", () => {
           const skipOneOf: DefaultFormStateBehavior = { constAsDefaults: 'skipOneOf' };
           const other: RJSFSchema = { properties: { b: { type: 'string' } } };
