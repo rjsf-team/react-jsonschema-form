@@ -48,8 +48,8 @@ export const UNEVALUATED_PROPERTIES_KEY = 'unevaluatedProperties';
 export const RJSF_REF_KEY = Symbol('__rjsf_ref');
 export const RJSF_REF_CYCLE_KEY = Symbol('__rjsf_ref_cycle');
 /** Records, on every subschema `retrieveSchema()` hands out, where the subschema came from. Only `retrieveSchema()`
- * reads what it holds; the shared test setup strips it so that a stamped schema compares equal to the same schema
- * without it.
+ * writes or reads what it holds. It is exported so that a test can strip it, as RJSF's own test setup does, and
+ * compare a retrieved schema with the same schema written by hand.
  */
 export const RJSF_PROVENANCE_KEY = Symbol('__rjsf_provenance');
 export const SCHEMA_KEY = '$schema';
