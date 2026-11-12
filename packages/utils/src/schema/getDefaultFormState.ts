@@ -1873,7 +1873,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
             mergedSchemaOf<S, F>(context, view),
             viewMatchedSchema<S, F>(context, view),
             rootSchema,
-            { data: formData, unfolded: !populatesAllOf, retrievesAll: populatesAllOf, keys: unmerged },
+            formData,
+            !populatesAllOf,
+            populatesAllOf,
+            unmerged,
           )
         : formData;
     // A value the merged schema rejects is left out, so the key takes the field's own defaults, as a property the fold
@@ -2584,12 +2587,11 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   const mergesForData = !shouldRetrieveAllOf && formData !== undefined && holdsAnyOf(schemaToMatch, MERGING_KEYWORDS);
   const readSchema = mergesForData ? retrieve() : schemaToMatch;
   const nestedUnfolded = unfolded || mergesForData;
-  let selectSchema: S | undefined;
-  if (formData !== undefined && !isConstant<S>(readSchema)) {
-    selectSchema = resolveDeclaredConstantOptions<S>(readSchema, declarations);
-  } else if (formData !== undefined && readSchema !== schemaToMatch && !isConstant<S>(schemaToMatch)) {
-    selectSchema = resolveDeclaredConstantOptions<S>(schemaToMatch, declarations);
-  }
+  const optionsSchema = [readSchema, schemaToMatch].find((candidate) => !isConstant<S>(candidate));
+  const selectSchema =
+    formData === undefined || optionsSchema === undefined
+      ? undefined
+      : resolveDeclaredConstantOptions<S>(optionsSchema, declarations);
   let validFormData: unknown = formData;
   if (selectSchema !== undefined && isConstantSelect<S>(selectSchema, true)) {
     const getOptionsList = optionsList<T, S, F>(selectSchema);
@@ -2616,11 +2618,15 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   if (fieldConst !== undefined) {
     validFormData = fieldConst;
   } else if (isObject(validFormData)) {
-    validFormData = matchProperties<S, F>(context, readSchema, matched, rootSchema, {
-      data: validFormData,
-      unfolded: nestedUnfolded,
-      retrievesAll: shouldRetrieveAllOf,
-    });
+    validFormData = matchProperties<S, F>(
+      context,
+      readSchema,
+      matched,
+      rootSchema,
+      validFormData,
+      nestedUnfolded,
+      shouldRetrieveAllOf,
+    );
   }
 
   return asDeclared<T | T[] | undefined>(validFormData);
@@ -2635,27 +2641,21 @@ function declarationsOf<S extends StrictRJSFSchema>({ field, chains }: MatchedSc
   };
 }
 
-/** How `matchProperties()` matches the properties of some object data */
-interface PropertyMatch {
-  readonly data: GenericObjectType;
-  /** Whether the fold computed none of the properties, see `formDataMatching()` */
-  readonly unfolded: boolean;
-  /** Whether every property is retrieved, as `allOf: 'populateDefaults'` retrieves them */
-  readonly retrievesAll: boolean;
-  /** The only properties matched, where given, the others kept as the data holds them */
-  readonly keys?: ReadonlySet<string>;
-}
-
 /** Returns the object data `data` with each property `readSchema` declares matched to the schema of that property, as
  * `formDataMatching()` matches it, where it may reject the value: a value that doesn't match is left out, so the
- * property takes its defaults as one the data lacks does
+ * property takes its defaults as one the data lacks does. `unfolded` says the fold computed none of the properties, see
+ * `formDataMatching()`, `retrievesAll` that every property is retrieved, as `allOf: 'populateDefaults'` retrieves them,
+ * and `keys`, where given, names the only properties matched, the others kept as the data holds them
  */
 function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   readSchema: S,
   matchedSchema: MatchedSchema<S>,
   rootSchema: S,
-  { data, unfolded, retrievesAll, keys }: PropertyMatch,
+  data: GenericObjectType,
+  unfolded: boolean,
+  retrievesAll: boolean,
+  keys?: ReadonlySet<string>,
 ): GenericObjectType {
   if (!isObject(readSchema.properties)) {
     return data;

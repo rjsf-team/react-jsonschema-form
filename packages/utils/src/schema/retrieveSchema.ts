@@ -253,20 +253,11 @@ export function retrieveField<S extends StrictRJSFSchema, F extends FormContextT
   context: SchemaContext<S, F>,
   field: Provenance<S>,
   data?: unknown,
-  depData: unknown = data,
+  depData?: unknown,
 ): S {
   const root = parseSchemaGraph<S>(field.graph.rawRoot);
-  const planned =
-    depData === data
-      ? undefined
-      : buildPlan({
-          context,
-          graph: field.graph,
-          seeds: field.seeds,
-          data,
-          depData,
-          policy: renderPolicy(context, root),
-        });
+  const { graph, seeds } = field;
+  const planned = buildPlan({ context, graph, seeds, data, depData, policy: renderPolicy(context, root) });
   return buildView<S, F>(context, root, field, data, false, planned);
 }
 
