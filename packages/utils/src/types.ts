@@ -339,6 +339,13 @@ export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
     formData: unknown,
     depth: number,
   ): string | undefined;
+  /** Whether `ArrayField` renders the field at `fieldPath` as one widget, as a multiple select, a group of checkboxes, a
+   * file input or a custom widget, which holds `[]` with nothing chosen, so `ui:required` turns that down. Its `schema`
+   * has the type the fallback UI's selector is on pinned where the fallback UI renders the field. Without it, an array
+   * with `items` does where its schema is a multiple select or a files array, or its uiSchema names a widget, and no
+   * field other than `ArrayField` or `SchemaField`
+   */
+  rendersArrayWidget?(fieldPath: FieldPath, schema: S, uiSchema: GenericObjectType, formData: unknown): boolean;
 }
 
 declare const FIELD_PATH_BRAND: unique symbol;
@@ -1013,12 +1020,6 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
    * `default` and `fieldDefault` of a `ThemePresentation` take none
    */
   uncheckedIsFalse?: boolean;
-  /** Whether the control, left alone, already holds an empty array, as a group of checkboxes does, which
-   * `getDefaultFormState()` seeds a required one with and unchecking every box leaves. `required` then asks nothing of
-   * the user, so `@rjsf/core` plans the control as required, by its marker and its screen-reader cue alike, only where
-   * the schema's `minItems` demands a checked box or `ui:required: true` asks for it (#5573). A fact about one control, declared as `uncheckedIsFalse` is
-   */
-  uncheckedIsEmpty?: boolean;
   /** The widget a boolean renders with when its `uiSchema` names none, as an alias or a registry key. Read only under
    * `BooleanField`: it is the widget `@rjsf/core`'s `BooleanField` renders in place of its checkbox, and the one
    * `SchemaField` plans a component registered under that key with, so a replacement rendering another widget, such as
@@ -1033,16 +1034,16 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
 export type WidgetPresentationDeclaration = Omit<PresentationDeclaration<Exclude<PartOwner, 'widget'>>, 'widget'>;
 
 /** A declaration every component takes, so it leaves out what describes one control */
-type BlanketPresentationDeclaration = Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'uncheckedIsEmpty'>;
+type BlanketPresentationDeclaration = Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'>;
 
 /** A `PresentationDeclaration` with every part settled on the template or the component, as
- * `getPresentationDeclaration()` returns it, with `uncheckedIsFalse` and `uncheckedIsEmpty` left out where nothing
- * declares them, and `labelPlacement` where nothing declares it or the template draws the label
+ * `getPresentationDeclaration()` returns it, with `uncheckedIsFalse` left out where nothing declares it, and
+ * `labelPlacement` where nothing declares it or the template draws the label
  */
 export type ResolvedPresentationDeclaration = Required<
-  Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'uncheckedIsEmpty' | 'labelPlacement'>
+  Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'labelPlacement'>
 > &
-  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'uncheckedIsEmpty' | 'labelPlacement'> & {
+  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'labelPlacement'> & {
     /** The label, description and errors the field's own declaration settles on `'self'`, rather than the widget it
      * leaves them to, left out where there are none
      */

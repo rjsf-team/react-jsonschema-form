@@ -1446,7 +1446,7 @@ describe('getUiRequiredErrorSchema()', () => {
     });
   });
 
-  describe('an empty group of checkboxes', () => {
+  describe('an empty array rendered as one widget', () => {
     const colors: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true };
     const withColors = (extra: RJSFSchema = {}, required: string[] = []): RJSFSchema => ({
       type: 'object',
@@ -1470,6 +1470,31 @@ describe('getUiRequiredErrorSchema()', () => {
     it('reports `[]` on a field naming the widget by its registered name', () => {
       const field: UiSchema = { 'ui:widget': 'CheckboxesWidget', 'ui:required': true };
       expect(errorsFor(withColors(), field, { c: [] })).toEqual(missing);
+    });
+
+    // `ArrayField` renders each of these as one widget, which holds `[]` with nothing chosen (#5744)
+    it.each<[string, RJSFSchema, UiSchema]>([
+      ['a multiple select', colors, { 'ui:required': true }],
+      ['a multiple select named by its alias', colors, { 'ui:widget': 'select', 'ui:required': true }],
+      [
+        'a custom widget',
+        { type: 'array', items: { type: 'string' } },
+        { 'ui:widget': 'TagsWidget', 'ui:required': true },
+      ],
+      ['a file input', { type: 'array', items: { type: 'string', format: 'data-url' } }, { 'ui:required': true }],
+      [
+        'a file input named by its alias',
+        { type: 'array', items: { type: 'string' } },
+        { 'ui:widget': 'files', 'ui:required': true },
+      ],
+      [
+        'a group of checkboxes under `ui:field: ArrayField`',
+        colors,
+        { 'ui:field': 'ArrayField', 'ui:widget': 'checkboxes', 'ui:required': true },
+      ],
+      ['a multiple select under `ui:field: SchemaField`', colors, { 'ui:field': 'SchemaField', 'ui:required': true }],
+    ])('reports `[]` on %s', (_, c, field) => {
+      expect(errorsFor({ type: 'object', properties: { c } }, field, { c: [] })).toEqual(missing);
     });
 
     it("reports `[]` on a group an option renders, from the option's uiSchema", () => {
@@ -1514,10 +1539,104 @@ describe('getUiRequiredErrorSchema()', () => {
       ['a `minItems` the validator reports', withColors({ minItems: 1 }), checkboxes, { c: [] }],
       ['no `ui:required`', withColors(), { 'ui:widget': 'checkboxes' }, { c: [] }],
       ['`ui:required: false`', withColors(), { 'ui:widget': 'checkboxes', 'ui:required': false }, { c: [] }],
-      ['another widget', withColors(), { 'ui:widget': 'select', 'ui:required': true }, { c: [] }],
-      ['no widget', withColors(), { 'ui:required': true }, { c: [] }],
+      [
+        'a list of items, which renders no widget',
+        withColors({ items: { type: 'string' }, uniqueItems: false }),
+        { 'ui:required': true },
+        { c: [] },
+      ],
+      ['a `ui:field`', withColors(), { 'ui:field': 'TagsField', 'ui:required': true }, { c: [] }],
+      [
+        'a hidden widget, which leaves nothing to choose with',
+        withColors(),
+        { 'ui:widget': 'hidden', 'ui:required': true },
+        { c: [] },
+      ],
+      [
+        'no `items`, which renders the unsupported-field template',
+        { type: 'object', properties: { c: { type: 'array' } } },
+        { 'ui:widget': 'TagsWidget', 'ui:required': true },
+        { c: [] },
+      ],
+      [
+        'fixed items of files, which render as a list',
+        { type: 'object', properties: { c: { type: 'array', items: [{ type: 'string', format: 'data-url' }] } } },
+        { 'ui:required': true },
+        { c: [] },
+      ],
     ])('leaves `[]` alone with %s', (_, schema, field, formData) => {
       expect(errorsFor(schema, field, formData)).toEqual([]);
+    });
+
+    it.each<[string, RJSFSchema, boolean, string[]]>([
+      ['reports `[]` on a list of items it says renders as one', withColors({ uniqueItems: false }), true, missing],
+      ['lets `[]` through on a multiple select it says renders as no widget', withColors(), false, []],
+    ])("asks the form's fieldState whether ArrayField renders a widget, and %s", (_, schema, renders, expected) => {
+      const asked: unknown[] = [];
+      const fieldState: FormFieldState = {
+        selectedOption: () => 0,
+        isExpanded: () => false,
+        rendersArrayWidget: (...args) => {
+          asked.push(args);
+          return renders;
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        { c: { 'ui:required': true } },
+        { c: [] },
+        undefined,
+        undefined,
+        undefined,
+        fieldState,
+      );
+      expect(toErrorList(errorSchema).map(({ stack }) => stack)).toEqual(expected);
+      expect(asked).toEqual([['c', expect.objectContaining({ type: 'array' }), { 'ui:required': true }, []]]);
+    });
+
+    it("asks the form's fieldState on the type the fallback UI's selector is on", () => {
+      const asked: unknown[] = [];
+      const fieldState: FormFieldState = {
+        selectedOption: () => 0,
+        isExpanded: () => false,
+        fallbackType: () => 'array',
+        rendersArrayWidget: (_, schema) => {
+          asked.push(schema.type);
+          return true;
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        withColors({ type: ['string', 'array'] }),
+        { c: { 'ui:required': true } },
+        { c: [] },
+        undefined,
+        undefined,
+        undefined,
+        fieldState,
+      );
+      expect(toErrorList(errorSchema).map(({ stack }) => stack)).toEqual(missing);
+      expect(asked).toEqual(['array']);
+    });
+
+    it("leaves `[]` on a hidden widget alone, whatever the form's fieldState says", () => {
+      const fieldState: FormFieldState = {
+        selectedOption: () => 0,
+        isExpanded: () => false,
+        rendersArrayWidget: () => true,
+      };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        withColors(),
+        { c: { 'ui:widget': 'hidden', 'ui:required': true } },
+        { c: [] },
+        undefined,
+        undefined,
+        undefined,
+        fieldState,
+      );
+      expect(toErrorList(errorSchema)).toEqual([]);
     });
 
     it('does not check the root', () => {

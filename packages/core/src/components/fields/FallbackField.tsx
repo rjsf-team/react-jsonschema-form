@@ -38,7 +38,7 @@ import useSendBlur from '../../hooks/useSendBlur.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import type { KeptFallbackType, UiState } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
-import { fallbackValueKeepsWidget, getFallbackTypes, storedValue, withoutUiWidget } from './fieldWidgetUtils.ts';
+import { fallbackValueKeepsWidget, fallbackValueUiSchema, getFallbackTypes, storedValue } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import type { InheritedPresentation } from './PresentationContext.ts';
 import PresentationContext from './PresentationContext.ts';
@@ -373,17 +373,23 @@ const HELP_UI_OPTION = 'help';
  * implementation for the others, and `getWidget()` throws rather than falling back, which would take the whole form
  * down as soon as another type was selected. A widget registered under its own name is left alone since it is expected
  * to handle whatever it is given.
+ * @param schema - The schema the fallback UI renders.
+ * @param type - The type the selector is on.
  * @param uiSchema - The uiSchema for the field being rendered.
- * @param keepsWidget - Whether a widget implements the `ui:widget` for the type the selector is on.
+ * @param widgets - The registered widgets.
  */
 function getValueUiSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(uiSchema: UiSchema<T, S, F> | undefined, keepsWidget: boolean): UiSchema<T, S, F> {
+>(
+  schema: S,
+  type: JSONSchema7TypeName,
+  uiSchema: UiSchema<T, S, F> | undefined,
+  widgets: Registry<T, S, F>['widgets'],
+): UiSchema<T, S, F> {
   const noUiSchema: UiSchema<T, S, F> = {};
-  const ownUiSchema = uiSchema ?? noUiSchema;
-  const valueUiSchema = keepsWidget ? { ...ownUiSchema } : withoutUiWidget<T, S, F>(ownUiSchema);
+  const valueUiSchema = { ...fallbackValueUiSchema<T, S, F>(schema, type, uiSchema ?? noUiSchema, widgets) };
   delete valueUiSchema[HELP_UI_KEY];
   const uiOptions = { ...valueUiSchema[UI_OPTIONS_KEY] };
   delete uiOptions[HELP_UI_OPTION];
@@ -501,7 +507,7 @@ function FallbackUiField<
     () => fallbackTypeSetup<T, S, F>(schema, uiOptions.widget, widgets, typeSelectorDepth),
     [schema, uiOptions.widget, widgets, typeSelectorDepth],
   );
-  const { types, selector, typeList, defaultType, keepsWidget } = setup;
+  const { types, selector, typeList, defaultType } = setup;
   // What `getUiOptions(uiSchema, globalUiOptions)` returns for the label, without reading the `uiSchema` a second time
   const { label } = { ...globalUiOptions, ...uiOptions };
   const { uiState } = useUiState();
@@ -581,10 +587,9 @@ function FallbackUiField<
     () => getValueSchema<S>(schema, type, translateString(TranslatableString.Value), isLabelled),
     [schema, type, translateString, isLabelled],
   );
-  const valueKeepsWidget = useMemo(() => keepsWidget(type), [keepsWidget, type]);
   const valueUiSchema = useMemo(
-    () => getValueUiSchema<T, S, F>(uiSchema, valueKeepsWidget),
-    [uiSchema, valueKeepsWidget],
+    () => getValueUiSchema<T, S, F>(schema, type, uiSchema, widgets),
+    [schema, type, uiSchema, widgets],
   );
 
   const { SchemaField } = fields;

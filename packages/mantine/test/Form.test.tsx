@@ -480,7 +480,10 @@ describe('mantine WrapIfAdditionalTemplate and SelectWidget', () => {
         schema={{
           type: 'object',
           required: ['pets'],
-          properties: { pets: { type: 'array', items: { type: 'string', enum: ['cat', 'dog'] }, uniqueItems: true } },
+          // `required` alone leaves `[]` valid, so only `minItems` makes the select required (#5744)
+          properties: {
+            pets: { type: 'array', items: { type: 'string', enum: ['cat', 'dog'] }, uniqueItems: true, minItems: 1 },
+          },
         }}
         validator={validator}
       />,

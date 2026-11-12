@@ -214,6 +214,7 @@ export function asFieldValue(value: unknown): unknown {
  * @param [drawsControlsBesideOptions] - Where the form's fields draw the controls, passed in by the caller so this
  *        module needn't import `SchemaField`, which imports it
  * @param [fallbackType] - The type the fallback UI shows at a field it renders, passed in for the same reason
+ * @param [rendersArrayWidget] - Whether `ArrayField` renders a field as one widget, passed in for the same reason
  * @returns - The field state
  */
 export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -222,11 +223,13 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
   editedPath?: FieldPathList,
   drawsControlsBesideOptions?: FormFieldState<S>['drawsControlsBesideOptions'],
   fallbackType?: FormFieldState<S>['fallbackType'],
+  rendersArrayWidget?: FormFieldState<S>['rendersArrayWidget'],
 ): FormFieldState<S> {
   const rootSchema = schemaUtils.getRootSchema();
   return {
     ...(drawsControlsBesideOptions && { drawsControlsBesideOptions }),
     ...(fallbackType && { fallbackType }),
+    ...(rendersArrayWidget && { rendersArrayWidget }),
     selectedOption: (fieldPath, options, formData, discriminator) =>
       shownOption<T, S, F>(
         schemaUtils,

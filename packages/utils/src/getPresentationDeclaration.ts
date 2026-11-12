@@ -197,7 +197,7 @@ export default function getPresentationDeclaration<
   const widgetDeclaration = widget === undefined ? fieldDefault : getWidgetDeclaration<T, S, F>(schema, widget, source);
   // A fact about the control, which the widget alone speaks for when the field renders one: a field declaring it for its
   // checkbox says nothing about the radios a `ui:widget` swaps in
-  const { uncheckedIsFalse, uncheckedIsEmpty } = (widget === undefined ? ownDeclaration : widgetDeclaration) ?? {};
+  const { uncheckedIsFalse } = (widget === undefined ? ownDeclaration : widgetDeclaration) ?? {};
   const label = ownerOf('label', fieldDeclaration, widgetDeclaration);
   const drawnByField = FIELD_DRAWN_PARTS.filter((part) => fieldDeclaration[part] === 'self');
   // Where a self-drawn label sits is declared by whoever draws it: the declaration that settled the label on `'self'`
@@ -218,7 +218,6 @@ export default function getPresentationDeclaration<
       fieldDefault,
     ),
     ...(uncheckedIsFalse && { uncheckedIsFalse }),
-    ...(uncheckedIsEmpty && { uncheckedIsEmpty }),
     ...(labelPlacement && { labelPlacement }),
     ...(drawnByField.length > 0 && { drawnByField }),
   };

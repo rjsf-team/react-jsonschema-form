@@ -832,6 +832,8 @@ describe('multiple SelectWidget accessible name', () => {
           title: 'Colors',
           description: 'Pick your colors',
           uniqueItems: true,
+          // `required` alone leaves `[]` valid, so only `minItems` makes the select required (#5744)
+          minItems: 1,
           items: { type: 'string' as const, enum: ['red', 'blue'] },
         },
       },

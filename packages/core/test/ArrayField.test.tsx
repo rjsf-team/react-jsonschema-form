@@ -1824,6 +1824,114 @@ describe('ArrayField', () => {
         expect(node.querySelectorAll('.rjsf-checkbox-inline')).toHaveLength(3);
       });
     });
+
+    // A required array left alone holds the `[]` `getDefaultFormState()` seeds it with, which the schema accepts unless
+    // `minItems` turns it down, so a widget rendering the whole array is required only then (#5744)
+    describe('a required array rendered as one widget', () => {
+      const requiredArray = (items: RJSFSchema, minItems?: number): RJSFSchema => ({
+        type: 'object',
+        required: ['c'],
+        properties: {
+          c: {
+            type: 'array',
+            title: 'Colors',
+            items,
+            uniqueItems: true,
+            ...(minItems !== undefined && { minItems }),
+          },
+        },
+      });
+      const enumItems: RJSFSchema = { type: 'string', enum: ['a', 'b'] };
+
+      it.each([
+        [undefined, false],
+        [1, true],
+      ] as const)('given minItems %s, makes a multiple select required %s', async (minItems, required) => {
+        const { node, onSubmit } = createFormComponent({ schema: requiredArray(enumItems, minItems) });
+
+        expect(screen.getByRole('listbox').hasAttribute('required')).toBe(required);
+        expect(node.querySelector('label .rjsf-required') !== null).toBe(required);
+        await submitForm(node, user);
+        if (required) {
+          expect(onSubmit).not.toHaveBeenCalled();
+        } else {
+          expectToHaveBeenCalledWithFormData(onSubmit, { c: [] }, true);
+        }
+      });
+
+      it.each([
+        ['a multiple select', undefined, false, enumItems, {}, 'SelectWidget'],
+        ['a multiple select', 1, true, enumItems, {}, 'SelectWidget'],
+        ['a custom widget', undefined, false, { type: 'string' }, { 'ui:widget': 'TagsWidget' }, 'TagsWidget'],
+        ['a custom widget', 1, true, { type: 'string' }, { 'ui:widget': 'TagsWidget' }, 'TagsWidget'],
+        ['a file input', undefined, false, { type: 'string', format: 'data-url' }, {}, 'FileWidget'],
+        ['a file input', 1, true, { type: 'string', format: 'data-url' }, {}, 'FileWidget'],
+      ] as const)(
+        'hands %s of its own, given minItems %s, required %s',
+        (_, minItems, required, items, uiSchema, key) => {
+          const Widget = vi.fn<(props: WidgetProps) => null>(() => null);
+          createFormComponent({
+            schema: requiredArray(items, minItems),
+            uiSchema: { c: uiSchema },
+            widgets: { [key]: Widget },
+          });
+
+          expect(Widget.mock.lastCall?.[0].required).toBe(required);
+        },
+      );
+
+      it('leaves a required list of items marked, since it renders no widget', () => {
+        const { node } = createFormComponent({ schema: requiredArray({ type: 'string' }) });
+
+        expect(node.querySelector('.rjsf-required')).toBeInTheDocument();
+      });
+
+      it('requires a multiple select holding no value until it holds `[]`', async () => {
+        const { node } = createFormComponent({
+          schema: requiredArray(enumItems),
+          defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' },
+        });
+        const select = screen.getByRole('listbox');
+
+        expect(select).toBeRequired();
+        expect(node.querySelector('label .rjsf-required')).toBeInTheDocument();
+        await user.selectOptions(select, 'a');
+        await user.deselectOptions(select, 'a');
+        expect(select).not.toBeRequired();
+        expect(node.querySelector('label .rjsf-required')).not.toBeInTheDocument();
+      });
+
+      it('marks a group of checkboxes holding no value', () => {
+        const { node } = createFormComponent({
+          schema: requiredArray(enumItems),
+          uiSchema: { c: { 'ui:widget': 'checkboxes' } },
+          defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' },
+        });
+
+        expect(node.querySelector('.rjsf-required')).toBeInTheDocument();
+      });
+
+      const fallbackColors: RJSFSchema = {
+        type: ['string', 'array'],
+        title: 'Colors',
+        items: enumItems,
+        uniqueItems: true,
+      };
+
+      it.each<[string, RJSFSchema]>([
+        ['its field', fallbackColors],
+        ['the `anyOf` option shown', { anyOf: [fallbackColors, { type: 'number' }] }],
+      ])('leaves the label unmarked while the fallback UI under %s holds `[]` in a multiple select', (_, c) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', required: ['c'], properties: { c } },
+          initialFormData: { c: [] },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(screen.getByRole('listbox')).not.toBeRequired();
+        expect(node.querySelector('.rjsf-required')).not.toBeInTheDocument();
+      });
+    });
   });
 
   describe('Multiple files field', () => {
