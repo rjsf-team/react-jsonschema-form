@@ -105,3 +105,29 @@ describe('a read-only field whose default changes', () => {
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ mode: 'b', rate: 7 });
   });
 });
+
+describe('a value the seed held, once the form has worked out where it came from', () => {
+  const schemaWith = (fallback: string): RJSFSchema => ({
+    type: 'object',
+    properties: { v: { type: 'string', default: fallback } },
+  });
+
+  it('is not taken for a default later, where it was not one when it was first judged', () => {
+    const { rerender, getFormData } = createFormComponent({ schema: schemaWith('a'), initialFormData: { v: 'x' } });
+
+    // The seed's `x` is not the default `a`, so it is the user's from here on, also once a default happens to equal it
+    rerender({ schema: schemaWith('x') });
+    rerender({ schema: schemaWith('b') });
+
+    expect(getFormData()).toEqual({ v: 'x' });
+  });
+
+  it('follows the default from then on, where it was the default when it was first judged', () => {
+    const { rerender, getFormData } = createFormComponent({ schema: schemaWith('a'), initialFormData: { v: 'a' } });
+
+    rerender({ schema: schemaWith('b') });
+    rerender({ schema: schemaWith('c') });
+
+    expect(getFormData()).toEqual({ v: 'c' });
+  });
+});

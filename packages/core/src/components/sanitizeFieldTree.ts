@@ -84,6 +84,14 @@ export interface DroppedValue {
   value: unknown;
 }
 
+/** A value a seed held whose origin the diff worked out: `filled` where it is what the defaults filled the old field
+ * with, and `entered` where it is not, so the question is asked of it once
+ */
+export interface ClassifiedValue {
+  path: FieldPathList;
+  origin: 'entered' | 'filled';
+}
+
 /** What the tree diff needs that does not change as it descends */
 interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The schema utilities the previous tree is built with */
@@ -123,6 +131,8 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   itemMoves: ContainerKeyMove[];
   /** Each value the walk dropped that a person entered or a seed held, outside any array */
   dropped: DroppedValue[];
+  /** Each value a seed held that the walk asked the old defaults about */
+  classified: ClassifiedValue[];
 }
 
 /** The values a disabled or read-only form's sanitize judges, see `sanitizeFieldTree()`: each key holding `undefined`,
@@ -798,6 +808,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         return DROP;
       }
     }
+    const origin = originOf(ctx, oldPath);
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
     const judged = judge(
       oldLayers,
@@ -807,10 +818,17 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       newDefault,
       isItem,
       acceptsNull,
-      originOf(ctx, oldPath),
+      origin,
       // The fill before the diff has given the rows of a switched field the new option's defaults already, so what the
       // field held is what is asked about
-      (value) => isOldFill(below, oldLayers, oldDefault, oldPath, shownHere, isSwitched ? oldValue : value),
+      (value) => {
+        const isFill = isOldFill(below, oldLayers, oldDefault, oldPath, shownHere, isSwitched ? oldValue : value);
+        // An array or object that is not the old fill whole can still hold values that are
+        if (origin === 'seeded' && (isFill || (!isObject(newValue) && !Array.isArray(newValue)))) {
+          ctx.classified.push({ path, origin: isFill ? 'filled' : 'entered' });
+        }
+        return isFill;
+      },
       isSwitched,
     );
     if (judged !== undefined) {
@@ -1159,9 +1177,10 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
   origins: DataOrigins,
   edit?: FieldEdit,
   judgedClears?: JudgedClears,
-): { formData: T | undefined; itemMoves: ContainerKeyMove[]; dropped: DroppedValue[] } {
+): { formData: T | undefined; itemMoves: ContainerKeyMove[]; dropped: DroppedValue[]; classified: ClassifiedValue[] } {
   const itemMoves: ContainerKeyMove[] = [];
   const dropped: DroppedValue[] = [];
+  const classified: ClassifiedValue[] = [];
   const sanitized = walk(
     {
       oldSchemaUtils: previous.schemaUtils,
@@ -1179,6 +1198,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       judgedClears,
       itemMoves,
       dropped,
+      classified,
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),
@@ -1199,5 +1219,5 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
     },
     [],
   );
-  return { formData: sanitized === DROP ? undefined : asFieldValue<T>(sanitized), itemMoves, dropped };
+  return { formData: sanitized === DROP ? undefined : asFieldValue<T>(sanitized), itemMoves, dropped, classified };
 }

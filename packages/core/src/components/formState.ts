@@ -53,7 +53,14 @@ import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from
 import { clearsWrittenOver, holdsClearAt, keepRecordedClears } from './keepClears.ts';
 import { keyMoveOf, moveErrorKeys, moveErrorSchemaKeys, movedPaths, withKeysMoved } from './keyMove.ts';
 import type { ContainerKeyMove, KeyMove, MoveFate } from './keyMove.ts';
-import type { DataOrigins, DroppedValue, FieldTree, FirstRenderFill, JudgedClears } from './sanitizeFieldTree.ts';
+import type {
+  ClassifiedValue,
+  DataOrigins,
+  DroppedValue,
+  FieldTree,
+  FirstRenderFill,
+  JudgedClears,
+} from './sanitizeFieldTree.ts';
 import sanitizeFieldTree, { judgedClearsIn } from './sanitizeFieldTree.ts';
 import type { UiStateReader } from './uiState.ts';
 import {
@@ -417,6 +424,21 @@ function filterPaths(paths: ReadonlySet<FieldPath>, keep: (fieldPath: FieldPath)
   }
   const kept = [...paths].filter(keep);
   return kept.length === paths.size ? paths : new Set(kept);
+}
+
+/** `origins` once the sanitize worked out where the seeded values in `classified` came from: each leaves the seeded
+ * paths, an array or object with every seeded path it holds, and one a person must have entered joins the entered ones
+ */
+function withClassified(origins: DataOrigins, classified: readonly ClassifiedValue[]): DataOrigins {
+  if (classified.length === 0) {
+    return origins;
+  }
+  const settled = classified.map(({ path }) => path);
+  const entered = classified.filter(({ origin }) => origin === 'entered').map(({ path }) => fieldPathFromList(path));
+  return {
+    entered: withPaths(origins.entered, ...entered),
+    seeded: filterPaths(origins.seeded, (at) => !settled.some((path) => isPathPrefix(path, fieldPathToList(at)))),
+  };
 }
 
 /** `paths` with `added` in it, `paths` itself when it holds them already */
@@ -1469,6 +1491,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     for (;;) {
       const round = sanitizeFieldTree(previous, tree, uiState, fillAsFirstRender, diffedOrigins, roundEdit, judged);
       dropped.push(...round.dropped);
+      origins = withClassified(origins, round.classified);
       const sanitized = replaceEqualDeep(formData, round.formData);
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
