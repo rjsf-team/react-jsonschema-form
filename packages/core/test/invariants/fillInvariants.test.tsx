@@ -8,14 +8,22 @@ import { isDeepStrictEqual } from 'node:util';
 import type { FormRef } from '../../src/index.ts';
 import Form from '../../src/index.ts';
 import { setupConsoleErrorSuppression, setupConsoleWarnSuppression } from '../testUtils.tsx';
-import type { Case } from './generate.ts';
-import { caseOf, shrink } from './generate.ts';
+import type { Case, Difference } from './generate.ts';
+import { caseOf, firstOf, secondOf, shrink } from './generate.ts';
 
 // Each seed names one generated schema and seed data. The run is a fixed range, so it fails the same way every time;
 // `INVARIANT_RUNS` and `INVARIANT_SEED` widen or move it to look for new cases
 const RUNS = Number(process.env.INVARIANT_RUNS ?? 300);
 const FIRST_SEED = Number(process.env.INVARIANT_SEED ?? 1);
 const SHRUNK_PER_INVARIANT = 3;
+// A case with two schemas takes a mount and one or two re-renders, each of them dearer than a mount, so those
+// invariants run over the first two thirds of the range
+const RUNS_BETWEEN = Math.ceil((RUNS * 2) / 3);
+
+const FOLLOWS = 'form: with nothing seeded or entered, the data follows the defaults a re-render changes';
+const STAYS = 'form: a seeded value no default gave stays when the defaults change';
+const OWNED = 'form: through a schema change and back, every value is the seed’s or one the defaults give';
+const RESTORES = 'form: a schema change and back restores the data outside arrays';
 
 /** How a case breaks an invariant: the two values differ, differ only in keys held as `undefined`, or the code threw */
 interface Failure {
@@ -25,10 +33,15 @@ interface Failure {
   message?: string;
 }
 
-/** A failing case, shrunk to the smallest schema and data that still fail the same way */
-interface Example extends Case, Failure {
+/** A failing case, shrunk to the smallest schemas and data that still fail the same way */
+interface Example extends Failure {
   seed: number;
+  schema: RJSFSchema;
+  other?: RJSFSchema;
+  data: unknown;
 }
+
+type Path = (string | number)[];
 
 function compare(expected: unknown, actual: unknown): Failure | undefined {
   if (isDeepStrictEqual(expected, actual)) {
@@ -38,8 +51,16 @@ function compare(expected: unknown, actual: unknown): Failure | undefined {
   return { kind, expected, actual };
 }
 
+const schemaUtils = new WeakMap<RJSFSchema, ReturnType<typeof createSchemaUtils>>();
+
+function utilsOf(schema: RJSFSchema) {
+  const utils = schemaUtils.get(schema) ?? createSchemaUtils({ validator }, schema);
+  schemaUtils.set(schema, utils);
+  return utils;
+}
+
 function fill(schema: RJSFSchema, data: unknown, initialDefaultsGenerated = false): unknown {
-  return createSchemaUtils({ validator }, schema).getDefaultFormState(schema, data, false, initialDefaultsGenerated);
+  return utilsOf(schema).getDefaultFormState(schema, data, false, initialDefaultsGenerated);
 }
 
 function withProperty(schema: RJSFSchema, key: string): RJSFSchema {
@@ -51,6 +72,103 @@ function without(value: unknown, key: string): unknown {
     return value;
   }
   return Object.fromEntries(Object.entries(value).filter(([other]) => other !== key));
+}
+
+/** `value` without its arrays, at any depth */
+function outsideArrays(value: unknown): unknown {
+  if (typeof value !== 'object' || value === null) {
+    return value;
+  }
+  const kept = Object.entries(value).filter(([, held]) => !Array.isArray(held));
+  return Object.fromEntries(kept.map(([key, held]) => [key, outsideArrays(held)]));
+}
+
+function* leavesOf(value: unknown, path: Path = []): Generator<[Path, unknown]> {
+  if (typeof value === 'object' && value !== null) {
+    for (const [key, held] of Object.entries(value)) {
+      yield* leavesOf(held, [...path, Array.isArray(value) ? Number(key) : key]);
+    }
+  } else if (value !== undefined) {
+    yield [path, value];
+  }
+}
+
+function at(value: unknown, path: Path): unknown {
+  return path.reduce<unknown>(
+    (held, key) =>
+      typeof held === 'object' && held !== null
+        ? Object.entries(held).find(([k]) => k === String(key))?.[1]
+        : undefined,
+    value,
+  );
+}
+
+/** `value` with what it holds at `path` taken out: a key removed, an item left empty */
+function withoutAt(value: unknown, path: Path): unknown {
+  if (typeof value !== 'object' || value === null || path.length === 0) {
+    return value;
+  }
+  const [key, ...rest] = path;
+  if (Array.isArray(value)) {
+    const emptied = rest.length === 0 ? undefined : withoutAt(value[Number(key)], rest);
+    return value.map((item: unknown, index) => (index === key ? emptied : item));
+  }
+  const entries = Object.entries(value).filter(([other]) => rest.length > 0 || other !== key);
+  return Object.fromEntries(entries.map(([other, held]) => [other, other === key ? withoutAt(held, rest) : held]));
+}
+
+/**
+ * Says whether the defaults of `schema` give `data` the value it holds at a path: taken out, the fill puts it back. A
+ * default of an object or array around it gives it too, and that one only fills once what it is declared on is gone,
+ * so the value is taken out along with each of the values it is in. The whole data is taken out first, which answers
+ * for most values with one fill
+ */
+function givenBy(schema: RJSFSchema, data: unknown): (path: Path) => boolean {
+  const refills = new Map<string, unknown>();
+  const refilled = (taken: Path) => {
+    const key = taken.join('.');
+    if (!refills.has(key)) {
+      refills.set(key, fill(schema, taken.length === 0 ? undefined : withoutAt(data, taken)));
+    }
+    return refills.get(key);
+  };
+  return (path) => {
+    const taken = [[], ...path.map((_key, depth) => path.slice(0, path.length - depth))];
+    return taken.some((prefix) => isDeepStrictEqual(at(refilled(prefix), path), at(data, path)));
+  };
+}
+
+function withoutAdditional(schema: unknown): unknown {
+  if (Array.isArray(schema)) {
+    return schema.map(withoutAdditional);
+  }
+  if (typeof schema !== 'object' || schema === null) {
+    return schema;
+  }
+  const kept = Object.entries(schema).filter(([key]) => key !== 'additionalProperties');
+  return Object.fromEntries(kept.map(([key, held]) => [key, withoutAdditional(held)]));
+}
+
+/**
+ * The data of `schema` that its named fields hold. What `additionalProperties` would let through is left out: a value
+ * whose field a condition withdraws is set aside, even where the object would carry its key along
+ */
+function declared(schema: RJSFSchema, data: unknown): unknown {
+  const named: RJSFSchema = { ...schema, ...Object(withoutAdditional(schema)) };
+  delete named.additionalProperties;
+  return utilsOf(named).omitExtraData(named, data);
+}
+
+function keyed(leaves: [Path, unknown][]): Record<string, unknown> {
+  return Object.fromEntries(leaves.map(([path, value]) => [path.join('.'), value]));
+}
+
+/** An invariant of a case with two schemas. A schema with nothing to differ in gives two equal ones, which say nothing */
+function between(holds: (first: RJSFSchema, second: RJSFSchema, data: unknown) => Failure | undefined) {
+  return ({ schema, data }: Case) => {
+    const [first, second] = [firstOf(schema), secondOf(schema)];
+    return isDeepStrictEqual(first, second) ? undefined : holds(first, second, data);
+  };
 }
 
 /** Mounts a form seeded with the case and hands back how to read, edit and re-render it */
@@ -117,7 +235,118 @@ const invariants: Record<string, (testCase: Case) => Failure | undefined> = {
       form.reset();
       return compare(before, form.read());
     }),
+  // What a fresh form of the second schema holds is what the utility fills, by the invariant of the mount above
+  [FOLLOWS]: between((first, second) =>
+    withForm({ schema: first, data: undefined }, (form) => {
+      form.setSchema(second);
+      return compare(fill(second, undefined), form.read());
+    }),
+  ),
+  // What the form holds after its mount is what the utility fills, by the invariant of the mount above. That tells the
+  // cases with nothing to check before any form is mounted
+  [STAYS]: between((first, second, data) => {
+    const before = fill(first, data);
+    const isGiven = givenBy(first, before);
+    const kept = [...leavesOf(data)].filter(([path, value]) => isDeepStrictEqual(at(before, path), value));
+    const given = kept.filter(([path]) => isGiven(path));
+    // What a default gave follows the new one, which can withdraw the field a seeded value sits in. A fresh form of
+    // the second schema, seeded with only what no default gave, says which of those values still have their field
+    const fresh = declared(
+      second,
+      fill(
+        second,
+        given.reduce((seed, [path]) => withoutAt(seed, path), data),
+      ),
+    );
+    const entered = kept.filter((leaf) => !given.includes(leaf) && isDeepStrictEqual(at(fresh, leaf[0]), leaf[1]));
+    if (entered.length === 0) {
+      return undefined;
+    }
+    return withForm({ schema: first, data }, (form) => {
+      form.setSchema(second);
+      const after = form.read();
+      return compare(keyed(entered), keyed(entered.map(([path]) => [path, at(after, path)])));
+    });
+  }),
+  [OWNED]: between((first, second, data) =>
+    withForm({ schema: first, data }, (form) => {
+      for (const schema of [second, first]) {
+        form.setSchema(schema);
+        const held = form.read();
+        const isGiven = givenBy(schema, held);
+        const strays = [...leavesOf(held)].filter(
+          ([path, value]) => !isDeepStrictEqual(at(data, path), value) && !isGiven(path),
+        );
+        if (strays.length > 0) {
+          const refilled = strays.map(([path]): [Path, unknown] => [
+            path,
+            at(fill(schema, withoutAt(held, path)), path),
+          ]);
+          return { kind: 'differs', expected: keyed(refilled), actual: keyed(strays) };
+        }
+      }
+      return undefined;
+    }),
+  ),
+  [RESTORES]: between((first, second, data) =>
+    withForm({ schema: first, data }, (form) => {
+      const before = form.read();
+      form.setSchema(second);
+      form.setSchema(first);
+      // The form sets nothing inside an array aside: a row's value that loses its field is dropped, as it was before
+      // values were set aside at all, so only the data outside arrays is promised to return
+      return compare(outsideArrays(before), outsideArrays(form.read()));
+    }),
+  ),
 };
+
+/** How the second schema of an invariant's cases differs from the first, for the invariants that re-render with one */
+const differences: Partial<Record<string, Difference>> = {
+  [FOLLOWS]: 'changedDefaults',
+  [STAYS]: 'defaults',
+  [OWNED]: 'constraints',
+  [RESTORES]: 'fields',
+};
+
+/** What the form is known not to do yet, by the mechanism behind it */
+const GAPS = {
+  conditionFlip:
+    'A value the re-render itself changes, by following its default or by returning with its field, flips a condition or dependency, and the branch is settled against the old value: the one that closed stays filled, the one that opened is not filled',
+  optionOrigins:
+    'Inside an option of a oneOf or anyOf field a value is not told apart by where it came from: a filled value does not follow its default whole, a filled const stays after the const changed, and a seeded value comes back as the default',
+  rowOfArrayDefault:
+    'A row that the default of its array gave is taken for one its item’s own default gave, and follows that default when it changes',
+  additionalItemsRow:
+    'A seeded tuple row beyond `items` that equals the default of `additionalItems` follows that default, which the fill never gives to a row',
+  undeclaredData:
+    'A seeded value that no field holds, because its branch is closed, or that its field does not accept is carried along from the mount but not set aside when its branch or the object around it goes, so it does not return',
+};
+
+/**
+ * The seeds of the default range that fail an invariant for a known gap. A seed outside this list that fails is a
+ * regression; a seed in it that passes means the gap is closed there, and the seed is to be taken off the list
+ */
+const KNOWN_GAPS: Partial<Record<string, { gap: keyof typeof GAPS; seeds: number[] }[]>> = {
+  [FOLLOWS]: [
+    { gap: 'conditionFlip', seeds: [7, 12, 16, 94, 118, 127, 144, 152, 181, 204, 252] },
+    { gap: 'optionOrigins', seeds: [165, 247, 249] },
+    { gap: 'rowOfArrayDefault', seeds: [226] },
+  ],
+  [STAYS]: [{ gap: 'additionalItemsRow', seeds: [191] }],
+  [OWNED]: [
+    { gap: 'conditionFlip', seeds: [7, 152, 224] },
+    { gap: 'optionOrigins', seeds: [287] },
+  ],
+  [RESTORES]: [
+    { gap: 'conditionFlip', seeds: [16, 144, 155, 173, 195, 209, 280, 293] },
+    { gap: 'optionOrigins', seeds: [112] },
+    { gap: 'undeclaredData', seeds: [25, 36, 42, 73, 94, 109, 117, 127, 194, 217, 242, 275, 278, 288] },
+  ],
+};
+
+function caseFor(name: string, seed: number): Case {
+  return caseOf(seed, differences[name]);
+}
 
 function check(name: string, testCase: Case): Failure | undefined {
   try {
@@ -129,7 +358,7 @@ function check(name: string, testCase: Case): Failure | undefined {
 
 /** The failing case of `seed`, shrunk while it keeps failing `name` the way `failure` does */
 function shrunk(name: string, seed: number, failure: Failure): Example {
-  const smallest = shrink(caseOf(seed), (candidate) => {
+  const smallest = shrink(caseFor(name, seed), (candidate) => {
     // A root that is no object with properties is not a form the generator makes
     if (candidate.schema.type !== 'object' || !candidate.schema.properties) {
       return false;
@@ -137,7 +366,15 @@ function shrunk(name: string, seed: number, failure: Failure): Example {
     const again = check(name, candidate);
     return again?.kind === failure.kind && (failure.kind !== 'throws' || again.message === failure.message);
   });
-  return { seed, ...smallest, ...check(name, smallest), kind: failure.kind };
+  const other = differences[name] ? { other: secondOf(smallest.schema) } : {};
+  return {
+    seed,
+    schema: firstOf(smallest.schema),
+    ...other,
+    data: smallest.data,
+    ...check(name, smallest),
+    kind: failure.kind,
+  };
 }
 
 describe('invariants of the fill and the sanitize, over generated schemas', () => {
@@ -147,16 +384,32 @@ describe('invariants of the fill and the sanitize, over generated schemas', () =
   it.each(Object.keys(invariants))(
     '%s',
     (name) => {
-      const failing: { seed: number; failure: Failure }[] = [];
-      for (let seed = FIRST_SEED; seed < FIRST_SEED + RUNS; seed += 1) {
-        const failure = check(name, caseOf(seed));
+      const last = FIRST_SEED + (differences[name] ? RUNS_BETWEEN : RUNS);
+      const failing = new Map<number, Failure>();
+      for (let seed = FIRST_SEED; seed < last; seed += 1) {
+        const failure = check(name, caseFor(name, seed));
         if (failure) {
-          failing.push({ seed, failure });
+          failing.set(seed, failure);
         }
       }
-      const examples = failing.slice(0, SHRUNK_PER_INVARIANT).map(({ seed, failure }) => shrunk(name, seed, failure));
-      // The shrunk cases come first, so a failure shows a schema small enough to read
-      expect({ examples, seeds: failing.map(({ seed }) => seed) }).toEqual({ examples: [], seeds: [] });
+      const known = (KNOWN_GAPS[name] ?? []).map(({ gap, seeds }) => ({
+        gap,
+        mechanism: GAPS[gap],
+        seeds: seeds.filter((seed) => seed >= FIRST_SEED && seed < last),
+      }));
+      const listed = new Set(known.flatMap(({ seeds }) => seeds));
+      const unlisted = [...failing].filter(([seed]) => !listed.has(seed));
+      const examples = unlisted.slice(0, SHRUNK_PER_INVARIANT).map(([seed, failure]) => shrunk(name, seed, failure));
+      const closed = known
+        .map((gap) => ({ ...gap, seeds: gap.seeds.filter((seed) => !failing.has(seed)) }))
+        .filter(({ seeds }) => seeds.length > 0);
+      // The shrunk cases come first, so a failure shows a schema small enough to read. Only a seed that is not listed
+      // is shrunk: a listed one is known by its gap
+      expect({ examples, seeds: unlisted.map(([seed]) => seed), closed }).toEqual({
+        examples: [],
+        seeds: [],
+        closed: [],
+      });
     },
     120_000,
   );

@@ -277,72 +277,329 @@ function sample(r: Rng, schema: RJSFSchema, root: RJSFSchema, keep = 0.7): unkno
   }
 }
 
-/** One generated case: a root schema and the data a form is seeded with */
+// A case with two schemas holds them as one: the first, with marks on what the second has otherwise. A shrink that
+// deletes from it deletes from both, so the second stays the first with a few differences however small they get
+const SET = '~set';
+const DROP = '~drop';
+const ABSENT = '~absent';
+const MARKS: string[] = [SET, DROP, ABSENT];
+
+type Marked = RJSFSchema & { [SET]?: Record<string, unknown>; [DROP]?: string[]; [ABSENT]?: true };
+
+/** How a case's second schema differs from its first */
+export type Difference = 'defaults' | 'changedDefaults' | 'fields' | 'constraints';
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isAbsent(value: unknown): boolean {
+  return isRecord(value) && value[ABSENT] === true;
+}
+
+function first(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(first);
+  }
+  if (!isRecord(value)) {
+    return value;
+  }
+  const kept = Object.entries(value).filter(([key]) => !MARKS.includes(key));
+  return Object.fromEntries(kept.map(([key, held]) => [key, first(held)]));
+}
+
+function second(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(second);
+  }
+  if (!isRecord(value)) {
+    return value;
+  }
+  const dropped = Array.isArray(value[DROP]) ? value[DROP] : [];
+  const kept = Object.entries(value).filter(
+    ([key, held]) => !MARKS.includes(key) && !dropped.includes(key) && !isAbsent(held),
+  );
+  return {
+    ...Object.fromEntries(kept.map(([key, held]) => [key, second(held)])),
+    ...(isRecord(value[SET]) ? value[SET] : {}),
+  };
+}
+
+/** The schema a case's form mounts with */
+export function firstOf(schema: RJSFSchema): RJSFSchema {
+  const plain = first(schema);
+  return isSchema(plain) ? plain : schema;
+}
+
+/** The schema a case's form is re-rendered with */
+export function secondOf(schema: RJSFSchema): RJSFSchema {
+  const other = second(schema);
+  return isSchema(other) ? other : schema;
+}
+
+/** Marks `key` of `schema` as holding `value` in the second schema, or as left out of it where there is none */
+function differ(schema: Marked, key: string, value?: unknown) {
+  const set = Object.entries(schema[SET] ?? {}).filter(([other]) => other !== key);
+  const dropped = (schema[DROP] ?? []).filter((other) => other !== key);
+  if (value === undefined) {
+    dropped.push(key);
+  } else {
+    set.push([key, value]);
+  }
+  Object.assign(schema, { [SET]: Object.fromEntries(set), [DROP]: dropped });
+}
+
+/** Marks `schema`, a property, as one the second schema does not have */
+function withdraw(schema: Marked) {
+  Object.assign(schema, { [ABSENT]: true });
+}
+
+const SCHEMA_KEYS = ['items', 'additionalItems', 'additionalProperties', 'then', 'else', 'allOf', 'oneOf', 'anyOf'];
+const SCHEMA_MAP_KEYS = ['properties', 'definitions', 'dependencies'];
+
+/**
+ * Every schema within `schema` that describes data, and whether it is within an option of a `oneOf` or `anyOf` field.
+ * An `if` only tests data, so it is left out
+ */
+function* nodesOf(schema: RJSFSchema, inOption = false, isDependency = false): Generator<[RJSFSchema, boolean]> {
+  yield [schema, inOption];
+  for (const [key, held] of Object.entries(schema)) {
+    if (SCHEMA_KEYS.includes(key)) {
+      const within = inOption || ((key === 'oneOf' || key === 'anyOf') && !isDependency);
+      for (const child of Array.isArray(held) ? held : [held]) {
+        if (isSchema(child)) {
+          yield* nodesOf(child, within);
+        }
+      }
+    } else if (SCHEMA_MAP_KEYS.includes(key) && isSchema(held)) {
+      for (const child of Object.values(held)) {
+        if (isSchema(child)) {
+          yield* nodesOf(child, inOption, key === 'dependencies');
+        }
+      }
+    }
+  }
+}
+
+/** A `default` that `schema` allows and does not have. For an array one of another length is tried first */
+function otherDefault(r: Rng, schema: RJSFSchema, root: RJSFSchema): unknown {
+  const bare: RJSFSchema = { ...schema };
+  delete bare.default;
+  const held = JSON.stringify(schema.default);
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    const value = sample(r, bare, root, schema.type === 'object' ? 0.5 : 0.8);
+    const sameLength = Array.isArray(value) && Array.isArray(schema.default) && value.length === schema.default.length;
+    if (value !== undefined && JSON.stringify(value) !== held && !(sameLength && attempt < 3)) {
+      return value;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Defaults changed, added and taken away, on scalars, arrays and objects alike. With `onlyChanged` a default only
+ * changes from one value that is not `null` to another: a filled value follows a default the schema still declares,
+ * and stays where it declares none or `null`. Nothing else differs
+ */
+function differInDefaults(r: Rng, schema: RJSFSchema, onlyChanged = false) {
+  const root = firstOf(schema);
+  const typed = [...nodesOf(schema)].flatMap(([held]) => {
+    const other = secondOf(held);
+    const declares = other.default !== undefined && other.default !== null;
+    const takes = other.type !== undefined && other.const === undefined && (declares || !onlyChanged);
+    return takes ? [{ held, other }] : [];
+  });
+  const giveAnother = ({ held, other }: (typeof typed)[number]) => {
+    const value = otherDefault(r, other, root);
+    const gives = value !== undefined && !(onlyChanged && value === null);
+    if (gives) {
+      differ(held, 'default', value);
+    }
+    return gives;
+  };
+  let differs = false;
+  for (const node of typed) {
+    const roll = r.next();
+    if (node.other.default !== undefined && roll < 0.1 && !onlyChanged) {
+      differ(node.held, 'default');
+      differs = true;
+    } else if (roll < (node.other.default === undefined ? 0.15 : 0.7)) {
+      differs = giveAnother(node) || differs;
+    }
+  }
+  const start = r.int(typed.length);
+  for (let offset = 0; !differs && offset < typed.length; offset += 1) {
+    differs = giveAnother(typed[(start + offset) % typed.length]);
+  }
+}
+
+/**
+ * Fields withdrawn without any value being made invalid: properties and branches taken out, and the `k` a condition
+ * reads sent the other way, by what the `if` or the dependency asks of it or by its own `default`. A `default` is
+ * changed and never added, so that coming back takes none away: what a filled value does then is its own invariant.
+ * The options of a `oneOf` or `anyOf` field are left alone: the data picks its option by what the options declare,
+ * and the `const` of another option replaces a value
+ */
+function differInFields(r: Rng, schema: RJSFSchema) {
+  let differing = 0;
+  const outsideOptions = [...nodesOf(schema)].flatMap(([held, inOption]) => (inOption ? [] : [held]));
+  for (const held of outsideOptions) {
+    if (isSchema(held.if)) {
+      if (r.chance(0.5)) {
+        differ(held, 'if', { ...held.if, properties: { k: { const: 'y' } } });
+        differing += 1;
+      }
+      for (const branch of ['then', 'else'] as const) {
+        if (held[branch] !== undefined && r.chance(0.15)) {
+          differ(held, branch);
+          differing += 1;
+        }
+      }
+    }
+    const dependency = held.dependencies?.k;
+    if (isSchema(dependency) && Array.isArray(dependency.oneOf) && r.chance(0.3)) {
+      for (const [index, option] of dependency.oneOf.entries()) {
+        const asked = isSchema(option) ? option.properties?.k : undefined;
+        if (isSchema(asked)) {
+          differ(asked, 'enum', [index === 0 ? 'y' : 'x']);
+          differing += 1;
+        }
+      }
+    }
+    const k = held.properties?.k;
+    if (isSchema(k) && k.default !== undefined && r.chance(0.5)) {
+      differ(k, 'default', k.default === 'y' ? 'x' : 'y');
+      differing += 1;
+    }
+    for (const property of Object.values(held.properties ?? {})) {
+      if (isSchema(property) && r.chance(0.2)) {
+        withdraw(property);
+        differing += 1;
+      }
+    }
+  }
+  const fallback = r.pick(Object.values(schema.properties ?? {}));
+  if (differing === 0 && isSchema(fallback)) {
+    withdraw(fallback);
+  }
+}
+
+/**
+ * Values made invalid: an `enum` that stops listing one and a `const` that asks for another. Only an `enum` with a
+ * `default` is narrowed, and the `default` moves to a value still listed where it has to and now and then where it
+ * does not. None is added or taken away, so that every value has a default to follow both ways. A schema with no such
+ * `enum` and no `const` gets no difference
+ */
+function differInConstraints(r: Rng, schema: RJSFSchema) {
+  for (const [held] of [...nodesOf(schema)]) {
+    if (Array.isArray(held.enum) && held.enum.length > 1 && held.default !== undefined && r.chance(0.7)) {
+      const index = r.int(held.enum.length);
+      const left = held.enum.filter((_value, at) => at !== index);
+      differ(held, 'enum', left);
+      const others = left.filter((value) => value !== held.default);
+      if (others.length > 0 && (held.default === held.enum[index] || r.chance(0.5))) {
+        differ(held, 'default', r.pick(others));
+      }
+    } else if (held.const !== undefined && r.chance(0.3)) {
+      const values: (string | number)[] = typeof held.const === 'string' ? STRINGS : NUMBERS;
+      differ(held, 'const', r.pick(values.filter((value) => value !== held.const)));
+    }
+  }
+}
+
+const differences: Record<Difference, (r: Rng, schema: RJSFSchema) => void> = {
+  defaults: differInDefaults,
+  changedDefaults: (r, schema) => differInDefaults(r, schema, true),
+  fields: differInFields,
+  constraints: differInConstraints,
+};
+
+/**
+ * One generated case: a root schema and the data a form is seeded with. The schema of a case made with a difference
+ * is two, to be read with `firstOf()` and `secondOf()`
+ */
 export interface Case {
   schema: RJSFSchema;
   data: unknown;
 }
 
-export function caseOf(seed: number): Case {
+export function caseOf(seed: number, difference?: Difference): Case {
   const r = rngOf(seed);
   const schema = schemaOf(r);
   const data = r.chance(0.3) ? undefined : sample(r, schema, schema);
+  if (difference) {
+    differences[difference](r, schema);
+  }
   return { schema, data };
 }
 
-/** Every value one deletion smaller than `value`: a key or an item removed, at any depth */
-function* smaller(value: unknown): Generator {
+/**
+ * Every value one deletion smaller than `value`: a key or an item removed, at any depth. A key in `fixed` stays, at
+ * every depth, and so does a key the second schema has otherwise, for as long as it does: without it a changed
+ * `default` would shrink into an added one, which is another difference
+ */
+function* smaller(value: unknown, fixed: readonly string[] = []): Generator {
   if (Array.isArray(value)) {
     for (let index = 0; index < value.length; index += 1) {
       yield value.filter((_item, at) => at !== index);
     }
     for (let index = 0; index < value.length; index += 1) {
-      for (const child of smaller(value[index])) {
+      for (const child of smaller(value[index], fixed)) {
         yield value.map((item: unknown, at) => (at === index ? child : item));
       }
     }
-  } else if (typeof value === 'object' && value !== null) {
+  } else if (isRecord(value)) {
+    const marked = [...Object.keys(isRecord(value[SET]) ? value[SET] : {}), ...[value[DROP]].flat()];
     const entries = Object.entries(value);
-    for (const [key] of entries) {
+    const free = entries.filter(([key]) => !fixed.includes(key) && !marked.includes(key));
+    for (const [key] of free) {
       yield Object.fromEntries(entries.filter(([other]) => other !== key));
     }
-    for (const [key, held] of entries) {
-      for (const child of smaller(held)) {
+    for (const [key, held] of free) {
+      for (const child of smaller(held, fixed)) {
         yield Object.fromEntries(entries.map(([other, item]) => [other, other === key ? child : item]));
       }
     }
   }
 }
 
-/** The smallest case found by deleting from `failing` while `fails` still holds, within `budget` checks */
+function candidatesOf(current: Case): Case[] {
+  const candidates: Case[] = [];
+  if (current.data !== undefined) {
+    candidates.push({ ...current, data: undefined });
+  }
+  for (const data of smaller(current.data)) {
+    candidates.push({ ...current, data });
+  }
+  // A schema that loses one of these is one the generator does not make, and fails in ways the generated one does not
+  for (const schema of smaller(current.schema, ['type', '$ref', 'if'])) {
+    if (isSchema(schema)) {
+      candidates.push({ ...current, schema });
+    }
+  }
+  return candidates;
+}
+
+/**
+ * The smallest case found by deleting from `failing` while `fails` still holds, within `budget` checks. After a
+ * deletion the search goes on from where it was instead of from the start, since what could not be deleted from the
+ * larger case can rarely be deleted from the smaller one; it ends when a whole round deletes nothing
+ */
 export function shrink(failing: Case, fails: (candidate: Case) => boolean, budget = 400): Case {
   let current = failing;
-  let left = budget;
-  let progressed = true;
-  while (progressed && left > 0) {
-    progressed = false;
-    const candidates: Case[] = [];
-    if (current.data !== undefined) {
-      candidates.push({ schema: current.schema, data: undefined });
-    }
-    for (const data of smaller(current.data)) {
-      candidates.push({ schema: current.schema, data });
-    }
-    for (const schema of smaller(current.schema)) {
-      if (isSchema(schema)) {
-        candidates.push({ schema, data: current.data });
-      }
-    }
-    for (const candidate of candidates) {
-      if (left <= 0) {
-        break;
-      }
-      left -= 1;
-      if (fails(candidate)) {
-        current = candidate;
-        progressed = true;
-        break;
-      }
+  let candidates = candidatesOf(current);
+  let at = 0;
+  let sinceProgress = 0;
+  for (let left = budget; left > 0 && sinceProgress < candidates.length; left -= 1) {
+    const candidate = candidates[at % candidates.length];
+    if (fails(candidate)) {
+      current = candidate;
+      candidates = candidatesOf(current);
+      at = candidates.length > 0 ? at % candidates.length : 0;
+      sinceProgress = 0;
+    } else {
+      at += 1;
+      sinceProgress += 1;
     }
   }
   return current;
