@@ -1476,7 +1476,7 @@ An option's `items` schema beside the parent's tuple applies to each of its posi
 A `not`, or a conditional (`if`, `then` and `else` together), that the option declares replaces the parent's as a whole: `not: true` rejects every value, and one schema's `if` with the other's `then` is a condition neither declared.
 Any other keyword both declare, such as a `format`, a `pattern`, a `multipleOf`, an `enum` or a `const` or `default` object, is the option's. An `enum` is the option's list as it stands, since its `ui:enumNames` are read by position against it, so a value the parent doesn't list stays, for validation to reject.
 A pair of subschemas either of which holds a `$ref` is returned as an `allOf` of the two, since the `$ref` is resolved only where the subschema is rendered, against the root schema, and the keywords met in beside it would be layered over the ones it names; the field's `allOf` merge meets them once it is resolved.
-An option naming no `type` takes the parent's, every type of a type list included, and an object parent that names none, such as one with only `properties`, passes on `object`.
+An option naming no `type` takes the parent's, every type of a type list included, unless it takes the whole field and pins its value with a `const` or `enum`, which takes only the listed types its values have; an object parent that names none, such as one with only `properties`, passes on `object`.
 
 #### Parameters
 

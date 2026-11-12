@@ -12,6 +12,7 @@ import {
   createFormRef,
   elementOf,
   errorListMessages,
+  expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   handleOf,
   submitForm,
@@ -369,6 +370,32 @@ describe('option selection as form state', () => {
       expect(getSelectedOptionValue(selectOf(node, 'root__anyof_select'))).toBe('B');
       expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y', c: 'z' });
     });
+
+    it.each<{ type: RJSFSchema['type'] }>([{ type: ['object', 'array'] }, { type: ['array', 'object'] }])(
+      "omits by the $type list's items an array option renders with",
+      async ({ type }) => {
+        const { node, onSubmit } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              val: {
+                type,
+                properties: { p: { type: 'string' } },
+                items: { type: 'object', properties: { x: { type: 'string' } } },
+                oneOf: [{ type: 'object' }, { type: 'array' }],
+              },
+            },
+          },
+          initialFormData: { val: [{ x: '1', extra: '2' }] },
+          omitExtraData: true,
+        });
+
+        expect(elementOf(node, '#root_val_0_x')).toBeInTheDocument();
+        await submitForm(node, user);
+
+        expectToHaveBeenCalledWithFormData(onSubmit, { val: [{ x: '1' }] }, true);
+      },
+    );
   });
 
   it('matches the root data setFieldValue sets again when transformChange rewrites it', async () => {

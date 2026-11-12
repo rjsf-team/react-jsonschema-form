@@ -1,3 +1,5 @@
+import type { JSONSchema7TypeName } from 'json-schema';
+
 import { conjoin, copyJoinedSchemas } from './additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -16,6 +18,7 @@ import {
   REQUIRED_KEY,
   THEN_KEY,
 } from './constants.ts';
+import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import hasSchemaMarker from './hasSchemaMarker.ts';
 import isObject from './isObject.ts';
 import mergeSchemas from './mergeSchemas.ts';
@@ -257,7 +260,8 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * branch of the choice made there rather than a narrowing of what the parent accepts: a field reading `schema.type`,
  * such as the one choosing the props of `BaseInputTemplate`'s `<input>`, which withholds the numeric `pattern` from a
  * union precisely because the other types do not have to match it, would otherwise be told the value is of a type the
- * parent never pinned it to.
+ * parent never pinned it to. An option taking the whole field that pins its value with a `const` or `enum` is the
+ * exception: it takes only the listed types its values have, where the list holds any of them.
  *
  * The result is the same object for the same `parent` and `option`, so a reader keying its work on the schema it is
  * handed, as `retrieveSchema()` does, finds it again rather than taking a new copy for content to compare.
@@ -315,6 +319,20 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
     for (const [key, value] of Object.entries(parent)) {
       if (!KEYWORDS_LEFT_ON_PARENT.has(key)) {
         inherited[key] = value;
+      }
+    }
+    // An option naming no type but pinning its value with a `const` or `enum` holds only those of the parent's types
+    // its values have, which the meet would otherwise leave as the whole list, rendered as its first: an object under
+    // `['object', 'string']`. A typeless option that only implies a type keeps the list, for the fallback UI to offer
+    const pinsValue = isObject(option) && option.type === undefined && (ENUM_KEY in option || CONST_KEY in option);
+    const ownTypes = pinsValue ? getSchemaOwnTypes<S>(option) : undefined;
+    if (ownTypes && Array.isArray(inherited.type)) {
+      // `guessType()` reads every number as `number`, so a list's `integer` holds a numeric value too
+      const types = inherited.type.filter(
+        (type: JSONSchema7TypeName) => ownTypes.includes(type) || (type === 'integer' && ownTypes.includes('number')),
+      );
+      if (types.length > 0) {
+        inherited.type = types;
       }
     }
   }

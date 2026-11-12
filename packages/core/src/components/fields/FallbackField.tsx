@@ -308,9 +308,11 @@ export function fallbackUiType<T, S extends StrictRJSFSchema, F extends FormCont
  * `uiSchema` below, undoing the widget `getValueUiSchema()` drops. The outer field has already resolved that entry
  * into the `uiSchema` handed to this one, so nothing else is lost with it. A `$id` is dropped because the value schema
  * is not the schema that identifier names — its `type` is pinned to one of the several that one allows — so carrying it
- * would give two schemas the same identity, and the same base URI for a relative `$ref` to resolve against. It is
- * marked `PINNED_TYPE_FLAG`, so an `anyOf`/`oneOf` option of another type than an `object` pinned takes the whole field
- * as it would under the types the selector offers.
+ * would give two schemas the same identity, and the same base URI for a relative `$ref` to resolve against. Where the
+ * selector offers a choice, it is marked `PINNED_TYPE_FLAG`, so an `anyOf`/`oneOf` option of another type than an
+ * `object` pinned takes the whole field as it would under the types the selector offers. A schema of one type, which a
+ * `ui:field` or `$id` naming this field sends here, pins nothing, so a plain object keeps its own field beside its
+ * options.
  * @param schema - The schema being rendered by the fallback UI.
  * @param type - The type currently chosen in the type selector.
  * @param title - The translated title naming the value's role.
@@ -323,7 +325,9 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
   isLabelled: boolean,
 ): S {
   const valueSchema: S = { ...schema, type };
-  Reflect.set(valueSchema, PINNED_TYPE_FLAG, true);
+  if (rendersTypeSelector<S>(schema)) {
+    Reflect.set(valueSchema, PINNED_TYPE_FLAG, true);
+  }
   Reflect.deleteProperty(valueSchema, GUESSED_TYPE_FLAG);
   Reflect.deleteProperty(valueSchema, ADDITIONAL_PROPERTY_FLAG);
   Reflect.deleteProperty(valueSchema, RJSF_REF_KEY);

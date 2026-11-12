@@ -1158,6 +1158,53 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
             expect(elementOf(node, '#root_val')).toBeInTheDocument();
           },
         );
+
+        it.each<{ type: RJSFSchema['type']; fallback: boolean }>([
+          { type: ['object', 'string'], fallback: true },
+          { type: ['object', 'string'], fallback: false },
+          { type: ['string', 'object'], fallback: true },
+          { type: ['string', 'object'], fallback: false },
+        ])(
+          'renders a const option of another type under $type as its own type, fallback UI $fallback',
+          ({ type, fallback }) => {
+            const { node } = createFormComponent({
+              schema: withVal({
+                type,
+                format: 'email',
+                properties: { p: { type: 'string' } },
+                oneOf: [{ type: 'object' }, { const: 'a@b.c' }, { const: 'x@b.c' }],
+              }),
+              initialFormData: { val: 'a@b.c' },
+              useFallbackUiForUnsupportedType: fallback,
+            });
+
+            expect(node.querySelector('#root_val_p')).not.toBeInTheDocument();
+            expect(elementOf(node, '#root_val')).toHaveAttribute('type', 'email');
+          },
+        );
+
+        it.each<[string, RJSFSchema, UiSchema?]>([
+          ['a ui:field', {}, { val: { 'ui:field': 'FallbackField' } }],
+          ['a $id', { $id: 'FallbackField' }],
+        ])(
+          'renders a plain object named the fallback field by %s beside an option of another type',
+          (_, extra, uiSchema) => {
+            const { node } = createFormComponent({
+              schema: withVal({
+                type: 'object',
+                properties: { a: { type: 'string' } },
+                format: 'email',
+                oneOf: [{ type: 'object' }, { type: 'string' }],
+                ...extra,
+              }),
+              uiSchema,
+              initialFormData: { val: 'abc' },
+              useFallbackUiForUnsupportedType: true,
+            });
+
+            expect(elementOf(node, '#root_val_a')).toBeInTheDocument();
+          },
+        );
       });
 
       it('leaves the fields beside the one being typed in alone, whatever the options retrieve', async () => {

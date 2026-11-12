@@ -496,6 +496,18 @@ describe('getRenderedOptionSchema()', () => {
         getRenderedOptionSchema({ type: ['string', 'object'], format: 'email', properties }, option),
       );
     });
+    test.each<[string, RJSFSchema, RJSFSchema['type']]>([
+      ['a const', { const: 'a@b.c' }, ['string']],
+      ['an enum', { enum: ['a', 1] }, ['string', 'number']],
+      ['a const of no type the list holds', { const: true }, ['object', 'string', 'number']],
+    ])("narrows an object-first type list to the types %s option's values have", (_, option, type) => {
+      const parent: RJSFSchema = { type: ['object', 'string', 'number'], format: 'email', properties };
+      expect(getRenderedOptionSchema(parent, option)).toEqual({ ...parent, ...option, type });
+    });
+    test("narrows an object-first type list to its integer for a number const option, which guessType() calls 'number'", () => {
+      const parent: RJSFSchema = { type: ['object', 'integer'], properties };
+      expect(getRenderedOptionSchema(parent, { const: 1 })).toEqual({ ...parent, const: 1, type: ['integer'] });
+    });
     test('passes on the pinned type of a pinned object with its marker to an option naming no type', () => {
       const pinned: RJSFMarkedSchema = { type: 'object', properties, [PINNED_TYPE_FLAG]: true };
       expect(getRenderedOptionSchema(pinned, { required: ['a'] })).toEqual({
