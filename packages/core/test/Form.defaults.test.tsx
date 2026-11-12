@@ -883,12 +883,11 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       });
     });
 
-    // The same asymmetry read from the other side: what the old branch computed for a key says no more about what it
-    // declared than what the new branch computes. A required boolean's `false` and a required array's `[]` are the
-    // fill's work rather than a default the branch asked for, so a value sitting at one of them is nobody's default
-    // to replace
-    describe('keeps a value only the old branch computed a default for', () => {
-      it('leaves a required boolean the old branch declared no default for alone', async () => {
+    // A required boolean's `false` and a required array's `[]` are the fill's work rather than a default the old branch
+    // asked for. The form knows it filled the `false` in, so it gives way to a default the new branch declares. A
+    // value in an array is left as the data holds it, so the `[]` stays
+    describe('a value only the old branch computed a default for', () => {
+      it('gives a required boolean the old branch declared no default for the default the new branch declares', async () => {
         const { node, onChange } = createFormComponent({
           schema: modeSwap(
             { required: ['agree'], properties: { agree: { type: 'boolean' } } },
@@ -898,7 +897,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
         await selectMode(node, 'b');
 
-        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', agree: false }, 'root_mode');
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', agree: true }, 'root_mode');
       });
 
       it('leaves a required array the old branch declared no default for alone', async () => {
@@ -1406,10 +1405,9 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onChange, { wrap: { mode: 'b', cfg: { name: 'b' } } }, 'root_wrap_mode');
     });
 
-    // Where a branch declares the default is what decides how much of the value it speaks for. On the object itself
-    // it declares that object's keys, so an untouched one is replaced while its edited sibling is kept; one level up
-    // it declares the whole object, which the edit no longer matches, so all of it stays
-    describe('an untouched leaf takes the new default of whichever level above it declares one', () => {
+    // A value the defaults filled in follows its default wherever a branch declares it, on the object itself or one
+    // level up, and what the user wrote beside it stays
+    describe('a nested default is matched at the level that declares it', () => {
       const cfgWithNote = (name: string): RJSFSchema => ({
         type: 'object',
         default: { name },
@@ -1431,7 +1429,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b', note: 'hi' } }, 'root_mode');
       });
 
-      it('replaces an untouched leaf beside an edited one when the branch declares the default above the object (#5818)', async () => {
+      it('swaps the value the default above the object filled in, and keeps what the user wrote beside it', async () => {
         const { node, onChange } = createFormComponent({
           schema: {
             type: 'object',

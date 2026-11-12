@@ -11296,5 +11296,101 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(root, filled)).toEqual(filled);
       });
     });
+
+    describe('a value the fieldState says the defaults filled in', () => {
+      /** A `fieldState` under which the values at `paths` are ones the defaults filled in */
+      const filledAt = (...paths: (string | number)[][]): FormFieldState => {
+        const filled = new Set(paths.map((path) => fieldPathFromList(path)));
+        return { selectedOption: () => 0, isExpanded: () => false, isFilled: (fieldPath) => filled.has(fieldPath) };
+      };
+      const fill = (schema: RJSFSchema, formData: unknown, fieldState: FormFieldState, uiSchema?: UiSchema) =>
+        getDefaultFormState(
+          { validator: testValidator },
+          { schema, rootSchema: schema, formData, fieldState, uiSchema },
+        );
+      const nested: RJSFSchema = {
+        type: 'object',
+        default: { a: { b: 'y' } },
+        properties: { a: { type: 'object', properties: { b: { type: 'string' }, d: { type: 'number' } } } },
+      };
+
+      it('takes the default that gives it now, wherever that is declared (#5818)', () => {
+        expect(fill(nested, { a: { b: 'x', d: 1 } }, filledAt(['a', 'b']))).toEqual({ a: { b: 'y', d: 1 } });
+        // A property the data lacks has no value to ask about
+        expect(fill(nested, { a: { b: 'x' } }, filledAt(['a', 'b'], ['a', 'd']))).toEqual({ a: { b: 'y' } });
+      });
+
+      it('stays where the fieldState says a person or a seed put it there', () => {
+        expect(fill(nested, { a: { b: 'x', d: 1 } }, filledAt())).toEqual({ a: { b: 'x', d: 1 } });
+      });
+
+      it('takes the default of a parent that wins over its own (#5817)', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { v: 'z' },
+          properties: { v: { type: 'string', default: 'q' }, w: { type: 'string' } },
+        };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' } },
+            { schema, rootSchema: schema, formData: { v: 'x', w: 'k' }, fieldState: filledAt(['v']) },
+          ),
+        ).toEqual({ v: 'z', w: 'k' });
+      });
+
+      it('stays where no default gives one any more', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { b: { type: 'string' } } };
+        expect(fill(schema, { b: 'x' }, filledAt(['b']))).toEqual({ b: 'x' });
+      });
+
+      it('stays where the settings leave the default that would replace it out', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { b: { type: 'string', default: 'y' } } };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' } },
+            { schema, rootSchema: schema, formData: { b: 'x' }, fieldState: filledAt(['b']) },
+          ),
+        ).toEqual({ b: 'x' });
+      });
+
+      it('stays where only the `false` a required boolean falls back to would replace it', () => {
+        const schema: RJSFSchema = { type: 'object', required: ['b'], properties: { b: { type: 'boolean' } } };
+        expect(fill(schema, { b: true }, filledAt(['b']))).toEqual({ b: true });
+      });
+
+      it('takes a `const` the property now declares', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { b: { type: 'string', const: 'c' } } };
+        expect(fill(schema, { b: 'x' }, filledAt(['b']))).toEqual({ b: 'c' });
+      });
+
+      it('stays under a `ui:initialValue`, its own or that of a field above it, which no later fill gives again', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'object', properties: { b: { type: 'string', default: 'y' } } } },
+        };
+        const data = { a: { b: 'x' } };
+        const fieldState = filledAt(['a', 'b']);
+        expect(fill(schema, data, fieldState, { a: { b: { 'ui:initialValue': 'i' } } })).toEqual(data);
+        expect(fill(schema, data, fieldState, { a: { 'ui:initialValue': { b: 'i' } } })).toEqual(data);
+        expect(fill(schema, data, fieldState)).toEqual({ a: { b: 'y' } });
+      });
+
+      it('stays where it is an extra key, an array or object, a `null`, or the value of a field offering options', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { extra: 'e', list: ['l'], obj: { o: 'o' }, nil: 'n', pick: 'p' },
+          properties: {
+            list: { type: 'array', items: { type: 'string' } },
+            obj: { type: 'object' },
+            nil: { type: ['string', 'null'] },
+            pick: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+          },
+          additionalProperties: { type: 'string' },
+        };
+        const data = { extra: 'x', list: ['x'], obj: { o: 'x' }, nil: null, pick: 'x' };
+        const fieldState = filledAt(['extra'], ['list'], ['obj'], ['nil'], ['pick']);
+        expect(fill(schema, data, fieldState)).toEqual(data);
+      });
+    });
   });
 }

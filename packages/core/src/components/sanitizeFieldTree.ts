@@ -138,23 +138,13 @@ export interface JudgedClears {
  */
 export function judgedClearsIn(data: unknown, recorded: ReadonlySet<FieldPath>): JudgedClears {
   const along = new Set<FieldPath>();
-  const addAlong = (path: FieldPathList) => {
-    // Longest first: a path already added was added with every path holding it
-    for (let end = path.length; end >= 0; end -= 1) {
-      const at = fieldPathFromList(path.slice(0, end));
-      if (along.has(at)) {
-        return;
-      }
-      along.add(at);
-    }
-  };
   for (const clear of clearsIn(data, [])) {
     if (typeof clear[clear.length - 1] === 'string') {
-      addAlong(clear);
+      addAlong(along, clear);
     }
   }
   for (const clear of recorded) {
-    addAlong(fieldPathToList(clear));
+    addAlong(along, fieldPathToList(clear));
   }
   return { recorded, along };
 }
@@ -680,20 +670,22 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return deepEquals(getByPath(formFill, oldPath), value);
 }
 
+/** Adds `path` to `along` with the path of every array and object holding it, the root's included */
+function addAlong(along: Set<FieldPath>, path: FieldPathList): void {
+  // Longest first: a path already added was added with every path holding it
+  for (let end = path.length; end >= 0; end -= 1) {
+    const at = fieldPathFromList(path.slice(0, end));
+    if (along.has(at)) {
+      return;
+    }
+    along.add(at);
+  }
+}
+
 /** Each of `paths` with the path of every array and object holding it, the root's included */
 function pathsAlong(paths: ReadonlySet<FieldPath>): ReadonlySet<FieldPath> {
   const along = new Set<FieldPath>();
-  for (const path of paths) {
-    const list = fieldPathToList(path);
-    // Longest first: a path already added was added with every path holding it
-    for (let end = list.length; end >= 0; end -= 1) {
-      const at = fieldPathFromList(list.slice(0, end));
-      if (along.has(at)) {
-        break;
-      }
-      along.add(at);
-    }
-  }
+  paths.forEach((path) => addAlong(along, fieldPathToList(path)));
   return along;
 }
 

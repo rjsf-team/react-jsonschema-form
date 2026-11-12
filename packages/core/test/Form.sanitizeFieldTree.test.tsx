@@ -5,7 +5,7 @@ import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import type { FormRef, IChangeEvent } from '../src/index.ts';
+import type { FormProps, FormRef, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
 import { AcceptingParent, createParentLog, elementOf, handleOf, input, TransformingParent } from './testUtils.tsx';
 
@@ -625,6 +625,76 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(formData).toEqual({ kind: 't' });
       expect(container.querySelector('#root_a__key')).toBeNull();
     });
+  });
+
+  describe('a value the defaults filled in, when the default that gave it changes', () => {
+    /** Mounts `from` with `initialFormData`, re-renders with `to`, and hands back the data at each step */
+    function reschema(
+      from: RJSFSchema,
+      to: RJSFSchema,
+      initialFormData: object,
+      behavior?: FormProps['defaultFormStateBehavior'],
+      beforeChange?: (form: FormRef) => void,
+    ) {
+      const ref = createRef<FormRef>();
+      const element = (schema: RJSFSchema) => (
+        <Form
+          schema={schema}
+          validator={validator}
+          initialFormData={initialFormData}
+          defaultFormStateBehavior={behavior}
+          ref={ref}
+        />
+      );
+      const { rerender } = render(element(from));
+      const mounted = structuredClone(ref.current?.getFormData());
+      act(() => {
+        if (ref.current) {
+          beforeChange?.(ref.current);
+        }
+      });
+      rerender(element(to));
+      return { mounted, changed: ref.current?.getFormData() };
+    }
+    const nested = (b: string): RJSFSchema => ({
+      type: 'object',
+      default: { a: { b } },
+      properties: {
+        a: { type: 'object', properties: { b: { type: 'string' }, d: { type: 'number' } } },
+      },
+    });
+
+    it('takes the new default of an ancestor, through an object declaring none (#5818)', () => {
+      const { mounted, changed } = reschema(nested('x'), nested('y'), { a: { d: 1 } });
+      expect(mounted).toEqual({ a: { b: 'x', d: 1 } });
+      expect(changed).toEqual({ a: { b: 'y', d: 1 } });
+    });
+
+    it('keeps the value once the user wrote over it', () => {
+      const { changed } = reschema(nested('x'), nested('y'), { a: { d: 1 } }, undefined, (form) =>
+        form.setFieldValue(['a', 'b'], 'mine'),
+      );
+      expect(changed).toEqual({ a: { b: 'mine', d: 1 } });
+    });
+
+    it.each([{ own: 'q' }, { own: null }])(
+      "takes the new default of a parent that wins over the field's own $own (#5817)",
+      ({ own }) => {
+        const schema = (v: string): RJSFSchema => ({
+          type: 'object',
+          default: { v },
+          properties: { v: { type: ['string', 'null'], default: own }, w: { type: 'string' } },
+        });
+        const { mounted, changed } = reschema(
+          schema('x'),
+          schema('z'),
+          { w: 'k' },
+          { nestedDefaultsPrecedence: 'ancestorWins' },
+        );
+        expect(mounted).toEqual({ v: 'x', w: 'k' });
+        expect(changed).toEqual({ v: 'z', w: 'k' });
+      },
+    );
   });
 
   it('judges each edit against the data before it when a parent stores what onChange reports (#5250)', async () => {

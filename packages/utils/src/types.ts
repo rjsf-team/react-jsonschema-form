@@ -353,13 +353,11 @@ export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
     formData: unknown,
     depth: number,
   ): string | undefined;
-  /** Whether `ArrayField` renders the field at `fieldPath` as one widget, as a multiple select, a group of checkboxes, a
-   * file input or a custom widget, which holds `[]` with nothing chosen, so `ui:required` turns that down. Its `schema`
-   * has the type the fallback UI's selector is on pinned where the fallback UI renders the field. Without it, an array
-   * with `items` does where its schema is a multiple select or a files array, or its uiSchema names a widget, and no
-   * field other than `ArrayField` or `SchemaField`
+  /** Whether the value the data holds at `fieldPath` is one the defaults filled in, rather than one a person entered or
+   * a seed held. The defaults of a property the schema declares are then computed as if the data held nothing there, so
+   * the value follows whichever default gives it now. Without it, no value is taken for a filled one
    */
-  rendersArrayWidget?(fieldPath: FieldPath, schema: S, uiSchema: GenericObjectType, formData: unknown): boolean;
+  isFilled?(fieldPath: FieldPath): boolean;
 }
 
 declare const FIELD_PATH_BRAND: unique symbol;

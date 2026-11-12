@@ -15,6 +15,7 @@ import {
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
+import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
@@ -561,6 +562,10 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
   fieldPath?: FoldPath;
+  /** Whether the field or one above it has a `ui:initialValue`, which fills it only once: a value it filled in is
+   * kept as the data holds it, since no later fill gives it again
+   */
+  holdsInitialValue?: boolean;
 }
 
 /** A field's path as its parent's and its own key, so a child's is made without copying its parent's, and is spelled
@@ -954,6 +959,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     props.shouldMergeDefaultsIntoFormData,
     props.isRenderedOption,
     props.nullFills?.isCollapsed,
+    props.holdsInitialValue,
   ];
   const leaf = leafOf(child);
   for (const entry of [memo?.get(memoKey), leaf && leafDefaults.get(leaf)]) {
@@ -1614,6 +1620,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     view.stubs && allowsAdditionalProperties<S, F>(context, view.schema)
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
+  const holdsInitialValue =
+    props.holdsInitialValue === true || getUiOptions<T, S, F>(uiSchema).initialValue !== undefined;
+  const filledKeys = filledKeysOf<T, S, F>(formData, schema, props, holdsInitialValue);
   const parentConst = schema[CONST_KEY];
   // Under `constAsDefaults: 'always'` an object `const` takes precedence over the data, so an extra key it doesn't name
   // is dropped, whether the object stubs it among its properties or computes it from its `additionalProperties`
@@ -1636,6 +1645,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaKey),
     uiSchemaDefinitions,
     nullFills,
+    holdsInitialValue,
     ...childPathProps<T, S, F>(props, key),
   });
   // Computes a child's defaults, reporting whether they hold a `null` fill
@@ -1663,7 +1673,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const propertyKeys = Object.keys(schema.properties ?? {}).filter(
     (key) => isPinned(key) || !hasSchemaMarker(getPropertySchema<S>(schema, key), ADDITIONAL_PROPERTY_FLAG),
   );
-  for (const key of propertyKeys) {
+  propertyKeys.forEach((key) => {
     const propertySchema = getPropertySchema<S>(schema, key);
     const { seeds, edge } = childSeeds(view, key);
     // A property written as a `$ref` keeps its `const` and `type` in the definition it names, which is read where the
@@ -1693,6 +1703,33 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       isRequired: ownProps.required,
       formData: ownProps.rawFormData,
     });
+    // A value the defaults filled in follows the default that gives it now, wherever that is declared, so it is
+    // computed as for a property the data lacks, and added as one is. Where no default gives one any more, or the
+    // form's settings leave it out, the value stays as it is: the `false` a required boolean falls back to is no
+    // default, so the property is computed as one not required
+    const derived = filledKeys.has(key)
+      ? foldReporting(context, `derived:${key}`, child, {
+          ...ownProps,
+          rawFormData: undefined,
+          required: false,
+          nullFills: propertyNullFills,
+        }).value
+      : undefined;
+    if (derived !== undefined && derived !== null) {
+      maybeAddDefaultToObject(
+        computed,
+        key,
+        derived,
+        includeUndefinedValues,
+        required,
+        schema.required,
+        defaultFormStateBehavior?.emptyObjectFields,
+        hasConst,
+      );
+      if (Object.hasOwn(computed, key)) {
+        return;
+      }
+    }
     // Compute the defaults for this node, with the parent defaults we might have from a previous run: defaults[key].
     let property = foldReporting(
       context,
@@ -1751,7 +1788,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     if (property.holdsNull) {
       onNullFill?.();
     }
-  }
+  });
   // An `allOf` or `if` the field's plan left unmerged still brings its properties into the field rendered for it
   if (
     !view.field.retrieves &&
@@ -1862,6 +1899,47 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     return computed;
   }
   return computeDefaultBasedOnSchemaTypeAndDefaults<unknown, S>(view.schema, computed);
+}
+
+/** The properties `schema` declares whose value in `data`, the data of an object field, the defaults filled in, as
+ * `fieldState` tells them. A value under a `ui:initialValue` is not one, since no later fill gives it again, and
+ * neither is an extra key's or an array or object, whose own values are told apart where they are folded. A property
+ * offering `anyOf`/`oneOf` options is left out too: its defaults are those of the option it shows, which is chosen by
+ * its data
+ *
+ * @param data - The object's data
+ * @param schema - The object's schema, its extra keys stubbed where the field stubs them
+ * @param props - The props of the object field
+ * @param holdsInitialValue - Whether the object or a field above it has a `ui:initialValue`
+ * @returns - The keys holding a filled value
+ */
+function filledKeysOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  data: GenericObjectType,
+  schema: S,
+  { fieldState, fieldPath, uiSchema }: FoldProps<T, S, F>,
+  holdsInitialValue: boolean,
+): ReadonlySet<string> {
+  const filled = new Set<string>();
+  if (fieldState?.isFilled === undefined || holdsInitialValue) {
+    return filled;
+  }
+  for (const key of Object.keys(schema.properties ?? {})) {
+    const value: unknown = Object.hasOwn(data, key) ? data[key] : undefined;
+    const propertyUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, key);
+    if (
+      value !== undefined &&
+      value !== null &&
+      !isObject(value) &&
+      !Array.isArray(value) &&
+      !hasSchemaMarker(getPropertySchema<S>(schema, key), ADDITIONAL_PROPERTY_FLAG) &&
+      getXxxOfOptions<S>(getPropertySchema<S>(schema, key)) === undefined &&
+      (propertyUiSchema === undefined || getUiOptions<T, S, F>(propertyUiSchema).initialValue === undefined) &&
+      fieldState.isFilled(fieldPathFromList([...pathListOf(fieldPath), key]))
+    ) {
+      filled.add(key);
+    }
+  }
+  return filled;
 }
 
 /** Whether an extra key keeps the object data the user gave it over `value`, the value its field computed from that

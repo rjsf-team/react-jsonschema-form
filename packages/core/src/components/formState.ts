@@ -1351,7 +1351,15 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // though this instance has generated defaults before.
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
   // The defaults of a field offering options are those of the option it shows, which is the form's to keep
-  const fieldState = uiState && fieldStateOf(uiState, schemaUtils, heldPath);
+  // A value in an array is left as the data holds it: an array's `default` fills its rows by position, so one computed
+  // again after a row moved would land in another row
+  const isFilled = (fieldPath: FieldPath) =>
+    !origins.entered.has(fieldPath) &&
+    !origins.seeded.has(fieldPath) &&
+    !fieldPathToList(fieldPath).some((key) => typeof key === 'number');
+  // A pass told nothing of where its values came from takes none for a filled one
+  const knowsOrigins = options.origins !== undefined || options.originsAfterEdit !== undefined;
+  const fieldState = uiState && { ...fieldStateOf(uiState, schemaUtils, heldPath), ...(knowsOrigins && { isFilled }) };
   const defaultsOf = (
     utils: SchemaUtilsType<T, S, F>,
     ui: UiSchema<T, S, F> | undefined,
@@ -1765,9 +1773,8 @@ function clearsOfCopies<T>(
 
 /** The path of each value `data` holds that is no array or object */
 function leafPathsIn(data: unknown): ReadonlySet<FieldPath> {
-  const entered: FieldPath[] = [];
-  collectEntered(data, undefined, false, [], entered);
-  return entered.length === 0 ? NO_PATHS : new Set(entered);
+  const paths = leafPathsOf(data, fieldPathFromList([]));
+  return paths.length === 0 ? NO_PATHS : new Set(paths);
 }
 
 /** Adds to `entered` the path of each value under `written`, at `path`, that is no array or object and that
@@ -1833,8 +1840,13 @@ function originsAfterChange<T>(
   const entered: FieldPath[] = [];
   const has = path.every((_key, depth) => hasByPath(getAt<unknown>(committed, path.slice(0, depth)), path[depth]));
   collectEntered(getAt<unknown>(written, path), has ? getAt<unknown>(committed, path) : undefined, has, path, entered);
-  // A value no array or object the write replaced is what the field now holds, entered or cleared
+  // A value no array or object the write replaced is what the field now holds, entered or cleared: one written again
+  // as the value it was is entered all the same, since the person chose it
   const fieldPath = fieldPathFromList(path);
+  const value = getAt<unknown>(written, path);
+  if (value !== undefined && !isObject(value) && !Array.isArray(value) && !entered.includes(fieldPath)) {
+    entered.push(fieldPath);
+  }
   const overwritten = new Set([fieldPath, ...entered]);
   return {
     entered: withPaths(
@@ -2067,7 +2079,13 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
   props: FormProps<T, S, F>,
   seed: T | undefined,
 ): FormState<T, S, F> {
-  const { formData, context } = deriveFormData(current, seed, { isReset: true }, props);
+  const seededPaths = leafPathsIn(seed);
+  const { formData, context } = deriveFormData(
+    current,
+    seed,
+    { isReset: true, origins: { entered: NO_PATHS, seeded: seededPaths } },
+    props,
+  );
   return {
     ...current,
     ...context,
@@ -2078,8 +2096,8 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     revealed: NOTHING_REVEALED,
     clearedPaths: NO_PATHS,
     enteredPaths: NO_PATHS,
-    seededPaths: leafPathsIn(seed),
-    baselineSeededPaths: leafPathsIn(seed),
+    seededPaths,
+    baselineSeededPaths: seededPaths,
     isDataPassed: seed !== undefined,
     ...extraErrorsAlone(props.extraErrors),
     // The reset pass has generated the initial defaults, so the next unrelated recompute is not an initial pass and
