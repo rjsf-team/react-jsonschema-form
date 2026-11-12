@@ -147,6 +147,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const extra: RJSFSchema = { type: 'object', additionalProperties: { type: 'number' }, const: { b: 2 } };
           expect(utils(extra).getDefaultFormState(extra, {}, false, true)).toEqual({});
           expect(utils(extra).getDefaultFormState(extra, { c: 2 }, false, true)).toEqual({ c: 2 });
+          // On the first pass the defaults are computed without the data and merged beneath it, as for a `default`
+          expect(utils(extra).getDefaultFormState(extra, { c: 2 })).toEqual({ c: 2, b: 2 });
+          const withDefault: RJSFSchema = { ...extra, const: undefined, default: { b: 2 } };
+          expect(utils(withDefault).getDefaultFormState(withDefault, { c: 2 })).toEqual({ c: 2, b: 2 });
         });
         it('seeds no key of the const where patternProperties or unevaluatedProperties let the user add, remove or rename keys', () => {
           const patterned: RJSFSchema = {
