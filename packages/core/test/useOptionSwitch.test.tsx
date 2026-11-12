@@ -110,7 +110,7 @@ describe('useOptionSwitch() in a custom field', () => {
     expect(form.data()).toEqual({ pet: { kind: 'dog', name: 'Rex', sound: 'meow' } });
   });
 
-  it('sets aside what only the old option declares, and brings it back with that option', async () => {
+  it('drops what only the old option declares, which stays gone after switching back', async () => {
     const form = mounted({ pet: { kind: 'cat' } });
     form.set(['pet', 'lives'], 9);
 
@@ -118,7 +118,7 @@ describe('useOptionSwitch() in a custom field', () => {
     expect(form.data()).toEqual({ pet: { kind: 'dog', sound: 'woof' } });
 
     await form.pick('Cat');
-    expect(form.data()).toEqual({ pet: { kind: 'cat', sound: 'meow', lives: 9 } });
+    expect(form.data()).toEqual({ pet: { kind: 'cat', sound: 'meow' } });
   });
 
   it('holds nothing on a null option, and starts the option switched to from its defaults', async () => {

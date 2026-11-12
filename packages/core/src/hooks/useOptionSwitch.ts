@@ -38,9 +38,9 @@ export interface OptionSwitchState<
   optionsUiSchema: UiSchema<T, S, F>[];
   /** Switches the field to the option at `index`, or clears the selection for an `index` below 0. The field sends what
    * it holds, filled with what the option starts from, and the form it is rendered in judges each value against the
-   * option switched away from and the one switched to: it replaces what the old option's defaults filled in, sets
-   * aside what the new option has no field for, and brings back what was set aside under the option if the user
-   * returns to it. Does nothing for a `disabled` or `readonly` field, or for the option already shown.
+   * option switched away from and the one switched to: it replaces what the old option's defaults filled in and drops
+   * what the new option has no field for. Does nothing for a `disabled` or `readonly` field, or for the option already
+   * shown.
    *
    * A field that writes a value of its own on a switch, such as the property its selector edits, passes `adjust`: it
    * is handed what the field would send for an option that holds data, and what it returns is sent instead. The switch

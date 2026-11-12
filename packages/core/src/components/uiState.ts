@@ -259,25 +259,6 @@ export function fieldsRendered<T, S extends StrictRJSFSchema, F extends FormCont
   schema: S,
   formData: T | undefined,
 ): (path: FieldPathList) => boolean {
-  const schemaAt = renderedSchemas<T, S, F>(uiState, schemaUtils, schema, formData);
-  return (path) => schemaAt(path) !== undefined;
-}
-
-/** The schema of the field the form renders at a path for `formData`, or undefined where it renders none, see
- * `fieldsRendered()`
- *
- * @param uiState - The form's option selections and cycle expansions
- * @param schemaUtils - The schema utilities the form renders with
- * @param schema - The retrieved root schema
- * @param formData - The form's data
- * @returns - The schema of the field rendered at a given path, if one is
- */
-export function renderedSchemas<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  uiState: UiStateReader,
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  schema: S,
-  formData: T | undefined,
-): (path: FieldPathList) => S | undefined {
   const fieldState = fieldStateOf<T, S, F>(uiState, schemaUtils);
   // The schema and data found at each path prefix walked
   const reached = new Map<FieldPath, { parent: S | undefined; data: unknown }>();
@@ -322,11 +303,11 @@ export function renderedSchemas<T, S extends StrictRJSFSchema, F extends FormCon
         data = getByPath(data, [key]);
         reached.set(next, { parent, data });
       } else {
-        return undefined;
+        return false;
       }
       at = next;
     }
-    return parent;
+    return parent !== undefined;
   };
 }
 
@@ -458,16 +439,6 @@ export function createUiState() {
     selection: selectionAt,
     /** The path of each field holding a selection */
     pickedPaths: (): FieldPath[] => [...selections.keys()],
-    /** The option list at `path` the user picked from last, if they picked from any there */
-    lastPickedList: (path: FieldPath): string | undefined => {
-      let last: { list: string; pick: number } | undefined;
-      selections.get(path)?.forEach(({ pick }, list) => {
-        if (pick > (last?.pick ?? 0)) {
-          last = { list, pick };
-        }
-      });
-      return last?.list;
-    },
     /** Selects option `index` of `list` at `path`, holding for the data in `holdsFor`: what the form kept for the
      * switch, or nothing where the form's data is to be matched again with the selection preferred
      */

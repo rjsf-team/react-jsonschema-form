@@ -630,7 +630,7 @@ describe('a discriminated cell of a layout grid', () => {
       expect(screen.getByRole('combobox')).toHaveDisplayValue('Num');
     });
 
-    it("brings the entry's own value back, beside its default, when switched back from a null option", async () => {
+    it("fills in the entry's own default when switched back from a null option", async () => {
       const { onChange } = createFormComponent({
         schema: {
           type: 'object',
@@ -654,8 +654,7 @@ describe('a discriminated cell of a layout grid', () => {
       expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: null });
 
       await user.selectOptions(screen.getByRole('combobox'), 'Obj');
-      // The `'k'` the seed held was set aside by the switch and returns with its option, over the option's default
-      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: { a: 'k', shared: 'x' } });
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: { a: 'A', shared: 'x' } });
     });
 
     it('is stored as an object stores it when its oneOf of constants renders as a select', async () => {

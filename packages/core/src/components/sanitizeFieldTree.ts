@@ -133,8 +133,6 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   judgedClears: JudgedClears | undefined;
   /** Where each array the walk dropped items of moved the items it kept, an inner array's before the array holding it */
   itemMoves: ContainerKeyMove[];
-  /** Each value the walk dropped that a person entered or a seed held, outside any array */
-  dropped: DroppedValue[];
   /** Each value the walk dropped or wrote another over, whose path holds no value of the origin it had. An array's
    * items are left to `itemMoves`
    */
@@ -409,18 +407,6 @@ function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declare
     maxItems: keywordOf(layers, 'maxItems'),
     declaredDefault,
   };
-}
-
-/** Whether a field of `schema` holds `value` by the keywords `judge()` rejects a value by: its type, its `const` and
- * the values it offers
- */
-export function takesValue<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
-  const { const: constant, values } = constraintsOf([schema], undefined);
-  return (
-    takesTypeOf<S>(schema, value) &&
-    (constant === undefined || deepEquals(constant, value)) &&
-    (values === undefined || values.some((offered) => deepEquals(offered, value)))
-  );
 }
 
 /** Whether a guessed extra key's stub renders `value`: a scalar, or an object whose every key the stub takes as an
@@ -932,15 +918,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           result = { ...newValue };
         }
         if (next === DROP) {
-          // What the defaults filled in is theirs to give again. Anything else is set aside for the form to bring
-          // back with its field. A row has no place to come back to once its array's rows move, so none is kept
-          const previousKey = previousKeyOf(key);
-          const droppedFrom = oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined;
-          const dropped = { path: childPath, value: newValue[key] };
-          if (!childPath.some((at) => typeof at === 'number') && originOf(ctx, droppedFrom, childPath) !== 'filled') {
-            ctx.dropped.push(dropped);
-          }
-          ctx.released.push(dropped);
+          ctx.released.push({ path: childPath, value: newValue[key] });
           delete result[key];
         } else {
           setOwn(result, key, next);
@@ -1202,7 +1180,7 @@ function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
  * @param [judgedClears] - For a disabled or read-only form, the only values judged, see `judgedClearsIn()`
  * @returns - The sanitized data, sharing everything it left alone with `data`; where each array it dropped items of
  *   moved the rest, an inner array's first, with the paths of the arrays holding it as they were before; each value it
- *   set aside, each it dropped or wrote over, and each seeded value it kept whose origin it worked out
+ *   dropped or wrote over, and each seeded value it kept whose origin it worked out
  */
 export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F extends FormContextType>(
   previous: FieldTree<T, S, F>,
@@ -1215,12 +1193,10 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
 ): {
   formData: T | undefined;
   itemMoves: ContainerKeyMove[];
-  dropped: DroppedValue[];
   released: DroppedValue[];
   classified: ClassifiedValue[];
 } {
   const itemMoves: ContainerKeyMove[] = [];
-  const dropped: DroppedValue[] = [];
   const released: DroppedValue[] = [];
   const classified: ClassifiedValue[] = [];
   const sanitized = walk(
@@ -1239,7 +1215,6 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       fillAsFirstRender,
       judgedClears,
       itemMoves,
-      dropped,
       released,
       classified,
     },
@@ -1268,7 +1243,6 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
   return {
     formData: sanitized === DROP ? undefined : asFieldValue<T>(sanitized),
     itemMoves,
-    dropped,
     released,
     classified,
   };

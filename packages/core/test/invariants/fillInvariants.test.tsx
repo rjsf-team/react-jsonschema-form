@@ -23,7 +23,7 @@ const RUNS_BETWEEN = Math.ceil((RUNS * 2) / 3);
 const FOLLOWS = 'form: with nothing seeded or entered, the data follows the defaults a re-render changes';
 const STAYS = 'form: a seeded value no default gave stays when the defaults change';
 const OWNED = 'form: through a schema change and back, every value is the seed’s or one the defaults give';
-const RESTORES = 'form: a schema change and back restores the data outside arrays';
+const RESTORES = 'form: with nothing seeded or entered, a schema change and back gives the data of the mount';
 
 /** How a case breaks an invariant: the two values differ, differ only in keys held as `undefined`, or the code threw */
 interface Failure {
@@ -72,15 +72,6 @@ function without(value: unknown, key: string): unknown {
     return value;
   }
   return Object.fromEntries(Object.entries(value).filter(([other]) => other !== key));
-}
-
-/** `value` without its arrays, at any depth */
-function outsideArrays(value: unknown): unknown {
-  if (typeof value !== 'object' || value === null) {
-    return value;
-  }
-  const kept = Object.entries(value).filter(([, held]) => !Array.isArray(held));
-  return Object.fromEntries(kept.map(([key, held]) => [key, outsideArrays(held)]));
 }
 
 function* leavesOf(value: unknown, path: Path = []): Generator<[Path, unknown]> {
@@ -151,7 +142,7 @@ function withoutAdditional(schema: unknown): unknown {
 
 /**
  * The data of `schema` that its named fields hold. What `additionalProperties` would let through is left out: a value
- * whose field a condition withdraws is set aside, even where the object would carry its key along
+ * whose field a condition withdraws is dropped, even where the object would carry its key along
  */
 function declared(schema: RJSFSchema, data: unknown): unknown {
   const named: RJSFSchema = { ...schema, ...Object(withoutAdditional(schema)) };
@@ -288,14 +279,12 @@ const invariants: Record<string, (testCase: Case) => Failure | undefined> = {
       return undefined;
     }),
   ),
-  [RESTORES]: between((first, second, data) =>
-    withForm({ schema: first, data }, (form) => {
+  [RESTORES]: between((first, second) =>
+    withForm({ schema: first, data: undefined }, (form) => {
       const before = form.read();
       form.setSchema(second);
       form.setSchema(first);
-      // The form sets nothing inside an array aside: a row's value that loses its field is dropped, as it was before
-      // values were set aside at all, so only the data outside arrays is promised to return
-      return compare(outsideArrays(before), outsideArrays(form.read()));
+      return compare(before, form.read());
     }),
   ),
 };
@@ -311,15 +300,15 @@ const differences: Partial<Record<string, Difference>> = {
 /** What the form is known not to do yet, by the mechanism behind it */
 const GAPS = {
   conditionFlip:
-    'A value the re-render itself changes, by following its default or by returning with its field, flips a condition or dependency, and the branch is settled against the old value: the one that closed stays filled, the one that opened is not filled',
+    'A value the re-render itself changes by following its default flips a condition or dependency, and the branch is settled against the old value: the one that closed stays filled, the one that opened is not filled',
   optionOrigins:
-    'Inside an option of a oneOf or anyOf field a value is not told apart by where it came from: a filled value does not follow its default whole, a filled const stays after the const changed, and a seeded value comes back as the default',
+    'Inside an option of a oneOf or anyOf field a value is not told apart by where it came from: a filled value does not follow its default whole, and a filled const stays after the const changed',
   rowOfArrayDefault:
     'A row that the default of its array gave is taken for one its item’s own default gave, and follows that default when it changes',
   additionalItemsRow:
     'A seeded tuple row beyond `items` that equals the default of `additionalItems` follows that default, which the fill never gives to a row',
-  undeclaredData:
-    'A seeded value that no field holds, because its branch is closed, or that its field does not accept is carried along from the mount but not set aside when its branch or the object around it goes, so it does not return',
+  extraKeyOfRowDefault:
+    'A row of an array a re-render brings in is filled without the keys its item’s default holds under `additionalProperties`, which a mount fills in',
 };
 
 /**
@@ -338,9 +327,8 @@ const KNOWN_GAPS: Partial<Record<string, { gap: keyof typeof GAPS; seeds: number
     { gap: 'optionOrigins', seeds: [287] },
   ],
   [RESTORES]: [
-    { gap: 'conditionFlip', seeds: [16, 144, 155, 173, 195, 209, 280, 293] },
-    { gap: 'optionOrigins', seeds: [112] },
-    { gap: 'undeclaredData', seeds: [25, 36, 42, 73, 94, 109, 117, 127, 194, 217, 242, 275, 278, 288] },
+    { gap: 'conditionFlip', seeds: [12, 16, 17, 33, 118, 144, 155, 195] },
+    { gap: 'extraKeyOfRowDefault', seeds: [71] },
   ],
 };
 

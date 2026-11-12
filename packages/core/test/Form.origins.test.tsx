@@ -64,24 +64,16 @@ describe('where a value came from, as a schema, a branch or a write changes the 
       else: { properties: { color: other } },
     });
 
-    it('returns with its branch, over the `const` the other branch filled in', () => {
+    it('takes the default its branch gives once the `const` the other branch filled in took its place', () => {
       const { form, write } = mount(coloured({ const: 'black' }));
       write(['color'], 'green');
       write(['mode'], 'b');
       expect(form.getFormData()).toEqual({ mode: 'b', color: 'black' });
       write(['mode'], 'a');
-      expect(form.getFormData()).toEqual({ mode: 'a', color: 'green' });
+      expect(form.getFormData()).toEqual({ mode: 'a', color: 'red' });
     });
 
-    it('does not return into a field whose `const` rejects it', () => {
-      const { form, write } = mount(coloured({ const: 'black' }));
-      write(['color'], 'green');
-      write(['mode'], 'b');
-      write(['note'], 'unrelated');
-      expect(form.getFormData()).toEqual({ mode: 'b', color: 'black', note: 'unrelated' });
-    });
-
-    it('gives way to a value the branch lists once a list of one took its place', () => {
+    it('takes the default its branch gives once a list of one took its place', () => {
       const { form, write } = mount(coloured({ enum: ['black'] }));
       write(['color'], 'green');
       write(['mode'], 'b');
@@ -90,7 +82,7 @@ describe('where a value came from, as a schema, a branch or a write changes the 
       expect(form.getFormData()).toEqual({ mode: 'a', color: 'red' });
     });
 
-    it('returns with its type, where the default filled in for the other type is not set aside in its place', () => {
+    it('is dropped with its type, and the default filled in for the other type goes with that type in turn', () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: { kind: { type: 'string', enum: ['s', 'n'], default: 's' } },
@@ -103,7 +95,7 @@ describe('where a value came from, as a schema, a branch or a write changes the 
       write(['kind'], 'n');
       expect(form.getFormData()).toEqual({ kind: 'n', x: 5 });
       write(['kind'], 's');
-      expect(form.getFormData()).toEqual({ kind: 's', x: 'hi' });
+      expect(form.getFormData()).toEqual({ kind: 's' });
     });
 
     it("is the form's from the mount on where the seed held a value the `enum` does not list", () => {
