@@ -24,10 +24,10 @@ import useSendMove from './useSendMove.ts';
 interface OptionSwitch<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The option switched away from */
   oldOption: S | undefined;
-  /** The option switched away from as `getRenderedOptionSchema()` renders it, when the field has already computed it */
-  oldRenderedOption?: S;
   /** The option switched to */
   newOption: S | undefined;
+  /** The option switched to as `getRenderedOptionSchema()` renders it */
+  newRenderedOption: S | undefined;
   /** The uiSchema the field of the option switched away from rendered with */
   oldUiSchema: UiSchema<T, S, F> | undefined;
   /** The uiSchema the field of the option switched to renders with */
@@ -61,13 +61,12 @@ function rendersItemFields<S extends StrictRJSFSchema>(rendered: S): boolean {
  */
 function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schema: S,
-  { oldOption, oldRenderedOption, newOption, oldUiSchema, newUiSchema }: OptionSwitch<T, S, F>,
+  { oldOption, newRenderedOption: newRendered, oldUiSchema, newUiSchema }: OptionSwitch<T, S, F>,
 ): boolean {
-  if (!oldOption || !newOption || oldUiSchema !== newUiSchema) {
+  if (!oldOption || !newRendered || oldUiSchema !== newUiSchema) {
     return false;
   }
-  const oldRendered = oldRenderedOption ?? getRenderedOptionSchema<S>(schema, oldOption);
-  const newRendered = getRenderedOptionSchema<S>(schema, newOption);
+  const oldRendered = getRenderedOptionSchema<S>(schema, oldOption);
   return (
     rendersItemFields<S>(oldRendered) &&
     rendersItemFields<S>(newRendered) &&
@@ -76,6 +75,15 @@ function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextT
     deepEquals(oldRendered.additionalItems, newRendered.additionalItems) &&
     oldRendered.uniqueItems === newRendered.uniqueItems
   );
+}
+
+/** Whether `option` is one whose field renders nothing and holds `null`: a `null` type or a `null` constant
+ *
+ * @param option - The option, if one is selected
+ * @returns - True when the option holds only `null`
+ */
+export function holdsOnlyNull<S extends StrictRJSFSchema>(option: S | undefined): boolean {
+  return option !== undefined && (option.type === 'null' || (isConstant<S>(option) && toConstant<S>(option) === null));
 }
 
 /** Returns what sends the change of a `oneOf`/`anyOf` field at `fieldPath` whose option is switched. The option's
@@ -137,11 +145,8 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       const isEntry = isEntryPath || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
       // An entry's `null` option holds `null` rather than the `''` of a cleared value, which no such option takes and
       // which would reload as another option. Elsewhere it holds nothing
-      const isNullOption =
-        newOption !== undefined &&
-        (newOption.type === 'null' || (isConstant<S>(newOption) && toConstant<S>(newOption) === null));
       const value =
-        isEntry && newFormData === undefined && isNullOption
+        isEntry && newFormData === undefined && holdsOnlyNull<S>(newOption)
           ? (null as V)
           : storedValue(newFormData, fieldPath, isEntry);
       return sendMove(

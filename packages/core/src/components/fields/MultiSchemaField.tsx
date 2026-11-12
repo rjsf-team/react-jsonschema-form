@@ -1,5 +1,5 @@
 import { use, useCallback, useMemo } from 'react';
-import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -22,7 +22,6 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from '@rjsf/utils';
 
-import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useOptionSwitch from '../../hooks/useOptionSwitch.ts';
 import { retrievedOptionListOf } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
@@ -85,7 +84,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const selectorsAbove = useSelectorsAbove(id);
   const selectorDepth = selectorsAbove[xxxOfKey] + 1;
   const fieldId = optionSelectorId(id, xxxOfKey, selectorDepth);
-  const { selectedOption, switchOption } = useOptionSwitch<T, S, F>(props, options, fieldId);
+  const { selectedOption, optionsUiSchema, switchOption } = useOptionSwitch<T, S, F>(props, options, fieldId);
   const selectorsBelow = useMemo(
     () => ({ ...selectorsAbove, [xxxOfKey]: selectorDepth }),
     [selectorsAbove, xxxOfKey, selectorDepth],
@@ -102,22 +101,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const title = titleOption ?? schema.title;
 
-  // First we will check to see if there is an anyOf/oneOf override for the UI schema. Computed here, ahead of
-  // `onOptionChange`, so that callback can pass the new option's own uiSchema to `defaultsForOption()`,
-  // letting `ui:initialValue`/`ui:emptyValue` on that option's fields apply on selection.
-  // Memoized so the common case (no `uiSchema.oneOf`/`anyOf` override) doesn't hand `onOptionChange`'s `useCallback`
-  // a fresh `[]` on every render, which would otherwise break its memoization.
-  const optionsUiSchema = useMemo<UiSchema<T, S, F>[]>(() => {
-    if (uiSchema && xxxOfKey in uiSchema) {
-      if (Array.isArray(uiSchema[xxxOfKey])) {
-        return uiSchema[xxxOfKey];
-      }
-      logOnce(`uiSchema.${xxxOfKey} is not an array for ${fieldLabelForLog(id, fieldPath)}`);
-    }
-    return [];
-  }, [xxxOfKey, uiSchema, id, fieldPath]);
-
-  // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
+  // The selected option's own uiSchema where the field's lists one for it, else the field's
   const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
 
   const option = selectedOption >= 0 ? options[selectedOption] || null : null;
@@ -125,7 +109,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // it hands down, so such a union only reaches here with the fallback UI off or with options that leave the choice of
   // type to themselves
   // Memoized, since the meet walks every subschema the two share. `SchemaField` retrieves the options afresh when the
-  // data changes, so this only spares a render that leaves the data as it was, and the switch away from the option
+  // data changes, so this only spares a render that leaves the data as it was
   const renderedOption = useMemo(() => (option ? getRenderedOptionSchema<S>(schema, option) : null), [schema, option]);
   const rendersOption = renderedOption !== null && renderedOption.type !== 'null';
   // The entry this field renders from, which the `SchemaField` rendering it provides, so an option nested in another

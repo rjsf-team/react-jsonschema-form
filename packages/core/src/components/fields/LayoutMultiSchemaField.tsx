@@ -7,23 +7,12 @@ import type {
   StrictRJSFSchema,
   UiSchema,
 } from '@rjsf/utils';
-import {
-  getByPath,
-  getDiscriminatorFieldFromSchema,
-  isPlainObject,
-  setByPath,
-  getOptionUiSchema,
-  fieldPathToName,
-  getUiOptions,
-  toFieldPath,
-} from '@rjsf/utils';
+import { getByPath, isPlainObject, setByPath, fieldPathToName, getUiOptions, toFieldPath } from '@rjsf/utils';
 
-import useOptionSelection from '../../hooks/useOptionSelection.ts';
+import useOptionSwitch from '../../hooks/useOptionSwitch.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
-import useSendOptionSwitch, { selectSwitchedOption } from '../../hooks/useSendOptionSwitch.ts';
 import { asFieldValue, retrievedOptionListOf } from '../uiState.ts';
-import defaultsForOption from './defaultsForOption.ts';
-import { getWidgetErrorProps, getWidgetLabelProps, optionsKeywordOf } from './fieldWidgetUtils.ts';
+import { getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import {
   computeEnumOptions,
   getFirstOption,
@@ -77,7 +66,6 @@ export default function LayoutMultiSchemaField<
     fieldPath,
     id,
     onBlur,
-    onChange,
     onFocus,
     registry,
     uiSchema: namingUiSchema,
@@ -92,27 +80,19 @@ export default function LayoutMultiSchemaField<
     presentation,
     title: parentTitle,
   } = props;
-  const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
-  const sendOptionSwitch = useSendOptionSwitch(fieldPath);
+  const { widgets, schemaUtils, globalUiOptions } = registry;
   const options = useMemo(
-    () => retrievedOptionListOf<T, S, F>(schemaUtils, schema, formData),
+    () => retrievedOptionListOf<T, S, F>(schemaUtils, schema, formData) ?? [],
     [schemaUtils, schema, formData],
   );
-  // The selector names the option, but a cell of the grid shows the one the form selects for these options
-  const { selectedOption: cellsOption, selectOption } = useOptionSelection<T, S, F>(
-    registry,
-    fieldPath,
-    options,
-    formData,
-    getDiscriminatorFieldFromSchema<S>(schema),
-  );
   const uiSchema = useMemo(() => omitFieldDirectives<T, S, F>(namingUiSchema), [namingUiSchema]);
-  const keyword = optionsKeywordOf<S>(schema);
   const enumOptions = useMemo(
     () => computeEnumOptions(schema, schemaUtils, uiSchema, formData),
     [schema, schemaUtils, uiSchema, formData],
   );
   const disabled = fieldDisabled || enumOptions.length === 0;
+  // The selector names the option, but a cell of the grid shows the one the form selects for these options
+  const { switchOption } = useOptionSwitch<T, S, F>({ ...props, uiSchema, disabled }, options);
   const allUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const selectorField = getSelectorField<T, S, F>(schema, allUiOptions);
   if (!selectorField) {
@@ -138,80 +118,18 @@ export default function LayoutMultiSchemaField<
   const selectedOption = getByPath(formData, selectorField);
   const { Widget } = resolveSelectorWidget<T, S, F>(schema, firstOption, selectorField, allUiOptions, widgets);
 
-  /** Callback function that updates the selected option and adjusts the form data based on the structure of the new
-   * option, calling the `onChange` callback with the adjusted formData.
+  /** Switches to the option `opt` names, or clears the selection where it names none
    *
-   * @param opt - If the option is undefined, we are going to clear the selection otherwise we
-   *      will use it as the index of the new option to select
+   * @param opt - The value of the selector field the widget picked
    */
-  const onOptionChange = (opt?: unknown) => {
-    if (disabled || readonly) {
-      return;
-    }
-    const newOptionIndex = getSelectedOptionIndex<S>(enumOptions, selectorField, opt);
-    const oldOptionIndex = getSelectedOptionIndex<S>(enumOptions, selectorField, selectedOption);
-    const newOption = enumOptions[newOptionIndex]?.schema;
-    const oldOption = enumOptions[oldOptionIndex]?.schema;
-
-    // The newly-selected option's own uiSchema is resolved the same way AnyOfField's optionsUiSchema/optionUiSchema
-    // does — `uiSchema.oneOf[i]`/`uiSchema.anyOf[i]` when declared as an array reaching that option's index, falling
-    // back to this field's own uiSchema otherwise — so per-option ui:initialValue/ui:emptyValue overrides apply the
-    // same way here as they do when the same schema is rendered through plain SchemaField/AnyOfField.
-    // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
-    // never carries the root's `ui:definitions` itself.
-    const newOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex);
-    const oldOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex);
+  const onOptionChange = (opt?: unknown) =>
     // The selector cell's value is the one thing the switch writes. The form judges every other value against the
     // option switched to and fills what that option declares
-    let switched: T | undefined;
-    if (newOption !== undefined && newOption.type !== 'null') {
-      const starts = defaultsForOption<T, S, F>(
-        schemaUtils,
-        schema,
-        newOption,
-        isPlainObject(formData) ? formData : undefined,
-        { optionUiSchema: newOptionUiSchema, uiSchemaDefinitions, globalUiOptions },
-      );
+    switchOption(getSelectedOptionIndex<S>(enumOptions, selectorField, opt), (starts) => {
       const held: GenericObjectType = isPlainObject(starts) ? { ...starts } : {};
       setByPath(held, selectorField, opt);
-      switched = asFieldValue<T>(held);
-    }
-    // The selector holds the option picked, which the form keeps rather than putting the old one back
-    if (switched.held && Object.hasOwn(switched.held, selectorField)) {
-      const held = { ...switched.held };
-      delete held[selectorField];
-      switched.held = held;
-    }
-    // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to
-    selectOption(newOptionIndex);
-    let sentData: unknown;
-    const outcome = sendOptionSwitch(
-      schema,
-      {
-        oldOption,
-        newOption,
-        oldUiSchema: oldOptionUiSchema,
-        newUiSchema: newOptionUiSchema,
-        // The option `oldOption` is, in the list the selection is stored by. Without options there is no selection
-        oldIndex: options ? oldOptionIndex : -1,
-      },
-      formData,
-      switched,
-      (sent) => {
-        sentData = sent;
-        // Pass the component name in the path
-        onChange(sent, fieldPath, undefined, id);
-      },
-    );
-    selectSwitchedOption<T, S, F>(
-      selectOption,
-      schemaUtils,
-      { from: cellsOption, to: newOptionIndex, newOption: options?.[newOptionIndex] },
-      formData,
-      sentData,
-      outcome,
-    );
-  };
+      return asFieldValue<T>(held);
+    });
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
   const widgetOptions = { enumOptions, ...uiOptions };

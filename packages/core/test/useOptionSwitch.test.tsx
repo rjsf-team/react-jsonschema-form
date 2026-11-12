@@ -1,11 +1,12 @@
 import { createRef } from 'react';
-import type { FieldProps, RJSFSchema } from '@rjsf/utils';
+import type { FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormRef } from '../src/index.ts';
 import Form, { useOptionSwitch } from '../src/index.ts';
+import { setupConsoleWarnSuppression } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -38,13 +39,20 @@ const schema: RJSFSchema = {
 function ButtonsField(props: FieldProps) {
   const { schema: fieldSchema, registry, formData } = props;
   const options = registry.schemaUtils.retrieveSchema(fieldSchema, formData).anyOf as RJSFSchema[];
-  const { selectedOption, switchOption } = useOptionSwitch(props, options);
+  const { selectedOption, optionsUiSchema, switchOption } = useOptionSwitch(props, options);
+  const stamp = (data: unknown) => (typeof data === 'object' ? { ...data, stamped: true } : { stamped: true });
   return (
     <div>
       <output aria-label='shown'>{selectedOption}</output>
+      <output aria-label='option titles'>{optionsUiSchema.map((option) => option['ui:title']).join(',')}</output>
       {options.map((option, index) => (
         <button key={option.title} type='button' onClick={() => switchOption(index)}>
           {option.title}
+        </button>
+      ))}
+      {options.map((option, index) => (
+        <button key={option.title} type='button' onClick={() => switchOption(index, stamp)}>
+          Stamp {option.title}
         </button>
       ))}
       <button type='button' onClick={() => switchOption(-1)}>
@@ -54,13 +62,13 @@ function ButtonsField(props: FieldProps) {
   );
 }
 
-function mounted(initialFormData: unknown, disabled = false) {
+function mounted(initialFormData: unknown, disabled = false, petUiSchema: UiSchema = {}) {
   const ref = createRef<FormRef>();
   render(
     <Form
       schema={schema}
       validator={validator}
-      uiSchema={{ pet: { 'ui:field': ButtonsField, 'ui:fieldReplacesAnyOrOneOf': true } }}
+      uiSchema={{ pet: { 'ui:field': ButtonsField, 'ui:fieldReplacesAnyOrOneOf': true, ...petUiSchema } }}
       initialFormData={initialFormData}
       disabled={disabled}
       ref={ref}
@@ -71,6 +79,7 @@ function mounted(initialFormData: unknown, disabled = false) {
     set: (path: (string | number)[], value: unknown) => act(() => ref.current?.setFieldValue(path, value)),
     pick: (title: string) => user.click(screen.getByRole('button', { name: title })),
     shown: () => screen.getByLabelText('shown').textContent,
+    optionTitles: () => screen.getByLabelText('option titles').textContent,
   };
 }
 
@@ -138,5 +147,60 @@ describe('useOptionSwitch() in a custom field', () => {
 
     expect(form.shown()).toBe('0');
     expect(form.data()).toEqual({ pet: { kind: 'cat', sound: 'meow' } });
+  });
+
+  it("hands back the uiSchema of each option the field's uiSchema lists", () => {
+    const form = mounted({ pet: { kind: 'cat' } }, false, {
+      anyOf: [{ 'ui:title': 'Feline' }, { 'ui:title': 'Canine' }],
+    });
+
+    expect(form.optionTitles()).toBe('Feline,Canine');
+  });
+
+  describe('with a uiSchema.anyOf that is not an array', () => {
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+    it('hands back no option uiSchema, and warns once however often the field renders', () => {
+      const form = mounted({ pet: { kind: 'cat' } }, false, {
+        // @ts-expect-error: TS2353, deliberately not an array, to exercise the runtime warning below
+        anyOf: { 'ui:title': 'Feline' },
+      });
+      form.set(['pet', 'name'], 'Tom');
+
+      expect(form.optionTitles()).toBe('');
+      const warnings = consoleWarnSuppression.consoleSpy.mock.calls.filter(
+        ([message]) => message === 'uiSchema.anyOf is not an array for "root_pet" (pet)',
+      );
+      expect(warnings).toHaveLength(1);
+    });
+  });
+
+  it('sends what `adjust` returns for the data the switch would send', async () => {
+    const form = mounted({ pet: { kind: 'cat' } });
+
+    await form.pick('Stamp Dog');
+
+    expect(form.shown()).toBe('1');
+    expect(form.data()).toEqual({ pet: { kind: 'dog', sound: 'woof', stamped: true } });
+  });
+
+  it('sends what `adjust` returns for the option already shown', async () => {
+    const form = mounted({ pet: { kind: 'cat' } });
+
+    await form.pick('Cat');
+    expect(form.data()).toEqual({ pet: { kind: 'cat', sound: 'meow' } });
+
+    await form.pick('Stamp Cat');
+    expect(form.shown()).toBe('0');
+    expect(form.data()).toEqual({ pet: { kind: 'cat', sound: 'meow', stamped: true } });
+  });
+
+  it('leaves a null option holding nothing, whatever `adjust` would return', async () => {
+    const form = mounted({ pet: { kind: 'cat' } });
+
+    await form.pick('Stamp None');
+
+    expect(form.shown()).toBe('2');
+    expect(form.data()).toEqual({ pet: undefined });
   });
 });
