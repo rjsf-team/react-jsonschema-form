@@ -2415,7 +2415,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             "drops object data of a field declared inside a parent's allOf that types it as a string",
             { allOf: [{ properties: { c: { allOf: [{ type: 'string' }] } } }] },
             { c: { z: 1 }, d: 1 },
-            { c: undefined, d: 1 },
+            { d: 1 },
+          ],
+          [
+            "replaces a value outside the allOf enum of a property declared inside the allOf with the field's default",
+            { default: { c: 'red' }, allOf: [{ properties: { c: { allOf: [{ enum: ['red', 'green'] }] } } }] },
+            { c: 'purple' },
+            { c: 'red' },
+          ],
+          [
+            "replaces a value outside the allOf enum of a property declared inside an object field's allOf with the field's default",
+            {
+              type: 'object',
+              default: { c: 'red' },
+              allOf: [{ properties: { c: { allOf: [{ enum: ['red', 'green'] }] } } }],
+            },
+            { c: 'purple' },
+            { c: 'red' },
+          ],
+          [
+            "leaves out a value outside the allOf enum of a property declared inside an object field's allOf",
+            { type: 'object', allOf: [{ properties: { c: { allOf: [{ enum: ['red', 'green'] }] } } }] },
+            { c: 'purple', d: 1 },
+            { d: 1 },
           ],
           [
             'keeps a null the enum offers',

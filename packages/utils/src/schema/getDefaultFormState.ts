@@ -2651,8 +2651,9 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
         // A `null` is how a cleared field holds its value, so one the options leave out is still the user's, as the fold
         // keeps it for a property it computes
         const matchedProperty = matchedValue === undefined && matched[key] === null ? null : matchedValue;
-        // A value that doesn't match is left out, so the property takes its defaults as one the data lacks does
-        if (matchedProperty === undefined && !retrievesProperty) {
+        // A value that doesn't match is left out, an `allOf` the property is read through or not, so the property takes
+        // its defaults as one the data lacks does
+        if (matchedProperty === undefined) {
           Reflect.deleteProperty(matched, key);
         } else {
           setOwn(matched, key, matchedProperty);
