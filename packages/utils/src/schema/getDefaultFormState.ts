@@ -2517,14 +2517,16 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   // its subschemas, so all four are read from the merged schema, retrieved with the data so that a condition on it
   // picks what it is checked against. A merge that reads no data is kept for any data, so only one whose result
   // depends on the data is planned again for it. A merge that leaves one value is a constant, whose data is kept as it
-  // is for a field that declares one, and as `populateDefaults` keeps it
+  // is for a field that declares one, and as `populateDefaults` keeps it, as long as the field's own options take it
   const mergesForData = !shouldRetrieveAllOf && formData !== undefined && holdsAnyOf(schemaToMatch, MERGING_KEYWORDS);
   const readSchema = mergesForData ? retrieveField<S, F>(context, field(), formData) : schemaToMatch;
   const nestedUnfolded = unfolded || mergesForData;
-  const selectSchema =
-    formData === undefined || isConstant<S>(readSchema)
-      ? undefined
-      : resolveDeclaredConstantOptions<S>(readSchema, declarations);
+  let selectSchema: S | undefined;
+  if (formData !== undefined && !isConstant<S>(readSchema)) {
+    selectSchema = resolveDeclaredConstantOptions<S>(readSchema, declarations);
+  } else if (formData !== undefined && readSchema !== schemaToMatch && !isConstant<S>(schemaToMatch)) {
+    selectSchema = resolveDeclaredConstantOptions<S>(schemaToMatch, declarations);
+  }
   let validFormData: unknown = formData;
   if (selectSchema !== undefined && isConstantSelect<S>(selectSchema, true)) {
     const getOptionsList = optionsList<T, S, F>(selectSchema);
