@@ -2759,6 +2759,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it.each([false, true])(
+          'keeps a key the user left undefined that an allOf declares through an allOf of its own, initialDefaultsGenerated %s',
+          (initialDefaultsGenerated) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { obj: { allOf: [{ properties: { c: { allOf: [{ enum: ['a', 'b'] }] } } }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { obj: { c: undefined } }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ obj: { c: undefined } });
+          },
+        );
+
         it.each<[string, RJSFSchema, GenericObjectType]>([
           ['an object field', { type: 'object' }, { extra: { a: 1 } }],
           ['an untyped field', {}, { extra: { a: 1 }, c: 'x' }],

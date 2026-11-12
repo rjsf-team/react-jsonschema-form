@@ -2695,13 +2695,14 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
     }
     const retrievesProperty = retrievesAll || (isObject(readProperty) && ALL_OF_KEY in readProperty);
     // Object data is matched at every depth, so a value nested in it that its schema can't take is found too, and so
-    // is any other value the fold didn't compute that its schema may reject. A key the user left `undefined` holds no
-    // value to reject, so it stays, as the fold keeps it. A boolean schema has nothing to match the data against
+    // is any other value the fold didn't compute that its schema may reject. A boolean schema has nothing to match the
+    // data against
     const matchesNested =
       isSchemaObject<S>(readProperty) &&
-      (isObjectData(matched[key]) ||
-        (unfolded && matched[key] !== undefined && holdsAnyOf(readProperty, REJECTING_KEYWORDS)));
-    if (retrievesProperty || matchesNested) {
+      (isObjectData(matched[key]) || (unfolded && holdsAnyOf(readProperty, REJECTING_KEYWORDS)));
+    // A key the user left `undefined` holds no value to reject, so it stays, as the fold keeps it, whether or not the
+    // property is read through an `allOf`
+    if (matched[key] !== undefined && (retrievesProperty || matchesNested)) {
       const chainsOfProperty = () => {
         const { graph, seeds } = propertyField();
         return buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } }).chains;
