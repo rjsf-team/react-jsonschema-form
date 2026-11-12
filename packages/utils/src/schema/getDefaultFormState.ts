@@ -2032,8 +2032,22 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
 
   // Inject defaults into existing array defaults
   if (Array.isArray(defaults)) {
-    defaults = defaults.map((item: unknown, idx) =>
-      foldChild<T, S, F>(
+    // Only an `items` schema has defaults to fill an item with: without one the item stays the copy it is
+    const hasItemsSchema = isSchemaObject<S>(schema.items);
+    defaults = defaults.map((item: unknown, idx) => {
+      const isHeld = Array.isArray(rawFormData) && idx < rawFormData.length;
+      if (hasItemsSchema && !isHeld) {
+        // An item of the default no row of the data stands for is filled as the row holding it will be once the data
+        // does (#5831): what the item states is kept, and the defaults of the items' schema fill the rest of it
+        return foldChild<T, S, F>(
+          context,
+          `defaultRow:${idx}`,
+          itemField(view, AdditionalItemsHandling.Ignore),
+          { ...itemProps(idx), rawFormData: item, shouldMergeDefaultsIntoFormData: true },
+          memo,
+        );
+      }
+      return foldChild<T, S, F>(
         context,
         `default:${idx}`,
         itemField(view, AdditionalItemsHandling.Fallback, idx),
@@ -2042,11 +2056,11 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
           parentDefaults: item,
           rawFormData: Array.isArray(rawFormData) ? rawFormData[idx] : undefined,
           // An item the data holds is one a field renders
-          onNullFill: Array.isArray(rawFormData) && idx < rawFormData.length ? onNullFill : undefined,
+          onNullFill: isHeld ? onNullFill : undefined,
         },
         memo,
-      ),
-    );
+      );
+    });
   }
 
   // Deeply inject defaults into already existing form data
