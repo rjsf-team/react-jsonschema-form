@@ -647,6 +647,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       dropsOwnErrors: move?.dropsOwnErrors,
       isAnnouncedMove: move !== undefined,
       isFieldEdit,
+      ...(takenAt && taken?.switchedFrom && { switchAt: { path: takenAt, from: taken.switchedFrom.index } }),
     };
     const uiMove = keyMoveOf(fieldChange);
     const containerPath = uiMove && fieldPathToList(uiMove.container);

@@ -355,8 +355,8 @@ describe('dirty', () => {
         touchedFields: {},
         submitCount: 0,
       });
+      // The seeded value was set aside by the switch, and returns with its option
       await user.selectOptions(optionSelect(container), 'A');
-      await user.type(input(container, 'root_a'), 'x');
 
       expect(handle.getFormData()).toEqual({ a: 'x' });
       expect(handle.getStatus()).toEqual({

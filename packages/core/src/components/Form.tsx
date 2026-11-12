@@ -342,8 +342,9 @@ export interface FormState<
   seededPaths: SeededPaths;
   /** The seeded paths of the baseline: those of the seed it was derived from */
   baselineSeededPaths: SeededPaths;
-  /** The values a person entered or the seed held whose field went away, by the path each was at. None is in the data,
-   * and each returns to it when a field that can hold it shows at its path again. Emptied by a reset
+  /** The values a person entered or the seed held whose field went away, each with the path it was at and, for one an
+   * option switch left out, the option it was entered under. None is in the data, and each returns to it when a field
+   * that can hold it shows at its path again, under that option. Emptied by a reset
    */
   orphans: Orphans;
   /** Where `liveValidate`'s trigger fired, which decides the errors `liveErrors: 'field'` shows */

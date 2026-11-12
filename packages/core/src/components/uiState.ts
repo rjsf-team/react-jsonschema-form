@@ -456,6 +456,16 @@ export function createUiState() {
       };
     },
     selection: selectionAt,
+    /** The option list at `path` the user picked from last, if they picked from any there */
+    lastPickedList: (path: FieldPath): string | undefined => {
+      let last: { list: string; pick: number } | undefined;
+      selections.get(path)?.forEach(({ pick }, list) => {
+        if (pick > (last?.pick ?? 0)) {
+          last = { list, pick };
+        }
+      });
+      return last?.list;
+    },
     /** Selects option `index` of `list` at `path`, holding for the data in `holdsFor`: what the form kept for the
      * switch, or nothing where the form's data is to be matched again with the selection preferred
      */

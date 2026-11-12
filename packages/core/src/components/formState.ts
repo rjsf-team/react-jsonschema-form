@@ -308,8 +308,37 @@ export type EnteredPaths = ReadonlySet<FieldPath>;
 /** The values the seed held, see `FormState.seededPaths` */
 export type SeededPaths = ReadonlySet<FieldPath>;
 
-/** The values set aside when their field went away, see `FormState.orphans` */
-export type Orphans = ReadonlyMap<FieldPath, unknown>;
+/** A value set aside when its field went away, see `FormState.orphans` */
+export interface Orphan {
+  fieldPath: FieldPath;
+  value: unknown;
+  /** For a value an option switch left out, the option it was entered under: the field offering the options, the list
+   * picked from, and the option's index in it. The value returns only while the field shows that option
+   */
+  under?: { fieldPath: FieldPath; list: string; index: number };
+}
+
+/** The values set aside, each by its path and the option it was entered under, so two options keep their own value
+ * for a key both declare
+ */
+export type Orphans = ReadonlyMap<string, Orphan>;
+
+/** The key an orphan is kept under */
+function orphanKey({ fieldPath, under }: Orphan): string {
+  return under ? `${fieldPath}\n${under.fieldPath}\n${under.list}\n${under.index}` : fieldPath;
+}
+
+/** `orphans` with each of `added`, one set aside under a key replacing the one kept there, since it is the value last
+ * entered for the field
+ */
+function withOrphans(orphans: Orphans, added: readonly Orphan[]): Orphans {
+  if (added.length === 0) {
+    return orphans;
+  }
+  const next = new Map(orphans);
+  added.forEach((orphan) => next.set(orphanKey(orphan), orphan));
+  return next;
+}
 
 const NO_ORPHANS: Orphans = new Map();
 
@@ -733,6 +762,10 @@ export interface FieldChange<T> {
    * before the switch
    */
   switchedFrom?: SwitchedFrom;
+  /** For an option switch, the path of the field whose option it switched and the index of the option switched away
+   * from: what the switch leaves out of the field's data is set aside under that option, see `FormState.orphans`
+   */
+  switchAt?: { path: FieldPathList; from: number };
 }
 
 /** The keys a switch the form took put back, see `SwitchedOption`, at `path`, the switched field's, with the selections
@@ -1467,10 +1500,10 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     }
   }
   const { retrievedSchema } = tree.formData === formData ? tree : treeOf(formData);
-  // A value dropped at a path replaces one set aside there before: it is the one last entered for the field
-  const setAside = new Map(options.orphans);
-  dropped.forEach(({ path, value }) => setAside.set(fieldPathFromList(path), value));
-  const orphans: Orphans = setAside.size === 0 ? NO_ORPHANS : setAside;
+  const orphans = withOrphans(
+    options.orphans ?? NO_ORPHANS,
+    dropped.map(({ path, value }) => ({ fieldPath: fieldPathFromList(path), value })),
+  );
   const droppedNow = new Set(dropped.map(({ path }) => fieldPathFromList(path)));
   const returning =
     uiState && !options.keepsOrphans
@@ -1483,11 +1516,12 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   let restored: unknown = formData;
   const remaining = new Map(orphans);
   const entered: FieldPath[] = [];
-  for (const [fieldPath, value] of returning) {
+  for (const orphan of returning) {
+    const { fieldPath, value } = orphan;
     const path = fieldPathToList(fieldPath);
     restored = isObject(restored) ? copyAlongPath(restored, path) : {};
     setByPath(restored, path, value);
-    remaining.delete(fieldPath);
+    remaining.delete(orphanKey(orphan));
     entered.push(...leafPathsOf(value, fieldPath));
   }
   return settleFormData(
@@ -1508,7 +1542,8 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
 }
 
 /** The orphans that return to the data: each whose path shows a field again, of a type that takes the value, where
- * the data holds no value a person or a seed put there. One the pass itself dropped stays out
+ * the data holds no value a person or a seed put there, and, for one a switch left out, while the field shows the option
+ * it was entered under. One the pass itself dropped stays out
  *
  * @param orphans - The values set aside
  * @param droppedNow - The paths of the values this pass dropped
@@ -1517,7 +1552,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
  * @param retrievedSchema - The schema retrieved for `formData`
  * @param formData - The settled data
  * @param origins - Where the values of `formData` came from
- * @returns - The path and value of each orphan that returns, an outer path before one inside it
+ * @returns - Each orphan that returns, one at an outer path before one inside it
  */
 function returningOrphans<T, S extends StrictRJSFSchema, F extends FormContextType>(
   orphans: Orphans,
@@ -1527,20 +1562,23 @@ function returningOrphans<T, S extends StrictRJSFSchema, F extends FormContextTy
   retrievedSchema: S,
   formData: T | undefined,
   origins: DataOrigins,
-): [FieldPath, unknown][] {
+): Orphan[] {
   if (orphans.size === 0) {
     return [];
   }
   const schemaAt = renderedSchemas<T, S, F>(uiState, schemaUtils, retrievedSchema, formData);
-  return [...orphans]
-    .filter(([fieldPath, value]) => {
+  return [...orphans.values()]
+    .filter(({ fieldPath, value, under }) => {
+      if (under && uiState.selection(under.fieldPath, under.list)?.index !== under.index) {
+        return false;
+      }
       const path = fieldPathToList(fieldPath);
       const schema = droppedNow.has(fieldPath) ? undefined : schemaAt(path);
       const held = getAt<unknown>(formData, path);
       const isHeld = held !== undefined && (origins.entered.has(fieldPath) || origins.seeded.has(fieldPath));
       return schema !== undefined && !isHeld && takesTypeOf<S>(schema, value);
     })
-    .sort(([a], [b]) => a.length - b.length);
+    .sort((a, b) => a.fieldPath.length - b.fieldPath.length);
 }
 
 /** Whether a field of `schema` can hold a value of the JSON type `value` has, as a schema declaring no type can */
@@ -1923,6 +1961,47 @@ function collectEntered(
   }
 }
 
+/** `current`'s orphans with the values an option switch left out of the object at its field: each key the data held
+ * that `written` no longer does, or holds as another value, where a person entered or a seed held any of its value.
+ * Each is set aside under the option switched away from. A value in an array is not kept, as none the sanitize drops
+ * there is
+ *
+ * @param current - The state before the switch
+ * @param written - The data the switch wrote, before any defaults
+ * @param [switchAt] - The switched field and the option switched away from, for a change that is a switch
+ * @returns - The orphans, `current`'s own when the switch set nothing aside
+ */
+function withSwitchedAway<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  written: T | undefined,
+  switchAt: FieldChange<T>['switchAt'],
+): Orphans {
+  const before = switchAt && getAt<unknown>(current.formData, switchAt.path);
+  const switchedField = switchAt && fieldPathFromList(switchAt.path);
+  const list = switchedField === undefined ? undefined : current.uiState.lastPickedList(switchedField);
+  if (
+    !switchAt ||
+    switchedField === undefined ||
+    list === undefined ||
+    !isPlainObject(before) ||
+    switchAt.path.some((key) => typeof key === 'number')
+  ) {
+    return current.orphans;
+  }
+  const after = getAt<unknown>(written, switchAt.path);
+  const origins = [...current.enteredPaths, ...current.seededPaths].map(fieldPathToList);
+  const under = { fieldPath: switchedField, list, index: switchAt.from };
+  const setAside: Orphan[] = [];
+  for (const [key, value] of Object.entries(before)) {
+    const path = [...switchAt.path, key];
+    const isKept = isPlainObject(after) && Object.is(getByPath(after, key), value);
+    if (value !== undefined && !isKept && origins.some((origin) => isPathPrefix(path, origin))) {
+      setAside.push({ fieldPath: fieldPathFromList(path), value, under });
+    }
+  }
+  return withOrphans(current.orphans, setAside);
+}
+
 /** The entered and seeded paths `state` holds */
 function originsOf<T, S extends StrictRJSFSchema, F extends FormContextType>({
   enteredPaths,
@@ -2074,7 +2153,9 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
   }
   let clearedPaths = clearsAfterChange(current.clearedPaths, change, oldFormData, formData, path);
   let origins = originsAfterChange(originsOf(current), change, oldFormData, formData, path);
-  let { orphans } = current;
+  // What a switch leaves out of the field's data is set aside before the data is settled, so it can return with its
+  // option. The keys the switch put back for the sanitize to judge are set aside there if it drops them
+  let orphans = withSwitchedAway(current, formData, change.switchAt);
 
   if (isContainer) {
     // Only the data and its context are derived here; the errors are reconciled below. A root write is sanitized only
@@ -2091,7 +2172,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
         // The sanitize diffs against the data before the change, whose entered paths are the committed ones
         origins: originsOf(current),
         originsAfterEdit: origins,
-        orphans: current.orphans,
+        orphans,
         judgesOnlyClears: disabled || readonly,
         // A switch a parent field sent at its own path is still an edit at the switched field, which holds the user's
         // value and the selections at and above it; the parent's write moves no key

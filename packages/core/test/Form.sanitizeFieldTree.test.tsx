@@ -721,6 +721,54 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(form.data()).toEqual({ kind: 's', a: 'x' });
     });
 
+    describe('by a switch of option', () => {
+      const options: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { title: 'A', properties: { kind: { const: 'a' }, name: { type: 'string' } }, required: ['kind'] },
+          { title: 'B', properties: { kind: { const: 'b' }, name: { type: 'number' }, b: { type: 'string' } } },
+        ],
+      };
+      async function switching(initialFormData: object) {
+        const ref = createRef<FormRef>();
+        const { container } = render(
+          <Form schema={options} validator={validator} initialFormData={initialFormData} ref={ref} />,
+        );
+        return {
+          pick: (title: string) => user.selectOptions(elementOf(container, '#root__oneof_select'), title),
+          set: (key: string, value: unknown) => act(() => ref.current?.setFieldValue([key], value)),
+          data: () => ref.current?.getFormData(),
+        };
+      }
+
+      it('returns when the user switches back to the option it was entered under', async () => {
+        const form = await switching({ kind: 'a' });
+        form.set('name', 'x');
+        await form.pick('B');
+        expect(form.data()).toEqual({ kind: 'b' });
+        await form.pick('A');
+        expect(form.data()).toEqual({ kind: 'a', name: 'x' });
+      });
+
+      it("keeps each option's own value for a key both declare", async () => {
+        const form = await switching({ kind: 'a' });
+        form.set('name', 'x');
+        await form.pick('B');
+        form.set('name', 7);
+        await form.pick('A');
+        expect(form.data()).toEqual({ kind: 'a', name: 'x' });
+        await form.pick('B');
+        expect(form.data()).toEqual({ kind: 'b', name: 7 });
+      });
+
+      it("does not bring the old option's discriminator back into the new option", async () => {
+        const form = await switching({ kind: 'a', name: 'x' });
+        await form.pick('B');
+        form.set('b', 'y');
+        expect(form.data()).toEqual({ kind: 'b', b: 'y' });
+      });
+    });
+
     it('is forgotten by a reset', () => {
       const form = mounted({ kind: 's' });
       form.set('a', 'x');
