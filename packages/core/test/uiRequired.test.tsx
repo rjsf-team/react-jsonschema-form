@@ -3,6 +3,7 @@ import { noop, toPath } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
+import ArrayField from '../src/components/fields/ArrayField.tsx';
 import { useOptionSelection } from '../src/index.ts';
 import { createFormComponent, elementOf, errorListMessages, submitForm } from './testUtils.tsx';
 
@@ -268,6 +269,16 @@ describe('ui:required enforcement', () => {
       await expectSubmitBlocked(colors({}, ['c']), { c: { 'ui:widget': 'CheckboxesWidget', 'ui:required': true } });
     });
 
+    it('blocks a submit with no box checked, under a `ui:field` naming `ArrayField`', async () => {
+      await expectSubmitBlocked(colors({}, ['c']), {
+        c: { 'ui:field': 'ArrayField', 'ui:widget': 'checkboxes', 'ui:required': true },
+      });
+    });
+
+    it('blocks a submit with nothing chosen in a multiple select (#5744)', async () => {
+      await expectSubmitBlocked(colors({}, ['c']), { c: { 'ui:required': true } });
+    });
+
     it('blocks a submit with no box checked, on a group an option renders', async () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -399,6 +410,67 @@ describe('ui:required enforcement', () => {
       const { node, onSubmit } = createFormComponent({ schema: colors({}, ['c']), uiSchema });
       await user.click(elementOf(node, 'input[type=checkbox]'));
       await submitForm(node, user);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+  });
+
+  // The walk asks the form which field renders the array, as `SchemaField` plans it, rather than guessing from the
+  // uiSchema's names (#5744)
+  describe('an empty array, by the field the form renders it with', () => {
+    const colors: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true };
+    const withC = (c: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { c } });
+
+    it.each<[string, UiSchema]>([
+      ['a `ui:field` given as the `ArrayField` component', { 'ui:field': ArrayField, 'ui:required': true }],
+      ['a `ui:field` naming no registered field, which renders by type', { 'ui:field': 'Nope', 'ui:required': true }],
+    ])('blocks a submit with nothing chosen under %s', async (_, uiSchema) => {
+      await expectSubmitBlocked(withC(colors), { c: uiSchema }, { c: [] });
+    });
+
+    it('blocks a submit with nothing chosen in a custom widget on an array with no `items` under the fallback UI', async () => {
+      const { node, onSubmit, onError } = createFormComponent({
+        schema: withC({ type: 'array' }),
+        uiSchema: { c: { 'ui:widget': 'TagsWidget', 'ui:required': true } },
+        widgets: { TagsWidget: () => null },
+        initialFormData: { c: [] },
+        useFallbackUiForUnsupportedType: true,
+      });
+      await submitForm(node, user, true);
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalled();
+    });
+
+    it('blocks a submit with nothing chosen in the multiple select the fallback UI renders for a type list', async () => {
+      const { node, onSubmit, onError } = createFormComponent({
+        schema: withC({ ...colors, type: ['string', 'array'] }),
+        uiSchema: { c: { 'ui:required': true } },
+        initialFormData: { c: [] },
+        useFallbackUiForUnsupportedType: true,
+      });
+      await submitForm(node, user, true);
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalled();
+    });
+
+    it('submits `[]` from a multiple select its `deprecatedHandling` hides', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: withC({ ...colors, deprecated: true }),
+        uiSchema: { c: { 'ui:required': true, 'ui:options': { deprecatedHandling: 'hide' } } },
+        initialFormData: { c: [] },
+      });
+      await submitForm(node, user, true);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+
+    it("submits `[]` to a field of your own the schema's `$id` names, as it does to one a `ui:field` names", async () => {
+      const Tags = (_: FieldProps) => null;
+      const { node, onSubmit } = createFormComponent({
+        schema: withC({ ...colors, $id: 'Tags' }),
+        uiSchema: { c: { 'ui:required': true } },
+        fields: { Tags },
+        initialFormData: { c: [] },
+      });
+      await submitForm(node, user, true);
       expect(onSubmit).toHaveBeenCalled();
     });
   });

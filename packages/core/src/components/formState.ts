@@ -46,7 +46,11 @@ import isDevelopment from '../isDevelopment.ts';
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import { copyAlongPath, getAt, isPathPrefix, replaceErrorSchemaNode } from './dataPaths.ts';
-import { schemaFieldDrawsControlsBesideOptions, schemaFieldFallbackType } from './fields/SchemaField.tsx';
+import {
+  schemaFieldDrawsControlsBesideOptions,
+  schemaFieldFallbackType,
+  schemaFieldRendersArrayWidget,
+} from './fields/SchemaField.tsx';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
 import { clearsWrittenOver, holdsClearAt, keepRecordedClears } from './keepClears.ts';
@@ -909,6 +913,14 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
         fieldUiSchema as UiSchema<T, S, F>,
         asFieldValue<T>(data),
         depth,
+      ),
+    (_fieldPath, fieldSchema, fieldUiSchema, data) =>
+      schemaFieldRendersArrayWidget<T, S, F>(
+        context.registry,
+        fieldSchema,
+        // As above
+        fieldUiSchema as UiSchema<T, S, F>,
+        asFieldValue<T>(data),
       ),
   );
 

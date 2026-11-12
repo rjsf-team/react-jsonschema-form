@@ -1102,6 +1102,33 @@ export function schemaFieldFallbackType<T, S extends StrictRJSFSchema, F extends
     : undefined;
 }
 
+/** Whether `ArrayField` renders the field for `schema` as one widget, for the `ui:required` walk, which turns down the
+ * `[]` such a widget holds with nothing chosen. The field is planned as `useSchemaFieldPlan()` plans it, so a `ui:field`
+ * naming `ArrayField` by key or component, or a `$id` naming a field, is read as the form renders it
+ *
+ * @param registry - The registry the form renders with
+ * @param schema - The field's schema
+ * @param uiSchema - The field's uiSchema
+ * @param formData - The field's form data
+ * @returns - True where `ArrayField` renders the field with a widget it shows
+ */
+export function schemaFieldRendersArrayWidget<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  registry: Registry<T, S, F>,
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  formData: T | undefined,
+): boolean {
+  const resolved = createFieldWidgetResolver<T, S, F>().resolve(schema, uiSchema, formData, registry, false, false);
+  const plan = planFieldComponent<T, S, F>(resolved, registry);
+  // A hidden field, by its widget or its `deprecatedHandling`, leaves the user nothing to choose with
+  return (
+    !resolved.hidden &&
+    plan?.FieldComponent === registry.fields.ArrayField &&
+    getFieldWidget<T, S, F>(plan.FieldComponent, resolved.selectSchemaInfo.schema, resolved.uiSchema, registry) !==
+      undefined
+  );
+}
+
 /** Gets a part of a field's plan with the field's own drawing of it taken away, so nothing draws a part the field was
  * planned to draw itself
  *

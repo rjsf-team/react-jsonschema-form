@@ -24,6 +24,14 @@ const requiredIds = (container: HTMLElement) =>
 
 const OTHER_OPTION: RJSFSchema = { title: 'B', type: 'number' };
 
+const colors = (extra: RJSFSchema = {}, required = ['c']): RJSFSchema => ({
+  type: 'object',
+  required,
+  properties: {
+    c: { type: 'array', title: 'Colors', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true, ...extra },
+  },
+});
+
 const withOption = (option: RJSFSchema, required = ['pet']): RJSFSchema => ({
   type: 'object',
   required,
@@ -182,15 +190,25 @@ export function requiredCueTests(
       expect(requiredIds(container)).toEqual(['root_pet']);
     });
   });
-  describe('the required cue of a group of checkboxes (#5573)', () => {
-    const colors = (extra: RJSFSchema = {}, required = ['c']): RJSFSchema => ({
-      type: 'object',
-      required,
-      properties: {
-        c: { type: 'array', title: 'Colors', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true, ...extra },
-      },
+  // A required array left alone holds `[]`, so only `minItems` or `ui:required` demands a choice (#5744)
+  describe('the required cue of a multiple select (#5744)', () => {
+    it('says nothing where `required` alone leaves an empty array valid', () => {
+      const { container } = render(<Form schema={colors()} validator={validator} />);
+      expect(countMarkers(container)).toBe(0);
+      expect(requiredIds(container)).toEqual([]);
     });
 
+    it.each<[string, RJSFSchema, UiSchema]>([
+      ['a `minItems`', colors({ minItems: 1 }), {}],
+      ['`ui:required`', colors(), { c: { 'ui:required': true } }],
+    ])('marks its label once and requires it with %s', (_, schema, uiSchema) => {
+      const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(countMarkers(container)).toBe(1);
+      expect(requiredIds(container)).not.toEqual([]);
+    });
+  });
+
+  describe('the required cue of a group of checkboxes (#5573)', () => {
     function renderColors(schema: RJSFSchema, uiOptions: UiSchema = {}) {
       return render(
         <Form schema={schema} uiSchema={{ c: { 'ui:widget': 'checkboxes', ...uiOptions } }} validator={validator} />,

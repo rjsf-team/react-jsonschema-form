@@ -1824,6 +1824,68 @@ describe('ArrayField', () => {
         expect(node.querySelectorAll('.rjsf-checkbox-inline')).toHaveLength(3);
       });
     });
+
+    // A required array left alone holds the `[]` `getDefaultFormState()` seeds it with, which the schema accepts unless
+    // `minItems` turns it down, so a widget rendering the whole array is required only then (#5744)
+    describe('a required array rendered as one widget', () => {
+      const requiredArray = (items: RJSFSchema, minItems?: number): RJSFSchema => ({
+        type: 'object',
+        required: ['c'],
+        properties: {
+          c: {
+            type: 'array',
+            title: 'Colors',
+            items,
+            uniqueItems: true,
+            ...(minItems !== undefined && { minItems }),
+          },
+        },
+      });
+      const enumItems: RJSFSchema = { type: 'string', enum: ['a', 'b'] };
+
+      it.each([
+        [undefined, false],
+        [1, true],
+      ] as const)('given minItems %s, makes a multiple select required %s', async (minItems, required) => {
+        const { node, onSubmit } = createFormComponent({ schema: requiredArray(enumItems, minItems) });
+
+        expect(screen.getByRole('listbox').hasAttribute('required')).toBe(required);
+        expect(node.querySelector('label .rjsf-required') !== null).toBe(required);
+        await submitForm(node, user);
+        if (required) {
+          expect(onSubmit).not.toHaveBeenCalled();
+        } else {
+          expectToHaveBeenCalledWithFormData(onSubmit, { c: [] }, true);
+        }
+      });
+
+      it.each([
+        ['a multiple select', undefined, false, enumItems, {}, 'SelectWidget'],
+        ['a multiple select', 1, true, enumItems, {}, 'SelectWidget'],
+        ['a custom widget', undefined, false, { type: 'string' }, { 'ui:widget': 'TagsWidget' }, 'TagsWidget'],
+        ['a custom widget', 1, true, { type: 'string' }, { 'ui:widget': 'TagsWidget' }, 'TagsWidget'],
+        ['a file input', undefined, false, { type: 'string', format: 'data-url' }, {}, 'FileWidget'],
+        ['a file input', 1, true, { type: 'string', format: 'data-url' }, {}, 'FileWidget'],
+      ] as const)(
+        'hands %s of its own, given minItems %s, required %s',
+        (_, minItems, required, items, uiSchema, key) => {
+          const Widget = vi.fn<(props: WidgetProps) => null>(() => null);
+          createFormComponent({
+            schema: requiredArray(items, minItems),
+            uiSchema: { c: uiSchema },
+            widgets: { [key]: Widget },
+          });
+
+          expect(Widget.mock.lastCall?.[0].required).toBe(required);
+        },
+      );
+
+      it('leaves a required list of items marked, since it renders no widget', () => {
+        const { node } = createFormComponent({ schema: requiredArray({ type: 'string' }) });
+
+        expect(node.querySelector('.rjsf-required')).toBeInTheDocument();
+      });
+    });
   });
 
   describe('Multiple files field', () => {

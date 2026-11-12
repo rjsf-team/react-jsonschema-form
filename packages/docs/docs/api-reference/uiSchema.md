@@ -988,7 +988,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-On a group of checkboxes (`ui:widget: 'checkboxes'` or `'CheckboxesWidget'`), `ui:required: true` also rejects an empty array, so one box has to be checked. On any other field, only a missing value is rejected, and an empty array counts as a value. That includes a group widget of your own, given as a component or registered under another key: give it `minItems: 1` to have the form demand a box.
+On an array rendered as one widget, such as a group of checkboxes, a multiple select, a file input or a custom widget named by `ui:widget`, `ui:required: true` also rejects an empty array, so something has to be chosen. On an array rendered as a list of items, through a `ui:field` of your own, or by the `hidden` widget, only a missing value is rejected, and an empty array counts as a value: give it `minItems: 1` to have the form demand an item.
 
 On a checkbox, `ui:required: true` shows the indicator while the box holds no value yet, since nothing seeds the `false` a schema-required `boolean` gets and the form blocks that submit; once it holds `false`, that counts as an answer. A `CheckboxWidget` of your own marks its label where both the `required` it is handed and [`templateMarksRequired()`](./utility-functions.md#templatemarksrequired) hold (see [Custom Widgets](../advanced-customization/custom-widgets-fields.md)).
 

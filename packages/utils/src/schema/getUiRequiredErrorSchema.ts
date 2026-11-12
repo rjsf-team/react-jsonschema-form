@@ -3,6 +3,7 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
+  ITEMS_KEY,
   ONE_OF_KEY,
   RJSF_REF_CYCLE_KEY,
   UI_DEFINITIONS_KEY,
@@ -20,6 +21,7 @@ import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
+import isCustomWidget from '../isCustomWidget.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject from '../isObject.ts';
@@ -46,6 +48,8 @@ import uiBooleanOption from '../uiBooleanOption.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
 import { emptySchema } from './graph/mergePlan.ts';
+import isFilesArray from './isFilesArray.ts';
+import isMultiSelect from './isMultiSelect.ts';
 import retrieveSchema, { expandRefCycle, withOptionExtraKeys } from './retrieveSchema.ts';
 
 /** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node, and, for an object node, the option
@@ -203,6 +207,40 @@ function rendersAnswer<T, S extends StrictRJSFSchema, F extends FormContextType>
   );
 }
 
+/** Whether `ArrayField` renders the array at `path` as one widget, as the form's `fieldState` says, asked on the type
+ * the fallback UI's selector is on where the fallback UI renders the field. Without one, it does as `ArrayField` picks
+ * its mode, and naming `ArrayField`, or `SchemaField`, which renders the data by its type, still has `ArrayField`
+ * render it.
+ * shortcut: without the registry, a field named as a component or by `$id`, an unregistered name, and an array with
+ * no `items` under `useFallbackUiForUnsupportedType` are guessed wrong; pass `fieldState.rendersArrayWidget` for those
+ */
+function rendersArrayWidget<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: WalkContext<T, S, F>,
+  path: (string | number)[],
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  formData: unknown,
+): boolean {
+  const { schemaContext, rootSchema, fieldState } = ctx;
+  if (fieldState?.rendersArrayWidget) {
+    const shownType = fallbackTypeAt<T, S, F>(ctx, path, schema, uiSchema, formData);
+    return fieldState.rendersArrayWidget(
+      fieldPathFromList(path),
+      shownType === undefined ? schema : { ...schema, type: shownType },
+      uiSchema,
+      formData,
+    );
+  }
+  const { field } = getUiOptions<T, S, F>(uiSchema);
+  return (
+    (field === undefined || field === 'ArrayField' || field === 'SchemaField') &&
+    ITEMS_KEY in schema &&
+    (isMultiSelect<T, S, F>(schemaContext, schema, rootSchema) ||
+      isCustomWidget<T, S, F>(uiSchema) ||
+      isFilesArray<T, S, F>(schemaContext, schema, uiSchema, rootSchema))
+  );
+}
+
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: WalkContext<T, S, F>,
   schema: S,
@@ -293,11 +331,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // The option's `ui:required` is read here and not above, which reads the field's, since an option is never walked as a
   // node of its own; an option leaving it unset takes the field's, unless it renders options of its own, which
-  // `@rjsf/core` hands nothing on to. A group of checkboxes holds `[]` with no box checked,
-  // whether seeded or left by unchecking the last box, which the validator accepts unless a `minItems` has it report
-  // this itself. The group says it is required, so `[]` can't pass
-  // shortcut: a theme's declarations don't reach this walk, so only the built-in's names count, not a widget of your own
-  // declared `uncheckedIsEmpty` or given as a component; hand the walk the form's presentation if one is reported
+  // `@rjsf/core` hands nothing on to. An array `ArrayField` renders as one widget, as it picks its mode, holds `[]` with
+  // nothing chosen, whether seeded or left by clearing the last choice, which the validator accepts unless a `minItems`
+  // has it report this itself. The field says it is required, so `[]` can't pass
   const optionUiRequired =
     uiBooleanOption(branchUiRequired) ?? (getXxxOfOptions<S>(retrieved) ? undefined : fieldUiRequired);
   if (path.length > 0 && optionUiRequired === true) {
@@ -309,7 +345,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         : Array.isArray(formData) &&
           formData.length === 0 &&
           (retrieved.minItems ?? 0) < 1 &&
-          (branchWidget === 'checkboxes' || branchWidget === 'CheckboxesWidget');
+          // A hidden widget leaves the user nothing to choose with
+          branchWidget !== 'hidden' &&
+          rendersArrayWidget<T, S, F>(ctx, path, retrieved, branchUiSchema, formData);
     if (isUnanswered) {
       builder.addErrors(`must have required property '${path[path.length - 1]}'`, path);
     }
@@ -458,9 +496,9 @@ function computeMightHaveUiRequired<T, S extends StrictRJSFSchema, F extends For
 
 /** Walks the `schema` (resolved node by node against `formData`, exactly as `SchemaField` does while rendering) and
  * the `uiSchema` (resolved through `ui:definitions` the same way), returning an `ErrorSchema` holding a required
- * error for every field marked `ui:required: true` whose value is missing, which for a group of checkboxes includes
- * `[]`. The schema handed to the validator is left untouched, so this works identically on the submit and
- * live-validation paths and with precompiled validators.
+ * error for every field marked `ui:required: true` whose value is missing, which for an array rendered as one widget,
+ * such as a group of checkboxes or a multiple select, includes `[]`. The schema handed to the validator is left
+ * untouched, so this works identically on the submit and live-validation paths and with precompiled validators.
  * Given the form's `fieldState`, the walk follows the option each field shows and descends into the `$ref` cycles
  * the user expanded, so the fields it walks are the ones on screen.
  */

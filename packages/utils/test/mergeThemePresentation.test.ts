@@ -33,8 +33,8 @@ describe('mergeThemePresentation()', () => {
     });
   });
 
-  it('takes no uncheckedIsFalse or uncheckedIsEmpty from a default or a fieldDefault', () => {
-    const blanket: WidgetPresentationDeclaration = { label: 'self', uncheckedIsFalse: true, uncheckedIsEmpty: true };
+  it('takes no uncheckedIsFalse from a default or a fieldDefault', () => {
+    const blanket: WidgetPresentationDeclaration = { label: 'self', uncheckedIsFalse: true };
     expect(
       mergeThemePresentation({ default: blanket, widgets: { SelectWidget: {} }, fieldDefault: blanket }),
     ).toStrictEqual({

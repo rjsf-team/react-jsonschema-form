@@ -216,10 +216,13 @@ function rendersControl<
  * as an unchecked checkbox does, would fail the browser's own check of a native `required` for a value the schema
  * accepts, so it is required, by its attribute and its marker alike, only where the schema demands `true` (#5388). It
  * holds that `false` only where `getDefaultFormState()` seeds it, which it does by the type the field renders: rendered as
- * another type, as a `type` list's string field renders one, an unchecked box answers nothing. A group of checkboxes left
- * alone holds an empty array likewise, which only `minItems` or `ui:required` turns down (#5573)
+ * another type, as a `type` list's string field renders one, an unchecked box answers nothing. An array rendered as one
+ * widget, a group of checkboxes, a multiple select, a file input or a custom widget, holds the empty array
+ * `getDefaultFormState()` seeds a required one with likewise, which only `minItems` or `ui:required` turns down (#5573,
+ * #5744)
  *
  * @param declaration - The declaration of the control
+ * @param rendersArrayWidget - Whether `ArrayField` renders the field as one widget
  * @param schema - The schema it renders
  * @param uiSchema - The uiSchema it renders
  * @param registry - The registry, whose `widgets` are read
@@ -231,6 +234,7 @@ function demandsAnswer<
   F extends FormContextType = FormContextType,
 >(
   declaration: ResolvedPresentationDeclaration | undefined,
+  rendersArrayWidget: boolean,
   schema: S,
   uiSchema: UiSchema<T, S, F>,
   registry: Registry<T, S, F>,
@@ -239,7 +243,7 @@ function demandsAnswer<
     (!declaration?.uncheckedIsFalse ||
       getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, registry.widgets) !== 'boolean' ||
       schemaRequiresTrueValue<S>(schema)) &&
-    (!declaration?.uncheckedIsEmpty ||
+    (!rendersArrayWidget ||
       (schema.minItems ?? 0) >= 1 ||
       uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) === true)
   );
@@ -371,7 +375,13 @@ export default function useSchemaFieldPresentation<
         required &&
         !(rendersUnsupportedTemplate && inherited !== undefined) &&
         ((holdsNoValue && uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) === true) ||
-          demandsAnswer<T, S, F>(declaration, schema, uiSchema, registry))
+          demandsAnswer<T, S, F>(
+            declaration,
+            field === fields.ArrayField && widget !== undefined,
+            schema,
+            uiSchema,
+            registry,
+          ))
       );
     }
     const { field: optionField, schema: optionSchema, uiSchema: optionUiSchema } = shownOptionField;
@@ -387,6 +397,7 @@ export default function useSchemaFieldPresentation<
       (holdsNoValue ||
         demandsAnswer<T, S, F>(
           getPresentationDeclaration<T, S, F>(registry, shownOptionField),
+          shownOptionField.field === fields.ArrayField && shownOptionField.widget !== undefined,
           optionSchema,
           optionUiSchema,
           registry,
@@ -397,6 +408,9 @@ export default function useSchemaFieldPresentation<
     rendersUnsupportedTemplate,
     inherited,
     declaration,
+    field,
+    fields,
+    widget,
     schema,
     uiSchema,
     registry,
