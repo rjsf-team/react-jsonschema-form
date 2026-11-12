@@ -45,17 +45,17 @@ import {
   ITEMS_KEY,
 } from '@rjsf/utils';
 
-import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import type { UiState, UiStateReader } from '../uiState.ts';
 import { optionListKey, optionsMayDisagreeAbout, retrievedOptionsOf, shownOption } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
-import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import { declaresProperty, storedValue, withoutAdditionalFlag, withoutOptionalControls } from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';
 import type { ShownOption } from './ShownOptionContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
+import TemplateWarnEntryContext, { templateWarnEntry } from './TemplateWarnEntryContext.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
  */
@@ -860,10 +860,11 @@ function LayoutGridRow<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const { span, ...rowGridProps } = gridProps;
-  const additionalDepths = use(AdditionalPropertyDepthsContext);
+  const entryAbove = use(TemplateWarnEntryContext);
   if (span !== undefined) {
+    const entry = templateWarnEntry(entryAbove, false, fieldPath, registry.globalFormOptions);
     logOnce(
-      `span on a ui:row in ${entryLabelForLog(fieldPath, registry.globalFormOptions, additionalDepths)} is ignored, ` +
+      `span on a ui:row in ${entry.label()} is ignored, ` +
         'since span sizes a ui:col or ui:columns rather than a row.',
     );
   }

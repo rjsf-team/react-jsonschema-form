@@ -17,7 +17,8 @@ import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJS
  * @param [uiOptions={}] - The `UIOptionsType` from which to read an alternate template
  * @param [entryLabel] - Builds the label of the uiSchema entry the field is rendered from, such as
  * `"root_tasks_[]_title" (tasks[].title)`, so one entry warns once however many rows render it; read only when an
- * override is actually invalid, and omitted by callers that only resolve, which stay silent
+ * override is actually invalid, and omitted by callers that only resolve, which stay silent. Read once per function
+ * while the override stays the same, so pass a new function when the label changes
  * @returns - The template from either the `uiSchema` or `registry` for the `name`
  */
 export default function getTemplate<

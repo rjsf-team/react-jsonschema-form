@@ -18,4 +18,34 @@ describe('entryLabelForLog', () => {
 
     expect(entryLabelForLog(fieldPath, globalFormOptions)).toBe('"root_people_[]_first-_20name" (people[].first name)');
   });
+
+  it('writes the path below an option entry after that entry, collapsing indexes and extra keys past the option', () => {
+    const fieldPath = toFieldPath(
+      'title',
+      toFieldPath(0, toFieldPath('tasks', toFieldPath('key', toFieldPath('map')))),
+    );
+    const anchor = { depth: 2, prefix: 'uiSchema.anyOf[1]', owner: () => '"root_map_{}" (map{})' };
+
+    expect(entryLabelForLog(fieldPath, globalFormOptions, [1], anchor)).toBe(
+      'the uiSchema.anyOf[1].tasks[].title entry of "root_map_{}" (map{})',
+    );
+  });
+
+  it("names the option's ui:definitions entry beside its own, with the same path below each", () => {
+    const fieldPath = toFieldPath('title', toFieldPath(0, toFieldPath('tasks')));
+    const anchor = { depth: 0, prefix: 'uiSchema.anyOf[0]', owner: () => '"root"', definition: '#/$defs/Foo' };
+
+    expect(entryLabelForLog(fieldPath, globalFormOptions, undefined, anchor)).toBe(
+      'the uiSchema.anyOf[0].tasks[].title entry of "root" (or ui:definitions[\'#/$defs/Foo\'].tasks[].title)',
+    );
+  });
+
+  it('names a schema below an option schema with the noun its anchor gives', () => {
+    const fieldPath = toFieldPath('b', toFieldPath('x'));
+    const anchor = { depth: 1, prefix: 'anyOf[1]', owner: () => '"root_x" (x)', noun: 'schema' };
+
+    expect(entryLabelForLog(fieldPath, globalFormOptions, undefined, anchor)).toBe(
+      'the anyOf[1].b schema of "root_x" (x)',
+    );
+  });
 });

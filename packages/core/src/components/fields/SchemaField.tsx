@@ -9,7 +9,6 @@ import type {
   FieldProps,
   FieldTemplateProps,
   FormContextType,
-  GlobalFormOptions,
   GlobalUISchemaOptions,
   ObjectFieldPropertyRendering,
   Registry,
@@ -68,7 +67,7 @@ import {
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
-import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
@@ -76,7 +75,6 @@ import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf, shownOption as pickShownOption } from '../uiState.ts';
 import type { UiState } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
-import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import { fallbackUiType } from './FallbackField.tsx';
 import type { SelectSchemaInfo } from './fieldWidgetUtils.ts';
 import getFieldWidget, {
@@ -98,9 +96,8 @@ import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
-import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
+import TemplateWarnEntryContext, { useTemplateWarnEntry } from './TemplateWarnEntryContext.ts';
 import type { TemplateWarnEntry } from './TemplateWarnEntryContext.ts';
-import useAdditionalDepths from './useAdditionalDepths.ts';
 import type { ShownOptionField } from './useSchemaFieldPresentation.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
@@ -407,15 +404,13 @@ function createFieldWidgetResolver<
       ownUiSchema: UiSchema<T, S, F>,
       schemaId: string | undefined,
       fields: Registry<T, S, F>['fields'],
-      fieldPath: FieldPath,
-      globalFormOptions: GlobalFormOptions,
     ): NamedFieldResolution<T, S, F> | undefined => {
       if (isRefCycle) {
         return undefined;
       }
       return namedAbove
         ? { ignored: [], uiSchema: withoutNamedField<T, S, F>(ownUiSchema) }
-        : resolveNamedField<T, S, F>(ownUiSchema, schemaId, fields, fieldPath, globalFormOptions);
+        : resolveNamedField<T, S, F>(ownUiSchema, schemaId, fields);
     },
   );
   const inferWidget = memoizeLast(inferSelectWidget<T, S, F>);
@@ -437,23 +432,14 @@ function createFieldWidgetResolver<
     schema: S,
     rawUiSchema: UiSchema<T, S, F> | undefined,
     formData: T | undefined,
-    fieldPath: FieldPath,
     registry: Registry<T, S, F>,
     isRefCycle: boolean,
     namedAbove: boolean,
   ): FieldWidgetPlan<T, S, F> => {
-    const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
+    const { schemaUtils, globalUiOptions, fields } = registry;
     const ownUiSchema = resolveOwnUiSchema(schema, rawUiSchema, registry);
     const selectSchemaInfo = selectSchemaInfoOf(retrieveSchema(isRefCycle, schema, formData, schemaUtils));
-    const uiField = resolveUiField(
-      isRefCycle,
-      namedAbove,
-      ownUiSchema,
-      selectSchemaInfo.schema.$id,
-      fields,
-      fieldPath,
-      globalFormOptions,
-    );
+    const uiField = resolveUiField(isRefCycle, namedAbove, ownUiSchema, selectSchemaInfo.schema.$id, fields);
     const resolvedUiSchema = uiField?.uiSchema ?? ownUiSchema;
     const widgetUiSchema = writeBackWidget(resolvedUiSchema, inferWidget(selectSchemaInfo, resolvedUiSchema), fields);
     // The value is a container kept in its own field, for which another type's widget means nothing, and `ArrayField`
@@ -509,7 +495,7 @@ export function createIsSchemaFieldHidden<
    * @param schema - The field's schema, as handed to its `SchemaField`
    * @param uiSchema - The field's uiSchema, as handed to its `SchemaField`
    * @param formData - The field's data
-   * @param fieldPath - The field's path
+   * @param _fieldPath - The field's path, which whether it renders hidden doesn't depend on
    * @param registry - The registry
    * @returns - True when the field renders hidden
    */
@@ -517,7 +503,7 @@ export function createIsSchemaFieldHidden<
     schema: S,
     uiSchema: UiSchema<T, S, F> | undefined,
     formData: T | undefined,
-    fieldPath: FieldPath,
+    _fieldPath: FieldPath,
     registry: Registry<T, S, F>,
   ): boolean => {
     const isRefCycle = hasSchemaMarker(schema, RJSF_REF_CYCLE_KEY);
@@ -529,7 +515,7 @@ export function createIsSchemaFieldHidden<
     }
     const fieldSchema = isRefCycle ? expandCycle(schema, registry.schemaUtils.getRootSchema()) : schema;
     // An expansion carries no cycle flag, and nothing above the field names one for it
-    return resolveFieldWidget(fieldSchema, uiSchema, formData, fieldPath, registry, false, false).hidden;
+    return resolveFieldWidget(fieldSchema, uiSchema, formData, registry, false, false).hidden;
   };
 }
 
@@ -585,7 +571,7 @@ export function createSchemaFieldRenderedAs<
    * @param schema - The field's schema, as handed to its `SchemaField`
    * @param uiSchema - The field's uiSchema, as handed to its `SchemaField`
    * @param formData - The field's data
-   * @param fieldPath - The field's path
+   * @param _fieldPath - The field's path, which what it renders as doesn't depend on
    * @param registry - The registry
    * @returns - The field named for it, the widget it renders and the type of the field rendered
    */
@@ -593,14 +579,14 @@ export function createSchemaFieldRenderedAs<
     schema: S,
     uiSchema: UiSchema<T, S, F> | undefined,
     formData: T | undefined,
-    fieldPath: FieldPath,
+    _fieldPath: FieldPath,
     registry: Registry<T, S, F>,
   ): ObjectFieldPropertyRendering => {
     const fieldSchema = hasSchemaMarker(schema, RJSF_REF_CYCLE_KEY)
       ? expandCycle(schema, registry.schemaUtils.getRootSchema())
       : schema;
     // An expansion carries no cycle flag, and nothing above the field names one for it
-    const resolved = resolve(fieldSchema, uiSchema, formData, fieldPath, registry, false, false);
+    const resolved = resolve(fieldSchema, uiSchema, formData, registry, false, false);
     const { selectSchemaInfo } = resolved;
     const { rendering, rendersOption } = renderedAs(
       selectSchemaInfo,
@@ -633,7 +619,6 @@ export function createSchemaFieldRenderedAs<
       options[index],
       index,
       formData,
-      fieldPath,
       registry,
       false,
     );
@@ -995,7 +980,6 @@ function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormC
     option: S | undefined,
     index: number,
     formData: T | undefined,
-    fieldPath: FieldPath,
     registry: Registry<T, S, F>,
     namedAbove: boolean,
   ): ShownOptionField<T, S, F> | null | undefined => {
@@ -1004,7 +988,7 @@ function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormC
     }
     const input = optionInput(schema, uiSchema, xxxOfKey, option, index, registry);
     const isRefCycle = hasSchemaMarker(input.schema, RJSF_REF_CYCLE_KEY);
-    const resolved = resolve(input.schema, input.uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove);
+    const resolved = resolve(input.schema, input.uiSchema, formData, registry, isRefCycle, namedAbove);
     const { selectSchemaInfo, uiField, uiSchema: optionUiSchema, ownUiOptions, hidden } = resolved;
     // `AnyOfField` renders no `null` option, whatever field it names, and `SchemaField` nothing for an empty schema
     if (input.schema.type === 'null' || Object.keys(selectSchemaInfo.schema).length === 0) {
@@ -1039,7 +1023,7 @@ function drawsControlsBesideOwnOptions<T, S extends StrictRJSFSchema, F extends 
   );
 }
 
-/** Whether the object field at `fieldPath` draws its Optional Data Controls beside its `anyOf`/`oneOf` options, for the
+/** Whether an object field draws its Optional Data Controls beside its `anyOf`/`oneOf` options, for the
  * `ui:required` walk, which has to leave out the selected option they keep off screen. The field is planned as
  * `useSchemaFieldPlan()` plans it, through the same resolver, for a field nothing above it names. Where it doesn't render
  * the options itself, the field below it at the same path does, planned with no field named: the fallback UI's value
@@ -1047,7 +1031,6 @@ function drawsControlsBesideOwnOptions<T, S extends StrictRJSFSchema, F extends 
  * `ui:fieldReplacesAnyOrOneOf`. It models core's `SchemaField`, not a replacement registered in `registry.fields`
  *
  * @param registry - The registry the form renders with
- * @param fieldPath - The field's path
  * @param schema - The object's schema, with the extra-key keywords of the option shown joined in
  * @param uiSchema - The object's uiSchema
  * @param formData - The object's form data
@@ -1056,7 +1039,6 @@ function drawsControlsBesideOwnOptions<T, S extends StrictRJSFSchema, F extends 
  */
 export function schemaFieldDrawsControlsBesideOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
   registry: Registry<T, S, F>,
-  fieldPath: FieldPath,
   schema: S,
   uiSchema: UiSchema<T, S, F>,
   formData: T | undefined,
@@ -1066,7 +1048,6 @@ export function schemaFieldDrawsControlsBesideOptions<T, S extends StrictRJSFSch
     schema,
     uiSchema,
     formData,
-    fieldPath,
     registry,
     false,
     isFieldBelow,
@@ -1080,7 +1061,6 @@ export function schemaFieldDrawsControlsBesideOptions<T, S extends StrictRJSFSch
       !isFieldBelow &&
       schemaFieldDrawsControlsBesideOptions<T, S, F>(
         registry,
-        fieldPath,
         plan.rendersOptionsItself ? { ...schema, type: getSchemaType<S>(schema) } : schema,
         uiSchema,
         formData,
@@ -1116,15 +1096,7 @@ export function schemaFieldFallbackType<T, S extends StrictRJSFSchema, F extends
   if (!registry.globalFormOptions.useFallbackUiForUnsupportedType) {
     return undefined;
   }
-  const resolved = createFieldWidgetResolver<T, S, F>().resolve(
-    schema,
-    uiSchema,
-    formData,
-    fieldPath,
-    registry,
-    false,
-    false,
-  );
+  const resolved = createFieldWidgetResolver<T, S, F>().resolve(schema, uiSchema, formData, registry, false, false);
   return planFieldComponent<T, S, F>(resolved, registry)?.FieldComponent === registry.fields.FallbackField
     ? fallbackUiType<T, S, F>(registry, uiState, fieldPath, schema, uiSchema, formData, depth)
     : undefined;
@@ -1279,8 +1251,8 @@ export function useSchemaFieldPlan<
   const resolveFieldWidget = useMemo(() => createFieldWidgetResolver<T, S, F>().resolve, []);
   const isRefCycle = hasSchemaMarker(_schema, RJSF_REF_CYCLE_KEY);
   const { selectSchemaInfo, uiField, uiSchema, ownUiOptions, uiOptions, deprecatedHandling, hidden } = useMemo(
-    () => resolveFieldWidget(_schema, _uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove),
-    [resolveFieldWidget, _schema, _uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove],
+    () => resolveFieldWidget(_schema, _uiSchema, formData, registry, isRefCycle, namedAbove),
+    [resolveFieldWidget, _schema, _uiSchema, formData, registry, isRefCycle, namedAbove],
   );
   const { schema, xxxOfKey } = selectSchemaInfo;
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
@@ -1447,12 +1419,11 @@ export function useSchemaFieldPlan<
             fieldShownOption.options[optionBeside] as S | undefined,
             optionBeside,
             formData,
-            fieldPath,
             registry,
             namedAbove,
           )
         : undefined,
-    [planShownOption, xxxOfKey, fieldShownOption, schema, optionBeside, formData, fieldPath, registry, namedAbove],
+    [planShownOption, xxxOfKey, fieldShownOption, schema, optionBeside, formData, registry, namedAbove],
   );
   // What the field that named this one hands it. This field renders under the id beside the options, so it inherits
   // none of that, though the option takes that field's label and draws its help
@@ -1731,21 +1702,12 @@ function SchemaFieldRender<
     [framedAbove, ownErrors, errorSchema],
   );
 
-  const entryAbove = use(TemplateWarnEntryContext);
-  // An additional property's own key, and the keys above a field nested beneath one, collapse like array indexes:
-  // every extra key renders the one entry, so a mistake in it warns once rather than once per key
-  const additionalDepths = useAdditionalDepths(schema, fieldPath);
   // Names the uiSchema entry rather than the field in a template-override warning, so an `items` or
-  // `additionalProperties` mistake warns once, not once per row or extra key. Rendered as a shown `anyOf`/`oneOf`
-  // option, the field renders at the option field's own path, so it takes the option entry's label rather than name
-  // the entry above itself. Memoized, since it is provided to everything below
-  const templateEntry = useMemo<TemplateWarnEntry>(() => {
-    if (entryAbove?.fieldPath === fieldPath) {
-      return entryAbove;
-    }
-    const entryLabel = () => entryLabelForLog(fieldPath, registry.globalFormOptions, additionalDepths);
-    return { fieldPath, label: entryLabel, schemaLabel: entryLabel };
-  }, [entryAbove, fieldPath, registry.globalFormOptions, additionalDepths]);
+  // `additionalProperties` mistake warns once, not once per row or extra key: an additional property's own key, and
+  // the keys above a field nested beneath one, collapse like array indexes. Rendered as a shown `anyOf`/`oneOf`
+  // option, the field renders at the option field's own path, so it takes the option entry rather than name the
+  // entry above itself
+  const templateEntry = useTemplateWarnEntry(schema, fieldPath, registry.globalFormOptions);
 
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
@@ -1789,11 +1751,12 @@ function SchemaFieldRender<
   // Falling back to the field for the schema is kept over throwing, but a caller who asked for their own field would
   // otherwise have no sign it was dropped.
   // The message describes the fallback the field renders, which its plan labels as it labels that field anywhere else.
-  // An `items` entry reaches every item of its array, so a field's own `ui:field` is named with the item's index left
-  // out, and every item the entry reaches shares one warning. A tuple's per-position entries and its `additionalItems`
-  // share it too, since nothing here tells them apart
+  // A field's own `ui:field` is named by the uiSchema entry it sits in, as a template override is, so every item an
+  // `items` entry reaches and every key an `additionalProperties` entry reaches shares one warning, while the same
+  // mistake in two options' entries warns for each. A tuple's per-position entries and its `additionalItems` share it
+  // too, since nothing here tells them apart
   for (const message of uiField.ignored) {
-    logOnce(message);
+    logOnce(message(templateEntry.label));
   }
   if (xxxOfKey && !hidden) {
     // Named by the entry rather than the row, so a mistake in an `items` or `additionalProperties` entry warns once
@@ -1933,42 +1896,40 @@ function SchemaFieldRender<
   // remount everything below it
   return withUiState(
     <TemplateWarnEntryContext value={templateEntry}>
-      <AdditionalPropertyDepthsContext value={additionalDepths}>
-        <FieldTemplate {...fieldProps}>
-          <>
-            {field}
-            {XxxOfField && (
-              <NamedFieldContext value={ownNamedFieldPath}>
-                <ShownOptionContext value={shownOption}>
-                  <OptionalControlsBesideContext value={controlsDrawnBeside ? fieldPath : controlsBesideAbove}>
-                    <PresentationContext value={optionsBelow}>
-                      <XxxOfField
-                        name={name}
-                        disabled={disabled}
-                        readonly={readonly}
-                        hideError={hideError}
-                        errorSchema={optionsErrorSchema}
-                        formData={formData}
-                        fieldPath={fieldPath}
-                        id={fieldId}
-                        onBlur={handleSelectorBlur}
-                        onChange={handleOptionFieldChange}
-                        onFocus={props.onFocus}
-                        options={xxxOfOptions}
-                        registry={registry}
-                        required={effectiveRequired}
-                        schema={schema}
-                        uiSchema={uiSchema}
-                        presentation={optionsPresentation}
-                      />
-                    </PresentationContext>
-                  </OptionalControlsBesideContext>
-                </ShownOptionContext>
-              </NamedFieldContext>
-            )}
-          </>
-        </FieldTemplate>
-      </AdditionalPropertyDepthsContext>
+      <FieldTemplate {...fieldProps}>
+        <>
+          {field}
+          {XxxOfField && (
+            <NamedFieldContext value={ownNamedFieldPath}>
+              <ShownOptionContext value={shownOption}>
+                <OptionalControlsBesideContext value={controlsDrawnBeside ? fieldPath : controlsBesideAbove}>
+                  <PresentationContext value={optionsBelow}>
+                    <XxxOfField
+                      name={name}
+                      disabled={disabled}
+                      readonly={readonly}
+                      hideError={hideError}
+                      errorSchema={optionsErrorSchema}
+                      formData={formData}
+                      fieldPath={fieldPath}
+                      id={fieldId}
+                      onBlur={handleSelectorBlur}
+                      onChange={handleOptionFieldChange}
+                      onFocus={props.onFocus}
+                      options={xxxOfOptions}
+                      registry={registry}
+                      required={effectiveRequired}
+                      schema={schema}
+                      uiSchema={uiSchema}
+                      presentation={optionsPresentation}
+                    />
+                  </PresentationContext>
+                </OptionalControlsBesideContext>
+              </ShownOptionContext>
+            </NamedFieldContext>
+          )}
+        </>
+      </FieldTemplate>
     </TemplateWarnEntryContext>,
   );
 }

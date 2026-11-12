@@ -1,9 +1,7 @@
 import type {
   Field,
-  FieldPath,
   FieldProps,
   FormContextType,
-  GlobalFormOptions,
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
@@ -11,8 +9,6 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import { describeUnresolvedComponent, getByPath, isComponentType, UI_FIELD_KEY } from '@rjsf/utils';
-
-import { entryLabelForLog } from '../../fieldLabelForLog.ts';
 
 /** Looks up what a `ui:field` refers to: the value registered under it when it is a name, otherwise the `ui:field`
  * itself. `getByPath()` reads own properties only, so a name such as `constructor` or `toString` resolves to nothing
@@ -77,8 +73,10 @@ export interface NamedFieldResolution<
    * planned by
    */
   namedFieldKey?: string;
-  /** The warning for each `ui:field` or `$id` that was given but names no field */
-  ignored: readonly string[];
+  /** Builds the warning for each `ui:field` or `$id` that was given but names no field, from the label of the uiSchema
+   * entry the field renders from, which only the `SchemaField` logging them knows; the rest is built once, here
+   */
+  ignored: readonly ((entryLabel: () => string) => string)[];
   /** The field's `uiSchema` as everything rendering or labelling its data reads it: as given where it names a field
    * written for the schema, which reads it itself, and otherwise naming no field. Where none is written for the schema
    * the data renders as though none were named — none resolved, or the one that did is `SchemaField` or `FallbackField`
@@ -90,16 +88,15 @@ export interface NamedFieldResolution<
   uiSchema: UiSchema<T, S, F>;
 }
 
-/** The warning that a spelling of the named field was ignored
+/** The warning that a spelling of the named field was ignored, after the entry that was given
  *
- * @param entry - The entry that was given
  * @param value - What the entry holds
  * @param resolved - What that value refers to
  * @param renders - What renders in place of the field it names
  * @returns - The warning
  */
-function ignoredMessage(entry: string, value: unknown, resolved: unknown, renders: string): string {
-  return `${entry} ${describeUnresolvedComponent(value, resolved, 'registered field', 'MyField')}, so it is ignored and the ${renders}.`;
+function ignoredMessage(value: unknown, resolved: unknown, renders: string): string {
+  return `${describeUnresolvedComponent(value, resolved, 'registered field', 'MyField')}, so it is ignored and the ${renders}.`;
 }
 
 /** Resolves the one field a schema's field is named by: its own `ui:field`, else the schema's `$id`, each given as a
@@ -117,8 +114,6 @@ function ignoredMessage(entry: string, value: unknown, resolved: unknown, render
  * @param ownUiSchema - The field's own `uiSchema`
  * @param schemaId - The schema's `$id`
  * @param fields - The registered fields
- * @param fieldPath - The field's path, which names its own `ui:field` entry in the warning
- * @param globalFormOptions - The form's options, which name the entry the same way
  * @returns - The field to render, if any, the registry key it was named by, the warning for each `ui:field` or `$id`
  *   that was ignored, and the `uiSchema` the field is read by
  */
@@ -130,10 +125,8 @@ export function resolveNamedField<
   ownUiSchema: UiSchema<T, S, F>,
   schemaId: string | undefined,
   fields: Registry<T, S, F>['fields'],
-  fieldPath: FieldPath,
-  globalFormOptions: GlobalFormOptions,
 ): NamedFieldResolution<T, S, F> {
-  const ignored: string[] = [];
+  const ignored: ((entryLabel: () => string) => string)[] = [];
   const named = (namedField: Field<T, S, F>, namedFieldKey: string | undefined): NamedFieldResolution<T, S, F> => ({
     namedField,
     namedFieldKey,
@@ -149,14 +142,8 @@ export function resolveNamedField<
     if (isComponentType<FieldProps<T, S, F>>(resolved)) {
       return named(resolved, typeof ownField === 'string' ? ownField : undefined);
     }
-    ignored.push(
-      ignoredMessage(
-        `ui:field for ${entryLabelForLog(fieldPath, globalFormOptions)}`,
-        ownField,
-        resolved,
-        'field is rendered as though no ui:field were given',
-      ),
-    );
+    const message = ignoredMessage(ownField, resolved, 'field is rendered as though no ui:field were given');
+    ignored.push((entryLabel) => `ui:field for ${entryLabel()} ${message}`);
   }
   if (schemaId) {
     const resolved = lookUpUiField<T, S, F>(schemaId, fields);
@@ -164,14 +151,13 @@ export function resolveNamedField<
       return named(resolved, schemaId);
     }
     if (resolved != null) {
-      ignored.push(
-        ignoredMessage(
-          '$id',
-          schemaId,
-          resolved,
-          'fields of the schema carrying it are rendered as though no field were registered under it',
-        ),
+      // A `$id` reaches every field of the schema carrying it, so its warning names no entry
+      const message = ignoredMessage(
+        schemaId,
+        resolved,
+        'fields of the schema carrying it are rendered as though no field were registered under it',
       );
+      ignored.push(() => `$id ${message}`);
     }
   }
   return { ignored, uiSchema: withoutNamedField<T, S, F>(ownUiSchema) };

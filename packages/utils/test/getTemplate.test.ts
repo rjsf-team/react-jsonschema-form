@@ -204,6 +204,35 @@ describe('getTemplate', () => {
     expect(warnSuppression.consoleSpy).toHaveBeenCalledTimes(2);
   });
 
+  it('builds the label once while the same entry keeps the same invalid override, and again once it changes', () => {
+    const entryLabel = vi.fn(() => '"root"');
+    const options: UIOptionsType = Object.fromEntries([['FieldTemplate', 'Typo']]);
+    getTemplate('FieldTemplate', registry, options, entryLabel);
+    getTemplate('FieldTemplate', registry, options, entryLabel);
+    expect(entryLabel).toHaveBeenCalledOnce();
+
+    // The same override resolving to another template, so only the template tells the two apart
+    const typoRegistry: Registry = { ...registry, templates: { ...registry.templates } };
+    const typoTemplates: Record<string, unknown> = typoRegistry.templates;
+    typoTemplates.Typo = createElement(FakeTemplate);
+    getTemplate('FieldTemplate', typoRegistry, options, entryLabel);
+    expect(entryLabel).toHaveBeenCalledTimes(2);
+
+    getTemplate('FieldTemplate', registry, Object.fromEntries([['FieldTemplate', 'Other']]), entryLabel);
+    expect(entryLabel).toHaveBeenCalledTimes(3);
+    expect(warnSuppression.consoleSpy.mock.calls).toEqual([
+      [
+        'FieldTemplate (ui:FieldTemplate or ui:options) for "root" names no registered template (\'Typo\'), so it is ignored.',
+      ],
+      [
+        'FieldTemplate (ui:FieldTemplate or ui:options) for "root" names a registered template (\'Typo\') that is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+      ],
+      [
+        'FieldTemplate (ui:FieldTemplate or ui:options) for "root" names no registered template (\'Other\'), so it is ignored.',
+      ],
+    ]);
+  });
+
   it('warns for each kind of invalid value an entry is edited to, and tells a string from an object', () => {
     const entryLabel = () => '"root"';
     const warnFor = (value: unknown) => {

@@ -891,10 +891,9 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
     ),
     schemaUtils,
     heldPath,
-    (fieldPath, fieldSchema, fieldUiSchema, data) =>
+    (_fieldPath, fieldSchema, fieldUiSchema, data) =>
       schemaFieldDrawsControlsBesideOptions<T, S, F>(
         context.registry,
-        fieldPath,
         fieldSchema,
         // `FormFieldState` carries no `T` or `F`, and hands back the `UiSchema<T, S, F>` `getUiRequiredErrorSchema()` gave it
         fieldUiSchema as UiSchema<T, S, F>,

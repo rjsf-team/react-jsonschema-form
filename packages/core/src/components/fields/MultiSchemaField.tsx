@@ -1,6 +1,7 @@
 import { use, useCallback, useMemo } from 'react';
 import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
@@ -13,18 +14,20 @@ import {
   isFormDataAvailable,
   logOnce,
   optionSelectorId,
+  PATTERN_PROPERTIES_KEY,
   resolveWidget,
+  RJSF_REF_KEY,
   selectOptionUiSchema,
   shouldRenderOptionalField,
   TranslatableString,
+  UNEVALUATED_PROPERTIES_KEY,
 } from '@rjsf/utils';
 
-import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch, { selectSwitchedOption } from '../../hooks/useSendOptionSwitch.ts';
 import { retrievedOptionListOf } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
-import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import {
   displaysLabel,
   getWidgetErrorProps,
@@ -38,8 +41,10 @@ import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
-import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
-import type { TemplateWarnEntry } from './TemplateWarnEntryContext.ts';
+import TemplateWarnEntryContext, { optionWarnEntry, useTemplateWarnEntry } from './TemplateWarnEntryContext.ts';
+
+/** The keywords describing an object's extra keys */
+const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY];
 
 /** The widgets the option index has an implementation of that would show the index as a number to edit */
 const VALUE_ENTRY_WIDGETS = new Set<unknown>(['text', 'updown', 'range', 'TextWidget', 'UpDownWidget', 'RangeWidget']);
@@ -135,18 +140,16 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // data changes, so this only spares a render that leaves the data as it was, and the switch away from the option
   const renderedOption = useMemo(() => (option ? getRenderedOptionSchema<S>(schema, option) : null), [schema, option]);
   const rendersOption = renderedOption !== null && renderedOption.type !== 'null';
-  // The `SchemaField` rendering this has already added its own key's depth to the context
-  const additionalDepths = use(AdditionalPropertyDepthsContext);
-  const entryAbove = use(TemplateWarnEntryContext);
   // The entry this field renders from, which the `SchemaField` rendering it provides, so an option nested in another
-  // option's entry names both. Memoized, since the option entry's labels below are built on it
-  const entry = useMemo<TemplateWarnEntry>(() => {
-    if (entryAbove?.fieldPath === fieldPath) {
-      return entryAbove;
-    }
-    const label = () => entryLabelForLog(fieldPath, globalFormOptions, additionalDepths);
-    return { fieldPath, label, schemaLabel: label };
-  }, [entryAbove, fieldPath, globalFormOptions, additionalDepths]);
+  // option's entry names both
+  const entry = useTemplateWarnEntry(schema, fieldPath, globalFormOptions);
+  // `resolveUiSchema()` merges the `ui:definitions` entry of the option's `$ref` under its entry, which can't be told
+  // apart here from what the `uiSchema` gave it, so the labels name both
+  const optionRef: unknown = option ? (Reflect.get(option, RJSF_REF_KEY) ?? option.$ref) : undefined;
+  const definition =
+    typeof optionRef === 'string' && uiSchemaDefinitions && Object.hasOwn(uiSchemaDefinitions, optionRef)
+      ? optionRef
+      : undefined;
   // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't
   // tell apart from a `uiSchema` it inherits, so a field the option's own entry names is warned about here instead,
   // unless it is `SchemaField`, which renders the option the same either way
@@ -155,7 +158,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     const optionField = getUiOptions<T, S, F>(optionUiSchema).field;
     if (optionField && lookUpUiField<T, S, F>(optionField, fields) !== fields.SchemaField) {
       logOnce(
-        `ui:field in uiSchema.${xxxOfKey}[${selectedOption}] for ${entry.label()} is ` +
+        `ui:field in uiSchema.${xxxOfKey}[${selectedOption}]` +
+          `${definition ? ` (or ui:definitions['${definition}'])` : ''} for ${entry.label()} is ` +
           'ignored, since a field is already named for that path, so the option is rendered as though no ui:field ' +
           'were given.',
       );
@@ -180,19 +184,19 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // The option's `SchemaField` renders at this field's own `fieldPath`, so left to its own path its
   // template-override warnings would name this field's entry, and the two entries' mistakes would read as one under
   // `logOnce()`. It is handed the option entry's label instead, the way the `ui:field` warning above names it, or
-  // this field's own where it renders from this field's entry. The option's schema is its own either way. Memoized: a
-  // fresh label each render would re-render the option past its `memo`, and the labels are read only when something is
-  // actually invalid
-  const optionEntry = useMemo<TemplateWarnEntry>(
-    () => ({
-      fieldPath,
-      label:
-        optionUiSchema === uiSchema
-          ? entry.label
-          : () => `the uiSchema.${xxxOfKey}[${selectedOption}] entry of ${entry.label()}`,
-      schemaLabel: () => `the ${xxxOfKey}[${selectedOption}] option of ${entry.schemaLabel()}`,
-    }),
-    [optionUiSchema, uiSchema, xxxOfKey, selectedOption, fieldPath, entry],
+  // this field's own where it renders from this field's entry. The fields below an option's own entry are named after
+  // it too, through the anchor they inherit. The option's schema is its own either way. Memoized: a fresh label each
+  // render would re-render the option past its `memo`, and the labels are read only when something is actually invalid.
+  // An option's entry with no `additionalProperties` of its own renders the extra keys it takes from this field with
+  // this field's. Read as a flag, since the option's uiSchema is rebuilt whenever a re-retrieved schema is
+  const keysFromField =
+    optionUiSchema?.additionalProperties === undefined && optionFieldUiSchema?.additionalProperties !== undefined;
+  const rendersFromField = optionUiSchema === uiSchema;
+  const keySchemaFromField = EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(schema, keyword));
+  const optionEntry = useMemo(
+    () =>
+      optionWarnEntry(entry, rendersFromField, keysFromField, keySchemaFromField, xxxOfKey, selectedOption, definition),
+    [entry, rendersFromField, keysFromField, keySchemaFromField, xxxOfKey, selectedOption, definition],
   );
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated

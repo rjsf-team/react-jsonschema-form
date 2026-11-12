@@ -46,16 +46,40 @@ export function isTemplateName(name: string): boolean {
   return TEMPLATE_NAME_SET.has(name);
 }
 
-/** Logs the invalid-override warning once per message, naming the field's entry, so a changed value logs again */
+/** The message last built for each entry label and template name, with the override and the template it resolved to
+ * that it was built for. A field passes the same label function on every render, so a warning still raised for an
+ * unchanged override reuses the message instead of rebuilding the label and description only for `logOnce()` to drop
+ * it. Keyed weakly, so an unmounted field's entry is let go
+ */
+const builtMessages = new WeakMap<
+  () => string,
+  Map<string, { override: unknown; template: unknown; message: string }>
+>();
+
+/** Logs the invalid-override warning once per message, naming the field's entry, so a changed value logs again. The
+ * message still goes through `logOnce()` when it is reused, so `resetLogOnce()` lets it log again as it would any other
+ */
 export function warnOnInvalidOverride(
   name: string,
   override: unknown,
   template: unknown,
   entryLabel: () => string,
 ): void {
+  let byName = builtMessages.get(entryLabel);
+  if (!byName) {
+    byName = new Map();
+    builtMessages.set(entryLabel, byName);
+  }
+  const built = byName.get(name);
+  if (built && Object.is(built.override, override) && Object.is(built.template, template)) {
+    logOnce(built.message);
+    return;
+  }
   // The value may sit under `ui:${name}` or under `ui:options`, so the warning names both rather than send the
   // user looking for a key that isn't there
   const target = `${name} (ui:${name} or ui:options) for ${entryLabel()}`;
   const description = describeUnresolvedComponent(override, template, 'registered template', 'MyTemplate');
-  logOnce(`${target} ${description}, so it is ignored.`);
+  const message = `${target} ${description}, so it is ignored.`;
+  byName.set(name, { override, template, message });
+  logOnce(message);
 }
