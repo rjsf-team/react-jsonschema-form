@@ -1750,8 +1750,15 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
   // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or
   // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the
-  // `const` names. A `patternProperties` or `unevaluatedProperties` that takes extra keys leaves the guards in place
-  const closingConst = objectConst && !allowsAdditionalProperties<S, F>(context, schema) ? objectConst : undefined;
+  // `const` names. A `patternProperties` or `unevaluatedProperties` that takes extra keys leaves the guards in place. A
+  // `ui:initialValue` takes priority over the `const` as the object's default, so none of its keys are seeded beside one,
+  // on the first pass or once the defaults were generated
+  const closingConst =
+    objectConst &&
+    getUiOptions<T, S, F>(uiSchema).initialValue === undefined &&
+    !allowsAdditionalProperties<S, F>(context, schema)
+      ? objectConst
+      : undefined;
   if ((additionalProperties && !initialDefaultsGenerated) || closingConst) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(

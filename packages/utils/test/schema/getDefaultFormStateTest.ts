@@ -190,6 +190,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const uiSchema = { 'ui:initialValue': { z: 1 } };
           expect(utils(closed).getDefaultFormState(closed, undefined, false, false, uiSchema)).toStrictEqual({});
         });
+        it('seeds no key of a const beside a ui:initialValue, on the first pass or once the defaults were generated', () => {
+          const uiSchema = { 'ui:initialValue': { z: 1 } };
+          expect(utils(bare).getDefaultFormState(bare, undefined, false, false, uiSchema)).toStrictEqual({});
+          expect(utils(bare).getDefaultFormState(bare, {}, false, true, uiSchema)).toStrictEqual({});
+        });
         it("fills a mixed oneOf option's const under skipOneOf, whether or not the option declares its keys", () => {
           const skipOneOf: DefaultFormStateBehavior = { constAsDefaults: 'skipOneOf' };
           const other: RJSFSchema = { properties: { b: { type: 'string' } } };
