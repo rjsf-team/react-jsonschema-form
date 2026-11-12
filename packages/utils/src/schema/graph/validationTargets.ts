@@ -357,6 +357,25 @@ export function declaredProperties<S extends StrictRJSFSchema = RJSFSchema>(
   return declarations.get([graph, id, key], () => declarationsAt(graph, id, undefined, key).map((found) => found.id));
 }
 
+/** Returns whether a subschema that applies wherever the node `id` applies, whatever the data, declares the property
+ * `key`: the node, what its `$ref` resolves to or one of its `allOf` entries, but no `then`, `else` or `dependencies`
+ * schema
+ *
+ * @param graph - The graph of the root
+ * @param id - The node whose scope is read
+ * @param key - The property name
+ * @returns - Whether that scope declares the property
+ */
+export function declaresUnconditionally<S extends StrictRJSFSchema = RJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  key: string,
+): boolean {
+  return scopeAt(graph, id, undefined, 'unconditional').some(
+    ({ node }) => graph.child(node.id, PROPERTIES_KEY, key) !== undefined,
+  );
+}
+
 /** The nodes `declaredProperties()` finds, per graph, option and key: an option is matched on its discriminator on
  * every edit, and walking its scope each time repeats the same answer
  */

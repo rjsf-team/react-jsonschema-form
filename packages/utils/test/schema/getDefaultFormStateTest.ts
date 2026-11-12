@@ -2909,6 +2909,51 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toStrictEqual({ plain: 'zz', wrapped: 'zz' });
           },
         );
+
+        it.each<[string, RJSFSchema]>([
+          ['without an allOf', {}],
+          ['beside an unrelated allOf', { allOf: [{ title: 'x' }] }],
+        ])('matches no key only an unmerged then declares %s, see #5816', (_name, beside) => {
+          const o: RJSFSchema = {
+            type: 'object',
+            properties: { k: { type: 'string' } },
+            if: { properties: { k: { const: 'x' } } },
+            then: { properties: { c: { enum: ['red', 'green'] } } },
+            ...beside,
+          };
+          const schema: RJSFSchema = { type: 'object', properties: { o } };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' } },
+              { schema, formData: { o: { k: 'x', c: 'blue' } } },
+            ),
+          ).toStrictEqual({ o: { k: 'x', c: 'blue' } });
+        });
+
+        it.each<[GenericObjectType, boolean, GenericObjectType]>([
+          [{}, false, { a: 'x' }],
+          [{ a: 'y' }, false, { a: 'y' }],
+          [{ a: 'y' }, true, { a: 'y' }],
+          [{ a: 'z' }, false, { a: 'x' }],
+          [{ a: 'z' }, true, { a: 'x' }],
+        ])(
+          "reads a key an object's allOf declares by that property whether its value comes from the data %j or the default, initialDefaultsGenerated %s",
+          (value, initialDefaultsGenerated, expected) => {
+            const o: RJSFSchema = {
+              type: 'object',
+              additionalProperties: { type: 'number' },
+              default: { a: 'x' },
+              allOf: [{ properties: { a: { enum: ['x', 'y'] } } }],
+            };
+            const schema: RJSFSchema = { type: 'object', properties: { o } };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { o: value }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ o: expected });
+          },
+        );
       });
 
       it("skips the constant default of a schema's anyOf under skipOneOf when it also has a oneOf", () => {

@@ -98,6 +98,7 @@ import type { Provenance } from './graph/provenance.ts';
 import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
 import { schemaFrom } from './graph/schemaFrom.ts';
+import { declaresUnconditionally } from './graph/validationTargets.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import { resolveDeclaredConstantOptions } from './resolveConstantOptions.ts';
 import retrieveSchema, {
@@ -1773,6 +1774,16 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       onNullFill?.();
     });
   }
+  // A key a property of an `allOf` the plan left unmerged declares, whatever the data, is no extra key of the field as
+  // rendered, so its data is matched to that property below and its default is the field's. A key only an unmerged
+  // `then`, `else` or `dependencies` declares stays an extra key (#5816)
+  const declaredInAllOf = (key: string) => {
+    if (!(ALL_OF_KEY in view.schema)) {
+      return false;
+    }
+    const { graph, seeds } = fieldOfView<S>(view);
+    return seeds.some(({ node }) => declaresUnconditionally<S>(graph, node, key));
+  };
   const additionalProperties = absentKeywordAllows<S, F>(context, schema) || schema.additionalProperties;
   if (additionalProperties && !initialDefaultsGenerated) {
     // as per spec additionalProperties may be either schema or boolean
@@ -1782,13 +1793,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     );
     const keys = new Set<string>();
     const formDataRequired: string[] = [];
-    // A key a property in an `allOf` the plan left unmerged declares is no extra key of the field as rendered, so its
-    // data is matched to that property below, as it is once the form has generated its defaults
-    const declaredInAllOf = (key: string) => {
-      const declared =
-        ALL_OF_KEY in view.schema ? getByPath(mergedSchemaOf<S, F>(context, view).properties, key) : undefined;
-      return declared !== undefined && !hasSchemaMarker(declared, ADDITIONAL_PROPERTY_FLAG);
-    };
     Object.keys(formData)
       .filter((key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && !declaredInAllOf(key))
       .forEach((key) => {
@@ -1801,7 +1805,13 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     if (isObject(defaults) && formDataRequired.length === 0) {
       Object.keys(defaults)
         .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
-        .forEach((key) => keys.add(key));
+        .forEach((key) => {
+          if (!declaredInAllOf(key)) {
+            keys.add(key);
+          } else if (!Object.hasOwn(formData, key) && isPinned(key)) {
+            setOwn(computed, key, defaults[key]);
+          }
+        });
     }
     [...keys].filter(isPinned).forEach((key) => {
       const { value, holdsNull } = foldReporting(
@@ -1875,7 +1885,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     });
     // The keys an object `const` pins keep the data's values, as under a `const` of the field's own
     const unmerged = new Set(
-      ALL_OF_KEY in view.schema && !pinnedKeys ? kept.filter((key) => formData[key] !== undefined) : [],
+      pinnedKeys ? [] : kept.filter((key) => formData[key] !== undefined && declaredInAllOf(key)),
     );
     let matched = formData;
     if (unmerged.size > 0) {
