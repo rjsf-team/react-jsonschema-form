@@ -328,9 +328,9 @@ describe('transformChange', () => {
       transformChange: refuseReorder,
     });
     const optionOf = (index: number) => elementOf(node, `#root_${index}__oneof_select`);
-    // A switch between two string options clears the item, so it is typed again under the option picked
+    // A switch between two string options carries the item over
     await user.selectOptions(optionOf(0), 'B');
-    await user.type(input(node, 'root_0'), 'x');
+    expect(input(node, 'root_0')).toHaveValue('x');
 
     await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
     expect(optionOf(0)).toHaveValue('1');
@@ -362,7 +362,6 @@ describe('transformChange', () => {
     });
     const optionOf = (index: number) => elementOf(node, `#root_${index}__oneof_select`);
     await user.selectOptions(optionOf(0), 'B');
-    await user.type(input(node, 'root_0'), 'x');
 
     await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
 
@@ -377,20 +376,20 @@ describe('transformChange', () => {
       items: {
         oneOf: [
           { title: 'A', type: 'string' },
-          { title: 'B', type: 'string' },
+          { title: 'B', type: 'string', default: 'x' },
         ],
       },
     };
     // The reorder leaves data equal to the data before it, which `previous` still refuses. Only such an edit is
-    // refused, so the switch, which clears the item, and typing it again are taken
+    // refused, so the switch is taken: the first row holds nothing, and takes the default of the option picked
     const { node } = renderForm<string[]>({
       schema: choiceSchema,
-      initialFormData: ['x', 'x'],
+      initialFormData: ['', 'x'],
       transformChange: (next, previous) => (JSON.stringify(next) === JSON.stringify(previous) ? previous : next),
     });
     const optionOf = (index: number) => elementOf(node, `#root_${index}__oneof_select`);
     await user.selectOptions(optionOf(0), 'B');
-    await user.type(input(node, 'root_0'), 'x');
+    expect(input(node, 'root_0')).toHaveValue('x');
 
     await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
 

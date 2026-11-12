@@ -14,8 +14,6 @@ import type {
 } from '@rjsf/utils';
 import {
   getByPath,
-  getSchemaOwnTypes,
-  guessType,
   hasByPath,
   setByPath,
   propertyToPath,
@@ -48,11 +46,8 @@ import isDevelopment from '../isDevelopment.ts';
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import { copyAlongPath, getAt, isPathPrefix, replaceErrorSchemaNode } from './dataPaths.ts';
-import {
-  schemaFieldDrawsControlsBesideOptions,
-  schemaFieldFallbackType,
-  schemaFieldRendersArrayWidget,
-} from './fields/SchemaField.tsx';
+import { takesTypeOf } from './fields/fieldWidgetUtils.ts';
+import { schemaFieldDrawsControlsBesideOptions, schemaFieldFallbackType } from './fields/SchemaField.tsx';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
 import { clearsWrittenOver, holdsClearAt, keepRecordedClears } from './keepClears.ts';
@@ -758,28 +753,26 @@ export interface FieldChange<T> {
    * `setFieldValue()` sets it, is matched again
    */
   isFieldEdit?: boolean;
-  /** For an option switch, the option switched away from, the keys the form put back, and the selections the form held
-   * before the switch
-   */
+  /** For an option switch, the switched field and the selections the form held before the switch */
   switchedFrom?: SwitchedFrom;
   /** For an option switch, the path of the field whose option it switched and the index of the option switched away
-   * from: what the switch leaves out of the field's data is set aside under that option, see `FormState.orphans`
+   * from: what the settle of the switch takes out of the field's data is set aside under that option, see
+   * `FormState.orphans`
    */
   switchAt?: { path: FieldPathList; from: number };
 }
 
-/** The keys a switch the form took put back, see `SwitchedOption`, at `path`, the switched field's, with the selections
- * and expansions the form showed the data under before it, which the field tree before the switch is read with below
- * those keys. The path is the change's own, or below it where a parent field sent the switch's data at its own path
+/** A switch the form took, see `SwitchedOption`: `path`, the switched field's, with the selections and expansions the
+ * form showed the data under before it, which the field tree before the switch is read with at and below that field.
+ * The path is the change's own, or below it where a parent field sent the switch's data at its own path
  */
 export interface SwitchedFrom {
   path: FieldPathList;
-  heldKeys: ReadonlySet<string>;
   uiState: UiStateReader;
 }
 
 /** A change being made to the data: its path, where it moved the keys of the array or object there, if it moved any,
- * and the option it switched away from, with the keys the form put back, if it is a switch
+ * and the field whose option it switched, if it is a switch
  */
 export interface FieldEdit {
   path: FieldPathList;
@@ -1529,20 +1522,23 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     remaining.delete(orphanKey(orphan));
     entered.push(...leafPathsOf(value, fieldPath));
   }
+  // The data settled so far is what the returning values are a change of: nothing else of the change being made is
+  // left to judge, and a value that returns is kept as a value the previous data did not hold is
   return settleFormData(
-    current,
+    current && { ...current, formData },
     asFilledFormData<T>(restored),
     {
       ...options,
+      edit: undefined,
       clearedPaths,
-      origins: diffedOrigins,
+      origins,
       originsAfterEdit: { entered: withPaths(origins.entered, ...entered), seeded: origins.seeded },
       orphans: remaining,
       keepsOrphans: true,
     },
     props,
     schemaUtils,
-    previousRetrievedSchema,
+    () => retrievedSchema,
   );
 }
 
@@ -1578,23 +1574,14 @@ function returningOrphans<T, S extends StrictRJSFSchema, F extends FormContextTy
         return false;
       }
       const path = fieldPathToList(fieldPath);
-      const schema = droppedNow.has(fieldPath) ? undefined : schemaAt(path);
+      // The value the pass dropped stays out. One set aside under the option the field shows again is another value
+      // for the path, which returns as the first leaves
+      const schema = !under && droppedNow.has(fieldPath) ? undefined : schemaAt(path);
       const held = getAt<unknown>(formData, path);
       const isHeld = held !== undefined && (origins.entered.has(fieldPath) || origins.seeded.has(fieldPath));
       return schema !== undefined && !isHeld && takesTypeOf<S>(schema, value);
     })
     .sort((a, b) => a.fieldPath.length - b.fieldPath.length);
-}
-
-/** Whether a field of `schema` can hold a value of the JSON type `value` has, as a schema declaring no type can */
-function takesTypeOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
-  const types = getSchemaOwnTypes<S>(schema);
-  const valueType = guessType(value);
-  return (
-    types === undefined ||
-    types.length === 0 ||
-    types.some((type) => type === valueType || (type === 'integer' && Number.isInteger(value)))
-  );
 }
 
 /** What reconciling the errors of a derivation needs to know */
@@ -1968,19 +1955,22 @@ function collectEntered(
   }
 }
 
-/** `current`'s orphans with the values an option switch left out of the object at its field: each key the data held
- * that `written` no longer does, or holds as another value, where a person entered or a seed held any of its value.
- * Each is set aside under the option switched away from. A value in an array is not kept, as none the sanitize drops
+/** `orphans` with the values the settle of an option switch took out of its field: of an object, each key the data
+ * held that `settled` no longer does, or holds as another value, where a person entered or a seed held any of its
+ * value, and of any other field the value itself, where the settle set it aside. Each is set aside under the option
+ * switched away from. A value in an array is not kept, as none the sanitize drops
  * there is
  *
  * @param current - The state before the switch
- * @param written - The data the switch wrote, before any defaults
+ * @param orphans - The orphans the settle left
+ * @param settled - The data the switch settled as
  * @param [switchAt] - The switched field and the option switched away from, for a change that is a switch
- * @returns - The orphans, `current`'s own when the switch set nothing aside
+ * @returns - The orphans, `orphans` itself when the switch set nothing aside
  */
 function withSwitchedAway<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
-  written: T | undefined,
+  orphans: Orphans,
+  settled: T | undefined,
   switchAt: FieldChange<T>['switchAt'],
 ): Orphans {
   const before = switchAt && getAt<unknown>(current.formData, switchAt.path);
@@ -1990,14 +1980,23 @@ function withSwitchedAway<T, S extends StrictRJSFSchema, F extends FormContextTy
     !switchAt ||
     switchedField === undefined ||
     list === undefined ||
-    !isPlainObject(before) ||
     switchAt.path.some((key) => typeof key === 'number')
   ) {
-    return current.orphans;
+    return orphans;
   }
-  const after = getAt<unknown>(written, switchAt.path);
-  const origins = [...current.enteredPaths, ...current.seededPaths].map(fieldPathToList);
   const under = { fieldPath: switchedField, list, index: switchAt.from };
+  if (!isPlainObject(before)) {
+    // The field's whole value, where the settle set it aside by its path alone
+    const whole = orphans.get(switchedField);
+    if (before === undefined || !whole || !Object.is(whole.value, before)) {
+      return orphans;
+    }
+    const kept = new Map(orphans);
+    kept.delete(switchedField);
+    return withOrphans(kept, [{ ...whole, under }]);
+  }
+  const after = getAt<unknown>(settled, switchAt.path);
+  const origins = [...current.enteredPaths, ...current.seededPaths].map(fieldPathToList);
   const setAside: Orphan[] = [];
   for (const [key, value] of Object.entries(before)) {
     const path = [...switchAt.path, key];
@@ -2006,7 +2005,17 @@ function withSwitchedAway<T, S extends StrictRJSFSchema, F extends FormContextTy
       setAside.push({ fieldPath: fieldPathFromList(path), value, under });
     }
   }
-  return withOrphans(current.orphans, setAside);
+  if (setAside.length === 0) {
+    return orphans;
+  }
+  // The settle set the same values aside by their path alone, which the option they are kept under now stands for
+  const kept = new Map(orphans);
+  for (const { fieldPath, value } of setAside) {
+    if (Object.is(kept.get(fieldPath)?.value, value)) {
+      kept.delete(fieldPath);
+    }
+  }
+  return withOrphans(kept, setAside);
 }
 
 /** The entered and seeded paths `state` holds */
@@ -2043,7 +2052,9 @@ function originsAfterChange<T>(
   if (change.newKeyOf || change.isAnnouncedMove || change.switchedFrom) {
     // An array whose rows the change moved, added or removed is entered itself: its rows no longer sit where its
     // `default` would fill them
-    const isRowChange = change.newKeyOf !== undefined && Array.isArray(getAt<unknown>(committed, path));
+    // A switch of the array's option moves no row itself
+    const isRowChange =
+      change.newKeyOf !== undefined && !change.switchAt && Array.isArray(getAt<unknown>(committed, path));
     return isRowChange ? { ...moved, entered: withPaths(moved.entered, fieldPathFromList(path)) } : moved;
   }
   const entered: FieldPath[] = [];
@@ -2163,14 +2174,12 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
   }
   let clearedPaths = clearsAfterChange(current.clearedPaths, change, oldFormData, formData, path);
   let origins = originsAfterChange(originsOf(current), change, oldFormData, formData, path);
-  // What a switch leaves out of the field's data is set aside before the data is settled, so it can return with its
-  // option. The keys the switch put back for the sanitize to judge are set aside there if it drops them
-  let orphans = withSwitchedAway(current, formData, change.switchAt);
+  let { orphans } = current;
 
   if (isContainer) {
     // Only the data and its context are derived here; the errors are reconciled below. A root write is sanitized only
     // where it stands for an edit, as the data a `transformChange` writes over one does, or where it is an option
-    // switch that put keys back for the sanitize to judge. The `undefined` a clear leaves is stripped from the copy the
+    // switch, which the sanitize judges. The `undefined` a clear leaves is stripped from the copy the
     // validator gets, so AJV never sees `{ [key]: undefined }` for a `string` field (#4518)
     const editedPath = change.editedPath ?? (isRootPath && !change.switchedFrom ? undefined : path);
     const derived = deriveFormData(
@@ -2199,7 +2208,9 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     formData = derived.formData;
     clearedPaths = derived.clearedPaths;
     origins = derived.origins;
-    orphans = derived.orphans;
+    // What the settle of a switch took out of the field's data is set aside under the option switched away from, so
+    // it returns with that option
+    orphans = withSwitchedAway(current, derived.orphans, formData, change.switchAt);
     context = derived.context;
   }
 
@@ -2225,7 +2236,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
  *
  * @param changed - The state the change's data left, with the errors from before it
  * @param previousFormData - The data before the change
- * @param change - The change
+ * @param fieldChange - The change
  * @param props - The current props
  * @param isValidated - Whether the change's data is validated
  * @returns - `changed` with the errors after the change
@@ -2233,11 +2244,12 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
 export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   changed: FormState<T, S, F>,
   previousFormData: T | undefined,
-  change: FieldChange<T>,
+  fieldChange: FieldChange<T>,
   props: FormProps<T, S, F>,
   isValidated: boolean,
 ): FormState<T, S, F> {
   const { formData } = changed;
+  const change = withSettledRows(fieldChange, previousFormData, formData);
   const isHidden = hiddenErrorsOf(props, changed);
   if (isValidated) {
     // The validation replaces the validator's result whole, so only the fields' own errors are carried through
@@ -2267,6 +2279,38 @@ export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends F
         : previousFormData,
     );
   return { ...changed, ...applyChangeToErrors(changed, change, props.extraErrors, getDataChange, isHidden) };
+}
+
+/** `change` with the errors under the items of an array whose option it switched going where the settle left the
+ * items. The switching field keeps the errors of each item it carries over, but only the settle decides which stay: a
+ * row it replaced holds another value under the same index, and an array it trimmed or refilled at another length has
+ * `ArrayField` key every row anew, which mounts each row's field afresh
+ *
+ * @param change - The change
+ * @param previousFormData - The data before the change
+ * @param settled - The data the change settled as
+ * @returns - The change, moving the errors of only the rows the settle kept
+ */
+function withSettledRows<T>(change: FieldChange<T>, previousFormData: T | undefined, settled: T | undefined) {
+  const { switchAt, newKeyOf, newOwnKeyOf } = change;
+  const path = fieldPathToList(change.fieldPath);
+  if (!switchAt || !newKeyOf || path.length !== switchAt.path.length || !isPathPrefix(path, switchAt.path)) {
+    return change;
+  }
+  const before = getAt<unknown>(previousFormData, path);
+  const after = getAt<unknown>(settled, path);
+  if (!Array.isArray(before) || !Array.isArray(after)) {
+    return change;
+  }
+  const rows: readonly unknown[] = before;
+  const settledRows: readonly unknown[] = after;
+  const ofKeptRow =
+    (keyOf: KeyMove): KeyMove =>
+    (key) =>
+      rows.length === settledRows.length && Object.is(rows[Number(key)], settledRows[Number(key)])
+        ? keyOf(key)
+        : undefined;
+  return { ...change, newKeyOf: ofKeptRow(newKeyOf), newOwnKeyOf: newOwnKeyOf && ofKeptRow(newOwnKeyOf) };
 }
 
 /** The error members of a state with `extraErrors` as the only errors on display, as a reset or a valid submission

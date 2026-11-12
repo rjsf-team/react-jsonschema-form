@@ -3,6 +3,7 @@ import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSc
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
+  deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
@@ -11,6 +12,7 @@ import {
   getUiOptions,
   hasSchemaMarker,
   hasWidget,
+  isConstant,
   isFormDataAvailable,
   logOnce,
   optionSelectorId,
@@ -19,6 +21,7 @@ import {
   RJSF_REF_KEY,
   selectOptionUiSchema,
   shouldRenderOptionalField,
+  toConstant,
   TranslatableString,
   UNEVALUATED_PROPERTIES_KEY,
 } from '@rjsf/utils';
@@ -28,14 +31,15 @@ import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch, { selectSwitchedOption } from '../../hooks/useSendOptionSwitch.ts';
 import { retrievedOptionListOf } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
+import defaultsForOption from './defaultsForOption.ts';
 import {
   displaysLabel,
   getWidgetErrorProps,
   getWidgetLabelProps,
   optionsKeywordOf,
+  takesTypeOf,
   withoutOptionalControls,
 } from './fieldWidgetUtils.ts';
-import formDataForNewOption from './formDataForNewOption.ts';
 import getOptionFieldUiSchema from './getOptionFieldUiSchema.ts';
 import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
@@ -115,8 +119,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const title = titleOption ?? schema.title;
 
   // First we will check to see if there is an anyOf/oneOf override for the UI schema. Computed here, ahead of
-  // `onOptionChange`, so that callback can pass the old and new options' own uiSchemas to `formDataForNewOption`,
-  // letting `ui:initialValue`/`ui:emptyValue` on those options' fields apply on selection.
+  // `onOptionChange`, so that callback can pass the new option's own uiSchema to `defaultsForOption()`,
+  // letting `ui:initialValue`/`ui:emptyValue` on that option's fields apply on selection.
   // Memoized so the common case (no `uiSchema.oneOf`/`anyOf` override) doesn't hand `onOptionChange`'s `useCallback`
   // a fresh `[]` on every render, which would otherwise break its memoization.
   const optionsUiSchema = useMemo<UiSchema<T, S, F>[]>(() => {
@@ -220,12 +224,30 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       // `uiSchemaDefinitions` comes from the registry since an option's uiSchema is only its own sub-uiSchema and
       // never carries the root's `ui:definitions` itself.
       const newOptionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, intOption);
-      const switched = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
-        newOptionUiSchema,
-        oldOptionUiSchema: optionUiSchema,
-        uiSchemaDefinitions,
-        globalUiOptions,
-      });
+      // A cleared selection and a `null` option render no field, so nothing is held there. Any other option gets the
+      // data as it is: the form judges each value against the option switched to and fills what that option declares
+      const holdsNothing =
+        newOption === undefined ||
+        newOption.type === 'null' ||
+        (isConstant<S>(newOption) && toConstant<S>(newOption) === null);
+      // `''` is what a cleared `additionalProperties` entry holds for nothing, see `storedValue()`
+      const heldNothing = formData === undefined || formData === null || (formData as unknown) === '';
+      // A value of a JSON type the option cannot hold is not carried either, and neither is one that is not the
+      // constant the option names, so the field keeps its place in its container with what the option starts from
+      const renderedNewOption = newOption && getRenderedOptionSchema<S>(schema, newOption);
+      const carriesNothing =
+        heldNothing ||
+        (renderedNewOption !== undefined &&
+          (!takesTypeOf<S>(renderedNewOption, formData) ||
+            (isConstant<S>(renderedNewOption) && !deepEquals(toConstant<S>(renderedNewOption), formData))));
+      const carried =
+        newOption &&
+        defaultsForOption<T, S, F>(schemaUtils, schema, newOption, carriesNothing ? undefined : formData, {
+          optionUiSchema: newOptionUiSchema,
+          uiSchemaDefinitions,
+          globalUiOptions,
+        });
+      const switched = holdsNothing ? undefined : carried;
 
       // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to
       selectOption(intOption);

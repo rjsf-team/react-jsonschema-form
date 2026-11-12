@@ -1,8 +1,16 @@
 import { useMemo } from 'react';
-import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import type {
+  FieldProps,
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+} from '@rjsf/utils';
 import {
   getByPath,
   getDiscriminatorFieldFromSchema,
+  isPlainObject,
   setByPath,
   getOptionUiSchema,
   fieldPathToName,
@@ -13,9 +21,9 @@ import {
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useSendOptionSwitch, { selectSwitchedOption } from '../../hooks/useSendOptionSwitch.ts';
-import { retrievedOptionListOf } from '../uiState.ts';
+import { asFieldValue, retrievedOptionListOf } from '../uiState.ts';
+import defaultsForOption from './defaultsForOption.ts';
 import { getWidgetErrorProps, getWidgetLabelProps, optionsKeywordOf } from './fieldWidgetUtils.ts';
-import formDataForNewOption from './formDataForNewOption.ts';
 import {
   computeEnumOptions,
   getFirstOption,
@@ -153,14 +161,20 @@ export default function LayoutMultiSchemaField<
     // never carries the root's `ui:definitions` itself.
     const newOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex);
     const oldOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex);
-    const switched = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
-      newOptionUiSchema,
-      oldOptionUiSchema,
-      uiSchemaDefinitions,
-      globalUiOptions,
-    });
-    if (switched.formData) {
-      setByPath(switched.formData, selectorField, opt);
+    // The selector cell's value is the one thing the switch writes. The form judges every other value against the
+    // option switched to and fills what that option declares
+    let switched: T | undefined;
+    if (newOption !== undefined && newOption.type !== 'null') {
+      const starts = defaultsForOption<T, S, F>(
+        schemaUtils,
+        schema,
+        newOption,
+        isPlainObject(formData) ? formData : undefined,
+        { optionUiSchema: newOptionUiSchema, uiSchemaDefinitions, globalUiOptions },
+      );
+      const held: GenericObjectType = isPlainObject(starts) ? { ...starts } : {};
+      setByPath(held, selectorField, opt);
+      switched = asFieldValue<T>(held);
     }
     // The selector holds the option picked, which the form keeps rather than putting the old one back
     if (switched.held && Object.hasOwn(switched.held, selectorField)) {

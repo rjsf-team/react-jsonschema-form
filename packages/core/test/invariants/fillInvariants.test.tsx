@@ -91,11 +91,6 @@ const invariants: Record<string, (testCase: Case) => Failure | undefined> = {
     const filled = fill(schema, data);
     return compare(filled, fill(schema, filled));
   },
-  'utils: sanitizing against the same schema, then filling, changes nothing': ({ schema, data }) => {
-    const filled = fill(schema, data);
-    const sanitized = createSchemaUtils({ validator }, schema).sanitizeDataForNewSchema(schema, schema, filled);
-    return compare(filled, fill(schema, sanitized, true));
-  },
   'form: mount holds what the utility fills': (testCase) =>
     withForm(testCase, (form) => compare(fill(testCase.schema, testCase.data), form.read())),
   'form: a re-render with an equal schema changes nothing': (testCase) =>

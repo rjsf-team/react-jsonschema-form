@@ -11,7 +11,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  ANY_OF_KEY,
+  constrainsAlike,
   CONST_KEY,
   constrainsAlikeAsideDefault,
   deepEquals,
@@ -48,6 +48,7 @@ import {
 } from '@rjsf/utils';
 
 import { copyAlongPath, isPathPrefix } from './dataPaths.ts';
+import { takesTypeOf } from './fields/fieldWidgetUtils.ts';
 import type { FieldEdit, SwitchedFrom } from './formState.ts';
 import { clearsIn, emptyValue } from './keepClears.ts';
 import type { ContainerKeyMove, KeyMove } from './keyMove.ts';
@@ -90,8 +91,8 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   /** The schema utilities the new tree is built with */
   schemaUtils: SchemaUtilsType<T, S, F>;
   uiState: UiStateReader;
-  /** The selections and expansions the previous tree is read with: `uiState`, except below a key an option switch
-   * put back, which is read as the form showed it before the switch
+  /** The selections and expansions the previous tree is read with: `uiState`, except at and below a field whose
+   * option was switched, which is read as the form showed it before the switch
    */
   oldUiState: UiStateReader;
   /** The path of the change being made, if there is one: the value there is the user's, and the selections at or
@@ -100,8 +101,12 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   editedPath?: FieldPathList;
   /** Where the change moved the keys of the array or object at `editedPath`, if it moved any */
   newKeyOf?: KeyMove;
-  /** For an option switch, the switched field, the option switched away from and the keys the switch put back */
+  /** For an option switch, the switched field and the selections the form held before the switch */
   switchedFrom?: SwitchedFrom;
+  /** Whether the walk is below a field whose option was switched, where a value is the old option's to begin with, so
+   * one of a JSON type its field under the new option cannot hold goes, whether or not the field's constraints differ
+   */
+  isBelowSwitch?: boolean;
   /** The path, in the data the previous tree is built for, of each value a person entered and of each array or object
    * holding one, and the same for each value a seed held
    */
@@ -244,6 +249,13 @@ function previousKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
 /** The value `container` holds under `key`, if any */
 function valueAt(container: unknown, key: string | undefined): unknown {
   return key === undefined ? undefined : getByPath(container, key);
+}
+
+/** Whether `value` is what a field holds for nothing: `''` is what a cleared `additionalProperties` entry stores, and
+ * `null` what a cleared array item does
+ */
+function holdsNothing(value: unknown): boolean {
+  return value === undefined || value === null || value === '';
 }
 
 /** A value the diff removes from the data */
@@ -396,17 +408,21 @@ function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: 
 }
 
 /** Re-judges a value whose field's constraints changed. A cleared property is dropped, for the defaults to fill. A value
- * equal to the default the old schema filled it with is that schema's, so it becomes the new schema's default; a value
- * of another type, or one the new `const` or `enum` rejects, is replaced as `sanitizeDataForNewSchema()` replaces it,
- * or dropped. A field the new schema only holds as an extra key whose schema is guessed from its data keeps a value
- * its stub renders, see `guessedStubRenders()`, unless the value equals what the old field's defaults fill in, such as
- * its `default`, its `const` or an empty object, which no data can tell apart from a value the user chose.
+ * equal to the default the old schema declared for it is that schema's, so it becomes the new schema's default; a value
+ * of another type is dropped, and one the new `const` or `enum` rejects takes the new `const` where it held the old
+ * one, the new default where the `enum` offers it, the only value a list of one offers, and is dropped otherwise. A
+ * field the new schema only holds as an extra key whose schema is guessed from its data keeps a value its stub renders,
+ * see `guessedStubRenders()`, unless the value equals what the old field's defaults fill in, such as its `default`, its
+ * `const` or an empty object, which no data can tell apart from a value the user chose.
  *
  * @param acceptsNull - Whether the field's new schema holds `null`, asked only of a `null` item
  * @param origin - Where the value came from. One a person entered is theirs whatever it equals, and one the defaults
  *   filled in is the old field's. One a seed held is compared with what the defaults give, since nothing else tells
- * @param isFilledByOldDefaults - Whether a value is what the defaults filled the old field with, asked only of a
- *   seeded value of a field that turns into a guessed extra key
+ * @param isFilledByOldDefaults - Whether a value is what the defaults filled the old field with, asked of a seeded
+ *   value of a field that turns into a guessed extra key, and of a value no person entered whose declared default
+ *   changes
+ * @param [isOfHeldType=false] - Whether the value is known to be of a JSON type the new field holds, as the value the
+ *   field of an option switch sends is, so a change of the declared type does not reject it
  * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
  *   judge what it holds
  */
@@ -420,7 +436,7 @@ function judge<S extends StrictRJSFSchema>(
   acceptsNull: () => boolean,
   origin: ValueOrigin,
   isFilledByOldDefaults: (value: unknown) => boolean,
-  oldFillOut: (value: unknown) => unknown,
+  isOfHeldType = false,
 ): unknown {
   const before = constraintsOf(oldLayers, oldDefault);
   const now = constraintsOf(newLayers, newDefault);
@@ -447,54 +463,25 @@ function judge<S extends StrictRJSFSchema>(
     const isFilled = origin === 'filled' || (origin === 'seeded' && isFilledByOldDefaults(value));
     return isOldDefault || !guessedStubRenders(value, newLayers) || isFilled ? DROP : undefined;
   }
-  // An object the defaults fill key by key holds its old default only as far as each key does, since the fill can leave
-  // some of the default's keys out, so its properties are judged one by one, as `sanitizeDataForNewSchema()` does
-  const isFilledByKey = () =>
-    isPlainObject(value) &&
-    isPlainObject(newDefault) &&
-    !newLayers.some((layer) => isWholeValueSelect<S>(layer)) &&
-    fillsKeyByKey(newLayers, isItem);
-  // A value equal to the new default is still judged by the rest, since a new `const` or `enum` can reject it. What the
-  // old field's defaults filled out from the `default` it declared, to `minItems` or below it through a
-  // `ui:initialValue`, is theirs too, though not what they compute for a field declaring none, as a required boolean's
-  // `false`, nor what its own `ui:initialValue` replaced the default with
-  const isNewDefault = newDefault === undefined || deepEquals(newDefault, value);
-  if (!isNewDefault && !isFilledByKey()) {
-    // A value holding the old default takes the new one as it is, but an array, which the fill fills out from it to
-    // `minItems` and below its items, is filled out from it as what the old default filled out is: in place, as a
-    // fresh mount fills it, or dropped for the fill. One that comes back as it is is kept, and judged by the rest
-    if (isOldDefault && !Array.isArray(value)) {
-      return structuredClone(newDefault);
-    }
-    const filledOut = oldDefault === undefined ? undefined : oldFillOut(value);
-    if (filledOut === DROP) {
-      return isItem ? UNSET : DROP;
-    }
-    if (filledOut !== undefined && !deepEquals(filledOut, value)) {
-      return filledOut;
-    }
+  // A value the defaults filled in where the old schema declared a default follows the default that gives it now,
+  // whatever the fill made of the old one: an array lengthened to `minItems` or whose rows it completed with their
+  // properties' own defaults, or a value a `ui:initialValue` gave in the default's place. A default the new `const`
+  // rejects, as one a parent declares for the old option can be, gives way to the `const`
+  const followsDefault =
+    isOldDefault ||
+    (origin !== 'entered' &&
+      oldDefault !== undefined &&
+      !deepEquals(oldDefault, newDefault) &&
+      isFilledByOldDefaults(value));
+  if (followsDefault && newDefault !== undefined && (now.const === undefined || deepEquals(now.const, newDefault))) {
+    return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
   }
-  // A `readOnly` property shows the default it is filled with, which the user can't change there, so another value
-  // gives way to a new one replacing an old one, as `sanitizeDataForNewSchema()` clears it: read from the field's own
-  // schema, for a scalar or a select's whole value. Where the old field declared none, the value is saved data
-  const isWholeValue =
-    typeof value !== 'object' || value === null || newLayers.some((layer) => isWholeValueSelect<S>(layer));
-  if (
-    !isNewDefault &&
-    !isItem &&
-    oldDefault !== undefined &&
-    !deepEquals(oldDefault, newDefault) &&
-    isWholeValue &&
-    newLayers[0].readOnly === true
-  ) {
-    return DROP;
-  }
-  // An item is rejected by its type only where the new schema declares one that leaves out an old type, as
-  // `sanitizeDataForNewSchema()` reads it, since dropping a prefix item clears its array
+  // An item is rejected by its type only where the new schema declares one that leaves out an old type, since
+  // dropping a prefix item clears its array
   const isTypeChange = isItem
     ? now.type !== undefined && !namesEveryType(before.type, now.type)
     : !deepEquals(before.type, now.type);
-  if (before.type !== undefined && isTypeChange) {
+  if (before.type !== undefined && isTypeChange && !isOfHeldType) {
     return DROP;
   }
   if (now.const !== undefined && !deepEquals(now.const, value)) {
@@ -552,8 +539,7 @@ function itemsLayerOf<S extends StrictRJSFSchema>(layers: readonly S[]): S | und
 /** The subschema the item at `index` is judged by, as `getItemSchema()` reads it: `true` where nothing constrains it,
  * and `false` where no item is allowed. `ArrayField` renders a `prefixItems` array's items with `items`, and the default
  * draft-07 validator ignores `prefixItems`, but a schema declaring it is written for a validator that reads it by
- * position, as the Ajv 2019 and 2020 classes do, so its items are judged that way, as `sanitizeDataForNewSchema()`
- * sanitizes them
+ * position, as the Ajv 2019 and 2020 classes do, so its items are judged that way
  */
 function itemOf<S extends StrictRJSFSchema>(itemsLayer: S | undefined, index: number): S | boolean {
   return itemsLayer ? getItemSchema<S>(itemsLayer, index) : true;
@@ -743,65 +729,75 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return newValue;
   }
   const keepsShape = judgedClears !== undefined;
-  const edited = isEdited(ctx, path);
+  const { switchedFrom } = ctx;
+  // A switch carries what the field held to the option switched to. One from or to a field holding nothing carries
+  // nothing: what it wrote, as the defaults of the option for a field that was empty, is its own
+  const isSwitched =
+    switchedFrom !== undefined &&
+    path.length === switchedFrom.path.length &&
+    isPathPrefix(path, switchedFrom.path) &&
+    !holdsNothing(newValue) &&
+    !holdsNothing(oldValue);
+  // A switch of option is no edit of the value the field holds: the value is judged as the options change around it
+  const edited = isEdited(ctx, path) && !isSwitched;
   // A property holding `undefined` is a clear, which is judged as the field around it changes
   const isClear = newValue === undefined && !isItem;
   if (oldRaw === undefined || (isClear ? edited : !hasOld)) {
     return newValue;
   }
   // Nothing a field's subtree is built from differs, so neither does the subtree
-  if (
-    !edited &&
-    !ctx.isDefaultsChanged &&
-    oldRaw === newRaw &&
-    oldValue === newValue &&
-    oldRequired === newRequired &&
-    oldParentRequired === newParentRequired &&
-    deepEquals(oldInherited, newInherited)
-  ) {
+  if (!edited && !isSwitched && oldRaw === newRaw && oldValue === newValue && Object.is(oldInherited, newInherited)) {
     return newValue;
   }
   // The old side shows the options the new side shows from the same lists: which option the data is shown under is
-  // the selection's, or the match's, so a matching change changes no field's constraints. The keys a switch put back
-  // are the exception: they are laid out on the old side under the option switched away from, and below them as the
-  // form showed them before the switch, so each is judged against the fields that option rendered, as a field a
-  // conditional changes is
+  // the selection's, or the match's, so nothing but a switch changes a field's constraints through them. The field a
+  // switch switched is laid out on the old side as the form showed it before the switch, the option switched away from
+  // and every list at and below it read from the selections it held then
   const shown = new Map<string, number>();
   const newLayers = layersOf(ctx, ctx.schemaUtils, ctx.uiState, newRaw, newValue, path, shown, newRetrieved);
-  const oldLayers = layersOf(ctx, ctx.oldSchemaUtils, ctx.oldUiState, oldRaw, oldValue, path, shown, oldRetrieved);
+  const below: TreeContext<T, S, F> = isSwitched
+    ? { ...ctx, oldUiState: switchedFrom.uiState, newKeyOf: undefined, switchedFrom: undefined, isBelowSwitch: true }
+    : ctx;
+  const oldShown = isSwitched ? new Map<string, number>() : shown;
+  const oldLayers = layersOf(
+    below,
+    ctx.oldSchemaUtils,
+    below.oldUiState,
+    oldRaw,
+    oldValue,
+    path,
+    oldShown,
+    oldRetrieved,
+  );
   if (newLayers.length === 0) {
     return newValue;
   }
-  const shownHere = oldPath === undefined ? shownAbove : { oldPath, shown, above: shownAbove };
-  const { switchedFrom } = ctx;
-  const isSwitched =
-    switchedFrom !== undefined && path.length === switchedFrom.path.length && isPathPrefix(path, switchedFrom.path);
-  // A property's value is judged by the default the defaults write into it, while what it hands its own properties is
-  // the default it computes, which they fill from whether or not it is written itself
-  const isProperty = !isItem && path.length > 0;
-  // Read only by the judge of an item or the root, and by the properties of an object, so a property holding no
-  // object, whose value is judged by its written default, runs no option pick for it
-  const isComputedRead = !isProperty || isPlainObject(newValue);
-  const oldComputed = isComputedRead ? filledDefaultOf(ctx.oldSchemaUtils, oldLayers, oldInherited) : undefined;
-  const newComputed = isComputedRead ? filledDefaultOf(ctx.schemaUtils, newLayers, newInherited) : undefined;
+  const shownHere = oldPath === undefined ? shownAbove : { oldPath, shown: oldShown, above: shownAbove };
+  const oldOwnDefault = keywordOf(oldLayers, DEFAULT_KEY);
+  const newOwnDefault = keywordOf(newLayers, DEFAULT_KEY);
+  const oldDefault = oldOwnDefault ?? oldInherited;
+  const newDefault = newOwnDefault ?? newInherited;
   // The edited value and the values holding it are the user's
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
-    // The fill picks the option of a field holding no data by the field's own `default`, not by the one `Form` shows,
-    // and writes that option's `default`, so a clear hands `getFilledDefault()` the field's own layer, options and all,
-    // for it to pick as the fill does
-    const filledLayers = (layers: S[]) => (isClear ? layers.slice(0, 1) : layers);
-    const oldDefault = isProperty
-      ? filledDefaultOf(ctx.oldSchemaUtils, filledLayers(oldLayers), oldInherited, {
-          isRequired: oldRequired,
-          isParentRequired: oldParentRequired,
-        })
-      : oldComputed;
-    const newDefault = isProperty
-      ? filledDefaultOf(ctx.schemaUtils, filledLayers(newLayers), newInherited, {
-          isRequired: newRequired,
-          isParentRequired: newParentRequired,
-        })
-      : newComputed;
+    const typed = isGuessed(newLayers) ? undefined : newLayers.findLast((layer) => Object.hasOwn(layer, 'type'));
+    if (ctx.isBelowSwitch && !isItem && newValue !== undefined) {
+      if (typed && !takesTypeOf<S>(typed, newValue)) {
+        return DROP;
+      }
+      // A `readOnly` default stands in for a `const`: no person can change the value, so one that no person entered
+      // gives way to the default the option switched to declares in place of the old option's
+      const isScalar = !isObject(newValue) && !Array.isArray(newValue);
+      const givesAnotherDefault = newDefault !== undefined && !deepEquals(oldDefault, newDefault);
+      if (
+        isScalar &&
+        givesAnotherDefault &&
+        keywordOf(newLayers, 'readOnly') === true &&
+        originOf(ctx, oldPath) !== 'entered' &&
+        !deepEquals(newDefault, newValue)
+      ) {
+        return DROP;
+      }
+    }
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
     const judged = judge(
       oldLayers,
@@ -812,7 +808,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       isItem,
       acceptsNull,
       originOf(ctx, oldPath),
-      (value) => isOldFill(ctx, oldLayers, oldDefault, oldPath, shownHere, value),
+      // The fill before the diff has given the rows of a switched field the new option's defaults already, so what the
+      // field held is what is asked about
+      (value) => isOldFill(below, oldLayers, oldDefault, oldPath, shownHere, isSwitched ? oldValue : value),
+      isSwitched,
     );
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
@@ -824,104 +823,33 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (isPlainObject(newValue)) {
     const oldProperties = propertiesOf(oldLayers);
     const newProperties = propertiesOf(newLayers);
-    const previousKeyOf = previousKeys(ctx, path, oldValue);
-    const oldRequiredKeys = requiredOf(oldLayers);
-    const newRequiredKeys = requiredOf(newLayers);
-    // The keys a switch put back are judged under the option switched away from
-    let heldSide:
-      | {
-          keys: ReadonlySet<string>;
-          properties: Map<string, S | true>;
-          required: Set<string> | undefined;
-          computedDefault: unknown;
-          shownHere?: ShownAbove;
-          ctx: TreeContext<T, S, F>;
-          optionUiSchema?: GenericObjectType;
-        }
-      | undefined;
-    if (isSwitched && switchedFrom.heldKeys.size > 0) {
-      // The option switched to renders the keys with its own entry of the switched field's uiSchema option list where
-      // that list holds one, and with the field's uiSchema otherwise, as `getOptionUiSchema()` picks it, so a key is
-      // filled out anew under the uiSchema that option renders it with
-      const newOptions = retrievedOptionsOf<T, S, F>(ctx.schemaUtils, newLayers[0], asFieldValue<T>(newValue));
-      const newIndex = newOptions
-        ? shown.get(optionListKey<S>(newOptions, ctx.schemaUtils.getRootSchema()))
-        : undefined;
-      const xxxOfKey = getXxxOfOptions<S>(newLayers[0])?.key;
-      const ownUiSchemas = (
-        oldUiSchema
-          ? [oldUiSchema]
-          : uiSchemasOn(ctx, path.slice(0, -1)).flatMap((uiSchema) =>
-              uiSchemasAt(uiSchema, path[path.length - 1], true),
-            )
-      ).filter((uiSchema): uiSchema is GenericObjectType => isObject(uiSchema));
-      const switchedTo = ownUiSchemas.flatMap((uiSchema) => {
-        const optionUiSchema =
-          xxxOfKey && newIndex !== undefined ? getOptionUiSchema(uiSchema, xxxOfKey, newIndex) : uiSchema;
-        return optionUiSchema === uiSchema ? [uiSchema] : withOptionUiSchemas([optionUiSchema]);
-      });
-      // The form as it was before the switch: its selections, with the option switched away from at the switched field,
-      // which holds there and above it as for an edit made there, so the fill of the old data reads it too. Every list
-      // at the path is read from them afresh, since `shown` holds the options the new side shows
-      const heldCtx: TreeContext<T, S, F> = {
-        ...ctx,
-        oldUiState: switchedFrom.uiState,
-        newKeyOf: undefined,
-        switchedFrom: undefined,
-        switchedToUiSchemas: { depth: path.length, uiSchemas: switchedTo },
-      };
-      const heldShown = new Map<string, number>();
-      const heldLayers = layersOf(
-        heldCtx,
-        ctx.oldSchemaUtils,
-        switchedFrom.uiState,
-        oldRaw,
-        oldValue,
-        path,
-        heldShown,
-        oldRetrieved,
-      );
-      heldSide = {
-        keys: switchedFrom.heldKeys,
-        properties: propertiesOf(heldLayers),
-        required: requiredOf(heldLayers),
-        computedDefault: filledDefaultOf(ctx.oldSchemaUtils, heldLayers, oldInherited),
-        shownHere: oldPath === undefined ? shownAbove : { oldPath, shown: heldShown, above: shownAbove },
-        ctx: heldCtx,
-        optionUiSchema: shownOptionUiSchemaOf<T, S, F>(
-          ctx.oldSchemaUtils,
-          heldLayers,
-          oldValue,
-          heldShown,
-          oldUiSchema,
-        ),
-      };
-    }
-    const oldOptionUiSchema = shownOptionUiSchemaOf<T, S, F>(
-      ctx.oldSchemaUtils,
-      oldLayers,
-      oldValue,
-      shown,
-      oldUiSchema,
-    );
+    const previousKeyOf = previousKeys(below, path, oldValue);
     let result: Record<string, unknown> = newValue;
     for (const key of Object.keys(newValue)) {
       const childPath = [...path, key];
       const newChild = newProperties.get(key);
-      const from = heldSide?.keys.has(key) ? heldSide : undefined;
-      const oldChild = (from?.properties ?? oldProperties).get(key);
+      const oldChild = oldProperties.get(key);
       let next: unknown = newValue[key];
-      // A `true` property holds the value whatever it is, so it constrains nothing on either side: a value the new one
-      // holds is judged by its default alone, and one an old `true` held by what the new schema declares
-      const newSchema = newChild === true ? (UNCONSTRAINED as S) : newChild;
-      const isOldUnconstrained = oldChild === true || (newChild === true && oldChild !== undefined);
-      const oldSchema = isOldUnconstrained ? (UNCONSTRAINED as S) : oldChild;
-      if (newSchema !== undefined) {
-        const previousKey = from ? key : previousKeyOf(key);
+      const heldNothing = holdsNothing(newValue[key]) && valueAt(oldValue, previousKeyOf(key)) === undefined;
+      if (
+        heldNothing &&
+        isSchemaObject<S>(oldChild) &&
+        isSchemaObject<S>(newChild) &&
+        hasSchemaMarker(newChild, ADDITIONAL_PROPERTY_FLAG) &&
+        !hasSchemaMarker(oldChild, ADDITIONAL_PROPERTY_FLAG) &&
+        !isEdited(ctx, childPath) &&
+        judgesAt(ctx, childPath, newValue[key], false)
+      ) {
+        // A field that held no value leaves none behind once it is gone: kept, the key would stand as an extra key the
+        // person never added
+        next = DROP;
+      } else if (newChild !== undefined && newChild !== true) {
+        // A `true` property holds the value whatever it is, so there is nothing to judge it by
+        const previousKey = previousKeyOf(key);
         const previousValue = valueAt(oldValue, previousKey);
-        const oldParentDefault = from ? from.computedDefault : oldComputed;
+        const oldParentDefault = oldOwnDefault;
         next = walk(
-          from?.ctx ?? ctx,
+          below,
           {
             oldRaw: oldSchema,
             newRaw: newSchema,
@@ -936,17 +864,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
             isItem: false,
             hasOld: previousValue !== undefined,
             oldPath: oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined,
-            shownAbove: from ? from.shownHere : shownHere,
-            // An extra key renders with the `additionalProperties` uiSchema, whatever entry its name has
-            oldUiSchema:
-              previousKey === undefined || hasSchemaMarker(oldChild, ADDITIONAL_PROPERTY_FLAG)
-                ? undefined
-                : soleUiSchemaOf(
-                    ctx,
-                    (from ? from.optionUiSchema : oldOptionUiSchema) ?? oldUiSchema,
-                    oldChild,
-                    (uiSchema) => uiSchema[previousKey],
-                  ),
+            shownAbove: shownHere,
           },
           childPath,
         );
@@ -965,7 +883,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         if (next === DROP) {
           // What the defaults filled in is theirs to give again. Anything else is set aside for the form to bring
           // back with its field. A row has no place to come back to once its array's rows move, so none is kept
-          const previousKey = from ? key : previousKeyOf(key);
+          const previousKey = previousKeyOf(key);
           const droppedFrom = oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined;
           if (!childPath.some((at) => typeof at === 'number') && originOf(ctx, droppedFrom) !== 'filled') {
             ctx.dropped.push({ path: childPath, value: newValue[key] });
@@ -991,12 +909,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // cuts it off with the items after it; an unchanged one leaves the array as it is, for validation to report
     const limit = typeof maxItems === 'number' ? maxItems : Infinity;
     const bound = isNewBound ? limit : Infinity;
-    // An item at a position the new schema allows none at, or a prefix item it rejects, clears the array, as
-    // `sanitizeDataForNewSchema()` clears it, unless it is at or past `maxItems`, where sanitize stops
+    // An item at a position the new schema allows none at, or a prefix item it rejects, clears the array, unless it is
+    // at or past `maxItems`, where the array is cut off
     let rejectsArray = false;
     // An item kept as it was, or an array kept or removed whole, moves none of the items inside it
     const movesBefore = ctx.itemMoves.length;
-    const previousKeyOf = previousKeys(ctx, path, oldValue, { items: newValue, isTuple: prefixLength > 0 });
+    const previousKeyOf = previousKeys(below, path, oldValue, { items: newValue, isTuple: prefixLength > 0 });
     // Read slot by slot, so a hole a write past the array's end left keeps its place rather than being skipped
     const items = Array.from(newValue, (item: unknown, index) => {
       // A cleared array keeps none of its items, so the rest need no walk
@@ -1022,11 +940,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // the old tree's item at its index, so a change that flips the constraints of the rows judges it as it judges them
       const itemMovesBefore = ctx.itemMoves.length;
       const judged = walk(
-        ctx,
+        below,
         {
-          // An old `true` or `false` constrained no item there, so the item is judged by the new schema alone, as
-          // `sanitizeDataForNewSchema()` judges it
-          oldRaw: typeof oldItem === 'boolean' ? (UNCONSTRAINED as S) : oldItem,
+          // An old `true` or `false` constrained no item there, so the item is judged by the new schema alone
+          oldRaw: typeof oldItem === 'boolean' ? (UNCONSTRAINED_ITEM as S) : oldItem,
           newRaw: newItem,
           oldValue: hasPrevious ? valueAt(oldValue, previousIndex) : item,
           newValue: item,
@@ -1057,8 +974,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
       // A prefix item dropped would move the items after it into positions describing others. An unfilled one stays a
       // hole, one of the array being edited stays as the user wrote it, and one whose position both trees constrain
-      // alike, the defaults aside, already failed the old schema, so each stays for validation to report, as
-      // `sanitizeDataForNewSchema()` keeps it
+      // alike, its `default` aside, already failed the old schema, so each stays for validation to report
       if (
         edited ||
         keepsShape ||
@@ -1072,8 +988,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       rejectsArray = true;
       return judged;
     });
-    // A cleared array is removed, or kept as it is where it is an item of another array, as `sanitizeDataForNewSchema()`
-    // keeps an inner array its sanitize clears
+    // A cleared array is removed, or kept as it is where it is an item of another array, whose rows would move
     if (rejectsArray) {
       ctx.itemMoves.splice(movesBefore);
       return isItem ? newValue : DROP;
@@ -1208,18 +1123,19 @@ function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
 /** Sanitizes `data` for the field tree it builds, against the tree `previous` built: the diff of the two trees, field by
  * field, as each is rendered (the selected option, the expanded `$ref` cycles). A field that left the tree loses its
  * value, unless the object holds it as an extra key that constrains nothing and renders it. A field whose constraints
- * changed (`type`, `const`, `enum`, `maxItems`, or the default the defaults fill it with, see `getFilledDefault()`) has
- * its value judged again, see `judge()`: a value still holding the default the old schema filled it with takes the new
- * one, written in place, an array filled out as a fresh mount fills it. A field whose constraints did not change keeps
- * its value, so an edit elsewhere never re-judges it. The value of the field being edited, and of the fields holding
- * it, is the user's, and only what they hold is judged. Both trees show the option the new data is shown under, so an
- * option matched anew changes no field's constraints. A switch by the selector puts back each key the data held before
- * it, as it held it, and each is judged against the option switched away from, as a field a conditional changes is, so
- * the defaults and clears of the keys both options declare are read from the fills the diff holds at that path. With
- * `judgedClears`, as for a disabled or read-only form, only the keys holding `undefined` and the `null` items the form
- * recorded as clears are judged, by the same rule, so each gives way where it would in an enabled form and every value
- * the data holds, a `null` item the user didn't clear included, stays as it is. Dropping an item moves the items after
- * it down, which the result reports, so the recorded clears stay on their items.
+ * changed (`type`, `const`, `enum`, `maxItems`, or the default declared for it on its own schema or on its parent's)
+ * has its value judged again, see `judge()`: a value still holding the default the old schema declared takes the new
+ * one, written in place. A field whose constraints did not change keeps its value, so an edit elsewhere never re-judges
+ * it. The value of the field being edited, and of the fields holding it, is the user's, and only what they hold is
+ * judged. Both trees show the option the new data is shown under, so a change of the option the data matches changes
+ * no field's constraints. A switch by the selector is the exception: the switched field is laid out on the old side as
+ * the form showed it before the switch, so each value it holds is judged against the option switched away from and the
+ * one switched to, as a field a conditional stops declaring is, and the field itself is no edit. A switch from or to a
+ * field holding nothing is the field's own write and is not judged. With `judgedClears`, as for a disabled or read-only
+ * form, only the keys holding `undefined` and the `null` items the form recorded as clears are
+ * judged, by the same rule, so each gives way where it would in an enabled form and every value the data holds, a `null`
+ * item the user didn't clear included, stays as it is. Dropping an item moves the items after it down, which the result
+ * reports, so the recorded clears stay on their items.
  *
  * @param previous - The previous tree: the schema utilities it is built with, its data, and the root schema retrieved
  *        for that data
@@ -1228,8 +1144,7 @@ function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
  * @param fillAsFirstRender - How the form fills data on its first render, which a seeded value is judged by
  * @param origins - Where the values of the data of `previous` came from
  * @param [edit] - The change being made, if any: its path, where it moved the keys of the array or object there, so
- *        each item or property is paired with its own previous value, and the option a switch there left with the keys
- *        it put back
+ *        each item or property is paired with its own previous value, and the field whose option it switched
  * @param [judgedClears] - For a disabled or read-only form, the only values judged, see `judgedClearsIn()`
  * @param [isDefaultsChanged=false] - Whether the `defaultFormStateBehavior` the defaults are computed by changed since
  *        `previous`, so every field is judged again, however little its schema and value changed
