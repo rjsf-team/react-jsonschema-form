@@ -2385,6 +2385,21 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { c: 'a' },
           ],
           [
+            "leaves out a value outside the enum nested in object data of a property declared inside an object field's allOf",
+            {
+              type: 'object',
+              allOf: [{ properties: { c: { type: 'object', properties: { d: { enum: ['a', 'b'] } } } } }],
+            },
+            { c: { d: 'z' } },
+            { c: {} },
+          ],
+          [
+            "drops object data of a property an object field's allOf types as a string",
+            { type: 'object', allOf: [{ properties: { c: { type: 'string' } } }] },
+            { c: { z: 1 }, d: 1 },
+            { d: 1 },
+          ],
+          [
             "keeps a valid value of a property declared inside an object field's allOf",
             { type: 'object', allOf: [{ properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
             { c: 'green', d: 1 },

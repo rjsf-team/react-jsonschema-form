@@ -1851,9 +1851,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   }
   // The data is the user's: a key it holds as `undefined` stays so unless `mergeDefaultsIntoFormData` says a default
   // replaces that and one does, and one no property names and no additional property was computed for is kept as it
-  // is, unless it is no object data, which an extra key keeps as `extraKeyKeepsData()` says, and a property an `allOf`
-  // the field's plan left unmerged declares for it rejects it. Only those keys are matched, as the fold computed the
-  // others. A `null` it holds was kept or replaced by the field of the key, as in any other container
+  // is, unless a property an `allOf` the field's plan left unmerged declares for it rejects it, or a value nested in it.
+  // Only those keys are matched, as the fold computed the others. A `null` it holds was kept or replaced by the field
+  // of the key, as in any other container
   if (shouldMergeDefaultsIntoFormData) {
     const kept = Object.keys(formData).filter((key) => {
       const value = formData[key];
@@ -1866,9 +1866,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     });
     // The keys an object `const` pins keep the data's values, as under a `const` of the field's own
     const unmerged = new Set(
-      ALL_OF_KEY in view.schema && !pinnedKeys
-        ? kept.filter((key) => formData[key] !== undefined && !isObjectData(formData[key]))
-        : [],
+      ALL_OF_KEY in view.schema && !pinnedKeys ? kept.filter((key) => formData[key] !== undefined) : [],
     );
     const matching =
       unmerged.size > 0 ? viewFormDataMatching<unknown, S, F>(context, view, formData, unmerged) : formData;
