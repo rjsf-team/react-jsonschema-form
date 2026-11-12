@@ -1630,7 +1630,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   let extraKeysField = view.schema;
   if (optionOf) {
     extraKeysField = joinOptionExtraKeys<S>(optionOf.parent(), optionOf.option());
-  } else if (objectConst !== undefined && !view.field.retrieves) {
+  } else if (
+    objectConst !== undefined &&
+    !view.field.retrieves &&
+    MERGING_KEYWORDS.some((keyword) => Object.hasOwn(view.schema, keyword))
+  ) {
     extraKeysField = retrieveSchema<unknown, S, F>(context, view.schema, rootSchema, rawFormData);
   }
   // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it, and only of an
@@ -1648,15 +1652,22 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const pinnedKeys = defaultFormStateBehavior?.constAsDefaults === 'always' ? objectConst : undefined;
   const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
   const isDeclared = (key: string) => Object.hasOwn(schema.properties ?? {}, key);
-  // A key a property of the field as rendered declares, of the option's as well for an option's parent, is the
-  // property's, which its own field renders
-  const rendersDeclared = (key: string) =>
-    isDeclared(key) ||
-    [extraKeysField, ...(optionOf ? [optionOf.option()] : [])].some(
-      (rendered) =>
-        Object.hasOwn(rendered.properties ?? {}, key) &&
-        !hasSchemaMarker(getPropertySchema<S>(rendered, key), ADDITIONAL_PROPERTY_FLAG),
-    );
+  // A key of the `const` that a property of the field as rendered declares, of the option's as well for an option's
+  // parent, is that property's, which its own field renders. Where the fold left the `allOf` or `if` declaring it
+  // unmerged, it is folded here as that property, as `ObjectField` renders it
+  const renderedSchemas =
+    extraKeysField === view.schema ? [] : [extraKeysField, ...(optionOf ? [optionOf.option()] : [])];
+  const unmergedProperties = new Map<string, S>();
+  for (const key of Object.keys(objectConst ?? {})) {
+    const rendered = isDeclared(key)
+      ? undefined
+      : renderedSchemas.find(({ properties }) => Object.hasOwn(properties ?? {}, key));
+    const propertySchema = rendered && getPropertySchema<S>(rendered, key);
+    if (propertySchema && !hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG)) {
+      unmergedProperties.set(key, propertySchema);
+    }
+  }
+  const isComputed = (key: string) => isDeclared(key) || unmergedProperties.has(key);
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
   const childProps = (key: string, uiSchemaKey: string) => ({
@@ -1696,8 +1707,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const propertyKeys = Object.keys(schema.properties ?? {}).filter(
     (key) => isPinned(key) || !hasSchemaMarker(getPropertySchema<S>(schema, key), ADDITIONAL_PROPERTY_FLAG),
   );
-  for (const key of propertyKeys) {
-    const propertySchema = getPropertySchema<S>(schema, key);
+  for (const key of [...propertyKeys, ...unmergedProperties.keys()]) {
+    const propertySchema = unmergedProperties.get(key) ?? getPropertySchema<S>(schema, key);
     const { seeds, edge } = childSeeds(view, key);
     // A property written as a `$ref` keeps its `const` and `type` in the definition it names, which is read where the
     // declaration holding that `$ref` sits, since a property declared twice is merged into one no graph holds
@@ -1811,7 +1822,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // Where the `const` closes the object, nothing else seeds an extra key: `additionalProperties` is falsy there
   const closingKeys =
     closingConst && constDefaults
-      ? new Set(Object.keys(closingConst).filter((key) => Object.hasOwn(constDefaults, key) && !rendersDeclared(key)))
+      ? new Set(Object.keys(closingConst).filter((key) => Object.hasOwn(constDefaults, key) && !isComputed(key)))
       : undefined;
   if (closingKeys) {
     for (const key of closingKeys) {
@@ -1837,12 +1848,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       );
     }
   } else if (additionalProperties && !initialDefaultsGenerated) {
-    const formDataRequired = Object.keys(formData).filter((key) => !isDeclared(key));
+    const formDataRequired = Object.keys(formData).filter((key) => !isComputed(key));
     // Only seed keys from schema defaults when formData has no additionalProperties of its own.
     // If the user already has data (e.g. after a key rename), injecting default keys would
     // re-add stale entries that no longer exist in formData.
     const seeded = isObject(defaults) && formDataRequired.length === 0 ? Object.keys(defaults) : [];
-    const keys = new Set([...formDataRequired, ...seeded.filter((key) => !isDeclared(key))]);
+    const keys = new Set([...formDataRequired, ...seeded.filter((key) => !isComputed(key))]);
     [...keys].filter(isPinned).forEach((key) => {
       const { value, holdsNull } = foldReporting(
         context,
@@ -1888,7 +1899,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const nullsOnly = nullsOnlyContext(context);
     const child = defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalProperties);
     Object.keys(formData)
-      .filter((key) => !isDeclared(key) && isPinned(key))
+      .filter((key) => !isComputed(key) && isPinned(key))
       .forEach((key) => {
         const { value, holdsNull } = foldReporting(nullsOnly, `additionalNull:${key}`, child, {
           rawFormData: getByPath(formData, key),
@@ -1914,7 +1925,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       const value = formData[key];
       const keptUndefined =
         value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior) && !closingKeys?.has(key);
-      const uncomputed = !Object.hasOwn(computed, key) && (value === undefined || !isDeclared(key));
+      const uncomputed = !Object.hasOwn(computed, key) && (value === undefined || !isComputed(key));
       if (keptUndefined || uncomputed) {
         setOwn(computed, key, value);
       }

@@ -285,6 +285,33 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             x: { a: undefined },
           });
         });
+        it('fills a key of a const that only a property its fold leaves unmerged declares, which keeps a value the user cleared', () => {
+          const declared: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: { type: 'object', const: { a: 1 }, allOf: [{ properties: { a: { type: 'number' } } }] },
+            },
+          };
+          expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(declared).getDefaultFormState(declared, { x: {} }, false, true)).toStrictEqual({ x: { a: 1 } });
+          const conditional: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                const: { a: 1, b: 2 },
+                properties: { a: {} },
+                if: { properties: { a: { const: 1 } } },
+                then: { properties: { b: {} } },
+              },
+            },
+          };
+          const skipEmpty: DefaultFormStateBehavior = { emptyObjectFields: 'skipEmptyDefaults' };
+          expect(utils(conditional, skipEmpty).getDefaultFormState(conditional)).toStrictEqual({ x: { a: 1, b: 2 } });
+          expect(
+            utils(conditional, skipEmpty).getDefaultFormState(conditional, { x: { a: 1, b: undefined } }, false, true),
+          ).toStrictEqual({ x: { a: 1, b: undefined } });
+        });
         it("asks whether an option's parent takes extra keys of the parent with its allOf merged", () => {
           const parent: RJSFSchema = {
             type: 'object',
