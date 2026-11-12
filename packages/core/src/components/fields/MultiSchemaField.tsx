@@ -3,16 +3,13 @@ import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSc
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
-  deepEquals,
   ERRORS_KEY,
-  getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
   getSelectorPresentation,
   getTemplates,
   getUiOptions,
   hasSchemaMarker,
   hasWidget,
-  isConstant,
   isFormDataAvailable,
   logOnce,
   optionSelectorId,
@@ -21,23 +18,19 @@ import {
   RJSF_REF_KEY,
   selectOptionUiSchema,
   shouldRenderOptionalField,
-  toConstant,
   TranslatableString,
   UNEVALUATED_PROPERTIES_KEY,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
-import useOptionSelection from '../../hooks/useOptionSelection.ts';
-import useSendOptionSwitch, { selectSwitchedOption } from '../../hooks/useSendOptionSwitch.ts';
+import useOptionSwitch from '../../hooks/useOptionSwitch.ts';
 import { retrievedOptionListOf } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
-import defaultsForOption from './defaultsForOption.ts';
 import {
   displaysLabel,
   getWidgetErrorProps,
   getWidgetLabelProps,
   optionsKeywordOf,
-  takesTypeOf,
   withoutOptionalControls,
 } from './fieldWidgetUtils.ts';
 import getOptionFieldUiSchema from './getOptionFieldUiSchema.ts';
@@ -73,7 +66,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     hideError,
     id,
     onBlur,
-    onChange,
     onFocus,
     options: givenOptions,
     readonly,
@@ -84,24 +76,16 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     presentation,
   } = props;
   const { schemaUtils } = registry;
-  const sendOptionSwitch = useSendOptionSwitch(fieldPath);
   const options = useMemo(
     () => givenOptions ?? retrievedOptionListOf<T, S, F>(schemaUtils, schema, formData) ?? [],
     [givenOptions, schemaUtils, schema, formData],
-  );
-
-  const { selectedOption, selectOption } = useOptionSelection<T, S, F>(
-    registry,
-    fieldPath,
-    options,
-    formData,
-    getDiscriminatorFieldFromSchema<S>(schema),
   );
 
   const xxxOfKey = optionsKeywordOf<S>(schema);
   const selectorsAbove = useSelectorsAbove(id);
   const selectorDepth = selectorsAbove[xxxOfKey] + 1;
   const fieldId = optionSelectorId(id, xxxOfKey, selectorDepth);
+  const { selectedOption, switchOption } = useOptionSwitch<T, S, F>(props, options, fieldId);
   const selectorsBelow = useMemo(
     () => ({ ...selectorsAbove, [xxxOfKey]: selectorDepth }),
     [selectorsAbove, xxxOfKey, selectorDepth],
@@ -203,101 +187,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     [entry, rendersFromField, keysFromField, keySchemaFromField, xxxOfKey, selectedOption, definition],
   );
 
-  /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
-   * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
-   * the `onChange` handler.
-   *
-   * @param value - The new option value being selected
-   */
   const onOptionChange = useCallback(
-    (value?: string) => {
-      if (disabled || readonly) {
-        return;
-      }
-      const intOption = value !== undefined ? parseInt(value, 10) : -1;
-      if (intOption === selectedOption) {
-        return;
-      }
-      const newOption = intOption >= 0 ? options[intOption] : undefined;
-      const oldOption = selectedOption >= 0 ? options[selectedOption] : undefined;
-
-      // `uiSchemaDefinitions` comes from the registry since an option's uiSchema is only its own sub-uiSchema and
-      // never carries the root's `ui:definitions` itself.
-      const newOptionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, intOption);
-      // A cleared selection and a `null` option render no field, so nothing is held there. Any other option gets the
-      // data as it is: the form judges each value against the option switched to and fills what that option declares
-      const holdsNothing =
-        newOption === undefined ||
-        newOption.type === 'null' ||
-        (isConstant<S>(newOption) && toConstant<S>(newOption) === null);
-      // `''` is what a cleared `additionalProperties` entry holds for nothing, see `storedValue()`
-      const heldNothing = formData === undefined || formData === null || (formData as unknown) === '';
-      // A value of a JSON type the option cannot hold is not carried either, and neither is one that is not the
-      // constant the option names, so the field keeps its place in its container with what the option starts from
-      const renderedNewOption = newOption && getRenderedOptionSchema<S>(schema, newOption);
-      const carriesNothing =
-        heldNothing ||
-        (renderedNewOption !== undefined &&
-          (!takesTypeOf<S>(renderedNewOption, formData) ||
-            (isConstant<S>(renderedNewOption) && !deepEquals(toConstant<S>(renderedNewOption), formData))));
-      const carried =
-        newOption &&
-        defaultsForOption<T, S, F>(schemaUtils, schema, newOption, carriesNothing ? undefined : formData, {
-          optionUiSchema: newOptionUiSchema,
-          uiSchemaDefinitions,
-          globalUiOptions,
-        });
-      const switched = holdsNothing ? undefined : carried;
-
-      // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to
-      selectOption(intOption);
-      let sentData: unknown;
-      const outcome = sendOptionSwitch(
-        schema,
-        {
-          oldOption,
-          oldRenderedOption: renderedOption ?? undefined,
-          newOption,
-          oldUiSchema: optionUiSchema,
-          newUiSchema: newOptionUiSchema,
-          oldIndex: selectedOption,
-        },
-        formData,
-        switched,
-        (sent) => {
-          sentData = sent;
-          onChange(sent, fieldPath, undefined, fieldId);
-        },
-      );
-      selectSwitchedOption<T, S, F>(
-        selectOption,
-        schemaUtils,
-        { from: selectedOption, to: intOption, newOption },
-        formData,
-        sentData,
-        outcome,
-      );
-    },
-    [
-      selectedOption,
-      options,
-      disabled,
-      readonly,
-      schema,
-      schemaUtils,
-      formData,
-      fieldPath,
-      onChange,
-      fieldId,
-      selectOption,
-      sendOptionSwitch,
-      optionsUiSchema,
-      optionUiSchema,
-      renderedOption,
-      uiSchema,
-      uiSchemaDefinitions,
-      globalUiOptions,
-    ],
+    (value?: string) => switchOption(value !== undefined ? parseInt(value, 10) : -1),
+    [switchOption],
   );
 
   const { SchemaField: SchemaFieldComponent } = fields;

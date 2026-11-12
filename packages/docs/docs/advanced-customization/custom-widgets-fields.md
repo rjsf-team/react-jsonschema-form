@@ -434,7 +434,24 @@ A field component will always be passed the following props:
   ```
 
 The option a union field shows is the form's state, not the field's: `SchemaField` reads it too, to stub the extra keys of an object once, with the selected option, and it outlives the field's components and follows the moves the form makes, of array items and of additional properties renamed or removed.
-A custom `AnyOfField` or `OneOfField` reads and writes it with `useOptionSelection()` from `@rjsf/core`, rather than keeping its own, and sends the data for a newly selected option through `onChange` as before:
+A custom `AnyOfField` or `OneOfField` shows and switches it with `useOptionSwitch()` from `@rjsf/core`, rather than keeping its own selection or working out the new option's data itself:
+
+```tsx
+import { useOptionSwitch } from '@rjsf/core';
+
+function MyAnyOfField(props: FieldProps & { options: RJSFSchema[] }) {
+  const { selectedOption, switchOption } = useOptionSwitch(props, props.options);
+  // render the selector on `selectedOption`; on a pick, `switchOption(index)`
+}
+```
+
+`switchOption(index)` selects the option and sends the field's data through `onChange` in one step, and `switchOption(-1)` clears the selection.
+The form judges each value the field held against the option switched away from and the one switched to: a value the old option's defaults filled in takes the new option's, a value the user entered stays where the new option has a field that can hold it, and one it has no field for is set aside and returns if the user switches back.
+It does nothing for a `disabled` or `readonly` field.
+The optional third argument is the id of the control that switches, which the form's `onChange` is told the change came from; it defaults to the field's `id`.
+Outside a `Form` nothing judges the data, so a switch only fills the option switched to.
+
+A field that has to send data of its own on a switch reads and writes the selection alone with `useOptionSelection()`, and sends the data through `onChange` itself. The form takes that data as written:
 
 ```tsx
 import { useOptionSelection } from '@rjsf/core';
