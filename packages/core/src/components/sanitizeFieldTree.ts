@@ -3,6 +3,7 @@ import type {
   FieldPathList,
   FormContextType,
   FormFieldState,
+  GenericObjectType,
   PropertyPlacement,
   SchemaUtilsType,
   StrictRJSFSchema,
@@ -10,6 +11,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  ANY_OF_KEY,
   CONST_KEY,
   constrainsAlikeAsideDefault,
   deepEquals,
@@ -33,10 +35,13 @@ import {
   isWholeValueSelect,
   mergeSchemas,
   namesEveryType,
+  ONE_OF_KEY,
   rendersOwnFieldBesideOption,
   RJSF_REF_CYCLE_KEY,
   setOwn,
   toConstant,
+  UI_DEFINITIONS_KEY,
+  UI_OPTIONS_KEY,
   unsetByPath,
 } from '@rjsf/utils';
 
@@ -440,19 +445,21 @@ function judge<S extends StrictRJSFSchema>(
     if (isOldDefault) {
       return structuredClone(newDefault);
     }
-    // Dropped rather than written in place, so the fill fills the new default out as it filled the old one
+    // Dropped, or an item left unset, rather than written in place, so the fill fills the new default out as it filled
+    // the old one
     if (oldDefault !== undefined && isFilledByOldDefaults(value, true)) {
-      return isItem ? structuredClone(newDefault) : DROP;
+      return isItem ? UNSET : DROP;
     }
   }
   // A `readOnly` property shows the default it is filled with, which the user can't change there, so another value
-  // gives way to a new one, as `sanitizeDataForNewSchema()` clears it: read from the field's own schema, for a scalar
-  // or a select's whole value
+  // gives way to a new one replacing an old one, as `sanitizeDataForNewSchema()` clears it: read from the field's own
+  // schema, for a scalar or a select's whole value. Where the old field declared none, the value is saved data
   const isWholeValue =
     typeof value !== 'object' || value === null || newLayers.some((layer) => isWholeValueSelect<S>(layer));
   if (
     !isNewDefault &&
     !isItem &&
+    oldDefault !== undefined &&
     !deepEquals(oldDefault, newDefault) &&
     isWholeValue &&
     newLayers[0].readOnly === true
@@ -635,7 +642,13 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return false;
   }
   const withoutValue = copyAlongPath(ctx.oldData, oldPath);
-  unsetByPath(withoutValue, oldPath);
+  const holder: unknown = oldPath.length === 1 ? withoutValue : getByPath(withoutValue, oldPath.slice(0, -1));
+  // The fill fills an `undefined` item but skips a hole, which deleting it would leave
+  if (Array.isArray(holder)) {
+    holder[Number(oldPath[oldPath.length - 1])] = undefined;
+  } else {
+    unsetByPath(withoutValue, oldPath);
+  }
   const formFill = ctx.fillAsFirstRender(ctx.oldTree, asFieldValue<T>(withoutValue), oldFieldStateOf(ctx, shownAbove));
   return deepEquals(getByPath(formFill, oldPath), value);
 }
@@ -794,7 +807,15 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       : newComputed;
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
     const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, (value, isSwap) =>
-      isOldFill(ctx, oldLayers, oldDefault, oldPath, shownHere, value, isSwap === true && !isFilledOut(ctx, oldLayers)),
+      isOldFill(
+        ctx,
+        oldLayers,
+        oldDefault,
+        oldPath,
+        shownHere,
+        value,
+        isSwap === true && !isFilledOut(ctx, oldLayers, oldPath),
+      ),
     );
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
@@ -1016,13 +1037,72 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return newValue;
 }
 
-/** Whether the form's fill can fill a field rendered with `layers` out past its declared `default`, which its own fill
- * can't: through a `ui:initialValue` anywhere in the old uiSchema, or out to a `minItems` it pads by `required` */
+/** Whether the form's fill can fill the field at `oldPath`, rendered with `layers`, out past its declared `default`,
+ * which its own fill can't: through a `ui:initialValue` the old uiSchema declares on, above or below the field, or out
+ * to a `minItems` it pads by `required`
+ */
 function isFilledOut<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   layers: readonly S[],
+  oldPath: FieldPathList | undefined,
 ): boolean {
-  return keywordOf(layers, 'minItems') !== undefined || ctx.oldDeclaresInitialValue();
+  return keywordOf(layers, 'minItems') !== undefined || (oldPath !== undefined && initialValueReaches(ctx, oldPath));
+}
+
+/** Whether a `ui:initialValue` in the old uiSchema can fill the field at `path`, as one declared on it, above it or below
+ * it. Asked per field, so it walks only the uiSchemas along `path`, over-counting them rather than resolving which one
+ * renders: every option's, an array's `items` and `additionalItems` alike, and the `ui:definitions` any `$ref` renders
+ * for every field
+ */
+function initialValueReaches<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  path: FieldPathList,
+): boolean {
+  const root = ctx.oldTree.uiSchema;
+  if (!ctx.oldDeclaresInitialValue() || declaresInitialValue(root?.[UI_DEFINITIONS_KEY])) {
+    return ctx.oldDeclaresInitialValue();
+  }
+  let reached = withOptionUiSchemas([root]);
+  for (const key of path) {
+    if (reached.some(ownsInitialValue)) {
+      return true;
+    }
+    reached = withOptionUiSchemas(reached.flatMap((uiSchema) => uiSchemasAt(uiSchema, key)));
+  }
+  return reached.some((uiSchema) => declaresInitialValue(uiSchema));
+}
+
+/** The uiSchemas the fill can render the value at `key` of a field rendered with `uiSchema` with */
+function uiSchemasAt(uiSchema: GenericObjectType, key: string | number): unknown[] {
+  if (typeof key === 'number') {
+    const { items } = uiSchema;
+    return [Array.isArray(items) ? items[key] : items, uiSchema.additionalItems];
+  }
+  return [uiSchema[key], uiSchema.additionalProperties];
+}
+
+/** `uiSchemas` that are objects, each followed by the uiSchemas its `anyOf`/`oneOf` options hold, theirs included */
+function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
+  const found: GenericObjectType[] = [];
+  const pending = [...uiSchemas];
+  while (pending.length > 0) {
+    const uiSchema = pending.pop();
+    if (isObject(uiSchema) && !found.includes(uiSchema)) {
+      found.push(uiSchema);
+      for (const options of [uiSchema[ANY_OF_KEY], uiSchema[ONE_OF_KEY]]) {
+        if (Array.isArray(options)) {
+          pending.push(...options);
+        }
+      }
+    }
+  }
+  return found;
+}
+
+/** Whether `uiSchema` itself declares a `ui:initialValue`, directly or in its `ui:options` */
+function ownsInitialValue(uiSchema: object): boolean {
+  const options: unknown = getByPath(uiSchema, UI_OPTIONS_KEY);
+  return Object.hasOwn(uiSchema, 'ui:initialValue') || (isObject(options) && Object.hasOwn(options, 'initialValue'));
 }
 
 /** Whether `uiSchema`, or any uiSchema it holds, an option's in an array included, declares a `ui:initialValue` */
@@ -1031,10 +1111,7 @@ function declaresInitialValue(uiSchema: unknown, seen = new WeakSet<object>()): 
     return false;
   }
   seen.add(uiSchema);
-  return (
-    Object.hasOwn(uiSchema, 'ui:initialValue') ||
-    Object.values(uiSchema).some((value) => declaresInitialValue(value, seen))
-  );
+  return ownsInitialValue(uiSchema) || Object.values(uiSchema).some((value) => declaresInitialValue(value, seen));
 }
 
 /** `compute`, run at most once */

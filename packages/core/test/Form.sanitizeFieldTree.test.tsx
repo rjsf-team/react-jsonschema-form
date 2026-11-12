@@ -3512,7 +3512,7 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
   // `minItems` is still the old default
   it.each<{ name: string; withDefault: (v: string) => RJSFSchema; data: Record<string, unknown>; expected: unknown }>([
     {
-      name: 'swaps a readOnly property the user changed for its new default',
+      name: 'swaps a saved readOnly value for the new default replacing its old one',
       withDefault: (v) => ({ type: 'object', properties: { v: { type: 'string', default: v, readOnly: true } } }),
       data: { v: 'k' },
       expected: { v: 'y' },
@@ -3527,6 +3527,31 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: {},
       expected: { v: ['y', 'z'] },
     },
+    {
+      name: 'swaps an item its old default filled out to minItems for its new default in place',
+      withDefault: (v) => ({
+        type: 'object',
+        required: ['list'],
+        properties: {
+          list: {
+            type: 'array',
+            items: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [v] },
+          },
+        },
+      }),
+      data: {
+        list: [
+          ['x', 'z'],
+          ['k', 'z'],
+        ],
+      },
+      expected: {
+        list: [
+          ['y', 'z'],
+          ['k', 'z'],
+        ],
+      },
+    },
   ])('$name when a schema change changes it', ({ withDefault, data, expected }) => {
     const props = { validator, initialFormData: data };
     const ref = createRef<FormRef<Record<string, unknown>>>();
@@ -3535,6 +3560,83 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
 
     expect(handleOf(ref).getFormData()).toEqual(expected);
+  });
+  it('swaps a root item its old default filled out to minItems for its new default in place', () => {
+    const withDefault = (v: string): RJSFSchema => ({
+      type: 'array',
+      items: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [v] },
+    });
+    const props = {
+      validator,
+      initialFormData: [
+        ['x', 'z'],
+        ['k', 'z'],
+      ],
+    };
+    const ref = createRef<FormRef>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual([
+      ['y', 'z'],
+      ['k', 'z'],
+    ]);
+  });
+  // The form's fill is asked only where a `ui:initialValue` is declared on, above or below the field. What it filled
+  // out is dropped for the new default, which a `ui:initialValue`, applied on mount, no longer fills
+  it.each<{ name: string; uiSchema: UiSchema; expected: unknown }>([
+    {
+      name: 'a ui:initialValue',
+      uiSchema: { other: { 'ui:initialValue': 'o' }, v: { b: { 'ui:initialValue': 'i' } } },
+      expected: { other: 'o', v: { a: 'y' } },
+    },
+    {
+      name: 'a ui:options initialValue',
+      uiSchema: { v: { b: { 'ui:options': { initialValue: 'i' } } } },
+      expected: { v: { a: 'y' } },
+    },
+  ])('drops an object its old default filled out through $name below it', ({ uiSchema, expected }) => {
+    const withDefault = (v: string): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        other: { type: 'string' },
+        // Untyped, so its object default is judged whole rather than key by key
+        v: { default: { a: v }, properties: { a: { type: 'string' }, b: { type: 'string' } } },
+      },
+    });
+    const props = { validator, uiSchema };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual(expected);
+  });
+  // With no old default to tell them by, what the uiSchema filled in is kept as saved data is, as for any field
+  it.each<{ name: string; uiSchema: UiSchema; initialFormData: Record<string, unknown>; expected: string }>([
+    { name: 'a saved readOnly value', uiSchema: {}, initialFormData: { id: 'saved-123' }, expected: 'saved-123' },
+    {
+      name: 'the readOnly value a ui:initialValue filled in',
+      uiSchema: { id: { 'ui:initialValue': 'a' } },
+      initialFormData: {},
+      expected: 'a',
+    },
+  ])('keeps $name when a conditional first gives it a default', async ({ uiSchema, initialFormData, expected }) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { flag: { type: 'boolean' }, id: { type: 'string', readOnly: true } },
+      if: { properties: { flag: { const: true } }, required: ['flag'] },
+      then: { properties: { id: { default: 'gen' } } },
+    };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { container } = render(
+      <Form ref={ref} schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={initialFormData} />,
+    );
+
+    await user.click(input(container, 'root_flag'));
+
+    expect(handleOf(ref).getFormData()).toEqual({ flag: true, id: expected });
   });
   // A `readOnly` value gives way only to a new default, read from the field's own schema, as `sanitizeDataForNewSchema()`
   // reads it, a select's whole value included

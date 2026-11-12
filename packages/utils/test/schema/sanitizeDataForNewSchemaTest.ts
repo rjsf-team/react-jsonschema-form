@@ -2262,6 +2262,15 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           {},
         );
       });
+      it('keeps a value a readOnly default newly given to it differs from, as saved data', () => {
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            objectWith({ type: 'string', default: 'n', readOnly: true }),
+            objectWith({ type: 'string' }),
+            { k: 'u' },
+          ),
+        ).toStrictEqual({ k: 'u' });
+      });
       it('keeps an array whose items change type, without the items', () => {
         const oldK: RJSFSchema = { type: 'array', items: { type: 'number' } };
         const newK: RJSFSchema = { type: 'array', items: { type: 'string' } };
