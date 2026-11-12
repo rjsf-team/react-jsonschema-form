@@ -22,7 +22,6 @@ import {
   sanitizeDataForNewSchema,
 } from './schema/index.ts';
 import type {
-  FieldFill,
   FormContextType,
   FormFieldState,
   FoundFieldType,
@@ -455,14 +454,12 @@ class SchemaUtils<
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
-   * @param [fill] - What the defaults hand the field holding the data, for one below the root, such as the field an
-   *        `anyOf`/`oneOf` switch is made in
    * @returns - The new form data, without the fields uniquely associated with the old schema. Will return `undefined`
    *      if the new schema is not an object containing properties, or where its object or array `const` rejects the
    *      data, and a copy of that `const` where the data holds the old schema's
    */
-  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown, fill?: FieldFill): T {
-    return sanitizeDataForNewSchema(this.context, this.rootSchema, newSchema, oldSchema, data, fill);
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown): T {
+    return sanitizeDataForNewSchema(this.context, this.rootSchema, newSchema, oldSchema, data);
   }
 }
 

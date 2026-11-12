@@ -1,10 +1,4 @@
-import type {
-  DefaultFormStateBehavior,
-  FieldFill,
-  RJSFMarkedSchema,
-  SchemaUtilsType,
-  RJSFSchema,
-} from '../../src/index.ts';
+import type { DefaultFormStateBehavior, RJSFMarkedSchema, SchemaUtilsType, RJSFSchema } from '../../src/index.ts';
 import {
   createSchemaUtils,
   getItemSchema,
@@ -179,16 +173,20 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         validator: testValidator,
         defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' as const },
       };
-      const optionWith = (a: number): RJSFSchema => ({
+      const withField = (a: number, parentDefault?: RJSFSchema['default']): RJSFSchema => ({
         type: 'object',
-        default: { a },
-        properties: { a: { type: 'number' } },
+        ...(parentDefault !== undefined && { default: parentDefault }),
+        properties: { f: { type: 'object', default: { a }, properties: { a: { type: 'number' } } } },
       });
-      const sanitize = (fill?: FieldFill) =>
-        sanitizeDataForNewSchema(context, optionWith(3), optionWith(3), optionWith(2), { a: undefined }, fill);
+      const sanitize = (parentDefault?: RJSFSchema['default']) => {
+        const newSchema = withField(3, parentDefault);
+        return sanitizeDataForNewSchema(context, newSchema, newSchema, withField(2, parentDefault), {
+          f: { a: undefined },
+        });
+      };
 
-      expect(sanitize()).toStrictEqual({});
-      expect(sanitize({ inheritedDefault: { a: 1 } })).toStrictEqual({ a: undefined });
+      expect(sanitize()).toStrictEqual({ f: {} });
+      expect(sanitize({ f: { a: 1 } })).toStrictEqual({ f: { a: undefined } });
     });
     it("reads an object its parent lists no `required` for as the defaults do under 'populateRequiredDefaults'", () => {
       const context = {

@@ -584,6 +584,31 @@ describe('oneOf', () => {
     expect(Object.hasOwn(onChange.mock.lastCall![0].formData, 'a')).toBe(true);
   });
 
+  it("should keep a clear of a property the outer field's default fills under every option of an inner oneOf (#5824)", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      default: { a: 'p' },
+      anyOf: [
+        {
+          oneOf: [
+            { title: 'A', default: { a: 'p' }, properties: { a: { type: 'string' } } },
+            { title: 'B', properties: { a: { type: 'string' } } },
+          ],
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_a')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { a: undefined } }),
+      'root__oneof_select',
+    );
+    expect(Object.hasOwn(onChange.mock.lastCall![0].formData, 'a')).toBe(true);
+  });
+
   it("should keep a clear in an item of an optional array, whose defaults fill neither option, under 'populateRequiredDefaults'", async () => {
     const optionFor = (title: string, value: string): RJSFSchema => ({
       title,

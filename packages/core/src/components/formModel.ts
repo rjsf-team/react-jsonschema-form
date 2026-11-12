@@ -53,7 +53,6 @@ import {
 import type { RJSFFormStatus } from './IChangeEvent.ts';
 import { keyMoveOf, moveFateOf } from './keyMove.ts';
 import type { AnnouncedMove, MoveOutcome } from './keyMove.ts';
-import { fieldFillAt } from './sanitizeFieldTree.ts';
 import { asFieldValue, fieldStateOf, fieldsRendered, withSwitchUndone } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
@@ -625,16 +624,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       moved = { move: taken, outcome: { kind: 'refused' } };
     }
     const takenAt = taken && fieldPathToList(taken.fieldPath);
-    // The switch leaves out the keys only the old option declared, which a change taken as the switch puts back for the
-    // sanitize to judge
+    // A change taken as the switch puts back each key the data held before it, as it held it, for the sanitize to judge
+    // against the option switched away from. Keys the switch filled that the data didn't hold keep what it sent
     let value = newValue;
-    let putBack: { fieldPath: FieldPath; at: FieldPathList; index: number; left: GenericObjectType } | undefined;
-    if (takenAt && taken?.switchedFrom?.left && isPlainObject(taken.value)) {
-      const { index, left } = taken.switchedFrom;
-      putBack = { fieldPath: taken.fieldPath, at: takenAt, index, left };
+    let putBack: { fieldPath: FieldPath; at: FieldPathList; index: number; held: GenericObjectType } | undefined;
+    if (takenAt && taken?.switchedFrom?.held && isPlainObject(taken.value)) {
+      const { index, held } = taken.switchedFrom;
+      putBack = { fieldPath: taken.fieldPath, at: takenAt, index, held };
       const at = putBack.at.slice(path.length);
-      const withLeft = { ...taken.value, ...left };
-      value = at.length === 0 ? asFieldValue<T>(withLeft) : setByPath(copyAlongPath(newValue, at), at, withLeft);
+      const withHeld = { ...taken.value, ...held };
+      value = at.length === 0 ? asFieldValue<T>(withHeld) : setByPath(copyAlongPath(newValue, at), at, withHeld);
     }
     // The selections and expansions under keys the change moves, or under a property it removes, move before it is
     // applied, so the sanitize reads them where the change puts the data; a change the form refuses puts them back
@@ -655,13 +654,13 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       const before = containerPath && getAt<unknown>(current().formData, containerPath);
       const unmoved = uiMove && uiState.save();
       // The field tree before a switch is read under the selections from before it, which the move drops under the keys
-      // the switch left
+      // the switch removes
       let applied = fieldChange;
       if (putBack) {
         const oldData = getAt<unknown>(current().formData, putBack.at);
         const shownBefore = withSwitchUndone(unmoved ?? uiState.save(), putBack.fieldPath, putBack.index, oldData);
-        const leftKeys = new Set(Object.keys(putBack.left));
-        applied = { ...fieldChange, switchedFrom: { path: putBack.at, leftKeys, uiState: shownBefore } };
+        const heldKeys = new Set(Object.keys(putBack.held));
+        applied = { ...fieldChange, switchedFrom: { path: putBack.at, heldKeys, uiState: shownBefore } };
       }
       if (uiMove) {
         uiState.move(uiMove.container, uiMove.newKeyOf);
@@ -1019,7 +1018,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     /** The latest value at `path`: an edit made since the form last rendered included */
     readField: <D>(path: FieldPath) => getAt<D>(current().formData, fieldPathToList(path)),
     readRenderedField: <D>(path: FieldPath) => getAt<D>(rendered.formData, fieldPathToList(path)),
-    readFieldFill: (path: FieldPath) => fieldFillAt(current(), uiState, fieldPathToList(path)),
     uiState,
     getSnapshot: () => shown,
     subscribe: (listener: () => void) => {

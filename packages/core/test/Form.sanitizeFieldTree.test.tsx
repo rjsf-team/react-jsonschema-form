@@ -524,14 +524,16 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         expect(container.querySelector('#root_a__key')).toBeNull();
       });
 
-      // Without data the field matches its first option, whose defaults are what the form filled it with to start
-      it("drops another option's defaults, kept through the switch to the option shown", async () => {
+      // Without data the field matches its first option, whose defaults are what the form filled it with to start. The
+      // switch to the option shown already judges them against that option, as keys only it declared (#5824)
+      it("drops another option's defaults on the switch to the option shown", async () => {
         const { container, formData } = await selectT(unionOf({ title: 'B', type: 'object' }), {
           whenAbsent: 'allow',
           initialFormData: { kind: 's' },
           beforeSwitch: async (form) => {
-            await user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'B');
             expect(input(form, 'root_a_w').value).toBe('q');
+            await user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'B');
+            expect(form.querySelector('#root_a_w')).toBeNull();
           },
         });
 
@@ -2774,13 +2776,34 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: { a: 'x', b: 'z' },
       expected: { a: 'y' },
     })),
-    // A `true` key the walk has nothing to judge by, so the object holding it is swapped whole
+    // A `true` key constrains nothing, so only the default it is filled with changes
     {
-      name: 'swaps an object property with a true key holding its old default',
+      name: 'swaps a true key of an object property holding its old default for its new default',
       from: { type: 'object', default: { a: 'x' }, properties: { a: true } },
       to: { type: 'object', default: { a: 'y' }, properties: { a: true } },
       data: { a: 'x' },
       expected: { a: 'y' },
+    },
+    {
+      name: 'swaps a key of an object property that was true holding its old default for its new default',
+      from: { type: 'object', default: { a: 'x' }, properties: { a: true } },
+      to: { type: 'object', default: { a: 'y' }, properties: { a: { type: 'string' } } },
+      data: { a: 'x' },
+      expected: { a: 'y' },
+    },
+    {
+      name: 'swaps a true key of an object property beside a key the new default drops for its new default',
+      from: { type: 'object', default: { a: 'x', b: 'z' }, properties: { a: true, b: { type: 'string' } } },
+      to: { type: 'object', default: { a: 'y' }, properties: { a: true, b: { type: 'string' } } },
+      data: { a: 'x', b: 'z' },
+      expected: { a: 'y', b: 'z' },
+    },
+    {
+      name: 'swaps a true key of an object property beside an edited key for its new default',
+      from: { type: 'object', default: { a: 'x', b: 'z' }, properties: { a: true, b: { type: 'string' } } },
+      to: { type: 'object', default: { a: 'y', b: 'z' }, properties: { a: true, b: { type: 'string' } } },
+      data: { a: 'x', b: 'k' },
+      expected: { a: 'y', b: 'k' },
     },
     // Only an object `default` is filled key by key, so an object holding its old one takes a new `null` whole
     ...(
@@ -2870,6 +2893,18 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       value: data,
     });
     expect(sanitized).toEqual({ value: expected });
+  });
+  it('swaps a key of an object property that turns true holding its old default for its new default', () => {
+    const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
+    const from: RJSFSchema = { type: 'object', default: { a: 'x' }, properties: { a: { type: 'string' } } };
+    const to: RJSFSchema = { type: 'object', default: { a: 'y' }, properties: { a: true } };
+    const ref = createRef<FormRef<{ value?: unknown }>>();
+    const props = { validator, initialFormData: { value: { a: 'x' } } };
+    const { rerender } = render(<Form ref={ref} schema={wrap(from)} {...props} />);
+
+    rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ value: { a: 'y' } });
   });
   it("keeps a clear of a property holding its own null default when its parent's default changes (#5815)", () => {
     const schemaWith = (parentDefault: string): RJSFSchema => ({
@@ -3472,6 +3507,92 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     );
 
     expect(handleOf(ref).getFormData()).toEqual({ v: 'x' });
+  });
+  // A schema change judges a field as a switch does: a `readOnly` value gives way, and an old default filled out to
+  // `minItems` is still the old default
+  it.each<{ name: string; withDefault: (v: string) => RJSFSchema; data: Record<string, unknown>; expected: unknown }>([
+    {
+      name: 'swaps a readOnly property the user changed for its new default',
+      withDefault: (v) => ({ type: 'object', properties: { v: { type: 'string', default: v, readOnly: true } } }),
+      data: { v: 'k' },
+      expected: { v: 'y' },
+    },
+    {
+      name: 'swaps an array its old default filled out to minItems for its new default',
+      withDefault: (v) => ({
+        type: 'object',
+        required: ['v'],
+        properties: { v: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [v] } },
+      }),
+      data: {},
+      expected: { v: ['y', 'z'] },
+    },
+  ])('$name when a schema change changes it', ({ withDefault, data, expected }) => {
+    const props = { validator, initialFormData: data };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual(expected);
+  });
+  // A `readOnly` value gives way only to a new default, read from the field's own schema, as `sanitizeDataForNewSchema()`
+  // reads it, a select's whole value included
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; data: unknown; expected: unknown }>([
+    {
+      name: 'keeps a readOnly value when only its enum changes',
+      from: { type: 'string', readOnly: true, default: 'draft', enum: ['draft', 'approved'] },
+      to: { type: 'string', readOnly: true, default: 'draft', enum: ['draft', 'approved', 'final'] },
+      data: 'approved',
+      expected: 'approved',
+    },
+    {
+      name: "swaps a readOnly select's object value for its new default",
+      from: { type: 'object', readOnly: true, default: { a: 1 }, enum: [{ a: 1 }, { a: 2 }, { a: 3 }] },
+      to: { type: 'object', readOnly: true, default: { a: 2 }, enum: [{ a: 1 }, { a: 2 }, { a: 3 }] },
+      data: { a: 3 },
+      expected: { a: 2 },
+    },
+    {
+      name: 'keeps a value only its option declares readOnly',
+      from: { default: 'x', oneOf: [{ type: 'string', readOnly: true }] },
+      to: { default: 'y', oneOf: [{ type: 'string', readOnly: true }] },
+      data: 'k',
+      expected: 'k',
+    },
+  ])('$name', ({ from, to, data, expected }) => {
+    const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
+    const props = { validator, initialFormData: { value: data } };
+    const ref = createRef<FormRef<{ value?: unknown }>>();
+    const { rerender } = render(<Form ref={ref} schema={wrap(from)} {...props} />);
+
+    rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ value: expected });
+  });
+  // A key an old `true` held is judged by the schema it takes, as any field whose constraints changed
+  it.each<{ name: string; to: RJSFSchema; data: Record<string, unknown>; expected: unknown }>([
+    {
+      name: 'swaps the value a new const rejects for the const',
+      to: { type: 'object', properties: { a: { const: 'c' } } },
+      data: { a: 'k' },
+      expected: { a: 'c' },
+    },
+    {
+      name: 'fills a clear with the new default',
+      to: { type: 'object', default: { a: 'y' }, properties: { a: { type: 'string' } } },
+      data: { a: undefined },
+      expected: { a: 'y' },
+    },
+  ])('$name of a key that was true', ({ to, data, expected }) => {
+    const from: RJSFSchema = { type: 'object', default: { a: 'x' }, properties: { a: true } };
+    const props = { validator, initialFormData: data };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} {...props} />);
+
+    rerender(<Form ref={ref} schema={to} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual(expected);
   });
   // Under `populateRequiredDefaults` the defaults fill a property only where it is required and so is its object, or its
   // object is the root, so a value equal to the default of any other is the user's

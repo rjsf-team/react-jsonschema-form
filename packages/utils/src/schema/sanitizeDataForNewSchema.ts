@@ -22,7 +22,6 @@ import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
-  FieldFill,
   FormContextType,
   GenericObjectType,
   PropertyPlacement,
@@ -449,8 +448,6 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  * @param [newSchema] - The new schema for which the data is being sanitized
  * @param [oldSchema] - The old schema from which the data originated
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
- * @param [fill={}] - What the defaults hand the field holding the data, the same before and after the change, for one
- *        below the root, such as the field an `anyOf`/`oneOf` switch is made in
  * @returns - The new form data, without the fields uniquely associated with the old schema. Will return `undefined` if
  *      the new schema is not an object containing properties, or where its `const` rejects object or array data, and a
  *      copy of that `const` where the data holds the old schema's
@@ -459,15 +456,18 @@ export default function sanitizeDataForNewSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  context: SchemaContext<S, F>,
-  rootSchema: S,
-  newSchema?: S,
-  oldSchema?: S,
-  data: unknown = {},
-  fill: FieldFill = {},
-): T {
-  return sanitizeWithFills<T, S, F>(context, rootSchema, newSchema, oldSchema, data, fill, fill);
+>(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: unknown = {}): T {
+  return sanitizeWithFills<T, S, F>(context, rootSchema, newSchema, oldSchema, data, {}, {});
+}
+
+/** What the defaults hand a field the sanitize descends into, which they fill its properties by */
+interface FieldFill {
+  /** The default the field holding this one was filled with for it */
+  inheritedDefault?: unknown;
+  /** Whether the field is required where it sits, as the defaults hand it `required`: an array item is where its array
+   * is. Undefined for the root
+   */
+  isRequired?: boolean;
 }
 
 /** `sanitizeDataForNewSchema()` for a value whose field the defaults reached as `oldFill` says before the change and

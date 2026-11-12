@@ -47,17 +47,17 @@ export type MoveOutcome =
   | { kind: 'taken'; kept: unknown }
   | { kind: 'rewritten'; kept: unknown; edited: unknown };
 
-/** The option an `anyOf`/`oneOf` field showed before a switch, and the keys only that option declared that the switch
- * left out of the value it sends, with their values. It marks the move as a switch, which the form takes from a parent
- * field forwarding it too, so the switching field learns what became of it. The form puts the keys back where it takes
- * the change as the switch, for its sanitize to judge as it judges a field a conditional stops declaring; a change it
- * doesn't take as the switch leaves them out, as outside a `Form`
+/** The option an `anyOf`/`oneOf` field showed before a switch, and the keys the data held before it, with the values it
+ * held there. It marks the move as a switch, which the form takes from a parent field forwarding it too, so the
+ * switching field learns what became of it. The form puts the keys back as they were where it takes the change as the
+ * switch, for its sanitize to judge against the option switched away from, as it judges a field a conditional changes;
+ * a change it doesn't take as the switch keeps the value the switch sent, as outside a `Form`
  */
 export interface SwitchedOption {
   /** The index of the option switched away from, in the option list whose selection the switch made */
   index: number;
-  /** The keys the switch left out that only the option switched away from declared, with their values, if any */
-  left?: GenericObjectType;
+  /** The keys the data held before the switch, with their values, if it held an object */
+  held?: GenericObjectType;
 }
 
 /** A `KeyMove` with the path of the array or object whose keys it moved */
@@ -85,7 +85,7 @@ export interface AnnouncedMove {
    * option's widget would be shown by one that never made it
    */
   dropsOwnErrors?: boolean;
-  /** For an option switch from an option shown, that option and the keys only it declared that the switch left, if any */
+  /** For an option switch from an option shown, that option and the keys the data held before the switch, if any */
   switchedFrom?: SwitchedOption;
 }
 
