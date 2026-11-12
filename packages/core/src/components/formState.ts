@@ -346,6 +346,9 @@ const NO_PATHS: ReadonlySet<FieldPath> = new Set();
 
 const NO_ORIGINS: DataOrigins = { entered: NO_PATHS, seeded: NO_PATHS };
 
+/** The selections of a form that holds none */
+const NO_SELECTIONS: UiStateReader = { selection: () => undefined, isExpanded: () => false };
+
 const NOTHING_REVEALED: RevealedPaths = { fields: NO_PATHS, containers: NO_PATHS, all: false };
 
 /** Whether a change from `previous` to `next` dropped the key at `fieldPath` or one above it, see
@@ -1384,7 +1387,12 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     !fieldPathToList(fieldPath).some((key) => typeof key === 'number');
   // A pass told nothing of where its values came from takes none for a filled one
   const knowsOrigins = options.origins !== undefined || options.originsAfterEdit !== undefined;
-  const fieldState = uiState && { ...fieldStateOf(uiState, schemaUtils, heldPath), ...(knowsOrigins && { isFilled }) };
+  // On construction the form holds no selection yet, and the option each field shows is asked for all the same, so the
+  // mount fills the data under the option every later pass will show it under (#5832)
+  const fieldState = {
+    ...fieldStateOf(uiState ?? NO_SELECTIONS, schemaUtils, heldPath),
+    ...(knowsOrigins && { isFilled }),
+  };
   const defaultsOf = (
     utils: SchemaUtilsType<T, S, F>,
     ui: UiSchema<T, S, F> | undefined,

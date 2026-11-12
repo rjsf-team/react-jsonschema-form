@@ -963,8 +963,9 @@ describe('option selection as form state', () => {
       });
       const steps = counts.slice(1).map((count, index) => count - counts[index]);
 
-      // Each level adds the same matching, rather than multiplying the matching below it by the options it scores
-      expect(new Set(steps).size).toBe(1);
+      // No level adds more matching than the one above it, rather than multiplying the matching below it by the options
+      // it scores. The deepest levels add a little less, since the options left to open run out
+      expect(steps.every((step, index) => step <= (steps[index - 1] ?? step))).toBe(true);
     });
 
     it('opens every level the data holds on an option that fits it, down to the None that ends it', () => {

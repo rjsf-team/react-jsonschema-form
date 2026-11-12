@@ -1,6 +1,6 @@
 import { createRef, useState } from 'react';
-import type { DefaultFormStateBehavior, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { buttonId, createSchemaUtils, getByPath } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { buttonId, createSchemaUtils, getByPath, isObject } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -624,6 +624,48 @@ describe('sanitize as a diff of the field trees before and after a change', () =
 
       expect(formData).toEqual({ kind: 't' });
       expect(container.querySelector('#root_a__key')).toBeNull();
+    });
+  });
+
+  describe('the option a field shows before the user picks one (#5832)', () => {
+    /** Mounts `schema`, with a field to edit beside its own, and hands back the data at mount and after `step` */
+    function around(schema: RJSFSchema, initialFormData: object, step: (form: FormRef) => void) {
+      const ref = createRef<FormRef>();
+      const withOther: RJSFSchema = { ...schema, properties: { ...schema.properties, other: { type: 'string' } } };
+      render(<Form schema={withOther} validator={validator} initialFormData={initialFormData} ref={ref} />);
+      const data: unknown = ref.current?.getFormData();
+      const mounted = isObject(data) ? structuredClone(data) : {};
+      act(() => {
+        if (ref.current) {
+          step(ref.current);
+        }
+      });
+      return { mounted, after: ref.current?.getFormData() };
+    }
+    const edit = (form: FormRef) => form.setFieldValue(['other'], 'v');
+    const reset = (form: FormRef) => form.reset();
+    const takesExtraKeys: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          oneOf: [{ additionalProperties: false }, { properties: { q: { default: 'b' } }, additionalProperties: true }],
+        },
+      },
+    };
+    const requiresKey: RJSFSchema = {
+      type: 'object',
+      properties: {
+        q: { anyOf: [{ required: ['p'], additionalProperties: {} }, { properties: { p: { type: 'null' } } }] },
+      },
+    };
+    it.each([
+      { name: 'an option taking the extra key the data holds', schema: takesExtraKeys, data: { p: { t: 2 } } },
+      { name: 'an option not requiring a key the data lacks', schema: requiresKey, data: { q: { m: 'b' } } },
+    ])('is the same at mount, after an edit elsewhere and after a reset, for $name', ({ schema, data }) => {
+      const edited = around(schema, data, edit);
+      expect(edited.after).toEqual({ ...edited.mounted, other: 'v' });
+      const afterReset = around(schema, data, reset);
+      expect(afterReset.after).toEqual(afterReset.mounted);
     });
   });
 
