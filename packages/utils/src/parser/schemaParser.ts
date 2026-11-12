@@ -1,6 +1,6 @@
 import { ID_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import { schemaKey } from '../hashForSchema.ts';
+import { schemaKey } from '../hashObject.ts';
 import parseSchemaGraph from '../schema/graph/parseSchemaGraph.ts';
 import { validationTargets } from '../schema/graph/validationTargets.ts';
 import type { RJSFSchema, StrictRJSFSchema } from '../types.ts';
@@ -34,14 +34,4 @@ export function getValidationSchemas<S extends StrictRJSFSchema = RJSFSchema>(ro
     schemaMap[key] = identified;
   }
   return schemaMap;
-}
-
-/** `getValidationSchemas()` under the name 6.x exported it as, returning the same list
- *
- * @param rootSchema - The root schema to list the validated schemas of
- * @returns - The `SchemaMap` of the schemas
- * @deprecated Call `getValidationSchemas()`, which this is another name for
- */
-export function schemaParser<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): SchemaMap<S> {
-  return getValidationSchemas<S>(rootSchema);
 }

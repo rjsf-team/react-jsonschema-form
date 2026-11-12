@@ -63,10 +63,10 @@ export interface Seed {
  * conjoined with it, so the seeds of each step are merged first and then into the seeds around them the same way. A
  * chosen option (`o<node>`) is merged over the whole field wherever it sits, as the form merges the option it renders.
  */
-export type Scope = readonly string[];
+type Scope = readonly string[];
 
 /** How a plan entry joined the plan */
-export type PlanEdge = 'seed' | 'ref' | 'allOf' | 'then' | 'else' | 'dependency' | 'option';
+type PlanEdge = 'seed' | 'ref' | 'allOf' | 'then' | 'else' | 'dependency' | 'option';
 
 /** One node merged at a field. A `ref` entry's `refPath` ends with the entry's own node. */
 export interface PlanEntry {
@@ -76,7 +76,7 @@ export interface PlanEntry {
 }
 
 /** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
-export interface Provider<S extends StrictRJSFSchema = RJSFSchema> {
+interface Provider<S extends StrictRJSFSchema = RJSFSchema> {
   readonly node: ObjectNode<S>;
   readonly refPath: RefPath;
   /** A property of the node's `properties` the plan leaves out: the one a dependency's `oneOf` option is chosen by */

@@ -1,7 +1,7 @@
+import { EXTRA_KEYS_ELSEWHERE_FLAG } from '../src/constants.ts';
 import type { RJSFMarkedSchema, RJSFSchema } from '../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  EXTRA_KEYS_ELSEWHERE_FLAG,
   getRenderedOptionSchema,
   rendersOwnFieldBesideOption,
   RJSF_REF_KEY,

@@ -306,7 +306,7 @@ describe('compileSchemaValidatorsCode', () => {
       expect(module).toBe(runtime);
       return module;
     };
-    // A form that reaches the document under `id` through `not`, where `schemaParser` leaves the
+    // A form that reaches the document under `id` through `not`, where `getValidationSchemas()` leaves the
     // `$ref` for the validator to resolve.
     const refersTo = (id: string): RJSFSchema => ({
       $id: 'refers',
@@ -992,7 +992,7 @@ describe('compileSchemaValidatorsCode', () => {
       const form: RJSFSchema = {
         $id: 'f',
         type: 'object',
-        // Under `not`, which schemaParser leaves for the validator to resolve.
+        // Under `not`, which getValidationSchemas() leaves for the validator to resolve.
         properties: { x: { not: { $ref: 'https://example.com/a#/$defs/d' } } },
       };
       const options = { additionalMetaSchemas: [METASCHEMAS.get('http://json-schema.org/draft-07/schema#')!, a] };

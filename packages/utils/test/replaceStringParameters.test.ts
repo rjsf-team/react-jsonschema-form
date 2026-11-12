@@ -1,4 +1,4 @@
-import { replaceStringParameters } from '../src/index.ts';
+import replaceStringParameters from '../src/replaceStringParameters.ts';
 
 const PARAMS = ['one', 'two'];
 const FUNKY_PARAMS = ['o%20n%20e'];

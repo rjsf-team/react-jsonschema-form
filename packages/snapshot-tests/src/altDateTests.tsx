@@ -103,8 +103,9 @@ export function altDateTests(Form: ComponentType<FormProps>) {
       });
     });
 
-    // With no description or help, a part described by `ariaDescribedByIds()` rather than its field's plan still
-    // announces the error, so only the exact ids and `aria-invalid` tell the plan's describers from that fallback's
+    // With no description or help, a part described by its id's error, description and help ids rather than its field's
+    // plan still announces the error, so only the exact ids and `aria-invalid` tell the plan's describers from that
+    // fallback's
     describe('with no description or help', () => {
       const fields: [string, string, string[], string][] = [
         ['When', 'root_when', DATE_PARTS, 'Too early'],

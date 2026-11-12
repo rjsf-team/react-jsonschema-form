@@ -1,10 +1,6 @@
+import { ariaDescribedByIds } from '../src/idGenerators.ts';
 import type { FieldPresentation, Registry, ResolvedPresentationDeclaration } from '../src/index.ts';
-import {
-  ariaDescribedByIds,
-  englishStringTranslator,
-  getGroupAttributes,
-  resolveFieldPresentation,
-} from '../src/index.ts';
+import { englishStringTranslator, getGroupAttributes, resolveFieldPresentation } from '../src/index.ts';
 
 const ID = 'root_foo';
 const GROUP: ResolvedPresentationDeclaration = {

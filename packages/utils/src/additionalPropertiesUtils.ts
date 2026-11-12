@@ -1,6 +1,5 @@
 import { ALL_OF_KEY, EXTRA_KEYS_ELSEWHERE_FLAG, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
 import getSchemaType from './getSchemaType.ts';
-import hasSchemaMarker from './hasSchemaMarker.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { schemaFrom } from './schema/graph/schemaFrom.ts';
@@ -71,9 +70,6 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
  * The two are read off a schema typed to hold an `S` in them: the subschema either one holds is an `S` the way every
  * other subschema of an `S` is.
  *
- * It is exported for `omitExtraData()` rather than for consumers, so that the keys the form renders and seeds through
- * one of these keywords are the keys it keeps.
- *
  * @param schema - The object schema whose keyword is desired
  * @returns - What the keyword says, or undefined where the object names neither
  */
@@ -115,7 +111,7 @@ export function absentKeywordAllows<
 >(context: SchemaContext<S, F>, schema: S): boolean {
   return (
     readsAbsentAsAllowed<S, F>(context) &&
-    !hasSchemaMarker(schema, EXTRA_KEYS_ELSEWHERE_FLAG) &&
+    Reflect.get(schema, EXTRA_KEYS_ELSEWHERE_FLAG) !== true &&
     additionalPropertiesKeyword<S>(schema) === undefined &&
     schema.const === undefined &&
     schema.enum === undefined &&
@@ -236,8 +232,8 @@ function describesKey<S extends StrictRJSFSchema>(schema: S, key: string, readsU
  * one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the
  * caller to resolve into the one schema that describes it, the same object for every key the same patterns match; a
  * `false` among them rejects the key whatever the others allow, since no value satisfies it. A key no pattern matches
- * is `additionalProperties`' to describe, `false` and `true` included, which `additionalPropertiesKeyword()` reads with
- * the precedence the keywords have.
+ * is `additionalProperties`' to describe, `false` and `true` included, read with the precedence
+ * `additionalProperties` and `unevaluatedProperties` have.
  *
  * A schema `retrieveSchema()` joined with the option selected beside it answers for the object and for the option
  * apart, and conjoins the two: the object's `unevaluatedProperties` says nothing about a key the option evaluates.

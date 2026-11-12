@@ -360,9 +360,9 @@ export function getFieldTypeForUiSchema<
  */
 export const DEFAULT_BOOLEAN_WIDGET = widgetMap.boolean.checkbox;
 
-/** The lowercase `ui:widget` alias names `getWidget` accepts for a given JSON Schema primitive `type`, e.g.
+/** The lowercase `ui:widget` alias names `resolveWidget()` accepts for a given JSON Schema primitive `type`, e.g.
  * `WidgetAliasFor<'string'>` is `'text' | 'textarea' | 'password' | ...`. Used to keep a type-safe widget vocabulary
- * (like `@rjsf/core`'s `CoreUiOptionsChecks`) in sync with the aliases `getWidget` actually resolves.
+ * (like `@rjsf/core`'s `CoreUiOptionsChecks`) in sync with the aliases `resolveWidget()` actually resolves.
  */
 export type WidgetAliasFor<Type extends keyof typeof widgetMap> = keyof (typeof widgetMap)[Type];
 
@@ -425,10 +425,11 @@ export default function getWidget<
   throw new Error(`No widget '${widget}' for type '${String(fieldType)}' in schema: ${JSON.stringify(schema)}`);
 }
 
-/** Returns the widget `getWidget()` returns as the `Widget` of an object, throwing the same errors. A component
- * destructures `Widget` from it: React's static-components rule doesn't follow a destructure, so it accepts the widget
- * where it reports the result of a `getWidget()` call. It can't check it either, so this relies on the widget being
- * defined at module scope.
+/** Returns the component that renders `widget` for `schema`, as the `Widget` of an object: `widget` itself when it is
+ * a component, else the one `registeredWidgets` holds under its name or under the key its alias maps to for the
+ * schema's type. A component destructures `Widget` from it: React's static-components rule doesn't follow a
+ * destructure, so it accepts the widget where it reports the result of a function call. It can't check it either, so
+ * this relies on the widget being defined at module scope.
  *
  * @param schema - The schema for the field
  * @param [widget] - Either the name of the widget OR a `Widget` implementation to use

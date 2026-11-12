@@ -4,7 +4,7 @@ import {
   ErrorSchemaBuilder,
   getFirstMatchingOption,
   getValidationTarget,
-  hashForSchema,
+  hashObject,
   isObject,
   mergeSchemas,
   noop,
@@ -94,13 +94,13 @@ describe('ATAPrecompiledValidator', () => {
         const schema: RJSFSchema = { $ref: '#/definitions/notListed' };
         expect(() => validator.isValid(schema, {}, rootSchema)).toThrow(
           new Error(
-            `No precompiled validator function was found for the given schema for "${hashForSchema(schema)}" (the subschema at "#/definitions/notListed")`,
+            `No precompiled validator function was found for the given schema for "${hashObject(schema)}" (the subschema at "#/definitions/notListed")`,
           ),
         );
       });
       it('should throw if the schema is not recognized', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
-        const hash = hashForSchema(schema);
+        const hash = hashObject(schema);
         expect(() => validator.isValid(schema, { name: 'bar' }, rootSchema)).toThrow(
           new Error(`No precompiled validator function was found for the given schema for "${hash}"`),
         );

@@ -13,15 +13,12 @@ import type {
 } from '@rjsf/utils';
 import {
   DEFAULT_ID_PREFIX,
-  DEFINITIONS_KEY,
-  DISCRIMINATOR_PATH,
   ErrorSchemaBuilder,
   getUiOptions,
   LOOKUP_MAP_NAME,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   retrieveSchema,
-  sortedJSONStringify,
   toFieldPath,
   fieldPathToId,
   fieldPathToList,
@@ -662,7 +659,12 @@ const DEFAULT_ID = 'test-id';
 function stringifyProps(props: Pick<Partial<FieldProps>, 'uiSchema' | 'registry'> & Record<string, unknown>) {
   const { uiSchema, registry, ...otherProps } = props;
   const { ...otherUIOptions } = getUiOptions(uiSchema);
-  return sortedJSONStringify({ ...otherProps, otherUIOptions });
+  // Keys sorted, so props built in a different order compare equal and a failure still reads as the props
+  return JSON.stringify({ ...otherProps, otherUIOptions }, (_key, value: unknown) =>
+    value && typeof value === 'object' && !Array.isArray(value)
+      ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)))
+      : value,
+  );
 }
 
 // Render a strong with the props stringified
@@ -1389,7 +1391,7 @@ describe('LayoutGridField', () => {
       retrieveSchemaSpy.mockRestore();
     });
     test('returns schema, isRequired: false, isReadonly: true, options: undefined when oneOf schema is used, passed idSeparator', () => {
-      const path = getByPath<string>(SIMPLE_ONEOF, DISCRIMINATOR_PATH);
+      const path = getByPath<string>(SIMPLE_ONEOF, ['discriminator', 'propertyName']);
       const selectedSchema = getByPath(SIMPLE_ONEOF, [ONE_OF_KEY, 1]);
       const schema = getByPath(selectedSchema, [PROPERTIES_KEY, path]);
       const formData = { [path]: SIMPLE_ONEOF_OPTIONS[1].value };
@@ -1436,7 +1438,7 @@ describe('LayoutGridField', () => {
       const formData = { employment: { job_type: 'company' } };
       const schema = gridFormSchemaRegistry.schemaUtils.getFromSchema(
         GRID_FORM_SCHEMA,
-        [DEFINITIONS_KEY, 'Location', PROPERTIES_KEY, 'state'],
+        ['definitions', 'Location', PROPERTIES_KEY, 'state'],
         {},
       ) as RJSFSchema;
       expect(getSchemaDetailsForField(gridFormSchemaRegistry, path, GRID_FORM_SCHEMA, formData, FIELD_PATH)).toEqual({

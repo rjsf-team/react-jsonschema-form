@@ -1,5 +1,6 @@
+import { ariaDescribedByIds } from '../src/idGenerators.ts';
 import type { FieldPresentation, ResolvedPresentationDeclaration } from '../src/index.ts';
-import { ariaDescribedByIds, examplesId, getControlAttributes, resolveFieldPresentation } from '../src/index.ts';
+import { examplesId, getControlAttributes, resolveFieldPresentation } from '../src/index.ts';
 
 const ID = 'root_foo';
 const TEMPLATE: ResolvedPresentationDeclaration = {
@@ -18,7 +19,7 @@ describe('getControlAttributes()', () => {
   it('describes a widget rendered without a plan by every part id, then its own', () => {
     expect(getControlAttributes({ id: ID })).toEqual({ 'aria-describedby': ariaDescribedByIds(ID) });
     expect(getControlAttributes({ id: ID }, [examplesId(ID)])).toEqual({
-      'aria-describedby': ariaDescribedByIds(ID, true),
+      'aria-describedby': `${ariaDescribedByIds(ID)} ${examplesId(ID)}`,
     });
   });
 

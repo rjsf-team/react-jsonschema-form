@@ -113,7 +113,7 @@ function prefixSubschemas(key: string, value: unknown, rewrite: RefRewrite, scop
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
  * `prefixRefs` for any other elements. Only a keyword holding subschemas is read as schemas: any other, such as `const`,
  * `enum`, `default` or `examples`, holds data, where a `$ref` key is part of a value, so only a local one is prefixed
- * there, as `withIdRefPrefix()` prefixes every local one
+ * there
  *
  * @param node - The copy of `holder` to which the `base` is added when a REF_KEY is part of it
  * @param holder - The object node `node` copies, by which the graph knows it
@@ -174,12 +174,6 @@ function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
   scope?: string,
   isData?: boolean,
 ): S;
-function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
-  schemaNode: S | S[] | S[keyof S],
-  rewrite: RefRewrite,
-  scope?: string,
-  isData?: boolean,
-): S | S[] | S[keyof S];
 function prefixRefs(schemaNode: unknown, rewrite: RefRewrite, scope?: string, isData?: boolean): unknown;
 function prefixRefs(schemaNode: unknown, rewrite: RefRewrite, scope = '', isData = false): unknown {
   if (Array.isArray(schemaNode)) {
@@ -231,22 +225,4 @@ export function withRootIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
     base,
     nestedRef: isObject(rootSchema) ? nestedRefOf(parseSchemaGraph<S>(rootSchema), base) : undefined,
   });
-}
-
-/** Recursively prefixes all `$ref`s local to the root document, one starting with `#`, with the value of the
- * `ROOT_SCHEMA_PREFIX` constant. This is used in isValid to make references to the rootSchema
- *
- * @param schemaNode - The object node to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
- * @returns - A copy of the `schemaNode` with updated `$ref`s
- */
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[]): S[];
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S): S;
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[keyof S]): S[keyof S];
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
-  schemaNode: S | S[] | S[keyof S],
-): S | S[] | S[keyof S];
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
-  schemaNode: S | S[] | S[keyof S],
-): S | S[] | S[keyof S] {
-  return prefixRefs<S>(schemaNode, { base: ROOT_SCHEMA_PREFIX });
 }

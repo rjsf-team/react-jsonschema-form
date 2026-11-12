@@ -70,7 +70,7 @@ export type TestIdShape = Record<string, string>;
  *
  * - `'indexed'`: options are encoded as their array index (default, historical behavior).
  * - `'realValue'`: string, number and boolean option values are stringified directly, enabling native form
- *   submission. Object, array and `null` values are encoded as their index behind the `ENUM_OPTION_INDEX_PREFIX`
+ *   submission. Object, array and `null` values are encoded as their index behind the `__rjsf_index:` prefix
  *   (e.g. `__rjsf_index:2`), which keeps them apart from a string option that happens to look like an index. The empty
  *   string, which a select's empty placeholder carries, and a string option that starts with the prefix are encoded as
  *   their index too, and so are options whose `String()` is the same, such as `1` and `'1'`, so each keeps a DOM value
@@ -747,7 +747,7 @@ export interface GlobalUISchemaOptionsKeys {
    *  - `'realValue'`: string, number and boolean option values are stringified directly
    *    (e.g. `"foo"`, `"42"`, `"true"`). This enables native form submission and browser
    *    autocomplete since the submitted value matches the enum value. Object, array and
-   *    `null` values are encoded as their index behind the `ENUM_OPTION_INDEX_PREFIX`
+   *    `null` values are encoded as their index behind the `__rjsf_index:` prefix
    *    (e.g. `"__rjsf_index:2"`), since `String(obj)` would produce `"[object Object]"`
    *    and `String(null)` would collide with a `"null"` string option. So is the empty
    *    string, which would collide with the select's empty placeholder, and so are options
@@ -765,7 +765,7 @@ export interface GlobalUISchemaOptionsKeys {
   deprecatedHandling?: 'hide' | 'disable' | 'label';
 }
 
-/** The templates `getTemplate()` reads from a field's options: every one `DeclaredTemplatesType` declares but
+/** The templates `getTemplates()` reads from a field's options: every one `DeclaredTemplatesType` declares but
  * `ButtonTemplates`. Derived rather than listed, so that a template a later release declares fails typecheck until
  * `RESERVED_UI_OPTION_NAMES` lists it
  */

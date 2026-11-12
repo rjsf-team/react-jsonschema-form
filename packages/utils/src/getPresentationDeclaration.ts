@@ -163,7 +163,7 @@ function getWidgetDeclaration<
 
 /** Gets which parts of a field its template draws and which the components rendering it draw themselves, from the
  * declarations the theme registered for the keys of those components. Read from the field component `SchemaField`
- * resolved and the widget its caller says that field renders, never throwing where `getWidget()` would.
+ * resolved and the widget its caller says that field renders, never throwing for a widget the registry can't resolve.
  *
  * A field component's declaration is the merged declaration for its key over the field default: the theme's
  * `fieldDefault` over drawing its own label and description. So a component gets the same answer however `SchemaField`

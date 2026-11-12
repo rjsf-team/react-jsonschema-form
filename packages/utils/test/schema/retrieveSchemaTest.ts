@@ -1,9 +1,9 @@
 import type { MockInstance } from 'vitest';
 
+import { EXTRA_KEYS_ELSEWHERE_FLAG } from '../../src/constants.ts';
 import type { RJSFMarkedSchema, RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  EXTRA_KEYS_ELSEWHERE_FLAG,
   GUESSED_TYPE_FLAG,
   getAdditionalPropertySchema,
   createSchemaUtils,
@@ -3578,7 +3578,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(GUESSED_TYPE_FLAG in stub).toBe(true);
         expect(stub.type).toBe('string');
         // The `$ref` that would reach into a container is dropped, so copying the container into every property
-        // would hand each of them an unreachable copy for `hashForSchema()` and `deepEquals()` to walk
+        // would hand each of them an unreachable copy for `hashObject()` and `deepEquals()` to walk
         expect('$defs' in stub).toBe(false);
         expect(stub.contentMediaType).toBe('text/plain');
       });

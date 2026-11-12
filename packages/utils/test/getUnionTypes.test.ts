@@ -1,7 +1,8 @@
 import type { JSONSchema7TypeName } from 'json-schema';
 
+import { getKnownTypes } from '../src/getUnionTypes.ts';
 import type { RJSFSchema } from '../src/index.ts';
-import { getKnownTypes, getUnionTypes } from '../src/index.ts';
+import { getUnionTypes } from '../src/index.ts';
 
 const knownCases: { schema: RJSFSchema; expected: JSONSchema7TypeName[] }[] = [
   {

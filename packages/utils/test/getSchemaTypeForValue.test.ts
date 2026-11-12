@@ -1,4 +1,4 @@
-import { getSchemaTypeForValue } from '../src/index.ts';
+import getSchemaTypeForValue from '../src/getSchemaTypeForValue.ts';
 
 describe('getSchemaTypeForValue()', () => {
   test.each<[unknown, string]>([

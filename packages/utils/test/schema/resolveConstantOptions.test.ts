@@ -1,5 +1,6 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { resolveConstantOptions, RJSF_REF_KEY } from '../../src/index.ts';
+import { RJSF_REF_KEY } from '../../src/index.ts';
+import resolveConstantOptions from '../../src/schema/resolveConstantOptions.ts';
 
 describe('resolveConstantOptions()', () => {
   const rootSchema: RJSFSchema = {

@@ -14,6 +14,7 @@ export type LogOnceLevel = 'warn' | 'error';
  * arbitrary text, and a plain-object or array `error` is held as its whole JSON. Two full generations of the warnings
  * raised inside this library, which run a few hundred bytes each, stay under a megabyte. The cap is a ceiling rather
  * than an allocation, so a form warning about a handful of fields holds a handful of strings.
+ * @testSeam Exported for utils' own tests
  */
 export const LOG_ONCE_MAX_MESSAGES = 2000;
 
@@ -31,7 +32,7 @@ let previousMessages = new Set<string>();
 
 /** Logs `message` (followed by `error`, when there is one) through `console.warn()` or `console.error()`, but only the
  * first time that combination of `level`, `message` and `error` is seen, so that a warning raised while rendering isn't
- * repeated on every re-render. The `error` is compared by its type and its `toDisplayString()` form, so two distinct
+ * repeated on every re-render. The `error` is compared by its type and the text it is shown as, so two distinct
  * values of the same type and form (two `Error`s of the same class and message, say) are treated as one message. A
  * message that has to be told apart from another must say so itself, as the field warnings do by naming the field; one
  * that identifies nothing, or only something as generic as a `dependencies` key, is reported for whichever schema

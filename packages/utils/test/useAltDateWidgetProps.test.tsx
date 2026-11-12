@@ -6,19 +6,19 @@ import type { UserEvent } from '@testing-library/user-event';
 import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
+import getDateElementProps from '../src/getDateElementProps.ts';
+import { ariaDescribedByIds } from '../src/idGenerators.ts';
 import type { DateElementProp, Registry, UseAltDateWidgetResult, WidgetProps } from '../src/index.ts';
 import {
-  ariaDescribedByIds,
   DateElement,
   englishStringTranslator,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
-  getDateElementProps,
-  parseDateString,
   resolveFieldPresentation,
   useAltDateWidgetProps,
   widgetAriaProps,
 } from '../src/index.ts';
+import parseDateString from '../src/parseDateString.ts';
 
 function SelectWidget(props: WidgetProps) {
   const { id, options, value, required, disabled, readonly, placeholder, onChange, name } = props;

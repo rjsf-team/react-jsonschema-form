@@ -1,16 +1,7 @@
-import type {
-  ADDITIONAL_PROPERTY_FLAG,
-  EXTRA_KEYS_ELSEWHERE_FLAG,
-  GUESSED_TYPE_FLAG,
-  RJSF_REF_CYCLE_KEY,
-} from './constants.ts';
+import type { ADDITIONAL_PROPERTY_FLAG, GUESSED_TYPE_FLAG, RJSF_REF_CYCLE_KEY } from './constants.ts';
 
 /** The markers that hold a flag rather than a value */
-export type SchemaFlagMarker =
-  | typeof ADDITIONAL_PROPERTY_FLAG
-  | typeof EXTRA_KEYS_ELSEWHERE_FLAG
-  | typeof GUESSED_TYPE_FLAG
-  | typeof RJSF_REF_CYCLE_KEY;
+export type SchemaFlagMarker = typeof ADDITIONAL_PROPERTY_FLAG | typeof GUESSED_TYPE_FLAG | typeof RJSF_REF_CYCLE_KEY;
 
 /** Whether `schema` carries the flag `marker` the schema utilities set on the schemas they build, such as the
  * `ADDITIONAL_PROPERTY_FLAG` `retrieveSchema()` sets on a property an `additionalProperties` adds. A boolean subschema,

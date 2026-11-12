@@ -238,7 +238,7 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * field also stubs the extra keys of the data, for the parent and the selected option together (see
  * `retrieveSchema()`'s `selectedOption`), so the option is rendered without its own `additionalProperties`,
  * `patternProperties` and `unevaluatedProperties`, which would stub the same keys a second time, and marked with
- * `EXTRA_KEYS_ELSEWHERE_FLAG`, so its field offers no extra key of its own beside the parent's. An option offering
+ * an internal flag, so its field offers no extra key of its own beside the parent's. An option offering
  * options of its own is the exception: the field it renders beside them takes the extra keys in the parent's field's
  * place, so it keeps its own extra-key keywords, joined with the parent's, each still judging a key apart, carries
  * the names of the properties the fields above declare, which its field leaves to them, and is not marked. A
@@ -253,8 +253,9 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * An option naming no `type` takes the parent's, and an object parent that names none is read as an object, the type
  * its `ObjectField` was picked for. A parent allowing several types passes all of them on, since the option is one
  * branch of the choice made there rather than a narrowing of what the parent accepts: a field reading `schema.type`,
- * such as `getInputProps()`, which withholds the numeric `pattern` from a union precisely because the other types do
- * not have to match it, would otherwise be told the value is of a type the parent never pinned it to.
+ * such as the one choosing the props of `BaseInputTemplate`'s `<input>`, which withholds the numeric `pattern` from a
+ * union precisely because the other types do not have to match it, would otherwise be told the value is of a type the
+ * parent never pinned it to.
  *
  * The result is the same object for the same `parent` and `option`, so a reader keying its work on the schema it is
  * handed, as `retrieveSchema()` does, finds it again rather than taking a new copy for content to compare.

@@ -159,6 +159,7 @@ function hasContent(value: unknown): boolean {
  * @param schema - The schema to inspect
  * @param computedDefault - The computed default for the schema
  * @returns - Flag indicating whether a null should be returned instead of the computedDefault
+ * @testSeam Exported for utils' own tests
  */
 export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
@@ -2215,6 +2216,7 @@ function helperView<S extends StrictRJSFSchema, F extends FormContextType>(
  * @param rawSchema - The schema for which the default state is desired
  * @param computeDefaultsProps - Optional props for this function
  * @returns - The resulting `formData` with all the defaults provided
+ * @testSeam Exported for utils' own tests
  */
 export function computeDefaults<
   T = unknown,
@@ -2238,6 +2240,7 @@ export function computeDefaults<
  * @param computeDefaultsProps - Optional props for this function
  * @param defaults - Optional props for this function
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
+ * @testSeam Exported for utils' own tests
  */
 export function getObjectDefaults<
   T = unknown,
@@ -2261,6 +2264,7 @@ export function getObjectDefaults<
  * @param computeDefaultsProps - Optional props for this function
  * @param initialDefaults - Optional props for this function
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
+ * @testSeam Exported for utils' own tests
  */
 export function getArrayDefaults<
   T = unknown,
@@ -2286,6 +2290,7 @@ export function getArrayDefaults<
  * @param defaults - Optional props for this function
  * @param [isWholeValue] - Whether `rawSchema` is a select over whole object or array values, when already known
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
+ * @testSeam Exported for utils' own tests
  */
 export function getDefaultBasedOnSchemaType<
   T = unknown,
@@ -2321,6 +2326,7 @@ export function getDefaultBasedOnSchemaType<
  * @param rootSchema - The root schema, used to primarily to look up `$ref`s
  * @param formData - The current formData
  * @returns - valid formData that matches schema
+ * @testSeam Exported for utils' own tests
  */
 export function ensureFormDataMatchingSchema<
   T = unknown,

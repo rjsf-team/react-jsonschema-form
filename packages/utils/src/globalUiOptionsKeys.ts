@@ -25,12 +25,11 @@ export const GLOBAL_UI_OPTIONS_KEYS = Object.keys(
 ) as readonly (keyof GlobalUISchemaOptionsKeys)[];
 
 /** Every name in `ReservedUiOptionName`, which `pickGlobalUiOptions()` drops from the extension keys it is given.
- * Listed through an object, as `GLOBAL_UI_OPTIONS_KEYS` is, so that it can't drift from the type
+ * Listed through an object, as the names `pickGlobalUiOptions()` keeps are, so that it can't drift from the type
  */
 export const RESERVED_UI_OPTION_NAMES = Object.keys({
   ...GLOBAL_UI_OPTIONS_KEY_MAP,
-  // The declared template names, one list shared with `isTemplateName()`; it lives in
-  // `templateOverrideWarnings.ts` so this public module adds no export for it
+  // The declared template names, one list shared with `isTemplateName()`
   ...OVERRIDABLE_TEMPLATE_NAME_MAP,
   field: true,
   classNames: true,

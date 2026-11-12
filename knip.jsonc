@@ -1,5 +1,17 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  // The root `knip` script deletes packages/*/lib first: knip resolves an `@rjsf/*` import through the package's
+  // `default` export condition, so a built lib/ would stand in for src/ and every export of src/index.ts would look
+  // unused. knip has no option for the `@rjsf/source` condition, and a tsconfig.json per package to map lib/ back to
+  // src/ would add a type-check program per package.
+  "ignoreIssues": {
+    // Public types cost no bundle size and name the parameters and results of the public exports.
+    "packages/utils/src/index.ts": ["types"],
+    // The index re-exports every type here with `export type *`, so each one is public.
+    "packages/utils/src/types.ts": ["types"],
+    // A module augmentation has to export the interface it merges into.
+    "packages/utils/src/jsonSchemaAugmentation.ts": ["types"],
+  },
   "workspaces": {
     ".": {
       // .github/size-limit/report.mjs: invoked with `node` from
@@ -25,6 +37,13 @@
     "packages/shadcn": {
       // src/index.ts: see packages/chakra-ui.
       "ignore": ["src/index.ts"],
+    },
+    "packages/utils": {
+      // `knip --production` leaves out utils' own tests, so there the index has to be imported by another package's
+      // source to count as used; the plain `knip` run still checks the tests. The production run skips exports
+      // tagged @testSeam, which exist only for utils' own tests.
+      "project": ["src/**/*.{ts,tsx}!", "test/**/*.{ts,tsx}"],
+      "includeEntryExports": true,
     },
     "packages/docs": {
       // Docusaurus scaffold kept for the homepage. It is also the only

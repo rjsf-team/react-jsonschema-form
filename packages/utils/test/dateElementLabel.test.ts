@@ -1,5 +1,6 @@
+import dateElementLabel, { dateElementAriaLabel } from '../src/dateElementLabel.ts';
 import type { Registry } from '../src/index.ts';
-import { dateElementAriaLabel, dateElementLabel, englishStringTranslator, TranslatableString } from '../src/index.ts';
+import { englishStringTranslator, TranslatableString } from '../src/index.ts';
 
 const translateString: Registry['translateString'] = (key, params) => `[${key}${params ? `|${params.join('|')}` : ''}]`;
 

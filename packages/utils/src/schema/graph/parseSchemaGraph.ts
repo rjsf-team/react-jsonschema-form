@@ -24,7 +24,7 @@ import { schemaFrom } from './schemaFrom.ts';
 export type NodeId = number;
 
 /** A boolean subschema. Booleans have no identity of their own, so each location holding one is a node of its own */
-export interface BooleanNode {
+interface BooleanNode {
   readonly kind: 'boolean';
   readonly id: NodeId;
   readonly pointer: string;
@@ -37,7 +37,7 @@ type InvalidReason = 'dangling' | 'circular-alias';
 /** What a `$ref` that resolves to no subschema points at: `message` is the error whatever enters the reference
  * throws
  */
-export interface InvalidNode {
+interface InvalidNode {
   readonly kind: 'invalid';
   readonly id: NodeId;
   readonly pointer: string;
@@ -138,6 +138,7 @@ export interface AdoptedSchema<S extends StrictRJSFSchema = RJSFSchema> {
 
 /** Where the nodes `adoptSchema()` parses from outside the root are placed. It is not a JSON pointer, which starts
  * with a `/` or is empty, so it never names a location in the root.
+ * @testSeam Exported for utils' own tests
  */
 export const EXTERNAL_POINTER = '~external';
 

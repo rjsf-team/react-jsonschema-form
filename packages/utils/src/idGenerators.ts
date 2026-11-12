@@ -117,12 +117,10 @@ export function titleId(id: string) {
  * element.
  *
  * @param id - The id of the field
- * @param [includeExamples=false] - Optional flag, if true, will add the `examplesId` into the list
  * @returns - The string containing the list of ids for use in an `aria-describedBy` attribute
  */
-export function ariaDescribedByIds(id: string, includeExamples = false) {
-  const examples = includeExamples ? ` ${examplesId(id)}` : '';
-  return `${errorId(id)} ${descriptionId(id)} ${helpId(id)}${examples}`;
+export function ariaDescribedByIds(id: string) {
+  return `${errorId(id)} ${descriptionId(id)} ${helpId(id)}`;
 }
 
 /** Return a consistent `id` for the label a theme's `FieldTemplate` renders above a field's control, so a widget that
@@ -145,17 +143,6 @@ export function ariaDescribedByIds(id: string, includeExamples = false) {
  */
 export function fieldLabelId(id: string) {
   return partId(id, 'label');
-}
-
-/** Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders, so a theme can point a
- * label at the year, month or day control rather than rebuilding this shape itself
- *
- * @param rootId - The id of the `AltDateWidget` field the date element belongs to
- * @param type - The type of the date element, as given by its `DateElementProp`
- * @returns - The consistent id for that date element's control
- */
-export function dateElementId(rootId: string, type: string) {
-  return partId(rootId, type);
 }
 
 /** Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` widget

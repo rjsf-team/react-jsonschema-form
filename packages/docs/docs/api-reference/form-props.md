@@ -1005,14 +1005,14 @@ One could use this function to alter one or more of the existing english strings
 Below is an example of changing a few of the english strings to something else:
 
 ```ts
-import { TranslatableString, englishStringTranslator, replaceStringParameters } from '@rjsf/utils';
+import { TranslatableString, englishStringTranslator } from '@rjsf/utils';
 
 function fixupSomeEnglishStrings(stringToTranslate: TranslatableString, params?: string[]): string {
   switch (stringToTranslate) {
     case TranslatableString.NewStringDefault:
       return ''; // Use an empty string for the new additionalProperties string default value
     case TranslatableString.KeyLabel:
-      return replaceStringParameters('%1 Key Name', params); // Add "Name" onto the end of the WrapIfAdditionalTemplate key label
+      return `${englishStringTranslator(stringToTranslate, params)} Name`; // Add "Name" onto the end of the WrapIfAdditionalTemplate key label
     default:
       return englishStringTranslator(stringToTranslate, params); // Fallback to the default english
   }

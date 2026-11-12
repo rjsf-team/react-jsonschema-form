@@ -93,6 +93,7 @@ function extraKeyJudgeOf<S extends StrictRJSFSchema>(schema: S, option?: S): Ext
  *
  * @param value - The value to check
  * @returns - True if the value is considered empty, false otherwise
+ * @testSeam Exported for utils' own tests
  */
 export function isValueEmpty(value: unknown): boolean {
   if (value == null || value === '') {
@@ -115,9 +116,9 @@ function dataOf(value: unknown): unknown {
 
 /** A recursive, schema-driven filter that walks `schema` and `formData` in lockstep, keeping only
  * values that are described by the schema. Handles `$ref`, `allOf`, `anyOf`, `oneOf`, `if/then/else`,
- * `patternProperties`, `additionalProperties`, `propertyNames`, and `dependencies`. Optional object
- * properties whose schema-filtered content is entirely empty (per `isValueEmpty`) are pruned; required
- * properties and scalar values are always kept when schema-defined.
+ * `patternProperties`, `additionalProperties`, `propertyNames`, and `dependencies`. Optional object properties whose
+ * schema-filtered content is entirely empty (`null`, `undefined`, `''`, or an array or object holding only such values)
+ * are pruned; required properties and scalar values are always kept when schema-defined.
  *
  * An object's shown `anyOf`/`oneOf` option is read as its field renders it, retrieved for the data, and the object's
  * extra keys are judged once, as the one field taking them stubs them: by the keywords of the object and the option
@@ -174,7 +175,7 @@ export default function omitExtraData<
    * each value. Handles `properties`, `patternProperties`, and `additionalProperties` — or the
    * `unevaluatedProperties` that answers for the leftover keys where no `additionalProperties` does.
    * Optional object-valued properties are pruned when every key in the filtered result is both
-   * optional (per the inner schema's `required`) and empty (per `isValueEmpty`). This preserves
+   * optional (per the inner schema's `required`) and empty, as described above. This preserves
    * optional objects whose required children have empty values, while still dropping objects whose
    * schema-filtered content is entirely optional-and-empty. Required properties and scalar values
    * are always written when defined. Always returns `target` — pruning of the object itself is
@@ -210,8 +211,8 @@ export default function omitExtraData<
 
     /** Recursively omits extra data from `value` via `omit`, then conditionally writes the result to
      * `target[key]`. Optional object-valued properties are dropped when every key in the filtered
-     * result is both optional (within the inner schema's `required` list) and has an empty value per
-     * `isValueEmpty`. This per-key approach prevents required-but-empty child properties — kept by
+     * result is both optional (within the inner schema's `required` list) and has an empty value, as
+     * described above. This per-key approach prevents required-but-empty child properties — kept by
      * inner `setProperty` calls — from inadvertently causing the parent optional object to be dropped,
      * while still pruning optional objects whose schema-filtered content is entirely empty. Vacuously
      * true for `{}`, so empty results are always dropped. Scalar and array values are not pruned here.

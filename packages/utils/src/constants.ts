@@ -33,7 +33,6 @@ export const GUESSED_TYPE_FLAG = Symbol('__guessed_type');
 export const ID_KEY = '$id';
 export const IF_KEY = 'if';
 export const ITEMS_KEY = 'items';
-export const NAME_KEY = '$name';
 export const NOT_KEY = 'not';
 export const ONE_OF_KEY = 'oneOf';
 export const PATTERN_PROPERTIES_KEY = 'patternProperties';
@@ -49,8 +48,8 @@ export const UNEVALUATED_PROPERTIES_KEY = 'unevaluatedProperties';
 export const RJSF_REF_KEY = Symbol('__rjsf_ref');
 export const RJSF_REF_CYCLE_KEY = Symbol('__rjsf_ref_cycle');
 /** Records, on every subschema `retrieveSchema()` hands out, where the subschema came from. Only `retrieveSchema()`
- * writes or reads what it holds; it is exported for a comparison that should see a stamped schema as the same schema
- * without it.
+ * writes or reads what it holds. It is exported so that a test can strip it, as RJSF's own test setup does, and
+ * compare a retrieved schema with the same schema written by hand.
  */
 export const RJSF_PROVENANCE_KEY = Symbol('__rjsf_provenance');
 export const SCHEMA_KEY = '$schema';
@@ -67,7 +66,7 @@ export const FORM_CONTEXT_NAME = 'formContext';
 /** The name of the `layoutGridLookupMap` attribute in the form context
  */
 export const LOOKUP_MAP_NAME = 'layoutGridLookupMap';
-export const RJSF_PREFIX_KEY = '__rjsf';
+const RJSF_PREFIX_KEY = '__rjsf';
 export const RJSF_ADDITIONAL_PROPERTIES_FLAG = `${RJSF_PREFIX_KEY}_additionalProperties`;
 export const ROOT_SCHEMA_PREFIX = `${RJSF_PREFIX_KEY}_rootSchema`;
 /** The start of the `$id` an option's scoring copy gives a part it holds once, and of every `$ref` naming it, which

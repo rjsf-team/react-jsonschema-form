@@ -3,9 +3,8 @@ import getUiOptions from './getUiOptions.ts';
 import isObject from './isObject.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonOptions, UiSchema } from './types.ts';
 
-/** The default submit button options, exported for testing purposes
- */
-export const DEFAULT_OPTIONS: SubmitButtonOptions = {
+/** The default submit button options */
+const DEFAULT_OPTIONS: SubmitButtonOptions = {
   props: {
     disabled: false,
   },

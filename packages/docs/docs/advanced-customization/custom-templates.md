@@ -501,7 +501,7 @@ The following props are passed to the `BaseInputTemplate`:
 - `label`: The computed label for this widget, as a string
 - `multiple`: A boolean value stating if the widget can accept multiple values. `ArrayField` passes it to the widget of any multi-select, so [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it only on a `file` input;
 - `type`: The `type` of the input, which the widgets rendering a `BaseInputTemplate` set, such as `'number'` or `'date'`;
-- `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it, `inputMode` and `accept` over the input props `getInputProps()` derives and adds `multiple` to a `file` input, and [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns those three on their own. A `pattern` counts even when it is undefined, which turns the derived one off;
+- `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it, `inputMode` and `accept` over the input props derived from the schema and adds `multiple` to a `file` input, and [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns those three on their own. A `pattern` counts even when it is undefined, which turns the derived one off;
 - `inputMode`: An `inputMode` a widget passes for the input, which replaces the one the schema derives, and which `callerInputProps()` returns the way it returns `pattern`;
 - `accept`: The file types a widget passes for the input, which replace `ui:options.accept`, and which `callerInputProps()` returns too;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
@@ -1579,14 +1579,14 @@ const uiSchema: UiSchema = { 'ui:ArrayFieldTemplate': 'CustomArrayFieldTemplate'
 
 ### Reading a custom template back
 
-RJSF doesn't know the props of a template you register under your own name, so one read back from `registry.templates`, `getTemplate()` or `getTemplates()` under that name has props of type `never` and can't be rendered as it is. Name its props with `isComponentType()`, which also checks that it is a component:
+RJSF doesn't know the props of a template you register under your own name, so one read back from `registry.templates` or `getTemplates()` under that name has props of type `never` and can't be rendered as it is. Name its props with `isComponentType()`, which also checks that it is a component:
 
 ```tsx
-import { getTemplate, isComponentType, Registry } from '@rjsf/utils';
+import { isComponentType, Registry } from '@rjsf/utils';
 import { MyTemplateProps } from './MyTemplate';
 
 function renderMyTemplate(registry: Registry, props: MyTemplateProps) {
-  const MyTemplate = getTemplate('MyTemplate', registry);
+  const { MyTemplate } = registry.templates;
   if (!isComponentType<MyTemplateProps>(MyTemplate)) {
     return null;
   }
@@ -1597,7 +1597,7 @@ function renderMyTemplate(registry: Registry, props: MyTemplateProps) {
 For a template in a group of your own, narrow the group first, since `isComponentType()` is false for it, then name the props on the member. A `typeof` check alone isn't enough to find the group, because what `memo()`, `forwardRef()` and `lazy()` return is an object too:
 
 ```tsx
-const MyGroup = getTemplate('MyGroup', registry);
+const { MyGroup } = registry.templates;
 if (typeof MyGroup !== 'object' || isComponentType(MyGroup)) {
   return null;
 }

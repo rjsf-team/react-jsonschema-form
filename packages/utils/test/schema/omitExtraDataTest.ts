@@ -1,5 +1,6 @@
 import type { FormFieldState, RJSFSchema } from '../../src/index.ts';
-import { createSchemaUtils, isObject, isValueEmpty, noop, omitExtraData } from '../../src/index.ts';
+import { createSchemaUtils, isObject, noop, omitExtraData } from '../../src/index.ts';
+import { isValueEmpty } from '../../src/schema/omitExtraData.ts';
 import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import { PET_RESOURCE_SCHEMA } from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';

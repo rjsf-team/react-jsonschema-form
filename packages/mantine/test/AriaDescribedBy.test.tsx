@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { createElement, use } from 'react';
 import { createTheme, InputWrapperContext, MantineProvider } from '@mantine/core';
 import type { ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, errorId, helpId } from '@rjsf/utils';
+import { descriptionId, errorId, getControlDescribedBy, helpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -189,7 +189,7 @@ describe('aria-describedby', () => {
   test('text widget with examples also describes its input by the examples list', () => {
     const { container } = renderField({ type: 'string', examples: ['x'] });
 
-    expect(describedByValues(container)).toEqual([ariaDescribedByIds('root', true)]);
+    expect(describedByValues(container)).toEqual(['root__error root__description root__help root__examples']);
   });
 
   test.each([
@@ -212,7 +212,7 @@ describe('aria-describedby', () => {
       const { container } = renderField({ type: 'string' }, { 'ui:options': uiOptions });
 
       expect(screen.getByTestId('custom-container')).toContainElement(screen.getByRole('textbox'));
-      expect(describedByValues(container)).toEqual([ariaDescribedByIds('root')]);
+      expect(describedByValues(container)).toEqual(['root__error root__description root__help']);
     },
   );
 
@@ -515,7 +515,7 @@ describe('aria-describedby', () => {
   test('range widget describes its focusable slider thumb, not the slider root', () => {
     renderField({ type: 'integer' }, { 'ui:widget': 'range' });
 
-    expect(screen.getByRole('slider')).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-describedby', 'root__error root__description root__help');
   });
 
   test('range widget renders a ui:options description only as its description', () => {
@@ -534,7 +534,10 @@ describe('aria-describedby', () => {
       { 'ui:widget': 'range', 'ui:options': { thumbProps: { 'aria-describedby': 'my-hint' } } },
     );
 
-    expect(screen.getByRole('slider')).toHaveAttribute('aria-describedby', `${ariaDescribedByIds('root')} my-hint`);
+    expect(screen.getByRole('slider')).toHaveAttribute(
+      'aria-describedby',
+      'root__error root__description root__help my-hint',
+    );
   });
 
   test('range widget keeps the thumbProps default from the Mantine theme', async () => {
@@ -556,7 +559,10 @@ describe('aria-describedby', () => {
 
     expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('An error');
     expect(container.querySelector('[id="root-error"]')).not.toBeInTheDocument();
-    expect(screen.getByRole('checkbox')).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
+    expect(screen.getByRole('checkbox')).toHaveAttribute(
+      'aria-describedby',
+      'root__error root__description root__help',
+    );
   });
 
   describe('invalid and required options', () => {
@@ -623,7 +629,7 @@ describe('aria-describedby', () => {
         }}
         uiSchema={{
           custom: {
-            'ui:widget': ({ id }: WidgetProps) => <input id={id} aria-describedby={ariaDescribedByIds(id)} />,
+            'ui:widget': ({ id }: WidgetProps) => <input id={id} aria-describedby={getControlDescribedBy({ id })} />,
           },
         }}
         validator={validator}

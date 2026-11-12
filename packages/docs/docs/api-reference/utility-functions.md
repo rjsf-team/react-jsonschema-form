@@ -8,17 +8,17 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 
 ## Constants
 
-The `@rjsf/utils` package exports a set of constants that represent all the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
-In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility, and the `EXTRA_KEYS_ELSEWHERE_FLAG` flag that [`getRenderedOptionSchema()`](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema) adds.
+The `@rjsf/utils` package exports a set of constants that represent the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
+In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility.
 `GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or a schema with no keyword that asserts something about the value, such as `enum`, `const`, `format`, a length, a range, `properties`, `items` or a subschema keyword like `allOf` or `not`: its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all when the schema it is compared against is equally unconstrained, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it.
 An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
-`RJSF_PROVENANCE_KEY` is the Symbol `retrieveSchema()` adds to every subschema it hands out, recording where the subschema came from. Only `retrieveSchema()` writes or reads what it holds; it is exported for a comparison that should see a stamped schema as the same schema without it.
+`RJSF_PROVENANCE_KEY` is the Symbol `retrieveSchema()` adds to every subschema it hands out, recording where the subschema came from. Only `retrieveSchema()` writes or reads what it holds. It is exported so that a test can strip it, as RJSF's own test setup does, and compare a retrieved schema with the same schema written by hand.
 `UNEVALUATED_PROPERTIES_KEY` is the `unevaluatedProperties` keyword, which an object naming no `additionalProperties` is read through in its place.
 `WIDGET_FIELD_PRESENTATION` is the `PresentationDeclaration` of a field that renders its value with a single widget and leaves every part to whoever that widget says draws it, for a theme or `@rjsf/core` to declare such a field with (see [getPresentationDeclaration()](#getpresentationdeclaration)). It is defined in [getPresentationDeclaration.ts](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getPresentationDeclaration.ts) rather than with the other constants.
 `DEFAULT_BOOLEAN_WIDGET` is the registry key the `checkbox` alias of a `boolean` resolves to (`CheckboxWidget`), so a theme can read that widget from its registry, as `registry.widgets[DEFAULT_BOOLEAN_WIDGET]`, without copying the key. It is defined next to the widget map in [getWidget.tsx](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getWidget.tsx) rather than with the other constants.
 
-These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
+The constants it exports from `constants.ts` are `ADDITIONAL_PROPERTY_FLAG`, `ADDITIONAL_PROPERTIES_KEY`, `ALL_OF_KEY`, `ANY_OF_KEY`, `CONST_KEY`, `DEFAULT_KEY`, `ELSE_KEY`, `ERRORS_KEY`, `GUESSED_TYPE_FLAG`, `ID_KEY`, `ITEMS_KEY`, `ONE_OF_KEY`, `PATTERN_PROPERTIES_KEY`, `PROPERTIES_KEY`, `READONLY_KEY`, `REQUIRED_KEY`, `SUBMIT_BTN_OPTIONS_KEY`, `REF_KEY`, `THEN_KEY`, `UNEVALUATED_PROPERTIES_KEY`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`, `SCHEMA_KEY`, `DEFAULT_ID_PREFIX`, `DEFAULT_ID_SEPARATOR`, `LOOKUP_MAP_NAME`, `RJSF_ADDITIONAL_PROPERTIES_FLAG`, `ROOT_SCHEMA_PREFIX`, `UI_FIELD_KEY`, `UI_WIDGET_KEY`, `UI_OPTIONS_KEY`, `UI_GLOBAL_OPTIONS_KEY`, `UI_DEFINITIONS_KEY`, `JSON_SCHEMA_DRAFT_2019_09`, `JSON_SCHEMA_DRAFT_2020_12` and `JSON_SCHEMA_TYPES`; that file also holds keys only RJSF's own code reads.
 
 ## Types
 
@@ -79,16 +79,16 @@ that label where `hideLabel` leaves it to the select, or else names the select b
 ### DateElement&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Renders one of the six date element selectors an `AltDateWidget` is made of, using the `SelectWidget` from the registry.
-Each element is a control of its own, so the `SelectWidget` receives [dateElementId()](#dateelementid) as both its `id` and its `name`, the element's translated name, from [dateElementLabel()](#dateelementlabel), as its `placeholder`, and its accessible name, from [dateElementAriaLabel()](#dateelementarialabel), as its `aria-label`.
+Each element is a control of its own, so the `SelectWidget` receives the part's id, from [partId()](#partid), as both its `id` and its `name`, the part's translated name, such as `TranslatableString.YearLabel`, as its `placeholder`, and the field's label followed by that name, as `TranslatableString.DateElementAriaLabel` joins them, as its `aria-label`.
 Given its field's `presentation`, it hands the `SelectWidget` a plan of its own, which describes the element by the field's parts that render and marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank the element's own name, or by the `attributes` its caller gives over them; without a plan, it describes the element by the field's description, help and error ids unless `attributes` give an `aria-describedby`.
 Every theme's `SelectWidget` gives those to the control it renders through [widgetAriaProps()](#widgetariaprops).
 The `useAltDateWidgetProps()` hook returns the props for each of them, so a theme's `AltDateWidget` maps over those rather than assembling the selectors itself.
 
 #### Props
 
-- value: number | undefined - The value currently selected for this element, or `undefined` for none, as `getDateElementProps()` gives it; a `-1`, as a `DateObject` holds an unset part, is handed to the `SelectWidget` as `undefined` too
-- [name]: string - Deprecated and ignored: the element takes [dateElementId()](#dateelementid) as its name
-- rootId: string - The id of the field, from which the element derives its own id with [dateElementId()](#dateelementid)
+- value: number | undefined - The value currently selected for this element, or `undefined` for none, as `useAltDateWidgetProps()` gives it; a `-1`, as a `DateObject` holds an unset part, is handed to the `SelectWidget` as `undefined` too
+- [name]: string - Deprecated and ignored: the element takes its own id as its name
+- rootId: string - The id of the field, from which the element derives its own id with [partId()](#partid)
 - select: (property: keyof DateObject, value: unknown) => void - Records a value for one property of the `DateObject`
 - type: DateElementProp['type'] - Which element this is, e.g. `year`, `month` or `day`
 - range: DateElementProp['range'] - The inclusive range of values the element offers
@@ -99,10 +99,10 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - [autofocus]: boolean - Optional flag, if true, the widget autofocuses
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
-- [label]: string - Optional label of the field, which leads the element's accessible name, as built by [dateElementAriaLabel()](#dateelementarialabel)
-- [elementLabel]: string - Optional translated name of the element, for a caller that already translated it to display it; defaults to [dateElementLabel()](#dateelementlabel)
+- [label]: string - Optional label of the field, which leads the element's accessible name
+- [elementLabel]: string - Optional translated name of the element, for a caller that already translated it to display it; defaults to the part's `TranslatableString`, such as `YearLabel`
 - [presentation]: FieldPresentation - Optional plan of the field, whose parts that render describe the element, and whose errors mark it `aria-invalid` while they show
-- [attributes]: Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'> - Optional `aria-describedby` and `aria-invalid` for the element, such as those with the id of a message the theme renders around the field, each one left out defaulting to what the element would take without them: that of `presentation`'s control, or without a `presentation`, `ariaDescribedByIds(rootId)` and no `aria-invalid`
+- [attributes]: Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'> - Optional `aria-describedby` and `aria-invalid` for the element, such as those with the id of a message the theme renders around the field, each one left out defaulting to what the element would take without them: that of `presentation`'s control, or without a `presentation`, `getControlDescribedBy({ id: rootId })` and no `aria-invalid`
 - [elementOptions]: UIOptionsType&lt;T, S, F> - Optional further options for the `SelectWidget`, such as the props of a theme's own select, beside the element's `enumOptions`, which they can't replace; the `SelectWidget` also receives them, with those `enumOptions`, as its `uiSchema`'s `ui:options`
 
 ### SelectedOptionDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#selectedoptiondescription}
@@ -162,38 +162,6 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 
 - boolean: True if additional items is allowed, otherwise false
 
-### allowsAdditionalProperties&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Returns whether an object takes keys its own `properties` don't name, which is what makes asking [`getAdditionalPropertySchema()`](#getadditionalpropertyschemas-extends-strictrjsfschema--rjsfschema) about such a key worth it at all: `retrieveSchema()` stubs the extra keys the form data holds only for an object that takes them, `canExpand()` offers the add button only for one, and `ObjectField` adds a property only to one.
-A form's components ask `registry.schemaUtils.allowsAdditionalProperties(schema)`, which passes the form's own `context`.
-
-A `patternProperties` naming a pattern says the object takes them, whatever an `additionalProperties: false` beside it says about the names no pattern matches, since the names a pattern matches are the object's to take all the same.
-Otherwise the keyword that describes those names answers, as long as it does not reject them.
-An object naming none of the three keywords takes any key as far as a validator is concerned, which the form follows only where the `context`'s `additionalPropertiesWhenAbsent` is `'allow'`; a schema that is no object, an untyped `{}` included, takes none either way, nor does one whose `const` or `enum` pins the whole value.
-An empty `patternProperties` names no pattern, so it matches no name and describes no key the object could take, the way an empty `properties` declares none.
-
-#### Parameters
-
-- context: SchemaContext&lt;S, F> - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says what an absent keyword means
-- schema: S - The object schema to check
-
-#### Returns
-
-- boolean: True when the object takes keys beyond the ones its `properties` name
-
-### ariaDescribedByIds()
-
-Return a list of element ids that contain additional information about the field that can be used to as the aria description of the field.
-
-#### Parameters
-
-- id: string - The id of the field
-- [includeExamples=false]: boolean - Optional flag, if true, will add the `examplesId` into the list
-
-#### Returns
-
-- string: The string containing the list of ids for use in an `aria-describedBy` attribute
-
 ### asNumber()
 
 Attempts to convert the string into a number. If an empty string is provided, then `undefined` is returned.
@@ -252,7 +220,7 @@ Return a consistent `id` for the `btn` button element
 
 ### callerInputProps()
 
-Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` or `inputMode` the caller names counts even when it is undefined, which is how a caller turns the derived one off. [`getBaseInputProps()`](#getbaseinputprops) merges them for you.
+Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate`, to spread after the input props derived from the schema and options. A `pattern` or `inputMode` the caller names counts even when it is undefined, which is how a caller turns the derived one off. [`getBaseInputProps()`](#getbaseinputprops) merges them for you.
 
 #### Parameters
 
@@ -274,24 +242,6 @@ Tests that expect such a throw need to catch the timer's error themselves; this 
 #### Parameters
 
 - callback: () => void - The consumer's callback to call
-
-### canExpand&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.
-The UI for the field can expand if it has additional properties, as [`allowsAdditionalProperties()`](#allowsadditionalpropertiess-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) reads them for the `context`, is not forced as non-expandable by the `uiSchema` and the `formData` object doesn't already have `schema.maxProperties` elements.
-A `schema.propertyNames.enum` caps the object in the same way: once every name it allows is held by a property, there is no name left for a new one to be added under, so the field can no longer expand.
-An `ObjectFieldTemplate` asks `registry.schemaUtils.canExpand(schema, uiSchema, formData)`, which passes the form's own `context`.
-
-#### Parameters
-
-- context: SchemaContext&lt;S, F> - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says whether an object naming no `additionalProperties` takes extra keys
-- schema: S - The schema for the field that is being checked
-- [uiSchema=\{}]: UiSchema&lt;T, S, F> - The uiSchema for the field
-- [formData]: T | undefined - The formData for the field
-
-#### Returns
-
-- boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, is not at the maxProperties limit and has a name its `propertyNames.enum` allows left to take
 
 ### constrainsAlike&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -349,96 +299,6 @@ A form validates with the same schema object until its schema changes, and passe
 #### Returns
 
 - (schema: S, formData?: unknown) => void: A function that takes the `schema` to validate with and the `formData` the schema may have been resolved for, and throws when the schema is neither the `rootSchema` nor its resolution
-
-### dataURItoBlob()
-
-Given the `FileReader.readAsDataURL()` based `dataURI` extracts that data into an actual Blob along with the name
-of that Blob if provided in the URL. If no name is provided, then the name falls back to `unknown`.
-
-#### Parameters
-
-- dataURILike: string - The `DataUrl` potentially containing name and raw data to be converted to a Blob
-
-#### Returns
-
-- \{ blob: Blob, name: string }: An object containing a Blob and its name, extracted from the URI
-
-### dateElementAriaLabel()
-
-Return the accessible name of a date element: the field's label combined with the element's translated name through `TranslatableString.DateElementAriaLabel` (`'%1, %2'` in english), so a locale controls both the order and the punctuation.
-The label is kept even when the field hides it on screen, since that is when the parts of two date fields are otherwise impossible to tell apart.
-Only an empty label leaves the element's name alone.
-
-#### Parameters
-
-- elementLabel: string - The translated name of the date element, as returned by [dateElementLabel()](#dateelementlabel)
-- translateString: Registry['translateString'] - The `translateString` function from the `registry`
-- [label]: string - The label of the field the date element belongs to
-
-#### Returns
-
-- string: The accessible name of the date element
-
-#### Example
-
-```typescript
-dateElementAriaLabel('year', englishStringTranslator, 'When'); // 'When, year'
-dateElementAriaLabel('year', englishStringTranslator, ''); // 'year'
-```
-
-### dateElementId()
-
-Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders.
-`DateElement` gives its `SelectWidget` this id, so a theme can point a label at the year, month or day control rather than rebuilding the id itself.
-It is a [partId()](#partid), so no sibling property's id can take it.
-
-#### Parameters
-
-- rootId: string - The id of the `AltDateWidget` field the date element belongs to
-- type: string - The type of the date element, as given by its `DateElementProp`
-
-#### Returns
-
-- string: The consistent id for that date element's control
-
-#### Example
-
-```typescript
-dateElementId('root_birthday', 'year'); // 'root_birthday__year'
-```
-
-### dateElementLabel()
-
-Return the translated name of a date element, through the `TranslatableString` for its `type`: `YearLabel`, `MonthLabel`, `DayLabel`, `HourLabel`, `MinuteLabel` or `SecondLabel`.
-Any other `type` is returned as it is.
-
-#### Parameters
-
-- type: string - The type of the date element, as given by its `DateElementProp`
-- translateString: Registry['translateString'] - The `translateString` function from the `registry`
-
-#### Returns
-
-- string: The translated name of the date element
-
-### dateRangeOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Returns a list of options for a date range between `start` and `stop`.
-If the start date is greater than the end date, then the date range is reversed.
-If `start` and `stop` are negative numbers (or zero), then they will be treated as relative to the current year.
-
-#### Parameters
-
-- start: number - The starting point of the date range
-- stop: number - The ending point of the date range
-
-#### Returns
-
-- (EnumOptionsType&lt;S> & \{ value: number })[]: The list of EnumOptionsType for the date range between `start` and `stop`
-
-#### Throws
-
-- Error when `start` and `stop` aren't both %lt;= 0 or > 0
 
 ### deepEquals()
 
@@ -543,7 +403,7 @@ Encodes every option of `enumOptions` for its DOM value attribute, in a single p
 A widget reads an option's value at its position, and `enumOptionValueDecoder()` and `enumOptionSelectedValue()` encode against the same list, so they agree with it.
 When `format` is `'indexed'` (the default), each option's value is its index as a string.
 When `format` is `'realValue'`, primitive values are converted via `String()`.
-Non-primitive values (objects, arrays) fall back to their index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`.
+Non-primitive values (objects, arrays) fall back to their index, prefixed with `__rjsf_index:`, since `String()` would produce `"[object Object]"`.
 So do `null` and the empty string, since the empty string is the value of a select's empty placeholder.
 The prefix keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
 Options whose `String()` is the same, such as `1` and `'1'`, are each encoded as their index too, so every option keeps a DOM value of its own.
@@ -926,23 +786,6 @@ For a widget rendered without a plan, the two agree, so it falls back to `hasWid
 
 - boolean: True when the field shows errors of its own
 
-### findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-**Deprecated.** Kept for callers written against 6.x; resolve a `$ref` as the form does with `schemaUtils.retrieveSchema({ $ref })` instead.
-
-Returns the definition `$ref` names in `rootSchema`, resolved through the schema graph as the form resolves a field's `$ref`: a JSON pointer, an `$anchor` or the `$id` of an embedded resource, each resolved against the `$id`s around it, with every `$ref` below the target followed, the annotations beside a followed `$ref` read over the target's and any other keywords beside it merged with the target as the `allOf` of both.
-The result is shared across calls and marked with `RJSF_REF_KEY`, so copy it rather than changing it.
-Throws `Could not find a definition for …` for a `$ref` that names nothing, and `Definition for … is a circular reference` for a chain of `$ref`s that loops back on itself.
-
-#### Parameters
-
-- [$ref]: string - The `$ref` to resolve
-- [rootSchema=\{}]: S - The root schema the `$ref` names a definition of
-
-#### Returns
-
-- S: The definition the `$ref` names
-
 ### flattenGroupedOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Flattens the list returned by `groupEnumOptions()` back into a single list of options, in the same order they appear in that list: each group's options in place of the group, followed by any standalone options.
@@ -1029,12 +872,12 @@ An array rendered without a plan draws its `ui:description` or schema `descripti
 
 ### getBaseInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getbaseinputprops}
 
-Returns the props a `BaseInputTemplate` puts on its input: the ones `getInputProps()` derives from the schema and options, overridden by those [`callerInputProps()`](#callerinputprops) picks from the widget's props, and the `title` from [`getNumericInputTitle()`](#getnumericinputtitle) that names the derived numeric `pattern`, which is left out when the widget replaces that pattern. The widget's `multiple` is kept only for a `file` input and is undefined for any other, so it also overrides one spread from the template's other props: `ArrayField` passes it to whatever widget renders a multi-select, and the template can't tell that one from a `multiple` a widget means for an `email` input.
+Returns the props a `BaseInputTemplate` puts on its input: the ones derived from the schema and options, overridden by those [`callerInputProps()`](#callerinputprops) picks from the widget's props, and the translated `NumberInputTitle` or `IntegerInputTitle` `title` that names the derived numeric `pattern`, which is left out when the widget replaces that pattern. The widget's `multiple` is kept only for a `file` input and is undefined for any other, so it also overrides one spread from the template's other props: `ArrayField` passes it to whatever widget renders a multi-select, and the template can't tell that one from a `multiple` a widget means for an `email` input.
 
 #### Parameters
 
 - props: Pick&lt;BaseInputTemplateProps&lt;T, S, F>, 'schema' | 'type' | 'options' | 'accept' | 'inputMode' | 'multiple' | 'pattern'> & \{ registry: Pick&lt;Registry, 'translateString'> } - The props of the `BaseInputTemplate`
-- [plainNativeInput=true]: boolean - Passed on to `getInputProps()`
+- [plainNativeInput=true]: boolean - Whether the theme renders a plain native `<input>` for a number, which then gets a text input with a numeric `inputMode` and `pattern`
 
 #### Returns
 
@@ -1191,34 +1034,10 @@ The `aria-labelledby` names the element the title is drawn under, so a custom ti
 
 - Pick&lt;ControlAttributes, 'aria-labelledby' | 'aria-describedby'>: The `aria-labelledby` and `aria-describedby`, each left out when there is nothing to say
 
-### getControlAriaLabel()
-
-Gets the `aria-label` of a control that takes no name from what it displays, such as a combobox trigger: the `aria-label` its caller or its field's plan gives it, else none where a label names it, either the one the widget draws itself, as [widgetDrawsLabelText()](#widgetdrawslabeltext) says, or one the `FieldTemplate` draws, as [isNamedByTemplateLabel()](#isnamedbytemplatelabel) says, else the name [getControlFallbackName()](#getcontrolfallbackname) gives it.
-An empty `aria-label` names nothing, so it falls back like a missing one.
-
-#### Parameters
-
-- props: Pick&lt;WidgetProps&lt;T, S, F>, 'label' | 'hideLabel' | 'placeholder' | 'presentation' | 'registry'> - The widget's `label`, `hideLabel`, `placeholder`, `presentation` and `registry`
-- [ariaLabel]: string | undefined - The `aria-label` the caller or the plan gives the control
-
-#### Returns
-
-- string | undefined: The `aria-label`, or undefined where a label names the control
-
-#### Example
-
-```tsx
-// In a combobox whose trigger draws its value, beside a label the widget may draw itself
-const ariaLabel = props['aria-label'] || getControlAttributes(props)['aria-label'];
-<ComboboxTrigger aria-label={getControlAriaLabel(props, ariaLabel)} />;
-```
-
-A `SelectWidget` takes this name from [widgetAriaProps()](#widgetariaprops) instead.
-
 ### getControlAttributes()
 
 Gets the ARIA attributes a widget spreads onto the focusable element that carries its `id`: the `aria-labelledby`, the `aria-label` a control whose label `ui:label: false` hides is named by, the `aria-describedby` and the `aria-invalid` its field's plan gives its control, followed in `aria-describedby` by the ids of the elements the widget renders to describe that control itself, such as its examples list, each once.
-A widget rendered without a plan, as one a caller renders without a `SchemaField` above it, is described by [ariaDescribedByIds()](#ariadescribedbyids).
+A widget rendered without a plan, as one a caller renders without a `SchemaField` above it, is described by the ids of its errors, description and help: [errorId()](#errorid), [descriptionId()](#descriptionid) and [helpId()](#helpid).
 The plan's `required` is left to the widget's own `required` prop, which a widget may turn off, as `FileWidget` does once a file is chosen.
 A control whose label the field handing the widget its plan draws itself, as the plan's `drawnByField` says, and which nothing else names, is named by the label's text through `aria-label`, since the widget draws no label to name it by. A field that draws a `<label for>` naming that control gives its own `aria-labelledby` in the `control.attributes` of the plan it hands down, since that `aria-label` would replace the label's name. A control the field renders itself takes the plan's `control.attributes`, which carry no such name, rather than these.
 
@@ -1241,7 +1060,7 @@ A control whose label the field handing the widget its plan draws itself, as the
 ### getControlDescribedBy()
 
 Gets the `aria-describedby` a widget gives the focusable element that carries its `id`: the ids its field's plan describes its control by, followed by the ids of the elements the widget renders to describe that control itself, each once.
-A widget rendered without a plan is described by [ariaDescribedByIds()](#ariadescribedbyids).
+A widget rendered without a plan is described by the ids of its errors, description and help: [errorId()](#errorid), [descriptionId()](#descriptionid) and [helpId()](#helpid).
 [getControlAttributes()](#getcontrolattributes) builds its `aria-describedby` from it; call this one where a widget needs only that attribute.
 
 #### Parameters
@@ -1267,21 +1086,6 @@ A widget gives it as the control's `aria-label` where [isNamedByTemplateLabel()]
 
 - string: The name
 
-### getDateElementProps()
-
-Given date & time information with optional yearRange & format, returns props for DateElement
-
-#### Parameters
-
-- date: DateObject - Object containing date with optional time information
-- time: boolean - Determines whether to include time or not
-- [yearRange=[1900, new Date().getFullYear() + 2]]: readonly [number, number] - Controls the list of years to be displayed. A range `normalizeYearsRange()` can't read gives the default
-- [format='YMD']: DateElementFormat - Controls the order in which day, month and year input element will be displayed
-
-#### Returns
-
-- Array of props for DateElement, each part the `date` holds as `-1`, which no one has picked yet, given an `undefined` `value`
-
 ### getDateTimeLocalValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Computes whether a date-time field's `schema.format` is `iso-date-time`, and the `value` to use for display accordingly. When `isIsoDateTime`, a stored value that happens to carry a timezone offset (legal, since that format's timezone is optional) is stripped, so it displays as the naive wall-clock time it represents instead of being converted to another timezone by a date/time picker that parses the offset as real. A bare `YYYY-MM-DD` day reads as the start of that day. To be used by theme specific `DateTimeWidget` implementations.
@@ -1301,7 +1105,7 @@ A finite epoch number or a valid `Date` is an exact instant. It is converted to 
 
 Gets the error messages a widget, or an `ArrayFieldTemplate` or `ObjectFieldTemplate`, draws itself: the messages its field's plan shows, with `ui:hideError` applied, where the plan's `presentation.errors.by` is `'self'`, and none where they are drawn elsewhere, as by the `FieldTemplate` under `'template'`, below an `anyOf`/`oneOf` option by the field above, or by the field component handing it the plan, as the plan's `drawnByField` says.
 For a component rendered without a plan, as one rendered outside `SchemaField` is, it falls back to the deprecated `rawErrors` while `hideError` is off.
-Read it rather than `rawErrors` or the deprecated [getVisibleErrors()](#getvisibleerrors), and [hasWidgetErrors()](#haswidgeterrors) or a template's `hasErrors` prop for an error state.
+Read it rather than `rawErrors`, and [hasWidgetErrors()](#haswidgeterrors) or a template's `hasErrors` prop for an error state.
 
 #### Parameters
 
@@ -1415,19 +1219,6 @@ A `propertyNames` written as a `$ref` reads as the former, since resolving one n
 
 - string[] | undefined: The allowed names nothing has taken, or undefined when the schema enumerates none
 
-### getGlobalUiOptions&lt;UserExtensions extends GlobalUISchemaOptionsExtensions&lt;UserExtensions> = Record&lt;never, never>>() {#getglobaluioptions}
-
-Returns the registry's `globalUiOptions` typed with the `UserExtensions` a theme or custom component reads from them.
-The `Registry` only knows the options RJSF reads, so this is an unchecked cast: it is the caller's word that the root uiSchema's `ui:globalOptions` was written against the same extensions.
-
-#### Parameters
-
-- registry: Pick&lt;Registry, 'globalUiOptions'> - The `Registry` holding the `globalUiOptions`
-
-#### Returns
-
-- GlobalUISchemaOptions&lt;UserExtensions> | undefined: The registry's `globalUiOptions`, typed with `UserExtensions`, if the root uiSchema has any
-
 ### getGroupAttributes&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getgroupattributes}
 
 Gets the ARIA attributes a widget rendering a group of controls, such as radios or checkboxes, spreads onto the group's wrapper and onto each control in it.
@@ -1496,21 +1287,6 @@ return (
 );
 ```
 
-### getInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Using the `schema`, `defaultType` and `options`, extract out the props for the `<input>` element that make sense.
-
-#### Parameters
-
-- schema: RJSFSchema - The schema for the field provided by the widget
-- [defaultType]: string | undefined - The default type, if any, for the field provided by the widget
-- [options=\{}]: UIOptionsType&lt;T, S, F> - The UI Options for the field provided by the widget
-- [plainNativeInput=true]: boolean - Whether the theme renders a plain native `<input>`. When true, a number or integer field with no `defaultType` is rendered as a text input with a numeric `inputMode` and `pattern`, and a `number` field that resolves to a native `number` input (via `inputType` or a `defaultType` of `number`) gets `step="any"`; pass false for a theme with its own numeric widget
-
-#### Returns
-
-- InputPropsType: The extracted `InputPropsType` object
-
 ### getItemSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the schema an array schema declares for its item at `index`: the `prefixItems` or tuple `items` entry there, and past them its `items`, or the `additionalItems` beside a tuple.
@@ -1544,23 +1320,9 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 
 - UiSchema&lt;T, S, F> | undefined: The uiSchema for the item at `index`, or undefined
 
-### getKnownTypes()
-
-Gets the JSON Schema types a `schema` lists, without the duplicates and the type names that are not one of `JSON_SCHEMA_TYPES`, which no field can render.
-A schema whose `type` is a single name lists nothing, since a name of its own is not a list to choose from, so an empty array is returned for it.
-[getUnionTypes()](#getuniontypes) is this list narrowed to the schemas that allow more than one type, and `FallbackField` uses the list itself to offer exactly the types a schema names, even when it names only one.
-
-#### Parameters
-
-- schema: S - The schema for which to get the listed types
-
-#### Returns
-
-- JSONSchema7TypeName[]: The JSON Schema types the `schema` lists, empty when it lists none
-
 ### getLabelId&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getlabelid}
 
-Gets the id of a field's label, for a widget or template that draws it or names a control by it: the id the field's plan gives the label, whoever draws it, which is numbered with [optionLabelId()](#optionlabelid) beneath a label a field above draws under `fieldLabelId(id)`, or [fieldLabelId()](#fieldlabelid) for one rendered without a plan.
+Gets the id of a field's label, for a widget or template that draws it or names a control by it: the id the field's plan gives the label, whoever draws it, which is `${id}__optionLabel`, numbered `__optionLabel2` and so on further down, beneath a label a field above draws under `fieldLabelId(id)`, or [fieldLabelId()](#fieldlabelid) for one rendered without a plan.
 A widget that draws its own label draws it under this id, so the label and the `aria-labelledby` its plan points at the label agree.
 
 #### Parameters
@@ -1583,21 +1345,6 @@ Returns the subset of a schema's `patternProperties` specifications whose patter
 #### Returns
 
 - Required&lt;S['patternProperties']>: The subset of `patternProperties` specifications that match the given `key`
-
-### getNumericInputTitle()
-
-Builds the `title` for the `<input>` described by `inputProps`.
-A `pattern` that the value fails is reported by the browser as a bare "Please match the requested format", which says nothing on a field that now looks like a plain text box; a `title` is appended to that message, so naming the expected format makes the rejection self-explanatory.
-`getInputProps()` only sets a `pattern` for the numeric text input a `number`/`integer` field defaults to, and sets the `inputMode` that tells the two apart in the same place.
-
-#### Parameters
-
-- inputProps: InputPropsType - The `InputPropsType` returned by `getInputProps()`
-- translateString: Registry['translateString'] - The `translateString` function from the `Registry`, used to localize the title
-
-#### Returns
-
-- string | undefined: The `title` string, or undefined when the input has no `pattern` to explain
 
 ### getOptionalDataControlsType&lt;S extends StrictRJSFSchema = RJSFSchema>() {#getoptionaldatacontrolstype}
 
@@ -1675,7 +1422,7 @@ Returns the number of items an array schema describes by position, through `pref
 ### getPresentationDeclaration&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getpresentationdeclaration}
 
 Gets which parts of a field (its label, description, errors and help) its template draws and which the components rendering it draw themselves, from the form's merged [`ThemePresentation`](#types), by the key each component is registered under.
-It reads the field component `SchemaField` resolved and the widget its caller says that field renders, and never throws where [getWidget()](#getwidget) would.
+It reads the field component `SchemaField` resolved and the widget its caller says that field renders, and never throws for a widget that is neither registered nor an alias.
 
 A field component's declaration is the merged `fields` entry for its key over the field default: the merged `fieldDefault` over drawing its own label and description and leaving its errors and help to the template. So a component gets the same answer however `SchemaField` chose it, by the schema's type, a `ui:field` or a `$id`; one no key named, or named by a key that declares nothing, takes the declaration of the first key it is registered under that declares it.
 A field that renders its value with a single widget declares `WIDGET_FIELD_PRESENTATION` to leave its parts to that widget.
@@ -1685,7 +1432,7 @@ A part a field leaves to its widget, with no widget given, falls back to the fie
 A field that leaves its label to the widget it renders takes that widget's `labelledBy`, or else its own entry's, but never the `fieldDefault`'s. A field that keeps its label takes its own entry's, or else that of the widget it renders, which knows whether a `for` can name its control, as a group of radios can't, or else the `fieldDefault`'s. A widget's `labelledBy` includes the theme's `default`, so a `default.labelledBy` beats a `fieldDefault.labelledBy` there.
 `uncheckedIsFalse` and `uncheckedIsEmpty` are the widget's when the field renders one, since they describe the control, or else the field's own entry's, and are left out where nothing declares them.
 A label the component draws takes the `labelPlacement` of the declaration that settled it on `'self'`: the widget's when the field leaves its label to one, or else the field's. It is left out where nothing declares it or the template draws the label.
-A part nothing declares is drawn by the template. A widget `getWidget()` rejects, such as a name that is neither registered nor an alias, gets whatever is declared for it.
+A part nothing declares is drawn by the template. A widget that can't be resolved, such as a name that is neither registered nor an alias, gets whatever is declared for it.
 
 #### Parameters
 
@@ -1715,7 +1462,7 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 
 Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
 An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
-That field also stubs the extra keys of the data, for the parent and the selected option together (see [`retrieveSchema()`](#retrieveschemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype)), so the option is rendered without its own `additionalProperties`, `patternProperties` and `unevaluatedProperties`, and marked with `EXTRA_KEYS_ELSEWHERE_FLAG`, so its own field offers no extra key beside the parent's, even in a form that reads an absent `additionalProperties` as taking any key. The marker says nothing to a validator, and an option offering options of its own still takes the extra keys one of them names.
+That field also stubs the extra keys of the data, for the parent and the selected option together (see [`retrieveSchema()`](#retrieveschemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype)), so the option is rendered without its own `additionalProperties`, `patternProperties` and `unevaluatedProperties`, and marked with a flag, so its own field offers no extra key beside the parent's, even in a form that reads an absent `additionalProperties` as taking any key. The marker says nothing to a validator, and an option offering options of its own still takes the extra keys one of them names.
 An option that offers options of its own renders a field of its own beside them, which takes the extra keys in the parent's field's place, so that they render once: it keeps its own extra-key keywords, joined with the parent's as the parent's field would join them, so that a key is still judged by each of them apart, and is not marked. It also carries the names of the properties the parent and the fields above it declare, which its field leaves to them rather than rendering them as extra keys, and the parent's bounds on the object's keys, which its add button now answers to: the stricter `maxProperties` of the two, and both `propertyNames`. Its uiSchema takes the parent's say over the extra keys likewise, see [`getRenderedOptionUiSchema()`](#getrenderedoptionuischema). A `ui:field` the option's uiSchema names renders it all the same, handed the extra keys in its `schema` and `formData`, so the field renders them where it renders the option's schema.
 Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
 It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
@@ -1761,7 +1508,7 @@ Any other option's uiSchema is returned as it is.
 ### getSchemaOwnTypes()
 
 Gets the JSON Schema types a `schema` says its value has, or `undefined` for one that says nothing about it.
-The types come from whichever of these the schema provides, in order: the recognized names of a `type` list, as [getKnownTypes()](#getknowntypes) returns them; the values of a typeless `enum` or `const`, whose types the value has whichever one is chosen; and otherwise the type [getSchemaType()](#getschematype) resolves, so a schema that only implies its type — `properties` implying `object` — says what every other reader of it already renders it as.
+The types come from whichever of these the schema provides, in order: the names of a `type` list that JSON Schema defines, without duplicates; the values of a typeless `enum` or `const`, whose types the value has whichever one is chosen; and otherwise the type [getSchemaType()](#getschematype) resolves, so a schema that only implies its type — `properties` implying `object` — says what every other reader of it already renders it as.
 The `enum` and `const` values are read directly rather than through `getSchemaType()`, which answers `string` for any typeless `enum` and so would leave out the `number` in an `enum` of numbers.
 
 A schema says nothing about its value's type when its only `type` is a name JSON Schema does not define, or when the type was guessed from the form data rather than named — an `additionalProperties` entry the schema puts no constraint on, which `retrieveSchema()` marks with `GUESSED_TYPE_FLAG`.
@@ -1787,7 +1534,7 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 - schema.additionalProperties: Returns `object`
 - schema.patternProperties: Returns `object`
 - schema.unevaluatedProperties: Returns `object`, since it describes the keys an object's other keywords leave over
-- type is an array: Returns its first type other than 'null' that JSON Schema defines, since 'null' is the one type that holds no value to edit and an unrecognized name has no field to render it; failing that its first type other than 'null', and 'null' for an array listing nothing else. No single field renders every type of an array allowing several, so use [getUnionTypes()](#getuniontypes) to get them all, or [getSchemaTypeForValue()](#getschematypeforvalue) for the one a given value has
+- type is an array: Returns its first type other than 'null' that JSON Schema defines, since 'null' is the one type that holds no value to edit and an unrecognized name has no field to render it; failing that its first type other than 'null', and 'null' for an array listing nothing else. No single field renders every type of an array allowing several, so use [getUnionTypes()](#getuniontypes) to get them all, or [guessType()](#guesstype) for the type a given value has
 
 #### Parameters
 
@@ -1796,22 +1543,6 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 #### Returns
 
 - string | undefined: The type of the schema
-
-### getSchemaTypeForValue()
-
-Gets the type of a given `schema` that `value` has.
-A schema whose `type` is a list allows a value of any type it lists, not just the one `getSchemaType()` resolves it to, so a value of another listed type is read as its own type: a string held by a `['null', 'object', 'string']` is a string, not an object to look for properties in.
-A number held by a list naming `integer` but not `number` is that `integer`.
-Any other value, an `undefined` one included, and a schema naming a single type, gets what `getSchemaType()` returns.
-
-#### Parameters
-
-- schema: S - The schema describing `value`
-- [value]: unknown - The value whose type is wanted
-
-#### Returns
-
-- string | undefined: The listed type `value` has, otherwise the type of the schema
 
 ### getSelectFieldType()
 
@@ -1872,38 +1603,9 @@ Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto t
 
 - SubmitButtonOptions: The merging of the `DEFAULT_OPTIONS` with any custom ones, always with `props`
 
-### getTemplate&lt;Name extends keyof TemplatesType&lt;T, S, F>, T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Returns the template with the given `name` from either the `uiSchema` if it is defined or from the `registry`
-otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only those in the `registry` are returned.
-
-#### Parameters
-
-- name: Name - The name of the template to fetch, restricted to the keys of `TemplatesType`
-- registry: Registry&lt;T, S, F> - The `Registry` from which to read the template
-- [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read an alternate template
-- [entryLabel]: () => string - Builds the label of the uiSchema entry the field is rendered from, so one entry
-  warns once however many rows or extra keys render it; omitted by callers that only resolve, which stay silent, and
-  called only when an override is invalid. It is read once per function while the override stays the same, so pass a
-  new function when the label changes
-
-#### Returns
-
-- TemplatesType&lt;T, S, F>[Name]: The template from either the `uiSchema` or `registry` for the `name`. An override
-  that is not a component is ignored, warning once per uiSchema entry when an `entryLabel` is given, and falls back to
-  the registry's own template. Template overrides are per-field only, not `ui:globalOptions`. An explicit own `null`
-  renders the registry's own template without a warning. An override under a custom template name can't be told apart
-  from an ordinary option, so it is returned unchecked and without a warning: a truthy value (a component or a
-  `Record` of them) as-is, a string looked up among the registry's templates, a falsy one falling back
-
-A template under a custom name has props of type `never`, since only its caller knows them: name them with
-`isComponentType<P>()` before rendering it. See
-[Reading a custom template back](../advanced-customization/custom-templates.md#reading-a-custom-template-back).
-
 ### getTemplates&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Returns every template in the `registry`, with each one that `uiOptions` overrides resolved the way `getTemplate()`
-resolves it. Only templates the registry already holds are resolved: an override for a name the registry lacks is
+Returns every template in the `registry`, with each one that `uiOptions` overrides resolved in its place. Only templates the registry already holds are resolved: an override for a name the registry lacks is
 left out. Destructure the templates a component renders from the result, e.g.
 `const { FieldTemplate, FieldErrorTemplate } = getTemplates(registry, uiOptions)`.
 
@@ -1911,13 +1613,14 @@ left out. Destructure the templates a component renders from the result, e.g.
 
 - registry: Registry&lt;T, S, F> - The `Registry` from which to read the templates
 - [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read alternate templates
-- [entryLabel]: () => string - Passed through to `getTemplate()` for the invalid-override warnings
+- [entryLabel]: () => string - Names the uiSchema entry in the warning an invalid override logs. It is read once
+  while the override stays the same, so pass a new function when the label changes
 
 #### Returns
 
 - Readonly&lt;TemplatesType&lt;T, S, F>>: The templates from either the `uiSchema` or `registry`
 
-A template the result holds under a custom name has props of type `never`, as `getTemplate()` returns it.
+A template the result holds under a custom name has props of type `never`.
 
 ### getTestIds()
 
@@ -1956,7 +1659,7 @@ Pass the registry's `globalUiOptions`, which hold only the options RJSF reads th
 ### getUnionTypes()
 
 Gets the list of types a `schema` allows when it allows more than one of them, i.e. its `type` is an array of two or more non-`null` type names.
-The list is the one [getKnownTypes()](#getknowntypes) returns, so type names that are not one of `JSON_SCHEMA_TYPES` are dropped, since no field can render them, as are duplicates.
+Type names that are not one of `JSON_SCHEMA_TYPES` are dropped, since no field can render them, as are duplicates.
 A schema allowing a single type, with or without `null`, is one that [getSchemaType()](#getschematype) resolves to that type, so it is not a union and `undefined` is returned for it.
 `SchemaField` uses this to route a multi-type schema to `FallbackField` when the [useFallbackUiForUnsupportedType](./form-props.md#usefallbackuiforunsupportedtype) prop is set, unless its `anyOf`/`oneOf` options [leave the choice of type to themselves](../json-schema/single.md#multiple-types).
 
@@ -2008,19 +1711,6 @@ A schema [`retrieveSchema()`](#retrieveschemat--unknown-s-extends-strictrjsfsche
 
 - S: The schema to hand the validator
 
-### getVisibleErrors()
-
-Returns the list of errors that a widget or template should surface in its own UI, which is empty whenever `ui:hideError` is in effect: `rawErrors` is deliberately still provided while errors are hidden, so that custom widgets can render them their own way.
-Deprecated, and kept through v7 for a component rendered without a plan: read [getErrorsToDraw()](#geterrorstodraw) instead, which gives the messages its field's plan shows, with `ui:hideError` applied, only where `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and falls back to this without a plan, and [hasWidgetErrors()](#haswidgeterrors) or a template's `hasErrors` prop for an error state.
-
-#### Parameters
-
-- props: VisibleErrorsProps - The props of the widget or template, from which `rawErrors` and `hideError` are read
-
-#### Returns
-
-- string[]: The errors to display, or an empty array when there are none or they are being hidden
-
 ### getWidgetDescription()
 
 Gets the description a widget draws itself, as a checkbox does: the one its field's plan says the widget draws, with the text and id the plan gives it.
@@ -2036,32 +1726,9 @@ Without a plan it can't tell which description the theme's `FieldTemplate` draws
 
 - \{ text: string, id: string } | undefined: The text and id of the description the widget draws, or undefined when it draws none
 
-### getWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getwidget}
-
-Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
-React component that is used to render the widget. If the `widget` is already a React component, it is returned
-as-is. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based on the
-schema type and `widget` name. The `object` and `null` types accept `select`, `radio` and `hidden`, which a select over
-object constants, or one whose `type` is `null`, renders with. A string with a string `const` also accepts `checkbox`, which resolves to `CheckboxWidget`, including on a `type` list naming the string after a number. A schema whose `type` is a list looks the name up by the type
-[getWidgetType()](#getwidgettype) picks, so a `textarea` on a `['null', 'number', 'string']` is the `string` one. If no widget component can be found an `Error` is thrown.
-
-#### Parameters
-
-- schema: RJSFSchema - The schema for the field
-- [widget]: Widget&lt;T, S, F> | string - Either the name of the widget OR a `Widget` implementation to use
-- [registeredWidgets=\{}]: RegistryWidgetsType&lt;T, S, F> - A registry of widget name to `Widget` implementation
-
-#### Returns
-
-- Widget&lt;T, S, F>: The `Widget` component to use
-
-#### Throws
-
-- An error if there is no `Widget` component that can be returned
-
 ### getWidgetType&lt;S extends StrictRJSFSchema = RJSFSchema>() {#getwidgettype}
 
-Gets the type whose field renders a widget for a schema, matching the widget's alias or the registered name an alias maps to, such as `textarea` or `TextareaWidget`. That is the type the schema resolves to when it has the widget, otherwise the first `string`, `number`, `integer` or `boolean` its `type` list names that does: a `textarea` on a `['null', 'number', 'string']` or a `['array', 'string']` is the `string` one, and a `checkbox` on a `['number', 'boolean']` the `boolean` one. A string with a string `const` also has `checkbox`, so a `checkbox` on a `['number', 'string']` with a string `const` is the `string` one, while a `['boolean', 'string']` resolves to the `boolean`, which has its own. No `null`, `object` or `array` type is looked to, since the field of the type the list resolves to would be left rendering the widget: a `radio` of the `null` type would replace the list an `ArrayField` multi-select edits with one value. For the same reason a multi-select takes only its own widgets, as another type's field has none of its options to show. A select over a `type` list takes only the widgets of the field [getSelectFieldType()](#getselectfieldtype) renders it through, and only `select`, `radio` and `hidden` when that is a `string` over a list naming an `object` or `array`, so a `checkbox` on an `enum` of `['a', true]` has no type. `getWidget()` looks a widget alias up by the type it returns, and [getFieldTypeForWidget()](#getfieldtypeforwidget) builds on it for the field `SchemaField` renders.
+Gets the type whose field renders a widget for a schema, matching the widget's alias or the registered name an alias maps to, such as `textarea` or `TextareaWidget`. That is the type the schema resolves to when it has the widget, otherwise the first `string`, `number`, `integer` or `boolean` its `type` list names that does: a `textarea` on a `['null', 'number', 'string']` or a `['array', 'string']` is the `string` one, and a `checkbox` on a `['number', 'boolean']` the `boolean` one. A string with a string `const` also has `checkbox`, so a `checkbox` on a `['number', 'string']` with a string `const` is the `string` one, while a `['boolean', 'string']` resolves to the `boolean`, which has its own. No `null`, `object` or `array` type is looked to, since the field of the type the list resolves to would be left rendering the widget: a `radio` of the `null` type would replace the list an `ArrayField` multi-select edits with one value. For the same reason a multi-select takes only its own widgets, as another type's field has none of its options to show. A select over a `type` list takes only the widgets of the field [getSelectFieldType()](#getselectfieldtype) renders it through, and only `select`, `radio` and `hidden` when that is a `string` over a list naming an `object` or `array`, so a `checkbox` on an `enum` of `['a', true]` has no type. A widget alias is looked up by the type it returns, and [getFieldTypeForWidget()](#getfieldtypeforwidget) builds on it for the field `SchemaField` renders.
 
 #### Parameters
 
@@ -2165,18 +1832,6 @@ Sorts object fields in consistent order before stringify to prevent different ha
 
 - string: The string obtained from the hash of the stringified object
 
-### hashString()
-
-Hashes a string using the algorithm based on Java's hashing function.
-
-#### Parameters
-
-- string: string - The string for which to get the hash
-
-#### Returns
-
-- string: The resulting hash of the string in hex format
-
 ### guessType()
 
 Given a specific `value` attempts to guess the type of a schema element. In the case where we have to implicitly
@@ -2189,18 +1844,6 @@ create a schema, it is useful to know what type to use based on the data we are 
 #### Returns
 
 - string: The best guess for the object type
-
-### hashForSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Stringifies the schema and returns the hash of the resulting string.
-
-#### Parameters
-
-- schema: S - The schema for which the hash is desired
-
-#### Returns
-
-- string: The string obtained from the hash of the stringified schema
 
 ### hasAdditionalKeyLabel()
 
@@ -2223,7 +1866,7 @@ One with neither renders as the field holding its options, which leaves the cont
 
 #### Parameters
 
-- schemaUtils: Pick&lt;SchemaUtilsType&lt;T, S, F>, 'canExpand'> - The `canExpand()` of the form's `SchemaUtilsType`
+- schemaUtils: Pick&lt;SchemaUtilsType&lt;T, S, F>, 'canExpand'> - The form's `SchemaUtilsType`, whose `canExpand()` it calls
 - schema: S - The object's schema, with the extra-key keywords of the option shown joined in
 - [uiSchema]: UiSchema&lt;T, S, F> - The object's uiSchema, whose `expandable` can rule out more keys
 - [formData]: T - The object's form data, which can fill its `maxProperties`
@@ -2236,12 +1879,12 @@ One with neither renders as the field holding its options, which leaves the cont
 
 Whether `schema` carries the flag `marker` the schema utilities set on the schemas they build, such as the `ADDITIONAL_PROPERTY_FLAG` `retrieveSchema()` sets on a property an `additionalProperties` adds.
 A boolean subschema, which can stand wherever a schema can, carries none.
-It takes only the markers that hold a flag: `ADDITIONAL_PROPERTY_FLAG`, `EXTRA_KEYS_ELSEWHERE_FLAG`, `GUESSED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`. A flag set to `undefined` or `false` reads as unset.
+It takes only the markers that hold a flag: `ADDITIONAL_PROPERTY_FLAG`, `GUESSED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`. A flag set to `undefined` or `false` reads as unset.
 
 #### Parameters
 
 - schema: unknown - The schema to check, which may be a boolean subschema
-- marker: SchemaFlagMarker - The symbol of the flag marker, the exported union `typeof ADDITIONAL_PROPERTY_FLAG | typeof EXTRA_KEYS_ELSEWHERE_FLAG | typeof GUESSED_TYPE_FLAG | typeof RJSF_REF_CYCLE_KEY`
+- marker: SchemaFlagMarker - The symbol of the flag marker, one of `ADDITIONAL_PROPERTY_FLAG`, `GUESSED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`
 
 #### Returns
 
@@ -2250,7 +1893,7 @@ It takes only the markers that hold a flag: `ADDITIONAL_PROPERTY_FLAG`, `EXTRA_K
 ### hasVisibleErrors()
 
 Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
-It is the boolean form of [getVisibleErrors()](#getvisibleerrors), for the components that only need to decide whether to render an error state rather than render the errors themselves.
+It is true when `rawErrors` holds an error and `hideError` is not set, for the components that only need to decide whether to render an error state rather than render the errors themselves.
 Deprecated, and kept through v7 for a component rendered without a plan: read [hasWidgetErrors()](#haswidgeterrors) instead, which reads the plan and falls back to this only without one, or a template's `hasErrors` prop. A component drawing the messages itself reads [getErrorsToDraw()](#geterrorstodraw).
 
 #### Parameters
@@ -2325,23 +1968,6 @@ Whether a `WrapIfAdditionalTemplate` disables the remove button of an `additiona
 
 - boolean: True when the remove button is disabled
 
-### isCollapsedByOptionalDataControls&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#iscollapsedbyoptionaldatacontrols}
-
-Determines whether the Optional Data Controls render the property of an object collapsed, showing only its Add button: it holds no data, it is not required, read from its own `ui:required` before the object's `required`, and [`isOptionalDataControlsType()`](#isoptionaldatacontrolstype) is true for it.
-Its uiSchema is the one its field renders with, the `ui:definitions` entry of a definition it references merged in.
-An `additionalProperties` entry `retrieveSchema()` stubbed never is, since its key being there makes it present.
-
-#### Parameters
-
-- schema: S | (() => S) - The property's schema, retrieved, or a function retrieving it, called only once the uiSchema turns the Optional Data Controls UI on for some type
-- rawSchema: S - The property's schema as the object declares it, whose `$ref` picks its `ui:definitions` entry
-- uiSchema: UiSchema&lt;T, S, F> | undefined - The property's own uiSchema, if any
-- options: object - `uiSchemaDefinitions` and `globalUiOptions`, both optional, the `rootSchema`, `required`, whether the object's `required` lists the property, and the property's `formData`
-
-#### Returns
-
-- boolean: True when the property renders collapsed behind its Add button
-
 ### isComponentType&lt;P = never>()
 
 Determines whether a `value` given in place of a component, such as a `ui:field`, a `ui:widget` or a `LayoutGridField` cell's `render`, is one React can render as a component.
@@ -2413,18 +2039,6 @@ Checks to see if the `uiSchema` names a `widget` and that the widget is not `hid
 #### Returns
 
 - boolean: True if the `uiSchema` describes a custom widget, false otherwise
-
-### isDateElementFormat()
-
-Reports whether a `format` option is a `DateElementFormat`, the order of an `AltDateWidget`'s date elements, which a JSON uiSchema can hold as anything
-
-#### Parameters
-
-- value: unknown - The value of the `format` option
-
-#### Returns
-
-- boolean: Whether `value` is `'DMY'`, `'MDY'` or `'YMD'`
 
 ### isEnumOptionsGroup&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2507,22 +2121,6 @@ In this case, `thing` is an object if it has the type `object` but is NOT null, 
 
 - boolean: True if it is a non-null, non-array, non-File object
 
-### isOptionalDataControlsType&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#isoptionaldatacontrolstype}
-
-Determines whether the type of the field for `schema`, as [`getOptionalDataControlsType()`](#getoptionaldatacontrolstype) reads it, is one that `enableOptionalDataFieldForType` turns the Optional Data Controls UI on for. A field whose `anyOf`/`oneOf` options name several types is never one of them.
-Unlike `shouldRenderOptionalField()`, it takes no `registry` and leaves out whether the field is required or the root, so code that only has the schema and uiSchema can ask whether a field would be rendered with the controls.
-
-#### Parameters
-
-- schema: S | (() => S) - The schema for the field, or a function building it, called only once the uiSchema turns the Optional Data Controls UI on for some type
-- uiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema for the field, if any
-- globalUiOptions: GlobalUISchemaOptions | undefined - The global UI options, if any
-- rootSchema: S - The root schema an option written as a `$ref` names its definition in
-
-#### Returns
-
-- boolean: True if the Optional Data Controls UI is enabled for the type of the field, otherwise false
-
 ### isPlainObject()
 
 Determines whether `thing` is a plain object, i.e. one created by the `Object` constructor or with a `null` prototype.
@@ -2548,18 +2146,6 @@ A boolean or missing subschema describes no value of its own, so it has nothing 
 #### Returns
 
 - boolean: True when the definition is a schema object rather than a boolean shorthand or absent, narrowing it to `S`
-
-### isValueEmpty()
-
-Returns true when a form value is considered empty: `null`, `undefined`, or `''` (empty string), an empty array (`[]`), or a plain object whose every own value is itself empty (checked recursively). Scalar values such as `0` and `false` are not considered empty.
-
-#### Parameters
-
-- value: unknown - The value to check
-
-#### Returns
-
-- boolean: True if the value is considered empty, false otherwise
 
 ### isWholeValueSelect&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2638,18 +2224,6 @@ A theme's `SelectWidget` that renders its own list of options gives it the resul
 
 - \{ 'aria-labelledby'?: string, 'aria-label'?: string }: The `aria-labelledby` or the `aria-label` to give the list of options
 
-### localTimeToOffsetTime()
-
-Appends the browser's current local UTC offset to a bare `time` string (`HH:MM` or `HH:MM:SS`), producing a `time` compliant with the JSON Schema `time` format (RFC 3339 `full-time`), which requires a timezone. The wall-clock value itself is left untouched; only the offset annotation is added.
-
-#### Parameters
-
-- time: string - A time string without a timezone offset
-
-#### Returns
-
-- string: The `time` string suffixed with `Z` (UTC) or a `+HH:MM`/`-HH:MM` offset
-
 ### localToUTC()
 
 Converts a local Date string into a UTC date string
@@ -2726,31 +2300,6 @@ Code that builds a registry for a themed form outside `Form` layers the theme's 
 
 - FormClassMap: The layered class map, whose entries are functions only where no layer beneath gives a class
 
-### mergeDefaultsWithFormData&lt;T = unknown>()
-
-Merges the `defaults` object of type `T` into the `formData` of type `T`
-
-When merging defaults and form data, we want to merge in this specific way:
-
-- objects are deeply merged
-- arrays are merged in such a way that:
-  - when the array is set in form data, only array entries set in form data are deeply merged; additional entries from the defaults are ignored unless `mergeExtraArrayDefaults` is true, in which case the extras are appended onto the end of the form data
-  - when the array is not set in form data, the default is copied over
-- scalars are overwritten/set by form data unless the form data is `undefined` or `null` and there is a default, or is `NaN`, AND `defaultSupercedesUndefined` is true, or unless `overrideFormDataWithDefaults` is true and the form data is neither `undefined` nor `null`, in which case the default replaces it
-- a non-object default is ignored when form data is an object, whatever the flags, so `mergeDefaultsWithFormData('x', { b: 2 })` returns `{ b: 2 }`
-
-#### Parameters
-
-- [defaults]: T | undefined - The defaults to merge
-- [formData]: T | undefined - The form data into which the defaults will be merged
-- [mergeExtraArrayDefaults=false]: boolean - If true, any additional default array entries are appended onto the formData
-- [defaultSupercedesUndefined=false]: boolean - If true, an `undefined` or `null` form data value with a default, or a `NaN` one, will be overwritten by the default value
-- [overrideFormDataWithDefaults=false]: boolean - If true, the default value will overwrite the form data value, except that an `undefined` or `null` form data value is kept unless `defaultSupercedesUndefined` is true, a form data key or array entry that doesn't exist in the defaults keeps its value, and object or array form data is never replaced, only merged with a default of the same kind. A default that is present but `undefined` still replaces a scalar form data value. This is useful when we have already merged formData with defaults and want to add an additional field from formData that does not exist in defaults.
-
-#### Returns
-
-- T | undefined: The resulting merged form data with defaults
-
 ### mergeObjects()
 
 Recursively merge deeply nested objects.
@@ -2826,18 +2375,6 @@ A validator package that has to tell which resource of the root a `$ref` names u
 
 - string: The URI in the form two spellings of the same URI share
 
-### normalizeYearsRange()
-
-Returns the `[first, last]` years to pass `getDateElementProps()` for a `yearsRange` option, which a JSON uiSchema can hold as anything. A year held as a numeric string counts as its number, and a fractional year is rounded down. Only its first two entries are read. A range whose first two entries aren't years, that mixes a relative and an absolute year, which `dateRangeOptions()` throws for, or that reaches a year before 100 or after 9999, which a date string can't hold, gives `undefined`, for the default years
-
-#### Parameters
-
-- yearsRange: unknown - The `yearsRange` option
-
-#### Returns
-
-- [number, number] | undefined: The range, or `undefined` for the default years
-
 ### numericWidgetStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The schema's type decides, and a type that allows a number too writes one. A schema with no type has only the value to go by, so it writes a number until it holds a string, even for an `enum` of strings.
@@ -2895,21 +2432,6 @@ Each further level showing a description of its own beneath those is numbered, s
 #### Returns
 
 - string: The consistent id for the option's own description element from the given `id` and `depth`
-
-### optionLabelId()
-
-Return a consistent `id` for the label a selected `anyOf`/`oneOf` option or the fallback UI's value field draws of its own, beneath a field whose own component already draws a label under the id it would take, such as the option selector drawing an `anyOf` field's label beside an option whose widget draws its own.
-Each further level drawing a label beneath those is numbered, so an option of an option that draws its own takes `optionLabel2`.
-It is the id [resolveFieldPresentation()](#resolvefieldpresentation) plans for it, which [getGroupLabelling()](#getgrouplabelling) draws a group's label under.
-
-#### Parameters
-
-- id: string - The id of the field
-- [depth=1]: number - How many fields above rendering the same `id` draw a label
-
-#### Returns
-
-- string: The consistent id for the option's own label element from the given `id` and `depth`
 
 ### optionHelpId()
 
@@ -3043,19 +2565,6 @@ If `order` contains a '_' then any `properties` that are not mentioned explicity
 
 - Error when the properties cannot be ordered correctly
 
-### pad()
-
-Returns a string representation of the `num` that is padded with leading "0"s if necessary
-
-#### Parameters
-
-- num: number - The number to pad
-- width: number - The width of the string at which no lead padding is necessary
-
-#### Returns
-
-- string: The number converted to a string with leading zero padding if the number of digits is less than `width`
-
 ### padTimeSeconds()
 
 Appends `:00` seconds to a bare time-of-day (`HH:MM`) or the time portion of a naive local date-time string (`...THH:MM`) that is missing them, since RFC 3339 requires seconds for both the `time` and `date-time` formats (independent of whether a timezone offset is present or required).
@@ -3067,23 +2576,6 @@ Appends `:00` seconds to a bare time-of-day (`HH:MM`) or the time portion of a n
 #### Returns
 
 - string: The value with `:00` appended if it was missing seconds, otherwise unchanged
-
-### parseDateString()
-
-Parses the `dateString` into a `DateObject`, including the time information when `includeTime` is true
-
-#### Parameters
-
-- [dateString]: string - The date string to parse into a DateObject
-- [includeTime=true]: boolean - Optional flag, if false, will not include the time data into the object
-
-#### Returns
-
-- DateObject: The date string converted to a `DateObject`
-
-#### Throws
-
-- Error when the date cannot be parsed from the string
 
 ### partId()
 
@@ -3106,7 +2598,7 @@ partId('root_when', 'time'); // 'root_when__time'
 
 ### pickGlobalUiOptions() {#pickglobaluioptions}
 
-Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which `GLOBAL_UI_OPTIONS_KEYS` lists, and the extension keys the form's theme and the `Form` itself declare.
+Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which `GlobalUISchemaOptionsKeys` names, and the extension keys the form's theme and the `Form` itself declare.
 Every other key is left out, so a global option RJSF reads only per field, such as `widget` or `placeholder`, reaches no field.
 Such an option is warned about once, since a form that set one, such as a global `readonly`, would otherwise change with no sign of why.
 An extension key that `RESERVED_UI_OPTION_NAMES` lists is left out too, with a warning: one of those per-field names, which every field would otherwise read as its own option, or `definitions` or `globalOptions`, which only the root uiSchema's `ui:` keys set.
@@ -3199,44 +2691,11 @@ This is structural sharing, as TanStack Query's `replaceEqualDeep` does for fetc
 
 - T: `prev` when the values are deeply equal, otherwise `next` (or a copy of it) sharing every unchanged subtree with `prev`
 
-### replaceStringParameters()
-
-Potentially substitutes all replaceable parameters with the associated value(s) from the `params` if available.
-When a `params` array is provided, each value in the array is used to replace any of the replaceable parameters in the `inputString` using the `%1`, `%2`, etc. replacement specifiers.
-
-#### Parameters
-
-- inputString: string - The string which will be potentially updated with replacement parameters
-- [params]: string[] - The optional list of replaceable parameter values to substitute into the english string
-
-#### Returns
-
-- string: The updated string with any replacement specifiers replaced
-
 ### resetLogOnce()
 
 Forgets every message `logOnce()` has already logged, so each will be logged again the next time it is seen.
 Tests need it so each one sees its own warnings.
 An app that swaps schemas at runtime needs it for the same reason the playground does: a wizard whose steps reuse the same field ids, a schema editor or a form builder would otherwise have the second schema's warnings held back by the first's.
-
-### resolveConstantOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Returns `schema` with the own `$ref` of each of its `anyOf`/`oneOf` options resolved when that makes every option a constant, the shape a select is read from, and `schema` itself otherwise.
-`retrieveSchema()` hands an option written as a `$ref` out as it stands, for the field that renders it to retrieve, except a select's: a select renders no field per option, so the schema it hands out holds a select's constants resolved this way. `getDisplayLabel()`, `getDefaultFormState()`, `omitExtraData()` and `sanitizeDataForNewSchema()` read the options of a schema that did not come from `retrieveSchema()` through this before `optionsList()` labels them or a select over object or array constants is told from a container.
-The result is made once per schema and shared.
-
-#### Parameters
-
-- schema: S - The schema that may offer options written as `$ref`s
-- rootSchema: S - The root schema the references name definitions of
-
-#### Returns
-
-- S: The schema with its constant options resolved, or `schema` itself
-
-#### Throws
-
-- Error for an option's reference that resolves to nothing, as retrieving that option does
 
 ### resolveDefaultWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -3261,11 +2720,11 @@ Builds a field's plan (`FieldPresentation`) of what draws its label, description
 It predicts nothing: whether a part shows is decided from the decisions passed in, so a template and a widget reading the plan agree on it.
 Each part is placed `template` or `self` by its declared owner, `above` when a field above rendering the same id already draws it, or `none`.
 
-- The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name. It is `above`, under the id and text of the label drawn there, when the template of a field above rendering the same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a second time; a level with no control, such as a container whose label is its own heading, keeps its label only when no field above already draws its text, or else is `above` under the id of the label that does. A label with a control to name takes [fieldLabelId()](#fieldlabelid); a heading takes [titleId()](#titleid), the id every title template renders it under, so a heading kept beneath a label above has an id of its own. A label of its own with a control to name takes [optionLabelId()](#optionlabelid) instead when a field above draws a label under the id it would take, numbered by how many fields above draw one. The control points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the control above was pointed at that label too, since its template may then draw it with no `for`, or when its id isn't the one that label's `for` names. The label's `requiredMarker` follows `required` whether or not there is a control, so a container's heading is marked too, and an `above` label carries the marker of the label drawn above along with its text and id, while the control's own `required` stays this level's.
+- The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name. It is `above`, under the id and text of the label drawn there, when the template of a field above rendering the same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a second time; a level with no control, such as a container whose label is its own heading, keeps its label only when no field above already draws its text, or else is `above` under the id of the label that does. A label with a control to name takes [fieldLabelId()](#fieldlabelid); a heading takes [titleId()](#titleid), the id every title template renders it under, so a heading kept beneath a label above has an id of its own. A label of its own with a control to name takes `${id}__optionLabel` instead, numbered `__optionLabel2` and so on further down, when a field above draws a label under the id it would take, numbered by how many fields above draw one. The control points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the control above was pointed at that label too, since its template may then draw it with no `for`, or when its id isn't the one that label's `for` names. The label's `requiredMarker` follows `required` whether or not there is a control, so a container's heading is marked too, and an `above` label carries the marker of the label drawn above along with its text and id, while the control's own `required` stays this level's.
 - The description and help show where they have text, the description only where `showLabel` allows it, since `ui:label: false` hides both. Text any field above already shows is `above`, as is a part with no text under a field above that shows one. Text is compared with `===`, so an element `ui:help` is matched only by the same element, which an option inheriting its field's `uiSchema` carries; to repeat one in an option's own `uiSchema`, reuse the one element rather than writing the JSX again. Text of its own takes [optionDescriptionId()](#optiondescriptionid) or [optionHelpId()](#optionhelpid) when a field above shows text under the id it would take, numbered by how many fields above show text of their own, so each level's text has an id of its own.
 - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws, unless it hides them while this field shows its own, which this field then draws. Beside the messages, `errors.own` says whether the field shows errors of its own, as its `ui:hideError` leaves them, whoever draws them: the error state of its wrapper and of the label and description drawn for it, where the messages may be those of a field above, which [fieldShowsOwnErrors()](#fieldshowsownerrors) reads for a widget.
 - The control is described by the parts that render, here or above, which the plan lists as `describedBy`, and is `aria-invalid` whenever errors show. The errors come first, then the descriptions and helps in the order they are drawn: `templateOrder` is the order the `FieldTemplate` draws them in around its `children`, inside which a part a component draws itself and the levels below sit, so a part a field above draws after its `children` is listed after the option's own. A field below rendering the same id inherits `describedBy`, so a widget adds the ids of the elements it renders to describe its own control, such as its `examplesId()` list, with [getControlAttributes()](#getcontrolattributes) rather than through the plan.
-- The plan records `showLabel` as resolved, so a widget reads whether `ui:label: false` hides its field's label and description from it. A control whose label it hides, with no label above naming it, takes the label's text as its `aria-label`, since hiding the label is a choice of layout, not of the control's name, or the `aria-label` of the nearest field above rendering the same id whose label is hidden too, as an option's control is named by its field's label while it shows; `getGroupAttributes()` puts it on a group's wrapper. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at the id its plan gives the label: [fieldLabelId()](#fieldlabelid), or [optionLabelId()](#optionlabelid) beneath a label a field above draws under that id.
+- The plan records `showLabel` as resolved, so a widget reads whether `ui:label: false` hides its field's label and description from it. A control whose label it hides, with no label above naming it, takes the label's text as its `aria-label`, since hiding the label is a choice of layout, not of the control's name, or the `aria-label` of the nearest field above rendering the same id whose label is hidden too, as an option's control is named by its field's label while it shows; `getGroupAttributes()` puts it on a group's wrapper. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at the id its plan gives the label: [fieldLabelId()](#fieldlabelid), or `${id}__optionLabel` beneath a label a field above draws under that id.
 
 #### Parameters
 
@@ -3312,7 +2771,7 @@ It is how the schema graph reads a `$ref` or a nested `$id` against the resource
 
 ### resolveWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Returns the widget `getWidget()` returns as the `Widget` of an object, throwing the same errors. Destructure
+Returns the component that renders `widget` for `schema`, as the `Widget` of an object, throwing for a widget that is neither registered nor an alias, or that doesn't support the schema's type. Destructure
 it in a component, e.g. `const { Widget } = resolveWidget(schema, widget, registry.widgets)`.
 
 #### Parameters
@@ -3355,19 +2814,6 @@ Two schemas sharing a key must validate the same way, so a schema derived from a
 #### Returns
 
 - string: The `$id` of the schema if it has a non-empty one, otherwise the hash of the schema
-
-### schemaParser&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-**Deprecated.** Another name for [`getValidationSchemas()`](#getvalidationschemass-extends-strictrjsfschema--rjsfschema), kept for callers written against 6.x.
-It returns the same list, which changed with the rename, so code calling it still has to regenerate its precompiled validators.
-
-#### Parameters
-
-- rootSchema: S - The root schema to list the validated schemas of
-
-#### Returns
-
-- SchemaMap&lt;S>: The schemas, keyed by `schemaKey()`
 
 ### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>() {#schemarequirestruevalue}
 
@@ -3489,18 +2935,6 @@ should be rendered with the Optional Data Controls UI. The root field never is, 
 
 - boolean: True if the field should be rendered with the optional field UI, otherwise false
 
-### sortedJSONStringify()
-
-Stringifies an `object`, sorts object fields in consistent order before stringifying it.
-
-#### Parameters
-
-- object: unknown - The object for which the sorted stringify is desired
-
-#### Returns
-
-- string: The stringified object with keys sorted in a consistent order
-
 ### templateDrawsDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#templatedrawsdescription}
 
 Whether a `FieldTemplate` draws the description it is handed: where the field's plan says the template draws it, or, for a template rendered without a plan, as one rendered outside `SchemaField` is, where it draws the label, since the deprecated `displayLabel` gates both there.
@@ -3605,20 +3039,6 @@ Otherwise, throws an error.
 #### Throws
 
 - Error when the schema does not have a constant value
-
-### toDateString()
-
-Returns a UTC date string for the given `dateObject`.
-If `time` is false, then the time portion of the string is removed.
-
-#### Parameters
-
-- dateObject: DateObject - The `DateObject` to convert to a date string
-- [time=true]: boolean - Optional flag used to remove the time portion of the date string if false
-
-#### Returns
-
-- string: The UTC date string
 
 ### toErrorList&lt;T = unknown>()
 
@@ -3896,9 +3316,9 @@ If no `additionalErrorSchema` is passed, or one that holds nothing, then `valida
 
 Return the `aria-label`, `aria-labelledby`, `aria-describedby` and `aria-invalid` a `SelectWidget` gives the element a screen reader focuses, all of which belong on that element.
 A select its field's plan reaches takes the attributes [getControlAttributes()](#getcontrolattributes) gives its control, with the ids its caller passed, then the selected option's description id, added to the plan's describers, each id once, and the caller's `aria-label` over the plan's unless it is empty.
-A select shows its value rather than a name, so where neither gives one, it takes the name [getControlAriaLabel()](#getcontrolarialabel) gives it: none where a label names it, whether the select draws it, as [widgetDrawsLabelText()](#widgetdrawslabeltext) says, or the template does, else the field's label, its `placeholder` or the translated `TranslatableString.SelectPlaceholder`.
+A select shows its value rather than a name, so where neither gives one, it takes a name as `widgetAriaProps()` gives it: none where a label names it, whether the select draws it, as [widgetDrawsLabelText()](#widgetdrawslabeltext) says, or the template does, else the field's label, its `placeholder` or the translated `TranslatableString.SelectPlaceholder`.
 A select rendered inside another widget, such as each date part of an `AltDateWidget`, has an id of its own that no help or error element is rendered for, so `DateElement` gives it a plan of its own, through which it is described by its field's parts.
-Without a plan, the caller's ids, even an empty `aria-describedby`, replace the `ariaDescribedByIds(props.id)` a select rendered without one falls back to, whose ids no element may have.
+Without a plan, the caller's ids, even an empty `aria-describedby`, replace the `getControlDescribedBy({ id: props.id })` a select rendered without one falls back to, whose ids no element may have.
 The selected option's description id, [selectedOptionDescriptionId()](#selectedoptiondescriptionid) under its field's plan and `descriptionId(props.id)` without one, is added only while the select shows that description, the one element it renders itself: a date part, a `multiple` select, one whose label is hidden and one whose selected option has no description render none, and its id may be another field's description id.
 Under a plan it is listed where it is drawn, so a screen reader announces it in the order it is shown, among the description and help of its plan and of the plans above it. The select sits in its template's `children`, so it is listed after the parts the registry's `presentation.fieldTemplateOrder` draws before them and before those it draws after them, at every level. Of the parts the select draws itself, it is listed before the help, and after the description unless `presentation.selectedOptionDescription` is `'beforeDescription'`. With none of them it is listed last.
 A part a field above draws itself, as an `anyOf`/`oneOf` field's selector does above the select, is listed before it whatever the placement.
@@ -3948,19 +3368,6 @@ A label holding only a required field's `*` would name the control "star", so a 
 #### Returns
 
 - boolean: True when the widget draws a label with text
-
-### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the value of the `ROOT_SCHEMA_PREFIX` constant.
-This is used in isValid to make references to the rootSchema
-
-#### Parameters
-
-- schemaNode: S | S[] | S[keyof S] - The object node to which a `ROOT_SCHEMA_PREFIX` is added when a `$ref` is part of it
-
-#### Returns
-
-- S | S[] | S[keyof S]: A copy of the `schemaNode` with updated `$ref`s, of the same shape as the `schemaNode` given
 
 ### withRootIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -4223,7 +3630,7 @@ A key the option declares is left to the option, which renders it.
 The field takes the option's extra-key keywords beside its own: `additionalProperties` and `unevaluatedProperties` become the `allOf` of the two, one side's where the other declares none or allows any key, and `false` where either is, and the option's `patternProperties` join the field's, a pattern both declare becoming the `allOf` of its two subschemas.
 Every other key is stubbed as the field's keywords and the option's describe it, each side read on its own and the two `allOf`ed, so a key either side forbids is stubbed as `{ type: 'null' }` whatever the other allows.
 The options of an object field are handed out without stubs; a field of any other type renders no field of its own beside the option, so it leaves the option to stub its own extra keys.
-A selected option that offers options of its own renders a field of its own beside them, which takes the extra keys of the field, the option and the option it selects in turn (see [`getRenderedOptionSchema()`](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema)), so the field stubs none and is handed out without its `additionalProperties`, `patternProperties` and `unevaluatedProperties`, marked with `EXTRA_KEYS_ELSEWHERE_FLAG`.
+A selected option that offers options of its own renders a field of its own beside them, which takes the extra keys of the field, the option and the option it selects in turn (see [`getRenderedOptionSchema()`](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema)), so the field stubs none and is handed out without its `additionalProperties`, `patternProperties` and `unevaluatedProperties`, marked with a flag.
 Without a `selectedOption`, the extra keys are stubbed for the field alone, a key an option declares included.
 
 #### Parameters
@@ -4349,7 +3756,7 @@ A property cleared this way, by the new `const`, its `enum` or a `readOnly` `def
 ### createSchemaUtils&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Creates a `SchemaUtilsType` interface that is based around the given `context` and `rootSchema` parameters.
-The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs, [`allowsAdditionalProperties()`](#allowsadditionalpropertiess-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) and [`canExpand()`](#canexpandt--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) among them, which it offers as `allowsAdditionalProperties(schema)` and `canExpand(schema, uiSchema, formData)`.
+The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs, among them `allowsAdditionalProperties(schema)` and `canExpand(schema, uiSchema, formData)`.
 The `rootSchema` is parsed once per object and treated as immutable: a change made to it in place is not seen, even by a new `createSchemaUtils()`, so pass a new object to change it.
 
 #### Parameters

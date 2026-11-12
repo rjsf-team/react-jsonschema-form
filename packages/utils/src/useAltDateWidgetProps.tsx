@@ -8,7 +8,7 @@ import dateRangeOptions from './dateRangeOptions.ts';
 import type { DateElementProp } from './getDateElementProps.ts';
 import getDateElementProps, { elementValue, isDateElementFormat, normalizeYearsRange } from './getDateElementProps.ts';
 import getNestedControlPresentation from './getNestedControlPresentation.ts';
-import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
+import { ariaDescribedByIds, partId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
 import toNumericValue from './toNumericValue.ts';
@@ -49,13 +49,13 @@ export type DateElementProps<
   /** The name of the field. Ignored: each date element is a control of its own, so it is given its own id as its name
    * rather than its field's, which a select would otherwise read as the field it names
    *
-   * @deprecated - Ignored; each date element takes `dateElementId(rootId, type)` as its name
+   * @deprecated - Ignored; each date element takes `partId(rootId, type)` as its name
    */
   name?: string;
   /** The label of the field, which leads the accessible name of each date element, such as `When, year` */
   label?: string;
   /** The translated name of the date element, for a caller that already translated it to display it. Defaults to
-   * `dateElementLabel(type, translateString)`
+   * the translated name of `type`, such as `TranslatableString.YearLabel`
    */
   elementLabel?: string;
   /** The selector function for a specific prop within the `DateObject`, for a value */
@@ -70,8 +70,8 @@ export type DateElementProps<
   presentation?: FieldPresentation;
   /** The `aria-describedby` and `aria-invalid` each date element takes, such as those of `presentation`'s control with
    * the id of a message the theme renders around the field. Each one left out defaults to what the element would take
-   * without them: that of `presentation`'s control, or without a `presentation`, `ariaDescribedByIds(rootId)` and no
-   * `aria-invalid`
+   * without them: that of `presentation`'s control, or without a `presentation`, the ids
+   * `getControlDescribedBy({ id: rootId })` gives and no `aria-invalid`
    */
   attributes?: Pick<ControlAttributes, 'aria-describedby' | 'aria-invalid'>;
   /** Further options for the `SelectWidget`, such as the props of a theme's own select, beside the `enumOptions` of
@@ -81,16 +81,16 @@ export type DateElementProps<
 };
 
 /** The `DateElement` component renders one of the 6 date element selectors for an `AltDateWidget`, using the `select`
- * widget from the registry. Each selector is a control in its own right, with the id `dateElementId(rootId, type)` as
+ * widget from the registry. Each selector is a control in its own right, with the id `partId(rootId, type)` as
  * its id and name and no visible label of its own, so it hands the `SelectWidget` the translated name of its element
  * as its placeholder and an `aria-label` built from the field's `label`, such as `When, year`. Given its field's plan,
  * it hands it a plan of its own, through which `widgetAriaProps()` describes it by the field's parts that render and
  * marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank its
  * own name, or by the `attributes` its caller gives over them. Without a plan, it describes it by
- * `ariaDescribedByIds(rootId)` unless `attributes` give an `aria-describedby`. An unset element, which the hook's
- * `elements` give as `undefined` and a `DateObject` holds as -1, is no option, so it is handed to the `SelectWidget`
- * as an `undefined` value, which a native select reports to `onFocus` and `onBlur` as `undefined` and every other
- * built-in `SelectWidget` reports as it is handed.
+ * `getControlDescribedBy({ id: rootId })` unless `attributes` give an `aria-describedby`. An unset element, which the
+ * hook's `elements` give as `undefined` and a `DateObject` holds as -1, is no option, so it is handed to the
+ * `SelectWidget` as an `undefined` value, which a native select reports to `onFocus` and `onBlur` as `undefined` and
+ * every other built-in `SelectWidget` reports as it is handed.
  *
  * @param props - The `DateElementProps` for the date element
  */
@@ -118,7 +118,7 @@ export function DateElement<
     attributes,
     elementOptions,
   } = props;
-  const id = dateElementId(rootId, type);
+  const id = partId(rootId, type);
   const { widgets, translateString } = registry;
   const { SelectWidget } = widgets;
   const onChange = useCallback((newValue: unknown) => select(type as keyof DateObject, newValue), [select, type]);

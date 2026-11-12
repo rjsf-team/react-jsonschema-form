@@ -2,6 +2,7 @@ import { Component, createElement, forwardRef, lazy, memo } from 'react';
 import type { ComponentType } from 'react';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
+import getTemplate from '../src/getTemplate.ts';
 import type {
   CustomTemplateEntries,
   DeclaredTemplatesType,
@@ -14,7 +15,6 @@ import type {
 import {
   createSchemaUtils,
   englishStringTranslator,
-  getTemplate,
   getTemplates,
   isComponentType,
   mergeThemePresentation,

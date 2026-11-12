@@ -1,10 +1,11 @@
-import { DEFAULT_OPTIONS } from '../src/getSubmitButtonOptions.ts';
-import type { UiSchema } from '../src/index.ts';
+import type { SubmitButtonOptions, UiSchema } from '../src/index.ts';
 import { getSubmitButtonOptions } from '../src/index.ts';
+
+const DEFAULT_OPTIONS: SubmitButtonOptions = { props: { disabled: false }, submitText: 'Submit', norender: false };
 
 describe('getSubmitButtonOptions', () => {
   it('default props', () => {
-    expect(getSubmitButtonOptions()).toBe(DEFAULT_OPTIONS);
+    expect(getSubmitButtonOptions()).toEqual(DEFAULT_OPTIONS);
   });
 
   it('allowed option should be false', () => {

@@ -7,7 +7,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
+import { TranslatableString, utcToLocal } from '@rjsf/utils';
 import { fireEvent, act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -2493,7 +2493,7 @@ describe('StringField', () => {
 
         await user.click(node.querySelector('button.rjsf-btn-now')!);
 
-        const expected = toDateString(parseDateString(new Date().toJSON()), false);
+        const expected = new Date().toJSON().slice(0, 10);
 
         expectToHaveBeenCalledWithFormData(onChange, expected, 'root');
       });

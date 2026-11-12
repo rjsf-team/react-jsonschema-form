@@ -57,7 +57,7 @@ export function realValueEncoder<S extends StrictRJSFSchema = RJSFSchema>(
  * When `format` is `'indexed'` (the default), each option's value is its index as a string.
  *
  * When `format` is `'realValue'`, primitive values are converted via `String()`.
- * Non-primitive values (objects, arrays) fall back to their index, prefixed with `ENUM_OPTION_INDEX_PREFIX`, since
+ * Non-primitive values (objects, arrays) fall back to their index, prefixed with `__rjsf_index:`, since
  * `String()` would produce `"[object Object]"`. `null` does too, since `String()` would make it indistinguishable from
  * the string `'null'`, and so does the empty string, which is the value of a select's empty placeholder. The prefix
  * keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself

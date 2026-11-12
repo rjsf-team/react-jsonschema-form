@@ -1,6 +1,5 @@
 import { Children } from 'react';
 import type { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
-import { getTemplate } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 import { readFileSync } from 'node:fs';
 
@@ -117,7 +116,7 @@ describe('FieldTemplate', () => {
   describe('rendered without a plan, as outside SchemaField', () => {
     function renderTemplate(displayLabel: boolean, uiSchema?: FieldTemplateProps['uiSchema']) {
       const registry = getTestRegistry({});
-      const FieldTemplate = getTemplate('FieldTemplate', registry);
+      const { FieldTemplate } = registry.templates;
       return render(
         <FieldTemplate
           id='root_foo'

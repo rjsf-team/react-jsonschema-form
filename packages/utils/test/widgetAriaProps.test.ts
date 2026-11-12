@@ -1,3 +1,4 @@
+import { ariaDescribedByIds } from '../src/idGenerators.ts';
 import type {
   FieldPresentation,
   FieldTemplateOrder,
@@ -7,7 +8,6 @@ import type {
   WidgetAriaPropsInput,
 } from '../src/index.ts';
 import {
-  ariaDescribedByIds,
   englishStringTranslator,
   getSelectorPresentation,
   resolveFieldPresentation,
