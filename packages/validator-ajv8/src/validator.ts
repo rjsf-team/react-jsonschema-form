@@ -9,7 +9,7 @@ import type {
   ValidatorType,
   RawValidationResult,
 } from '@rjsf/utils';
-import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, sharedCopyParts, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import ajvRootSchemaId from './ajvRootSchemaId.ts';
@@ -147,16 +147,16 @@ export default class AJV8Validator<
     this.subschemaIds.clear();
   }
 
-  /** Removes the schemas `isValid()` added under `ids` and every `$id` they hold, such as those of the parts an option's
-   * scoring copy holds once, which Ajv registers as the JSON pointer to it in the schema's document, `<id>#/…`, and
-   * which removing the schema leaves in place
+  /** Removes the schemas `isValid()` added under `ids` and every `$id` they hold, such as those of the parts an
+   * option's scoring copy holds once, which Ajv registers as the JSON pointer to it in the schema's document,
+   * `<id>#/…`, and which removing the schema leaves in place
    */
   private removeSchemas(ids: ReadonlySet<string>) {
     if (ids.size === 0) {
       return;
     }
     for (const [ref, target] of Object.entries(this.ajv.refs)) {
-      if (typeof target === 'string' && ids.has(target.slice(0, target.indexOf('#')))) {
+      if (typeof target === 'string' && ids.has(target.split('#', 1)[0])) {
         this.ajv.removeSchema(ref);
       }
     }
@@ -349,7 +349,13 @@ export default class AJV8Validator<
       // meta-schema validation. Guard with !compiled so that a runtime error thrown
       // by compiledValidator(formData) does not evict a correctly-compiled schema.
       if (!compiled && schemaId !== undefined) {
-        this.removeSchemas(new Set([schemaId.replace(/#$/, '')]));
+        // Only a schema holding parts it holds once, see `sharedCopyParts()`, has `$id`s registered beside it
+        const key = schemaId.replace(/#$/, '');
+        if (sharedCopyParts(schema).length === 0) {
+          this.ajv.removeSchema(key);
+        } else {
+          this.removeSchemas(new Set([key]));
+        }
       }
       return false;
     }
