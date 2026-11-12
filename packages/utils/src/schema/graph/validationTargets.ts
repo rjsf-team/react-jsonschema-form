@@ -698,6 +698,13 @@ interface Copies<S extends StrictRJSFSchema> {
   readonly shared: Set<object>;
 }
 
+/** Returns whether `key`, a place by its `placeKey()` or a node by its id, is among the `places` on the way to a copy
+ * or the `nodes` above it, see `Dependence`
+ */
+function onWay(key: string | NodeId, places: ReadonlySet<string>, nodes: ReadonlySet<NodeId>): boolean {
+  return typeof key === 'string' ? places.has(key) : nodes.has(key);
+}
+
 /** Returns a copy of the node `id` reached at `place` without what `loosening` drops, from the node and from the nodes
  * `scopeOf()` lists, a dropped `additionalProperties: false` turned into `true`. A `$ref` among them is read as JSON
  * Schema reads one, as an `allOf` entry beside the keywords next to it, since a pointer cannot subtract from what it
@@ -731,7 +738,7 @@ function derive<S extends StrictRJSFSchema>(
   const innerAbove = new Set(above).add(id);
   const depends = (key: string | NodeId) => {
     if (key !== ownKey && key !== id) {
-      dependence.set(key, typeof key === 'string' ? path.has(key) : above.has(key));
+      dependence.set(key, onWay(key, path, above));
     }
   };
   // Whether `key`, a place or a node, of the node `at`, is on the way to or above the copy, which the copy depends on
@@ -740,7 +747,7 @@ function derive<S extends StrictRJSFSchema>(
     if (onCycle(graph, at)) {
       depends(key);
     }
-    return typeof key === 'string' ? innerPath.has(key) : innerAbove.has(key);
+    return onWay(key, innerPath, innerAbove);
   };
   const choices = recursiveChoices(graph);
   // Below a part, a subschema is named where it leads to no recursive choice and the root holds it, read as what
@@ -774,7 +781,7 @@ function derive<S extends StrictRJSFSchema>(
     // for each, so each copy is kept rather than replacing the one made before
     let known = made.find(({ dependence: on }) => {
       for (const [reached, held] of on) {
-        if ((typeof reached === 'string' ? innerPath.has(reached) : childAbove.has(reached)) !== held) {
+        if (onWay(reached, innerPath, childAbove) !== held) {
           return false;
         }
       }
@@ -901,7 +908,7 @@ function derive<S extends StrictRJSFSchema>(
  * named by its `$id` wherever the target holds it. Definitions that each name the next twice over reach the last along
  * a number of paths that doubles with each level, so a target writing the copy of each out at every path would grow as
  * fast, which no validator could compile. Writing out twice a copy that holds no other such copy grows the target by
- * that copy alone, so it is, and an option reaching a part twice is copied as it was. Each `$id` is hashed from what
+ * that copy alone, so such a copy is written out wherever the target holds it. Each `$id` is hashed from what
  * the copy holds, so a target lists the same ids however the root holding it was reached, which a precompiled
  * validator finds it by; two copies hashing alike are told apart by a count.
  */
@@ -1561,8 +1568,12 @@ function onCycle<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId):
   if (base !== undefined && id < base.size) {
     return onCycle(base, id);
   }
-  const start = base?.size ?? 0;
   const closed = onCycleMemo.get([graph], () => new Map());
+  const known = closed.get(id);
+  if (known !== undefined) {
+    return known;
+  }
+  const start = base?.size ?? 0;
   const open = new Map<NodeId, number>();
   const stack: NodeId[] = [];
   const frames: { readonly id: NodeId; readonly order: number; low: number; readonly next: NodeId[] }[] = [];
@@ -1583,9 +1594,7 @@ function onCycle<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId):
     stack.push(at);
     entered += 1;
   };
-  if (!closed.has(id)) {
-    enter(id);
-  }
+  enter(id);
   for (let frame = frames.at(-1); frame !== undefined; frame = frames.at(-1)) {
     const child = frame.next.pop();
     const order = child === undefined ? undefined : open.get(child);
