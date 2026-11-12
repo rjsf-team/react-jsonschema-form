@@ -259,6 +259,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }
           expect(utils(two).getDefaultFormState(two, { a: 5 }, false, true, uiSchema)).toStrictEqual({ a: 5 });
         });
+        it('asks whether an object takes extra keys, and which keys it declares, of the field with its allOf merged', () => {
+          const open: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', const: { a: 1 }, allOf: [{ additionalProperties: true }] } },
+          };
+          expect(utils(open).getDefaultFormState(open)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(open).getDefaultFormState(open, { x: {} }, false, true)).toStrictEqual({ x: {} });
+          const declared: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: { type: 'object', const: { a: 1 }, allOf: [{ properties: { a: { type: 'number' } } }] },
+            },
+          };
+          expect(utils(declared).getDefaultFormState(declared, { x: { a: undefined } }, false, true)).toStrictEqual({
+            x: { a: undefined },
+          });
+        });
+        it("asks whether an option's parent takes extra keys of the parent with its allOf merged", () => {
+          const parent: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                allOf: [{ additionalProperties: true }],
+                oneOf: [{ const: { b: 1 } }, { properties: { c: { type: 'string' } } }],
+              },
+            },
+          };
+          expect(utils(parent).getDefaultFormState(parent, { x: {} }, false, true)).toStrictEqual({ x: {} });
+        });
         it("fills a mixed oneOf option's const under skipOneOf, whether or not the option declares its keys", () => {
           const skipOneOf: DefaultFormStateBehavior = { constAsDefaults: 'skipOneOf' };
           const other: RJSFSchema = { properties: { b: { type: 'string' } } };

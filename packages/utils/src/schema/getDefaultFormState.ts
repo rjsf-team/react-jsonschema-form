@@ -559,13 +559,13 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
   fieldPath?: FoldPath;
-  /** The object parent of the `anyOf`/`oneOf` option the field is, without its options, and that option as listed. The
-   * field that renders the option's extra keys, the parent's `ObjectField` or, where the option offers options of its
-   * own, the option's, takes them as the parent with the extra-key keywords of the option, resolved as
-   * `retrieveSchema()` resolves it, joined (see `joinOptionExtraKeys()`), so the two decide whether the user can add,
-   * remove or rename one, whatever `const` the option holds
+  /** The object parent of the `anyOf`/`oneOf` option the field is, without its options, and that option, each as
+   * `retrieveSchema()` resolves it for the data, retrieved on the first call. The field that renders the option's extra
+   * keys, the parent's `ObjectField` or, where the option offers options of its own, the option's, takes them as the
+   * parent with the option's extra-key keywords joined (see `joinOptionExtraKeys()`), so the two decide whether the
+   * user can add, remove or rename one, whatever `const` the option holds
    */
-  optionOf?: { readonly parent: S; readonly option: S };
+  optionOf?: { readonly parent: () => S; readonly option: () => S };
 }
 
 /** A field's path as its parent's and its own key, so a child's is made without copying its parent's, and is spelled
@@ -823,6 +823,15 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   const seeds = restartSeeds(field.seeds);
   const expanded: DefaultsField<S> = { ...field, seeds, expanded: true };
   return planView(context, expanded, planFor(seeds), options, data, depData);
+}
+
+/** Returns `compute`, which computes its value on the first call only */
+function computedOnce<V>(compute: () => V): () => V {
+  let computed: { value: V } | undefined;
+  return () => {
+    computed ??= { value: compute() };
+    return computed.value;
+  };
 }
 
 /** Returns the child of `view` that `seeds` seed, reached through `edge`. A subschema the schema's own keywords stand
@@ -1364,24 +1373,23 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const listedOption: unknown = options[index];
   const rendersOwnField = rendersOwnFieldBesideOption<S>(fieldSchema, listedOption);
   const optionUiSchema = getOptionUiSchema<T, S, F>(props.uiSchema, key, index);
+  const retrieved = (raw: S) => retrieveSchema<unknown, S, F>(context, raw, rootSchema, props.rawFormData);
+  const retrievedOption = computedOnce(() =>
+    retrieved(isSchemaObject<S>(listedOption) ? listedOption : schemaOfBoolean(Boolean(listedOption), rootSchema)),
+  );
   const branchProps = {
     ...props,
     // An option whose field takes the object's extra keys is asked as the field renders it, retrieved for the data, and
     // only where it has a uiSchema of its own for the object's to lie beneath
     uiSchema:
       rendersOwnField && optionUiSchema !== props.uiSchema && isSchemaObject<S>(listedOption)
-        ? getRenderedOptionUiSchema<T, S, F>(
-            fieldSchema,
-            retrieveSchema<unknown, S, F>(context, listedOption, rootSchema, props.rawFormData),
-            props.uiSchema,
-            optionUiSchema,
-          )
+        ? getRenderedOptionUiSchema<T, S, F>(fieldSchema, retrievedOption(), props.uiSchema, optionUiSchema)
         : optionUiSchema,
     isRenderedOption: true,
     optionOf: rendersOwnField
       ? {
-          parent: fieldSchema,
-          option: isSchemaObject<S>(listedOption) ? listedOption : schemaOfBoolean(Boolean(listedOption), rootSchema),
+          parent: computedOnce(() => (fieldSchema === remaining ? retrieved(remaining) : fieldSchema)),
+          option: retrievedOption,
         }
       : undefined,
   };
@@ -1605,17 +1613,18 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     !constIsAjvDataReference(view.schema)
       ? parentConst
       : undefined;
-  // An option's `const` is not its parent's. The field that renders the option's extra keys, its parent's or, where
-  // the option offers options of its own, the option's, asks whether the user can add one of the parent with the
-  // option's extra-key keywords joined to it. Only a `const` the field defaults to changes what is computed from the
-  // answer, so the join is spared every other option
-  const extraKeysField =
-    props.optionOf && objectConst
-      ? joinOptionExtraKeys<S>(
-          props.optionOf.parent,
-          retrieveSchema<unknown, S, F>(context, props.optionOf.option, rootSchema, rawFormData),
-        )
-      : view.schema;
+  // `ObjectField` asks whether the user can add a key of the field as it renders it, retrieved for the data, its `allOf`
+  // and `if` merged. An option's `const` is not its parent's: the field that renders the option's extra keys, its
+  // parent's or, where the option offers options of its own, the option's, asks it of the parent with the option's
+  // extra-key keywords joined to it. Only a `const` the field defaults to changes what is computed from the answer, so
+  // the retrieve and the join are spared every other field
+  const optionOf = objectConst === undefined ? undefined : props.optionOf;
+  let extraKeysField = view.schema;
+  if (optionOf) {
+    extraKeysField = joinOptionExtraKeys<S>(optionOf.parent(), optionOf.option());
+  } else if (objectConst !== undefined && !view.field.retrieves) {
+    extraKeysField = retrieveSchema<unknown, S, F>(context, view.schema, rootSchema, rawFormData);
+  }
   // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it, and only of an
   // object that stubs them or defaults to an object `const`, the two that need the answer
   const takesExtraKeys =
@@ -1631,6 +1640,15 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const pinnedKeys = defaultFormStateBehavior?.constAsDefaults === 'always' ? objectConst : undefined;
   const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
   const isDeclared = (key: string) => Object.hasOwn(schema.properties ?? {}, key);
+  // A key a property of the field as rendered declares, of the option's as well for an option's parent, is the
+  // property's, which its own field renders
+  const rendersDeclared = (key: string) =>
+    isDeclared(key) ||
+    [extraKeysField, ...(optionOf ? [optionOf.option()] : [])].some(
+      (rendered) =>
+        Object.hasOwn(rendered.properties ?? {}, key) &&
+        !hasSchemaMarker(getPropertySchema<S>(rendered, key), ADDITIONAL_PROPERTY_FLAG),
+    );
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
   const childProps = (key: string, uiSchemaKey: string) => ({
@@ -1789,7 +1807,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     closingConst &&
     new Set(
       constDefaults
-        ? Object.keys(closingConst).filter((key) => Object.hasOwn(constDefaults, key) && !isDeclared(key))
+        ? Object.keys(closingConst).filter((key) => Object.hasOwn(constDefaults, key) && !rendersDeclared(key))
         : [],
     );
   if (closingKeys) {
