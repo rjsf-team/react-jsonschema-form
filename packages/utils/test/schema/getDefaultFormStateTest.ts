@@ -212,6 +212,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(bare, never).getDefaultFormState(bare)).toEqual({});
         });
       });
+      test("keeps the guards for an option's const where the parent's field takes extra keys, as an explicit additionalProperties does", () => {
+        const options: RJSFSchema = {
+          type: 'object',
+          oneOf: [{ const: { b: 1 } }, { required: ['z'], properties: { z: { type: 'string' } } }],
+        };
+        const allowing = createSchemaUtils(
+          { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' },
+          options,
+        );
+        const explicit: RJSFSchema = { ...options, additionalProperties: true };
+        const explicitUtils = createSchemaUtils({ validator: testValidator }, explicit);
+        for (const [utils, schema] of [
+          [allowing, options],
+          [explicitUtils, explicit],
+        ] as const) {
+          expect(utils.getDefaultFormState(schema, {})).toStrictEqual({ b: 1 });
+          expect(utils.getDefaultFormState(schema, {}, false, true)).toStrictEqual({});
+          expect(utils.getDefaultFormState(schema, { c: 1 }, false, true)).toStrictEqual({ c: 1 });
+        }
+        const closed = createSchemaUtils({ validator: testValidator }, options);
+        expect(closed.getDefaultFormState(options, {}, false, true)).toStrictEqual({ b: 1 });
+      });
       test('computeDefaults gives the const without data, which getDefaultFormState merges in', () => {
         expect(computeDefaults({ validator: testValidator }, bare, { rawFormData: { a: 3 } })).toEqual({ a: 1 });
       });

@@ -106,6 +106,7 @@ import retrieveSchema, {
   resolveMergedOwnRef,
   retrieveField,
   stubExistingAdditionalProperties,
+  withOptionExtraKeys,
 } from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
@@ -557,6 +558,11 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
   fieldPath?: FoldPath;
+  /** The object parent of the `anyOf`/`oneOf` option the field is, without its options. Its `ObjectField` renders the
+   * option's extra keys, with the option's extra-key keywords joined to its own (see `withOptionExtraKeys()`), so it
+   * decides whether the user can add, remove or rename one, whatever `const` the option holds
+   */
+  optionParent?: S;
 }
 
 /** A field's path as its parent's and its own key, so a child's is made without copying its parent's, and is spelled
@@ -1374,6 +1380,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
           )
         : optionUiSchema,
     isRenderedOption: true,
+    optionParent: rendersOwnField ? fieldSchema : undefined,
   };
   const choice = view.choices.find(
     (offered) => offered.keyword === key && offered.options.length === options.length && offered.list === options,
@@ -1587,15 +1594,22 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
+  const parentConst = view.schema[CONST_KEY];
+  // An option's `const` is not its parent's, whose field renders the option's extra keys and asks whether the user can
+  // add one of the parent with the option's extra-key keywords joined to it. Only a `const` changes the answer, so the
+  // join is spared every other option
+  const extraKeysField =
+    props.optionParent && parentConst !== undefined
+      ? withOptionExtraKeys<S>(props.optionParent, view.schema)
+      : view.schema;
   // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it
-  const takesExtraKeys = allowsAdditionalProperties<S, F>(context, view.schema);
+  const takesExtraKeys = allowsAdditionalProperties<S, F>(context, extraKeysField);
   // A field resolved the way `retrieveSchema()` resolves a schema has the extra keys of its data stubbed among its
   // `properties`
   const schema =
     view.stubs && takesExtraKeys
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
-  const parentConst = schema[CONST_KEY];
   // An object `const` the field defaults to, read under the checks `foldView()` reads it under
   const objectConst =
     isObjectData(parentConst) &&
@@ -1748,7 +1762,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       onNullFill?.();
     });
   }
-  const additionalProperties = absentKeywordAllows<S, F>(context, schema) || schema.additionalProperties;
+  const additionalProperties = absentKeywordAllows<S, F>(context, extraKeysField) || schema.additionalProperties;
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
   // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or
   // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the
