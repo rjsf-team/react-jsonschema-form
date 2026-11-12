@@ -1751,7 +1751,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or
   // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the
   // `const` names. A `patternProperties` or `unevaluatedProperties` that takes extra keys leaves the guards in place
-  const closingConst = allowsAdditionalProperties<S, F>(context, schema) ? undefined : objectConst;
+  const closingConst = objectConst && !allowsAdditionalProperties<S, F>(context, schema) ? objectConst : undefined;
   if ((additionalProperties && !initialDefaultsGenerated) || closingConst) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
