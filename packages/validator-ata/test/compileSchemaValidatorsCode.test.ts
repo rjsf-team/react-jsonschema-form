@@ -686,7 +686,7 @@ describe('compileSchemaValidatorsCode', () => {
     });
 
     test("reads a resource nested in the subschema an extra names against that subschema's $id, as at runtime", () => {
-      // `cat.json` resolves against `pets/pet.json`, so its `#/$defs/meow` names its own `meow`, which `pet` has none of
+      // `cat.json` resolves against `pets/pet.json`, so its `#/$defs/meow` names its own `meow`, which `pet` lacks
       const form = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
         $id: 'https://e.com/root.json',

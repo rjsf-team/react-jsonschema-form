@@ -1,12 +1,12 @@
 import type { GenericObjectType, RJSFSchema, ValidatorType } from '../../src/index.ts';
 import { getFirstMatchingOption } from '../../src/index.ts';
 
-/** The levels of definitions `chainedDefinitions()` builds that #5771 measured running out of memory at */
+/** The levels of definitions `chainedDefinitions()` builds at which #5771 measured running out of memory */
 export const DEEP_CHAIN = 18;
 
-/** Returns the schema of #5771: definitions `L0` to `L<levels>`, each but the last naming the next under two properties,
- * and the last holding a choice whose two options name it again under the same property, so `L0` reaches the choice
- * along `2 ** levels` paths. The root offers an object whose `v` holds `L0` and one whose `v` holds any object.
+/** Returns the schema of #5771: definitions `L0` to `L<levels>`, each but the last naming the next under two
+ * properties, and the last holding a choice whose two options name it again under the same property, so `L0` reaches
+ * the choice along `2 ** levels` paths. The root offers an object whose `v` holds `L0` and one whose `v` holds any object.
  *
  * @param levels - The levels of definitions naming the next twice over
  * @param [id] - The `$id` of the root, if it has one
@@ -35,7 +35,9 @@ export function chainedDefinitions(levels: number, id?: string): { root: RJSFSch
   return { root: { ...(id === undefined ? {} : { $id: id }), definitions, oneOf: options }, options };
 }
 
-/** Returns data for `chainedDefinitions(levels)` reaching the last definition along `a` at every level, holding `leaf` */
+/** Returns data for `chainedDefinitions(levels)` reaching the last definition along `a` at every level, holding
+ * `leaf`
+ */
 function deepData(levels: number, leaf: unknown): object {
   let data: object = { leaf, c: { next: { x: 'x' } } };
   for (let level = 0; level < levels; level += 1) {

@@ -1247,8 +1247,8 @@ describe('scoringTarget()', () => {
       const { root } = chainedDefinitions(levels);
       return scored(root, '/oneOf/0');
     };
-    /** Returns the one part `target` holds once and the `$id` it gives it, read from the target rather than spelled out,
-     * since the hash in it follows the content of the copy
+    /** Returns the one part `target` holds once and the `$id` it gives it, read from the target rather than spelled
+     * out, since the hash in it follows the content of the copy
      */
     const onlyPart = (target: RJSFSchema) => {
       const names = Object.keys(target.definitions ?? {});
