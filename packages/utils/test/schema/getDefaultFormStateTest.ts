@@ -2758,6 +2758,32 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toStrictEqual({ obj: value });
           },
         );
+
+        it.each<[string, RJSFSchema, GenericObjectType]>([
+          ['an object field', { type: 'object' }, { extra: { a: 1 } }],
+          ['an untyped field', {}, { extra: { a: 1 }, c: 'x' }],
+          [
+            'an object field, for a value nested in it',
+            { type: 'object', additionalProperties: { type: 'object', properties: { n: { type: 'string' } } } },
+            { extra: { n: { a: 1 } } },
+          ],
+        ])(
+          "keeps the object data of an extra key its schema can't take beside the allOf of %s once the defaults are generated",
+          (_name, field, value) => {
+            const o: RJSFSchema = {
+              additionalProperties: { type: 'string' },
+              allOf: [{ properties: { c: { type: 'string' } } }],
+              ...field,
+            };
+            const schema: RJSFSchema = { type: 'object', properties: { o } };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { o: value }, initialDefaultsGenerated: true },
+              ),
+            ).toStrictEqual({ o: value });
+          },
+        );
       });
 
       it("skips the constant default of a schema's anyOf under skipOneOf when it also has a oneOf", () => {

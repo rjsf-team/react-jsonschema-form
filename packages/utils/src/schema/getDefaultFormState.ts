@@ -2673,8 +2673,12 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
     }
     return declared.length > 0 ? rootProvenance<S>(field().graph, declared) : fieldOf<S>(rootGraph, propertySchema);
   };
+  // An extra key stubbed from `additionalProperties` keeps the data the user gave it, see `extraKeyKeepsData()`
   const matchedKeys = Object.keys(readSchema.properties).filter(
-    (dataKey) => Object.hasOwn(matched, dataKey) && keys?.has(dataKey) !== false,
+    (dataKey) =>
+      Object.hasOwn(matched, dataKey) &&
+      keys?.has(dataKey) !== false &&
+      !hasSchemaMarker(getPropertySchema<S>(readSchema, dataKey), ADDITIONAL_PROPERTY_FLAG),
   );
   for (const key of matchedKeys) {
     const propertySchema = getPropertySchema<S>(readSchema, key);
