@@ -2465,24 +2465,26 @@ function mergeReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, fr
   if (known !== undefined) {
     return known;
   }
-  const seen = new Set<NodeId>();
-  const pending = [from];
+  // A set hands out what is added to it while it is walked, so each node the merge leads to is read once
+  const seen = new Set<NodeId>([from]);
   let reaches = false;
-  for (let id = pending.pop(); id !== undefined && !reaches; id = pending.pop()) {
+  for (const id of seen) {
     const node = graph.node(id);
-    if (!seen.has(id) && node.kind === 'schema') {
-      seen.add(id);
+    if (!reaches && node.kind === 'schema') {
       reaches = Object.hasOwn(node.raw, CONST_KEY);
-      pending.push(
-        ...[
-          node.ref,
-          node.conjunction,
-          ...[IF_KEY, THEN_KEY, ELSE_KEY].map((keyword) => graph.child(id, keyword)),
-        ].filter((next) => next !== undefined),
+      const nexts = [
+        node.ref,
+        node.conjunction,
+        ...[IF_KEY, THEN_KEY, ELSE_KEY].map((keyword) => graph.child(id, keyword)),
         ...[ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY].flatMap((keyword) =>
           graph.subschemas(id, keyword).map(([, next]) => next),
         ),
-      );
+      ];
+      for (const next of nexts) {
+        if (next !== undefined) {
+          seen.add(next);
+        }
+      }
     }
   }
   byNode.set(from, reaches);
