@@ -131,6 +131,16 @@ export default class AJV8Validator<
     }
   }
 
+  /** Adds `schema`, which Ajv doesn't hold yet, under `schemaId`, for `removeSubschemas()` to remove, returning the
+   * function Ajv compiled it to
+   */
+  private addSubschema(schema: S, schemaId: string) {
+    // Ajv keys a schema by its `$id` without an empty trailing fragment, so it is removed under that key
+    this.subschemaIds.add(schemaId.replace(/#$/, ''));
+    const forAjv = withPartIdsUnder(schema, this.ajv.opts.schemaId);
+    return this.ajv.addSchema(forAjv, schemaId).getSchema(schemaId) ?? this.ajv.compile(forAjv);
+  }
+
   /** Removes the schemas `isValid()` added, which were compiled against the root registered when they were added */
   private removeSubschemas() {
     this.removeSchemas(this.subschemaIds);
@@ -142,6 +152,9 @@ export default class AJV8Validator<
    * which removing the schema leaves in place
    */
   private removeSchemas(ids: ReadonlySet<string>) {
+    if (ids.size === 0) {
+      return;
+    }
     for (const [ref, target] of Object.entries(this.ajv.refs)) {
       if (typeof target === 'string' && ids.has(target.slice(0, target.indexOf('#')))) {
         this.ajv.removeSchema(ref);
@@ -310,14 +323,8 @@ export default class AJV8Validator<
       // Add schema by an explicit ID so it can be fetched later
       // Fall back to using compile if necessary
       // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
-      const registered = this.ajv.getSchema(schemaId);
-      if (registered === undefined) {
-        // Ajv keys a schema by its `$id` without an empty trailing fragment, so it is removed under that key
-        this.subschemaIds.add(schemaId.replace(/#$/, ''));
-      }
-      const forAjv = withPartIdsUnder(schemaWithIdRefPrefix, this.ajv.opts.schemaId);
-      const compiledValidator =
-        registered ?? this.ajv.addSchema(forAjv, schemaId).getSchema(schemaId) ?? this.ajv.compile(forAjv);
+      const compiledValidator: ValidateFunction =
+        this.ajv.getSchema(schemaId) ?? this.addSubschema(schemaWithIdRefPrefix, schemaId);
       compiled = true;
       let changes = this.changesDataOf.get(compiledValidator);
       if (changes === undefined) {
