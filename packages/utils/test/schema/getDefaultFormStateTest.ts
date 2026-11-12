@@ -2699,6 +2699,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toStrictEqual({ a: 'x', b: 'y' });
         });
 
+        it.each([false, true])(
+          'pins no keys from a dependency option only the data without its defaults matches beside an allOf under constAsDefaults always, initialDefaultsGenerated %s',
+          (initialDefaultsGenerated) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                o: {
+                  type: 'object',
+                  properties: { k: { type: 'string', default: 'b' }, j: { type: 'string', default: 'b' } },
+                  allOf: [{ properties: { other: { type: 'string' } } }],
+                  dependencies: {
+                    k: {
+                      anyOf: [
+                        { properties: { z: { type: 'string' } }, const: { k: 'b', j: 'b', pinned: 'A' } },
+                        { properties: { j: { type: 'string' } } },
+                      ],
+                    },
+                  },
+                },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { o: { other: 'x' } }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ o: { k: 'b', j: 'b', other: 'x' } });
+          },
+        );
+
         it.each<[string, RJSFSchema, string]>([
           ['no const', { type: 'string', enum: ['a', 'b'] }, 'b'],
           ['a const', { const: 'a' }, 'a'],

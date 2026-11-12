@@ -354,7 +354,7 @@ function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
     const matchContext = optionMatchContext(context);
     return {
       allOf: true,
-      selectOption: (request) => dependencyOption(matchContext, request, request.data),
+      selectOption: (request) => dependencyOption(matchContext, request, request.depData),
     };
   });
 }
