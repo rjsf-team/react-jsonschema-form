@@ -780,12 +780,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The edited value and the values holding it are the user's
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
     const typed = isGuessed(newLayers) ? undefined : newLayers.findLast((layer) => Object.hasOwn(layer, 'type'));
-    if (ctx.isBelowSwitch && !isItem && newValue !== undefined) {
-      if (typed && !takesTypeOf<S>(typed, newValue)) {
+    if (!isItem && newValue !== undefined) {
+      if (ctx.isBelowSwitch && typed && !takesTypeOf<S>(typed, newValue)) {
         return DROP;
       }
-      // A `readOnly` default stands in for a `const`: no person can change the value, so one that no person entered
-      // gives way to the default the option switched to declares in place of the old option's
+      // No person can change what a `readOnly` field holds, so a value there that no person entered is the schema's
+      // to give: it takes the default the field declares now in place of the one it declared before
       const isScalar = !isObject(newValue) && !Array.isArray(newValue);
       const givesAnotherDefault = newDefault !== undefined && !deepEquals(oldDefault, newDefault);
       if (

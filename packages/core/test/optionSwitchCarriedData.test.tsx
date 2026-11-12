@@ -1,7 +1,8 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { createFormComponent } from './testUtils.tsx';
+import { createFormComponent, createFormRef, handleOf } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -74,5 +75,33 @@ describe('the data an anyOf/oneOf switch carries to the option switched to', () 
     );
 
     expect(formData).toEqual({ kind: 'new', list: [] });
+  });
+});
+
+describe('a read-only field whose default changes', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { mode: { enum: ['a', 'b'] }, rate: { type: 'number', readOnly: true } },
+    if: { properties: { mode: { const: 'b' } }, required: ['mode'] },
+    then: { properties: { rate: { default: 2 } } },
+    else: { properties: { rate: { default: 1 } } },
+  };
+
+  it('takes the default a branch gives it in place of a value the seed held', async () => {
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { mode: 'a', rate: 7 } });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_mode') ?? node, 'b');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ mode: 'b', rate: 2 });
+  });
+
+  it('keeps a value written with setFieldValue(), which counts as entered', async () => {
+    const ref = createFormRef();
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { mode: 'a' }, ref });
+    act(() => handleOf(ref).setFieldValue(['rate'], 7));
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_mode') ?? node, 'b');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ mode: 'b', rate: 7 });
   });
 });
