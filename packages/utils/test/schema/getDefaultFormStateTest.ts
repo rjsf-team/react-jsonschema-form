@@ -11266,5 +11266,35 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema, filled)).toEqual(filled);
       });
     });
+
+    describe('the option a field with an inherited default shows', () => {
+      const fill = (schema: RJSFSchema, formData?: unknown) =>
+        getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData });
+      const schema = (): RJSFSchema => ({
+        type: 'object',
+        default: { p: { b: 'x' } },
+        properties: {
+          p: {
+            oneOf: [
+              { type: 'object', properties: { a: { type: 'string' } }, required: ['a'] },
+              { type: 'object', properties: { kind: { const: 'o1' }, b: { type: 'string' } }, required: ['b'] },
+            ],
+          },
+        },
+      });
+
+      it('is the option the inherited default matches, as it is once the data holds that default', () => {
+        // The mock validator cannot match an option: the first rejects the default and the second takes it
+        testValidator.setReturnValues({ isValid: [false, true] });
+        expect(fill(schema())).toEqual({ p: { kind: 'o1', b: 'x' } });
+      });
+
+      it('changes nothing when the filled data is filled again', () => {
+        testValidator.setReturnValues({ isValid: [false, true, false, true] });
+        const root = schema();
+        const filled = fill(root);
+        expect(fill(root, filled)).toEqual(filled);
+      });
+    });
   });
 }

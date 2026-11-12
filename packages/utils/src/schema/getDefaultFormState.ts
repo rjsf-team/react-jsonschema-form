@@ -1316,15 +1316,17 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const optionContext: SchemaContext<S, F> = skipsOneOfConstants
     ? { ...context, defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' } }
     : context;
-  // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick. An
-  // ancestor default that wins picks the option too, so the option it is checked against is one that can hold it; one
-  // no option holds gives way, so the field's own default picks the option, as it does with no ancestor default
+  // A field holding no data shows the option its default matches: its own, or else the one it inherits, which is the
+  // value it will hold, so the option is the one the data picks once it holds that value. An ancestor default that
+  // wins picks the option over the field's own, so the option it is checked against is one that can hold it; one no
+  // option holds gives way to the field's own default
   const ancestorPicks =
     preferParentDefaults &&
     options.some((option, index) => optionTakesValueOf<S, F>(context, view, key, index, option, defaults));
-  // A `default: null` of its own is a default, which wins over the inherited one as it does for any other field
-  const inheritedDefault = ancestorPicks || schema.default === undefined ? defaults : schema.default;
-  const valueToMatch = rawFormData ?? (picksWholeOption || ancestorPicks ? inheritedDefault : schema.default);
+  const inheritedDefault = ancestorPicks ? defaults : (schema.default ?? defaults);
+  // A `default: null` the field declares is its default, so it is read by the key and not by its value
+  const ownOrInherited = Object.hasOwn(schema, DEFAULT_KEY) ? schema.default : defaults;
+  const valueToMatch = rawFormData ?? (picksWholeOption || ancestorPicks ? inheritedDefault : ownOrInherited);
   // A constant option equal to the value is the one it picked, whatever the validator makes of the others
   const equalOptionIndex = picksWholeOption
     ? wholeOptions.findIndex((option) => deepEquals(toConstant<S>(option), valueToMatch))

@@ -919,7 +919,8 @@ describe('option selection as form state', () => {
       default: { w: { p: { kind: 'obj', extra: 'from-root' } } },
     };
     const { node, getFormData } = createFormComponent({ schema });
-    expect(getFormData()).toEqual({ w: { p: { kind: 'obj', extra: 'from-root' } } });
+    // The mount shows the option the ancestor's default matches, with that option's own defaults, as the switch back does
+    expect(getFormData()).toEqual({ w: { p: { kind: 'obj', note: 'from-option', extra: 'from-root' } } });
 
     await user.selectOptions(selectOf(node, 'root_w_p__oneof_select'), 'None');
     await user.selectOptions(selectOf(node, 'root_w_p__oneof_select'), 'Obj');
