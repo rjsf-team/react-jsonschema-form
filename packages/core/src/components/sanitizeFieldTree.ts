@@ -10,6 +10,7 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   CONST_KEY,
   deepEquals,
   DEFAULT_KEY,
@@ -21,6 +22,7 @@ import {
   getItemSchema,
   getPrefixLength,
   getRenderedOptionSchema,
+  getSchemaType,
   getXxxOfOptions,
   GUESSED_TYPE_FLAG,
   hasSchemaMarker,
@@ -319,6 +321,22 @@ function typeOf<S extends StrictRJSFSchema>(layers: readonly S[]): unknown {
   return Array.isArray(type) ? [...new Set(type.map(String))].sort() : type;
 }
 
+/** Whether the defaults fill a field's object key by key, as `sanitizeDataForNewSchema()` reads it: the field's own
+ * `type` read as `getSchemaType()` reads it, so a type list renders as the type it names first, or, for an untyped item
+ * alone, whether it or its option declares `properties` other than the stubs `retrieveSchema()` adds for the data's
+ * extra keys. Not where a property is `true`, which the walk has nothing to judge by, so the object is judged whole */
+function fillsKeyByKey<S extends StrictRJSFSchema>(layers: readonly S[], isItem: boolean): boolean {
+  const properties = [...propertiesOf(layers).values()];
+  if (properties.includes(true)) {
+    return false;
+  }
+  const [own] = layers;
+  if (own.type !== undefined) {
+    return getSchemaType<S>(own) === 'object';
+  }
+  return isItem && properties.some((property) => !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG));
+}
+
 /** The values a field offers: its `enum`, or the constants of options that are all constants */
 function offeredValues<S extends StrictRJSFSchema>(layers: readonly S[]): unknown[] | undefined {
   const enumValues = keywordOf(layers, 'enum');
@@ -406,7 +424,14 @@ function judge<S extends StrictRJSFSchema>(
   if (becomesGuessed) {
     return isOldDefault || !guessedStubRenders(value, newLayers) || isFilledByOldDefaults(value) ? DROP : undefined;
   }
-  if (isOldDefault && newDefault !== undefined) {
+  // An object the defaults fill key by key holds its old default only as far as each key does, since the fill can leave
+  // some of the default's keys out, so its properties are judged one by one, as `sanitizeDataForNewSchema()` does
+  const isFilledByKey = () =>
+    isPlainObject(value) &&
+    isPlainObject(newDefault) &&
+    !newLayers.some((layer) => isWholeValueSelect<S>(layer)) &&
+    fillsKeyByKey(newLayers, isItem);
+  if (isOldDefault && newDefault !== undefined && !isFilledByKey()) {
     return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
   }
   // An item is rejected by its type only where the new schema declares one that leaves out an old type, as

@@ -1,4 +1,10 @@
-import type { FieldFill, RJSFMarkedSchema, SchemaUtilsType, RJSFSchema } from '../../src/index.ts';
+import type {
+  DefaultFormStateBehavior,
+  FieldFill,
+  RJSFMarkedSchema,
+  SchemaUtilsType,
+  RJSFSchema,
+} from '../../src/index.ts';
 import {
   createSchemaUtils,
   getItemSchema,
@@ -609,6 +615,49 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           enumField: 'oldData',
         }),
       ).toStrictEqual({});
+    });
+    it('replaces invalid enum data with the default the defaults fill the field with (#5817, #5818)', () => {
+      const withEnum = (parentDefault: string, values: string[], ownDefault?: string): RJSFSchema => ({
+        type: 'object',
+        default: { v: parentDefault },
+        properties: {
+          v: { type: 'string', enum: values, ...(ownDefault && { default: ownDefault }) },
+          w: { type: 'string' },
+        },
+      });
+      const sanitize = (ownDefault?: string, nestedDefaultsPrecedence?: 'ancestorWins') => {
+        const newSchema = withEnum('c', ['c', 'd'], ownDefault);
+        const context = { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence } };
+        return sanitizeDataForNewSchema(context, newSchema, newSchema, withEnum('b', ['a', 'b'], ownDefault), {
+          v: 'a',
+          w: 'k',
+        });
+      };
+
+      expect(sanitize()).toEqual({ v: 'c', w: 'k' });
+      expect(sanitize('d')).toEqual({ v: 'd', w: 'k' });
+      expect(sanitize('d', 'ancestorWins')).toEqual({ v: 'c', w: 'k' });
+    });
+    it('replaces a cleared enum value with its own default only where the defaults fill it with that one', () => {
+      const withEnum = (parentDefault: string, values: string[]): RJSFSchema => ({
+        type: 'object',
+        default: { v: parentDefault },
+        properties: { v: { type: 'string', enum: values, default: values[1] }, w: { type: 'string' } },
+      });
+      const sanitize = (defaultFormStateBehavior: DefaultFormStateBehavior) => {
+        const newSchema = withEnum('c', ['c', 'd']);
+        return sanitizeDataForNewSchema(
+          { validator: testValidator, defaultFormStateBehavior },
+          newSchema,
+          newSchema,
+          withEnum('b', ['a', 'b']),
+          { v: undefined, w: 'k' },
+        );
+      };
+
+      expect(sanitize({})).toStrictEqual({ v: 'd', w: 'k' });
+      expect(sanitize({ nestedDefaultsPrecedence: 'ancestorWins' })).toStrictEqual({ w: 'k' });
+      expect(sanitize({ emptyObjectFields: 'skipDefaults' })).toStrictEqual({ w: 'k' });
     });
     it('replaces invalid oneOf const and enum data', () => {
       const oldSchema: RJSFSchema = {

@@ -2716,6 +2716,82 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: { a: { b: 'x', d: 1 } },
       expected: { a: { b: 'y', d: 1 } },
     })),
+    // The defaults fill an object key by key, so a key the new default drops keeps the value the old one filled in
+    {
+      name: 'swaps each key of an object holding its old default, keeping a key the new default drops (#5818)',
+      from: {
+        type: 'object',
+        default: { a: 'x', b: 'z' },
+        properties: { a: { type: 'string' }, b: { type: 'string' } },
+      },
+      to: { type: 'object', default: { a: 'y' }, properties: { a: { type: 'string' }, b: { type: 'string' } } },
+      data: { a: 'x', b: 'z' },
+      expected: { a: 'y', b: 'z' },
+    },
+    // `sanitizeDataForNewSchema()` sanitizes a property key by key only where it declares an object type itself
+    ...(
+      [
+        ['an untyped object property', { properties: { a: { type: 'string' }, b: { type: 'string' } } }],
+        ['an object property of object options', { oneOf: [{ type: 'object', properties: { a: {}, b: {} } }] }],
+      ] satisfies [string, RJSFSchema][]
+    ).map(([what, schema]) => ({
+      name: `swaps ${what} holding its old default whole`,
+      from: { ...schema, default: { a: 'x', b: 'z' } },
+      to: { ...schema, default: { a: 'y' } },
+      data: { a: 'x', b: 'z' },
+      expected: { a: 'y' },
+    })),
+    // A `true` key the walk has nothing to judge by, so the object holding it is swapped whole
+    {
+      name: 'swaps an object property with a true key holding its old default',
+      from: { type: 'object', default: { a: 'x' }, properties: { a: true } },
+      to: { type: 'object', default: { a: 'y' }, properties: { a: true } },
+      data: { a: 'x' },
+      expected: { a: 'y' },
+    },
+    // Only an object `default` is filled key by key, so an object holding its old one takes a new `null` whole
+    ...(
+      [
+        [
+          'an object property',
+          (d) => ({ type: ['object', 'null'], default: d, properties: { a: { type: 'string' } } }),
+        ],
+        [
+          'an object item',
+          (d) => ({
+            type: 'array',
+            items: { type: ['object', 'null'], default: d, properties: { a: { type: 'string' } } },
+          }),
+        ],
+      ] satisfies [string, (d: RJSFSchema['default']) => RJSFSchema][]
+    ).map(([what, withDefault], index) => ({
+      name: `swaps ${what} holding its old object default for a new null one`,
+      from: withDefault({ a: 'x' }),
+      to: withDefault(null),
+      data: index === 0 ? { a: 'x' } : [{ a: 'x' }],
+      expected: index === 0 ? null : [null],
+    })),
+    // A value the new `enum` rejects takes the default the property computes, which is not gated by `emptyObjectFields`
+    ...[
+      { own: undefined, behavior: undefined, expected: 'c' },
+      { own: 'd', behavior: undefined, expected: 'd' },
+      { own: 'd', behavior: { nestedDefaultsPrecedence: 'ancestorWins' }, expected: 'c' },
+      { own: undefined, behavior: { emptyObjectFields: 'skipDefaults' }, expected: 'c' },
+    ].map(({ own, behavior, expected }) => {
+      const withEnum = (parent: string, values: string[]): RJSFSchema => ({
+        type: 'object',
+        default: { v: parent },
+        properties: { v: { type: 'string', enum: values, ...(own && { default: own }) }, w: { type: 'string' } },
+      });
+      return {
+        name: `replaces a value its new enum rejects with its filled default, own ${JSON.stringify(own)} under ${JSON.stringify(behavior)} (#5818)`,
+        from: withEnum('b', ['a', 'b']),
+        to: withEnum('c', ['c', 'd']),
+        data: { v: 'a', w: 'k' },
+        expected: { v: expected, w: 'k' },
+        behavior: behavior as DefaultFormStateBehavior | undefined,
+      };
+    }),
     // Under `skipDefaults` the defaults fill no property, so a value equal to its default is the user's
     {
       name: "keeps a property holding its old default under emptyObjectFields: 'skipDefaults'",
@@ -2876,6 +2952,22 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: { o: { v: 'x' } },
       expected: { o: { v: 'y' } },
     },
+    // The defaults fill an object key by key, leaving its optional keys out of a default they write
+    ...[
+      { required: [], expected: { o: { a: 'x' } } },
+      { required: ['a'], expected: { o: { a: 'y' } } },
+    ].map(({ required, expected }) => ({
+      name: `${required.length ? 'swaps a required' : 'keeps an optional'} key of a required object holding its old default`,
+      withDefault: (a: string): RJSFSchema => ({
+        type: 'object',
+        required: ['o'],
+        properties: {
+          o: { type: 'object', required, default: { a }, properties: { a: { type: 'string' }, b: { type: 'string' } } },
+        },
+      }),
+      data: { o: { a: 'x' } },
+      expected,
+    })),
   ])("$name under emptyObjectFields: 'populateRequiredDefaults'", ({ withDefault, data, expected }) => {
     const from = withDefault('x');
     const to = withDefault('y');

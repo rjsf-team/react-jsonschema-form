@@ -315,13 +315,16 @@ function rendersProperties<S extends StrictRJSFSchema>(schema: S): boolean {
   );
 }
 
-function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: unknown) {
+function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  formValue: unknown,
+  defaultValue: unknown = getByPath(schema, DEFAULT_KEY, NO_VALUE),
+) {
   const enumValues = enumValuesForSchema(schema);
   if (!enumValues || enumValues.some((value) => deepEquals(value, formValue))) {
     return NO_VALUE;
   }
 
-  const defaultValue = getByPath(schema, DEFAULT_KEY, NO_VALUE);
   if (defaultValue !== NO_VALUE && enumValues.some((value) => deepEquals(value, defaultValue))) {
     return defaultValue;
   }
@@ -589,9 +592,12 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
           }
         } else if (isContainer) {
           // A container holding the old `default` takes the new one whole, as a scalar does, rather than being
-          // sanitized into neither, unless it is an object, whose `default` the defaults fill in key by key
+          // sanitized into neither, unless it is an object, whose object `default` the defaults fill in key by key
           const defaultValue =
-            formValue === undefined || (isObjectValue && getSchemaType<S>(newKeyedSchema) === 'object')
+            formValue === undefined ||
+            (isObjectValue &&
+              getSchemaType<S>(newKeyedSchema) === 'object' &&
+              isPlainObject(getFilledDefault<S, F>(context, newKeyedSchema, newInherited, newPlacement)))
               ? NO_VALUE
               : replacementFor(false, false);
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. Data holding no object
@@ -655,7 +661,23 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
 
           // A clear the same constraints held stays one, even where the enum offers a `default` or a single option
           if (hasByPath(data, key) && !keptClears.has(key)) {
-            const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
+            // A value the enum rejects takes the default the property computes, under any `emptyObjectFields`, as
+            // `Form` replaces it. A clear takes only its own `default`, and only where the fill writes that one into
+            // it, leaving any other for the fill to write
+            const filledDefault = getFilledDefault<S, F>(
+              context,
+              newKeyedSchema,
+              newInherited,
+              formValue === undefined ? newPlacement : undefined,
+            );
+            const isTaken =
+              filledDefault !== undefined &&
+              (formValue !== undefined || deepEquals(filledDefault, newKeyedSchema.default));
+            const enumReplacement = replacementForInvalidEnumValue(
+              newKeyedSchema,
+              formValue,
+              isTaken ? filledDefault : NO_VALUE,
+            );
             if (enumReplacement !== NO_VALUE) {
               replacements[key] = enumReplacement;
             }
@@ -813,9 +835,8 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
       // filled so only by an object `default`, through their `properties` or an option's, see `rendersProperties()`.
       // `Form` clears no item for a `readOnly` new `default`
       const isFilledByKey =
-        schemaType === undefined
-          ? isPlainObject(newItemSchema.default) && rendersProperties<S>(newItemSchema)
-          : schemaType === 'object';
+        isPlainObject(newItemSchema.default) &&
+        (schemaType === undefined ? rendersProperties<S>(newItemSchema) : schemaType === 'object');
       if (newItemSchema.default !== undefined && !(isPlainObject(aValue) && !isWholeSelect && isFilledByKey)) {
         oldItemSchema = oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
         const defaultValue = defaultReplacement<S>(
