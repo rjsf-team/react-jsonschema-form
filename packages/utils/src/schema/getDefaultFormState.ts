@@ -1566,21 +1566,6 @@ function itemField<S extends StrictRJSFSchema>(
   return defaultsChild(view, seeds, edge, fallback);
 }
 
-/** The schema the keys of a `const` that closes an object are folded through, by the root of the graph it is typed as */
-const closingKeySchemas = new WeakMap<object, object>();
-
-/** Returns the child of the object field `view` a key of a `const` that closes the object is folded as: one with no
- * keywords of its own, the same schema for every key and every call, so a pass of the object's fixed point reuses what
- * an earlier pass computed for the key
- */
-function closingKeyField<S extends StrictRJSFSchema>(view: DefaultsView<S>): DefaultsField<S> {
-  const { graph, expanded } = view.field;
-  const known = closingKeySchemas.get(graph.rawRoot);
-  const fallback = isSchemaObject<S>(known) ? known : schemaFrom(graph.rawRoot, {});
-  closingKeySchemas.set(graph.rawRoot, fallback);
-  return { graph, seeds: [], expanded, edge: 'additionalKey', fallback };
-}
-
 /** Computes the default value for objects.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -1791,38 +1776,57 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // Only a key the defaults hold has a value to seed
   const closingConst = objectConst && !takesExtraKeys ? objectConst : undefined;
   const readsInitialValue = closingConst && getUiOptions<T, S, F>(uiSchema).initialValue !== undefined;
+  const constDefaults =
+    closingConst && isObject(defaults) && !(readsInitialValue && initialDefaultsGenerated) ? defaults : undefined;
   const closingKeys =
     closingConst &&
-    Object.keys(closingConst).filter(
-      (key) => isObject(defaults) && Object.hasOwn(defaults, key) && !(readsInitialValue && initialDefaultsGenerated),
+    new Set(
+      constDefaults
+        ? Object.keys(closingConst).filter((key) => Object.hasOwn(constDefaults, key) && !isDeclared(key))
+        : [],
     );
-  const isClosingKey = (key: string) => closingKeys !== undefined && closingKeys.includes(key) && !isDeclared(key);
-  if ((additionalProperties && !initialDefaultsGenerated) || (closingKeys && closingKeys.length > 0)) {
+  if (closingKeys) {
+    for (const key of closingKeys) {
+      // No field renders a key of a `const` that closes the object, so no user fills, clears or fixes it: the `const`
+      // fills in what its data lacks on every pass, as on the first, a value held as `undefined` or `null` and the
+      // items of an array included, at any depth, and keeps the rest of the data
+      const keyDefault: unknown = getByPath(constDefaults, key);
+      const keyData: unknown = getByPath(formData, key);
+      const value = shouldMergeDefaultsIntoFormData
+        ? mergeDefaultsWithFormData(keyDefault, keyData, true, true)
+        : keyDefault;
+      maybeAddDefaultToObject(
+        computed,
+        key,
+        value,
+        includeUndefinedValues,
+        required,
+        [],
+        'populateAllDefaults',
+        // A `ui:initialValue` the object defaults to in place of the `const` can leave a key it names with no value
+        value !== undefined,
+      );
+    }
+  } else if (additionalProperties && !initialDefaultsGenerated) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
       rootSchema,
       isObject(additionalProperties) ? additionalProperties : {},
     );
-    const formDataRequired = closingKeys ? [] : Object.keys(formData).filter((key) => !isDeclared(key));
+    const formDataRequired = Object.keys(formData).filter((key) => !isDeclared(key));
     // Only seed keys from schema defaults when formData has no additionalProperties of its own.
     // If the user already has data (e.g. after a key rename), injecting default keys would
     // re-add stale entries that no longer exist in formData.
-    const seeded = closingKeys ?? (isObject(defaults) && formDataRequired.length === 0 ? Object.keys(defaults) : []);
+    const seeded = isObject(defaults) && formDataRequired.length === 0 ? Object.keys(defaults) : [];
     const keys = new Set([...formDataRequired, ...seeded.filter((key) => !isDeclared(key))]);
     [...keys].filter(isPinned).forEach((key) => {
-      // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
-      // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`. No such
-      // field renders the keys of a `const` that closes the object, so its uiSchema doesn't apply to them
-      const extraKeyProps = childProps(key, ADDITIONAL_PROPERTIES_KEY);
       const { value, holdsNull } = foldReporting(
         context,
         `additional:${key}`,
-        // The keys of a `const` that closes the object take no extra-key schema, which the object doesn't render them with
-        closingKeys
-          ? closingKeyField(view)
-          : defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
-        // Nor does the user edit them, so the `const` fills what their data lacks on every pass, as on the first
-        closingKeys ? { ...extraKeyProps, uiSchema: undefined, initialDefaultsGenerated: false } : extraKeyProps,
+        defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
+        // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
+        // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
+        childProps(key, ADDITIONAL_PROPERTIES_KEY),
       );
       // Added whatever the form's settings say, below, so its `null` only has to reach the objects above
       if (holdsNull) {
@@ -1839,7 +1843,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         // A property added by `additionalProperties` is one the user added, so it is populated whatever the form's
         // `emptyObjectFields` says about the properties the schema names
         'populateAllDefaults',
-        // A `ui:initialValue` the object defaults to in place of the `const` can leave a key it names with no value
         value !== undefined && Object.hasOwn(objectConst ?? {}, key),
       );
     });
@@ -1880,7 +1883,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     for (const key of Object.keys(formData).filter(isPinned)) {
       const value = formData[key];
       const keptUndefined =
-        value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior) && !isClosingKey(key);
+        value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior) && !closingKeys?.has(key);
       const uncomputed = !Object.hasOwn(computed, key) && (value === undefined || !isDeclared(key));
       if (keptUndefined || uncomputed) {
         setOwn(computed, key, value);

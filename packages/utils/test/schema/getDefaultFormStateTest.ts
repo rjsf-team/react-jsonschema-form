@@ -206,6 +206,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             a: undefined,
           });
         });
+        it('fills a key of a const that closes the object where the data holds it as null, at any depth', () => {
+          expect(utils(bare).getDefaultFormState(bare, { a: null })).toStrictEqual({ a: 1 });
+          expect(utils(bare).getDefaultFormState(bare, { a: null }, false, true)).toStrictEqual({ a: 1 });
+          const nested: RJSFSchema = { type: 'object', const: { a: { b: 1, c: 2 } } };
+          expect(utils(nested).getDefaultFormState(nested, { a: { b: null } }, false, true)).toStrictEqual({
+            a: { b: 1, c: 2 },
+          });
+          const declared: RJSFSchema = { ...bare, properties: { a: { type: ['number', 'null'] } } };
+          expect(utils(declared).getDefaultFormState(declared, { a: null }, false, true)).toStrictEqual({ a: null });
+        });
+        it('completes an array of a const that closes the object where the data holds fewer items', () => {
+          const list: RJSFSchema = { type: 'object', const: { a: [1, 2] } };
+          expect(utils(list).getDefaultFormState(list, { a: [1] })).toStrictEqual({ a: [1, 2] });
+          expect(utils(list).getDefaultFormState(list, { a: [1] }, false, true)).toStrictEqual({ a: [1, 2] });
+          expect(utils(list).getDefaultFormState(list, { a: [3, 4, 5] }, false, true)).toStrictEqual({ a: [3, 4, 5] });
+          const rows: RJSFSchema = { type: 'object', const: { a: [{ x: 1, y: 2 }, { x: 3 }] } };
+          expect(utils(rows).getDefaultFormState(rows, { a: [{ x: 1 }] }, false, true)).toStrictEqual({
+            a: [{ x: 1, y: 2 }, { x: 3 }],
+          });
+        });
         it('getObjectDefaults seeds only the keys of the const that the defaults it is handed hold', () => {
           const context = { validator: testValidator, ...absent };
           expect(getObjectDefaults(context, bare, { includeUndefinedValues: true })).toStrictEqual({});
