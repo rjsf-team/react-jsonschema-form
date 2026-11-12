@@ -349,6 +349,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ x: { a: 5 } });
           expect(utils(withDefault).getDefaultFormState(withDefault)).toStrictEqual({ x: { a: 5 } });
         });
+        it('adds the default of a property spelling out const: undefined under skipDefaults, as 6.x does', () => {
+          const spread: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string', const: undefined, default: 'd' } },
+          };
+          expect(utils(spread, { emptyObjectFields: 'skipDefaults' }).getDefaultFormState(spread)).toStrictEqual({
+            a: 'd',
+          });
+        });
         it("asks whether an option's parent takes extra keys of the parent with its allOf merged", () => {
           const parent: RJSFSchema = {
             type: 'object',

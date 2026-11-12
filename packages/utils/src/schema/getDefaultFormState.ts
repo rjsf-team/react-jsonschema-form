@@ -1736,7 +1736,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
     // should always return the computedDefault since it's coming from the const.
     const hasParentConst = getByPath(parentConst, key) !== undefined;
-    const hasConst = constIsDefault<S>(readProperty, defaultFormStateBehavior, hasParentConst);
+    // A property spelling out `const: undefined`, as a schema built by spreading can, counts as one here, as in 6.x
+    const hasConst = constIsDefault<S>(
+      readProperty,
+      defaultFormStateBehavior,
+      hasParentConst || (isObject(readProperty) && CONST_KEY in readProperty),
+    );
     // A property stubbed by `stubExistingAdditionalProperties()` from `additionalProperties`/`patternProperties`
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.
