@@ -259,6 +259,25 @@ export function fieldsRendered<T, S extends StrictRJSFSchema, F extends FormCont
   schema: S,
   formData: T | undefined,
 ): (path: FieldPathList) => boolean {
+  const schemaAt = renderedSchemas<T, S, F>(uiState, schemaUtils, schema, formData);
+  return (path) => schemaAt(path) !== undefined;
+}
+
+/** The schema of the field the form renders at a path for `formData`, or undefined where it renders none, see
+ * `fieldsRendered()`
+ *
+ * @param uiState - The form's option selections and cycle expansions
+ * @param schemaUtils - The schema utilities the form renders with
+ * @param schema - The retrieved root schema
+ * @param formData - The form's data
+ * @returns - The schema of the field rendered at a given path, if one is
+ */
+export function renderedSchemas<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiState: UiStateReader,
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  schema: S,
+  formData: T | undefined,
+): (path: FieldPathList) => S | undefined {
   const fieldState = fieldStateOf<T, S, F>(uiState, schemaUtils);
   // The schema and data found at each path prefix walked
   const reached = new Map<FieldPath, { parent: S | undefined; data: unknown }>();
@@ -303,11 +322,11 @@ export function fieldsRendered<T, S extends StrictRJSFSchema, F extends FormCont
         data = getByPath(data, [key]);
         reached.set(next, { parent, data });
       } else {
-        return false;
+        return undefined;
       }
       at = next;
     }
-    return parent !== undefined;
+    return parent;
   };
 }
 

@@ -627,6 +627,78 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     });
   });
 
+  describe('a value whose field goes away', () => {
+    const branches: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string', enum: ['s', 't', 'u'] } },
+      allOf: [
+        {
+          if: { properties: { kind: { const: 's' } }, required: ['kind'] },
+          then: { properties: { a: { type: 'string' } } },
+        },
+        {
+          if: { properties: { kind: { const: 'u' } }, required: ['kind'] },
+          then: { properties: { a: { type: 'number' } } },
+        },
+      ],
+    };
+    /** Mounts the form and hands back how to set a field and read the data */
+    function mounted(initialFormData: object) {
+      const ref = createRef<FormRef>();
+      render(<Form schema={branches} validator={validator} initialFormData={initialFormData} ref={ref} />);
+      return {
+        set: (key: string, value: unknown) => act(() => ref.current?.setFieldValue([key], value)),
+        reset: () => act(() => ref.current?.reset()),
+        data: () => ref.current?.getFormData(),
+      };
+    }
+
+    it('is left out of the data, and returns when the branch declaring its field applies again', () => {
+      const form = mounted({ kind: 's' });
+      form.set('a', 'x');
+      form.set('kind', 't');
+      expect(form.data()).toEqual({ kind: 't' });
+      form.set('kind', 's');
+      expect(form.data()).toEqual({ kind: 's', a: 'x' });
+    });
+
+    it('returns the same where the seed held it', () => {
+      const form = mounted({ kind: 's', a: 'x' });
+      form.set('kind', 't');
+      expect(form.data()).toEqual({ kind: 't' });
+      form.set('kind', 's');
+      expect(form.data()).toEqual({ kind: 's', a: 'x' });
+    });
+
+    it('stays out while the field that returns cannot hold a value of its type', () => {
+      const form = mounted({ kind: 's' });
+      form.set('a', 'x');
+      form.set('kind', 'u');
+      expect(form.data()).toEqual({ kind: 'u' });
+      form.set('kind', 's');
+      expect(form.data()).toEqual({ kind: 's', a: 'x' });
+    });
+
+    it('is forgotten by a reset', () => {
+      const form = mounted({ kind: 's' });
+      form.set('a', 'x');
+      form.set('kind', 't');
+      form.reset();
+      form.set('kind', 's');
+      expect(form.data()).toEqual({ kind: 's' });
+    });
+
+    it('gives way to a value entered in its place', () => {
+      const form = mounted({ kind: 's' });
+      form.set('a', 'x');
+      form.set('kind', 'u');
+      form.set('a', 7);
+      form.set('kind', 's');
+      // The number is the value last entered for the key, and the string field cannot hold it, so neither shows
+      expect(form.data()).toEqual({ kind: 's' });
+    });
+  });
+
   describe('a value the defaults filled in, when the default that gave it changes', () => {
     /** Mounts `from` with `initialFormData`, re-renders with `to`, and hands back the data at each step */
     function reschema(

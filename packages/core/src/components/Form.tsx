@@ -48,7 +48,7 @@ import TemplateWarnEntryContext from './fields/TemplateWarnEntryContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
-import type { ClearedPaths, EnteredPaths, RevealedPaths, SeededPaths, TouchedPaths } from './formState.ts';
+import type { ClearedPaths, EnteredPaths, Orphans, RevealedPaths, SeededPaths, TouchedPaths } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState, UiStateReader } from './uiState.ts';
@@ -342,6 +342,10 @@ export interface FormState<
   seededPaths: SeededPaths;
   /** The seeded paths of the baseline: those of the seed it was derived from */
   baselineSeededPaths: SeededPaths;
+  /** The values a person entered or the seed held whose field went away, by the path each was at. None is in the data,
+   * and each returns to it when a field that can hold it shows at its path again. Emptied by a reset
+   */
+  orphans: Orphans;
   /** Where `liveValidate`'s trigger fired, which decides the errors `liveErrors: 'field'` shows */
   revealed: RevealedPaths;
   /** The option selections the baseline is derived under, whenever a prop change or an omission derives it again: none

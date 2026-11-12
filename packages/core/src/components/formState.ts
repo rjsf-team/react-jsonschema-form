@@ -14,6 +14,8 @@ import type {
 } from '@rjsf/utils';
 import {
   getByPath,
+  getSchemaOwnTypes,
+  guessType,
   hasByPath,
   setByPath,
   propertyToPath,
@@ -56,7 +58,7 @@ import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from
 import { clearsWrittenOver, holdsClearAt, keepRecordedClears } from './keepClears.ts';
 import { keyMoveOf, moveErrorKeys, moveErrorSchemaKeys, movedPaths, withKeysMoved } from './keyMove.ts';
 import type { ContainerKeyMove, KeyMove, MoveFate } from './keyMove.ts';
-import type { DataOrigins, FieldTree, FirstRenderFill, JudgedClears } from './sanitizeFieldTree.ts';
+import type { DataOrigins, DroppedValue, FieldTree, FirstRenderFill, JudgedClears } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree, { judgedClearsIn } from './sanitizeFieldTree.ts';
 import type { UiStateReader } from './uiState.ts';
 import {
@@ -64,6 +66,7 @@ import {
   createUiState,
   fieldStateOf,
   jsonCopyOf,
+  renderedSchemas,
   settledEntries,
   withoutSelections,
   withSelectionsAsOf,
@@ -304,6 +307,11 @@ export type EnteredPaths = ReadonlySet<FieldPath>;
 
 /** The values the seed held, see `FormState.seededPaths` */
 export type SeededPaths = ReadonlySet<FieldPath>;
+
+/** The values set aside when their field went away, see `FormState.orphans` */
+export type Orphans = ReadonlyMap<FieldPath, unknown>;
+
+const NO_ORPHANS: Orphans = new Map();
 
 /** Where `liveValidate`'s trigger fired, for `liveErrors: 'field'`: `fields`, the fields that fired, whose errors show
  * along with those of every array and object holding them, and `containers`, the arrays and objects whose keys a move
@@ -1206,6 +1214,8 @@ interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> 
   clearedPaths: ReadonlySet<FieldPath>;
   /** The pass's entered and seeded paths, moved the same way */
   origins: DataOrigins;
+  /** The orphans after the pass: those it was handed, without the ones it brought back, and the values it dropped */
+  orphans: Orphans;
   /** The render context for `formData`, carrying the schema resolved for it and the utilities that resolved it.
    * Every value in it is `current`'s own whenever nothing it is built from changed, so committing it always is
    * free; handing it back rather than the parts is what keeps state from holding a `retrievedSchema` resolved by
@@ -1257,6 +1267,12 @@ interface DeriveDataOptions {
    * wrote
    */
   originsAfterEdit?: DataOrigins;
+  /** The values set aside before the pass, which it brings back where their field shows again */
+  orphans?: Orphans;
+  /** Whether the pass leaves the orphans where they are: one that has just brought some back does, so a value whose
+   * own return hides its field again is not brought back in a loop
+   */
+  keepsOrphans?: boolean;
   /** For a disabled or read-only form: the sanitize judges only the recorded clears and the keys holding `undefined`,
    * see `sanitizeFieldTree()`. Being disabled or read-only changes neither the values the data holds nor which clears
    * are kept, and a clear gives way as in an enabled form. With neither there is nothing to judge, so the pass isn't
@@ -1303,7 +1319,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   props: FormProps<T, S, F>,
 ): DerivedData<T, S, F> {
   const schemaUtils = resolveSchemaUtils(props, current);
-  const { formData, retrievedSchema, clearedPaths, origins } = settleFormData(
+  const { formData, retrievedSchema, clearedPaths, origins, orphans } = settleFormData(
     current,
     inputFormData,
     options,
@@ -1315,7 +1331,14 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // utilities are resolved from. `deriveRenderContext()` shares its result against `current`, so an unchanged context
   // keeps every reference the fields hold.
   const context = deriveRenderContext(props, retrievedSchema, current, schemaUtils);
-  return { formData, clearedPaths, origins, context, areSchemaUtilsReused: schemaUtils === current?.schemaUtils };
+  return {
+    formData,
+    clearedPaths,
+    origins,
+    orphans,
+    context,
+    areSchemaUtilsReused: schemaUtils === current?.schemaUtils,
+  };
 }
 
 /** The data half of `deriveFormData()`, with the schema utilities it settles the data with already resolved
@@ -1337,9 +1360,11 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   retrievedSchema: S;
   clearedPaths: ReadonlySet<FieldPath>;
   origins: DataOrigins;
+  orphans: Orphans;
 } {
   const { isSanitized, edit, heldPath, isReset = false, judgesOnlyClears, keepsClears } = options;
   let clearedPaths = options.clearedPaths ?? NO_PATHS;
+  const dropped: DroppedValue[] = [];
   let diffedOrigins = options.origins ?? NO_ORIGINS;
   let origins = options.originsAfterEdit ?? diffedOrigins;
   const uiState = options.uiState ?? current?.uiState;
@@ -1404,6 +1429,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     );
     for (;;) {
       const round = sanitizeFieldTree(previous, tree, uiState, fillAsFirstRender, diffedOrigins, roundEdit, judged);
+      dropped.push(...round.dropped);
       const sanitized = replaceEqualDeep(formData, round.formData);
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
@@ -1433,7 +1459,91 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     }
   }
   const { retrievedSchema } = tree.formData === formData ? tree : treeOf(formData);
-  return { formData, retrievedSchema, clearedPaths, origins };
+  // A value dropped at a path replaces one set aside there before: it is the one last entered for the field
+  const setAside = new Map(options.orphans);
+  dropped.forEach(({ path, value }) => setAside.set(fieldPathFromList(path), value));
+  const orphans: Orphans = setAside.size === 0 ? NO_ORPHANS : setAside;
+  const droppedNow = new Set(dropped.map(({ path }) => fieldPathFromList(path)));
+  const returning =
+    uiState && !options.keepsOrphans
+      ? returningOrphans(orphans, droppedNow, uiState, schemaUtils, retrievedSchema, formData, origins)
+      : [];
+  if (returning.length === 0) {
+    return { formData, retrievedSchema, clearedPaths, origins, orphans };
+  }
+  // Each returns as the person's value, and the data is settled again with them in it
+  let restored: unknown = formData;
+  const remaining = new Map(orphans);
+  const entered: FieldPath[] = [];
+  for (const [fieldPath, value] of returning) {
+    const path = fieldPathToList(fieldPath);
+    restored = isObject(restored) ? copyAlongPath(restored, path) : {};
+    setByPath(restored, path, value);
+    remaining.delete(fieldPath);
+    entered.push(...leafPathsOf(value, fieldPath));
+  }
+  return settleFormData(
+    current,
+    asFilledFormData<T>(restored),
+    {
+      ...options,
+      clearedPaths,
+      origins: diffedOrigins,
+      originsAfterEdit: { entered: withPaths(origins.entered, ...entered), seeded: origins.seeded },
+      orphans: remaining,
+      keepsOrphans: true,
+    },
+    props,
+    schemaUtils,
+    previousRetrievedSchema,
+  );
+}
+
+/** The orphans that return to the data: each whose path shows a field again, of a type that takes the value, where
+ * the data holds no value a person or a seed put there. One the pass itself dropped stays out
+ *
+ * @param orphans - The values set aside
+ * @param droppedNow - The paths of the values this pass dropped
+ * @param uiState - The form's option selections
+ * @param schemaUtils - The schema utilities the data is settled with
+ * @param retrievedSchema - The schema retrieved for `formData`
+ * @param formData - The settled data
+ * @param origins - Where the values of `formData` came from
+ * @returns - The path and value of each orphan that returns, an outer path before one inside it
+ */
+function returningOrphans<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  orphans: Orphans,
+  droppedNow: ReadonlySet<FieldPath>,
+  uiState: UiStateReader,
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  retrievedSchema: S,
+  formData: T | undefined,
+  origins: DataOrigins,
+): [FieldPath, unknown][] {
+  if (orphans.size === 0) {
+    return [];
+  }
+  const schemaAt = renderedSchemas<T, S, F>(uiState, schemaUtils, retrievedSchema, formData);
+  return [...orphans]
+    .filter(([fieldPath, value]) => {
+      const path = fieldPathToList(fieldPath);
+      const schema = droppedNow.has(fieldPath) ? undefined : schemaAt(path);
+      const held = getAt<unknown>(formData, path);
+      const isHeld = held !== undefined && (origins.entered.has(fieldPath) || origins.seeded.has(fieldPath));
+      return schema !== undefined && !isHeld && takesTypeOf<S>(schema, value);
+    })
+    .sort(([a], [b]) => a.length - b.length);
+}
+
+/** Whether a field of `schema` can hold a value of the JSON type `value` has, as a schema declaring no type can */
+function takesTypeOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
+  const types = getSchemaOwnTypes<S>(schema);
+  const valueType = guessType(value);
+  return (
+    types === undefined ||
+    types.length === 0 ||
+    types.some((type) => type === valueType || (type === 'integer' && Number.isInteger(value)))
+  );
 }
 
 /** What reconciling the errors of a derivation needs to know */
@@ -1613,10 +1723,11 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     isSanitized: true,
     clearedPaths: current?.clearedPaths,
     origins: current && originsOf(current),
+    orphans: current?.orphans,
     judgesOnlyClears: props.disabled || props.readonly,
     keepsClears: fillsOverClears(props),
   };
-  const { formData, clearedPaths, origins, context, areSchemaUtilsReused } = deriveFormData(
+  const { formData, clearedPaths, origins, orphans, context, areSchemaUtilsReused } = deriveFormData(
     current,
     inputFormData,
     options,
@@ -1654,6 +1765,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     baseline,
     baselineUiState: current?.baselineUiState ?? withoutSelections(context.uiState),
     baselineSeededPaths: current?.baselineSeededPaths ?? seededPaths ?? NO_PATHS,
+    orphans,
     ...marks,
     isDataPassed,
     ...errors,
@@ -1954,6 +2066,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
   }
   let clearedPaths = clearsAfterChange(current.clearedPaths, change, oldFormData, formData, path);
   let origins = originsAfterChange(originsOf(current), change, oldFormData, formData, path);
+  let { orphans } = current;
 
   if (isContainer) {
     // Only the data and its context are derived here; the errors are reconciled below. A root write is sanitized only
@@ -1970,6 +2083,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
         // The sanitize diffs against the data before the change, whose entered paths are the committed ones
         origins: originsOf(current),
         originsAfterEdit: origins,
+        orphans: current.orphans,
         judgesOnlyClears: disabled || readonly,
         // A switch a parent field sent at its own path is still an edit at the switched field, which holds the user's
         // value and the selections at and above it; the parent's write moves no key
@@ -1986,6 +2100,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     formData = derived.formData;
     clearedPaths = derived.clearedPaths;
     origins = derived.origins;
+    orphans = derived.orphans;
     context = derived.context;
   }
 
@@ -1999,6 +2114,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     ...context,
     ...omitted,
     ...marksAfterChange(current, change, omitted.formData, props, clearedPaths, origins),
+    orphans,
     // An edit is data the user made, whose errors they have earned, so a prop change live-validates it from now on
     isDataPassed: true,
   };
@@ -2098,6 +2214,7 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     enteredPaths: NO_PATHS,
     seededPaths,
     baselineSeededPaths: seededPaths,
+    orphans: NO_ORPHANS,
     isDataPassed: seed !== undefined,
     ...extraErrorsAlone(props.extraErrors),
     // The reset pass has generated the initial defaults, so the next unrelated recompute is not an initial pass and

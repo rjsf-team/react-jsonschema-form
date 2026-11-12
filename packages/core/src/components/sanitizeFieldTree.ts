@@ -77,6 +77,12 @@ export interface DataOrigins {
   seeded: ReadonlySet<FieldPath>;
 }
 
+/** A value a person entered or a seed held that the sanitize took out of the data, with the path it was at */
+export interface DroppedValue {
+  path: FieldPathList;
+  value: unknown;
+}
+
 /** What the tree diff needs that does not change as it descends */
 interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The schema utilities the previous tree is built with */
@@ -110,14 +116,8 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   judgedClears: JudgedClears | undefined;
   /** Where each array the walk dropped items of moved the items it kept, an inner array's before the array holding it */
   itemMoves: ContainerKeyMove[];
-  /** Whether the settings the defaults are computed by changed, so a field whose schema and value didn't can still be
-   * filled with another default, and none is skipped
-   */
-  isDefaultsChanged: boolean;
-  /** Below a key a switch put back, the uiSchemas the option switched to renders the switched field's keys from, and
-   * the depth of that field's path
-   */
-  switchedToUiSchemas?: { depth: number; uiSchemas: GenericObjectType[] };
+  /** Each value the walk dropped that a person entered or a seed held, outside any array */
+  dropped: DroppedValue[];
 }
 
 /** The values a disabled or read-only form's sanitize judges, see `sanitizeFieldTree()`: each key holding `undefined`,
@@ -957,6 +957,13 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           result = { ...newValue };
         }
         if (next === DROP) {
+          // What the defaults filled in is theirs to give again. Anything else is set aside for the form to bring
+          // back with its field. A row has no place to come back to once its array's rows move, so none is kept
+          const previousKey = from ? key : previousKeyOf(key);
+          const droppedFrom = oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined;
+          if (!childPath.some((at) => typeof at === 'number') && originOf(ctx, droppedFrom) !== 'filled') {
+            ctx.dropped.push({ path: childPath, value: newValue[key] });
+          }
           delete result[key];
         } else {
           setOwn(result, key, next);
@@ -1231,9 +1238,9 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
   origins: DataOrigins,
   edit?: FieldEdit,
   judgedClears?: JudgedClears,
-  isDefaultsChanged = false,
-): { formData: T | undefined; itemMoves: ContainerKeyMove[] } {
+): { formData: T | undefined; itemMoves: ContainerKeyMove[]; dropped: DroppedValue[] } {
   const itemMoves: ContainerKeyMove[] = [];
+  const dropped: DroppedValue[] = [];
   const sanitized = walk(
     {
       oldSchemaUtils: previous.schemaUtils,
@@ -1250,7 +1257,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       fillAsFirstRender,
       judgedClears,
       itemMoves,
-      isDefaultsChanged,
+      dropped,
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),
@@ -1271,5 +1278,5 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
     },
     [],
   );
-  return { formData: sanitized === DROP ? undefined : asFieldValue<T>(sanitized), itemMoves };
+  return { formData: sanitized === DROP ? undefined : asFieldValue<T>(sanitized), itemMoves, dropped };
 }
