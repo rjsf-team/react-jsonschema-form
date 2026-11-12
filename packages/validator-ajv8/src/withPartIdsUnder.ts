@@ -20,7 +20,7 @@ export default function withPartIdsUnder<S extends StrictRJSFSchema = RJSFSchema
       return part;
     }
     const { [ID_KEY]: _id, ...rest } = part;
-    return { [schemaId]: id, ...rest };
+    return { ...rest, [schemaId]: id };
   };
   let written = schema;
   for (const container of [DEFINITIONS_KEY, '$defs']) {

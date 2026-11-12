@@ -1,4 +1,4 @@
-import type { RJSFSchema, ValidatorType } from '../../src/index.ts';
+import type { GenericObjectType, RJSFSchema, ValidatorType } from '../../src/index.ts';
 import { getFirstMatchingOption } from '../../src/index.ts';
 
 /** The levels of definitions `chainedDefinitions()` builds that #5771 measured running out of memory at */
@@ -44,6 +44,24 @@ function deepData(levels: number, leaf: unknown): object {
   return { v: data };
 }
 
+/** Checks that the `options` of `root`, built by `chainedDefinitions(levels)`, are matched in time, the part every path
+ * reaches still checked, against the validator `buildValidator` returns for the root
+ */
+function expectOptionsMatched(
+  buildValidator: (rootSchema: RJSFSchema) => ValidatorType,
+  root: RJSFSchema,
+  options: RJSFSchema[],
+  levels: number,
+): void {
+  const validator = buildValidator(root);
+  const match = (data: unknown) => getFirstMatchingOption({ validator }, data, options, root);
+
+  expect(match(deepData(levels, 'leaf'))).toBe(0);
+  // The last definition, reached along every path, is still checked
+  expect(match(deepData(levels, 5))).toBe(1);
+  expect(match({ v: { a: 'not an object' } })).toBe(1);
+}
+
 /** Checks that the options of the root `chainedDefinitions(DEEP_CHAIN)` gives, under `dialect`, are matched in time,
  * the part every path reaches still checked, against the validator `buildValidator` returns for the root
  */
@@ -53,15 +71,8 @@ function expectChainMatched(
   dialect: string | undefined,
 ): void {
   const chained = chainedDefinitions(DEEP_CHAIN, id);
-  const { options } = chained;
   const root = dialect === undefined ? chained.root : { $schema: dialect, ...chained.root };
-  const validator = buildValidator(root);
-  const match = (data: unknown) => getFirstMatchingOption({ validator }, data, options, root);
-
-  expect(match(deepData(DEEP_CHAIN, 'leaf'))).toBe(0);
-  // The last definition, reached along every path, is still checked
-  expect(match(deepData(DEEP_CHAIN, 5))).toBe(1);
-  expect(match({ v: { a: 'not an object' } })).toBe(1);
+  expectOptionsMatched(buildValidator, root, chained.options, DEEP_CHAIN);
 }
 
 /** Runs the suite checking that an option reaching a part of the data along many paths is matched in time and still
@@ -88,6 +99,16 @@ export default function sharedCopyScoringTests(buildValidator: (rootSchema: RJSF
  * @param buildValidator - Returns the validator to match the options of the root with
  */
 export function draft04SharedCopyScoringTests(buildValidator: (rootSchema: RJSFSchema) => ValidatorType): void {
+  const draft04 = 'http://json-schema.org/draft-04/schema#';
   it(`matches the option of ${DEEP_CHAIN} levels of definitions naming the next twice, for a draft-04 root`, () =>
-    expectChainMatched(buildValidator, undefined, 'http://json-schema.org/draft-04/schema#'));
+    expectChainMatched(buildValidator, undefined, draft04));
+  it('matches the option of a part held once that has a draft-04 id of its own', () => {
+    const levels = 3;
+    const { root, options } = chainedDefinitions(levels);
+    const next = { $ref: '#/definitions/L2' };
+    // JSONSchema7 has no draft-04 `id`
+    const L1: GenericObjectType = { id: '#L1', type: 'object', properties: { a: next, b: next } };
+    const ownId: RJSFSchema = { $schema: draft04, ...root, definitions: { ...root.definitions, L1 } };
+    expectOptionsMatched(buildValidator, ownId, options, levels);
+  });
 }
