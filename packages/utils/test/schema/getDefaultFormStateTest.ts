@@ -259,6 +259,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }
           expect(utils(two).getDefaultFormState(two, { a: 5 }, false, true, uiSchema)).toStrictEqual({ a: 5 });
         });
+        it('hands out the keys of a const that closes the object read from a ui:initialValue as copies', () => {
+          const nested: RJSFSchema = { type: 'object', const: { a: { b: 1 } } };
+          const initialValue = { a: { b: 1 } };
+          const state = utils(nested).getDefaultFormState(nested, undefined, false, false, {
+            'ui:initialValue': initialValue,
+          });
+          expect(state).toStrictEqual({ a: { b: 1 } });
+          expect(isObject(state) && state.a).not.toBe(initialValue.a);
+        });
         it('asks whether an object takes extra keys, and which keys it declares, of the field with its allOf merged', () => {
           const open: RJSFSchema = {
             type: 'object',

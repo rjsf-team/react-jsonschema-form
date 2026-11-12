@@ -1815,7 +1815,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       // No field renders a key of a `const` that closes the object, so no user fills, clears or fixes it: the `const`
       // fills in what its data lacks on every pass, as on the first, a value held as `undefined` or `null` and the
       // items of an array included, at any depth, and keeps the rest of the data
-      const keyDefault: unknown = getByPath(constDefaults, key);
+      // Copied, since on the first pass beside a `ui:initialValue` the defaults are the uiSchema's own value
+      const keyDefault: unknown = ownValue(getByPath(constDefaults, key));
       const keyData: unknown = getByPath(formData, key);
       const value = shouldMergeDefaultsIntoFormData
         ? mergeDefaultsWithFormData(keyDefault, keyData, true, true)
