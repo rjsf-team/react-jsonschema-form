@@ -452,6 +452,20 @@ describe('ui:required enforcement', () => {
       expect(onError).toHaveBeenCalled();
     });
 
+    it('blocks a submit with nothing chosen in the multiple select the fallback UI renders for a schema with no type', async () => {
+      const { type: _type, ...typeless } = colors;
+      const { node, onSubmit, onError } = createFormComponent({
+        schema: withC(typeless),
+        uiSchema: { c: { 'ui:required': true } },
+        initialFormData: { c: [] },
+        useFallbackUiForUnsupportedType: true,
+      });
+      expect(node.querySelector('select[multiple]')).toBeInTheDocument();
+      await submitForm(node, user, true);
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalled();
+    });
+
     it('submits `[]` from the list of items the fallback UI renders where it drops a `ui:widget` no array takes', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: withC({ type: ['string', 'array'], items: { type: 'string' } }),

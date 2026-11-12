@@ -28,10 +28,10 @@ import {
 import getFieldWidget, {
   displaysLabel,
   fallbackValueKeepsWidget,
+  fallbackValueUiSchema,
   getBooleanFieldWidget,
   getFallbackTypes,
   withoutDescribers,
-  withoutUiWidget,
 } from './fieldWidgetUtils.ts';
 
 /** The fields of core's that render no control for a template label to name: a container, whose label is its own
@@ -213,6 +213,47 @@ function rendersControl<
   return !CONTROLLESS_FIELD_KEYS.some((key) => fields[key] === field);
 }
 
+/** Whether `ArrayField` renders a field as one widget, or the fallback UI's value field while it holds an array, with the
+ * `ui:widget` the fallback UI hands it
+ *
+ * @param field - The field component planned
+ * @param widget - The single widget it renders, if any
+ * @param registry - The registry, whose `fields`, `widgets` and `globalFormOptions` are read
+ * @param schema - The schema the field renders
+ * @param uiSchema - The uiSchema the field renders
+ * @param [headingType] - The type with a heading of its own that a `FallbackField`'s value holds, if any
+ * @returns - True where `ArrayField` renders the value with a widget
+ */
+function rendersOneArrayWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  field: Field<T, S, F> | undefined,
+  widget: Widget<T, S, F> | string | undefined,
+  registry: Registry<T, S, F>,
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  headingType?: 'object' | 'array',
+) {
+  const { fields, globalFormOptions, widgets } = registry;
+  if (field === fields.ArrayField) {
+    return widget !== undefined;
+  }
+  return (
+    field === fields.FallbackField &&
+    Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
+    headingType === 'array' &&
+    getFallbackTypes<S>(schema).includes('array') &&
+    getFieldWidget<T, S, F>(
+      fields.ArrayField,
+      { ...schema, type: 'array' },
+      fallbackValueUiSchema<T, S, F>(schema, 'array', uiSchema, widgets),
+      registry,
+    ) !== undefined
+  );
+}
+
 /** Whether a required control left alone fails the form, and so says it is required. A control holding `false` left alone,
  * as an unchecked checkbox does, would fail the browser's own check of a native `required` for a value the schema
  * accepts, so it is required, by its attribute and its marker alike, only where the schema demands `true` (#5388). It
@@ -319,32 +360,10 @@ export default function useSchemaFieldPresentation<
   const usesFallbackUi = Boolean(globalFormOptions.useFallbackUiForUnsupportedType);
   const arrayMissesItems = plannedField === fields.ArrayField && !hidden && !(ITEMS_KEY in schema);
   const rendersUnsupportedTemplate = (fallbackDrawsNoControl || arrayMissesItems) && !usesFallbackUi;
-  // `ArrayField` renders the field as one widget, or the fallback UI's value field while it holds an array, which keeps
-  // the field's `ui:widget` only as the fallback UI hands it down
-  const rendersArrayWidget = useMemo(() => {
-    if (field === fields.ArrayField) {
-      return widget !== undefined;
-    }
-    if (
-      plannedField !== fields.FallbackField ||
-      !usesFallbackUi ||
-      headingType !== 'array' ||
-      !getFallbackTypes<S>(schema).includes('array')
-    ) {
-      return false;
-    }
-    const valueUiSchema = fallbackValueKeepsWidget<T, S, F>(
-      schema,
-      'array',
-      getUiOptions<T, S, F>(uiSchema).widget,
-      registry.widgets,
-    )
-      ? uiSchema
-      : withoutUiWidget<T, S, F>(uiSchema);
-    return (
-      getFieldWidget<T, S, F>(fields.ArrayField, { ...schema, type: 'array' }, valueUiSchema, registry) !== undefined
-    );
-  }, [field, plannedField, fields, widget, usesFallbackUi, headingType, schema, uiSchema, registry]);
+  const fieldRendersArrayWidget = useMemo(
+    () => rendersOneArrayWidget<T, S, F>(plannedField, widget, registry, schema, uiSchema, headingType),
+    [plannedField, widget, registry, schema, uiSchema, headingType],
+  );
   // A field with no control of its own to name hands its label and description to the field below it rendering the same
   // id, which draws them as its heading: the field rendering withheld options, and the fallback UI's field while its
   // value is one that draws its own heading or label
@@ -402,8 +421,9 @@ export default function useSchemaFieldPresentation<
       return (
         required &&
         !(rendersUnsupportedTemplate && inherited !== undefined) &&
-        ((holdsNoValue && (uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) === true || rendersArrayWidget)) ||
-          demandsAnswer<T, S, F>(declaration, rendersArrayWidget, schema, uiSchema, registry))
+        ((holdsNoValue &&
+          (uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) === true || fieldRendersArrayWidget)) ||
+          demandsAnswer<T, S, F>(declaration, fieldRendersArrayWidget, schema, uiSchema, registry))
       );
     }
     const { field: optionField, schema: optionSchema, uiSchema: optionUiSchema } = shownOptionField;
@@ -419,7 +439,14 @@ export default function useSchemaFieldPresentation<
       (holdsNoValue ||
         demandsAnswer<T, S, F>(
           getPresentationDeclaration<T, S, F>(registry, shownOptionField),
-          shownOptionField.field === fields.ArrayField && shownOptionField.widget !== undefined,
+          rendersOneArrayWidget<T, S, F>(
+            optionField,
+            shownOptionField.widget,
+            registry,
+            optionSchema,
+            optionUiSchema,
+            headingType,
+          ),
           optionSchema,
           optionUiSchema,
           registry,
@@ -430,13 +457,13 @@ export default function useSchemaFieldPresentation<
     rendersUnsupportedTemplate,
     inherited,
     declaration,
-    rendersArrayWidget,
-    fields,
+    fieldRendersArrayWidget,
     schema,
     uiSchema,
     registry,
     shownOptionField,
     holdsNoValue,
+    headingType,
   ]);
   const templateOrder = registry.presentation?.fieldTemplateOrder;
   const presentation = useMemo(() => {

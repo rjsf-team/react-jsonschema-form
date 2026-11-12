@@ -16,11 +16,14 @@ function countStars(container: HTMLElement) {
   return shown.textContent.split('*').length - 1;
 }
 
-// Left out, the hidden input Radix's checkbox renders beside its button to take part in a native form
+// Left out, the hidden input Radix's checkbox renders beside its button to take part in a native form, and anything but
+// a form control, on which `required` means nothing, as on the box Mantine's `MultiSelect` draws around its input
 const requiredIds = (container: HTMLElement) =>
-  [...container.querySelectorAll('[required]:not([aria-hidden="true"]), [aria-required="true"]')].map(
-    (element) => element.id,
-  );
+  [
+    ...container.querySelectorAll(
+      ':is(input, select, textarea)[required]:not([aria-hidden="true"]), [aria-required="true"]',
+    ),
+  ].map((element) => element.id);
 
 const OTHER_OPTION: RJSFSchema = { title: 'B', type: 'number' };
 
@@ -204,7 +207,7 @@ export function requiredCueTests(
     ])('marks its label once and requires it with %s', (_, schema, uiSchema) => {
       const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
       expect(countMarkers(container)).toBe(1);
-      expect(requiredIds(container)).not.toEqual([]);
+      expect(requiredIds(container)).toEqual(['root_c']);
     });
   });
 

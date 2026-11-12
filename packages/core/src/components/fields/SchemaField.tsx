@@ -79,8 +79,9 @@ import { fallbackUiType } from './FallbackField.tsx';
 import type { SelectSchemaInfo } from './fieldWidgetUtils.ts';
 import getFieldWidget, {
   booleanListsConstantOptions,
-  fallbackValueKeepsWidget,
+  fallbackValueUiSchema,
   getDeprecatedTemplateProps,
+  getFallbackTypes,
   getFieldErrorProps,
   getSelectSchemaInfo,
   getTemplateParts,
@@ -1119,24 +1120,27 @@ export function schemaFieldRendersArrayWidget<T, S extends StrictRJSFSchema, F e
   uiSchema: UiSchema<T, S, F>,
   formData: T | undefined,
 ): boolean {
+  const { fields, globalFormOptions } = registry;
   const resolved = createFieldWidgetResolver<T, S, F>().resolve(schema, uiSchema, formData, registry, false, false);
-  const plan = planFieldComponent<T, S, F>(resolved, registry);
+  const field = planFieldComponent<T, S, F>(resolved, registry)?.FieldComponent;
   const arraySchema = resolved.selectSchemaInfo.schema;
-  // The fallback UI hands its array value the `ui:widget` only where that widget renders an array, as `FallbackField`
-  // does; anywhere else `ArrayField` throws on such a widget, so dropping it changes no other answer
-  const widgetUiSchema = fallbackValueKeepsWidget<T, S, F>(
-    arraySchema,
-    'array',
-    resolved.ownUiOptions.widget,
-    registry.widgets,
-  )
-    ? resolved.uiSchema
-    : withoutUiWidget<T, S, F>(resolved.uiSchema);
+  // The walk pins only a type list to the type its selector is on, so the fallback UI rendering a typeless schema holding
+  // an array, whose selector is then on `array`, is asked here as `ArrayField` rendering its value
+  const rendersArray =
+    field === fields.ArrayField ||
+    (field === fields.FallbackField &&
+      Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
+      Array.isArray(formData) &&
+      getFallbackTypes<S>(arraySchema).includes('array'));
+  // The fallback UI hands its array value the `ui:widget` only where that widget renders an array; anywhere else
+  // `ArrayField` throws on such a widget, so dropping it changes no other answer
+  const widgetUiSchema = fallbackValueUiSchema<T, S, F>(arraySchema, 'array', resolved.uiSchema, registry.widgets);
   // A hidden field, by its widget or its `deprecatedHandling`, leaves the user nothing to choose with
   return (
     !resolved.hidden &&
-    plan?.FieldComponent === registry.fields.ArrayField &&
-    getFieldWidget<T, S, F>(plan.FieldComponent, arraySchema, widgetUiSchema, registry) !== undefined
+    rendersArray &&
+    getFieldWidget<T, S, F>(fields.ArrayField, { ...arraySchema, type: 'array' }, widgetUiSchema, registry) !==
+      undefined
   );
 }
 

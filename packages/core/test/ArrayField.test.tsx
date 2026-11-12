@@ -1911,13 +1911,19 @@ describe('ArrayField', () => {
         expect(node.querySelector('.rjsf-required')).toBeInTheDocument();
       });
 
-      it('leaves the fallback UI label unmarked while its multiple select holds `[]`', () => {
+      const fallbackColors: RJSFSchema = {
+        type: ['string', 'array'],
+        title: 'Colors',
+        items: enumItems,
+        uniqueItems: true,
+      };
+
+      it.each<[string, RJSFSchema]>([
+        ['its field', fallbackColors],
+        ['the `anyOf` option shown', { anyOf: [fallbackColors, { type: 'number' }] }],
+      ])('leaves the label unmarked while the fallback UI under %s holds `[]` in a multiple select', (_, c) => {
         const { node } = createFormComponent({
-          schema: {
-            type: 'object',
-            required: ['c'],
-            properties: { c: { type: ['string', 'array'], title: 'Colors', items: enumItems, uniqueItems: true } },
-          },
+          schema: { type: 'object', required: ['c'], properties: { c } },
           initialFormData: { c: [] },
           useFallbackUiForUnsupportedType: true,
         });
