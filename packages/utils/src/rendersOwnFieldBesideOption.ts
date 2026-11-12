@@ -17,6 +17,10 @@ import type { FormContextType, RJSFSchema, SchemaUtilsType, StrictRJSFSchema, Ui
  * while that option is shown, so that option takes the whole field as any other field's does, wherever `object` sits in
  * the list.
  * So does an object the fallback UI's type selector pinned, which it marks `PINNED_TYPE_FLAG`.
+ * An option whose own types list `object` beside another type keeps that field beside it even while its own type
+ * selector is on the other type, so for such an option the list's order still decides: a list whose first type besides
+ * `null` is `object` renders the object's properties beside it, and any other order leaves the whole field to the
+ * option.
  *
  * @param schema - The schema holding the options
  * @param [option] - The option shown, without which, or for a boolean one, the answer is the schema's alone. One whose

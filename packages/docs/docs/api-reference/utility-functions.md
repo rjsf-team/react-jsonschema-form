@@ -18,7 +18,7 @@ There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defin
 `WIDGET_FIELD_PRESENTATION` is the `PresentationDeclaration` of a field that renders its value with a single widget and leaves every part to whoever that widget says draws it, for a theme or `@rjsf/core` to declare such a field with (see [getPresentationDeclaration()](#getpresentationdeclaration)). It is defined in [getPresentationDeclaration.ts](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getPresentationDeclaration.ts) rather than with the other constants.
 `DEFAULT_BOOLEAN_WIDGET` is the registry key the `checkbox` alias of a `boolean` resolves to (`CheckboxWidget`), so a theme can read that widget from its registry, as `registry.widgets[DEFAULT_BOOLEAN_WIDGET]`, without copying the key. It is defined next to the widget map in [getWidget.tsx](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getWidget.tsx) rather than with the other constants.
 
-The constants it exports from `constants.ts` are `ADDITIONAL_PROPERTY_FLAG`, `ADDITIONAL_PROPERTIES_KEY`, `ALL_OF_KEY`, `ANY_OF_KEY`, `CONST_KEY`, `DEFAULT_KEY`, `ELSE_KEY`, `ERRORS_KEY`, `GUESSED_TYPE_FLAG`, `ID_KEY`, `ITEMS_KEY`, `ONE_OF_KEY`, `PATTERN_PROPERTIES_KEY`, `PROPERTIES_KEY`, `READONLY_KEY`, `REQUIRED_KEY`, `SUBMIT_BTN_OPTIONS_KEY`, `REF_KEY`, `THEN_KEY`, `UNEVALUATED_PROPERTIES_KEY`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`, `SCHEMA_KEY`, `DEFAULT_ID_PREFIX`, `DEFAULT_ID_SEPARATOR`, `LOOKUP_MAP_NAME`, `RJSF_ADDITIONAL_PROPERTIES_FLAG`, `ROOT_SCHEMA_PREFIX`, `UI_FIELD_KEY`, `UI_WIDGET_KEY`, `UI_OPTIONS_KEY`, `UI_GLOBAL_OPTIONS_KEY`, `UI_DEFINITIONS_KEY`, `JSON_SCHEMA_DRAFT_2019_09`, `JSON_SCHEMA_DRAFT_2020_12` and `JSON_SCHEMA_TYPES`; that file also holds keys only RJSF's own code reads.
+The constants it exports from `constants.ts` are `ADDITIONAL_PROPERTY_FLAG`, `ADDITIONAL_PROPERTIES_KEY`, `ALL_OF_KEY`, `ANY_OF_KEY`, `CONST_KEY`, `DEFAULT_KEY`, `ELSE_KEY`, `ERRORS_KEY`, `GUESSED_TYPE_FLAG`, `ID_KEY`, `ITEMS_KEY`, `ONE_OF_KEY`, `PATTERN_PROPERTIES_KEY`, `PINNED_TYPE_FLAG`, `PROPERTIES_KEY`, `READONLY_KEY`, `REQUIRED_KEY`, `SUBMIT_BTN_OPTIONS_KEY`, `REF_KEY`, `THEN_KEY`, `UNEVALUATED_PROPERTIES_KEY`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`, `SCHEMA_KEY`, `DEFAULT_ID_PREFIX`, `DEFAULT_ID_SEPARATOR`, `LOOKUP_MAP_NAME`, `RJSF_ADDITIONAL_PROPERTIES_FLAG`, `ROOT_SCHEMA_PREFIX`, `UI_FIELD_KEY`, `UI_WIDGET_KEY`, `UI_OPTIONS_KEY`, `UI_GLOBAL_OPTIONS_KEY`, `UI_DEFINITIONS_KEY`, `JSON_SCHEMA_DRAFT_2019_09`, `JSON_SCHEMA_DRAFT_2020_12` and `JSON_SCHEMA_TYPES`; that file also holds keys only RJSF's own code reads.
 
 ## Types
 
@@ -1884,7 +1884,7 @@ It takes only the markers that hold a flag: `ADDITIONAL_PROPERTY_FLAG`, `GUESSED
 #### Parameters
 
 - schema: unknown - The schema to check, which may be a boolean subschema
-- marker: SchemaFlagMarker - The symbol of the flag marker, one of `ADDITIONAL_PROPERTY_FLAG`, `GUESSED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`
+- marker: SchemaFlagMarker - The symbol of the flag marker, one of `ADDITIONAL_PROPERTY_FLAG`, `GUESSED_TYPE_FLAG`, `PINNED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`
 
 #### Returns
 
@@ -2665,6 +2665,7 @@ Whether the field of `schema` renders a field of its own beside its selected `an
 Such a field shows its own properties and other keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option as [getRenderedOptionSchema()](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema) renders it.
 `getRenderedOptionSchema()`, the defaults `getDefaultFormState()` computes, the `getUiRequiredErrorSchema()` walk and `MultiSchemaField` all read it to choose between the two, so none of them renders one option and seeds or walks another.
 A `type` list holding `object` and another type, `null` included, renders no such field beside an option whose own types leave out `object`, wherever `object` sits in the list, and neither does an object the fallback UI's type selector pinned, which it marks `PINNED_TYPE_FLAG` ([#5725](https://github.com/rjsf-team/react-jsonschema-form/issues/5725)).
+An option whose own types list `object` beside another type keeps that field beside it even while its own type selector is on the other type, so for such an option the list's order still decides: a list whose first type besides `null` is `object` renders the object's properties beside it, and any other order leaves the whole field to the option.
 
 #### Parameters
 
