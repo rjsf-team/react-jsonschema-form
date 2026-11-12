@@ -297,6 +297,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           };
           expect(utils(parent).getDefaultFormState(parent, { x: {} }, false, true)).toStrictEqual({ x: {} });
+          const typedByAllOf: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                allOf: [{ type: 'object', additionalProperties: true }],
+                oneOf: [{ const: { b: 1 } }, { properties: { c: { type: 'string' } } }],
+              },
+            },
+          };
+          expect(utils(typedByAllOf).getDefaultFormState(typedByAllOf)).toStrictEqual({ x: { b: 1 } });
+          expect(utils(typedByAllOf).getDefaultFormState(typedByAllOf, { x: {} }, false, true)).toStrictEqual({
+            x: {},
+          });
         });
         it("fills a mixed oneOf option's const under skipOneOf, whether or not the option declares its keys", () => {
           const skipOneOf: DefaultFormStateBehavior = { constAsDefaults: 'skipOneOf' };

@@ -94,7 +94,7 @@ import { readProvenance, rootProvenance } from './graph/provenance.ts';
 import type { Provenance } from './graph/provenance.ts';
 import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
-import { schemaFrom, schemaOfBoolean } from './graph/schemaFrom.ts';
+import { schemaFrom } from './graph/schemaFrom.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import { resolveDeclaredConstantOptions } from './resolveConstantOptions.ts';
 import retrieveSchema, {
@@ -1385,24 +1385,25 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const rendersOwnField = rendersOwnFieldBesideOption<S>(fieldSchema, listedOption);
   const optionUiSchema = getOptionUiSchema<T, S, F>(props.uiSchema, key, index);
   const retrieved = (raw: S) => retrieveSchema<unknown, S, F>(context, raw, rootSchema, props.rawFormData);
-  const retrievedOption = computedOnce(() =>
-    retrieved(isSchemaObject<S>(listedOption) ? listedOption : schemaOfBoolean(Boolean(listedOption), rootSchema)),
-  );
+  const retrievedOption = isSchemaObject<S>(listedOption) ? computedOnce(() => retrieved(listedOption)) : undefined;
   const branchProps = {
     ...props,
     // An option whose field takes the object's extra keys is asked as the field renders it, retrieved for the data, and
     // only where it has a uiSchema of its own for the object's to lie beneath
     uiSchema:
-      rendersOwnField && optionUiSchema !== props.uiSchema && isSchemaObject<S>(listedOption)
+      rendersOwnField && optionUiSchema !== props.uiSchema && retrievedOption
         ? getRenderedOptionUiSchema<T, S, F>(fieldSchema, retrievedOption(), props.uiSchema, optionUiSchema)
         : optionUiSchema,
     isRenderedOption: true,
-    optionOf: rendersOwnField
-      ? {
-          parent: computedOnce(() => (fieldSchema === remaining ? retrieved(remaining) : fieldSchema)),
-          option: retrievedOption,
-        }
-      : undefined,
+    // A boolean option holds no `const`, and a `const` the parent holds is its defaults before any option is folded, so
+    // only an object option is joined
+    optionOf:
+      rendersOwnField && retrievedOption
+        ? {
+            parent: computedOnce(() => (fieldSchema === remaining ? retrieved(remaining) : fieldSchema)),
+            option: retrievedOption,
+          }
+        : undefined,
   };
   const choice = view.choices.find(
     (offered) => offered.keyword === key && offered.options.length === options.length && offered.list === options,
