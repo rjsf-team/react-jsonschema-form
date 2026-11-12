@@ -117,10 +117,10 @@ const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 /** The keywords retrieving a schema merges subschemas in through; it leaves the own keywords of a schema holding none */
 const MERGING_KEYWORDS = [REF_KEY, ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY];
 
-/** The keywords through which a schema may reject a value that is no object: the options it offers, its `const`, which
- * replaces the value under `constAsDefaults: 'always'`, and those that merge in subschemas that may hold either
+/** The keywords through which a schema may reject a value that is no object: the options it offers, and those that
+ * merge in subschemas that may hold them. Under `constAsDefaults: 'always'` its `const` replaces the value too
  */
-const REJECTING_KEYWORDS = [ENUM_KEY, ONE_OF_KEY, ANY_OF_KEY, CONST_KEY, ...MERGING_KEYWORDS];
+const REJECTING_KEYWORDS = [ENUM_KEY, ONE_OF_KEY, ANY_OF_KEY, ...MERGING_KEYWORDS];
 
 function holdsAnyOf(schema: object, keywords: readonly string[]): boolean {
   return keywords.some((keyword) => Object.hasOwn(schema, keyword));
@@ -2743,7 +2743,10 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
     // data against
     const matchesNested =
       isSchemaObject<S>(readProperty) &&
-      (isObjectData(matched[key]) || (unfolded && holdsAnyOf(readProperty, REJECTING_KEYWORDS)));
+      (isObjectData(matched[key]) ||
+        (unfolded &&
+          (holdsAnyOf(readProperty, REJECTING_KEYWORDS) ||
+            (context.defaultFormStateBehavior?.constAsDefaults === 'always' && CONST_KEY in readProperty))));
     // A key the user left `undefined` holds no value to reject, so it stays, as the fold keeps it, whether or not the
     // property is read through an `allOf`
     if (matched[key] !== undefined && (retrievesProperty || matchesNested)) {
