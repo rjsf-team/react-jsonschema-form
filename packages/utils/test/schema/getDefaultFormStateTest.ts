@@ -322,6 +322,33 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             utils(conditional, skipEmpty).getDefaultFormState(conditional, { x: { a: 1, b: undefined } }, false, true),
           ).toStrictEqual({ x: { a: 1, b: undefined } });
         });
+        it('folds a key of a const that only an unmerged allOf declares from that property, not the extra-key schema', () => {
+          const withDefault: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                const: { a: 1 },
+                additionalProperties: { type: 'number' },
+                allOf: [{ properties: { a: { type: 'number', default: 5 } } }],
+              },
+            },
+          };
+          const declared: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                const: { a: 1 },
+                additionalProperties: { type: 'number' },
+                properties: { a: { type: 'number', default: 5 } },
+              },
+            },
+          };
+          // A property's own default wins over the object's `const`, whether `properties` or an `allOf` declares it
+          expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ x: { a: 5 } });
+          expect(utils(withDefault).getDefaultFormState(withDefault)).toStrictEqual({ x: { a: 5 } });
+        });
         it("asks whether an option's parent takes extra keys of the parent with its allOf merged", () => {
           const parent: RJSFSchema = {
             type: 'object',

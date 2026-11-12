@@ -1709,7 +1709,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   );
   for (const key of [...propertyKeys, ...unmergedProperties.keys()]) {
     const propertySchema = unmergedProperties.get(key) ?? getPropertySchema<S>(schema, key);
-    const { seeds, edge } = childSeeds(view, key);
+    // A key the fold left unmerged has no seed under the object's `properties`, so it is read from its property as the
+    // field renders it, rather than from the `additionalProperties` or `patternProperties` its seeds would be
+    const { seeds, edge } = unmergedProperties.has(key)
+      ? { seeds: [], edge: 'property' as const }
+      : childSeeds(view, key);
     // A property written as a `$ref` keeps its `const` and `type` in the definition it names, which is read where the
     // declaration holding that `$ref` sits, since a property declared twice is merged into one no graph holds
     const readProperty = isSchemaObject<S>(propertySchema)
