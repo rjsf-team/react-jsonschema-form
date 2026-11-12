@@ -1603,8 +1603,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     props.optionParent && parentConst !== undefined
       ? joinOptionExtraKeys<S>(props.optionParent, view.schema)
       : view.schema;
-  // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it
-  const takesExtraKeys = allowsAdditionalProperties<S, F>(context, extraKeysField);
+  // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it, and only of an
+  // object that stubs them or holds an object `const`, the two that need the answer
+  const takesExtraKeys =
+    (view.stubs || isObjectData(parentConst)) && allowsAdditionalProperties<S, F>(context, extraKeysField);
   // A field resolved the way `retrieveSchema()` resolves a schema has the extra keys of its data stubbed among its
   // `properties`
   const schema =
