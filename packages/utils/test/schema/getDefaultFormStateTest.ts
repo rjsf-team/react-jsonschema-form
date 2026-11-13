@@ -430,6 +430,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(utils(schema, requiredOnly).getDefaultFormState(schema)).toStrictEqual({ x: { k: { n: 'd' } } });
           }
         });
+        it('folds the keys of an open object const from the additionalProperties an allOf merges in beside its own', () => {
+          const merged: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                additionalProperties: { type: 'number' },
+                allOf: [{ additionalProperties: { type: 'number', default: 7 } }],
+                const: { c: 1 },
+              },
+            },
+          };
+          const plain: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: { type: 'object', additionalProperties: { type: 'number', default: 7 }, const: { c: 1 } },
+            },
+          };
+          // An `additionalProperties` default wins over the `const` for a key it computes, wherever it is declared
+          for (const schema of [merged, plain]) {
+            expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ x: { c: 7 } });
+          }
+        });
         it('folds a key of a const that only an unmerged allOf declares from that property, not the extra-key schema', () => {
           const withDefault: RJSFSchema = {
             type: 'object',

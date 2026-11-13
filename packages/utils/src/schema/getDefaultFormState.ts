@@ -1837,7 +1837,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       },
     );
   }
-  // Read from the field that decides whether the object takes extra keys, so the keys seeded are folded as it takes them
+  // Read from the field that decides whether the object takes extra keys, so the keys seeded are folded as it takes them,
+  // seeded where the field as retrieved holds them where that is the field
+  const extraKeySeeding = extraKeysField === view.schema ? view : retrievedView();
   const additionalProperties =
     absentKeywordAllows<S, F>(context, extraKeysField) || extraKeysField.additionalProperties;
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
@@ -1896,8 +1898,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         `additional:${key}`,
         // as per spec additionalProperties may be either schema or boolean
         defaultsChild(
-          view,
-          seedsAt(view, ADDITIONAL_PROPERTIES_KEY),
+          extraKeySeeding,
+          seedsAt(extraKeySeeding, ADDITIONAL_PROPERTIES_KEY),
           'additionalKey',
           isObject(additionalProperties) ? additionalProperties : emptySchema<S>(),
         ),
@@ -1933,7 +1935,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     mayHoldNullType(additionalProperties, rootSchema)
   ) {
     const nullsOnly = nullsOnlyContext(context);
-    const child = defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalProperties);
+    const child = defaultsChild(
+      extraKeySeeding,
+      seedsAt(extraKeySeeding, ADDITIONAL_PROPERTIES_KEY),
+      'additionalKey',
+      additionalProperties,
+    );
     Object.keys(formData)
       .filter((key) => !isComputed(key) && isPinned(key))
       .forEach((key) => {
