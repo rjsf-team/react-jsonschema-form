@@ -4384,7 +4384,10 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
 
     rerender(<Form ref={ref} schema={withDefault('y')} validator={validator} />);
 
-    expect(handleOf(ref).getFormData()).toEqual({ t: [{ a: 'y' }] });
+    expect(handleOf(ref).getFormData()).toEqual({ t: [{ a: 'y', k: 'A' }] });
+    const fresh = createRef<FormRef<Record<string, unknown>>>();
+    render(<Form ref={fresh} schema={withDefault('y')} validator={validator} />);
+    expect(handleOf(fresh).getFormData()).toEqual({ t: [{ a: 'y', k: 'A' }] });
   });
   // Applied only on mount, the initial value is filled out anew from a default of another length, as a fresh mount
   // with the new schema fills it
