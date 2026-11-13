@@ -2501,9 +2501,7 @@ export function ensureFormDataMatchingSchema<
 }
 
 /** The schema of the field `view` stands for, merged as `retrieveSchema()` merges it for the data the view was planned
- * with, its `dependencies` read against the dependency data the plan read them against, so that it takes the branch
- * the plan took. The fold, the object defaults and the data match of a field all read it, so it is merged once for
- * them
+ * with. The fold, the object defaults and the data match of a field all read it, so it is merged once for them
  */
 function mergedSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2511,7 +2509,7 @@ function mergedSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
 ): S {
   const { merged } = view;
   if (merged.schema === undefined || merged.context !== context) {
-    merged.schema = retrieveField<S, F>(context, fieldOfView<S>(view), view.data, view.depData);
+    merged.schema = retrieveField<S, F>(context, fieldOfView<S>(view), view.data);
     merged.context = context;
   }
   return merged.schema;
@@ -2553,7 +2551,11 @@ const constReach = new KeyedMemo<boolean | number | undefined>();
 /** How deep `mergeReachesConst()` is in its walk, the shallowest open node the nodes below have read, and the keys of
  * the nodes whose answer waits on the cycle they lead back to
  */
-const constWalk = { depth: 0, lowestRead: Infinity, unsettled: [] as (readonly unknown[])[] };
+const constWalk: { depth: number; lowestRead: number; unsettled: (readonly unknown[])[] } = {
+  depth: 0,
+  lowestRead: Infinity,
+  unsettled: [],
+};
 
 /** Whether any subschema retrieving the node `from` may merge in declares a `const`: one in its scope, see
  * `scopeNodes()`, which holds its `$ref`, `allOf`, `then`/`else` and `dependencies` subschemas but no `if`, a condition
@@ -2771,11 +2773,10 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   // `populateDefaults`, or the root's retrieval, already merged them away
   const mergesForData = !shouldRetrieveAllOf && formData !== undefined && holdsAnyOf(schemaToMatch, MERGING_KEYWORDS);
   const ownOptions = () => {
-    const { graph, seeds } = field();
-    if (formData === undefined || seeds.length === 0) {
+    if (formData === undefined) {
       return undefined;
     }
-    const own = buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } }).schema;
+    const own = buildPlan<S, F>({ context, ...field(), policy: { allOf: false, conditions: false } }).schema;
     return isConstant<S>(own) ? undefined : own;
   };
   const readSchema = mergesForData ? retrieve() : schemaToMatch;
