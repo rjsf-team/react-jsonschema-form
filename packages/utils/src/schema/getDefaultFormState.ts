@@ -562,6 +562,10 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * retrieves anew, and the extra-key schema it hands its children keeps its identity, so their memo hits
    */
   shareExtraKeySchema?: <V>(extraKeySchema: V) => V;
+  /** Whether the field's object `const`, its own, a branch's or its shown option's, is left out of its defaults, to
+   * tell whether anything else gives an optional object a value; its children's `const`s still count
+   */
+  leavesOutObjectConst?: boolean;
   /** Returns a view of the field as `SchemaField` retrieves it, settled once per view of the pass, so the `const` read
    * and the object's extra keys share one retrieve
    */
@@ -1122,13 +1126,14 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
   const constSchema = constSchemaOf<S>(view, props.retrievedViewOf);
-  const constDefault = constIsDefault<S>(constSchema, defaultFormStateBehavior);
+  const leavesOutConst = props.leavesOutObjectConst === true && isObjectData(constSchema[CONST_KEY]);
+  const constDefault = !leavesOutConst && constIsDefault<S>(constSchema, defaultFormStateBehavior);
   if (constDefault) {
     defaults = ownValue(constSchema[CONST_KEY]);
   }
   // An object `const` beside options is the object's defaults, but the option the object shows still renders beside
   // it, as `ObjectField` renders it, so that option is folded with the `const` as its parent's defaults
-  const foldsOptionUnderConst = xxxOf !== undefined && objectConstOf<S, F>(context, constSchema) !== undefined;
+  const foldsOptionUnderConst = xxxOf !== undefined && constDefault && isObjectData(constSchema[CONST_KEY]);
   if (constDefault && !foldsOptionUnderConst) {
     // The `const` is the field's defaults
   } else if (
@@ -1220,6 +1225,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (
       rawFormData === undefined &&
       !foldsOptionUnderConst &&
+      !(props.leavesOutObjectConst && isObjectData(toConstant<S>(choice.wholeOptions[choice.index]))) &&
       choice.context.defaultFormStateBehavior?.constAsDefaults !== 'never'
     ) {
       defaults = ownValue(toConstant<S>(choice.wholeOptions[choice.index]));
@@ -1729,7 +1735,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const rootSchema = view.field.graph.rawRoot;
   const retrieved = props.retrievedViewOf ?? ((field: DefaultsView<S>) => retrieveView<S, F>(context, field));
   const constSchema = constSchemaOf<S>(view, retrieved);
-  const parentConst = constSchema[CONST_KEY];
+  const parentConst = props.leavesOutObjectConst ? undefined : constSchema[CONST_KEY];
   // An object `const` the field defaults to, read as `foldView()` reads it
   const objectConst = objectConstOf<S, F>(context, constSchema);
   // `ObjectField` asks whether the user can add a key of the field as it renders it, retrieved for the data, its `allOf`
@@ -1851,16 +1857,14 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const declaring = seeding.schema;
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key, declaring);
     // An optional object the Optional Data Controls render behind their add control while the data holds nothing for it
-    // starts out without a value where only `const`s would give it one, its own, a branch's or its option's, as an
-    // empty default would: the `const` is its value once the user adds it. Whatever else gives it a value, a default of
-    // its own or of its properties, a `ui:initialValue` or the object's defaults, opens it as it opens any object
+    // starts out without a value where only an object `const` would give it one, its own, a branch's or its option's,
+    // as an empty default would: the `const` is its value once the user adds it. Whatever else gives it a value, a
+    // default or `const` of its properties, a default of its own, a `ui:initialValue` or the object's defaults, opens it
+    // as it opens any object
     if (
       nullFills !== undefined &&
       ownProps.rawFormData === undefined &&
-      ownProps.parentDefaults === undefined &&
-      !(getUiOptions<T, S, F>(ownProps.uiSchema).initialValue !== undefined && !initialDefaultsGenerated) &&
       isSchemaObject<S>(readProperty) &&
-      !(DEFAULT_KEY in readProperty) &&
       isCollapsedByOptionalDataControls<T, S, F>(readProperty, propertySchema, ownProps.uiSchema, {
         uiSchemaDefinitions,
         globalUiOptions: nullFills.globalUiOptions,
@@ -1869,15 +1873,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         formData: undefined,
       })
     ) {
-      const constsLeftOut = {
-        ...context,
-        defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' as const },
-      };
-      const withoutConsts = foldReporting(constsLeftOut, `withoutConsts:${key}`, child, {
+      const withoutConst = foldReporting(context, `withoutConst:${key}`, child, {
         ...ownProps,
         nullFills: { ...nullFills, isCollapsed: true },
+        leavesOutObjectConst: true,
       }).value;
-      if (withoutConsts === undefined || (isObjectData(withoutConsts) && Object.keys(withoutConsts).length === 0)) {
+      if (withoutConst === undefined || (isObjectData(withoutConst) && Object.keys(withoutConst).length === 0)) {
         return;
       }
     }

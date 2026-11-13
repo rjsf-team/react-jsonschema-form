@@ -652,6 +652,58 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const held: RJSFSchema = { type: 'array', items };
           expect(utils(held).getDefaultFormState(held, [{}], false, false, uiSchema)).toStrictEqual([{}]);
         });
+        it('opens an optional object that a property const gives a value, and collapses only an object const', () => {
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          const shapes: [RJSFSchema, unknown][] = [
+            [{ type: 'object', properties: { a: { type: 'string', const: 'k' } } }, { a: 'k' }],
+            [
+              { type: 'object', properties: { kind: { type: 'string', const: 'k' }, name: { type: 'string' } } },
+              { kind: 'k' },
+            ],
+            [
+              { type: 'object', properties: { a: { type: 'string', oneOf: [{ const: 'p' }, { const: 'q' }] } } },
+              { a: 'p' },
+            ],
+            [
+              {
+                type: 'object',
+                properties: { o: { type: 'object', properties: { a: { type: 'string', const: 'k' } } } },
+              },
+              { o: { a: 'k' } },
+            ],
+          ];
+          for (const [x, expected] of shapes) {
+            const schema: RJSFSchema = { type: 'object', properties: { x } };
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({
+              x: expected,
+            });
+          }
+          // A select over object constants is filled from the option it shows, and collapses as its own `const` does
+          const select: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] } },
+          };
+          expect(utils(select).getDefaultFormState(select, undefined, false, false, uiSchema)).toStrictEqual({});
+          expect(utils(select).getDefaultFormState(select)).toStrictEqual({ x: { a: 1 } });
+          // A `null` field beside the object `const` doesn't open it either
+          const withNull: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: { type: 'object', const: { a: 2 }, properties: { a: { type: 'number' }, n: { type: 'null' } } },
+            },
+          };
+          expect(utils(withNull).getDefaultFormState(withNull, undefined, false, false, uiSchema)).toStrictEqual({});
+          // Nor does a `ui:initialValue` once the defaults were generated, where it no longer applies
+          const initialValue = { ...uiSchema, x: { 'ui:initialValue': { a: 2 } } };
+          expect(utils(withNull).getDefaultFormState(withNull, {}, false, true, initialValue)).toStrictEqual({});
+          // An array is filled from its `const` under the controls for arrays, as without them
+          const arrays = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['array' as const] } };
+          const list: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'array', const: ['a'], items: { type: 'string' } } },
+          };
+          expect(utils(list).getDefaultFormState(list, undefined, false, false, arrays)).toStrictEqual({ x: ['a'] });
+        });
         it('reads a primitive const an unmerged allOf or if branch gives a field as the default the plan skips', () => {
           const viaAllOf: RJSFSchema = {
             type: 'object',
