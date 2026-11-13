@@ -2999,6 +2999,91 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it("fills a key an object's allOf requires through its fold as required under populateRequiredDefaults, as its own required property", () => {
+          const b: RJSFSchema = {
+            type: 'object',
+            required: ['c'],
+            properties: { c: { type: 'string', default: 'z' } },
+          };
+          const zz: RJSFSchema = { type: 'string' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', required: ['zz', 'b'], properties: { zz, b }, default: { b: {} } },
+              wrapped: {
+                type: 'object',
+                required: ['zz'],
+                properties: { zz },
+                default: { b: {} },
+                allOf: [{ required: ['b'], properties: { b } }],
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' } },
+              { schema, formData: { own: {}, wrapped: {} } },
+            ),
+          ).toStrictEqual({ own: { b: { c: 'z' } }, wrapped: { b: { c: 'z' } } });
+        });
+
+        it.each<[DefaultFormStateBehavior]>([
+          [{ constAsDefaults: 'always' }],
+          [{ emptyObjectFields: 'populateRequiredDefaults' }],
+          [{ emptyObjectFields: 'skipDefaults' }],
+        ])(
+          "fills a key the data lacks with the const of an object's allOf property, as of its own, under %j",
+          (behavior) => {
+            const a: RJSFSchema = { const: 'c' };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { a } },
+                wrapped: { type: 'object', allOf: [{ properties: { a } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: behavior },
+                { schema, formData: { own: {}, wrapped: {} } },
+              ),
+            ).toStrictEqual({ own: { a: 'c' }, wrapped: { a: 'c' } });
+          },
+        );
+
+        it("fills a key an object's allOf declares that the data holds as undefined with that property's default under useDefaultIfFormDataUndefined, as its own", () => {
+          const a: RJSFSchema = { enum: ['x', 'y'], default: 'x' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', properties: { a } },
+              wrapped: { type: 'object', allOf: [{ properties: { a } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              {
+                validator: testValidator,
+                defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+              },
+              { schema, formData: { own: { a: undefined }, wrapped: { a: undefined } } },
+            ),
+          ).toStrictEqual({ own: { a: 'x' }, wrapped: { a: 'x' } });
+        });
+
+        it("fills a key an object's allOf declares with a boolean schema from the object's default, as its own", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', default: { t: 5 }, properties: { t: true } },
+              wrapped: { type: 'object', default: { t: 5 }, allOf: [{ properties: { t: true } }] },
+            },
+          };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { own: {}, wrapped: {} } }),
+          ).toStrictEqual({ own: { t: 5 }, wrapped: { t: 5 } });
+        });
+
         it("folds the object's default for a key its allOf declares through that property, as for its own property", () => {
           const o: RJSFSchema = { type: 'object', properties: { y: { type: 'string', default: 'Y' } } };
           const schema: RJSFSchema = {

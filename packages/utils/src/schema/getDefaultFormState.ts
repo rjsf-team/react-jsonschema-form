@@ -1640,6 +1640,18 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
+  // Whether the property `key`, seeded by `seeds`, takes a `const`: one of its own, the object's `const` for it, or one
+  // its `allOf` or unmerged `if`/`then` brings in, read from its schema merged for its data where a merge can reach
+  // one, as the fold takes it
+  const holdsConst = (key: string, graph: SchemaGraph<S>, seeds: readonly Seed[], readProperty: S) =>
+    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    !constIsAjvDataReference(readProperty) &&
+    ((isObject(readProperty) && CONST_KEY in readProperty) ||
+      getByPath(parentConst, key) !== undefined ||
+      (isSchemaObject<S>(readProperty) &&
+        holdsAnyOf(readProperty, MERGING_KEYWORDS) &&
+        seeds.some(({ node }) => mergeReachesConst<S>(graph, node)) &&
+        constValueOf<S>(retrieveField<S, F>(context, rootProvenance<S>(graph, seeds), formData[key])) !== undefined));
   const childProps = (key: string, uiSchemaKey: string) => ({
     includeUndefinedValues: includeUndefinedValues === true,
     parentDefaults: getByPath(defaults, key),
@@ -1685,20 +1697,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const readProperty = isSchemaObject<S>(propertySchema)
       ? resolveMergedOwnRef<S>(view.graph, seeds, propertySchema, context.customMergeAllOf)
       : propertySchema;
-    // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
-    // should always return the computedDefault since it's coming from the const.
-    const hasParentConst = getByPath(parentConst, key) !== undefined;
-    // A `const` the property's `allOf` or unmerged `if`/`then` brings in counts as its own, as the fold takes it, so it
-    // is read from the property's schema merged for its data where a merge can reach one
-    const mergesConst = () =>
-      isSchemaObject<S>(readProperty) &&
-      holdsAnyOf(readProperty, MERGING_KEYWORDS) &&
-      seeds.some(({ node }) => mergeReachesConst<S>(view.graph, node)) &&
-      constValueOf<S>(retrieveField<S, F>(context, rootProvenance<S>(view.graph, seeds), formData[key])) !== undefined;
-    const hasConst =
-      defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-      !constIsAjvDataReference(readProperty) &&
-      ((isObject(readProperty) && CONST_KEY in readProperty) || hasParentConst || mergesConst());
+    // Worked out only where a default is added, as the data holds most keys on an edit
+    const hasConst = () => holdsConst(key, view.graph, seeds, readProperty);
     // A property stubbed by `stubExistingAdditionalProperties()` from `additionalProperties`/`patternProperties`
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.
@@ -1733,7 +1733,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         required,
         schema.required,
         defaultFormStateBehavior?.emptyObjectFields,
-        hasConst,
+        hasConst(),
       );
       if (isFormDataAvailable(added[key])) {
         property = foldReporting(context, `property:${key}`, child, ownProps);
@@ -1767,7 +1767,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         required,
         schema.required,
         defaultFormStateBehavior?.emptyObjectFields,
-        hasConst,
+        hasConst(),
         property.holdsNull,
       );
     }
@@ -1888,12 +1888,16 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         }
       });
   }
-  // A key only an `allOf` the plan left unmerged declares takes the object's default where the data lacks it, or holds
-  // it as `undefined` that `mergeDefaultsIntoFormData` says a default replaces, as a property of the object's own does,
-  // whatever the object says about other keys, and is required where the merged schema requires it. The default is
-  // folded through the property the merge gives the key, as one the object declares is through its own
-  if (isObject(defaults)) {
-    Object.keys(defaults)
+  // A key only an `allOf` the plan left unmerged declares is filled as a property of the object's own is, where the
+  // data lacks it or holds it as `undefined` that `mergeDefaultsIntoFormData` says a default replaces: its default is
+  // folded through the property the merge gives it, and it is required where the merged schema requires it. One that
+  // holds a `null` fill was added, and reported, by `branchNullFills()` above. Under `allOf: 'skipDefaults'` the
+  // `allOf`'s own defaults don't fill a key the data lacks, so one is filled only where the object's default names it
+  // or a `const` gives it its value
+  if (ALL_OF_KEY in view.schema) {
+    const mergedSchema = mergedSchemaOf<S, F>(context, view);
+    const rootGraph = parseSchemaGraph<S>(rootSchema);
+    Object.keys(mergedSchema.properties ?? {})
       .filter(
         (key) =>
           (!Object.hasOwn(formData, key) ||
@@ -1904,17 +1908,30 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
           declaredInAllOf(key),
       )
       .forEach((key) => {
-        const mergedSchema = mergedSchemaOf<S, F>(context, view);
-        const { graph, seeds } = fieldOf<S>(parseSchemaGraph<S>(rootSchema), getPropertySchema<S>(mergedSchema, key));
-        const child: DefaultsField<S> = { graph, seeds, expanded: view.field.expanded, edge: 'property' };
+        // A boolean property names no field of its own, so it has nothing to fold and holds no `const`
+        const propertySchema = getPropertySchema<S>(mergedSchema, key);
+        const field = isSchemaObject<S>(propertySchema) ? fieldOf<S>(rootGraph, propertySchema) : undefined;
+        const isConst = field !== undefined && holdsConst(key, field.graph, field.seeds, propertySchema);
+        if (!Object.hasOwn(formData, key) && getByPath(defaults, key) === undefined && !isConst) {
+          return;
+        }
+        const ownProps = { ...childProps(key, key), required: mergedSchema.required?.includes(key) };
         maybeAddDefaultToObject(
           computed,
           key,
-          foldReporting(context, `allOf:${key}`, child, childProps(key, key)).value,
+          field === undefined
+            ? ownProps.parentDefaults
+            : foldReporting(
+                context,
+                `allOf:${key}`,
+                { ...field, expanded: view.field.expanded, edge: 'property' },
+                ownProps,
+              ).value,
           includeUndefinedValues,
           required,
           mergedSchema.required,
           defaultFormStateBehavior?.emptyObjectFields,
+          isConst,
         );
       });
   }
