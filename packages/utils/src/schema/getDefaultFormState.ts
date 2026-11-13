@@ -1638,6 +1638,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // extra-key keywords joined to it. Only a `const` the field defaults to changes what is computed from the answer, so
   // the retrieve and the join are spared every other field
   const optionOf = objectConst === undefined ? undefined : props.optionOf;
+  // The field as `SchemaField` retrieves it, for the data the fold reads, which the branch `null` fill reads as well
+  const retrievedView = computedOnce(() =>
+    settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options),
+  );
   let extraKeysField = view.schema;
   if (optionOf) {
     extraKeysField = joinOptionExtraKeys<S>(optionOf.parent(), optionOf.option());
@@ -1646,7 +1650,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     !view.field.retrieves &&
     MERGING_KEYWORDS.some((keyword) => Object.hasOwn(view.schema, keyword))
   ) {
-    extraKeysField = retrieveSchema<unknown, S, F>(context, view.schema, rootSchema, rawFormData);
+    extraKeysField = retrievedView().schema;
   }
   if (extraKeysField !== view.schema && props.shareRendered) {
     extraKeysField = props.shareRendered(extraKeysField);
@@ -1822,7 +1826,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
     mayHoldNullType(view.schema, rootSchema)
   ) {
-    branchNullFills<T, S, F>(context, view, schema, props, foldReporting, unmergedProperties).forEach(
+    branchNullFills<T, S, F>(context, retrievedView(), schema, props, foldReporting, unmergedProperties).forEach(
       ({ key, value }) => {
         setOwn(computed, key, value);
         fillOverUndefined(nullFills, rawFormData, key, value);
@@ -1986,7 +1990,7 @@ function extraKeyKeepsData(data: unknown, value: unknown): boolean {
  * branches would default.
  *
  * @param context - The `SchemaContext` the defaults are computed in
- * @param view - The object field's view
+ * @param retrieved - The object field's view as `SchemaField` retrieves it
  * @param schema - The object's schema, its extra keys stubbed where the field stubs them
  * @param props - The props of the object field
  * @param foldReporting - Computes a child's defaults, reporting whether they hold a `null` fill
@@ -1995,7 +1999,7 @@ function extraKeyKeepsData(data: unknown, value: unknown): boolean {
  */
 function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  view: DefaultsView<S>,
+  retrieved: DefaultsView<S>,
   schema: S,
   props: FoldProps<T, S, F>,
   foldReporting: (
@@ -2008,9 +2012,8 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
 ): { key: string; value: unknown }[] {
   const { rawFormData, uiSchema, uiSchemaDefinitions, nullFills } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
-  const retrieved = settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
   const rendered = allowsAdditionalProperties<S, F>(context, retrieved.schema)
-    ? stubExistingAdditionalProperties<unknown, S, F>(context, retrieved.schema, view.graph.rawRoot, formData)
+    ? stubExistingAdditionalProperties<unknown, S, F>(context, retrieved.schema, retrieved.graph.rawRoot, formData)
     : retrieved.schema;
   const nullsOnly = nullsOnlyContext(context);
   const ownProperties = schema.properties ?? {};
