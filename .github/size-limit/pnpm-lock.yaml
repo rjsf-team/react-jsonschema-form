@@ -199,12 +199,12 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  lilconfig@3.1.3:
-    resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
+  lilconfig@3.1.5:
+    resolution: {integrity: sha512-aRAOI9Ia43ygL4o1EOmC/sc/0OFxrm7qcQngiIyWaqVnSnz932ybJ07zyCcgMNGSDP8Yxaf88Xj1zHEXmvQ4SA==}
     engines: {node: '>=14'}
 
-  nanoid@6.0.1:
-    resolution: {integrity: sha512-3wVS3i51pE2pi1k5FFL/95BGfVS0kSsvDVuGXHOtxox/TywUmtgq+3qiTOTbs9J7KfHaXPiN171k/A6dBnaXFw==}
+  nanoid@6.0.2:
+    resolution: {integrity: sha512-hIvVOb9Qr1p/9CNNLOe0OlWvgx/ziTsVwKN/GDSsuArN2K0wDiafP3s0SWmsm7o2BdnyS8Z9Z64NFBUbn6ziBg==}
     engines: {node: ^22 || ^24 || >=26}
     hasBin: true
 
@@ -302,7 +302,7 @@ snapshots:
   '@size-limit/esbuild@13.0.3(size-limit@13.0.3)':
     dependencies:
       esbuild: 0.28.2
-      nanoid: 6.0.1
+      nanoid: 6.0.2
       size-limit: 13.0.3
 
   '@size-limit/file@13.0.3(size-limit@13.0.3)':
@@ -346,9 +346,9 @@ snapshots:
       '@esbuild/win32-ia32': 0.28.2
       '@esbuild/win32-x64': 0.28.2
 
-  lilconfig@3.1.3: {}
+  lilconfig@3.1.5: {}
 
-  nanoid@6.0.1: {}
+  nanoid@6.0.2: {}
 
   nanospinner@1.2.2:
     dependencies:
@@ -359,5 +359,5 @@ snapshots:
   size-limit@13.0.3:
     dependencies:
       bytes-iec: 3.1.1
-      lilconfig: 3.1.3
+      lilconfig: 3.1.5
       nanospinner: 1.2.2
