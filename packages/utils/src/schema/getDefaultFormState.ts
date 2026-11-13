@@ -2532,27 +2532,32 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
   const outerRead = constWalk.lowestRead;
   constWalk.lowestRead = Infinity;
   constReach.set(keys, depth);
-  const scope = scopeNodes<S>(graph, from, 'conditional');
-  const holds = (id: NodeId, keyword: string) => {
-    const node = graph.node(id);
-    return node.kind === 'schema' && Object.hasOwn(node.raw, keyword);
-  };
-  const readsOptions = withOptions || scope.some((id) => holds(id, DEPENDENCIES_KEY));
-  const reaches = scope.some(
-    (id) =>
-      holds(id, CONST_KEY) ||
-      (readsOptions &&
-        [ANY_OF_KEY, ONE_OF_KEY].some((keyword) =>
-          graph.subschemas(id, keyword).some(([, option]) => mergeReachesConst<S>(graph, option, true)),
-        )),
-  );
-  constWalk.depth -= 1;
-  // A `const` found stays found, but none found may be only because an open node above read as none, so that answer
-  // is worked out again once the node is settled
-  const readAbove = constWalk.lowestRead < depth;
-  constReach.set(keys, reaches || !readAbove ? reaches : undefined);
-  constWalk.lowestRead = Math.min(outerRead, readAbove ? constWalk.lowestRead : Infinity);
-  return reaches;
+  let reaches: boolean | undefined;
+  try {
+    const scope = scopeNodes<S>(graph, from, 'conditional');
+    const holds = (id: NodeId, keyword: string) => {
+      const node = graph.node(id);
+      return node.kind === 'schema' && Object.hasOwn(node.raw, keyword);
+    };
+    const readsOptions = withOptions || scope.some((id) => holds(id, DEPENDENCIES_KEY));
+    reaches = scope.some(
+      (id) =>
+        holds(id, CONST_KEY) ||
+        (readsOptions &&
+          [ANY_OF_KEY, ONE_OF_KEY].some((keyword) =>
+            graph.subschemas(id, keyword).some(([, option]) => mergeReachesConst<S>(graph, option, true)),
+          )),
+    );
+    return reaches;
+  } finally {
+    // The walk is left as it was entered even where the graph throws, so no node stays open. A `const` found stays
+    // found, but none found may be only because an open node above read as none, so that answer is worked out again
+    // once the node is settled, as one the walk never finished is
+    constWalk.depth -= 1;
+    const readAbove = constWalk.lowestRead < depth;
+    constReach.set(keys, reaches === true || !readAbove ? reaches : undefined);
+    constWalk.lowestRead = Math.min(outerRead, readAbove ? constWalk.lowestRead : Infinity);
+  }
 }
 
 /** The field `view` stands for, see `viewField()`, built once for the view */

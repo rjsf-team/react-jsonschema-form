@@ -1467,4 +1467,14 @@ describe('mergeReachesConst()', () => {
     expect(mergeReachesConst(graph, node('/definitions/P/oneOf/0'), true)).toBe(true);
     expect(mergeReachesConst(graph, node('/definitions/P/oneOf/0/oneOf/0'), true)).toBe(true);
   });
+
+  it('leaves no node open where the graph throws', () => {
+    const graph = parseSchemaGraph({ definitions: { c: { const: 'x' } } });
+    const unknown = 1_000_000;
+    expect(() => mergeReachesConst(graph, unknown, true)).toThrow(RangeError);
+    // A node left open would answer `false` now instead of throwing again
+    expect(() => mergeReachesConst(graph, unknown, true)).toThrow(RangeError);
+    const known = graph.byPointer('/definitions/c');
+    expect(known !== undefined && mergeReachesConst(graph, known, true)).toBe(true);
+  });
 });
