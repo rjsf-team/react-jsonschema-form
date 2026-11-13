@@ -1919,10 +1919,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         declarationsOf<S>(matchedSchema),
         rootSchema,
         formData,
-        !populatesAllOf,
-        populatesAllOf,
-        unmerged,
-        defaults,
+        { unfolded: !populatesAllOf, retrievesAll: populatesAllOf, keys: unmerged, defaults },
       );
     }
     // A value the merged schema rejects has taken the defaults in the match, since the fold computed none for it
@@ -2739,18 +2736,11 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   if (fieldConst !== undefined) {
     validFormData = fieldConst;
   } else if (isObject(validFormData)) {
-    validFormData = matchProperties<S, F>(
-      context,
-      readSchema,
-      matched,
-      declarations,
-      rootSchema,
-      validFormData,
-      nestedUnfolded,
-      shouldRetrieveAllOf,
-      undefined,
+    validFormData = matchProperties<S, F>(context, readSchema, matched, declarations, rootSchema, validFormData, {
+      unfolded: nestedUnfolded,
+      retrievesAll: shouldRetrieveAllOf,
       defaults,
-    );
+    });
   }
 
   return asDeclared<T | T[] | undefined>(validFormData);
@@ -2765,14 +2755,24 @@ function declarationsOf<S extends StrictRJSFSchema>({ field, chains }: MatchedSc
   };
 }
 
+/** How `matchProperties()` matches the properties of object data */
+interface PropertyMatch {
+  /** Whether the fold computed none of the properties, see `formDataMatching()` */
+  readonly unfolded: boolean;
+  /** Whether every property is retrieved, as `allOf: 'populateDefaults'` retrieves them */
+  readonly retrievesAll: boolean;
+  /** The only properties matched, where given, the others kept as the data holds them */
+  readonly keys?: ReadonlySet<string>;
+  /** The object's defaults, which a value an unfolded property rejects takes first */
+  readonly defaults?: unknown;
+}
+
 /** Returns the object data `data` with each property `readSchema` declares matched to the schema of that property, as
  * `formDataMatching()` matches it, where it may reject the value: a value that doesn't match is left out, so the
  * property takes its defaults as one the data lacks does. `declarations` gives the declarations of `matchedSchema`, see
- * `declarationsOf()`, `unfolded` says the fold computed none of the properties, see `formDataMatching()`,
- * `retrievesAll` that every property is retrieved, as `allOf: 'populateDefaults'` retrieves them, and `keys`, where
- * given, names the only properties matched, the others kept as the data holds them. As the fold computes none of an
- * unfolded property, a value one rejects takes its default here, from `defaults`, the object's defaults, or else the
- * property's own; with neither, a value that is no object is kept, as a select keeps one its options don't offer
+ * `declarationsOf()`, and `match` how the properties are matched. As the fold computes none of an unfolded property, a
+ * value one rejects takes its default here, from the object's defaults, or else the property's own; with neither, a
+ * value that is no object is kept, as a select keeps one its options don't offer
  */
 function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2781,10 +2781,7 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
   declarations: () => Seeding<S>,
   rootSchema: S,
   data: GenericObjectType,
-  unfolded: boolean,
-  retrievesAll: boolean,
-  keys?: ReadonlySet<string>,
-  defaults?: unknown,
+  { unfolded, retrievesAll, keys, defaults }: PropertyMatch,
 ): GenericObjectType {
   if (!isObject(readSchema.properties)) {
     return data;
