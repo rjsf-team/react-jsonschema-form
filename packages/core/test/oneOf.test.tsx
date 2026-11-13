@@ -6052,8 +6052,8 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
     });
 
     // The sanitize clears data the new option's object `const` or `enum` rejects. The switch then defaults the object to
-    // the option's `const`, whose key is an extra key where the option doesn't declare it, and leaves an `enum`'s clear
-    // as v7 does
+    // the option's `const`, whose key is an extra key where the option doesn't declare it, and leaves an `enum`'s clear,
+    // since an `enum` lists values for the user to pick from rather than one to default to
     it.each<{ declares: string; option: RJSFSchema; expected: unknown; extraKey: boolean }>([
       {
         declares: 'a const beside properties',

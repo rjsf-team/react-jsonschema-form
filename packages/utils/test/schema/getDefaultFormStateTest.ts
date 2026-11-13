@@ -250,6 +250,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             a: [{ x: 1, y: 2 }, { x: 3 }],
           });
         });
+        it('fills a key of a const that closes the object held as NaN, and keeps one held as another kind of object', () => {
+          expect(utils(bare).getDefaultFormState(bare, { a: Number.NaN }, false, true)).toStrictEqual({ a: 1 });
+          class Holder {
+            b = 2;
+          }
+          const held = new Holder();
+          const nested: RJSFSchema = { type: 'object', const: { a: { b: 1, c: 2 } } };
+          const state = utils(nested).getDefaultFormState(nested, { a: held }, false, true);
+          expect(isObject(state) && state.a).toBe(held);
+        });
         it("keeps an array of a const that closes the object as the user's where its items differ from the const's", () => {
           const list: RJSFSchema = { type: 'object', const: { a: [1, 2] } };
           expect(utils(list).getDefaultFormState(list, { a: [3] })).toStrictEqual({ a: [3] });
@@ -263,6 +273,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const context = { validator: testValidator, ...absent };
           expect(getObjectDefaults(context, bare, { includeUndefinedValues: true })).toStrictEqual({});
           expect(getObjectDefaults(context, bare, { includeUndefinedValues: true }, { a: 1 })).toStrictEqual({ a: 1 });
+          // A `const` an `allOf` gives the object is read from the object retrieved
+          const viaAllOf: RJSFSchema = { type: 'object', allOf: [{ const: { a: 1 } }] };
+          expect(getObjectDefaults(context, viaAllOf, {}, { a: 1 })).toStrictEqual({ a: 1 });
         });
         it('keeps an empty object the const holds', () => {
           const emptyMeta: RJSFSchema = { type: 'object', const: { meta: {} } };
@@ -579,6 +592,65 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               x: { a: 2 },
             });
           }
+          // So does a `ui:initialValue`
+          const withProperty: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', const: { a: 2 }, properties: { a: { type: 'number' } } } },
+          };
+          const initialValue = { ...uiSchema, x: { 'ui:initialValue': { a: 2 } } };
+          for (const schema of [withProperty, withY]) {
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, initialValue)).toStrictEqual({
+              x: { a: 2 },
+            });
+          }
+          // The `const` of the option the object shows collapses it as its own does
+          const viaOption: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: { type: 'object', oneOf: [{ const: { a: 1 } }, { properties: { b: { type: 'string' } } }] },
+            },
+          };
+          expect(utils(viaOption).getDefaultFormState(viaOption, undefined, false, false, uiSchema)).toStrictEqual({});
+          // An optional object without a `const` that a default of one of its properties gives a value opens, with the
+          // `null` of its `null` field
+          const withNull: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                properties: { n: { type: 'null' }, s: { type: 'string', default: 'd' } },
+              },
+            },
+          };
+          expect(utils(withNull).getDefaultFormState(withNull, undefined, false, false, uiSchema)).toStrictEqual({
+            x: { n: null, s: 'd' },
+          });
+          // and stays out where the form adds only the defaults of what is required
+          const requiredInside: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                required: ['s'],
+                properties: { n: { type: 'null' }, s: { type: 'string', default: 'd' } },
+              },
+            },
+          };
+          expect(
+            utils(requiredInside, { emptyObjectFields: 'populateRequiredDefaults' }).getDefaultFormState(
+              requiredInside,
+              undefined,
+              false,
+              false,
+              uiSchema,
+            ),
+          ).toStrictEqual({});
+          // An item `minItems` adds collapses it as an item the data holds does
+          const items: RJSFSchema = { type: 'object', properties: { x: { type: 'object', const: { a: 2 } } } };
+          const filled: RJSFSchema = { type: 'array', minItems: 1, items };
+          expect(utils(filled).getDefaultFormState(filled, undefined, false, false, uiSchema)).toStrictEqual([{}]);
+          const held: RJSFSchema = { type: 'array', items };
+          expect(utils(held).getDefaultFormState(held, [{}], false, false, uiSchema)).toStrictEqual([{}]);
         });
         it('reads a primitive const an unmerged allOf or if branch gives a field as the default the plan skips', () => {
           const viaAllOf: RJSFSchema = {
@@ -593,6 +665,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(viaThen, { emptyObjectFields: 'skipEmptyDefaults' }).getDefaultFormState(viaThen)).toStrictEqual(
             {},
           );
+        });
+        it("keeps an extra key the option's own retrieve stubs as the user's once the defaults were generated", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                properties: { p: { type: 'string' } },
+                oneOf: [
+                  {
+                    const: { a: { z: 1 } },
+                    additionalProperties: { type: 'object', properties: { m: { type: 'number', default: 3 } } },
+                  },
+                  { properties: { q: { type: 'string' } } },
+                ],
+              },
+            },
+          };
+          // `a` is an extra key of the open object, not a property the option declares, so it isn't filled again (#3759)
+          expect(utils(schema).getDefaultFormState(schema, { x: { a: {} } }, false, true)).toStrictEqual({
+            x: { a: {} },
+          });
         });
         it('asks whether an object const beside options takes extra keys with the shown option joined', () => {
           const open: RJSFSchema = {

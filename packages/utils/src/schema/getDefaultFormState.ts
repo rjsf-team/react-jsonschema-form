@@ -853,7 +853,7 @@ function constSchemaOf<S extends StrictRJSFSchema>(
   retrieved: (view: DefaultsView<S>) => DefaultsView<S>,
 ): S {
   const { schema } = view;
-  if (schema[CONST_KEY] !== undefined || view.field.retrieves) {
+  if (schema[CONST_KEY] !== undefined || view.field.retrieves || !(ALL_OF_KEY in schema || IF_KEY in schema)) {
     return schema;
   }
   const branches: unknown[] = [...(Array.isArray(schema.allOf) ? schema.allOf : [])];
@@ -1735,6 +1735,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
   const retrieved = props.retrievedViewOf ?? retrieveViewOf(context);
+  const constsLeftOut = computedOnce(() => ({
+    ...context,
+    defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' as const },
+  }));
   const constSchema = constSchemaOf<S>(view, retrieved);
   const parentConst = constSchema[CONST_KEY];
   // An object `const` the field defaults to, read as `foldView()` reads it
@@ -1858,13 +1862,16 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const declaring = seeding.schema;
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key, declaring);
     // An optional object the Optional Data Controls render behind their add control while the data holds nothing for it
-    // starts out without a value, its object `const` included, as an empty default would: the `const` is its value once
-    // the user adds it. A default of its own, or one the object's defaults give it, opens it as it opens any object
+    // starts out without a value where only `const`s would give it one, its own, a branch's or its option's, as an
+    // empty default would: the `const` is its value once the user adds it. Whatever else gives it a value, a default of
+    // its own or of its properties, a `ui:initialValue` or the object's defaults, opens it as it opens any object
     if (
       nullFills !== undefined &&
       ownProps.rawFormData === undefined &&
       ownProps.parentDefaults === undefined &&
+      !(getUiOptions<T, S, F>(ownProps.uiSchema).initialValue !== undefined && !initialDefaultsGenerated) &&
       isSchemaObject<S>(readProperty) &&
+      !(DEFAULT_KEY in readProperty) &&
       isCollapsedByOptionalDataControls<T, S, F>(readProperty, propertySchema, ownProps.uiSchema, {
         uiSchemaDefinitions,
         globalUiOptions: nullFills.globalUiOptions,
@@ -1873,11 +1880,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         formData: undefined,
       })
     ) {
-      const childView = settle(context, child, undefined, undefined);
-      if (
-        childView.schema[DEFAULT_KEY] === undefined &&
-        objectConstOf<S, F>(context, constSchemaOf<S>(childView, retrieveViewOf(context))) !== undefined
-      ) {
+      const withoutConsts = foldReporting(constsLeftOut(), `withoutConsts:${key}`, child, {
+        ...ownProps,
+        nullFills: { ...nullFills, isCollapsed: true },
+      }).value;
+      if (withoutConsts === undefined || (isObjectData(withoutConsts) && Object.keys(withoutConsts).length === 0)) {
         return;
       }
     }
@@ -2143,12 +2150,13 @@ function fillFromConst(constValue: unknown, data: unknown): unknown {
     return constValue;
   }
   if (Array.isArray(constValue) && Array.isArray(data)) {
-    const filled: unknown[] = data.map((item: unknown, index) =>
-      index < constValue.length ? fillFromConst(constValue[index], item) : item,
-    );
-    const prefix: unknown[] = constValue.slice(0, filled.length);
+    if (data.length > constValue.length) {
+      return data;
+    }
+    const filled: unknown[] = data.map((item: unknown, index) => fillFromConst(constValue[index], item));
+    const prefix: unknown[] = constValue.slice(0, data.length);
     // Equal items keep the `const`'s identity, so a prefix of the `const` is the one `replaceEqualDeep()` hands back
-    return filled.length <= constValue.length && replaceEqualDeep(prefix, filled) === prefix ? constValue : data;
+    return replaceEqualDeep(prefix, filled) === prefix ? constValue : data;
   }
   if (isPlainObject(constValue) && isPlainObject(data)) {
     const filled: GenericObjectType = { ...data };
@@ -2411,7 +2419,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
         context,
         `filler:${i}`,
         itemField(view, AdditionalItemsHandling.Invert),
-        { ...itemProps(defaultsLength + i), parentDefaults: fillerDefault, nullFills: undefined },
+        { ...itemProps(defaultsLength + i), parentDefaults: fillerDefault },
         memo,
       ),
     );

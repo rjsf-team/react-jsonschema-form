@@ -5269,7 +5269,7 @@ describe('ObjectField', () => {
     });
 
     expect(node.querySelector('#root_x__optionalAdd')).toBeInTheDocument();
-    expect(getFormData()).toEqual({});
+    expect(getFormData()).toStrictEqual({});
 
     await user.click(elementOf(node, '#root_x__optionalAdd'));
 
