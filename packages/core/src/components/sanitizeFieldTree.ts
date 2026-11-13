@@ -25,6 +25,7 @@ import {
   getPrefixLength,
   getRenderedOptionSchema,
   getSchemaType,
+  getUiOptions,
   getXxxOfOptions,
   GUESSED_TYPE_FLAG,
   hasSchemaMarker,
@@ -37,11 +38,11 @@ import {
   namesEveryType,
   ONE_OF_KEY,
   rendersOwnFieldBesideOption,
+  resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   setOwn,
   toConstant,
   UI_DEFINITIONS_KEY,
-  UI_OPTIONS_KEY,
   unsetByPath,
 } from '@rjsf/utils';
 
@@ -94,10 +95,6 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
    * filled with another default, and none is skipped
    */
   isDefaultsChanged: boolean;
-  /** Whether the previous tree's uiSchema declares a `ui:initialValue` anywhere, worked out once on first asking */
-  oldDeclaresInitialValue: () => boolean;
-  /** Whether the previous tree's `ui:definitions` declare a `ui:initialValue`, worked out once on first asking */
-  oldDefinitionsDeclareInitialValue: () => boolean;
 }
 
 /** The values a disabled or read-only form's sanitize judges, see `sanitizeFieldTree()`: each key holding `undefined`,
@@ -440,8 +437,9 @@ function judge<S extends StrictRJSFSchema>(
     !newLayers.some((layer) => isWholeValueSelect<S>(layer)) &&
     fillsKeyByKey(newLayers, isItem);
   // A value equal to the new default is still judged by the rest, since a new `const` or `enum` can reject it. What the
-  // old field's defaults filled in from the `default` it declared, as through a `ui:initialValue` or filled out to
-  // `minItems`, is theirs too, though not what they compute for a field declaring none, as a required boolean's `false`
+  // old field's defaults filled out from the `default` it declared, to `minItems` or below it through a
+  // `ui:initialValue`, is theirs too, though not what they compute for a field declaring none, as a required boolean's
+  // `false`, nor what its own `ui:initialValue` replaced the default with
   const isNewDefault = newDefault === undefined || deepEquals(newDefault, value);
   if (!isNewDefault && !isFilledByKey()) {
     if (isOldDefault) {
@@ -614,9 +612,7 @@ function oldFieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextTyp
  * old data without the field's value, under the options the old tree showed, and sees the uiSchema, the `required`
  * and the defaults above the field.
  *
- * A field with no old path has only its own fill: there is no old data around it for the form's to read. Where
- * `isOwnFillEnough`, the form's fill isn't asked either, since it fills the whole form, once per field asked, see
- * `isFilledOut()`.
+ * A field with no old path has only its own fill: there is no old data around it for the form's to read.
  *
  * Without its value the field holds no data, so the form's fill picks its own option by its `default`, as
  * `getDefaultFormState()` does for a field with no data whatever it is told it shows, and evaluates its
@@ -630,17 +626,11 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   oldPath: FieldPathList | undefined,
   shownAbove: ShownAbove | undefined,
   value: unknown,
-  isOwnFillEnough = false,
 ): boolean {
-  const { oldSchemaUtils } = ctx;
-  const ownFill = oldLayers.reduceRight<unknown>(
-    (filled, layer) => oldSchemaUtils.getDefaultFormState(layer, asFieldValue<T>(filled)),
-    oldDefault,
-  );
-  if (deepEquals(ownFill, value)) {
+  if (isOwnFill(ctx.oldSchemaUtils, oldLayers, oldDefault, value)) {
     return true;
   }
-  if (oldPath === undefined || isOwnFillEnough) {
+  if (oldPath === undefined) {
     return false;
   }
   const withoutValue = copyAlongPath(ctx.oldData, oldPath);
@@ -653,6 +643,82 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const formFill = ctx.fillAsFirstRender(ctx.oldTree, asFieldValue<T>(withoutValue), oldFieldStateOf(ctx, shownAbove));
   return deepEquals(getByPath(formFill, oldPath), value);
+}
+
+/** Whether `value` is what the field's own fill fills it with, starting from the option it showed and, as its data,
+ * the default the defaults fill it with
+ */
+function isOwnFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  oldSchemaUtils: SchemaUtilsType<T, S, F>,
+  oldLayers: readonly S[],
+  oldDefault: unknown,
+  value: unknown,
+): boolean {
+  const ownFill = oldLayers.reduceRight<unknown>(
+    (filled, layer) => oldSchemaUtils.getDefaultFormState(layer, asFieldValue<T>(filled)),
+    oldDefault,
+  );
+  return deepEquals(ownFill, value);
+}
+
+/** The key the field `isFilledOutFromDefault()` fills alone sits at in the object holding it */
+const FILLED_KEY = 'field';
+
+/** Whether `value` is what the old defaults filled the field out to from the default they filled it with, padded to
+ * `minItems` or filled below through a `ui:initialValue`, which its own fill, holding that default as data, leaves
+ * out. The field is filled alone, as the property of an object whose `default` hands it `oldDefault`, with the
+ * `required` it had and each uiSchema the old one can render it with, see `uiSchemasOn()`, so the fill costs the field
+ * rather than the form. A scalar is never filled out, and a value the field's own `ui:initialValue` filled holds none
+ * of its default, since the initial value replaces it, and the field, keeping its uiSchema, still shows it on a fresh
+ * mount. A key a switch put back is the exception, judged against the option switched away from, whose uiSchema is
+ * read as no longer rendering it, so its own `ui:initialValue` is counted, a scalar's included
+ */
+function isFilledOutFromDefault<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  oldRaw: S,
+  oldDefault: unknown,
+  isItem: boolean,
+  isRequired: boolean,
+  oldPath: FieldPathList | undefined,
+  value: unknown,
+): boolean {
+  // Only a key a switch put back is walked with the old option's selections
+  const isSwitchedAway = ctx.oldUiState !== ctx.uiState;
+  if (!isSwitchedAway && (typeof value !== 'object' || value === null)) {
+    return false;
+  }
+  const { oldSchemaUtils } = ctx;
+  const uiSchemaDefinitions = ctx.oldTree.uiSchema?.[UI_DEFINITIONS_KEY];
+  const registry = { rootSchema: oldSchemaUtils.getRootSchema(), uiSchemaDefinitions };
+  // An array fills out each row its data holds, from the item's own `default` and by the array's `required`, whatever
+  // `emptyObjectFields` says of writing a property, so an item is filled as the one row of an array property
+  const holder = {
+    type: 'object',
+    properties: { [FILLED_KEY]: isItem ? { type: 'array', items: { ...oldRaw, [DEFAULT_KEY]: oldDefault } } : oldRaw },
+    required: isRequired ? [FILLED_KEY] : [],
+    ...(isItem ? {} : { default: { [FILLED_KEY]: oldDefault } }),
+  } as unknown as S;
+  const data = isItem ? ({ [FILLED_KEY]: [undefined] } as T) : undefined;
+  const at = isItem ? [FILLED_KEY, 0] : [FILLED_KEY];
+  const uiSchemas = oldPath === undefined ? [] : uiSchemasOn(ctx, oldPath);
+  return (uiSchemas.length === 0 ? [{}] : uiSchemas).some((found) => {
+    const uiSchema = found as UiSchema<T, S, F>;
+    if (
+      !isSwitchedAway &&
+      getUiOptions(resolveUiSchema<T, S, F>(oldRaw, uiSchema, registry)).initialValue !== undefined
+    ) {
+      return false;
+    }
+    const filled = oldSchemaUtils.getDefaultFormState(
+      holder,
+      data,
+      false,
+      false,
+      { [FILLED_KEY]: isItem ? { items: uiSchema } : uiSchema } as UiSchema<T, S, F>,
+      uiSchemaDefinitions,
+    );
+    return isObject(filled) && deepEquals(getByPath(filled, at), value);
+  });
 }
 
 /** The default the defaults fill a field rendered with `layers` with, given the one it inherits, see
@@ -809,15 +875,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       : newComputed;
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
     const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, (value, isSwap) =>
-      isOldFill(
-        ctx,
-        oldLayers,
-        oldDefault,
-        oldPath,
-        shownHere,
-        value,
-        isSwap === true && !isFilledOut(ctx, oldLayers, oldPath),
-      ),
+      isSwap === true
+        ? isOwnFill(ctx.oldSchemaUtils, oldLayers, oldDefault, value) ||
+          isFilledOutFromDefault(ctx, oldRaw, oldDefault, isItem, oldRequired === true, oldPath, value)
+        : isOldFill(ctx, oldLayers, oldDefault, oldPath, shownHere, value),
     );
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
@@ -1039,38 +1100,20 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return newValue;
 }
 
-/** Whether the form's fill can fill the field at `oldPath`, rendered with `layers`, out past its declared `default`,
- * which its own fill can't: through a `ui:initialValue` the old uiSchema declares on, above or below the field, or out
- * to a `minItems` it pads by `required`
+/** The uiSchemas the old uiSchema can render the field at `path` with, walking only those along `path` and
+ * over-counting them rather than resolving which one renders: every option's, an array's `items` and `additionalItems`
+ * alike. shortcut: one a `ui:definitions` entry of an ancestor's `$ref` holds is missed, so a value it filled out isn't
+ * dropped whole but judged key by key, keeping what the `ui:initialValue` filled in; upgrade once the diff carries each
+ * field's resolved uiSchema
  */
-function isFilledOut<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  ctx: TreeContext<T, S, F>,
-  layers: readonly S[],
-  oldPath: FieldPathList | undefined,
-): boolean {
-  return keywordOf(layers, 'minItems') !== undefined || (oldPath !== undefined && initialValueReaches(ctx, oldPath));
-}
-
-/** Whether a `ui:initialValue` in the old uiSchema can fill the field at `path`, as one declared on it, above it or below
- * it. Asked per field, so it walks only the uiSchemas along `path`, over-counting them rather than resolving which one
- * renders: every option's, an array's `items` and `additionalItems` alike, and the `ui:definitions` any `$ref` renders
- * for every field
- */
-function initialValueReaches<T, S extends StrictRJSFSchema, F extends FormContextType>(
+function uiSchemasOn<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   path: FieldPathList,
-): boolean {
-  if (!ctx.oldDeclaresInitialValue() || ctx.oldDefinitionsDeclareInitialValue()) {
-    return ctx.oldDeclaresInitialValue();
-  }
-  let reached = withOptionUiSchemas([ctx.oldTree.uiSchema]);
-  for (const key of path) {
-    if (reached.some(ownsInitialValue)) {
-      return true;
-    }
-    reached = withOptionUiSchemas(reached.flatMap((uiSchema) => uiSchemasAt(uiSchema, key)));
-  }
-  return reached.some((uiSchema) => declaresInitialValue(uiSchema));
+): GenericObjectType[] {
+  return path.reduce(
+    (reached, key) => withOptionUiSchemas(reached.flatMap((uiSchema) => uiSchemasAt(uiSchema, key))),
+    withOptionUiSchemas([ctx.oldTree.uiSchema]),
+  );
 }
 
 /** The uiSchemas the fill can render the value at `key` of a field rendered with `uiSchema` with */
@@ -1098,30 +1141,6 @@ function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
     }
   }
   return found;
-}
-
-/** Whether `uiSchema` itself declares a `ui:initialValue`, directly or in its `ui:options` */
-function ownsInitialValue(uiSchema: object): boolean {
-  const options: unknown = getByPath(uiSchema, UI_OPTIONS_KEY);
-  return Object.hasOwn(uiSchema, 'ui:initialValue') || (isObject(options) && Object.hasOwn(options, 'initialValue'));
-}
-
-/** Whether `uiSchema`, or any uiSchema it holds, an option's in an array included, declares a `ui:initialValue` */
-function declaresInitialValue(uiSchema: unknown, seen = new WeakSet<object>()): boolean {
-  if (typeof uiSchema !== 'object' || uiSchema === null || seen.has(uiSchema)) {
-    return false;
-  }
-  seen.add(uiSchema);
-  return ownsInitialValue(uiSchema) || Object.values(uiSchema).some((value) => declaresInitialValue(value, seen));
-}
-
-/** `compute`, run at most once */
-function once<V>(compute: () => V): () => V {
-  let result: { value: V } | undefined;
-  return () => {
-    result ??= { value: compute() };
-    return result.value;
-  };
 }
 
 /** Sanitizes `data` for the field tree it builds, against the tree `previous` built: the diff of the two trees, field
@@ -1178,8 +1197,6 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       judgedClears,
       itemMoves,
       isDefaultsChanged,
-      oldDeclaresInitialValue: once(() => declaresInitialValue(previous.uiSchema)),
-      oldDefinitionsDeclareInitialValue: once(() => declaresInitialValue(previous.uiSchema?.[UI_DEFINITIONS_KEY])),
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),
