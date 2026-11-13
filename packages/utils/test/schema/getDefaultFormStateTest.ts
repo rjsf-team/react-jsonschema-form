@@ -162,6 +162,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             x: { c: 3 },
           });
         });
+        it('seeds only the keys of the const beside the extra keys the data holds, read from a ui:initialValue', () => {
+          const nested: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', additionalProperties: { type: 'number' }, const: { b: 2 } } },
+          };
+          const data = { x: { c: 3 } };
+          const initialValue = (value: object) => ({ x: { 'ui:initialValue': value } });
+          expect(utils(nested).getDefaultFormState(nested, data, false, false, initialValue({ z: 9 }))).toStrictEqual({
+            x: { c: 3 },
+          });
+          expect(
+            utils(nested).getDefaultFormState(nested, data, false, false, initialValue({ b: 5, z: 9 })),
+          ).toStrictEqual({ x: { c: 3, b: 5 } });
+        });
         it('seeds no key of the const where patternProperties or unevaluatedProperties let the user add, remove or rename keys', () => {
           const patterned: RJSFSchema = {
             type: 'object',
