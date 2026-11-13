@@ -25,7 +25,6 @@ import {
   getPrefixLength,
   getRenderedOptionSchema,
   getSchemaType,
-  getUiOptions,
   getXxxOfOptions,
   GUESSED_TYPE_FLAG,
   hasSchemaMarker,
@@ -38,7 +37,6 @@ import {
   namesEveryType,
   ONE_OF_KEY,
   rendersOwnFieldBesideOption,
-  resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   setOwn,
   toConstant,
@@ -668,15 +666,17 @@ const FILLED_KEY = 'field';
  * `minItems` or filled below through a `ui:initialValue`, which its own fill, holding that default as data, leaves
  * out. The field is filled alone, as the property of an object whose `default` hands it `oldDefault`, with the
  * `required` it had and each uiSchema the old one can render it with, see `uiSchemasOn()`, so the fill costs the field
- * rather than the form. A scalar is never filled out, and a value the field's own `ui:initialValue` filled holds none
- * of its default, since the initial value replaces it, and the field, keeping its uiSchema, still shows it on a fresh
- * mount. A key a switch put back is the exception, judged against the option switched away from, whose uiSchema is
- * read as no longer rendering it, so its own `ui:initialValue` is counted, a scalar's included
+ * rather than the form. A scalar is never filled out, and nor is a value the same uiSchema fills the field with from
+ * `newDefault` too, as one its own `ui:initialValue` filled, or one whose every item an `items` `ui:initialValue`
+ * filled: the default plays no part in it, and the field, keeping its uiSchema, still shows it on a fresh mount. A key
+ * a switch put back is the exception, judged against the option switched away from, whose uiSchema is read as no
+ * longer rendering it, so a `ui:initialValue` there is counted, a scalar's included
  */
 function isFilledOutFromDefault<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   oldRaw: S,
   oldDefault: unknown,
+  newDefault: unknown,
   isItem: boolean,
   isRequired: boolean,
   oldPath: FieldPathList | undefined,
@@ -689,35 +689,36 @@ function isFilledOutFromDefault<T, S extends StrictRJSFSchema, F extends FormCon
   }
   const { oldSchemaUtils } = ctx;
   const uiSchemaDefinitions = ctx.oldTree.uiSchema?.[UI_DEFINITIONS_KEY];
-  const registry = { rootSchema: oldSchemaUtils.getRootSchema(), uiSchemaDefinitions };
   // An array fills out each row its data holds, from the item's own `default` and by the array's `required`, whatever
   // `emptyObjectFields` says of writing a property, so an item is filled as the one row of an array property
-  const holder = {
-    type: 'object',
-    properties: { [FILLED_KEY]: isItem ? { type: 'array', items: { ...oldRaw, [DEFAULT_KEY]: oldDefault } } : oldRaw },
-    required: isRequired ? [FILLED_KEY] : [],
-    ...(isItem ? {} : { default: { [FILLED_KEY]: oldDefault } }),
-  } as unknown as S;
+  const holderWith = (fieldDefault: unknown) =>
+    ({
+      type: 'object',
+      properties: {
+        [FILLED_KEY]: isItem
+          ? { type: 'array', items: { ...oldRaw, [DEFAULT_KEY]: fieldDefault } }
+          : { ...oldRaw, [DEFAULT_KEY]: fieldDefault },
+      },
+      required: isRequired ? [FILLED_KEY] : [],
+      ...(isItem ? {} : { default: { [FILLED_KEY]: fieldDefault } }),
+    }) as unknown as S;
   const data = isItem ? ({ [FILLED_KEY]: [undefined] } as T) : undefined;
   const at = isItem ? [FILLED_KEY, 0] : [FILLED_KEY];
   const uiSchemas = oldPath === undefined ? [] : uiSchemasOn(ctx, oldPath);
   return (uiSchemas.length === 0 ? [{}] : uiSchemas).some((found) => {
     const uiSchema = found as UiSchema<T, S, F>;
-    if (
-      !isSwitchedAway &&
-      getUiOptions(resolveUiSchema<T, S, F>(oldRaw, uiSchema, registry)).initialValue !== undefined
-    ) {
-      return false;
-    }
-    const filled = oldSchemaUtils.getDefaultFormState(
-      holder,
-      data,
-      false,
-      false,
-      { [FILLED_KEY]: isItem ? { items: uiSchema } : uiSchema } as UiSchema<T, S, F>,
-      uiSchemaDefinitions,
-    );
-    return isObject(filled) && deepEquals(getByPath(filled, at), value);
+    const fillsWith = (fieldDefault: unknown) => {
+      const filled = oldSchemaUtils.getDefaultFormState(
+        holderWith(fieldDefault),
+        data,
+        false,
+        false,
+        { [FILLED_KEY]: isItem ? { items: uiSchema } : uiSchema } as UiSchema<T, S, F>,
+        uiSchemaDefinitions,
+      );
+      return isObject(filled) && deepEquals(getByPath(filled, at), value);
+    };
+    return fillsWith(oldDefault) && (isSwitchedAway || !fillsWith(newDefault));
   });
 }
 
@@ -877,7 +878,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, (value, isSwap) =>
       isSwap === true
         ? isOwnFill(ctx.oldSchemaUtils, oldLayers, oldDefault, value) ||
-          isFilledOutFromDefault(ctx, oldRaw, oldDefault, isItem, oldRequired === true, oldPath, value)
+          isFilledOutFromDefault(ctx, oldRaw, oldDefault, newDefault, isItem, oldRequired === true, oldPath, value)
         : isOldFill(ctx, oldLayers, oldDefault, oldPath, shownHere, value),
     );
     if (judged !== undefined) {
