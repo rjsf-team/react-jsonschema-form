@@ -1115,10 +1115,16 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const choice = chooseOption<T, S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults, props);
     isWholeValue = choice.isWholeValue;
     if (choice.wholeOptions === undefined) {
-      const optionValue = foldOption<T, S, F>(choice.context, view, xxxOf, choice.index, {
+      const foldedOption = foldOption<T, S, F>(choice.context, view, xxxOf, choice.index, {
         ...props,
         parentDefaults: defaults,
       });
+      // Under the object's own `const`, a key only the option declares, which the `const` doesn't name and the data
+      // doesn't hold, is left out: its default would make the object a value the `const` rejects
+      const optionValue =
+        foldsOptionUnderConst && isObjectData(foldedOption)
+          ? withoutKeysOutside(foldedOption, [schema[CONST_KEY], schema.properties, rawFormData])
+          : foldedOption;
       // Data the field takes is its own even where the option it renders through holds none of it, as an option with
       // no value, or one that is no object or takes no object, holds none of object data. Its defaults are merged
       // beneath the data, as an object field's are
@@ -2016,6 +2022,22 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     return computed;
   }
   return computeDefaultBasedOnSchemaTypeAndDefaults<unknown, S>(view.schema, computed);
+}
+
+/** Returns `value` without the keys none of `keeping` holds as its own
+ *
+ * @param value - The object value
+ * @param keeping - The objects whose keys are kept
+ * @returns - The value with only those keys
+ */
+function withoutKeysOutside(value: GenericObjectType, keeping: readonly unknown[]): GenericObjectType {
+  const kept: GenericObjectType = {};
+  for (const [key, entry] of Object.entries(value)) {
+    if (keeping.some((keys) => isObject(keys) && Object.hasOwn(keys, key))) {
+      setOwn(kept, key, entry);
+    }
+  }
+  return kept;
 }
 
 /** Returns `data` with what it lacks of `constValue` filled in: a missing, `undefined`, `null` or `NaN` value takes the

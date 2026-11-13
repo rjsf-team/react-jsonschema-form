@@ -525,6 +525,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const nested: RJSFSchema = { type: 'object', properties: { x: open } };
           expect(utils(nested).getDefaultFormState(nested, { x: {} }, false, true)).toStrictEqual({ x: {} });
         });
+        it("leaves out a key only the shown option beside an object const declares, which the const doesn't name", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            const: { k: 'x' },
+            properties: { k: { type: 'string' } },
+            oneOf: [{ properties: { z: { type: 'string', default: 'q' } } }, { properties: { w: { type: 'string' } } }],
+          };
+          expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ k: 'x' });
+          expect(utils(schema).getDefaultFormState(schema, { k: 'x', z: 'r' })).toStrictEqual({ k: 'x', z: 'r' });
+        });
         it('folds a key of an object const beside options as the shown option declares or takes it', () => {
           const declared: RJSFSchema = {
             type: 'object',
