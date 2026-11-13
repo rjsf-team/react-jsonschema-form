@@ -22,6 +22,7 @@ import {
   getByPath,
   getDiscriminatorFieldFromSchema,
   getItemSchema,
+  getOptionUiSchema,
   getPrefixLength,
   getRenderedOptionSchema,
   getSchemaType,
@@ -93,6 +94,10 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
    * filled with another default, and none is skipped
    */
   isDefaultsChanged: boolean;
+  /** Below a key a switch put back, the uiSchemas the option switched to renders the switched field's keys from, and
+   * the depth of that field's path
+   */
+  switchedToUiSchemas?: { depth: number; uiSchemas: GenericObjectType[] };
 }
 
 /** The values a disabled or read-only form's sanitize judges, see `sanitizeFieldTree()`: each key holding `undefined`,
@@ -456,9 +461,6 @@ function judge<S extends StrictRJSFSchema>(
     if (filledOut !== undefined && !deepEquals(filledOut, value)) {
       return filledOut;
     }
-    if (isOldDefault && filledOut === undefined) {
-      return structuredClone(newDefault);
-    }
   }
   // A `readOnly` property shows the default it is filled with, which the user can't change there, so another value
   // gives way to a new one replacing an old one, as `sanitizeDataForNewSchema()` clears it: read from the field's own
@@ -680,8 +682,8 @@ const FILLED_KEY = 'field';
  * `required` it had, or has for the new default, and each uiSchema the old one can render it with, see
  * `uiSchemasOn()`, so the fill costs the field rather than the form. A scalar is never filled out, and a value the
  * uiSchema fills from the new default alike, as one the field's own `ui:initialValue` filled, comes back as it is. A
- * key a switch put back is the exception, judged against the option switched away from, whose uiSchema is read as no
- * longer rendering it, so it is `DROP`ped for the fill, a scalar included
+ * key a switch put back, a scalar included, is judged against the option switched away from, and is `DROP`ped for the
+ * fill unless the option switched to renders it with a uiSchema alike, see `TreeContext.switchedToUiSchemas`
  */
 function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
@@ -735,7 +737,14 @@ function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!uiSchema) {
     return undefined;
   }
-  if (isSwitchedAway) {
+  // A key a switch put back keeps the uiSchema that filled it only where the option switched to renders it with one
+  // alike, as a fresh mount of that option fills it; elsewhere the fill fills it out anew without
+  const switchedTo = ctx.switchedToUiSchemas;
+  const isRenderedAlike =
+    switchedTo !== undefined &&
+    oldPath !== undefined &&
+    uiSchemasBelow(switchedTo.uiSchemas, oldPath.slice(switchedTo.depth)).some((found) => deepEquals(found, uiSchema));
+  if (isSwitchedAway && !isRenderedAlike) {
     return DROP;
   }
   return fillOf(ctx.schemaUtils, newRaw, newDefault, isRequired, uiSchema) ?? DROP;
@@ -943,6 +952,24 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         }
       | undefined;
     if (isSwitched && switchedFrom.heldKeys.size > 0) {
+      // The option switched to renders the keys with its own entry of the switched field's uiSchema option list where
+      // that list holds one, and with the field's uiSchema otherwise, as `getOptionUiSchema()` picks it, so a key's old
+      // `ui:initialValue` still applies where that holds the uiSchema that filled it
+      const newOptions = retrievedOptionsOf<T, S, F>(ctx.schemaUtils, newLayers[0], asFieldValue<T>(newValue));
+      const newIndex = newOptions
+        ? shown.get(optionListKey<S>(newOptions, ctx.schemaUtils.getRootSchema()))
+        : undefined;
+      const xxxOfKey = getXxxOfOptions<S>(newLayers[0])?.key;
+      const ownUiSchemas = (
+        path.length === 0
+          ? [ctx.oldTree.uiSchema]
+          : uiSchemasOn(ctx, path.slice(0, -1)).flatMap((uiSchema) => uiSchemasAt(uiSchema, path[path.length - 1]))
+      ).filter((uiSchema): uiSchema is GenericObjectType => isObject(uiSchema));
+      const switchedTo = ownUiSchemas.flatMap((uiSchema) => {
+        const optionUiSchema =
+          xxxOfKey && newIndex !== undefined ? getOptionUiSchema(uiSchema, xxxOfKey, newIndex) : uiSchema;
+        return optionUiSchema === uiSchema ? [uiSchema] : withOptionUiSchemas([optionUiSchema]);
+      });
       // The form as it was before the switch: its selections, with the option switched away from at the switched field,
       // which holds there and above it as for an edit made there, so the fill of the old data reads it too. Every list
       // at the path is read from them afresh, since `shown` holds the options the new side shows
@@ -951,6 +978,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         oldUiState: switchedFrom.uiState,
         newKeyOf: undefined,
         switchedFrom: undefined,
+        switchedToUiSchemas: { depth: path.length, uiSchemas: switchedTo },
       };
       const heldShown = new Map<string, number>();
       const heldLayers = layersOf(
@@ -1148,9 +1176,15 @@ function uiSchemasOn<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   path: FieldPathList,
 ): GenericObjectType[] {
+  return uiSchemasBelow(withOptionUiSchemas([ctx.oldTree.uiSchema]), path);
+}
+
+/** The uiSchemas the fill can render the value at `path` below a field rendered with `uiSchemas` with, as
+ * `uiSchemasOn()` walks them */
+function uiSchemasBelow(uiSchemas: GenericObjectType[], path: FieldPathList): GenericObjectType[] {
   return path.reduce(
     (reached, key) => withOptionUiSchemas(reached.flatMap((uiSchema) => uiSchemasAt(uiSchema, key))),
-    withOptionUiSchemas([ctx.oldTree.uiSchema]),
+    uiSchemas,
   );
 }
 
@@ -1181,21 +1215,21 @@ function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
   return found;
 }
 
-/** Sanitizes `data` for the field tree it builds, against the tree `previous` built: the diff of the two trees, field
- * by field, as each is rendered (the selected option, the expanded `$ref` cycles). A field that left the tree loses its
+/** Sanitizes `data` for the field tree it builds, against the tree `previous` built: the diff of the two trees, field by
+ * field, as each is rendered (the selected option, the expanded `$ref` cycles). A field that left the tree loses its
  * value, unless the object holds it as an extra key that constrains nothing and renders it. A field whose constraints
- * changed (`type`, `const`, `enum`, `maxItems`, or the default the defaults fill it with, see `getFilledDefault()`)
- * has its value judged again, see `judge()`: a value still holding the default the old schema filled it with takes the
- * new one, written in place, an array filled out as a fresh mount fills it. A field whose constraints did not change keeps its value, so an edit elsewhere never re-judges
- * it. The value of the field being edited, and of the fields holding it, is the user's, and only what they hold is
- * judged. Both trees show the option the new data is shown under, so an option matched anew changes no field's
- * constraints. A switch by the selector puts back each key the data held before it, as it held it, and each is judged
- * against the option switched away from, as a field a conditional changes is, so the defaults and clears of the keys
- * both options declare are read from the fills the diff holds at that path. With `judgedClears`, as for a disabled or
- * read-only form, only the keys holding `undefined` and the `null` items the form recorded as clears are
- * judged, by the same rule, so each gives way where it would in an enabled form and every value the data holds, a `null`
- * item the user didn't clear included, stays as it is. Dropping an item moves the items after it down, which the result
- * reports, so the recorded clears stay on their items.
+ * changed (`type`, `const`, `enum`, `maxItems`, or the default the defaults fill it with, see `getFilledDefault()`) has
+ * its value judged again, see `judge()`: a value still holding the default the old schema filled it with takes the new
+ * one, written in place, an array filled out as a fresh mount fills it. A field whose constraints did not change keeps
+ * its value, so an edit elsewhere never re-judges it. The value of the field being edited, and of the fields holding
+ * it, is the user's, and only what they hold is judged. Both trees show the option the new data is shown under, so an
+ * option matched anew changes no field's constraints. A switch by the selector puts back each key the data held before
+ * it, as it held it, and each is judged against the option switched away from, as a field a conditional changes is, so
+ * the defaults and clears of the keys both options declare are read from the fills the diff holds at that path. With
+ * `judgedClears`, as for a disabled or read-only form, only the keys holding `undefined` and the `null` items the form
+ * recorded as clears are judged, by the same rule, so each gives way where it would in an enabled form and every value
+ * the data holds, a `null` item the user didn't clear included, stays as it is. Dropping an item moves the items after
+ * it down, which the result reports, so the recorded clears stay on their items.
  *
  * @param previous - The previous tree: the schema utilities it is built with, its data, and the root schema retrieved
  *        for that data
@@ -1203,7 +1237,8 @@ function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
  * @param uiState - The form's option selections and cycle expansions
  * @param fillAsFirstRender - How the form fills data on its first render, which a field's defaults are judged by
  * @param [edit] - The change being made, if any: its path, where it moved the keys of the array or object there, so
- *        each item or property is paired with its own previous value, and the option a switch there left with the keys it put back
+ *        each item or property is paired with its own previous value, and the option a switch there left with the keys
+ *        it put back
  * @param [judgedClears] - For a disabled or read-only form, the only values judged, see `judgedClearsIn()`
  * @param [isDefaultsChanged=false] - Whether the `defaultFormStateBehavior` the defaults are computed by changed since
  *        `previous`, so every field is judged again, however little its schema and value changed

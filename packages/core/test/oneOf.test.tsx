@@ -855,6 +855,56 @@ describe('oneOf', () => {
     );
   });
 
+  // Where the option switched to renders the key with the same uiSchema, its `ui:initialValue` still fills it out, as a
+  // fresh mount of that option does; an option uiSchema of its own leaving it out renders it without
+  it.each<{
+    name: string;
+    to: Partial<RJSFSchema>;
+    uiSchemaOf?: (t: UiSchema) => UiSchema;
+    minItems?: number;
+    expected: string[];
+  }>([
+    { name: 'a default the new option shares, under a new maxItems', to: { maxItems: 3 }, expected: ['i', 'i'] },
+    { name: 'a new default', to: { default: ['y'] }, expected: ['i', 'i'] },
+    { name: 'a new default without minItems', to: { default: ['y'] }, minItems: 0, expected: ['i'] },
+    {
+      name: "a new default, each option's uiSchema alike",
+      to: { default: ['y'] },
+      uiSchemaOf: (t) => ({ oneOf: [{ t }, { t }] }),
+      expected: ['i', 'i'],
+    },
+    {
+      name: "a new default, the new option's uiSchema leaving it out over the field's",
+      to: { default: ['y'] },
+      uiSchemaOf: (t) => ({ t, oneOf: [{ t }, {}] }),
+      expected: ['y', 'z'],
+    },
+  ])(
+    'should fill out a key an items ui:initialValue filled anew as the option switched to renders it, for $name',
+    async ({ to, uiSchemaOf = (t) => ({ t }), minItems = 2, expected }) => {
+      const optionFor = (kind: string, t: Partial<RJSFSchema>): RJSFSchema => ({
+        title: kind,
+        type: 'object',
+        properties: {
+          kind: { type: 'string', const: kind, default: kind },
+          t: { type: 'array', minItems, items: { type: 'string', default: 'z' }, default: ['x'], ...t } as RJSFSchema,
+        },
+      });
+      const t = { items: { 'ui:initialValue': 'i' } };
+      const { node, onChange } = createFormComponent({
+        schema: { oneOf: [optionFor('a', {}), optionFor('b', to)] },
+        uiSchema: uiSchemaOf(t),
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { kind: 'b', t: expected } }),
+        'root__oneof_select',
+      );
+    },
+  );
+
   it('should switch the same way wherever required is declared', async () => {
     // The field renders each option merged with the parent's `required` and `type`, so the defaults compared here
     // have to come from that same schema or the two placements disagree about what the old option had written
