@@ -556,11 +556,11 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * would be computed from the same inputs again
    */
   memo?: Map<string, MemoEntry>;
-  /** Returns the object field as rendered, retrieved or joined with an option, sharing what is equal with the one the
-   * last pass of the field's fixed point read. Each pass plans the field anew, so it retrieves anew, and the extra-key
-   * schema it hands its children keeps its identity, so their memo hits
+  /** Returns the `additionalProperties` of the object field as rendered, retrieved or joined with an option, sharing
+   * what is equal with the one the last pass of the field's fixed point read. Each pass plans the field anew, so it
+   * retrieves anew, and the extra-key schema it hands its children keeps its identity, so their memo hits
    */
-  shareRendered?: (rendered: S) => S;
+  shareExtraKeySchema?: <V>(extraKeySchema: V) => V;
   /** The option each field shows, which a field offering `anyOf`/`oneOf` options computes its defaults from */
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
@@ -893,15 +893,14 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const onNullFill = () => {
     holdsNull = true;
   };
-  // Only the subtrees are shared: an option's joined field carries a new record of the schemas it joins on every call, so
-  // its top level is new on every pass, which nothing compares; its `additionalProperties`, which seeds the extra keys'
-  // fallback, keeps its identity
-  let lastRendered: S | undefined;
-  const shareRendered = (rendered: S) => {
-    lastRendered = replaceEqualDeep(lastRendered, rendered);
-    return lastRendered;
+  // Only the `additionalProperties` the extra keys' fallback is read from is shared, not the whole field around it
+  let lastExtraKeySchema: unknown;
+  const shareExtraKeySchema = <V>(extraKeySchema: V) => {
+    const shared = replaceEqualDeep(lastExtraKeySchema, extraKeySchema);
+    lastExtraKeySchema = shared;
+    return shared;
   };
-  const passProps = { ...props, memo: new Map<string, MemoEntry>(), shareRendered, track, onNullFill };
+  const passProps = { ...props, memo: new Map<string, MemoEntry>(), shareExtraKeySchema, track, onNullFill };
   const fold = (passView: DefaultsView<S>) => {
     holdsNull = false;
     return foldView(context, passView, passProps);
@@ -1665,9 +1664,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   ) {
     extraKeysField = retrievedView().schema;
   }
-  if (extraKeysField !== view.schema && props.shareRendered) {
-    extraKeysField = props.shareRendered(extraKeysField);
-  }
   // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it, and only of an
   // object that stubs them or defaults to an object `const`, the two that need the answer
   const takesExtraKeys =
@@ -1853,8 +1849,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // Read from the field that decides whether the object takes extra keys, so the keys seeded are folded as it takes them,
   // seeded where the field as retrieved holds them where that is the field, settled only by a branch that seeds one
   const extraKeySeeding = () => (extraKeysField === view.schema ? view : retrievedView());
-  const additionalProperties =
+  const ownAdditionalProperties =
     absentKeywordAllows<S, F>(context, extraKeysField) || extraKeysField.additionalProperties;
+  const additionalProperties =
+    extraKeysField !== view.schema && props.shareExtraKeySchema
+      ? props.shareExtraKeySchema(ownAdditionalProperties)
+      : ownAdditionalProperties;
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
   // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or
   // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the
