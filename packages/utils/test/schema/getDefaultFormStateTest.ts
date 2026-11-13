@@ -3071,6 +3071,84 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toStrictEqual({ own: { a: 'x' }, wrapped: { a: 'x' } });
         });
 
+        it.each([false, true])(
+          "matches a key an object's allOf declares that an object const pins as its own property, at any depth, initialDefaultsGenerated %s",
+          (initialDefaultsGenerated) => {
+            const c: RJSFSchema = { enum: ['a', 'b'], default: 'a' };
+            const d: RJSFSchema = { type: 'object', properties: { d: c } };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', allOf: [{ const: { c: 'b', n: { d: 'a' } } }], properties: { c, n: d } },
+                wrapped: { type: 'object', allOf: [{ const: { c: 'b', n: { d: 'a' } } }, { properties: { c, n: d } }] },
+              },
+            };
+            const value = { c: 'zz', n: { d: 'zz' } };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { own: value, wrapped: value }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ own: { c: 'a', n: { d: 'a' } }, wrapped: { c: 'a', n: { d: 'a' } } });
+          },
+        );
+
+        it.each<[string, DefaultFormStateBehavior, string]>([
+          ["the property's own", {}, 'green'],
+          ["the object's under ancestorWins", { nestedDefaultsPrecedence: 'ancestorWins' }, 'red'],
+        ])(
+          "replaces a value outside the enum of a key an object's allOf declares with %s default, as for its own property",
+          (_name, behavior, expected) => {
+            const c: RJSFSchema = { enum: ['red', 'green'], default: 'green' };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', default: { c: 'red' }, properties: { c } },
+                wrapped: { type: 'object', default: { c: 'red' }, allOf: [{ properties: { c } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: behavior },
+                { schema, formData: { own: { c: 'zz' }, wrapped: { c: 'zz' } } },
+              ),
+            ).toStrictEqual({ own: { c: expected }, wrapped: { c: expected } });
+          },
+        );
+
+        it("gives a nullable key an object's allOf requires the object's default over its null, as its own property", () => {
+          const c: RJSFSchema = { type: 'null' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['own', 'wrapped'],
+            properties: {
+              own: { type: 'object', default: { c: 'x' }, required: ['c'], properties: { c } },
+              wrapped: { type: 'object', default: { c: 'x' }, allOf: [{ required: ['c'], properties: { c } }] },
+            },
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, formData: {} })).toStrictEqual({
+            own: { c: 'x' },
+            wrapped: { c: 'x' },
+          });
+        });
+
+        it("fills a key an object's allOf declares beside an object const that doesn't name it, as its own property", () => {
+          const b: RJSFSchema = { const: 'q' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', allOf: [{ const: { a: 1 } }], properties: { b } },
+              wrapped: { type: 'object', allOf: [{ const: { a: 1 } }, { properties: { b } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { own: {}, wrapped: {} } },
+            ),
+          ).toStrictEqual({ own: { b: 'q' }, wrapped: { b: 'q' } });
+        });
+
         it("fills a key an object's allOf declares with a boolean schema from the object's default, as its own", () => {
           const schema: RJSFSchema = {
             type: 'object',

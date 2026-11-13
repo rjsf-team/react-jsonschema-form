@@ -1775,18 +1775,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       onNullFill?.();
     }
   }
-  // An `allOf` or `if` the field's plan left unmerged still brings its properties into the field rendered for it
-  if (
-    !view.field.retrieves &&
-    (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
-    mayHoldNullType(view.schema, rootSchema)
-  ) {
-    branchNullFills<T, S, F>(context, view, schema, props, foldReporting).forEach(({ key, value }) => {
-      setOwn(computed, key, value);
-      fillOverUndefined(nullFills, rawFormData, key, value);
-      onNullFill?.();
-    });
-  }
   // A key a property of an `allOf` the plan left unmerged declares, whatever the data, is no extra key of the field as
   // rendered, so its data is matched to that property below and its default is the field's. A key only an unmerged
   // `then`, `else` or `dependencies` declares stays an extra key (#5816), as does one the merge leaves out, as it leaves
@@ -1800,15 +1788,29 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     let declared = allOfKeys.get(key);
     if (declared === undefined) {
       const { graph, seeds } = fieldOfView<S>(view);
-      const property: unknown = getByPath(mergedSchemaOf<S, F>(context, view).properties, key);
       declared =
-        property !== undefined &&
-        !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG) &&
+        getByPath(mergedSchemaOf<S, F>(context, view).properties, key) !== undefined &&
         seeds.some(({ node }) => declaresUnconditionally<S>(graph, node, key));
       allOfKeys.set(key, declared);
     }
     return declared;
   };
+  // An `allOf` or `if` the field's plan left unmerged still brings its properties into the field rendered for it
+  if (
+    !view.field.retrieves &&
+    (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
+    mayHoldNullType(view.schema, rootSchema)
+  ) {
+    // A key the `allOf` declares that the object's default gives another value takes that default below, as a
+    // property of the object's own takes it over its `null`
+    branchNullFills<T, S, F>(context, view, schema, props, foldReporting)
+      .filter(({ key, value }) => [undefined, value].includes(getByPath(defaults, key)) || !declaredInAllOf(key))
+      .forEach(({ key, value }) => {
+        setOwn(computed, key, value);
+        fillOverUndefined(nullFills, rawFormData, key, value);
+        onNullFill?.();
+      });
+  }
   const additionalProperties = absentKeywordAllows<S, F>(context, schema) || schema.additionalProperties;
   if (additionalProperties && !initialDefaultsGenerated) {
     // as per spec additionalProperties may be either schema or boolean
@@ -1904,7 +1906,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
             (formData[key] === undefined && defaultReplacesUndefined(defaultFormStateBehavior))) &&
           !Object.hasOwn(computed, key) &&
           (!schema.properties || !Object.hasOwn(schema.properties, key)) &&
-          isPinned(key) &&
           declaredInAllOf(key),
       )
       .forEach((key) => {
@@ -1950,10 +1951,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
             (value === undefined || !schema.properties || !Object.hasOwn(schema.properties, key))))
       );
     });
-    // The keys an object `const` pins keep the data's values, as under a `const` of the field's own
-    const unmerged = new Set(
-      pinnedKeys ? [] : kept.filter((key) => formData[key] !== undefined && declaredInAllOf(key)),
-    );
+    // A key an object `const` pins is matched all the same, as a property of the field's own is computed under it
+    const unmerged = new Set(kept.filter((key) => formData[key] !== undefined && declaredInAllOf(key)));
     let matched = formData;
     if (unmerged.size > 0) {
       const matchedSchema = viewMatchedSchema<S, F>(context, view);
@@ -2923,12 +2922,15 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
       // its defaults as one the data lacks does, here where the fold computes none for it
       let value = matchedProperty;
       if (value === undefined && unfolded) {
-        // A `null` default is a default like any other, so only a missing one falls through
-        value = [
-          getByPath(defaults, key),
-          getByPath(readProperty, DEFAULT_KEY),
-          isObjectData(matched[key]) ? undefined : matched[key],
-        ].find((candidate) => candidate !== undefined);
+        // A `null` default is a default like any other, so only a missing one falls through. The property's own
+        // default wins over the object's, as in the fold, unless `nestedDefaultsPrecedence` says the ancestor's does
+        const defaultsInOrder = [getByPath(readProperty, DEFAULT_KEY), getByPath(defaults, key)];
+        if (context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins') {
+          defaultsInOrder.reverse();
+        }
+        value = [...defaultsInOrder, isObjectData(matched[key]) ? undefined : matched[key]].find(
+          (candidate) => candidate !== undefined,
+        );
       }
       if (value === undefined) {
         Reflect.deleteProperty(matched, key);
