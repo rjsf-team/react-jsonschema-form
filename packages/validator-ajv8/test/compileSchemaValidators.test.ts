@@ -68,6 +68,7 @@ describe('compileSchemaValidators()', () => {
     });
     afterAll(() => {
       consoleLogSpy.mockClear();
+      vi.mocked(compileSchemaValidatorsCode).mockClear();
       vi.mocked(writeFileSync).mockClear();
     });
     it('called console.log twice', () => {

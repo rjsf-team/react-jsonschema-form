@@ -1,0 +1,295 @@
+import type { StrictUiSchema, UiOptionsCheck } from '@rjsf/utils';
+
+import type { CoreUiOptionsChecks } from '../src/index.ts';
+
+// A self-referential shape (no depth cap), matching how a recursive `$ref` (e.g.
+// packages/playground/src/samples/references.ts's `node` definition) actually behaves.
+interface TreeNode {
+  name: string;
+  children: (TreeNode | null)[];
+}
+
+interface ReferencesFormData {
+  billing_address: { street_address: string; city: string; state: string };
+  tree: TreeNode;
+  contact: { name: string; details: string };
+}
+
+describe('CoreUiOptionsChecks', () => {
+  it('accepts the options `UIOptionsType` declares for a file and an alt-date string field', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { upload: string; born: string }>;
+    const ui: Checked = {
+      upload: { 'ui:widget': 'FileWidget', 'ui:options': { accept: '.png,.jpg' } },
+      born: { 'ui:widget': 'AltDateWidget', 'ui:options': { yearsRange: [1900, 2000] } },
+    };
+
+    expect(ui.upload?.['ui:widget']).toBe('FileWidget');
+  });
+
+  it('accepts the alt-date options', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { born: string }>;
+    const ui: Checked = {
+      born: {
+        'ui:widget': 'alt-datetime',
+        'ui:options': { yearsRange: [1980, 2030], format: 'MDY', hideNowButton: true, hideClearButton: true },
+      },
+    };
+    const badFormat: Checked = {
+      // @ts-expect-error `format` orders the date elements, so only `DMY`, `MDY` or `YMD`
+      born: { 'ui:widget': 'AltDateWidget', 'ui:options': { format: 'hex' } },
+    };
+
+    expect(ui.born?.['ui:options']?.format).toBe('MDY');
+    expect(badFormat.born?.['ui:options']?.format).toBe('hex');
+  });
+
+  it('accepts a RatingWidget and its `stars` for a number field', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { score: number }>;
+    const ui: Checked = { score: { 'ui:widget': 'RatingWidget', 'ui:options': { stars: 3 } } };
+
+    expect(ui.score?.['ui:widget']).toBe('RatingWidget');
+  });
+
+  it('accepts `accept` for a multiple file field', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { files: string[] }>;
+    const ui: Checked = { files: { 'ui:widget': 'FileWidget', 'ui:options': { accept: '.pdf' } } };
+
+    expect(ui.files?.['ui:options']?.accept).toBe('.pdf');
+  });
+
+  it("narrows ui:widget/ui:field/ui:options to @rjsf/core's real widget and field names", () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, ReferencesFormData>;
+
+    const ui: Checked = {
+      'ui:order': ['billing_address', 'contact', 'tree'],
+      tree: {
+        name: { 'ui:placeholder': 'Enter node name', 'ui:help': 'Applies at every recursion level' },
+        children: { 'ui:options': { orderable: false }, items: { 'ui:help': 'Per-item help on a recursive element' } },
+      },
+      contact: {
+        name: { 'ui:placeholder': 'Full name (e.g., John Doe)' },
+        details: { 'ui:widget': 'TextareaWidget' },
+      },
+    };
+    const badWidget: Checked = {
+      tree: {
+        // @ts-expect-error RangeWidget is a number widget; `name` is a string field
+        name: { 'ui:widget': 'RangeWidget' },
+      },
+    };
+    const badField: Checked = {
+      tree: {
+        // @ts-expect-error StringField is a string field's field implementation, not valid for `children`, an array
+        children: { 'ui:field': 'StringField' },
+      },
+    };
+
+    expect(ui.tree?.name?.['ui:placeholder']).toBe('Enter node name');
+    expect(ui['ui:order']).toEqual(['billing_address', 'contact', 'tree']);
+    expect([badWidget, badField]).toHaveLength(2);
+  });
+
+  it('accepts a checkbox on a string field, which confirms a string const', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { confirm: string; agree: string }>;
+
+    const ui: Checked = { confirm: { 'ui:widget': 'checkbox' }, agree: { 'ui:widget': 'CheckboxWidget' } };
+
+    expect(ui.confirm?.['ui:widget']).toBe('checkbox');
+  });
+
+  it('closes the ui: namespace to just the options CoreUiOptionsChecks declares', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { bio: string }>;
+
+    const bad: Checked = {
+      bio: {
+        // @ts-expect-error `ui:wigdet` is a typo of `ui:widget` - no longer swallowed by a permissive index signature
+        'ui:wigdet': 'TextWidget',
+      },
+    };
+
+    expect(bad).toBeDefined();
+  });
+
+  it("offers the options @rjsf/core's widgets read on the type of field they read them from", () => {
+    type Checked = StrictUiSchema<
+      CoreUiOptionsChecks,
+      { born: string; upload: string[]; score: number; extras: { name: string } }
+    >;
+    // Outside the literal, since an `as const` array written where a mutable tuple is expected isn't made read-only
+    const years = [2000, 2030] as const;
+
+    const ui: Checked = {
+      born: {
+        'ui:widget': 'alt-date',
+        'ui:options': { format: 'MDY', yearsRange: [2000, 2030], hideNowButton: true, hideClearButton: true },
+        'ui:accept': '.pdf',
+        'ui:yearsRange': years,
+      },
+      upload: { 'ui:accept': '.pdf' },
+      score: { 'ui:widget': 'RatingWidget', 'ui:stars': 3, 'ui:shape': 'heart' },
+      extras: { 'ui:expandable': false },
+    };
+    const bad: Checked = {
+      born: {
+        // @ts-expect-error `stars` is read by `RatingWidget`, a number widget
+        'ui:stars': 3,
+      },
+      score: {
+        // @ts-expect-error `yearsRange` is read by the alt-date widgets, for a string field
+        'ui:yearsRange': [2000, 2030],
+      },
+    };
+
+    expect(ui.score?.['ui:stars']).toBe(3);
+    expect(bad).toBeDefined();
+  });
+
+  it('keeps type-agnostic options (template overrides, global options) available under Checks', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { bio: string }>;
+
+    const ui: Checked = {
+      'ui:label': false,
+      'ui:ObjectFieldTemplate': () => null,
+      'ui:enableMarkdownInDescription': true,
+      bio: { 'ui:label': false },
+    };
+
+    expect(ui['ui:label']).toBe(false);
+  });
+
+  it('accepts the lowercase widget aliases getWidget resolves, alongside the PascalCase component names', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, ReferencesFormData>;
+
+    const ui: Checked = {
+      contact: {
+        name: { 'ui:widget': 'textarea' },
+        details: { 'ui:widget': 'hidden' },
+      },
+    };
+
+    expect(ui.contact?.name?.['ui:widget']).toBe('textarea');
+  });
+
+  it('allows hiding an array or object field, but only via the alias ObjectField/SchemaField actually check', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, ReferencesFormData>;
+
+    const hiddenArray: Checked = { tree: { children: { 'ui:widget': 'HiddenWidget' } } };
+    const hiddenObject: Checked = { tree: { 'ui:widget': 'hidden' } };
+    const badHiddenObject: Checked = {
+      // @ts-expect-error `'HiddenWidget'` has no runtime effect on an object field - only `'hidden'` does
+      tree: { 'ui:widget': 'HiddenWidget' },
+    };
+
+    expect(hiddenArray.tree?.children?.['ui:widget']).toBe('HiddenWidget');
+    expect(hiddenObject.tree?.['ui:widget']).toBe('hidden');
+    expect(badHiddenObject).toBeDefined();
+  });
+
+  it('offers the select and radio widgets for an object field, which an enum or oneOf/anyOf of constants renders', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { plan: { tier: number }; backup: { tier: number } }>;
+
+    const ui: Checked = { plan: { 'ui:widget': 'radio' }, backup: { 'ui:widget': 'SelectWidget' } };
+    const badWidget: Checked = {
+      // @ts-expect-error a checkbox list selects several values, which an object select never does
+      plan: { 'ui:widget': 'checkboxes' },
+    };
+
+    expect(ui.plan?.['ui:widget']).toBe('radio');
+    expect(ui.backup?.['ui:widget']).toBe('SelectWidget');
+    expect(badWidget).toBeDefined();
+  });
+
+  it('offers the radio alias for an array field, which an enum or oneOf/anyOf of array constants renders', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { size: number[]; fallback: number[] }>;
+
+    const ui: Checked = { size: { 'ui:widget': 'radio' } };
+    const badWidget: Checked = {
+      // @ts-expect-error `getWidget` resolves a registered name before it checks for a multi-select, so only the alias
+      fallback: { 'ui:widget': 'RadioWidget' },
+    };
+
+    expect(ui.size?.['ui:widget']).toBe('radio');
+    expect(badWidget).toBeDefined();
+  });
+
+  it('makes emptyValue/placeholder/inline/filePreview available on every type that actually reads them', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { age: number; agree: boolean; tags: string[] }>;
+
+    const ui: Checked = {
+      age: { 'ui:emptyValue': 0, 'ui:placeholder': 'Age', 'ui:options': { inline: true } },
+      agree: { 'ui:emptyValue': false, 'ui:placeholder': 'Agree?', 'ui:options': { inline: true } },
+      tags: { 'ui:options': { filePreview: true, emptyValue: [] } },
+    };
+
+    expect(ui.age?.['ui:emptyValue']).toBe(0);
+    expect(ui.agree?.['ui:emptyValue']).toBe(false);
+  });
+
+  it('offers the enum options, optgroups included, on every type whose widgets read them', () => {
+    type Checked = StrictUiSchema<
+      CoreUiOptionsChecks,
+      { pet: string; rank: number; agree: boolean; tags: string[]; home: { city: string }; nothing: null }
+    >;
+
+    const ui: Checked = {
+      pet: { 'ui:options': { optgroups: { Mammals: ['cat', 'dog'], Birds: ['parrot'] } } },
+      rank: { 'ui:options': { optgroups: { Low: [1, 2] } } },
+      agree: { 'ui:options': { optgroups: { Answers: [true, false] } } },
+      tags: { 'ui:options': { optgroups: { Colors: ['red'] } } },
+      home: {
+        'ui:options': {
+          enumDisabled: [{ city: 'Rome' }],
+          enumNames: ['Oslo', 'Rome'],
+          enumOrder: [{ city: 'Oslo' }, '*'],
+          optgroups: { North: [{ city: 'Oslo' }] },
+        },
+      },
+    };
+    const badOnNull: Checked = {
+      // @ts-expect-error `optgroups` is an enum option; a null field has no options to group
+      nothing: { 'ui:options': { optgroups: { Any: ['x'] } } },
+    };
+    const badNamesOnObject: Checked = {
+      // @ts-expect-error a map's keys are strings, which can't name an object value
+      home: { 'ui:options': { enumNames: { Oslo: 'North' } } },
+    };
+
+    expect(ui.pet?.['ui:options']?.optgroups).toEqual({ Mammals: ['cat', 'dog'], Birds: ['parrot'] });
+    expect(badOnNull).toBeDefined();
+    expect(badNamesOnObject).toBeDefined();
+  });
+
+  it('narrows a readonly array field and does not mistake a length-bearing object for an array', () => {
+    interface Track {
+      length: number;
+      title: string;
+    }
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { tags: readonly string[]; track: Track }>;
+
+    const ui: Checked = {
+      tags: { 'ui:options': { orderable: false } },
+      track: { 'ui:options': { order: ['title'] } },
+    };
+    const badOnArray: Checked = {
+      // @ts-expect-error `order` is an object option, not valid for the readonly array field `tags`
+      tags: { 'ui:options': { order: ['title'] } },
+    };
+
+    expect(ui.tags?.['ui:options']).toEqual({ orderable: false });
+    expect(badOnArray).toBeDefined();
+  });
+
+  it('does not widen the vocabulary for a Checks member that declares no widget/field key', () => {
+    type NoWidgetCheck = UiOptionsCheck<string, { placeholder: string }>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks | NoWidgetCheck, { bio: string }>;
+
+    const bad: Checked = {
+      bio: {
+        // @ts-expect-error unioning in a widget-less/field-less check must not open ui:widget back up to `any`
+        'ui:widget': 'NotARealWidget',
+      },
+    };
+
+    expect(bad).toBeDefined();
+  });
+});

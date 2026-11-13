@@ -23,7 +23,7 @@ export default function ValidatorSelector({ validator, validators, select }: Val
 
   const onChange = useCallback(
     ({ formData }: IChangeEvent) => {
-      if (formData) {
+      if (typeof formData === 'string') {
         select(formData);
       }
     },
@@ -36,7 +36,7 @@ export default function ValidatorSelector({ validator, validators, select }: Val
       idPrefix='rjsf_validatorSelector'
       schema={schema}
       uiSchema={uiSchema}
-      formData={validator}
+      initialFormData={validator}
       validator={localValidator}
       onChange={onChange}
     >

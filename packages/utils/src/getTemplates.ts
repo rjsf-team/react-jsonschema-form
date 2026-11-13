@@ -1,0 +1,39 @@
+import getTemplate from './getTemplate.ts';
+import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJSFSchema, RJSFSchema } from './types.ts';
+
+/** Returns every template in the `registry`, with each one that `uiOptions` overrides resolved in its place. Only
+ * templates the registry already holds are resolved: an override for a name the registry lacks is left out, since
+ * `uiOptions` also holds non-template options. Destructure the templates a component renders from the result: React's
+ * static-components rule doesn't follow a destructure, so it accepts them where it reports the result of a function
+ * call. It can't check them either, so this relies on the registry and `uiOptions` holding components defined at
+ * module scope.
+ *
+ * @param registry - The `Registry` from which to read the templates
+ * @param [uiOptions={}] - The `UIOptionsType` from which to read alternate templates
+ * @param [entryLabel] - Builds the label of the uiSchema entry the field is rendered from, for the warning an invalid
+ * override logs; omitted by callers that only resolve, which stay silent
+ * @returns - The templates from either the `uiSchema` or `registry`
+ */
+export default function getTemplates<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  registry: Registry<T, S, F>,
+  uiOptions: UIOptionsType<T, S, F> = {},
+  entryLabel?: () => string,
+): Readonly<TemplatesType<T, S, F>> {
+  // Every field and widget calls this on each render, so the registry's own map is returned as-is, without allocating,
+  // unless an override actually applies
+  let templates: TemplatesType<T, S, F> | undefined;
+  for (const name in uiOptions) {
+    if (Object.hasOwn(uiOptions, name) && Object.hasOwn(registry.templates, name)) {
+      const template = getTemplate(name, registry, uiOptions, entryLabel);
+      if (template !== registry.templates[name]) {
+        templates ??= { ...registry.templates };
+        templates[name] = template;
+      }
+    }
+  }
+  return templates ?? registry.templates;
+}

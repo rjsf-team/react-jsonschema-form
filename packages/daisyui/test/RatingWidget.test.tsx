@@ -1,9 +1,133 @@
-import { render, fireEvent } from '@testing-library/react';
+import type { RJSFSchema } from '@rjsf/utils';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import RatingWidget from '../src/widgets/RatingWidget/RatingWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
+const user = userEvent.setup();
+
 describe('RatingWidget', () => {
+  test('reads a numeric-string `stars` option as its number', () => {
+    const jsonOptions: Record<string, unknown> = { stars: '3' };
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getAllByRole('radio')).toHaveLength(3);
+  });
+
+  test.each(['five', null, true, '', [4]])(
+    'shows the default 5 stars for a `stars` option of %j, as a JSON uiSchema can hold',
+    (stars) => {
+      const jsonOptions: Record<string, unknown> = { stars };
+      const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+      expect(getAllByRole('radio')).toHaveLength(5);
+    },
+  );
+
+  test.each([
+    ['a `stars` option', {}, { stars: 2.5 }, 2],
+    ['a schema `maximum`', { maximum: 2.5 }, {}, 3],
+  ])('rounds down %s that is not a whole number', (_, schema, options, count) => {
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ schema: { type: 'number', ...schema }, options })} />,
+    );
+
+    expect(getAllByRole('radio')).toHaveLength(count);
+  });
+
+  test('reads numeric-string bounds as their numbers, as it does a `stars` option', async () => {
+    const stringBounds = { type: 'integer', minimum: '1', maximum: '3' };
+    const schema = stringBounds as unknown as RJSFSchema;
+    const onChange = vi.fn();
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ schema, onChange })} />);
+
+    const stars = getAllByRole('radio');
+    expect(stars).toHaveLength(3);
+
+    await user.click(stars[0]);
+
+    expect(onChange).toHaveBeenCalledWith(1);
+  });
+
+  test('writes the fractional value of a star numbered from a fractional `minimum`', async () => {
+    const onChange = vi.fn();
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ schema: { type: 'number', minimum: 1.5 }, onChange })} />,
+    );
+
+    await user.click(getAllByRole('radio')[0]);
+
+    expect(onChange).toHaveBeenCalledWith(1.5);
+  });
+
+  test('falls back to the `stars` option for Ajv `$data` bounds', () => {
+    const dataBounds = { type: 'integer', maximum: { $data: '1/limit' }, minimum: { $data: '1/floor' } };
+    const schema = dataBounds as unknown as RJSFSchema;
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ schema, options: { stars: 3 } })} />);
+
+    expect(getAllByRole('radio')).toHaveLength(3);
+  });
+
+  test('autofocuses the first star for a value beyond the stars left by rounding down', () => {
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ autofocus: true, value: 2, options: { stars: 2.5 } })} />,
+    );
+
+    expect(getAllByRole('radio')[0]).toHaveFocus();
+  });
+
+  test('autofocuses the checked star numbered from a fractional `minimum`', () => {
+    const { getAllByRole } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({ autofocus: true, value: 1.4, schema: { type: 'number', minimum: 0.4 } })}
+      />,
+    );
+
+    expect(getAllByRole('radio')[1]).toHaveFocus();
+  });
+
+  test('uses the default size and color for a `size` or `color` option that is not a string', () => {
+    const jsonOptions: Record<string, unknown> = { size: 5, color: true };
+    const { getAllByRole, getByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getByRole('radiogroup')).toHaveClass('rating gap-1', { exact: true });
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-orange-400');
+  });
+
+  test.each(['', ' '])('uses the default size and color for a `size` and `color` option of %j', (option) => {
+    const jsonOptions: Record<string, unknown> = { size: option, color: option };
+    const { getAllByRole, getByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getByRole('radiogroup')).toHaveClass('rating gap-1', { exact: true });
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-orange-400');
+  });
+
+  test('trims the space around a `size` and `color` option', () => {
+    const { getAllByRole, getByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ options: { size: ' lg', color: ' red ' } })} />,
+    );
+
+    expect(getByRole('radiogroup')).toHaveClass('rating gap-1 rating-lg', { exact: true });
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-red-400');
+  });
+
+  test.each([['false'], [1], [{}]])('draws no gradient for a `colorGradient` option of %j', (colorGradient) => {
+    const jsonOptions: Record<string, unknown> = { colorGradient };
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getAllByRole('radio').map(({ className }) => className.match(/bg-\w+-400/)?.[0])).toEqual(
+      Array(5).fill('bg-orange-400'),
+    );
+  });
+
+  test('draws the gradient for a `colorGradient` option of true', () => {
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: { colorGradient: true } })} />);
+
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-red-400');
+  });
+
   test('renders with default props (value=0)', () => {
     const { asFragment } = render(
       <RatingWidget
@@ -41,6 +165,35 @@ describe('RatingWidget', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
+  test.each<[string, RJSFSchema, number | undefined, number[]]>([
+    ['no bounds', {}, undefined, [0, 1, 2, 3, 4]],
+    ['a maximum alone, as a bound rather than a count', { maximum: 3 }, undefined, [0, 1, 2, 3]],
+    ['both bounds, stopping at the maximum', { minimum: 3, maximum: 5 }, undefined, [3, 4, 5]],
+    ['a range wider than five stars', { minimum: 1, maximum: 10 }, undefined, [1, 2, 3, 4, 5]],
+    ['a maximum of 0', { maximum: 0 }, undefined, [0]],
+    ['a maximum below the first star', { maximum: -1 }, undefined, [0]],
+    ['a maximum below the minimum', { minimum: 3, maximum: 1 }, undefined, [3]],
+    ['a fractional maximum', { maximum: 2.5 }, undefined, [0, 1, 2]],
+    ['fractional bounds a whole step apart', { minimum: 1.3, maximum: 2.3 }, undefined, [1.3, 2.3]],
+    ['a fractional minimum', { minimum: 0.57, maximum: 2.57 }, undefined, [0.57, 1.57, 2.57]],
+    ['a stars option beside the bounds', { minimum: 1, maximum: 5 }, 3, [1, 2, 3]],
+    ['a stars option above five', {}, 9, [0, 1, 2, 3, 4]],
+    ['a stars option below one', {}, 0, [0]],
+    ['a fractional stars option', {}, 2.5, [0, 1]],
+  ])('draws the right stars for %s', (_, schema, stars, values) => {
+    const { container } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          schema: { type: 'integer', ...schema },
+          options: { stars },
+        })}
+      />,
+    );
+
+    const radios = [...container.querySelectorAll<HTMLInputElement>('input[type="radio"]')];
+    expect(radios.map((radio) => Number(radio.value))).toEqual(values);
+  });
+
   test('renders in disabled state', () => {
     const { asFragment } = render(
       <RatingWidget
@@ -65,7 +218,7 @@ describe('RatingWidget', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  test('calls onChange when rating is changed', () => {
+  test('calls onChange when rating is changed', async () => {
     const onChange = vi.fn();
     const { container } = render(
       <RatingWidget
@@ -79,7 +232,7 @@ describe('RatingWidget', () => {
     // Get the third star (index 2, value 2+1=3)
     // Note: The actual implementation returns 0-indexed value (2)
     const inputs = container.querySelectorAll('input');
-    fireEvent.click(inputs[2]);
+    await user.click(inputs[2]);
 
     // The value should be 2 (0-indexed)
     expect(onChange).toHaveBeenCalledWith(2);
@@ -87,7 +240,7 @@ describe('RatingWidget', () => {
 
   // Skip the disabled test for now as it's unreliable in the test environment
   // The actual component does prevent clicks when disabled
-  test.skip('does not call onChange when disabled', () => {
+  test.skip('does not call onChange when disabled', async () => {
     const onChange = vi.fn();
     const { container } = render(
       <RatingWidget
@@ -100,8 +253,69 @@ describe('RatingWidget', () => {
     );
 
     const inputs = container.querySelectorAll('input');
-    fireEvent.click(inputs[2]);
+    await user.click(inputs[2]);
 
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  test('reports a fractional star as its own value', async () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <RatingWidget {...makeWidgetMockProps({ schema: { type: 'number', minimum: 0.5, maximum: 2 }, onChange })} />,
+    );
+
+    await user.click(elementOf(container, 'input[value="1.5"]'));
+
+    expect(onChange).toHaveBeenCalledWith(1.5);
+  });
+
+  test('autofocuses the checked star under a fractional minimum', () => {
+    const { container } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          schema: { type: 'number', minimum: 0.3, maximum: 3 },
+          value: 2.3,
+          autofocus: true,
+        })}
+      />,
+    );
+
+    expect(elementOf(container, 'input[value="2.3"]')).toHaveFocus();
+  });
+
+  test('autofocuses the first star when rounding moves it off the minimum and none is checked', () => {
+    const { container } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          schema: { type: 'number', minimum: 1.0000000001, maximum: 5 },
+          value: undefined,
+          autofocus: true,
+        })}
+      />,
+    );
+
+    expect(elementOf(container, 'input[value="1"]')).toHaveFocus();
+  });
+
+  test('names its radios by htmlName where the form generates one', () => {
+    const { container } = render(<RatingWidget {...makeWidgetMockProps({ htmlName: 'root[stars]' })} />);
+
+    const radios = container.querySelectorAll('input[type="radio"]');
+    expect(radios.length).toBeGreaterThan(0);
+    radios.forEach((radio) => expect(radio).toHaveAttribute('name', 'root[stars]'));
+  });
+
+  test('reads a rating stored as a numeric string, and writes a string back', async () => {
+    const onChange = vi.fn();
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ value: '3', schema: { type: 'string' }, onChange })} />,
+    );
+    const stars = getAllByRole('radio');
+
+    expect(stars[3]).toBeChecked();
+
+    await user.click(stars[4]);
+
+    expect(onChange).toHaveBeenCalledWith('4');
   });
 });

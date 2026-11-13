@@ -1,0 +1,402 @@
+import CoreForm from '@rjsf/core';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { render, screen } from '@testing-library/react';
+
+import { setupConsoleErrorSuppression } from '../../../testing/consoleSuppression.ts';
+import Form from '../src/index.ts';
+
+describe('a read-only CheckboxWidget the form leaves enabled', () => {
+  it('takes no native required, so it does not block the submit of a field its user cannot change (#5593)', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['agree'],
+          properties: { agree: { type: 'boolean', const: true, title: 'Agree' } },
+        }}
+        uiSchema={{ agree: { 'ui:readonly': true } }}
+        formContext={{ readonlyAsDisabled: false }}
+        initialFormData={{ agree: false }}
+        validator={validator}
+      />,
+    );
+
+    const checkbox = screen.getByRole('checkbox', { name: /Agree/ });
+    expect(checkbox).toBeEnabled();
+    expect(checkbox).not.toBeRequired();
+    expect(checkbox).toHaveAttribute('aria-readonly', 'true');
+    expect(container.querySelector('form')?.checkValidity()).toBe(true);
+  });
+
+  it('keeps native required while it is editable', () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['agree'],
+          properties: { agree: { type: 'boolean', const: true, title: 'Agree' } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('checkbox', { name: /Agree/ })).toBeRequired();
+    expect(screen.getByRole('checkbox', { name: /Agree/ })).not.toHaveAttribute('aria-readonly');
+  });
+});
+
+describe('ui:autofocus', () => {
+  it.each<[string, RJSFSchema, UiSchema]>([
+    ['text', { type: 'string' }, {}],
+    ['email', { type: 'string', format: 'email' }, {}],
+    ['number', { type: 'number' }, {}],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
+    ['password', { type: 'string' }, { 'ui:widget': 'password' }],
+    ['date', { type: 'string', format: 'date' }, {}],
+    ['date-time', { type: 'string', format: 'date-time' }, {}],
+  ])('focuses a %s field marked with it (#5597)', (_, x, uiSchema) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X' } } }}
+        uiSchema={{ x: { ...uiSchema, 'ui:autofocus': true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_x')).toHaveFocus();
+  });
+});
+
+describe('a native submit', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      sel: { type: 'string', enum: ['a', 'b'] },
+      multi: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['a', 'b', 'c'] } },
+      range: { type: 'integer', minimum: 0, maximum: 10 },
+    },
+  };
+  const uiSchema: UiSchema = { multi: { 'ui:widget': 'select' }, range: { 'ui:widget': 'range' } };
+  const formData = { sel: 'b', multi: ['a', 'c'], range: 4 };
+
+  function entriesOf(form: HTMLFormElement | null, name: string) {
+    return form ? new FormData(form).getAll(name) : undefined;
+  }
+
+  it('gets the select, multi-select and range values core posts for them (#5597)', () => {
+    const { container: core } = render(
+      <CoreForm schema={schema} uiSchema={uiSchema} initialFormData={formData} validator={validator} />,
+    );
+    const { container: antd } = render(
+      <Form schema={schema} uiSchema={uiSchema} initialFormData={formData} validator={validator} />,
+    );
+
+    for (const name of ['root_sel', 'root_multi', 'root_range']) {
+      const posted = entriesOf(antd.querySelector('form'), name);
+      expect(posted).not.toHaveLength(0);
+      expect(posted).toEqual(entriesOf(core.querySelector('form'), name));
+    }
+  });
+
+  it.each<[string, UiSchema, string[]]>([
+    ['for form data out of enum order', { 'ui:widget': 'select', 'ui:optionValueFormat': 'realValue' }, ['c', 'a']],
+    [
+      'under groups that draw a later option first',
+      { 'ui:widget': 'select', 'ui:optgroups': { G: ['c'] } },
+      ['a', 'c'],
+    ],
+  ])('gets the multi-select values in the order core draws its options, %s', (_, multiUiSchema, multi) => {
+    const props = { schema, uiSchema: { ...uiSchema, multi: multiUiSchema }, initialFormData: { multi }, validator };
+    const { container: core } = render(<CoreForm {...props} />);
+    const { container: antd } = render(<Form {...props} />);
+
+    const posted = entriesOf(antd.querySelector('form'), 'root_multi');
+    expect(posted).toHaveLength(2);
+    expect(posted).toEqual(entriesOf(core.querySelector('form'), 'root_multi'));
+  });
+
+  it('gets what core posts for a select with nothing selected', () => {
+    const { container: core } = render(<CoreForm schema={schema} uiSchema={uiSchema} validator={validator} />);
+    const { container: antd } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    for (const name of ['root_sel', 'root_multi']) {
+      expect(entriesOf(antd.querySelector('form'), name)).toEqual(entriesOf(core.querySelector('form'), name));
+    }
+  });
+
+  it('gets what core posts for a select with nothing selected under ui:emptyValue', () => {
+    const emptyValueUiSchema: UiSchema = { ...uiSchema, sel: { 'ui:emptyValue': 'none' } };
+    const { container: core } = render(
+      <CoreForm schema={schema} uiSchema={emptyValueUiSchema} validator={validator} />,
+    );
+    const { container: antd } = render(<Form schema={schema} uiSchema={emptyValueUiSchema} validator={validator} />);
+
+    expect(entriesOf(antd.querySelector('form'), 'root_sel')).toEqual(
+      entriesOf(core.querySelector('form'), 'root_sel'),
+    );
+  });
+
+  describe('under ui:optionValueFormat realValue, for form data no option holds', () => {
+    setupConsoleErrorSuppression();
+    const realValueUiSchema: UiSchema = {
+      sel: { 'ui:optionValueFormat': 'realValue' },
+      multi: { 'ui:widget': 'select', 'ui:optionValueFormat': 'realValue' },
+    };
+    const staleData = { sel: 'zzz', multi: ['a', 'zzz'] };
+
+    it.each<[string, RJSFSchema]>([
+      ['with an empty placeholder', {}],
+      ['under a default, with no empty placeholder', { default: 'b' }],
+    ])('gets what core posts, %s', (_, selDefault) => {
+      const props = {
+        schema: {
+          ...schema,
+          properties: { ...schema.properties, sel: { type: 'string', enum: ['a', 'b'], ...selDefault } },
+        },
+        uiSchema: realValueUiSchema,
+        initialFormData: staleData,
+        validator,
+      } satisfies Partial<Parameters<typeof Form>[0]>;
+      const { container: core } = render(<CoreForm {...props} />);
+      const { container: antd } = render(<Form {...props} />);
+
+      for (const name of ['root_sel', 'root_multi']) {
+        expect(entriesOf(antd.querySelector('form'), name)).toEqual(entriesOf(core.querySelector('form'), name));
+      }
+    });
+  });
+
+  describe('for a select with a default no option holds, so it draws no empty placeholder', () => {
+    setupConsoleErrorSuppression();
+    const sel: RJSFSchema = { type: 'string', enum: ['a', 'b', 'c'], default: 'z' };
+
+    it.each<[string, UiSchema, string[]]>([
+      ['its first option', {}, ['0']],
+      ['its first enabled option', { 'ui:enumDisabled': ['a'] }, ['1']],
+      ['its first option in the order the groups draw them', { 'ui:optgroups': { G: ['c'] } }, ['2']],
+      ['nothing when every option is disabled', { 'ui:enumDisabled': ['a', 'b', 'c'] }, []],
+    ])('gets %s, as core does', (_, selUiSchema, expected) => {
+      const selectSchema: RJSFSchema = { type: 'object', properties: { sel } };
+      const props = { schema: selectSchema, uiSchema: { sel: selUiSchema }, validator };
+      const { container: core } = render(<CoreForm {...props} />);
+      const { container: antd } = render(<Form {...props} />);
+
+      expect(entriesOf(core.querySelector('form'), 'root_sel')).toEqual(expected);
+      expect(entriesOf(antd.querySelector('form'), 'root_sel')).toEqual(expected);
+    });
+
+    it.each<[string, UiSchema, string]>([
+      ['its first option', {}, 'a'],
+      ['its first enabled option', { 'ui:enumDisabled': ['a'] }, 'b'],
+    ])('draws %s selected, the option it posts', (_, selUiSchema, drawn) => {
+      const selectSchema: RJSFSchema = { type: 'object', properties: { sel } };
+      const { container } = render(
+        <Form schema={selectSchema} uiSchema={{ sel: selUiSchema }} validator={validator} />,
+      );
+
+      expect(container.querySelector('.ant-select-content-has-value')).toHaveAttribute('title', drawn);
+    });
+
+    it('gets nothing for form data an option ui:enumDisabled disables holds', () => {
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { sel } }}
+          uiSchema={{ sel: { 'ui:enumDisabled': ['b'] } }}
+          initialFormData={{ sel: 'b' }}
+          validator={validator}
+        />,
+      );
+
+      expect(entriesOf(container.querySelector('form'), 'root_sel')).toEqual([]);
+    });
+  });
+
+  it.each<[string, RJSFSchema, number, string]>([
+    ['above its maximum', { type: 'number', minimum: 0, maximum: 10, multipleOf: 5 }, 50, '10'],
+    ['below its minimum', { type: 'number', minimum: 0, maximum: 10, multipleOf: 5 }, -3, '0'],
+    ['off its step', { type: 'number', minimum: 0, maximum: 10, multipleOf: 5 }, 7, '5'],
+    ['halfway between two steps', { type: 'number', minimum: 0, maximum: 10, multipleOf: 5 }, 7.5, '10'],
+    ['nearest a maximum off its step', { type: 'number', minimum: 0, maximum: 10, multipleOf: 3 }, 10, '9'],
+    ['off a decimal step', { type: 'number', minimum: 0, maximum: 1, multipleOf: 0.1 }, 0.33, '0.3'],
+    ['at a decimal maximum', { type: 'number', minimum: 0, maximum: 0.3, multipleOf: 0.1 }, 0.3, '0.3'],
+    ['at another decimal maximum', { type: 'number', minimum: 0, maximum: 0.7, multipleOf: 0.1 }, 0.7, '0.7'],
+    ['halfway between two decimal steps', { type: 'number', minimum: 0, maximum: 1, multipleOf: 0.1 }, 0.35, '0.4'],
+    [
+      'halfway between two decimal steps above 1',
+      { type: 'number', minimum: 0, maximum: 2, multipleOf: 0.1 },
+      1.15,
+      '1.2',
+    ],
+  ])(
+    'gets the value a native range input holds for a value %s, where the slider is drawn',
+    (_, range, value, posted) => {
+      // The expected values are the HTML spec's range sanitization, which a browser applies to core's range input. jsdom
+      // clamps the value but doesn't snap it to the step, so core's input can't be the reference here
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { range } }}
+          uiSchema={uiSchema}
+          initialFormData={{ range: value }}
+          validator={validator}
+        />,
+      );
+
+      expect(entriesOf(container.querySelector('form'), 'root_range')).toEqual([posted]);
+      expect(container.querySelector('.ant-slider-handle')).toHaveAttribute('aria-valuenow', posted);
+    },
+  );
+
+  it.each<[string, RJSFSchema, number, string]>([
+    ['off a step written with an exponent', { type: 'number', minimum: 0, maximum: 1, multipleOf: 1e-7 }, 0.5, '0.5'],
+    [
+      'above a minimum written with an exponent',
+      { type: 'number', minimum: 1e-7, maximum: 1, multipleOf: 0.1 },
+      0.33,
+      '0.3000001',
+    ],
+  ])('gets the value a native range input holds for a value %s', (_, range, value, posted) => {
+    // Only the posted value is checked: rc-slider rounds the value it draws by the decimals `String()` writes, so it
+    // draws these at the wrong step whatever value it is handed
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { range } }}
+        uiSchema={uiSchema}
+        initialFormData={{ range: value }}
+        validator={validator}
+      />,
+    );
+
+    expect(entriesOf(container.querySelector('form'), 'root_range')).toEqual([posted]);
+  });
+
+  it('gets the value the slider is drawn at for an empty range', () => {
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(container.querySelector('.ant-slider-handle')).toHaveAttribute('aria-valuenow', '0');
+    expect(entriesOf(container.querySelector('form'), 'root_range')).toEqual(['0']);
+  });
+
+  it('leaves out a selected option ui:enumDisabled disables, as a native select does', () => {
+    // The HTML spec leaves a selected option that is disabled out of the entry list
+    // (https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#constructing-the-form-data-set). jsdom
+    // only checks whether the select itself is disabled, so core's select can't be the reference here
+    const disabledUiSchema: UiSchema = {
+      sel: { 'ui:enumDisabled': ['b'] },
+      multi: { 'ui:widget': 'select', 'ui:enumDisabled': ['c'] },
+    };
+    const { container } = render(
+      <Form schema={schema} uiSchema={disabledUiSchema} initialFormData={formData} validator={validator} />,
+    );
+
+    const form = container.querySelector('form');
+    expect(entriesOf(form, 'root_sel')).toEqual([]);
+    expect(entriesOf(form, 'root_multi')).toEqual(['0']);
+  });
+
+  it('gets a value the form data holds twice once, as a native multi-select posts it', () => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={uiSchema} initialFormData={{ multi: ['a', 'a'] }} validator={validator} />,
+    );
+
+    expect(entriesOf(container.querySelector('form'), 'root_multi')).toEqual(['0']);
+  });
+
+  it('gets nothing for a disabled select or range, as for a disabled native control', () => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={uiSchema} initialFormData={formData} disabled validator={validator} />,
+    );
+
+    const form = container.querySelector('form');
+    expect(entriesOf(form, 'root_sel')).toEqual([]);
+    expect(entriesOf(form, 'root_multi')).toEqual([]);
+    expect(entriesOf(form, 'root_range')).toEqual([]);
+  });
+});
+
+describe('a read-only CheckboxesWidget the form leaves enabled', () => {
+  it('marks each checkbox read-only (#5597)', () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { c: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } } },
+        }}
+        uiSchema={{ c: { 'ui:widget': 'checkboxes', 'ui:readonly': true } }}
+        formContext={{ readonlyAsDisabled: false }}
+        validator={validator}
+      />,
+    );
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    expect(checkboxes).toHaveLength(2);
+    for (const checkbox of checkboxes) {
+      expect(checkbox).toBeEnabled();
+      expect(checkbox).toHaveAttribute('aria-readonly', 'true');
+    }
+  });
+});
+
+describe('a read-only RadioWidget the form leaves enabled', () => {
+  it('is announced as read-only (#5597)', () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['c'],
+          properties: { c: { type: 'string', enum: ['a', 'b'], title: 'C' } },
+        }}
+        uiSchema={{ c: { 'ui:widget': 'radio', 'ui:readonly': true } }}
+        formContext={{ readonlyAsDisabled: false }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radiogroup', { name: 'C' })).toHaveAttribute('aria-readonly', 'true');
+  });
+
+  it.each<[string, UiSchema]>([
+    ['while it is editable', { 'ui:widget': 'radio' }],
+    ['once readonlyAsDisabled disables it', { 'ui:widget': 'radio', 'ui:readonly': true }],
+  ])('is not marked read-only %s', (_, uiSchema) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { c: { type: 'string', enum: ['a', 'b'], title: 'C' } } }}
+        uiSchema={{ c: uiSchema }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radiogroup', { name: 'C' })).not.toHaveAttribute('aria-readonly');
+  });
+});
+
+describe('a read-only SelectWidget the form leaves enabled', () => {
+  it('is announced as read-only', () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { c: { type: 'string', enum: ['a', 'b'], title: 'C' } } }}
+        uiSchema={{ c: { 'ui:readonly': true } }}
+        formContext={{ readonlyAsDisabled: false }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'C' })).toHaveAttribute('aria-readonly', 'true');
+  });
+
+  it.each<[string, UiSchema]>([
+    ['while it is editable', {}],
+    ['once readonlyAsDisabled disables it', { 'ui:readonly': true }],
+  ])('is not marked read-only %s', (_, uiSchema) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { c: { type: 'string', enum: ['a', 'b'], title: 'C' } } }}
+        uiSchema={{ c: uiSchema }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'C' })).not.toHaveAttribute('aria-readonly');
+  });
+});

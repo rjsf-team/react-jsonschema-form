@@ -55,7 +55,7 @@ const numbers: Sample = {
       'ui:widget': 'range',
     },
   },
-  formData: {
+  initialFormData: {
     number: 3.14,
     integer: 42,
     numberEnum: 2,

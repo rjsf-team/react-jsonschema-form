@@ -2,10 +2,28 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { TextInput, NumberInput } from '@mantine/core';
 import { SchemaExamples } from '@rjsf/core';
-import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema } from '@rjsf/utils';
+import {
+  examplesId,
+  getControlAttributes,
+  getExampleSuggestions,
+  callerInputProps,
+  getBaseInputProps,
+  labelValue,
+  numericWidgetStoresString,
+  offersClearButton,
+  toInputValue,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import {
+  cleanupOptions,
+  getDescriptionProps,
+  getWidgetError,
+  numberInputOwnKeys,
+  useInputAriaProps,
+  getRequiredProps,
+} from '../utils.tsx';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -14,47 +32,67 @@ import { cleanupOptions } from '../utils.ts';
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  T = unknown,
+  S extends RJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
     htmlName,
-    type,
     schema,
     value,
     placeholder,
-    required,
     disabled,
     readonly,
     autofocus,
     label,
-    hideLabel,
     onChange,
     onChangeOverride,
     onBlur,
     onFocus,
     options,
-    rawErrors,
     children,
     registry,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const inputProps = getInputProps<T, S, F>(schema, type, options, false);
-  const description = hideLabel ? undefined : options.description || schema.description;
-  const themeProps = cleanupOptions(options);
+  // Mantine's `NumberInput` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared
+  // to receive, and sets an `inputMode` of its own over any it is given, so a widget that names either gets the plain
+  // input every other theme renders for a numeric field.
+  const plainInput = Boolean(onChangeOverride) || 'inputMode' in props;
+  const inputProps = getBaseInputProps<T, S, F>(props, plainInput);
+  const isNumeric = !plainInput && (inputProps.type === 'number' || inputProps.type === 'integer');
+  // `NumberInput`'s own options would land on a `TextInput` as unknown attributes
+  const optionProps = cleanupOptions(options, props, isNumeric ? undefined : numberInputOwnKeys);
+  // `ui:options` spreads onto the input as Mantine props, so the props a widget passes go after it to win. A `pattern`
+  // there replaces the derived one, so it drops the title that names it, as a passed `pattern` does
+  const themeProps = {
+    ...optionProps,
+    ...('pattern' in optionProps && { title: undefined }),
+    ...callerInputProps(props),
+  };
+  const descriptionProps = getDescriptionProps(props);
 
-  const handleNumberChange = useCallback((newValue: number | string) => onChange(newValue), [onChange]);
+  // `NumberInput` reports a number once its text parses as one, and on blur trims leading zeroes by parsing the text,
+  // which rounds the digits past a number's precision, so a string field turns that trim off and gets a string back
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const handleNumberChange = useCallback(
+    (newValue: number | string) => {
+      if (newValue === '') {
+        onChange(options.emptyValue);
+      } else {
+        onChange(storesString ? String(newValue) : newValue);
+      }
+    },
+    [onChange, storesString, options.emptyValue],
+  );
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const handler = onChangeOverride || onChange;
-      const newValue = e.target.value === '' ? options.emptyValue : e.target.value;
-      handler(newValue);
+      onChange(e.target.value === '' ? options.emptyValue : e.target.value);
     },
-    [onChange, onChangeOverride, options],
+    [onChange, options.emptyValue],
   );
 
   const handleBlur = useCallback(
@@ -80,57 +118,71 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const inputValue = toInputValue(value);
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   const componentProps = {
     id,
     name: htmlName || id,
     label: labelValue(label || undefined, hideLabel, false),
-    required,
+    ...getRequiredProps<T, S, F>(props),
     autoFocus: autofocus,
     disabled: disabled || readonly,
     onBlur: !readonly ? handleBlur : undefined,
     onFocus: !readonly ? handleFocus : undefined,
     placeholder,
-    error: rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined,
-    list: schema.examples ? examplesId(id) : undefined,
+    error: getWidgetError<T, S, F>(props),
+    list: hasExamples ? examplesId(id) : undefined,
   };
 
   const { min, max, ...restInputProps } = inputProps;
 
-  const input =
-    inputProps.type === 'number' || inputProps.type === 'integer' ? (
-      <NumberInput
-        onChange={!readonly ? handleNumberChange : undefined}
-        {...componentProps}
-        {...restInputProps}
-        {...themeProps}
-        step={typeof inputProps.step === 'number' ? inputProps.step : 1}
-        type='text'
-        description={description}
-        value={value ?? ''}
-        min={typeof min === 'number' ? min : undefined}
-        max={typeof max === 'number' ? max : undefined}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    ) : (
-      <TextInput
-        onChange={!readonly ? handleChange : undefined}
-        {...componentProps}
-        {...inputProps}
-        {...themeProps}
-        description={description}
-        value={value ?? ''}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    );
+  const ariaDescribedByProps = useInputAriaProps<T, S, F>(
+    isNumeric ? 'NumberInput' : 'TextInput',
+    props,
+    getControlAttributes<T, S, F>(props, hasExamples ? [examplesId(id)] : []),
+  );
+
+  const input = isNumeric ? (
+    <NumberInput
+      onChange={!readonly ? handleNumberChange : undefined}
+      {...componentProps}
+      {...restInputProps}
+      {...themeProps}
+      step={typeof inputProps.step === 'number' ? inputProps.step : 1}
+      {...(storesString && { trimLeadingZeroesOnBlur: false })}
+      type='text'
+      {...ariaDescribedByProps}
+      {...descriptionProps}
+      value={inputValue}
+      min={typeof min === 'number' ? min : undefined}
+      max={typeof max === 'number' ? max : undefined}
+    />
+  ) : (
+    <TextInput
+      onChange={!readonly ? (onChangeOverride ?? handleChange) : undefined}
+      {...componentProps}
+      {...inputProps}
+      {...themeProps}
+      {...ariaDescribedByProps}
+      {...descriptionProps}
+      value={inputValue}
+    />
+  );
+
+  // `NumberInput` is a text input that shows a partial number such as `5.` or `-`, which a native number input blanks
+  const showsValue = isNumeric
+    ? (typeof value === 'number' || typeof value === 'string') && Boolean(inputValue)
+    : offersClearButton(inputValue, inputProps.type);
 
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && showsValue && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

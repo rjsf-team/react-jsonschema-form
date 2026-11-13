@@ -59,7 +59,7 @@ const date: Sample = {
       },
     },
   },
-  formData: {},
+  initialFormData: {},
 };
 
 export default date;

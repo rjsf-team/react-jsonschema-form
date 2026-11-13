@@ -1,0 +1,700 @@
+import { Suspense, startTransition, use, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
+import type {
+  ArrayFieldItemTemplateProps,
+  ArrayFieldTemplateProps,
+  FieldPathList,
+  ObjectFieldTemplateProps,
+  FieldProps,
+  RJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
+import { noop, toInputValue } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { act, render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { renderToString } from 'react-dom/server';
+
+import type { FormRef } from '../src/index.ts';
+import Form, { ArrayFieldItemTemplate as DefaultItemTemplate } from '../src/index.ts';
+import type { NoValFormProps } from './testUtils.tsx';
+import {
+  AcceptingParent,
+  createFormComponent,
+  createFormRef,
+  createRetainingWidget,
+  errorListMessages,
+  expectToHaveBeenCalledWithFormData,
+  handleOf,
+  input,
+  renderInActivity,
+  setupConsoleWarnSuppression,
+} from './testUtils.tsx';
+
+const user = userEvent.setup();
+const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+
+it('an abandoned concurrent render does not publish its schema or callbacks to the model', async () => {
+  const ref = createFormRef<{ name?: string }>();
+  const committedCallback = vi.fn();
+  const pendingCallback = vi.fn();
+  const never = new Promise<void>(() => {});
+  const pendingSchema: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string', title: 'pending', default: 'pending default' } },
+  };
+  function SuspendingWidget({ value, schema: fieldSchema }: WidgetProps) {
+    if (fieldSchema.title === 'pending') {
+      use(never);
+    }
+    return <span>{toInputValue(value)}</span>;
+  }
+  function Parent() {
+    const [isPending, setIsPending] = useState(false);
+    return (
+      <>
+        <button type='button' onClick={() => startTransition(() => setIsPending(true))}>
+          Suspend
+        </button>
+        <Suspense fallback={<span>Loading</span>}>
+          <Form
+            ref={ref}
+            schema={isPending ? pendingSchema : schema}
+            validator={validator}
+            initialFormData={{}}
+            onChange={isPending ? pendingCallback : committedCallback}
+            widgets={{ TextWidget: SuspendingWidget }}
+          />
+        </Suspense>
+      </>
+    );
+  }
+  render(<Parent />);
+  await user.click(screen.getByRole('button', { name: 'Suspend' }));
+  // The pending schema's default would be in the data had its render been committed
+  expect(handleOf(ref).getFormData()).toEqual({});
+  act(() => handleOf(ref).setFieldValue('name', 'event'));
+  expectToHaveBeenCalledWithFormData(committedCallback, { name: 'event' }, 'root_name');
+  expect(pendingCallback).not.toHaveBeenCalled();
+});
+
+it('renders seeded data on the server without a browser or effect publishing a snapshot', () => {
+  const markup = renderToString(<Form schema={schema} validator={validator} initialFormData={{ name: 'server' }} />);
+  expect(markup).toContain('value="server"');
+});
+
+it("new props reach a field's layout and passive Effects of the commit that renders them", () => {
+  const ref = createFormRef<{ name?: string; extra?: string }>();
+  const phases: [string, unknown, unknown][] = [];
+  const before: RJSFSchema = { type: 'object', properties: { name: { type: 'string' }, extra: { type: 'string' } } };
+  // A default the new schema adds is filled into the data as the form renders the schema
+  const after: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string' }, extra: { type: 'string', default: 'added' } },
+  };
+  function ObservingWidget({ value }: WidgetProps) {
+    useLayoutEffect(() => {
+      phases.push(['layout', value, ref.current?.getFormData()]);
+    }, [value]);
+    useEffect(() => {
+      phases.push(['passive', value, ref.current?.getFormData()]);
+    }, [value]);
+    return <span>{toInputValue(value)}</span>;
+  }
+  const props = { ref, validator, widgets: { TextWidget: ObservingWidget }, onChange: vi.fn() };
+  const { rerender } = render(<Form {...props} schema={before} initialFormData={{ name: 'kept' }} />);
+  phases.length = 0;
+  rerender(<Form {...props} schema={after} initialFormData={{ name: 'kept' }} />);
+  // The form hands the model the props of the commit from an insertion Effect, before any layout Effect runs
+  expect(phases).toEqual([
+    ['layout', 'added', { name: 'kept', extra: 'added' }],
+    ['passive', 'added', { name: 'kept', extra: 'added' }],
+  ]);
+});
+
+it('several additional-property adds in one event use the current data of the form', async () => {
+  function AddTwice({ properties, onAddProperty }: ObjectFieldTemplateProps) {
+    return (
+      <div>
+        {properties.map(({ content }) => content)}
+        <button
+          type='button'
+          onClick={() => {
+            onAddProperty();
+            onAddProperty();
+          }}
+        >
+          Add twice
+        </button>
+      </div>
+    );
+  }
+  const { onChange, getFormData } = createFormComponent({
+    schema: { type: 'object', additionalProperties: { type: 'string', default: 'value' } },
+    templates: { ObjectFieldTemplate: AddTwice },
+  });
+  await user.click(screen.getByRole('button', { name: 'Add twice' }));
+  expect(getFormData()).toEqual({ newKey: 'value', 'newKey-1': 'value' });
+  expectToHaveBeenCalledWithFormData(onChange, getFormData(), 'root');
+});
+
+describe('an item set through the handle and an add in one event, on an array a core field renders below itself', () => {
+  const list: RJSFSchema = { type: 'array', items: { type: 'string', default: 'new' } };
+  const node: RJSFSchema = { type: 'object', properties: { list, next: { $ref: '#/definitions/node' } } };
+
+  it.each<{ field: string; props: NoValFormProps; arrayId: string; itemPath: FieldPathList; expected: object }>([
+    {
+      field: 'LayoutGridField',
+      props: {
+        schema: { type: 'object', properties: { list } },
+        uiSchema: { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': { children: ['list'] } } },
+        initialFormData: { list: ['a'] },
+      },
+      arrayId: 'root_list',
+      itemPath: ['list', 0],
+      expected: { list: ['edited', 'new'] },
+    },
+    {
+      field: 'FallbackField',
+      props: {
+        schema: { ...list, type: ['array', 'string'] },
+        useFallbackUiForUnsupportedType: true,
+        initialFormData: ['a'],
+      },
+      arrayId: 'root',
+      itemPath: [0],
+      expected: ['edited', 'new'],
+    },
+    {
+      field: 'CyclicSchemaField',
+      props: {
+        schema: { definitions: { node }, type: 'object', properties: { tree: { $ref: '#/definitions/node' } } },
+        initialFormData: { tree: { list: [], next: { list: ['a'] } } },
+      },
+      arrayId: 'root_tree_next_list',
+      itemPath: ['tree', 'next', 'list', 0],
+      expected: { tree: { list: [], next: { list: ['edited', 'new'] } } },
+    },
+  ])('below $field, the add builds on the item set', async ({ field, props, arrayId, itemPath, expected }) => {
+    const ref = createFormRef();
+    function SetThenAdd({ id, items, onAddClick }: ArrayFieldTemplateProps) {
+      return (
+        <div>
+          {items}
+          <button
+            type='button'
+            onClick={(event) => {
+              handleOf(ref).setFieldValue(itemPath, 'edited');
+              onAddClick(event);
+            }}
+          >
+            Set then add {id}
+          </button>
+        </div>
+      );
+    }
+    const { getFormData } = createFormComponent({ ...props, ref, templates: { ArrayFieldTemplate: SetThenAdd } });
+    if (field === 'CyclicSchemaField') {
+      await user.click(screen.getAllByRole('button', { name: 'Expand Cycle' })[0]);
+    }
+
+    await user.click(screen.getByRole('button', { name: `Set then add ${arrayId}` }));
+
+    expect(getFormData()).toMatchObject(expected);
+  });
+});
+
+it.each([false, true])(
+  'an edit renders zero unaffected rows or widgets in a 200-item form (under a parent storing edits: %s)',
+  async (underParent) => {
+    const rows = new Map<number, number>();
+    const widgets = new Map<string, number>();
+    function CountingItem(props: ArrayFieldItemTemplateProps) {
+      rows.set(props.index, (rows.get(props.index) ?? 0) + 1);
+      return <DefaultItemTemplate {...props} />;
+    }
+    // Forwards focus and blur as `BaseInputTemplate` does, so a focus that re-renders every row fails this too
+    function CountingWidget({ id, value, onChange, onFocus, onBlur }: WidgetProps) {
+      widgets.set(id, (widgets.get(id) ?? 0) + 1);
+      return (
+        <input
+          id={id}
+          value={toInputValue(value)}
+          onChange={(event) => onChange(event.target.value)}
+          onFocus={(event) => onFocus(id, event.target.value)}
+          onBlur={(event) => onBlur(id, event.target.value)}
+        />
+      );
+    }
+    const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
+    const props = {
+      schema,
+      widgets: { TextWidget: CountingWidget },
+      templates: { ArrayFieldItemTemplate: CountingItem },
+    };
+    const initial = Array.from({ length: 200 }, (_, index) => String(index));
+    const { container } = underParent
+      ? render(<AcceptingParent<string[]> {...props} initialValue={initial} />)
+      : createFormComponent({ ...props, initialFormData: initial });
+    const previousRows = new Map(rows);
+    const previousWidgets = new Map(widgets);
+    expect(previousRows.size).toBe(200);
+    expect(previousWidgets.size).toBe(200);
+    await user.type(input(container, 'root_0'), 'x');
+    expect(widgets.get('root_0')).toBeGreaterThan(previousWidgets.get('root_0') ?? Infinity);
+    for (let index = 1; index < 200; index++) {
+      expect(rows.get(index)).toBe(previousRows.get(index));
+      expect(widgets.get(`root_${index}`)).toBe(previousWidgets.get(`root_${index}`));
+    }
+  },
+);
+
+it('same-tick validation sees the custom errors a field raises with its edit', async () => {
+  const ref = createFormRef();
+  const results: boolean[] = [];
+  function RaiseAndValidate({ fieldPath, onChange }: FieldProps) {
+    return (
+      <button
+        type='button'
+        onClick={() => {
+          onChange('edited', fieldPath, { __errors: ['blocked'] });
+          results.push(handleOf(ref).validateForm());
+        }}
+      >
+        Raise and validate
+      </button>
+    );
+  }
+  const onError = vi.fn();
+  createFormComponent({
+    ref,
+    schema,
+    uiSchema: { name: { 'ui:field': RaiseAndValidate } },
+    onError,
+    initialFormData: { name: 'committed' },
+  });
+
+  await user.click(screen.getByRole('button', { name: 'Raise and validate' }));
+
+  expect(results).toEqual([false]);
+  expect(handleOf(ref).getFormData()).toEqual({ name: 'edited' });
+  expect(onError).toHaveBeenLastCalledWith(expect.arrayContaining([expect.objectContaining({ message: 'blocked' })]));
+});
+
+it('same-tick validation sees a setFieldValue() made just before it', () => {
+  const ref = createFormRef();
+  const { node } = createFormComponent({
+    ref,
+    schema: { type: 'object', properties: { name: { type: 'string', minLength: 3 } } },
+  });
+  let isValid: boolean | undefined;
+
+  act(() => {
+    handleOf(ref).setFieldValue('name', 'a');
+    isValid = handleOf(ref).validateForm();
+  });
+
+  expect(isValid).toBe(false);
+  expect(errorListMessages(node)).toEqual(['.name must NOT have fewer than 3 characters']);
+});
+
+it('an edit customValidate makes through the handle while validateForm() runs is kept', () => {
+  const ref = createFormRef();
+  let isFirstRun = true;
+  const customValidate: NoValFormProps['customValidate'] = (_formData, errors) => {
+    if (isFirstRun) {
+      isFirstRun = false;
+      handleOf(ref).setFieldValue('b', 'derived');
+    }
+    return errors;
+  };
+  const { onChange } = createFormComponent({
+    ref,
+    schema: { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } },
+    initialFormData: { a: 'x' },
+    customValidate,
+  });
+
+  act(() => {
+    handleOf(ref).validateForm();
+  });
+
+  expectToHaveBeenCalledWithFormData(onChange, { a: 'x', b: 'derived' }, 'root_b');
+  expect(handleOf(ref).getFormData()).toEqual({ a: 'x', b: 'derived' });
+});
+
+it('a handle retained past the unmount neither applies nor reports a change', () => {
+  const ref = createFormRef();
+  const { onChange, unmount } = createFormComponent({ ref, schema, initialFormData: { name: 'a' } });
+  const handle = handleOf(ref);
+  act(() => handle.setFieldValue('name', 'before'));
+  expectToHaveBeenCalledWithFormData(onChange, { name: 'before' }, 'root_name');
+  unmount();
+  onChange.mockClear();
+
+  // A debounced widget or an autosave timer firing after a route change
+  handle.setFieldValue('name', 'later');
+  handle.reset();
+
+  expect(handle.getFormData()).toEqual({ name: 'before' });
+  expect(onChange).not.toHaveBeenCalled();
+});
+
+it.each(['layout', 'passive'] as const)(
+  'a change a widget makes from its %s Effect cleanup as the form unmounts is dropped',
+  (kind) => {
+    const useCleanupEffect = kind === 'layout' ? useLayoutEffect : useEffect;
+    const flushed = vi.fn();
+    function FlushOnUnmountWidget({ onChange, value }: WidgetProps) {
+      useCleanupEffect(
+        () => () => {
+          flushed();
+          onChange('flushed', undefined, 'root_name');
+        },
+        [onChange],
+      );
+      return <span>{String(toInputValue(value))}</span>;
+    }
+    const { onChange, unmount } = createFormComponent({
+      schema,
+      initialFormData: { name: 'a' },
+      uiSchema: { name: { 'ui:widget': FlushOnUnmountWidget } },
+    });
+    onChange.mockClear();
+
+    unmount();
+
+    expect(flushed).toHaveBeenCalledTimes(1);
+    expect(onChange).not.toHaveBeenCalled();
+  },
+);
+
+it('a blur and a focus a widget reports from its Effect cleanup as the form unmounts are dropped', () => {
+  const flushed = vi.fn();
+  function BlurOnUnmountWidget({ id, onBlur, onFocus, value }: WidgetProps) {
+    useEffect(
+      () => () => {
+        flushed();
+        onBlur(id, 'left');
+        onFocus(id, 'entered');
+      },
+      [id, onBlur, onFocus],
+    );
+    return <span>{String(toInputValue(value))}</span>;
+  }
+  const onBlur = vi.fn();
+  const onFocus = vi.fn();
+  const { unmount } = createFormComponent({
+    schema,
+    initialFormData: { name: 'a' },
+    uiSchema: { name: { 'ui:widget': BlurOnUnmountWidget } },
+    onBlur,
+    onFocus,
+  });
+
+  unmount();
+
+  expect(flushed).toHaveBeenCalledTimes(1);
+  expect(onBlur).not.toHaveBeenCalled();
+  expect(onFocus).not.toHaveBeenCalled();
+});
+
+it('a blur and a focus that reach a form hidden by Activity are dropped, and those after it is shown are reported', () => {
+  const reports = new Map<string, Pick<WidgetProps, 'onBlur' | 'onFocus'>>();
+  function RetainingWidget({ id, onBlur, onFocus, value }: WidgetProps) {
+    useEffect(() => {
+      reports.set(id, { onBlur, onFocus });
+    }, [id, onBlur, onFocus]);
+    return <span>{String(toInputValue(value))}</span>;
+  }
+  const report = (kind: 'onBlur' | 'onFocus') => reports.get('root_name')?.[kind]('root_name', 'a');
+  const calls: string[] = [];
+  const { hide, show } = renderInActivity(() => (
+    <Form
+      schema={schema}
+      validator={validator}
+      initialFormData={{ name: 'a' }}
+      uiSchema={{ name: { 'ui:widget': RetainingWidget } }}
+      onBlur={(id) => calls.push(`blur ${id}`)}
+      onFocus={(id) => calls.push(`focus ${id}`)}
+    />
+  ));
+  hide();
+
+  act(() => {
+    report('onFocus');
+    report('onBlur');
+  });
+  expect(calls).toEqual([]);
+
+  show();
+  act(() => {
+    report('onFocus');
+    report('onBlur');
+  });
+
+  expect(calls).toEqual(['focus root_name', 'blur root_name']);
+});
+
+it('a handle retained past the unmount validates without reporting the errors', () => {
+  const ref = createFormRef();
+  const invalidSchema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 3 } } };
+  const { onError, unmount } = createFormComponent({ ref, schema: invalidSchema, initialFormData: { name: 'a' } });
+  const handle = handleOf(ref);
+  unmount();
+
+  expect(handle.validateForm()).toBe(false);
+  expect(handle.validateFormWithFormData({ name: 'abc' })).toBe(true);
+  expect(handle.validateFormWithFormData({ name: 'a' })).toBe(false);
+  expect(onError).not.toHaveBeenCalled();
+});
+
+it('a draft a widget flushes as its form unmounts does not reach the form that replaces it', async () => {
+  function DraftWidget({ onChange, value }: WidgetProps) {
+    useEffect(() => () => onChange('draft of A', undefined, 'root_name'), [onChange]);
+    return <span>{String(toInputValue(value))}</span>;
+  }
+  function Records() {
+    const [record, setRecord] = useState<{ id: string; data: unknown }>({ id: 'A', data: { name: 'a' } });
+    return (
+      <>
+        <button type='button' onClick={() => setRecord({ id: 'B', data: { name: 'b' } })}>
+          Next record
+        </button>
+        <output>{JSON.stringify(record)}</output>
+        <Form
+          key={record.id}
+          schema={schema}
+          validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
+          formData={record.data}
+          uiSchema={{ name: { 'ui:widget': DraftWidget } }}
+          onChange={(event) => setRecord((current) => ({ ...current, data: event.formData }))}
+        />
+      </>
+    );
+  }
+  render(<Records />);
+
+  await user.click(screen.getByRole('button', { name: 'Next record' }));
+
+  expect(screen.getByRole('status')).toHaveTextContent('{"id":"B","data":{"name":"b"}}');
+});
+
+it('a form hidden by Activity drops a retained handle and a late field change, as an unmounted form does', () => {
+  const { RetainingWidget, change } = createRetainingWidget();
+  const ref = createFormRef<{ name?: string }>();
+  const onChange = vi.fn();
+  const { hide, show } = renderInActivity(() => (
+    <Form
+      ref={ref}
+      schema={schema}
+      validator={validator}
+      initialFormData={{ name: 'a' }}
+      uiSchema={{ name: { 'ui:widget': RetainingWidget } }}
+      onChange={onChange}
+    />
+  ));
+  const handle = handleOf(ref);
+  hide();
+
+  act(() => {
+    handle.setFieldValue('name', 'later');
+    change('root_name', 'late');
+  });
+
+  // React asks that hidden content be treated as unmounted: what reaches the form while it is hidden is dropped
+  expect(handle.getFormData()).toEqual({ name: 'a' });
+  expect(onChange).not.toHaveBeenCalled();
+
+  show();
+
+  expect(screen.getByText('a')).toBeInTheDocument();
+});
+
+it('a form shown again after Activity hid it takes and shows an edit, with no render of its own before it', () => {
+  const ref = createFormRef<{ name?: string }>();
+  const form = (className: string) => (
+    <Form ref={ref} className={className} schema={schema} validator={validator} initialFormData={{ name: 'a' }} />
+  );
+  const { container, hide, show } = renderInActivity((element: ReactNode) => element, form('mounted'));
+  // Rendered once more, as most forms have been by the time they are hidden. The same element from then on, so
+  // neither hiding nor showing the form renders it
+  const rendered = form('rendered');
+  show(rendered);
+  const handle = handleOf(ref);
+  hide(rendered);
+  show(rendered);
+
+  act(() => handle.setFieldValue('name', 'later'));
+
+  expect(input(container, 'root_name')).toHaveValue('later');
+});
+
+describe('a formData passed to a form hidden by Activity', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  it('is ignored, and data set through the handle is taken once the form is shown', () => {
+    interface Record {
+      name?: string;
+      other?: string;
+    }
+    const ref = createFormRef<Record>();
+    const onChange = vi.fn();
+    const { hide, show } = renderInActivity(
+      (formData: Record) => (
+        <Form
+          ref={ref}
+          schema={{ type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } }}
+          validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
+          formData={formData}
+          onChange={onChange}
+        />
+      ),
+      { name: 'a', other: 'x' },
+    );
+    const handle = handleOf(ref);
+    hide({ name: 'a', other: 'x' });
+
+    // The parent passes another record while the form is hidden, which the form ignores as it would when shown
+    hide({ name: 'b', other: 'y' });
+    expect(handle.getFormData()).toEqual({ name: 'a', other: 'x' });
+
+    // So is the handle, while the form is hidden, as for an unmounted form
+    act(() => handle.setFieldValue('name', 'hidden'));
+    show({ name: 'b', other: 'y' });
+    act(() => handle.setFieldValue('', { name: 'b', other: 'y' }));
+    act(() => handle.setFieldValue('name', 'edited'));
+
+    expect(handle.getFormData()).toEqual({ name: 'edited', other: 'y' });
+    expectToHaveBeenCalledWithFormData(onChange, { name: 'edited', other: 'y' }, 'root_name');
+    // The dropped handle call is warned about as it is made; the ignored `formData` warning is an Effect's, which
+    // waits for the form to be shown
+    const messages = warnings.consoleSpy.mock.calls.map(([message]) => String(message));
+    expect(messages).toHaveLength(2);
+    expect(messages[0]).toMatch(/`setFieldValue\(\)` was called on a form that is hidden/);
+    expect(messages[1]).toMatch(/`formData` changed after the form mounted/);
+  });
+});
+
+it('a submit and a change on a form hidden by Activity are dropped', () => {
+  const ref = createFormRef<{ name?: string }>();
+  const calls: string[] = [];
+  const { hide } = renderInActivity(() => (
+    <Form
+      ref={ref}
+      schema={schema}
+      validator={validator}
+      initialFormData={{}}
+      onChange={() => calls.push('change')}
+      onSubmit={({ formData }) => calls.push(`submit ${JSON.stringify(formData)}`)}
+    />
+  ));
+  const handle = handleOf(ref);
+  hide();
+
+  act(() => {
+    handle.setFieldValue('name', 'later');
+    handle.submit();
+  });
+
+  expect(calls).toEqual([]);
+  expect(handle.getFormData()).toEqual({});
+});
+
+describe('validateForm() from a passive Effect after a prop change (#5034)', () => {
+  const schemaA: RJSFSchema = { type: 'string', minLength: 10, maxLength: 15 };
+  const schemaB: RJSFSchema = { type: 'string', minLength: 20 };
+  const valueA = 'invalid';
+  const valueB = 'this is also invalid';
+
+  type Validation = [RJSFSchema, string, boolean];
+
+  function ValidatingParent({ validations }: { validations: Validation[] }) {
+    const ref = useRef<FormRef<string>>(null);
+    const [activeSchema, setActiveSchema] = useState(schemaA);
+    const [formData, setFormData] = useState(valueA);
+    useEffect(() => {
+      validations.push([activeSchema, formData, handleOf(ref).validateForm()]);
+    }, [validations, activeSchema, formData]);
+    return (
+      <>
+        <Form<string>
+          ref={ref}
+          schema={activeSchema}
+          validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
+          formData={formData}
+          onChange={(event) => setFormData(event.formData ?? '')}
+          onError={noop}
+        />
+        <button type='button' onClick={() => setActiveSchema((previous) => (previous === schemaA ? schemaB : schemaA))}>
+          Toggle schema
+        </button>
+        <button type='button' onClick={() => handleOf(ref).setFieldValue('', formData === valueA ? valueB : valueA)}>
+          Toggle data
+        </button>
+      </>
+    );
+  }
+
+  it('validates the initial props', () => {
+    const validations: Validation[] = [];
+    const { container } = render(<ValidatingParent validations={validations} />);
+
+    expect(validations).toEqual([[schemaA, valueA, false]]);
+    expect(errorListMessages(container)).toEqual(['must NOT have fewer than 10 characters']);
+  });
+
+  it('validates against the new schema', async () => {
+    const validations: Validation[] = [];
+    const { container } = render(<ValidatingParent validations={validations} />);
+
+    await user.click(screen.getByRole('button', { name: 'Toggle schema' }));
+
+    expect(validations.at(-1)).toEqual([schemaB, valueA, false]);
+    expect(errorListMessages(container)).toEqual(['must NOT have fewer than 20 characters']);
+  });
+
+  it('validates the new data', async () => {
+    const validations: Validation[] = [];
+    const { container } = render(<ValidatingParent validations={validations} />);
+
+    await user.click(screen.getByRole('button', { name: 'Toggle data' }));
+
+    expect(validations.at(-1)).toEqual([schemaA, valueB, false]);
+    expect(errorListMessages(container)).toEqual(['must NOT have more than 15 characters']);
+  });
+
+  it('renders the data set through its handle after validating only as it mounted, without the errors of the data it replaced', async () => {
+    function ValidatedOnMountParent() {
+      const ref = useRef<FormRef<string>>(null);
+      useEffect(() => {
+        handleOf(ref).validateForm();
+      }, []);
+      return (
+        <>
+          <Form<string>
+            ref={ref}
+            schema={schemaA}
+            validator={validator}
+            initialFormData={valueA}
+            readonly
+            onError={noop}
+          />
+          <button type='button' onClick={() => handleOf(ref).setFieldValue('', valueB)}>
+            Toggle data
+          </button>
+        </>
+      );
+    }
+    const { container } = render(<ValidatedOnMountParent />);
+    expect(errorListMessages(container)).toEqual(['must NOT have fewer than 10 characters']);
+
+    await user.click(screen.getByRole('button', { name: 'Toggle data' }));
+
+    expect(screen.getByRole('textbox')).toHaveValue(valueB);
+    expect(errorListMessages(container)).toEqual([]);
+  });
+});

@@ -1,8 +1,19 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  fieldShowsOwnErrors,
+  getControlAttributes,
+  getTemplates,
+  getUiOptions,
+  getWidgetDescription,
+  hasWidgetErrors,
+  labelValue,
+  schemaRequiresTrueValue,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { Label } from '../components/ui/label.tsx';
+import { cn } from '../lib/utils.ts';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -10,9 +21,9 @@ import { Label } from '../components/ui/label.tsx';
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -21,7 +32,6 @@ export default function CheckboxWidget<
     disabled,
     readonly,
     label,
-    hideLabel,
     schema,
     autofocus,
     options,
@@ -29,34 +39,37 @@ export default function CheckboxWidget<
     onBlur,
     onFocus,
     registry,
+    presentation,
     uiSchema,
     className,
     required,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
+  const hasErrors = fieldShowsOwnErrors<T, S, F>(props);
 
   const handleChange = (checked: boolean) => onChange(checked);
   const handleBlur = () => onBlur(id, value);
   const handleFocus = () => onFocus(id, value);
 
-  const description = options.description || schema.description;
+  // Without a plan, core's `FieldTemplate` draws the description of a field whose `ui:widget` is the `checkbox` alias
+  const description =
+    presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (
-    <div
-      className={`relative ${disabled || readonly ? 'cursor-not-allowed opacity-50' : ''}`}
-      aria-describedby={ariaDescribedByIds(id)}
-    >
-      {!hideLabel && description && (
+    <div className={`relative ${disabled || readonly ? 'cursor-not-allowed opacity-50' : ''}`}>
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
+          hasErrors={hasErrors}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -67,17 +80,24 @@ export default function CheckboxWidget<
           id={id}
           name={htmlName || id}
           checked={typeof value === 'undefined' ? false : Boolean(value)}
-          required={required}
+          required={trueValueRequired || undefined}
+          // Replaces the one Radix sets from `required`, so it is set wherever the box is natively required too
+          aria-required={marksRequired || undefined}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onCheckedChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
-          className={className}
+          {...getControlAttributes<T, S, F>({ id, presentation })}
+          className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className)}
         />
-        <Label className='leading-tight' htmlFor={id}>
+        <Label
+          className='leading-tight data-invalid:text-destructive'
+          htmlFor={id}
+          data-invalid={hasErrors || undefined}
+        >
           {labelValue(label, hideLabel || !label)}
-          {!hideLabel && label && trueValueRequired && <span className='text-destructive ml-1'>*</span>}
+          {!hideLabel && label && marksRequired && <span className='text-destructive ml-1'>*</span>}
         </Label>
       </div>
     </div>

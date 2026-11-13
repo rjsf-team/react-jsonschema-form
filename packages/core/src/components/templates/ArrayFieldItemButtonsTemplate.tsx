@@ -7,9 +7,9 @@ import { buttonId } from '@rjsf/utils';
  * @param props - The `ArrayFieldItemButtonsTemplateProps` props for the component
  */
 export default function ArrayFieldItemButtonsTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldItemButtonsTemplateProps<T, S, F>) {
   const {
     disabled,
@@ -17,7 +17,8 @@ export default function ArrayFieldItemButtonsTemplate<
     hasMoveDown,
     hasMoveUp,
     hasRemove,
-    fieldPathId,
+    id,
+    itemButtonProps,
     onCopyItem,
     onRemoveItem,
     onMoveDownItem,
@@ -32,7 +33,8 @@ export default function ArrayFieldItemButtonsTemplate<
     <>
       {(hasMoveUp || hasMoveDown) && (
         <MoveUpButton
-          id={buttonId(fieldPathId, 'moveUp')}
+          {...itemButtonProps?.moveUp}
+          id={buttonId(id, 'moveUp')}
           className='rjsf-array-item-move-up'
           disabled={disabled || readonly || !hasMoveUp}
           onClick={onMoveUpItem}
@@ -42,7 +44,8 @@ export default function ArrayFieldItemButtonsTemplate<
       )}
       {(hasMoveUp || hasMoveDown) && (
         <MoveDownButton
-          id={buttonId(fieldPathId, 'moveDown')}
+          {...itemButtonProps?.moveDown}
+          id={buttonId(id, 'moveDown')}
           className='rjsf-array-item-move-down'
           disabled={disabled || readonly || !hasMoveDown}
           onClick={onMoveDownItem}
@@ -52,7 +55,8 @@ export default function ArrayFieldItemButtonsTemplate<
       )}
       {hasCopy && (
         <CopyButton
-          id={buttonId(fieldPathId, 'copy')}
+          {...itemButtonProps?.copy}
+          id={buttonId(id, 'copy')}
           className='rjsf-array-item-copy'
           disabled={disabled || readonly}
           onClick={onCopyItem}
@@ -62,7 +66,8 @@ export default function ArrayFieldItemButtonsTemplate<
       )}
       {hasRemove && (
         <RemoveButton
-          id={buttonId(fieldPathId, 'remove')}
+          {...itemButtonProps?.remove}
+          id={buttonId(id, 'remove')}
           className='rjsf-array-item-remove'
           disabled={disabled || readonly}
           onClick={onRemoveItem}

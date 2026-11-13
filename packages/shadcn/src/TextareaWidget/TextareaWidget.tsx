@@ -1,40 +1,35 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds } from '@rjsf/utils';
+import { getControlAttributes, hasWidgetErrors, toInputValue } from '@rjsf/utils';
 
 import { Textarea } from '../components/ui/textarea.tsx';
-
-type CustomWidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = WidgetProps<
-  T,
-  S,
-  F
-> & {
-  options: any;
-};
+import { cn } from '../lib/utils.ts';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
  * @param props - The `WidgetProps` for this component
  */
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  id,
-  htmlName,
-  placeholder,
-  value,
-  required,
-  disabled,
-  autofocus,
-  readonly,
-  onBlur,
-  onFocus,
-  onChange,
-  options,
-  className,
-}: CustomWidgetProps<T, S, F>) {
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    placeholder,
+    value,
+    required,
+    disabled,
+    autofocus,
+    readonly,
+    onBlur,
+    onFocus,
+    onChange,
+    options,
+    className,
+    presentation,
+  } = props;
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value);
@@ -48,15 +43,15 @@ export default function TextareaWidget<
         placeholder={placeholder}
         disabled={disabled}
         readOnly={readonly}
-        value={value ?? ''}
+        value={toInputValue(value)}
         required={required}
         autoFocus={autofocus}
-        rows={options.rows || 5}
+        rows={options.rows ?? 5}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
-        className={className}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
+        className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className)}
       />
     </div>
   );

@@ -17,26 +17,25 @@ const useStyles = makeStyles({
  * @param props - The `FieldErrorProps` for the errors being rendered
  */
 export default function FieldErrorTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldErrorProps<T, S, F>) {
-  const { errors = [], fieldPathId } = props;
+  const { errors = [], id: fieldId } = props;
   const classes = useStyles();
 
   if (errors.length === 0) {
     return null;
   }
-  const id = errorId(fieldPathId);
+  const id = errorId(fieldId);
 
+  // One element carries the id a control is described by, so the id appears once and describes every message
   return (
-    <ul className={classes.list}>
+    <ul className={classes.list} id={id}>
       {errors.map((error, i: number) => (
         // oxlint-disable-next-line react/no-array-index-key
         <li key={i} className={classes.listItem}>
-          <small className={classes.errorLabel} id={id}>
-            {error}
-          </small>
+          <small className={classes.errorLabel}>{error}</small>
         </li>
       ))}
     </ul>

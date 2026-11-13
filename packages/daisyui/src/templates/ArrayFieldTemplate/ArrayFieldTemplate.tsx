@@ -1,28 +1,39 @@
 import React, { useCallback } from 'react';
 import type { ArrayFieldTemplateProps, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, TranslatableString, buttonId } from '@rjsf/utils';
+import {
+  getArrayDescription,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  TranslatableString,
+  buttonId,
+  titleDrawsOptionalDataControl,
+} from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
  * This DaisyUI implementation:
  * - Renders the entire array in a rounded container with base-200 background
- * - Uses custom ArrayFieldTitleTemplate and ArrayFieldDescriptionTemplate
+ * - Uses the theme's ArrayFieldTitleTemplate, and core's ArrayFieldDescriptionTemplate styled by the class map
  * - Displays an info alert when the array is empty
- * - Renders each array item using ArrayFieldItemTemplate with additional props
+ * - Renders each array item using the registry's ArrayFieldItemTemplate, which is core's styled by the class map
  * - Positions the add button at the bottom right using flexbox
  * - Uses DaisyUI's button styling for the add button
  * - Maintains proper spacing with margin and padding utilities
  *
  * @param props - The `ArrayFieldTemplateProps` for the component
  */
-export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ArrayFieldTemplateProps<T, S, F>,
-) {
+export default function ArrayFieldTemplate<
+  T = unknown,
+  S extends RJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     className,
     disabled,
-    fieldPathId,
+    hasErrors,
+    id,
     items,
     optionalDataControl,
     onAddClick,
@@ -31,21 +42,14 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
     required,
     schema,
     title,
+    presentation,
     uiSchema,
   } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const shownDescription = getArrayDescription<T, S, F>(props);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -65,10 +69,15 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
   );
 
   return (
-    <div className={`array-field-template ${className}`}>
+    <div
+      className={`array-field-template ${className}`}
+      id={id}
+      role='group'
+      {...getContainerAttributes(presentation, id, title)}
+    >
       <ArrayFieldTitleTemplate
-        fieldPathId={fieldPathId}
-        title={uiOptions.title || title}
+        id={id}
+        title={title}
         schema={schema}
         uiSchema={uiSchema}
         required={required}
@@ -76,25 +85,29 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
         optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <ArrayFieldDescriptionTemplate
-        fieldPathId={fieldPathId}
-        description={uiOptions.description || schema.description}
+        id={id}
+        description={shownDescription}
+        hasErrors={hasErrors}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
+        presentation={presentation}
       />
       <div className='flex flex-col gap-4'>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         <div className='rjsf-array-item-list'>
           {items}
           {items && items.length === 0 && canAdd && (
-            <div className='text-center italic text-base-content/70'>{TranslatableString.EmptyArray}</div>
+            <div className='text-center italic text-base-content/70'>
+              {registry.translateString(TranslatableString.EmptyArray)}
+            </div>
           )}
         </div>
         {canAdd && (
           <div className='flex justify-end'>
             <AddButton
-              id={buttonId(fieldPathId, 'add')}
-              className='rjsf-array-item-add btn btn-primary btn-sm'
+              id={buttonId(id, 'add')}
+              className='rjsf-array-item-add btn-primary'
               onClick={handleAddClick}
               disabled={disabled || readonly}
               uiSchema={uiSchema}

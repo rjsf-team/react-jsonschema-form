@@ -1,0 +1,162 @@
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+
+import Form from './WrappedForm.tsx';
+
+const user = userEvent.setup();
+
+const FILE_STR = 'data:text/plain;name=file1.txt;base64,';
+const uiSchema: UiSchema = { 'ui:options': { clearable: true, clearButtonProps: { 'aria-label': 'Clear' } } };
+
+describe('FileWidget', () => {
+  test('an empty single file input shows its placeholder and no clear button', () => {
+    const schema: RJSFSchema = { type: 'string', format: 'data-url' };
+    render(
+      <Form schema={schema} uiSchema={{ ...uiSchema, 'ui:placeholder': 'Choose a file' }} validator={validator} />,
+    );
+
+    expect(screen.getByText('Choose a file')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Clear')).toBeNull();
+  });
+
+  test('clearing a single file input reports an undefined value', async () => {
+    const schema: RJSFSchema = { type: 'string', format: 'data-url' };
+    const onChange = vi.fn();
+    render(
+      <Form schema={schema} uiSchema={uiSchema} initialFormData={FILE_STR} validator={validator} onChange={onChange} />,
+    );
+
+    await user.click(screen.getByLabelText('Clear'));
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: undefined }), 'root');
+  });
+
+  test('clearing a multiple file input reports an empty list', async () => {
+    const schema: RJSFSchema = { type: 'array', items: { type: 'string', format: 'data-url' } };
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={schema}
+        uiSchema={uiSchema}
+        initialFormData={[FILE_STR]}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await user.click(screen.getByLabelText('Clear'));
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [] }), 'root');
+  });
+
+  test('joins an `accept` option given as an array', () => {
+    const jsonOptions: Record<string, unknown> = { accept: ['.png', '.jpg'] };
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'data-url' }}
+        uiSchema={{ 'ui:options': jsonOptions }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input[type=file]')).toHaveAttribute('accept', '.png,.jpg');
+  });
+
+  test.each([
+    ['true', true],
+    ['an object', {}],
+  ])('sets no `accept` for an option holding %s', (_, accept) => {
+    const jsonOptions: Record<string, unknown> = { accept };
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'data-url' }}
+        uiSchema={{ 'ui:options': jsonOptions }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input[type=file]')).not.toHaveAttribute('accept');
+  });
+
+  test('offers to clear a stored item that could not be read', async () => {
+    const schema: RJSFSchema = { type: 'array', items: { type: 'string', format: 'data-url' } };
+    const onChange = vi.fn();
+    render(
+      <Form schema={schema} uiSchema={uiSchema} initialFormData={[null]} validator={validator} onChange={onChange} />,
+    );
+
+    await user.click(screen.getByLabelText('Clear'));
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [] }), 'root');
+  });
+
+  test('offers to clear a stored string that is not a data URL', async () => {
+    const schema: RJSFSchema = { type: 'string', format: 'data-url' };
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={schema}
+        uiSchema={uiSchema}
+        initialFormData='not-a-data-url'
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await user.click(screen.getByLabelText('Clear'));
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: undefined }), 'root');
+  });
+
+  test('a multiple input offers to clear a lone string that is not a data URL', async () => {
+    const schema: RJSFSchema = { type: 'array', items: { type: 'string', format: 'data-url' } };
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={schema}
+        uiSchema={uiSchema}
+        initialFormData='not-a-data-url'
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await user.click(screen.getByLabelText('Clear'));
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [] }), 'root');
+  });
+
+  test('renders with description from options', () => {
+    const options = { description: 'Test description' };
+    const uiOptions = { ...uiSchema, 'ui:options': options };
+    render(<Form schema={{ type: 'string', format: 'data-url' }} uiSchema={uiOptions} validator={validator} />);
+    expect(screen.getByText('Test description')).toBeInTheDocument();
+  });
+
+  test('renders with description from schema', () => {
+    const schema: RJSFSchema = { type: 'string', description: 'Test description from schema', format: 'data-url' };
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+    expect(screen.getByText('Test description from schema')).toBeInTheDocument();
+  });
+
+  test('hides description when hideLabel is true', () => {
+    const uiOptions = { 'ui:options': { description: 'Test description', label: false } };
+    const { queryByText } = render(
+      <Form schema={{ type: 'string', format: 'data-url' }} uiSchema={uiOptions} validator={validator} />,
+    );
+    expect(queryByText('Test description')).not.toBeInTheDocument();
+  });
+
+  test('sets the accepted file types from options on the input itself, since cleanupOptions() strips them', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'data-url' }}
+        uiSchema={{ 'ui:options': { accept: '.pdf' } }}
+        validator={validator}
+      />,
+    );
+    expect(container.querySelector('input[type="file"]')).toHaveAttribute('accept', '.pdf');
+  });
+});

@@ -1,56 +1,174 @@
-import { ANY_OF_KEY, ONE_OF_KEY } from './constants.ts';
+import { ADDITIONAL_PROPERTY_FLAG } from './constants.ts';
+import { ROOT_FIELD_PATH } from './fieldPath.ts';
+import getRenderedOptionSchema from './getRenderedOptionSchema.ts';
+import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getUiOptions from './getUiOptions.ts';
-import isObject from './isObject.ts';
-import isRootSchema from './isRootSchema.ts';
-import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
+import getXxxOfOptions from './getXxxOfOptions.ts';
+import hasSchemaMarker from './hasSchemaMarker.ts';
+import isFormDataAvailable from './isFormDataAvailable.ts';
+import { isSchemaObject } from './isObject.ts';
+import resolveUiSchema from './resolveUiSchema.ts';
+import { resolveOwnRef } from './schema/retrieveSchema.ts';
+import type {
+  FieldPath,
+  FormContextType,
+  GlobalUISchemaOptions,
+  Registry,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  UiSchemaDefinitions,
+} from './types.ts';
+import uiBooleanOption from './uiBooleanOption.ts';
 
-/** Returns the unique list of schema types for all of the options in a anyOf/oneOf
+/** Returns the type of the field that the Optional Data Controls UI is rendered for. An `anyOf`/`oneOf` schema's type
+ * is read from its options as they render: each option written as a `$ref` is resolved against `rootSchema`, and each
+ * one naming or implying no type of its own takes what `getRenderedOptionSchema()` passes it from the schema, so it has
+ * the schema's own type, as the option `MultiSchemaField` renders does. The type is the one the options agree on, the
+ * unique list of them when they name several, a `null` option counted among them so that such a list keeps the
+ * selector the `null` branch is reached through, and `undefined` when they name none. Otherwise, including for an
+ * empty `anyOf: []`/`oneOf: []`, it is the schema's own type.
  *
- * @param schemas - The list of schemas representing the XxxOf options
- * @returns - All of the unique types contained within the oneOf list
+ * @param schema - The schema for the field
+ * @param rootSchema - The root schema an option written as a `$ref` names its definition in
+ * @returns - The type of the field, the list of its `anyOf`/`oneOf` options' types when they name several, or
+ *            `undefined` when neither names one
  */
-export function getSchemaTypesForXxxOf<S extends StrictRJSFSchema = RJSFSchema>(schemas: S[]): string | string[] {
-  const allTypes: string[] = [
+export function getOptionalDataControlsType<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  rootSchema: S,
+): string | string[] | undefined {
+  const xxxOf = getXxxOfOptions<S>(schema);
+  if (!xxxOf) {
+    return getSchemaType<S>(schema);
+  }
+  const types = [
     ...new Set(
-      schemas
-        .map((s) => (isObject(s) ? getSchemaType(s) : undefined))
-        .flat()
-        .filter((t) => t !== undefined),
+      xxxOf.options.flatMap((option) => {
+        if (!isSchemaObject<S>(option)) {
+          return [];
+        }
+        const resolved = resolveOwnRef<S>(option, rootSchema);
+        const ownTypes = getSchemaOwnTypes<S>(resolved);
+        // Read from the option's own types rather than `getSchemaType()`, which reads any typeless `enum` as `string`:
+        // an `enum: [null]` is the `null` branch too, and an `enum` of arrays a select over whole arrays.
+        // Only an option that implies no type of its own takes the schema's, which keeps a `properties` option an
+        // object under a `['array', 'object']` schema whose first type it would otherwise take
+        if (ownTypes) {
+          return ownTypes.find((type) => type !== 'null') ?? 'null';
+        }
+        return getSchemaType<S>(getRenderedOptionSchema<S>(schema, resolved)) ?? [];
+      }),
     ),
   ];
-  return allTypes.length === 1 ? allTypes[0] : allTypes;
+  return types.length > 1 ? types : types[0];
+}
+
+/** Determines whether the type of the field for `schema` is one that `enableOptionalDataFieldForType` turns the Optional
+ * Data Controls UI on for. A field whose `anyOf`/`oneOf` options name several types is never one of them, while a
+ * `type` list counts as the type `getSchemaType()` resolves it to.
+ *
+ * @param schema - The schema for the field, or a function building it, called only once the uiSchema turns the Optional
+ *        Data Controls UI on for some type, which by default it does for none
+ * @param uiSchema - The uiSchema for the field, if any
+ * @param globalUiOptions - The global UI options, from the `registry`, if any
+ * @param rootSchema - The root schema, see `getOptionalDataControlsType()`
+ * @returns - True if the Optional Data Controls UI is enabled for the type of the field, otherwise false
+ */
+export function isOptionalDataControlsType<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  schema: S | (() => S),
+  uiSchema: UiSchema<T, S, F> | undefined,
+  globalUiOptions: GlobalUISchemaOptions | undefined,
+  rootSchema: S,
+): boolean {
+  const { enableOptionalDataFieldForType = [] } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  if (enableOptionalDataFieldForType.length === 0) {
+    return false;
+  }
+  const schemaType = getOptionalDataControlsType<S>(typeof schema === 'function' ? schema() : schema, rootSchema);
+  return typeof schemaType === 'string' && enableOptionalDataFieldForType.some((val) => val === schemaType);
+}
+
+/** Determines whether the Optional Data Controls render the property of an object collapsed, showing only its Add
+ * button: it holds no data, it is not required, read from its own `ui:required` before the object's `required`, as
+ * `SchemaField` reads it, and `enableOptionalDataFieldForType` turns the controls on for its type. Its uiSchema is the
+ * one its field renders with, the `ui:definitions` entry of a definition it references merged in. An
+ * `additionalProperties` entry `retrieveSchema()` stubbed never is, since its key being there makes it present.
+ *
+ * @param schema - The property's schema, retrieved, or a function retrieving it, called only once the uiSchema turns the
+ *        Optional Data Controls UI on for some type
+ * @param rawSchema - The property's schema as the object declares it, whose `$ref` picks its `ui:definitions` entry
+ * @param uiSchema - The property's own uiSchema, if any
+ * @param options - The registry's `ui:definitions` and global UI options, the root schema, whether the object's
+ *        `required` lists the property, and the property's form data
+ * @returns - True when the property renders collapsed behind its Add button
+ */
+export function isCollapsedByOptionalDataControls<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  schema: S | (() => S),
+  rawSchema: S,
+  uiSchema: UiSchema<T, S, F> | undefined,
+  {
+    uiSchemaDefinitions,
+    globalUiOptions,
+    rootSchema,
+    required,
+    formData,
+  }: {
+    uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
+    globalUiOptions?: GlobalUISchemaOptions;
+    rootSchema: S;
+    required: boolean;
+    formData: unknown;
+  },
+): boolean {
+  if (isFormDataAvailable(formData) || hasSchemaMarker(rawSchema, ADDITIONAL_PROPERTY_FLAG)) {
+    return false;
+  }
+  const fieldUiSchema = uiSchemaDefinitions
+    ? resolveUiSchema<T, S, F>(rawSchema, uiSchema, { rootSchema, uiSchemaDefinitions })
+    : uiSchema;
+  return (
+    !(uiBooleanOption(getUiOptions<T, S, F>(fieldUiSchema).required) ?? required) &&
+    isOptionalDataControlsType<T, S, F>(schema, fieldUiSchema, globalUiOptions, rootSchema)
+  );
 }
 
 /** Determines whether the field information from the combination of `schema` and `required` along with the
  * `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
- * should be rendered with the Optional Data Controls UI.
+ * should be rendered with the Optional Data Controls UI. The root field never is: it is the form itself, which has no
+ * parent to leave it out of. Nor is an `additionalProperties` entry `retrieveSchema()` stubbed: its key makes it present.
  *
  * @param registry - The `registry` object
  * @param schema - The schema for the field
  * @param required - Flag indicating whether the field is required
- * @param [uiSchema] - The uiSchema for the field
+ * @param uiSchema - The uiSchema for the field, if any
+ * @param fieldPath - The `FieldPath` of the field, which is `ROOT_FIELD_PATH` for the root field
  * @return - True if the field should be rendered with the optional field UI, otherwise false
  */
 export default function shouldRenderOptionalField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(registry: Registry<T, S, F>, schema: S, required: boolean, uiSchema?: UiSchema<T, S, F>): boolean {
-  const { enableOptionalDataFieldForType = [] } = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
-  let schemaType: ReturnType<typeof getSchemaType<S>>;
-  if (ANY_OF_KEY in schema && Array.isArray(schema[ANY_OF_KEY])) {
-    schemaType = getSchemaTypesForXxxOf<S>(schema[ANY_OF_KEY] as S[]);
-  } else if (ONE_OF_KEY in schema && Array.isArray(schema[ONE_OF_KEY])) {
-    schemaType = getSchemaTypesForXxxOf<S>(schema[ONE_OF_KEY] as S[]);
-  } else {
-    schemaType = getSchemaType<S>(schema);
-  }
+  F extends FormContextType = FormContextType,
+>(
+  registry: Registry<T, S, F>,
+  schema: S,
+  required: boolean,
+  uiSchema: UiSchema<T, S, F> | undefined,
+  fieldPath: FieldPath,
+): boolean {
   return (
-    !isRootSchema<T, S, F>(registry, schema) &&
+    fieldPath !== ROOT_FIELD_PATH &&
     !required &&
-    !!schemaType &&
-    !Array.isArray(schemaType) &&
-    !!enableOptionalDataFieldForType.find((val) => val === schemaType)
+    !hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) &&
+    isOptionalDataControlsType<T, S, F>(schema, uiSchema, registry.globalUiOptions, registry.rootSchema)
   );
 }

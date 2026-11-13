@@ -1,4 +1,4 @@
-import { BsPlus } from '@react-icons/all-files/bs/BsPlus';
+import { BsPlus } from '@react-icons/all-files/bs/BsPlus.js';
 import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import IconButton, { RemoveButton } from '../IconButton/index.ts';
@@ -12,9 +12,9 @@ import IconButton, { RemoveButton } from '../IconButton/index.ts';
  * @param props - The `OptionalDataControlsTemplateProps` for the template
  */
 export default function OptionalDataControlsTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: OptionalDataControlsTemplateProps<T, S, F>) {
   const { id, registry, label, onAddClick, onRemoveClick } = props;
   if (onAddClick) {

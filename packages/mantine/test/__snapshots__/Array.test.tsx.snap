@@ -130,7 +130,7 @@ exports[`array fields > array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-r1p"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_1t_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -151,7 +151,6 @@ exports[`array fields > array icons 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -325,7 +324,7 @@ exports[`array fields > array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-r2a"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_2e_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -346,7 +345,6 @@ exports[`array fields > array icons 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -626,12 +624,15 @@ exports[`array fields > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
+                aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
                 id="root"
+                role="combobox"
                 type="text"
                 value=""
               />
@@ -668,6 +669,7 @@ exports[`array fields > checkboxes 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-MultiSelect-options"
           id="mantine-i"
           role="listbox"
@@ -689,6 +691,7 @@ exports[`array fields > checkboxes 1`] = `
                 <div
                   class="m_c0783ff9 mantine-ScrollArea-viewport"
                   data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
                   data-scrollbars="xy"
                   style="overflow-x: scroll; overflow-y: scroll;"
                 >
@@ -699,7 +702,7 @@ exports[`array fields > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":r1e:"
+                      id="_r_1h_"
                       role="option"
                       value="0"
                     >
@@ -711,7 +714,7 @@ exports[`array fields > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":r1g:"
+                      id="_r_1j_"
                       role="option"
                       value="1"
                     >
@@ -723,7 +726,7 @@ exports[`array fields > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":r1i:"
+                      id="_r_1l_"
                       role="option"
                       value="2"
                     >
@@ -805,15 +808,16 @@ exports[`array fields > empty errors array 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
           data-mantine-styles="inline"
         >
-          .__m__-r3v{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_40_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-r3v"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_40_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -830,7 +834,7 @@ exports[`array fields > empty errors array 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_name"
-                  id="root_name-label"
+                  id="root_name__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   name
@@ -842,7 +846,6 @@ exports[`array fields > empty errors array 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
-                    aria-invalid="false"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_name"
@@ -913,7 +916,7 @@ exports[`array fields > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-ra"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_c_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -934,7 +937,6 @@ exports[`array fields > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -955,7 +957,7 @@ exports[`array fields > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-ri"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_k_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -977,7 +979,6 @@ exports[`array fields > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
-                        aria-invalid="false"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -994,6 +995,7 @@ exports[`array fields > fixed array 1`] = `
                       >
                         <div
                           class="m_95e17d22 mantine-NumberInput-controls"
+                          style="--ni-chevron-size: var(--ni-chevron-size-sm);"
                         >
                           <button
                             aria-hidden="true"
@@ -1179,15 +1181,16 @@ exports[`array fields > has errors 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
           data-mantine-styles="inline"
         >
-          .__m__-r35{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_39_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-r35"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_39_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1205,7 +1208,7 @@ exports[`array fields > has errors 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_name"
-                  id="root_name-label"
+                  id="root_name__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   name
@@ -1218,7 +1221,7 @@ exports[`array fields > has errors 1`] = `
                   style="--input-margin-bottom: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
-                    aria-describedby="root_name-error"
+                    aria-describedby="root_name__error"
                     aria-invalid="true"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-error="true"
@@ -1233,34 +1236,11 @@ exports[`array fields > has errors 1`] = `
                 <p
                   class="m_8f816625 mantine-InputWrapper-error mantine-TextInput-error"
                   data-size="sm"
-                  id="root_name-error"
+                  id="root_name__error"
                   style="--input-error-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   Bad input
                 </p>
-              </div>
-              <div
-                class=""
-                id="root_name__error"
-                style="color: var(--mantine-color-red-text); display: none;"
-              >
-                <ul
-                  class="m_abbac491 mantine-List-root"
-                >
-                  <li
-                    class="m_abb6bec2 mantine-List-item"
-                  >
-                    <div
-                      class="m_75cd9f71 mantine-List-itemWrapper"
-                    >
-                      <span
-                        class="mantine-List-itemLabel"
-                      >
-                        Bad input
-                      </span>
-                    </div>
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
@@ -1314,15 +1294,16 @@ exports[`array fields > no errors 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
           data-mantine-styles="inline"
         >
-          .__m__-r3k{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_3l_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-r3k"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_3l_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1339,7 +1320,7 @@ exports[`array fields > no errors 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_name"
-                  id="root_name-label"
+                  id="root_name__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   name
@@ -1351,7 +1332,6 @@ exports[`array fields > no errors 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
-                    aria-invalid="false"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_name"
@@ -1422,7 +1402,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-ris"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_jv_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -1437,15 +1417,16 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     data-fluid="true"
                     data-strategy="block"
                     id="root_0"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rj0{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-_r_k3_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-rj0"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_k3_"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <div
@@ -1462,7 +1443,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                               data-size="sm"
                               for="root_0_name"
-                              id="root_0_name-label"
+                              id="root_0_name__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               name
@@ -1474,7 +1455,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
-                                aria-invalid="false"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_0_name"
@@ -1501,7 +1481,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                               data-size="sm"
                               for="root_0_value"
-                              id="root_0_value-label"
+                              id="root_0_value__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               value
@@ -1514,7 +1494,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                             >
                               <input
-                                aria-invalid="false"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                                 data-variant="default"
                                 id="root_0_value"
@@ -1530,6 +1509,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               >
                                 <div
                                   class="m_95e17d22 mantine-NumberInput-controls"
+                                  style="--ni-chevron-size: var(--ni-chevron-size-sm);"
                                 >
                                   <button
                                     aria-hidden="true"
@@ -1705,7 +1685,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rjo"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_kr_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -1720,15 +1700,16 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     data-fluid="true"
                     data-strategy="block"
                     id="root_1"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rjs{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-_r_kv_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-rjs"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_kv_"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <div
@@ -1745,7 +1726,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                               data-size="sm"
                               for="root_1_name"
-                              id="root_1_name-label"
+                              id="root_1_name__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               name
@@ -1757,7 +1738,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
-                                aria-invalid="false"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_1_name"
@@ -1784,7 +1764,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                               data-size="sm"
                               for="root_1_value"
-                              id="root_1_value-label"
+                              id="root_1_value__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               value
@@ -1797,7 +1777,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                             >
                               <input
-                                aria-invalid="false"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                                 data-variant="default"
                                 id="root_1_value"
@@ -1813,6 +1792,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               >
                                 <div
                                   class="m_95e17d22 mantine-NumberInput-controls"
+                                  style="--ni-chevron-size: var(--ni-chevron-size-sm);"
                                 >
                                   <button
                                     aria-hidden="true"
@@ -2084,7 +2064,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rhn"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_ip_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2105,7 +2085,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -2241,7 +2220,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-ri6"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_j8_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2262,7 +2241,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -2504,12 +2482,15 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
+                aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
                 id="root"
+                role="combobox"
                 type="text"
                 value=""
               />
@@ -2546,6 +2527,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-MultiSelect-options"
           id="mantine-i"
           role="listbox"
@@ -2567,6 +2549,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 <div
                   class="m_c0783ff9 mantine-ScrollArea-viewport"
                   data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
                   data-scrollbars="xy"
                   style="overflow-x: scroll; overflow-y: scroll;"
                 >
@@ -2577,7 +2560,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rpb:"
+                      id="_r_qj_"
                       role="option"
                       value="0"
                     >
@@ -2589,7 +2572,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rpd:"
+                      id="_r_ql_"
                       role="option"
                       value="1"
                     >
@@ -2601,7 +2584,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rpf:"
+                      id="_r_qn_"
                       role="option"
                       value="2"
                     >
@@ -2691,7 +2674,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rkr"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_lv_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2712,7 +2695,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -2733,7 +2715,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rl3"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_m7_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2755,7 +2737,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
-                        aria-invalid="false"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -2772,6 +2753,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       >
                         <div
                           class="m_95e17d22 mantine-NumberInput-controls"
+                          style="--ni-chevron-size: var(--ni-chevron-size-sm);"
                         >
                           <button
                             aria-hidden="true"
@@ -2828,7 +2810,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rld"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_mh_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2843,7 +2825,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                     data-checked="true"
                     data-label-position="right"
                     data-variant="filled"
-                    style="--checkbox-color: var(--mantine-color-blue-filled);"
+                    style="--checkbox-radius: var(--mantine-radius-sm); --checkbox-color: var(--mantine-color-blue-filled);"
                   >
                     <div
                       class="m_5f6e695e mantine-Checkbox-body"
@@ -2853,9 +2835,9 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         data-label-position="right"
                       >
                         <input
-                          aria-describedby="root_2__error root_2__description root_2__help"
                           checked=""
                           class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
+                          data-with-error-styles="true"
                           id="root_2"
                           name="root[2]"
                           type="checkbox"
@@ -2942,7 +2924,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rlq"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_mv_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2965,7 +2947,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         style="margin-bottom: var(--mantine-spacing-xs);"
                       >
                         <div
-                          class="m_8bffd616 mantine-Flex-root __m__-rm0"
+                          class="m_8bffd616 mantine-Flex-root __m__-_r_n6_"
                           style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                         >
                           <div
@@ -2986,7 +2968,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
-                                    aria-invalid="false"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_0_0"
@@ -3122,7 +3103,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         style="margin-bottom: var(--mantine-spacing-xs);"
                       >
                         <div
-                          class="m_8bffd616 mantine-Flex-root __m__-rmf"
+                          class="m_8bffd616 mantine-Flex-root __m__-_r_nl_"
                           style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                         >
                           <div
@@ -3143,7 +3124,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
-                                    aria-invalid="false"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_0_1"
@@ -3443,7 +3423,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rn8"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_oe_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -3466,7 +3446,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         style="margin-bottom: var(--mantine-spacing-xs);"
                       >
                         <div
-                          class="m_8bffd616 mantine-Flex-root __m__-rne"
+                          class="m_8bffd616 mantine-Flex-root __m__-_r_ol_"
                           style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                         >
                           <div
@@ -3487,7 +3467,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
-                                    aria-invalid="false"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_1_0"
@@ -3623,7 +3602,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         style="margin-bottom: var(--mantine-spacing-xs);"
                       >
                         <div
-                          class="m_8bffd616 mantine-Flex-root __m__-rnt"
+                          class="m_8bffd616 mantine-Flex-root __m__-_r_p4_"
                           style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                         >
                           <div
@@ -3644,7 +3623,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
-                                    aria-invalid="false"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_1_1"
@@ -4040,7 +4018,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rqr"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_s5_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -4055,15 +4033,16 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     data-fluid="true"
                     data-strategy="block"
                     id="root_0"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rqv{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-_r_s9_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-rqv"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_s9_"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <div
@@ -4080,7 +4059,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                               data-size="sm"
                               for="root_0_name"
-                              id="root_0_name-label"
+                              id="root_0_name__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               name
@@ -4092,7 +4071,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
-                                aria-invalid="false"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_0_name"
@@ -4119,7 +4097,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                               data-size="sm"
                               for="root_0_value"
-                              id="root_0_value-label"
+                              id="root_0_value__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               value
@@ -4132,7 +4110,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                             >
                               <input
-                                aria-invalid="false"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                                 data-variant="default"
                                 id="root_0_value"
@@ -4148,6 +4125,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               >
                                 <div
                                   class="m_95e17d22 mantine-NumberInput-controls"
+                                  style="--ni-chevron-size: var(--ni-chevron-size-sm);"
                                 >
                                   <button
                                     aria-hidden="true"
@@ -4323,7 +4301,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rrn"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_t1_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -4338,15 +4316,16 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     data-fluid="true"
                     data-strategy="block"
                     id="root_1"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rrr{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-_r_t5_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-rrr"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_t5_"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <div
@@ -4363,7 +4342,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                               data-size="sm"
                               for="root_1_name"
-                              id="root_1_name-label"
+                              id="root_1_name__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               name
@@ -4375,7 +4354,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
-                                aria-invalid="false"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_1_name"
@@ -4402,7 +4380,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                               data-size="sm"
                               for="root_1_value"
-                              id="root_1_value-label"
+                              id="root_1_value__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               value
@@ -4415,7 +4393,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                             >
                               <input
-                                aria-invalid="false"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                                 data-variant="default"
                                 id="root_1_value"
@@ -4431,6 +4408,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               >
                                 <div
                                   class="m_95e17d22 mantine-NumberInput-controls"
+                                  style="--ni-chevron-size: var(--ni-chevron-size-sm);"
                                 >
                                   <button
                                     aria-hidden="true"
@@ -4702,7 +4680,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rpm"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_qv_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -4723,7 +4701,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -4859,7 +4836,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rq5"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_re_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -4880,7 +4857,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -5077,6 +5053,560 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 </DocumentFragment>
 `;
 
+exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-array"
+    >
+      <fieldset
+        class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-object m_e9408a47 mantine-Fieldset-root"
+        data-variant="default"
+        id="root"
+      >
+        <div
+          class="row rjsf-array-item-list"
+        >
+          <div
+            class="rjsf-array-item"
+            style="margin-bottom: var(--mantine-spacing-xs);"
+          >
+            <div
+              class="m_8bffd616 mantine-Flex-root __m__-_r_u5_"
+              style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
+            >
+              <div
+                class=""
+                style="width: 100%;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-object"
+                >
+                  <div
+                    class="m_7485cace mantine-Container-root"
+                    data-fluid="true"
+                    data-strategy="block"
+                    id="root_0"
+                    role="group"
+                    style="padding: 0rem;"
+                  >
+                    <style
+                      data-mantine-styles="inline"
+                    >
+                      .__m__-_r_u9_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                    </style>
+                    <div
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_u9_"
+                      style="margin-bottom: var(--mantine-spacing-sm);"
+                    >
+                      <div
+                        class=""
+                      >
+                        <div
+                          class="rjsf-field rjsf-field-string"
+                        >
+                          <div
+                            class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                            data-size="sm"
+                          >
+                            <label
+                              class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
+                              data-size="sm"
+                              for="root_0_name"
+                              id="root_0_name__wrapperLabel"
+                              style="--input-label-size: var(--mantine-font-size-sm);"
+                            >
+                              name
+                            </label>
+                            <div
+                              class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                              data-size="sm"
+                              data-variant="default"
+                              style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                            >
+                              <input
+                                class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
+                                data-variant="default"
+                                id="root_0_name"
+                                name="root_0_name"
+                                placeholder=""
+                                type="text"
+                                value="report.pdf"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="m_4081bf90 mantine-Group-root"
+                style="--group-gap: calc(0.125rem * var(--mantine-scale)); --group-align: center; --group-justify: flex-start; --group-wrap: nowrap; margin-bottom: calc(0.4375rem * var(--mantine-scale));"
+              >
+                <button
+                  class="mantine-focus-auto rjsf-array-item-move-up m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-disabled="true"
+                  data-size="sm"
+                  data-variant="subtle"
+                  disabled=""
+                  id="root_0__moveUp"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Move report.pdf up"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-up"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M6 15l6 -6l6 6"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-move-down m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_0__moveDown"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Move report.pdf down"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-down"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M6 9l6 6l6 -6"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-copy m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_0__copy"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Copy report.pdf"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-copy"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"
+                      />
+                      <path
+                        d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_0__remove"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Remove report.pdf"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M18 6l-12 12"
+                      />
+                      <path
+                        d="M6 6l12 12"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rjsf-array-item"
+            style="margin-bottom: var(--mantine-spacing-xs);"
+          >
+            <div
+              class="m_8bffd616 mantine-Flex-root __m__-_r_ur_"
+              style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
+            >
+              <div
+                class=""
+                style="width: 100%;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-object"
+                >
+                  <div
+                    class="m_7485cace mantine-Container-root"
+                    data-fluid="true"
+                    data-strategy="block"
+                    id="root_1"
+                    role="group"
+                    style="padding: 0rem;"
+                  >
+                    <style
+                      data-mantine-styles="inline"
+                    >
+                      .__m__-_r_uv_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                    </style>
+                    <div
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_uv_"
+                      style="margin-bottom: var(--mantine-spacing-sm);"
+                    >
+                      <div
+                        class=""
+                      >
+                        <div
+                          class="rjsf-field rjsf-field-string"
+                        >
+                          <div
+                            class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                            data-size="sm"
+                          >
+                            <label
+                              class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
+                              data-size="sm"
+                              for="root_1_name"
+                              id="root_1_name__wrapperLabel"
+                              style="--input-label-size: var(--mantine-font-size-sm);"
+                            >
+                              name
+                            </label>
+                            <div
+                              class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                              data-size="sm"
+                              data-variant="default"
+                              style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                            >
+                              <input
+                                class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
+                                data-variant="default"
+                                id="root_1_name"
+                                name="root_1_name"
+                                placeholder=""
+                                type="text"
+                                value="invoice.pdf"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="m_4081bf90 mantine-Group-root"
+                style="--group-gap: calc(0.125rem * var(--mantine-scale)); --group-align: center; --group-justify: flex-start; --group-wrap: nowrap; margin-bottom: calc(0.4375rem * var(--mantine-scale));"
+              >
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-move-up m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_1__moveUp"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Move invoice.pdf up"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-up"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M6 15l6 -6l6 6"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto rjsf-array-item-move-down m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-disabled="true"
+                  data-size="sm"
+                  data-variant="subtle"
+                  disabled=""
+                  id="root_1__moveDown"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Move invoice.pdf down"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-down"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M6 9l6 6l6 -6"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-copy m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_1__copy"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Copy invoice.pdf"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-copy"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"
+                      />
+                      <path
+                        d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_1__remove"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Remove invoice.pdf"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M18 6l-12 12"
+                      />
+                      <path
+                        d="M6 6l12 12"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="m_4081bf90 mantine-Group-root"
+          style="--group-gap: var(--mantine-spacing-md); --group-align: center; --group-justify: flex-end; --group-wrap: wrap;"
+        >
+          <button
+            class="mantine-focus-auto mantine-active rjsf-array-item-add m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+            data-size="md"
+            data-variant="subtle"
+            id="root__add"
+            style="--ai-size: var(--ai-size-md); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+            title="Add Item"
+            type="button"
+          >
+            <span
+              class="m_8d3afb97 mantine-ActionIcon-icon"
+            >
+              <svg
+                class="icon icon-tabler icons-tabler-outline icon-tabler-plus"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                  stroke="none"
+                />
+                <path
+                  d="M12 5l0 14"
+                />
+                <path
+                  d="M5 12l14 0"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </fieldset>
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`with title and description > array 1`] = `
 <DocumentFragment>
   <style
@@ -5100,6 +5630,8 @@ exports[`with title and description > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -5110,14 +5642,18 @@ exports[`with title and description > array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h4>
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -5214,6 +5750,8 @@ exports[`with title and description > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -5224,14 +5762,18 @@ exports[`with title and description > array icons 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h4>
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -5245,7 +5787,7 @@ exports[`with title and description > array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-r6d"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_6m_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -5264,10 +5806,10 @@ exports[`with title and description > array icons 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_0"
-                      id="root_0-label"
+                      id="root_0__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-1
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-TextInput-required"
@@ -5275,14 +5817,21 @@ exports[`with title and description > array icons 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                       data-size="sm"
-                      id="root_0-description"
+                      id="root_0__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a test item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_0__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a test item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                       data-size="sm"
@@ -5290,8 +5839,7 @@ exports[`with title and description > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
-                        aria-invalid="false"
+                        aria-describedby="root_0__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -5465,7 +6013,7 @@ exports[`with title and description > array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-r70"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_7a_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -5484,10 +6032,10 @@ exports[`with title and description > array icons 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_1"
-                      id="root_1-label"
+                      id="root_1__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-2
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-TextInput-required"
@@ -5495,14 +6043,21 @@ exports[`with title and description > array icons 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                       data-size="sm"
-                      id="root_1-description"
+                      id="root_1__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a test item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_1__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a test item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                       data-size="sm"
@@ -5510,8 +6065,7 @@ exports[`with title and description > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
-                        aria-invalid="false"
+                        aria-describedby="root_1__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -5782,12 +6336,27 @@ exports[`with title and description > checkboxes 1`] = `
           Test field
         </label>
         <div
+          class="m_fe47ce59 mantine-InputWrapper-description mantine-MultiSelect-description"
+          data-size="sm"
+          id="root__wrapperDescription"
+          style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
+        >
+          <p
+            class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            data-inherit="true"
+            id="root__description"
+            style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+          >
+            a test description
+          </p>
+        </div>
+        <div
           class="m_6c018570 mantine-Input-wrapper mantine-MultiSelect-wrapper"
           data-multiline="true"
           data-size="sm"
           data-variant="default"
           data-with-right-section="true"
-          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-padding-y: var(--input-padding-y-sm); --input-right-section-pointer-events: none;"
+          style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-padding-y: var(--input-padding-y-sm); --input-right-section-pointer-events: none;"
         >
           <div
             class="m_8fb7ebe7 mantine-Input-input mantine-MultiSelect-input"
@@ -5800,12 +6369,15 @@ exports[`with title and description > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
+                aria-describedby="root__description"
+                aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
                 id="root"
+                role="combobox"
                 type="text"
                 value=""
               />
@@ -5864,6 +6436,7 @@ exports[`with title and description > checkboxes 1`] = `
                 <div
                   class="m_c0783ff9 mantine-ScrollArea-viewport"
                   data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
                   data-scrollbars="xy"
                   style="overflow-x: scroll; overflow-y: scroll;"
                 >
@@ -5874,7 +6447,7 @@ exports[`with title and description > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":r60:"
+                      id="_r_68_"
                       role="option"
                       value="0"
                     >
@@ -5886,7 +6459,7 @@ exports[`with title and description > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":r62:"
+                      id="_r_6a_"
                       role="option"
                       value="1"
                     >
@@ -5898,7 +6471,7 @@ exports[`with title and description > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":r64:"
+                      id="_r_6c_"
                       role="option"
                       value="2"
                     >
@@ -5976,6 +6549,8 @@ exports[`with title and description > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -5986,14 +6561,18 @@ exports[`with title and description > fixed array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h4>
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -6007,7 +6586,7 @@ exports[`with title and description > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-r4n"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_4q_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -6026,10 +6605,10 @@ exports[`with title and description > fixed array 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_0"
-                      id="root_0-label"
+                      id="root_0__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-1
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-TextInput-required"
@@ -6037,14 +6616,21 @@ exports[`with title and description > fixed array 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                       data-size="sm"
-                      id="root_0-description"
+                      id="root_0__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a test item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_0__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a test item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                       data-size="sm"
@@ -6052,8 +6638,7 @@ exports[`with title and description > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
-                        aria-invalid="false"
+                        aria-describedby="root_0__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -6074,7 +6659,7 @@ exports[`with title and description > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-r51"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_55_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -6093,10 +6678,10 @@ exports[`with title and description > fixed array 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_1"
-                      id="root_1-label"
+                      id="root_1__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-2
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-NumberInput-required"
@@ -6104,14 +6689,21 @@ exports[`with title and description > fixed array 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-NumberInput-description"
                       data-size="sm"
-                      id="root_1-description"
+                      id="root_1__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a test item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_1__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a test item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-NumberInput-wrapper"
                       data-size="sm"
@@ -6120,8 +6712,7 @@ exports[`with title and description > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
-                        aria-invalid="false"
+                        aria-describedby="root_1__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -6138,6 +6729,7 @@ exports[`with title and description > fixed array 1`] = `
                       >
                         <div
                           class="m_95e17d22 mantine-NumberInput-controls"
+                          style="--ni-chevron-size: var(--ni-chevron-size-sm);"
                         >
                           <button
                             aria-hidden="true"
@@ -6235,6 +6827,8 @@ exports[`with title and description from both > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -6245,14 +6839,18 @@ exports[`with title and description from both > array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -6349,6 +6947,8 @@ exports[`with title and description from both > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -6359,14 +6959,18 @@ exports[`with title and description from both > array icons 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -6380,7 +6984,7 @@ exports[`with title and description from both > array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rdb"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_e6_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -6399,7 +7003,7 @@ exports[`with title and description from both > array icons 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_0"
-                      id="root_0-label"
+                      id="root_0__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
                       My Item
@@ -6410,14 +7014,21 @@ exports[`with title and description from both > array icons 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                       data-size="sm"
-                      id="root_0-description"
+                      id="root_0__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a fancier item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_0__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a fancier item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                       data-size="sm"
@@ -6425,8 +7036,7 @@ exports[`with title and description from both > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
-                        aria-invalid="false"
+                        aria-describedby="root_0__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -6600,7 +7210,7 @@ exports[`with title and description from both > array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rdu"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_eq_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -6619,7 +7229,7 @@ exports[`with title and description from both > array icons 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_1"
-                      id="root_1-label"
+                      id="root_1__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
                       My Item
@@ -6630,14 +7240,21 @@ exports[`with title and description from both > array icons 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                       data-size="sm"
-                      id="root_1-description"
+                      id="root_1__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a fancier item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_1__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a fancier item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                       data-size="sm"
@@ -6645,8 +7262,7 @@ exports[`with title and description from both > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
-                        aria-invalid="false"
+                        aria-describedby="root_1__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -6916,14 +7532,21 @@ exports[`with title and description from both > checkboxes 1`] = `
         >
           My Field
         </label>
-        <p
+        <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-MultiSelect-description"
           data-size="sm"
-          id="root-description"
+          id="root__wrapperDescription"
           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
         >
-          a fancier description
-        </p>
+          <p
+            class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            data-inherit="true"
+            id="root__description"
+            style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+          >
+            a fancier description
+          </p>
+        </div>
         <div
           class="m_6c018570 mantine-Input-wrapper mantine-MultiSelect-wrapper"
           data-multiline="true"
@@ -6943,13 +7566,15 @@ exports[`with title and description from both > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root-description"
+                aria-describedby="root__description"
+                aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
                 id="root"
+                role="combobox"
                 type="text"
                 value=""
               />
@@ -7008,6 +7633,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 <div
                   class="m_c0783ff9 mantine-ScrollArea-viewport"
                   data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
                   data-scrollbars="xy"
                   style="overflow-x: scroll; overflow-y: scroll;"
                 >
@@ -7018,7 +7644,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rcu:"
+                      id="_r_do_"
                       role="option"
                       value="0"
                     >
@@ -7030,7 +7656,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rd0:"
+                      id="_r_dq_"
                       role="option"
                       value="1"
                     >
@@ -7042,7 +7668,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rd2:"
+                      id="_r_ds_"
                       role="option"
                       value="2"
                     >
@@ -7120,6 +7746,8 @@ exports[`with title and description from both > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -7130,14 +7758,18 @@ exports[`with title and description from both > fixed array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -7151,7 +7783,7 @@ exports[`with title and description from both > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rbk"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_ca_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -7170,7 +7802,7 @@ exports[`with title and description from both > fixed array 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_0"
-                      id="root_0-label"
+                      id="root_0__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
                       My Item
@@ -7181,14 +7813,21 @@ exports[`with title and description from both > fixed array 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                       data-size="sm"
-                      id="root_0-description"
+                      id="root_0__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a fancier item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_0__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a fancier item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                       data-size="sm"
@@ -7196,8 +7835,7 @@ exports[`with title and description from both > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
-                        aria-invalid="false"
+                        aria-describedby="root_0__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -7218,7 +7856,7 @@ exports[`with title and description from both > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rbu"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_cl_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -7237,7 +7875,7 @@ exports[`with title and description from both > fixed array 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_1"
-                      id="root_1-label"
+                      id="root_1__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
                       My Item
@@ -7248,14 +7886,21 @@ exports[`with title and description from both > fixed array 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-NumberInput-description"
                       data-size="sm"
-                      id="root_1-description"
+                      id="root_1__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a fancier item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_1__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a fancier item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-NumberInput-wrapper"
                       data-size="sm"
@@ -7264,8 +7909,7 @@ exports[`with title and description from both > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
-                        aria-invalid="false"
+                        aria-describedby="root_1__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -7282,6 +7926,7 @@ exports[`with title and description from both > fixed array 1`] = `
                       >
                         <div
                           class="m_95e17d22 mantine-NumberInput-controls"
+                          style="--ni-chevron-size: var(--ni-chevron-size-sm);"
                         >
                           <button
                             aria-hidden="true"
@@ -7379,6 +8024,8 @@ exports[`with title and description from uiSchema > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -7389,14 +8036,18 @@ exports[`with title and description from uiSchema > array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -7493,6 +8144,8 @@ exports[`with title and description from uiSchema > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -7503,14 +8156,18 @@ exports[`with title and description from uiSchema > array icons 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -7524,7 +8181,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-r9s"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_ae_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -7543,7 +8200,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_0"
-                      id="root_0-label"
+                      id="root_0__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
                       My Item
@@ -7554,14 +8211,21 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                       data-size="sm"
-                      id="root_0-description"
+                      id="root_0__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a fancier item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_0__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a fancier item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                       data-size="sm"
@@ -7569,8 +8233,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
-                        aria-invalid="false"
+                        aria-describedby="root_0__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -7744,7 +8407,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-raf"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_b2_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -7763,7 +8426,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_1"
-                      id="root_1-label"
+                      id="root_1__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
                       My Item
@@ -7774,14 +8437,21 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                       data-size="sm"
-                      id="root_1-description"
+                      id="root_1__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a fancier item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_1__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a fancier item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                       data-size="sm"
@@ -7789,8 +8459,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
-                        aria-invalid="false"
+                        aria-describedby="root_1__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -8060,14 +8729,21 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         >
           My Field
         </label>
-        <p
+        <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-MultiSelect-description"
           data-size="sm"
-          id="root-description"
+          id="root__wrapperDescription"
           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
         >
-          a fancier description
-        </p>
+          <p
+            class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            data-inherit="true"
+            id="root__description"
+            style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+          >
+            a fancier description
+          </p>
+        </div>
         <div
           class="m_6c018570 mantine-Input-wrapper mantine-MultiSelect-wrapper"
           data-multiline="true"
@@ -8087,13 +8763,15 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root-description"
+                aria-describedby="root__description"
+                aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
                 id="root"
+                role="combobox"
                 type="text"
                 value=""
               />
@@ -8152,6 +8830,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 <div
                   class="m_c0783ff9 mantine-ScrollArea-viewport"
                   data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
                   data-scrollbars="xy"
                   style="overflow-x: scroll; overflow-y: scroll;"
                 >
@@ -8162,7 +8841,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":r9f:"
+                      id="_r_a0_"
                       role="option"
                       value="0"
                     >
@@ -8174,7 +8853,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":r9h:"
+                      id="_r_a2_"
                       role="option"
                       value="1"
                     >
@@ -8186,7 +8865,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":r9j:"
+                      id="_r_a4_"
                       role="option"
                       value="2"
                     >
@@ -8264,6 +8943,8 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -8274,14 +8955,18 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -8295,7 +8980,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-r85"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_8i_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -8314,7 +8999,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_0"
-                      id="root_0-label"
+                      id="root_0__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
                       My Item
@@ -8325,14 +9010,21 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                       data-size="sm"
-                      id="root_0-description"
+                      id="root_0__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a fancier item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_0__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a fancier item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                       data-size="sm"
@@ -8340,8 +9032,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
-                        aria-invalid="false"
+                        aria-describedby="root_0__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -8362,7 +9053,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-r8f"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_8t_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -8381,7 +9072,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                       data-required="true"
                       data-size="sm"
                       for="root_1"
-                      id="root_1-label"
+                      id="root_1__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
                       My Item
@@ -8392,14 +9083,21 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                          *
                       </span>
                     </label>
-                    <p
+                    <div
                       class="m_fe47ce59 mantine-InputWrapper-description mantine-NumberInput-description"
                       data-size="sm"
-                      id="root_1-description"
+                      id="root_1__wrapperDescription"
                       style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                     >
-                      a fancier item description
-                    </p>
+                      <p
+                        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                        data-inherit="true"
+                        id="root_1__description"
+                        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+                      >
+                        a fancier item description
+                      </p>
+                    </div>
                     <div
                       class="m_6c018570 mantine-Input-wrapper mantine-NumberInput-wrapper"
                       data-size="sm"
@@ -8408,8 +9106,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
-                        aria-invalid="false"
+                        aria-describedby="root_1__description"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -8426,6 +9123,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                       >
                         <div
                           class="m_95e17d22 mantine-NumberInput-controls"
+                          style="--ni-chevron-size: var(--ni-chevron-size-sm);"
                         >
                           <button
                             aria-hidden="true"
@@ -8527,9 +9225,6 @@ exports[`with title and description with global label off > array 1`] = `
         data-variant="default"
         id="root"
       >
-        <legend
-          class="m_90794832 mantine-Fieldset-legend"
-        />
         <div
           class="row rjsf-array-item-list"
         />
@@ -8625,9 +9320,6 @@ exports[`with title and description with global label off > array icons 1`] = `
         data-variant="default"
         id="root"
       >
-        <legend
-          class="m_90794832 mantine-Fieldset-legend"
-        />
         <div
           class="row rjsf-array-item-list"
         >
@@ -8636,7 +9328,7 @@ exports[`with title and description with global label off > array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rge"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_hf_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -8657,7 +9349,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
+                        aria-label="Test item"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -8831,7 +9523,7 @@ exports[`with title and description with global label off > array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rgv"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_i0_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -8852,7 +9544,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
+                        aria-label="Test item"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -9132,12 +9824,15 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
+                aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
+                aria-label="Test field"
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
                 id="root"
+                role="combobox"
                 type="text"
                 value=""
               />
@@ -9174,6 +9869,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Test field"
           class="m_b2821a6e mantine-MultiSelect-options"
           id="mantine-i"
           role="listbox"
@@ -9195,6 +9891,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 <div
                   class="m_c0783ff9 mantine-ScrollArea-viewport"
                   data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
                   data-scrollbars="xy"
                   style="overflow-x: scroll; overflow-y: scroll;"
                 >
@@ -9205,7 +9902,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rg3:"
+                      id="_r_h3_"
                       role="option"
                       value="0"
                     >
@@ -9217,7 +9914,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rg5:"
+                      id="_r_h5_"
                       role="option"
                       value="1"
                     >
@@ -9229,7 +9926,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rg7:"
+                      id="_r_h7_"
                       role="option"
                       value="2"
                     >
@@ -9311,9 +10008,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
         data-variant="default"
         id="root"
       >
-        <legend
-          class="m_90794832 mantine-Fieldset-legend"
-        />
         <div
           class="row rjsf-array-item-list"
         >
@@ -9322,7 +10016,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rev"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_fu_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -9343,7 +10037,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-invalid="false"
+                        aria-label="Test item"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -9364,7 +10058,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rf7"
+              class="m_8bffd616 mantine-Flex-root __m__-_r_g6_"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -9386,7 +10080,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
-                        aria-invalid="false"
+                        aria-label="Test item"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -9403,6 +10097,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       >
                         <div
                           class="m_95e17d22 mantine-NumberInput-controls"
+                          style="--ni-chevron-size: var(--ni-chevron-size-sm);"
                         >
                           <button
                             aria-hidden="true"

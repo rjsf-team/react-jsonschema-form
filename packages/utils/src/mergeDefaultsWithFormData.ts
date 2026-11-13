@@ -1,5 +1,6 @@
-import type { GenericObjectType } from './index.ts';
 import isObject from './isObject.ts';
+import setOwn from './setOwn.ts';
+import type { GenericObjectType } from './types.ts';
 
 /** Merges the `defaults` object of type `T` into the `formData` of type `T`
  *
@@ -10,20 +11,26 @@ import isObject from './isObject.ts';
  *     are deeply merged; additional entries from the defaults are ignored unless `mergeExtraArrayDefaults` is true, in
  *     which case the extras are appended onto the end of the form data
  *   - when the array is not set in form data, the default is copied over
- * - scalars are overwritten/set by form data unless undefined and there is a default AND `defaultSupercedesUndefined`
- *   is true
+ * - scalars are overwritten/set by form data unless the form data is `undefined` or `null` and there is a default, or
+ *   is `NaN`, AND `defaultSupercedesUndefined` is true, or unless `overrideFormDataWithDefaults` is true and the form
+ *   data is neither `undefined` nor `null`, in which case the default replaces it
+ * - a non-object default is ignored when form data is an object, whatever the flags, so
+ *   `mergeDefaultsWithFormData('x', { b: 2 })` returns `{ b: 2 }`
  *
  * @param [defaults] - The defaults to merge
  * @param [formData] - The form data into which the defaults will be merged
  * @param [mergeExtraArrayDefaults=false] - If true, any additional default array entries are appended onto the formData
- * @param [defaultSupercedesUndefined=false] - If true, an explicit undefined value will be overwritten by the default value
- * @param [overrideFormDataWithDefaults=false] - If true, the default value will overwrite the form data value. If the value
- *        doesn't exist in the default, we take it from formData and in the case where the value is set to undefined in formData.
- *       This is useful when we have already merged formData with defaults and want to add an additional field from formData
- *       that does not exist in defaults.
+ * @param [defaultSupercedesUndefined=false] - If true, an `undefined` or `null` form data value with a default, or a
+ *        `NaN` one, will be overwritten by the default value
+ * @param [overrideFormDataWithDefaults=false] - If true, the default value will overwrite the form data value, except
+ *        that an `undefined` or `null` form data value is kept unless `defaultSupercedesUndefined` is true, a form data
+ *        key or array entry that doesn't exist in the defaults keeps its value, and object or array form data is never
+ *        replaced, only merged with a default of the same kind. A default that is present but `undefined` still
+ *        replaces a scalar form data value. This is useful when we have already merged formData with defaults and want
+ *        to add an additional field from formData that does not exist in defaults.
  * @returns - The resulting merged form data with defaults
  */
-export default function mergeDefaultsWithFormData<T = any>(
+export default function mergeDefaultsWithFormData<T = unknown>(
   defaults?: T,
   formData?: T,
   mergeExtraArrayDefaults = false,
@@ -31,18 +38,19 @@ export default function mergeDefaultsWithFormData<T = any>(
   overrideFormDataWithDefaults = false,
 ): T | undefined {
   if (Array.isArray(formData)) {
-    const defaultsArray = Array.isArray(defaults) ? defaults : [];
+    const formDataArray: unknown[] = formData;
+    const defaultsArray: unknown[] = Array.isArray(defaults) ? defaults : [];
 
     // If overrideFormDataWithDefaults is true, we want to override the formData with the defaults
-    const overrideArray = overrideFormDataWithDefaults ? defaultsArray : formData;
-    const overrideOppositeArray = overrideFormDataWithDefaults ? formData : defaultsArray;
+    const overrideArray = overrideFormDataWithDefaults ? defaultsArray : formDataArray;
+    const overrideOppositeArray = overrideFormDataWithDefaults ? formDataArray : defaultsArray;
 
     const mapped = overrideArray.map((value, idx) => {
       // We want to explicitly make sure that the value is NOT undefined since null, 0 and empty space are valid values
       if (overrideOppositeArray[idx] !== undefined) {
         return mergeDefaultsWithFormData(
           defaultsArray[idx],
-          formData[idx],
+          formDataArray[idx],
           mergeExtraArrayDefaults,
           defaultSupercedesUndefined,
           overrideFormDataWithDefaults,
@@ -59,45 +67,24 @@ export default function mergeDefaultsWithFormData<T = any>(
     return mapped as unknown as T;
   }
   if (isObject(formData)) {
-    // oxlint-disable-next-line prefer-object-spread -- spread loses T type, Object.assign preserves it
-    const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
     const formDataObj: GenericObjectType = formData;
     const defaultsObj: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
+    const acc: GenericObjectType = { ...defaultsObj }; // Prevent mutation of source object.
     return Object.keys(formDataObj).reduce((accumulator, key) => {
       const keyValue = formDataObj[key];
-      const keyExistsInDefaults = defaultsObj !== undefined && key in defaultsObj;
-      const keyExistsInFormData = key in formDataObj;
-      const keyDefault = defaultsObj?.[key] ?? {};
-      // If any direct child of this key's default is itself an object or array,
-      // the shallow spread below would bypass its merge rules. Route those cases
-      // to the recursive path; the recursive call repeats this check one level deeper.
-      const defaultValueNeedsDeepMerge =
-        keyExistsInDefaults &&
-        isObject(keyDefault) &&
-        Object.values(keyDefault).some((v) => isObject(v) || Array.isArray(v));
-
-      const keyDefaultIsObject = keyExistsInDefaults && isObject(defaultsObj?.[key]);
-      const keyHasFormDataObject = keyExistsInFormData && isObject(keyValue);
-
-      if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueNeedsDeepMerge) {
-        accumulator[key as keyof T] = {
-          ...defaultsObj?.[key],
-          ...keyValue,
-        };
-        return accumulator;
-      }
-
-      accumulator[key as keyof T] = mergeDefaultsWithFormData<T>(
-        defaultsObj?.[key],
+      const keyExistsInDefaults = defaultsObj !== undefined && Object.hasOwn(defaultsObj, key);
+      const ownDefault = keyExistsInDefaults ? defaultsObj[key] : undefined;
+      const merged = mergeDefaultsWithFormData(
+        ownDefault,
         keyValue,
         mergeExtraArrayDefaults,
         defaultSupercedesUndefined,
         // overrideFormDataWithDefaults can be true only when the key value exists in defaults
-        // Or if the key value doesn't exist in formData
-        overrideFormDataWithDefaults && (keyExistsInDefaults || !keyExistsInFormData),
+        overrideFormDataWithDefaults && keyExistsInDefaults,
       );
-      return acc;
-    }, acc);
+      setOwn(accumulator, key, merged);
+      return accumulator;
+    }, acc) as T;
   }
 
   /**

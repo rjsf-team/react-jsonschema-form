@@ -7,7 +7,7 @@ const testValidator = getTestValidator({});
 describe('resolveDefaultWidget()', () => {
   it('defaults to "text" with no enumOptions when the schema has no enumerable options or registered format', () => {
     const schema: RJSFSchema = { type: 'string' };
-    const schemaUtils = createSchemaUtils(testValidator, schema);
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
     expect(resolveDefaultWidget(schema, {}, schemaUtils)).toEqual({
       defaultWidget: 'text',
@@ -17,7 +17,7 @@ describe('resolveDefaultWidget()', () => {
 
   it('defaults to "select" with enumOptions when the schema has enumerable options', () => {
     const schema: RJSFSchema = { type: 'string', enum: ['foo', 'bar'] };
-    const schemaUtils = createSchemaUtils(testValidator, schema);
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
     const { defaultWidget, enumOptions } = resolveDefaultWidget(schema, {}, schemaUtils);
 
@@ -28,9 +28,32 @@ describe('resolveDefaultWidget()', () => {
     ]);
   });
 
+  it('reads constant options written as $refs as the select isSelect() finds in the same retrieved schema', () => {
+    const colourSchema: RJSFSchema = {
+      type: 'string',
+      oneOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/blue' }],
+    };
+    const rootSchema: RJSFSchema = {
+      definitions: { red: { const: 'red', title: 'Red' }, blue: { const: 'blue', title: 'Blue' } },
+      type: 'object',
+      properties: { colour: colourSchema },
+    };
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+    const colour = schemaUtils.retrieveSchema(colourSchema);
+
+    const { defaultWidget, enumOptions } = resolveDefaultWidget(colour, {}, schemaUtils);
+
+    expect(schemaUtils.isSelect(colour)).toBe(true);
+    expect(defaultWidget).toEqual('select');
+    expect(enumOptions?.map(({ label, value }) => ({ label, value }))).toEqual([
+      { label: 'Red', value: 'red' },
+      { label: 'Blue', value: 'blue' },
+    ]);
+  });
+
   it('uses the schema format as the default widget when a widget is registered for it', () => {
     const schema: RJSFSchema = { type: 'number', format: 'custom-format' };
-    const schemaUtils = createSchemaUtils(testValidator, schema);
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
     const registeredWidgets = { 'custom-format': (() => null) as unknown as Widget };
 
     expect(resolveDefaultWidget(schema, {}, schemaUtils, registeredWidgets)).toEqual({
@@ -41,7 +64,7 @@ describe('resolveDefaultWidget()', () => {
 
   it('ignores the schema format when no widget is registered for it', () => {
     const schema: RJSFSchema = { type: 'number', format: 'custom-format' };
-    const schemaUtils = createSchemaUtils(testValidator, schema);
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
     expect(resolveDefaultWidget(schema, {}, schemaUtils)).toEqual({
       defaultWidget: 'text',
@@ -49,9 +72,31 @@ describe('resolveDefaultWidget()', () => {
     });
   });
 
+  it.each<[RJSFSchema, string]>([
+    [{ type: ['null', 'string', 'number'], format: 'email' }, 'email'],
+    [{ type: ['number', 'string'], format: 'email' }, 'text'],
+    [{ type: ['number', 'string'], format: 'date' }, 'text'],
+  ])('uses the format of %j only as a widget of the type it resolves to', (schema, expected) => {
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+    const registeredWidgets = {
+      EmailWidget: (() => null) as unknown as Widget,
+      DateWidget: (() => null) as unknown as Widget,
+    };
+
+    expect(resolveDefaultWidget(schema, {}, schemaUtils, registeredWidgets).defaultWidget).toEqual(expected);
+  });
+
+  it('uses a widget registered under the format name whatever type the schema resolves to', () => {
+    const schema: RJSFSchema = { type: ['number', 'string'], format: 'email' };
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+    const registeredWidgets = { email: (() => null) as unknown as Widget };
+
+    expect(resolveDefaultWidget(schema, {}, schemaUtils, registeredWidgets).defaultWidget).toEqual('email');
+  });
+
   it('defaults registeredWidgets to {} when omitted', () => {
     const schema: RJSFSchema = { type: 'number', format: 'custom-format' };
-    const schemaUtils = createSchemaUtils(testValidator, schema);
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
     expect(resolveDefaultWidget(schema, {}, schemaUtils).defaultWidget).toEqual('text');
   });

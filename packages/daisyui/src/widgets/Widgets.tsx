@@ -1,55 +1,33 @@
 import type { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import AltDateTimeWidget from './AltDateTimeWidget/AltDateTimeWidget.tsx';
-import AltDateWidget from './AltDateWidget/AltDateWidget.tsx';
-import CheckboxesWidget from './CheckboxesWidget/CheckboxesWidget.tsx';
-import CheckboxWidget from './CheckboxWidget/CheckboxWidget.tsx';
-import DateTimeWidget from './DateTimeWidget/DateTimeWidget.tsx';
-import DateWidget from './DateWidget/DateWidget.tsx';
-import RadioWidget from './RadioWidget/RadioWidget.tsx';
-import RangeWidget from './RangeWidget/RangeWidget.tsx';
-import RatingWidget from './RatingWidget/RatingWidget.tsx';
-import SelectWidget from './SelectWidget/SelectWidget.tsx';
-import TextareaWidget from './TextareaWidget/TextareaWidget.tsx';
-import TimeWidget from './TimeWidget/TimeWidget.tsx';
-import ToggleWidget from './ToggleWidget/ToggleWidget.tsx';
+import CheckboxWidget from './CheckboxWidget/index.ts';
+import DateTimeWidget from './DateTimeWidget/index.ts';
+import DateWidget from './DateWidget/index.ts';
+import RatingWidget from './RatingWidget/index.ts';
+import SelectWidget from './SelectWidget/index.ts';
+import TimeWidget from './TimeWidget/index.ts';
+import ToggleWidget from './ToggleWidget/index.ts';
 
-export {
-  AltDateTimeWidget,
-  AltDateWidget,
-  CheckboxesWidget,
-  CheckboxWidget,
-  DateTimeWidget,
-  DateWidget,
-  RadioWidget,
-  RangeWidget,
-  RatingWidget,
-  SelectWidget,
-  TextareaWidget,
-  TimeWidget,
-  ToggleWidget,
-};
+export { CheckboxWidget, DateTimeWidget, DateWidget, RatingWidget, SelectWidget, TimeWidget, ToggleWidget };
 
-export function generateWidgets<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): RegistryWidgetsType<T, S, F> {
+export function createWidgets() {
   return {
-    AltDateTimeWidget,
-    AltDateWidget,
-    CheckboxesWidget,
     CheckboxWidget,
     DateTimeWidget,
     DateWidget,
-    RadioWidget,
-    RangeWidget,
     RatingWidget,
     SelectWidget,
-    TextareaWidget,
     TimeWidget,
     toggle: ToggleWidget,
   };
 }
 
-export default generateWidgets;
+export function generateWidgets<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): RegistryWidgetsType<T, S, F> {
+  return createWidgets();
+}
+
+export default createWidgets();

@@ -1,7 +1,13 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Label, Textarea, makeStyles } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  labelValue,
+  toInputValue,
+  widgetDrawsLabelText,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 const useStyles = makeStyles({
   label: {
@@ -16,10 +22,15 @@ const useStyles = makeStyles({
  * @param props - The `WidgetProps` for this component
  */
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: WidgetProps<T, S, F>) {
+  F extends FormContextType = FormContextType,
+>(
+  props: WidgetProps<T, S, F> & {
+    /** A handler that replaces the textarea's own change handling */
+    onChangeOverride?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  },
+) {
   const {
     id,
     htmlName,
@@ -29,15 +40,16 @@ export default function TextareaWidget<
     disabled,
     value,
     label,
-    hideLabel,
     onChange,
     onChangeOverride,
     onBlur,
     onFocus,
     autofocus,
     options,
-    schema,
+    presentation,
   } = props;
+  // A label holding only a required field's `*` would name the textarea "star", so one is drawn only with text
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const classes = useStyles();
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
@@ -52,7 +64,12 @@ export default function TextareaWidget<
   return (
     <>
       {labelValue(
-        <Label htmlFor={id} required={required} disabled={disabled} className={classes.label}>
+        <Label
+          htmlFor={id}
+          required={templateMarksRequired<T, S, F>(props)}
+          disabled={disabled}
+          className={classes.label}
+        >
           {label}
         </Label>,
         hideLabel,
@@ -64,11 +81,11 @@ export default function TextareaWidget<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || handleChange}
+        value={String(toInputValue(value))}
+        onChange={onChangeOverride ?? handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
         rows={rows}
       />
     </>

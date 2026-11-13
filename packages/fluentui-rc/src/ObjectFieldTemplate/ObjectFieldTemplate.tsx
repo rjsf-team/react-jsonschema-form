@@ -1,6 +1,14 @@
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import {
+  descriptionId,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  titleDrawsOptionalDataControl,
+  titleId,
+  buttonId,
+} from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -9,9 +17,9 @@ import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId 
  * @param props - The `ObjectFieldTemplateProps` for this component
  */
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
@@ -21,7 +29,8 @@ export default function ObjectFieldTemplate<
     disabled,
     readonly,
     uiSchema,
-    fieldPathId,
+    presentation,
+    id,
     schema,
     formData,
     optionalDataControl,
@@ -29,22 +38,19 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
   return (
-    <>
+    // A column, as the `Field` around it lays out its parts, so their margins don't collapse into one another
+    <Flex column id={id} role='group' {...getContainerAttributes(presentation, id, title)}>
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -55,7 +61,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(fieldPathId)}
+          id={presentation?.description.id ?? descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -70,15 +76,15 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <Flex column fill key={element.name} style={{ marginBottom: '10px' }}>
+            <Flex column fill key={element.content.key} style={{ marginBottom: '10px' }}>
               {element.content}
             </Flex>
           ),
         )}
-        {canExpand<T, S, F>(schema, uiSchema, formData) && (
+        {schemaUtils.canExpand(schema, uiSchema, formData) && (
           <Flex hAlign='end'>
             <AddButton
-              id={buttonId(fieldPathId, 'add')}
+              id={buttonId(id, 'add')}
               className='rjsf-object-property-expand'
               onClick={onAddProperty}
               disabled={disabled || readonly}
@@ -88,6 +94,6 @@ export default function ObjectFieldTemplate<
           </Flex>
         )}
       </Flex>
-    </>
+    </Flex>
   );
 }

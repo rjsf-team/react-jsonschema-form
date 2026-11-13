@@ -1,8 +1,8 @@
 /** @vitest-environment jsdom */
 import { render } from '@testing-library/react';
 
-import type { DescriptionFieldProps, Registry, RJSFSchema, SelectedOptionDescriptionProps } from '../src/index.ts';
-import { SelectedOptionDescription } from '../src/index.ts';
+import type { DescriptionFieldProps, Registry, SelectedOptionDescriptionProps } from '../src/index.ts';
+import { resolveFieldPresentation, SelectedOptionDescription, selectedOptionDescriptionId } from '../src/index.ts';
 
 function DescriptionFieldTemplate({ id, description, schema }: DescriptionFieldProps) {
   return (
@@ -51,6 +51,45 @@ describe('SelectedOptionDescription', () => {
     expect(container.innerHTML).toBe('');
   });
 
+  it("renders under its field's plan when hideLabel only says the template draws the label, under an id of its own", () => {
+    const presentation = resolveFieldPresentation({
+      id: 'root',
+      declaration: {
+        label: 'template',
+        description: 'template',
+        errors: 'template',
+        help: 'template',
+        labelledBy: 'for',
+      },
+      label: 'Choice',
+    });
+    const { container } = render(<SelectedOptionDescription {...baseProps} hideLabel presentation={presentation} />);
+
+    expect(container.querySelector(`#${selectedOptionDescriptionId('root')}`)?.textContent).toBe('Foo description');
+    expect(container.querySelector('#root__description')).toBeNull();
+  });
+
+  it.each(['Choice', ''])(
+    "renders nothing under its field's plan where its resolved `ui:label: false` applies, label %j",
+    (label) => {
+      const presentation = resolveFieldPresentation({
+        id: 'root',
+        declaration: {
+          label: 'template',
+          description: 'template',
+          errors: 'template',
+          help: 'template',
+          labelledBy: 'for',
+        },
+        label,
+        showLabel: false,
+      });
+      const { container } = render(<SelectedOptionDescription {...baseProps} presentation={presentation} />);
+
+      expect(container).toBeEmptyDOMElement();
+    },
+  );
+
   it.each([
     ['ui:options label', { ...baseProps, uiSchema: { 'ui:options': { label: false } } }],
     ['ui:label', { ...baseProps, uiSchema: { 'ui:label': false } }],
@@ -67,7 +106,7 @@ describe('SelectedOptionDescription', () => {
     ['an option without a schema', { enumOptions: [{ value: 'foo', label: 'Foo' }] }],
     [
       'an option schema without a description',
-      { enumOptions: [{ value: 'foo', label: 'Foo', schema: { title: 'Foo' } as RJSFSchema }] },
+      { enumOptions: [{ value: 'foo', label: 'Foo', schema: { title: 'Foo' } }] },
     ],
   ])('does not render with %s', (_, options) => {
     const { container } = render(<SelectedOptionDescription {...baseProps} options={options} />);

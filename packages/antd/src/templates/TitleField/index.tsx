@@ -3,35 +3,25 @@ import type { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } f
 import { Col, Divider, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
 
+import type { AntdFormContext } from '../../formContext.ts';
+import stripTrailingColon from '../stripTrailingColon.ts';
+
 /** The `TitleField` is the template to use to render the title of a field
  *
  * @param props - The `TitleFieldProps` for this component
  */
-export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  required,
-  registry,
-  title,
-  optionalDataControl,
-}: TitleFieldProps<T, S, F>) {
+export default function TitleField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, required, registry, title, optionalDataControl }: TitleFieldProps<T, S, F>) {
   const { formContext } = registry;
-  const { colon = true } = formContext;
+  const { colon = true }: AntdFormContext = formContext;
 
   let labelChildren = title;
   if (colon && typeof title === 'string' && title.trim() !== '') {
-    labelChildren = title.replace(/[：:]\s*$/, '');
+    labelChildren = stripTrailingColon(title);
   }
-
-  const handleLabelClick = () => {
-    if (!id) {
-      return;
-    }
-
-    const control: HTMLLabelElement | null = document.querySelector(`[id="${id}"]`);
-    if (control?.focus) {
-      control.focus();
-    }
-  };
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('form');
@@ -39,18 +29,12 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     [`${prefixCls}-item-required`]: required,
     [`${prefixCls}-item-no-colon`]: !colon,
   });
-  // The antd theme, for some reason, made its labels cause the associated field to get the focus when clicked (which
-  // kinda breaks a11y), but since it's built that way we will honor it until we decided to break it in a major release
-  // oxlint-disable jsx-a11y/no-noninteractive-element-interactions -- <label> is interactive; oxlint incorrectly flags it
+  // The heading's text carries its `titleId()`, which the control a container's heading names, such as its option
+  // selector, points `aria-labelledby` at. It sits inside the label, whose required class draws antd's `*` as generated
+  // content, which a browser counts in the name of whatever the label's id names
   let heading = title ? (
-    <label
-      className={labelClassName}
-      htmlFor={id}
-      onClick={handleLabelClick}
-      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleLabelClick()}
-      title={typeof title === 'string' ? title : ''}
-    >
-      {labelChildren}
+    <label className={labelClassName} title={typeof title === 'string' ? title : ''}>
+      <span id={id}>{labelChildren}</span>
     </label>
   ) : null;
   if (optionalDataControl) {

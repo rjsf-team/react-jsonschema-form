@@ -1,9 +1,60 @@
-import { mergeDefaultsWithFormData } from '../src/index.ts';
+import mergeDefaultsWithFormData from '../src/mergeDefaultsWithFormData.ts';
 
 describe('mergeDefaultsWithFormData()', () => {
+  it.each(['toString', 'constructor', 'valueOf', 'hasOwnProperty'])(
+    'keeps form data under the inherited default name %s',
+    (key) => {
+      const formData = { [key]: 'user value' };
+      expect(mergeDefaultsWithFormData<Record<string, unknown>>({ a: 1 }, formData, true, false, true)).toEqual({
+        a: 1,
+        [key]: 'user value',
+      });
+    },
+  );
+
+  it.each([false, true])('preserves a JSON __proto__ key with override=%s', (override) => {
+    const formData = JSON.parse('{"__proto__":{"marker":1},"b":2}');
+    const result = mergeDefaultsWithFormData({ a: 1 }, formData, false, false, override);
+    expect(Object.hasOwn(result, '__proto__')).toBe(true);
+    expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toEqual({ marker: 1 });
+    expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+    expect(result.marker).toBeUndefined();
+    expect(Object.getOwnPropertyDescriptor(formData, '__proto__')?.value).toEqual({ marker: 1 });
+  });
+
+  it('safely copies and merges an own __proto__ default', () => {
+    const defaults = JSON.parse('{"__proto__":{"left":1}}');
+    const formData = JSON.parse('{"__proto__":{"right":2}}');
+    const result = mergeDefaultsWithFormData(defaults, formData);
+    expect(Object.hasOwn(result, '__proto__')).toBe(true);
+    expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toEqual({ left: 1, right: 2 });
+    expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+    expect(Object.getOwnPropertyDescriptor(defaults, '__proto__')?.value).toEqual({ left: 1 });
+    const copied = mergeDefaultsWithFormData(defaults, {});
+    expect(Object.hasOwn(copied, '__proto__')).toBe(true);
+    expect(Object.getPrototypeOf(copied)).toBe(Object.prototype);
+  });
+
+  it('ignores inherited defaults but honors own prototype-named defaults', () => {
+    const inherited = Object.create({ constructor: 'inherited' });
+    expect(mergeDefaultsWithFormData(inherited, { constructor: 'user' }, false, false, true)).toEqual({
+      constructor: 'user',
+    });
+    expect(mergeDefaultsWithFormData({ constructor: 'own' }, { constructor: 'user' }, false, false, true)).toEqual({
+      constructor: 'own',
+    });
+  });
+
+  it('preserves a nested __proto__ form value', () => {
+    const formData = JSON.parse('{"nested":{"__proto__":{"marker":1}}}');
+    const result = mergeDefaultsWithFormData({ nested: { d: { e: 1 } } }, formData);
+    expect(Object.hasOwn(result?.nested, '__proto__')).toBe(true);
+    expect(Object.getPrototypeOf(result?.nested)).toBe(Object.prototype);
+  });
+
   it('shouldn`t mutate the provided objects', () => {
     const obj1 = { a: 1 };
-    mergeDefaultsWithFormData<any>(obj1, { b: 2 }); // oxlint-disable-line typescript/no-unnecessary-type-arguments
+    mergeDefaultsWithFormData<object>(obj1, { b: 2 });
     expect(obj1).toEqual({ a: 1 });
   });
 
@@ -112,8 +163,7 @@ describe('mergeDefaultsWithFormData()', () => {
       },
       c: 3,
     };
-    // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
-    expect(mergeDefaultsWithFormData<any>(obj1, obj2)).toEqual(expected);
+    expect(mergeDefaultsWithFormData<object>(obj1, obj2)).toEqual(expected);
   });
 
   it('should recursively merge deeply nested objects, including extra array data', () => {
@@ -148,8 +198,7 @@ describe('mergeDefaultsWithFormData()', () => {
       },
       c: 3,
     };
-    // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
-    expect(mergeDefaultsWithFormData<any>(obj1, obj2, true)).toEqual(expected);
+    expect(mergeDefaultsWithFormData<object>(obj1, obj2, true)).toEqual(expected);
   });
 
   it('should recursively merge File objects', () => {
@@ -169,6 +218,18 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(mergeDefaultsWithFormData<{ file: string }>({ file: largeDefault }, { file: formValue })).toEqual({
       file: formValue,
     });
+  });
+
+  it('should not merge a scalar default into object formData as index keys', () => {
+    expect(mergeDefaultsWithFormData<string | object>('x', { b: 2 })).toEqual({ b: 2 });
+  });
+
+  it('should not merge an array default into object formData as index keys', () => {
+    expect(mergeDefaultsWithFormData<object>([1, 2], { b: 2 })).toEqual({ b: 2 });
+  });
+
+  it('should not merge a nested array default into nested object formData as index keys', () => {
+    expect(mergeDefaultsWithFormData<object>({ a: [1, 2] }, { a: { x: 1 } })).toEqual({ a: { x: 1 } });
   });
 
   describe('test with overrideFormDataWithDefaults set to true', () => {
@@ -286,8 +347,7 @@ describe('mergeDefaultsWithFormData()', () => {
         },
         c: 2,
       };
-      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
-      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+      expect(mergeDefaultsWithFormData<object>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
     it('should recursively merge deeply nested objects, including extra array data', () => {
@@ -324,15 +384,13 @@ describe('mergeDefaultsWithFormData()', () => {
         c: 2,
         d: 4,
       };
-      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
-      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+      expect(mergeDefaultsWithFormData<object>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
     it('should deeply merge an array that sits under an object key', () => {
       const defaults = { outer: { rows: [{ name: 'Name', grade: 'A' }] } };
       const formData = { outer: { rows: [{ name: 'Name' }] } };
-      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
-      expect(mergeDefaultsWithFormData<any>(defaults, formData, true, false, true)).toEqual({
+      expect(mergeDefaultsWithFormData<object>(defaults, formData, true, false, true)).toEqual({
         outer: { rows: [{ name: 'Name', grade: 'A' }] },
       });
     });
@@ -347,5 +405,44 @@ describe('mergeDefaultsWithFormData()', () => {
       };
       expect(mergeDefaultsWithFormData(obj1, obj2)?.a).toBeInstanceOf(File);
     });
+
+    it.each([
+      ['string', 'x'],
+      ['array', [1, 2]],
+      ['null', null],
+      ['number', 5],
+    ])('should keep object formData over a %s default', (_, defaults) => {
+      const merged = mergeDefaultsWithFormData<object | string | number | null>(defaults, { b: 2 }, true, false, true);
+      expect(merged).toEqual({ b: 2 });
+    });
+
+    it.each([
+      ['null', { a: null }],
+      ['number', { a: 5 }],
+      ['array', { a: [1, 2] }],
+    ])('should keep nested object formData over a nested %s default', (_, defaults) => {
+      expect(mergeDefaultsWithFormData<object>(defaults, { a: { x: 1 } }, true, false, true)).toEqual({ a: { x: 1 } });
+    });
+
+    it.each([
+      ['one level down', { a: { b: 'd' } }, { a: { b: 'f' } }],
+      ['two levels down', { a: { c: { b: 'd' } } }, { a: { c: { b: 'f' } } }],
+      ['beside an object child', { a: { b: 'd', n: { z: 1 } } }, { a: { b: 'f' } }],
+    ])('should override a scalar %s as it does at the top (#5523)', (_, defaults, formData) => {
+      expect(mergeDefaultsWithFormData<object>(defaults, formData, true, false, true)).toEqual(defaults);
+    });
+  });
+
+  it.each([
+    ['one level down', { a: { x: 1 } }, { a: { x: undefined } }],
+    ['two levels down', { a: { b: { x: 1 } } }, { a: { b: { x: undefined } } }],
+  ])('should apply defaultSupercedesUndefined %s as it does at the top (#5523)', (_, defaults, formData) => {
+    expect(mergeDefaultsWithFormData<object>(defaults, formData, false, true)).toEqual(defaults);
+  });
+
+  it('should keep a nested undefined over its default when defaultSupercedesUndefined is off (#5523)', () => {
+    const merged = mergeDefaultsWithFormData<object>({ a: { x: 1 } }, { a: { x: undefined } });
+    expect(merged).toEqual({ a: {} });
+    expect(merged).toHaveProperty('a.x', undefined);
   });
 });

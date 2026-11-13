@@ -12,9 +12,9 @@ import type { FormContextType, RJSFSchema, Registry, StrictRJSFSchema } from './
  * @returns - The value associated with `toLookup` in the form context or `fallback`
  */
 export default function lookupFromFormContext<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
   R = unknown,
 >(regOrFc: Registry<T, S, F> | Registry<T, S, F>['formContext'], toLookup: string, fallback?: R): R {
   const lookupPath = [LOOKUP_MAP_NAME];

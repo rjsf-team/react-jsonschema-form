@@ -9,6 +9,11 @@ updates:
     directory: '/'
     schedule:
       interval: 'monthly'
+    ignore:
+      # oxfmt is pre-1.0 and a release can change its output, which `pnpm run cs-check` now fails CI
+      # on. Nothing on a Dependabot branch runs `cs-format`, so keep its upgrades manual and let the
+      # reformat ride along in the same commit.
+      - dependency-name: 'oxfmt'
 
   - package-ecosystem: 'github-actions'
     directory: '/'

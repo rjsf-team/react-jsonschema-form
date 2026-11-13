@@ -4,7 +4,17 @@ import type { InputProps } from '@fluentui/react-components';
 import { Input, Label, makeStyles } from '@fluentui/react-components';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
+import {
+  examplesId,
+  getControlAttributes,
+  getExampleSuggestions,
+  getBaseInputProps,
+  labelValue,
+  offersClearButton,
+  toInputValue,
+  widgetDrawsLabelText,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 const useStyles = makeStyles({
   input: {
@@ -24,9 +34,9 @@ const useStyles = makeStyles({
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -35,10 +45,8 @@ export default function BaseInputTemplate<
     required,
     readonly,
     disabled,
-    type,
     value,
     label,
-    hideLabel,
     onChange,
     onChangeOverride,
     onBlur,
@@ -47,10 +55,13 @@ export default function BaseInputTemplate<
     options,
     schema,
     registry,
+    presentation,
   } = props;
+  // A label holding only a required field's `*` would name the input "star", so one is drawn only with text
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
   const classes = useStyles();
-  const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const { title, ...inputProps } = getBaseInputProps<T, S, F>(props);
   // Now we need to pull out the step, min, max into an inner `inputProps` for fluentui-rc
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
@@ -64,10 +75,18 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
+  const inputValue = toInputValue(value);
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   return (
     <>
       {labelValue(
-        <Label htmlFor={id} required={required} disabled={disabled} className={classes.label}>
+        <Label
+          htmlFor={id}
+          required={templateMarksRequired<T, S, F>(props)}
+          disabled={disabled}
+          className={classes.label}
+        >
           {label}
         </Label>,
         hideLabel,
@@ -79,22 +98,23 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
+        title={title}
         {...(inputProps as InputProps)}
         input={{
           className: classes.input,
           // Due to Fluent UI this does not work correctly
-          list: schema.examples ? examplesId(id) : undefined,
+          list: hasExamples ? examplesId(id) : undefined,
         }}
-        value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || handleChange}
+        value={String(inputValue)}
+        onChange={onChangeOverride ?? handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && offersClearButton(inputValue, inputProps.type) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

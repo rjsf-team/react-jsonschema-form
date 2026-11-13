@@ -1,5 +1,9 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { MantineProvider } from '@mantine/core';
+import { gridTests, renderGridColumn } from '@rjsf/snapshot-tests';
+import { render } from '@testing-library/react';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
+import GridTemplate from '../src/templates/GridTemplate.tsx';
 import WrappedForm from './WrappedForm.tsx';
 
 gridTests(WrappedForm, {
@@ -212,4 +216,56 @@ gridTests(WrappedForm, {
       },
     },
   },
+});
+
+describe('GridTemplate span', () => {
+  // `LayoutGridField` warns about the row's span, which would otherwise land on the DOM unexplained
+  setupConsoleWarnSuppression();
+
+  test("keeps a row's span off the element", () => {
+    expect(renderGridColumn(WrappedForm, {}, { span: 6 }).row).not.toHaveAttribute('span');
+  });
+  test("takes a column's half-step span natively", () => {
+    renderGridColumn(WrappedForm, { span: 4.5 });
+    // 4.5 of mantine's 12 columns, in the flex basis `Grid.Col` writes into its own `<style>`
+    const styles = Array.from(document.querySelectorAll('style'), (style) => style.textContent).join('');
+    expect(styles).toContain('calc(37.5%');
+  });
+  test('grows a row without a fluid container to fill its line, so a row nested in a row takes a line of its own', () => {
+    expect(renderGridColumn(WrappedForm, {}, { fluid: false }).row).toHaveStyle({ flex: '1 1 100%' });
+  });
+  test("leaves a row's own w to size it", () => {
+    const { row } = renderGridColumn(WrappedForm, {}, { fluid: false, w: '50%' });
+    expect(row).toHaveStyle({ width: '50%' });
+    expect(row).not.toHaveStyle({ flex: '1 1 100%' });
+  });
+  // A responsive style prop is written to a class, which the fill's inline `flex` would beat
+  test("leaves a row's own responsive flex to size it", () => {
+    const { row } = renderGridColumn(WrappedForm, {}, { fluid: false, flex: { base: '0 0 50%', sm: '0 0 40%' } });
+    expect(row).not.toHaveStyle({ flexGrow: 1 });
+    expect(row).not.toHaveStyle({ flexBasis: '100%' });
+  });
+  test.each([
+    [{ width: '50%' }, { width: '50%' }],
+    [[{ padding: '4px' }, { width: '50%' }], { width: '50%' }],
+    [[{ padding: '4px' }, [{ width: '50%' }]], { width: '50%' }],
+    [{ flexBasis: '50%' }, { flexBasis: '50%' }],
+    [{ flexGrow: 0 }, { flexGrow: 0 }],
+    [() => ({ width: '50%' }), { width: '50%' }],
+  ])("leaves a row's own flex or width style, %o, to size it", (style, ownStyle) => {
+    const { row } = renderGridColumn(WrappedForm, {}, { fluid: false, style });
+    expect(row).toHaveStyle(ownStyle);
+    expect(row).not.toHaveStyle({ flexGrow: 1 });
+    expect(row).not.toHaveStyle({ flexBasis: '100%' });
+  });
+  test("takes mantine's own style arrays and functions", () => {
+    const { container } = render(
+      <MantineProvider>
+        <GridTemplate fluid={false} style={[{ padding: '4px' }, () => ({ width: '50%' })]}>
+          content
+        </GridTemplate>
+      </MantineProvider>,
+    );
+    expect(container.querySelector('.mantine-Grid-root')).toHaveStyle({ padding: '4px', width: '50%' });
+  });
 });

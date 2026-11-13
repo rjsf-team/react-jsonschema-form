@@ -9,9 +9,21 @@ import type {
   StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString, getUiOptions } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
+  AdditionalPropertyKeySelect,
+  buttonId,
+  getAdditionalKeyAttributes,
+  getUiOptions,
+  hasAdditionalKeyLabel,
+  hasSchemaMarker,
+  isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
+  TranslatableString,
+} from '@rjsf/utils';
 
-import { computeSxProps, getMuiProps } from '../util.ts';
+import { computeSxProps, getMuiProps, inputLabelId } from '../util.ts';
 /** Properties available for the `rjsfSlotProps` target of the WrapIfAdditionalTemplate. */
 export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the WrapIfAdditionalTemplate. */
@@ -33,9 +45,9 @@ export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {
  * @param props - The `WrapIfAdditionalProps` for this component
  */
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
@@ -44,20 +56,26 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
-    displayLabel,
+    keyName,
+    onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
     readonly,
     required,
     schema,
     uiSchema,
     registry,
   } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
-  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const keyId = additionalKeyId(id);
+  const additional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
   const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
@@ -65,7 +83,7 @@ export default function WrapIfAdditionalTemplate<
     fontWeight: 'bold',
   };
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { rjsfSlotProps: { wrapGridContainer, wrapKeyGridItem, wrapChildrenGridItem, wrapRemoveButtonGridItem } = {} } =
     getMuiProps<T, S, F, WrapIfAdditionalTemplateMuiProps>(uiOptions);
 
@@ -80,26 +98,57 @@ export default function WrapIfAdditionalTemplate<
   return (
     <Grid
       container
-      key={`${id}-key`}
       spacing={2}
       className={classNames}
       style={style}
       {...wrapGridContainer}
       sx={computeSxProps<GridProps>({ alignItems: 'flex-start' }, wrapGridContainer)}
     >
-      <Grid size={5.5} {...wrapKeyGridItem}>
-        <TextField
-          key={label}
-          fullWidth
-          required={required}
-          label={displayLabel ? keyLabel : undefined}
-          defaultValue={label}
-          disabled={disabled || readonly}
-          id={`${id}-key`}
-          name={`${id}-key`}
-          onBlur={!readonly ? onKeyRenameBlur : undefined}
-          type='text'
-        />
+      {/* The free-text `TextField` below sets `fullWidth` itself; the key dropdown is the theme's own `SelectWidget`,
+          which has no say in how wide this column wants it, and mui renders a bare `TextField` at intrinsic width.
+          Sizing it from the column keeps the two branches the same width */}
+      <Grid
+        size={5.5}
+        {...wrapKeyGridItem}
+        sx={computeSxProps<GridProps>({ '& > .MuiFormControl-root': { width: '100%' } }, wrapKeyGridItem)}
+      >
+        {propertyNamesEnum ? (
+          <AdditionalPropertyKeySelect<T, S, F>
+            errorAttributes={keyAttributes}
+            id={keyId}
+            label={keyLabel}
+            hideLabel={!hasKeyLabel}
+            value={keyName}
+            propertyNamesEnum={propertyNamesEnum}
+            onKeyRename={onKeyRename}
+            disabled={disabled}
+            readonly={readonly}
+            required={required}
+            registry={registry}
+          />
+        ) : (
+          <TextField
+            key={keyName}
+            fullWidth
+            required={required}
+            label={hasKeyLabel ? keyLabel : undefined}
+            // Where `ui:label: false` leaves the key unlabelled, its label's text names it, as core's key input is named
+            slotProps={{
+              inputLabel: { id: inputLabelId(keyId) },
+              htmlInput: {
+                'aria-label': hasKeyLabel ? undefined : keyLabel,
+                'aria-describedby': keyAttributes['aria-describedby'],
+              },
+            }}
+            error={keyAttributes['aria-invalid']}
+            defaultValue={keyName}
+            disabled={isAdditionalKeyDisabled(props)}
+            id={keyId}
+            name={keyId}
+            onBlur={!readonly ? onKeyRenameBlur : undefined}
+            type='text'
+          />
+        )}
       </Grid>
       <Grid size={5.5} {...wrapChildrenGridItem}>
         {children}
@@ -110,7 +159,7 @@ export default function WrapIfAdditionalTemplate<
           className='rjsf-object-property-remove'
           iconType='default'
           style={btnStyle}
-          disabled={disabled || readonly}
+          disabled={isAdditionalRemoveDisabled(props)}
           onClick={onRemoveProperty}
           uiSchema={uiSchema}
           registry={registry}

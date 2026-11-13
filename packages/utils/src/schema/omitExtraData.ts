@@ -1,96 +1,91 @@
-import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants.ts';
-import findSchemaDefinition from '../findSchemaDefinition.ts';
+import type { JSONSchema7Definition } from 'json-schema';
+
+import {
+  absentKeywordAllows,
+  additionalPropertiesKeyword,
+  getAdditionalPropertySchema,
+  getMatchingPatternProperties,
+} from '../additionalPropertiesUtils.ts';
+import { ADDITIONAL_PROPERTY_FLAG } from '../constants.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
-import isObject from '../isObject.ts';
-import { getByPath, hasByPath, setByPath, toPath } from '../pathUtils.ts';
+import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
+import isContainerValue from '../isContainerValue.ts';
+import isObject, { isSchemaObject } from '../isObject.ts';
+import isWholeValueSelect from '../isWholeValueSelect.ts';
+import rendersOwnFieldBesideOption, { takesParentExtraKeys } from '../rendersOwnFieldBesideOption.ts';
+import { DECLARED_ABOVE_KEY } from '../schemaMarkers.ts';
+import setOwn from '../setOwn.ts';
 import type {
-  Experimental_CustomMergeAllOf,
+  FieldPathList,
   FormContextType,
+  FormFieldState,
   GenericObjectType,
-  PathSchema,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
-  ValidatorType,
 } from '../types.ts';
-import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import isSelect from './isSelect.ts';
-import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
-import shallowAllOfMerge from './shallowAllOfMerge.ts';
+import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts';
+import { closestOption } from './getClosestMatchingOption.ts';
+import { mergeAllOf } from './graph/mergePlan.ts';
+import { schemaFrom, schemaOfBoolean } from './graph/schemaFrom.ts';
+import resolveConstantOptions from './resolveConstantOptions.ts';
+import retrieveSchema, { conditionHolds, joinOptionExtraKeys, resolveOwnRef } from './retrieveSchema.ts';
 
-/** Returns the `formData` with only the elements specified in the `fields` list
- *
- * @param formData - The data for the `Form`
- * @param fields - The fields to keep while filtering
- * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
- */
-export function getUsedFormData<T = any>(formData: T | undefined, fields: string[]): T | undefined {
-  // For the case of a single input form
-  if (fields.length === 0 && typeof formData !== 'object') {
-    return formData;
-  }
-
-  // Keep only the values at the given field paths; `fields` contains either dotted strings or the
-  // deep path lists produced by `getFieldNames()`
-  const data: GenericObjectType = {};
-  fields.forEach((field) => {
-    const path = Array.isArray(field) ? field : toPath(field);
-    if (hasByPath(formData, path)) {
-      setByPath(data, path, getByPath(formData, path));
-    }
-  });
-  if (Array.isArray(formData)) {
-    return Object.keys(data).map((key: string) => data[key]) as unknown as T;
-  }
-
-  return data as T;
+/** The `anyOf`/`oneOf` option `omitExtraData()` applied to an object, as the field holding it shows it */
+interface ShownOption<S extends StrictRJSFSchema> {
+  /** The option, as the field retrieves it for its data */
+  option?: S;
+  /** Whether the option's field takes the object's extra keys in the place of the object's own (see
+   * `getRenderedOptionSchema()`)
+   */
+  takesExtraKeys?: boolean;
 }
 
-/** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
- *
- * @param pathSchema - The `PathSchema` object for the form
- * @param [formData] - The form data to use while checking for empty objects/arrays
- * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
+/** The extra keys of an object, as the one field taking them judges them: the keys none of `declared` names, which the
+ * extra-key keywords of `schema` describe
  */
-// oxlint-disable-next-line typescript/no-deprecated
-export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
-  const formValueHasData = (value: unknown, isLeaf: boolean) => {
-    if (typeof value !== 'object' || value === null) {
-      return true;
-    }
-    const isEmptyValue = Array.isArray(value) ? value.length === 0 : Object.keys(value).length === 0;
-    return isEmptyValue || isLeaf;
-  };
-  const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
-    const objKeys = Object.keys(_obj);
-    objKeys.forEach((key: string) => {
-      const data = _obj[key];
-      if (typeof data === 'object') {
-        const newPaths = paths.map((path) => [...path, key]);
-        // If an object is marked with additionalProperties, all its keys are valid
-        if (data[RJSF_ADDITIONAL_PROPERTIES_FLAG] && data[NAME_KEY] !== '') {
-          acc.push(data[NAME_KEY]);
-        } else {
-          getAllPaths(data, acc, newPaths);
-        }
-      } else if (key === NAME_KEY && data !== '') {
-        paths.forEach((path) => {
-          const formValue = getByPath(formData, path);
-          const isLeaf = objKeys.length === 1;
-          // adds path to fieldNames if it points to a value or an empty object/array which is not a leaf
-          if (
-            formValueHasData(formValue, isLeaf) ||
-            (Array.isArray(formValue) && formValue.every((val: unknown) => formValueHasData(val, isLeaf)))
-          ) {
-            acc.push(path);
-          }
-        });
-      }
-    });
-    return acc;
-  };
+interface ExtraKeyJudge<S extends StrictRJSFSchema> {
+  /** The object's extra-key keywords, joined with those of the option it shows where the object's field takes them */
+  schema: S;
+  /** The names of the properties the object, the option it shows and the fields above it declare */
+  declared: Set<string>;
+}
 
-  return getAllPaths(pathSchema);
+/** Returns `option` without the stubs `retrieveSchema()` makes among its `properties` for the extra keys of the data,
+ * which the option takes no more than it declares
+ */
+function withoutStubs<S extends StrictRJSFSchema>(option: S): S {
+  const { properties } = option;
+  if (!properties) {
+    return option;
+  }
+  const declared = Object.entries(properties).filter(
+    ([, property]) => !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG),
+  );
+  return declared.length === Object.keys(properties).length
+    ? option
+    : { ...option, properties: Object.fromEntries(declared) };
+}
+
+/** Returns how the field of `schema` judges its extra keys, joined with those of the `option` it shows: the keys the
+ * schema, the option and the fields above declare are theirs, and the rest are described by the keywords of the two
+ * joined (see `joinOptionExtraKeys()`)
+ *
+ * @param schema - The object schema
+ * @param [option] - The option the object shows, as its field retrieves it
+ * @returns - How the field judges the object's extra keys
+ */
+function extraKeyJudgeOf<S extends StrictRJSFSchema>(schema: S, option?: S): ExtraKeyJudge<S> {
+  const declaredAbove: unknown = Reflect.get(schema, DECLARED_ABOVE_KEY);
+  const declared = new Set<string>([
+    ...Object.keys(schema.properties ?? {}),
+    ...Object.keys(option?.properties ?? {}),
+    ...(Array.isArray(declaredAbove) ? declaredAbove : []),
+  ]);
+  return { schema: option === undefined ? schema : joinOptionExtraKeys<S>(schema, option), declared };
 }
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
@@ -98,6 +93,7 @@ export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T):
  *
  * @param value - The value to check
  * @returns - True if the value is considered empty, false otherwise
+ * @testSeam Exported for utils' own tests
  */
 export function isValueEmpty(value: unknown): boolean {
   if (value == null || value === '') {
@@ -112,44 +108,59 @@ export function isValueEmpty(value: unknown): boolean {
   return false;
 }
 
-/** Merges an `allOf` schema into a single flat schema, delegating to `experimental_customMergeAllOf`
- * when provided or falling back to the module-level `shallowAllOfMerge` otherwise.
- *
- * @param schema - A schema containing an `allOf` array to be merged
- * @param [experimental_customMergeAllOf] - Optional custom merge function; see `Form` documentation
- * @returns - The merged schema with `allOf` resolved into a single schema object
- */
-function doMergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
-): S {
-  return experimental_customMergeAllOf ? experimental_customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S);
+/** The filtered data, in the type of the data it was filtered from */
+function dataOf<T>(value: unknown): T | undefined;
+function dataOf(value: unknown): unknown {
+  return value;
 }
 
 /** A recursive, schema-driven filter that walks `schema` and `formData` in lockstep, keeping only
  * values that are described by the schema. Handles `$ref`, `allOf`, `anyOf`, `oneOf`, `if/then/else`,
- * `patternProperties`, `additionalProperties`, `propertyNames`, and `dependencies`. Optional object
- * properties whose schema-filtered content is entirely empty (per `isValueEmpty`) are pruned; required
- * properties and scalar values are always kept when schema-defined.
+ * `patternProperties`, `additionalProperties`, `propertyNames`, and `dependencies`. Optional object properties whose
+ * schema-filtered content is entirely empty (`null`, `undefined`, `''`, or an array or object holding only such values)
+ * are pruned; required properties and scalar values are always kept when schema-defined.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * An object's shown `anyOf`/`oneOf` option is read as its field renders it, retrieved for the data, and the object's
+ * extra keys are judged once, as the one field taking them stubs them: by the keywords of the object and the option
+ * joined, or by the option's own field where it offers options of its own and takes them in the object's place.
+ *
+ * A property declared both beside a `$ref` and in the definition it names, or an option an `allOf` merge here rebuilds,
+ * is a schema no `$id` resource holds, so a `$ref` inside it that a resource of its own wrote is resolved against the
+ * root: filtering through it throws or reads the root's definition of the same name.
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which to filter the formData
  * @param [rootSchema] - The root schema, used primarily to look up `$ref`s
  * @param [formData] - The data for the `Form`
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [fieldState] - The option each field shows, so a field offering `anyOf`/`oneOf` options keeps the data its
+ *        shown option describes. Without it, the option the data matches best
  * @returns - The `formData` after omitting extra data, or `undefined` when `formData` is undefined
  */
 export default function omitExtraData<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: SchemaContext<S, F>,
   schema: S,
-  rootSchema: S = {} as S,
+  rootSchema: S = schemaFrom(schema, {}),
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  fieldState?: FormFieldState<S>,
 ): T | undefined {
+  /** The path of the child at `key`, which only `fieldState` is asked about, so without one no path is built */
+  const childPath = (path: FieldPathList, key: string | number): FieldPathList => (fieldState ? [...path, key] : path);
+
+  /** Reads `key` off `obj` only when it is an own property, returning `undefined` for a missing or
+   * inherited key, so an `Object.prototype` member is never mistaken for form data.
+   *
+   * @param obj - The object to read from
+   * @param key - The property key to read
+   * @returns - The own value at `key`, or `undefined`
+   */
+  function ownValue(obj: GenericObjectType, key: string): unknown {
+    return Object.hasOwn(obj, key) ? obj[key] : undefined;
+  }
+
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
    *
@@ -160,21 +171,11 @@ export default function omitExtraData<
     return isObject(value);
   }
 
-  /** Type predicate that narrows a `S | boolean` schema definition to `S` — true when `schemaDef` is
-   * a schema object rather than a JSON Schema boolean shorthand (`true` meaning allow-all, `false`
-   * meaning deny-all).
-   *
-   * @param schemaDef - The schema definition to check
-   * @returns - True if `schemaDef` is a schema object
-   */
-  function isSchemaObj(schemaDef: S | boolean): schemaDef is S {
-    return isObject(schemaDef);
-  }
-
   /** Copies schema-defined properties from `source` into `target`, applying `omit` recursively for
-   * each value. Handles `properties`, `patternProperties`, and `additionalProperties`.
+   * each value. Handles `properties`, `patternProperties`, and `additionalProperties` — or the
+   * `unevaluatedProperties` that answers for the leftover keys where no `additionalProperties` does.
    * Optional object-valued properties are pruned when every key in the filtered result is both
-   * optional (per the inner schema's `required`) and empty (per `isValueEmpty`). This preserves
+   * optional (per the inner schema's `required`) and empty, as described above. This preserves
    * optional objects whose required children have empty values, while still dropping objects whose
    * schema-filtered content is entirely optional-and-empty. Required properties and scalar values
    * are always written when defined. Always returns `target` — pruning of the object itself is
@@ -183,16 +184,35 @@ export default function omitExtraData<
    * @param childSchema - The object schema describing which properties are allowed
    * @param source - The source form data object to read values from
    * @param target - The accumulator object to write filtered values into
+   * @param path - The path of the object
+   * @param [judge] - How the object's extra keys are judged, or undefined where another field takes them
    * @returns - `target` after all schema-defined properties have been processed
    */
-  function handleObject(childSchema: S, source: GenericObjectType, target: GenericObjectType): GenericObjectType {
-    const { properties, additionalProperties, patternProperties } = childSchema;
+  function handleObject(
+    childSchema: S,
+    source: GenericObjectType,
+    target: GenericObjectType,
+    path: FieldPathList,
+    judge?: ExtraKeyJudge<S>,
+  ): GenericObjectType {
+    const { properties } = childSchema;
+    const extraKeys = judge?.schema;
+    const patternProperties = extraKeys?.patternProperties;
+    // Read with the precedence `getAdditionalPropertySchema()` reads the two keywords with, so a key the form renders
+    // a field for, and the add button seeds, through an `unevaluatedProperties` is one this keeps rather than prunes
+    // out from under it, and with neither of them named, as the context says an absent one reads
+    let additionalProperties: unknown;
+    if (extraKeys !== undefined) {
+      additionalProperties = absentKeywordAllows<S, F>(context, extraKeys)
+        ? true
+        : additionalPropertiesKeyword<S>(extraKeys);
+    }
     const requiredSet = new Set(childSchema.required ?? []);
 
     /** Recursively omits extra data from `value` via `omit`, then conditionally writes the result to
      * `target[key]`. Optional object-valued properties are dropped when every key in the filtered
-     * result is both optional (within the inner schema's `required` list) and has an empty value per
-     * `isValueEmpty`. This per-key approach prevents required-but-empty child properties — kept by
+     * result is both optional (within the inner schema's `required` list) and has an empty value, as
+     * described above. This per-key approach prevents required-but-empty child properties — kept by
      * inner `setProperty` calls — from inadvertently causing the parent optional object to be dropped,
      * while still pruning optional objects whose schema-filtered content is entirely empty. Vacuously
      * true for `{}`, so empty results are always dropped. Scalar and array values are not pruned here.
@@ -203,14 +223,17 @@ export default function omitExtraData<
      * @param [required=false] - When true the property is never pruned regardless of its filtered value
      */
     function setProperty(key: string, schemaDef: S | boolean, value: unknown, required = false) {
-      const v = omit(schemaDef, value, target[key]);
+      const v = omit(schemaDef, value, childPath(path, key), ownValue(target, key));
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
-        let sd = isSchemaObj(schemaDef) ? schemaDef : ({} as S);
+        let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = findSchemaDefinition<S>(sd.$ref, rootSchema);
+          sd = resolveOwnRef<S>(sd, rootSchema, context.customMergeAllOf);
         }
-        const innerRequired = new Set(sd.required ?? []);
+        // A key the `patternProperties` match is described by the `allOf` of every pattern matching it, which is where
+        // the names it requires live: read off the wrapper around them it requires nothing, and a required child
+        // holding an empty value would take the whole object down with it
+        const innerRequired = new Set((sd.allOf ? mergeAllOfOnce(sd, sd.allOf) : sd)?.required);
         // Drop this optional object when every key in v is both optional in the inner schema
         // and has an empty value. Vacuously true for {} so empty objects are always dropped.
         const shouldDrop = Object.entries(v).every(([k, val]) => !innerRequired.has(k) && isValueEmpty(val));
@@ -219,51 +242,53 @@ export default function omitExtraData<
         }
       }
       if (v !== undefined) {
-        // oxlint-disable-next-line no-param-reassign
-        target[key] = v;
+        setOwn(target, key, v);
       }
     }
 
     if (properties !== undefined) {
       for (const [key, schemaDef] of Object.entries(properties)) {
-        setProperty(key, schemaDef as S | boolean, source[key], requiredSet.has(key));
+        setProperty(key, schemaDef as S | boolean, ownValue(source, key), requiredSet.has(key));
       }
     }
 
     // Track keys not handled by properties/patterns so additionalProperties can pick them up.
     let patternPropertiesRest: string[] | undefined;
-    if (patternProperties !== undefined) {
+    if (judge !== undefined && extraKeys !== undefined && patternProperties !== undefined) {
       patternPropertiesRest = [];
-      const patterns = Object.entries(patternProperties).map(([pattern, schemaDef]): [RegExp, S | boolean] => [
-        new RegExp(pattern),
-        schemaDef as S | boolean,
-      ]);
-      const knownProperties = new Set(Object.keys(properties ?? {}));
       for (const [key, value] of Object.entries(source)) {
-        if (!knownProperties.has(key)) {
-          const matched = patterns.find(([re]) => re.test(key));
-          if (matched === undefined) {
+        if (!judge.declared.has(key)) {
+          // The patterns are read through `getMatchingPatternProperties()` rather than compiled here, so the keys this
+          // keeps are the keys the rest of the form describes and seeds through a pattern: one compiled a second way
+          // matches a different set of keys, and a key kept by one rule and described by the other is either dropped
+          // from under a field that edited it or kept with nothing to edit it
+          if (Object.keys(getMatchingPatternProperties<S>(extraKeys, key)).length === 0) {
             patternPropertiesRest.push(key);
           } else {
-            setProperty(key, matched[1], value);
+            // A key several patterns match is described by all of them together, which is the schema the form renders
+            // it with, so `getAdditionalPropertySchema()` answers for it here too: filtered by the first matching
+            // pattern alone, such a key loses whatever only another of them describes, out from under a field that
+            // edited it
+            setProperty(key, getAdditionalPropertySchema<S>(extraKeys, key), value, requiredSet.has(key));
           }
         }
       }
     }
 
-    // JSON Schema spec: absent additionalProperties defaults to true (allow all extra keys). Here
-    // we treat it as false so omitExtraData never inadvertently passes through undescribed keys.
-    if (additionalProperties !== undefined && additionalProperties !== false) {
+    // JSON Schema spec: absent additionalProperties defaults to true (allow all extra keys). Unless the context's
+    // `additionalPropertiesWhenAbsent` is 'allow', we treat it as false so omitExtraData never inadvertently passes
+    // through undescribed keys.
+    if (judge !== undefined && additionalProperties !== undefined && additionalProperties !== false) {
       const addlSchema = additionalProperties as S | boolean;
       if (patternPropertiesRest !== undefined) {
         for (const key of patternPropertiesRest) {
-          setProperty(key, addlSchema, source[key]);
+          // `patternPropertiesRest` comes from `Object.entries(source)`, so its keys are always own
+          setProperty(key, addlSchema, source[key], requiredSet.has(key));
         }
       } else {
-        const knownProperties = new Set(Object.keys(properties ?? {}));
         for (const [key, value] of Object.entries(source)) {
-          if (!knownProperties.has(key)) {
-            setProperty(key, addlSchema, value);
+          if (!judge.declared.has(key)) {
+            setProperty(key, addlSchema, value, requiredSet.has(key));
           }
         }
       }
@@ -284,16 +309,17 @@ export default function omitExtraData<
    * @param childSchema - The array schema describing `items` and optionally `additionalItems`
    * @param source - The source array to read elements from
    * @param target - The accumulator array to write filtered elements into
+   * @param path - The path of the array
    * @returns - `target` after all applicable source elements have been written
    */
-  function handleArray(childSchema: S, source: unknown[], target: unknown[]): unknown[] {
+  function handleArray(childSchema: S, source: unknown[], target: unknown[], path: FieldPathList): unknown[] {
     const { items, additionalItems } = childSchema;
     if (Array.isArray(items)) {
       const tupleLength = Math.min(items.length, source.length);
       let i = 0;
       for (; i < tupleLength; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(items[i] as S | boolean, source[i]);
+        target[i] = omit(items[i], source[i], childPath(path, i));
       }
       // Without additionalItems, truncate at the tuple boundary to drop any pre-existing items.
       if (!additionalItems) {
@@ -303,12 +329,12 @@ export default function omitExtraData<
       }
       for (; i < source.length; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(additionalItems as S | boolean, source[i]);
+        target[i] = omit(additionalItems, source[i], childPath(path, i));
       }
     } else {
       for (let i = 0; i < source.length; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(items as S | boolean, source[i]);
+        target[i] = omit(items, source[i], childPath(path, i));
       }
     }
     // Truncate any pre-existing items beyond the source length.
@@ -326,22 +352,20 @@ export default function omitExtraData<
    * @param childSchema - The schema potentially containing `if`, `then`, and `else` keywords
    * @param source - The current form data value, passed to `validator.isValid` and the branch `omit`
    * @param target - The already-filtered value to merge the branch result into
+   * @param path - The path of the value
    * @returns - The result of applying the matched branch, or `target` when no branch applies
    */
-  function handleConditions(childSchema: S, source: unknown, target: unknown): unknown {
+  function handleConditions(childSchema: S, source: unknown, target: unknown, path: FieldPathList): unknown {
     const { if: condition, then, else: otherwise } = childSchema;
     if (condition === undefined) {
       return target;
     }
-    // validator.isValid signature: (schema, formData, rootSchema)
-    const isThenBranch = isSchemaObj(condition as S | boolean)
-      ? validator.isValid(condition as S, source as T, rootSchema)
-      : condition;
-    const branch = isThenBranch ? then : otherwise;
-    return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
+    const branch = conditionHolds<S, F>(context, condition, source, rootSchema) ? then : otherwise;
+    return branch === undefined ? target : omit(branch, source, path, target, false);
   }
 
-  /** Applies the best-matching `oneOf` option to `source`, merging the result into `target`. When
+  /** Applies the `oneOf` option the field shows to `source`, the best-matching one without a `fieldState`, merging
+   * the result into `target`. When
    * `oneOf` is not an array or the schema represents a select widget (enum-driven), `target` is
    * returned unchanged. `additionalProperties: false` is relaxed on each option before scoring so that
    * `getClosestMatchingOption` can validate freely, but the original option schema is used for the
@@ -351,32 +375,51 @@ export default function omitExtraData<
    * @param childSchema - The parent schema containing the `oneOf` keyword
    * @param source - The current form data value used to score each option
    * @param target - The already-filtered value to merge the winning option's result into
+   * @param path - The path of the value
+   * @param shown - Where the option applied is recorded
    * @returns - The result of applying the best-matching option, or `target` when no matching applies
    */
-  function handleOneOf(oneOf: S['oneOf'], childSchema: S, source: unknown, target: unknown): unknown {
-    if (!Array.isArray(oneOf) || isSelect(validator, childSchema, rootSchema, experimental_customMergeAllOf)) {
+  function handleOneOf(
+    oneOf: S['oneOf'],
+    childSchema: S,
+    source: unknown,
+    target: unknown,
+    path: FieldPathList,
+    shown: ShownOption<S>,
+  ): unknown {
+    // A select's value has no branch to omit extra data by
+    if (!Array.isArray(oneOf) || rendersOptionsAsSelect<S>(childSchema, oneOf)) {
       return target;
     }
-    // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
-    // The unrelaxed resolved schema is re-derived for the winning option so that omit() still
-    // respects additionalProperties:false during filtering.
-    const scoringOptions = relaxOptionsForScoring<S>(oneOf as (S | boolean)[], true, rootSchema);
-    const bestIndex = getClosestMatchingOption<T, S, F>(
-      validator,
-      rootSchema,
-      source as T,
-      scoringOptions,
-      0,
-      getDiscriminatorFieldFromSchema<S>(childSchema),
-      experimental_customMergeAllOf,
-    );
-    const winning = (oneOf as (S | boolean)[])[bestIndex];
-    // For object options, re-resolve without relaxation so additionalProperties:false is respected.
-    // For boolean options, scoringOptions already holds the converted schema (true→{}, false→{not:{}}).
-    const resolved: S = isObject(winning)
-      ? resolveAllReferences<S>(winning, rootSchema, [])
-      : scoringOptions[bestIndex];
-    return omit(resolved, source, target, false);
+    let winning: unknown;
+    if (fieldState) {
+      winning = oneOf[fieldShownOption<S, F>(context, fieldState, path, childSchema, oneOf, rootSchema, source)];
+    } else {
+      // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
+      // that is then applied with it, to omit them
+      const discriminator = getDiscriminatorFieldFromSchema<S>(childSchema);
+      winning = oneOf[closestOption<S, F>(context, rootSchema, source, oneOf, 0, true, discriminator)];
+    }
+    // An index naming no option, as -1 does for none shown, keeps nothing the options describe, as a `false` option does.
+    // The field renders the option retrieved for its data, its `allOf`, `if`/`then` and `dependencies` merged in, so
+    // that is the option applied, and whose extra-key keywords are read
+    const option = isSchemaObject<S>(winning)
+      ? withoutStubs<S>(retrieveSchema<unknown, S, F>(context, winning, rootSchema, source))
+      : schemaOfBoolean(Boolean(winning), rootSchema);
+    // The option takes the whole field, rendered with the keywords it inherits, such as the `items` of a type list
+    // naming `object` first, which the object's own omit leaves unapplied
+    if (!rendersOwnFieldBesideOption<S>(childSchema, option)) {
+      return omit(getRenderedOptionSchema<S>(childSchema, option), source, path, target, false);
+    }
+    // An object's field takes the extra keys of the object and its option, unless the option's own field takes them in
+    // its place, rendered with the object's extra-key keywords joined to its own
+    // oxlint-disable-next-line no-param-reassign
+    shown.option = option;
+    // oxlint-disable-next-line no-param-reassign
+    shown.takesExtraKeys = takesParentExtraKeys<S>(childSchema, option);
+    return shown.takesExtraKeys
+      ? omit(getRenderedOptionSchema<S>(childSchema, option), source, path, target, false)
+      : omit(option, source, path, target, false, false);
   }
 
   /** Applies `anyOf` branches from `schema` to `source`, merging results into `target`. When `anyOf`
@@ -387,9 +430,17 @@ export default function omitExtraData<
    * @param childSchema - The schema potentially containing an `anyOf` keyword
    * @param source - The current form data value; empty or undefined triggers all-branch application
    * @param target - The already-filtered value to merge branch results into
+   * @param path - The path of the value
+   * @param shown - Where the option applied is recorded, when one is picked
    * @returns - The result after applying the relevant `anyOf` branch(es), or `target` when inapplicable
    */
-  function handleAnyOf(childSchema: S, source: unknown, target: unknown): unknown {
+  function handleAnyOf(
+    childSchema: S,
+    source: unknown,
+    target: unknown,
+    path: FieldPathList,
+    shown: ShownOption<S>,
+  ): unknown {
     const { anyOf } = childSchema;
     if (!Array.isArray(anyOf)) {
       return target;
@@ -402,11 +453,11 @@ export default function omitExtraData<
     ) {
       let result = target;
       for (const branch of anyOf as (S | boolean)[]) {
-        result = omit(branch, source, result, false);
+        result = omit(branch, source, path, result, false);
       }
       return result;
     }
-    return handleOneOf(anyOf, childSchema, source, target);
+    return handleOneOf(anyOf, childSchema, source, target, path, shown);
   }
 
   /** Applies schema-based `dependencies` from `schema` to `source`, merging each active dependency's
@@ -417,9 +468,10 @@ export default function omitExtraData<
    * @param childSchema - The schema potentially containing a `dependencies` keyword
    * @param source - The current form data value; must be a plain object for dependencies to apply
    * @param target - The already-filtered value to merge dependency results into
+   * @param path - The path of the value
    * @returns - The result after applying all active schema dependencies, or `target` when inapplicable
    */
-  function handleDependencies(childSchema: S, source: unknown, target: unknown): unknown {
+  function handleDependencies(childSchema: S, source: unknown, target: unknown, path: FieldPathList): unknown {
     const { dependencies } = childSchema;
     if (dependencies === undefined || !isObjectValue(source)) {
       return target;
@@ -427,11 +479,48 @@ export default function omitExtraData<
     let result = target;
     for (const [key, deps] of Object.entries(dependencies)) {
       // Skip property dependencies (string arrays); only process schema dependencies.
-      if (key in source && !Array.isArray(deps)) {
-        result = omit(deps as S | boolean, source, result, false);
+      if (Object.hasOwn(source, key) && !Array.isArray(deps)) {
+        result = omit(deps, source, path, result, false);
       }
     }
     return result;
+  }
+
+  /** Each `allOf` schema merged once per call rather than once per data node. The `allOf` and its entries belong to
+   * the schema, so the merge yields the same result every time, while `omit()` recurses per array element and per
+   * object property: a 200-row array merged the same schema once a row. Keyed on the schema, so it is only valid for
+   * this call's `rootSchema`, which is why it lives here rather than at module scope
+   */
+  const mergedAllOfSchemas = new WeakMap<object, S | JSONSchema7Definition>();
+
+  /** Resolves the reference of one `allOf` entry. Only its own `$ref` needs resolving: the merge would hoist it rather
+   * than follow it, where the ones below are resolved as `omit()` reaches them
+   *
+   * @param entry - The `allOf` entry to resolve, which a boolean shorthand leaves alone
+   * @returns - The entry with its own reference resolved
+   */
+  function resolveAllOfEntry(entry: JSONSchema7Definition): JSONSchema7Definition {
+    return isSchemaObject<S>(entry) ? resolveOwnRef<S>(entry, rootSchema, context.customMergeAllOf) : entry;
+  }
+
+  /** Returns the merge of a schema's `allOf`, made once per schema object and remembered for the rest of this call.
+   *
+   * Each entry's own reference is resolved before merging, as the merge plan follows an entry's `$ref` before it merges
+   * the entry into the parent. The shallow merge hoists an entry's `$ref` onto the merged
+   * schema rather than following it, so the referenced schema's properties would be taken for extra data, and a
+   * `customMergeAllOf` would be handed a `$ref` the form's own merge never sees.
+   *
+   * @param schemaDef - The schema carrying the `allOf`, which is what the merge is remembered under
+   * @param allOf - The `allOf` entries to merge into it
+   * @returns - The merged schema, or `undefined` for an `allOf` merged to `false`
+   */
+  function mergeAllOfOnce(schemaDef: S, allOf: NonNullable<S['allOf']>): S | undefined {
+    let merged = mergedAllOfSchemas.get(schemaDef);
+    if (merged === undefined) {
+      merged = mergeAllOf<S, F>(context, { ...schemaDef, allOf: allOf.map(resolveAllOfEntry) });
+      mergedAllOfSchemas.set(schemaDef, merged);
+    }
+    return isSchemaObject<S>(merged) ? merged : undefined;
   }
 
   /** Core recursive filter. Resolves `$ref`s, merges `allOf`, then delegates to the type-specific
@@ -443,27 +532,57 @@ export default function omitExtraData<
    *
    * @param schemaDef - The schema (or boolean shorthand) to filter `source` against
    * @param source - The raw form data value to filter
+   * @param path - The path of the value
    * @param [target] - An optional accumulator carrying results from prior oneOf/anyOf processing
    * @param [useSourceAsFallback=true] - When false a permissive schema (`true`/`{}`) returns `target`
    *   rather than `source`, preventing compositional branches from aliasing the accumulator to `source`
+   * @param [judgesExtraKeys=true] - False for an option whose object's field judges its extra keys, which keeps only
+   *   the properties it declares
    * @returns - The filtered value, or `undefined` when the schema rejects the value
    */
-  function omit(schemaDef: S | boolean, source: unknown, target?: unknown, useSourceAsFallback = true): unknown {
+  function omit(
+    schemaDef: unknown,
+    source: unknown,
+    path: FieldPathList,
+    target?: unknown,
+    useSourceAsFallback = true,
+    judgesExtraKeys = true,
+  ): unknown {
     if (source === undefined || schemaDef === false) {
       return undefined;
     }
-    if (schemaDef === true || !schemaDef || Object.keys(schemaDef).length === 0) {
+    if (!isSchemaObject<S>(schemaDef) || Object.keys(schemaDef).length === 0) {
       return target ?? (useSourceAsFallback ? source : undefined);
+    }
+    // The `not` of the empty schema, which a `false` definition reads as behind a `$ref`, holds no value either
+    const { not } = schemaDef;
+    if (not === true || (isObject(not) && Object.keys(not).length === 0)) {
+      return undefined;
     }
 
     let localSchema = schemaDef;
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(findSchemaDefinition<S>(ref, rootSchema), source, target, useSourceAsFallback);
+      return omit(
+        resolveOwnRef<S>(localSchema, rootSchema, context.customMergeAllOf),
+        source,
+        path,
+        target,
+        useSourceAsFallback,
+        judgesExtraKeys,
+      );
     }
     if (allOf) {
-      localSchema = doMergeAllOf<S>(localSchema, experimental_customMergeAllOf);
+      const merged = mergeAllOfOnce(localSchema, allOf);
+      // An `allOf` holding a `false` merges to that `false`, the one boolean a merge yields — a `true` entry merges to
+      // `{}` — and no value satisfies it. The keyword handlers below read nothing off a boolean, so the value would
+      // otherwise reach the fallback that returns `source`, keeping even the keys the entries beside the `false`
+      // describe nothing about
+      if (merged === undefined) {
+        return undefined;
+      }
+      localSchema = merged;
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.
@@ -472,25 +591,50 @@ export default function omitExtraData<
       if (remainingAllOf) {
         for (let i = 0; i < remainingAllOf.length; i++) {
           // oxlint-disable-next-line no-param-reassign
-          target = omit(remainingAllOf[i] as S | boolean, source, target, false);
+          target = omit(remainingAllOf[i], source, path, target, false);
         }
       }
     }
 
-    let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
+    // The options of a select are read as the constants they name, as the form renders them, `$ref`s included
+    localSchema = resolveConstantOptions<S>(localSchema, rootSchema);
+    // An `anyOf` is the list the field reads over a `oneOf` beside it (see `getXxxOfKey()`), so its option, applied
+    // second, is the one recorded
+    const shown: ShownOption<S> = {};
+    let filtered = handleAnyOf(
+      localSchema,
+      source,
+      handleOneOf(localSchema.oneOf, localSchema, source, target, path, shown),
+      path,
+      shown,
+    );
+    // The one field taking the object's extra keys judges them once, by the keywords of the object and the option it
+    // shows joined, as `retrieveSchema()` stubs them, rather than each keeping the keys its own keywords allow
+    const judge = judgesExtraKeys && !shown.takesExtraKeys ? extraKeyJudgeOf<S>(localSchema, shown.option) : undefined;
 
-    const type = getSchemaType<S>(localSchema);
+    // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune, nor has a
+    // container `const`, which takes no extra key (see `absentKeywordAllows()`) yet needs every key it names to hold. A
+    // value of another type a `type` list allows is kept as it is, rather than pruned or dropped as the type the list
+    // resolves to
+    const schemaType =
+      isWholeValueSelect<S>(localSchema) || isContainerValue(localSchema.const)
+        ? undefined
+        : getSchemaType<S>(localSchema);
+    const type =
+      Array.isArray(localSchema.type) && getSchemaTypeForValue<S>(localSchema, source) !== schemaType
+        ? undefined
+        : schemaType;
     if (type === 'object') {
       if (!isObjectValue(source)) {
         return undefined;
       }
-      filtered = handleObject(localSchema, source, isObjectValue(filtered) ? filtered : {});
+      filtered = handleObject(localSchema, source, isObjectValue(filtered) ? filtered : {}, path, judge);
     } else if (type === 'array') {
       if (!Array.isArray(source)) {
         return undefined;
       }
       if (localSchema.items !== undefined) {
-        filtered = handleArray(localSchema, source, Array.isArray(filtered) ? filtered : []);
+        filtered = handleArray(localSchema, source, Array.isArray(filtered) ? filtered : [], path);
       }
     }
 
@@ -498,24 +642,30 @@ export default function omitExtraData<
     // dependency sub-schemas are legitimate extensions of the allowed property set and must not be
     // pruned. Keys added only by winning conditional branches are still removed here so the result
     // honours additionalProperties:false.
-    const afterConditions = handleConditions(localSchema, source, filtered);
-    if (localSchema.additionalProperties === false && isObjectValue(afterConditions)) {
-      const knownKeys = new Set(Object.keys(localSchema.properties ?? {}));
-      const patterns = localSchema.patternProperties
-        ? Object.keys(localSchema.patternProperties).map((p) => new RegExp(p))
-        : [];
+    // Where the shown option's field took the object's extra keys, the keys it kept stand, and only those the object's
+    // own conditions add are pruned, by the object's keywords
+    const judgedByOption =
+      judgesExtraKeys && shown.takesExtraKeys && localSchema.additionalProperties === false && isObjectValue(filtered)
+        ? new Set(Object.keys(filtered))
+        : undefined;
+    const afterConditions = handleConditions(localSchema, source, filtered, path);
+    const pruning = judge ?? (judgedByOption ? extraKeyJudgeOf<S>(localSchema) : undefined);
+    if (pruning?.schema.additionalProperties === false && isObjectValue(afterConditions)) {
       for (const key of Object.keys(afterConditions)) {
-        if (!knownKeys.has(key) && !patterns.some((re) => re.test(key))) {
-          // oxlint-disable-next-line no-param-reassign
+        if (
+          !judgedByOption?.has(key) &&
+          !pruning.declared.has(key) &&
+          Object.keys(getMatchingPatternProperties<S>(pruning.schema, key)).length === 0
+        ) {
           delete afterConditions[key];
         }
       }
     }
 
-    const result = handleDependencies(localSchema, source, afterConditions);
+    const result = handleDependencies(localSchema, source, afterConditions, path);
 
     return result ?? (useSourceAsFallback ? source : undefined);
   }
 
-  return omit(schema, formData) as T | undefined;
+  return dataOf<T>(omit(schema, formData, []));
 }

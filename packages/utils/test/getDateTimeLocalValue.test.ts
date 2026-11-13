@@ -1,0 +1,138 @@
+import pinTimeZone from '../../../testing/pinTimeZone.ts';
+import { getDateTimeLocalValue } from '../src/index.ts';
+
+describe('getDateTimeLocalValue()', () => {
+  // The non date-time cases below depend on the local zone
+  pinTimeZone('America/Los_Angeles');
+
+  it('should report isIsoDateTime as false for format=date-time', () => {
+    expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, undefined).isIsoDateTime).toBe(false);
+  });
+
+  it('should report isIsoDateTime as true for format=iso-date-time', () => {
+    expect(getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, undefined).isIsoDateTime).toBe(true);
+  });
+
+  it('should normalize an undefined value to undefined for localValue', () => {
+    expect(getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, undefined).localValue).toBeUndefined();
+  });
+
+  it.each([true, null, {}, [], Symbol('x')])('should normalize %s to undefined for localValue', (value) => {
+    expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, value).localValue).toBeUndefined();
+  });
+
+  it('should convert an epoch number to an ISO string for localValue', () => {
+    const epoch = Date.UTC(2020, 4, 3, 14, 30);
+    expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, epoch).localValue).toEqual(
+      '2020-05-03T14:30:00.000Z',
+    );
+  });
+
+  it('should convert a Date to an ISO string for localValue', () => {
+    const date = new Date(Date.UTC(2020, 4, 3, 14, 30));
+    expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, date).localValue).toEqual(
+      '2020-05-03T14:30:00.000Z',
+    );
+  });
+
+  it('should show a converted epoch number at local wall-clock time for iso-date-time', () => {
+    const epoch = Date.UTC(2020, 4, 3, 14, 30);
+    expect(getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, epoch).localValue).toEqual(
+      '2020-05-03T07:30:00.000',
+    );
+  });
+
+  it('should show a converted Date at local wall-clock time for iso-date-time', () => {
+    const date = new Date(Date.UTC(2020, 4, 3, 14, 30));
+    expect(getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, date).localValue).toEqual(
+      '2020-05-03T07:30:00.000',
+    );
+  });
+
+  it.each([
+    ['no format', {}],
+    ['format: date', { format: 'date' }],
+  ])('should show a converted epoch number and Date at local wall-clock time for %s', (_name, extra) => {
+    const schema = { type: 'string', ...extra } as const;
+    const epoch = Date.UTC(2020, 4, 3, 2, 0);
+    expect(getDateTimeLocalValue(schema, epoch).localValue).toEqual('2020-05-02T19:00:00.000');
+    expect(getDateTimeLocalValue(schema, new Date(epoch)).localValue).toEqual('2020-05-02T19:00:00.000');
+  });
+
+  it('should read a UTC midnight as the day it names for format=date', () => {
+    const schema = { type: 'string', format: 'date' } as const;
+    const epoch = Date.UTC(2020, 4, 3);
+    expect(getDateTimeLocalValue(schema, epoch).localValue).toEqual('2020-05-03');
+    expect(getDateTimeLocalValue(schema, new Date(epoch)).localValue).toEqual('2020-05-03');
+  });
+
+  it.each([
+    ['10000', Date.UTC(10000, 0, 1)],
+    ['-3', Date.UTC(-3, 0, 1)],
+    ['0', new Date(Date.UTC(2000, 0, 1)).setUTCFullYear(0)],
+  ])(
+    'should normalize a UTC midnight in the year %s, outside the years 1-9999, to undefined for format=date',
+    (_, value) => {
+      expect(getDateTimeLocalValue({ type: 'string', format: 'date' }, value).localValue).toBeUndefined();
+    },
+  );
+
+  it('should not read a UTC midnight as a day for a format other than date', () => {
+    const epoch = Date.UTC(2020, 4, 3);
+    expect(getDateTimeLocalValue({ type: 'string' }, epoch).localValue).toEqual('2020-05-02T17:00:00.000');
+  });
+
+  it.each([
+    ['275760', 8.64e15],
+    ['33658', 1e15],
+    ['-3', Date.UTC(-3, 0, 1)],
+    ['0', new Date(2000, 6, 1).setFullYear(0)],
+  ])('should normalize an epoch in the local year %s, outside the years 1-9999, to undefined', (_, value) => {
+    expect(getDateTimeLocalValue({ type: 'string' }, value).localValue).toBeUndefined();
+  });
+
+  it.each([
+    ['date-time', true],
+    ['datetime', true],
+    ['iso-date-time', false],
+    ['date', false],
+    [undefined, false],
+  ])('should report requiresOffset for format=%s as %s', (format, expected) => {
+    expect(getDateTimeLocalValue({ type: 'string', format }, '2020-05-03').requiresOffset).toBe(expected);
+  });
+
+  it.each([NaN, Infinity, 8.64e15 + 1])('should normalize the out-of-range number %s to undefined', (value) => {
+    expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, value).localValue).toBeUndefined();
+  });
+
+  it('should normalize an invalid Date to undefined for localValue', () => {
+    expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, new Date(NaN)).localValue).toBeUndefined();
+  });
+
+  it.each([
+    ['date-time', '2016-04-05T14:01:30.000Z'],
+    ['date', '2020-05-03'],
+  ])('should leave a string value untouched when format is %s', (format, value) => {
+    expect(getDateTimeLocalValue({ type: 'string', format }, value).localValue).toEqual(value);
+  });
+
+  it('should strip a timezone offset from a string value for iso-date-time', () => {
+    expect(
+      getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, '2016-04-05T14:01:30.000Z').localValue,
+    ).toEqual('2016-04-05T14:01:30.000');
+  });
+
+  it.each(['2020-05-03', '2020-05-03+02:00'])(
+    'should read a bare day %s as the start of that day for iso-date-time',
+    (value) => {
+      expect(getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, value).localValue).toEqual(
+        '2020-05-03T00:00:00',
+      );
+    },
+  );
+
+  it('should leave a string value without a timezone offset untouched for iso-date-time', () => {
+    const value = '2016-04-05T14:01:30';
+    expect(getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, value).localValue).toEqual(value);
+  });
+});

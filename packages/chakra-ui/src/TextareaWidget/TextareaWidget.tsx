@@ -1,61 +1,70 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Textarea } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  hasWidgetErrors,
+  labelValue,
+  toInputValue,
+  widgetDrawsLabelText,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
 
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  id,
-  htmlName,
-  placeholder,
-  value,
-  label,
-  hideLabel,
-  disabled,
-  autofocus,
-  readonly,
-  onBlur,
-  onFocus,
-  onChange,
-  options,
-  required,
-  rawErrors,
-  uiSchema,
-}: WidgetProps<T, S, F>) {
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    placeholder,
+    value,
+    label,
+    disabled,
+    autofocus,
+    readonly,
+    onBlur,
+    onFocus,
+    onChange,
+    options,
+    required,
+    presentation,
+  } = props;
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target?.value);
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(options);
 
   return (
     <Field
       mb={1}
       disabled={disabled || readonly}
       required={required}
+      requiredMarker={templateMarksRequired<T, S, F>(props)}
       readOnly={readonly}
-      invalid={rawErrors && rawErrors.length > 0}
-      label={labelValue(label, hideLabel || !label)}
+      invalid={hasWidgetErrors<T, S, F>(props)}
+      label={labelValue(label, !drawsLabel)}
+      id={id}
       {...chakraProps}
     >
       <Textarea
         id={id}
         name={htmlName || id}
-        value={value ?? ''}
+        value={toInputValue(value)}
         placeholder={placeholder}
         autoFocus={autofocus}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
         rows={options.rows}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
       />
     </Field>
   );

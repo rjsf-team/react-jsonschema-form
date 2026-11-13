@@ -6,13 +6,15 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
-  getSchemaType,
-  getTemplate,
+  getOptionalDataControlsType,
+  getTemplates,
   getUiOptions,
   isFormDataAvailable,
   optionalControlsId,
   TranslatableString,
 } from '@rjsf/utils';
+
+import { withGlobalUiOptions } from './fieldWidgetUtils.ts';
 
 /** The `OptionalDataControlsField` component is used to render the optional data controls for the field associated
  * with the given props.
@@ -20,9 +22,9 @@ import {
  * @param props - The `FieldProps` for this template
  */
 export default function OptionalDataControlsField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const {
     schema,
@@ -31,42 +33,51 @@ export default function OptionalDataControlsField<
     disabled = false,
     readonly = false,
     onChange,
-    errorSchema,
-    fieldPathId,
+    fieldPath,
+    id: fieldId,
     registry,
   } = props;
 
-  const { globalUiOptions = {}, schemaUtils, translateString } = registry;
+  const { globalUiOptions = {}, schemaUtils, translateString, uiSchemaDefinitions } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const OptionalDataControlsTemplate = getTemplate<'OptionalDataControlsTemplate', T, S, F>(
-    'OptionalDataControlsTemplate',
-    registry,
-    uiOptions,
-  );
+  const { OptionalDataControlsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const hasFormData = isFormDataAvailable<T>(formData);
   let id: string;
   let label: string | undefined;
   let onAddClick: OptionalDataControlsTemplateProps['onAddClick'];
   let onRemoveClick: OptionalDataControlsTemplateProps['onRemoveClick'];
   if (disabled || readonly) {
-    id = optionalControlsId(fieldPathId, 'Msg');
+    id = optionalControlsId(fieldId, 'Msg');
     label = hasFormData ? undefined : translateString(TranslatableString.OptionalObjectEmptyMsg);
   } else {
     const labelEnum = hasFormData ? TranslatableString.OptionalObjectRemove : TranslatableString.OptionalObjectAdd;
     label = translateString(labelEnum);
     if (hasFormData) {
-      id = optionalControlsId(fieldPathId, 'Remove');
-      onRemoveClick = () => onChange(undefined as T, fieldPathId.path, errorSchema);
+      id = optionalControlsId(fieldId, 'Remove');
+      // The errors at and below the removed value describe fields that are no longer there, so an empty raise takes
+      // them off: passing none would leave them standing, and the fields' own would keep the form from submitting
+      onRemoveClick = () => onChange(undefined, fieldPath, {});
     } else {
-      id = optionalControlsId(fieldPathId, 'Add');
+      id = optionalControlsId(fieldId, 'Add');
       onAddClick = () => {
-        // If it has form data, store an empty object, otherwise get the default form state and use it
-        let newFormData: unknown = schemaUtils.getDefaultFormState(schema, formData, 'excludeObjectChildren');
+        // Passes uiSchema/uiSchemaDefinitions so a ui:initialValue on a field beneath this control applies immediately,
+        // the same as it would if the field had been present since the initial render. Add is only offered when there
+        // is no data to keep, so none is passed: a `null` held by a `['object', 'null']` would otherwise be kept as the
+        // value of the type it is, and nothing would be added
+        let newFormData: unknown = schemaUtils.getDefaultFormState(
+          schema,
+          undefined,
+          'excludeObjectChildren',
+          undefined,
+          withGlobalUiOptions<T, S, F>(uiSchema, globalUiOptions),
+          uiSchemaDefinitions,
+        );
         if (newFormData === undefined) {
-          // If new form data ended up being undefined, and we have pushed the add button we need to actually add data
-          newFormData = getSchemaType<S>(schema) === 'array' ? [] : {};
+          // getDefaultFormState() returns undefined for an optional array (and can for an object), so Add has to supply
+          // the empty container itself, of the type shouldRenderOptionalField() rendered the controls for
+          newFormData = getOptionalDataControlsType<S>(schema, registry.rootSchema) === 'array' ? [] : {};
         }
-        onChange(newFormData as T, fieldPathId.path, errorSchema);
+        onChange(newFormData, fieldPath);
       };
     }
   }

@@ -163,3 +163,5 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 In this example the user is prompted with different follow-up questions dynamically based on their answer to the first question.
 
 In these examples, the "Do you have any pets?" question is validated against the corresponding property in each schema in the `oneOf` array. If exactly one matches, the rest of that schema is merged with the existing schema.
+
+A `oneOf` none of whose schemas declares the dependency's property in its `properties` is not a dynamic dependency: it applies as a `oneOf` beside `dependencies` does, the schema the data matches merged in with no option selector. An `anyOf` under `dependencies` applies the same way. Only the entry's own `anyOf` and `oneOf` are read this way: an `anyOf` in an `allOf` member or a `then`/`else` of the entry still renders an option selector, and a `oneOf` there is still read as part of the dynamic dependency.

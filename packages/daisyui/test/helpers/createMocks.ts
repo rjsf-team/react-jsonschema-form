@@ -1,4 +1,4 @@
-import { getTestRegistry } from '@rjsf/core';
+import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 
 import Templates from '../../src/templates/Templates.tsx';
@@ -14,7 +14,7 @@ const mockSchema: RJSFSchema = {
 const mockEventHandlers = (): void => undefined;
 
 function mockRegistry() {
-  return getTestRegistry({ templates: Templates, rootSchema: mockSchema, widgets: generateWidgets() });
+  return getTestRegistry(mockSchema, undefined, Templates, generateWidgets());
 }
 
 export function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetProps {
@@ -30,7 +30,8 @@ export function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetPro
     onBlur: mockEventHandlers,
     onFocus: mockEventHandlers,
     multiple: false,
-    rawErrors: [''],
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+    rawErrors: [],
     value: 'test-value',
     options: {},
     id: 'test-id',

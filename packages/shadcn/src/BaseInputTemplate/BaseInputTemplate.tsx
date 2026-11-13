@@ -1,11 +1,34 @@
-import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import type { ChangeEvent, FocusEvent, InputHTMLAttributes, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
+import {
+  examplesId,
+  getControlAttributes,
+  getExampleSuggestions,
+  callerInputProps,
+  getBaseInputProps,
+  hasWidgetErrors,
+  offersClearButton,
+  toInputValue,
+} from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
 import { cn } from '../lib/utils.ts';
+
+/** The props this theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes
+ * `extraProps` to
+ */
+export type ShadcnBaseInputTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = BaseInputTemplateProps<T, S, F> & {
+  /** Props to spread on the input along with the ones the schema derives. Its `pattern`, `inputMode` and `accept` win
+   * over the derived ones
+   */
+  extraProps?: InputHTMLAttributes<HTMLInputElement> & Record<`data-${string}`, unknown>;
+};
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -14,36 +37,39 @@ import { cn } from '../lib/utils.ts';
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  id,
-  htmlName,
-  placeholder,
-  required,
-  readonly,
-  disabled,
-  type,
-  value,
-  onChange,
-  onChangeOverride,
-  onBlur,
-  onFocus,
-  autofocus,
-  options,
-  schema,
-  rawErrors = [],
-  children,
-  extraProps,
-  className,
-  registry,
-}: BaseInputTemplateProps<T, S, F>) {
+  F extends FormContextType = FormContextType,
+>(props: ShadcnBaseInputTemplateProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    placeholder,
+    required,
+    readonly,
+    disabled,
+    value,
+    onChange,
+    onChangeOverride,
+    onBlur,
+    onFocus,
+    autofocus,
+    options,
+    schema,
+    children,
+    extraProps,
+    className,
+    registry,
+    presentation,
+  } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
-  const inputProps = {
-    ...extraProps,
-    ...getInputProps<T, S, F>(schema, type, options),
-  };
+  // The `pattern`, `inputMode`, `accept` and `multiple` in `extraProps` count as the widget's own, over its props
+  const { title, ...baseInputProps } = getBaseInputProps<T, S, F>({
+    ...props,
+    ...callerInputProps({ ...extraProps }),
+    multiple: extraProps?.multiple ?? props.multiple,
+  });
+  const inputProps = { ...extraProps, ...baseInputProps };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
@@ -57,31 +83,34 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const inputValue = toInputValue(value);
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   return (
     <div className='p-0.5'>
       <Input
         id={id}
         name={htmlName || id}
-        type={type}
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className={cn({ 'border-destructive focus-visible:ring-0': rawErrors.length > 0 }, className)}
-        list={schema.examples ? examplesId(id) : undefined}
+        list={hasExamples ? examplesId(id) : undefined}
+        title={title}
         {...inputProps}
-        value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || handleChange}
+        className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className, extraProps?.className)}
+        value={inputValue}
+        onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && offersClearButton(inputValue, inputProps.type) && (
         <ClearButton onClick={handleClear} registry={registry} />
       )}
       {children}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </div>
   );
 }

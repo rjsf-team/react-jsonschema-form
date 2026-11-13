@@ -1,10 +1,14 @@
-import type { ButtonHTMLAttributes, Dispatch, MutableRefObject, PropsWithChildren, SetStateAction } from 'react';
+import type { Dispatch, RefObject, SetStateAction } from 'react';
 import { useCallback } from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Drawer from '@mui/material/Drawer';
-import type { IChangeEvent } from '@rjsf/core';
+import Typography from '@mui/material/Typography';
+import type { FormProps, FormRef, IChangeEvent } from '@rjsf/core';
 import Form from '@rjsf/core';
-import type { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
-import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR } from '@rjsf/utils';
+import type { DefaultFormStateBehavior, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, isObject } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 import base64 from '../utils/base64.ts';
@@ -12,52 +16,34 @@ import CopyLink from './CopyLink.tsx';
 import RawValidatorTest from './RawValidatorTest.tsx';
 import ValidatorSelector from './ValidatorSelector.tsx';
 
-export const DRAWER_WIDTH = '28rem';
+export const DRAWER_WIDTH = '280px';
 
-type HeaderButtonProps = {
-  title: string;
-  onClick: () => void;
-} & ButtonHTMLAttributes<HTMLButtonElement>;
-
-function HeaderButton({ title, onClick, children, ...buttonProps }: PropsWithChildren<HeaderButtonProps>) {
-  return (
-    <button
-      type='button'
-      className='btn btn-default'
-      title={title}
-      onClick={onClick}
-      {...buttonProps}
-      style={{ marginRight: '5px' }}
-    >
-      {children}
-    </button>
-  );
-}
-
-function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: MutableRefObject<any> }) {
+function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: RefObject<FormRef | null> }) {
   const submitClick = useCallback(() => {
-    playGroundFormRef.current.submit();
+    playGroundFormRef.current?.submit();
   }, [playGroundFormRef]);
   const validateClick = useCallback(() => {
-    playGroundFormRef.current.validateForm();
+    playGroundFormRef.current?.validateForm();
   }, [playGroundFormRef]);
   const resetClick = useCallback(() => {
-    playGroundFormRef.current.reset();
+    playGroundFormRef.current?.reset();
   }, [playGroundFormRef]);
   return (
     <>
-      <span className='control-label'>Programmatic</span>
-      <div className='btn-group'>
-        <HeaderButton title='Click me to submit the form programmatically.' onClick={submitClick}>
+      <Typography variant='subtitle2' component='p'>
+        Programmatic
+      </Typography>
+      <ButtonGroup size='small'>
+        <Button title='Click me to submit the form programmatically.' onClick={submitClick}>
           Submit
-        </HeaderButton>
-        <HeaderButton title='Click me to validate the form programmatically.' onClick={validateClick}>
+        </Button>
+        <Button title='Click me to validate the form programmatically.' onClick={validateClick}>
           Validate
-        </HeaderButton>
-        <HeaderButton title='Click me to reset the form programmatically.' onClick={resetClick}>
+        </Button>
+        <Button title='Click me to reset the form programmatically.' onClick={resetClick}>
           Reset
-        </HeaderButton>
-      </div>
+        </Button>
+      </ButtonGroup>
     </>
   );
 }
@@ -73,15 +59,21 @@ const liveSettingsBooleanSchema: RJSFSchema = {
     focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
     useFallbackUiForUnsupportedType: { type: 'boolean', title: 'Use Fallback UI', default: false },
     omitExtraData: { type: 'boolean', title: 'Omit extra data' },
-    liveOmit: { type: 'string', title: 'Live omit', default: false, enum: [false, 'onChange', 'onBlur'] },
-    liveValidate: { type: 'string', title: 'Live validation', default: false, enum: [false, 'onChange', 'onBlur'] },
+    liveOmit: { type: 'string', title: 'Live omit', default: 'off', enum: ['off', 'onChange', 'onBlur'] },
+    liveValidate: { type: 'string', title: 'Live validation', default: 'off', enum: ['off', 'onChange', 'onBlur'] },
+    additionalPropertiesWhenAbsent: {
+      type: 'string',
+      title: 'Absent additionalProperties',
+      default: 'forbid',
+      enum: ['forbid', 'allow'],
+    },
     showErrorList: {
       type: 'string',
       default: 'top',
       title: 'Show Error List',
       enum: [false, 'top', 'bottom'],
     },
-    experimental_defaultFormStateBehavior: {
+    defaultFormStateBehavior: {
       title: 'Default Form State Behavior (Experimental)',
       type: 'object',
       properties: {
@@ -90,7 +82,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
           properties: {
             populate: {
               type: 'string',
-              default: 'populate',
+              default: 'all',
               title: 'Populate minItems in arrays',
               oneOf: [
                 {
@@ -262,7 +254,13 @@ const liveSettingsBooleanUiSchema: UiSchema = {
       inline: true,
     },
   },
-  experimental_defaultFormStateBehavior: {
+  additionalPropertiesWhenAbsent: {
+    'ui:widget': 'radio',
+    'ui:options': {
+      inline: true,
+    },
+  },
+  defaultFormStateBehavior: {
     'ui:options': {
       label: false,
     },
@@ -284,28 +282,75 @@ const liveSettingsBooleanUiSchema: UiSchema = {
   },
 };
 
-export interface LiveSettings {
-  showErrorList?: false | 'top' | 'bottom';
-  [key: string]: any;
-}
+/** The value of the drawer's `liveValidate` and `liveOmit` radios */
+export type LiveFlag = 'off' | 'onChange' | 'onBlur';
+
+/** The drawer's settings. Most are `Form` props spread straight onto it; `liveValidate` and `liveOmit` hold the drawer's
+ * radio value, which `toLiveSetting()` maps onto the prop since `Form` has no `'off'`.
+ */
+export type LiveSettings = Pick<
+  FormProps,
+  | 'disabled'
+  | 'readonly'
+  | 'idPrefix'
+  | 'idSeparator'
+  | 'noHtml5Validate'
+  | 'noValidate'
+  | 'omitExtraData'
+  | 'showErrorList'
+  | 'useFallbackUiForUnsupportedType'
+  | 'additionalPropertiesWhenAbsent'
+> & {
+  focusOnFirstError?: boolean;
+  liveValidate?: LiveFlag;
+  liveOmit?: LiveFlag;
+  defaultFormStateBehavior?: DefaultFormStateBehavior;
+};
+
+type ArrayMinItems = NonNullable<DefaultFormStateBehavior['arrayMinItems']>;
+
+/** `arrayMinItems` as a shared link may carry it */
+export type LoadedArrayMinItems =
+  | 'populate'
+  | (Omit<ArrayMinItems, 'populate'> & { populate?: ArrayMinItems['populate'] | 'populate' });
+
+/** The settings as a shared link may carry them. A v5 or v6 link holds `liveValidate` and `liveOmit` as booleans. A link
+ * shared from the initial settings the playground had through v6 holds an `arrayMinItems` of `'populate'`, which
+ * `DefaultFormStateBehavior` never allowed, a `validate` of `false`, and `useFallbackField`, which names no `Form` prop.
+ * One shared after a change in the drawer can hold `'populate'` as its `arrayMinItems.populate`, the default the drawer
+ * filled in through v6, which is none of the values that takes either.
+ * `validate` was the name of the live validation toggle in early v5, whose links hold it in place of `liveValidate`.
+ */
+export type LoadedLiveSettings = Omit<LiveSettings, 'liveValidate' | 'liveOmit' | 'defaultFormStateBehavior'> & {
+  liveValidate?: LiveFlag | boolean;
+  liveOmit?: LiveFlag | boolean;
+  defaultFormStateBehavior?: Omit<DefaultFormStateBehavior, 'arrayMinItems'> & {
+    arrayMinItems?: LoadedArrayMinItems;
+  };
+  validate?: boolean;
+  useFallbackField?: boolean;
+};
 
 interface OptionsDrawerProps {
+  /** Changes whenever the playground loads a sample or a shared link, which remounts the options forms it seeds */
+  loadKey: number;
   schema: RJSFSchema;
   uiSchema: UiSchema;
-  formData: any;
+  formData: unknown;
   shareURL: string | null;
   theme: string;
   sampleName: string;
   validators: Record<string, ValidatorType>;
   validator: string;
   liveSettings: LiveSettings;
-  playGroundFormRef: MutableRefObject<any>;
+  playGroundFormRef: RefObject<FormRef | null>;
   setValidator: Dispatch<SetStateAction<string>>;
   setLiveSettings: Dispatch<SetStateAction<LiveSettings>>;
   setShareURL: Dispatch<SetStateAction<string | null>>;
 }
 
 export default function OptionsDrawer({
+  loadKey,
   schema,
   uiSchema,
   formData,
@@ -329,7 +374,10 @@ export default function OptionsDrawer({
 
   const handleSetLiveSettings = useCallback(
     ({ formData: settingsData }: IChangeEvent) => {
-      setLiveSettings((previousLiveSettings) => ({ ...previousLiveSettings, ...settingsData }));
+      setLiveSettings((previousLiveSettings) => ({
+        ...previousLiveSettings,
+        ...(isObject(settingsData) ? settingsData : {}),
+      }));
     },
     [setLiveSettings],
   );
@@ -362,19 +410,27 @@ export default function OptionsDrawer({
   const drawerSx = { width: DRAWER_WIDTH, p: 1 };
   return (
     <Drawer open variant='permanent' anchor='right' sx={drawerSx} slotProps={{ paper: { sx: drawerSx } }}>
-      <OptionsButtons playGroundFormRef={playGroundFormRef} />
-      <CopyLink shareURL={shareURL} onShare={onShare} />
+      <Box sx={{ display: 'inline-flex', flexDirection: 'column', alignSelf: 'start' }}>
+        <OptionsButtons playGroundFormRef={playGroundFormRef} />
+        <CopyLink shareURL={shareURL} onShare={onShare} />
+      </Box>
       <Form
+        key={`options-${loadKey}`}
         idPrefix='rjsf_options'
         schema={liveSettingsBooleanSchema}
-        formData={liveSettings}
+        initialFormData={liveSettings}
         validator={localValidator}
         onChange={handleSetLiveSettings}
         uiSchema={liveSettingsBooleanUiSchema}
       >
         <span />
       </Form>
-      <ValidatorSelector validators={validators} validator={validator} select={onValidatorSelected} />
+      <ValidatorSelector
+        key={`validator-${loadKey}`}
+        validators={validators}
+        validator={validator}
+        select={onValidatorSelected}
+      />
       <RawValidatorTest validator={validators[validator]} schema={schema} formData={formData} />
     </Drawer>
   );

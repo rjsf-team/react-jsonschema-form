@@ -1,0 +1,193 @@
+import { use, useCallback } from 'react';
+import type { FieldPath, FormContextType, SchemaUtilsType, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  deepEquals,
+  deepEqualsUndefinedAsMissing,
+  getRenderedOptionSchema,
+  getValidationTarget,
+  getXxxOfKey,
+  hasSchemaMarker,
+  isConstant,
+  isPlainObject,
+  isWholeValueSelect,
+  toConstant,
+} from '@rjsf/utils';
+
+import AdditionalEntryContext from '../components/fields/AdditionalEntryContext.ts';
+import { declaresProperty, storedValue } from '../components/fields/fieldWidgetUtils.ts';
+import type { OptionSwitchData } from '../components/fields/formDataForNewOption.ts';
+import type { MoveOutcome } from '../components/keyMove.ts';
+import type { OptionSelectionState } from './useOptionSelection.ts';
+import useSendMove from './useSendMove.ts';
+
+/** The options of an `anyOf`/`oneOf` field a switch leaves and selects, each with the uiSchema its field renders with */
+interface OptionSwitch<T, S extends StrictRJSFSchema, F extends FormContextType> {
+  /** The option switched away from */
+  oldOption: S | undefined;
+  /** The option switched away from as `getRenderedOptionSchema()` renders it, when the field has already computed it */
+  oldRenderedOption?: S;
+  /** The option switched to */
+  newOption: S | undefined;
+  /** The uiSchema the field of the option switched away from rendered with */
+  oldUiSchema: UiSchema<T, S, F> | undefined;
+  /** The uiSchema the field of the option switched to renders with */
+  newUiSchema: UiSchema<T, S, F> | undefined;
+  /** The index of the option switched away from, in the list the field stores its selection by, -1 where none was
+   * shown
+   */
+  oldIndex: number;
+}
+
+/** Whether the field of an option as it is rendered renders a field per item. A select over whole arrays renders one
+ * control for the array, and an option holding options of its own renders its items under a nested
+ * `MultiSchemaField`, which mounts their fields anew
+ *
+ * @param rendered - The option as `getRenderedOptionSchema()` renders it
+ * @returns - True when the option's field renders a field per item
+ */
+function rendersItemFields<S extends StrictRJSFSchema>(rendered: S): boolean {
+  return !isWholeValueSelect<S>(rendered) && getXxxOfKey<S>(rendered) === undefined;
+}
+
+/** Whether the options of `schema` a switch leaves and selects render the items of an array alike, as
+ * `MultiSchemaField` renders each option with what it inherits from `schema`. `uniqueItems` can turn enumerated items
+ * into one multi-select, which renders no field per item, and the uiSchema picks the field each item renders with. The
+ * uiSchemas are compared by identity, since `deepEquals()` reads any two fields named by `ui:field` as equal, so options
+ * given uiSchemas of their own render their items alike only when they share one
+ *
+ * @param schema - The schema holding the options
+ * @param optionSwitch - The options switched between, with their uiSchemas
+ * @returns - True when both options render the same items
+ */
+function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  { oldOption, oldRenderedOption, newOption, oldUiSchema, newUiSchema }: OptionSwitch<T, S, F>,
+): boolean {
+  if (!oldOption || !newOption || oldUiSchema !== newUiSchema) {
+    return false;
+  }
+  const oldRendered = oldRenderedOption ?? getRenderedOptionSchema<S>(schema, oldOption);
+  const newRendered = getRenderedOptionSchema<S>(schema, newOption);
+  return (
+    rendersItemFields<S>(oldRendered) &&
+    rendersItemFields<S>(newRendered) &&
+    oldRendered.items !== undefined &&
+    deepEquals(oldRendered.items, newRendered.items) &&
+    deepEquals(oldRendered.additionalItems, newRendered.additionalItems) &&
+    oldRendered.uniqueItems === newRendered.uniqueItems
+  );
+}
+
+/** Returns what sends the change of a `oneOf`/`anyOf` field at `fieldPath` whose option is switched. The option's
+ * fields are rendered anew under the new option's schema, so the form drops the fields' own errors under every key the
+ * option that was left declared or the data held: a raise of a widget that is gone, or that another widget now renders
+ * for, would stand with no field to clear it. The validator's errors go only under the keys the new option does not
+ * declare, since those under a key it declares too may describe a constraint it shares. The keys of the properties
+ * `schema` declares beside its options keep everything, since those fields stay as they are, and so do the indices of
+ * an array the switch carries over at the same length to an option that renders its items as the option left did,
+ * since the fields of the items it still holds stay as they are too. A change of length has `ArrayField` key every
+ * item anew, which mounts each item's field afresh. The errors raised at the field's own path go too, whatever the
+ * options declare. `send` is handed the value to send, the new option's data as the field's container stores it, see
+ * `storedValue()`, which is the value the move is announced with. What it returns says what became of the change, see
+ * `FormDataAccess.sendMove()`.
+ *
+ * The keys only the old option declared that `formDataForNewOption()` left out stay out of the value sent, and the move
+ * carries them with the option switched away from. A form that takes the change as the switch puts them back, and its
+ * sanitize judges them against that option as it judges a field a conditional stops declaring; anything else, such as
+ * a field outside a `Form` or a parent field that sends other data, leaves them out.
+ */
+export default function useSendOptionSwitch(fieldPath: FieldPath) {
+  const sendMove = useSendMove(fieldPath);
+  const isEntryPath = use(AdditionalEntryContext) === fieldPath;
+  return useCallback(
+    <T, S extends StrictRJSFSchema, F extends FormContextType, V>(
+      schema: S,
+      optionSwitch: OptionSwitch<T, S, F>,
+      formData: unknown,
+      { formData: newFormData, left }: OptionSwitchData<V>,
+      send: (value: V | undefined) => void,
+    ) => {
+      const { oldOption, newOption, oldIndex } = optionSwitch;
+      const kept = schema.properties ?? {};
+      // An item only keeps its errors while it still holds what it held: one an option's `default` replaced is another
+      // value under the same index
+      const items =
+        Array.isArray(formData) &&
+        Array.isArray(newFormData) &&
+        formData.length === newFormData.length &&
+        rendersItemsAlike(schema, optionSwitch)
+          ? { before: formData as unknown[], after: newFormData as unknown[] }
+          : undefined;
+      const isKeptItem = (index: number) =>
+        items !== undefined && deepEqualsUndefinedAsMissing(items.after[index], items.before[index]);
+      const declaredByOld = oldOption?.properties ?? {};
+      const declaredByNew = newOption?.properties ?? {};
+      // `schema` arrives with the extra keys of its data stubbed among its `properties`, so a stub is kept only while it
+      // stays the same extra key: one an option declares renders as that option's field, and one the switch deleted
+      // renders no field to clear its errors
+      const isKeptProperty = (key: string) =>
+        declaresProperty<S>(kept, key) ||
+        (Object.hasOwn(kept, key) &&
+          !Object.hasOwn(declaredByOld, key) &&
+          !Object.hasOwn(declaredByNew, key) &&
+          isPlainObject(newFormData) &&
+          Object.hasOwn(newFormData, key));
+      const isKept = (key: string) => isKeptProperty(key) || (/^\d+$/.test(key) && isKeptItem(Number(key)));
+      const held = typeof formData === 'object' && formData !== null ? Object.keys(formData) : [];
+      const gone = new Set([...Object.keys(declaredByOld), ...held].filter((key) => !isKept(key)));
+      const isEntry = isEntryPath || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
+      // An entry's `null` option holds `null` rather than the `''` of a cleared value, which no such option takes and
+      // which would reload as another option. Elsewhere it holds nothing, see `formDataForNewOption()`
+      const isNullOption =
+        newOption !== undefined &&
+        (newOption.type === 'null' || (isConstant<S>(newOption) && toConstant<S>(newOption) === null));
+      const value =
+        isEntry && newFormData === undefined && isNullOption
+          ? (null as V)
+          : storedValue(newFormData, fieldPath, isEntry);
+      return sendMove(
+        {
+          value,
+          newKeyOf: (key) => (gone.has(key) && !Object.hasOwn(declaredByNew, key) ? undefined : key),
+          newOwnKeyOf: (key) => (gone.has(key) ? undefined : key),
+          dropsOwnErrors: true,
+          ...(oldIndex >= 0 && { switchedFrom: { index: oldIndex, left } }),
+        },
+        () => send(value),
+      );
+    },
+    [sendMove, fieldPath, isEntryPath],
+  );
+}
+
+/** Records the option a switch from the option at `from` to the one at `to` leaves selected, once the form has answered
+ * it with `outcome`. A switch the form refused changed nothing, so the option shown before is shown again, even where
+ * the data fits the one picked. One the form took holds for what it stored, which the form records as it takes it, and
+ * one no form answered for `sent`, what was sent. One `transformChange` rewrote holds while the data the form kept
+ * still fits `newOption`, so data several options fit keeps the explicit choice, and is otherwise matched again
+ */
+export function selectSwitchedOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  selectOption: OptionSelectionState['selectOption'],
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  { from, to, newOption }: { from: number; to: number; newOption: S | undefined },
+  formData: unknown,
+  sent: unknown,
+  outcome: MoveOutcome | undefined,
+) {
+  const rootSchema = schemaUtils.getRootSchema();
+  if (outcome === undefined) {
+    selectOption(to, [sent]);
+  } else if (outcome.kind === 'refused') {
+    selectOption(from, [formData]);
+  } else if (
+    outcome.kind === 'rewritten' &&
+    !deepEquals(outcome.kept, outcome.edited) &&
+    !(
+      newOption !== undefined &&
+      schemaUtils.getValidator().isValid(getValidationTarget<S>(newOption, rootSchema), outcome.kept, rootSchema)
+    )
+  ) {
+    selectOption(to, []);
+  }
+}

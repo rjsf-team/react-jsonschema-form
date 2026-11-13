@@ -1,8 +1,10 @@
 import type { FocusEvent } from 'react';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { ariaDescribedByIds, schemaRequiresTrueValue } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { getControlAttributes, schemaRequiresTrueValue, widgetDrawsLabel } from '@rjsf/utils';
 import type { CheckboxProps } from 'antd';
 import { Checkbox, theme } from 'antd';
+
+import useControlState from '../../controlState.ts';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -10,9 +12,9 @@ import { Checkbox, theme } from 'antd';
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
     autofocus,
@@ -21,7 +23,6 @@ export default function CheckboxWidget<
     id,
     htmlName,
     label,
-    hideLabel,
     onBlur,
     onChange,
     onFocus,
@@ -29,11 +30,16 @@ export default function CheckboxWidget<
     value,
     required,
     schema,
+    presentation,
   } = props;
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { token } = theme.useToken();
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
+  const control = useControlState<T, S, F>({ disabled, readonly, required: trueValueRequired, registry });
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
 
@@ -50,19 +56,21 @@ export default function CheckboxWidget<
   return (
     <Checkbox
       autoFocus={autofocus}
-      checked={typeof value === 'undefined' ? false : value}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      checked={Boolean(value)}
+      disabled={control.disabled}
       id={id}
       name={htmlName || id}
-      required={required}
+      required={control.toggleRequired}
+      aria-required={(marksRequired && !trueValueRequired) || undefined}
+      aria-readonly={control.ariaReadonly}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     >
       {!hideLabel && label ? (
         <>
           {label}
-          {trueValueRequired && (
+          {marksRequired && (
             <span aria-hidden='true' style={{ color: token.colorError, marginLeft: 2 }}>
               *
             </span>

@@ -1,11 +1,19 @@
-import { Grid, GridItem } from '@chakra-ui/react';
+import { Box, Grid, GridItem } from '@chakra-ui/react';
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
+import {
+  buttonId,
+  descriptionId,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  titleDrawsOptionalDataControl,
+  titleId,
+} from '@rjsf/utils';
 
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
@@ -15,7 +23,8 @@ export default function ObjectFieldTemplate<
     disabled,
     readonly,
     uiSchema,
-    fieldPathId,
+    presentation,
+    id,
     schema,
     formData,
     optionalDataControl,
@@ -23,23 +32,27 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
 
   return (
-    <>
+    // Spaces its parts as the `FieldTemplate`'s `Fieldset.Content` around it spaces its own children
+    <Box
+      id={id}
+      role='group'
+      display='flex'
+      flexDirection='column'
+      gap={4}
+      {...getContainerAttributes(presentation, id, title)}
+    >
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -50,7 +63,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(fieldPathId)}
+          id={presentation?.description.id ?? descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -58,14 +71,16 @@ export default function ObjectFieldTemplate<
         />
       )}
       <Grid gap={description ? 2 : 4} mb={4}>
-        {!showOptionalDataControlInTitle ? <GridItem>{optionalDataControl}</GridItem> : undefined}
+        {!showOptionalDataControlInTitle && optionalDataControl ? (
+          <GridItem>{optionalDataControl}</GridItem>
+        ) : undefined}
         {properties.map((element) =>
-          element.hidden ? element.content : <GridItem key={element.name}>{element.content}</GridItem>,
+          element.hidden ? element.content : <GridItem key={element.content.key}>{element.content}</GridItem>,
         )}
-        {canExpand<T, S, F>(schema, uiSchema, formData) && (
+        {schemaUtils.canExpand(schema, uiSchema, formData) && (
           <GridItem justifySelf='flex-end'>
             <AddButton
-              id={buttonId(fieldPathId, 'add')}
+              id={buttonId(id, 'add')}
               className='rjsf-object-property-expand'
               onClick={onAddProperty}
               disabled={disabled || readonly}
@@ -75,6 +90,6 @@ export default function ObjectFieldTemplate<
           </GridItem>
         )}
       </Grid>
-    </>
+    </Box>
   );
 }

@@ -3,9 +3,17 @@ import Checkbox from '@mui/material/Checkbox';
 import type { FormControlLabelProps } from '@mui/material/FormControlLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  getTemplates,
+  getWidgetDescription,
+  labelValue,
+  schemaRequiresTrueValue,
+  widgetDrawsLabel,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import { getMuiProps, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the CheckboxWidget. */
 export interface CheckboxWidgetMuiProps extends GenericObjectType {
@@ -24,51 +32,53 @@ export interface CheckboxWidgetMuiProps extends GenericObjectType {
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
     schema,
     id,
     htmlName,
     value,
-    disabled,
-    readonly,
+    // `false` where unset, since `FormControlLabel` takes the control's `disabled` where its own is undefined
+    disabled = false,
+    readonly = false,
     label,
-    hideLabel,
     autofocus,
     onChange,
     onBlur,
     onFocus,
     registry,
+    presentation,
     options,
     uiSchema,
     required,
   } = props;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
 
-  const handleChange = (_: any, checked: boolean) => onChange(checked);
+  const handleChange: NonNullable<CheckboxProps['onChange']> = (_, checked) => onChange(checked);
   const handleBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
   const handleFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
-  const description = options.description ?? schema.description;
+  const description = getWidgetDescription<T, S, F>(props);
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxWidgetMuiProps>(options);
 
   return (
     <>
-      {!hideLabel && description && (
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -77,20 +87,32 @@ export default function CheckboxWidget<
       <FormControlLabel
         {...otherMuiProps}
         {...muiSlotProps?.formControlLabel}
-        required={trueValueRequired}
+        // `FormControlLabel` gives its own `disabled` to the control in place of the control's, so the form's goes here
+        disabled={disabled || readonly}
+        required={marksRequired && templateMarksRequired<T, S, F>(props)}
         control={
           <Checkbox
             id={id}
             name={htmlName || id}
-            checked={typeof value === 'undefined' ? false : Boolean(value)}
-            required={trueValueRequired}
-            disabled={disabled || readonly}
             autoFocus={autofocus}
+            {...muiSlotProps?.checkbox}
+            // After the author's props, so they can't take the form's data or focus
+            checked={typeof value === 'undefined' ? false : Boolean(value)}
             onChange={handleChange}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            aria-describedby={ariaDescribedByIds(id)}
-            {...muiSlotProps?.checkbox}
+            // The `<input>` carrying the field's id takes its plan, rather than the `<span>` around it
+            // `FormControlLabel` hands the control the `required` it marks its label by, so the `<input>` takes its own
+            slotProps={withInputSlot(
+              {
+                required: muiSlotProps?.checkbox?.required ?? trueValueRequired,
+                'aria-required': (marksRequired && !trueValueRequired) || undefined,
+                ...getControlAttributes<T, S, F>({ id, presentation }),
+              },
+              muiSlotProps?.checkbox?.slotProps,
+              // A lone box's `value` is only what native `FormData` submits, not the form's data
+              ['disabled', 'checked'],
+            )}
           />
         }
         label={labelValue(label, hideLabel, false)}

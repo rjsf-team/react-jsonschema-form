@@ -1,15 +1,9 @@
 import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
-import type { RJSFSchema, ErrorSchema, UiSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
-
-vi.mock('@rjsf/utils', async (importOriginal) => ({
-  ...(await importOriginal()),
-  // Disable the getTestIds within the snapshot tests by returning an empty object
-  getTestIds: vi.fn(() => ({})),
-}));
 
 const titleAndDesc = {
   title: 'Test field',
@@ -88,7 +82,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         'ui:options': { copyable: true },
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['a', 'b']} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -101,10 +95,10 @@ export function arrayTests(Form: ComponentType<FormProps>) {
           },
         },
       };
-      const errors: any[] = ['Bad input'];
+      const errors: string[] = ['Bad input'];
       const extraErrors = {
         name: { __errors: errors },
-      } as unknown as ErrorSchema;
+      };
       const { asFragment } = render(<Form schema={schema} validator={validator} extraErrors={extraErrors} />);
       expect(asFragment()).toMatchSnapshot();
     });
@@ -129,10 +123,10 @@ export function arrayTests(Form: ComponentType<FormProps>) {
           },
         },
       };
-      const errors: any[] = [];
+      const errors: string[] = [];
       const extraErrors = {
         name: { __errors: errors },
-      } as unknown as ErrorSchema;
+      };
       const { asFragment } = render(<Form schema={schema} validator={validator} extraErrors={extraErrors} />);
       expect(asFragment()).toMatchSnapshot();
     });
@@ -195,7 +189,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         'ui:options': { copyable: true },
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['a', 'b']} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -250,7 +244,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         ...uiTitleAndDesc,
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['a', 'b']} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -309,7 +303,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         ...uiTitleAndDesc,
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['a', 'b']} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -373,7 +367,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         'ui:options': { copyable: true },
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['a', 'b']} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -390,7 +384,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         };
         const formData = ['foo', 'bar'];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -411,7 +410,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
           { name: 'Item 2', value: 20 },
         ];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -423,7 +427,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         };
         const formData = ['text', 42, true];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -443,7 +452,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
           ['c', 'd'],
         ];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -474,7 +488,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         };
         const formData = ['foo', 'bar'];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={dotNotationNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -495,10 +514,83 @@ export function arrayTests(Form: ComponentType<FormProps>) {
           { name: 'Item 2', value: 20 },
         ];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={dotNotationNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
+    });
+    // Kept last, so the ids it takes from React's useId counter don't shift those in the snapshots before it
+    describe('item names', () => {
+      test('array icons named by itemLabel', async () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        };
+        const uiSchema: UiSchema = {
+          'ui:options': { copyable: true, itemLabel: 'name' },
+        };
+        const { asFragment } = render(
+          <Form
+            schema={schema}
+            uiSchema={uiSchema}
+            validator={validator}
+            initialFormData={[{ name: 'report.pdf' }, { name: 'invoice.pdf' }]}
+          />,
+        );
+        expect(asFragment()).toMatchSnapshot();
+      });
+    });
+  });
+
+  describe('an anyOf array option with a description of its own', () => {
+    // Last in the suite, as each render advances the `useId` counter and would renumber the snapshots after it. The
+    // field's template draws its description, so the selected array option's own one needs the id its plan gives it
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        tags: {
+          title: 'Tags',
+          description: 'Some tags',
+          anyOf: [{ type: 'array', description: 'Other desc', items: { type: 'string' } }, { type: 'string' }],
+        },
+      },
+    };
+
+    test('gives the field and the option each a description id of their own', () => {
+      const { container } = render(<Form schema={schema} initialFormData={{ tags: ['a'] }} validator={validator} />);
+
+      // The ids RJSF gives, not those a library generates for its own parts. A theme's widget may list every part's id
+      // whether or not it renders, so only the `tags` field's own description ids are required to exist
+      const ids = Array.from(container.querySelectorAll('[id^="root"]'), (element) => element.id);
+      expect(ids).toEqual([...new Set(ids)]);
+      expect(container).toHaveTextContent('Some tags');
+      expect(container).toHaveTextContent('Other desc');
+      const describedBy = Array.from(container.querySelectorAll('[aria-describedby]'), (element) =>
+        element.getAttribute('aria-describedby')!.split(' '),
+      ).flat();
+      const descriptionIds = describedBy.filter((id) => /^root_tags__\w*description\d*$/i.test(id));
+      expect(descriptionIds).not.toHaveLength(0);
+      for (const id of descriptionIds) {
+        expect(document.getElementById(id), id).not.toBeNull();
+      }
+    });
+
+    test("hides the option's description under the field's ui:label false", () => {
+      const uiSchema: UiSchema = { tags: { 'ui:label': false } };
+      const { container } = render(
+        <Form schema={schema} uiSchema={uiSchema} initialFormData={{ tags: ['a'] }} validator={validator} />,
+      );
+
+      expect(container).not.toHaveTextContent('Some tags');
+      expect(container).not.toHaveTextContent('Other desc');
     });
   });
 }

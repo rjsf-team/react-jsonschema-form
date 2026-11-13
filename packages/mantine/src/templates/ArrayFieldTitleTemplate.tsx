@@ -1,29 +1,32 @@
 import { Grid, Title } from '@mantine/core';
 import type { ArrayFieldTitleProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getUiOptions, titleId } from '@rjsf/utils';
+import { titleId } from '@rjsf/utils';
 
-/** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
- * the `fieldPathId`.
+import { RequiredMarker } from '../utils.tsx';
+
+/** The `ArrayFieldTitleTemplate` component renders the array's title, with the `titleId()` of its `id` on the title's
+ * text alone, as `TitleField` does. `ArrayField` already leaves `title` empty where `ui:label` turns the heading off,
+ * and `ArrayFieldTemplate` places the optional data control from `title` alone, so only `title` decides whether a
+ * heading is drawn
  *
  * @param props - The `ArrayFieldTitleProps` for the component
  */
 export default function ArrayFieldTitleTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldTitleProps<T, S, F>) {
-  const { fieldPathId, title, uiSchema, registry, optionalDataControl } = props;
+  const { id, title, required, optionalDataControl } = props;
 
-  const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
-  const { label: displayLabel = true } = options;
-  if (!title || !displayLabel) {
+  if (!title) {
     return null;
   }
-  let heading = title ? (
-    <Title id={titleId(fieldPathId)} order={4} fw='normal'>
-      {title}
+  let heading = (
+    <Title order={4} fw='normal'>
+      <span id={titleId(id)}>{title}</span>
+      {required && <RequiredMarker />}
     </Title>
-  ) : null;
+  );
   if (optionalDataControl) {
     heading = (
       <Grid>

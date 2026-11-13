@@ -1,32 +1,30 @@
-import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { rangeSpec } from '@rjsf/utils';
-import FormRange from 'react-bootstrap/FormRange';
+import { getTemplates, toInputValue } from '@rjsf/utils';
 
-export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
-  const { id, value, disabled, onChange, onBlur, onFocus, schema } = props;
-
-  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => onChange(newValue);
-  const handleBlur = ({ target: { value: newValue } }: FocusEvent<HTMLInputElement>) => onBlur(id, newValue);
-  const handleFocus = ({ target: { value: newValue } }: FocusEvent<HTMLInputElement>) => onFocus(id, newValue);
-
-  const rangeProps = {
-    value,
-    id,
-    name: id,
-    disabled,
-    onChange: handleChange,
-    onBlur: handleBlur,
-    onFocus: handleFocus,
-    ...rangeSpec<S>(schema),
-  };
-
+/** The `RangeWidget` component renders a `range` input through the `BaseInputTemplate`, as core's does, with the
+ * value beside it
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function RangeWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const { value, disabled, readonly, registry, options } = props;
+  const { BaseInputTemplate } = getTemplates<T, S, F>(registry, options);
+  // A browser ignores `readonly` on a range input, so a read-only range is disabled to keep it from being dragged.
+  // `offersClearButton()` offers no clear button for a range, and `allowClearTextInputs: false` keeps one off in a custom
+  // `BaseInputTemplate` that doesn't ask it
   return (
     <>
-      <FormRange {...rangeProps} />
-      <span className='range-view'>{value}</span>
+      <BaseInputTemplate
+        type='range'
+        {...props}
+        disabled={disabled || readonly}
+        options={{ ...options, allowClearTextInputs: false }}
+      />
+      <span className='range-view'>{toInputValue(value)}</span>
     </>
   );
 }

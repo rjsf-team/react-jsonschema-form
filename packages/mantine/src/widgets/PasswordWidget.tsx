@@ -2,9 +2,9 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { PasswordInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import { labelValue, toInputValue, widgetDrawsLabel } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps, getRequiredProps } from '../utils.tsx';
 
 /**
  * The `PasswordWidget` component renders a password input element.
@@ -12,30 +12,16 @@ import { cleanupOptions } from '../utils.ts';
  * @param props - The `WidgetProps` for this component
  */
 export default function PasswordWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    name,
-    value,
-    placeholder,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    label,
-    hideLabel,
-    rawErrors,
-    options,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
+  const { id, htmlName, value, placeholder, disabled, readonly, autofocus, label, options, onChange, onBlur, onFocus } =
+    props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { emptyValue } = options;
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -62,22 +48,28 @@ export default function PasswordWidget<
     [onFocus, id],
   );
 
+  const ariaDescribedByProps = useInputAriaProps('PasswordInput', props);
+
+  const error = getWidgetError<T, S, F>(props);
   return (
     <PasswordInput
       id={id}
-      name={name}
-      value={value || ''}
+      name={htmlName || id}
+      value={toInputValue(value)}
       placeholder={placeholder || undefined}
-      required={required}
+      {...getRequiredProps<T, S, F>(props)}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       label={labelValue(label || undefined, hideLabel, false)}
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
+      error={error}
+      // Mantine's `PasswordInput` renders its input without the `aria-invalid` the other inputs get from `Input`
+      aria-invalid={!!error || undefined}
       {...themeProps}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...ariaDescribedByProps}
+      {...getDescriptionProps(props)}
     />
   );
 }

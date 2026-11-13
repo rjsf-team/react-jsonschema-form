@@ -2,11 +2,12 @@ import type {
   CustomValidator,
   ErrorTransformer,
   FormContextType,
+  RawValidationResult,
   RJSFSchema,
   RJSFValidationError,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
@@ -24,13 +25,14 @@ import {
 
 import type { CFWorkerValidationError, SuppressDuplicateFilteringType } from './types.ts';
 
-/** The raw validation results produced by the underlying engine, before conversion into RJSF's error formats. */
-export interface RawValidationErrorsType<Result = any> {
-  /** The raw errors returned by the engine's validation run, when any. */
-  errors?: Result[];
-
-  /** The error thrown when the engine could not run validation, such as on an invalid schema. */
-  validationError?: Error;
+/** Returns the key a token of a pointer the engine reports names. The engine writes each key as a JSON Pointer token in
+ * a URI fragment (`a/b` as `a~1b`, `a#b` as `a%23b`), where the form keys its data and uiSchema plainly
+ *
+ * @param token - The token of the instance or keyword location
+ * @returns - The key it names
+ */
+function decodePointerToken(token: string): string {
+  return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
 /** Converts a cfworker instance location into RJSF's dot-separated property path.
@@ -42,7 +44,7 @@ function instanceLocationToProperty(instanceLocation: string): string {
   if (!instanceLocation || instanceLocation === '#') {
     return '';
   }
-  return instanceLocation.replace(/^#?/, '').replace(/\//g, '.');
+  return instanceLocation.replace(/^#?/, '').split('/').map(decodePointerToken).join('.');
 }
 
 /** Extracts the missing property name from a cfworker `required` error.
@@ -99,9 +101,9 @@ export function filterDuplicateErrors(
  * @returns - The converted RJSF validation errors
  */
 export function transformRJSFValidationErrors<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   errors: CFWorkerValidationError[] = [],
   uiSchema?: UiSchema<T, S, F>,
@@ -126,6 +128,7 @@ export function transformRJSFValidationErrors<
           .replace(/\/properties\//g, '/')
           .split('/')
           .slice(1, -1)
+          .map(decodePointerToken)
           .concat([missingProperty]);
         title = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
       }
@@ -181,7 +184,7 @@ export function transformRJSFValidationErrors<
 
 /** Processes raw validation errors and applies optional error transforms and custom validation.
  *
- * @param validator - The validator used to derive default form state for custom validation
+ * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
  * @param rawErrors - The raw cfworker errors and any engine exception
  * @param formData - The form data being validated
  * @param schema - The schema against which the form data is validated
@@ -189,21 +192,25 @@ export function transformRJSFValidationErrors<
  * @param [transformErrors] - A function that transforms errors before custom validation
  * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
  * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed
+ * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's defaults
+ *        already applied. `Form` supplies it so those defaults honor its `customMergeAllOf` and
+ *        `defaultFormStateBehavior`; without it they are computed here with the default `allOf` merge
  * @returns - The processed validation errors and error schema
  */
 export default function processRawValidationErrors<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
-  rawErrors: RawValidationErrorsType<CFWorkerValidationError>,
+  context: SchemaContext<S, F>,
+  rawErrors: RawValidationResult<CFWorkerValidationError>,
   formData: T | undefined,
   schema: S,
   customValidate?: CustomValidator<T, S, F>,
   transformErrors?: ErrorTransformer<T, S, F>,
   uiSchema?: UiSchema<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
+  getCustomValidateFormData?: () => T,
 ) {
   const { validationError } = rawErrors;
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
@@ -222,7 +229,18 @@ export default function processRawValidationErrors<
     return { errors, errorSchema };
   }
 
-  const newFormData = getDefaultFormState<T, S, F>(validator, schema, formData, schema, true) as T;
+  // `uiSchema` is threaded through so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed
+  // and rendered.
+  // Called rather than read, so defaults that come out `undefined` are not mistaken for "not supplied"
+  const newFormData = getCustomValidateFormData
+    ? getCustomValidateFormData()
+    : (getDefaultFormState<T, S, F>(context, {
+        schema,
+        formData,
+        rootSchema: schema,
+        includeUndefinedValues: true,
+        uiSchema,
+      }) as T);
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);
   return validationDataMerge<T>({ errors, errorSchema }, userErrorSchema);

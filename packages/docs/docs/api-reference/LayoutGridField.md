@@ -35,7 +35,7 @@ Simple `ui:row` definition, without additional `GridTemplate` props:
 }
 ```
 
-Complex `ui:row` definition, with additional `GridTemplate` (this example uses `@mui/material/Grid2` native props):
+Complex `ui:row` definition, with additional `GridTemplate` (this example uses `@mui/material/Grid` native props):
 
 ```json
 {
@@ -72,7 +72,7 @@ The `ui:col` grid element is used to specify the list of columns within a grid r
 several forms:
 
 1. a simple list of dotted-path field names within the root field;
-2. a list of objects containing the dotted-path field `name` any other props that are gathered into `ui:options` for the field;
+2. a list of objects containing the dotted-path field `name` any other props that are gathered into `ui:options` for the field, except the [keys `ui:options` doesn't take](uiSchema.md#exceptions-to-the-equivalence), such as `field`, which are ignored with a warning, so name a cell's field with `ui:field` in its own `uiSchema` entry;
 3. a list with a one-off `render` functional component with or without a non-field `name` identifier and any other to-be-spread props; and
 4. an object with native `GridTemplate` implementation specific props and a `children` array with 1) or 2) or even a nested `ui:row` or a `ui:condition` containing a `ui:row` (although this should be used carefully). E.g. (as JSON objects):
 
@@ -113,7 +113,7 @@ one-off `render` functional component without a non-field `name` identifier
 ```
 
 Most complicated `ui:col` definition, additional `GridTemplate` props and form 1, 2 and 3 children (this example
-uses @mui/material/Grid2 native props):
+uses @mui/material/Grid native props):
 
 ```json
 {

@@ -1,23 +1,25 @@
 import { memo } from 'react';
-import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown';
-import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp';
-import { IoIosCopy } from '@react-icons/all-files/io/IoIosCopy';
-import { IoIosRemove } from '@react-icons/all-files/io/IoIosRemove';
-import { IoMdClose } from '@react-icons/all-files/io/IoMdClose';
+import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown.js';
+import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp.js';
+import { IoIosCopy } from '@react-icons/all-files/io/IoIosCopy.js';
+import { IoIosRemove } from '@react-icons/all-files/io/IoIosRemove.js';
+import { IoMdClose } from '@react-icons/all-files/io/IoMdClose.js';
 import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
-import type { ButtonProps } from 'react-bootstrap/Button';
-import Button from 'react-bootstrap/Button';
+import type { ButtonProps } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 export type BootstrapIconButtonProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > = IconButtonProps<T, S, F> & ButtonProps;
 
-function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: BootstrapIconButtonProps<T, S, F>,
-) {
+function IconButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: BootstrapIconButtonProps<T, S, F>) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
   return (
     <Button {...otherProps} variant={props.variant || 'light'} size='sm'>
@@ -28,9 +30,11 @@ function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 const IconButton = memo(IconButtonFn) as typeof IconButtonFn;
 export default IconButton;
 
-function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: BootstrapIconButtonProps<T, S, F>,
-) {
+function CopyButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: BootstrapIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -38,9 +42,11 @@ function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 }
 export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
 
-function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: BootstrapIconButtonProps<T, S, F>,
-) {
+function MoveDownButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: BootstrapIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -50,9 +56,11 @@ function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 }
 export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
 
-function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: BootstrapIconButtonProps<T, S, F>,
-) {
+function MoveUpButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: BootstrapIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -60,9 +68,11 @@ function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 }
 export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
 
-function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: BootstrapIconButtonProps<T, S, F>,
-) {
+function RemoveButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: BootstrapIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -77,9 +87,11 @@ function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 }
 export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
-function ClearButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: BootstrapIconButtonProps<T, S, F>,
-) {
+function ClearButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: BootstrapIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;

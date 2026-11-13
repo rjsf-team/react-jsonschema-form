@@ -1,4 +1,4 @@
-import type { OutputUnit, Schema, Validator } from '@cfworker/json-schema';
+import type { OutputUnit, Validator } from '@cfworker/json-schema';
 import type {
   CustomValidator,
   ErrorTransformer,
@@ -8,11 +8,11 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
-import { deepEquals, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type { CFWorkerValidationError, CustomValidatorOptionsType } from './types.ts';
 
@@ -35,30 +35,44 @@ interface CachedValidator {
  * @param data - The form data to normalize
  * @returns - The form data with `undefined` values converted to JSON-compatible values
  */
-export function normalizeFormDataForValidation<D>(data: D): D {
+export function normalizeFormDataForValidation(data: unknown): unknown {
   if (data === undefined) {
-    return null as D;
+    return null;
   }
   if (Array.isArray(data)) {
-    return data.map((value) => normalizeFormDataForValidation(value)) as D;
+    return data.map((value: unknown) => normalizeFormDataForValidation(value));
   }
   if (data !== null && typeof data === 'object') {
-    const normalized = Object.fromEntries(
+    return Object.fromEntries(
       Object.entries(data).flatMap(([key, value]) =>
         value === undefined ? [] : [[key, normalizeFormDataForValidation(value)]],
       ),
     );
-    return normalized as D;
   }
   return data;
 }
 
+/** Returns `schema` carrying the `$id` the engine is handed it under: the `$id` less any fragment, as
+ * `rootSchemaIdOf()` registers a root, so a schema is compared and built as the root it may be, the root as it is handed
+ * included. A schema whose `$id` is only a fragment, which names a place in the resource around it, is handed as it is.
+ *
+ * @param schema - The schema the engine is handed
+ * @returns - The schema with its `$id` as registered
+ */
+function asRegistered(schema: object): object {
+  const id: unknown = Reflect.get(schema, ID_KEY);
+  if (typeof id !== 'string') {
+    return schema;
+  }
+  const [document] = id.split('#', 1);
+  return document === '' || document === id ? schema : { ...schema, [ID_KEY]: document };
+}
+
 /** `ValidatorType` implementation backed by `@cfworker/json-schema`. */
 export default class CFWorkerValidator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** The resolved options used to configure this validator.
    *
    * @private
@@ -73,7 +87,8 @@ export default class CFWorkerValidator<
    */
   private readonly validators = new Map<string, CachedValidator>();
 
-  /** The root schema registered under `ROOT_SCHEMA_PREFIX`, used to resolve prefixed `$ref` values.
+  /** The root schema registered under its `$id`, or `ROOT_SCHEMA_PREFIX` without one, used to resolve prefixed `$ref`
+   * values.
    *
    * @private
    */
@@ -107,15 +122,18 @@ export default class CFWorkerValidator<
     this.hasRegisteredRootSchema = false;
   }
 
-  /** Returns a cached schema-bound validator or builds and caches a new one.
+  /** Returns a cached schema-bound validator or builds and caches a new one. The root is bound beside the schema unless
+   * the schema is registered under the root's own `$id`, which makes it the document the root is: the engine takes one
+   * schema per URI, and the schema's `$ref`s into that document resolve against the schema itself.
    *
    * @param id - The cache key for the schema
-   * @param schema - The schema to bind to the validator
+   * @param handed - The schema to bind to the validator, bound with its `$id` as `asRegistered()` gives it
    * @returns - The cached or newly constructed validator
    */
-  private getOrBuild(id: string, schema: object): Validator {
-    const rootSchema =
-      this.cachedRootSchema && !deepEquals(this.cachedRootSchema, schema) ? this.cachedRootSchema : undefined;
+  private getOrBuild(id: string, handed: object): Validator {
+    const schema = asRegistered(handed);
+    const rootId: unknown = this.cachedRootSchema && Reflect.get(this.cachedRootSchema, ID_KEY);
+    const rootSchema = Reflect.get(schema, ID_KEY) === rootId ? undefined : this.cachedRootSchema;
     const cached = this.validators.get(id);
     if (
       cached &&
@@ -125,7 +143,7 @@ export default class CFWorkerValidator<
       return cached.validator;
     }
 
-    const validator = createCfworkerInstance(schema as Schema, this.options, rootSchema as Schema | undefined);
+    const validator = createCfworkerInstance(schema, this.options, rootSchema);
     this.validators.set(id, { validator, schema, rootSchema });
     return validator;
   }
@@ -136,18 +154,18 @@ export default class CFWorkerValidator<
    * @param [formData] - The form data to validate
    * @returns - The raw cfworker errors and any engine exception
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<CFWorkerValidationError> {
     let validationError: Error | undefined;
     let errors: OutputUnit[] | undefined;
     try {
-      const id = schema[ID_KEY] ?? hashForSchema(schema);
+      const id = schemaKey(schema);
       const validator = this.getOrBuild(id, schema);
       const result = validator.validate(normalizeFormDataForValidation(formData));
       errors = result.valid ? undefined : result.errors;
     } catch (error) {
       validationError = error as Error;
     }
-    return { errors: errors as Result[] | undefined, validationError };
+    return { errors, validationError };
   }
 
   /** Validates form data and applies RJSF error transformation and custom validation.
@@ -157,18 +175,21 @@ export default class CFWorkerValidator<
    * @param [customValidate] - A function that adds application-specific validation errors
    * @param [transformErrors] - A function that transforms errors before custom validation
    * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's
+   *        defaults applied; left out, they are computed here with the default `allOf` merge
    * @returns - The processed validation errors and error schema
    */
-  validateFormData(
+  validateFormData<T = unknown>(
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<CFWorkerValidationError>(schema, formData);
+    const rawErrors = this.rawValidation(schema, formData);
     return processRawValidationErrors(
-      this,
+      { validator: this },
       rawErrors,
       formData,
       schema,
@@ -176,6 +197,7 @@ export default class CFWorkerValidator<
       transformErrors,
       uiSchema,
       this.options.suppressDuplicateFiltering,
+      getCustomValidateFormData,
     );
   }
 
@@ -187,9 +209,9 @@ export default class CFWorkerValidator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    // `withIdRefPrefix()` rewrites local refs to ROOT_SCHEMA_PREFIX, so the
-    // root must be registered under that alias even when it has its own $id.
-    const rootSchemaId = ROOT_SCHEMA_PREFIX;
+    // Registered under its own `$id`, a root is what both its own `$ref`s, which resolve against that `$id`, and the
+    // local `$ref`s `withRootIdRefPrefix()` prefixes with it resolve into
+    const rootSchemaId = rootSchemaIdOf(rootSchema);
     const rootWithId =
       rootSchema[ID_KEY] === rootSchemaId
         ? (rootSchema as object)
@@ -211,16 +233,22 @@ export default class CFWorkerValidator<
    * @param rootSchema - The root schema used to provide `$ref` resolutions
    * @returns - Whether the form data is valid
    */
-  isValid(schema: S, formData: T | undefined, rootSchema: S): boolean {
+  isValid(schema: S, formData: unknown, rootSchema: S): boolean {
+    // Declared outside the try so the catch block can say which schema the error is about
+    let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      const id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema);
+      id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;
     } catch (error) {
-      // oxlint-disable-next-line no-console
-      console.warn('Error encountered validating schema:', error);
+      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning. Which of
+      // the schema and the form data is at fault is deliberately not claimed: the `Validator` constructor only
+      // dereferences, leaving `$ref` resolution and keyword checks to `validate()`, so a schema defect such as a
+      // dangling `$ref` or an unparseable `pattern` throws from there and would be reported as a problem with the data
+      const named = id === undefined ? '' : ` "${id}"`;
+      logOnce(`Error encountered validating schema${named}:`, 'warn', error);
       return false;
     }
   }

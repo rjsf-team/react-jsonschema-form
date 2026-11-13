@@ -1,15 +1,28 @@
 'use client';
 
 import type { MouseEvent } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
+import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
-import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
-import getDateElementProps from './getDateElementProps.ts';
-import { ariaDescribedByIds } from './idGenerators.ts';
+import type { DateElementProp } from './getDateElementProps.ts';
+import getDateElementProps, { elementValue, isDateElementFormat, normalizeYearsRange } from './getDateElementProps.ts';
+import getNestedControlPresentation from './getNestedControlPresentation.ts';
+import { ariaDescribedByIds, partId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
-import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
+import toNumericValue from './toNumericValue.ts';
+import type {
+  ControlAttributes,
+  DateObject,
+  FieldPresentation,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UIOptionsType,
+  UiSchema,
+  WidgetProps,
+} from './types.ts';
 
 /** Function that checks to see if a `DateObject` is ready for the onChange callback to be triggered
  *
@@ -21,55 +34,129 @@ function readyForChange(state: DateObject) {
 }
 
 /** The Props for the `DateElement` component */
-export type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
+export type DateElementProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = Pick<
   WidgetProps<T, S, F>,
-  'value' | 'name' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus' | 'className'
+  'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus' | 'className'
 > & {
+  /** The selected value of the date element, `undefined` when none is picked */
+  value: DateElementProp['value'];
   /** The root id of the field */
   rootId: string;
+  /** The name of the field. Ignored: each date element is a control of its own, so it is given its own id as its name
+   * rather than its field's, which a select would otherwise read as the field it names
+   *
+   * @deprecated - Ignored; each date element takes `partId(rootId, type)` as its name
+   */
+  name?: string;
+  /** The label of the field, which leads the accessible name of each date element, such as `When, year` */
+  label?: string;
+  /** The translated name of the date element, for a caller that already translated it to display it. Defaults to
+   * the translated name of `type`, such as `TranslatableString.YearLabel`
+   */
+  elementLabel?: string;
   /** The selector function for a specific prop within the `DateObject`, for a value */
-  select: (property: keyof DateObject, value: any) => void;
+  select: (property: keyof DateObject, value: unknown) => void;
   /** The type of the date element */
   type: DateElementProp['type'];
   /** The range for the date element */
   range: DateElementProp['range'];
+  /** The plan of the field, whose parts that render describe each date element, and whose errors mark it
+   * `aria-invalid` while they show
+   */
+  presentation?: FieldPresentation;
+  /** The `aria-describedby` and `aria-invalid` each date element takes, such as those of `presentation`'s control with
+   * the id of a message the theme renders around the field. Each one left out defaults to what the element would take
+   * without them: that of `presentation`'s control, or without a `presentation`, the ids
+   * `getControlDescribedBy({ id: rootId })` gives and no `aria-invalid`
+   */
+  attributes?: Pick<ControlAttributes, 'aria-describedby' | 'aria-invalid'>;
+  /** Further options for the `SelectWidget`, such as the props of a theme's own select, beside the `enumOptions` of
+   * the date element, which they can't replace
+   */
+  elementOptions?: UIOptionsType<T, S, F>;
 };
 
 /** The `DateElement` component renders one of the 6 date element selectors for an `AltDateWidget`, using the `select`
- * widget from the registry.
+ * widget from the registry. Each selector is a control in its own right, with the id `partId(rootId, type)` as
+ * its id and name and no visible label of its own, so it hands the `SelectWidget` the translated name of its element
+ * as its placeholder and an `aria-label` built from the field's `label`, such as `When, year`. Given its field's plan,
+ * it hands it a plan of its own, through which `widgetAriaProps()` describes it by the field's parts that render and
+ * marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank its
+ * own name, or by the `attributes` its caller gives over them. Without a plan, it describes it by
+ * `getControlDescribedBy({ id: rootId })` unless `attributes` give an `aria-describedby`. An unset element, which the
+ * hook's `elements` give as `undefined` and a `DateObject` holds as -1, is no option, so it is handed to the
+ * `SelectWidget` as an `undefined` value, which a native select reports to `onFocus` and `onBlur` as `undefined` and
+ * every other built-in `SelectWidget` reports as it is handed.
  *
  * @param props - The `DateElementProps` for the date element
  */
-export function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: DateElementProps<T, S, F>,
-) {
+export function DateElement<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: DateElementProps<T, S, F>) {
   const {
-    className = 'form-control',
+    className,
     type,
     range,
     value,
     select,
     rootId,
-    name,
     disabled,
     readonly,
     autofocus,
     registry,
     onBlur,
     onFocus,
+    label,
+    elementLabel: translatedElementLabel,
+    presentation,
+    attributes,
+    elementOptions,
   } = props;
-  const id = `${rootId}_${type}`;
-  const { SelectWidget } = registry.widgets;
-  const onChange = useCallback((newValue: any) => select(type as keyof DateObject, newValue), [select, type]);
+  const id = partId(rootId, type);
+  const { widgets, translateString } = registry;
+  const { SelectWidget } = widgets;
+  const onChange = useCallback((newValue: unknown) => select(type as keyof DateObject, newValue), [select, type]);
+  const elementLabel = translatedElementLabel ?? dateElementLabel(type, translateString);
+  const ariaLabel = dateElementAriaLabel(elementLabel, translateString, label);
+  const elementPresentation = useMemo(
+    () =>
+      (presentation ?? attributes) &&
+      getNestedControlPresentation({
+        id,
+        label: ariaLabel,
+        field: presentation,
+        attributes: presentation
+          ? attributes
+          : { ...attributes, 'aria-describedby': attributes?.['aria-describedby'] ?? ariaDescribedByIds(rootId) },
+      }),
+    [id, ariaLabel, presentation, attributes, rootId],
+  );
+  const [start, end] = range;
+  const selectOptions = useMemo(
+    () => ({ ...elementOptions, enumOptions: dateRangeOptions<S>(start, end) }),
+    [elementOptions, start, end],
+  );
+  // As the element's own options, so a theme that drops a form's extension keys from its select's options keeps them.
+  // Cast since `ui:options` also bars the `ui:`-only keys, such as `field`, which a select's options never hold
+  const uiSchema = useMemo(
+    () => elementOptions && ({ 'ui:options': selectOptions } as UiSchema<T, S, F>),
+    [elementOptions, selectOptions],
+  );
   return (
     <SelectWidget
       schema={{ type: 'integer' } as S}
       id={id}
-      name={name}
+      name={id}
       className={className}
-      options={{ enumOptions: dateRangeOptions<S>(range[0], range[1]) }}
-      placeholder={type}
-      value={value}
+      options={selectOptions}
+      placeholder={elementLabel}
+      value={elementValue(value)}
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
@@ -77,8 +164,11 @@ export function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       onBlur={onBlur}
       onFocus={onFocus}
       registry={registry}
+      uiSchema={uiSchema}
       label=''
-      aria-describedby={ariaDescribedByIds(rootId)}
+      aria-label={ariaLabel}
+      aria-describedby={elementPresentation ? undefined : ariaDescribedByIds(rootId)}
+      presentation={elementPresentation}
     />
   );
 }
@@ -88,80 +178,96 @@ export interface UseAltDateWidgetResult {
   /** The list of `DateElementProp` data to render for the `AltDateWidget` */
   elements: DateElementProp[];
   /** The callback that handles the changing of DateElement components */
-  handleChange: (property: keyof DateObject, value?: string) => void;
+  handleChange: (property: keyof DateObject, value?: unknown) => void;
   /** The callback that will clear the `AltDateWidget` when a button is clicked */
   handleClear: (event: MouseEvent) => void;
   /** The callback that will set the `AltDateWidget` to NOW when a button is clicked */
   handleSetNow: (event: MouseEvent) => void;
+  /** True when the widget is disabled or read-only, in which case `handleClear` and `handleSetNow` do nothing, so the
+   * buttons that call them are rendered disabled
+   */
+  buttonsDisabled: boolean;
 }
 
 /** Hook which encapsulates the logic needed to render an `AltDateWidget` with optional `time` elements. It contains
  * the `state` of the current date(/time) selections in the widget. It returns a `UseAltDateWidgetResult` object
- * that contains the `elements: DateElementProp[]` and three callbacks needed to change one of the rendered `elements`,
- * and to handle the clicking of the `clear` and `setNow` buttons.
+ * that contains the `elements: DateElementProp[]`, three callbacks needed to change one of the rendered `elements`
+ * and to handle the clicking of the `clear` and `setNow` buttons, and the `buttonsDisabled` flag for those buttons.
  *
  * @param props - The `WidgetProps` for the `AltDateWidget`
  */
 export default function useAltDateWidgetProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): UseAltDateWidgetResult {
   const { time = false, disabled = false, readonly = false, options, onChange, value } = props;
-  const [state, setState] = useState(parseDateString(value, time));
-
-  useEffect(() => {
-    setState(parseDateString(value, time));
-  }, [time, value]);
+  const parsed = useMemo(() => {
+    try {
+      return parseDateString(typeof value === 'string' ? value : undefined, time);
+    } catch {
+      return parseDateString(undefined, time);
+    }
+  }, [value, time]);
+  // A selection that isn't complete yet, kept only for the parse it was made against, so a new value from the parent
+  // replaces it. Tagged with that parse rather than with `value`, since the memo builds a new one on every change: a
+  // value the parent replaces and then restores must not revive the draft. Dropped whenever a value is sent, so a
+  // parent that rejects it or stores it later shows the value it holds
+  const [draft, setDraft] = useState<{ basis: DateObject; state: DateObject }>();
+  const state = draft?.basis === parsed ? draft.state : parsed;
+  const buttonsDisabled = disabled || readonly;
 
   const handleChange = useCallback(
-    (property: keyof DateObject, newValue?: string) => {
-      const nextState = {
-        ...state,
-        [property]: typeof newValue === 'undefined' ? -1 : newValue,
-      };
+    (property: keyof DateObject, newValue?: unknown) => {
+      // A select that reports its cleared choice as `null`, through an `emptyValue` of `null`, picks nothing either, as
+      // does a value that is no number, which `Number()` would read as `0` or `NaN`
+      const nextState = { ...state, [property]: toNumericValue(newValue) ?? -1 };
 
       if (readyForChange(nextState)) {
+        setDraft(undefined);
         onChange(toDateString(nextState, time));
       } else {
-        setState(nextState);
+        setDraft({ basis: parsed, state: nextState });
       }
     },
-    [state, onChange, time],
+    [state, onChange, time, parsed],
   );
 
   const handleClear = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
-      if (disabled || readonly) {
+      if (buttonsDisabled) {
         return;
       }
+      setDraft(undefined);
       onChange(undefined);
     },
-    [disabled, readonly, onChange],
+    [buttonsDisabled, onChange],
   );
 
   const handleSetNow = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
-      if (disabled || readonly) {
+      if (buttonsDisabled) {
         return;
       }
       const nextState = parseDateString(new Date().toJSON(), time);
+      setDraft(undefined);
       onChange(toDateString(nextState, time));
     },
-    [disabled, readonly, time, onChange],
+    [buttonsDisabled, time, onChange],
   );
 
+  const { yearsRange, format } = options;
   const elements = useMemo(
     () =>
       getDateElementProps(
         state,
         time,
-        options.yearsRange as [number, number] | undefined,
-        options.format as DateElementFormat | undefined,
+        normalizeYearsRange(yearsRange),
+        isDateElementFormat(format) ? format : undefined,
       ),
-    [state, time, options.yearsRange, options.format],
+    [state, time, yearsRange, format],
   );
-  return { elements, handleChange, handleClear, handleSetNow };
+  return { elements, handleChange, handleClear, handleSetNow, buttonsDisabled };
 }

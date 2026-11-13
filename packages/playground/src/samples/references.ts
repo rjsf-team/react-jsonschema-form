@@ -115,7 +115,7 @@ const references: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     billing_address: {
       street_address: '21, Jump Street',
       city: 'Babel',

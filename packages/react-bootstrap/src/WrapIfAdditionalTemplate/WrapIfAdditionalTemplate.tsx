@@ -1,35 +1,50 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
+  AdditionalPropertyKeySelect,
+  buttonId,
+  getAdditionalKeyAttributes,
+  hasAdditionalKeyLabel,
+  hasSchemaMarker,
+  isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
+  TranslatableString,
+} from '@rjsf/utils';
+import { Col, Form, Row } from 'react-bootstrap';
 
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  classNames,
-  style,
-  children,
-  disabled,
-  id,
-  label,
-  displayLabel,
-  onRemoveProperty,
-  onKeyRenameBlur,
-  rawDescription,
-  readonly,
-  required,
-  schema,
-  uiSchema,
-  registry,
-}: WrapIfAdditionalTemplateProps<T, S, F>) {
+  F extends FormContextType = FormContextType,
+>(props: WrapIfAdditionalTemplateProps<T, S, F>) {
+  const {
+    classNames,
+    style,
+    children,
+    disabled,
+    id,
+    label,
+    keyName,
+    onRemoveProperty,
+    onKeyRename,
+    onKeyRenameBlur,
+    propertyNamesEnum,
+    rawDescription,
+    readonly,
+    required,
+    schema,
+    uiSchema,
+    registry,
+  } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
-  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const additional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
   const descPadding = rawDescription ? 1 : 0;
   const descMargin = rawDescription ? -24 : 0;
 
@@ -41,25 +56,45 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const keyId = `${id}-key`;
-  const margin = displayLabel ? 12 + descMargin : 0;
-  const padding = displayLabel ? 4 + descPadding : 1;
+  const keyId = additionalKeyId(id);
+  const margin = hasKeyLabel ? 12 + descMargin : 0;
+  const padding = hasKeyLabel ? 4 + descPadding : 1;
 
   return (
-    <Row className={classNames} style={style} key={keyId}>
+    <Row className={classNames} style={style}>
       <Col xs={5}>
         <Form.Group>
-          {displayLabel && <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>}
-          <Form.Control
-            key={label}
-            required={required}
-            defaultValue={label}
-            disabled={disabled || readonly}
-            id={keyId}
-            name={keyId}
-            onBlur={!readonly ? onKeyRenameBlur : undefined}
-            type='text'
-          />
+          {hasKeyLabel && <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>}
+          {propertyNamesEnum ? (
+            <AdditionalPropertyKeySelect<T, S, F>
+              errorAttributes={keyAttributes}
+              id={keyId}
+              label={keyLabel}
+              hideLabel
+              labelledByTemplate={hasKeyLabel}
+              value={keyName}
+              propertyNamesEnum={propertyNamesEnum}
+              onKeyRename={onKeyRename}
+              disabled={disabled}
+              readonly={readonly}
+              required={required}
+              registry={registry}
+            />
+          ) : (
+            <Form.Control
+              key={keyName}
+              aria-label={hasKeyLabel ? undefined : keyLabel}
+              {...keyAttributes}
+              isInvalid={keyAttributes['aria-invalid']}
+              required={required}
+              defaultValue={keyName}
+              disabled={isAdditionalKeyDisabled(props)}
+              id={keyId}
+              name={keyId}
+              onBlur={!readonly ? onKeyRenameBlur : undefined}
+              type='text'
+            />
+          )}
         </Form.Group>
       </Col>
       <Col xs={6}>{children}</Col>
@@ -67,7 +102,7 @@ export default function WrapIfAdditionalTemplate<
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove w-100'
-          disabled={disabled || readonly}
+          disabled={isAdditionalRemoveDisabled(props)}
           onClick={onRemoveProperty}
           uiSchema={uiSchema}
           registry={registry}

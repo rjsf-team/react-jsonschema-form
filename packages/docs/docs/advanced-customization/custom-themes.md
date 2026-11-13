@@ -8,7 +8,7 @@ This theme-defining object is passed as the only parameter to the HOC (`withThem
 ```tsx
 import React, { Component } from 'react';
 import validator from '@rjsf/validator-ajv8';
-import { withTheme, ThemeProps } from '@rjsf/core';
+import { withTheme, type ThemeProps } from '@rjsf/core';
 
 const theme: ThemeProps = { widgets: { test: () => <div>test</div> } };
 
@@ -33,15 +33,15 @@ you can essentially redefine the default Form by simply doing `const Form = with
 Example theme with custom widget:
 
 ```tsx
-import { WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
-import { ThemeProps } from '@rjsf/core';
+import { RegistryWidgetsType, toInputValue, WidgetProps } from '@rjsf/utils';
+import type { ThemeProps } from '@rjsf/core';
 
 const MyCustomWidget = (props: WidgetProps) => {
   return (
     <input
       type='text'
       className='custom'
-      value={props.value}
+      value={toInputValue(props.value)}
       required={props.required}
       onChange={(event) => props.onChange(event.target.value)}
     />
@@ -64,13 +64,17 @@ Each template should be passed into the theme object via the **templates** objec
 
 ```tsx
 import { ArrayFieldTemplateProps, ErrorListProps } from '@rjsf/utils';
-import { ThemeProps } from '@rjsf/core';
+import type { ThemeProps } from '@rjsf/core';
 
 function MyArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   return (
     <div>
-      {props.items.map((element) => element.children)}
-      {props.canAdd && <button type='button' onClick={props.onAddClick}></button>}
+      {props.items}
+      {props.canAdd && (
+        <button type='button' onClick={props.onAddClick} disabled={props.disabled || props.readonly}>
+          Add
+        </button>
+      )}
     </div>
   );
 }
@@ -97,12 +101,101 @@ const ThemeObject: ThemeProps = {
 export default ThemeObject;
 ```
 
+### Presentation
+
+A theme's **presentation** is a `ThemePresentation` declaring which parts of a field its fields and widgets draw themselves: the `label`, `description`, `errors` and `help`, each owned by the `'template'` (the `FieldTemplate`) or by the component itself (`'self'`), and `labelledBy`, how a label the template draws reaches the control.
+A component drawing its label itself says where that label sits with `labelPlacement`: `'above'` its control, as a text input's label drawn over the input, or `'beside'` it, as a checkbox's. `@rjsf/core` reads it to lay out an array item's buttons, which line up with the item's control below a label above it, whether the template draws that label or a component declared `'above'` does; a self-drawn label left undeclared isn't taken to sit above its control. A theme whose widgets draw their label above declares it in its `default`, and `'beside'` for its checkbox, which would take that `default` otherwise.
+Where a theme's `FallbackField` draws its own label, the fallback UI also hands a boolean's description down below its type selector to a control declared `'beside'`, as it does for a checkbox, so a checkbox-like widget should declare it; any other control keeps its description with the field.
+A widget whose control holds `false` left alone, as a checkbox or a switch does, declares `uncheckedIsFalse: true`, so a required boolean the schema lets be `false` isn't given a native `required` that would stop the browser submitting it ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388)); `@rjsf/core` declares it for its `CheckboxWidget`. `@rjsf/core`'s `StringField` also reads it to hand such a widget on a string with a string `const` a boolean, writing the `const` when it is checked and clearing the field when it is not ([#3882](https://github.com/rjsf-team/react-jsonschema-form/issues/3882)), so a theme declaring it on a switch changes what such a field writes. It describes one control, so it is declared under that widget's key: `default` and `fieldDefault` don't take it, since a blanket would also mark the `select` or `radio` a boolean can render.
+
+An array `ArrayField` renders as one widget, a group of checkboxes, a multiple select, a file input or a custom widget, needs no declaration: it holds the empty array `getDefaultFormState()` seeds a required one with, so `@rjsf/core` marks it required while it holds no value, and otherwise only where the schema's `minItems` is at least 1 or `ui:required: true` asks for it ([#5573](https://github.com/rjsf-team/react-jsonschema-form/issues/5573), [#5744](https://github.com/rjsf-team/react-jsonschema-form/issues/5744)).
+
+The `BooleanField` entry can name a `widget`, an alias or a registry key, which `@rjsf/core`'s `BooleanField` renders in place of its checkbox when the `uiSchema` names none; it is ignored under any other key, which `Form` warns about in development. A replacement registered as `BooleanField` that renders another widget declares the one it renders, so it is labelled and marked required as that widget is ([#5591](https://github.com/rjsf-team/react-jsonschema-form/issues/5591)):
+
+```tsx
+<Form fields={{ BooleanField: RadioBooleanField }} presentation={{ fields: { BooleanField: { widget: 'radio' } } }} />
+```
+
+Declarations are keyed by the name a field or widget is registered under, so a wrapper registered under the same name keeps them.
+A `default` covers every part the theme's own entry for a widget leaves out, for every widget, custom ones included, so it also overrides what `@rjsf/core` declares for those parts; a `fieldDefault` covers every part a field's merged entry leaves out.
+A theme whose `FieldTemplate` draws the description and help in another order around its `children` than core's, `['description', 'children', 'help']`, declares it in `fieldTemplateOrder`, such as `['children', 'description', 'help']` for a template that draws both below the control. [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation) lists them in that order, with an `anyOf`/`oneOf` option's own drawn inside the field's `children`, and [`widgetAriaProps()`](../api-reference/utility-functions.md#widgetariaprops) lists a select's selected option description, which the select draws inside them too, so a screen reader announces them in the order they are drawn ([#5720](https://github.com/rjsf-team/react-jsonschema-form/issues/5720)). A form that replaces its theme's `FieldTemplate` with one drawing them in another order declares its own through its `presentation` prop.
+
+A theme whose `SelectWidget` draws the field's description itself, and the selected option's description before it, declares `selectedOptionDescription: 'beforeDescription'`; the default, `'afterDescription'`, lists the option's description after it ([#5367](https://github.com/rjsf-team/react-jsonschema-form/issues/5367)). A form that replaces its theme's `SelectWidget` with one drawing them in another order declares its own through its `presentation` prop.
+
+```tsx
+import type { ThemeProps } from '@rjsf/core';
+
+const ThemeObject: ThemeProps = {
+  widgets: myWidgets,
+  presentation: {
+    // Every widget built on this library draws its own label above its control, its checkbox beside it and its
+    // description too
+    default: { label: 'self', labelPlacement: 'above' },
+    widgets: { CheckboxWidget: { label: 'self', description: 'self', labelPlacement: 'beside' } },
+    // This theme's template draws no label, so an `anyOf`/`oneOf` field is named by its option selector
+    fields: { AnyOfField: { label: 'self' }, OneOfField: { label: 'self' } },
+  },
+};
+```
+
+A declaration states what the theme's templates and widgets do.
+`@rjsf/core` declares that its checkbox draws its own label and description, that a radio or checkboxes group is labelled through `aria-labelledby`, that the fields rendering one widget (`StringField`, `NumberField`, `BooleanField`, and `ArrayField` as a multi-select or files) leave every part to it, and that an `anyOf`/`oneOf` field and the fallback UI are labelled by the template; everything else is drawn by the template, except the label and description of a custom field, an object, an array that renders no single widget and a `null` field, which they draw themselves.
+`SchemaField` hands the theme's `FieldTemplate` the parts the plan gives it as `displayLabel`, `description`, `help` and `errors`, and its widgets `hideLabel`, so a template renders what it is handed and a widget draws its label where `hideLabel` is false.
+
+The theme's declarations are layered part by part over `@rjsf/core`'s, and the `Form`'s [`presentation`](../api-reference/form-props.md#presentation) prop over the theme's, by [`mergeThemePresentation()`](../api-reference/utility-functions.md#mergethemepresentation), so each layer declares only the parts it changes.
+
+### Class map
+
+A theme's **classMap** is a `ClassMap` of the class names its CSS framework needs on the elements `@rjsf/core` renders, so a theme built on a CSS framework styles core's components rather than copying them.
+It has one key per element rather than per concept, since frameworks put a concept's class on different elements: Bootstrap 3 puts `checkbox` on the `<div>` around a checkbox and its label, `checkboxWrapper`, while daisyUI puts it on the `<input>`.
+The one key named after a state, `disabled`, is added to a checkbox or radio option that is disabled or read-only beside its own key's, since Bootstrap 3's CSS selects `.checkbox.disabled`.
+`ClassMap` in `@rjsf/utils` lists the keys and the element each one reaches.
+
+```tsx
+import type { ThemeProps } from '@rjsf/core';
+
+const ThemeObject: ThemeProps = {
+  classMap: {
+    input: 'input input-bordered',
+    select: 'select select-bordered',
+    checkboxWrapper: 'form-control',
+    submitButton: 'btn btn-primary',
+  },
+};
+```
+
+`@rjsf/core` gives its elements no class of its own beyond their `rjsf-` markers, which always render, so a key's value is the class the element carries beside its marker, and a key the `Form`'s `classMap` gives replaces the theme's.
+`withTheme()` layers the `Form`'s [`classMap`](../api-reference/form-props.md#classmap) prop over the theme's, key by key, with [`mergeClassMaps()`](../api-reference/utility-functions.md#mergeclassmaps), and `buildRegistry()` layers that over `@rjsf/core`'s empty one; the merged `MergedClassMap` is `registry.classMap`, which a custom component reads its classes from: every key is present, `undefined` where no layer gives the element a class, so reading it onto a `className` renders no `class` attribute.
+
+### Global UI options
+
+A theme whose widgets or templates read an option of their own from [`ui:globalOptions`](../api-reference/uiSchema.md#uiglobaloptions), as `@rjsf/mui` reads `mui`, declares its key as `globalUiOptionsKeys`.
+RJSF reads only its own options from `ui:globalOptions` and the keys the theme and the `Form`'s [`globalUiOptionsKeys`](../api-reference/form-props.md#globaluioptionskeys) prop declare, so every field hands the theme's to its widget in its `options`, beneath the field's own, and a template reads them with `getUiOptions(uiSchema, registry.globalUiOptions)`.
+A key may not be one `ReservedUiOptionName` lists: an option name RJSF reads per field, or `definitions` or `globalOptions`, which only the root uiSchema's `ui:` keys set.
+Every field hands a user's declared keys to its widget too, so a theme whose widgets read an option `ReservedUiOptionName` doesn't list, as `@rjsf/mantine`'s `RangeWidget` reads `thumbLabel`, adds it to the names its type rejects as a user's key, through the second parameter of `GlobalUISchemaOptionsExtensions`, as `@rjsf/daisyui` and `@rjsf/mantine` do.
+Type the keys with `ThemeGlobalUISchemaOptions`, which takes the user's own extensions too:
+
+```tsx
+import { ThemeProps } from '@rjsf/core';
+import { ThemeGlobalUISchemaOptions } from '@rjsf/utils';
+
+interface MyThemeGlobalUiOptionsKeys {
+  density?: 'compact' | 'comfortable';
+}
+export type MyThemeGlobalUISchemaOptions = ThemeGlobalUISchemaOptions<MyThemeGlobalUiOptionsKeys>;
+
+const ThemeObject: ThemeProps = {
+  widgets: myWidgets,
+  globalUiOptionsKeys: ['density'],
+};
+```
+
 ## Overriding other Form props
 
 Just as the theme can override **widgets**, **fields**, any of the **templates**, and set default values to properties like **showErrorList**, you can do the same with the instance of the withTheme() Form component.
 
 ```tsx
-import { ThemeProps } from '@rjsf/core';
+import type { ThemeProps } from '@rjsf/core';
 
 const ThemeObject: ThemeProps = {
   templates: {

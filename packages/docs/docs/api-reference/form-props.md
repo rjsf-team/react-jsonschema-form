@@ -14,13 +14,57 @@ The value of this prop will be passed to the `action` [HTML attribute on the for
 
 Note that this just renders the `action` attribute in the HTML markup. There is no real network request being sent to this `action` on submit. Instead, react-jsonschema-form catches the submit event with `event.preventDefault()` and then calls the [`onSubmit`](#onSubmit) function, where you could send a request programmatically with `fetch` or similar.
 
+## additionalPropertiesWhenAbsent
+
+What an object schema naming neither `additionalProperties` nor `unevaluatedProperties` says about the keys its `properties` and `patternProperties` leave over: `'forbid'`, the default, or `'allow'`.
+
+JSON Schema reads such an object as taking any extra key, as `additionalProperties: true` does, and `'allow'` has the form follow it ([#2137](https://github.com/rjsf-team/react-jsonschema-form/issues/2137)):
+
+- the object gets an add button, and the extra keys of its data render with their key input and remove button, each as a field for the value it holds
+- `omitExtraData` keeps those keys rather than dropping them
+- an object `anyOf`/`oneOf` union, such as `{ type: 'object', oneOf: [...] }`, renders its own field beside the option it shows, with its title and add button, unless the option it shows names `additionalProperties: false`
+
+A keyword the schema names is read as it stands either way, so an `additionalProperties: false` or an `unevaluatedProperties: false` still closes the object.
+To keep a union closed under `'allow'`, give it `additionalProperties: false`, or hide its add button with the [`expandable` option](../json-schema/objects.md#expandable-option).
+A schema that is no object, an untyped `{}` included, gets no add button, nor does one whose `const` or `enum` pins the whole value.
+
+```tsx
+import Form from '@rjsf/core';
+import validator from '@rjsf/validator-ajv8';
+
+render(
+  <Form schema={{ type: 'object' }} validator={validator} additionalPropertiesWhenAbsent='allow' />,
+  document.getElementById('app'),
+);
+```
+
+See [Objects naming no `additionalProperties`](../json-schema/objects.md#objects-naming-no-additionalproperties) for more.
+
 ## autoComplete
 
 The value of this prop will be passed to the `autocomplete` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-autocomplete).
 
 ## className
 
-The value of this prop will be passed to the `class` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).
+The value of this prop will be passed to the `class` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form), beside the `rjsf` class the form always carries, which `@rjsf/core/rjsf.css` scopes its rules to.
+
+## classMap
+
+A `ClassMap` of class names for the elements `@rjsf/core` renders, one key per element: the `<input>` of `BaseInputTemplate` under `input`, the `<label>` the `FieldTemplate` draws under `fieldLabel`, the `<div>` around a checkbox under `checkboxWrapper`, and so on; `ClassMap` in `@rjsf/utils` lists them.
+A class given here replaces the class the theme gives that element; `@rjsf/core` itself gives its elements only their `rjsf-` marker classes, which always render beside the mapped class.
+A function is called with the class beneath instead, the theme's, or `''` where the theme gives none, so a form can add a class to it without repeating it: `classMap={{ fieldLabel: (themeClass) => joinClassNames(themeClass, 'uppercase') }}`, with [`joinClassNames()`](./utility-functions.md#joinclassnames) leaving out a theme class that is empty.
+The merged result, with every entry a class or `undefined`, is `registry.classMap`.
+See [Custom Themes](../advanced-customization/custom-themes.md#class-map) for more information.
+
+```tsx
+import Form from '@rjsf/core';
+import validator from '@rjsf/validator-ajv8';
+
+render(
+  <Form schema={schema} validator={validator} classMap={{ input: 'my-input', submitButton: 'my-button' }} />,
+  document.getElementById('app'),
+);
+```
 
 ## children
 
@@ -29,7 +73,7 @@ You can provide custom buttons to your form via the `Form` component's `children
 For other ways to modify the default `Submit` button, see both the [Submit Button Options](./uiSchema.md#submitbuttonoptions) and the [SubmitButton Template](../advanced-customization/custom-templates.md#submitbutton) documentation.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -56,19 +100,11 @@ Formerly the `validate` prop.
 The `customValidate` prop requires a function that specifies custom validation rules for the form.
 See [Validation](../usage/validation.md) for more information.
 
-## experimental_componentUpdateStrategy
+Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
 
-Experimental feature to specify an alternative component update strategy that accepts one of the following value:
-React's default `Component` rendering strategy is to re-render on every state change, see `shouldComponentUpdate` docs.
-`PureComponent`'s strategy uses shallow equality. One can also always update (not recommended for performance reasons, but can be useful for testing)
+Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a new `schema` is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
 
-| Option     | Description                                       |
-| ---------- | ------------------------------------------------- |
-| customDeep | Legacy behavior - uses RJSF's deepEquals function |
-| shallow    | shallow equality                                  |
-| always     | component always rerenders                        |
-
-## experimental_defaultFormStateBehavior
+## defaultFormStateBehavior
 
 Experimental features to specify different form state behavior.
 Currently, this only affects the handling of optional array fields where `minItems` is set and handling of setting defaults based on the value of `emptyObjectFields`.
@@ -96,16 +132,19 @@ Optional enumerated flag controlling how array minItems are populated, defaultin
 
 The signature and documentation for this property is as follow:
 
-##### computeSkipPopulate &lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+##### computeSkipPopulate &lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-A function that determines whether to skip populating the array with default values based on the provided validator, schema, and root schema.
+A function that determines whether to skip populating the array with default values based on the provided `SchemaContext`, schema, and root schema.
 If the function returns `true`, the array will not be populated with default values.
 If the function returns `false`, the array will be populated with default values according to the `populate` option.
 
+Replacing the callback alone does not take effect: the form compares a new `defaultFormStateBehavior` against the one it holds, and that comparison treats any two functions as equal, so a form keeps calling the callback it was first given until some other setting, the `validator` or the `schema` changes.
+Define the behavior the callback needs from its `schema` and `rootSchema` arguments rather than from values captured when it was created, since a callback closing over changing state goes stale.
+
 ###### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
-- schema: S - The schema for which resolving a condition is desired
+- context: SchemaContext&lt;S, F> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within a `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+- schema: S - The array schema whose defaults are being computed
 - [rootSchema]: S - The root schema that will be forwarded to all the APIs
 
 ###### Returns
@@ -135,17 +174,17 @@ const schema: RJSFSchema = {
   required: ['stringArray', 'numberArray'],
 };
 
-const computeSkipPopulateNumberArrays = (validator, schema, rootSchema) =>
+const computeSkipPopulateNumberArrays = (context, schema, rootSchema) =>
   // These conditions are needed to narrow down the type of the schema.items
   !Array.isArray(schema?.items) &&
   typeof schema?.items !== 'boolean' &&
-  schema?.items?.type === 'number',
+  schema?.items?.type === 'number';
 
 render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       arrayMinItems: {
         computeSkipPopulate: computeSkipPopulateNumberArrays,
       },
@@ -173,8 +212,10 @@ Optional enumerated flag controlling how empty object fields are populated, defa
 | `skipDefaults`             | Does not set defaults                                                                                                       |
 | `skipEmptyDefaults`        | Does not set an empty default. It will still apply the default value if a default property is defined in your schema        |
 
+A required boolean these flags leave unset, under `skipDefaults`, or under `populateRequiredDefaults` where the object holding it is optional, is reported missing by validation once the object holding it has a value, as the form's root always does. An optional object left empty is left out of the data, so until then nothing reports it. Either way its checkbox, like that of any required boolean whose schema doesn't demand `true`, isn't marked required, as [`requiredBooleanDefault`](#requiredbooleandefault) explains.
+
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -188,7 +229,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       emptyObjectFields: 'populateRequiredDefaults',
     }}
   />,
@@ -216,18 +257,18 @@ The branch of an `if-then-else` is picked from the form data, not from the compu
 
 - When the `if` lists a property in `required` and only a default provides that property, the `then` default is left out until the form data holds the value, for instance on the initial render.
 - Without `required`, a missing property still satisfies the `if`'s `properties`, so such an `if` passes with no data, and its `then` default is filled in even when the `if` does not match the defaulted value.
-- With one `allOf` entry per `enum` value and no form data, the default `allOf` merger merges the `then` defaults of all the entries, and the first entry that defaults a property wins. An `experimental_customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf` instead.
+- With one `allOf` entry per `enum` value and no form data, the default `allOf` merger merges the `then` defaults of all the entries, and the first entry that defaults a property wins. A `customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf` instead.
 
 An `allOf` in an object property or in an array's `items` is skipped as a whole, plain property defaults included, so it usually needs `populateDefaults` to provide its defaults.
 This is specific to `allOf`:
 
 - An `if-then-else` placed directly in a nested object schema is resolved with either value, unless `emptyObjectFields` is `skipEmptyDefaults`. For example, under `skipDefaults`, `items: { type: 'object', if, then }` fills in the `then` default, while `items: { type: 'object', allOf: [{ if, then }] }` does not.
 - Adding a direct `if` to that `items` schema resolves its whole `allOf` too, unless `emptyObjectFields` is `skipEmptyDefaults`.
-- With an `experimental_customMergeAllOf` built on a deep merger, such as `createDeepAllOfMerge` from `@x0k/json-schema-merge` given a shallow merge built with that library's `createMerger` and `createShallowAllOfMerge`, merging an `allOf` also turns a property's `allOf: [{ if, then }]` into a direct `if-then-else`, so that property's `then` default is filled in under `skipDefaults`, unless `emptyObjectFields` is `skipEmptyDefaults`. That happens wherever an `allOf` is merged: the root's own `allOf`, or the `allOf` of an object or `items` schema that also has a direct `if`, but not a nested `allOf` on its own.
-- A `dependencies` entry in a nested object schema is resolved once its property has a value, its `allOf` and `if-then-else` included, even when `emptyObjectFields` is `skipEmptyDefaults`. A default counts as that value, and the entry's `if` is checked against it, so an `if` that lists the property in `required` passes with no form data, while one that does not match the default fails. For example, under `skipDefaults`, `items: { type: 'object', properties: { animal: { default: 'Cat' } }, dependencies: { animal: { allOf: [{ if, then }] } } }` fills in the `then` default. A root `dependencies` entry counts a default only while the form data is empty: once the form data holds any value, the entry is applied only when the form data holds its property.
+- A `customMergeAllOf` built on a deep merger, such as `createDeepAllOfMerge` from `@x0k/json-schema-merge`, changes none of this. It may also flatten the `allOf` of the properties inside the `allOf` it merges, but each property's defaults are computed from the property as the schema declares it, so a property's `allOf` is skipped under `skipDefaults` as any other nested `allOf` is.
+- A `dependencies` entry in a nested object schema is resolved once its property has a value, its `allOf` and `if-then-else` included, even when `emptyObjectFields` is `skipEmptyDefaults`. A default counts as that value, and the entry's `if` is checked against it, so an `if` that lists the property in `required` passes with no form data, while one that does not match the default fails. For example, under `skipDefaults`, `items: { type: 'object', properties: { animal: { default: 'Cat' } }, dependencies: { animal: { allOf: [{ if, then }] } } }` fills in the `then` default. A root `dependencies` entry counts a default too, whatever else the form data holds.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -272,7 +313,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       allOf: 'populateDefaults',
     }}
   />,
@@ -301,14 +342,14 @@ NOTE: If there is a default for a field and the `formData` is unspecified, the d
 | Flag Value                      | Description                                                                                                                               |
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `useFormDataIfPresent`          | Legacy behavior - Do not merge defaults if there is a value for a field in `formData` even if that value is explicitly set to `undefined` |
-| `useDefaultIfFormDataUndefined` | If the value of a field within the `formData` is `undefined`, then use the default value instead                                          |
+| `useDefaultIfFormDataUndefined` | If the value of a field within the `formData` is `undefined`, then use the default value instead, unless the user cleared the field       |
 
 ### nestedDefaultsPrecedence
 
 Optional enumerated flag controlling how defaults defined on multiple levels are merged together for overlapping properties, defaulting to `descendantWins`.
 
 | Flag Value       | Description                                                                                       |
-| -----------------| --------------------------------------------------------------------------------------------------|
+| ---------------- | ------------------------------------------------------------------------------------------------- |
 | `descendantWins` | The innermost (descendant) default value definition takes precedence over its ancestor's defaults |
 | `ancestorWins`   | The outermost (ancestor) default value definition takes precedence over any descendant's defaults |
 
@@ -317,7 +358,7 @@ Optional enumerated flag controlling how defaults defined on multiple levels are
 In the following example, the `animal` property is a descendant of the root schema and both define a default value for `animal`. By default, the `animal`'s default value `Cat` would take precedence over its ancestor's `Fish`. However, since `nestedDefaultsPrecedence` is set to `ancestorWins`, the root schema's default value takes precedence and `animal` is set to `Fish` by default.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -339,7 +380,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       nestedDefaultsPrecedence: 'ancestorWins',
     }}
   />,
@@ -352,17 +393,19 @@ render(
 Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default` of its own, is populated with `false`, defaulting to `populateFalse`.
 An explicit schema `default`, a parent default and an existing `formData` value always take precedence; this flag only decides what happens when none of them provides a value.
 
-| Flag Value      | Description                                                                                                                    |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `populateFalse` | A required boolean with no `default` is set to `false`                                                                         |
+| Flag Value      | Description                                                                                                                   |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `populateFalse` | A required boolean with no `default` is set to `false`                                                                        |
 | `skip`          | No value is synthesized; the property stays `undefined` until the user answers it, so `required` remains a validation concern |
 
 #### Example
 
-In the following example, `agree` is required but has no `default`. By default it would start as `false`, and the form would report `{ agree: false }` through `onChange` on mount. With `requiredBooleanDefault` set to `skip`, `formData` stays `{}` until the user answers, and validation reports `agree` as missing until then. This is the behavior to choose when a boolean question is rendered with an explicit "unanswered" state, for example a `- - -` / Yes / No select, rather than a checkbox.
+In the following example, `agree` is required but has no `default`. By default it would start as `false`, so [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically) would return `{ agree: false }` before the user touched it. With `requiredBooleanDefault` set to `skip`, the data stays `{}` until the user answers, and validation reports `agree` as missing until then. This is the behavior to choose when a boolean question is rendered with an explicit "unanswered" state, for example a `- - -` / Yes / No select, rather than a checkbox.
+A checkbox isn't marked required, by its `*` or a native `required`, unless its schema demands `true`, whatever this flag is: a native `required` would block the `false` an unchecked box holds, whether `populateFalse` filled it in or a user gave it by unchecking the box. Under `skip` it also has no unanswered state to show, so validation alone reports it missing, and only once the object holding it has a value, since an optional object left empty is left out of the data.
+The same holds wherever [`emptyObjectFields`](#emptyobjectfields) leaves a required boolean unset: under `skipDefaults`, and under `populateRequiredDefaults` where the object holding it is optional.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -381,7 +424,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       requiredBooleanDefault: 'skip',
     }}
   />,
@@ -389,9 +432,9 @@ render(
 );
 ```
 
-## experimental_customMergeAllOf
+## customMergeAllOf
 
-The `experimental_customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in case the where the default merge library ([@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/)) doesn't satisfy your functional or performance requirements.
+The `customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in case the where the default merge library ([@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/)) doesn't satisfy your functional or performance requirements.
 
 By providing your own implementation, you can potentially achieve significant performance improvements. For instance, if your use case only requires a subset of JSON Schema features, you can implement a faster, more tailored merging strategy.
 
@@ -400,7 +443,7 @@ If you're looking for alternative `allOf` merging implementations, you might con
 **Warning:** This is an experimental feature. Only use this if you fully understand the implications of custom `allOf` merging and are prepared to handle potential edge cases. Incorrect implementations may lead to unexpected behavior or validation errors.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
 const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
@@ -408,7 +451,7 @@ const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
 };
 
 render(
-  <Form schema={schema} validator={validator} experimental_customMergeAllOf={customMergeAllOf} />,
+  <Form schema={schema} validator={validator} customMergeAllOf={customMergeAllOf} />,
   document.getElementById('app'),
 );
 ```
@@ -418,7 +461,7 @@ render(
 It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -436,7 +479,7 @@ If you just want to disable some fields, see the `ui:disabled` parameter in `uiS
 It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then forwarded down to each field of the form.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -456,12 +499,12 @@ The value of this prop will be passed to the `enctype` [HTML attribute on the fo
 ## extraErrors
 
 This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it can be used to implement asynchronous validation.
-By default, these are non-blocking errors, meaning that you can still submit the form when these are the only errors displayed to the user.
+By default, these errors block form submission just like JSON Schema errors do.
 See [Validation](../usage/validation.md) for more information.
 
-## extraErrorsBlockSubmit
+## extraErrorsAreWarnings
 
-If set to true, causes the `extraErrors` to become blocking when the form is submitted.
+If set to true, treats `extraErrors` as warnings instead of blocking form submission.
 
 ## fields
 
@@ -474,7 +517,7 @@ If set to true, then the first field with an error will receive the focus when t
 You can also provide a custom callback function to handle what happens when this function is called.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -494,11 +537,50 @@ render(<Form schema={schema} validator={validator} focusOnFirstError={focusOnErr
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.
 
 See [AntD Customization](themes/antd/uiSchema.md#formcontext) for formContext customizations for the `antd` theme.
-See [Semantic UI Customization](themes/semantic-ui/uiSchema.md#formcontext) for formContext customizations for the `semantic-ui` theme.
 
 ## formData
 
-The data for the form, used to load a "controlled" form with its current data. If you want an "uncontrolled" form with initial data, then use `initialFormData` instead.
+Deprecated: use [`initialFormData`](#initialformdata), which this is another name for. The form reads it only when it mounts and when `reset()` is called, which the name `formData` hides by reading as a controlled value.
+
+It seeds the form exactly as `initialFormData` does, and nothing more. When both are passed, `formData` is the seed, and in development the form warns once that `initialFormData` is ignored.
+
+The form owns its data after it mounts. The usual v6 pattern keeps working, since the value `onChange` reports is the form's own and passing it back changes nothing:
+
+```tsx
+const [data, setData] = useState(record);
+<Form schema={schema} validator={validator} formData={data} onChange={(event) => setData(event.formData)} />;
+```
+
+Any other value passed after mount is ignored, with a warning in development only: a production build shows the seed, or the stale record, with nothing logged. That covers v6 code such as `formData={record ?? {}}` with `record` from a fetch, or a parent that resets by setting its state to a blank object. To show other data, a record that loads after mount or the next record, remount the form under a `key`, which also clears its errors and gives the record the values the form fills in on mount only, such as a [`ui:initialValue`](./uiSchema.md#initialvalue):
+
+```tsx
+<Form key={record.id} schema={schema} validator={validator} initialFormData={record} onChange={save} />
+```
+
+To change the data in place, keeping the errors and the fields' own state, call [`setFieldValue('', data)`](../advanced-customization/internals.md#change-form-data-programmatically) on the form's ref, which reports the new value through `onChange` like any edit, so the form reads dirty. To show the data clean, call [`reset(data)`](../usage/submitting.md#making-the-saved-data-the-baseline) instead, which makes it the baseline too.
+
+Only `undefined` means "not passed". `null` seeds the schema's defaults the way `undefined` does. `false`, `0` and `''` are values.
+
+## globalUiOptionsKeys
+
+The keys of the extensions to [`ui:globalOptions`](uiSchema.md#uiglobaloptions) that your own widgets, fields and templates read, beyond the ones RJSF reads there.
+They are added to the ones the theme declares, and the registry's `globalUiOptions` hold only those and RJSF's own, so every field hands them to its widget in its `options`, beneath the field's own, and a template reads them with `getUiOptions(uiSchema, registry.globalUiOptions)`.
+A key that is an option name RJSF reads per field, such as `widget` or `placeholder`, or `definitions` or `globalOptions`, which only the root uiSchema's `ui:` keys set, is not read from `ui:globalOptions`, and a warning says so.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { GlobalUISchemaOptions, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const globalOptions: GlobalUISchemaOptions<{ density?: 'compact' | 'comfortable' }> = { density: 'compact' };
+const uiSchema: UiSchema = { 'ui:globalOptions': globalOptions };
+
+// Each widget's `options.density` is 'compact', unless its own uiSchema sets another
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} globalUiOptionsKeys={['density']} />,
+  document.getElementById('app'),
+);
+```
 
 ## id
 
@@ -509,7 +591,7 @@ The value of this prop will be passed to the `id` [HTML attribute on the form](h
 To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids (the default is `root`).
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -527,7 +609,7 @@ This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key"
 To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (the default is `_`).
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -548,7 +630,9 @@ id="root_first">` when rendering `first`.
 
 ## initialFormData
 
-The initial data for the form, used to fill an "uncontrolled" form with existing data on the initial render and when `reset()` is called programmatically.
+The seed of the form's data, the way `defaultValue` works on an `<input>`. It is read, and filled in with the schema's defaults, when the form mounts and when `reset()` is called, unless an earlier `reset(saved)` passed data of its own, and ignored otherwise, so a value written inline does not replace the data the form holds on a re-render. Every edit is reported through [`onChange`](#onchange); read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). When both props are passed, [`formData`](#formdata), a deprecated name for this prop, is the seed and `initialFormData` is ignored. To show other data after mount, remount the form under a `key`, or call [`reset(data)`](../usage/submitting.md#making-the-saved-data-the-baseline) on its ref, which makes it the baseline too, so the form reads clean. `setFieldValue('', data)` applies it as an edit instead, so the form reads dirty.
+
+The form's data shares its unchanged parts with the object you pass, so don't mutate that object afterwards; change a copy. In development the form freezes it from its first edit, validation, submit or reset on, so a mutation throws.
 
 ## nameGenerator
 
@@ -563,7 +647,7 @@ RJSF provides two built-in generators:
 **`dotNotationNameGenerator`** - Generates dot notation for other frameworks (e.g., `root.tasks.0.title`).
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { bracketNameGenerator, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -591,29 +675,44 @@ render(
 
 You can also create a custom generator by implementing the `NameGeneratorFunction` type, which receives `path` (array of path segments), `idPrefix` (typically `'root'`), and optional `isMultiValue` (boolean for multi-value fields).
 
+## liveErrors
+
+Use this prop with [`liveValidate`](#livevalidate) to choose which errors live validation shows. Without `liveValidate` it changes nothing: errors only appear after a submit.
+
+- Omit this prop, or use `liveErrors="all"`, to show every error, as live validation always has.
+- Use `liveErrors="field"` to show a field's errors only once the user has reached it: once it changed, under `liveValidate="onChange"`, or once it lost focus, under `liveValidate="onBlur"`. A submit attempt, or a call to [`validateForm()`](../usage/validation.md#validate-form-programmatically) on the form's ref, shows every error from then on, until [`reset()`](../advanced-customization/internals.md#read-the-form-status). `validateForm()` doesn't count as a submit, so it leaves `submitCount` as it is.
+
+With `liveErrors="field"`:
+
+- An array's or object's own errors, such as a `minItems` or `minProperties` error, show once the user reached it or any field inside it. Adding, removing or moving an array's items, or adding, renaming or removing an object's properties, counts as reaching the array or object. So does switching an `anyOf` or `oneOf` field's option, or, under `liveValidate="onBlur"`, blurring its selector, which reveals that field's own errors but none of those inside it.
+- [`extraErrors`](#extraerrors) always show, and so do the errors a custom field or widget raises itself. [`customValidate`](#customvalidate)'s errors show the way the schema's do.
+- The error list, each field's errors and the `errors` and `errorSchema` of the [`onChange`](#onchange) event hold only the errors shown. [`onError`](#onerror) still sees every error, so an error that isn't shown still blocks the submit.
+
+```tsx
+<Form schema={schema} validator={validator} liveValidate='onChange' liveErrors='field' />
+```
+
 ## liveOmit
 
-Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
-to `true` and the form's data is updated by the user.
+Use this prop with `omitExtraData={true}` to remove extra data while editing, rather than waiting for submission.
 
-If no value (or `false`) is provided, then live omit will not happen. If `true` or `onChange` is provided for
-the flag, then live omit will be performed after processing of all pending changes has completed. If `onBlur`
-is provided, then live omit will be performed when a field that was updated is blurred (as a performance
-optimization).
+Choose when to omit extra data:
 
-> NOTE: The `boolean` options for this flag is deprecated and will be removed in a future major release
+- Omit this prop to disable live omission.
+- Use `liveOmit="onChange"` to omit extra data after each edit.
+- Use `liveOmit="onBlur"` to omit extra data when an edited field loses focus.
 
 ## liveValidate
 
-Flag that describes when live validation will be performed. Live validation means that the form will perform
-validation and show any validation errors whenever the form data is updated, rather than just on submit.
+Use this prop to show validation errors while editing, rather than waiting for submission.
 
-If no value (or `false`) is provided, then live validation will not happen. If `true` or `onChange` is provided for
-the flag, then live validation will be performed after processing of all pending changes has completed. If `onBlur`
-is provided, then live validation will be performed when a field that was updated is blurred (as a performance
-optimization).
+Choose when to validate while editing:
 
-> NOTE: The `boolean` options for this flag is deprecated and will be removed in a future major release
+- Omit this prop to validate on submission only.
+- Use `liveValidate="onChange"` to validate after each edit.
+- Use `liveValidate="onBlur"` to validate when an edited field loses focus.
+
+Live validation shows every error in the form, including those of fields the user hasn't reached yet. Use [`liveErrors="field"`](#liveerrors) to show a field's errors only once the user has reached it.
 
 ## method
 
@@ -643,17 +742,22 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 ## onChange
 
-If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same first argument as `onSubmit` any time a value is updated in the form.
+Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes, such as the schema's defaults: read those with `getFormData()`. The edit has been applied by the time it is called, so not storing it does not undo it; refuse or rewrite edits in [`transformChange`](#transformchange).
+The event also carries the form's status: `dirty`, `dirtyFields`, `touched`, `touchedFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields). A change to the status alone fires no `onChange`, so a blur that only touches a field fires none: the next event carries it. Neither does a prop change that moves the baseline with the data, so read `getStatus()` after one. `submitCount` counts the submits that reach the form, including one the form ignores while a promise `onSubmit` returned is pending: one the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set, except, while a promise is pending, a click on the form's own submit button, Enter in a field that clicks it, or `submit()`, which the form ignores before that validation would run.
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
+
+`onChange` runs as the edit is processed. React may update the inputs afterward, so read `event.formData` rather than reading values from the DOM inside the callback.
+
+Each event carries the complete value, earlier edits of the same event included. A `setFieldValue()` call from inside `onChange` builds on the edit being handled. See the [migration examples](../migration-guides/v7.x%20upgrade%20guide.md#form-owns-its-data-breaking-change).
 
 ## onError
 
 To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -676,7 +780,7 @@ It will be passed a result object having a `formData` attribute, which is the va
 The original event will also be passed as a second parameter:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -690,17 +794,35 @@ render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, docum
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
 
-## removeEmptyOptionalObjects
+When `onSubmit` returns a promise, the form ignores another submit until that promise settles, and meanwhile the submit button gets `pending` and `aria-disabled`.
+When the promise rejects, the form's own copy of it is reported as an unhandled rejection, even if you handle the promise you return, so catch errors inside `onSubmit` and return a promise that resolves.
+See [Submitting](../usage/submitting.md), which also shows how to dispatch a `useActionState` action from `onSubmit`.
 
-> **Deprecated**: This prop no longer has any effect and will be removed in a future release. The behavior of pruning optional empty objects is now built into [`omitExtraData`](#omitextradata) — enable that prop instead.
+## presentation
 
-When a JSON Schema has a required field inside an optional object, any user interaction with that optional object "activates" it. Even if the user clears all the fields within that object, the empty object property (e.g., `{ test: {} }` or `{ test: { field1: "" } }`) remains in the `formData`. Because the object contains required fields that are now empty, the form becomes unsubmittable.
+A `ThemePresentation` declaring which parts of a field (its label, description, errors and help) the fields and widgets you register draw themselves, under the keys you register them by, plus a `default` for every part its own entry for a widget leaves out, which overrides the theme's and `@rjsf/core`'s declarations of those parts, and a `fieldDefault` for every part a field's merged entry leaves out.
+It is layered part by part over the theme's declarations, which are layered over `@rjsf/core`'s, and the merged result is `registry.presentation`.
+See [Custom Themes](../advanced-customization/custom-themes.md#presentation) for more information.
 
-Previously, setting `removeEmptyOptionalObjects` to `true` caused the form to recursively prune these optional empty objects from the `formData` during `onChange`, `onBlur`, and `onSubmit`. This pruning is now performed automatically by `omitExtraData`.
+```tsx
+import Form from '@rjsf/core';
+import { ThemePresentation } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+// MyLabelledWidget draws its own label, so the FieldTemplate draws none for it
+const presentation: ThemePresentation = { widgets: { MyLabelledWidget: { label: 'self' } } };
+
+render(
+  <Form schema={schema} validator={validator} widgets={{ MyLabelledWidget }} presentation={presentation} />,
+  document.getElementById('app'),
+);
+```
 
 ## schema
 
 **Required**! Form schema. We support JSON schema draft-07 by default. See [Schema Reference](https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
+
+The schema is treated as immutable: it is parsed once per object, so a change made to it in place is not seen. Pass a new object to change it.
 
 ## showErrorList
 
@@ -740,6 +862,136 @@ Dictionary of registered templates in the form. See [Custom Templates](../advanc
 
 A function can be passed to this prop in order to make modifications to the default errors resulting from JSON Schema validation. See [Validation](../usage/validation.md) for more information.
 
+Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
+
+Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a new `schema` is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
+
+## transformChange
+
+A pure function that decides what an edit leaves the form with. The form calls it with the data the edit produced and the data before it, for a field's change and for `setFieldValue()`, before it stores the result, validates it and reports it through [`onChange`](#onchange). Return `next` to take the edit, `previous` to refuse it, or another value, such as `next` with a field upper-cased:
+
+```tsx
+<Form
+  schema={schema}
+  validator={validator}
+  transformChange={(next, previous) => {
+    if ((next?.title ?? '').length > 80) {
+      return previous;
+    }
+    return next?.code === undefined ? next : { ...next, code: next.code.toUpperCase() };
+  }}
+/>
+```
+
+It runs for every keystroke, so a rewrite has to hold for a value the user is still typing, and for a field they cleared, which is `undefined`. Upper-casing does; trimming would remove a space as soon as it is typed, so `hello world` would come out as `helloworld`. Trim on submit instead. Leave out a key `next` doesn't hold, as the example does for an empty `code`: `{ ...next, code: undefined }` adds one, so every edit while `code` is empty would come back rewritten.
+
+Return a value on every path: `undefined` leaves the form with no data, which a function body that forgets a `return` does, so the form warns about it in development. What you return is filled in with the schema's defaults like any data the form holds, so a property with a `default` that you leave out, or set to `undefined` under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'`, gets its default back. A field the user cleared stays cleared where you pass its `undefined` through, as it does without a `transformChange`; `JSON.parse(JSON.stringify(next))` drops that `undefined`, so copy with `structuredClone()`, which keeps it. It is sanitized as the edit would be, too: when it switches an `if`/`then`/`else`, `dependencies` or other conditional, the values of the branch it leaves are dropped, as they are when the user makes that switch in the field. Return `next`'s unchanged subtrees as they are, so their fields do not render again. A copy of `previous` refuses the edit as `previous` itself does, except for an edit that leaves the data as it was, such as an option switch whose data fits both options or a reorder of two equal items: `next` is a copy of `previous` then, so a copy of either takes the edit, and only `previous` itself refuses it. At a root that holds a string, number or boolean, there is no copy to tell apart: such an edit's `next` is `previous` itself, so it can't be refused. The function must be pure: the form may call it again for the same edit. Don't mutate `next` or `previous`, since both share their unchanged parts with the data the form holds; return a new object instead. In development both are frozen, so a mutation throws. It is not called for what the form derives on its own: its defaults, the live omit a blur runs, or a `reset()`. The defaults are filled in on mount and again when the `schema`, a `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent` changes.
+
+### Compute a field from other fields
+
+A field computed from other fields belongs in `transformChange` too. Here `mode` follows `country`, and an `if`/`then` reads `mode` to add `rate`:
+
+```tsx
+import Form from '@rjsf/core';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+interface Settings {
+  country?: 'US' | 'SE';
+  mode?: 'auto' | 'manual';
+  rate?: number;
+}
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    country: { type: 'string', enum: ['US', 'SE'] },
+    mode: { type: 'string', enum: ['auto', 'manual'] },
+  },
+  if: { properties: { mode: { const: 'auto' } }, required: ['mode'] },
+  then: { properties: { rate: { type: 'number' } } },
+};
+
+const uiSchema: UiSchema<Settings> = { mode: { 'ui:readonly': true } };
+
+const initialData: Settings = { country: 'US' };
+
+const withMode = (data: Settings | undefined): Settings => {
+  const mode = data?.country === 'SE' ? 'auto' : 'manual';
+  return data?.mode === mode ? data : { ...data, mode };
+};
+
+<Form
+  schema={schema}
+  uiSchema={uiSchema}
+  validator={validator}
+  initialFormData={withMode(initialData)}
+  transformChange={withMode}
+/>;
+```
+
+A change to `country` and the `mode` it computes are one edit, so the form shows `rate` in the same render. `withMode` returns `next` itself when there is nothing to change, as the `code` rewrite above does for an empty `code`.
+
+Nothing else should set `mode`. An edit to it, from its widget or from `setFieldValue('mode', …)`, is sanitized against the branch it switches to before `withMode` puts `mode` back, so a switch to `manual` drops `rate`, and the value the user entered is lost. The uiSchema marks `mode` `ui:readonly` for the widget; code that wants another `mode` sets `country`.
+
+Before you write a stored record with `setFieldValue('', record)`, drop its `mode` and any `rate` the computed `mode` hides; `withMode` adds `mode` back. What a write leaves otherwise, from the form holding `{ country: 'US', mode: 'manual' }`:
+
+| Write                                                         | Data after it                                                                                            |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `setFieldValue('', { country: 'SE', rate: 5 })`               | `{ country: 'SE', mode: 'auto', rate: 5 }`: the form keeps a value the write sets itself                 |
+| `setFieldValue('', { country: 'US', rate: 5 })`               | `{ country: 'US', mode: 'manual', rate: 5 }`: `rate` is kept, not rendered but submitted                 |
+| `setFieldValue('', { country: 'US', mode: 'auto', rate: 5 })` | `{ country: 'US', mode: 'manual' }`: changing the stored `mode` is an edit to `mode`, which drops `rate` |
+| The third row's write, made right after the second row's      | `{ country: 'US', mode: 'manual', rate: 5 }`: the write changes nothing, so the hidden `rate` stays      |
+
+The form fills `initialFormData` in with the schema's defaults and any [`ui:initialValue`](uiSchema.md#initialvalue) without calling `transformChange`, so compute the field into `initialFormData` yourself, from an `initialData` that already holds any `default` or `ui:initialValue` of `country`; otherwise `mode` is computed before `country` has its value. The defaults the form fills in again when the `schema`, a `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent` changes skip `transformChange` too, so when such a change can give `country` a value, such as a new `schema` with a `default` for it, [remount the form under a new `key`](../migration-guides/v7.x%20upgrade%20guide.md#show-other-data-after-mount) as it arrives, with `initialFormData` computed from data that holds that default. The remount starts the form over from `initialFormData`, so read the form's current data with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically) in the event handler that swaps the `schema`, and keep the seed in state with the new `key`. Continuing the example above:
+
+```tsx
+import { useRef, useState } from 'react';
+import type { FormRef } from '@rjsf/core';
+
+const swedishDefault = 'SE';
+
+const swedishSchema: RJSFSchema = {
+  ...schema,
+  properties: { ...schema.properties, country: { type: 'string', enum: ['US', 'SE'], default: swedishDefault } },
+};
+
+function SettingsForm() {
+  const formRef = useRef<FormRef<Settings>>(null);
+  const [form, setForm] = useState({ key: 0, schema, initialFormData: withMode(initialData) });
+
+  function defaultToSweden() {
+    const data = formRef.current?.getFormData();
+    setForm({
+      key: form.key + 1,
+      schema: swedishSchema,
+      initialFormData: withMode({ ...data, country: data?.country ?? swedishDefault }),
+    });
+  }
+
+  return (
+    <>
+      <button type="button" onClick={defaultToSweden}>
+        Default to Sweden
+      </button>
+      <Form
+        key={form.key}
+        ref={formRef}
+        schema={form.schema}
+        uiSchema={uiSchema}
+        validator={validator}
+        initialFormData={form.initialFormData}
+        transformChange={withMode}
+      />
+    </>
+  );
+}
+```
+
+`swedishDefault` is the new default, and a `country` the data already holds overrides it. The `??` matters: clearing the `country` select leaves the key holding `undefined`, which a spread over `{ country: swedishDefault }` would copy. The seed is everything the form holds, the old schema's defaults included, so a default the new `schema` changes applies only where the data holds no value, as it would without a remount. Reading the data in the handler, not in render, keeps the seed fixed, so a later `reset()` returns to it.
+
+Setting the field from a widget's Effect, or calling `setFieldValue()` from `onChange`, makes it a second edit instead: `onChange` reports the first with `mode` out of date before it reports the second, and a widget's Effect also reports a change on mount that the user never made.
+
 ## translateString
 
 Optional string translation function, if provided, allows users to change the translation of the RJSF internal strings.
@@ -747,20 +999,20 @@ Some strings contain replaceable parameter values as indicated by `%1`, `%2`, et
 The number after the `%` indicates the order of the parameter.
 The ordering of parameters is important because some languages may choose to put the second parameter before the first in its translation. In addition to replaceable parameters, some of the strings support the use of markdown and simple html.
 
-One can use the [documentation](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts) of the `TranslatableString` enums to determine which enum values contain replaceable parameters and which support markdown and simple html.
+One can use the [documentation](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts) of the `TranslatableString` values to determine which contain replaceable parameters and which support markdown and simple html.
 
 One could use this function to alter one or more of the existing english strings to better suit one's application or fully translate all strings into a different language.
 Below is an example of changing a few of the english strings to something else:
 
 ```ts
-import { TranslatableString, englishStringTranslator, replaceStringParameters } from '@rjsf/utils';
+import { TranslatableString, englishStringTranslator } from '@rjsf/utils';
 
 function fixupSomeEnglishStrings(stringToTranslate: TranslatableString, params?: string[]): string {
   switch (stringToTranslate) {
     case TranslatableString.NewStringDefault:
       return ''; // Use an empty string for the new additionalProperties string default value
     case TranslatableString.KeyLabel:
-      return replaceStringParameters('%1 Key Name', params); // Add "Name" onto the end of the WrapIfAdditionalTemplate key label
+      return `${englishStringTranslator(stringToTranslate, params)} Name`; // Add "Name" onto the end of the WrapIfAdditionalTemplate key label
     default:
       return englishStringTranslator(stringToTranslate, params); // Fallback to the default english
   }
@@ -773,7 +1025,10 @@ Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 
 ## useFallbackUiForUnsupportedType
 
-If set to true, when an unsupported schema type is encountered, the form will render a fallback UI instead of displaying an error. The fallback UI will display a widget that allows the user to select a JSON Schema primitive type, and a field containing the form data that matches the selected type. Set to false by default.
+If set to true, when an unsupported schema type is encountered, the form will render a fallback UI instead of displaying an error.
+The fallback UI will display a widget that allows the user to select a JSON Schema type, and a field containing the form data that matches the selected type.
+It is also what renders a schema that allows [multiple types](../json-schema/single.md#multiple-types), offering exactly those types, and a property the schema puts no constraint on, such as an `additionalProperties: true` entry, offering every type.
+Set to false by default.
 
 ## validator
 
@@ -783,3 +1038,5 @@ If set to true, when an unsupported schema type is encountered, the form will re
 ## widgets
 
 Dictionary of registered widgets in the form. See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md) for more information.
+
+Register a widget under a built-in alias, such as `textarea`, from the first render. Adding or removing one later can switch a field whose `type` is a list to another type's field, and the form's data keeps the defaults of the field it had.

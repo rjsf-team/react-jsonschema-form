@@ -1,3 +1,5 @@
+import { toInputValue } from '@rjsf/utils';
+
 import type { Sample } from './Sample.ts';
 
 const widgets: Sample = {
@@ -59,6 +61,11 @@ const widgets: Sample = {
             type: 'string',
             title: 'Favorite color (color picker)',
             default: '#151ce6',
+          },
+          confirmation: {
+            type: 'string',
+            title: 'Details confirmed (checkbox for a string const)',
+            const: 'confirmed',
           },
         },
       },
@@ -168,6 +175,11 @@ const widgets: Sample = {
           },
         ],
       },
+      selectWidgetOptions3: {
+        title: 'Select widget with options grouped by optgroups',
+        type: 'string',
+        enum: ['lorem', 'ipsum', 'dolorem', 'alpha', 'beta', 'gamma'],
+      },
     },
   },
   uiSchema: {
@@ -176,6 +188,9 @@ const widgets: Sample = {
     },
     contactDetails: {
       'ui:widget': 'textarea',
+      confirmation: {
+        'ui:widget': 'checkbox',
+      },
     },
     customWidgets: {
       rating: {
@@ -234,8 +249,8 @@ const widgets: Sample = {
         onChange,
         options,
       }: {
-        value: any;
-        onChange: (value: any) => void;
+        value: unknown;
+        onChange: (value: unknown) => void;
         options: { backgroundColor: string };
       }) => {
         const { backgroundColor } = options;
@@ -244,7 +259,7 @@ const widgets: Sample = {
             className='form-control'
             onChange={(event) => onChange(event.target.value)}
             style={{ backgroundColor }}
-            value={value}
+            value={toInputValue(value)}
           />
         );
       },
@@ -258,21 +273,21 @@ const widgets: Sample = {
         onChange,
         options,
       }: {
-        value: any;
-        onChange: (value: any) => void;
-        options: { enumOptions: { label: string; value: any }[]; backgroundColor: string };
+        value: unknown;
+        onChange: (value: unknown) => void;
+        options: { enumOptions: { label: string; value: unknown }[]; backgroundColor: string };
       }) => {
         const { enumOptions, backgroundColor } = options;
         return (
           <select
             className='form-control'
             style={{ backgroundColor }}
-            value={value}
+            value={toInputValue(value)}
             onChange={(event) => onChange(event.target.value)}
           >
             {enumOptions.map(({ label: enumLabel, value: enumValue }, i) => (
               // oxlint-disable-next-line react/no-array-index-key
-              <option key={i} value={enumValue}>
+              <option key={i} value={toInputValue(enumValue)}>
                 {enumLabel}
               </option>
             ))}
@@ -283,8 +298,16 @@ const widgets: Sample = {
         backgroundColor: 'pink',
       },
     },
+    selectWidgetOptions3: {
+      'ui:options': {
+        optgroups: {
+          Latin: ['lorem', 'ipsum', 'dolorem'],
+          Greek: ['alpha', 'beta', 'gamma'],
+        },
+      },
+    },
   },
-  formData: {
+  initialFormData: {
     stringFormats: {
       email: 'chuck@norris.net',
       uri: 'http://chucknorris.com/',

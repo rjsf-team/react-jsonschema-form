@@ -1,11 +1,12 @@
 import type { ErrorListProps, FormValidation, GenericObjectType, RJSFSchema } from '@rjsf/utils';
 import { customizeValidator as customizeV8Validator } from '@rjsf/validator-ajv8';
-import userEvent from '@testing-library/user-event';
-import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
+import { userEvent } from '@testing-library/user-event';
+import draft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
 import type { FormProps } from '../src/index.ts';
-import { createFormComponent, submitForm } from './testUtils.tsx';
+import type { NoValFormProps } from './testUtils.tsx';
+import { createFormComponent, elementOf, errorListMessages, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -23,14 +24,14 @@ describe('Validation', () => {
 
         const { node, onError, onSubmit } = createFormComponent({
           schema,
-          formData: 13,
+          initialFormData: 13,
         });
 
         await submitForm(node, user, true);
 
         expect(onSubmit).not.toHaveBeenCalled();
         expect(onError).toHaveBeenCalledOnce();
-        expect(Array.from(node.querySelectorAll('.errors li')).map((error) => error.textContent)).toEqual([
+        expect(Array.from(node.querySelectorAll('.rjsf-errors li')).map((error) => error.textContent)).toEqual([
           'boolean schema is false',
           'must match "then" schema',
         ]);
@@ -51,7 +52,7 @@ describe('Validation', () => {
         beforeEach(async () => {
           const compInfo = createFormComponent({
             schema,
-            formData: {
+            initialFormData: {
               foo: undefined,
             },
           });
@@ -78,8 +79,8 @@ describe('Validation', () => {
         });
 
         it('should render errors', () => {
-          expect(node.querySelectorAll('.errors li')).toHaveLength(1);
-          expect(node.querySelector('.errors li')).toHaveTextContent("must have required property 'foo'");
+          expect(node.querySelectorAll('.rjsf-errors li')).toHaveLength(1);
+          expect(node.querySelector('.rjsf-errors li')).toHaveTextContent("must have required property 'foo'");
         });
       });
 
@@ -101,7 +102,7 @@ describe('Validation', () => {
         beforeEach(async () => {
           const compInfo = createFormComponent({
             schema,
-            formData: {
+            initialFormData: {
               foo: '123456789',
             },
           });
@@ -112,8 +113,10 @@ describe('Validation', () => {
         });
 
         it('should render errors', () => {
-          expect(node.querySelectorAll('.errors li')).toHaveLength(1);
-          expect(node.querySelector('.errors li')).toHaveTextContent('.foo must NOT have fewer than 10 characters');
+          expect(node.querySelectorAll('.rjsf-errors li')).toHaveLength(1);
+          expect(node.querySelector('.rjsf-errors li')).toHaveTextContent(
+            '.foo must NOT have fewer than 10 characters',
+          );
         });
 
         it('should trigger the onError handler', () => {
@@ -147,7 +150,7 @@ describe('Validation', () => {
         const { onError, node } = createFormComponent({
           schema,
           customValidate,
-          formData,
+          initialFormData: formData,
         });
 
         await submitForm(node, user);
@@ -168,8 +171,8 @@ describe('Validation', () => {
         const { onChange, node } = createFormComponent({
           schema,
           customValidate,
-          formData,
-          liveValidate: true,
+          initialFormData: formData,
+          liveValidate: 'onChange',
         });
 
         const input = node.querySelector('input')!;
@@ -186,6 +189,44 @@ describe('Validation', () => {
         );
       });
 
+      it.each<[string, RJSFSchema]>([
+        ['a schema change', { type: 'string', minLength: 3, title: 'Name' }],
+        ['a customValidate change', { type: 'string', minLength: 3 }],
+      ])('keeps live validating an edit in a form with no seed across %s', async (change, nextSchema) => {
+        const schema: RJSFSchema = { type: 'string', minLength: 3 };
+        const { node, rerender } = createFormComponent({ schema, liveValidate: 'onChange' });
+        await user.type(elementOf(node, 'input'), 'x');
+        const tooShort = 'must NOT have fewer than 3 characters';
+        expect(errorListMessages(node)).toEqual([tooShort]);
+
+        rerender({
+          schema: nextSchema,
+          liveValidate: 'onChange',
+          customValidate: change === 'a customValidate change' ? (_, errors) => errors : undefined,
+        });
+
+        // The schema's title names the field in the message
+        expect(errorListMessages(node)).toEqual([expect.stringContaining(tooShort)]);
+      });
+
+      it('re-validates when the customValidate prop changes', () => {
+        const schema: RJSFSchema = { type: 'string' };
+        function rejectEverything(_: FormProps['formData'], errors: FormValidation) {
+          errors.addError('Invalid');
+          return errors;
+        }
+        function acceptEverything(_: FormProps['formData'], errors: FormValidation) {
+          return errors;
+        }
+        const props: NoValFormProps = { schema, initialFormData: 'a', liveValidate: 'onChange' };
+        const { node, rerender } = createFormComponent({ ...props, customValidate: acceptEverything });
+        expect(node.textContent).not.toContain('Invalid');
+
+        rerender({ ...props, customValidate: rejectEverything });
+
+        expect(node.textContent).toContain('Invalid');
+      });
+
       it('should submit form on valid data', async () => {
         const schema: RJSFSchema = { type: 'string' };
         const formData = 'hello';
@@ -200,7 +241,7 @@ describe('Validation', () => {
 
         const { node } = createFormComponent({
           schema,
-          formData,
+          initialFormData: formData,
           customValidate,
           onSubmit,
         });
@@ -225,7 +266,7 @@ describe('Validation', () => {
 
         const { node } = createFormComponent({
           schema,
-          formData,
+          initialFormData: formData,
           customValidate,
           onSubmit,
           onError,
@@ -249,7 +290,7 @@ describe('Validation', () => {
         const formData = { pass1: 'aaa', pass2: 'b' };
 
         function customValidate(formData: FormProps['formData'], errors: FormValidation) {
-          const { pass1, pass2 } = formData;
+          const { pass1, pass2 } = formData as { pass1: string; pass2: string };
           if (pass1 !== pass2) {
             (errors.pass2 as FormValidation).addError("Passwords don't match");
           }
@@ -259,7 +300,7 @@ describe('Validation', () => {
         const { node, onError } = createFormComponent({
           schema,
           customValidate,
-          formData,
+          initialFormData: formData,
         });
         await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
@@ -297,10 +338,13 @@ describe('Validation', () => {
           { pass1: 'a', pass2: 'a' },
         ];
 
-        function customValidate(formData: FormProps['formData'], errors: FormValidation) {
-          formData.forEach(({ pass1, pass2 }: GenericObjectType, i: number) => {
+        function customValidate(
+          formData: FormProps['formData'],
+          errors: FormValidation<{ pass1?: string; pass2?: string }[]>,
+        ) {
+          (formData as GenericObjectType[]).forEach(({ pass1, pass2 }: GenericObjectType, i: number) => {
             if (pass1 !== pass2) {
-              (errors as GenericObjectType)[i].pass2.addError("Passwords don't match");
+              errors[i]?.pass2?.addError("Passwords don't match");
             }
           });
           return errors;
@@ -309,7 +353,7 @@ describe('Validation', () => {
         const { node, onError } = createFormComponent({
           schema,
           customValidate,
-          formData,
+          initialFormData: formData,
         });
 
         await submitForm(node, user);
@@ -333,7 +377,7 @@ describe('Validation', () => {
         const formData = ['aaa', 'bbb', 'ccc'];
 
         function customValidate(formData: FormProps['formData'], errors: FormValidation) {
-          if (formData.indexOf('bbb') !== -1) {
+          if (Array.isArray(formData) && formData.includes('bbb')) {
             errors.addError('Forbidden value: bbb');
           }
           return errors;
@@ -342,7 +386,7 @@ describe('Validation', () => {
         const { node, onError } = createFormComponent({
           schema,
           customValidate,
-          formData,
+          initialFormData: formData,
         });
         await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
@@ -371,7 +415,7 @@ describe('Validation', () => {
         beforeEach(async () => {
           const compInfo = createFormComponent({
             schema,
-            formData: {
+            initialFormData: {
               foo: undefined,
             },
             showErrorList: false,
@@ -386,7 +430,7 @@ describe('Validation', () => {
         });
 
         it('should not render error list if showErrorList prop true', () => {
-          expect(node.querySelectorAll('.errors li')).toHaveLength(0);
+          expect(node.querySelectorAll('.rjsf-errors li')).toHaveLength(0);
         });
 
         it('should trigger onError call', () => {
@@ -401,6 +445,14 @@ describe('Validation', () => {
               title: '',
             },
           ]);
+        });
+
+        it('renders the error list after the fields when showErrorList is bottom', async () => {
+          const { node: bottomNode } = createFormComponent({ schema, initialFormData: {}, showErrorList: 'bottom' });
+          await submitForm(bottomNode, user, true);
+
+          expect(bottomNode.firstElementChild).not.toHaveClass('rjsf-errors');
+          expect(bottomNode.lastElementChild).toHaveClass('rjsf-errors');
         });
       });
     });
@@ -425,12 +477,12 @@ describe('Validation', () => {
         registry: {
           formContext: { className },
         },
-      }: ErrorListProps) => (
+      }: ErrorListProps<unknown, RJSFSchema, { className?: string }>) => (
         <div>
           <div className='CustomErrorList'>{errors.length} custom</div>
           <div className='ErrorSchema'>{errorSchema.__errors?.[0]}</div>
           <div className='Schema'>{schema.type}</div>
-          <div className='UiSchema'>{uiSchema?.foo}</div>
+          <div className='UiSchema'>{String(uiSchema?.foo)}</div>
           <div className={className} />
         </div>
       );
@@ -439,8 +491,8 @@ describe('Validation', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          liveValidate: true,
-          formData,
+          liveValidate: 'onChange',
+          initialFormData: formData,
           templates: { ErrorListTemplate: CustomErrorList },
           formContext: { className: 'foo' },
         });
@@ -489,8 +541,8 @@ describe('Validation', () => {
         const withMetaSchema = createFormComponent(
           {
             schema,
-            formData,
-            liveValidate: true,
+            initialFormData: formData,
+            liveValidate: 'onChange',
           },
           validator,
         );
@@ -499,7 +551,7 @@ describe('Validation', () => {
         await submitForm(node, user);
       });
       it('should be used to validate schema', async () => {
-        expect(node.querySelectorAll('.errors li')).toHaveLength(1);
+        expect(node.querySelectorAll('.rjsf-errors li')).toHaveLength(1);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must match pattern "\\d+"',
@@ -516,7 +568,7 @@ describe('Validation', () => {
         const input = node.querySelector('input')!;
         await user.clear(input);
         await user.type(input, '1234');
-        expect(node.querySelectorAll('.errors li')).toHaveLength(0);
+        expect(node.querySelectorAll('.rjsf-errors li')).toHaveLength(0);
         expect(onError).not.toHaveBeenCalled();
       });
     });

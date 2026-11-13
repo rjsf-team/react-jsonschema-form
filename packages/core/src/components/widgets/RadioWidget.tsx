@@ -2,11 +2,14 @@ import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
+  enumOptionsAutofocusIndex,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   enumOptionsIsSelected,
+  getGroupAttributes,
   getOptionValueFormat,
+  joinClassNames,
   optionId,
 } from '@rjsf/utils';
 
@@ -15,7 +18,11 @@ import {
  *
  * @param props - The `WidgetProps` for this component
  */
-function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   options,
   value,
   required,
@@ -27,9 +34,15 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   onChange,
   id,
   htmlName,
+  registry,
+  presentation,
+  label,
+  placeholder,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  const { classMap } = registry;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
@@ -43,13 +56,19 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     [onFocus, enumOptions, emptyValue, id, optionValueFormat],
   );
 
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation, label, placeholder, registry },
+    'radiogroup',
+  );
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
-    <div className='field-radio-group' id={id} role='radiogroup'>
+    <div className='rjsf-field-radio-group' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
-          const checked = enumOptionsIsSelected<S>(option.value, value);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
-          const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
+          const checked = enumOptionsIsSelected<S>(option.value, value, false);
+          const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
+          const optionDisabled = disabled || itemDisabled || readonly;
+          const disabledCls = optionDisabled && classMap.disabled;
 
           const handleChange = () => onChange(option.value);
 
@@ -57,29 +76,40 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
             <span>
               <input
                 type='radio'
+                className={classMap.radioInput}
                 id={optionId(id, i)}
                 checked={checked}
                 name={htmlName || id}
                 required={required}
-                value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+                value={domValues[i]}
                 disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && i === 0}
+                autoFocus={i === autofocusIndex}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onFocus={handleFocus}
-                aria-describedby={ariaDescribedByIds(id)}
+                {...optionAttributes}
               />
               <span>{option.label}</span>
             </span>
           );
 
           return inline ? (
-            <label key={String(option.value)} className={`radio-inline ${disabledCls}`}>
+            <label
+              // oxlint-disable-next-line react/no-array-index-key
+              key={i}
+              className={joinClassNames('rjsf-radio-inline', classMap.radioInlineLabel, disabledCls)}
+              data-disabled={optionDisabled || undefined}
+            >
               {radio}
             </label>
           ) : (
-            <div key={String(option.value)} className={`radio ${disabledCls}`}>
-              <label>{radio}</label>
+            <div
+              // oxlint-disable-next-line react/no-array-index-key
+              key={i}
+              className={joinClassNames('rjsf-radio', classMap.radioWrapper, disabledCls)}
+              data-disabled={optionDisabled || undefined}
+            >
+              <label className={classMap.radioLabel}>{radio}</label>
             </div>
           );
         })}

@@ -23,6 +23,7 @@ body:
       label: What theme are you using?
       options:
         - antd
+        - bootstrap3
         - chakra-ui
         - core
         - daisyui
@@ -30,10 +31,11 @@ body:
         - mantine
         - mui
         - react-bootstrap
-        - semantic-ui
         - shadcn
         - utils
         - validator-ajv8
+        - validator-ata
+        - validator-cfworker
         - other
     validations:
       required: true

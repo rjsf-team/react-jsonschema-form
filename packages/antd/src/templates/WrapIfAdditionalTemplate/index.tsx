@@ -1,9 +1,27 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, UI_OPTIONS_KEY, TranslatableString, buttonId } from '@rjsf/utils';
+import type {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  WrapIfAdditionalTemplateProps,
+} from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
+  AdditionalPropertyKeySelect,
+  buttonId,
+  getAdditionalKeyAttributes,
+  hasAdditionalKeyLabel,
+  hasSchemaMarker,
+  isAdditionalRemoveDisabled,
+  TranslatableString,
+  UI_OPTIONS_KEY,
+} from '@rjsf/utils';
 import { Col, Row, Form, Input } from 'antd';
 
-const VERTICAL_LABEL_COL = { span: 24 };
-const VERTICAL_WRAPPER_COL = { span: 24 };
+import useControlState from '../../controlState.ts';
+import { DEFAULT_LABEL_COL, DEFAULT_ROW_GUTTER, DEFAULT_WRAPPER_COL } from '../../formContext.ts';
+import type { AntdFormContext } from '../../formContext.ts';
 
 const INPUT_STYLE = {
   width: '100%',
@@ -15,40 +33,47 @@ const INPUT_STYLE = {
  * @param props - The `WrapIfAdditionalProps` for this component
  */
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
     classNames,
     style,
     disabled,
-    displayLabel,
     id,
     label,
+    keyName,
     onRemoveProperty,
+    onKeyRename,
     onKeyRenameBlur,
+    propertyNamesEnum,
     readonly,
     required,
     registry,
     schema,
     uiSchema,
   } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   const {
     colon,
-    labelCol = VERTICAL_LABEL_COL,
-    readonlyAsDisabled = true,
-    rowGutter = 24,
+    labelAlign,
+    labelCol,
+    rowGutter = DEFAULT_ROW_GUTTER,
     toolbarAlign = 'top',
-    wrapperCol = VERTICAL_WRAPPER_COL,
+    wrapperCol = DEFAULT_WRAPPER_COL,
     wrapperStyle,
-  } = registry.formContext;
+  }: AntdFormContext = registry.formContext;
   const { templates, translateString } = registry;
+  const control = useControlState<T, S, F>({ disabled, readonly, registry });
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
-  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const keyId = additionalKeyId(id);
+  const additional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
 
   if (!additional) {
     return (
@@ -59,10 +84,10 @@ export default function WrapIfAdditionalTemplate<
   }
 
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so put it into the uiSchema instead
-  const uiOptions = uiSchema ? uiSchema[UI_OPTIONS_KEY] : {};
-  const buttonUiOptions = {
-    ...uiSchema,
-    [UI_OPTIONS_KEY]: { ...uiOptions, block: true },
+  const baseUiSchema: UiSchema<T, S, F> = uiSchema ?? {};
+  const buttonUiOptions: UiSchema<T, S, F> = {
+    ...baseUiSchema,
+    [UI_OPTIONS_KEY]: { ...baseUiSchema[UI_OPTIONS_KEY], block: true },
   };
 
   return (
@@ -74,35 +99,57 @@ export default function WrapIfAdditionalTemplate<
               colon={colon}
               className='form-group'
               hasFeedback
-              htmlFor={`${id}-key`}
-              label={displayLabel ? keyLabel : undefined}
-              labelCol={labelCol}
+              htmlFor={keyId}
+              label={hasKeyLabel ? keyLabel : undefined}
+              labelAlign={labelAlign}
+              labelCol={labelCol ?? DEFAULT_LABEL_COL}
               required={required}
               style={wrapperStyle}
+              validateStatus={keyAttributes['aria-invalid'] ? 'error' : undefined}
               wrapperCol={wrapperCol}
             >
-              <Input
-                key={label}
-                className='form-control'
-                defaultValue={label}
-                disabled={disabled || (readonlyAsDisabled && readonly)}
-                id={`${id}-key`}
-                name={`${id}-key`}
-                onBlur={!readonly ? onKeyRenameBlur : undefined}
-                style={INPUT_STYLE}
-                type='text'
-              />
+              {propertyNamesEnum ? (
+                <AdditionalPropertyKeySelect<T, S, F>
+                  errorAttributes={keyAttributes}
+                  id={keyId}
+                  label={keyLabel}
+                  hideLabel
+                  labelledByTemplate={hasKeyLabel}
+                  value={keyName}
+                  propertyNamesEnum={propertyNamesEnum}
+                  onKeyRename={onKeyRename}
+                  disabled={control.disabled}
+                  readonly={readonly}
+                  required={required}
+                  registry={registry}
+                />
+              ) : (
+                <Input
+                  key={keyName}
+                  aria-label={hasKeyLabel ? undefined : keyLabel}
+                  {...keyAttributes}
+                  className='form-control'
+                  defaultValue={keyName}
+                  disabled={control.disabled || !onKeyRenameBlur}
+                  id={keyId}
+                  name={keyId}
+                  onBlur={!readonly ? onKeyRenameBlur : undefined}
+                  readOnly={readonly}
+                  style={INPUT_STYLE}
+                  type='text'
+                />
+              )}
             </Form.Item>
           </div>
         </Col>
         <Col className='form-additional' flex='1'>
           {children}
         </Col>
-        <Col flex='120px' style={{ marginTop: displayLabel ? '40px' : undefined }}>
+        <Col flex='120px' style={{ marginTop: hasKeyLabel ? '40px' : undefined }}>
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'
-            disabled={disabled || readonly}
+            disabled={isAdditionalRemoveDisabled(props)}
             onClick={onRemoveProperty}
             uiSchema={buttonUiOptions}
             registry={registry}

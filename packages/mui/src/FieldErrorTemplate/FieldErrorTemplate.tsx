@@ -27,26 +27,27 @@ export interface FieldErrorTemplateMuiProps extends GenericObjectType {
  * @param props - The `FieldErrorProps` for the errors being rendered
  */
 export default function FieldErrorTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldErrorProps<T, S, F>) {
-  const { errors = [], fieldPathId, uiSchema } = props;
+  const { errors = [], id: fieldId, uiSchema, registry } = props;
   if (errors.length === 0) {
     return null;
   }
-  const id = errorId(fieldPathId);
+  const id = errorId(fieldId);
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const muiProps = getMuiProps<T, S, F, FieldErrorTemplateMuiProps>(uiOptions);
   const { rjsfSlotProps: muiSlotProps } = muiProps;
 
+  // One element carries the id a control is described by, so the id appears once and describes every message
   return (
     <List id={id} dense disablePadding {...muiSlotProps?.fieldErrorList}>
       {errors.map((error, i: number) => (
         // oxlint-disable-next-line react/no-array-index-key
         <ListItem key={i} disableGutters {...muiSlotProps?.fieldErrorListItem}>
-          <FormHelperText component='div' id={`${id}-${i}`} {...muiSlotProps?.fieldErrorFormHelperText}>
+          <FormHelperText component='div' {...muiSlotProps?.fieldErrorFormHelperText}>
             {error}
           </FormHelperText>
         </ListItem>

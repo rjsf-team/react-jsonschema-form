@@ -1,19 +1,27 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, ErrorSchema } from '@rjsf/utils';
-import { getWidget, getUiOptions, resolveDefaultWidget } from '@rjsf/utils';
+import { fieldPathToName, getPresentationDeclaration, getUiOptions, resolveWidget, uiBooleanOption } from '@rjsf/utils';
+
+import {
+  displaysLabel,
+  getWidgetErrorProps,
+  getWidgetLabelProps,
+  resolveStringFieldWidget,
+} from './fieldWidgetUtils.ts';
 
 /** The `StringField` component is used to render a schema field that represents a string type
  *
  * @param props - The `FieldProps` for this template
  */
-function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F>,
 ) {
   const {
     schema,
     name,
     uiSchema,
-    fieldPathId,
+    fieldPath,
+    id: fieldId,
     formData,
     required,
     disabled = false,
@@ -23,44 +31,76 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     onBlur,
     onFocus,
     registry,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its widget, for one that doesn't read `presentation`
     rawErrors,
+    presentation,
     hideError,
     title,
   } = props;
   const { title: schemaTitle } = schema;
-  const { widgets, schemaUtils, globalUiOptions } = registry;
-  const { defaultWidget, enumOptions } = resolveDefaultWidget<T, S, F>(schema, uiSchema, schemaUtils, widgets);
-  const { widget = defaultWidget, placeholder = '', title: uiTitle, ...options } = getUiOptions<T, S, F>(uiSchema);
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-  const label = uiTitle ?? title ?? schemaTitle ?? name;
-  const Widget = getWidget<T, S, F>(schema, widget, widgets);
+  const { widgets, globalUiOptions } = registry;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const { widget, enumOptions } = resolveStringFieldWidget<T, S, F>(schema, uiSchema, registry, uiOptions);
+  const { widget: _widget, placeholder = '', title: uiTitle, ...options } = uiOptions;
+  const { Widget } = resolveWidget<T, S, F>(schema, widget, widgets);
+  const labelOption = uiBooleanOption(uiOptions.label);
+  // Read from the widget's declaration, so a theme's switch confirms the `const` too, while a widget the form registers
+  // under the `checkbox` key, which declares nothing, is handed the string
+  const confirmsConst = useMemo(
+    () =>
+      typeof schema.const === 'string' &&
+      !!getPresentationDeclaration<T, S, F>(registry, { schema, field: StringField, fieldKey: 'StringField', widget })
+        .uncheckedIsFalse,
+    [registry, schema, widget],
+  );
+  // As `BooleanField` does, a checkbox confirming the `const` skips `getDisplayLabel()`, which leaves the label to it
+  const labelProps = getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? title ?? schemaTitle ?? name, () =>
+    confirmsConst ? labelOption !== false : displaysLabel(registry, schema, uiSchema),
+  );
+  const toFormValue = useCallback(
+    (value: unknown) => {
+      if (!confirmsConst) {
+        return value;
+      }
+      return value ? schema.const : uiOptions.emptyValue;
+    },
+    [confirmsConst, schema.const, uiOptions.emptyValue],
+  );
   const onWidgetChange = useCallback(
     (value: T | undefined, errorSchema?: ErrorSchema, id?: string) =>
-      onChange(value, fieldPathId.path, errorSchema, id),
-    [onChange, fieldPathId],
+      onChange(toFormValue(value), fieldPath, errorSchema, id),
+    [onChange, fieldPath, toFormValue],
+  );
+  const onWidgetBlur = useCallback(
+    (id: string, value: unknown) => onBlur(id, toFormValue(value)),
+    [onBlur, toFormValue],
+  );
+  const onWidgetFocus = useCallback(
+    (id: string, value: unknown) => onFocus(id, toFormValue(value)),
+    [onFocus, toFormValue],
   );
   return (
     <Widget
       options={{ ...options, enumOptions }}
       schema={schema}
       uiSchema={uiSchema}
-      id={fieldPathId.$id}
+      id={fieldId}
       name={name}
-      label={label}
-      hideLabel={!displayLabel}
+      {...labelProps}
       hideError={hideError}
-      value={formData}
+      value={confirmsConst ? formData === schema.const : formData}
       onChange={onWidgetChange}
-      onBlur={onBlur}
-      onFocus={onFocus}
+      onBlur={onWidgetBlur}
+      onFocus={onWidgetFocus}
       required={required}
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
       registry={registry}
       placeholder={placeholder}
-      rawErrors={rawErrors}
-      htmlName={fieldPathId.name}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
+      presentation={presentation}
+      htmlName={fieldPathToName(fieldPath, registry.globalFormOptions)}
     />
   );
 }

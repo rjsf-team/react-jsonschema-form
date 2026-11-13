@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 const REQUIRED_FIELD_SYMBOL = '*';
 
 export interface LabelProps {
@@ -7,21 +9,32 @@ export interface LabelProps {
   required?: boolean;
   /** The id of the input field being labeled */
   id?: string;
+  /** The id of the label's text, which a control labelled through `aria-labelledby` points at */
+  labelId?: string;
+  /** The class names of the `<label>` */
+  className?: string;
+  /** Whether the field shows its own errors, marked on the label as `data-invalid` */
+  invalid?: boolean;
 }
 
-/** Renders a label for a field
+/** Renders a label for a field. Its `labelId` goes on the label's text alone, as a group or an option selector is
+ * named through it, and the required marker isn't part of that name; a control the label's `for` names is named by the
+ * whole label, marker included
  *
  * @param props - The `LabelProps` for this component
  */
-export default function Label(props: LabelProps) {
-  const { label, required, id } = props;
+function Label(props: LabelProps) {
+  const { label, required, id, labelId, className, invalid } = props;
   if (!label) {
     return null;
   }
   return (
-    <label className='control-label' htmlFor={id}>
-      {label}
-      {required && <span className='required'>{REQUIRED_FIELD_SYMBOL}</span>}
+    <label className={className} htmlFor={id} data-invalid={invalid || undefined}>
+      {labelId ? <span id={labelId}>{label}</span> : label}
+      {required && <span className='rjsf-required'>{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
   );
 }
+// Memoized so a keystroke in its own field is not a render of its label. A keystroke in another field renders neither:
+// `SchemaField` is what keeps the fields apart, not this
+export default memo(Label);

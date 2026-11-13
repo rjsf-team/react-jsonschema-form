@@ -25,20 +25,23 @@ export interface MultiSchemaFieldTemplateMuiProps extends GenericObjectType {
 }
 
 export default function MultiSchemaFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: MultiSchemaFieldTemplateProps<T, S, F>) {
-  const { optionSchemaField, selector, uiSchema } = props;
+  const { optionSchemaField, selector, uiSchema, registry } = props;
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, MultiSchemaFieldTemplateMuiProps>(uiOptions);
 
   return (
     <Box sx={{ mb: 2 }} {...muiSlotProps?.multiBox}>
-      <FormControl fullWidth sx={{ mb: 2 }} {...muiSlotProps?.multiFormControl}>
-        {selector}
-      </FormControl>
+      {/* No row is laid out for a selector the field doesn't render, as while an optional field has no data (#5401) */}
+      {selector ? (
+        <FormControl fullWidth sx={{ mb: 2 }} {...muiSlotProps?.multiFormControl}>
+          {selector}
+        </FormControl>
+      ) : null}
       {optionSchemaField}
     </Box>
   );

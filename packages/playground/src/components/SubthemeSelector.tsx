@@ -10,7 +10,7 @@ const uiSchema: UiSchema = {
 };
 
 export interface SubthemeType {
-  stylesheet?: string;
+  stylesheet?: string | string[];
   dataTheme?: string;
 }
 
@@ -34,11 +34,11 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
 
   const handleChange = useCallback(
     ({ formData }: IChangeEvent) => {
-      if (!formData) {
+      if (typeof formData !== 'string') {
         return;
       }
 
-      return select(formData, subthemes[formData]);
+      select(formData, subthemes[formData]);
     },
     [select, subthemes],
   );
@@ -54,7 +54,7 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
         idPrefix='rjsf_subthemeSelector'
         schema={schema}
         uiSchema={uiSchema}
-        formData={subtheme}
+        initialFormData={subtheme}
         validator={localValidator}
         onChange={handleChange}
       >

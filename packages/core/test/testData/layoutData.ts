@@ -1,36 +1,51 @@
 import type { EnumOptionsType, RJSFSchema, UiSchema } from '@rjsf/utils';
 
+/** Declared apart from the schemas that hold it so a test needing the option schemas themselves has them already
+ * typed as `RJSFSchema[]`
+ */
+export const SIMPLE_ONEOF_SCHEMAS: RJSFSchema[] = [
+  {
+    title: 'Choice 1',
+    type: 'object',
+    properties: {
+      answer: {
+        type: 'string',
+        default: '1',
+        readOnly: true,
+      },
+    },
+    required: ['answer'],
+  },
+  {
+    title: 'Choice 2',
+    type: 'object',
+    properties: {
+      answer: {
+        type: 'string',
+        default: '2',
+        readOnly: true,
+      },
+    },
+  },
+];
+/** Returns the `options` with an `answer` selector property that keeps only its `default`, so it has no type of its own
+ *
+ * @param options - Options shaped like `SIMPLE_ONEOF_SCHEMAS`
+ * @returns - The options, each with a selector property that has no type
+ */
+export function withTypelessSelector(options: RJSFSchema[]): RJSFSchema[] {
+  return options.map((option) => ({
+    ...option,
+    properties: { answer: { default: (option.properties!.answer as RJSFSchema).default } },
+  }));
+}
 export const SIMPLE_ONEOF: RJSFSchema = {
   title: 'Simple',
   type: 'object',
   discriminator: {
     propertyName: 'answer',
   },
-  oneOf: [
-    {
-      title: 'Choice 1',
-      type: 'object',
-      properties: {
-        answer: {
-          type: 'string',
-          default: '1',
-          readOnly: true,
-        },
-      },
-      required: ['answer'],
-    },
-    {
-      title: 'Choice 2',
-      type: 'object',
-      properties: {
-        answer: {
-          type: 'string',
-          default: '2',
-          readOnly: true,
-        },
-      },
-    },
-  ],
+  oneOf: SIMPLE_ONEOF_SCHEMAS,
 };
 export const SAMPLE_SCHEMA: RJSFSchema = {
   title: 'My Title',
@@ -79,7 +94,7 @@ export const SAMPLE_SCHEMA: RJSFSchema = {
   },
   required: ['ranges'],
 };
-export const sampleUISchema: UiSchema = {
+export const sampleUISchema: UiSchema<{ simpleString?: string }> = {
   simpleString: {
     'ui:placeholder': 'Enter a string',
   },

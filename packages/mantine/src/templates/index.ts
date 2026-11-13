@@ -4,7 +4,9 @@ import ArrayFieldItemTemplate from './ArrayFieldItemTemplate.tsx';
 import ArrayFieldTemplate from './ArrayFieldTemplate.tsx';
 import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate.tsx';
 import BaseInputTemplate from './BaseInputTemplate.tsx';
-import ButtonTemplates from './ButtonTemplates/index.ts';
+import AddButton from './ButtonTemplates/AddButton.tsx';
+import { ClearButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './ButtonTemplates/IconButton.tsx';
+import SubmitButton from './ButtonTemplates/SubmitButton.tsx';
 import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate.tsx';
 import DescriptionField from './DescriptionField.tsx';
 import ErrorList from './ErrorList.tsx';
@@ -18,18 +20,22 @@ import OptionalDataControlsTemplate from './OptionalDataControlsTemplate.tsx';
 import TitleField from './TitleField.tsx';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate.tsx';
 
-export function generateTemplates<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): Partial<TemplatesType<T, S, F>> {
+export function createTemplates() {
   return {
     ArrayFieldItemTemplate,
     ArrayFieldTemplate,
     ArrayFieldTitleTemplate,
     BaseInputTemplate,
     CyclicSchemaExpandTemplate,
-    ButtonTemplates: ButtonTemplates<T, S, F>(),
+    ButtonTemplates: {
+      SubmitButton,
+      AddButton,
+      CopyButton,
+      MoveDownButton,
+      MoveUpButton,
+      RemoveButton,
+      ClearButton,
+    },
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
     FieldErrorTemplate,
@@ -44,4 +50,12 @@ export function generateTemplates<
   };
 }
 
-export default generateTemplates();
+export function generateTemplates<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): Partial<TemplatesType<T, S, F>> {
+  return createTemplates();
+}
+
+export default createTemplates();

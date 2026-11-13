@@ -45,15 +45,19 @@ In other words, the following `uiSchema`s are equivalent:
 ```
 
 For a full list of what is supported in the `uiSchema` see the `UiSchema` type in [@rjsf/utils/types.ts](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/types.ts).
-Be sure to pay attention to the hierarchical intersection to these other types: `UIOptionsBaseType` and `TemplatesType`.
+Be sure to pay attention to the hierarchical intersection to these other types: `UIOptionsType` and `TemplatesType`.
 
 ## Exceptions to the equivalence
 
 There are 4 properties that exist in a `UiSchema` that will not be found in an inner `ui:options` object.
+One given in `ui:options` is ignored, with a console warning.
 
 ### `ui:globalOptions`
 
 The set of globally relevant `UiSchema` options that are read from the root-level `UiSchema` and stored in the `registry` for use everywhere.
+RJSF reads twelve options from it, as fallbacks for a field that sets none of its own: `addable`, `copyable`, `orderable`, `removable`, `label`, `allowClearTextInputs`, `duplicateKeySuffixSeparator`, `enableMarkdownInDescription`, `enableMarkdownInHelp`, `enableOptionalDataFieldForType`, `optionValueFormat` and `deprecatedHandling`.
+Every other option is read per field only.
+Neither `ui:globalOptions` nor `ui:definitions` is itself an option of the root field.
 
 ```ts
 import { UiSchema } from '@rjsf/utils';
@@ -63,7 +67,29 @@ const uiSchema: UiSchema = {
 };
 ```
 
-### `ui:definitions`
+The `GlobalUISchemaOptions` type takes a `UserExtensions` parameter for options your own widgets, fields and templates read, whose keys may not reuse an option name RJSF reads for a field, or `definitions` or `globalOptions`, which only the root uiSchema's `ui:` keys set.
+Declare the options against it, then hand them to the uiSchema, and name their keys in the `Form`'s [`globalUiOptionsKeys`](form-props.md#globaluioptionskeys) prop, so every field hands them to its widget in its `options`, beneath the field's own, and a template reads them with `getUiOptions(uiSchema, registry.globalUiOptions)`:
+
+```tsx
+import { Form } from '@rjsf/core';
+import { GlobalUISchemaOptions, UiSchema, WidgetProps } from '@rjsf/utils';
+
+const globalOptions: GlobalUISchemaOptions<{ density?: 'compact' | 'comfortable' }> = { density: 'compact' };
+const uiSchema: UiSchema = { 'ui:globalOptions': globalOptions };
+
+function DensityWidget({ options }: WidgetProps) {
+  // `options` doesn't carry the extension's types, so check the option's value before use
+  const density = options.density === 'compact' ? 'compact' : 'comfortable';
+  // ...
+}
+
+<Form schema={schema} uiSchema={uiSchema} validator={validator} globalUiOptionsKeys={['density']} />;
+```
+
+A component reads them from `registry.globalUiOptions`, which doesn't carry the extension's types, so check each option's value before use, as `DensityWidget` does with `options`.
+A theme that reads options of its own globally declares their keys itself and exports a type for them, which takes your `UserExtensions` too, such as `@rjsf/mui`'s `MuiGlobalUISchemaOptions`, and a `UiSchema` type whose `ui:globalOptions` take them inline.
+
+### `ui:definitions` {#ui-definitions}
 
 The `ui:definitions` property allows you to define reusable UI customizations for schema `$ref` references. This is particularly useful for:
 
@@ -74,7 +100,7 @@ The `ui:definitions` property allows you to define reusable UI customizations fo
 The keys in `ui:definitions` must match the exact `$ref` path used in the schema (e.g., `#/definitions/address` or `#/$defs/node`).
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -163,23 +189,6 @@ const uiSchema: UiSchema = {
 };
 ```
 
-### `ui:rootFieldId` (deprecated)
-
-> DEPRECATED: Use `Form.idPrefix` instead, will be removed in a future major version
-
-By default, this library will generate ids unique to the form for all rendered widgets.
-If you plan on using multiple instances of the `Form` component in a same page, it's wise to declare a root prefix for these, using the `ui:rootFieldId` uiSchema directive:
-
-```ts
-import { UiSchema } from '@rjsf/utils';
-
-const uiSchema: UiSchema = {
-  'ui:rootFieldId': 'myform',
-};
-```
-
-This will make all widgets have an id prefixed with `myform`.
-
 ### `ui:field`
 
 The `ui:field` property overrides the `Field` implementation used for rendering any field in the form's hierarchy.
@@ -187,12 +196,29 @@ Specify either the name of a field that is used to look up an implementation fro
 
 See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md#custom-field-components) for more information about how to use this property.
 
+A custom field named by `ui:field` isn't handed the select `SchemaField` infers for a boolean with labelled `oneOf`/`anyOf` options, so one that renders `BooleanField` sets `ui:widget: 'select'` itself to keep it.
+
+A field's own `ui:field` comes first, then a field registered under the schema's [`$id`](../advanced-customization/custom-widgets-fields.md#custom-field-by-id).
+The field they name is applied once per data path: a `SchemaField` the named field renders for its own data, and the selected `anyOf`/`oneOf` option, render as though no field were named, the option's own `ui:field` or `$id` included.
+The field's own `SchemaField` renders the extra key's input and remove button and the `anyOf`/`oneOf` option selector around the named field, and a `SchemaField` the named field renders for its own data renders none of them again.
+It draws the label, description and help the named field's [plan](form-props.md#presentation) hands down to it, so each renders once: a custom field draws its own label and description unless its `presentation` declaration leaves them to the template, and one that renders `SchemaField` for its own data leaves them to that field.
+`SchemaField` and `FallbackField` are not custom fields, whichever of the two ways names them: `SchemaField` renders exactly as though no field were named, and `FallbackField` renders as it does for a schema whose type sends it there, labelled as though no field were named.
+
 ### `ui:fieldReplacesAnyOrOneOf`
 
 By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or `OneOfField` component.
 This default behavior may be undesirable if your custom field already handles behavior related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
-By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
-If the flag is omitted or set to `false`, your custom field will be wrapped by `AnyOfField`/`OneOfField`.
+By providing a `true` value for this flag in association with a custom `ui:field`, or a field named by the schema's `$id`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
+If the flag is omitted or set to `false`, your custom field is rendered beside the `AnyOfField`/`OneOfField`, whose selected option renders the default field for its schema rather than the custom one again.
+
+The flag needs a `ui:field` or a `$id` that resolves to a field.
+A name no field is registered under names nothing for the `anyOf`/`oneOf` to give way to, so the options are rendered as though the flag were absent: dropping them would leave an object union with no way to reach the `properties` of any option while the validator still required them.
+A `ui:field` naming `SchemaField` names no custom field, so the options are rendered as without one, and a `ui:field` naming `FallbackField` does not take them away either, whatever [`useFallbackUiForUnsupportedType`](./form-props.md#usefallbackuiforunsupportedtype) says.
+With that prop on, the [fallback UI](../json-schema/single.md#multiple-types) renders the options itself, against the schema whose type its selector has pinned.
+The exception is a `type` list with an option naming a type of its own, unless its first type is `object`: it gets no selector to pin a type, so the options render as they do without the `ui:field`.
+With it off the same name renders the unsupported-field template, which renders nothing of the schema, so there is nothing for the options to give way to and they are rendered in its place.
+
+An `anyOf`/`oneOf` that is empty, or left `undefined`, offers no options to give way to, so the field renders as it does for a schema without the keyword, and `ui:disabled` applies to it as to any other field.
 
 ### `ui:options`
 
@@ -281,7 +307,7 @@ It can also be enabled globally by setting the `allowClearTextInputs` option to 
 uiSchema directive.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -291,6 +317,8 @@ const uiSchema: UiSchema = {
     allowClearTextInputs: true,
   },
 };
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### autocomplete
@@ -381,7 +409,7 @@ const uiSchema: UiSchema = {
 It can also be set globally by specifying the `deprecatedHandling` option in the `ui:globalOptions` uiSchema directive, which applies the chosen behavior to every deprecated field in the form.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -405,16 +433,20 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 ### disabled
 
 The `ui:disabled` uiSchema directive will disable all child widgets from a given field.
+On an array item, it disables the item's move, copy and remove buttons too, see [Disabling specific items](../json-schema/arrays.md#disabling-specific-items).
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
 
 ### enableMarkdownInDescription
 
 The `ui:enableMarkdownInDescription` uiSchema directive enables the support of Markdown syntax within the description of
-a field.
+a field. It renders through the registered [`MarkdownTemplate`](../advanced-customization/custom-templates.md#markdowntemplate),
+whose core default is plain text, so a renderer has to be registered as well — `@rjsf/core/markdown` provides one and
+needs `markdown-to-jsx` installed.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -422,14 +454,18 @@ const schema: RJSFSchema = { type: 'string', description: '**bolded** text in th
 const uiSchema: UiSchema = {
   'ui:enableMarkdownInDescription': true,
 };
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+  document.getElementById('app'),
+);
 ```
 
 It can also be enabled globally by setting the `enableMarkdownInDescription` option to `true` in the `ui:globalOptions`
 uiSchema directive.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -440,16 +476,21 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+  document.getElementById('app'),
+);
 ```
 
 ### enableMarkdownInHelp
 
 The `ui:enableMarkdownInHelp` uiSchema directive enables the support of Markdown syntax within the help displayed for
-a field.
+a field. Like `ui:enableMarkdownInDescription`, it renders through the registered
+[`MarkdownTemplate`](../advanced-customization/custom-templates.md#markdowntemplate) and needs a renderer registered.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -458,14 +499,18 @@ const uiSchema: UiSchema = {
   'ui:enableMarkdownInHelp': true,
   'ui:help': '**bolded** text in the help',
 };
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+  document.getElementById('app'),
+);
 ```
 
 It can also be enabled globally by setting the `enableMarkdownInHelp` option to `true` in the `ui:globalOptions`
 uiSchema directive.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -477,7 +522,10 @@ const uiSchema: UiSchema = {
   'ui:help': '**bolded** text in the help',
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+  document.getElementById('app'),
+);
 ```
 
 ### enableOptionalDataFieldForType
@@ -499,6 +547,8 @@ When enabled for either (or both) the `array` or `object` types, any optional ob
 Instead the object/array container's field title will have an "Add optional data" icon button that, when clicked will cause an empty container data element to be added to `formData`.
 
 When enabled for either (or both) the `array` or `object` types, any optional object or array field which has an "defined" value in `formData` will render all of the container's UI elements as normal AND the object/array container's field title will have a "Remove optional data" icon button that, when clicked will set the data for field in the `formData` to "undefined".
+
+An `additionalProperties` entry never shows the controls, whatever this directive says: it is present while its key is, and is taken away by its own remove button, or not at all where a layout grid names its key.
 
 Here is an example of what the UI will look like when enabled using the following `Form` configuration:
 
@@ -527,7 +577,7 @@ const uiSchema = {
     enableOptionalDataFieldForType: ['object', 'array'],
   },
 };
-const experimental_defaultFormStateBehavior = {
+const defaultFormStateBehavior = {
   // Set the emptyObjectFields to only populate required defaults to highlight the code working
   emptyObjectFields: 'populateRequiredDefaults',
 };
@@ -537,7 +587,7 @@ render(
     schema={schema}
     validator={validator}
     uiSchema={uiSchema}
-    experimental_defaultFormStateBehavior={experimental_defaultFormStateBehavior}
+    defaultFormStateBehavior={defaultFormStateBehavior}
     templates={{ OptionalDataControlsTemplate }}
   />,
   document.getElementById('app'),
@@ -554,11 +604,16 @@ render(
 
 ### emptyValue
 
-The `ui:emptyValue` uiSchema directive provides the value to store when the input for a field is emptied, whether by typing or by clicking the `ui:allowClearTextInputs` clear button. It defaults to `undefined`, which omits the field from the form data entirely.
+The `ui:emptyValue` uiSchema directive provides the value to store whenever a field is blank — whether it was emptied by typing, by clicking the `ui:allowClearTextInputs` clear button, was never filled in on initial render, or is blank again after a form reset. It defaults to `undefined`, which omits the field from the form data entirely.
+
+> Note: because it now populates untouched fields too, `ui:emptyValue` can change what validation reports for a field the user never interacted with. A non-empty `emptyValue` (e.g. `''`) can trip a schema constraint the field would otherwise never see — `minLength`, `pattern`, `format`, or an `enum` that doesn't include that value — on an optional field. On a schema-required field, it has the opposite effect: an `emptyValue` present from the first render satisfies `required` even though the user never entered anything, so pair it with a schema constraint (like `minLength`) if an effectively-empty value shouldn't be allowed to pass as complete.
+>
+> Note: for array items, the plain-object and array (per-tuple-position) forms of `uiSchema.items` are both applied when computing defaults (including a `minItems` filler item or a new row added via the array's "Add" button, which uses `uiSchema.additionalItems` instead when it's added past a fixed/tuple `items` schema); the dynamic `(itemData, index, formContext) => UiSchema` function form can't be resolved before there's item data to call it with, so it's ignored for that purpose (it still works normally for rendering existing items).
 
 ### enumDisabled
 
 To disable an option, use the `enumDisabled` property in uiSchema.
+A primitive value matches strictly, and an object or array value by deep equality.
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -576,6 +631,8 @@ const uiSchema: UiSchema = {
 ### enumNames
 
 Allows a user to provide labels for enum values in the schema. Can be an array (matched by index) or a map (matched by value).
+
+A map's keys are strings, so it names a string, number, boolean or `null` value by its `String()` form, and can't name an object or array value; use the array form for those. An object or array value without a name is labelled with its JSON.
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -600,6 +657,10 @@ const uiSchemaMap: UiSchema = {
 
 Controls the display order of enum options. Use `'*'` to represent remaining values in their original schema order. Unlisted values not covered by `'*'` are dropped.
 
+An entry matches the enum value equal to it. Failing that, an object or array entry matches one deeply equal to it, and a primitive entry one sharing its string form, so `'1'` matches the enum value `1`.
+Each enum value goes to the first entry that finds it, and an entry takes the next value not yet found, so `['1', '1']` over the enum `[1, '1']` lists `'1'` and then `1`.
+Only the first `'*'` lists the remaining values, and a `ui:enumOrder` that isn't a list is ignored.
+
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 
@@ -610,6 +671,25 @@ const schema: RJSFSchema = {
 
 const uiSchema: UiSchema = {
   'ui:enumOrder': ['cherry', '*', 'apple'],
+};
+```
+
+It orders the options of an `anyOf` or `oneOf` made entirely of constants the same way, naming each option by its constant.
+Options keep their schema order when any of them is read through a discriminator or `ui:optionsSchemaSelector`.
+A `ui:title` in `uiSchema.anyOf`/`uiSchema.oneOf` still names the option at its position in the schema, wherever the order shows it.
+
+```tsx
+const schema: RJSFSchema = {
+  type: 'string',
+  anyOf: [
+    { const: 'OPTION1', title: 'op1' },
+    { const: 'OPTION2', title: 'op2' },
+    { const: 'OPTION3', title: 'op3' },
+  ],
+};
+
+const uiSchema: UiSchema = {
+  'ui:enumOrder': ['OPTION3', '*'],
 };
 ```
 
@@ -647,6 +727,8 @@ const uiSchema: UiSchema = {
 
 ![](https://i.imgur.com/scJUuZo.png)
 
+`ui:help` also accepts a `ReactElement`, which is rendered as-is; for markup in a string, use `ui:enableMarkdownInHelp`.
+
 Help texts work for any kind of field at any level, and will always be rendered immediately below the field component widget(s) (after contextualized errors, if any).
 
 ### hideError
@@ -656,6 +738,41 @@ The `ui:hideError` uiSchema directive will, if set to `true`, hide the default e
 If you need to enable the default error display of a child in the hierarchy after setting `hideError: true` on the parent field, simply set `hideError: false` on the child.
 
 This is useful when you have a custom field or widget that utilizes either the `rawErrors` or the `errorSchema` to manipulate and/or show the error(s) for the field/widget itself.
+
+The default error display includes the theme's own error styling, such as a red outline or an invalid flag on the input, not just the error messages.
+It does not include the [error list](./form-props.md#showerrorlist) rendered for the form as a whole, which is controlled separately by `showErrorList`.
+
+Because `rawErrors` is still passed to fields and widgets while errors are hidden, a custom field or widget deciding whether to render an error state must not read `rawErrors` alone.
+Its field's plan, `presentation`, applies the directive: its `errors.messages` is empty, and its control isn't `aria-invalid`, while the errors are hidden.
+A widget reads its error state from [`hasWidgetErrors()`](./utility-functions.md#haswidgeterrors), which follows that `aria-invalid`, and the messages it draws itself from [`getErrorsToDraw()`](./utility-functions.md#geterrorstodraw), each falling back to `rawErrors` with `hideError` only for a widget rendered without a plan.
+
+A `FieldTemplate` is handed the errors on the other terms: its `rawErrors` is `undefined` while they are hidden, so a template styling itself from that alone needs no change, and one rendering the errors itself reads them from `errorSchema`, which carries them whatever `hideError` says.
+
+### initialValue
+
+The `ui:initialValue` uiSchema directive pre-fills a field on initial render and after a form reset. It takes priority over `schema.default`, but never overrides form data that has already been provided. This is useful for a field, often hidden, that a particular form wants to fix to a known value without changing the underlying schema:
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    country: { type: 'string' },
+  },
+};
+
+const uiSchema: UiSchema = {
+  country: {
+    'ui:widget': 'hidden',
+    'ui:initialValue': 'US',
+  },
+};
+```
+
+> Note: `ui:initialValue` is applied as an ordinary default, the same way `schema.default` is, so it comes back after the field is cleared (`onChange` storing `undefined` re-triggers default computation, which reapplies it) rather than leaving the field genuinely empty. If a field needs to be clearable, pair `ui:initialValue` with a distinct [`ui:emptyValue`](#emptyvalue) rather than relying on it alone.
+>
+> The same [array-items caveat as `ui:emptyValue`](#emptyvalue) applies to array items too.
 
 ### inputType
 
@@ -678,7 +795,7 @@ Field labels are rendered by default.
 Labels may be omitted on a per-field by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -695,7 +812,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 They can also be omitted globally by setting the `label` option to `false` in the `ui:globalOptions` uiSchema directive.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -709,17 +826,66 @@ const uiSchema: UiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
+### optgroups
+
+To group a `select`-backed widget's options into labeled sections (rendered as `<optgroup>` elements, or each theme's closest equivalent), specify the grouping via the `optgroups` key in `ui:options`.
+Keys are the group labels, values are arrays of enum values belonging to that group.
+Any enum values not listed in a group are rendered ungrouped after the groups. This is supported by every `@rjsf` theme package.
+
+A value in a group matches the enum entry it is equal to.
+Object and array values also match by deep equality, and primitive values by their string form, the same way `ui:enumOrder` does, so `'1'` groups the enum value `1`.
+Values that match no enum entry are ignored, and a group with no matching entries is not rendered.
+`ui:enumDisabled`, which often sits beside `optgroups` in the same `ui:options` block, does not share that string-form fallback — it matches primitive enum values strictly.
+So for the enum `[1, 2, 3]`, `{ enumDisabled: ['2'], optgroups: { Low: ['1', '2'] } }` groups `2` but leaves it selectable; write the enum's own value (`2`) in `enumDisabled`.
+
+Groups render in the object's property order. JavaScript always places integer-like keys (such as `'2024'`) first, in ascending numeric order, ahead of every other key no matter where they were written.
+So `{ Newest: [...], '2024': [...], '2023': [...] }` renders as `2023`, `2024`, `Newest`.
+To keep numeric labels in the order you wrote them, make them non-integer strings (for example `'Year 2024'`).
+
+Grouping is purely presentational and never changes what a form submits.
+A `multiple` select reports its selected values in whatever order it would have reported them in without `optgroups`, so adding, reordering or removing a group leaves the order of the submitted array alone.
+That underlying order is the theme's own: `@rjsf/core` and `@rjsf/react-bootstrap` render a native `<select>`, which exposes no selection order at all, so they report enum order; the themes built on a custom dropdown track the selection themselves and order it their own way.
+
+Each theme groups with whatever primitive its UI library provides, so the accessible semantics vary slightly.
+The one caveat worth knowing is `@rjsf/mui`: MUI's `Select` clones every child of its list with `role="option"` and offers no group primitive, so group labels are rendered as `ListSubheader`s marked `aria-disabled` — announced, but not offered as selectable choices.
+A consequence worth knowing when writing tests: in `@rjsf/mui`, and only there, a query like `getAllByRole('option')` counts the group labels alongside the real options.
+
+`@rjsf/antd` and `@rjsf/mantine` render a select you can type in to narrow the options, and that search matches option labels only, never group labels.
+A group whose options the search rules out disappears along with them instead of leaving its label behind.
+
+```tsx
+import Form from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  enum: ['lorem', 'ipsum', 'dolorem', 'alpha', 'beta', 'gamma'],
+};
+
+const uiSchema: UiSchema = {
+  'ui:options': {
+    optgroups: {
+      Latin: ['lorem', 'ipsum', 'dolorem'],
+      Greek: ['alpha', 'beta', 'gamma'],
+    },
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
 ### optionValueFormat
 
 Controls how enum-backed widgets (`select`, `radio`, `checkboxes`) encode option values in their DOM `value` attributes. Accepts `'indexed'` (default) or `'realValue'`.
 
 - `'indexed'`: options are encoded as their array index (e.g. `value="0"`, `value="1"`). This is the historical behavior and keeps non-primitive enum values (objects, arrays) addressable without stringifying them.
-- `'realValue'`: primitive option values are stringified directly (e.g. `value="admin"`, `value="42"`, `value="true"`). This enables native HTML form submission and browser autocomplete since the submitted value matches the enum value. Non-primitive values (objects, arrays) still fall back to their index because `String(obj)` would produce `"[object Object]"`.
+- `'realValue'`: primitive option values are stringified directly (e.g. `value="admin"`, `value="42"`, `value="true"`). This enables native HTML form submission and browser autocomplete since the submitted value matches the enum value. Non-primitive values (objects, arrays) fall back to their index, prefixed with `__rjsf_index:` (e.g. `value="__rjsf_index:2"`), because `String(obj)` would produce `"[object Object]"`. So does `null`, since `String(null)` can't be told apart from the string `'null'`, and so does the empty string, which is the value of the select's empty placeholder. The prefix keeps that index from colliding with a primitive option spelled as the same number. Primitive options whose string is the same, such as `1` and `'1'`, are each encoded as their prefixed index too, so every option keeps a DOM value of its own.
 
 The form data passed to `onChange` is always the typed enum value; this option only affects the DOM-level encoding. Can be specified in `ui:globalOptions` to apply to all enum-backed fields, or per-field in `ui:options`.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -758,7 +924,7 @@ This property allows you to reorder the properties that are shown for a particul
 You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -773,7 +939,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -788,15 +954,60 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 ### readonly
 
 The `ui:readonly` uiSchema directive will mark all child widgets from a given field as read-only. This is equivalent to setting the `readOnly` property in the schema.
+On an array item, either one disables the item's move, copy and remove buttons too, see [Disabling specific items](../json-schema/arrays.md#disabling-specific-items).
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
+
+### required
+
+The `ui:required` uiSchema directive overrides a field's `required` status on the UI side only. Setting it to `true` shows the required indicator and adds the field to the effective required set used for validation, even if the schema doesn't mark it required. Setting it to `false` hides the required indicator on a schema-required field, but does **not** suppress schema-level validation — if the field is left empty, validation still fails.
+
+Because of that, `ui:required: false` is only useful alongside `ui:initialValue` or `ui:emptyValue`, which guarantee the field always has a value. If it's used on a schema-required field without either, a `console.warn` naming the field is emitted, since the UI would show the field as optional while validation still rejects an empty value. It is logged once per page for a given field rather than on every re-render, so a test asserting on it needs `resetLogOnce()` beforehand (see [`logOnce()`](./utility-functions.md#logonce)):
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  required: ['country'],
+  properties: {
+    country: { type: 'string' },
+    nickname: { type: 'string' },
+  },
+};
+
+const uiSchema: UiSchema = {
+  country: {
+    'ui:widget': 'hidden',
+    'ui:initialValue': 'US',
+    'ui:required': false, // hidden and pre-filled, no need to show as required
+  },
+  nickname: {
+    'ui:required': true, // required in this form, even though the schema doesn't say so
+  },
+};
+```
+
+On an array rendered as one widget, such as a group of checkboxes, a multiple select, a file input or a custom widget named by `ui:widget`, `ui:required: true` also rejects an empty array, so something has to be chosen. On an array rendered as a list of items, through a `ui:field` of your own, or by the `hidden` widget, only a missing value is rejected, and an empty array counts as a value: give it `minItems: 1` to have the form demand an item.
+
+On a checkbox, `ui:required: true` shows the indicator while the box holds no value yet, since nothing seeds the `false` a schema-required `boolean` gets and the form blocks that submit; once it holds `false`, that counts as an answer. A `CheckboxWidget` of your own marks its label where both the `required` it is handed and [`templateMarksRequired()`](./utility-functions.md#templatemarksrequired) hold (see [Custom Widgets](../advanced-customization/custom-widgets-fields.md)).
+
+On an `anyOf`/`oneOf` field, `ui:required: true` in the entry of `uiSchema.oneOf` or `uiSchema.anyOf` for the option shown requires the field while that option is shown, and shows the indicator on the field's label. An entry that leaves `ui:required` unset takes the field's own, so `ui:required: true` beside `oneOf` also has a group of checkboxes an option shows reject an empty array. An option that renders options of its own doesn't hand it on to them. A `null` option, or one with no `type` that renders the unsupported-field template, has no control to answer with, so its own `ui:required` doesn't require the field.
+
+`ui:required` must be set per field, as it isn't one of the options read from [`ui:globalOptions`](#uiglobaloptions).
+
+`ui:required` is enforced by walking the form the same way it's rendered — resolving each node's schema (`$ref`, `allOf`, `dependencies`, `if`/`then`/`else`, the selected `oneOf`/`anyOf` branch) and uiSchema (including a [`ui:definitions`](#ui-definitions) fragment) against the current `formData`, exactly as `SchemaField` does. Because of that, it's enforced everywhere a field can appear — nested objects, array items, a `ui:definitions` fragment, a field only reachable through `dependencies`/`$ref`/`allOf`, and inside the currently-selected `oneOf`/`anyOf` branch — on both the submit and `liveValidate` paths, and by precompiled validators (which never see the schema mutated, since it isn't). Under `liveValidate`, a change to `uiSchema` or `formContext` alone doesn't re-validate: if `ui:required` depends on state outside the form, the error appears on the next data change, blur or submit.
+
+The one difference worth knowing: a `ui:required` error is built by RJSF itself, not by your validator, so it has a `property` and `message` but not a validator-specific shape (e.g. AJV's `params.missingProperty`/`schemaPath`), and it does not pass through a custom `transformErrors` function the way schema-level errors do. It renders under the field and participates in `focusOnFirstError` normally, worded identically to a schema-level required error (`must have required property 'x'`) so it reads the same in an error list.
+
+A known limitation under `oneOf`/`anyOf`: which branch is "selected" is picked by matching `formData` against each option's schema, the same way `MultiSchemaField` picks its initial branch. `MultiSchemaField` then keeps the user's own selection in component state, independent of that matching, so once the `formData` for the field no longer disambiguates the options (e.g. it's empty, or matches more than one branch equally well), a manual switch between options can leave the enforced branch out of sync with the one actually rendered — a `ui:required` error can appear for a field that isn't shown, or fail to appear for one that is. This can't be fixed from outside the rendered form, since the walk that enforces `ui:required` has no access to `MultiSchemaField`'s component state. It only arises when the data itself doesn't distinguish the branches; giving each option a distinguishing property (e.g. a `const`-valued discriminator field) avoids it entirely.
 
 ### rows
 
 You can set the initial height of a textarea widget by specifying `rows` option.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -973,5 +1184,82 @@ const uiSchema: UiSchema = {
 - [AntD Customization](themes/antd/uiSchema.md)
 - [Chakra-UI Customization](themes/chakra-ui/uiSchema.md)
 - [MUI Customization](themes/mui/uiSchema.md)
-- [PrimeReact Customization](themes/primereact/uiSchema.md)
-- [Semantic-UI Customization](themes/semantic-ui/uiSchema.md)
+
+## Type-safe UiSchema
+
+`UiSchema<T>` checks that a nested key names a real field of `T` (see the [v7 upgrade guide](../migration-guides/v7.x%20upgrade%20guide.md#uischemat-checks-field-names-breaking-change)), but by default it does not check the _values_ given to a field's `ui:widget`/`ui:field`/`ui:options` against that field's type - a widget name that doesn't apply to the field it's on (`{ 'ui:widget': 'RangeWidget' }` on a `string` field), or a typo in a `ui:`-prefixed option name (`ui:wigdet`), still only surfaces at runtime, if at all.
+
+`StrictUiSchema<Checks, T, S, F>` is the opt-in form of `UiSchema` that closes that gap. Pass it a `Checks` union and it narrows `ui:widget`, `ui:field` and `ui:options` (and their `ui:`-prefixed equivalents, e.g. `ui:placeholder`) to only the values valid for each field's form-data type, recursing into nested objects/arrays the same way. `@rjsf/utils` itself has no widgets of its own, so it has no vocabulary to pass - each theme exports its own `Checks` union next to its widgets; `@rjsf/core` exports `CoreUiOptionsChecks`, describing its own built-in widget/field/option vocabulary:
+
+```ts
+import type { CoreUiOptionsChecks } from '@rjsf/core';
+import type { StrictUiSchema } from '@rjsf/utils';
+
+interface FormData {
+  age: number;
+  bio: string;
+}
+
+const uiSchema: StrictUiSchema<CoreUiOptionsChecks, FormData> = {
+  age: { 'ui:widget': 'RangeWidget' }, // ok - RangeWidget is valid for `number`
+  bio: {
+    // @ts-expect-error RangeWidget is not valid for a `string` field
+    'ui:widget': 'RangeWidget',
+  },
+};
+```
+
+Using `StrictUiSchema` is entirely opt-in, and can be adopted incrementally, field by field or form by form - `UiSchema<T>` behaves exactly as it always has (fully open, no narrowing).
+
+### Extending the widget/option vocabulary
+
+The widget/field names and options a `Checks` union declares are built from `UiOptionsCheck<When, Then>` rules: "when a field's type is assignable to `When`, the names/options in `Then` become valid for it." Extend a built-in vocabulary - `@rjsf/core`'s `CoreUiOptionsChecks`, or a theme's own equivalent - by unioning in your own `UiOptionsCheck` entries, not by modifying or augmenting that export itself. `Checks` is also never included automatically - union it in yourself with whatever else you want to add:
+
+```ts
+import type { CoreUiOptionsChecks } from '@rjsf/core';
+import type { StrictUiSchema, UiOptionsCheck } from '@rjsf/utils';
+
+type MyThemeChecks = UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>;
+type MyUiSchema<T = unknown> = StrictUiSchema<CoreUiOptionsChecks | MyThemeChecks, T>;
+
+const uiSchema: MyUiSchema<{ active: boolean }> = {
+  active: { 'ui:widget': 'ToggleWidget' },
+};
+```
+
+A generic type that passes its own `Checks` on to `StrictUiSchema` constrains them with `AnyUiOptionsCheck`, which `StrictUiSchema` uses itself. `UiOptionsCheck` alone is narrower: its default `Then` is a `Record<string, unknown>`, which a `Then` written as an interface doesn't fit, since an interface has no index signature:
+
+```ts
+import type { AnyUiOptionsCheck, StrictUiSchema, UiOptionsCheck } from '@rjsf/utils';
+
+interface ToggleThen {
+  widget?: 'ToggleWidget';
+}
+type Wrap<C extends AnyUiOptionsCheck> = StrictUiSchema<C, { active: boolean }>;
+
+const uiSchema: Wrap<UiOptionsCheck<boolean, ToggleThen>> = { active: { 'ui:widget': 'ToggleWidget' } };
+```
+
+### Known gaps
+
+- With no form-data type (`T` defaulting to `unknown`), a `StrictUiSchema` does **not** fall back to unrestricted strings for `ui:widget`/`ui:field` - they're still limited to the names declared in `Checks`, every one of them, since data of an unknown type could match any `when`. Its other keys are not narrowed at all, so a nested field, or a misspelled `ui:` key such as `ui:wigdet`, is not caught. Every `ui:definitions` entry falls into this gap, since a definition applies to whichever field references it and its data type can't be known from the `$ref` key: its `ui:widget`/`ui:field` names and its declared options (in `ui:options` or as `ui:` keys) are still checked against `Checks`, but an undeclared `ui:` key or a nested field key is not. Pass an actual widget/field component instance instead of a string, or extend `Checks`, for anything not already covered.
+- A key declared beside an index signature (e.g. from `additionalProperties`/`patternProperties`) is checked against the index signature's value type, as every dynamic key is, not against its own. In `{ name: string; [key: string]: string | number }`, `name` takes a uiSchema for `string | number`: a misspelled `ui:` key is still caught, but a number widget is accepted for it. Its `ui:widget`, `ui:field` and options are narrowed to its own type only where the index signature's value type is that type, as in `{ name: string; [key: string]: string }`.
+- A `UiSchema<Record<string, V>>` rejects every `ui:` key when its `V` can't hold every value, such as `Record<string, string>`, since it reads each key as an entry of the data. A `V` that can, such as `unknown`, `any` or `{} | null | undefined`, accepts them. Its entries and `additionalProperties` are unaffected, so where such an object needs `ui:` keys of its own, give the form the wider type: `<Form<Record<string, unknown>>>` takes a `Record<string, string | undefined>` as its `initialFormData`. `Form` otherwise infers `T` from `initialFormData`.
+- An index signature holding `unknown` values, as in `Record<string, unknown>` or `{ name: string; [key: string]: unknown }`, leaves every key of that object unchecked, the declared ones included: an entry is `unknown`, and a misspelled `ui:` key such as `ui:wigdet` is not caught. `ui:widget`, `ui:field` and the options `Checks` declares are still narrowed for the object itself.
+
+### Applying it to an inline uiSchema with `satisfies`
+
+`FormProps['uiSchema']` is typed as the open `UiSchema<T, S, F>`, so an inline `uiSchema` object literal passed directly as a JSX prop gets no narrowing at all. A variable declared as `const uiSchema: StrictUiSchema<CoreUiOptionsChecks, FormData> = {...}` doesn't help either: its closed `ui:options` has no index signature, so that declared type isn't assignable to the open `UiSchema` the prop expects. Check the object literal against the closed form with TypeScript's `satisfies` operator instead. `satisfies` validates the expression while leaving the expression's own type in place, so the value still fits the prop, inline or through a `const uiSchema = {...} satisfies StrictUiSchema<CoreUiOptionsChecks, FormData>`, with no cast:
+
+```tsx
+<Form
+  schema={schema}
+  uiSchema={
+    {
+      // Compile error: RangeWidget is not valid for `bio`, a string field.
+      bio: { 'ui:widget': 'RangeWidget' },
+    } satisfies StrictUiSchema<CoreUiOptionsChecks, FormData>
+  }
+  validator={validator}
+/>
+```

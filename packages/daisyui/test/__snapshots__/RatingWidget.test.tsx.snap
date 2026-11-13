@@ -6,9 +6,13 @@ exports[`RatingWidget > renders in disabled state 1`] = `
     class="form-control w-full"
   >
     <div
+      aria-labelledby="test-id__label"
       class="rating gap-1 "
+      id="test-id"
+      role="radiogroup"
     >
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="0 stars"
         class="mask mask-star-2 bg-orange-400"
         disabled=""
@@ -18,6 +22,7 @@ exports[`RatingWidget > renders in disabled state 1`] = `
         value="0"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="1 star"
         class="mask mask-star-2 bg-orange-400"
         disabled=""
@@ -27,6 +32,7 @@ exports[`RatingWidget > renders in disabled state 1`] = `
         value="1"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="2 stars"
         class="mask mask-star-2 bg-orange-400"
         disabled=""
@@ -36,6 +42,7 @@ exports[`RatingWidget > renders in disabled state 1`] = `
         value="2"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="3 stars"
         checked=""
         class="mask mask-star-2 bg-orange-400"
@@ -46,6 +53,7 @@ exports[`RatingWidget > renders in disabled state 1`] = `
         value="3"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="4 stars"
         class="mask mask-star-2 bg-orange-400"
         disabled=""
@@ -65,9 +73,13 @@ exports[`RatingWidget > renders in readonly state 1`] = `
     class="form-control w-full"
   >
     <div
+      aria-labelledby="test-id__label"
       class="rating gap-1 "
+      id="test-id"
+      role="radiogroup"
     >
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="0 stars"
         class="mask mask-star-2 bg-orange-400"
         disabled=""
@@ -77,6 +89,7 @@ exports[`RatingWidget > renders in readonly state 1`] = `
         value="0"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="1 star"
         class="mask mask-star-2 bg-orange-400"
         disabled=""
@@ -86,6 +99,7 @@ exports[`RatingWidget > renders in readonly state 1`] = `
         value="1"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="2 stars"
         class="mask mask-star-2 bg-orange-400"
         disabled=""
@@ -95,6 +109,7 @@ exports[`RatingWidget > renders in readonly state 1`] = `
         value="2"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="3 stars"
         checked=""
         class="mask mask-star-2 bg-orange-400"
@@ -105,6 +120,7 @@ exports[`RatingWidget > renders in readonly state 1`] = `
         value="3"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="4 stars"
         class="mask mask-star-2 bg-orange-400"
         disabled=""
@@ -124,9 +140,13 @@ exports[`RatingWidget > renders with default props (value=0) 1`] = `
     class="form-control w-full"
   >
     <div
+      aria-labelledby="test-id__label"
       class="rating gap-1 "
+      id="test-id"
+      role="radiogroup"
     >
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="0 stars"
         checked=""
         class="mask mask-star-2 bg-orange-400"
@@ -136,6 +156,7 @@ exports[`RatingWidget > renders with default props (value=0) 1`] = `
         value="0"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="1 star"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -144,6 +165,7 @@ exports[`RatingWidget > renders with default props (value=0) 1`] = `
         value="1"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="2 stars"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -152,6 +174,7 @@ exports[`RatingWidget > renders with default props (value=0) 1`] = `
         value="2"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="3 stars"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -160,6 +183,7 @@ exports[`RatingWidget > renders with default props (value=0) 1`] = `
         value="3"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="4 stars"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -178,9 +202,13 @@ exports[`RatingWidget > renders with maximum stars from schema 1`] = `
     class="form-control w-full"
   >
     <div
+      aria-labelledby="test-id__label"
       class="rating gap-1 "
+      id="test-id"
+      role="radiogroup"
     >
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="0 stars"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -189,6 +217,7 @@ exports[`RatingWidget > renders with maximum stars from schema 1`] = `
         value="0"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="1 star"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -197,6 +226,7 @@ exports[`RatingWidget > renders with maximum stars from schema 1`] = `
         value="1"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="2 stars"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -205,6 +235,7 @@ exports[`RatingWidget > renders with maximum stars from schema 1`] = `
         value="2"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="3 stars"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -213,6 +244,7 @@ exports[`RatingWidget > renders with maximum stars from schema 1`] = `
         value="3"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="4 stars"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -231,9 +263,13 @@ exports[`RatingWidget > renders with value=3 1`] = `
     class="form-control w-full"
   >
     <div
+      aria-labelledby="test-id__label"
       class="rating gap-1 "
+      id="test-id"
+      role="radiogroup"
     >
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="0 stars"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -242,6 +278,7 @@ exports[`RatingWidget > renders with value=3 1`] = `
         value="0"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="1 star"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -250,6 +287,7 @@ exports[`RatingWidget > renders with value=3 1`] = `
         value="1"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="2 stars"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"
@@ -258,6 +296,7 @@ exports[`RatingWidget > renders with value=3 1`] = `
         value="2"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="3 stars"
         checked=""
         class="mask mask-star-2 bg-orange-400"
@@ -267,6 +306,7 @@ exports[`RatingWidget > renders with value=3 1`] = `
         value="3"
       />
       <input
+        aria-describedby="test-id__error test-id__description test-id__help"
         aria-label="4 stars"
         class="mask mask-star-2 bg-orange-400"
         name="test-id"

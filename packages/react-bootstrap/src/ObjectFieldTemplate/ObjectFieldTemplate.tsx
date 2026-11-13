@@ -1,45 +1,49 @@
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import {
+  buttonId,
+  descriptionId,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  titleDrawsOptionalDataControl,
+  titleId,
+} from '@rjsf/utils';
+import { Col, Container, Row } from 'react-bootstrap';
 
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  description,
-  title,
-  properties,
-  required,
-  uiSchema,
-  fieldPathId,
-  schema,
-  formData,
-  optionalDataControl,
-  onAddProperty,
-  disabled,
-  readonly,
-  registry,
-}: ObjectFieldTemplateProps<T, S, F>) {
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
+  F extends FormContextType = FormContextType,
+>(props: ObjectFieldTemplateProps<T, S, F>) {
+  const {
+    description,
+    title,
+    properties,
+    required,
+    uiSchema,
+    presentation,
+    id,
+    schema,
+    formData,
+    optionalDataControl,
+    onAddProperty,
+    disabled,
+    readonly,
     registry,
-    uiOptions,
-  );
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
   return (
-    <>
+    <div id={id} role='group' {...getContainerAttributes(presentation, id, title)}>
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -50,7 +54,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(fieldPathId)}
+          id={presentation?.description.id ?? descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -59,16 +63,20 @@ export default function ObjectFieldTemplate<
       )}
       <Container fluid className='p-0'>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-        {properties.map((element: any) => (
-          <Row key={element.name} style={{ marginBottom: '10px' }} className={element.hidden ? 'd-none' : undefined}>
+        {properties.map((element) => (
+          <Row
+            key={element.content.key}
+            style={{ marginBottom: '10px' }}
+            className={element.hidden ? 'd-none' : undefined}
+          >
             <Col xs={12}> {element.content}</Col>
           </Row>
         ))}
-        {canExpand(schema, uiSchema, formData) ? (
+        {schemaUtils.canExpand(schema, uiSchema, formData) ? (
           <Row>
             <Col xs={{ offset: 11, span: 1 }} className='py-0.5'>
               <AddButton
-                id={buttonId(fieldPathId, 'add')}
+                id={buttonId(id, 'add')}
                 onClick={onAddProperty}
                 disabled={disabled || readonly}
                 className='rjsf-object-property-expand'
@@ -79,6 +87,6 @@ export default function ObjectFieldTemplate<
           </Row>
         ) : null}
       </Container>
-    </>
+    </div>
   );
 }

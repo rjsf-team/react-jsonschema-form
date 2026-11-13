@@ -1,20 +1,36 @@
 import type { ChangeEvent, FocusEvent } from 'react';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { ariaDescribedByIds } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { getControlAttributes, toInputValue } from '@rjsf/utils';
 import { Input } from 'antd';
+
+import useControlState from '../../controlState.ts';
 
 /** The `PasswordWidget` component uses the `BaseInputTemplate` changing the type to `password`.
  *
  * @param props - The `WidgetProps` for this component
  */
 export default function PasswordWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { disabled, registry, id, onBlur, onChange, onFocus, options, placeholder, readonly, value } = props;
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const {
+    autofocus,
+    disabled,
+    registry,
+    id,
+    htmlName,
+    onBlur,
+    onChange,
+    onFocus,
+    options,
+    placeholder,
+    readonly,
+    required,
+    value,
+    presentation,
+  } = props;
+  const control = useControlState<T, S, F>({ disabled, readonly, registry });
 
   const emptyValue = options.emptyValue || '';
 
@@ -27,15 +43,18 @@ export default function PasswordWidget<
 
   return (
     <Input.Password
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      autoFocus={autofocus}
+      disabled={control.disabled}
       id={id}
-      name={id}
+      name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
-      value={value || ''}
-      aria-describedby={ariaDescribedByIds(id)}
+      readOnly={readonly}
+      required={required}
+      value={toInputValue(value)}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );
 }

@@ -1,20 +1,21 @@
 import type { ChangeEvent, PropsWithChildren } from 'react';
 import { useCallback, useState } from 'react';
 import type { FieldProps } from '@rjsf/utils';
+import { partId } from '@rjsf/utils';
 
 const COLORS = ['red', 'green', 'blue'];
 
-export default function SpecialInput({ id, fieldPathId, onChange, formData }: PropsWithChildren<FieldProps>) {
-  const [text, setText] = useState<string>(formData || '');
+export default function SpecialInput({ id, fieldPath, onChange, formData }: PropsWithChildren<FieldProps>) {
+  const [text, setText] = useState<string>(typeof formData === 'string' ? formData : '');
 
   const inputBgColor = COLORS[text.length % COLORS.length];
 
   const handleOnChange = useCallback(
     ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-      onChange(value, fieldPathId.path);
+      onChange(value, fieldPath);
       setText(value);
     },
-    [onChange, fieldPathId, setText],
+    [onChange, fieldPath, setText],
   );
 
   return (
@@ -27,9 +28,9 @@ export default function SpecialInput({ id, fieldPathId, onChange, formData }: Pr
       </p>
       <div className='row'>
         <div className='col-sm-6'>
-          <label htmlFor={`${id}-special-input`}>SpecialInput</label>
+          <label htmlFor={partId(id, 'specialInput')}>SpecialInput</label>
           <input
-            id={`${id}-special-input`}
+            id={partId(id, 'specialInput')}
             className='form-control'
             style={{ background: inputBgColor, color: 'white', fontSize: 14 }}
             value={text}

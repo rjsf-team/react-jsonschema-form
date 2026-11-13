@@ -41,7 +41,7 @@ pnpm run clean-build
 ```
 
 The first command will delete all of the `node_modules` directories in the environment and then rerun `pnpm install`.
-The second command cleans up the typescript build cache files before retrying the build.
+The second command deletes every package's built `lib/` before retrying the build.
 
 Worst case scenario when neither of those commands work, try running `pnpm run nuke-build-env` and then rerun the two commands.
 
@@ -51,10 +51,58 @@ When building in environments with limited memory, such as Netlify, it's recomme
 
 ## Coding style
 
-All the JavaScript/Typescript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style.
-Code is automatically prettified upon commit using precommit hooks, assuming you followed the `First time step` above.
+All the JavaScript/Typescript code in this project is formatted with [oxfmt](https://oxc.rs/docs/guide/usage/formatter) and linted with [oxlint](https://oxc.rs/docs/guide/usage/linter).
+oxfmt formats every file type it supports, not just source: Markdown, YAML, JSON and CSS are checked too, so a changelog or docs edit can need formatting as much as a component does.
+Staged files are automatically formatted upon commit using precommit hooks, assuming you followed the `First time step` above.
 
-You can also run `pnpm cs-format` within any package directory you are changing.
+CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the repository root for any commit the hooks did not see — one made with `--no-verify`, from a fresh worktree, or through the GitHub web editor.
+
+## Public entry points
+
+A package's public API is what its root exports, plus the subpaths its `package.json` `exports` lists: `@rjsf/core/markdown`, `@rjsf/core/testing`, core's two stylesheets, `compileSchemaValidators` in `@rjsf/validator-ajv8` and `@rjsf/validator-ata`, and `@rjsf/snapshot-tests/setup`.
+Nothing under `lib/` can be imported on its own, so a new module is internal until the package root exports something from it, and every name the root exports has to keep working until the next major.
+To make something public, export it from the package root and add a changelog entry; add a subpath to `exports` only for an entry point that has to load separately, as `@rjsf/core/markdown` does.
+`@rjsf/utils` exports only what another RJSF package's source imports, which `pnpm run knip` checks: its `src/index.ts` names every value it exports rather than re-exporting a module with `export *`, and an export only tests import is tagged `@testSeam`. An export that is public API though no other package's source imports it is tagged `@public`, which knip never reports: the validator-based schema functions, which consumers call on their own though RJSF reaches them through `createSchemaUtils()`, the id generators `optionDescriptionId()`, `optionHelpId()` and `selectedOptionDescriptionId()`, which name parts RJSF renders, `RJSF_PROVENANCE_KEY`, which consumers' tests strip from a retrieved schema before comparing it with one written by hand, and `SHARED_COPY_ID`, by which a custom validator recognises a part an option's scoring copy holds once.
+
+## Changelog
+
+A PR that changes anything a user of a published package can notice adds an entry to the changelog for each change users notice, so a PR that fixes one thing and adds another adds two.
+Append each as the last bullet under the heading of each package whose users notice the change, in the upcoming release at the top of the file.
+If the top heading is dated, that release has shipped: add an undated heading for the next version above it.
+A change that belongs to no single package, such as a new Node or React requirement, goes once under `All packages` instead.
+If the change needs a bigger semver bump than that release's heading names, update the heading.
+A change to a package's peer dependency range goes under that package, and so does a dependency bump that changes what its users get, such as a fix or a new minimum version.
+Tests, CI, refactors, docs changes, playground changes and dependency bumps users can't notice need no entry, and neither does a change to something that isn't released yet: edit that change's entry instead, keeping its PR link and adding yours after it.
+
+Write the entry for someone deciding whether to upgrade, who won't open the PR:
+
+- Start with `Add`, `Change`, `Deprecate`, `Fix` or `Remove`, and name the component, prop or export a user meets, in backticks.
+  Use `Fix` when the old behavior was wrong for users and `Change` when it worked as intended but now works differently.
+- Say what users notice, not how the code does it, and leave out internal helpers, hooks and concepts users never meet. A fix names what went wrong for them: "Fix `ArrayField` dropping the last item's errors when an item is removed".
+- Leave the reasoning, the alternatives, the edge cases and related issues to the PR description.
+- End the entry with its PR and then each issue it fixes, as in `([#5305](https://github.com/rjsf-team/react-jsonschema-form/pull/5305), [#4666](https://github.com/rjsf-team/react-jsonschema-form/issues/4666))`: a PR's link has `pull`, an issue's has `issues`.
+- Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and end the text with `See [the upgrade guide](…)`, linking the [upgrade guide](#upgrade-guide) section that says what to change.
+  Link it on the docs site, as in `https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/vN.x%20upgrade%20guide#<section>`, since the entry is also copied into a GitHub Release, where relative paths don't resolve.
+- A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower or reshaped type, such as an `enum` becoming a union type. A type-only break gets an upgrade guide section too.
+- Aim for a sentence or two, about 200 characters of text, not counting link URLs. If it can't be both short and clear, keep it clear.
+
+For example, instead of an entry that explains the implementation:
+
+> Fixed `ObjectFieldTemplate` rendering a property with no column span when the `colSpan` map in `formContext` has no usable entry for its widget or field name. The lookup now falls through to the schema type and then to the default span, skipping entries that are not a whole number of columns from 0 to 24 and a `ui:field` that names no registered component. …
+
+write what users see:
+
+> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450), [#5447](https://github.com/rjsf-team/react-jsonschema-form/issues/5447))
+
+A breaking entry has the same shape:
+
+> **BREAKING CHANGE:** Change an additional property's key input id from `root_foo-key` to `root_foo__key`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#ids-cant-collide-or-split-an-id-list-breaking-change) ([#5626](https://github.com/rjsf-team/react-jsonschema-form/pull/5626))
+
+## Upgrade guide
+
+A breaking change also gets a section in the upgrade guide for the next major version N, `packages/docs/docs/migration-guides/vN.x upgrade guide.md`, in the same PR. Create the file if it doesn't exist yet.
+The guide answers one question: "my code broke, what do I change?". Each section has a heading that names the change as users meet it, then says who it affects, what happened before and what happens now, and what to do instead, with a before/after `diff` when code has to change. Link the reference docs for anything more.
+New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide.
 
 ## Documentation
 
@@ -78,13 +126,9 @@ pnpm run test
 ### Snapshot testing
 
 All the themes, including `core` use snapshot testing (NOTE: `core` also has extensive non-snapshot tests).
-The source-code of these snapshot tests reside in the `core` package in the `testSnap` directory and are shared with all the themes.
-In order to support the various themes, the code for the tests are actually functions that take two parameters:
-
-- `Form`: ComponentType&lt;FormProps> - The component from the theme implementation
-- `[customOptions]`: \{ [key: string]: TestRendererOptions } - an optional map of `react-test-renderer` `TestRendererOptions` implementations that some themes need to be able properly run
-
-There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `objectTests`, each with its own definition of `customOptions`
+The source-code of these snapshot tests resides in the `snapshot-tests` package and is shared with all the themes. `core`'s own snapshot tests live in `packages/snapshot-tests/test`, since `snapshot-tests` depends on `core`.
+In order to support the various themes, the code for the tests are actually functions that take the theme's `Form` component (`ComponentType<FormProps>`).
+The `snapshot-tests` package provides `arrayTests`, `formTests` and `objectTests`, plus `gridTests`, which also takes a map of the props (such as `className`s) that the theme's layout grid needs for each row and column width.
 
 Each theme will basically run these functions by creating a `Xxx.test.tsx` file (where `Xxx` is `Array`, `Form` or `Object`) that looks like the following:
 
@@ -100,7 +144,23 @@ arrayTests(Form); // OR
 // objectTests(Form);
 ```
 
-Anytime you add a new feature, be sure to update the appropriate `xxxTests()` function in the `testSnap` directory and do `pnpm run test` from the root directory to update all the snapshots.
+The suites expect `getTestIds` from `@rjsf/utils` to be mocked out before the theme's `Form` is imported, so each theme's `vitest.config.mts` lists a `test/snapshotSetup.ts` that loads `@rjsf/snapshot-tests/setup`. Without it the snapshots pick up numbered `data-testid` values that the other themes don't produce, and fail.
+The file imports the setup rather than `setupFiles` naming it, since Vitest resolves a `setupFiles` entry without the `@rjsf/source` condition, so naming it there would load the built `lib/setup.js` and need a build first:
+
+```ts
+// test/snapshotSetup.ts
+import '@rjsf/snapshot-tests/setup';
+```
+
+```ts
+export default mergeConfig(base, {
+  test: {
+    setupFiles: ['./test/snapshotSetup.ts'],
+  },
+});
+```
+
+Anytime you add a new feature, be sure to update the appropriate `xxxTests()` function in the `snapshot-tests` package and do `pnpm run test:update` from the root directory to update all the snapshots.
 If you add a theme-only feature, it is ok to update the appropriate `Xxx.test.tsx` file to add (or update) the theme-specific `describe()` block.
 For example:
 
@@ -148,11 +208,14 @@ If you make changes to those libraries, you will have to maintain that coverage,
 
 ## Releasing
 
+Each release starts by turning the upcoming release's section of the changelog into release notes. Commit them on the `rc` branch below before you run `pnpm exec nx release version --git-tag`, so that the tagged commit carries them. Date the section's heading with the day you plan to publish, as in `# 6.100.10 (2026-11-01)`, and if the rc PR merges on a later day, correct the date in that PR before merging it. Start the section with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
+
 To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
 For instance if you are about to create the new `6.100.10` branch, then you would run the following commands:
 
 ```bash
 git checkout -b rc6.100.10
+git commit -m "Release notes for 6.100.10" CHANGELOG.md
 pnpm exec nx release version --git-tag
 git commit -m "Releasing 6.100.10"
 git push
@@ -168,8 +231,7 @@ Then, make a PR to main. Merge the PR into main -- make sure you use "merge comm
 the original commit where the tag was based on is still present in the main branch.
 
 Then, create a release in the GitHub "Releases" tab, select the new tag that you have added,
-and add a description of the changes in the new release. You can copy
-the latest changelog entry in `CHANGELOG.md` to make the release notes, and update as necessary.
+and copy the release's changelog section into its description.
 
 This will trigger a GitHub Actions pipeline that will build and publish all packages to npm.
 

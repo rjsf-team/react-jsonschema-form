@@ -6,17 +6,15 @@ import CheckboxesWidget from './CheckboxesWidget/index.tsx';
 import CheckboxWidget from './CheckboxWidget/index.tsx';
 import DateTimeWidget from './DateTimeWidget/index.tsx';
 import DateWidget from './DateWidget/index.tsx';
+import HiddenWidget from './HiddenWidget/index.tsx';
 import PasswordWidget from './PasswordWidget/index.tsx';
 import RadioWidget from './RadioWidget/index.tsx';
 import RangeWidget from './RangeWidget/index.tsx';
+import RatingWidget from './RatingWidget/index.tsx';
 import SelectWidget from './SelectWidget/index.tsx';
 import TextareaWidget from './TextareaWidget/index.tsx';
 
-export function generateWidgets<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): RegistryWidgetsType<T, S, F> {
+export function createWidgets() {
   return {
     AltDateTimeWidget,
     AltDateWidget,
@@ -24,12 +22,22 @@ export function generateWidgets<
     CheckboxWidget,
     DateTimeWidget,
     DateWidget,
+    HiddenWidget,
     PasswordWidget,
     RadioWidget,
     RangeWidget,
+    RatingWidget,
     SelectWidget,
     TextareaWidget,
   };
 }
 
-export default generateWidgets();
+export function generateWidgets<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): RegistryWidgetsType<T, S, F> {
+  return createWidgets();
+}
+
+export default createWidgets();

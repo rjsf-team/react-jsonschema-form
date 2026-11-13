@@ -1,7 +1,10 @@
 import type { ArrayFieldTemplateProps, ArrayFieldItemTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
-import userEvent from '@testing-library/user-event';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
+import IconButton from '../src/components/templates/ButtonTemplates/IconButton.tsx';
+import { getTestRegistry } from '../src/testing.ts';
 import { createFormComponent } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -43,7 +46,7 @@ describe('ArrayFieldTemplate', () => {
         it('should render a stateful custom component', () => {
           const { node } = createFormComponent({
             schema: { type: 'array', items: { type: 'string' } },
-            formData,
+            initialFormData: formData,
             templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
           });
 
@@ -54,7 +57,7 @@ describe('ArrayFieldTemplate', () => {
         it('should render a stateful custom component', () => {
           const { node } = createFormComponent({
             schema: { type: 'array', items: { type: 'string' } },
-            formData,
+            initialFormData: formData,
             uiSchema: {
               'ui:ArrayFieldTemplate': ArrayFieldTemplate,
               'ui:ArrayFieldItemTemplate': ArrayFieldItemTemplate,
@@ -68,7 +71,7 @@ describe('ArrayFieldTemplate', () => {
         it('should render a stateful custom component', () => {
           const { node } = createFormComponent({
             schema: { type: 'array', items: { type: 'string' } },
-            formData,
+            initialFormData: formData,
             uiSchema: {
               'ui:ArrayFieldTemplate': ArrayFieldTemplate,
               'ui:ArrayFieldItemTemplate': ArrayFieldItemTemplate,
@@ -100,7 +103,7 @@ describe('ArrayFieldTemplate', () => {
         beforeEach(() => {
           node = createFormComponent({
             templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
           }).node;
@@ -117,7 +120,7 @@ describe('ArrayFieldTemplate', () => {
 
         beforeEach(() => {
           node = createFormComponent({
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
           }).node;
@@ -133,7 +136,7 @@ describe('ArrayFieldTemplate', () => {
 
         beforeEach(() => {
           node = createFormComponent({
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
             // Empty field template for proof that we're doing overrides
@@ -187,7 +190,7 @@ describe('ArrayFieldTemplate', () => {
         };
         beforeEach(() => {
           node = createFormComponent({
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
             templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
@@ -204,7 +207,7 @@ describe('ArrayFieldTemplate', () => {
         };
         beforeEach(() => {
           node = createFormComponent({
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
           }).node;
@@ -219,7 +222,7 @@ describe('ArrayFieldTemplate', () => {
         };
         beforeEach(() => {
           node = createFormComponent({
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
             // Empty field template for proof that we're doing overrides
@@ -266,7 +269,7 @@ describe('ArrayFieldTemplate', () => {
     it('should render a stateful custom component', () => {
       const { node } = createFormComponent({
         schema: { type: 'array', items: { type: 'string' } },
-        formData,
+        initialFormData: formData,
         templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
       });
       expect(node.querySelectorAll('.rjsf-field-array .field-content div')).toHaveLength(3);
@@ -283,14 +286,15 @@ describe('ArrayFieldTemplate', () => {
       };
       createFormComponent({
         schema: { type: 'array', items: { type: 'string' } },
-        formData,
+        initialFormData: formData,
         templates: { ArrayFieldTemplate },
       });
     });
 
     it('should pass formData so it is in sync with items', async () => {
       const ArrayFieldTemplate = ({ formData, items, onAddClick }: ArrayFieldTemplateProps) => {
-        if (formData.length !== items.length) {
+        const rows = formData as string[];
+        if (rows.length !== items.length) {
           throw new Error('Error');
         }
         return (
@@ -298,7 +302,7 @@ describe('ArrayFieldTemplate', () => {
             {items.map((_, i) => (
               // oxlint-disable-next-line react/no-array-index-key
               <span key={i} className='test-data'>
-                {formData[i]}
+                {rows[i]}
               </span>
             ))}
             <button type='button' aria-label='Add item' className='rjsf-array-item-add' onClick={onAddClick} />
@@ -307,7 +311,7 @@ describe('ArrayFieldTemplate', () => {
       };
       const { node } = createFormComponent({
         schema: { type: 'array', items: { type: 'string' } },
-        formData,
+        initialFormData: formData,
         templates: { ArrayFieldTemplate },
       });
       let data = node.querySelectorAll('.test-data');
@@ -318,5 +322,27 @@ describe('ArrayFieldTemplate', () => {
       data = node.querySelectorAll('.test-data');
       expect(data).toHaveLength(formData.length + 1);
     });
+  });
+});
+
+describe('IconButton', () => {
+  const registry = getTestRegistry({});
+
+  it('renders a string icon as an inline SVG hidden from assistive technology', () => {
+    const { container } = render(<IconButton icon='plus' registry={registry} />);
+    const svg = container.querySelector('button > svg.rjsf-button-icon');
+    expect(svg).toHaveAttribute('aria-hidden', 'true');
+    expect(svg?.querySelector('path')).toHaveAttribute('d');
+  });
+
+  it.each(['unknown', 'constructor'])('renders no icon for a name it does not know: %s', (icon) => {
+    const { container } = render(<IconButton icon={icon} registry={registry} />);
+    expect(container.querySelector('button')).toBeEmptyDOMElement();
+  });
+
+  it('renders a React element icon as-is', () => {
+    const { container } = render(<IconButton icon={<svg data-testid='custom-icon' />} registry={registry} />);
+    expect(container.querySelector('button > svg[data-testid="custom-icon"]')).toBeInTheDocument();
+    expect(container.querySelectorAll('svg')).toHaveLength(1);
   });
 });

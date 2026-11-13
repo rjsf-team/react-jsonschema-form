@@ -2,39 +2,67 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
-import Form from 'react-bootstrap/Form';
+import {
+  examplesId,
+  getControlAttributes,
+  getExampleSuggestions,
+  callerInputProps,
+  getBaseInputProps,
+  hasWidgetErrors,
+  offersClearButton,
+  toInputValue,
+} from '@rjsf/utils';
+import { Form } from 'react-bootstrap';
+import type { FormControlProps } from 'react-bootstrap';
+
+/** The props this theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes
+ * `extraProps` to
+ */
+export type BootstrapBaseInputTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = BaseInputTemplateProps<T, S, F> & {
+  /** Props to spread on the `Form.Control` along with the ones the schema derives, or, without `Form.Control`'s own
+   * `size`, `htmlSize`, `plaintext`, `isValid` and `isInvalid`, on the `Form.Range` of a `range` input. Its `pattern`,
+   * `inputMode` and `accept` win over the derived ones
+   */
+  extraProps?: FormControlProps & Record<`data-${string}`, unknown>;
+};
 
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  id,
-  htmlName,
-  placeholder,
-  required,
-  readonly,
-  disabled,
-  type,
-  value,
-  onChange,
-  onChangeOverride,
-  onBlur,
-  onFocus,
-  autofocus,
-  options,
-  schema,
-  rawErrors = [],
-  children,
-  extraProps,
-  registry,
-}: BaseInputTemplateProps<T, S, F>) {
+  F extends FormContextType = FormContextType,
+>(props: BootstrapBaseInputTemplateProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    placeholder,
+    required,
+    readonly,
+    disabled,
+    value,
+    onChange,
+    onChangeOverride,
+    onBlur,
+    onFocus,
+    autofocus,
+    options,
+    schema,
+    children,
+    extraProps,
+    registry,
+    presentation,
+  } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
-  const inputProps = {
-    ...extraProps,
-    ...getInputProps<T, S, F>(schema, type, options),
-  };
+  // The `pattern`, `inputMode`, `accept` and `multiple` in `extraProps` count as the widget's own, over its props
+  const { title, ...baseInputProps } = getBaseInputProps<T, S, F>({
+    ...props,
+    ...callerInputProps({ ...extraProps }),
+    multiple: extraProps?.multiple ?? props.multiple,
+  });
+  const inputProps = { ...extraProps, ...baseInputProps };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
@@ -48,31 +76,53 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
-  // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
+  const inputValue = toInputValue(value);
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
+  const isInvalid = hasWidgetErrors<T, S, F>(props);
+  const controlProps = {
+    id,
+    name: htmlName || id,
+    placeholder,
+    autoFocus: autofocus,
+    required,
+    disabled,
+    title,
+    readOnly: readonly,
+    list: hasExamples ? examplesId(id) : undefined,
+    ...inputProps,
+    value: inputValue,
+    onChange: onChangeOverride ?? handleChange,
+    onBlur: handleBlur,
+    onFocus: handleFocus,
+    ...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []),
+  };
+  const {
+    size: _size,
+    htmlSize: _htmlSize,
+    plaintext: _plaintext,
+    isValid: _isValid,
+    isInvalid: _isInvalid,
+    ...rangeProps
+  } = controlProps;
   return (
     <>
-      <Form.Control
-        id={id}
-        name={htmlName || id}
-        placeholder={placeholder}
-        autoFocus={autofocus}
-        required={required}
-        disabled={disabled}
-        readOnly={readonly}
-        className={rawErrors.length > 0 ? 'is-invalid' : ''}
-        list={schema.examples ? examplesId(id) : undefined}
-        {...inputProps}
-        value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || handleChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {inputProps.type === 'range' ? (
+        // `Form.Range` takes Bootstrap's `form-range` class through its prefix, which a `ThemeProvider` can rename, and
+        // renders a bare `<input>` without `Form.Control`'s own props, so its error state is the class `Form.Control`
+        // would add
+        <Form.Range
+          {...rangeProps}
+          className={[inputProps.className, isInvalid && 'is-invalid'].filter(Boolean).join(' ') || undefined}
+        />
+      ) : (
+        <Form.Control isInvalid={isInvalid} {...controlProps} />
+      )}
+      {options.allowClearTextInputs && !readonly && !disabled && offersClearButton(inputValue, inputProps.type) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

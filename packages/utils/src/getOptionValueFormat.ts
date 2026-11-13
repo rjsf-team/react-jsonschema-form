@@ -5,7 +5,7 @@ import type { OptionValueFormat } from './types.ts';
  * Provides a single source of truth for the default DOM encoding format
  * (`'indexed'`) used by `SelectWidget`, `RadioWidget`, and `CheckboxesWidget`.
  * Widgets should call this helper once and pass the result to
- * `enumOptionValueEncoder`, `enumOptionValueDecoder`, and `enumOptionSelectedValue`
+ * `enumOptionsDomValues`, `enumOptionValueDecoder`, and `enumOptionSelectedValue`
  * rather than reading `options.optionValueFormat` directly.
  *
  * @param options - The widget options (typically from the `options` prop, already

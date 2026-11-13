@@ -8,10 +8,11 @@ import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert.tsx'
  *
  * @param props - The `ErrorListProps` for this component
  */
-export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  errors,
-  registry,
-}: ErrorListProps<T, S, F>) {
+export default function ErrorList<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ errors, registry }: ErrorListProps<T, S, F>) {
   const { translateString } = registry;
   return (
     <Alert variant='destructive' className='mb-2'>

@@ -2,100 +2,151 @@
  * enumeration keys is expected to be the actual english string. Some strings contain replaceable parameter values
  * as indicated by `%1`, `%2`, etc. The number after the `%` indicates the order of the parameter. The ordering of
  * parameters is important because some languages may choose to put the second parameter before the first in its
- * translation. Also, some strings are rendered using `markdown-to-jsx` and thus support markdown and inline html.
+ * translation. Some strings are rendered through the registered `MarkdownTemplate`, when there is one, and so may
+ * contain markdown; the english defaults are plain text so they read the same either way.
  */
-export enum TranslatableString {
+export const TranslatableString = {
   /** Fallback title of an array item, used by ArrayField */
-  ArrayItemTitle = 'Item',
+  ArrayItemTitle: 'Item',
   /** Missing items reason, used by ArrayField */
-  MissingItems = 'Missing items definition',
+  MissingItems: 'Missing items definition',
   /** Empty array message, used by ArrayField */
-  EmptyArray = 'No items yet. Use the button below to add some.',
+  EmptyArray: 'No items yet. Use the button below to add some.',
   /** Yes label, used by BooleanField */
-  YesLabel = 'Yes',
+  YesLabel: 'Yes',
   /** No label, used by BooleanField */
-  NoLabel = 'No',
+  NoLabel: 'No',
   /** Close label, used by ErrorList */
-  CloseLabel = 'Close',
+  CloseLabel: 'Close',
   /** Errors label, used by ErrorList */
-  ErrorsLabel = 'Errors',
+  ErrorsLabel: 'Errors',
   /** New additionalProperties string default value, used by ObjectField */
-  NewStringDefault = 'New Value',
+  NewStringDefault: 'New Value',
   /** Add button title, used by AddButton */
-  AddButton = 'Add',
+  AddButton: 'Add',
   /** Add button title, used by AddButton */
-  AddItemButton = 'Add Item',
+  AddItemButton: 'Add Item',
   /** Copy button title, used by IconButton */
-  CopyButton = 'Copy',
+  CopyButton: 'Copy',
   /** Expand cycle button title */
-  ExpandButton = 'Expand Cycle',
+  ExpandButton: 'Expand Cycle',
   /** Move down button title, used by IconButton */
-  MoveDownButton = 'Move down',
+  MoveDownButton: 'Move down',
   /** Move up button title, used by IconButton */
-  MoveUpButton = 'Move up',
+  MoveUpButton: 'Move up',
   /** Remove button title, used by IconButton */
-  RemoveButton = 'Remove',
+  RemoveButton: 'Remove',
+  /** Copy button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by ArrayField */
+  CopyItemButton: 'Copy %1',
+  /** Move down button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by
+   * ArrayField
+   */
+  MoveDownItemButton: 'Move %1 down',
+  /** Move up button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by
+   * ArrayField
+   */
+  MoveUpItemButton: 'Move %1 up',
+  /** Remove button title for an array item named through `ui:options.itemLabel`, or for a selected item of a multiple
+   * select, where %1 is its name; used by ArrayField and by the SelectWidget of @rjsf/shadcn
+   */
+  RemoveItemButton: 'Remove %1',
+  /** The name of an array item named through `ui:options.itemLabel` when another item has the same name, or of a thumb
+   * of a range of several values, where %1 is the name and %2 a number that tells them apart; used by ArrayField and by
+   * the RangeWidget of @rjsf/mui
+   */
+  ItemNameWithNumber: '%1 (%2)',
   /** Now label, used by AltDateWidget */
-  NowLabel = 'Now',
+  NowLabel: 'Now',
   /** Clear label, used by AltDateWidget */
-  ClearLabel = 'Clear',
+  ClearLabel: 'Clear',
+  /** Year element label, used by AltDateWidget */
+  YearLabel: 'year',
+  /** Month element label, used by AltDateWidget */
+  MonthLabel: 'month',
+  /** Day element label, used by AltDateWidget */
+  DayLabel: 'day',
+  /** Hour element label, used by AltDateTimeWidget */
+  HourLabel: 'hour',
+  /** Minute element label, used by AltDateTimeWidget */
+  MinuteLabel: 'minute',
+  /** Second element label, used by AltDateTimeWidget */
+  SecondLabel: 'second',
   /** Aria date label, used by DateWidget */
-  AriaDateLabel = 'Select a date',
+  AriaDateLabel: 'Select a date',
+  /** Placeholder for the shadcn SelectWidget's input, and the accessible name getControlFallbackName() gives a select when the field has no title */
+  SelectPlaceholder: 'Select ...',
+  /** Accessible name of a radio group no label names, such as an untitled field's, given by getGroupAttributes() */
+  RadioGroupName: 'Choose an option',
+  /** Follows the name of a group of checkboxes that has to have one checked, in the name a screen reader announces */
+  RequiredGroupCue: 'required',
+  /** Done button label, used by the daisyUI date pickers */
+  DoneLabel: 'Done',
+  /** Time input label, used by the daisyUI DateTimeWidget */
+  TimeLabel: 'Time',
   /** File preview label, used by FileWidget */
-  PreviewLabel = 'Preview',
+  PreviewLabel: 'Preview',
   /** Decrement button aria label, used by UpDownWidget */
-  DecrementAriaLabel = 'Decrease value by 1',
+  DecrementAriaLabel: 'Decrease value by 1',
   /** Increment button aria label, used by UpDownWidget */
-  IncrementAriaLabel = 'Increase value by 1',
+  IncrementAriaLabel: 'Increase value by 1',
   /** The label for the Add button in for an optional object field */
-  OptionalObjectAdd = 'Add data for optional field',
+  OptionalObjectAdd: 'Add data for optional field',
   /** The label for the Remove button in for an optional object field */
-  OptionalObjectRemove = 'Remove data for optional field',
+  OptionalObjectRemove: 'Remove data for optional field',
   /** The label for when displaying a non-editable form with missing optional field data */
-  OptionalObjectEmptyMsg = 'No data for optional field',
+  OptionalObjectEmptyMsg: 'No data for optional field',
   /** Label for the schema type selector, used by FallbackField */
-  Type = 'Type',
-  /** Label for the 'value' field, used by FallbackField */
-  Value = 'Value',
+  Type: 'Type',
+  /** Title of the value field the fallback UI renders, with or without a type selector above it, where the field around
+   * it labels the value. The value field then draws no label of its own, so no built-in template renders this; a custom
+   * `FieldTemplate` gets it as `label`, with `templateDrawsLabel()` false, and as `schema.title`
+   */
+  Value: 'Value',
   /** Clear button title, used by IconButton */
-  ClearButton = 'clear input',
+  ClearButton: 'clear input',
+  /** Title of the numeric text input a `number` field renders, used by the `BaseInputTemplate` of every theme */
+  NumberInputTitle: 'Enter a number',
+  /** Title of the numeric text input an `integer` field renders, used by the `BaseInputTemplate` of every theme */
+  IntegerInputTitle: 'Enter a whole number',
   // Strings with replaceable parameters
   /** Unknown field type reason, where %1 will be replaced with the type as provided by SchemaField */
-  UnknownFieldType = 'Unknown field type %1',
+  UnknownFieldType: 'Unknown field type %1',
   /** Option prefix, where %1 will be replaced with the option index as provided by MultiSchemaField */
-  OptionPrefix = 'Option %1',
+  OptionPrefix: 'Option %1',
   /** Option prefix, where %1 and %2 will be replaced by the schema title and option index, respectively as provided by
    * MultiSchemaField
    */
-  TitleOptionPrefix = '%1 option %2',
+  TitleOptionPrefix: '%1 option %2',
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
-  KeyLabel = '%1 Key',
+  KeyLabel: '%1 Key',
+  /** Error for an additional property key the object's schema forbids, where %1 will be replaced by the key as
+   * provided by ObjectField
+   */
+  AdditionalPropertyKeyNotAllowed: 'The key "%1" is not allowed here',
   /** Deprecated label, where %1 will be replaced by the label as provided by SchemaField */
-  DeprecatedLabel = '%1 (deprecated)',
+  DeprecatedLabel: '%1 (deprecated)',
+  /** Accessible name of one of the selects an AltDateWidget renders, where %1 will be replaced by the field's label
+   * and %2 by the translated name of the date element, such as `YearLabel`, as provided by DateElement
+   */
+  DateElementAriaLabel: '%1, %2',
   /** Cyclic schema message */
-  CycleDetected = 'Circular reference ($ref cycle) detected for field "%1". You may choose to expand to the next cycle break',
-  // Strings with replaceable parameters AND/OR that support markdown and html
-  /** Invalid object field configuration as provided by the ObjectField.
-   * NOTE: Use markdown notation rather than html tags.
-   */
-  InvalidObjectField = 'Invalid "%1" object field configuration: _%2_.',
+  CycleDetected:
+    'Circular reference ($ref cycle) detected for field "%1". You may choose to expand to the next cycle break',
+  /** Invalid object field configuration as provided by the ObjectField. */
+  InvalidObjectField: 'Invalid "%1" object field configuration: %2.',
   /** Unsupported field schema, used by UnsupportedField */
-  UnsupportedField = 'Unsupported field schema.',
-  /** Unsupported field schema, where %1 will be replaced by the FieldPathId.$id as provided by UnsupportedField.
-   * NOTE: Use markdown notation rather than html tags.
-   */
-  UnsupportedFieldWithId = 'Unsupported field schema for field `%1`.',
-  /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField.
-   * NOTE: Use markdown notation rather than html tags.
-   */
-  UnsupportedFieldWithReason = 'Unsupported field schema: _%1_.',
-  /** Unsupported field schema, where %1 and %2 will be replaced by the FieldPathId.$id and reason strings,
+  UnsupportedField: 'Unsupported field schema.',
+  /** Unsupported field schema, where %1 will be replaced by the field id as provided by UnsupportedField. */
+  UnsupportedFieldWithId: 'Unsupported field schema for field %1.',
+  /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField. */
+  UnsupportedFieldWithReason: 'Unsupported field schema: %1.',
+  /** Unsupported field schema, where %1 and %2 will be replaced by the field id and reason strings,
    * respectively, as provided by UnsupportedField.
-   * NOTE: Use markdown notation rather than html tags.
    */
-  UnsupportedFieldWithIdAndReason = 'Unsupported field schema for field `%1`: _%2_.',
+  UnsupportedFieldWithIdAndReason: 'Unsupported field schema for field %1: %2.',
   /** File name, type and size info, where %1, %2 and %3 will be replaced by the file name, file type and file size as
    * provided by FileWidget
    */
-  FilesInfo = '**%1** (%2, %3 bytes)',
-}
+  FilesInfo: '%1 (%2, %3 bytes)',
+} as const;
+export type TranslatableString = (typeof TranslatableString)[keyof typeof TranslatableString];

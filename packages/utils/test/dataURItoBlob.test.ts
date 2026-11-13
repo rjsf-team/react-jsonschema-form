@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 // Asserts against jsdom Blob/File semantics that differ from the Node globals.
-import { dataURItoBlob } from '../src/index.ts';
+import dataURItoBlob from '../src/dataURItoBlob.ts';
 
 describe('dataURItoBlob()', () => {
   it('should pass when the data is empty', () => {
@@ -41,6 +41,21 @@ describe('dataURItoBlob()', () => {
     expect(() => dataURItoBlob('data:text/plain;base64,こんにちわ')).toThrow(
       new Error('File is invalid: Invalid character'),
     );
+  });
+
+  it('should attach the decoding error as the cause', () => {
+    expect(() => dataURItoBlob('data:text/plain;base64,Hello%20World')).toThrow(
+      expect.objectContaining({ cause: expect.objectContaining({ message: 'Invalid character' }) }),
+    );
+  });
+
+  it('should stringify a decoding failure that is not an Error', () => {
+    const nonError: unknown = 'bad input';
+    vi.spyOn(globalThis, 'atob').mockImplementationOnce(() => {
+      throw nonError;
+    });
+    expect(() => dataURItoBlob('data:text/plain;base64,SGVsbG8=')).toThrow(new Error('File is invalid: bad input'));
+    vi.restoreAllMocks();
   });
 
   it('should return the name of the file if present', () => {

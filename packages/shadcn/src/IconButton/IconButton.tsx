@@ -8,9 +8,9 @@ import type { buttonVariants } from '../components/ui/button.tsx';
 import { Button } from '../components/ui/button.tsx';
 
 export type ShadIconButtonProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > = IconButtonProps<T, S, F> & VariantProps<typeof buttonVariants>;
 
 /** Base button component that renders a Shadcn button with an icon for RJSF form actions.
@@ -20,9 +20,11 @@ export type ShadIconButtonProps<
  *
  * @param props - The combined props from RJSF IconButtonProps and Shadcn ButtonProps, including icon and event handlers
  */
-function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ShadIconButtonProps<T, S, F>,
-) {
+function IconButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ShadIconButtonProps<T, S, F>) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
   return (
     <Button size='icon' variant='outline' className={className} {...otherProps} type='button'>
@@ -39,9 +41,11 @@ export default IconButton;
  *
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
-function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ShadIconButtonProps<T, S, F>,
-) {
+function CopyButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ShadIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -57,9 +61,11 @@ export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
  *
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
-function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ShadIconButtonProps<T, S, F>,
-) {
+function MoveDownButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ShadIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -79,9 +85,11 @@ export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
  *
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
-function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ShadIconButtonProps<T, S, F>,
-) {
+function MoveUpButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ShadIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -102,9 +110,11 @@ export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
  *
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
-function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ShadIconButtonProps<T, S, F>,
-) {
+function RemoveButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ShadIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -119,9 +129,11 @@ function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 }
 export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
-function ClearButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ShadIconButtonProps<T, S, F>,
-) {
+function ClearButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ShadIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;

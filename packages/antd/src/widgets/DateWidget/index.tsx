@@ -1,7 +1,10 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { ariaDescribedByIds } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { getControlAttributes, getDateTimeLocalValue } from '@rjsf/utils';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+
+import useControlState from '../../controlState.ts';
 
 const DATE_PICKER_STYLE = {
   width: '100%',
@@ -12,27 +15,49 @@ type DateWidgetProps<T, S extends StrictRJSFSchema, F extends FormContextType> =
 };
 
 /** The `DateWidget` component uses the `BaseInputTemplate` changing the type to `date` and transforms
- * the value to undefined when it is falsy during the `onChange` handling.
+ * the value to undefined when it is falsy during the `onChange` handling. When `schema.format` is
+ * `iso-date-time`, the picked value is formatted as a naive local date-time string instead of being
+ * converted to UTC, since that format's timezone is optional; a stored value that happens to carry an
+ * offset is stripped before being parsed, so it displays as the naive wall-clock time it represents
+ * instead of being converted to the browser's local zone.
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function DateWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
+  autofocus,
   disabled,
   registry,
   id,
+  htmlName,
   onBlur,
   onChange,
   onFocus,
   placeholder,
   readonly,
+  required,
   value,
   showTime = false,
+  schema,
+  presentation,
 }: DateWidgetProps<T, S, F>) {
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const control = useControlState<T, S, F>({ disabled, readonly, registry });
+  const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
 
-  const handleChange = (nextValue: any) =>
-    onChange(nextValue && (showTime ? nextValue.toISOString() : nextValue.format('YYYY-MM-DD')));
+  const handleChange = (nextValue: Dayjs | null) => {
+    if (!nextValue) {
+      onChange(nextValue);
+    } else if (isIsoDateTime) {
+      onChange(nextValue.format('YYYY-MM-DDTHH:mm:ss'));
+    } else if (showTime) {
+      onChange(nextValue.toISOString());
+    } else {
+      onChange(nextValue.format('YYYY-MM-DD'));
+    }
+  };
 
   const handleBlur = () => onBlur(id, value);
 
@@ -42,24 +67,31 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
 
   return (
     <DatePicker
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      autoFocus={autofocus}
+      disabled={control.disabled}
       getPopupContainer={getPopupContainer}
       id={id}
-      name={id}
+      name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
+      open={readonly ? false : undefined}
       placeholder={placeholder}
+      inputReadOnly={readonly}
+      required={required}
       showTime={showTime}
       style={DATE_PICKER_STYLE}
-      value={value && dayjs(value)}
-      aria-describedby={ariaDescribedByIds(id)}
+      value={localValue ? dayjs(localValue) : undefined}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );
 }
 
 /** Give the playground a place to hook into the `getPopupContainer` callback generation function so that it can be
  * disabled while in the playground. Since the callback is a simple function, it can be returned by this static
- * "generator" function.
+ * "generator" function. The default never returns `undefined`; the return type allows it because that is how the
+ * playground's replacement turns the callback off. A trigger without a parent element gets `document.body`, antd's own
+ * default container.
  */
-DateWidget.getPopupContainerCallback = () => (node: any) => node.parentNode;
+DateWidget.getPopupContainerCallback = (): ((node: HTMLElement) => HTMLElement) | undefined => (node) =>
+  node.parentElement ?? document.body;

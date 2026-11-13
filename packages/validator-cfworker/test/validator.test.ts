@@ -1,16 +1,28 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
-import type { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
-import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
+import type {
+  CustomValidator,
+  ErrorTransformer,
+  FormValidation,
+  RJSFSchema,
+  RJSFValidationError,
+  UiSchema,
+} from '@rjsf/utils';
+import { ROOT_SCHEMA_PREFIX, getValidationTarget } from '@rjsf/utils';
 
+import nestedResourceTests, { mergedResourceViewTests } from '../../utils/test/testUtils/nestedResourceTests.ts';
+import pointerValidationTests, {
+  absoluteRefValidationTests,
+  sharedObjectValidationTests,
+} from '../../utils/test/testUtils/pointerValidationTests.ts';
+import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import * as pkg from '../src/index.ts';
-import type { CFWorkerValidationError } from '../src/types.ts';
 import { normalizeFormDataForValidation } from '../src/validator.ts';
 
 describe('CFWorkerValidator', () => {
   it('normalizes undefined object members so required errors surface', () => {
-    const validator = customizeValidator<{ email?: string }>();
+    const validator = customizeValidator();
     const schema: RJSFSchema = {
       type: 'object',
       required: ['email'],
@@ -18,7 +30,7 @@ describe('CFWorkerValidator', () => {
     };
     const formData = { email: undefined };
 
-    const raw = validator.rawValidation<CFWorkerValidationError>(schema, formData);
+    const raw = validator.rawValidation(schema, formData);
     expect(raw.validationError).toBeUndefined();
     expect(raw.errors?.some((error) => error.keyword === 'required')).toBe(true);
 
@@ -31,7 +43,7 @@ describe('CFWorkerValidator', () => {
     const validator = customizeValidator();
     const schema: RJSFSchema = { type: 'string', minLength: 3 };
     expect(validator.rawValidation(schema, 'valid')).toEqual({ errors: undefined, validationError: undefined });
-    const invalid = validator.rawValidation<CFWorkerValidationError>(schema, 'x');
+    const invalid = validator.rawValidation(schema, 'x');
     expect(invalid.validationError).toBeUndefined();
     expect(invalid.errors?.some((error) => error.keyword === 'minLength')).toBe(true);
   });
@@ -48,6 +60,33 @@ describe('CFWorkerValidator', () => {
     const result = validator.validateFormData({ extra: 42 }, additionalSchema);
     expect(result.errors.some((error) => error.name === 'additionalProperties')).toBe(true);
     expect(result.errorSchema.extra?.__errors).toHaveLength(1);
+  });
+
+  it('keys an error by the property name the data holds, not as the engine escapes and percent-encodes it', () => {
+    const validator = customizeValidator();
+    const keys = ['a#b', 'c d', 'é%', 'a/b', 'a~b', '~1'];
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: Object.fromEntries(keys.map((key) => [key, { type: 'number' }])),
+    };
+    const result = validator.validateFormData(Object.fromEntries(keys.map((key) => [key, 's'])), schema);
+    expect(result.errors.map((error) => error.property)).toEqual(expect.arrayContaining(keys.map((key) => `.${key}`)));
+    for (const key of keys) {
+      expect(result.errorSchema[key]?.__errors).toHaveLength(1);
+    }
+  });
+
+  it('titles a missing property by the uiSchema of an array item under a key the engine percent-encodes', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        'my list': { type: 'array', items: { type: 'object', required: ['x'], properties: { x: { type: 'string' } } } },
+      },
+    };
+    const uiSchema = { 'my list': { items: { x: { 'ui:title': 'Ex' } } } };
+    const result = validator.validateFormData({ 'my list': [{}] }, schema, undefined, undefined, uiSchema);
+    expect(result.errors).toContainEqual(expect.objectContaining({ property: '.my list.0.x', title: 'Ex' }));
   });
 
   it('honors the draft and shortCircuit options', () => {
@@ -82,20 +121,29 @@ describe('CFWorkerValidator', () => {
   });
 
   it('runs transformErrors and customValidate hooks', () => {
-    const validator = customizeValidator<{ value?: string }>();
+    const validator = customizeValidator();
     const schema: RJSFSchema = { type: 'object', required: ['value'], properties: { value: { type: 'string' } } };
     const transform = vi.fn((errors: RJSFValidationError[]) =>
       errors.map((error) => ({ ...error, message: 'transformed' })),
     );
-    const custom = vi.fn((_data, errors) => {
-      errors.value.addError('custom');
+    const custom = vi.fn((_data: unknown, errors: FormValidation<{ value?: string }>) => {
+      errors.value?.addError('custom');
       return errors;
     });
-    const result = validator.validateFormData({}, schema, custom, transform, {});
+    const result = validator.validateFormData<{ value?: string }>({}, schema, custom, transform, {});
     expect(transform).toHaveBeenCalled();
     expect(custom).toHaveBeenCalled();
     expect(result.errors[0].message).toBe('transformed');
     expect(result.errorSchema.value?.__errors).toEqual(expect.arrayContaining(['transformed', 'custom']));
+  });
+
+  it('passes customValidate a formData reflecting the ui:initialValue default, matching what the form renders', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
+    const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
+    const custom = vi.fn<CustomValidator>((_data, errors) => errors);
+    validator.validateFormData({}, schema, custom, undefined, uiSchema);
+    expect(custom).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
   });
 
   it('resolves root-schema references', () => {
@@ -158,7 +206,21 @@ describe('CFWorkerValidator', () => {
     const validator = customizeValidator();
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     expect(validator.isValid(null as unknown as RJSFSchema, {}, null as unknown as RJSFSchema)).toBe(false);
-    expect(warn).toHaveBeenCalled();
+    // The throw happens before the schema's id is known, so there is no schema to name
+    expect(warn).toHaveBeenCalledWith('Error encountered validating schema:', expect.any(Error));
+    warn.mockRestore();
+  });
+
+  it('names the schema in the warning once its id is known', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = { $id: 'has-an-id', type: 'object' };
+    const selfReferential: Record<string, unknown> = {};
+    selfReferential.self = selfReferential;
+    // Normalizing a cyclic value throws after the id has been computed. The message names the schema so two schemas
+    // failing with the same error text are reported separately rather than deduped into one
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    expect(validator.isValid(schema, selfReferential, { type: 'object' })).toBe(false);
+    expect(warn).toHaveBeenCalledWith('Error encountered validating schema "has-an-id":', expect.any(Error));
     warn.mockRestore();
   });
 
@@ -179,7 +241,9 @@ describe('CFWorkerValidator', () => {
     const validator = customizeValidator();
     expect(validator.isValid({ type: 'string', format: 'color' }, '#fff', { type: 'string' })).toBe(true);
     expect(
-      validator.isValid({ type: 'string', format: 'data-url' }, 'data:text/plain;base64,eA==', { type: 'string' }),
+      validator.isValid({ type: 'string', format: 'data-url' }, 'data:text/plain;base64,eA==', {
+        type: 'string',
+      }),
     ).toBe(true);
   });
 
@@ -211,6 +275,20 @@ describe('createCfworkerInstance()', () => {
     expect(extenderFn).toHaveBeenCalledTimes(1);
   });
 
+  it('resolves a $ref to a schema the extender adds', () => {
+    const validator = createCfworkerInstance(
+      { $ref: 'https://example.com/added' },
+      {
+        extenderFn: (engine) => {
+          engine.addSchema({ $id: 'https://example.com/added', type: 'number' });
+          return engine;
+        },
+      },
+    );
+    expect(validator.validate(1).valid).toBe(true);
+    expect(validator.validate('one').valid).toBe(false);
+  });
+
   it('fails loudly if the engine format registry is unavailable', () => {
     expect(() => installFormats({}, null as never)).toThrow('did not expose its format registry');
   });
@@ -222,4 +300,197 @@ describe('package surface', () => {
     expect(typeof pkg.CFWorkerValidator).toBe('function');
     expect(pkg.default).toBeInstanceOf(pkg.CFWorkerValidator);
   });
+});
+
+describe('validateFormData() and the data handed to customValidate', () => {
+  it('hands customValidate the formData whose defaults the caller computed', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    // `Form` computes these with its own `SchemaUtils`, so they honor the `customMergeAllOf` and
+    // `defaultFormStateBehavior` it was given, which a validator has no way to know
+    validator.validateFormData({}, schema, customValidate, undefined, undefined, () => ({ a: 'fromTheForm' }));
+    expect(customValidate.mock.calls[0][0]).toEqual({ a: 'fromTheForm' });
+  });
+
+  it('hands customValidate an undefined the caller computed, rather than recomputing its own defaults', () => {
+    const validator = customizeValidator();
+    // A root whose defaults legitimately come out `undefined` for the form: read rather than called, the parameter
+    // could not say that, and the validator would recompute `[]` here with neither of the form's settings
+    const schema: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    validator.validateFormData(undefined, schema, customValidate, undefined, undefined, () => undefined);
+    expect(customValidate.mock.calls[0][0]).toBeUndefined();
+  });
+
+  it('computes them itself, with the default allOf merge, when the caller supplies none', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      allOf: [{ properties: { merged: { type: 'string', default: 'fromAllOf' } } }],
+    };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    validator.validateFormData({}, schema, customValidate);
+    expect(customValidate.mock.calls[0][0]).toEqual({ merged: 'fromAllOf' });
+  });
+});
+
+describe('validateFormData() with a transformErrors that clears every message', () => {
+  it('lists the errors whether or not a customValidate is passed', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string', minLength: 8 } } };
+    const transformErrors: ErrorTransformer = (errors) => errors.map((error) => ({ ...error, message: undefined }));
+    const customValidate: CustomValidator = (_formData, errors) => errors;
+    const { errors } = validator.validateFormData({ a: 'short' }, schema, undefined, transformErrors);
+    expect(errors).not.toEqual([]);
+    expect(validator.validateFormData({ a: 'short' }, schema, customValidate, transformErrors).errors).toEqual(errors);
+  });
+});
+
+describe('CFWorkerValidator validating a subschema by its place in the root', () => {
+  it('does not answer a pointer with what it compiled for an earlier root', () => {
+    const validator = customizeValidator();
+    const pointer: RJSFSchema = { $ref: '#/definitions/X' };
+    expect(validator.isValid(pointer, 's', { definitions: { X: { type: 'string' } } })).toBe(true);
+    const numberRoot: RJSFSchema = { definitions: { X: { type: 'number' } } };
+    expect(validator.isValid(pointer, 's', numberRoot)).toBe(false);
+    expect(validator.isValid(pointer, 5, numberRoot)).toBe(true);
+  });
+  it('resolves a pointer into a root that carries an $id', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it.each([
+    ['5', 5],
+    ['true', true],
+    ['{}', {}],
+  ])('resolves a pointer into a root whose $id is %s, as into one without an $id', (_written, id) => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { definitions: { X: { type: 'number' } } };
+    // An untyped caller may hand over an `$id` that is no string, which the engine reads as a URI all the same
+    Reflect.set(rootSchema, '$id', id);
+    const pointer: RJSFSchema = { $ref: '#/definitions/X' };
+    expect(validator.isValid(pointer, 1, rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 's', rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a root whose $id ends in an empty fragment', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json#', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('validates against the root itself where its $id ends in an empty fragment', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      $id: 'http://example.com/root.json#',
+      definitions: { X: { type: 'string' } },
+      type: 'object',
+      properties: { k: { $ref: '#/definitions/X' } },
+    };
+    expect(validator.isValid(rootSchema, { k: 's' }, rootSchema)).toBe(true);
+    expect(validator.isValid(rootSchema, { k: 5 }, rootSchema)).toBe(false);
+    expect(validator.validateFormData({ k: 's' }, rootSchema).errors).toEqual([]);
+    expect(validator.validateFormData({ k: 5 }, rootSchema).errors.map((error) => error.property)).toContain('.k');
+  });
+  it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold, a # ending it', () => {
+    const validator = customizeValidator();
+    const property: RJSFSchema = { type: 'string' };
+    const rootSchema: RJSFSchema = { $defs: { X: { properties: { 'a$b:c@d+e#f g%h#': property } } } };
+    const pointer = getValidationTarget(property, rootSchema);
+    expect(pointer).toEqual({ $ref: '#/$defs/X/properties/a$b:c@d+e%23f%20g%25h%23' });
+    expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a $ref the root holds that escapes a # in a property name as %23', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      definitions: { 'a#b': { type: 'number' } },
+      type: 'object',
+      properties: { x: { $ref: '#/definitions/a%23b' } },
+    };
+    expect(validator.validateFormData({ x: 1 }, rootSchema).errors).toEqual([]);
+    expect(validator.validateFormData({ x: 's' }, rootSchema).errors.map((error) => error.property)).toContain('.x');
+    expect(validator.isValid({ $ref: '#/properties/x' }, 1, rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/properties/x' }, 's', rootSchema)).toBe(false);
+  });
+  it('resolves a $ref with no fragment as it stands', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { definitions: { X: { $id: 'http://example.com/x.json', type: 'number' } } };
+    expect(validator.isValid({ $ref: 'http://example.com/x.json' }, 1, rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: 'http://example.com/x.json' }, 's', rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a dependencies entry named like a keyword', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      properties: { type: { type: 'string' } },
+      dependencies: { type: { oneOf: [{ properties: { type: { const: 'a' } } }] } },
+    };
+    const pointer: RJSFSchema = { $ref: '#/dependencies/type/oneOf/0/properties/type' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+  });
+  it.each(['properties', 'definitions', '$defs', 'patternProperties', 'dependentSchemas'])(
+    'resolves a pointer into a dependencies entry named like the map keyword %s',
+    (key) => {
+      const validator = customizeValidator();
+      const rootSchema: RJSFSchema = {
+        properties: { [key]: { type: 'string' } },
+        dependencies: { [key]: { oneOf: [{ properties: { [key]: { const: 'a' } } }] } },
+      };
+      const pointer: RJSFSchema = { $ref: `#/dependencies/${key}/oneOf/0/properties/${key}` };
+      expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+      expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+    },
+  );
+  it('resolves a pointer into a dependencies entry named like a keyword inside another such entry', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      dependencies: { type: { dependencies: { enum: { oneOf: [{ properties: { enum: { const: 'a' } } }] } } } },
+    };
+    const pointer: RJSFSchema = { $ref: '#/dependencies/type/dependencies/enum/oneOf/0/properties/enum' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a dependencies entry named like a keyword below a property whose name holds a #', () => {
+    const validator = customizeValidator();
+    const dependent = (value: string): RJSFSchema => ({
+      dependencies: { type: { oneOf: [{ properties: { type: { const: value } } }] } },
+    });
+    const rootSchema: RJSFSchema = { properties: { a: dependent('A'), 'a#b': dependent('B') } };
+    const inA: RJSFSchema = { $ref: '#/properties/a/dependencies/type/oneOf/0/properties/type' };
+    const inAB: RJSFSchema = { $ref: '#/properties/a%23b/dependencies/type/oneOf/0/properties/type' };
+    expect(validator.isValid(inA, 'A', rootSchema)).toBe(true);
+    expect(validator.isValid(inA, 'B', rootSchema)).toBe(false);
+    expect(validator.isValid(inAB, 'B', rootSchema)).toBe(true);
+    expect(validator.isValid(inAB, 'A', rootSchema)).toBe(false);
+  });
+  it('resolves a pointer from the root into a dependencies entry named like a keyword inside a nested resource', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      properties: {
+        n: {
+          $id: 'http://example.com/n.json',
+          definitions: { A: { const: 'a' } },
+          dependencies: { type: { oneOf: [{ properties: { type: { $ref: '#/definitions/A' } } }] } },
+        },
+      },
+    };
+    const pointer: RJSFSchema = { $ref: '#/properties/n/dependencies/type/oneOf/0/properties/type' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+  });
+});
+
+pointerValidationTests(() => customizeValidator());
+absoluteRefValidationTests(() => customizeValidator());
+sharedObjectValidationTests(() => customizeValidator());
+sharedCopyScoringTests(() => customizeValidator());
+
+describe('CFWorkerValidator', () => {
+  const validatorFor = (rootSchema: RJSFSchema) =>
+    customizeValidator(String(rootSchema.$schema).includes('2020-12') ? { draft: '2020-12' } : {});
+  nestedResourceTests(validatorFor);
+  mergedResourceViewTests(validatorFor);
 });

@@ -1,4 +1,4 @@
-import { parseDateString } from '../src/index.ts';
+import parseDateString from '../src/parseDateString.ts';
 
 describe('parseDateString()', () => {
   it('should raise on invalid JSON datetime', () => {

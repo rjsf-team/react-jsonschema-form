@@ -5,7 +5,7 @@ const single: Sample = {
     title: 'A single-field form',
     type: 'string',
   },
-  formData: 'initial value',
+  initialFormData: 'initial value',
   uiSchema: {},
 };
 

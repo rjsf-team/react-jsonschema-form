@@ -66,7 +66,7 @@ const nested: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     title: 'My current tasks',
     tasks: [
       {

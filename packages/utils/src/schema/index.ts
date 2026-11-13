@@ -5,34 +5,42 @@ import getDefaultFormState from './getDefaultFormState.ts';
 import getDisplayLabel from './getDisplayLabel.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import getFromSchema from './getFromSchema.ts';
+import getUiRequiredErrorSchema from './getUiRequiredErrorSchema.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
-import omitExtraData, { getUsedFormData, getFieldNames, isValueEmpty } from './omitExtraData.ts';
-import retrieveSchema, { relaxOptionsForScoring } from './retrieveSchema.ts';
-import sanitizeDataForNewSchema from './sanitizeDataForNewSchema.ts';
-import toPathSchema from './toPathSchema.ts';
+import omitExtraData from './omitExtraData.ts';
+import retrieveSchema, { expandRefCycle, getAdditionalPropertyType, getValidationTarget } from './retrieveSchema.ts';
+import sanitizeDataForNewSchema, {
+  constrainsAlike,
+  getItemSchema,
+  getPrefixLength,
+  namesEveryType,
+} from './sanitizeDataForNewSchema.ts';
+import { constrainsValue } from './schemaKeywords.ts';
 
 export {
+  constrainsAlike,
+  constrainsValue,
+  expandRefCycle,
   findFieldInSchema,
   findSelectedOptionInXxxOf,
+  getAdditionalPropertyType,
   getDefaultFormState,
+  // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   getDisplayLabel,
-  // oxlint-disable-next-line typescript/no-deprecated
-  getFieldNames, // Exported only to prevent breaking change in core
   getClosestMatchingOption,
   getFirstMatchingOption,
   getFromSchema,
-  // oxlint-disable-next-line typescript/no-deprecated
-  getUsedFormData, // Exported only to prevent breaking change in core
+  getItemSchema,
+  getPrefixLength,
+  getUiRequiredErrorSchema,
+  getValidationTarget,
   isFilesArray,
   isMultiSelect,
   isSelect,
-  isValueEmpty,
+  namesEveryType,
   omitExtraData,
-  relaxOptionsForScoring,
   retrieveSchema,
   sanitizeDataForNewSchema,
-  // oxlint-disable-next-line typescript/no-deprecated
-  toPathSchema,
 };

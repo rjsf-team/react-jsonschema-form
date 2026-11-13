@@ -1,16 +1,31 @@
 import type { OptionOnSelectData } from '@fluentui/react-combobox';
-import { Dropdown, Field, Option } from '@fluentui/react-components';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { DropdownProps } from '@fluentui/react-components';
+import { Dropdown, Field, makeStyles, mergeClasses, Option, OptionGroup } from '@fluentui/react-components';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   enumOptionsIndexForValue,
+  enumOptionValueDecoder,
+  getLabelId,
   getOptionValueFormat,
-  labelValue,
+  groupEnumOptions,
+  hasWidgetErrors,
+  isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
+  widgetAriaProps,
+  widgetDrawsLabel,
+  widgetDrawsLabelText,
+  templateMarksRequired,
 } from '@rjsf/utils';
+
+import { fieldLabelSlot } from '../utils.ts';
+
+const useStyles = makeStyles({
+  // Fluent's `Dropdown` keeps a 250px minimum width, which would push it out of a narrower layout grid column
+  dropdown: { minWidth: 0 },
+});
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
   if (multiple) {
@@ -24,86 +39,107 @@ function getValue(data: OptionOnSelectData, multiple: boolean) {
  *
  * @param props - The `WidgetProps` for this component
  */
-function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  htmlName,
-  options,
-  label,
-  hideLabel,
-  value,
-  required,
-  disabled,
-  readonly,
-  multiple = false,
-  autofocus = false,
-  rawErrors = [],
-  onChange,
-  onBlur,
-  onFocus,
-  schema,
-  placeholder,
-  registry,
-  uiSchema,
-}: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+function SelectWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    className,
+    options,
+    label,
+    value,
+    required,
+    disabled,
+    readonly,
+    multiple = false,
+    autofocus = false,
+    onChange,
+    onBlur,
+    onFocus,
+    schema,
+    placeholder,
+    registry,
+    uiSchema,
+    presentation,
+  } = props;
+  const classes = useStyles();
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given, and one holding
+  // only a required field's `*` would name it "star", so a label is drawn only with text. Where none names it, the
+  // dropdown, whose contents are its value, is named by the field's label, its placeholder or the translated prompt
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
+  const labelId = getLabelId<T, S, F>(props);
+  const ariaProps = widgetAriaProps(props);
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-  let selectedIndexesAsArray: string[] = [];
+  // One scan of the options finds the selection, which both the displayed labels and the selected options come from.
+  // The options' own values are encoded in the `optionValueFormat`, so the selection is encoded in that format too
+  const matchedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const selectedOptionsWithIndex =
+    matchedIndexes === undefined || !enumOptions
+      ? []
+      : [matchedIndexes].flat().map((index) => ({ index: Number(index), ...enumOptions[Number(index)] }));
+  const dropdownValue = selectedOptionsWithIndex.map((option) => option.label).join(', ');
+  const selectedOptions = selectedOptionsWithIndex.map((option) => domValues[option.index]);
 
-  if (typeof selectedIndexes === 'string') {
-    selectedIndexesAsArray = [selectedIndexes];
-  } else if (Array.isArray(selectedIndexes)) {
-    selectedIndexesAsArray = selectedIndexes.map((index) => String(index));
-  }
-
-  const dropdownValue = selectedIndexesAsArray
-    .map((index) => (enumOptions ? enumOptions[Number(index)].label : undefined))
-    .join(', ');
-
-  const handleBlur = () => onBlur(id, selectedIndexes);
-  const handleFocus = () => onFocus(id, selectedIndexes);
-  const handleChange = (_: any, data: OptionOnSelectData) => {
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>({ id, value, options, onFocus, onBlur });
+  const handleChange: NonNullable<DropdownProps['onOptionSelect']> = (_, data) => {
     const newValue = getValue(data, multiple);
-    return onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
+    onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
   };
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
+  function renderOption(option: IndexedEnumOptionType<S>) {
+    return (
+      <Option key={option.index} value={domValues[option.index]} disabled={option.disabled}>
+        {option.label}
+      </Option>
+    );
+  }
+
   return (
     <Field
-      label={labelValue(label, hideLabel)}
-      validationState={rawErrors.length ? 'error' : undefined}
+      label={
+        drawsLabel
+          ? { ...fieldLabelSlot(label, id, labelId), required: templateMarksRequired<T, S, F>(props) }
+          : undefined
+      }
+      validationState={hasWidgetErrors<T, S, F>(props) ? 'error' : undefined}
       required={required}
     >
       <Dropdown
         id={id}
         name={htmlName || id}
         multiselect={multiple}
-        className='form-control'
+        className={mergeClasses('form-control', classes.dropdown, className)}
         value={dropdownValue}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         onBlur={handleBlur}
         onFocus={handleFocus}
         onOptionSelect={handleChange}
-        selectedOptions={selectedIndexesAsArray}
-        aria-describedby={ariaDescribedByIds(id)}
+        selectedOptions={selectedOptions}
+        // Fluent names the dropdown only through its label's `for` where that `for` matches its id, an id a nested
+        // `anyOf`'s option selector shares with the selector above it, so the dropdown points at its own label's id too
+        aria-labelledby={drawsLabel ? labelId : undefined}
+        {...ariaProps}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
-        {Array.isArray(enumOptions) &&
-          enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
-            const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
-            return (
-              <Option
-                key={String(enumValue)}
-                value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
-                disabled={isDisabled}
-              >
-                {enumLabel}
-              </Option>
-            );
-          })}
+        {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>
+          isEnumOptionsGroup<S>(item) ? (
+            <OptionGroup key={`optgroup-${item.label}`} label={item.label}>
+              {item.options.map(renderOption)}
+            </OptionGroup>
+          ) : (
+            renderOption(item)
+          ),
+        )}
       </Dropdown>
       <SelectedOptionDescription
         id={id}
@@ -112,6 +148,8 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         registry={registry}
         uiSchema={uiSchema}
         value={value}
+        hideLabel={hideLabel}
+        presentation={presentation}
       />
     </Field>
   );

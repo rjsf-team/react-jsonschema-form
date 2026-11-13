@@ -1,15 +1,17 @@
 import type { CSSProperties } from 'react';
-import type { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
-import { noop } from '@rjsf/utils';
+import { forwardRef, lazy, memo, Suspense } from 'react';
+import type { GenericObjectType, GlobalUISchemaOptions, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
+import { errorId, noop, toInputValue } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, fireEvent, act, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, fireEvent, act, screen, waitFor } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
 import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
 import Form from '../src/index.ts';
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import { createFormComponent, createFormRef, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import type { NoValFormProps } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -117,7 +119,7 @@ describe('uiSchema', () => {
           <input
             type='text'
             className='custom'
-            value={props.value}
+            value={toInputValue(props.value)}
             defaultValue={props.defaultValue}
             required={props.required}
             onChange={(event) => props.onChange(event.target.value)}
@@ -129,6 +131,50 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
         expect(node.querySelectorAll('.custom')).toHaveLength(1);
+      });
+    });
+
+    describe('wrapped component widget', () => {
+      const schema: RJSFSchema = { type: 'string' };
+
+      const CustomWidget = (props: WidgetProps) => (
+        <input type='text' className='custom' value={toInputValue(props.value)} onChange={noop} />
+      );
+      const ForwardedWidget = forwardRef<HTMLInputElement, WidgetProps>((props, ref) => (
+        <input ref={ref} type='text' className='custom' value={toInputValue(props.value)} onChange={noop} />
+      ));
+
+      const wrappedWidgets: [string, Widget][] = [
+        ['memo()', memo(CustomWidget)],
+        ['forwardRef()', ForwardedWidget],
+        ['memo(forwardRef())', memo(ForwardedWidget)],
+        ['lazy()', lazy(async () => ({ default: CustomWidget }))],
+      ];
+
+      // Rendered within a `Suspense` boundary for the `lazy()` widget, and awaited so it can resolve
+      it.each(wrappedWidgets)('should render a %s widget given as ui:widget', async (_name, widget) => {
+        const { findByRole } = render(
+          <Suspense>
+            <Form schema={schema} uiSchema={{ 'ui:widget': widget }} validator={validator} />
+          </Suspense>,
+        );
+
+        expect(await findByRole('textbox')).toHaveClass('custom');
+      });
+
+      it.each(wrappedWidgets)('should render a %s widget registered by name', async (_name, widget) => {
+        const { findByRole } = render(
+          <Suspense>
+            <Form
+              schema={schema}
+              uiSchema={{ 'ui:widget': 'wrapped' }}
+              widgets={{ wrapped: widget }}
+              validator={validator}
+            />
+          </Suspense>,
+        );
+
+        expect(await findByRole('textbox')).toHaveClass('custom');
       });
     });
 
@@ -227,32 +273,6 @@ describe('uiSchema', () => {
         );
       });
 
-      it('should cache MergedWidget instance', () => {
-        // Cast to get to the underlying cached object without typescript warnings
-        expect((widget as GenericObjectType).MergedWidget).not.toBeDefined();
-        createFormComponent({
-          schema: {
-            type: 'string',
-          },
-          uiSchema: {
-            'ui:widget': 'widget',
-          },
-          widgets,
-        });
-        const cached = (widget as GenericObjectType).MergedWidget;
-        expect(cached).toBeDefined();
-        createFormComponent({
-          schema: {
-            type: 'string',
-          },
-          uiSchema: {
-            'ui:widget': 'widget',
-          },
-          widgets,
-        });
-        expect((widget as GenericObjectType).MergedWidget).toBe(cached);
-      });
-
       it('should render merged ui:widget options for widget referenced as function', () => {
         const { node } = createFormComponent({
           schema,
@@ -340,7 +360,7 @@ describe('uiSchema', () => {
         <input
           type='text'
           className='custom'
-          value={props.value}
+          value={toInputValue(props.value)}
           defaultValue={props.defaultValue}
           required={props.required}
           onChange={(event) => props.onChange(event.target.value)}
@@ -374,7 +394,13 @@ describe('uiSchema', () => {
 
       const CustomWidget = (props: WidgetProps) => {
         const { value, options } = props;
-        return <input type='text' className={options.className} value={value} />;
+        return (
+          <input
+            type='text'
+            className={typeof options.className === 'string' ? options.className : undefined}
+            value={toInputValue(value)}
+          />
+        );
       };
 
       describe('direct reference', () => {
@@ -435,8 +461,9 @@ describe('uiSchema', () => {
         const { options } = props;
         const { enumOptions, className } = options;
         return (
-          <select className={className}>
-            {Array.isArray(enumOptions) && enumOptions.map(({ value }) => <option key={String(value)}>{value}</option>)}
+          <select className={typeof className === 'string' ? className : undefined}>
+            {Array.isArray(enumOptions) &&
+              enumOptions.map(({ value }) => <option key={String(value)}>{String(value)}</option>)}
           </select>
         );
       };
@@ -466,18 +493,19 @@ describe('uiSchema', () => {
           },
         },
       };
+      const enumDisabled = ['foo'];
       const uiSchema: UiSchema = {
         field: {
           'ui:widget': SelectWidget,
           'ui:options': {
             className: 'custom',
           },
-          'ui:enumDisabled': ['foo'],
+          'ui:enumDisabled': enumDisabled,
         },
       };
       it('should have atleast one option disabled', () => {
         const { node } = createFormComponent({ schema, uiSchema });
-        const disabledOptionsLen = uiSchema.field['ui:enumDisabled'].length;
+        const disabledOptionsLen = enumDisabled.length;
         expect(node.querySelectorAll('option:disabled')).toHaveLength(disabledOptionsLen);
         expect(node.querySelectorAll('option:enabled')).toHaveLength(
           // Two options, one disabled, plus the placeholder
@@ -496,24 +524,57 @@ describe('uiSchema', () => {
           },
         },
       };
+      const enumDisabled = ['foo'];
       const uiSchema: UiSchema = {
         field: {
           'ui:widget': RadioWidget,
           'ui:options': {
             className: 'custom',
           },
-          'ui:enumDisabled': ['foo'],
+          'ui:enumDisabled': enumDisabled,
         },
       };
       it('should have atleast one radio option disabled', () => {
         const { node } = createFormComponent({ schema, uiSchema });
-        const disabledOptionsLen = uiSchema.field['ui:enumDisabled'].length;
+        const disabledOptionsLen = enumDisabled.length;
         expect(node.querySelectorAll('input:disabled')).toHaveLength(disabledOptionsLen);
         expect(node.querySelectorAll('input:enabled')).toHaveLength(
           // Two options, one disabled, plus the placeholder
           2 - disabledOptionsLen,
         );
       });
+    });
+
+    it('should disable a listed constant of a $ref to a oneOf, in a checkboxes array and in a select (#2776)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Group: {
+            oneOf: [
+              { const: 'A', title: 'Group Alfa' },
+              { const: 'B', title: 'Group Beta' },
+              { const: 'C', title: 'Group Celsius' },
+            ],
+          },
+        },
+        properties: {
+          multi: { type: 'array', title: 'Multi', items: { $ref: '#/definitions/Group' }, uniqueItems: true },
+          single: { $ref: '#/definitions/Group' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        multi: { 'ui:widget': 'checkboxes', 'ui:enumDisabled': ['B'] },
+        single: { 'ui:enumDisabled': ['B'] },
+      };
+
+      createFormComponent({ schema, uiSchema });
+
+      expect(screen.getByRole('checkbox', { name: 'Group Beta' })).toBeDisabled();
+      expect(screen.getByRole('checkbox', { name: 'Group Alfa' })).toBeEnabled();
+      expect(screen.getByRole('checkbox', { name: 'Group Celsius' })).toBeEnabled();
+      expect(screen.getByRole('option', { name: 'Group Beta' })).toBeDisabled();
+      expect(screen.getByRole('option', { name: 'Group Alfa' })).toBeEnabled();
+      expect(screen.getByRole('option', { name: 'Group Celsius' })).toBeEnabled();
     });
   });
 
@@ -528,7 +589,7 @@ describe('uiSchema', () => {
 
       const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('div.help-block')).toHaveTextContent('plop');
+      expect(node.querySelector('div.rjsf-field-help')).toHaveTextContent('plop');
     });
   });
 
@@ -543,7 +604,7 @@ describe('uiSchema', () => {
 
       const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('label.control-label')).toHaveTextContent('plop');
+      expect(node.querySelector('label.rjsf-field-label')).toHaveTextContent('plop');
     });
   });
 
@@ -558,7 +619,7 @@ describe('uiSchema', () => {
 
       const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('div.field-description')).toHaveTextContent('plop');
+      expect(node.querySelector('div.rjsf-field-description')).toHaveTextContent('plop');
     });
   });
 
@@ -572,11 +633,11 @@ describe('uiSchema', () => {
 
     const { node } = createFormComponent({ schema, uiSchema });
 
-    expect(node.querySelector('div.help-block')).toHaveTextContent('plop');
+    expect(node.querySelector('div.rjsf-field-help')).toHaveTextContent('plop');
   });
 
   describe('ui:focus', () => {
-    function shouldFocus(schema: RJSFSchema, uiSchema: UiSchema, selector = 'input', formData?: any) {
+    function shouldFocus(schema: RJSFSchema, uiSchema: UiSchema, selector = 'input', formData?: unknown) {
       const props: GenericObjectType = {
         validator,
         schema,
@@ -720,6 +781,32 @@ describe('uiSchema', () => {
           { 'ui:autofocus': true },
         );
       });
+
+      it('should focus on the first radio a user can choose when the first is disabled', () => {
+        shouldFocus(
+          { type: 'string', enum: ['red', 'green', 'blue'] },
+          { 'ui:widget': 'radio', 'ui:autofocus': true, 'ui:enumDisabled': ['red'] },
+          'input[value="1"]',
+        );
+      });
+
+      it('should focus on the checked radio, where Tab into the group lands', () => {
+        shouldFocus(
+          { type: 'string', enum: ['red', 'green', 'blue'] },
+          { 'ui:widget': 'radio', 'ui:autofocus': true },
+          'input[value="2"]',
+          'blue',
+        );
+      });
+
+      it('should focus on the first radio a user can choose when the checked one is disabled', () => {
+        shouldFocus(
+          { type: 'string', enum: ['red', 'green', 'blue'] },
+          { 'ui:widget': 'radio', 'ui:autofocus': true, 'ui:enumDisabled': ['blue'] },
+          'input[value="0"]',
+          'blue',
+        );
+      });
     });
 
     describe('object', () => {
@@ -821,6 +908,14 @@ describe('uiSchema', () => {
           ['bar'],
         );
       });
+
+      it('should focus on the first checkbox a user can choose when the first is disabled', () => {
+        shouldFocus(
+          { type: 'array', items: { type: 'string', enum: ['foo', 'bar', 'baz'] }, uniqueItems: true },
+          { 'ui:widget': 'checkboxes', 'ui:autofocus': true, 'ui:enumDisabled': ['foo'] },
+          'input[value="1"]',
+        );
+      });
     });
 
     describe('boolean', () => {
@@ -902,7 +997,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -914,7 +1009,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -950,7 +1045,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -962,7 +1057,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -997,7 +1092,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: '#151ce6',
           },
         });
@@ -1009,15 +1104,14 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: '#151ce6',
           },
         });
 
-        // fireEvent.change is used instead of user.paste() because jsdom does not process paste
-        // events on color inputs — they have no editable text field in the DOM model and ignore
-        // clipboard events entirely. user.type() also fails because jsdom's sanitization algorithm
-        // rejects each intermediate character as an invalid color string.
+        // fireEvent.change is used because user-event cannot edit a color input at all: `color` is absent
+        // from its editableInputTypes list, so neither paste() nor type() reaches the value — both are
+        // silent no-ops that would leave this assertion testing nothing rather than failing.
         act(() => {
           fireEvent.change(node.querySelector('[type=color]')!, {
             target: {
@@ -1047,7 +1141,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -1059,7 +1153,7 @@ describe('uiSchema', () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -1099,7 +1193,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'b',
           },
         });
@@ -1111,7 +1205,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -1153,7 +1247,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3.14,
           },
         });
@@ -1165,7 +1259,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3.14,
           },
         });
@@ -1231,7 +1325,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 13.14,
           },
         });
@@ -1239,11 +1333,43 @@ describe('uiSchema', () => {
         expect(node.querySelector('[type=range]')).toHaveValue('13.14');
       });
 
+      it('should render through the BaseInputTemplate its uiSchema names', () => {
+        const CustomRangeInput = () => <span className='custom-range-input' />;
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': 'range', 'ui:BaseInputTemplate': CustomRangeInput } },
+        });
+
+        expect(node.querySelector('.custom-range-input')).toBeInTheDocument();
+        expect(node.querySelectorAll('[type=range]')).toHaveLength(0);
+      });
+
+      // A browser ignores `readonly` on a range input, so a read-only range is disabled to keep it from being dragged
+      it('should disable a read-only range', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': 'range', 'ui:readonly': true } },
+        });
+
+        expect(node.querySelector('[type=range]')).toBeDisabled();
+      });
+
+      // A range input can't show an empty value, so clearing it would leave the slider at its midpoint
+      it('should draw no allowClearTextInputs clear button', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': 'range', 'ui:allowClearTextInputs': true } },
+          initialFormData: { foo: 13.14 },
+        });
+
+        expect(node.querySelector('button.rjsf-btn-clear')).not.toBeInTheDocument();
+      });
+
       it('should call onChange handler when value is updated', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             // Use a value that is greater than the minumum value of the schema
             foo: 13.14,
           },
@@ -1327,7 +1453,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 2.718,
           },
         });
@@ -1339,7 +1465,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 2.718,
           },
         });
@@ -1369,7 +1495,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 42,
           },
         });
@@ -1381,7 +1507,7 @@ describe('uiSchema', () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 42,
           },
         });
@@ -1420,7 +1546,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3,
           },
         });
@@ -1432,7 +1558,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3,
           },
         });
@@ -1461,7 +1587,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3,
           },
         });
@@ -1473,7 +1599,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3,
           },
         });
@@ -1519,7 +1645,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 2,
           },
         });
@@ -1531,7 +1657,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 1,
           },
         });
@@ -1559,7 +1685,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 42,
           },
         });
@@ -1571,7 +1697,7 @@ describe('uiSchema', () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 42,
           },
         });
@@ -1611,7 +1737,7 @@ describe('uiSchema', () => {
       it('should render boolean option labels', () => {
         const { node } = createFormComponent({ schema, uiSchema });
         const labels = [].map.call(
-          node.querySelectorAll('.field-radio-group label'),
+          node.querySelectorAll('.rjsf-field-radio-group label'),
           (node: Element) => node.textContent,
         );
 
@@ -1622,7 +1748,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: false,
           },
         });
@@ -1634,7 +1760,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: true,
           },
         });
@@ -1648,7 +1774,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: false,
           },
         });
@@ -1683,7 +1809,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: false,
           },
         });
@@ -1698,7 +1824,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: false,
           },
         });
@@ -1727,7 +1853,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: true,
           },
         });
@@ -1739,7 +1865,7 @@ describe('uiSchema', () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: true,
           },
         });
@@ -1748,86 +1874,6 @@ describe('uiSchema', () => {
 
         expectToHaveBeenCalledWithFormData(onSubmit, { foo: true }, true);
       });
-    });
-  });
-
-  describe('custom root field id', () => {
-    it('should use a custom root field id for objects', () => {
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          foo: {
-            type: 'string',
-          },
-          bar: {
-            type: 'string',
-          },
-        },
-      };
-      const uiSchema: UiSchema = {
-        'ui:rootFieldId': 'myform',
-      };
-      const { node } = createFormComponent({ schema, uiSchema });
-
-      const ids = [].map.call(node.querySelectorAll('input[type=text]'), (node: Element) => node.id);
-      expect(ids).toEqual(['myform_foo', 'myform_bar']);
-    });
-
-    it('should use a custom root field id for arrays', () => {
-      const schema: RJSFSchema = {
-        type: 'array',
-        items: {
-          type: 'string',
-        },
-      };
-      const uiSchema: UiSchema = {
-        'ui:rootFieldId': 'myform',
-      };
-      const { node } = createFormComponent({
-        schema,
-        uiSchema,
-        formData: ['foo', 'bar'],
-      });
-
-      const ids = [].map.call(node.querySelectorAll('input[type=text]'), (node: Element) => node.id);
-      expect(ids).toEqual(['myform_0', 'myform_1']);
-    });
-
-    it('should use a custom root field id for array of objects', () => {
-      const schema: RJSFSchema = {
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            foo: {
-              type: 'string',
-            },
-            bar: {
-              type: 'string',
-            },
-          },
-        },
-      };
-      const uiSchema: UiSchema = {
-        'ui:rootFieldId': 'myform',
-      };
-      const { node } = createFormComponent({
-        schema,
-        uiSchema,
-        formData: [
-          {
-            foo: 'foo1',
-            bar: 'bar1',
-          },
-          {
-            foo: 'foo2',
-            bar: 'bar2',
-          },
-        ],
-      });
-
-      const ids = [].map.call(node.querySelectorAll('input[type=text]'), (node: Element) => node.id);
-      expect(ids).toEqual(['myform_0_foo', 'myform_0_bar', 'myform_1_foo', 'myform_1_bar']);
     });
   });
 
@@ -1851,7 +1897,7 @@ describe('uiSchema', () => {
           const rendered = createFormComponent({
             schema,
             uiSchema,
-            formData,
+            initialFormData: formData,
           });
           node = rendered.node;
         });
@@ -1865,7 +1911,7 @@ describe('uiSchema', () => {
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.rjsf-array-item-add button')).toBeDisabled();
+          expect(node.querySelector('.rjsf-array-item-add')).toBeDisabled();
         });
 
         it('should disable the Delete button', () => {
@@ -1950,7 +1996,7 @@ describe('uiSchema', () => {
 
       it('should disable a number text widget', () => {
         shouldBeDisabled(
-          'input[type=number]',
+          'input[inputmode=decimal]',
           {
             type: 'number',
           },
@@ -2129,7 +2175,7 @@ describe('uiSchema', () => {
           const rendered = createFormComponent({
             schema,
             uiSchema,
-            formData,
+            initialFormData: formData,
           });
           node = rendered.node;
         });
@@ -2142,7 +2188,7 @@ describe('uiSchema', () => {
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.rjsf-array-item-add button')).toBeDisabled();
+          expect(node.querySelector('.rjsf-array-item-add')).toBeDisabled();
         });
 
         it('should disable the Delete button', () => {
@@ -2231,7 +2277,7 @@ describe('uiSchema', () => {
 
       it('should mark as readonly a number text widget', () => {
         shouldBeReadonly(
-          'input[type=number]',
+          'input[inputmode=decimal]',
           {
             type: 'number',
           },
@@ -2394,7 +2440,7 @@ describe('uiSchema', () => {
           const uiSchema: UiSchema = {};
           const formData = ['a', 'b'];
 
-          const rendered = createFormComponent({ schema, uiSchema, formData });
+          const rendered = createFormComponent({ schema, uiSchema, initialFormData: formData });
           node = rendered.node;
         });
 
@@ -2406,7 +2452,7 @@ describe('uiSchema', () => {
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.rjsf-array-item-add button')).toBeDisabled();
+          expect(node.querySelector('.rjsf-array-item-add')).toBeDisabled();
         });
 
         it('should disable the Delete button', () => {
@@ -2439,7 +2485,7 @@ describe('uiSchema', () => {
           expect(disabled).toEqual([true, true]);
         });
 
-        it('should not mark as readonly even if globalOptions set readonly', () => {
+        it("should not mark as readonly a property whose ui:readonly is false, under an object's readOnly", () => {
           const schema: RJSFSchema = {
             type: 'object',
             properties: {
@@ -2454,9 +2500,6 @@ describe('uiSchema', () => {
           };
 
           const uiSchema: UiSchema = {
-            'ui:globalOptions': {
-              readonly: true,
-            },
             foo: {
               'ui:readonly': false,
             },
@@ -2522,7 +2565,7 @@ describe('uiSchema', () => {
 
       it('should mark as readonly a number text widget', () => {
         shouldBeReadonly(
-          'input[type=number]',
+          'input[inputmode=decimal]',
           {
             type: 'number',
             readOnly: true,
@@ -2664,6 +2707,158 @@ describe('uiSchema', () => {
     });
   });
 
+  describe('ui:globalOptions in a LayoutGridField cell', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const refSchema: RJSFSchema = {
+      type: 'object',
+      definitions: { foo: { type: 'string' } },
+      properties: { foo: { $ref: '#/definitions/foo' } },
+    };
+    const gridUiSchema: UiSchema = {
+      'ui:field': 'LayoutGridField',
+      'ui:layoutGrid': { 'ui:row': { children: ['foo'] } },
+      'ui:globalOptions': { label: false },
+    };
+    const ownSpellings: [string, UiSchema][] = [
+      ['ui:options', { 'ui:options': { label: true } }],
+      ['ui:<name>', { 'ui:label': true }],
+    ];
+
+    it.each<[string, RJSFSchema, UiSchema]>(
+      ownSpellings.flatMap(([spelling, own]) => [
+        [`the cell's uiSchema, as ${spelling}`, schema, { ...gridUiSchema, foo: own }],
+        [
+          `the ui:definitions entry the cell's schema $refs, as ${spelling}`,
+          refSchema,
+          { ...gridUiSchema, 'ui:definitions': { '#/definitions/foo': own } },
+        ],
+      ]),
+    )('is beaten by the options in %s', (_, formSchema, uiSchema) => {
+      const { node } = createFormComponent({ schema: formSchema, uiSchema });
+
+      expect(node.querySelector('label[for="root_foo"]')).toBeInTheDocument();
+    });
+
+    it('still reaches a cell that sets none of its own', () => {
+      const { node } = createFormComponent({ schema, uiSchema: gridUiSchema });
+
+      expect(node.querySelector('label[for="root_foo"]')).not.toBeInTheDocument();
+    });
+
+    it("leaves the globals out of the cell's uiSchema, so its widget's options hold no globalOptions", () => {
+      const TextWidget = vi.fn<Widget>(() => null);
+      createFormComponent({ schema, uiSchema: gridUiSchema, widgets: { TextWidget } });
+
+      const { options, uiSchema } = TextWidget.mock.lastCall![0];
+      expect(options).toMatchObject({ label: false });
+      expect(options).not.toHaveProperty('globalOptions');
+      expect(uiSchema).toEqual({});
+    });
+
+    it("leaves a cell's errors shown under a global hideError, which RJSF reads only per field", () => {
+      // Untyped, as a JSON uiSchema is, since `hideError` is an option RJSF reads only per field
+      const globalOptions: GenericObjectType = { hideError: true };
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { ...gridUiSchema, 'ui:globalOptions': globalOptions },
+        extraErrors: { foo: { __errors: ['foo is wrong'] } },
+      });
+
+      expect(node.querySelector(`#${errorId('root_foo')}`)).toHaveTextContent('foo is wrong');
+    });
+  });
+
+  describe('ui:globalOptions reaching a string or number widget', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { foo: { type: 'string' }, bar: { type: 'string' }, num: { type: 'number' } },
+    };
+
+    it("reach its options beneath the field's own", () => {
+      const TextWidget = vi.fn<Widget>(() => null);
+      createFormComponent({
+        schema,
+        uiSchema: { 'ui:globalOptions': { allowClearTextInputs: true }, bar: { 'ui:allowClearTextInputs': false } },
+        widgets: { TextWidget },
+      });
+
+      const optionsById = Object.fromEntries(TextWidget.mock.calls.map(([{ id, options }]) => [id, options]));
+      expect(optionsById.root_foo).toMatchObject({ allowClearTextInputs: true });
+      expect(optionsById.root_bar).toMatchObject({ allowClearTextInputs: false });
+      expect(optionsById.root_num).toMatchObject({ allowClearTextInputs: true });
+    });
+
+    it("reach its options with a key the Form declares in globalUiOptionsKeys, beneath the field's own", () => {
+      const TextWidget = vi.fn<Widget>(() => null);
+      const globalOptions: GlobalUISchemaOptions<{ density: string }> = { density: 'compact' };
+      createFormComponent({
+        schema,
+        uiSchema: { 'ui:globalOptions': globalOptions, bar: { 'ui:density': 'comfortable' } },
+        globalUiOptionsKeys: ['density'],
+        widgets: { TextWidget },
+      });
+
+      const optionsById = Object.fromEntries(TextWidget.mock.calls.map(([{ id, options }]) => [id, options]));
+      expect(optionsById.root_foo).toMatchObject({ density: 'compact' });
+      expect(optionsById.root_bar).toMatchObject({ density: 'comfortable' });
+    });
+
+    it.each<[string, RJSFSchema, string | number]>([
+      ['text', { type: 'string' }, 'x'],
+      ['number', { type: 'number' }, 4],
+    ])(
+      'give a %s input the clear button a global allowClearTextInputs turns on',
+      async (_, inputSchema, initialFormData) => {
+        const { node, onChange } = createFormComponent({
+          schema: inputSchema,
+          uiSchema: { 'ui:globalOptions': { allowClearTextInputs: true } },
+          initialFormData,
+        });
+
+        await user.click(node.querySelector('button.rjsf-btn-clear')!);
+
+        expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
+      },
+    );
+
+    it.each<[string, RJSFSchema, string[]]>([
+      ['string', { type: 'string', enum: ['admin', 'editor'] }, ['', 'admin', 'editor']],
+      ['number', { type: 'number', enum: [3, 7] }, ['', '3', '7']],
+    ])("encode a %s enum's options by a global optionValueFormat", (_, enumSchema, expected) => {
+      const { node } = createFormComponent({
+        schema: enumSchema,
+        uiSchema: { 'ui:globalOptions': { optionValueFormat: 'realValue' } },
+      });
+
+      const values = Array.from(node.querySelectorAll('#root option'), (option) => option.getAttribute('value'));
+      expect(values).toEqual(expected);
+    });
+
+    it('leave out every option RJSF reads only per field', () => {
+      const TextWidget = vi.fn<Widget>(() => null);
+      const TextareaWidget = vi.fn<Widget>(() => null);
+      // Untyped, as a JSON uiSchema is, since none of these is an option RJSF reads from ui:globalOptions
+      const globalOptions: GenericObjectType = {
+        widget: 'textarea',
+        required: true,
+        inputType: 'tel',
+        placeholder: 'Global',
+        emptyValue: 'EMPTY',
+        label: false,
+      };
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'string' } } },
+        uiSchema: { 'ui:globalOptions': globalOptions },
+        widgets: { TextWidget, TextareaWidget },
+      });
+
+      expect(TextareaWidget).not.toHaveBeenCalled();
+      const { options, placeholder } = TextWidget.mock.lastCall![0];
+      expect(options).toEqual({ label: false });
+      expect(placeholder).toBe('');
+    });
+  });
+
   describe('ui:definitions', () => {
     it('should apply ui:definitions to a simple $ref property', () => {
       const schema: RJSFSchema = {
@@ -2786,7 +2981,7 @@ describe('uiSchema', () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
-        formData: { people: [{ name: 'Alice' }, { name: 'Bob' }] },
+        initialFormData: { people: [{ name: 'Alice' }, { name: 'Bob' }] },
       });
 
       expect(node.querySelectorAll("input[placeholder='Enter name']")).toHaveLength(2);
@@ -2827,7 +3022,7 @@ describe('uiSchema', () => {
         ],
       };
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       expect(node.querySelectorAll("input[placeholder='Node name']")).toHaveLength(5);
     });
@@ -2867,7 +3062,7 @@ describe('uiSchema', () => {
         tree: [{ name: 'L0', children: [{ name: 'L1', children: [] }] }],
       };
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       const selects = node.querySelectorAll('select');
       expect(selects.length).toBeGreaterThanOrEqual(2);
@@ -2876,6 +3071,843 @@ describe('uiSchema', () => {
         const nodeOption = options.find((opt) => opt.text === 'Tree Node');
         expect(nodeOption).toBeDefined();
       });
+    });
+  });
+  describe('a uiSchema value that is not an object', () => {
+    // Only untyped JavaScript can put these here, so they stand in for a caller the types never saw. A uiSchema is
+    // user input, so every one of them has to render rather than throw
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const nonObjects: [string, unknown][] = [
+      ['a string', 'oops'],
+      ['a number', 42],
+      ['true', true],
+      ['an array', ['oops']],
+      ['null', null],
+    ];
+
+    it.each(nonObjects)('renders when the root ui:options is %s', (_label, value) => {
+      const uiSchema: GenericObjectType = { 'ui:options': value };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+
+    it.each(nonObjects)("renders when a field's own uiSchema is %s", (_label, value) => {
+      const uiSchema: GenericObjectType = { foo: value };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+
+    it.each(nonObjects)("renders when a field's own ui:options is %s", (_label, value) => {
+      const uiSchema: GenericObjectType = { foo: { 'ui:options': value } };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+
+    it.each(nonObjects)('renders when ui:globalOptions is %s', (_label, value) => {
+      const uiSchema: GenericObjectType = { 'ui:globalOptions': value };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+  });
+
+  // `0` and `null` stand in for an untyped JSON uiSchema, where a flag typed `boolean` can hold any value
+  describe('ui:label', () => {
+    it('reads a ui:label of 0 as false, rendering no stray 0', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+      const uiSchema: GenericObjectType = { foo: { 'ui:label': 0 } };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('.rjsf-field-string')?.textContent).not.toContain('0');
+    });
+
+    it.each([false, 0, null])("hides an object field's title and description for a ui:label of %s", (label) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'object', title: 'Foo title', description: 'Foo description', properties: {} },
+        },
+      };
+      const uiSchema: GenericObjectType = { foo: { 'ui:label': label } };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.textContent).not.toContain('Foo title');
+      expect(container.textContent).not.toContain('Foo description');
+    });
+
+    it("shows an object field's title and description when ui:label is unset", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'object', title: 'Foo title', description: 'Foo description', properties: {} },
+        },
+      };
+
+      const { container } = render(<Form schema={schema} validator={validator} />);
+
+      expect(container.textContent).toContain('Foo title');
+      expect(container.textContent).toContain('Foo description');
+    });
+  });
+
+  describe('ui:required', () => {
+    it('reads a ui:required of 0 as false, rendering no stray 0', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+      const uiSchema: GenericObjectType = { foo: { 'ui:required': 0 } };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('.rjsf-field-string')?.textContent).not.toContain('0');
+    });
+
+    it('shows the required indicator on a non-required field when ui:required is true', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': true },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).not.toBeNull();
+    });
+
+    it('forwards the effective required state to the field/widget, not just the label', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:widget': 'custom', 'ui:required': true },
+      };
+      const CustomWidget = (props: WidgetProps) => (
+        <input type='text' className='custom' required={props.required} readOnly />
+      );
+      const { node } = createFormComponent({ schema, uiSchema, widgets: { custom: CustomWidget } });
+      expect(node.querySelector('.custom')).toBeRequired();
+    });
+
+    it('hides the required indicator on a schema-required field when ui:required is false', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false, 'ui:initialValue': 'fallback' },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).toBeNull();
+    });
+
+    it('reads a ui:required of null as false on a schema-required field, not as unset', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: GenericObjectType = { foo: { 'ui:required': null } };
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).toBeNull();
+    });
+
+    it('blocks submission when ui:required is true and the field is empty', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': true },
+      };
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema });
+      await submitForm(node, user);
+      expect(onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('does not suppress schema validation when ui:required is false', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema });
+      await submitForm(node, user);
+      expect(onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('allows submission when ui:required is false and ui:initialValue fills the field', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false, 'ui:initialValue': 'fallback' },
+      };
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema });
+      await submitForm(node, user);
+      expectToHaveBeenCalledWithFormData(onSubmit, { foo: 'fallback' }, true);
+    });
+
+    it('warns when ui:required is false on a schema-required field with no initialValue or emptyValue', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('ui:required turns off required for schema-required field "root_foo"'),
+      );
+    });
+
+    it.each([0, null])(
+      'warns when ui:required is %s on a schema-required field, since it hides the marker as false does',
+      (value) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['foo'],
+          properties: {
+            foo: { type: 'string' },
+          },
+        };
+        const uiSchema: GenericObjectType = { foo: { 'ui:required': value } };
+        createFormComponent({ schema, uiSchema });
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('ui:required turns off required for schema-required field "root_foo"'),
+        );
+      },
+    );
+
+    it('warns only once, not on every re-render', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+      // Each keystroke changes foo's own formData, re-rendering its SchemaField; the misconfiguration itself
+      // (ui:required/ui:initialValue/ui:emptyValue) hasn't changed, so it must not warn again.
+      await user.type(node.querySelector('input')!, 'abc');
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('warns separately for each misconfigured field that shares a name', () => {
+      const address: RJSFSchema = {
+        type: 'object',
+        required: ['street'],
+        properties: {
+          street: { type: 'string' },
+        },
+      };
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          shipping: address,
+          billing: address,
+        },
+      };
+      const uiSchema: UiSchema = {
+        shipping: { street: { 'ui:required': false } },
+        billing: { street: { 'ui:required': false } },
+      };
+      createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_shipping_street"'));
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_billing_street"'));
+    });
+
+    // Both forms use the default idPrefix, so both warnings name the same field and are the same message. Two forms
+    // meant to coexist on a page need distinct idPrefixes anyway, or their fields collide on the same DOM ids.
+    it('warns once when two forms make the same mistake at the same field', () => {
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({
+        schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'string' } } },
+        uiSchema,
+      });
+      createFormComponent({
+        schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'number' } } },
+        uiSchema,
+      });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('warns separately for two forms whose idPrefixes make the field ids differ', () => {
+      const schema: RJSFSchema = { type: 'object', required: ['foo'], properties: { foo: { type: 'string' } } };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({ schema, uiSchema, idPrefix: 'shipping' });
+      createFormComponent({ schema, uiSchema, idPrefix: 'billing' });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"shipping_foo" (foo)'));
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"billing_foo" (foo)'));
+    });
+
+    // The reason the message carries the field path at all: ids join their segments with `idSeparator`, so these two
+    // fields share the id `root_a_b` and would otherwise produce the same message, silencing the second
+    it('warns separately for two misconfigured fields whose idSeparator-joined ids collide', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['a_b', 'a'],
+        properties: {
+          a_b: { type: 'string' },
+          a: { type: 'object', required: ['b'], properties: { b: { type: 'string' } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        a_b: { 'ui:required': false },
+        a: { b: { 'ui:required': false } },
+      };
+      createFormComponent({ schema, uiSchema, initialFormData: { a: {} } });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_a_b" (a_b)'));
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_a_b" (a.b)'));
+    });
+
+    it('does not warn when ui:required is false alongside ui:initialValue', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false, 'ui:initialValue': 'x' },
+      };
+      createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not warn when ui:required is false alongside ui:emptyValue', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false, 'ui:emptyValue': '' },
+      };
+      createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not warn when ui:required is false alongside a schema.default', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string', default: 'US' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not warn when ui:required is false on a field the schema does not require', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not honor required set via ui:globalOptions', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      // Untyped, as a JSON uiSchema is, since `required` is an option RJSF reads only per field
+      const globalOptions: GenericObjectType = { required: true };
+      const uiSchema: UiSchema = {
+        'ui:globalOptions': globalOptions,
+      };
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).toBeNull();
+      await submitForm(node, user);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+
+    it('does not honor required set via ui:globalOptions when rendered via LayoutGridField', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const globalOptions: GenericObjectType = { required: true };
+      const uiSchema: UiSchema = {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': {
+          'ui:row': { children: ['foo'] },
+        },
+        'ui:globalOptions': globalOptions,
+      };
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).toBeNull();
+      await submitForm(node, user);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+
+    describe('a widget gets no options from the global required, ui:definitions or ui:globalOptions', () => {
+      // Untyped, as a JSON uiSchema is, since `required` is an option RJSF reads only per field
+      const requiredGlobally: GenericObjectType = { required: true };
+      function optionsOf(widget: 'CheckboxWidget' | 'SelectWidget' | 'TextWidget', props: Partial<NoValFormProps>) {
+        const seen: WidgetProps['options'][] = [];
+        function SpyWidget({ options }: WidgetProps) {
+          seen.push(options);
+          return null;
+        }
+        createFormComponent({ schema: { type: 'string' }, ...props, widgets: { [widget]: SpyWidget } });
+        return seen[seen.length - 1];
+      }
+
+      it('a boolean field (#5527)', () => {
+        const options = optionsOf('CheckboxWidget', {
+          schema: { type: 'object', properties: { flag: { type: 'boolean' } } },
+          uiSchema: { 'ui:globalOptions': { ...requiredGlobally, enableMarkdownInDescription: true } },
+        });
+        expect(options).not.toHaveProperty('required');
+        expect(options).toHaveProperty('enableMarkdownInDescription', true);
+      });
+
+      it("an array field's multi-select (#5527)", () => {
+        const options = optionsOf('SelectWidget', {
+          schema: {
+            type: 'object',
+            properties: { tags: { type: 'array', uniqueItems: true, items: { enum: ['a', 'b'] } } },
+          },
+          uiSchema: { 'ui:globalOptions': requiredGlobally, tags: { 'ui:widget': 'select' } },
+        });
+        expect(options).not.toHaveProperty('required');
+      });
+
+      it("an anyOf field's option selector (#5527)", () => {
+        const options = optionsOf('SelectWidget', {
+          schema: { type: 'object', properties: { pet: { anyOf: [{ type: 'string' }, { type: 'number' }] } } },
+          uiSchema: { 'ui:globalOptions': requiredGlobally },
+        });
+        expect(options).not.toHaveProperty('required');
+      });
+
+      it('a root field, which carries ui:definitions (#5527)', () => {
+        const options = optionsOf('TextWidget', { uiSchema: { 'ui:definitions': {}, 'ui:placeholder': 'p' } });
+        expect(options).not.toHaveProperty('definitions');
+      });
+
+      it('a field LayoutGridField renders (#5527)', () => {
+        const options = optionsOf('TextWidget', {
+          schema: { type: 'object', properties: { foo: { type: 'string' } } },
+          uiSchema: {
+            'ui:field': 'LayoutGridField',
+            'ui:layoutGrid': { 'ui:row': { children: ['foo'] } },
+            'ui:globalOptions': { label: false },
+          },
+        });
+        expect(options).not.toHaveProperty('globalOptions');
+        expect(options).toHaveProperty('label', false);
+      });
+
+      it('keeps a field its own ui:required as an option', () => {
+        const notRequiredGlobally: GenericObjectType = { required: false };
+        const options = optionsOf('CheckboxWidget', {
+          schema: { type: 'object', properties: { flag: { type: 'boolean' } } },
+          uiSchema: { 'ui:globalOptions': notRequiredGlobally, flag: { 'ui:required': true } },
+        });
+        expect(options).toHaveProperty('required', true);
+      });
+    });
+
+    it('does not honor required set via the grid config uiProps for a cell', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': {
+          'ui:row': { children: [{ name: 'foo', required: true }] },
+        },
+      };
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).toBeNull();
+      await submitForm(node, user);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+
+    it('passes required set via a grid cell config through to a custom render component as a plain prop', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      // No matching schema property, so this cell renders through the raw UIComponent path rather than SchemaField;
+      // `required` here is just a component prop, unconnected to schema validation, so it isn't stripped out.
+      const CustomRenderer = (props: { required?: boolean }) => (
+        <div data-testid='custom-renderer' data-required={String(Boolean(props.required))} />
+      );
+      const uiSchema: UiSchema = {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': {
+          'ui:row': { children: [{ name: 'notInSchema', render: CustomRenderer, required: true }] },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('[data-testid="custom-renderer"]')).toHaveAttribute('data-required', 'true');
+    });
+
+    it('still warns when a field rendered via LayoutGridField sets ui:required: false with no fallback', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': {
+          'ui:row': { children: ['foo'] },
+        },
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('ui:required turns off required for schema-required field'),
+      );
+    });
+
+    it('enforces ui:required on a field only introduced by a dependencies branch', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          a: { type: 'string' },
+        },
+        dependencies: {
+          a: {
+            properties: {
+              b: { type: 'string' },
+            },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        b: { 'ui:required': true },
+      };
+      // fireEvent.submit bypasses the browser's own constraint validation (which would otherwise block submission
+      // on the rendered `required` field regardless of what schema validation does), isolating what this test
+      // actually means to check: that AJV itself rejects the missing field.
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema, initialFormData: { a: 'x' } });
+      await submitForm(node, user, true);
+      expect(onSubmit).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('ui:initialValue and ui:emptyValue', () => {
+    it('pre-fills a field with ui:initialValue on initial render', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          country: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        country: { 'ui:initialValue': 'US' },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector<HTMLInputElement>('input')).toHaveValue('US');
+    });
+
+    it('does not let ui:initialValue override formData that was already provided', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          country: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        country: { 'ui:initialValue': 'US' },
+      };
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: { country: 'FR' } });
+      expect(node.querySelector<HTMLInputElement>('input')).toHaveValue('FR');
+    });
+
+    it('restores ui:initialValue after the form is reset', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          country: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        country: { 'ui:initialValue': 'US' },
+      };
+      const formRef = createFormRef();
+      const props: NoValFormProps = { ref: formRef, schema, uiSchema };
+      const { node } = createFormComponent(props);
+      const input = node.querySelector<HTMLInputElement>('input')!;
+      await user.clear(input);
+      await user.type(input, 'FR');
+      expect(input).toHaveValue('FR');
+      act(() => {
+        formRef.current!.reset();
+      });
+      expect(input).toHaveValue('US');
+    });
+
+    it('restores ui:initialValue after reset when an explicit initialFormData is provided', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          country: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        country: { 'ui:initialValue': 'US' },
+      };
+      const formRef = createFormRef();
+      // Passing initialFormData means reset() derives the state from that data rather than from nothing
+      const props: NoValFormProps = { ref: formRef, schema, uiSchema, initialFormData: {} };
+      const { node } = createFormComponent(props);
+      const input = node.querySelector<HTMLInputElement>('input')!;
+      await user.clear(input);
+      await user.type(input, 'FR');
+      expect(input).toHaveValue('FR');
+      act(() => {
+        formRef.current!.reset();
+      });
+      expect(input).toHaveValue('US');
+    });
+
+    it('does not resurrect a cleared ui:initialValue on an unrelated recompute after a reset with initialFormData', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          country: { type: 'string' },
+          other: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        country: { 'ui:initialValue': 'US' },
+      };
+      const formRef = createFormRef();
+      const props: NoValFormProps = { ref: formRef, schema, uiSchema, initialFormData: {} };
+      const { node } = createFormComponent(props);
+      const countryInput = node.querySelector<HTMLInputElement>('#root_country')!;
+      act(() => {
+        formRef.current!.reset();
+      });
+      // The user clears the restored value again after the reset, then edits something unrelated.
+      await user.clear(countryInput);
+      expect(countryInput).toHaveValue('');
+      const otherInput = node.querySelector<HTMLInputElement>('#root_other')!;
+      await user.type(otherInput, 'x');
+      expect(countryInput).toHaveValue('');
+    });
+
+    it('extends ui:emptyValue to apply on initial render, not just on widget clear', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        name: { 'ui:emptyValue': 'unnamed' },
+      };
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema });
+      await submitForm(node, user);
+      expectToHaveBeenCalledWithFormData(onSubmit, { name: 'unnamed' }, true);
+    });
+
+    it('applies ui:initialValue to a new array item added via the add button', async () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        items: {
+          name: { 'ui:initialValue': 'Anonymous' },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
+      expect(node.querySelector<HTMLInputElement>('.rjsf-array-item input[type=text]')).toHaveValue('Anonymous');
+    });
+
+    it('applies ui:initialValue to a new additionalProperties entry added via the add button', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        additionalProperties: {
+          name: { 'ui:initialValue': 'Anonymous' },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
+      expect(node.querySelector<HTMLInputElement>('#root_newKey_name')).toHaveValue('Anonymous');
+    });
+
+    it('applies ui:initialValue on a oneOf branch selected via the option selector', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          {
+            type: 'object',
+            properties: { firstName: { type: 'string' } },
+          },
+          {
+            type: 'object',
+            properties: { idCode: { type: 'string' } },
+          },
+        ],
+      };
+      const uiSchema: UiSchema = {
+        oneOf: [{}, { idCode: { 'ui:initialValue': 'ID-1' } }],
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      const select = node.querySelector<HTMLSelectElement>('#root__oneof_select')!;
+      await user.selectOptions(select, '1');
+      expect(node.querySelector<HTMLInputElement>('#root_idCode')).toHaveValue('ID-1');
+    });
+
+    it('applies ui:initialValue from ui:definitions to a new array item added via the add button', async () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { $ref: '#/$defs/person' },
+        $defs: {
+          person: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/person': { name: { 'ui:initialValue': 'Anonymous' } },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
+      expect(node.querySelector<HTMLInputElement>('.rjsf-array-item input[type=text]')).toHaveValue('Anonymous');
+    });
+
+    it('applies ui:initialValue from ui:definitions to a new additionalProperties entry added via the add button', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { $ref: '#/$defs/person' },
+        $defs: {
+          person: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/person': { name: { 'ui:initialValue': 'Anonymous' } },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
+      expect(node.querySelector<HTMLInputElement>('#root_newKey_name')).toHaveValue('Anonymous');
+    });
+
+    it('applies ui:initialValue from ui:definitions to a field nested inside a newly selected oneOf branch', async () => {
+      // The selected option itself isn't a $ref (only `contact`, one of its own properties, is), so
+      // `resolveUiSchema()`'s oneOf/anyOf pre-population (which only expands an option that is itself a $ref)
+      // never fires here: `uiSchema.oneOf` stays empty, and MultiSchemaField's `newOptionUiSchema` falls back to
+      // the field's own (empty) uiSchema, exercising getDefaultFormState()'s own uiSchemaDefinitions threading.
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            oneOf: [
+              { type: 'object', properties: { firstName: { type: 'string' } } },
+              { type: 'object', properties: { contact: { $ref: '#/$defs/contact' } } },
+            ],
+          },
+        },
+        $defs: {
+          contact: { type: 'object', properties: { idCode: { type: 'string' } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/contact': { idCode: { 'ui:initialValue': 'ID-1' } },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      const select = node.querySelector<HTMLSelectElement>('#root_thing__oneof_select')!;
+      await user.selectOptions(select, '1');
+      expect(node.querySelector<HTMLInputElement>('#root_thing_contact_idCode')).toHaveValue('ID-1');
     });
   });
   it('string field with autocapitalize', () => {

@@ -11,7 +11,6 @@ import isSelectTest from './isSelectTest.ts';
 import omitExtraDataTest from './omitExtraDataTest.ts';
 import retrieveSchemaTest from './retrieveSchemaTest.ts';
 import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest.ts';
-import toPathSchemaTest from './toPathSchemaTest.ts';
 
 export type * from './types.ts';
 
@@ -29,5 +28,4 @@ export {
   omitExtraDataTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
-  toPathSchemaTest,
 };

@@ -11,7 +11,14 @@ import type {
   StrictRJSFSchema,
   GenericObjectType,
 } from '@rjsf/utils';
-import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
+import {
+  getArrayDescription,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  buttonId,
+  titleDrawsOptionalDataControl,
+} from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
@@ -37,14 +44,14 @@ export interface ArrayFieldTemplateMuiProps extends GenericObjectType {
  * @param props - The `ArrayFieldTemplateProps` props for the component
  */
 export default function ArrayFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     disabled,
-    fieldPathId,
+    id,
     uiSchema,
     items,
     optionalDataControl,
@@ -54,19 +61,12 @@ export default function ArrayFieldTemplate<
     required,
     schema,
     title,
+    presentation,
   } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
+  const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const shownDescription = getArrayDescription<T, S, F>(props);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -83,11 +83,11 @@ export default function ArrayFieldTemplate<
   } = getMuiProps<T, S, F, ArrayFieldTemplateMuiProps>(uiOptions);
 
   return (
-    <Paper elevation={2} {...arrayPaper}>
+    <Paper elevation={2} id={id} role='group' {...getContainerAttributes(presentation, id, title)} {...arrayPaper}>
       <Box {...arrayBox} sx={computeSxProps<BoxProps>({ p: 2 }, arrayBox)}>
         <ArrayFieldTitleTemplate
-          fieldPathId={fieldPathId}
-          title={uiOptions.title || title}
+          id={id}
+          title={title}
           schema={schema}
           uiSchema={uiSchema}
           required={required}
@@ -95,11 +95,12 @@ export default function ArrayFieldTemplate<
           optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
         />
         <ArrayFieldDescriptionTemplate
-          fieldPathId={fieldPathId}
-          description={uiOptions.description || schema.description}
+          id={id}
+          description={shownDescription}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
+          presentation={presentation}
         />
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {items}
@@ -112,7 +113,7 @@ export default function ArrayFieldTemplate<
             <Grid {...arrayAddButtonGridItem}>
               <Box {...arrayAddButtonBox} sx={computeSxProps<BoxProps>({ mt: 2 }, arrayAddButtonBox)}>
                 <AddButton
-                  id={buttonId(fieldPathId, 'add')}
+                  id={buttonId(id, 'add')}
                   className='rjsf-array-item-add'
                   onClick={onAddClick}
                   disabled={disabled || readonly}

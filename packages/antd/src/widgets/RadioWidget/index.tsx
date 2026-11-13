@@ -1,22 +1,30 @@
 import type { FocusEvent } from 'react';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
+  getGroupAttributes,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
 import type { RadioChangeEvent } from 'antd';
 import { Radio } from 'antd';
 
+import useControlState from '../../controlState.ts';
+
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   autofocus,
   disabled,
   registry,
@@ -27,13 +35,17 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onFocus,
   options,
   readonly,
+  required,
   value,
+  presentation,
+  label,
+  placeholder,
 }: WidgetProps<T, S, F>) {
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const control = useControlState<T, S, F>({ disabled, readonly, required, registry });
 
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = ({ target: { value: nextValue } }: RadioChangeEvent) =>
     onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
@@ -44,28 +56,40 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, emptyValue);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, emptyValue);
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation, label, placeholder, registry },
+    'radiogroup',
+  );
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
     <Radio.Group
-      disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
       name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
-      value={selectValue}
-      aria-describedby={ariaDescribedByIds(id)}
+      // Controlled even with no value, so a click on a read-only group, which `readonlyAsDisabled: false` leaves
+      // enabled, checks nothing the form doesn't hold
+      value={selectValue ?? null}
+      {...groupAttributes}
+      aria-readonly={control.ariaReadonly}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => (
           <Radio
             id={optionId(id, i)}
             name={htmlName || id}
-            autoFocus={i === 0 ? autofocus : false}
-            disabled={disabled || (Array.isArray(enumDisabled) && enumDisabled.includes(option.value))}
-            key={String(option.value)}
-            value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+            autoFocus={i === autofocusIndex}
+            // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
+            // the radio leaves `disabled` unset
+            disabled={control.disabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
+            // oxlint-disable-next-line react/no-array-index-key
+            key={i}
+            required={control.toggleRequired}
+            value={domValues[i]}
+            {...optionAttributes}
           >
             {option.label}
           </Radio>

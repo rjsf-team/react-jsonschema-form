@@ -1,27 +1,30 @@
 import { useCallback } from 'react';
-import type {
-  FieldProps,
-  FormContextType,
-  EnumOptionsType,
-  ErrorSchema,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
-import { getWidget, getUiOptions, isObject, optionsList, TranslatableString } from '@rjsf/utils';
+import type { FieldProps, FormContextType, ErrorSchema, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { fieldPathToName, getUiOptions, optionsList, resolveWidget, TranslatableString } from '@rjsf/utils';
+
+import {
+  booleanListsConstantOptions,
+  getBooleanFieldWidget,
+  getWidgetErrorProps,
+  getWidgetLabelProps,
+} from './fieldWidgetUtils.ts';
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
  * two boolean values based on the various alternatives in the schema.
  *
  * @param props - The `FieldProps` for this template
  */
-function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>,
-) {
+function BooleanField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: FieldProps<T, S, F>) {
   const {
     schema,
     name,
     uiSchema,
-    fieldPathId,
+    fieldPath,
+    id: fieldId,
     formData,
     registry,
     required,
@@ -33,61 +36,46 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     onChange,
     onFocus,
     onBlur,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its widget, for one that doesn't read `presentation`
     rawErrors,
+    presentation,
   } = props;
   const { title: schemaTitle } = schema;
   const { widgets, translateString, globalUiOptions } = registry;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const {
-    widget = 'checkbox',
+    widget: _widget,
     title: uiTitle,
     // Unlike the other fields, don't use `getDisplayLabel()` since it always returns false for the boolean type
     label: displayLabel = true,
-    enumNames,
+    // Applied through the `enumOptions` it labels, and ignored by constant options, so a widget mustn't apply it again
+    enumNames: _enumNames,
+    placeholder,
     ...options
-  } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const Widget = getWidget(schema, widget, widgets);
+  } = uiOptions;
+  const { Widget } = resolveWidget<T, S, F>(schema, getBooleanFieldWidget<T, S, F>(uiOptions, registry), widgets);
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
-  let enumOptions: EnumOptionsType<S>[] | undefined;
-  const label = uiTitle ?? schemaTitle ?? title ?? name;
-  if (Array.isArray(schema.oneOf)) {
-    enumOptions = optionsList<T, S, F>(
-      {
-        oneOf: schema.oneOf
-          .map((option) => {
-            if (isObject(option)) {
-              return {
-                ...option,
-                title: option.title || (option.const === true ? yes : no),
-              };
-            }
-            return undefined;
-          })
-          .filter((o: any) => o) as S[], // cast away the error that typescript can't grok is fixed
-      } as unknown as S,
-      uiSchema,
-    );
-  } else {
-    const enums = schema.enum ?? [true, false];
-    if (!enumNames && enums.length === 2 && enums.every((v: any) => typeof v === 'boolean')) {
-      enumOptions = [
-        {
-          value: enums[0],
-          label: enums[0] ? yes : no,
-        },
-        {
-          value: enums[1],
-          label: enums[1] ? yes : no,
-        },
-      ];
-    } else {
-      enumOptions = optionsList<T, S, F>({ enum: enums } as S, uiSchema);
+  const labelProps = getWidgetLabelProps<T, S, F>(
+    presentation,
+    uiTitle ?? schemaTitle ?? title ?? name,
+    () => displayLabel,
+  );
+  // The label `optionsList()` falls back to for a value nothing else names; any other value is labelled with itself
+  const yesNoLabel = (value: unknown) => {
+    if (typeof value !== 'boolean') {
+      return undefined;
     }
-  }
+    return value ? yes : no;
+  };
+  // Read from the keyword `SchemaField` picks the widget from, so the widget and the options come from one list
+  const enumOptions = booleanListsConstantOptions<S>(schema)
+    ? // Without the `enum`, which `optionsList()` would list instead
+      optionsList<T, S, F>({ ...schema, enum: undefined }, uiSchema, yesNoLabel)
+    : optionsList<T, S, F>({ enum: schema.enum ?? [true, false] } as S, uiSchema, yesNoLabel);
   const onWidgetChange = useCallback(
-    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) =>
-      onChange(value, fieldPathId.path, errorSchema, id),
-    [onChange, fieldPathId],
+    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => onChange(value, fieldPath, errorSchema, id),
+    [onChange, fieldPath],
   );
 
   return (
@@ -95,22 +83,25 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       options={{ ...options, enumOptions }}
       schema={schema}
       uiSchema={uiSchema}
-      id={fieldPathId.$id}
+      id={fieldId}
       name={name}
       onChange={onWidgetChange}
       onFocus={onFocus}
       onBlur={onBlur}
-      label={label}
-      hideLabel={!displayLabel}
+      {...labelProps}
       value={formData}
-      required={required}
+      // The plan's, which a checkbox the schema lets be `false` is not, so a widget written for any theme submits it
+      // unchecked (#5388). Its control's own, since a label drawn above carries the marker of the field it labels
+      required={presentation?.control ? presentation.control.attributes.required === true : required}
       disabled={disabled}
       readonly={readonly}
       hideError={hideError}
       registry={registry}
       autofocus={autofocus}
-      rawErrors={rawErrors}
-      htmlName={fieldPathId.name}
+      placeholder={placeholder}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
+      presentation={presentation}
+      htmlName={fieldPathToName(fieldPath, registry.globalFormOptions)}
     />
   );
 }

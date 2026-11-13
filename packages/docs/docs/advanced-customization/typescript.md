@@ -3,39 +3,44 @@
 RJSF fully supports Typescript.
 The [types and functions](../api-reference/utility-functions.md) exported by `@rjsf/utils` are fully typed (as needed) using one or more of the following 3 optional generics:
 
-- `T = any`: This represents the type of the `formData` and defaults to `any`.
+- `T = unknown`: This represents the type of the `formData` and defaults to `unknown`.
 - `S extends StrictRJSFSchema = RJSFSchema`: This represents the type of the `schema` and extends the `StrictRJSFSchema` type and defaults to the `RJSFSchema` type.
-- `F extends FormContextType = any`: This represents the type of the `formContext`, extends the `FormContextType` type and defaults to `any`.
+- `F extends FormContextType = FormContextType`: This represents the type of the `formContext`, extends the `FormContextType` type and defaults to `FormContextType`.
 
 Every other library in the `@rjsf/*` ecosystem use these same generics in their functions and React component definitions.
-For instance, in the `@rjsf/core` library the definitions of the `Form` component and the `withTheme()` and `getDefaultRegistry()` functions are as follows:
+For instance, in the `@rjsf/core` library the definitions of the `Form` component and the `withTheme()` and `generateTheme()` functions are as follows:
 
 ```ts
-export default class Form<
-  T = any,
+export default function Form<
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
-  // ... class implementation
-}
-
-export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  themeProps: ThemeProps<T, S, F>
-) {
+  F extends FormContextType = FormContextType,
+>(props: FormProps<T, S, F>) {
   // ... function implementation
 }
 
-export default function getDefaultRegistry<
-  T = any,
+export default function withTheme<
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(): Omit<Registry<T, S, F>, 'schemaUtils'> {
+  F extends FormContextType = FormContextType,
+>(themeProps: ThemeProps<T, S, F>): ThemedForm<T, S, F> {
+  // ... function implementation
+}
+
+export function generateTheme<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates' | 'classMap'> & { presentation: ThemePresentation } {
   // ... function implementation
 }
 ```
 
-Out of the box, the defaults for these generics will work for all use-cases.
-Providing custom types for any of these generics may be useful for situations where the caller is working with typed `formData`, `schema` or `formContext` props, Typescript is complaining and type casting isn't allowed.
+The defaults describe the general case, where RJSF cannot know the shape of your data: the schema decides it at runtime.
+Because `T` defaults to `unknown` rather than `any`, code that reads `formData` without naming its type has to narrow it first.
+Providing custom types for these generics is the way to avoid that, and is useful whenever the caller is working with typed `formData`, `schema` or `formContext` props.
+`Form` infers `T` from the `initialFormData` prop (or its deprecated alias `formData`) when one is passed, so naming it is only needed when there is no seed to infer from.
+The validator has no `T`: `ValidatorType<S, F>` puts the form data type on `validateFormData<T>()`, so one validator serves every form.
 
 ## Overriding generics
 
@@ -45,9 +50,9 @@ The generic `T` is used to represent the type of the `formData` property passed 
 If you are working with a simple, unchanging JSON Schema and you have defined a type for the `formData` you are working with, you can override this generic as follows:
 
 ```tsx
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 
 interface FormData {
   foo?: string;
@@ -64,49 +69,84 @@ const schema: RJSFSchema = {
 
 const formData: FormData = {};
 
-const validator = customizeValidator<FormData>();
+const validator = customizeValidator();
 
-render(<Form<FormData> schema={schema} validator={validator} formData={formData} />, document.getElementById('app'));
+render(<Form<FormData> schema={schema} validator={validator} initialFormData={formData} />, document.getElementById('app'));
 ```
 
 ### S
 
 The generic `S` is used to represent the type of the `schema` property passed into `Form`.
-If you are using something like the [Ajv utility types for schemas](https://ajv.js.org/guide/typescript.html#utility-types-for-schemas) typing system, you can override this generic as follows:
+It has to extend `StrictRJSFSchema`, the `JSONSchema7` of `@types/json-schema`, and defaults to `RJSFSchema`, which is the same type.
+A type of your own that extends it can declare a keyword on the root schema, and you can override this generic with it as follows:
 
 ```tsx
-import { JSONSchemaType } from 'ajv';
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 
 interface FormData {
   foo?: string;
   bar?: number;
 }
 
-type MySchema = JSONSchemaType<FormData>;
+type MySchema = RJSFSchema & { 'x-version'?: number };
 
 const schema: MySchema = {
   type: 'object',
+  'x-version': 2,
   properties: {
     foo: { type: 'string' },
     bar: { type: 'number' },
   },
 };
 
-const validator = customizeValidator<any, MySchema>();
+const validator = customizeValidator<MySchema>();
 
-render(<Form<any, MySchema> schema={schema} validator={validator} />, document.getElementById('app'));
-
-// Alternatively since you have the type, you could also use this
-// const validator = customizeValidator<FormData, MySchema>();
-// render((
-//  <Form<FormData, MySchema> schema={schema} validator={validator} />
-//), document.getElementById("app"));
+render(<Form<FormData, MySchema> schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-> NOTE: using this `Ajv typing system` has not been tested extensively with RJSF, so use carefully
+A subschema is still a `JSONSchema7Definition`, so a keyword declared this way type-checks on the root alone; to declare one at every depth, see [Keywords of your own](#keywords-of-your-own).
+
+The [Ajv utility types for schemas](https://ajv.js.org/guide/typescript.html#utility-types-for-schemas) don't fit `S`: `JSONSchemaType<FormData>` holds `readonly` arrays, such as its `anyOf`, where `JSONSchema7` takes mutable ones, so `Form<FormData, JSONSchemaType<FormData>>` fails with TS2344.
+Type the schema as `RJSFSchema` and the data with `T` instead.
+
+#### Keywords of your own
+
+`RJSFSchema` is the `JSONSchema7` of `@types/json-schema`, which `@rjsf/utils` augments with the later-draft, OpenAPI and Ajv keywords RJSF or its validators read.
+Declare a keyword RJSF doesn't read the same way, so that it type-checks at every depth of a schema:
+
+```ts
+import type { RJSFSchema } from '@rjsf/utils';
+
+declare module 'json-schema' {
+  interface JSONSchema7 {
+    'x-group'?: string;
+  }
+}
+
+const schema: RJSFSchema = { type: 'object', properties: { phone: { type: 'string', 'x-group': 'contact' } } };
+```
+
+The module has to resolve from your own code, to the copy `@rjsf/utils` uses.
+A package manager that doesn't hoist `@types/json-schema`, as pnpm doesn't by default, reports TS2664 (`Invalid module name in augmentation`) until your project lists it among its own dependencies. List a version `@rjsf/utils` accepts (`^7.0.15`), so that both resolve to one copy: the augmentation doesn't reach a second copy nested under `@rjsf/utils`.
+
+The file also has to be a module, with an `import` or an `export`, as the example is.
+In a file with neither, such as a `.d.ts` of its own, `declare module` replaces `json-schema` instead of adding to it, and TypeScript reports TS2353 on `type` and every other keyword until you add `export {};`.
+
+An augmentation adds keywords but can't change the type of one `JSONSchema7` already declares (TS2717).
+So Ajv's `$data` reference, which `formatMinimum` and its siblings take, doesn't type-check in `minimum`, `maximum`, `multipleOf` or another keyword typed as a number, even though a validator built with `customizeValidator({ ajvOptionsOverrides: { $data: true } })` validates it.
+The built-in widgets pass over a `$data` reference in `minimum`, `maximum` and `multipleOf` only; one in another keyword, such as `maxItems`, isn't handled yet, so an array with `maxItems: { $data: '1/limit' }` shows no Add button.
+Convert such a schema through `unknown`, since a direct `as RJSFSchema` fails with TS2352:
+
+```ts
+import type { RJSFSchema } from '@rjsf/utils';
+
+const schema = {
+  type: 'object',
+  properties: { low: { type: 'number' }, high: { type: 'number', minimum: { $data: '1/low' } } },
+} as unknown as RJSFSchema;
+```
 
 ### F
 
@@ -114,9 +154,9 @@ The generic `F` is used to represent the type of the `formContext` property pass
 If you have a type for this data, you can override this generic as follows:
 
 ```tsx
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 
 interface FormContext {
   myCustomWidgetData: object;
@@ -136,11 +176,11 @@ const formContext: FormContext = {
   },
 };
 
-const validator = customizeValidator<any, RJSFSchema, FormContext>();
+const validator = customizeValidator<RJSFSchema, FormContext>();
 
 render(
   <Form<any, RJSFSchema, FormContext> schema={schema} validator={validator} formContext={formContext} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -150,16 +190,16 @@ As shown in previous examples, overriding the default `Form` from `@rjsf/core` i
 Using the `withTheme()` function is just as easy:
 
 ```tsx
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { withTheme, ThemeProps } from '@rjsf/core';
+import { withTheme, type ThemeProps } from '@rjsf/core';
 
 interface FormData {
   foo?: string;
   bar?: number;
 }
 
-type MySchema = JSONSchemaType<FormData>;
+type MySchema = RJSFSchema;
 
 const schema: MySchema = {
   type: 'object',
@@ -179,7 +219,7 @@ const theme: ThemeProps<FormData, MySchema, FormContext> = {
 
 const ThemedForm = withTheme<FormData, MySchema, FormContext>(theme);
 
-const validator = customizeValidator<FormData, MySchema, FormContext>();
+const validator = customizeValidator<MySchema, FormContext>();
 
 const Demo = () => <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />;
 ```
@@ -187,8 +227,8 @@ const Demo = () => <ThemedForm schema={schema} uiSchema={uiSchema} validator={va
 ## Overriding generics in other themes
 
 Since all the other themes in RJSF are extensions of `@rjsf/core`, overriding parts of these themes with custom generics is a little different.
-The exported `Theme` and `Form` from any of the themes have been created using the generic defaults, and as a result, do not take generics themselves.
-In order to override generics, special `generateForm()` and `generateTheme()` functions are exported for your use.
+The exported `Form` from any of the themes is a `ThemedForm`, generic over the form data like `Form` itself, and the exported `Theme`, `Templates` and `Widgets` keep each component's own generics, so the `withTheme()` example above works unchanged with a theme's `Theme`.
+To pin the generics up front instead, `generateForm()` and `generateTheme()` functions are exported for your use.
 
 ### Overriding a Theme
 
@@ -196,12 +236,13 @@ If you are doing something like the following to create a new theme based on `@r
 
 ```tsx
 import React from 'react';
-import { WidgetProps } from '@rjsf/utils';
-import { ThemeProps, withTheme } from '@rjsf/core';
+import type { SlotComponent, WidgetProps } from '@rjsf/utils';
+import { type ThemeProps, withTheme } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
-import { Theme } from '@rjsf/mui';
+import { type MuiBaseInputTemplateProps, Templates, Theme } from '@rjsf/mui';
 
-const OldBaseInputTemplate = Theme.templates.BaseInputTemplate;
+// `BaseInputTemplateProps` doesn't declare `TextField`'s `size`, which `MuiBaseInputTemplateProps` does
+const OldBaseInputTemplate: SlotComponent<MuiBaseInputTemplateProps> = Templates.BaseInputTemplate;
 
 // Force the underlying `TextField` component to always use size="small"
 function MyBaseInputTemplate(props: WidgetProps) {
@@ -225,17 +266,17 @@ Then you would use the new `generateTheme()` and `generateForm()` functions as f
 
 ```tsx
 import React from 'react';
-import { WidgetProps } from '@rjsf/utils';
-import { ThemeProps, withTheme } from '@rjsf/core';
+import type { RJSFSchema, SlotComponent, WidgetProps } from '@rjsf/utils';
+import { type ThemeProps, withTheme } from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { generateTheme } from '@rjsf/mui';
+import { type MuiBaseInputTemplateProps, Templates, generateTheme } from '@rjsf/mui';
 
 interface FormData {
   foo?: string;
   bar?: number;
 }
 
-type MySchema = JSONSchemaType<FormData>;
+type MySchema = RJSFSchema;
 
 const schema: MySchema = {
   type: 'object',
@@ -251,7 +292,9 @@ interface FormContext {
 
 const Theme: ThemeProps<FormData, MySchema, FormContext> = generateTheme<FormData, MySchema, FormContext>();
 
-const OldBaseInputTemplate = Theme.templates.BaseInputTemplate;
+const OldBaseInputTemplate: SlotComponent<
+  MuiBaseInputTemplateProps<FormData, MySchema, FormContext>
+> = Templates.BaseInputTemplate;
 
 // Force the underlying `TextField` component to always use size="small"
 function MyBaseInputTemplate(props: WidgetProps<FormData, MySchema, FormContext>) {
@@ -268,7 +311,7 @@ const myTheme: ThemeProps<FormData, MySchema, FormContext> = {
 
 const ThemedForm = withTheme<FormData, MySchema, FormContext>(myTheme);
 
-const validator = customizeValidator<FormData, MySchema, FormContext>();
+const validator = customizeValidator<MySchema, FormContext>();
 
 // You could also do since they are effectively the same:
 // const ThemedForm = generateForm<FormData, MySchema, FormContext>(myTheme);

@@ -53,7 +53,7 @@ const defaults: Sample = {
     },
   },
   uiSchema: {},
-  formData: {
+  initialFormData: {
     valuesInFormData: {
       scalar: 'value',
       array: [

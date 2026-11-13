@@ -1,22 +1,27 @@
-import { createRef } from 'react';
-import type { RJSFSchema } from '@rjsf/utils';
+import type { HTMLAttributes } from 'react';
+import { createRef, useRef, useState } from 'react';
+import type { ArrayFieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
-import userEvent from '@testing-library/user-event';
-import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import draft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import { createPortal } from 'react-dom';
 
-import type { FormProps } from '../src/index.ts';
+import type { FormProps, FormRef } from '../src/index.ts';
 import Form from '../src/index.ts';
 import {
+  elementOf,
   expectToHaveBeenCalledWithFormData,
+  handleOf,
+  input,
   setupConsoleErrorSuppression,
   submitForm,
   describeRepeated,
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
-const renderErrorSuppression = setupConsoleErrorSuppression();
+setupConsoleErrorSuppression();
 
 describeRepeated('Form common: form props and updates', (createFormComponent) => {
   describe('Schema and formData updates', () => {
@@ -29,57 +34,82 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       },
     };
 
-    it('should replace state when props remove formData keys', async () => {
-      const formData = { foo: 'foo', bar: 'bar' };
-      const { node, onChange, rerender } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-      });
+    /** A parent that stores every edit, and can also replace the schema, and the value through the form's ref */
+    function ReplacingParent({ steps }: { steps: { schema: RJSFSchema; formData: object }[] }) {
+      const [step, setStep] = useState(0);
+      const [formData, setFormData] = useState<object>(steps[0].formData);
+      const ref = useRef<FormRef<object>>(null);
+      return (
+        <>
+          <button
+            type='button'
+            onClick={() => {
+              setStep(1);
+              handleOf(ref).setFieldValue('', steps[1].formData);
+            }}
+            data-testid='replace'
+            aria-label='replace'
+          />
+          <Form
+            ref={ref}
+            schema={steps[step].schema}
+            validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
+            formData={formData}
+            onChange={(event, id) => {
+              onChange(event, id);
+              setFormData(event.formData);
+            }}
+          />
+        </>
+      );
+    }
+    let onChange = vi.fn();
+    beforeEach(() => {
+      onChange = vi.fn();
+    });
 
-      rerender({
-        onChange,
-        schema: {
-          type: 'object',
-          properties: {
-            bar: { type: 'string' },
-          },
-        },
-        formData: { bar: 'bar' },
-      });
+    it('should replace state when the schema and the data are replaced without some keys', async () => {
+      const { container } = render(
+        <ReplacingParent
+          steps={[
+            { schema, formData: { foo: 'foo', bar: 'bar' } },
+            { schema: { type: 'object', properties: { bar: { type: 'string' } } }, formData: { bar: 'bar' } },
+          ]}
+        />,
+      );
 
-      await user.clear(node.querySelector('#root_bar')!);
-      await user.type(node.querySelector('#root_bar')!, 'baz');
+      await user.click(elementOf(container, '[data-testid=replace]'));
+      expect(container.querySelector('#root_foo')).toBeNull();
+      // Every edit from here on composes on the replaced value
+      await user.clear(input(container, 'root_bar'));
+      await user.type(input(container, 'root_bar'), 'baz');
 
       expectToHaveBeenCalledWithFormData(onChange, { bar: 'baz' }, 'root_bar');
     });
 
-    it('should replace state when props change formData keys', async () => {
-      const formData = { foo: 'foo', bar: 'bar' };
-      const { node, onChange, rerender } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-      });
+    it('should replace state when the schema and the data are replaced with other keys', async () => {
+      const { container } = render(
+        <ReplacingParent
+          steps={[
+            { schema, formData: { foo: 'foo', bar: 'bar' } },
+            {
+              schema: { type: 'object', properties: { foo: { type: 'string' }, baz: { type: 'string' } } },
+              formData: { foo: 'foo', baz: 'bar' },
+            },
+          ]}
+        />,
+      );
 
-      rerender({
-        onChange,
-        schema: {
-          type: 'object',
-          properties: {
-            foo: { type: 'string' },
-            baz: { type: 'string' },
-          },
-        },
-        formData: { foo: 'foo', baz: 'bar' },
-      });
-
-      await user.clear(node.querySelector('#root_baz')!);
-      await user.type(node.querySelector('#root_baz')!, 'baz');
+      await user.click(elementOf(container, '[data-testid=replace]'));
+      expect(container.querySelector('#root_bar')).toBeNull();
+      await user.clear(input(container, 'root_baz'));
+      await user.type(input(container, 'root_baz'), 'baz');
 
       expectToHaveBeenCalledWithFormData(onChange, { foo: 'foo', baz: 'baz' }, 'root_baz');
     });
   });
+
   describe('Form disable prop', () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -91,7 +121,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     const formData = { foo: 'foo', bar: 'bar' };
 
     it('should enable all items', () => {
-      const { node } = createFormComponent({ schema, formData });
+      const { node } = createFormComponent({ schema, initialFormData: formData });
 
       expect(node.querySelectorAll('input:disabled')).toHaveLength(0);
     });
@@ -99,7 +129,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('should disable all items', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         disabled: true,
       });
 
@@ -109,7 +139,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('should disable the submit button', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         disabled: true,
       });
 
@@ -120,7 +150,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('disabling the submit button via ui:schema - ui:submitButtonOptions props is still possible', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { 'ui:submitButtonOptions': { props: { disabled: true } } },
       });
 
@@ -131,7 +161,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('disabling the submit button via ui:schema - ui:options, submitButtonOptions props is still possible', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { 'ui:options': { submitButtonOptions: { submitText: 'hello', props: { disabled: true } } } },
       });
 
@@ -143,7 +173,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('if both ui:submitButtonProps and the main form disabled props are provided, and either of them are true, the button will be disabled', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { 'ui:submitButtonOptions': { props: { disabled: false } } },
         disabled: true,
       });
@@ -155,7 +185,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('if both ui:submitButtonProps and the main form disabled props are provided, but false, then submit button will not be disabled', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { 'ui:submitButtonOptions': { props: { disabled: false } } },
         disabled: false,
       });
@@ -176,7 +206,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     const formData = { foo: 'foo', bar: { baz: 'baz' } };
 
     it('should not have any readonly items', () => {
-      const { node } = createFormComponent({ schema, formData });
+      const { node } = createFormComponent({ schema, initialFormData: formData });
 
       expect(node.querySelectorAll('input:read-only')).toHaveLength(0);
     });
@@ -184,7 +214,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('should readonly all items', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         readonly: true,
       });
 
@@ -217,8 +247,8 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       expect(node.getAttribute('id')).toEqual(formProps.id);
     });
 
-    it('should set attr class of form', () => {
-      expect(node.getAttribute('class')).toEqual(formProps.className);
+    it('should set attr class of form beside the rjsf marker the stylesheet keys on', () => {
+      expect(node).toHaveClass('rjsf', formProps.className!);
     });
 
     it('should set attr name of form', () => {
@@ -255,8 +285,8 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
       const formProps: Omit<FormProps, 'validator'> = {
         ref: createRef(),
-        liveValidate: true,
-        formData: {
+        liveValidate: 'onChange',
+        initialFormData: {
           areaCode: '123455',
         },
         schema: {
@@ -326,7 +356,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
           minLength: 8,
           pattern: 'd+',
         },
-        formData: 'short',
+        initialFormData: 'short',
       };
 
       const { node, onError, rerender } = createFormComponent(formProps);
@@ -382,17 +412,9 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     });
 
     it('should render the component using a ComponentType', () => {
-      const Component = (props: any) => <div {...props} id='test' />;
+      const Component = (props: HTMLAttributes<HTMLDivElement>) => <div {...props} id='test' />;
       const { node } = createFormComponent({ schema: {}, tagName: Component });
       expect(node.id).toEqual('test');
-      // React deduplicates this warning per component name — only fires on the first test iteration
-      if (renderErrorSuppression.consoleSpy.mock.calls.length > 0) {
-        expect(renderErrorSuppression.consoleSpy).toHaveBeenCalledWith(
-          expect.stringContaining('Function components cannot be given refs'),
-          expect.any(String),
-          expect.any(String),
-        );
-      }
     });
   });
 
@@ -402,7 +424,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       const outerOnSubmit = vi.fn();
       const innerRef = createRef<HTMLDivElement>();
 
-      const ArrayTemplateWithForm = (_props: FormProps) => {
+      const ArrayTemplateWithForm = (_props: ArrayFieldTemplateProps) => {
         const innerFormProps = {
           validator,
           schema: {},
@@ -428,7 +450,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
           description: 'my description',
           items: { type: 'string' },
         },
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         templates: { ArrayFieldTemplate: ArrayTemplateWithForm },
         onSubmit: outerOnSubmit,
       });
@@ -478,11 +500,11 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       const formData = {
         type1: 'FOO',
       };
-      const { node, onError } = createFormComponent({ schema, formData });
+      const { node, onError } = createFormComponent({ schema, initialFormData: formData });
       await submitForm(node, user);
       expect(onError).not.toHaveBeenCalled();
     });
-    it('should show dependency defaults for uncontrolled components', async () => {
+    it('should show dependency defaults for a form seeded with initialFormData', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {

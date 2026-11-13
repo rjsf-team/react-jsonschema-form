@@ -1,0 +1,3939 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-object"
+        >
+          <fieldset
+            aria-labelledby="root_person__title"
+            id="root_person"
+          >
+            <legend>
+              <span
+                id="root_person__title"
+              >
+                person
+              </span>
+            </legend>
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_person_name"
+              >
+                <span
+                  id="root_person_name__label"
+                >
+                  name
+                </span>
+              </label>
+              <input
+                id="root_person_name"
+                name="root[person][name]"
+                placeholder=""
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <fieldset
+                aria-labelledby="root_person_address__title"
+                id="root_person_address"
+              >
+                <legend>
+                  <span
+                    id="root_person_address__title"
+                  >
+                    address
+                  </span>
+                </legend>
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="rjsf-field-label"
+                    for="root_person_address_street"
+                  >
+                    <span
+                      id="root_person_address_street__label"
+                    >
+                      street
+                    </span>
+                  </label>
+                  <input
+                    id="root_person_address_street"
+                    name="root[person][address][street]"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="rjsf-field-label"
+                    for="root_person_address_city"
+                  >
+                    <span
+                      id="root_person_address_city__label"
+                    >
+                      city
+                    </span>
+                  </label>
+                  <input
+                    id="root_person_address_city"
+                    name="root[person][address][city]"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="rjsf-field-label"
+                    for="root_person_address_country"
+                  >
+                    <span
+                      id="root_person_address_country__label"
+                    >
+                      country
+                    </span>
+                  </label>
+                  <input
+                    id="root_person_address_country"
+                    name="root[person][address][country]"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </fieldset>
+            </div>
+          </fieldset>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`nameGenerator > bracketNameGenerator > object with additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_name"
+          >
+            <span
+              id="root_name__label"
+            >
+              name
+            </span>
+          </label>
+          <input
+            id="root_name"
+            name="root[name]"
+            placeholder=""
+            type="text"
+            value="John"
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_customField__key"
+              >
+                customField Key
+              </label>
+              <input
+                id="root_customField__key"
+                type="text"
+                value="customField"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_customField"
+              >
+                <span
+                  id="root_customField__label"
+                >
+                  customField
+                </span>
+              </label>
+              <input
+                id="root_customField"
+                name="root[customField]"
+                placeholder=""
+                type="text"
+                value="customValue"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_customField__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_name"
+          >
+            <span
+              id="root_name__label"
+            >
+              name
+            </span>
+          </label>
+          <input
+            id="root_name"
+            name="root[name]"
+            placeholder=""
+            type="text"
+            value="Alice"
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_age"
+          >
+            <span
+              id="root_age__label"
+            >
+              age
+            </span>
+          </label>
+          <input
+            id="root_age"
+            inputmode="decimal"
+            name="root[age]"
+            pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+            placeholder=""
+            title="Enter a number"
+            type="text"
+            value="30"
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-boolean"
+        >
+          <div
+            class="rjsf-checkbox"
+          >
+            <label>
+              <input
+                checked=""
+                id="root_active"
+                name="root[active]"
+                type="checkbox"
+              />
+              <span>
+                active
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
+          class="rjsf-field rjsf-field-array"
+        >
+          <fieldset
+            aria-labelledby="root_tags__title"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+            id="root_tags"
+          >
+            <legend>
+              <span
+                id="root_tags__title"
+              >
+                tags
+              </span>
+            </legend>
+            <div
+              class="rjsf-array-item-list"
+            >
+              <div
+                class="rjsf-array-item"
+                data-display-label="true"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="rjsf-field-label"
+                    for="root_tags_0"
+                  >
+                    <span
+                      id="root_tags_0__label"
+                    >
+                      tags-1
+                    </span>
+                    <span
+                      class="rjsf-required"
+                    >
+                      *
+                    </span>
+                  </label>
+                  <input
+                    id="root_tags_0"
+                    name="root[tags][0]"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value="developer"
+                  />
+                </div>
+                <div
+                  class="rjsf-array-item-toolbox"
+                >
+                  <button
+                    class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
+                    disabled=""
+                    id="root_tags_0__moveUp"
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M8 13V3m-4 4 4-4 4 4"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
+                    id="root_tags_0__moveDown"
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M8 3v10m-4-4 4 4 4-4"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
+                    id="root_tags_0__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M4 4l8 8M12 4l-8 8"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="rjsf-array-item"
+                data-display-label="true"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="rjsf-field-label"
+                    for="root_tags_1"
+                  >
+                    <span
+                      id="root_tags_1__label"
+                    >
+                      tags-2
+                    </span>
+                    <span
+                      class="rjsf-required"
+                    >
+                      *
+                    </span>
+                  </label>
+                  <input
+                    id="root_tags_1"
+                    name="root[tags][1]"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value="designer"
+                  />
+                </div>
+                <div
+                  class="rjsf-array-item-toolbox"
+                >
+                  <button
+                    class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
+                    id="root_tags_1__moveUp"
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M8 13V3m-4 4 4-4 4 4"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
+                    disabled=""
+                    id="root_tags_1__moveDown"
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M8 3v10m-4-4 4 4 4-4"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
+                    id="root_tags_1__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M4 4l8 8M12 4l-8 8"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button
+              class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
+              id="root_tags__add"
+              title="Add"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M8 3v10M3 8h10"
+                />
+              </svg>
+            </button>
+          </fieldset>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_firstName"
+          >
+            <span
+              id="root_firstName__label"
+            >
+              firstName
+            </span>
+          </label>
+          <input
+            id="root_firstName"
+            name="root[firstName]"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_lastName"
+          >
+            <span
+              id="root_lastName__label"
+            >
+              lastName
+            </span>
+          </label>
+          <input
+            id="root_lastName"
+            name="root[lastName]"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_age"
+          >
+            <span
+              id="root_age__label"
+            >
+              age
+            </span>
+          </label>
+          <input
+            id="root_age"
+            inputmode="decimal"
+            name="root[age]"
+            pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+            placeholder=""
+            title="Enter a number"
+            type="text"
+            value=""
+          />
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-object"
+        >
+          <fieldset
+            aria-labelledby="root_person__title"
+            id="root_person"
+          >
+            <legend>
+              <span
+                id="root_person__title"
+              >
+                person
+              </span>
+            </legend>
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_person_name"
+              >
+                <span
+                  id="root_person_name__label"
+                >
+                  name
+                </span>
+              </label>
+              <input
+                id="root_person_name"
+                name="root.person.name"
+                placeholder=""
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <fieldset
+                aria-labelledby="root_person_address__title"
+                id="root_person_address"
+              >
+                <legend>
+                  <span
+                    id="root_person_address__title"
+                  >
+                    address
+                  </span>
+                </legend>
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="rjsf-field-label"
+                    for="root_person_address_street"
+                  >
+                    <span
+                      id="root_person_address_street__label"
+                    >
+                      street
+                    </span>
+                  </label>
+                  <input
+                    id="root_person_address_street"
+                    name="root.person.address.street"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="rjsf-field-label"
+                    for="root_person_address_city"
+                  >
+                    <span
+                      id="root_person_address_city__label"
+                    >
+                      city
+                    </span>
+                  </label>
+                  <input
+                    id="root_person_address_city"
+                    name="root.person.address.city"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </fieldset>
+            </div>
+          </fieldset>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_name"
+          >
+            <span
+              id="root_name__label"
+            >
+              name
+            </span>
+          </label>
+          <input
+            id="root_name"
+            name="root.name"
+            placeholder=""
+            type="text"
+            value="Test"
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_count"
+          >
+            <span
+              id="root_count__label"
+            >
+              count
+            </span>
+          </label>
+          <input
+            id="root_count"
+            inputmode="decimal"
+            name="root.count"
+            pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+            placeholder=""
+            title="Enter a number"
+            type="text"
+            value="5"
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-array"
+        >
+          <fieldset
+            aria-labelledby="root_items__title"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+            id="root_items"
+          >
+            <legend>
+              <span
+                id="root_items__title"
+              >
+                items
+              </span>
+            </legend>
+            <div
+              class="rjsf-array-item-list"
+            >
+              <div
+                class="rjsf-array-item"
+                data-display-label="true"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="rjsf-field-label"
+                    for="root_items_0"
+                  >
+                    <span
+                      id="root_items_0__label"
+                    >
+                      items-1
+                    </span>
+                    <span
+                      class="rjsf-required"
+                    >
+                      *
+                    </span>
+                  </label>
+                  <input
+                    id="root_items_0"
+                    name="root.items.0"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value="a"
+                  />
+                </div>
+                <div
+                  class="rjsf-array-item-toolbox"
+                >
+                  <button
+                    class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
+                    disabled=""
+                    id="root_items_0__moveUp"
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M8 13V3m-4 4 4-4 4 4"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
+                    id="root_items_0__moveDown"
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M8 3v10m-4-4 4 4 4-4"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
+                    id="root_items_0__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M4 4l8 8M12 4l-8 8"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="rjsf-array-item"
+                data-display-label="true"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="rjsf-field-label"
+                    for="root_items_1"
+                  >
+                    <span
+                      id="root_items_1__label"
+                    >
+                      items-2
+                    </span>
+                    <span
+                      class="rjsf-required"
+                    >
+                      *
+                    </span>
+                  </label>
+                  <input
+                    id="root_items_1"
+                    name="root.items.1"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value="b"
+                  />
+                </div>
+                <div
+                  class="rjsf-array-item-toolbox"
+                >
+                  <button
+                    class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
+                    id="root_items_1__moveUp"
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M8 13V3m-4 4 4-4 4 4"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
+                    disabled=""
+                    id="root_items_1__moveDown"
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M8 3v10m-4-4 4 4 4-4"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
+                    id="root_items_1__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="rjsf-button-icon"
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 16 16"
+                      width="1em"
+                    >
+                      <path
+                        d="M4 4l8 8M12 4l-8 8"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button
+              class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
+              id="root_items__add"
+              title="Add"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M8 3v10M3 8h10"
+                />
+              </svg>
+            </button>
+          </fieldset>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_firstName"
+          >
+            <span
+              id="root_firstName__label"
+            >
+              firstName
+            </span>
+          </label>
+          <input
+            id="root_firstName"
+            name="root.firstName"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_lastName"
+          >
+            <span
+              id="root_lastName__label"
+            >
+              lastName
+            </span>
+          </label>
+          <input
+            id="root_lastName"
+            name="root.lastName"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_age"
+          >
+            <span
+              id="root_age__label"
+            >
+              age
+            </span>
+          </label>
+          <input
+            id="root_age"
+            inputmode="decimal"
+            name="root.age"
+            pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+            placeholder=""
+            title="Enter a number"
+            type="text"
+            value=""
+          />
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo Key
+              </label>
+              <input
+                id="root_foo__key"
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo"
+              >
+                <span
+                  id="root_foo__label"
+                >
+                  foo
+                </span>
+              </label>
+              <input
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > additionalProperties with a description, propertyNames enum 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo Key
+              </label>
+              <select
+                id="root_foo__key"
+                name="root_foo__key"
+              >
+                <option
+                  value="0"
+                >
+                  foo
+                </option>
+                <option
+                  value="1"
+                >
+                  bar
+                </option>
+                <option
+                  value="2"
+                >
+                  baz
+                </option>
+              </select>
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo"
+              >
+                <span
+                  id="root_foo__label"
+                >
+                  foo
+                </span>
+              </label>
+              <div
+                class="rjsf-field-description"
+                id="root_foo__description"
+              >
+                A description
+              </div>
+              <input
+                aria-describedby="root_foo__description"
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > additionalProperties, array type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-array"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo Key
+              </label>
+              <input
+                id="root_foo__key"
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <fieldset
+                aria-labelledby="root_foo__title"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                id="root_foo"
+              >
+                <legend>
+                  <span
+                    id="root_foo__title"
+                  >
+                    foo
+                  </span>
+                </legend>
+                <div
+                  class="rjsf-array-item-list"
+                />
+                <button
+                  class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
+                  id="root_foo__add"
+                  title="Add"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="rjsf-button-icon"
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 16 16"
+                    width="1em"
+                  >
+                    <path
+                      d="M8 3v10M3 8h10"
+                    />
+                  </svg>
+                </button>
+              </fieldset>
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > additionalProperties, description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo Key
+              </label>
+              <input
+                id="root_foo__key"
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo"
+              >
+                <span
+                  id="root_foo__label"
+                >
+                  foo
+                </span>
+              </label>
+              <div
+                class="rjsf-field-description"
+                id="root_foo__description"
+              >
+                item description
+              </div>
+              <input
+                aria-describedby="root_foo__description"
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > additionalProperties, label off 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo Key
+              </label>
+              <input
+                id="root_foo__key"
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo"
+              >
+                <span
+                  id="root_foo__label"
+                >
+                  foo
+                </span>
+              </label>
+              <input
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > additionalProperties, object type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-object"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo Key
+              </label>
+              <input
+                id="root_foo__key"
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <fieldset
+                aria-labelledby="root_foo__title"
+                id="root_foo"
+              >
+                <legend>
+                  <span
+                    id="root_foo__title"
+                  >
+                    foo
+                  </span>
+                </legend>
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="rjsf-field-label"
+                    for="root_foo_foo"
+                  >
+                    <span
+                      id="root_foo_foo__label"
+                    >
+                      foo
+                    </span>
+                  </label>
+                  <input
+                    id="root_foo_foo"
+                    name="root_foo_foo"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </fieldset>
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > additionalProperties, propertyNames enum 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo Key
+              </label>
+              <select
+                id="root_foo__key"
+                name="root_foo__key"
+              >
+                <option
+                  value="0"
+                >
+                  foo
+                </option>
+                <option
+                  value="1"
+                >
+                  bar
+                </option>
+                <option
+                  value="2"
+                >
+                  baz
+                </option>
+              </select>
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo"
+              >
+                <span
+                  id="root_foo__label"
+                >
+                  foo
+                </span>
+              </label>
+              <input
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > deprecated additionalProperties, propertyNames enum 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo (deprecated) Key
+              </label>
+              <select
+                id="root_foo__key"
+                name="root_foo__key"
+              >
+                <option
+                  value="0"
+                >
+                  foo
+                </option>
+                <option
+                  value="1"
+                >
+                  bar
+                </option>
+                <option
+                  value="2"
+                >
+                  baz
+                </option>
+              </select>
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo"
+              >
+                <span
+                  id="root_foo__label"
+                >
+                  foo (deprecated)
+                </span>
+              </label>
+              <input
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_a"
+          >
+            <span
+              id="root_a__label"
+            >
+              A
+            </span>
+          </label>
+          <input
+            id="root_a"
+            name="root_a"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_b"
+          >
+            <span
+              id="root_b__label"
+            >
+              B
+            </span>
+          </label>
+          <input
+            id="root_b"
+            inputmode="decimal"
+            name="root_b"
+            pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+            placeholder=""
+            title="Enter a number"
+            type="text"
+            value=""
+          />
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > patternProperties, a key additionalProperties false forbids 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_abc__key"
+              >
+                abc Key
+              </label>
+              <input
+                id="root_abc__key"
+                type="text"
+                value="abc"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_abc"
+              >
+                <span
+                  id="root_abc__label"
+                >
+                  abc
+                </span>
+              </label>
+              <input
+                id="root_abc"
+                name="root_abc"
+                placeholder=""
+                type="text"
+                value="hello"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_abc__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          class="rjsf-field rjsf-field-null rjsf-field-error"
+          data-invalid="true"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                data-invalid="true"
+                for="root_a__key"
+              >
+                a Key
+              </label>
+              <input
+                aria-describedby="root_a__error"
+                aria-invalid="true"
+                id="root_a__key"
+                type="text"
+                value="a"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <fieldset
+                aria-labelledby="root_a__title"
+                class="rjsf-own-title-group"
+                style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
+              >
+                <legend>
+                  <span
+                    id="root_a__title"
+                  >
+                    a
+                  </span>
+                </legend>
+              </fieldset>
+              <div>
+                <ul
+                  class="rjsf-error-detail"
+                  id="root_a__error"
+                >
+                  <li
+                    class="rjsf-error"
+                  >
+                    The key "a" is not allowed here
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_a__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <label
+        class="rjsf-field-label"
+      >
+        <span
+          id="root__label"
+        >
+          Pet
+        </span>
+      </label>
+      <div
+        class="rjsf-multi-schema"
+      >
+        <div
+          class="rjsf-multi-schema-selector"
+        >
+          <select
+            aria-labelledby="root__label"
+            id="root__anyof_select"
+            name="root__anyof_select"
+          >
+            <option
+              value="0"
+            >
+              Dog
+            </option>
+            <option
+              value="1"
+            >
+              Cat
+            </option>
+          </select>
+        </div>
+        <div
+          class="rjsf-field rjsf-field-object"
+        >
+          <fieldset
+            aria-labelledby="root__title"
+            id="root"
+          >
+            <legend>
+              <span
+                id="root__title"
+              >
+                Dog
+              </span>
+            </legend>
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_bark"
+              >
+                <span
+                  id="root_bark__label"
+                >
+                  bark
+                </span>
+              </label>
+              <input
+                id="root_bark"
+                name="root_bark"
+                placeholder=""
+                type="text"
+                value=""
+              />
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > show add button and fields if additionalProperties is true and not an object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_additionalProperty__key"
+              >
+                additionalProperty Key
+              </label>
+              <input
+                id="root_additionalProperty__key"
+                type="text"
+                value="additionalProperty"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_additionalProperty"
+              >
+                <span
+                  id="root_additionalProperty__label"
+                >
+                  additionalProperty
+                </span>
+              </label>
+              <input
+                id="root_additionalProperty"
+                name="root_additionalProperty"
+                placeholder=""
+                type="text"
+                value="should appear"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_additionalProperty__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
+        id="root"
+      >
+        <legend>
+          <span
+            id="root__title"
+          >
+            Test field
+          </span>
+        </legend>
+        <div
+          class="rjsf-field-description"
+          id="root__description"
+        >
+          a test description
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo Key
+              </label>
+              <input
+                id="root_foo__key"
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo"
+              >
+                <span
+                  id="root_foo__label"
+                >
+                  foo
+                </span>
+              </label>
+              <input
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description > object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
+        id="root"
+      >
+        <legend>
+          <span
+            id="root__title"
+          >
+            Test field
+          </span>
+        </legend>
+        <div
+          class="rjsf-field-description"
+          id="root__description"
+        >
+          a test description
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_a"
+          >
+            <span
+              id="root_a__label"
+            >
+              A
+            </span>
+          </label>
+          <div
+            class="rjsf-field-description"
+            id="root_a__description"
+          >
+            A description
+          </div>
+          <input
+            aria-describedby="root_a__description"
+            id="root_a"
+            name="root_a"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_b"
+          >
+            <span
+              id="root_b__label"
+            >
+              B
+            </span>
+          </label>
+          <div
+            class="rjsf-field-description"
+            id="root_b__description"
+          >
+            B description
+          </div>
+          <input
+            aria-describedby="root_b__description"
+            id="root_b"
+            inputmode="decimal"
+            name="root_b"
+            pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+            placeholder=""
+            title="Enter a number"
+            type="text"
+            value=""
+          />
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description > show add button and fields if additionalProperties is true and not an object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
+        id="root"
+      >
+        <legend>
+          <span
+            id="root__title"
+          >
+            Test field
+          </span>
+        </legend>
+        <div
+          class="rjsf-field-description"
+          id="root__description"
+        >
+          a test description
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_additionalProperty__key"
+              >
+                additionalProperty Key
+              </label>
+              <input
+                id="root_additionalProperty__key"
+                type="text"
+                value="additionalProperty"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_additionalProperty"
+              >
+                <span
+                  id="root_additionalProperty__label"
+                >
+                  additionalProperty
+                </span>
+              </label>
+              <input
+                id="root_additionalProperty"
+                name="root_additionalProperty"
+                placeholder=""
+                type="text"
+                value="should appear"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_additionalProperty__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from both > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
+        id="root"
+      >
+        <legend>
+          <span
+            id="root__title"
+          >
+            My Field
+          </span>
+        </legend>
+        <div
+          class="rjsf-field-description"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo Key
+              </label>
+              <input
+                id="root_foo__key"
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo"
+              >
+                <span
+                  id="root_foo__label"
+                >
+                  foo
+                </span>
+              </label>
+              <input
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from both > object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
+        id="root"
+      >
+        <legend>
+          <span
+            id="root__title"
+          >
+            My Field
+          </span>
+        </legend>
+        <div
+          class="rjsf-field-description"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_a"
+          >
+            <span
+              id="root_a__label"
+            >
+              My Item A
+            </span>
+          </label>
+          <div
+            class="rjsf-field-description"
+            id="root_a__description"
+          >
+            a fancier item A description
+          </div>
+          <input
+            aria-describedby="root_a__description"
+            id="root_a"
+            name="root_a"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_b"
+          >
+            <span
+              id="root_b__label"
+            >
+              My Item B
+            </span>
+          </label>
+          <div
+            class="rjsf-field-description"
+            id="root_b__description"
+          >
+            a fancier item B description
+          </div>
+          <input
+            aria-describedby="root_b__description"
+            id="root_b"
+            inputmode="decimal"
+            name="root_b"
+            pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+            placeholder=""
+            title="Enter a number"
+            type="text"
+            value=""
+          />
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
+        id="root"
+      >
+        <legend>
+          <span
+            id="root__title"
+          >
+            My Field
+          </span>
+        </legend>
+        <div
+          class="rjsf-field-description"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo__key"
+              >
+                foo Key
+              </label>
+              <input
+                id="root_foo__key"
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_foo"
+              >
+                <span
+                  id="root_foo__label"
+                >
+                  foo
+                </span>
+              </label>
+              <input
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
+        id="root"
+      >
+        <legend>
+          <span
+            id="root__title"
+          >
+            My Field
+          </span>
+        </legend>
+        <div
+          class="rjsf-field-description"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_a"
+          >
+            <span
+              id="root_a__label"
+            >
+              My Item A
+            </span>
+          </label>
+          <div
+            class="rjsf-field-description"
+            id="root_a__description"
+          >
+            a fancier item A description
+          </div>
+          <input
+            aria-describedby="root_a__description"
+            id="root_a"
+            name="root_a"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <label
+            class="rjsf-field-label"
+            for="root_b"
+          >
+            <span
+              id="root_b__label"
+            >
+              My Item B
+            </span>
+          </label>
+          <div
+            class="rjsf-field-description"
+            id="root_b__description"
+          >
+            a fancier item B description
+          </div>
+          <input
+            aria-describedby="root_b__description"
+            id="root_b"
+            inputmode="decimal"
+            name="root_b"
+            pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+            placeholder=""
+            title="Enter a number"
+            type="text"
+            value=""
+          />
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > show add button and fields if additionalProperties is true and not an object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
+        id="root"
+      >
+        <legend>
+          <span
+            id="root__title"
+          >
+            My Field
+          </span>
+        </legend>
+        <div
+          class="rjsf-field-description"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_additionalProperty__key"
+              >
+                additionalProperty Key
+              </label>
+              <input
+                id="root_additionalProperty__key"
+                type="text"
+                value="additionalProperty"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <label
+                class="rjsf-field-label"
+                for="root_additionalProperty"
+              >
+                <span
+                  id="root_additionalProperty__label"
+                >
+                  additionalProperty
+                </span>
+              </label>
+              <input
+                id="root_additionalProperty"
+                name="root_additionalProperty"
+                placeholder=""
+                type="text"
+                value="should appear"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_additionalProperty__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description with global label off > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <input
+                aria-label="foo Key"
+                id="root_foo__key"
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <input
+                aria-label="foo"
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_foo__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description with global label off > object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <input
+            aria-label="A"
+            id="root_a"
+            name="root_a"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <input
+            aria-label="B"
+            id="root_b"
+            inputmode="decimal"
+            name="root_b"
+            pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+            placeholder=""
+            title="Enter a number"
+            type="text"
+            value=""
+          />
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description with global label off > show add button and fields if additionalProperties is true and not an object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="rjsf-additional-property"
+          >
+            <div
+              class="rjsf-additional-property-key"
+            >
+              <input
+                aria-label="additionalProperty Key"
+                id="root_additionalProperty__key"
+                type="text"
+                value="additionalProperty"
+              />
+            </div>
+            <div
+              class="rjsf-additional-property-value"
+            >
+              <input
+                aria-label="additionalProperty"
+                id="root_additionalProperty"
+                name="root_additionalProperty"
+                placeholder=""
+                type="text"
+                value="should appear"
+              />
+            </div>
+            <button
+              class="rjsf-button rjsf-button-danger rjsf-object-property-remove"
+              id="root_additionalProperty__remove"
+              title="Remove"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="rjsf-button-icon"
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 16 16"
+                width="1em"
+              >
+                <path
+                  d="M4 4l8 8M12 4l-8 8"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button
+          class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-object-property-expand"
+          id="root__add"
+          title="Add"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="rjsf-button-icon"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <path
+              d="M8 3v10M3 8h10"
+            />
+          </svg>
+        </button>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="rjsf-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;

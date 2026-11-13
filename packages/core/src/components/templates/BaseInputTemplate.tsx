@@ -1,9 +1,27 @@
-import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import type { ChangeEvent, FocusEvent, InputHTMLAttributes, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
+import {
+  examplesId,
+  getControlAttributes,
+  getExampleSuggestions,
+  getBaseInputProps,
+  offersClearButton,
+  toInputValue,
+} from '@rjsf/utils';
 
 import SchemaExamples from '../SchemaExamples.tsx';
+
+/** The props core's `BaseInputTemplate` takes: the shared `BaseInputTemplateProps`, and the `<input>` attributes it puts
+ * on the element from the props it doesn't read, such as `maxLength`, to type the registry's `BaseInputTemplate` a
+ * widget passes them to
+ */
+export type CoreBaseInputTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = BaseInputTemplateProps<T, S, F> &
+  Omit<InputHTMLAttributes<HTMLInputElement>, keyof BaseInputTemplateProps<T, S, F>>;
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -12,13 +30,14 @@ import SchemaExamples from '../SchemaExamples.tsx';
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: BaseInputTemplateProps<T, S, F>) {
+  F extends FormContextType = FormContextType,
+>(props: CoreBaseInputTemplateProps<T, S, F>) {
   const {
     id,
     name, // remove this from ...rest
+    label, // remove this from ...rest
     htmlName,
     value,
     readonly,
@@ -32,13 +51,17 @@ export default function BaseInputTemplate<
     schema,
     uiSchema,
     registry,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     rawErrors,
     type,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     hideLabel, // remove this from ...rest
     hideError, // remove this from ...rest
+    presentation, // remove this from ...rest
     ...rest
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
+  const { classMap } = registry;
 
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
@@ -47,17 +70,10 @@ export default function BaseInputTemplate<
     console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
-  const inputProps = {
-    ...rest,
-    ...getInputProps<T, S, F>(schema, type, options),
-  };
+  const { title, ...baseInputProps } = getBaseInputProps<T, S, F>(props);
+  const inputProps = { ...rest, ...baseInputProps };
 
-  let inputValue;
-  if (inputProps.type === 'number' || inputProps.type === 'integer') {
-    inputValue = value || value === 0 ? value : '';
-  } else {
-    inputValue = value == null ? '' : value;
-  }
+  const inputValue = toInputValue(value);
 
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
@@ -78,27 +94,36 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
+  let className = classMap.input;
+  if (inputProps.type === 'file') {
+    className = classMap.fileInput;
+  } else if (inputProps.type === 'range') {
+    className = classMap.rangeInput;
+  }
   return (
     <>
       <input
         id={id}
         name={htmlName || id}
-        className='form-control'
+        className={className}
         readOnly={readonly}
         disabled={disabled}
         autoFocus={autofocus}
         value={inputValue}
+        title={title}
         {...inputProps}
-        list={schema.examples ? examplesId(id) : undefined}
-        onChange={onChangeOverride || handleChange}
+        list={hasExamples ? examplesId(id) : undefined}
+        onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && inputValue && (
+      {options.allowClearTextInputs && !readonly && !disabled && offersClearButton(inputValue, inputProps.type) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

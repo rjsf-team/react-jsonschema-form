@@ -25,7 +25,7 @@ const nullField: Sample = {
       'ui:emptyValue': '',
     },
   },
-  formData: {},
+  initialFormData: {},
 };
 
 export default nullField;

@@ -1,17 +1,23 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
-import { getUiOptions } from '@rjsf/utils';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import { Col, Container, Row } from 'react-bootstrap';
 
-export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  title,
-  uiSchema,
-  optionalDataControl,
-}: TitleFieldProps<T, S, F>) {
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  let heading = <h5>{uiOptions.title || title}</h5>;
+/** The `TitleField` is the template to use to render the title of a field. Its `id` goes on the title's text alone, as
+ * an option selector beside a container's options is named by it, and the required marker and the optional data
+ * control aren't part of that name
+ *
+ * @param props - The `TitleFieldProps` for this component
+ */
+export default function TitleField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, title, required, optionalDataControl }: TitleFieldProps<T, S, F>) {
+  let heading = (
+    <h5>
+      <span id={id}>{title}</span>
+      {required ? '*' : null}
+    </h5>
+  );
   if (optionalDataControl) {
     heading = (
       <Container fluid className='p-0'>
@@ -25,7 +31,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     );
   }
   return (
-    <div id={id} className='my-1'>
+    <div className='my-1'>
       {heading}
       <hr className='border-0 bg-secondary mt-0' style={{ height: '1px' }} />
     </div>

@@ -1,0 +1,115 @@
+import { MantineProvider } from '@mantine/core';
+import { getTestRegistry } from '@rjsf/core/testing';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { render, screen } from '@testing-library/react';
+
+import Templates from '../src/templates/index.ts';
+import RadioWidget from '../src/widgets/RadioWidget.tsx';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  description: 'test',
+  enum: ['one', 'two', 'three'],
+};
+const uiSchema: UiSchema = { 'ui:widget': 'RadioWidget' };
+
+function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
+  return {
+    id: 'root',
+    name: 'root',
+    schema,
+    registry: getTestRegistry(schema, {}, Templates, {}),
+    options: {},
+    label: 'Radio',
+    value: undefined,
+    required: false,
+    disabled: false,
+    readonly: false,
+    multiple: false,
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+    rawErrors: [],
+    uiSchema,
+    onChange: () => undefined,
+    onBlur: () => undefined,
+    onFocus: () => undefined,
+    ...props,
+  };
+}
+
+function renderWidget(props: Partial<WidgetProps> = {}) {
+  return render(
+    <MantineProvider>
+      <RadioWidget {...makeProps(props)} />
+    </MantineProvider>,
+  );
+}
+
+describe('RadioWidget', () => {
+  test('renders with description from options', () => {
+    const { getByText } = renderWidget({
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(getByText('Test description')).toBeInTheDocument();
+  });
+
+  test('renders with description from schema', () => {
+    const { getByText } = renderWidget({
+      schema: {
+        type: 'string',
+        description: 'Test description from schema',
+      },
+    });
+    expect(getByText('Test description from schema')).toBeInTheDocument();
+  });
+
+  test('hides description when hideLabel is true', () => {
+    const { queryByText } = renderWidget({
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
+      hideLabel: true,
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(queryByText('Test description')).not.toBeInTheDocument();
+  });
+
+  test.each(['indexed', 'realValue'] as const)('checks the selected option in the %s format', (optionValueFormat) => {
+    renderWidget({
+      value: 'two',
+      options: {
+        enumOptions: ['one', 'two'].map((value) => ({ label: value, value })),
+        optionValueFormat,
+      },
+    });
+    expect(screen.getByRole('radio', { name: 'two' })).toBeChecked();
+  });
+
+  test.each(['indexed', 'realValue'] as const)(
+    'checks the selected object option in the %s format',
+    (optionValueFormat) => {
+      renderWidget({
+        value: { a: 2 },
+        options: {
+          enumOptions: [
+            { label: 'One', value: { a: 1 } },
+            { label: 'Two', value: { a: 2 } },
+          ],
+          optionValueFormat,
+        },
+      });
+      expect(screen.getByRole('radio', { name: 'Two' })).toBeChecked();
+      expect(screen.getByRole('radio', { name: 'One' })).not.toBeChecked();
+    },
+  );
+
+  test.each(['disabled', 'readonly'] as const)('disables every option of a %s field', (state) => {
+    renderWidget({
+      [state]: true,
+      options: { enumOptions: ['one', 'two'].map((value) => ({ label: value, value })) },
+    });
+    expect(screen.getByRole('radio', { name: 'one' })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: 'two' })).toBeDisabled();
+  });
+});

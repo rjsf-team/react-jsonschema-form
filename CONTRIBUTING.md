@@ -1,6 +1,6 @@
 # Contributing to React-JSONSchema-Form
 
-*Welcome, and thank you for considering contributing!*
+_Welcome, and thank you for considering contributing!_
 
 Whether you’re reporting bugs, suggesting enhancements or writing code your help is always appreciated.
 

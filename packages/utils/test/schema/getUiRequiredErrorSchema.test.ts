@@ -1,0 +1,1727 @@
+import type {
+  FormFieldState,
+  GenericObjectType,
+  GlobalUISchemaOptions,
+  RJSFSchema,
+  UiSchema,
+} from '../../src/index.ts';
+import { getUiRequiredErrorSchema, toErrorList } from '../../src/index.ts';
+import getTestValidator from '../testUtils/getTestValidator.ts';
+
+const testValidator = getTestValidator({});
+
+describe('getUiRequiredErrorSchema()', () => {
+  it('returns an empty error schema when no ui:required is set anywhere', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const uiSchema: UiSchema = { foo: { 'ui:widget': 'textarea' } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { foo: 'x' });
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('returns an empty error schema when uiSchema is undefined', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, undefined, {});
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('reports a missing top-level ui:required field', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
+    const uiSchema: UiSchema = { nick: { 'ui:required': true } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.nick');
+    expect(errors[0].message).toBe("must have required property 'nick'");
+  });
+
+  it('does not report a ui:required field that has a value', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
+    const uiSchema: UiSchema = { nick: { 'ui:required': true } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { nick: 'Chuck' });
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it.each([1, 'true'])('reports a missing field whose untyped JSON ui:required is the truthy %j', (value) => {
+    const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
+    const uiSchema: GenericObjectType = { nick: { 'ui:required': value } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    expect(toErrorList(errorSchema).map(({ property }) => property)).toEqual(['.nick']);
+  });
+
+  it('ignores ui:required: false', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
+    const uiSchema: UiSchema = { nick: { 'ui:required': false } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('does not duplicate a schema-required error when the same field is also ui:required: true', () => {
+    const schema: RJSFSchema = { type: 'object', required: ['nick'], properties: { nick: { type: 'string' } } };
+    const uiSchema: UiSchema = { nick: { 'ui:required': true } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('still reports a schema-required, ui:required field when its parent object is entirely absent, since AJV never validates a missing property against its own required list', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        addr: { type: 'object', required: ['zip'], properties: { zip: { type: 'string' } } },
+      },
+    };
+    const uiSchema: UiSchema = { addr: { zip: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.addr.zip');
+  });
+
+  it('does not check ui:required at the root path itself', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
+    // 'ui:required' isn't a real uiSchema key at the root, but even if present it must not be checked at path []
+    const uiSchema = { 'ui:required': true } as unknown as UiSchema;
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('reports a missing deeply nested ui:required field', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        a: { type: 'object', properties: { b: { type: 'object', properties: { c: { type: 'string' } } } } },
+      },
+    };
+    const uiSchema: UiSchema = { a: { b: { c: { 'ui:required': true } } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { a: { b: {} } });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.a.b.c');
+  });
+
+  it('reports a missing nested ui:required field when an ancestor object is entirely absent from formData', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        a: { type: 'object', properties: { b: { type: 'object', properties: { c: { type: 'string' } } } } },
+      },
+    };
+    const uiSchema: UiSchema = { a: { b: { c: { 'ui:required': true } } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.a.b.c');
+  });
+
+  describe('a type list that resolves to object', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { v: { type: ['null', 'object', 'string'], properties: { a: { type: 'string' } } } },
+    };
+    const uiSchema: UiSchema = { v: { a: { 'ui:required': true } } };
+    it.each([{}, null])('still reports a missing property of a %j value', (v) => {
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v });
+      expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+    });
+    it('reports a missing property of a string value, as ObjectField still renders the input', () => {
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v: 'hello' });
+      expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+    });
+    it('reports a schema-required property of a string value, which the validator has no object to require it of', () => {
+      const requiring: RJSFSchema = {
+        type: 'object',
+        properties: { v: { ...(schema.properties!.v as RJSFSchema), required: ['a'] } },
+      };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, requiring, uiSchema, { v: 'hello' });
+      expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+    });
+    describe('whose widget renders another listed type', () => {
+      const textarea: UiSchema = { v: { a: { 'ui:required': true }, 'ui:widget': 'textarea' } };
+      it.each(['hello', null, undefined])('requires no property of a %j value, as no input is shown', (v) => {
+        const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, textarea, { v });
+        expect(toErrorList(errorSchema)).toEqual([]);
+      });
+      it('reports a missing property of an object value, which keeps its own field', () => {
+        const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, textarea, { v: {} });
+        expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+      });
+      it('reports it for a widget the form registers under the alias, which leaves the object field', () => {
+        const errorSchema = getUiRequiredErrorSchema(
+          { validator: testValidator, widgets: { textarea: () => null } },
+          schema,
+          textarea,
+          { v: 'hello' },
+        );
+        expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+      });
+    });
+  });
+
+  describe('a type list under a type selector', () => {
+    const walkOf = (type: RJSFSchema['type'], v: unknown, shownType: string) =>
+      toErrorList(
+        getUiRequiredErrorSchema<GenericObjectType>(
+          { validator: testValidator },
+          {
+            type: 'object',
+            properties: {
+              v: {
+                type,
+                properties: { a: { type: 'string' } },
+                items: { type: 'object', properties: { a: { type: 'string' } } },
+              },
+            },
+          },
+          { v: { a: { 'ui:required': true }, items: { a: { 'ui:required': true } } } },
+          { v },
+          undefined,
+          undefined,
+          undefined,
+          { selectedOption: () => 0, isExpanded: () => false, fallbackType: () => shownType },
+        ),
+      ).map((error) => error.property);
+    it.each<[RJSFSchema['type'], unknown]>([
+      [['string', 'object'], {}],
+      [['object', 'string'], undefined],
+      [['object', 'string'], null],
+      [['object', 'string'], 5],
+    ])('reports a missing property of what %j holds as %j, under a selector on object', (type, v) => {
+      expect(walkOf(type, v, 'object')).toEqual(['.v.a']);
+    });
+    it.each<[unknown]>([[undefined], [{}], ['hello']])(
+      'requires no property of what the list holds as %j, under a selector on another type',
+      (v) => {
+        expect(walkOf(['object', 'number'], v, 'number')).toEqual([]);
+      },
+    );
+    it('walks the items of an array under a selector on array', () => {
+      expect(walkOf(['string', 'array'], [{}], 'array')).toEqual(['.v.0.a']);
+    });
+    it("gates the object's own properties by its selector and an option's by the option's, numbered below it", () => {
+      const depths: number[] = [];
+      const errors = toErrorList(
+        getUiRequiredErrorSchema<GenericObjectType>(
+          { validator: testValidator },
+          {
+            type: 'object',
+            properties: {
+              v: {
+                type: ['object', 'number'],
+                properties: { a: { type: 'string' } },
+                anyOf: [{ type: ['object', 'number'], properties: { b: { type: 'string' } } }, { minimum: 1 }],
+              },
+            },
+          },
+          { v: { a: { 'ui:required': true }, b: { 'ui:required': true } } },
+          { v: {} },
+          undefined,
+          undefined,
+          undefined,
+          {
+            selectedOption: () => 0,
+            isExpanded: () => false,
+            fallbackType: (_, schema, _uiSchema, _formData, depth) => {
+              depths.push(depth);
+              return 'anyOf' in schema ? 'number' : 'object';
+            },
+          },
+        ),
+      ).map((error) => error.property);
+
+      expect(errors).toEqual(['.v.b']);
+      expect(depths).toContain(2);
+    });
+  });
+
+  describe('a type list that resolves to a scalar', () => {
+    it('requires no item of an array its field shows no input for', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: { type: ['string', 'array'], items: { type: 'object', properties: { a: { type: 'string' } } } },
+        },
+      };
+      const uiSchema: UiSchema = { v: { items: { a: { 'ui:required': true } } } };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v: [{}] });
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+  });
+
+  it('requires no property of an object value under a type list that resolves to another type', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { v: { type: ['string', 'object'], properties: { a: { type: 'string' } } } },
+    };
+    const uiSchema: UiSchema = { v: { a: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v: { b: 1 } });
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('reports a missing property of a null held by a nullable object, whose properties ObjectField renders', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { v: { type: ['null', 'object'], properties: { a: { type: 'string' } } } },
+    };
+    const uiSchema: UiSchema = { v: { a: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v: null });
+    expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+  });
+
+  it('walks into an object schema with no properties without erroring', () => {
+    // A satisfied, unrelated ui:required keeps the top-level short-circuit from skipping the walk entirely, so this
+    // still exercises the "no properties" branch it's meant to check.
+    const schema: RJSFSchema = { type: 'object', properties: { empty: { type: 'object' }, nick: { type: 'string' } } };
+    const uiSchema: UiSchema = { empty: { 'ui:widget': 'someWidget' }, nick: { 'ui:required': true } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      empty: {},
+      nick: 'x',
+    });
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('skips a boolean sub-schema property without erroring', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { flag: true as unknown as RJSFSchema, nick: { type: 'string' } },
+    };
+    const uiSchema: UiSchema = { nick: { 'ui:required': true } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.nick');
+  });
+
+  it('reports a ui:required field only introduced by a schema-form dependency', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      dependencies: { a: { properties: { b: { type: 'string' } } } },
+    };
+    const uiSchema: UiSchema = { b: { 'ui:required': true } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { a: 'x' });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.b');
+  });
+
+  it('reports a ui:required field declared through a nested allOf', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        address: {
+          allOf: [
+            { type: 'object', properties: { street: { type: 'string' } } },
+            { type: 'object', properties: { city: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { address: { street: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { address: {} });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.address.street');
+  });
+
+  it('reports a ui:required field declared under a nested $ref', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: { Address: { type: 'object', properties: { street: { type: 'string' } } } },
+      properties: { address: { $ref: '#/definitions/Address' } },
+    };
+    const uiSchema: UiSchema = { address: { street: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { address: {} });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.address.street');
+  });
+
+  it('reports a ui:required field on a $ref-rooted schema', () => {
+    const schema: RJSFSchema = {
+      definitions: { Person: { type: 'object', properties: { nick: { type: 'string' } } } },
+      $ref: '#/definitions/Person',
+    };
+    const uiSchema: UiSchema = { nick: { 'ui:required': true } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.nick');
+  });
+
+  it('reports a ui:required field declared in a ui:definitions fragment', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: { Address: { type: 'object', properties: { zip: { type: 'string' } } } },
+      properties: { home: { $ref: '#/definitions/Address' } },
+    };
+    const uiSchema: UiSchema = {
+      'ui:definitions': { '#/definitions/Address': { zip: { 'ui:required': true } } },
+    };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { home: {} });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.home.zip');
+  });
+
+  it('finds a ui:definitions-declared field reused at more than one path', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: { Address: { type: 'object', properties: { zip: { type: 'string' } } } },
+      properties: {
+        home: { $ref: '#/definitions/Address' },
+        work: { $ref: '#/definitions/Address' },
+      },
+    };
+    const uiSchema: UiSchema = {
+      'ui:definitions': { '#/definitions/Address': { zip: { 'ui:required': true } } },
+    };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      home: {},
+      work: { zip: '1' },
+    });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.home.zip');
+  });
+
+  it('accepts an explicit uiSchemaDefinitions argument instead of reading ui:definitions off the uiSchema', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: { Address: { type: 'object', properties: { zip: { type: 'string' } } } },
+      properties: { home: { $ref: '#/definitions/Address' } },
+    };
+    const uiSchemaDefinitions = { '#/definitions/Address': { zip: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema(
+      { validator: testValidator },
+      schema,
+      undefined,
+      { home: {} },
+      uiSchemaDefinitions,
+    );
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.home.zip');
+  });
+
+  it('memoizes the ui:required pre-scan for a repeated, unchanged uiSchema reference', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
+    let scans = 0;
+    const uiSchema: UiSchema = {
+      get nick() {
+        scans += 1;
+        return { 'ui:widget': 'textarea' };
+      },
+    };
+    getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    expect(scans).toBe(1);
+    // A second call against the very same uiSchema object (the common case across `liveValidate: 'onChange'`
+    // keystrokes, where only formData changes) must not re-scan it.
+    getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { nick: 'x' });
+    expect(scans).toBe(1);
+    // A genuinely different uiSchema object is still scanned, proving the assertions above aren't just trivially
+    // satisfied by the scan never running at all.
+    const otherUiSchema: UiSchema = {
+      get nick() {
+        scans += 1;
+        return { 'ui:widget': 'textarea' };
+      },
+    };
+    getUiRequiredErrorSchema({ validator: testValidator }, schema, otherUiSchema, {});
+    expect(scans).toBe(2);
+  });
+
+  it('never resolves a descendant node when ui:definitions is present but nothing declares ui:required', () => {
+    // Once any ui:definitions fragment exists, the walk's per-node prune (no local uiSchema, no active definitions)
+    // can't rule out a subtree on its own — a definition might attach a ui:required further down. Without a cheaper
+    // check first, that turns every validation pass into a full, uncached schema resolution. `if` is resolved via
+    // `validator.isValid()` on every node retrieveSchema() actually visits, so a node the walk should never reach
+    // acts as a tripwire: if the walk is properly skipped up front, `isValid` is never called at all.
+    const validator = getTestValidator({});
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        a: {
+          type: 'object',
+          if: { properties: { flag: { const: true } } },
+          then: { properties: { flag2: { type: 'string' } } },
+          properties: { flag: { type: 'boolean' } },
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      'ui:definitions': { '#/definitions/Unrelated': { zip: { 'ui:widget': 'text' } } },
+    };
+    const errorSchema = getUiRequiredErrorSchema({ validator }, schema, uiSchema, { a: { flag: true } });
+    expect(toErrorList(errorSchema)).toEqual([]);
+    expect(validator.isValid).not.toHaveBeenCalled();
+  });
+
+  it('reports a ui:required field nested inside array items', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        people: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } },
+      },
+    };
+    const uiSchema: UiSchema = { people: { items: { name: { 'ui:required': true } } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      people: [{}, { name: 'x' }],
+    });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.people.0.name');
+  });
+
+  it('reports a ui:required field at the correct tuple position when uiSchema.items is an array', () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: [
+        { type: 'object', properties: { first: { type: 'string' } } },
+        { type: 'object', properties: { second: { type: 'string' } } },
+      ],
+    };
+    const uiSchema: UiSchema = {
+      items: [{ first: { 'ui:required': true } }, { second: { 'ui:required': true } }],
+    };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, [{}, {}]);
+    const errors = toErrorList(errorSchema)
+      .map((e) => e.property ?? '')
+      .sort();
+    expect(errors).toEqual(['.0.first', '.1.second']);
+  });
+
+  it('reports a ui:required field on an item added past a fixed tuple, using uiSchema.additionalItems', () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: [{ type: 'object', properties: { first: { type: 'string' } } }],
+      additionalItems: { type: 'object', properties: { extra: { type: 'string' } } },
+    };
+    const uiSchema: UiSchema = {
+      items: { first: { 'ui:required': true } },
+      additionalItems: { extra: { 'ui:required': true } },
+    };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, [{ first: 'x' }, {}]);
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.1.extra');
+  });
+
+  it('uses uiSchema.additionalItems, not the function form of uiSchema.items, for a row past a fixed tuple', () => {
+    // ArrayField's fixed-items render checks `index >= schemaItems.length` before anything else, so an overflow row
+    // never reaches the function form of `uiSchema.items` at all — it always renders with `uiSchema.additionalItems`.
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: [{ type: 'object', properties: { first: { type: 'string' } } }],
+      additionalItems: { type: 'object', properties: { extra: { type: 'string' } } },
+    };
+    const uiSchema: UiSchema = {
+      items: () => ({ first: { 'ui:required': true } }),
+      additionalItems: { extra: { 'ui:required': true } },
+    };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, [{ first: 'x' }, {}]);
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.1.extra');
+  });
+
+  it('reports a ui:required field on a dynamically-added additionalProperties entry', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { foo: { type: 'string' } },
+      additionalProperties: { type: 'object', properties: { name: { type: 'string' } } },
+    };
+    const uiSchema: UiSchema = {
+      additionalProperties: { name: { 'ui:required': true } },
+    };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      foo: 'x',
+      extraKey: {},
+    });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.extraKey.name');
+  });
+
+  it('reports a ui:required field inside the selected oneOf branch', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          oneOf: [
+            { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+            { type: 'object', properties: { kind: { type: 'string', const: 'b' }, bField: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true }, bField: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'a' },
+    });
+    const errors = toErrorList(errorSchema);
+    // Only the selected ('a') branch's field is checked; the unselected branch's bField is not reached.
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.aField');
+  });
+
+  it('reports a ui:required field inside a selected oneOf branch that is itself a raw $ref', () => {
+    // resolveSelectedBranch() must expand $ref options (resolveAnyOfOrOneOfRefs: true), the same way ObjectField
+    // does when rendering, or the merged branch schema has no `properties` and aField is never visited.
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: {
+        A: { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+      },
+      properties: {
+        thing: { oneOf: [{ $ref: '#/definitions/A' }] },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { thing: {} });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.aField');
+  });
+
+  it.each<[string, RJSFSchema, UiSchema, unknown]>([
+    [
+      'object',
+      {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        oneOf: [{ const: { b: 1 } }, { const: { b: 2 } }],
+      },
+      { a: { 'ui:required': true } },
+      { b: 1 },
+    ],
+    [
+      'array',
+      { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } }, enum: [[{ b: 1 }], []] },
+      { items: { a: { 'ui:required': true } } },
+      [{ b: 1 }],
+    ],
+  ])('does not walk into the fields of an %s select over constants, which renders none', (_, v, vUiSchema, value) => {
+    const schema: RJSFSchema = { type: 'object', properties: { v } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, { v: vUiSchema }, { v: value });
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('reports a ui:required field inside the selected anyOf branch', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          anyOf: [
+            { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+            { type: 'object', properties: { kind: { type: 'string', const: 'b' }, bField: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { bField: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'b' },
+    });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.bField');
+  });
+
+  it('reports a ui:required field inside the selected anyOf branch of a schema that also has a oneOf', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          anyOf: [{ type: 'object', properties: { aField: { type: 'string' } } }],
+          oneOf: [{ type: 'object', properties: { oField: { type: 'string' } } }],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { thing: {} });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.aField');
+  });
+
+  it('walks an object whose selected anyOf option is the boolean schema true', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: { type: 'object', properties: { aField: { type: 'string' } }, anyOf: [true, { required: ['aField'] }] },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.aField');
+  });
+
+  it("walks the parent's items where the selected option of an array declares items: true, as MultiSchemaField renders them", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        list: {
+          type: 'array',
+          items: { type: 'object', properties: { a: { type: 'string' } } },
+          anyOf: [{ items: true }, { maxItems: 3 }],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { list: { items: { a: { 'ui:required': true } } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { list: [{}] });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.list.0.a');
+  });
+
+  it("does not walk a property the selected option of an array declares where the parent's items forbid it", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        list: {
+          type: 'array',
+          items: { type: 'object', properties: { a: false } },
+          anyOf: [{ items: { properties: { a: { type: 'string' } } } }],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { list: { items: { a: { 'ui:required': true } } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { list: [{}] });
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('enforces a ui:required field declared inside uiSchema.oneOf[i] for the branch matching formData', () => {
+    // MultiSchemaField renders `uiSchema.oneOf[selectedOption]` in place of the parent uiSchema for that branch's own
+    // fields (see AnyOfField's `optionsUiSchema`/`optionUiSchema`) rather than merging it with a per-key entry on the
+    // parent (`uiSchema.thing.bField`), so the walk has to resolve the branch's uiSchema the same way.
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          oneOf: [
+            { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+            { type: 'object', properties: { kind: { type: 'string', const: 'b' }, bField: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { oneOf: [{}, { bField: { 'ui:required': true } }] } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'b' },
+    });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.bField');
+  });
+
+  it('enforces a ui:required field declared inside uiSchema.anyOf[i] for the branch matching formData', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          anyOf: [
+            { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+            { type: 'object', properties: { kind: { type: 'string', const: 'b' }, bField: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { anyOf: [{}, { bField: { 'ui:required': true } }] } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'b' },
+    });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.bField');
+  });
+
+  it('falls back to the parent uiSchema for a branch when uiSchema.oneOf has fewer entries than the schema', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          oneOf: [
+            { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+            { type: 'object', properties: { kind: { type: 'string', const: 'b' }, bField: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    // Only one entry for two options: the second (selected) branch isn't covered by the array, so it falls back to
+    // the parent uiSchema (`uiSchema.thing`) exactly as `AnyOfField` does when `optionsUiSchema.length <= selectedOption`.
+    const uiSchema: UiSchema = {
+      thing: { bField: { 'ui:required': true }, oneOf: [{ aField: { 'ui:required': true } }] },
+    };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'b' },
+    });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.bField');
+  });
+
+  it('treats a sparse entry in uiSchema.oneOf at the selected index as an empty uiSchema rather than throwing', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          oneOf: [
+            { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+            { type: 'object', properties: { kind: { type: 'string', const: 'b' }, bField: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { oneOf: [{ aField: { 'ui:required': true } }, undefined as never] } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'b' },
+    });
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('treats an empty oneOf list as a plain schema rather than throwing', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { thing: { type: 'object', oneOf: [], properties: { nick: { type: 'string' } } } },
+    };
+    const uiSchema: UiSchema = { thing: { nick: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { thing: {} });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.nick');
+  });
+
+  it('treats a malformed non-array oneOf as a plain schema rather than throwing', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        thing: {
+          type: 'object',
+          oneOf: 'not-an-array',
+          properties: { nick: { type: 'string' } },
+        },
+      },
+    } as unknown as RJSFSchema;
+    const uiSchema: UiSchema = { thing: { nick: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { thing: {} });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.nick');
+  });
+
+  describe('recursive $ref cycles', () => {
+    it('does not stack overflow on a recursive $ref reached through a ui:definitions fragment', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Node: {
+            type: 'object',
+            properties: { value: { type: 'string' }, next: { $ref: '#/definitions/Node' } },
+          },
+        },
+        properties: { root: { $ref: '#/definitions/Node' } },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': { '#/definitions/Node': { value: { 'ui:required': true } } },
+      };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { root: {} });
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.root.value');
+    });
+
+    it('does not report past the point retrieveSchema() itself marks as a $ref cycle', () => {
+      // retrieveSchema() (the same one SchemaField/CyclicSchemaField render against) marks the *second* occurrence
+      // of a repeated $ref within a single resolution pass as a cycle without expanding it further — here, that's
+      // `root.next` itself, one level shallower than the recursive structure might suggest. Matching that boundary
+      // (rather than either stack-overflowing past it or silently swallowing the first, legitimate level) is the
+      // property under test, not the traversal depth as such.
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Node: {
+            type: 'object',
+            properties: { value: { type: 'string' }, next: { $ref: '#/definitions/Node' } },
+          },
+        },
+        properties: { root: { $ref: '#/definitions/Node' } },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': { '#/definitions/Node': { value: { 'ui:required': true } } },
+      };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+        root: { value: 'x', next: {} },
+      });
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+
+    it('walks below a cycle the form state says the user expanded', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Node: {
+            type: 'object',
+            properties: { value: { type: 'string' }, next: { $ref: '#/definitions/Node' } },
+          },
+        },
+        properties: { root: { $ref: '#/definitions/Node' } },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': { '#/definitions/Node': { value: { 'ui:required': true } } },
+      };
+      const expanded: string[] = [];
+      const fieldState: FormFieldState = {
+        selectedOption: () => 0,
+        isExpanded: (fieldPath) => {
+          expanded.push(fieldPath);
+          return expanded.length === 1;
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        uiSchema,
+        { root: { value: 'x', next: {} } },
+        undefined,
+        undefined,
+        undefined,
+        fieldState,
+      );
+      expect(toErrorList(errorSchema).map(({ property }) => property)).toEqual(['.root.next.value']);
+    });
+  });
+
+  it('walks the option the form state says a field shows', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          anyOf: [
+            { type: 'object', properties: { a: { type: 'string' } } },
+            { type: 'object', properties: { b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { b: { 'ui:required': true } } };
+    const shown: unknown[] = [];
+    const fieldState: FormFieldState = {
+      selectedOption: (fieldPath, options, formData) => {
+        shown.push([fieldPath, options.length, formData]);
+        return 1;
+      },
+      isExpanded: () => false,
+    };
+    const errorSchema = getUiRequiredErrorSchema(
+      { validator: testValidator },
+      schema,
+      uiSchema,
+      { thing: {} },
+      undefined,
+      undefined,
+      undefined,
+      fieldState,
+    );
+    expect(toErrorList(errorSchema).map(({ property }) => property)).toEqual(['.thing.b']);
+    expect(shown).toEqual([['thing', 2, {}]]);
+  });
+
+  it('asks the form state among the options as the field shows them, a boolean one as the empty schema', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: { type: 'object', anyOf: [false, { type: 'object', properties: { b: { type: 'string' } } }] },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { b: { 'ui:required': true } } };
+    const asked: unknown[] = [];
+    const errorsWhenShown = (index: number) =>
+      toErrorList(
+        getUiRequiredErrorSchema(
+          { validator: testValidator },
+          schema,
+          uiSchema,
+          { thing: {} },
+          undefined,
+          undefined,
+          undefined,
+          {
+            selectedOption: (_fieldPath, options) => {
+              asked.push(options[0]);
+              return index;
+            },
+            isExpanded: () => false,
+          },
+        ),
+      ).map(({ property }) => property);
+    expect(errorsWhenShown(1)).toEqual(['.thing.b']);
+    // No option shown walks the field alone
+    expect(errorsWhenShown(-1)).toEqual([]);
+    expect(asked).toEqual([{}, {}]);
+    // One empty schema on every walk, so a form state matching the options finds what it remembers for them
+    expect(asked[0]).toBe(asked[1]);
+    // Nor does an index past the options, which a caller's form state can return
+    expect(errorsWhenShown(2)).toEqual([]);
+  });
+
+  it('does not treat a primitive value at an object-schema node as satisfying a ui:required child, matching computeDefaults isObject(rawFormData) handling', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        // A numeric-string key so that indexing the primitive `formData` directly (rather than guarding with
+        // isObject()) yields a character of the string instead of undefined, silently satisfying the ui:required
+        // check below for a field that was never actually filled in.
+        0: { type: 'string' },
+      },
+    };
+    const uiSchema: UiSchema = { 0: { 'ui:required': true } };
+    // Simulates formData left over from a mismatched source (e.g. a previous oneOf branch), which is a primitive
+    // rather than the object this node's schema expects.
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, 'abc');
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.0');
+  });
+
+  describe('Optional Data Controls', () => {
+    const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+
+    describe('an additionalProperties entry holding null, which renders its fields with no control', () => {
+      const object: RJSFSchema = { type: ['object', 'null'], properties: { a: { type: 'string' } } };
+      const errorsFor = (additionalProperties: RJSFSchema, entryUiSchema: UiSchema, formData: unknown) =>
+        toErrorList(
+          getUiRequiredErrorSchema(
+            { validator: testValidator },
+            { type: 'object', additionalProperties },
+            { additionalProperties: entryUiSchema },
+            formData,
+            undefined,
+            globalUiOptions,
+          ),
+        ).map(({ property }) => property);
+
+      it('fires for its own field', () => {
+        expect(errorsFor(object, { a: { 'ui:required': true } }, { extra: null })).toEqual(['.extra.a']);
+      });
+
+      it('fires for a field of the option it shows', () => {
+        expect(
+          errorsFor(
+            { anyOf: [object] },
+            { anyOf: [{ 'ui:enableOptionalDataFieldForType': ['object'], a: { 'ui:required': true } }] },
+            { extra: null },
+          ),
+        ).toEqual(['.extra.a']);
+      });
+
+      it('does not fire below an object declared inside it, which keeps its control', () => {
+        expect(
+          errorsFor(
+            { type: 'object', properties: { inner: object } },
+            { inner: { a: { 'ui:required': true } } },
+            { extra: { inner: null } },
+          ),
+        ).toEqual([]);
+      });
+    });
+
+    it('does not fire for a field inside an unselected anyOf branch configured as an Optional Data Control', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            anyOf: [
+              { type: 'object', properties: { aField: { type: 'string' } } },
+              { type: 'object', properties: { bField: { type: 'string' } } },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        uiSchema,
+        {},
+        undefined,
+        globalUiOptions,
+      );
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+
+    it('does not fire for a field inside an unselected oneOf branch configured as an Optional Data Control', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            oneOf: [
+              { type: 'object', properties: { aField: { type: 'string' } } },
+              { type: 'object', properties: { bField: { type: 'string' } } },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        uiSchema,
+        {},
+        undefined,
+        globalUiOptions,
+      );
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+
+    it('still fires once the Optional Data Control has been opted into (formData present)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            anyOf: [
+              { type: 'object', properties: { aField: { type: 'string' }, aOther: { type: 'string' } } },
+              { type: 'object', properties: { bField: { type: 'string' } } },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        uiSchema,
+        { thing: { aOther: 'x' } },
+        undefined,
+        globalUiOptions,
+      );
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing.aField');
+    });
+
+    it.each([undefined, null])(
+      'does not fire for a field inside a plain object Optional Data Control whose own value is %j, matching ObjectField hiding its real fields in that case too',
+      (thingValue) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            thing: { type: 'object', properties: { aField: { type: 'string' } } },
+          },
+        };
+        const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+        const errorSchema = getUiRequiredErrorSchema(
+          { validator: testValidator },
+          schema,
+          uiSchema,
+          { thing: thingValue },
+          undefined,
+          globalUiOptions,
+        );
+        expect(toErrorList(errorSchema)).toEqual([]);
+      },
+    );
+
+    const objectOption: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+    const aRequired: UiSchema = { thing: { a: { 'ui:required': true } } };
+    const errorsAt = (thing: RJSFSchema, thingValue: unknown) =>
+      toErrorList(
+        getUiRequiredErrorSchema(
+          { validator: testValidator },
+          { type: 'object', properties: { thing } },
+          aRequired,
+          { thing: thingValue },
+          undefined,
+          globalUiOptions,
+        ),
+      );
+
+    describe.each<[string, RJSFSchema]>([
+      ['an object beside an empty anyOf', { ...objectOption, anyOf: [] }],
+      ['an object beside an empty oneOf', { ...objectOption, oneOf: [] }],
+      ['the object option selected in an anyOf', { anyOf: [objectOption] }],
+      ['the object option selected in a oneOf', { oneOf: [objectOption] }],
+      [
+        'the object option selected in an anyOf beside a oneOf whose options name no type',
+        { anyOf: [objectOption], oneOf: [{ minProperties: 0 }] },
+      ],
+      [
+        'an object whose anyOf options name no type, since the object takes the controls as well',
+        { ...objectOption, anyOf: [{ minProperties: 0 }, { maxProperties: 5 }] },
+      ],
+      ['the object option selected in an allOf that resolves to an anyOf', { allOf: [{ anyOf: [objectOption] }] }],
+      // The test validator holds every `if`, so the `anyOf` sits in the `then`
+      [
+        'the object option selected in an if/then/else that resolves to an anyOf',
+        { if: { required: ['zzz'] }, then: { anyOf: [objectOption] }, else: {} },
+      ],
+    ])('for a field of %s', (_, thing) => {
+      it('does not fire while the object holds no value, since the field is hidden behind its Add button', () => {
+        expect(errorsAt(thing, undefined)).toEqual([]);
+      });
+
+      it('fires at the {} its Add button stores, since the field then renders', () => {
+        expect(errorsAt(thing, {}).map(({ property }) => property)).toEqual(['.thing.a']);
+      });
+    });
+
+    it("still fires for a field of the selected option whose value is {} when the option's own uiSchema does not enable the controls, since the option then renders its fields", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { thing: { anyOf: [objectOption] } } };
+      const uiSchema: UiSchema = {
+        thing: { 'ui:enableOptionalDataFieldForType': ['object'], anyOf: [{ a: { 'ui:required': true } }] },
+      };
+      const errors = toErrorList(
+        getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { thing: {} }),
+      );
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing.a');
+    });
+
+    it.each<[string, RJSFSchema]>([
+      ['with properties of its own', objectOption],
+      ['with room for more properties', { type: 'object', additionalProperties: { type: 'string' } }],
+    ])(
+      "does not fire for a field of the selected option of an object %s beside the options, whose controls hide the option whatever the option's own uiSchema says",
+      (_, own) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { thing: { ...own, anyOf: [{ properties: { b: { type: 'string' } } }] } },
+        };
+        const uiSchema: UiSchema = {
+          thing: { anyOf: [{ 'ui:enableOptionalDataFieldForType': [], b: { 'ui:required': true } }] },
+        };
+        expect(
+          toErrorList(
+            getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {}, undefined, globalUiOptions),
+          ),
+        ).toEqual([]);
+      },
+    );
+
+    it('fires for a field of the selected option of an object with properties of its own under a ui:field, which draws no controls beside the options, so the option renders as its own uiSchema says', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { thing: { ...objectOption, anyOf: [{ properties: { b: { type: 'string' } } }] } },
+      };
+      const uiSchema: UiSchema = {
+        thing: {
+          'ui:field': 'Wrapper',
+          anyOf: [{ 'ui:enableOptionalDataFieldForType': [], b: { 'ui:required': true } }],
+        },
+      };
+      const errors = toErrorList(
+        getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {}, undefined, globalUiOptions),
+      );
+      expect(errors.map(({ property }) => property)).toEqual(['.thing.b']);
+    });
+
+    it.each([true, false])(
+      "asks the form's fieldState whether the object draws the controls beside the options, which says %s",
+      (draws) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { thing: { ...objectOption, anyOf: [{ properties: { b: { type: 'string' } } }] } },
+        };
+        const uiSchema: UiSchema = {
+          thing: { anyOf: [{ 'ui:enableOptionalDataFieldForType': [], b: { 'ui:required': true } }] },
+        };
+        const asked: [string, RJSFSchema][] = [];
+        const fieldState: FormFieldState = {
+          selectedOption: () => 0,
+          isExpanded: () => false,
+          drawsControlsBesideOptions: (fieldPath, fieldSchema) => {
+            asked.push([fieldPath, fieldSchema]);
+            return draws;
+          },
+        };
+        const errors = toErrorList(
+          getUiRequiredErrorSchema(
+            { validator: testValidator },
+            schema,
+            uiSchema,
+            {},
+            undefined,
+            globalUiOptions,
+            undefined,
+            fieldState,
+          ),
+        );
+        expect(errors.map(({ property }) => property)).toEqual(draws ? [] : ['.thing.b']);
+        expect(asked.map(([fieldPath]) => fieldPath)).toEqual(['thing']);
+        expect(asked[0][1].properties).toEqual(objectOption.properties);
+      },
+    );
+
+    it('fires for a field of the selected option of an open object with no properties of its own whose option closes it, since it then renders the option as its own uiSchema says', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            type: 'object',
+            additionalProperties: true,
+            anyOf: [{ ...objectOption, additionalProperties: false }],
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        thing: { anyOf: [{ 'ui:enableOptionalDataFieldForType': [], a: { 'ui:required': true } }] },
+      };
+      const errors = toErrorList(
+        getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {}, undefined, globalUiOptions),
+      );
+      expect(errors.map(({ property }) => property)).toEqual(['.thing.a']);
+    });
+
+    it('does not fire for a field of the selected option of a closed object with no properties of its own, whose option draws the controls', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { thing: { type: 'object', additionalProperties: false, anyOf: [objectOption] } },
+      };
+      const uiSchema: UiSchema = { thing: { anyOf: [{ a: { 'ui:required': true } }] } };
+      expect(
+        toErrorList(
+          getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {}, undefined, globalUiOptions),
+        ),
+      ).toEqual([]);
+    });
+
+    it("still fires for a field of the selected option whose value is {} when the option's own uiSchema makes it ui:required, since a required option renders its fields", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { thing: { anyOf: [objectOption] } } };
+      const uiSchema: UiSchema = { thing: { anyOf: [{ 'ui:required': true, a: { 'ui:required': true } }] } };
+      const errors = toErrorList(
+        getUiRequiredErrorSchema(
+          { validator: testValidator },
+          schema,
+          uiSchema,
+          { thing: {} },
+          undefined,
+          globalUiOptions,
+        ),
+      );
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing.a');
+    });
+
+    it("still fires at {} for a property of a ui:required object whose option is not, since the object's own ObjectField renders it", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { thing: { ...objectOption, anyOf: [{ type: 'object', properties: { b: { type: 'string' } } }] } },
+      };
+      const uiSchema: UiSchema = {
+        thing: { 'ui:required': true, anyOf: [{ 'ui:required': false, a: { 'ui:required': true } }] },
+      };
+      const errors = toErrorList(
+        getUiRequiredErrorSchema(
+          { validator: testValidator },
+          schema,
+          uiSchema,
+          { thing: {} },
+          undefined,
+          globalUiOptions,
+        ),
+      );
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing.a');
+    });
+
+    it('still fires for an absent Optional-Data-Control-eligible field that is itself ui:required', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: { type: 'object', properties: { aField: { type: 'string' } } },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { 'ui:required': true } };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        uiSchema,
+        {},
+        undefined,
+        globalUiOptions,
+      );
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing');
+    });
+
+    it('does not treat an absent field as an Optional Data Control when the type is not enabled for it', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: { type: 'object', properties: { aField: { type: 'string' } } },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing.aField');
+    });
+  });
+
+  describe('the function form of uiSchema.items', () => {
+    it('enforces ui:required returned by the function form of uiSchema.items', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          people: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        people: { items: () => ({ name: { 'ui:required': true } }) },
+      };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { people: [{}] });
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.people.0.name');
+    });
+
+    it('passes formContext through to the function form of uiSchema.items', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          people: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        people: {
+          items: (_item: unknown, _index: number, formContext?: { requireName?: boolean }) => ({
+            name: { 'ui:required': formContext?.requireName === true },
+          }),
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        uiSchema,
+        { people: [{}] },
+        undefined,
+        undefined,
+        { requireName: true },
+      );
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.people.0.name');
+    });
+
+    it('falls back to no uiSchema and logs when the function form of uiSchema.items throws', () => {
+      const consoleErrorStub = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          people: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } },
+        },
+      };
+      const error = new Error('boom');
+      const uiSchema: UiSchema = {
+        people: {
+          items: () => {
+            throw error;
+          },
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { people: [{}] });
+      expect(toErrorList(errorSchema)).toEqual([]);
+      expect(consoleErrorStub).toHaveBeenCalledWith(
+        'Error executing dynamic uiSchema.items function for people[0]:',
+        error,
+      );
+      consoleErrorStub.mockRestore();
+    });
+
+    it('names the item by its own path when the throwing uiSchema.items function belongs to the root array', () => {
+      const consoleErrorStub = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const schema: RJSFSchema = { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } };
+      const error = new Error('boom');
+      const uiSchema: UiSchema = {
+        items: () => {
+          throw error;
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, [{}]);
+      expect(toErrorList(errorSchema)).toEqual([]);
+      expect(consoleErrorStub).toHaveBeenCalledWith('Error executing dynamic uiSchema.items function for [0]:', error);
+      consoleErrorStub.mockRestore();
+    });
+  });
+
+  describe('an empty array rendered as one widget', () => {
+    const colors: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true };
+    const withColors = (extra: RJSFSchema = {}, required: string[] = []): RJSFSchema => ({
+      type: 'object',
+      required,
+      properties: { c: { ...colors, ...extra } },
+    });
+    const errorsFor = (schema: RJSFSchema, field: UiSchema, formData: unknown) =>
+      toErrorList(getUiRequiredErrorSchema({ validator: testValidator }, schema, { c: field }, formData)).map(
+        ({ stack }) => stack,
+      );
+    const missing = [".c must have required property 'c'"];
+    const checkboxes: UiSchema = { 'ui:widget': 'checkboxes', 'ui:required': true };
+
+    it.each<[string, RJSFSchema]>([
+      ['the schema leaves optional', withColors()],
+      ['the schema requires too', withColors({}, ['c'])],
+    ])('reports `[]` on a field %s', (_, schema) => {
+      expect(errorsFor(schema, checkboxes, { c: [] })).toEqual(missing);
+    });
+
+    it('reports `[]` on a field naming the widget by its registered name', () => {
+      const field: UiSchema = { 'ui:widget': 'CheckboxesWidget', 'ui:required': true };
+      expect(errorsFor(withColors(), field, { c: [] })).toEqual(missing);
+    });
+
+    // `ArrayField` renders each of these as one widget, which holds `[]` with nothing chosen (#5744)
+    it.each<[string, RJSFSchema, UiSchema]>([
+      ['a multiple select', colors, { 'ui:required': true }],
+      ['a multiple select named by its alias', colors, { 'ui:widget': 'select', 'ui:required': true }],
+      [
+        'a custom widget',
+        { type: 'array', items: { type: 'string' } },
+        { 'ui:widget': 'TagsWidget', 'ui:required': true },
+      ],
+      ['a file input', { type: 'array', items: { type: 'string', format: 'data-url' } }, { 'ui:required': true }],
+      [
+        'a file input named by its alias',
+        { type: 'array', items: { type: 'string' } },
+        { 'ui:widget': 'files', 'ui:required': true },
+      ],
+      [
+        'a group of checkboxes under `ui:field: ArrayField`',
+        colors,
+        { 'ui:field': 'ArrayField', 'ui:widget': 'checkboxes', 'ui:required': true },
+      ],
+      ['a multiple select under `ui:field: SchemaField`', colors, { 'ui:field': 'SchemaField', 'ui:required': true }],
+    ])('reports `[]` on %s', (_, c, field) => {
+      expect(errorsFor({ type: 'object', properties: { c } }, field, { c: [] })).toEqual(missing);
+    });
+
+    it("reports `[]` on a group an option renders, from the option's uiSchema", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { c: { oneOf: [colors, { type: 'string' }] } } };
+      expect(errorsFor(schema, { oneOf: [checkboxes, {}] }, { c: [] })).toEqual(missing);
+    });
+
+    it("reports `[]` on a group an option renders, from the field's own `ui:required`", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { c: { oneOf: [colors, { type: 'string' }] } } };
+      const field: UiSchema = { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] };
+      expect(errorsFor(schema, field, { c: [] })).toEqual(missing);
+    });
+
+    it("lets `[]` through on an option rendering options of its own, which the field's `ui:required` doesn't reach", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [{ oneOf: [colors, { type: 'string' }] }, { type: 'number' }] } },
+      };
+      const field: UiSchema = { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] };
+      expect(errorsFor(schema, field, { c: [] })).toEqual([]);
+    });
+
+    it('leaves `[]` to the validator where the option shown has a `minItems`', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [{ ...colors, minItems: 1 }, { type: 'string' }] } },
+      };
+      expect(errorsFor(schema, checkboxes, { c: [] })).toEqual([]);
+    });
+
+    it('reports `[]` on a field resolved through a $ref', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: { colors },
+        properties: { c: { $ref: '#/definitions/colors' } },
+      };
+      expect(errorsFor(schema, checkboxes, { c: [] })).toEqual(missing);
+    });
+
+    it.each<[string, RJSFSchema, UiSchema, unknown]>([
+      ['a box checked', withColors(), checkboxes, { c: ['a'] }],
+      ['a `minItems` the validator reports', withColors({ minItems: 1 }), checkboxes, { c: [] }],
+      ['no `ui:required`', withColors(), { 'ui:widget': 'checkboxes' }, { c: [] }],
+      ['`ui:required: false`', withColors(), { 'ui:widget': 'checkboxes', 'ui:required': false }, { c: [] }],
+      [
+        'a list of items, which renders no widget',
+        withColors({ items: { type: 'string' }, uniqueItems: false }),
+        { 'ui:required': true },
+        { c: [] },
+      ],
+      ['a `ui:field`', withColors(), { 'ui:field': 'TagsField', 'ui:required': true }, { c: [] }],
+      [
+        'a hidden widget, which leaves nothing to choose with',
+        withColors(),
+        { 'ui:widget': 'hidden', 'ui:required': true },
+        { c: [] },
+      ],
+      [
+        'no `items`, which renders the unsupported-field template',
+        { type: 'object', properties: { c: { type: 'array' } } },
+        { 'ui:widget': 'TagsWidget', 'ui:required': true },
+        { c: [] },
+      ],
+      [
+        'fixed items of files, which render as a list',
+        { type: 'object', properties: { c: { type: 'array', items: [{ type: 'string', format: 'data-url' }] } } },
+        { 'ui:required': true },
+        { c: [] },
+      ],
+    ])('leaves `[]` alone with %s', (_, schema, field, formData) => {
+      expect(errorsFor(schema, field, formData)).toEqual([]);
+    });
+
+    it.each<[string, RJSFSchema, boolean, string[]]>([
+      ['reports `[]` on a list of items it says renders as one', withColors({ uniqueItems: false }), true, missing],
+      ['lets `[]` through on a multiple select it says renders as no widget', withColors(), false, []],
+    ])("asks the form's fieldState whether ArrayField renders a widget, and %s", (_, schema, renders, expected) => {
+      const asked: unknown[] = [];
+      const fieldState: FormFieldState = {
+        selectedOption: () => 0,
+        isExpanded: () => false,
+        rendersArrayWidget: (...args) => {
+          asked.push(args);
+          return renders;
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        { c: { 'ui:required': true } },
+        { c: [] },
+        undefined,
+        undefined,
+        undefined,
+        fieldState,
+      );
+      expect(toErrorList(errorSchema).map(({ stack }) => stack)).toEqual(expected);
+      expect(asked).toEqual([['c', expect.objectContaining({ type: 'array' }), { 'ui:required': true }, []]]);
+    });
+
+    it("asks the form's fieldState on the type the fallback UI's selector is on", () => {
+      const asked: unknown[] = [];
+      const fieldState: FormFieldState = {
+        selectedOption: () => 0,
+        isExpanded: () => false,
+        fallbackType: () => 'array',
+        rendersArrayWidget: (_, schema) => {
+          asked.push(schema.type);
+          return true;
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        withColors({ type: ['string', 'array'] }),
+        { c: { 'ui:required': true } },
+        { c: [] },
+        undefined,
+        undefined,
+        undefined,
+        fieldState,
+      );
+      expect(toErrorList(errorSchema).map(({ stack }) => stack)).toEqual(missing);
+      expect(asked).toEqual(['array']);
+    });
+
+    it("leaves `[]` on a hidden widget alone, whatever the form's fieldState says", () => {
+      const fieldState: FormFieldState = {
+        selectedOption: () => 0,
+        isExpanded: () => false,
+        rendersArrayWidget: () => true,
+      };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        withColors(),
+        { c: { 'ui:widget': 'hidden', 'ui:required': true } },
+        { c: [] },
+        undefined,
+        undefined,
+        undefined,
+        fieldState,
+      );
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+
+    it('does not check the root', () => {
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, colors, checkboxes, []);
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+  });
+
+  describe("an option's own ui:required", () => {
+    const errorsFor = (required: string[], formData: unknown, uiOption: UiSchema = { 'ui:required': true }) =>
+      toErrorList(
+        getUiRequiredErrorSchema(
+          { validator: testValidator },
+          { type: 'object', required, properties: { c: { oneOf: [{ type: 'string' }, { type: 'number' }] } } },
+          { c: { oneOf: [uiOption, {}] } },
+          formData,
+        ),
+      ).map(({ stack }) => stack);
+
+    it('reports a field with no value', () => {
+      expect(errorsFor([], {})).toEqual([".c must have required property 'c'"]);
+    });
+
+    it('leaves a field with a value alone', () => {
+      expect(errorsFor([], { c: 'x' })).toEqual([]);
+    });
+
+    it('leaves a schema-required field to the validator, which reports it', () => {
+      expect(errorsFor(['c'], {})).toEqual([]);
+    });
+
+    it('leaves an option that is not `ui:required` alone', () => {
+      expect(errorsFor([], {}, {})).toEqual([]);
+    });
+
+    it('reports one error where the field and its option both ask for it', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [{ type: 'string' }, { type: 'number' }] } },
+      };
+      const uiSchema: UiSchema = { c: { 'ui:required': true, oneOf: [{ 'ui:required': true }, {}] } };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+      expect(toErrorList(errorSchema).map(({ stack }) => stack)).toEqual([".c must have required property 'c'"]);
+    });
+
+    it.each<[string, RJSFSchema]>([
+      ['`null`', { type: 'null' }],
+      ['an empty', {}],
+      ['a titled but untyped', { title: 'Anything' }],
+    ])('leaves %s option alone, which has no control to answer it with', (_, option) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [option, { type: 'number' }] } },
+      };
+      const uiSchema: UiSchema = { c: { oneOf: [{ 'ui:required': true }, {}] } };
+      expect(toErrorList(getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {}))).toEqual([]);
+    });
+
+    it.each<[string, RJSFSchema, UiSchema, FormFieldState | undefined]>([
+      ['an `enum`', { enum: ['a', 'b'] }, { 'ui:required': true }, undefined],
+      ['`properties`', { properties: { x: { type: 'string' } } }, { 'ui:required': true }, undefined],
+      ['a `ui:field`', { title: 'Anything' }, { 'ui:required': true, 'ui:field': 'MyField' }, undefined],
+      [
+        'the fallback UI',
+        { title: 'Anything' },
+        { 'ui:required': true },
+        { selectedOption: () => 0, isExpanded: () => false, fallbackType: () => 'object' },
+      ],
+    ])('reports an untyped option rendered through %s', (_, option, uiOption, fieldState) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [option, { type: 'number' }] } },
+      };
+      const uiSchema: UiSchema = { c: { oneOf: [uiOption, {}] } };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        uiSchema,
+        {},
+        undefined,
+        undefined,
+        undefined,
+        fieldState,
+      );
+      expect(toErrorList(errorSchema).map(({ stack }) => stack)).toEqual([".c must have required property 'c'"]);
+    });
+  });
+});

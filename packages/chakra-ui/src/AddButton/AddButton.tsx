@@ -3,10 +3,11 @@ import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } f
 import { TranslatableString } from '@rjsf/utils';
 import { PlusIcon } from 'lucide-react';
 
-export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  registry,
-  ...props
-}: IconButtonProps<T, S, F>) {
+export default function AddButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ registry, ...props }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   return (
     <Button {...props}>

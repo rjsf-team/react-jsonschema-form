@@ -6,9 +6,9 @@ import type { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSche
  * @param props - The `DescriptionFieldProps` for this component
  */
 export default function DescriptionField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({ id, description, registry, uiSchema }: DescriptionFieldProps<T, S, F>) {
   if (!description) {
     return null;

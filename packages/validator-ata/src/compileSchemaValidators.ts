@@ -13,12 +13,11 @@ export { compileSchemaValidatorsCode };
  *
  * @param schema - The schema to be compiled into a set of precompiled validators functions
  * @param output - The name of the file into which the precompiled validator functions will be generated
- * @param [options={}] - The set of `CustomValidatorOptionsType` information used to alter the ata validator used for
- *        compiling the schema. These are the options of `customizeValidator()`, with limits: `extenderFn`, extra
- *        schemas without an `$id` and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`
- *        cannot be carried into the generated file and are ignored with a warning, the generated file never fills in
- *        `default` values, and `suppressDuplicateFiltering` belongs to `createPrecompiledValidator()`. See
- *        `compileSchemaValidatorsCode()` for details.
+ * @param [options={}] - The `CustomValidatorOptionsType` to compile with: the options of `customizeValidator()`, which
+ *        have limits: `extenderFn`, extra schemas without an `$id` and the `ataOptionsOverrides` keys `coerceTypes`,
+ *        `removeAdditional` and `keywords` cannot be carried into the generated file and are ignored with a warning,
+ *        the generated file never fills in `default` values, and `suppressDuplicateFiltering` belongs to
+ *        `createPrecompiledValidator()`. See `compileSchemaValidatorsCode()` for details.
  */
 export default function compileSchemaValidators<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,

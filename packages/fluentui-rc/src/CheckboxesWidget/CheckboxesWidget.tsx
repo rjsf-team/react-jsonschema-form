@@ -1,16 +1,19 @@
-import type { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { Label, Checkbox } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  enumOptionValueDecoder,
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
+  enumOptionsDomValues,
+  enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getGroupLabelling,
   getOptionValueFormat,
-  labelValue,
   optionId,
+  useOptionFocusHandlers,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
@@ -19,26 +22,14 @@ import {
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxesWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  label,
-  hideLabel,
-  id,
-  htmlName,
-  disabled,
-  options,
-  value,
-  autofocus,
-  readonly,
-  required,
-  onChange,
-  onBlur,
-  onFocus,
-}: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const { label, id, htmlName, disabled, options, value, autofocus, readonly, onChange, onBlur, onFocus } = props;
+  const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const handleChange =
@@ -51,40 +42,48 @@ export default function CheckboxesWidget<
       }
     };
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
+  const {
+    drawsLabel,
+    labelId,
+    group: groupAttributes,
+    option: optionAttributes,
+    requiredCue,
+  } = getGroupLabelling<T, S, F>(props, 'group');
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <>
-      {labelValue(
-        <Label required={required} htmlFor={id}>
-          {label || undefined}
-        </Label>,
-        hideLabel,
+      {drawsLabel && (
+        <Label id={labelId} required={templateMarksRequired<T, S, F>(props)}>
+          {label}
+        </Label>
       )}
-      <Flex column={!inline}>
+      {/* The group carries the field's id and each checkbox its option's, as core's do */}
+      <Flex column={!inline} id={id} {...groupAttributes}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+            const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
             return (
               <Checkbox
-                key={String(option.value)}
+                // oxlint-disable-next-line react/no-array-index-key
+                key={index}
                 id={optionId(id, index)}
                 name={htmlName || id}
                 label={option.label}
                 checked={checked}
+                value={domValues[index]}
                 disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && index === 0}
+                autoFocus={index === autofocusIndex}
                 onChange={handleChange(index)}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
-                aria-describedby={ariaDescribedByIds(id)}
+                onBlur={blurHandlers[index]}
+                onFocus={focusHandlers[index]}
+                {...optionAttributes}
               />
             );
           })}
+        {requiredCue && <span {...requiredCue} />}
       </Flex>
     </>
   );

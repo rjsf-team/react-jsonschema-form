@@ -41,6 +41,17 @@ describe('orderProperties()', () => {
       "uiSchema order list does not contain properties 'bar', 'baz'",
     );
   });
+  it('places a property named __proto__ at the wildcard', () => {
+    expect(orderProperties(['foo', '__proto__'], ['foo', '*'])).toEqual(['foo', '__proto__']);
+  });
+  it('throws error when * is missing and a property named __proto__ is not ordered', () => {
+    expect(() => orderProperties(['foo', '__proto__'], ['foo'])).toThrow(
+      "uiSchema order list does not contain property '__proto__'",
+    );
+  });
+  it('should remove from order an Object.prototype member that is not in properties', () => {
+    expect(orderProperties(['foo'], ['toString', '*'])).toEqual(['foo']);
+  });
   it('throws error when there are multiple *s in order', () => {
     const properties = ['foo', 'bar', 'baz'];
     const order = ['*', 'foo', '*'];

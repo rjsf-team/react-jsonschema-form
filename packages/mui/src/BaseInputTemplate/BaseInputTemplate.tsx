@@ -1,9 +1,10 @@
 import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
+import type { FormHelperTextProps } from '@mui/material/FormHelperText';
 import type { InputProps as MuiInputProps } from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
 import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
-import type { TextFieldProps } from '@mui/material/TextField';
+import type { TextFieldOwnerState, TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
 import { SchemaExamples } from '@rjsf/core';
 import type {
@@ -13,9 +14,32 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
+import {
+  examplesId,
+  getBaseInputProps,
+  getControlAttributes,
+  getExampleSuggestions,
+  hasWidgetErrors,
+  labelValue,
+  offersClearButton,
+  toInputValue,
+  widgetDrawsLabel,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import type { MuiSlotProps } from '../util.ts';
+import {
+  describeByHelperText,
+  getMuiProps,
+  helperTextSlot,
+  inputLabelId,
+  omitFormOwnedInputProps,
+  resolveSlotProps,
+  withoutDisabled,
+  withoutKeys,
+} from '../util.ts';
+
+type HtmlInputAttributes = React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
 
 /** Properties available for the MUI `ui:options` of the BaseInputTemplate.
  *  Unlike RJSF templates, `slotProps` here maps directly to MUI's native `TextField` `slotProps`,
@@ -23,16 +47,40 @@ import { getMuiProps } from '../util.ts';
 export interface BaseInputTemplateMuiProps extends GenericObjectType {
   /** Native MUI `TextField` slotProps for targeting specific sub-components. */
   slotProps?: {
-    /** Props applied to the base native HTML `<input>` or `<textarea>` element. */
-    htmlInput?: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
+    /** Props applied to the base native HTML `<input>` or `<textarea>` element, as an object or as MUI's
+     * `(ownerState) => props` */
+    htmlInput?: MuiSlotProps<HtmlInputAttributes, TextFieldOwnerState>;
+    /** Props applied to the `TextField`'s root `FormControl`, as an object or as MUI's `(ownerState) => props`. */
+    root?: NonNullable<TextFieldProps['slotProps']>['root'];
     /** Props applied to the MUI `Input` element, useful for `endAdornment`/`startAdornment`. */
     input?: MuiInputProps;
     /** Props applied to the MUI `InputLabel` element. */
     inputLabel?: MuiInputLabelProps;
+    /** Props applied to the helper text, as an object or as MUI's `(ownerState) => props`. */
+    formHelperText?: MuiSlotProps<FormHelperTextProps, TextFieldOwnerState>;
   };
 }
 
 const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
+
+/** The props mui's `BaseInputTemplate` takes: the shared `BaseInputTemplateProps`, and the `TextField` props that mui's
+ * own widgets, or a custom widget, pass it through the registry's `BaseInputTemplate`, typed by reading that template as
+ * a `SlotComponent<MuiBaseInputTemplateProps>`
+ */
+export type MuiBaseInputTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = BaseInputTemplateProps<T, S, F> &
+  Pick<BaseInputTemplateMuiProps, 'slotProps'> &
+  Partial<
+    Omit<TextFieldProps, keyof BaseInputTemplateProps<T, S, F> | 'slotProps' | 'InputLabelProps' | 'InputProps'>
+  > & {
+    /** Props for MUI's `InputLabel`, under the name MUI's `TextField` once took them by */
+    InputLabelProps?: Partial<MuiInputLabelProps>;
+    /** Props for MUI's `Input`, under the name MUI's `TextField` once took them by */
+    InputProps?: Partial<MuiInputProps>;
+  };
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -41,10 +89,10 @@ const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: BaseInputTemplateProps<T, S, F>) {
+  F extends FormContextType = FormContextType,
+>(props: MuiBaseInputTemplateProps<T, S, F>) {
   const {
     id,
     name, // remove this from textFieldProps
@@ -55,8 +103,9 @@ export default function BaseInputTemplate<
     disabled,
     type,
     label,
-    hideLabel,
-    hideError,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
+    hideLabel: _hideLabel,
+    hideError: _hideError,
     value,
     onChange,
     onChangeOverride,
@@ -66,36 +115,76 @@ export default function BaseInputTemplate<
     options,
     schema,
     uiSchema,
-    rawErrors = [],
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
+    rawErrors: _rawErrors,
     errorSchema,
     registry,
     InputLabelProps,
     InputProps,
     slotProps,
+    presentation,
+    // Attributes of the `<input>`, which `TextField` would otherwise put on its root
+    pattern: _pattern,
+    accept: _accept,
+    inputMode: _inputMode,
+    multiple: _multiple,
     ...textFieldProps
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
-  const { step, min, max, accept, autoCapitalize, ...rest } = getInputProps<T, S, F>(schema, type, options);
+  const { title, step, min, max, accept, inputMode, pattern, autoCapitalize, multiple, ...rest } = getBaseInputProps<
+    T,
+    S,
+    F
+  >(props);
 
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  // `rjsfSlotProps` holds other elements' props, which would reach the input's DOM through the `TextField`
+  const { slotProps: muiSlotProps, rjsfSlotProps: _otherSlots, ...otherMuiProps } = muiProps;
 
-  const htmlInputProps = {
-    ...slotProps?.htmlInput,
-    ...muiSlotProps?.htmlInput,
-    step,
-    min,
-    max,
-    accept,
-    ...(autoCapitalize === undefined ? {} : { autoCapitalize }),
-    ...(schema.examples ? { list: examplesId(id) } : undefined),
+  const inputValue = toInputValue(value);
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
+  const textFieldOverrides = { ...otherMuiProps, ...textFieldProps } as TextFieldProps;
+  const textFieldId = textFieldOverrides.id ?? id;
+  const controlAttributes = describeByHelperText(
+    getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []),
+    textFieldId,
+    textFieldOverrides.helperText,
+  );
+  // The derived attributes and the field's plan come first so a caller's `slotProps.htmlInput` overrides any of them.
+  // The plan goes on the `<input>` a user focuses rather than on the `TextField`'s root, where its own props go. The
+  // title explains the derived `pattern`, so a `pattern` in `htmlInput` drops it as a passed `pattern` does. A caller may give `htmlInput` as MUI's `(ownerState) => props`, so the slot is handed on in that
+  // form, for MUI to resolve
+  const htmlInputProps = (ownerState: TextFieldOwnerState) => {
+    const callerHtmlInput = {
+      ...resolveSlotProps<HtmlInputAttributes, TextFieldOwnerState>(slotProps?.htmlInput, ownerState),
+      // `InputBase` puts this `value` over the form's
+      ...resolveSlotProps(withoutKeys(muiSlotProps?.htmlInput, ['value', 'disabled']), ownerState),
+    };
+    return {
+      title: 'pattern' in callerHtmlInput ? undefined : title,
+      step,
+      min,
+      max,
+      accept,
+      inputMode,
+      pattern,
+      autoCapitalize,
+      multiple,
+      // The `TextField`'s `required` is its marker, which the outline's notch has to fit, so the `<input>` takes its own
+      required: textFieldOverrides.required ?? required,
+      ...controlAttributes,
+      ...callerHtmlInput,
+      ...(hasExamples ? { list: examplesId(id) } : undefined),
+    };
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
-  const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
+  const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type ?? '')
     ? { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps, shrink: true }
     : { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps };
   const handleClear = useCallback(
@@ -106,8 +195,8 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
-  const inputProps = { ...InputProps, ...slotProps?.input, ...muiSlotProps?.input };
-  if (options.allowClearTextInputs && value && !readonly && !disabled) {
+  const inputProps = { ...InputProps, ...slotProps?.input, ...omitFormOwnedInputProps(muiSlotProps?.input ?? {}) };
+  if (options.allowClearTextInputs && offersClearButton(inputValue, rest.type) && !readonly && !disabled) {
     const clearAdornment = (
       <InputAdornment position='end'>
         <ClearButton registry={registry} onClick={handleClear} />
@@ -131,25 +220,32 @@ export default function BaseInputTemplate<
         placeholder={placeholder}
         label={labelValue(label || undefined, hideLabel, undefined)}
         autoFocus={autofocus}
-        required={required}
-        disabled={disabled || readonly}
+        required={templateMarksRequired<T, S, F>(props)}
         slotProps={{
           ...slotProps,
           ...muiSlotProps,
+          // MUI puts this slot's `disabled` over the one the `TextField` gives its root, which the `<input>` takes
+          ...(muiSlotProps?.root && { root: withoutDisabled(muiSlotProps.root) }),
           input: inputProps,
           htmlInput: htmlInputProps,
-          inputLabel: DisplayInputLabelProps,
+          inputLabel: { ...DisplayInputLabelProps, id: DisplayInputLabelProps.id ?? inputLabelId(textFieldId) },
+          formHelperText: helperTextSlot<FormHelperTextProps, TextFieldOwnerState>(
+            textFieldId,
+            slotProps?.formHelperText,
+            muiSlotProps?.formHelperText,
+          ),
         }}
         {...rest}
-        value={value || value === 0 ? value : ''}
-        error={rawErrors.length > 0}
-        onChange={onChangeOverride || handleChange}
+        error={hasWidgetErrors<T, S, F>(props)}
+        {...textFieldOverrides}
+        // After the author's props, so they can't take the form's data, focus or disabled state
+        value={inputValue}
+        disabled={disabled || readonly}
+        onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        {...({ ...otherMuiProps, ...textFieldProps } as TextFieldProps)}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

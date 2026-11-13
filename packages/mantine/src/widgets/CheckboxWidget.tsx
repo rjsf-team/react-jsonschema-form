@@ -2,7 +2,17 @@ import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Checkbox } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { descriptionId, getTemplate, labelValue, ariaDescribedByIds, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  getErrorsToDraw,
+  hasWidgetErrors,
+  labelValue,
+  schemaRequiresTrueValue,
+  widgetDrawsLabel,
+  templateMarksRequired,
+} from '@rjsf/utils';
+
+import { getDescriptionProps, renderErrors } from '../utils.tsx';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -10,13 +20,12 @@ import { descriptionId, getTemplate, labelValue, ariaDescribedByIds, schemaRequi
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): ReactElement {
   const {
     id,
-    name,
     htmlName,
     value = false,
     required,
@@ -24,24 +33,18 @@ export default function CheckboxWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     schema,
-    rawErrors,
-    options,
     onChange,
     onBlur,
     onFocus,
-    registry,
-    uiSchema,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
-
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = props.presentation?.control ? required : trueValueRequired;
   const handleCheckboxChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (!disabled && !readonly && onChange) {
@@ -69,26 +72,20 @@ export default function CheckboxWidget<
     [onFocus, id],
   );
 
-  const description = options.description || schema.description;
+  const { description } = getDescriptionProps(props);
+  const errors = getErrorsToDraw<T, S, F>(props);
+  const invalid = hasWidgetErrors<T, S, F>(props);
   return (
     <>
-      {!hideLabel && !!description && (
-        <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
-          schema={schema}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
-      )}
+      {description}
       <Checkbox
         id={id}
-        name={htmlName || name}
+        name={htmlName || id}
         label={
           !hideLabel && label ? (
             <>
               {label}
-              {trueValueRequired && <span className='required'>*</span>}
+              {marksRequired && templateMarksRequired<T, S, F>(props) && <span className='required'>*</span>}
             </>
           ) : (
             labelValue(label || undefined, hideLabel, false)
@@ -96,14 +93,20 @@ export default function CheckboxWidget<
         }
         disabled={disabled || readonly}
         required={trueValueRequired}
+        aria-required={(marksRequired && !trueValueRequired) || undefined}
         autoFocus={autofocus}
-        checked={typeof value === 'undefined' ? false : value === 'true' || value}
+        checked={Boolean(value)}
         onChange={handleCheckboxChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-        aria-describedby={ariaDescribedByIds(id)}
+        // Mantine's `Checkbox` would render a message as its own error, with an id derived from the input's rather than
+        // `errorId(id)`, so it only gets a boolean, for the error styling, and the errors are rendered below it. It
+        // doesn't set `aria-invalid` either.
+        error={invalid}
+        {...getControlAttributes<T, S, F>(props)}
+        aria-invalid={invalid || undefined}
       />
+      {renderErrors(id, errors, { mt: 'calc(var(--mantine-spacing-xs) / 2)' })}
     </>
   );
 }

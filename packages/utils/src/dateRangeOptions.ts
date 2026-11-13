@@ -13,7 +13,7 @@ import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 export default function dateRangeOptions<S extends StrictRJSFSchema = RJSFSchema>(
   start: number,
   stop: number,
-): EnumOptionsType<S>[] {
+): (EnumOptionsType<S> & { value: number })[] {
   const bothRelative = start <= 0 && stop <= 0;
   const eitherNegative = start < 0 || stop < 0;
   if (!bothRelative && eitherNegative) {
@@ -25,7 +25,7 @@ export default function dateRangeOptions<S extends StrictRJSFSchema = RJSFSchema
   if (resolvedStart > resolvedStop) {
     return dateRangeOptions<S>(stop, start).reverse();
   }
-  const options: EnumOptionsType<S>[] = [];
+  const options: (EnumOptionsType<S> & { value: number })[] = [];
   for (let i = resolvedStart; i <= resolvedStop; i += 1) {
     options.push({ value: i, label: pad(i, 2) });
   }

@@ -1,35 +1,29 @@
-import type { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  enumOptionValueDecoder,
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
+  enumOptionsDomValues,
+  enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getGroupAttributes,
   getOptionValueFormat,
+  hasWidgetErrors,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
-import Form from 'react-bootstrap/Form';
+import { Form } from 'react-bootstrap';
 
 export default function CheckboxesWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  id,
-  htmlName,
-  disabled,
-  options,
-  value,
-  autofocus,
-  readonly,
-  required,
-  onChange,
-  onBlur,
-  onFocus,
-}: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const { id, htmlName, disabled, options, value, autofocus, readonly, onChange, onBlur, onFocus } = props;
+  const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const handleChange =
@@ -42,38 +36,41 @@ export default function CheckboxesWidget<
       }
     };
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const invalid = hasWidgetErrors<T, S, F>(props);
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
+  const { group: groupAttributes, option: optionAttributes, requiredCue } = getGroupAttributes<T, S, F>(props, 'group');
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
-    <Form.Group>
+    <Form.Group id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+          const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
 
           return (
             <Form.Check
-              key={option.value}
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
               inline={inline}
-              required={required}
               checked={checked}
+              isInvalid={invalid}
+              value={domValues[index]}
               className='bg-transparent border-0'
               type='checkbox'
               id={optionId(id, index)}
               name={htmlName || id}
               label={option.label}
-              autoFocus={autofocus && index === 0}
+              autoFocus={index === autofocusIndex}
               onChange={handleChange(index)}
-              onBlur={handleBlur}
-              onFocus={handleFocus}
+              onBlur={blurHandlers[index]}
+              onFocus={focusHandlers[index]}
               disabled={disabled || itemDisabled || readonly}
-              aria-describedby={ariaDescribedByIds(id)}
+              {...optionAttributes}
             />
           );
         })}
+      {requiredCue && <span {...requiredCue} />}
     </Form.Group>
   );
 }

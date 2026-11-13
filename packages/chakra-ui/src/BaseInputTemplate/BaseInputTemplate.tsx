@@ -3,23 +3,32 @@ import { useCallback } from 'react';
 import { Input } from '@chakra-ui/react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, labelValue, getInputProps } from '@rjsf/utils';
+import {
+  examplesId,
+  getControlAttributes,
+  getExampleSuggestions,
+  getBaseInputProps,
+  hasWidgetErrors,
+  labelValue,
+  offersClearButton,
+  toInputValue,
+  widgetDrawsLabelText,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
 
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
     htmlName,
-    type,
     value,
     label,
-    hideLabel,
     schema,
     onChange,
     onChangeOverride,
@@ -28,14 +37,14 @@ export default function BaseInputTemplate<
     options,
     required,
     readonly,
-    rawErrors,
     autofocus,
     placeholder,
     disabled,
-    uiSchema,
     registry,
+    presentation,
   } = props;
-  const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
+  const { title, ...inputProps } = getBaseInputProps<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
@@ -51,35 +60,41 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(options);
 
+  const inputValue = toInputValue(value);
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   return (
     <Field
       mb={1}
       disabled={disabled || readonly}
       required={required}
+      requiredMarker={templateMarksRequired<T, S, F>(props)}
       readOnly={readonly}
-      invalid={rawErrors && rawErrors.length > 0}
-      label={labelValue(label, hideLabel || !label)}
+      invalid={hasWidgetErrors<T, S, F>(props)}
+      label={labelValue(label, !drawsLabel)}
+      id={id}
       {...chakraProps}
     >
       <Input
         id={id}
         name={htmlName || id}
-        value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || handleChange}
+        value={inputValue}
+        onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
         autoFocus={autofocus}
         placeholder={placeholder}
+        title={title}
         {...inputProps}
-        list={schema.examples ? examplesId(id) : undefined}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        list={hasExamples ? examplesId(id) : undefined}
+        {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && offersClearButton(inputValue, inputProps.type) && (
         <ClearButton registry={registry} onClick={onClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </Field>
   );
 }

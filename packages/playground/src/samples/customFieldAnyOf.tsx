@@ -1,38 +1,54 @@
-import type { FieldProps, FieldTemplateProps, FieldPathId, RJSFSchema } from '@rjsf/utils';
-import { ID_KEY, getTemplate, noop } from '@rjsf/utils';
+import type { FieldPath, FieldProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import { getTemplates, isObject, isSchemaObject, noop, toFieldPath } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
 function UiField(props: FieldProps) {
-  const { fieldPathId, formData, onChange, registry, schema, uiSchema, ...otherProps } = props;
+  // The plan is this field's own, so it is kept from the fields below, which would take its label and ids for theirs
+  const {
+    fieldPath,
+    id: _id,
+    formData,
+    onChange,
+    registry,
+    schema,
+    uiSchema,
+    presentation: _presentation,
+    ...otherProps
+  } = props;
+  // The form data is unknown to the `Form` this sample renders, so narrow it before reading the branch fields
+  const location = isObject(formData) ? formData : {};
   const { fields, schemaUtils } = registry;
-  const changeHandlerFactory = (fieldName: string) => (value: any) => {
-    onChange(value, [fieldName]);
+  const changeHandlerFactory = (childPath: FieldPath) => (value: unknown) => {
+    onChange(value, childPath);
   };
 
   const { StringField, NumberField } = fields;
-  const FieldTemplate = getTemplate('FieldTemplate', registry);
-  const schema1 = (schema.anyOf?.[0] || {}) as RJSFSchema;
-  const schema2 = (schema.anyOf?.[1] || {}) as RJSFSchema;
+  const { FieldTemplate } = getTemplates(registry);
+  const [firstBranch, secondBranch] = schema.anyOf ?? [];
+  const schema1: RJSFSchema = isSchemaObject(firstBranch) ? firstBranch : {};
+  const schema2: RJSFSchema = isSchemaObject(secondBranch) ? secondBranch : {};
   const cityLabel = 'City';
   const latLabel = 'Latitude';
   const lonLabel = 'Longitude';
   const cityKey = 'city';
   const latKey = 'lat';
   const lonKey = 'lon';
-  const citySchema = schemaUtils.findFieldInSchema(schema1, cityKey, {} as RJSFSchema);
-  const latSchema = schemaUtils.findFieldInSchema(schema2, latKey, {} as RJSFSchema);
-  const lonSchema = schemaUtils.findFieldInSchema(schema2, lonKey, {} as RJSFSchema);
-  const cityFieldPathId: FieldPathId = { [ID_KEY]: cityKey, path: [cityKey] };
-  const latFieldPathId: FieldPathId = { [ID_KEY]: latKey, path: [latKey] };
-  const lonFieldPathId: FieldPathId = { [ID_KEY]: lonKey, path: [lonKey] };
+  const cityPath = toFieldPath(cityKey, fieldPath);
+  const latPath = toFieldPath(latKey, fieldPath);
+  const lonPath = toFieldPath(lonKey, fieldPath);
+  const citySchema = schemaUtils.findFieldInSchema(schema1, cityKey, {});
+  const latSchema = schemaUtils.findFieldInSchema(schema2, latKey, {});
+  const lonSchema = schemaUtils.findFieldInSchema(schema2, lonKey, {});
 
-  const fieldTemplateProps: Omit<FieldTemplateProps, 'label' | 'id' | 'fieldPathId' | 'children'> = {
+  const fieldTemplateProps: Omit<FieldTemplateProps, 'label' | 'keyName' | 'id' | 'fieldPath' | 'children'> = {
     registry,
     schema,
     uiSchema,
+    // oxlint-disable-next-line typescript/no-deprecated -- this custom field renders its `FieldTemplate` without a plan
     displayLabel: true,
     disabled: false,
+    hasErrors: false,
     readonly: false,
     onChange,
     onKeyRename: () => noop,
@@ -52,21 +68,17 @@ function UiField(props: FieldProps) {
             margin: '1rem',
           }}
         >
-          <FieldTemplate
-            {...fieldTemplateProps}
-            id={cityFieldPathId[ID_KEY]}
-            fieldPathId={cityFieldPathId}
-            label={cityLabel}
-          >
+          <FieldTemplate {...fieldTemplateProps} fieldPath={cityPath} id={cityKey} label={cityLabel} keyName={cityKey}>
             <StringField
               schema={citySchema.field!}
               registry={registry}
               {...otherProps}
               name={cityLabel}
               required={citySchema.isRequired}
-              fieldPathId={cityFieldPathId}
-              formData={formData.city}
-              onChange={changeHandlerFactory(cityKey)}
+              fieldPath={cityPath}
+              id={cityKey}
+              formData={location.city}
+              onChange={changeHandlerFactory(cityPath)}
             />
           </FieldTemplate>
         </div>
@@ -78,38 +90,30 @@ function UiField(props: FieldProps) {
             margin: '1rem',
           }}
         >
-          <FieldTemplate
-            {...fieldTemplateProps}
-            id={latFieldPathId[ID_KEY]}
-            fieldPathId={latFieldPathId}
-            label={latLabel}
-          >
+          <FieldTemplate {...fieldTemplateProps} fieldPath={latPath} id={latKey} label={latLabel} keyName={latKey}>
             <NumberField
               schema={latSchema.field!}
               registry={registry}
               {...otherProps}
               name={latLabel}
               required={latSchema.isRequired}
-              fieldPathId={latFieldPathId}
-              formData={formData.lat}
-              onChange={changeHandlerFactory(latKey)}
+              fieldPath={latPath}
+              id={latKey}
+              formData={location.lat}
+              onChange={changeHandlerFactory(latPath)}
             />
           </FieldTemplate>
-          <FieldTemplate
-            {...fieldTemplateProps}
-            id={lonFieldPathId[ID_KEY]}
-            fieldPathId={lonFieldPathId}
-            label={lonLabel}
-          >
+          <FieldTemplate {...fieldTemplateProps} fieldPath={lonPath} id={lonKey} label={lonLabel} keyName={lonKey}>
             <NumberField
               schema={lonSchema.field!}
               registry={registry}
               {...otherProps}
               name={lonLabel}
               required={lonSchema.isRequired}
-              fieldPathId={lonFieldPathId}
-              formData={formData.lon}
-              onChange={changeHandlerFactory(lonKey)}
+              fieldPath={lonPath}
+              id={lonKey}
+              formData={location.lon}
+              onChange={changeHandlerFactory(lonPath)}
             />
           </FieldTemplate>
         </div>
@@ -150,7 +154,7 @@ const customFieldAnyOf: Sample = {
     'ui:field': UiField,
     'ui:fieldReplacesAnyOrOneOf': true,
   },
-  formData: {},
+  initialFormData: {},
 };
 
 export default customFieldAnyOf;

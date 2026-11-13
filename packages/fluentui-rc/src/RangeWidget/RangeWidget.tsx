@@ -1,42 +1,81 @@
-import type { FocusEvent } from 'react';
-import type { SliderOnChangeData } from '@fluentui/react-components';
-import { Label, Slider } from '@fluentui/react-components';
+import type { SliderProps } from '@fluentui/react-components';
+import { Label, makeStyles, Slider } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  labelValue,
+  numericWidgetStoresString,
+  rangeSpec,
+  toNumericValue,
+  widgetDrawsLabelText,
+  templateMarksRequired,
+} from '@rjsf/utils';
+
+const useStyles = makeStyles({
+  // Fluent's `Slider` keeps a 120px minimum width, which would push it out of a narrower layout grid column
+  slider: { minWidth: 0 },
+});
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
-  const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, required, label, hideLabel, id } =
-    props;
-  const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
-
-  const handleChange = (_: any, data: SliderOnChangeData) => {
-    onChange(data.value ?? options.emptyValue);
+export default function RangeWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const {
+    value,
+    readonly,
+    disabled,
+    autofocus,
+    onBlur,
+    onFocus,
+    schema,
+    onChange,
+    required,
+    label,
+    id,
+    htmlName,
+    presentation,
+  } = props;
+  const classes = useStyles();
+  // A label holding only a required field's `*` would name the slider "star", so one is drawn only with text
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
+  const sliderProps = {
+    value: toNumericValue(value),
+    label,
+    id,
+    name: htmlName || id,
+    required,
+    autoFocus: autofocus,
+    ...rangeSpec<S>(schema),
   };
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
+
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const handleChange: NonNullable<SliderProps['onChange']> = (_, data) =>
+    onChange(storesString ? String(data.value) : data.value);
+  const handleBlur = () => onBlur(id, value);
+  const handleFocus = () => onFocus(id, value);
 
   return (
     <>
       {labelValue(
-        <Label required={required} htmlFor={id}>
-          {label || undefined}
+        <Label required={templateMarksRequired<T, S, F>(props)} htmlFor={id}>
+          {label}
         </Label>,
         hideLabel,
       )}
       <Slider
+        className={classes.slider}
         disabled={disabled || readonly}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...sliderProps}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
       />
     </>
   );

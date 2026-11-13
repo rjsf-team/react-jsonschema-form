@@ -2,12 +2,15 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  descriptionId,
-  getTemplate,
+  fieldShowsOwnErrors,
+  getControlAttributes,
+  getTemplates,
   labelValue,
   schemaRequiresTrueValue,
   getUiOptions,
+  getWidgetDescription,
+  joinClassNames,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
@@ -15,33 +18,42 @@ import {
  *
  * @param props - The `WidgetProps` for this component
  */
-function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  schema,
-  uiSchema,
-  options,
-  id,
-  value,
-  disabled,
-  readonly,
-  label,
-  hideLabel,
-  autofocus = false,
-  onBlur,
-  onFocus,
-  onChange,
-  registry,
-  htmlName,
-  required,
-}: WidgetProps<T, S, F>) {
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
+function CheckboxWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const {
+    schema,
+    uiSchema,
     options,
-  );
+    id,
+    value,
+    disabled,
+    readonly,
+    label,
+    autofocus = false,
+    onBlur,
+    onFocus,
+    onChange,
+    registry,
+    htmlName,
+    required,
+    presentation,
+  } = props;
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
+  const { classMap } = registry;
+  // The field's own error state, as its wrapper has it, rather than its control's, which is invalid while a field above
+  // shows its errors even where this one hides them
+  const hasErrors = fieldShowsOwnErrors<T, S, F>(props);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.checked),
@@ -58,40 +70,48 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
     [onFocus, id],
   );
 
-  const uiOptions = getUiOptions(uiSchema);
-  const isCheckboxWidget = uiOptions.widget === 'checkbox';
-  const description = isCheckboxWidget ? undefined : (options.description ?? schema.description);
+  // The plan says whether the label and description are this widget's to draw, so a checkbox under a label above names
+  // none of its own; without a plan, a template rendering the `checkbox` alias draws the description itself
+  const showsLabel = widgetDrawsLabel<T, S, F>(props);
+  const description =
+    presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (
-    <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
-      {!hideLabel && description && (
+    <div
+      className={joinClassNames('rjsf-checkbox', classMap.checkboxWrapper, (disabled || readonly) && classMap.disabled)}
+      data-disabled={disabled || readonly || undefined}
+    >
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
+          hasErrors={hasErrors}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
       )}
-      <label>
+      <label className={classMap.checkboxLabel} data-invalid={hasErrors || undefined}>
         <input
           type='checkbox'
+          className={classMap.checkboxInput}
           id={id}
           name={htmlName || id}
-          checked={typeof value === 'undefined' ? false : value}
-          required={required}
+          checked={Boolean(value)}
+          required={trueValueRequired}
+          aria-required={(marksRequired && !trueValueRequired) || undefined}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
-          aria-describedby={ariaDescribedByIds(id)}
+          {...getControlAttributes<T, S, F>({ id, presentation })}
         />
         {labelValue(
           <span>
             {label}
-            {trueValueRequired && <span className='required'>*</span>}
+            {marksRequired && <span className='rjsf-required'>*</span>}
           </span>,
-          hideLabel,
+          !showsLabel,
         )}
       </label>
     </div>

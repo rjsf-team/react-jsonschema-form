@@ -21,6 +21,14 @@ const optionsSample: Sample = {
         title: 'Telephone',
         minLength: 10,
       },
+      country: {
+        type: 'string',
+        title: 'Country',
+      },
+      email: {
+        type: 'string',
+        title: 'Email',
+      },
     },
   },
   uiSchema: {
@@ -62,8 +70,15 @@ const optionsSample: Sample = {
         inputType: 'tel',
       },
     },
+    country: {
+      'ui:widget': 'hidden',
+      'ui:initialValue': 'US',
+    },
+    email: {
+      'ui:required': true,
+    },
   },
-  formData: {
+  initialFormData: {
     lastName: 'Norris',
     age: 75,
     bio: 'Roundhouse kicking asses since 1940',

@@ -2,7 +2,10 @@
 
 exports[`CheckboxesWidget > inline 1`] = `
 <DocumentFragment>
-  <div>
+  <div
+    id="_id"
+    role="group"
+  >
     <div
       class="bg-transparent border-0 form-check form-check-inline"
     >
@@ -10,14 +13,14 @@ exports[`CheckboxesWidget > inline 1`] = `
         aria-describedby="_id__error _id__description _id__help"
         class="form-check-input"
         disabled=""
-        id="_id-0"
+        id="_id__0"
         name="_id"
-        required=""
         type="checkbox"
+        value="0"
       />
       <label
         class="form-check-label"
-        for="_id-0"
+        for="_id__0"
         title=""
       >
         A
@@ -29,7 +32,10 @@ exports[`CheckboxesWidget > inline 1`] = `
 
 exports[`CheckboxesWidget > simple 1`] = `
 <DocumentFragment>
-  <div>
+  <div
+    id="_id"
+    role="group"
+  >
     <div
       class="bg-transparent border-0 form-check"
     >
@@ -37,14 +43,14 @@ exports[`CheckboxesWidget > simple 1`] = `
         aria-describedby="_id__error _id__description _id__help"
         class="form-check-input"
         disabled=""
-        id="_id-0"
+        id="_id__0"
         name="_id"
-        required=""
         type="checkbox"
+        value="0"
       />
       <label
         class="form-check-label"
-        for="_id-0"
+        for="_id__0"
         title=""
       >
         A

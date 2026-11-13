@@ -1,15 +1,17 @@
-import type { ChangeEvent, FocusEvent } from 'react';
-import { useCallback } from 'react';
+import type { ChangeEvent } from 'react';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
+  enumOptionsDomValues,
+  enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getGroupAttributes,
   getOptionValueFormat,
+  joinClassNames,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
@@ -17,7 +19,11 @@ import {
  *
  * @param props - The `WidgetProps` for this component
  */
-function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+function CheckboxesWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   id,
   disabled,
   options,
@@ -28,30 +34,31 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   onBlur,
   onFocus,
   htmlName,
+  registry,
+  presentation,
 }: WidgetProps<T, S, F>) {
-  const { inline = false, enumOptions, enumDisabled, emptyValue } = options;
+  const { inline = false, enumOptions, enumDisabled } = options;
+  const { classMap } = registry;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) =>
-      onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
-    [onBlur, id, enumOptions, emptyValue, optionValueFormat],
-  );
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
-  const handleFocus = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) =>
-      onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
-    [onFocus, id, enumOptions, emptyValue, optionValueFormat],
-  );
-
+  const {
+    group: groupAttributes,
+    option: optionAttributes,
+    requiredCue,
+  } = getGroupAttributes<T, S, F>({ id, presentation, registry }, 'group');
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
-    <div className='checkboxes' id={id}>
+    <div className='rjsf-checkboxes' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
-          const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
+          const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
+          const optionDisabled = disabled || itemDisabled || readonly;
+          const disabledCls = optionDisabled && classMap.disabled;
 
           const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
             if (event.target.checked) {
@@ -65,30 +72,42 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
             <span>
               <input
                 type='checkbox'
+                className={classMap.checkboxInput}
                 id={optionId(id, index)}
                 name={htmlName || id}
                 checked={checked}
-                value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+                value={domValues[index]}
                 disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && index === 0}
+                autoFocus={index === autofocusIndex}
                 onChange={handleChange}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
-                aria-describedby={ariaDescribedByIds(id)}
+                onBlur={blurHandlers[index]}
+                onFocus={focusHandlers[index]}
+                {...optionAttributes}
               />
               <span>{option.label}</span>
             </span>
           );
           return inline ? (
-            <label key={String(option.value)} className={`checkbox-inline ${disabledCls}`}>
+            <label
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
+              className={joinClassNames('rjsf-checkbox-inline', classMap.checkboxInlineLabel, disabledCls)}
+              data-disabled={optionDisabled || undefined}
+            >
               {checkbox}
             </label>
           ) : (
-            <div key={String(option.value)} className={`checkbox ${disabledCls}`}>
-              <label>{checkbox}</label>
+            <div
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
+              className={joinClassNames('rjsf-checkbox', classMap.checkboxWrapper, disabledCls)}
+              data-disabled={optionDisabled || undefined}
+            >
+              <label className={classMap.checkboxLabel}>{checkbox}</label>
             </div>
           );
         })}
+      {requiredCue && <span {...requiredCue} />}
     </div>
   );
 }

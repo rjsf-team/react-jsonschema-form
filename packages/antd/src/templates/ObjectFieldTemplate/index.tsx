@@ -1,16 +1,29 @@
 import { useContext } from 'react';
 import type {
   FormContextType,
-  GenericObjectType,
   ObjectFieldTemplateProps,
   ObjectFieldTemplatePropertyType,
   RJSFSchema,
   StrictRJSFSchema,
-  UiSchema,
 } from '@rjsf/utils';
-import { canExpand, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import {
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  titleId,
+  buttonId,
+  titleDrawsOptionalDataControl,
+} from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
-import classNames from 'classnames';
+
+import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
+import type { AntdFormContext } from '../../formContext.ts';
+import headingLabelColClassName from '../headingLabelColClassName.ts';
+
+/** Whether `span` is a span antd's `Col` renders, which is a whole number of its 24 grid columns */
+function isColSpan(span: unknown): span is number {
+  return typeof span === 'number' && Number.isInteger(span) && span >= 0 && span <= 24;
+}
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -19,14 +32,14 @@ import classNames from 'classnames';
  * @param props - The `ObjectFieldTemplateProps` for this component
  */
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     disabled,
     formData,
-    fieldPathId,
+    id,
     onAddProperty,
     optionalDataControl,
     properties,
@@ -36,35 +49,28 @@ export default function ObjectFieldTemplate<
     schema,
     title,
     uiSchema,
+    presentation,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const { formContext } = registry;
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const { TitleFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const { formContext, schemaUtils } = registry;
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = formContext as GenericObjectType;
+  const { colSpan = 24, rowGutter = DEFAULT_ROW_GUTTER }: AntdFormContext = formContext;
 
-  const findSchema = (element: ObjectFieldTemplatePropertyType): S => element.content.props.schema;
+  const visibleProperties = properties.filter((e) => !e.hidden);
 
-  const findSchemaType = (element: ObjectFieldTemplatePropertyType) => findSchema(element).type;
-
-  const findUiSchema = (element: ObjectFieldTemplatePropertyType): UiSchema<T, S, F> | undefined =>
-    element.content.props.uiSchema;
-
-  const findUiSchemaField = (element: ObjectFieldTemplatePropertyType) => getUiOptions(findUiSchema(element)).field;
-
-  const findUiSchemaWidget = (element: ObjectFieldTemplatePropertyType) => getUiOptions(findUiSchema(element)).widget;
-
-  const calculateColSpan = (element: ObjectFieldTemplatePropertyType) => {
-    const type = findSchemaType(element);
-    const field = findUiSchemaField(element);
-    const widget = findUiSchemaWidget(element);
+  const calculateColSpan = (element: ObjectFieldTemplatePropertyType<T, S, F>) => {
+    if (isColSpan(colSpan)) {
+      return colSpan;
+    }
+    const { field, widget, type } = element.renderedAs?.() ?? {};
 
     const defaultColSpan =
-      properties.length < 2 || // Single or no field in object.
+      visibleProperties.length < 2 || // Single or no visible field in object.
       type === 'object' ||
       type === 'array' ||
       widget === 'textarea'
@@ -72,38 +78,26 @@ export default function ObjectFieldTemplate<
         : 12;
 
     if (typeof colSpan === 'object' && colSpan !== null) {
-      if (typeof widget === 'string') {
-        return colSpan[widget];
+      for (const key of [widget, field, type]) {
+        if (typeof key === 'string' && isColSpan(colSpan[key])) {
+          return colSpan[key];
+        }
       }
-      if (typeof field === 'string') {
-        return colSpan[field];
-      }
-      if (typeof type === 'string') {
-        return colSpan[type];
-      }
-    }
-    if (typeof colSpan === 'number') {
-      return colSpan;
     }
     return defaultColSpan;
   };
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('form');
-  const labelClsBasic = `${prefixCls}-item-label`;
-  const labelColClassName = classNames(
-    labelClsBasic,
-    labelAlign === 'left' && `${labelClsBasic}-left`,
-    // labelCol.className,
-  );
+  const labelColClassName = headingLabelColClassName(prefixCls, formContext);
 
   return (
-    <fieldset id={fieldPathId.$id}>
+    <fieldset id={id} {...getContainerAttributes(presentation, id, title)}>
       <Row gutter={rowGutter}>
         {title && (
           <Col className={labelColClassName} span={24}>
             <TitleFieldTemplate
-              id={titleId(fieldPathId)}
+              id={titleId(id)}
               title={title}
               required={required}
               schema={schema}
@@ -113,21 +107,21 @@ export default function ObjectFieldTemplate<
             />
           </Col>
         )}
-        {!showOptionalDataControlInTitle ? <Col span={24}>{optionalDataControl}</Col> : undefined}
-        {properties
-          .filter((e) => !e.hidden)
-          .map((element: ObjectFieldTemplatePropertyType) => (
-            <Col key={element.name} span={calculateColSpan(element)}>
-              {element.content}
-            </Col>
-          ))}
+        {!showOptionalDataControlInTitle && optionalDataControl ? (
+          <Col span={24}>{optionalDataControl}</Col>
+        ) : undefined}
+        {visibleProperties.map((element) => (
+          <Col key={element.content.key} span={calculateColSpan(element)}>
+            {element.content}
+          </Col>
+        ))}
       </Row>
-      {canExpand(schema, uiSchema, formData) && (
+      {schemaUtils.canExpand(schema, uiSchema, formData) && (
         <Col span={24}>
           <Row gutter={rowGutter} justify='end'>
             <Col flex='120px'>
               <AddButton
-                id={buttonId(fieldPathId, 'add')}
+                id={buttonId(id, 'add')}
                 className='rjsf-object-property-expand'
                 disabled={disabled || readonly}
                 onClick={onAddProperty}

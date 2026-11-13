@@ -1,6 +1,41 @@
-import { Flex, Grid, TextInput } from '@mantine/core';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, UI_OPTIONS_KEY, buttonId, TranslatableString } from '@rjsf/utils';
+import type { TextInputProps } from '@mantine/core';
+import { Flex, Grid, Input, TextInput } from '@mantine/core';
+import type {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  WrapIfAdditionalTemplateProps,
+} from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
+  AdditionalPropertyKeySelect,
+  buttonId,
+  getAdditionalKeyAttributes,
+  hasAdditionalKeyLabel,
+  hasSchemaMarker,
+  isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
+  TranslatableString,
+  UI_OPTIONS_KEY,
+} from '@rjsf/utils';
+
+import { useAriaDescribedByProps } from '../utils.tsx';
+
+/** The key's text input. Mantine's input takes its `aria-describedby` from its wrapper's context and its `aria-invalid`
+ * from `error`, over any given to it directly; a component of its own so only a key input runs the hook, not every field
+ * the template wraps
+ */
+function KeyTextInput({ id, describedBy, ...props }: TextInputProps & { id: string; describedBy?: string }) {
+  const ariaProps = useAriaDescribedByProps(
+    'TextInput',
+    id,
+    {},
+    { describedBy, label: typeof props.label === 'string' ? props.label : undefined },
+  );
+  return <TextInput id={id} {...props} {...ariaProps} />;
+}
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -8,32 +43,40 @@ import { ADDITIONAL_PROPERTY_FLAG, UI_OPTIONS_KEY, buttonId, TranslatableString 
  * @param props - The `WrapIfAdditionalProps` for this component
  */
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     id,
     classNames,
     style,
     label,
-    displayLabel,
+    keyName,
     rawDescription,
     required,
     readonly,
     disabled,
     schema,
     uiSchema,
+    onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
     registry,
     children,
   } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
+  // A description this theme's widget draws itself still takes a row, so the key lines up with the value whoever draws it
+  const hasDescription = props.presentation ? props.presentation.description.by !== 'none' : !!rawDescription;
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
-  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const keyId = additionalKeyId(id);
+  const additional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
 
   if (!additional) {
     return (
@@ -44,10 +87,10 @@ export default function WrapIfAdditionalTemplate<
   }
 
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so put it into the uiSchema instead
-  const uiOptions = uiSchema ? uiSchema[UI_OPTIONS_KEY] : {};
-  const buttonUiOptions = {
-    ...uiSchema,
-    [UI_OPTIONS_KEY]: { ...uiOptions, block: true },
+  const baseUiSchema: UiSchema<T, S, F> = uiSchema ?? {};
+  const buttonUiOptions: UiSchema<T, S, F> = {
+    ...baseUiSchema,
+    [UI_OPTIONS_KEY]: { ...baseUiSchema[UI_OPTIONS_KEY], block: true },
   };
 
   return (
@@ -55,18 +98,42 @@ export default function WrapIfAdditionalTemplate<
       <Flex gap='xs' align='end' justify='center'>
         <Grid w='100%' align='center'>
           <Grid.Col span={6} className='form-additional'>
-            <TextInput
-              key={label}
-              className='form-group'
-              label={displayLabel ? keyLabel : undefined}
-              defaultValue={label}
-              required={required}
-              description={rawDescription ? '\u00A0' : undefined}
-              disabled={disabled || readonly}
-              id={`${id}-key`}
-              name={`${id}-key`}
-              onBlur={!readonly ? onKeyRenameBlur : undefined}
-            />
+            {propertyNamesEnum ? (
+              <>
+                <AdditionalPropertyKeySelect<T, S, F>
+                  errorAttributes={keyAttributes}
+                  id={keyId}
+                  label={keyLabel}
+                  hideLabel={!hasKeyLabel}
+                  value={keyName}
+                  propertyNamesEnum={propertyNamesEnum}
+                  onKeyRename={onKeyRename}
+                  disabled={disabled}
+                  readonly={readonly}
+                  required={required}
+                  registry={registry}
+                />
+                {/* The key input below reserves a description row so the key lines up with the value beside it; the
+                    dropdown reserves the same row, since it renders no description of its own */}
+                {hasDescription && <Input.Description>&nbsp;</Input.Description>}
+              </>
+            ) : (
+              <KeyTextInput
+                key={keyName}
+                className='form-group'
+                label={hasKeyLabel ? keyLabel : undefined}
+                aria-label={hasKeyLabel ? undefined : keyLabel}
+                describedBy={keyAttributes['aria-describedby']}
+                error={keyAttributes['aria-invalid']}
+                defaultValue={keyName}
+                required={required}
+                description={hasDescription ? '\u00A0' : undefined}
+                disabled={isAdditionalKeyDisabled(props)}
+                id={keyId}
+                name={keyId}
+                onBlur={!readonly ? onKeyRenameBlur : undefined}
+              />
+            )}
           </Grid.Col>
           <Grid.Col span={6} className='form-additional'>
             {children}
@@ -77,7 +144,7 @@ export default function WrapIfAdditionalTemplate<
             id={buttonId(id, 'remove')}
             iconType='sm'
             className='rjsf-array-item-remove'
-            disabled={disabled || readonly}
+            disabled={isAdditionalRemoveDisabled(props)}
             onClick={onRemoveProperty}
             uiSchema={buttonUiOptions}
             registry={registry}

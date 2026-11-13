@@ -1,18 +1,32 @@
 import type { ThemeProps } from '@rjsf/core';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
-import { generateTemplates } from '../Templates/index.ts';
-import { generateWidgets } from '../Widgets/index.ts';
+import { generateClassMap } from '../classMap.ts';
+import { createTemplates } from '../Templates/index.ts';
+import { createWidgets } from '../Widgets/index.ts';
 
-export function generateTheme<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): ThemeProps<T, S, F> {
+/** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: the slider's thumb is
+ * named by the template's label through `aria-labelledby`, since a `for` can't reach a thumb, which isn't a form control
+ */
+function createPresentation(): ThemePresentation {
+  return { widgets: { RangeWidget: { labelledBy: 'aria-labelledby' } } };
+}
+
+function createTheme() {
   return {
-    templates: generateTemplates<T, S, F>(),
-    widgets: generateWidgets<T, S, F>(),
+    templates: createTemplates(),
+    widgets: createWidgets(),
+    presentation: createPresentation(),
+    classMap: generateClassMap(),
   };
 }
 
-export default generateTheme();
+export function generateTheme<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): ThemeProps<T, S, F> {
+  return createTheme();
+}
+
+export default createTheme();

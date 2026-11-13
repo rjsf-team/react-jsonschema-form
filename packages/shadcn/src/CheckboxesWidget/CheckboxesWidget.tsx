@@ -1,13 +1,16 @@
-import type { FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  enumOptionValueDecoder,
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
+  enumOptionsDomValues,
+  enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getGroupAttributes,
   getOptionValueFormat,
+  hasWidgetErrors,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
@@ -20,46 +23,42 @@ import { cn } from '../lib/utils.ts';
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxesWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  id,
-  htmlName,
-  disabled,
-  options,
-  value,
-  autofocus,
-  readonly,
-  required,
-  onChange,
-  onBlur,
-  onFocus,
-  className,
-}: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const { id, htmlName, disabled, options, value, autofocus, readonly, onChange, onBlur, onFocus, className } = props;
+  const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const handleBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>((target as any)?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>((target as any)?.value, enumOptions, optionValueFormat, emptyValue));
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
+  const checkboxClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className);
+  const { group: groupAttributes, option: optionAttributes, requiredCue } = getGroupAttributes<T, S, F>(props, 'group');
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
-    <div className={cn({ 'flex flex-col gap-2': !inline, 'flex flex-row gap-4 flex-wrap': inline })}>
+    <div
+      id={id}
+      {...groupAttributes}
+      className={cn({ 'flex flex-col gap-2': !inline, 'flex flex-row gap-4 flex-wrap': inline })}
+    >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+          const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
           const indexOptionId = optionId(id, index);
 
           return (
-            <div className='flex items-center gap-2' key={indexOptionId}>
+            <div
+              className='flex items-center gap-2'
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
+            >
               <Checkbox
                 id={indexOptionId}
                 name={htmlName || id}
-                required={required}
                 disabled={disabled || itemDisabled || readonly}
                 onCheckedChange={(state) => {
                   if (state) {
@@ -68,12 +67,13 @@ export default function CheckboxesWidget<
                     onChange(enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions));
                   }
                 }}
-                className={className}
+                className={checkboxClassName}
                 checked={checked}
-                autoFocus={autofocus && index === 0}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
-                aria-describedby={ariaDescribedByIds(id)}
+                value={domValues[index]}
+                autoFocus={index === autofocusIndex}
+                onBlur={blurHandlers[index]}
+                onFocus={focusHandlers[index]}
+                {...optionAttributes}
               />
               <Label className='leading-tight' htmlFor={optionId(id, index)}>
                 {option.label}
@@ -81,6 +81,7 @@ export default function CheckboxesWidget<
             </div>
           );
         })}
+      {requiredCue && <span {...requiredCue} />}
     </div>
   );
 }

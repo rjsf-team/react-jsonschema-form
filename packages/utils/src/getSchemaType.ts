@@ -1,3 +1,4 @@
+import { JSON_SCHEMA_TYPES } from './constants.ts';
 import guessType from './guessType.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
@@ -8,17 +9,18 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  * - schema.properties: Returns `object`
  * - schema.additionalProperties: Returns `object`
  * - schema.patternProperties: Returns `object`
- * - type is an array with a length of 2 and one type is 'null': Returns the other type
+ * - schema.unevaluatedProperties: Returns `object`, since it describes the keys an object's other keywords leave over
+ * - type is an array: Returns its first type other than 'null' that JSON Schema defines, since 'null' is the one type
+ *   that holds no value to edit and an unrecognized name has no field to render it; failing that its first type other
+ *   than 'null', and 'null' for an array listing nothing else
  *
  * @param schema - The schema for which to get the type
  * @returns - The type of the schema
  */
-export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-): string | string[] | undefined {
-  let { type } = schema;
+export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(schema: S): string | undefined {
+  const { type } = schema;
 
-  if (!type && schema.const) {
+  if (!type && schema.const !== undefined) {
     return guessType(schema.const);
   }
 
@@ -26,17 +28,21 @@ export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
     return 'string';
   }
 
-  if (!type && (schema.properties || schema.additionalProperties || schema.patternProperties)) {
+  if (
+    !type &&
+    (schema.properties ||
+      schema.additionalProperties ||
+      schema.patternProperties ||
+      // It describes the keys the other keywords leave unevaluated, which only an object has
+      schema.unevaluatedProperties)
+  ) {
     return 'object';
   }
 
   if (Array.isArray(type)) {
-    if (type.length === 2 && type.includes('null')) {
-      type = type.find((t) => t !== 'null');
-    } else {
-      // oxlint-disable-next-line prefer-destructuring
-      type = type[0];
-    }
+    // Searched in place rather than through `getKnownTypes()`, which builds a deduplicated copy of the list on every call
+    // of a function every field calls on every render
+    return type.find((t) => t !== 'null' && JSON_SCHEMA_TYPES.includes(t)) ?? type.find((t) => t !== 'null') ?? type[0];
   }
 
   return type;

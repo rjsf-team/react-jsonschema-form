@@ -1,87 +1,118 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
+  AdditionalPropertyKeySelect,
+  buttonId,
+  getAdditionalKeyAttributes,
+  hasAdditionalKeyLabel,
+  hasSchemaMarker,
+  isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
+  joinClassNames,
+  TranslatableString,
+} from '@rjsf/utils';
 
 import Label from './FieldTemplate/Label.tsx';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
- * part of an `additionalProperties` part of a schema.
+ * part of an `additionalProperties` part of a schema. The key, the value and the remove button sit in a row that
+ * `rjsf.css` lays out as a grid, on whose rows the key's label and input line up with the value's label and control.
  *
  * @param props - The `WrapIfAdditionalProps` for this component
  */
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     id,
     classNames,
     style,
     disabled,
-    displayLabel,
+    hasErrors,
     label,
+    keyName,
+    onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
-    rawDescription,
+    propertyNamesEnum,
     readonly,
     required,
     schema,
-    hideError,
-    rawErrors,
     children,
     uiSchema,
     registry,
   } = props;
-  const { templates, translateString } = registry;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
+  const { templates, translateString, classMap } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
-  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
-  const hasDescription = !!rawDescription;
-
-  const classNamesList = ['form-group', classNames];
-  if (!hideError && rawErrors && rawErrors.length > 0) {
-    classNamesList.push('has-error has-danger');
-  }
-  const uiClassNames = classNamesList.join(' ').trim();
+  const keyId = additionalKeyId(id);
+  const additional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
 
   if (!additional) {
     return (
-      <div className={uiClassNames} style={style}>
+      <div className={classNames} style={style} data-invalid={hasErrors || undefined}>
         {children}
       </div>
     );
   }
-  const margin = hasDescription ? 46 : 26;
   return (
-    <div className={uiClassNames} style={style}>
-      <div className='row'>
-        <div className='col-xs-5 form-additional'>
-          <div className='form-group'>
-            {displayLabel && <Label label={keyLabel} required={required} id={`${id}-key`} />}
-            {displayLabel && rawDescription && <div>&nbsp;</div>}
-            <input
-              key={label}
-              className='form-control'
-              type='text'
-              id={`${id}-key`}
-              onBlur={onKeyRenameBlur}
-              defaultValue={label}
+    <div className={classNames} style={style} data-invalid={hasErrors || undefined}>
+      <div className='rjsf-additional-property'>
+        <div className='rjsf-additional-property-key'>
+          {hasKeyLabel && (
+            <Label
+              label={keyLabel}
+              required={required}
+              id={keyId}
+              className={joinClassNames('rjsf-field-label', classMap.fieldLabel)}
+              invalid={keyAttributes['aria-invalid']}
             />
-          </div>
+          )}
+          {propertyNamesEnum ? (
+            <AdditionalPropertyKeySelect<T, S, F>
+              errorAttributes={keyAttributes}
+              id={keyId}
+              label={keyLabel}
+              hideLabel
+              labelledByTemplate={hasKeyLabel}
+              value={keyName}
+              propertyNamesEnum={propertyNamesEnum}
+              onKeyRename={onKeyRename}
+              disabled={disabled}
+              readonly={readonly}
+              required={required}
+              registry={registry}
+            />
+          ) : (
+            <input
+              key={keyName}
+              className={classMap.input}
+              type='text'
+              id={keyId}
+              aria-label={hasKeyLabel ? undefined : keyLabel}
+              {...keyAttributes}
+              disabled={isAdditionalKeyDisabled(props)}
+              onBlur={onKeyRenameBlur}
+              defaultValue={keyName}
+            />
+          )}
         </div>
-        <div className='form-additional form-group col-xs-5'>{children}</div>
-        <div className='col-xs-2' style={{ marginTop: displayLabel ? `${margin}px` : undefined }}>
-          <RemoveButton
-            id={buttonId(id, 'remove')}
-            className='rjsf-object-property-remove btn-block'
-            style={{ border: '0' }}
-            disabled={disabled || readonly}
-            onClick={onRemoveProperty}
-            uiSchema={uiSchema}
-            registry={registry}
-          />
-        </div>
+        <div className='rjsf-additional-property-value'>{children}</div>
+        <RemoveButton
+          id={buttonId(id, 'remove')}
+          className='rjsf-object-property-remove'
+          disabled={isAdditionalRemoveDisabled(props)}
+          onClick={onRemoveProperty}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
       </div>
     </div>
   );

@@ -13,11 +13,13 @@ can be hidden/shown based upon the value(s) of a field. It even supports the inc
 are not associated with a field. Finally, there is built-in support for doing a named look up of data within a special
 location in the `FormContext`.
 
-Since each theme that RJSF supports has its own unique grid system, the `uiSchema` that one creates for the
-`LayoutGridField` for one theme will most likely not work for any other theme unless two themes have the exact same
-grid specification props. It also requires that one understand how to use the grid system of the theme and how it
-interplays with the `LayoutGridField`'s "syntax". In other words, it will likely take some experimentation to get the
-grid looking exactly the way you want it to.
+Each theme that RJSF supports has its own grid system. A column's `span`, in twelfths of a row, lays out the same way
+in every theme, since each theme's `GridTemplate` converts it to its own grid (see [`span` in each theme](#span-in-each-theme)).
+Anything beyond that, such as breakpoints, gaps or a row's own template, uses the theme's own grid props, and a `uiSchema`
+that does will most likely not work for any other theme unless two themes have the exact same grid specification props.
+It also requires that one understand how to use the grid system of the theme and how it interplays with the
+`LayoutGridField`'s "syntax". In other words, it will likely take some experimentation to get the grid looking exactly
+the way you want it to.
 
 Let's break down how to use the `LayoutGridField` one step at a time.
 
@@ -100,7 +102,7 @@ This will highlight the first elements of the new "syntax"; `ui:layoutGrid` and 
 }
 ```
 
-This results in the following UI using the `core` theme via the `Bootstrap 3` grid system:
+This results in the following UI using the `core` theme's grid:
 
 ```text
   Last Name*
@@ -120,8 +122,10 @@ This results in the following UI using the `core` theme via the `Bootstrap 3` gr
 ```
 
 As mentioned before, another theme's grid system may render the above example differently. Most likely as three fields
-lined up next to each other. Assume all examples from here on out will be shown using the `core` theme. You may have to
-adjust the `uiSchema` for your theme to achieve the same results.
+lined up next to each other, since fields placed in a row without a `ui:col` are laid out by the theme's own grid.
+Assume all examples from here on out will be shown using the `core` theme. The ones that size every column with `span`
+lay out the same way in every theme; for the others you may have to adjust the `uiSchema` for your theme to achieve the
+same results.
 
 ### `ui:layoutGrid`
 
@@ -208,13 +212,12 @@ it's just a matter of updating the `uiSchema` again, this time using more of the
   "ui:field": "LayoutGridField",
   "ui:layoutGrid": {
     "ui:row": {
-      "className": "row",
       "children": [
         {
           "ui:row": [
             {
               "ui:col": {
-                "className": "col-xs-12",
+                "span": 12,
                 "children": ["person"]
               }
             }
@@ -224,7 +227,7 @@ it's just a matter of updating the `uiSchema` again, this time using more of the
           "ui:row": [
             {
               "ui:col": {
-                "className": "col-xs-4",
+                "span": 4,
                 "children": [
                   {
                     "name": "person.first"
@@ -234,7 +237,7 @@ it's just a matter of updating the `uiSchema` again, this time using more of the
             },
             {
               "ui:col": {
-                "className": "col-xs-4",
+                "span": 4,
                 "children": [
                   {
                     "name": "person.middle"
@@ -244,7 +247,7 @@ it's just a matter of updating the `uiSchema` again, this time using more of the
             },
             {
               "ui:col": {
-                "className": "col-xs-4",
+                "span": 4,
                 "children": [
                   {
                     "name": "person.last"
@@ -273,9 +276,12 @@ Person Info
   +--------------------------+  +--------------------------+  +--------------------------+
 ```
 
-The above example uses the `core` UI theme's `Bootstrap 3` grid classes to make the `Person Info` span 12 columns within
-a row and each of the person name fields span 4 columns within a row. It also adds the "row" grid class to the outermost
-`ui:row` to make whole UI be part of a grid row.
+The above example uses the `span` property to make the `Person Info` span all 12 columns of a row and each of the person
+name fields span 4 columns within a row. `span` counts twelfths of a row in every theme. The `core` theme's
+`GridTemplate` renders every `ui:row` as a 12-column grid and every `ui:col` as a column spanning `span` of its tracks, or
+all of them when it has none, laid out by the optional `@rjsf/core/rjsf.css` stylesheet. Without that stylesheet the
+`span` property has no visible effect in the `core` theme. Every other theme's `GridTemplate` converts `span` to its own
+grid, as [`span` in each theme](#span-in-each-theme) lists.
 
 Now sometimes, depending on the grid system, you don't need to explicitly define both second-level rows, instead
 depending on the column grid behavior. Luckily the `core` theme's grid system is one of those, so the following UI
@@ -286,17 +292,16 @@ schema will also produce the exact same result.
   "ui:field": "LayoutGridField",
   "ui:layoutGrid": {
     "ui:row": {
-      "className": "row",
       "children": [
         {
           "ui:col": {
-            "className": "col-xs-12",
+            "span": 12,
             "children": ["person"]
           }
         },
         {
           "ui:columns": {
-            "className": "col-xs-4",
+            "span": 4,
             "children": ["person.first", "person.middle", "person.last"]
           }
         }
@@ -314,23 +319,24 @@ Here is how the `LayoutGridField` "syntax" above is used.
 ### `ui:row`, part 2
 
 As the above examples show, the `ui:row` object can be nested inside of the `children` of a `ui:row`. This signifies the
-nesting of one row inside another row. It also shows that any additional properties added to the `ui:row` object, in this
-case the `"className": "row"` will be spread onto the underlying theme's grid implementation. You may also pass other
-properties, such as `style` blocks or, in the case of other themes, properties that will affect the underlying grid system
-components.
+nesting of one row inside another row. Any additional properties added to the `ui:row` object, such as a `className`, will
+be spread onto the underlying theme's grid implementation. You may also pass other properties, such as `style` blocks or,
+in the case of other themes, properties that will affect the underlying grid system components.
 
 ### `ui:col`
 
 The `ui:col` "syntax" represents a single column of data in the grid. Like `ui:row` this syntax will spread the
-`"className": "col-xs-12"` and `"className": "col-xs-4"` properties onto the underlying theme's grid implementation, as
-well as any other properties, such as `style` blocks, etc. In its most compact form, the `ui:col` can be written as
+`"span": 12` and `"span": 4` properties onto the underlying theme's grid implementation, as well as any other
+properties, such as `style` blocks, etc. In its most compact form, the `ui:col` can be written as
 `{ "ui:col": ["person"] }`, in a manner similar to `ui:row` where the array is implicitly assumed to be the `children`
 property.
 
 In its most expanded form, the `ui:col` contains an array of `children` in the form of objects with `"name": "<field id>"`
 as the minimum required property. Any additional properties added within the object will be passed along to the
 underlying `Widget` implementation in the `ui:options` portion of the `uiSchema`. This allows for fine-tuning any
-out-of-the-box or custom widgets. Let's take a look at an example where the `Middle Name` column hides its label adding
+out-of-the-box or custom widgets. The [keys `ui:options` doesn't take](../api-reference/uiSchema.md#exceptions-to-the-equivalence),
+such as `field`, are ignored with a warning, so name a cell's field with `ui:field` in its own `uiSchema` entry.
+Let's take a look at an example where the `Middle Name` column hides its label adding
 a margin to take up the space once occupied by the label, and is reduced in size relative to the `First Name` and
 `Last Name`:
 
@@ -339,13 +345,12 @@ a margin to take up the space once occupied by the label, and is reduced in size
   "ui:field": "LayoutGridField",
   "ui:layoutGrid": {
     "ui:row": {
-      "className": "row",
       "children": [
         {
           "ui:row": [
             {
               "ui:col": {
-                "className": "col-xs-12",
+                "span": 12,
                 "children": ["person"]
               }
             }
@@ -355,13 +360,13 @@ a margin to take up the space once occupied by the label, and is reduced in size
           "ui:row": [
             {
               "ui:col": {
-                "className": "col-xs-5",
+                "span": 5,
                 "children": ["person.first"]
               }
             },
             {
               "ui:col": {
-                "className": "col-xs-2",
+                "span": 2,
                 "style": {
                   "margin-top": "25px"
                 },
@@ -375,7 +380,7 @@ a margin to take up the space once occupied by the label, and is reduced in size
             },
             {
               "ui:col": {
-                "className": "col-xs-5",
+                "span": 5,
                 "children": ["person.last"]
               }
             }
@@ -403,7 +408,7 @@ Person Info
 ### `ui:columns`
 
 The `ui:columns` "syntax" represents a group of columns in the grid. Like `ui:row` and `ui:col` this syntax will spread
-the properties onto the underlying theme's grid implementation (in an earlier example `"className": "col-xs-4"` ), as
+the properties onto the underlying theme's grid implementation (in an earlier example `"span": 4` ), as
 well as any other properties, such as `style` blocks, etc. It is short-hand notation for rendering a group of columns
 all with the same grid system properties. As shown in the above examples, the set of three `ui:col` definitions for
 first, middle and last names are the same as the single `ui:columns` definition with all three listed as children.
@@ -412,6 +417,10 @@ In its most compact form, the `ui:col` can be written as `{ "ui:columns": ["pers
 manner similar `ui:row` and `ui:col` where the array is implicitly assumed to be the `children` property. The
 `ui:columns` syntax also supports `children` in the form of objects with `"name": "<field id>"` as the minimum required
 property, passing along any additional properties to the underlying `Widget` as `ui:options`.
+
+A `null` child renders nothing, so `{ "ui:columns": ["person.first", null, "person.last"] }` leaves its middle column
+empty. A `false` or `undefined` child, such as one a layout built in code leaves out with `showMiddle && "person.middle"`,
+is no child at all and takes no column.
 
 ## GridTemplate
 
@@ -424,6 +433,47 @@ also override your theme's `GridTemplate` with your own to fine tune how the pro
 and `ui:columns` are handled. Each `ui:row` and `ui:col` will render a `GridTemplate` passing `column: false` for `ui:row`
 and `column: true` for `ui:col`. The `ui:columns` syntax will render a `GridTemplate` around each of the `children`. Any
 additional properties besides `children` will be directly passed to the `GridTemplate`.
+
+### `span` in each theme
+
+Every theme's `GridTemplate` reads a column's `span` as twelfths of a row and converts it to its own grid. A `span` on a
+`ui:row` is ignored, and RJSF logs a warning saying so, once.
+
+| Theme                   | A column's `span` becomes                                             | Half steps, such as `4.5`                        |
+| ----------------------- | --------------------------------------------------------------------- | ------------------------------------------------ |
+| `core`                  | the `--rjsf-span` custom property, which `rjsf.css` reads             | No                                               |
+| `@rjsf/antd`            | `Col`'s `span`, doubled into antd's 24ths and rounded to a whole 24th | Yes, natively: `4.5` is `9` of antd's 24 columns |
+| `@rjsf/bootstrap3`      | a `col-xs-*` class                                                    | No                                               |
+| `@rjsf/chakra-ui`       | `GridItem`'s `colSpan`                                                | No                                               |
+| `@rjsf/daisyui`         | the column's flex basis                                               | Yes, through RJSF's own column width             |
+| `@rjsf/fluentui-rc`     | the column's `gridColumn` style                                       | No                                               |
+| `@rjsf/mantine`         | `Grid.Col`'s `span`                                                   | Yes, natively                                    |
+| `@rjsf/mui`             | `Grid`'s `size`                                                       | Yes, natively                                    |
+| `@rjsf/react-bootstrap` | `Col`'s `xs`                                                          | No                                               |
+| `@rjsf/shadcn`          | the column's `grid-column` style                                      | No                                               |
+
+Use whole numbers in the themes without half steps: their grids span whole tracks or name a class per width, and a half
+step there logs a warning. antd rounds a `span` finer than a half step, such as `4.3`, to the nearest one and logs a
+warning saying so. daisyui's column widths assume its row's default `gap-4`, so a row given another gap gets
+slightly wrong widths, and a full row of spans may wrap. A mantine row with `fluid: false` also grows its columns to fill
+each line, so spans that add up to less than 12 stretch; give that row `grow: false` to keep them as written.
+
+A theme's own width prop wins over `span`: a `flex` prop or a `flex`, `flexBasis` or `width` style in antd, `size` in mui, `xs` in react-bootstrap, `colSpan` in chakra-ui, a `gridColumn`
+style in fluentui-rc, a `flex`, `flexBasis` or `width` style or a `basis-*` or `w-*` class in daisyui, a `col-xs-*` class in bootstrap3 and a `col-span-*` class in shadcn,
+responsive ones such as `md:col-span-6` included. The column then ignores its `span`, and RJSF logs a warning saying so,
+once. antd's breakpoint props, such as `md`, take over from `span` at their breakpoints, as they do over antd's own
+`span`, and so do bootstrap3's `col-sm-*`, `col-md-*` and `col-lg-*` classes.
+
+In chakra-ui, fluentui-rc and shadcn, a `ui:row` without a column template of its own (`templateColumns`, `templateAreas`, `columns`,
+a `gridTemplateColumns`, `gridTemplateAreas`, `gridTemplate` or `grid` style, the same keys in chakra-ui's `css`, or a `grid-cols-*` class) lays out on 12 tracks, where each child is full width unless it
+spans fewer. A row with a template of its own keeps it, and a `span` then counts that template's tracks, as it counts the
+tracks of a mantine or mui row given `columns` of its own.
+
+In shadcn a column's `span` is an inline `grid-column` style, which overrides a `col-start-*` or `col-end-*` class beside
+it; place such a column with a `gridColumnStart` style instead.
+
+In bootstrap3, give each `ui:row` that holds columns Bootstrap's `row` class (`className: 'row'`), which clears the
+floated `col-xs-*` columns and lines their padding up with the content around the row.
 
 ## Defining the LayoutGridField to render fields conditionally
 
@@ -593,8 +643,12 @@ My Favorite Shape
     +--------------------------------------------------------------------------+
 ```
 
-> NOTE: The `LayoutGridField` does not currently work with a root-level `anyOf` or `oneOf` object since it requires that
-> everything being displayed in have a field id and they don't.
+> NOTE: The `LayoutGridField` can't place the option selector of a root-level `anyOf` or `oneOf` object since it requires
+> that everything being displayed have a field id and the selector doesn't. The options render beside the grid, so a cell
+> for an option's property renders nothing, or its `render`, since the option renders it, unless
+> [`ui:fieldReplacesAnyOrOneOf`](../api-reference/uiSchema.md#uifieldreplacesanyoroneof) replaces the options, which
+> leaves no option selector. A cell for a property that only an option's own `anyOf` or `oneOf` declares renders
+> nothing, or an extra key's field where the object takes extra keys and the option shown doesn't render it.
 
 Now let's add a `uiSchema` that will allow us to create a much more pleasing UI where the dropdown contains the actual
 `oneOf` values and the fields all show up on the side of the dropdown:
@@ -604,17 +658,16 @@ Now let's add a `uiSchema` that will allow us to create a much more pleasing UI 
   "ui:field": "LayoutGridField",
   "ui:layoutGrid": {
     "ui:row": {
-      "className": "row",
       "children": [
         {
           "ui:col": {
-            "className": "col-xs-12",
+            "span": 12,
             "children": ["name"]
           }
         },
         {
           "ui:col": {
-            "className": "col-xs-4",
+            "span": 4,
             "children": ["favorite"]
           }
         },
@@ -626,7 +679,7 @@ Now let's add a `uiSchema` that will allow us to create a much more pleasing UI 
             "children": [
               {
                 "ui:col": {
-                  "className": "col-xs-4",
+                  "span": 4,
                   "children": ["favorite.length"]
                 }
               }
@@ -641,7 +694,7 @@ Now let's add a `uiSchema` that will allow us to create a much more pleasing UI 
             "children": [
               {
                 "ui:col": {
-                  "className": "col-xs-4",
+                  "span": 4,
                   "children": ["favorite.radius"]
                 }
               }
@@ -656,7 +709,7 @@ Now let's add a `uiSchema` that will allow us to create a much more pleasing UI 
             "children": [
               {
                 "ui:columns": {
-                  "className": "col-xs-4",
+                  "span": 4,
                   "children": ["favorite.sides", "favorite.length"]
                 }
               }
@@ -672,7 +725,7 @@ Now let's add a `uiSchema` that will allow us to create a much more pleasing UI 
 }
 ```
 
-This results in the following UI using the `core` theme via the `Bootstrap 3` grid system:
+This results in the following UI using the `core` theme's grid:
 
 ```text
   My Name*
@@ -714,7 +767,7 @@ and
   +--------------------------+  +--------------------------+  +--------------------------+
 ```
 
-As mentioned before, another theme's grid system may render the above example differently.
+Since every column in the above example has a `span`, it lays out the same way in every theme.
 
 ### `ui:condition`
 
@@ -819,17 +872,16 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
   "ui:field": "LayoutGridField",
   "ui:layoutGrid": {
     "ui:row": {
-      "className": "row",
       "children": [
         {
           "ui:col": {
-            "className": "col-xs-12",
+            "span": 12,
             "children": ["name"]
           }
         },
         {
           "ui:col": {
-            "className": "col-xs-4",
+            "span": 4,
             "children": ["favorite"]
           }
         },
@@ -841,7 +893,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
             "children": [
               {
                 "ui:col": {
-                  "className": "col-xs-2",
+                  "span": 2,
                   "children": [
                     {
                       "name": "",
@@ -853,7 +905,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
               },
               {
                 "ui:col": {
-                  "className": "col-xs-4",
+                  "span": 4,
                   "children": ["favorite.length"]
                 }
               }
@@ -868,7 +920,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
             "children": [
               {
                 "ui:col": {
-                  "className": "col-xs-2",
+                  "span": 2,
                   "children": [
                     {
                       "name": "",
@@ -880,7 +932,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
               },
               {
                 "ui:col": {
-                  "className": "col-xs-4",
+                  "span": 4,
                   "children": ["favorite.radius"]
                 }
               }
@@ -895,7 +947,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
             "children": [
               {
                 "ui:col": {
-                  "className": "col-xs-2",
+                  "span": 2,
                   "children": [
                     {
                       "name": "",
@@ -907,7 +959,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
               },
               {
                 "ui:columns": {
-                  "className": "col-xs-3",
+                  "span": 3,
                   "children": ["favorite.sides", "favorite.length"]
                 }
               }
@@ -960,7 +1012,7 @@ then nothing will be rendered.
 If you provide an empty string as the `name` along with the `render`, then your component will be rendered only with any
 additional properties passed in the `children` object. If you provide a `name` that matches a field in the `schema`,
 then the `render` component won't be used. Otherwise, the `render` component will be passed all of the `FieldProp`s,
-including the `schema`, `uiSchema`, `fieldPathId`, `errorSchema`, `formData`, `registry`, etc.
+including the `schema`, `uiSchema`, `fieldPath`, `id`, `errorSchema`, `formData`, `registry`, etc.
 
 So our example will render the `LineShape` component with `size: 'small-size'` in the second column between the
 `My Favorite Shape` dropdown and the `Line Length` input. Also, it will render the `CircleShape` component with
@@ -987,17 +1039,16 @@ const uiSchema: UiSchema = {
   'ui:field': 'LayoutGridField',
   'ui:layoutGrid': {
     'ui:row': {
-      className: 'row',
       children: [
         {
           'ui:col': {
-            className: 'col-xs-12',
+            span: 12,
             children: ['name'],
           },
         },
         {
           'ui:col': {
-            className: 'col-xs-4',
+            span: 4,
             children: ['favorite'],
           },
         },
@@ -1009,13 +1060,13 @@ const uiSchema: UiSchema = {
             children: [
               {
                 'ui:col': {
-                  className: 'col-xs-4',
+                  span: 4,
                   children: ['favorite.length'],
                 },
               },
               {
                 'ui:col': {
-                  className: 'col-xs-12',
+                  span: 12,
                   children: [
                     {
                       name: 'lineImage',
@@ -1036,13 +1087,13 @@ const uiSchema: UiSchema = {
             children: [
               {
                 'ui:col': {
-                  className: 'col-xs-4',
+                  span: 4,
                   children: ['favorite.radius'],
                 },
               },
               {
                 'ui:col': {
-                  className: 'col-xs-12',
+                  span: 12,
                   children: [
                     {
                       name: 'circleShape',
@@ -1063,13 +1114,13 @@ const uiSchema: UiSchema = {
             children: [
               {
                 'ui:columns': {
-                  className: 'col-xs-4',
+                  span: 4,
                   children: ['favorite.sides', 'favorite.length'],
                 },
               },
               {
                 'ui:col': {
-                  className: 'col-xs-12',
+                  span: 12,
                   children: [
                     {
                       name: 'polygonShape',

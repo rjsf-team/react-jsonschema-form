@@ -1,0 +1,565 @@
+import { EXTRA_KEYS_ELSEWHERE_FLAG } from '../src/constants.ts';
+import type { RJSFMarkedSchema, RJSFSchema } from '../src/index.ts';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  getRenderedOptionSchema,
+  PINNED_TYPE_FLAG,
+  rendersOwnFieldBesideOption,
+  RJSF_REF_KEY,
+} from '../src/index.ts';
+import { rendersOwnFieldBesideOwnOptions } from '../src/rendersOwnFieldBesideOption.ts';
+import { DECLARED_ABOVE_KEY } from '../src/schemaMarkers.ts';
+
+describe('getRenderedOptionSchema()', () => {
+  describe('a non-object parent', () => {
+    test("passes on every keyword describing the value, such as an array's items and uniqueItems", () => {
+      const parent: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', enum: ['a', 'b'] },
+        uniqueItems: true,
+        oneOf: [{ minItems: 1 }],
+      };
+      expect(getRenderedOptionSchema(parent, { minItems: 1 })).toEqual({
+        type: 'array',
+        items: { type: 'string', enum: ['a', 'b'] },
+        uniqueItems: true,
+        minItems: 1,
+      });
+    });
+    test('takes a boolean option, which declares no keyword, for the parent as it is', () => {
+      const option = true as unknown as RJSFSchema;
+      expect(getRenderedOptionSchema({ type: 'string', minLength: 1, anyOf: [] }, option)).toEqual({
+        type: 'string',
+        minLength: 1,
+      });
+    });
+    test("passes on a string's format", () => {
+      expect(getRenderedOptionSchema({ type: 'string', format: 'date', anyOf: [] }, { minLength: 1 })).toEqual({
+        type: 'string',
+        format: 'date',
+        minLength: 1,
+      });
+    });
+    test('keeps the options, the annotations, the default and the schema document keywords on the parent', () => {
+      const parent: RJSFSchema = {
+        $id: 'parent',
+        $anchor: 'parent',
+        $dynamicAnchor: 'node',
+        $vocabulary: { 'https://json-schema.org/draft/2020-12/vocab/core': true },
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        $comment: 'a comment',
+        $defs: { a: { type: 'string' } },
+        definitions: { b: { type: 'string' } },
+        type: 'string',
+        title: 'Parent',
+        description: 'The parent',
+        deprecated: true,
+        default: 'x',
+        discriminator: { propertyName: 'kind' },
+        anyOf: [{ minLength: 1 }],
+        oneOf: [{ maxLength: 5 }],
+      };
+      expect(getRenderedOptionSchema(parent, { minLength: 1 })).toEqual({ type: 'string', minLength: 1 });
+    });
+    test("keeps the parent's Symbol-keyed markers on the parent", () => {
+      const parent = { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } as RJSFSchema;
+      expect(Object.getOwnPropertySymbols(getRenderedOptionSchema(parent, { minLength: 1 }))).toEqual([]);
+    });
+    test("merges an option's items into the parent's", () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string' } };
+      expect(getRenderedOptionSchema(parent, { type: 'array', items: { minLength: 1 } })).toEqual({
+        type: 'array',
+        items: { type: 'string', minLength: 1 },
+      });
+    });
+    test("lets the option's own keyword win where the two cannot be combined into one value", () => {
+      const parent: RJSFSchema = { type: 'string', format: 'date', pattern: '^a', multipleOf: 2 };
+      expect(getRenderedOptionSchema(parent, { format: 'email', pattern: '^b', multipleOf: 3 })).toEqual({
+        type: 'string',
+        format: 'email',
+        pattern: '^b',
+        multipleOf: 3,
+      });
+    });
+    test.each<[string, RJSFSchema, RJSFSchema, number]>([
+      ['the smaller maxItems', { maxItems: 3 }, { maxItems: 5 }, 3],
+      ['the smaller maxItems when the option is the stricter', { maxItems: 5 }, { maxItems: 3 }, 3],
+      ['the smaller maxLength', { maxLength: 4 }, { maxLength: 9 }, 4],
+      ['the smaller maxProperties', { maxProperties: 2 }, { maxProperties: 7 }, 2],
+      ['the smaller maximum', { maximum: 10 }, { maximum: 20 }, 10],
+      ['the smaller exclusiveMaximum', { exclusiveMaximum: 10 }, { exclusiveMaximum: 20 }, 10],
+      ['the larger minItems', { minItems: 2 }, { minItems: 1 }, 2],
+      ['the larger minLength', { minLength: 1 }, { minLength: 3 }, 3],
+      ['the larger minProperties', { minProperties: 4 }, { minProperties: 1 }, 4],
+      ['the larger minimum', { minimum: 0 }, { minimum: -5 }, 0],
+      ['the larger exclusiveMinimum', { exclusiveMinimum: 0 }, { exclusiveMinimum: 5 }, 5],
+    ])('keeps %s that both declare, since a value has to meet both', (_, parentBound, optionBound, expected) => {
+      const [key] = Object.keys(parentBound);
+      expect(getRenderedOptionSchema({ type: 'number', ...parentBound }, optionBound)).toEqual({
+        type: 'number',
+        [key]: expected,
+      });
+    });
+    test("keeps the stricter bound within a keyword the two both declare a schema for, such as an array's items", () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string', maxLength: 5 } };
+      expect(getRenderedOptionSchema(parent, { items: { maxLength: 10, minLength: 1 } })).toEqual({
+        type: 'array',
+        items: { type: 'string', maxLength: 5, minLength: 1 },
+      });
+    });
+    test("keeps the parent's subschema where the option's is true, since true adds nothing to meet", () => {
+      const parent: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { a: { type: 'string' }, b: { type: 'number' } } },
+      };
+      expect(getRenderedOptionSchema(parent, { items: true })).toEqual(parent);
+      expect(getRenderedOptionSchema(parent, { items: { properties: { a: true, b: { minimum: 1 } } } })).toEqual({
+        type: 'array',
+        items: { type: 'object', properties: { a: { type: 'string' }, b: { type: 'number', minimum: 1 } } },
+      });
+    });
+    test("keeps the parent's false subschema where the option gives a schema, since nothing meets false", () => {
+      const parent: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { a: false }, additionalProperties: false },
+      };
+      const option: RJSFSchema = {
+        items: { properties: { a: { type: 'string' } }, additionalProperties: { type: 'string' } },
+      };
+      expect(getRenderedOptionSchema(parent, option)).toEqual(parent);
+    });
+    test("keeps the parent's false subschema where the option's is true", () => {
+      const parent: RJSFSchema = { type: 'array', items: false, additionalItems: false };
+      expect(getRenderedOptionSchema(parent, { items: true, additionalItems: true })).toEqual(parent);
+      expect(getRenderedOptionSchema(parent, { items: [{ type: 'string' }] })).toEqual(parent);
+    });
+    test("keeps the parent's tuple where the option's items is true", () => {
+      const parent: RJSFSchema = { type: 'array', items: [{ type: 'string' }, { type: 'number' }] };
+      expect(getRenderedOptionSchema(parent, { items: true })).toEqual(parent);
+    });
+    test("meets each position of the parent's tuple, and the items past it, with the option's items schema", () => {
+      const parent: RJSFSchema = { type: 'array', items: [{ type: 'string', maxLength: 5 }, true] };
+      expect(getRenderedOptionSchema(parent, { items: { maxLength: 9, minLength: 1 } })).toEqual({
+        type: 'array',
+        items: [
+          { type: 'string', maxLength: 5, minLength: 1 },
+          { maxLength: 9, minLength: 1 },
+        ],
+      });
+      const open: RJSFSchema = { ...parent, additionalItems: { type: 'string', maxLength: 5 } };
+      expect(getRenderedOptionSchema(open, { items: { maxLength: 9, minLength: 1 } })).toEqual({
+        type: 'array',
+        items: [
+          { type: 'string', maxLength: 5, minLength: 1 },
+          { maxLength: 9, minLength: 1 },
+        ],
+        additionalItems: { type: 'string', maxLength: 5, minLength: 1 },
+      });
+      const closed: RJSFSchema = { type: 'array', items: [{ type: 'string' }], additionalItems: false };
+      expect(getRenderedOptionSchema(closed, { items: { minLength: 1 } })).toEqual({
+        type: 'array',
+        items: [{ type: 'string', minLength: 1 }],
+        additionalItems: false,
+      });
+    });
+    test("meets each position of the option's tuple, and the items past it, with the parent's items schema", () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string', maxLength: 5 } };
+      expect(getRenderedOptionSchema(parent, { items: [{ minLength: 1 }], additionalItems: { maxLength: 9 } })).toEqual(
+        {
+          type: 'array',
+          items: [{ type: 'string', maxLength: 5, minLength: 1 }],
+          additionalItems: { type: 'string', maxLength: 5 },
+        },
+      );
+    });
+    test.each<[string, RJSFSchema, RJSFSchema]>([
+      ["the parent's", { type: 'array', items: [{ type: 'string' }, { type: 'string' }] }, { items: { maxLength: 3 } }],
+      ["the option's", { type: 'array', items: { type: 'string' } }, { items: [{ maxLength: 3 }, { maxLength: 3 }] }],
+    ])('keeps %s tuple declaring no additionalItems at its length, as ArrayField renders it', (_, parent, option) => {
+      expect(getRenderedOptionSchema(parent, option)).toEqual({
+        type: 'array',
+        items: [
+          { type: 'string', maxLength: 3 },
+          { type: 'string', maxLength: 3 },
+        ],
+      });
+    });
+    test('meets two tuples position by position, keeping the positions only one of them describes', () => {
+      const parent = { type: 'array', prefixItems: [{ type: 'string', maxLength: 5 }, { type: 'number' }] };
+      const option = { prefixItems: [{ maxLength: 9 }] };
+      expect(getRenderedOptionSchema(parent as RJSFSchema, option as RJSFSchema)).toEqual({
+        type: 'array',
+        prefixItems: [{ type: 'string', maxLength: 5 }, { type: 'number' }],
+      });
+      expect(getRenderedOptionSchema(option as RJSFSchema, parent as RJSFSchema)).toEqual({
+        type: 'array',
+        prefixItems: [{ maxLength: 5, type: 'string' }, { type: 'number' }],
+      });
+    });
+    test('takes a list of schemas to combine, such as an allOf, as the option has it rather than by position', () => {
+      const parent: RJSFSchema = { type: 'array', items: { allOf: [{ maxLength: 5 }] } };
+      expect(getRenderedOptionSchema(parent, { items: { allOf: [{ minLength: 1 }] } })).toEqual({
+        type: 'array',
+        items: { allOf: [{ minLength: 1 }] },
+      });
+    });
+    test("meets an option's property only with a property the parent declares itself", () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
+      expect(getRenderedOptionSchema(parent, { items: { properties: { constructor: true } } })).toEqual({
+        type: 'array',
+        items: { type: 'object', properties: { a: { type: 'string' }, constructor: true } },
+      });
+    });
+    test.each<[string, string[]]>([
+      ['a value the parent does not list', ['a', 'b', 'c']],
+      ['its own order', ['c', 'b']],
+    ])("takes the option's enum whole, which its ui:enumNames are read by position against, with %s", (_, values) => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['b', 'c'] } };
+      expect(getRenderedOptionSchema(parent, { items: { enum: values } })).toEqual({
+        type: 'array',
+        items: { type: 'string', enum: values },
+      });
+    });
+    test.each<[string, RJSFSchema, RJSFSchema]>([
+      ['option', { title: 'Item', maxLength: 10 }, { $ref: '#/definitions/short' }],
+      ['parent', { $ref: '#/definitions/short' }, { maxLength: 10 }],
+    ])(
+      "leaves a subschema the %s's $ref names to the field's allOf merge, where the root schema resolves it",
+      (_, parentItems, optionItems) => {
+        expect(getRenderedOptionSchema({ type: 'array', items: parentItems }, { items: optionItems })).toEqual({
+          type: 'array',
+          items: { allOf: [parentItems, optionItems] },
+        });
+      },
+    );
+    test('asks for every name either required list asks for, whatever type the two name', () => {
+      expect(getRenderedOptionSchema({ required: ['a'] }, { required: ['b', 'a'] })).toEqual({ required: ['a', 'b'] });
+    });
+    test('takes a not both declare as the option has it, rather than merging the two into one neither declared', () => {
+      expect(getRenderedOptionSchema({ type: 'string', not: { maxLength: 3 } }, { not: { minLength: 5 } })).toEqual({
+        type: 'string',
+        not: { minLength: 5 },
+      });
+    });
+    test("replaces the parent's conditional with the one the option declares, keyword by keyword as a whole", () => {
+      const parent: RJSFSchema = {
+        type: 'string',
+        if: { minLength: 1 },
+        then: { maxLength: 5 },
+        else: { maxLength: 9 },
+      };
+      expect(getRenderedOptionSchema(parent, { if: { minLength: 2 }, then: { pattern: '^a' } })).toEqual({
+        type: 'string',
+        if: { minLength: 2 },
+        then: { pattern: '^a' },
+      });
+      expect(getRenderedOptionSchema(parent, { minLength: 1 })).toEqual({ ...parent, minLength: 1 });
+    });
+    test('takes a const or default object both declare as the option has it, rather than merging the two values', () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'object', default: { a: 1 }, const: { a: 1 } } };
+      const option: RJSFSchema = { items: { default: { b: 2 }, const: { b: 2 } } };
+      expect(getRenderedOptionSchema(parent, option)).toEqual({
+        type: 'array',
+        items: { type: 'object', default: { b: 2 }, const: { b: 2 } },
+      });
+    });
+    test("leaves an option's true within not or if as the option's, where true constrains the value", () => {
+      const parent: RJSFSchema = { type: 'string', not: { maxLength: 3 }, if: { minLength: 1 } };
+      expect(getRenderedOptionSchema(parent, { not: true, if: true })).toEqual({ type: 'string', not: true, if: true });
+    });
+    test('keeps uniqueItems when either asks for it', () => {
+      expect(getRenderedOptionSchema({ type: 'array', uniqueItems: true }, { uniqueItems: false })).toEqual({
+        type: 'array',
+        uniqueItems: true,
+      });
+      expect(getRenderedOptionSchema({ type: 'array', uniqueItems: false }, { uniqueItems: true })).toEqual({
+        type: 'array',
+        uniqueItems: true,
+      });
+    });
+    test('keeps an option bound that is not a number, such as a draft-04 boolean exclusiveMaximum, as the option has it', () => {
+      const parent = { type: 'number', maximum: 10, exclusiveMaximum: 5 } as RJSFSchema;
+      const option = { maximum: 8, exclusiveMaximum: true } as unknown as RJSFSchema;
+      expect(getRenderedOptionSchema(parent, option)).toEqual({ type: 'number', maximum: 8, exclusiveMaximum: true });
+    });
+    test('does not search a value keyword, such as a const object, for bounds', () => {
+      const parent: RJSFSchema = { type: 'array', const: { maximum: 1 }, examples: [{ maxItems: 1 }] };
+      expect(getRenderedOptionSchema(parent, { const: { maximum: 9 } })).toEqual({
+        type: 'array',
+        const: { maximum: 9 },
+        examples: [{ maxItems: 1 }],
+      });
+    });
+    test('does not search a keyword JSON Schema does not define for bounds', () => {
+      const parent = { type: 'array', 'x-limits': { maxItems: 1 } } as RJSFSchema;
+      const option = { 'x-limits': { maxItems: 9 } } as RJSFSchema;
+      expect(getRenderedOptionSchema(parent, option)).toEqual({ type: 'array', 'x-limits': { maxItems: 9 } });
+    });
+    test('does not search a not for bounds, where the looser of the two is what a value has to clear', () => {
+      expect(getRenderedOptionSchema({ type: 'string', not: { maxLength: 3 } }, { not: { maxLength: 5 } })).toEqual({
+        type: 'string',
+        not: { maxLength: 5 },
+      });
+    });
+    test('reads the entries of a properties map as schemas rather than as keywords', () => {
+      const parent: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { uniqueItems: true, a: { type: 'string', maxLength: 5 } } },
+      };
+      const option: RJSFSchema = {
+        items: { properties: { uniqueItems: { type: 'string' }, a: { maxLength: 9 }, b: { type: 'number' } } },
+      };
+      expect(getRenderedOptionSchema(parent, option)).toEqual({
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: { uniqueItems: { type: 'string' }, a: { type: 'string', maxLength: 5 }, b: { type: 'number' } },
+        },
+      });
+    });
+    test('passes on every type a parent allowing several types names', () => {
+      expect(getRenderedOptionSchema({ type: ['string', 'number'] }, { minLength: 1 })).toEqual({
+        type: ['string', 'number'],
+        minLength: 1,
+      });
+    });
+    test("leaves an option naming its own type with that type, over the parent's", () => {
+      expect(getRenderedOptionSchema({ type: 'string' }, { type: 'null' })).toEqual({ type: 'null' });
+    });
+    test('returns the option itself when the parent has nothing to pass on', () => {
+      const option: RJSFSchema = { minLength: 1 };
+      expect(getRenderedOptionSchema({ title: 'Parent', anyOf: [option] }, option)).toBe(option);
+    });
+    test("reads an option key holding undefined as declaring nothing, leaving the parent's keyword in place", () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string', maxLength: 3 }, maxItems: 3 };
+      const rendered = getRenderedOptionSchema(parent, {
+        title: 'A',
+        items: { maxLength: undefined },
+        maxItems: undefined,
+        minItems: undefined,
+      });
+      expect(rendered).toEqual({ type: 'array', items: { type: 'string', maxLength: 3 }, maxItems: 3, title: 'A' });
+      expect(rendered).not.toHaveProperty('minItems');
+    });
+    test("reads a property entry or tuple position holding undefined as declaring nothing, keeping the parent's", () => {
+      const parent: RJSFSchema = {
+        type: 'array',
+        items: [{ type: 'object', properties: { a: { type: 'string' } } }, { type: 'number' }],
+      };
+      expect(
+        getRenderedOptionSchema(parent, { items: [{ properties: { a: undefined } }, undefined] } as RJSFSchema),
+      ).toEqual(parent);
+    });
+    test("reads a parent subschema holding undefined as declaring nothing, keeping the option's true", () => {
+      const parent = {
+        type: 'array',
+        items: { type: 'object', properties: { a: undefined } },
+      } as unknown as RJSFSchema;
+      expect(getRenderedOptionSchema(parent, { items: { properties: { a: true } } })).toEqual({
+        type: 'array',
+        items: { type: 'object', properties: { a: true } },
+      });
+      expect(getRenderedOptionSchema({ type: 'array', items: undefined }, { items: true })).toEqual({
+        type: 'array',
+        items: true,
+      });
+    });
+    test('keeps the symbol markers of an option it reads undefined keys out of, at every level it meets', () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string' }, maxItems: 3 };
+      const items = { maxLength: 2, [RJSF_REF_KEY]: '#/definitions/item' };
+      const option: RJSFMarkedSchema = { items, maxItems: undefined, [RJSF_REF_KEY]: '#/definitions/option' };
+      const rendered = getRenderedOptionSchema(parent, option);
+      expect(Reflect.get(rendered, RJSF_REF_KEY)).toBe('#/definitions/option');
+      expect((rendered.items as Record<symbol, unknown>)[RJSF_REF_KEY]).toBe('#/definitions/item');
+      expect(rendered.maxItems).toBe(3);
+    });
+  });
+
+  describe('an object parent', () => {
+    const properties: RJSFSchema['properties'] = { a: { type: 'string' }, b: { type: 'string' } };
+    test('passes on only its required list and its type, marking the option to take no extra keys of its own, since its own ObjectField renders the rest', () => {
+      const parent: RJSFSchema = { type: 'object', properties, required: ['a'], minProperties: 1 };
+      expect(getRenderedOptionSchema(parent, { required: ['b'] })).toEqual({
+        type: 'object',
+        required: ['a', 'b'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
+      });
+    });
+    test('passes on the object type it was read as when it names no type of its own', () => {
+      expect(getRenderedOptionSchema({ properties }, { required: ['a'] })).toEqual({
+        type: 'object',
+        required: ['a'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
+      });
+    });
+    test("leaves an option naming its own type with that type, over the parent's", () => {
+      expect(getRenderedOptionSchema({ properties }, { type: 'object', required: ['a'] })).toEqual({
+        type: 'object',
+        required: ['a'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
+      });
+    });
+    test("reads an option's type or required list holding undefined as declaring nothing, passing on the parent's", () => {
+      const parent: RJSFSchema = { type: 'object', properties, required: ['a'] };
+      const option = { type: undefined, required: undefined, properties: { b: { minLength: 1 } } } as RJSFSchema;
+      expect(getRenderedOptionSchema(parent, option)).toStrictEqual({
+        type: 'object',
+        required: ['a'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
+        properties: { b: { minLength: 1 } },
+      });
+    });
+    test("leaves the extra keys to the parent's field, which stubs them with the selected option, and takes none itself", () => {
+      const option: RJSFSchema = {
+        properties: { b: { type: 'string' } },
+        additionalProperties: { type: 'number' },
+        patternProperties: { '^x': { type: 'string' } },
+        unevaluatedProperties: false,
+      };
+      // Marked rather than left as it is: a form reading an absent keyword as taking any key would otherwise give the
+      // option's field an add button beside the parent's
+      expect(getRenderedOptionSchema({ type: 'object', properties }, option)).toEqual({
+        type: 'object',
+        properties: { b: { type: 'string' } },
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
+      });
+    });
+    test("leaves an option offering options of its own its extra-key keywords, joined with the parent's, for its own field to take", () => {
+      const parent: RJSFSchema = {
+        type: 'object',
+        properties,
+        additionalProperties: { type: 'string' },
+        patternProperties: { '^p': { type: 'number' } },
+      };
+      const oneOf: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+      const rendered = getRenderedOptionSchema(parent, { oneOf, patternProperties: { '^q': { type: 'boolean' } } });
+      expect(rendered).toMatchObject({
+        type: 'object',
+        oneOf,
+        additionalProperties: { type: 'string' },
+        patternProperties: { '^p': { type: 'number' }, '^q': { type: 'boolean' } },
+      });
+      expect(Reflect.get(rendered, EXTRA_KEYS_ELSEWHERE_FLAG)).toBeUndefined();
+    });
+    test('hands an option offering options of its own the properties its parent declares, a boolean one included', () => {
+      const oneOf: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+      const declared = (parent: RJSFSchema) =>
+        Reflect.get(getRenderedOptionSchema(parent, { oneOf }), DECLARED_ABOVE_KEY) as string[];
+      expect(declared({ type: 'object', additionalProperties: true })).toEqual([]);
+      expect(declared({ type: 'object', properties: { b: true }, additionalProperties: true })).toEqual(['b']);
+    });
+    test("hands an option offering options of its own the parent's bounds on the object's keys, beside its own", () => {
+      const oneOf: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+      const parent: RJSFSchema = {
+        type: 'object',
+        additionalProperties: true,
+        maxProperties: 3,
+        propertyNames: { enum: ['p', 'q'] },
+      };
+      expect(getRenderedOptionSchema(parent, { oneOf })).toMatchObject({
+        maxProperties: 3,
+        propertyNames: { enum: ['p', 'q'] },
+      });
+      expect(
+        getRenderedOptionSchema(parent, { oneOf, maxProperties: 2, propertyNames: { maxLength: 1 } }),
+      ).toMatchObject({ maxProperties: 2, propertyNames: { allOf: [{ enum: ['p', 'q'] }, { maxLength: 1 }] } });
+      expect(getRenderedOptionSchema(parent, { oneOf, maxProperties: 5 }).maxProperties).toBe(3);
+    });
+    test('renders an option offering options of its own anew, where the parent names no extra-key keyword', () => {
+      // The option's field stubs the extra keys in the parent's field's place, so it carries the names the parent
+      // declares, which it would otherwise stub as extra keys of its own
+      const option: RJSFSchema = { type: 'object', oneOf: [{ properties: { x: { type: 'string' } } }] };
+      const rendered = getRenderedOptionSchema({ type: 'object', properties }, option);
+      expect(rendered).not.toBe(option);
+      expect(rendered).toMatchObject(option);
+      expect(Reflect.get(rendered, DECLARED_ABOVE_KEY)).toEqual(['a', 'b']);
+    });
+    test('returns the same object for the same parent and option, rather than a copy on every call', () => {
+      const parent: RJSFSchema = { type: 'object', properties };
+      const option: RJSFSchema = { type: 'object', properties: { b: { type: 'string' } } };
+      const rendered = getRenderedOptionSchema(parent, option);
+      expect(getRenderedOptionSchema(parent, option)).toBe(rendered);
+      expect(getRenderedOptionSchema({ ...parent }, option)).not.toBe(rendered);
+    });
+    test('passes on the type list of a nullable object', () => {
+      expect(getRenderedOptionSchema({ type: ['object', 'null'], properties }, { required: ['a'] })).toEqual({
+        type: ['object', 'null'],
+        required: ['a'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
+      });
+    });
+    test('passes on everything to the option of another type of an object-first type list, as a string-first one does', () => {
+      const option: RJSFSchema = { type: 'string' };
+      const rendered = getRenderedOptionSchema({ type: ['object', 'string'], format: 'email', properties }, option);
+      expect(rendered).toMatchObject({ type: 'string', format: 'email' });
+      expect(rendered).toEqual(
+        getRenderedOptionSchema({ type: ['string', 'object'], format: 'email', properties }, option),
+      );
+    });
+    test.each<[string, RJSFSchema, RJSFSchema['type']]>([
+      ['a const', { const: 'a@b.c' }, ['string']],
+      ['an enum', { enum: ['a', 1] }, ['string', 'number']],
+      ['a const of no type the list holds', { const: true }, ['object', 'string', 'number']],
+    ])("narrows an object-first type list to the types %s option's values have", (_, option, type) => {
+      const parent: RJSFSchema = { type: ['object', 'string', 'number'], format: 'email', properties };
+      expect(getRenderedOptionSchema(parent, option)).toEqual({ ...parent, ...option, type });
+    });
+    test("narrows an object-first type list to its integer for a number const option, which guessType() calls 'number'", () => {
+      const parent: RJSFSchema = { type: ['object', 'integer'], properties };
+      expect(getRenderedOptionSchema(parent, { const: 1 })).toEqual({ ...parent, const: 1, type: ['integer'] });
+    });
+    test('passes on the pinned type of a pinned object with its marker to an option naming no type', () => {
+      const pinned: RJSFMarkedSchema = { type: 'object', properties, [PINNED_TYPE_FLAG]: true };
+      expect(getRenderedOptionSchema(pinned, { required: ['a'] })).toEqual({
+        type: 'object',
+        required: ['a'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
+        [PINNED_TYPE_FLAG]: true,
+      });
+      expect(Reflect.get(getRenderedOptionSchema(pinned, { type: 'object' }), PINNED_TYPE_FLAG)).toBeUndefined();
+    });
+  });
+});
+
+describe('rendersOwnFieldBesideOption()', () => {
+  test.each<[string, RJSFSchema, boolean]>([
+    ['an object', { type: 'object' }, true],
+    ['a schema read as an object for its properties', { properties: { a: { type: 'string' } } }, true],
+    ['an array', { type: 'array', items: { type: 'string' } }, false],
+    ['a typeless schema', {}, false],
+  ])('reads %s as rendering its own field: %s', (_, schema, expected) => {
+    expect(rendersOwnFieldBesideOption(schema)).toBe(expected);
+  });
+  const objectFirst: RJSFSchema = { type: ['object', 'string'] };
+  const pinned: RJSFMarkedSchema = { type: 'object', [PINNED_TYPE_FLAG]: true };
+  test.each<[string, RJSFSchema, RJSFSchema, boolean]>([
+    ["a type list's option of another type", objectFirst, { type: 'string' }, false],
+    ["a type list's option listing another type and null", objectFirst, { type: ['string', 'null'] }, false],
+    ["a type list's object option", objectFirst, { type: 'object' }, true],
+    ["a type list's option naming no type", objectFirst, { title: 'A' }, true],
+    ["a type list's option implying an object", objectFirst, { properties: { a: { type: 'string' } } }, true],
+    ["a plain object's option of another type", { type: 'object' }, { type: 'string' }, true],
+    ["a string-first type list's object option", { type: ['string', 'object'] }, { type: 'object' }, false],
+    ["a nullable object's null option", { type: ['object', 'null'] }, { type: 'null' }, false],
+    ["a nullable object's object option", { type: ['object', 'null'] }, { type: 'object' }, true],
+    ["a one-entry list's option of another type", { type: ['object'] }, { type: 'string' }, true],
+    ["an object pinned from a type list's option of another type", pinned, { type: 'string' }, false],
+    ["an object pinned from a type list's object option", pinned, { type: 'object' }, true],
+  ])('reads %s as rendering its own field: %s', (_, schema, option, expected) => {
+    expect(rendersOwnFieldBesideOption(schema, option)).toBe(expected);
+  });
+});
+
+describe('rendersOwnFieldBesideOwnOptions()', () => {
+  const offered: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+  test.each<[string, RJSFSchema, boolean]>([
+    ['an option naming no type', { oneOf: offered }, true],
+    ['an object option', { type: 'object', anyOf: offered }, true],
+    ['an option offering nothing', { properties: { x: { type: 'string' } } }, false],
+    ['an option of constants, a select', { oneOf: [{ const: 'a' }, { const: 'b' }] }, false],
+    ['an option with an enum beside its options, a select', { enum: ['a'], oneOf: offered }, false],
+    ['an option of another type', { type: 'string', oneOf: [{ minLength: 1 }] }, false],
+  ])('reads %s as rendering its own field beside its options: %s', (_, option, expected) => {
+    expect(rendersOwnFieldBesideOwnOptions(option)).toBe(expected);
+  });
+});

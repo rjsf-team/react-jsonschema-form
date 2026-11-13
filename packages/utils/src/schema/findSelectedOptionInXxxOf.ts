@@ -1,61 +1,61 @@
-import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants.ts';
+import { CONST_KEY, DEFAULT_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getOptionSelectorSchema from '../getOptionSelectorSchema.ts';
 import { getByPath } from '../pathUtils.ts';
-import type {
-  Experimental_CustomMergeAllOf,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '../types.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
-/** Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or
- * `properties[selectorField].const` that matches the `formData[selectorField]` value. For the purposes of this
- * function, `selectorField` is either `schema.discriminator.propertyName` or `fallbackField`. The `LayoutGridField`
- * works directly with schemas in a recursive manner, making this faster than `getFirstMatchingOption()`.
+/** Finds the option of `schema['any/oneOf']` a field renders for `formData`. With a discriminator, it is the option whose
+ * `properties[discriminator].default` or `.const` matches the `formData[discriminator]` value, making this faster than
+ * `getFirstMatchingOption()` for the `LayoutGridField`, which works directly with schemas in a recursive manner, and no
+ * matching value has nothing selected. With none, it is the option `getClosestMatchingOption()` picks for the data, as
+ * `MultiSchemaField` picks it, since no one property's value can tell the options apart.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param schema - The schema element in which to search for the selected anyOf/oneOf option
- * @param fallbackField - The field to use as a backup selector field if the schema does not have a required field
+ * @param _fallbackField - Not read, since options with no discriminator aren't told apart by any one property
  * @param xxx - Either `anyOf` or `oneOf`, defines which value is being sought
- * @param [formData={}] - The form data that is used to determine which anyOf/oneOf option to descend
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
- * @returns - The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
+ * @param [formData] - The form data that is used to determine which anyOf/oneOf option to descend
+ * @returns - The anyOf/oneOf option that matches the discriminator, or the closest to the data for options with no
+ *        discriminator, or undefined if a discriminated list selects nothing
  */
 export default function findSelectedOptionInXxxOf<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: SchemaContext<S, F>,
   rootSchema: S,
   schema: S,
-  fallbackField: string,
+  _fallbackField: string,
   xxx: 'anyOf' | 'oneOf',
-  formData: T = {} as T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  formData?: T,
 ): S | undefined {
   if (Array.isArray(schema[xxx])) {
+    const xxxOfs = schema[xxx].map((xxxOf) => retrieveSchema<T, S, F>(context, xxxOf as S, rootSchema, formData));
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    const selectorField = discriminator || fallbackField;
-    const xxxOfs = schema[xxx].map((xxxOf) =>
-      retrieveSchema<T, S, F>(validator, xxxOf as S, rootSchema, formData, experimental_customMergeAllOf),
-    );
-    const data = getByPath(formData, selectorField);
+    if (!discriminator) {
+      // A tie goes to the first option the data matches (the first option when it matches none), and each read picks
+      // afresh: the option a user picked is the form's state, which schemas alone can't see, so `LayoutGridField` reads
+      // that itself
+      return xxxOfs[getClosestMatchingOption<T, S, F>(context, rootSchema, formData, xxxOfs)];
+    }
+    const data = getByPath(formData, discriminator);
     if (data !== undefined) {
-      return xxxOfs.find((xxxOfOption) =>
-        deepEquals(
-          getByPath(
-            xxxOfOption,
-            [PROPERTIES_KEY, selectorField, DEFAULT_KEY],
-            getByPath(xxxOfOption, [PROPERTIES_KEY, selectorField, CONST_KEY]),
-          ),
-          data,
-        ),
-      );
+      return xxxOfs.find((option) => {
+        // An option without a selector has no value to match
+        const selector = getOptionSelectorSchema<S>(option, discriminator, (written) =>
+          retrieveSchema<unknown, S, F>(context, written, rootSchema, data),
+        );
+        if (selector === undefined) {
+          return false;
+        }
+        const constValue = getByPath(selector, CONST_KEY);
+        return deepEquals(getByPath(selector, DEFAULT_KEY, constValue), data);
+      });
     }
   }
   return undefined;

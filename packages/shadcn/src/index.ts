@@ -1,6 +1,8 @@
-import Form from './Form/Form.tsx';
+import Form from './Form/index.ts';
 
+export { generateClassMap } from './classMap.ts';
 export { default as Form, generateForm } from './Form/index.ts';
+export type { ShadcnBaseInputTemplateProps } from './BaseInputTemplate/BaseInputTemplate.tsx';
 export { default as Templates, generateTemplates } from './Templates/index.ts';
 export { default as Theme, generateTheme } from './Theme/index.ts';
 export { default as Widgets, generateWidgets } from './Widgets/index.ts';

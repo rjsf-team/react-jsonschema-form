@@ -6,7 +6,7 @@ export { default as Theme, generateTheme } from './Theme/index.ts';
 export { default as Widgets, generateWidgets } from './Widgets/index.ts';
 export { __createChakraFrameProvider } from './ChakraFrameProvider.tsx';
 
-export type { ChakraUiSchema as UiSchema } from './utils.ts';
+export type { ChakraGlobalUiOptionsKeys, ChakraGlobalUISchemaOptions, ChakraUiSchema as UiSchema } from './utils.ts';
 
 export { getChakra } from './utils.ts';
 

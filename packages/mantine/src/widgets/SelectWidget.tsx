@@ -1,28 +1,40 @@
-import type { FocusEvent } from 'react';
 import { useCallback, useMemo } from 'react';
-import { Select, MultiSelect } from '@mantine/core';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { ComboboxParsedItem, OptionsFilter } from '@mantine/core';
+import { defaultOptionsFilter, MultiSelect, Select } from '@mantine/core';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
+  widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps, getRequiredProps } from '../utils.tsx';
+
+/** Mantine's default filter keeps a group in the dropdown even when the search matched none of its options, which
+ * leaves a bare heading behind, so the groups it emptied are dropped here.
+ */
+const optionsFilter: OptionsFilter = (input) =>
+  (defaultOptionsFilter(input) as ComboboxParsedItem[]).filter((item) => !('group' in item) || item.items.length > 0);
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+export default function SelectWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     htmlName,
@@ -33,59 +45,58 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     readonly,
     autofocus,
     label,
-    hideLabel,
     multiple,
-    rawErrors,
     schema,
     options,
     onChange,
-    onBlur,
-    onFocus,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
-  const { enumOptions, enumDisabled, emptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
-  const themeProps = cleanupOptions(options);
+  const domValues = useMemo(
+    () => enumOptionsDomValues<S>(enumOptions, optionValueFormat),
+    [enumOptions, optionValueFormat],
+  );
+  const themeProps = cleanupOptions(options, props);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   const handleChange = useCallback(
-    (nextValue: any) => {
+    (nextValue: string | string[] | null) => {
       if (!disabled && !readonly && onChange) {
-        onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
+        // `Select` reports a cleared value as `null`, which decodes as the empty string does
+        onChange(enumOptionValueDecoder<S>(nextValue ?? '', enumOptions, optionValueFormat, emptyValue));
       }
     },
     [onChange, disabled, readonly, enumOptions, emptyValue, optionValueFormat],
   );
 
-  const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => {
-      if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onBlur, id, enumOptions, emptyValue, optionValueFormat],
-  );
-
-  const handleFocus = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => {
-      if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onFocus, id, enumOptions, emptyValue, optionValueFormat],
-  );
+  // The focused element is the search input, whose value is the selected option's label rather than an encoded option
+  // value
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>(props);
 
   const selectOptions = useMemo(() => {
-    if (Array.isArray(enumOptions)) {
-      return enumOptions.map((option, index) => ({
-        key: String(index),
-        value: enumOptionValueEncoder(option.value, index, optionValueFormat),
-        label: option.label,
-        disabled: Array.isArray(enumDisabled) && enumDisabled.includes(option.value),
-      }));
-    }
-    return [];
-  }, [enumDisabled, enumOptions, optionValueFormat]);
+    const toComboboxItem = (option: IndexedEnumOptionType<S>) => ({
+      key: String(option.index),
+      value: domValues[option.index],
+      label: option.label,
+      disabled: option.disabled,
+    });
+    return groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>
+      isEnumOptionsGroup<S>(item)
+        ? { group: item.label, items: item.options.map(toComboboxItem) }
+        : toComboboxItem(item),
+    );
+  }, [enumDisabled, enumOptions, optgroups, domValues]);
+
+  // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop. An
+  // `aria-label` in the options, spread onto the select as Mantine's own prop, names it as its caller's would
+  const optionsAriaLabel = typeof options['aria-label'] === 'string' ? options['aria-label'] : undefined;
+  const ariaDescribedByProps = useInputAriaProps<T, S, F>(
+    multiple ? 'MultiSelect' : 'Select',
+    props,
+    widgetAriaProps<T, S, F>({ ...props, 'aria-label': props['aria-label'] || optionsAriaLabel }),
+  );
 
   const sharedProps = {
     id,
@@ -98,12 +109,14 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     autoFocus: autofocus,
     placeholder,
     disabled: disabled || readonly,
-    required,
-    error: rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined,
+    ...getRequiredProps<T, S, F>(props),
+    error: getWidgetError<T, S, F>(props),
     searchable: true,
-    'aria-describedby': ariaDescribedByIds(id),
+    filter: optionsFilter,
     comboboxProps: { withinPortal: false },
     ...themeProps,
+    ...ariaDescribedByProps,
+    ...getDescriptionProps(props),
   };
 
   return (
@@ -112,12 +125,19 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       {multiple ? (
         <MultiSelect
           {...sharedProps}
-          value={enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[]}
+          // Its search input, the element a user focuses, takes no `required`, which goes to the hidden input holding
+          // the values, so it says it as a native select's attribute would
+          aria-required={required || undefined}
+          value={enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, [])}
         />
       ) : (
         <Select
+          // A select whose schema has a default offers no empty choice, as the other themes' leave out their placeholder
+          // option, so the option selector of an `anyOf`/`oneOf` field holds an option unless the field's `ui:options`
+          // set `allowDeselect` or `clearable`
+          allowDeselect={schema.default === undefined}
           {...sharedProps}
-          value={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null) as string | null}
+          value={enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null)}
         />
       )}
     </>

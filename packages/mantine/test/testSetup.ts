@@ -13,7 +13,7 @@ beforeAll(() => {
 // Mantine components often use Math.random() internally for ID generation
 // Mocking it ensures a consistent ID is generated every time.
 const originalMathRandom = Math.random;
-Math.random = vi.fn(() => 0.5) as typeof Math.random;
+Math.random = vi.fn(() => 0.5);
 
 afterAll(() => {
   Math.random = originalMathRandom;

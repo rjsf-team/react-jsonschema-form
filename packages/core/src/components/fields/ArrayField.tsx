@@ -1,10 +1,9 @@
-import type { MouseEvent } from 'react';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
+  ArrayFieldItemButtonProps,
   ArrayFieldTemplateProps,
   ErrorSchema,
-  FieldPathId,
-  FieldPathList,
+  FieldPath,
   FieldProps,
   FormContextType,
   Registry,
@@ -14,51 +13,106 @@ import type {
   UIOptionsType,
 } from '@rjsf/utils';
 import {
-  setByPath,
+  getByPath,
+  toPath,
   allowAdditionalItems,
-  getTemplate,
+  deepEquals,
+  getItemUiSchemaForItem,
+  getStaticItemsUiSchema,
+  getTemplates,
   getUiOptions,
-  getWidget,
-  hashObject,
-  isCustomWidget,
   isFixedItems,
   isFormDataAvailable,
   isObject,
+  isSchemaObject,
   optionsList,
+  resolveWidget,
   shouldRenderOptionalField,
-  toFieldPathId,
-  useDeepCompareMemo,
-  ITEMS_KEY,
-  ID_KEY,
+  toFieldPath,
+  fieldPathToId,
+  fieldPathToName,
   TranslatableString,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
-/** Type used to represent the keyed form data used in the state */
-interface KeyedFormDataType<T> {
+import useReadFieldData from '../../hooks/useReadFieldData.ts';
+import useSendMove from '../../hooks/useSendMove.ts';
+import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
+import { EMPTY_UI_SCHEMA } from '../constants.ts';
+import { moveOfItems } from '../keyMove.ts';
+import type { KeyMove } from '../keyMove.ts';
+import { rendersTypeSelector } from './FallbackField.tsx';
+import {
+  ARRAY_MODE_DEFAULT_WIDGETS,
+  displaysLabel,
+  getArrayFieldMode,
+  getContainerErrorProps,
+  getContainerHeading,
+  getFieldErrorProps,
+  getWidgetErrorProps,
+  getWidgetLabelProps,
+  storedValue,
+  withFallbackItems,
+  withGlobalUiOptions,
+} from './fieldWidgetUtils.ts';
+import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
+import { useSchemaFieldPlan } from './SchemaField.tsx';
+
+/** The array buttons' event, taken from the published handler type so the internal handlers can't drift from it */
+type ArrayButtonEvent = Parameters<ArrayFieldTemplateProps['onAddClick']>[0];
+
+/** A row's stable React `key`, and its `order`: when the row was added, relative to the other rows of its array */
+interface RowId {
   key: string;
+  order: number;
+}
+
+/** An item of the `formData` paired with its row's identity */
+interface KeyedFormDataType<T> extends RowId {
   item: T;
 }
 
-/** Used to generate a unique ID for an element in a row */
-let rowIdCounter = 0;
-
-function generateRowId() {
-  rowIdCounter += 1;
-  return `rjsf-array-item-${rowIdCounter}`;
+/** The rows of items the field renders without a handler having made them, on mount or when the data's length gives
+ * no way to tell which rows survived: keyed by `generation`, which each such pass raises, so no row of an earlier pass
+ * hands its instance to one of these, and ordered as the items are
+ *
+ * @param keyPrefix - The field's own prefix for its rows' keys
+ * @param length - The number of items
+ * @param generation - The pass the rows are made in
+ * @returns - The rows
+ */
+function renderedRows(keyPrefix: string, length: number, generation: number): RowId[] {
+  return Array.from({ length }, (_, index) => ({ key: `${keyPrefix}-${generation}-${index}`, order: index }));
 }
 
-/** Converts the `formData` into `KeyedFormDataType` data, using the `generateRowId()` function to create the key
+/** The highest `order` among `rows`, or `-1` for none */
+function maxOrder(rows: readonly RowId[]): number {
+  return rows.reduce((max, { order }) => Math.max(max, order), -1);
+}
+
+/** Keys `items` by index rather than through `map()`, which skips the holes a write past the end of an array leaves, so
+ * every slot is an item with a row of its own: the row `rowFor` gives its index, or else a new one, ordered after
+ * `others` and every row keyed before it
  *
- * @param formData - The data for the form
- * @returns - The `formData` converted into a `KeyedFormDataType` element
+ * @param items - The items to key
+ * @param rowFor - The row the item at `index` keeps, if any
+ * @param newRowId - Makes a row ordered after the rows it is handed
+ * @param [others] - Rows beside the keyed ones that a new row is ordered after
+ * @returns - The keyed items
  */
-function generateKeyedFormData<T>(formData?: T[]): KeyedFormDataType<T>[] {
-  return !Array.isArray(formData)
-    ? []
-    : formData.map((item) => ({
-        key: generateRowId(),
-        item,
-      }));
+function keyItems<T>(
+  items: T[],
+  rowFor: (index: number, item: T) => RowId | undefined,
+  newRowId: (rows: readonly RowId[]) => RowId,
+  others: readonly RowId[] = [],
+): KeyedFormDataType<T>[] {
+  const keyed: KeyedFormDataType<T>[] = [];
+  for (let index = 0; index < items.length; index++) {
+    const item = items[index];
+    const { key, order } = rowFor(index, item) ?? newRowId([...others, ...keyed]);
+    keyed.push({ key, order, item });
+  }
+  return keyed;
 }
 
 /** Converts `KeyedFormDataType` data into the inner `formData`
@@ -89,135 +143,205 @@ function isItemRequired<S extends StrictRJSFSchema = RJSFSchema>(itemSchema: S) 
   return itemSchema.type !== 'null';
 }
 
-/** Determines whether more items can be added to the array. If the uiSchema indicates the array doesn't allow adding
- * then false is returned. Otherwise, if the schema indicates that there are a maximum number of items and the
- * `formData` matches that value, then false is returned, otherwise true is returned.
- *
- * @param registry - The registry
- * @param schema - The schema for the field
- * @param formItems - The list of items in the form
- * @param [uiSchema] - The UiSchema for the field
- * @returns - True if the item is addable otherwise false
+/** Whether the array's options let it add an item at all, whatever its number of items. A tuple can only add an item
+ * that its `additionalItems` describes
  */
-function canAddItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  registry: Registry<T[], S, F>,
+function isAddable<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schema: S,
-  formItems: T[],
-  uiSchema?: UiSchema<T[], S, F>,
+  uiOptions: UIOptionsType<T[], S, F>,
+  isTuple: boolean,
 ) {
-  let { addable } = getUiOptions<T[], S, F>(uiSchema, registry.globalUiOptions);
-  if (addable !== false) {
-    // if ui:options.addable was not explicitly set to false, we can add
-    // another item if we have not exceeded maxItems yet
-    if (schema.maxItems !== undefined) {
-      addable = formItems.length < schema.maxItems;
-    } else {
-      addable = true;
-    }
-  }
-  return addable;
+  return uiOptions.addable !== false && (!isTuple || isObject(schema.additionalItems));
 }
 
-/** Helper method to compute item UI schema for both normal and fixed arrays
- * Handles both static object and dynamic function cases
- *
- * @param uiSchema - The parent UI schema containing items definition
- * @param item - The item data
- * @param index - The index of the item
- * @param formContext - The form context
- * @returns The computed UI schema for the item
+/** Whether `maxItems` leaves room for another item after `itemCount` of them */
+function belowMaxItems<S extends StrictRJSFSchema>(schema: S, itemCount: number) {
+  return schema.maxItems === undefined || itemCount < schema.maxItems;
+}
+
+/** `belowMaxItems()` for the rows a handler reads, among which a tuple's fixed items count even while its data is
+ * shorter
  */
-function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  uiSchema: UiSchema<T[], S, F>,
-  item: T,
-  index: number,
-  formContext: F,
-): UiSchema<T[], S, F> | undefined {
-  if (typeof uiSchema.items === 'function') {
-    try {
-      // Call the function with item data, index, and form context
-      // TypeScript now correctly infers the types thanks to the ArrayElement type in UiSchema
-      const result = uiSchema.items(item, index, formContext);
-      // Only use the result if it's truthy
-      return result as UiSchema<T[], S, F>;
-    } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
-      // Fall back to undefined to allow the field to still render
-      return undefined;
-    }
-  } else {
-    // Static object case - preserve undefined to maintain backward compatibility
-    return uiSchema.items as UiSchema<T[], S, F> | undefined;
-  }
+function hasRoomForRow<S extends StrictRJSFSchema>(schema: S, rows: readonly unknown[]) {
+  return belowMaxItems(schema, Math.max(rows.length, getFixedItems(schema)?.length ?? 0));
+}
+
+/** The `items` of a tuple, which `isFixedItems()` can't narrow `schema.items` to */
+function getFixedItems<S extends StrictRJSFSchema>(schema: S) {
+  return Array.isArray(schema.items) && isFixedItems(schema) ? schema.items : undefined;
+}
+
+/** A handler a template gets, which does what its button can. A refused press still prevents the default, so a
+ * template's button that isn't `type='button'` doesn't submit the form. Only the event is handed on, since a button's
+ * `onClick` may pass a second argument, which `handler` would read as an index
+ *
+ * @param allowed - Whether the button can act
+ * @param handler - The array's handler for the button
+ * @param index - The handler's first argument after the event
+ * @param newIndex - The handler's second argument after the event
+ * @returns - The handler to publish
+ */
+function useButtonHandler<I, J>(
+  allowed: boolean,
+  handler: (event: ArrayButtonEvent, index: I, newIndex: J) => void,
+  index: I,
+  newIndex: J,
+) {
+  return useCallback(
+    (event: ArrayButtonEvent) => {
+      if (allowed) {
+        handler(event, index, newIndex);
+      } else {
+        event?.preventDefault();
+      }
+    },
+    [allowed, handler, index, newIndex],
+  );
+}
+
+/** The add rule an array's add button and its items' add and copy buttons share
+ *
+ * @param schema - The array's schema
+ * @param uiOptions - The array's `ui:options`
+ * @param isTuple - Whether the array is a tuple
+ * @param hasData - False for an optional array without data, whose add goes through its optional data control
+ * @param itemCount - The number of items the array renders
+ * @param locked - Whether the array is disabled or read-only
+ * @param handleAddItem - The array's add handler
+ * @returns - `canAdd`, whether the add button shows, which it does disabled on a locked array; `addsItem`, whether an
+ *   add acts, leaving `maxItems` to the handlers, which ask it about the items at the call; and the `onAddClick` handler
+ */
+function useAddRule<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  uiOptions: UIOptionsType<T[], S, F>,
+  isTuple: boolean,
+  hasData: boolean,
+  itemCount: number,
+  locked: boolean,
+  handleAddItem: (event: ArrayButtonEvent, index?: number) => void,
+) {
+  const addable = isAddable<T, S, F>(schema, uiOptions, isTuple) && hasData;
+  const addsItem = addable && !locked;
+  const onAddClick = useButtonHandler(addsItem, handleAddItem, undefined, undefined);
+  return { canAdd: addable && belowMaxItems(schema, itemCount), addsItem, onAddClick };
 }
 
 /** Returns the default form information for an item based on the schema for that item. Deals with the possibility
  * that the schema is fixed and allows additional items.
+ *
+ * @param index - The position the new row is being inserted at, so a tuple-position (array) form of
+ *          `uiSchema.items` resolves the same entry that the row will actually render with once added
  */
-function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  registry: Registry<T[], S, F>,
-  schema: S,
-): T {
-  const { schemaUtils, globalFormOptions } = registry;
-  let itemSchema = schema.items as S;
-  if (globalFormOptions.useFallbackUiForUnsupportedType && !itemSchema) {
-    // If we don't have itemSchema and useFallbackUiForUnsupportedType is on, use an empty schema
-    itemSchema = {} as S;
-  } else if (isFixedItems(schema) && allowAdditionalItems(schema)) {
+function getNewFormDataRow<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(registry: Registry<T[], S, F>, schema: S, index: number, uiSchema?: UiSchema<T[], S, F>): T {
+  const { schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
+  // An `items` that isn't one schema object renders its items with an empty schema, so the new item's default comes
+  // from the same one; `{}` is a valid `S`, whose every keyword is optional, but a generic `S` can't be built from it
+  let itemSchema = isSchemaObject<S>(schema.items) ? schema.items : ({} as S);
+  // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T/T[] caused by the
+  // FieldProps<T[], S, F> call on the class
+  let itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema, index);
+  const fixedItems = getFixedItems(schema);
+  const fixedItem: unknown = fixedItems?.[index];
+  if (isSchemaObject<S>(fixedItem)) {
+    itemSchema = fixedItem;
+  } else if (fixedItems && allowAdditionalItems(schema)) {
+    // A new row beyond the fixed tuple's own positions is rendered with `uiSchema.additionalItems` elsewhere in this
+    // field (see the `itemUiSchema` assignment below), so its default must be computed against the same uiSchema.
     itemSchema = schema.additionalItems as S;
+    itemUiSchema = uiSchema?.additionalItems as UiSchema<T[], S, F> | undefined;
   }
-  // Cast this as a T to work around schema utils being for T[] caused by the FieldProps<T[], S, F> call on the class
-  return schemaUtils.getDefaultFormState(itemSchema) as unknown as T;
+  // `uiSchemaDefinitions` comes from the registry (the root uiSchema's `ui:definitions`) since `itemUiSchema` is
+  // only the array's own sub-uiSchema and never carries `ui:definitions` itself.
+  return schemaUtils.getDefaultFormState(
+    itemSchema,
+    undefined,
+    false,
+    undefined,
+    withGlobalUiOptions<T[], S, F>(itemUiSchema, globalUiOptions),
+    uiSchemaDefinitions,
+  ) as unknown as T;
 }
 
 /** Props used for ArrayAsXxxx type components*/
 interface ArrayAsFieldProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > extends FieldProps<T, S, F> {
   /** The callback used to update the array when the selector changes */
-  onSelectChange: (value: T) => void;
+  onSelectChange: (value: unknown) => void;
+  /** The HTML name for the widget, generated with the multi-value flag since these widgets accept several values */
+  htmlName?: string;
+}
+
+/** Gets the label props an array rendered as one widget hands it: its `ui:title`, else its schema `title`, else its
+ * name, shown as its plan says, or where `getDisplayLabel()` lets it without a plan
+ *
+ * @param props - The array's props
+ * @param [uiTitle] - The array's `ui:title`
+ * @returns - The widget's label props
+ */
+function getArrayWidgetLabelProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ArrayAsFieldProps<T[], S, F>, uiTitle: string | undefined) {
+  const { presentation, schema, uiSchema, name, registry } = props;
+  return getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? schema.title ?? name, () =>
+    displaysLabel(registry, schema, uiSchema),
+  );
 }
 
 /** Renders an array as a set of checkboxes using the 'select' widget
  */
-function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ArrayAsFieldProps<T[], S, F>,
-) {
+function ArrayAsMultiSelect<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ArrayAsFieldProps<T[], S, F>) {
   const {
     schema,
-    fieldPathId,
+    id,
     uiSchema,
-    formData: items = [],
     disabled = false,
     readonly = false,
     autofocus = false,
     required = false,
-    placeholder,
     onBlur,
     onFocus,
     registry,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its widget, for one that doesn't read `presentation`
     rawErrors,
+    presentation,
+    hideError,
     name,
     onSelectChange,
+    htmlName,
   } = props;
-  const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
+  // A `null` held by a `type` list naming `array` is no selection, where the widget would read it as one and keep it
+  // beside the option checked. Any other value that isn't an array is the one selection it holds
+  const items: T[] = props.formData ?? [];
+  const { widgets, schemaUtils, globalUiOptions } = registry;
   const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
   // For computing `enumOptions`, fallback to the array property's uiSchema if there is no `items` schema
   // Avoids a breaking change reported in https://github.com/rjsf-team/react-jsonschema-form/issues/4985
   const itemsUiSchema = (uiSchema?.items ?? uiSchema) as UiSchema<T[], S, F>;
   const enumOptions = optionsList<T[], S, F>(itemsSchema, itemsUiSchema);
-  const { widget = 'select', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
-  const Widget = getWidget<T[], S, F>(schema, widget, widgets);
-  const label = uiTitle ?? schema.title ?? name;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-  // For custom widgets with multiple=true, generate a fieldPathId with isMultiValue flag
-  const multiValueFieldPathId = useDeepCompareMemo(toFieldPathId('', globalFormOptions, fieldPathId, true));
+  const {
+    widget = ARRAY_MODE_DEFAULT_WIDGETS.multiSelect,
+    title: uiTitle,
+    placeholder,
+    ...options
+  } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
+  const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
+  const labelProps = getArrayWidgetLabelProps<T, S, F>(props, uiTitle);
   return (
     <Widget
-      id={multiValueFieldPathId[ID_KEY]}
+      id={id}
       name={name}
       multiple
       onChange={onSelectChange}
@@ -230,50 +354,52 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       value={items}
       disabled={disabled}
       readonly={readonly}
+      hideError={hideError}
       required={required}
-      label={label}
-      hideLabel={!displayLabel}
+      {...labelProps}
       placeholder={placeholder}
       autofocus={autofocus}
-      rawErrors={rawErrors}
-      htmlName={multiValueFieldPathId.name}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
+      presentation={presentation}
+      htmlName={htmlName}
     />
   );
 }
 
 /** Renders an array using the custom widget provided by the user in the `uiSchema`
  */
-function ArrayAsCustomWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ArrayAsFieldProps<T[], S, F>,
-) {
+function ArrayAsCustomWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ArrayAsFieldProps<T[], S, F>) {
   const {
     schema,
-    fieldPathId,
+    id,
     uiSchema,
     disabled = false,
     readonly = false,
     autofocus = false,
     required = false,
     hideError,
-    placeholder,
     onBlur,
     onFocus,
     formData: items = [],
     registry,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its widget, for one that doesn't read `presentation`
     rawErrors,
+    presentation,
     name,
     onSelectChange,
+    htmlName,
   } = props;
-  const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
-  const { widget, title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
-  const Widget = getWidget<T[], S, F>(schema, widget, widgets);
-  const label = uiTitle ?? schema.title ?? name;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-  // For custom widgets with multiple=true, generate a fieldPathId with isMultiValue flag
-  const multiValueFieldPathId = useDeepCompareMemo(toFieldPathId('', globalFormOptions, fieldPathId, true));
+  const { widgets, globalUiOptions } = registry;
+  const { widget, title: uiTitle, placeholder, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
+  const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
+  const labelProps = getArrayWidgetLabelProps<T, S, F>(props, uiTitle);
   return (
     <Widget
-      id={multiValueFieldPathId[ID_KEY]}
+      id={id}
       name={name}
       multiple
       onChange={onSelectChange}
@@ -288,25 +414,27 @@ function ArrayAsCustomWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       readonly={readonly}
       hideError={hideError}
       required={required}
-      label={label}
-      hideLabel={!displayLabel}
+      {...labelProps}
       placeholder={placeholder}
       autofocus={autofocus}
-      rawErrors={rawErrors}
-      htmlName={multiValueFieldPathId.name}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
+      presentation={presentation}
+      htmlName={htmlName}
     />
   );
 }
 
 /** Renders an array of files using the `FileWidget`
  */
-function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ArrayAsFieldProps<T[], S, F>,
-) {
+function ArrayAsFiles<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ArrayAsFieldProps<T[], S, F>) {
   const {
     schema,
     uiSchema,
-    fieldPathId,
+    id,
     name,
     disabled = false,
     readonly = false,
@@ -316,20 +444,26 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     onFocus,
     registry,
     formData: items = [],
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its widget, for one that doesn't read `presentation`
     rawErrors,
+    presentation,
+    hideError,
     onSelectChange,
+    htmlName,
   } = props;
-  const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
-  const { widget = 'files', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
-  const Widget = getWidget<T[], S, F>(schema, widget, widgets);
-  const label = uiTitle ?? schema.title ?? name;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-  // For custom widgets with multiple=true, generate a fieldPathId with isMultiValue flag
-  const multiValueFieldPathId = useDeepCompareMemo(toFieldPathId('', globalFormOptions, fieldPathId, true));
+  const { widgets, globalUiOptions } = registry;
+  const {
+    widget = ARRAY_MODE_DEFAULT_WIDGETS.files,
+    title: uiTitle,
+    placeholder,
+    ...options
+  } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
+  const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
+  const labelProps = getArrayWidgetLabelProps<T, S, F>(props, uiTitle);
   return (
     <Widget
       options={options}
-      id={multiValueFieldPathId[ID_KEY]}
+      id={id}
       name={name}
       multiple
       onChange={onSelectChange}
@@ -340,21 +474,190 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       value={items}
       disabled={disabled}
       readonly={readonly}
+      hideError={hideError}
       required={required}
       registry={registry}
       autofocus={autofocus}
-      rawErrors={rawErrors}
-      label={label}
-      hideLabel={!displayLabel}
-      htmlName={multiValueFieldPathId.name}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
+      presentation={presentation}
+      {...labelProps}
+      placeholder={placeholder}
+      htmlName={htmlName}
     />
+  );
+}
+
+/** An item's errors as `ItemSchemaField` takes them. It comes from a registry typed for the array, so it takes a single
+ * item's errors as `ErrorSchema<T[]>` too; the overload is the one trust point for that.
+ */
+function asItemErrorSchema<T>(errorSchema: ErrorSchema<T> | undefined): ErrorSchema<T[]> | undefined;
+function asItemErrorSchema(errorSchema: unknown): unknown {
+  return errorSchema;
+}
+
+/** The name `ui:options.itemLabel` gives an item from the value it points at: a non-empty string, or a number */
+function itemNameFrom(value: unknown): string | undefined {
+  if (typeof value === 'string') {
+    const name = value.trim();
+    return name || undefined;
+  }
+  return typeof value === 'number' && Number.isFinite(value) ? String(value) : undefined;
+}
+
+/** Numbers the names that more than one item has, `a (1)` and `a (2)`, in the order the items sharing each name were
+ * added to the array, given as each entry's `order`. A number then stays with its item when items are moved, copied or
+ * edited, and a copy takes the next one. A numbered name already in use, as another item's own name or an earlier
+ * numbered one, moves on to the next free number.
+ */
+function numberSharedNames(
+  entries: readonly (readonly [name: string | null, order: number])[],
+  translateString: Registry['translateString'],
+): (string | undefined)[] {
+  const counts = new Map<string, number>();
+  for (const [name] of entries) {
+    if (name !== null) {
+      counts.set(name, (counts.get(name) ?? 0) + 1);
+    }
+  }
+  const taken = new Set(counts.keys());
+  const nextNumbers = new Map<string, number>();
+  const names: (string | undefined)[] = entries.map(([name]) => name ?? undefined);
+  const shared = entries
+    .flatMap(([name, order], index) => (name !== null && (counts.get(name) ?? 0) > 1 ? [{ name, order, index }] : []))
+    .sort((a, b) => a.order - b.order || a.index - b.index);
+  for (const { name, index } of shared) {
+    const numberedAs = (number: number) =>
+      translateString(TranslatableString.ItemNameWithNumber, [name, String(number)]);
+    let number = nextNumbers.get(name) ?? 1;
+    let numbered = numberedAs(number);
+    // With a working format at most `taken.size` numbers are in use, so a free one is found within the bound. A format
+    // that leaves the number out translates the next number the same, and searching further can't help
+    for (let attempts = 0; taken.has(numbered) && attempts < taken.size; attempts++) {
+      const next = numberedAs(number + 1);
+      if (next === numbered) {
+        break;
+      }
+      number += 1;
+      numbered = next;
+    }
+    nextNumbers.set(name, number + 1);
+    if (numbered) {
+      taken.add(numbered);
+      names[index] = numbered;
+    }
+  }
+  return names;
+}
+
+/** The `ui:options` that decide which buttons an array item shows, with their defaults, read in one place so that the
+ * buttons and the names `itemLabel` gives the items agree
+ */
+function itemButtonOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiOptions: UIOptionsType<T[], S, F>,
+) {
+  const { orderable = true, removable = true, copyable = false } = uiOptions;
+  return { orderable, removable, copyable };
+}
+
+/** Whether Copy can ever show on an array's items, whatever their number. Copy shows only while an item can be added,
+ * so this asks the rule the array's own Add and Copy buttons follow, `isAddable` and `belowMaxItems`, about the fewest
+ * items there can be with one to copy, `itemsBeforeCopy`
+ */
+function canEverCopy<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  uiOptions: UIOptionsType<T[], S, F>,
+  itemsBeforeCopy: number,
+  isTuple: boolean,
+) {
+  return (
+    itemButtonOptions(uiOptions).copyable &&
+    isAddable<T, S, F>(schema, uiOptions, isTuple) &&
+    belowMaxItems(schema, itemsBeforeCopy)
+  );
+}
+
+/** The title of one of an item's buttons, or undefined when the item has no name or the button can't show. Memoized per
+ * button, so that a change to whether one button shows doesn't re-translate the others.
+ */
+function useButtonTitle(
+  itemName: string | undefined,
+  shows: boolean,
+  key: TranslatableString,
+  translateString: Registry['translateString'],
+) {
+  return useMemo(
+    () => (itemName !== undefined && shows ? translateString(key, [itemName]) : undefined),
+    [itemName, shows, key, translateString],
+  );
+}
+
+/** The names `ui:options.itemLabel` gives the items of an array, read from each item's data at that path, or from the
+ * item itself for `'.'`. Items are named when their options give them buttons, not when a button shows right now, as a
+ * lone item can't move and an array at `maxItems` can't copy, so that reaching those limits doesn't renumber them. A
+ * tuple passes its `fixedItemCount`: its fixed items can only show Copy, and only the last of them, so that one is named
+ * only when Copy can ever show, which in a tuple also needs `additionalItems`.
+ */
+function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  keyedItems: readonly KeyedFormDataType<T>[],
+  registry: Registry<T[], S, F>,
+  schema: S,
+  uiOptions: UIOptionsType<T[], S, F>,
+  fixedItemCount?: number,
+): (string | undefined)[] | undefined {
+  const { itemLabel } = uiOptions;
+  // A uiSchema from JSON isn't type-checked, so a value other than a path leaves the items unnamed rather than throwing
+  const labelled = typeof itemLabel === 'string' && itemLabel !== '';
+  const isTuple = fixedItemCount !== undefined;
+  const canCopy = useMemo(
+    () => labelled && canEverCopy<T, S, F>(schema, uiOptions, Math.max(fixedItemCount ?? 0, 1), isTuple),
+    [labelled, isTuple, fixedItemCount, schema, uiOptions],
+  );
+  const { orderable, removable } = itemButtonOptions(uiOptions);
+  const hasButtons = orderable || removable || canCopy;
+  const path = useMemo(() => {
+    if (!labelled || !hasButtons) {
+      return undefined;
+    }
+    if (itemLabel === '.') {
+      return [];
+    }
+    // Only `'.'` names an item by its own value, so a path of nothing but separators, such as `'[]'`, names nothing
+    const segments = toPath(itemLabel);
+    return segments.length > 0 ? segments : undefined;
+  }, [labelled, hasButtons, itemLabel]);
+  // Of a tuple's fixed items, only the last can show Copy, since a copy goes below its item
+  const firstNamedIndex = Math.max((fixedItemCount ?? 0) - (canCopy ? 1 : 0), 0);
+  // Serialized, so that the numbering below reruns only when a name or the items' order changes, not on every edit to
+  // another field
+  const namesKey = useMemo(
+    () =>
+      path &&
+      JSON.stringify(
+        keyedItems.map(({ order, item }, index) => [
+          index < firstNamedIndex ? null : (itemNameFrom(path.length === 0 ? item : getByPath(item, path)) ?? null),
+          order,
+        ]),
+      ),
+    [keyedItems, path, firstNamedIndex],
+  );
+  const { translateString } = registry;
+  return useMemo(
+    () =>
+      namesKey === undefined
+        ? undefined
+        : numberSharedNames(JSON.parse(namesKey) as [string | null, number][], translateString),
+    [namesKey, translateString],
   );
 }
 
 /** Renders the individual array item using a `SchemaField` along with the additional properties that are needed to
  * render the whole of the `ArrayFieldItemTemplate`.
  */
-function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: {
+function ArrayFieldItemInner<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: {
   itemKey: string;
   index: number;
   name: string;
@@ -366,25 +669,31 @@ function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   uiOptions: UIOptionsType<T[], S, F>;
   parentUiSchema: UiSchema<T[], S, F>;
   title: string | undefined;
+  itemName?: string;
   canAdd: boolean;
+  /** Whether an add to the array acts, from `useAddRule()` */
+  addsItem: boolean;
+  /** Whether an item can go after this one, by an add or a copy, which only the last fixed item of a tuple and its
+   * additional items allow
+   */
+  canAddAfter?: boolean;
   canRemove?: boolean;
   canMoveUp: boolean;
   canMoveDown: boolean;
   rawItemSchema: S;
   itemData: T[];
   itemUiSchema: UiSchema<T[], S, F> | undefined;
-  parentFieldPathId: FieldPathId;
-  itemErrorSchema?: ErrorSchema<T[]>;
+  parentFieldPath: FieldPath;
+  itemErrorSchema?: ErrorSchema<T>;
   autofocus?: boolean;
   onBlur: FieldProps<T[], S, F>['onBlur'];
   onFocus: FieldProps<T[], S, F>['onFocus'];
   onChange: FieldProps<T[], S, F>['onChange'];
-  rawErrors?: string[];
   totalItems: number;
-  handleAddItem: (event: MouseEvent, index?: number) => void;
-  handleCopyItem: (event: MouseEvent, index: number) => void;
-  handleRemoveItem: (event: MouseEvent, index: number) => void;
-  handleReorderItems: (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => void;
+  handleAddItem: (event: ArrayButtonEvent, index?: number) => void;
+  handleCopyItem: (event: ArrayButtonEvent, index: number) => void;
+  handleRemoveItem: (event: ArrayButtonEvent, index: number) => void;
+  handleReorderItems: (event: ArrayButtonEvent, index: number, newIndex: number) => void;
 }) {
   const {
     itemKey,
@@ -397,21 +706,23 @@ function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     uiOptions,
     parentUiSchema,
     canAdd,
+    addsItem,
+    canAddAfter = true,
     canRemove = true,
     canMoveUp,
     canMoveDown,
     rawItemSchema,
     itemData,
     itemUiSchema,
-    parentFieldPathId,
+    parentFieldPath,
     itemErrorSchema,
     autofocus,
     onBlur,
     onFocus,
     onChange,
-    rawErrors,
     totalItems,
     title,
+    itemName,
     handleAddItem,
     handleCopyItem,
     handleRemoveItem,
@@ -420,97 +731,126 @@ function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   const {
     schemaUtils,
     fields: { ArraySchemaField, SchemaField },
-    globalUiOptions,
     globalFormOptions,
   } = registry;
   const itemSchema = useMemo(
     () => schemaUtils.retrieveSchema(rawItemSchema, itemData),
     [schemaUtils, rawItemSchema, itemData],
   );
-  // parentFieldPathId is the same stable reference for all items; index is a stable number.
-  // useMemo avoids creating a new FieldPathId object on every render, letting React.memo bail out.
-  const fieldPathId = useMemo(
-    () => toFieldPathId(index, globalFormOptions, parentFieldPathId),
-    [index, globalFormOptions, parentFieldPathId],
-  );
+  const fieldPath = toFieldPath(index, parentFieldPath);
+  const fieldId = fieldPathToId(fieldPath, globalFormOptions);
   const ItemSchemaField = ArraySchemaField || SchemaField;
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T[], S, F>(
-    'ArrayFieldItemTemplate',
+  const { ArrayFieldItemTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
+  const itemFieldProps: FieldProps<T[], S, F> = {
+    name,
+    title,
+    index,
+    schema: itemSchema,
+    uiSchema: itemUiSchema,
+    formData: itemData,
+    errorSchema: asItemErrorSchema(itemErrorSchema),
+    fieldPath,
+    id: fieldId,
+    required: isItemRequired<S>(itemSchema),
+    onChange,
+    onBlur,
+    onFocus,
     registry,
-    uiOptions,
-  );
-  const displayLabel = schemaUtils.getDisplayLabel(itemSchema, itemUiSchema, globalUiOptions);
-  const { description } = getUiOptions(itemUiSchema);
-  const hasDescription = !!description || !!itemSchema.description;
-  const { orderable = true, removable = true, copyable = false } = uiOptions;
+    disabled,
+    readonly,
+    hideError,
+    autofocus,
+    ...getFieldErrorProps<T, S, F>(itemErrorSchema?.__errors),
+  };
+  // The toolbar is laid out level with the item's first control below a label above it: one its template draws, as the
+  // plan the item's `SchemaField` builds from these same props says, so the two can't disagree about it however the
+  // field is named, or one its field or widget draws itself where its declaration places that label above the control.
+  // A hidden item has no control on screen, so nothing draws a label above it: its template hides the fallback UI's type
+  // selector with the value. A shown type selector comes first, and its label names the type rather than the item, so
+  // it is drawn above it whatever the item's title, wherever `ui:label` leaves the field's labels shown
+  const {
+    schema: plannedSchema,
+    fieldToRender,
+    presentation,
+    labelPlacement,
+    ownUiOptions,
+    disabled: itemDisabled,
+    readonly: itemReadonly,
+    hidden: itemHidden,
+  } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
+  const typeSelectorFirst =
+    fieldToRender?.FieldComponent === registry.fields.FallbackField &&
+    Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
+    rendersTypeSelector<S>(plannedSchema);
+  const labelBy = presentation?.control && presentation.label.by;
+  const displayLabel = typeSelectorFirst
+    ? !itemHidden && presentation?.showLabel === true
+    : labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
+  const hasDescription = !!ownUiOptions.description || !!itemSchema.description;
+  // The buttons change the array, so its lock holds them whatever an item's own `ui:disabled: false` unlocks. The
+  // template gets the same lock, so one that draws its own move or remove control can't disagree with them
+  const lockedDisabled = disabled || itemDisabled;
+  const lockedReadonly = readonly || itemReadonly;
+  const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
   const has: Record<string, boolean> = {
     moveUp: orderable && canMoveUp,
     moveDown: orderable && canMoveDown,
-    copy: copyable && canAdd,
+    copy: copyable && canAdd && canAddAfter,
     remove: removable && canRemove,
     toolbar: false,
   };
   has.toolbar = Object.keys(has).some((key: keyof typeof has) => has[key]);
 
-  const onAddItem = useCallback(
-    (event: MouseEvent) => {
-      handleAddItem(event, index + 1);
-    },
-    [handleAddItem, index],
-  );
-  const onCopyItem = useCallback(
-    (event: MouseEvent) => {
-      handleCopyItem(event, index);
-    },
-    [handleCopyItem, index],
-  );
-  const onRemoveItem = useCallback(
-    (event: MouseEvent) => {
-      handleRemoveItem(event, index);
-    },
-    [handleRemoveItem, index],
-  );
-  const onMoveUpItem = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
-      handleReorderItems(event, index, index - 1);
-    },
-    [handleReorderItems, index],
-  );
-  const onMoveDownItem = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
-      handleReorderItems(event, index, index + 1);
-    },
-    [handleReorderItems, index],
-  );
+  const { translateString } = registry;
+  // Titles only for the buttons this item can show. Both move buttons show, one of them disabled, whenever the item can
+  // move either way, so their titles depend on whether it can move at all rather than on `has.moveUp` and
+  // `has.moveDown`, which change as other items are added, removed or moved
+  const movable = orderable && (canMoveUp || canMoveDown);
+  const copyTitle = useButtonTitle(itemName, has.copy, TranslatableString.CopyItemButton, translateString);
+  const moveDownTitle = useButtonTitle(itemName, movable, TranslatableString.MoveDownItemButton, translateString);
+  const moveUpTitle = useButtonTitle(itemName, movable, TranslatableString.MoveUpItemButton, translateString);
+  const removeTitle = useButtonTitle(itemName, has.remove, TranslatableString.RemoveItemButton, translateString);
+  const itemButtonProps = useMemo(() => {
+    // An empty title, as from a translator without these strings, is left out, since it would replace the default one
+    const buttonProps: ArrayFieldItemButtonProps = {};
+    if (copyTitle) {
+      buttonProps.copy = { title: copyTitle };
+    }
+    if (moveDownTitle) {
+      buttonProps.moveDown = { title: moveDownTitle };
+    }
+    if (moveUpTitle) {
+      buttonProps.moveUp = { title: moveUpTitle };
+    }
+    if (removeTitle) {
+      buttonProps.remove = { title: removeTitle };
+    }
+    return Object.keys(buttonProps).length > 0 ? buttonProps : undefined;
+  }, [copyTitle, moveDownTitle, moveUpTitle, removeTitle]);
+
+  // What decides each button, so a template calling these from its own control can't do what the button can't
+  const locked = lockedDisabled || lockedReadonly;
+  const addsAfter = addsItem && canAddAfter;
+  const copiesItem = copyable && addsAfter && !locked;
+  const removesItem = has.remove && !locked;
+  const movesUp = has.moveUp && !locked;
+  // Not `has.moveDown`, which counts the items at render, when an add earlier in the same handler gives the last item
+  // one below it. Only a tuple's fixed items can't remove, and they can't move down either; `handleReorderItems()`
+  // refuses a move past the rows at the call
+  const movesDown = orderable && canRemove && !locked;
+  const onAddItem = useButtonHandler(addsAfter, handleAddItem, index + 1, undefined);
+  const onCopyItem = useButtonHandler(copiesItem, handleCopyItem, index, undefined);
+  const onRemoveItem = useButtonHandler(removesItem, handleRemoveItem, index, undefined);
+  const onMoveUpItem = useButtonHandler(movesUp, handleReorderItems, index, index - 1);
+  const onMoveDownItem = useButtonHandler(movesDown, handleReorderItems, index, index + 1);
 
   const templateProps = {
-    children: (
-      <ItemSchemaField
-        name={name}
-        title={title}
-        index={index}
-        schema={itemSchema}
-        uiSchema={itemUiSchema}
-        formData={itemData}
-        errorSchema={itemErrorSchema}
-        fieldPathId={fieldPathId}
-        required={isItemRequired<S>(itemSchema)}
-        onChange={onChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        registry={registry}
-        disabled={disabled}
-        readonly={readonly}
-        hideError={hideError}
-        autofocus={autofocus}
-        rawErrors={rawErrors}
-      />
-    ),
+    children: <ItemSchemaField {...itemFieldProps} />,
     buttonsProps: {
-      fieldPathId,
-      disabled,
-      readonly,
-      canAdd,
+      id: fieldId,
+      disabled: lockedDisabled,
+      readonly: lockedReadonly,
+      canAdd: canAdd && addsAfter,
       hasCopy: has.copy,
       hasMoveUp: has.moveUp,
       hasMoveDown: has.moveDown,
@@ -522,17 +862,18 @@ function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       onRemoveItem,
       onMoveUpItem,
       onMoveDownItem,
+      itemButtonProps,
       registry,
       schema: itemSchema,
       uiSchema: itemUiSchema,
     },
     itemKey,
     className: 'rjsf-array-item',
-    disabled,
+    disabled: lockedDisabled,
     hasToolbar: has.toolbar,
     index,
     totalItems,
-    readonly,
+    readonly: lockedReadonly,
     registry,
     schema: itemSchema,
     uiSchema: itemUiSchema,
@@ -546,32 +887,33 @@ const ArrayFieldItem = memo(ArrayFieldItemInner) as typeof ArrayFieldItemInner;
 
 /** The properties required by the stateless components that render the items using the `ArrayFieldItem` */
 interface InternalArrayFieldProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > extends FieldProps<T[], S, F> {
-  /** The keyedFormData from the `ArrayField` state */
+  /** The `formData` items paired with their stable React keys */
   keyedFormData: KeyedFormDataType<T>[];
   /** The callback used to handle the adding of an item at the given index (or the end, if missing) */
-  handleAddItem: (event: MouseEvent, index?: number) => void;
+  handleAddItem: (event: ArrayButtonEvent, index?: number) => void;
   /** The callback used to handle the copying of the item at the given index, below itself */
-  handleCopyItem: (event: MouseEvent, index: number) => void;
+  handleCopyItem: (event: ArrayButtonEvent, index: number) => void;
   /** The callback used to handle removing an item at the given index */
-  handleRemoveItem: (event: MouseEvent, index: number) => void;
+  handleRemoveItem: (event: ArrayButtonEvent, index: number) => void;
   /** The callback used to handle reordering an item at the given index to its newIndex */
-  handleReorderItems: (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => void;
+  handleReorderItems: (event: ArrayButtonEvent, index: number, newIndex: number) => void;
 }
 
 /** Renders a normal array without any limitations of length
  */
-function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: InternalArrayFieldProps<T, S, F>,
 ) {
   const {
     schema,
-    uiSchema = {},
+    uiSchema = EMPTY_UI_SCHEMA,
     errorSchema,
-    fieldPathId,
+    fieldPath,
+    id,
     formData: formDataFromProps,
     name,
     title,
@@ -583,6 +925,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     registry,
     onBlur,
     onFocus,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its template and items, for those that don't read `presentation`
     rawErrors,
     onChange,
     keyedFormData,
@@ -590,6 +933,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
+    presentation,
   } = props;
   const fieldTitle = schema.title || title || name;
   const { schemaUtils, fields, formContext, globalUiOptions } = registry;
@@ -599,29 +943,32 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const schemaItems: S = useMemo(() => (isObject(schema.items) ? (schema.items as S) : ({} as S)), [schema.items]);
   const itemsSchema: S = useMemo(() => schemaUtils.retrieveSchema(schemaItems), [schemaUtils, schemaItems]);
   const formData = useMemo(() => keyedToPlainFormData<T>(keyedFormData), [keyedFormData]);
-  const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
+  const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiOptions);
+  const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T[]>(formDataFromProps);
-  const canAdd = useMemo(
-    () => canAddItem<T, S, F>(registry, schema, formData, uiSchema) && (!renderOptionalField || hasFormData),
-    [registry, schema, formData, uiSchema, renderOptionalField, hasFormData],
+  const { canAdd, addsItem, onAddClick } = useAddRule<T, S, F>(
+    schema,
+    uiOptions,
+    false,
+    !renderOptionalField || hasFormData,
+    formData.length,
+    disabled || readonly,
+    handleAddItem,
   );
   const actualFormData = hasFormData ? keyedFormData : [];
   const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
-  // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
-  const childFieldPathId = props.childFieldPathId ?? fieldPathId;
-  const optionalDataControl = renderOptionalField ? (
-    <OptionalDataControlsField {...props} fieldPathId={childFieldPathId} />
-  ) : undefined;
+  const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
+    presentation,
     items: actualFormData.map((keyedItem, index: number) => {
       const { key, item } = keyedItem;
       // While we are actually dealing with a single item of type T, the types require a T[], so cast
       const itemCast = item as unknown as T[];
-      const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
+      const itemErrorSchema = errorSchema?.[index];
 
       // Compute the item UI schema using the helper method
-      const itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
+      const itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext, fieldPath);
 
       const itemProps = {
         itemKey: key,
@@ -635,18 +982,19 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
         disabled,
         required,
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
+        itemName: itemNames?.[index],
         canAdd,
+        addsItem,
         canMoveUp: index > 0,
         canMoveDown: index < formData.length - 1,
         rawItemSchema: schemaItems,
-        parentFieldPathId: childFieldPathId,
+        parentFieldPath: fieldPath,
         itemErrorSchema,
         itemData: itemCast,
         itemUiSchema,
         autofocus: autofocus && index === 0,
         onBlur,
         onFocus,
-        rawErrors,
         totalItems: keyedFormData.length,
         handleAddItem,
         handleCopyItem,
@@ -656,36 +1004,39 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       };
       return <ArrayFieldItem key={key} {...itemProps} />;
     }),
-    className: `rjsf-field rjsf-field-array rjsf-field-array-of-${itemsSchema.type}${extraClass}`,
+    className: `rjsf-field rjsf-field-array rjsf-field-array-of-${String(itemsSchema.type)}${extraClass}`,
     disabled,
-    fieldPathId,
+    id,
     uiSchema,
-    onAddClick: handleAddItem,
+    onAddClick,
     readonly,
-    required,
+    hideError,
+    required: templateMarksRequired<T[], S, F>({ required, presentation }),
     schema,
-    title: fieldTitle,
+    title: getContainerHeading<T[], S, F>(presentation, schema, uiOptions, uiOptions.title || fieldTitle),
     formData,
-    rawErrors,
+    errorSchema,
+    ...getContainerErrorProps<T[], S, F>(rawErrors, hideError),
     registry,
     optionalDataControl,
   };
 
-  const Template = getTemplate<'ArrayFieldTemplate', T[], S, F>('ArrayFieldTemplate', registry, uiOptions);
+  const { ArrayFieldTemplate: Template } = getTemplates<T[], S, F>(registry, uiOptions);
   return <Template {...arrayProps} />;
 }
 
 /** Renders an array that has a maximum limit of items
  */
-function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: InternalArrayFieldProps<T, S, F>,
 ) {
   const {
     schema,
-    uiSchema = {},
+    uiSchema = EMPTY_UI_SCHEMA,
     formData,
     errorSchema,
-    fieldPathId,
+    fieldPath,
+    id,
     name,
     title,
     disabled = false,
@@ -696,6 +1047,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     registry,
     onBlur,
     onFocus,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its template and items, for those that don't read `presentation`
     rawErrors,
     keyedFormData,
     onChange,
@@ -703,18 +1055,17 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
+    presentation,
   } = props;
-  let { formData: items = [] } = props;
+  // A `type` list naming `array` alongside another type can hold a `null` or a value of that other type here
+  let items: T[] = Array.isArray(props.formData) ? props.formData : [];
   const fieldTitle = schema.title || title || name;
   const { fields, formContext, globalUiOptions } = registry;
   const uiOptions = useMemo(() => getUiOptions<T[], S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const { OptionalDataControlsField } = fields;
-  const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
+  const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T[]>(formData);
   const schemaItems = useMemo<S[]>(() => (Array.isArray(schema.items) ? (schema.items as S[]) : []), [schema.items]);
-  const hasAdditionalItems = isObject(schema.additionalItems);
-  // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
-  const childFieldPathId = props.childFieldPathId ?? fieldPathId;
 
   if (items.length < schemaItems.length) {
     // to make sure at least all fixed items are generated
@@ -722,20 +1073,25 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   }
   const actualFormData = hasFormData ? keyedFormData : [];
   const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
-  const optionalDataControl = renderOptionalField ? (
-    <OptionalDataControlsField {...props} fieldPathId={childFieldPathId} />
-  ) : undefined;
+  const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
 
   // These are the props passed into the render function
-  const canAdd =
-    canAddItem<T, S, F>(registry, schema, items, uiSchema) &&
-    hasAdditionalItems &&
-    (!renderOptionalField || hasFormData);
+  const { canAdd, addsItem, onAddClick } = useAddRule<T, S, F>(
+    schema,
+    uiOptions,
+    true,
+    !renderOptionalField || hasFormData,
+    items.length,
+    disabled || readonly,
+    handleAddItem,
+  );
+  const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiOptions, schemaItems.length);
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
+    presentation,
     className: `rjsf-field rjsf-field-array rjsf-field-array-fixed-items${extraClass}`,
     disabled,
-    fieldPathId,
+    id,
     formData,
     items: actualFormData.map((keyedItem, index) => {
       const { key, item } = keyedItem;
@@ -755,9 +1111,9 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         itemUiSchema = uiSchema.items[index] as UiSchema<T[], S, F>;
       } else {
         // Use the helper method for function or static object cases
-        itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
+        itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext, fieldPath);
       }
-      const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
+      const itemErrorSchema = errorSchema?.[index];
 
       const itemProps = {
         index,
@@ -771,19 +1127,21 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         disabled,
         required,
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
+        itemName: itemNames?.[index],
         canAdd,
+        addsItem,
+        canAddAfter: index >= schemaItems.length - 1,
         canRemove: additional,
         canMoveUp: index >= schemaItems.length + 1,
         canMoveDown: additional && index < items.length - 1,
         rawItemSchema,
         itemData: itemCast,
         itemUiSchema,
-        parentFieldPathId: childFieldPathId,
+        parentFieldPath: fieldPath,
         itemErrorSchema,
         autofocus: autofocus && index === 0,
         onBlur,
         onFocus,
-        rawErrors,
         totalItems: keyedFormData.length,
         onChange,
         handleAddItem,
@@ -793,94 +1151,197 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       };
       return <ArrayFieldItem key={key} {...itemProps} />;
     }),
-    onAddClick: handleAddItem,
+    onAddClick,
     readonly,
-    required,
+    hideError,
+    required: templateMarksRequired<T[], S, F>({ required, presentation }),
     registry,
     schema,
     uiSchema,
-    title: fieldTitle,
+    title: getContainerHeading<T[], S, F>(presentation, schema, uiOptions, uiOptions.title || fieldTitle),
     errorSchema,
-    rawErrors,
+    ...getContainerErrorProps<T[], S, F>(rawErrors, hideError),
     optionalDataControl,
   };
 
-  const Template = getTemplate<'ArrayFieldTemplate', T[], S, F>('ArrayFieldTemplate', registry, uiOptions);
+  const { ArrayFieldTemplate: Template } = getTemplates<T[], S, F>(registry, uiOptions);
   return <Template {...arrayProps} />;
 }
 
-interface KeyedFormDataState<T = any> {
+interface KeyedFormDataState<T = unknown> {
   /** The keyed form data elements */
   keyedFormData: KeyedFormDataType<T>[];
+  /** The rows as a handler sees them: those rendered, or sent since by a handler */
+  readSentRows: () => KeyedFormDataType<T>[];
+  /** The items of those rows, the field's own record of its data for a handler outside a `Form` */
+  readSentItems: () => T[];
   /** Updates the keyed form data elements to the given value */
   updateKeyedFormData: (newData: KeyedFormDataType<T>[]) => T[];
 }
 
-/** Type used for the state of the `ArrayField` component */
-interface ArrayFieldState<T> {
-  /** The hash of the last formData passed in */
-  formDataHash: string;
-  /** The keyed form data elements */
-  keyedFormData: KeyedFormDataType<T>[];
-}
+const NO_ITEMS: never[] = [];
 
-/** A custom hook that handles the updating of the keyedFormData from an external `formData` change as well as
- * internally by the `ArrayField`. If there was an external `formData` change, then the `keyedFormData` is recomputed
- * in order to preserve the unique keys from the old `keyedFormData` to the new `formData`. Along with the
- * `keyedFormData` this hook also returns an `updateKeyedFormData()` function for use by the `ArrayField`. The detection
- * of external `formData` are handled by storing the hash of that `formData` along with the `keyedFormData` associated
- * with it. The `updateKeyedFormData()` will update that hash whenever the `keyedFormData` is modified and as well as
- * returning the plain `formData` from the `keyedFormData`.
+/** Pairs each item of the `formData` prop with a stable React key. Only the keys live in state: the items are read
+ * from props on every render, so the rows always show the value the form holds. The keys are UI metadata, kept so that
+ * React reuses row instances (and their DOM focus) across adds, removes and reorders.
+ *
+ * Two sets of rows are kept: `keys`, the rows of the field's latest change, and `confirmed`, the rows of the last data
+ * whose length matched them. Data of the latest change's length uses `keys`, and becomes the confirmed rows. Data of
+ * the confirmed rows' length uses `confirmed`, as when a custom parent field keeps the change to itself, so the form's
+ * data stays what it was. Data whose length matches neither, an external replacement, gives no way to tell which rows
+ * survived, so every key is regenerated. Where the form keeps other items than a change sent, the handler rekeys the
+ * rows itself, see `commitRows()`.
+ *
+ * A handler reads the rows from a ref rather than closing over the render's: a second handler in the same event has to
+ * start from the rows the first one sent, which React has yet to render, and a handler closing over the rendered rows
+ * would change identity with them and re-render every row on every edit. Each committed render installs its rows from
+ * a layout Effect, which React runs children first: a handler called from a layout Effect of a row or a template in
+ * the same commit still reads the rows of the commit before, under the keys of which it reads the form's current items.
  */
-function useKeyedFormData<T = any>(formData: T[] = []): KeyedFormDataState<T> {
-  const newHash = useMemo(() => hashObject(formData), [formData]);
-  const [state, setState] = useState<ArrayFieldState<T>>(() => ({
-    formDataHash: newHash,
-    keyedFormData: generateKeyedFormData<T>(formData),
-  }));
+function useKeyedFormData<T = unknown>(keyPrefix: string, formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
+  const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
+  // `keys` are the rows of the field's latest change, and `confirmed` those of the last data that matched them;
+  // `generation` counts the passes that made rows while rendering, see `renderedRows()`
+  const [rows, setRows] = useState<{ keys: RowId[]; confirmed: RowId[]; generation: number }>(() => {
+    const keys = renderedRows(keyPrefix, items.length, 0);
+    return { keys, confirmed: keys, generation: 0 };
+  });
 
-  let { keyedFormData, formDataHash } = state;
-  if (newHash !== formDataHash) {
-    const nextFormData = Array.isArray(formData) ? formData : [];
-    const previousKeyedFormData = keyedFormData || [];
-    keyedFormData =
-      nextFormData.length === previousKeyedFormData.length
-        ? previousKeyedFormData.map((previousKeyedFormDatum, index) => ({
-            key: previousKeyedFormDatum.key,
-            item: nextFormData[index],
-          }))
-        : generateKeyedFormData<T>(nextFormData);
-    formDataHash = newHash;
-    setState({ formDataHash, keyedFormData });
+  let itemKeys: RowId[];
+  if (rows.keys.length === items.length) {
+    itemKeys = rows.keys;
+    if (rows.confirmed !== rows.keys) {
+      setRows({ ...rows, confirmed: rows.keys });
+    }
+  } else if (rows.confirmed.length === items.length) {
+    // A custom parent field kept the change to itself, so the form's data matches the confirmed rows; keeping those
+    // stops the rows and the order they were added in from being regenerated. Only lengths are compared, so data set
+    // to another array of that length keeps the confirmed keys too
+    itemKeys = rows.confirmed;
+  } else {
+    const generation = rows.generation + 1;
+    itemKeys = renderedRows(keyPrefix, items.length, generation);
+    setRows({ keys: itemKeys, confirmed: itemKeys, generation });
   }
 
+  const keyedFormData = useMemo(
+    () => itemKeys.map(({ key, order }, index) => ({ key, order, item: items[index] })),
+    [itemKeys, items],
+  );
+  const sentRows = useRef(keyedFormData);
+  // Every commit, not only one that changed the rows: a change that never reached the form, as under a custom field
+  // that keeps it to itself, re-renders the rows it sent no data for, which must not outlive that render
+  useLayoutEffect(() => {
+    sentRows.current = keyedFormData;
+  });
+  const readSentRows = useCallback(() => sentRows.current, []);
+  const readSentItems = useCallback(() => keyedToPlainFormData(sentRows.current), []);
+
   const updateKeyedFormData = useCallback((newData: KeyedFormDataType<T>[]) => {
-    const plainFormData = keyedToPlainFormData(newData);
-    const updatedHash = hashObject(plainFormData);
-    setState({ formDataHash: updatedHash, keyedFormData: newData });
-    return plainFormData;
+    sentRows.current = newData;
+    const keys = newData.map(({ key, order }) => ({ key, order }));
+    setRows((current) => ({ ...current, keys }));
+    return keyedToPlainFormData(newData);
   }, []);
 
-  return { keyedFormData, updateKeyedFormData };
+  return { keyedFormData, readSentRows, readSentItems, updateKeyedFormData };
 }
 
 /** The `ArrayField` component is used to render a field in the schema that is of type `array`. It supports both normal
  * and fixed array, allowing user to add and remove elements from the array data.
  */
-export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T[], S, F>,
-) {
-  const { schema, uiSchema, errorSchema, fieldPathId, registry, formData, onChange } = props;
-  const { globalFormOptions, schemaUtils, translateString } = registry;
-  const { keyedFormData, updateKeyedFormData } = useKeyedFormData<T>(formData);
-  // Refs keep the latest values accessible inside stable useCallback closures without being in the dep array,
-  // so the four mutation handlers don't get new references on every keyedFormData / errorSchema change.
-  const keyedFormDataRef = useRef(keyedFormData);
-  keyedFormDataRef.current = keyedFormData;
-  const errorSchemaRef = useRef(errorSchema);
-  errorSchemaRef.current = errorSchema;
-  // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
-  const childFieldPathId = props.childFieldPathId ?? fieldPathId;
+export default function ArrayField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: FieldProps<T[], S, F>) {
+  const { schema, uiSchema, fieldPath, id: fieldId, registry, formData, onChange } = props;
+  const { globalFormOptions, translateString } = registry;
+  // Each field's own, so a row's `itemKey` is unique beyond its array, among the rows of an array nested in it or of
+  // another form, as a template that uses it as a DOM id needs; the field's id would not do, since it moves with the
+  // row it is in
+  const rowKeyPrefix = `rjsf-array-item-${useId()}`;
+  const { keyedFormData, readSentRows, readSentItems, updateKeyedFormData } = useKeyedFormData<T>(
+    rowKeyPrefix,
+    formData,
+  );
+  const readItems = useReadFieldData(fieldPath, readSentItems);
+  useWarnIfFormDataNotPassedThrough('ArrayField', fieldId, fieldPath, formData);
+  const sendMove = useSendMove(fieldPath);
+  // Counts the rows the handlers made, so that a row a handler adds never takes the key of one it removed in the same
+  // event, whose instance React would then reuse; mutated by handlers only, so rendering stays pure
+  const handlerRowCount = useRef(0);
+  /** A row a handler adds next to `rows`, ordered after every one of them, as the newest */
+  const newRowId = useCallback(
+    (rows: readonly RowId[]): RowId => {
+      handlerRowCount.current += 1;
+      return { key: `${rowKeyPrefix}-added-${handlerRowCount.current}`, order: maxOrder(rows) + 1 };
+    },
+    [rowKeyPrefix],
+  );
+
+  /** The rows as a handler sees them: the form's current items at this path, edits made since the form last rendered
+   * included, under the keys of the rows rendered or sent since, with a fresh key for an item those do not cover.
+   * Outside a `Form`, the rows rendered or sent since.
+   */
+  const readRows = useCallback(() => {
+    const rows = readSentRows();
+    const items = readItems();
+    if (!Array.isArray(items)) {
+      return [];
+    }
+    return keyItems(items, (index) => rows[index], newRowId);
+  }, [readItems, readSentRows, newRowId]);
+
+  /** Sends the rows a handler built from `rows`, keying them first so a second handler in the same event starts from
+   * them, and saying where each item went, so the form moves the items' errors along. Where that is, is read off the
+   * rows themselves, so the errors go nowhere the items did not. A change `transformChange` refused leaves the items
+   * where they were, so the rows go back to `rows`: kept, a refused reorder, which leaves the length as it was, would
+   * hand each row's instance, and the state it holds, to another item. So do the rows of a change a custom parent field
+   * kept, for later as a debounced `onChange` does or for good, wherever the form holds other items than the change
+   * sent: a second change before the next render would key the form's items by them. Otherwise the form may hold other
+   * items than the change put there: `transformChange` rewrote them, the defaults put one back, or `setFieldValue()`
+   * set the field back. A row then keeps its key only where the form holds the item the change put there, as the form
+   * made it, with the defaults it filled in and the extra data it omitted, so an item the form only derived keeps its
+   * row. An item past the rows the change sent, as one the defaults put back, gets a row of its own, as does every
+   * other item
+   */
+  const commitRows = useCallback(
+    (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[], sourceKeyOf?: KeyMove) => {
+      const newIndexes = new Map(newKeyedFormData.map((row, index) => [row, index]));
+      const value = updateKeyedFormData(newKeyedFormData);
+      const newKeyOf = moveOfItems((index) => newIndexes.get(rows[index]));
+      const outcome = sendMove({ value, newKeyOf, sourceKeyOf }, () => onChange(value, fieldPath));
+      if (outcome === undefined) {
+        if (!deepEquals(readItems(), value)) {
+          updateKeyedFormData(rows);
+        }
+        return;
+      }
+      if (outcome.kind === 'refused') {
+        updateKeyedFormData(rows);
+        return;
+      }
+      const held = readItems();
+      const items: T[] = Array.isArray(held) ? held : [];
+      const made = outcome.kind === 'rewritten' ? outcome.edited : outcome.kept;
+      const sent: unknown[] = Array.isArray(made) ? made : keyedToPlainFormData(newKeyedFormData);
+      if (items.length === newKeyedFormData.length && deepEquals(items, sent)) {
+        return;
+      }
+      const kept = keyItems(
+        items,
+        (index, item) => {
+          const row = newKeyedFormData[index];
+          return row && index < sent.length && deepEquals(item, sent[index]) ? row : undefined;
+        },
+        newRowId,
+        newKeyedFormData,
+      );
+      updateKeyedFormData(kept);
+    },
+    [sendMove, onChange, updateKeyedFormData, fieldPath, newRowId, readItems],
+  );
 
   /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data
    * either at the end of the list (when index is not specified) or inserted at the `index` when it is, adding it into
@@ -890,37 +1351,29 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param [index] - The optional index at which to add the new data
    */
   const handleAddItem = useCallback(
-    (event: MouseEvent, index?: number) => {
+    (event: ArrayButtonEvent, index?: number) => {
       if (event) {
         event.preventDefault();
       }
 
-      let newErrorSchema: ErrorSchema<T> | undefined;
-      if (errorSchemaRef.current) {
-        newErrorSchema = {};
-        for (const idx of Object.keys(errorSchemaRef.current)) {
-          const i = parseInt(idx, 10);
-          if (index === undefined || i < index) {
-            setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
-          } else if (i >= index) {
-            setByPath(newErrorSchema, i + 1, errorSchemaRef.current[i]);
-          }
-        }
+      const rows = readRows();
+      if (!hasRoomForRow(schema, rows)) {
+        return;
       }
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        key: generateRowId(),
-        item: getNewFormDataRow<T, S, F>(registry, schema),
+        ...newRowId(rows),
+        item: getNewFormDataRow<T, S, F>(registry, schema, index ?? rows.length, uiSchema),
       };
-      const newKeyedFormData = [...keyedFormDataRef.current];
+      const newKeyedFormData = [...rows];
       if (index !== undefined) {
         newKeyedFormData.splice(index, 0, newKeyedFormDataRow);
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      commitRows(rows, newKeyedFormData);
     },
-    [registry, schema, onChange, updateKeyedFormData, childFieldPathId],
+    [registry, schema, uiSchema, commitRows, readRows, newRowId],
   );
 
   /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of
@@ -930,37 +1383,30 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param index - The index at which the copy button is clicked
    */
   const handleCopyItem = useCallback(
-    (event: MouseEvent, index: number) => {
+    (event: ArrayButtonEvent, index: number) => {
       if (event) {
         event.preventDefault();
       }
 
-      let newErrorSchema: ErrorSchema<T> | undefined;
-      if (errorSchemaRef.current) {
-        newErrorSchema = {};
-        for (const idx of Object.keys(errorSchemaRef.current)) {
-          const i = parseInt(idx, 10);
-          if (i <= index) {
-            setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
-          } else if (i > index) {
-            setByPath(newErrorSchema, i + 1, errorSchemaRef.current[i]);
-          }
-        }
+      const rows = readRows();
+      if (index >= rows.length || !hasRoomForRow(schema, rows)) {
+        return;
       }
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        key: generateRowId(),
-        item: structuredClone(keyedFormDataRef.current[index].item),
+        ...newRowId(rows),
+        item: structuredClone(rows[index].item),
       };
-      const newKeyedFormData = [...keyedFormDataRef.current];
+      const newKeyedFormData = [...rows];
       if (index !== undefined) {
         newKeyedFormData.splice(index + 1, 0, newKeyedFormDataRow);
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      const copyKey = String(index + 1);
+      commitRows(rows, newKeyedFormData, (key) => (key === copyKey ? String(index) : undefined));
     },
-    [onChange, updateKeyedFormData, childFieldPathId],
+    [schema, commitRows, readRows, newRowId],
   );
 
   /** Callback handler for when the user clicks on the remove button on an existing array element. Removes the row of
@@ -970,27 +1416,20 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param index - The index at which the remove button is clicked
    */
   const handleRemoveItem = useCallback(
-    (event: MouseEvent, index: number) => {
+    (event: ArrayButtonEvent, index: number) => {
       if (event) {
         event.preventDefault();
       }
       // refs #195: revalidate to ensure properly reindexing errors
-      let newErrorSchema: ErrorSchema<T> | undefined;
-      if (errorSchemaRef.current) {
-        newErrorSchema = {};
-        for (const idx of Object.keys(errorSchemaRef.current)) {
-          const i = parseInt(idx, 10);
-          if (i < index) {
-            setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
-          } else if (i > index) {
-            setByPath(newErrorSchema, i - 1, errorSchemaRef.current[i]);
-          }
-        }
+      const rows = readRows();
+      if (index >= rows.length) {
+        return;
       }
-      const newKeyedFormData = keyedFormDataRef.current.filter((_, i) => i !== index);
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+
+      const newKeyedFormData = rows.filter((_, i) => i !== index);
+      commitRows(rows, newKeyedFormData);
     },
-    [onChange, updateKeyedFormData, childFieldPathId],
+    [commitRows, readRows],
   );
 
   /** Callback handler for when the user clicks on one of the move item buttons on an existing array element. Moves the
@@ -1001,36 +1440,27 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param newIndex - The index to where the item is to be moved
    */
   const handleReorderItems = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => {
-      if (event) {
-        event.preventDefault();
-        event.currentTarget.blur();
+    (event: ArrayButtonEvent, index: number, newIndex: number) => {
+      event?.preventDefault();
+      const rows = readRows();
+      if (index >= rows.length || newIndex >= rows.length) {
+        return;
       }
-      let newErrorSchema: ErrorSchema<T> | undefined;
-      if (errorSchemaRef.current) {
-        newErrorSchema = {};
-        for (const idx of Object.keys(errorSchemaRef.current)) {
-          const i = parseInt(idx, 10);
-          if (i === index) {
-            setByPath(newErrorSchema, newIndex, errorSchemaRef.current[index]);
-          } else if (i === newIndex) {
-            setByPath(newErrorSchema, index, errorSchemaRef.current[newIndex]);
-          } else {
-            setByPath(newErrorSchema, idx, errorSchemaRef.current[i]);
-          }
-        }
-      }
+      // React clears `currentTarget` once dispatch ends, so a template calling this after an `await` passes the event
+      // with a `null` one
+      const target: HTMLElement | null | undefined = event?.currentTarget;
+      target?.blur();
 
       function reOrderArray() {
-        const newKeyedFormData = keyedFormDataRef.current.slice();
+        const newKeyedFormData = rows.slice();
         newKeyedFormData.splice(index, 1);
-        newKeyedFormData.splice(newIndex, 0, keyedFormDataRef.current[index]);
+        newKeyedFormData.splice(newIndex, 0, rows[index]);
         return newKeyedFormData;
       }
       const newKeyedFormData = reOrderArray();
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      commitRows(rows, newKeyedFormData);
     },
-    [onChange, updateKeyedFormData, childFieldPathId],
+    [commitRows, readRows],
   );
 
   /** Callback handler used to deal with changing the value of the data in the array at the `index`. Calls the
@@ -1039,37 +1469,53 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param index - The index of the item being changed
    */
   const handleChange = useCallback(
-    (value: any, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      const lastPathIsItemIndex = typeof path.at(-1) === 'number';
-      onChange(
-        // We need to treat undefined items as nulls to have validation.
-        // See https://github.com/tdegrunt/jsonschema/issues/206
-        // Only set to null for array items, and not for object properties within array items
-        lastPathIsItemIndex && value === undefined ? null : value,
-        path,
-        newErrorSchema as ErrorSchema<T[]>,
-        id,
-      );
+    (value: unknown, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
+      // A cleared item is stored as `null`, and a cleared property inside an item as `undefined`
+      onChange(storedValue(value, changedFieldPath, false), changedFieldPath, newErrorSchema, id);
     },
     [onChange],
   );
 
   /** Callback handler used to change the value for a checkbox */
   const onSelectChange = useCallback(
-    (value: any) => {
-      onChange(value, childFieldPathId.path, undefined, childFieldPathId?.[ID_KEY]);
+    (value: unknown) => {
+      onChange(value, fieldPath, undefined, fieldId);
     },
-    [onChange, childFieldPathId],
+    [onChange, fieldPath, fieldId],
   );
 
+  const mode = getArrayFieldMode<T[], S, F>(schema, uiSchema, registry);
+  if (mode === 'unsupported') {
+    const uiOptions = getUiOptions<T[], S, F>(uiSchema);
+    const { UnsupportedFieldTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
+
+    return (
+      <OwnTitleAndDescription<T[], S, F> {...props}>
+        <UnsupportedFieldTemplate
+          schema={schema}
+          uiSchema={uiSchema}
+          id={fieldId}
+          reason={translateString(TranslatableString.MissingItems)}
+          registry={registry}
+        />
+      </OwnTitleAndDescription>
+    );
+  }
+  const arraySchema = withFallbackItems<S>(schema);
   const arrayAsMultiProps: ArrayAsFieldProps<T[], S, F> = {
     ...props,
+    schema: arraySchema,
     formData,
-    fieldPathId: childFieldPathId,
+    fieldPath,
     onSelectChange,
+    htmlName: fieldPathToName(fieldPath, globalFormOptions, true),
+    // The plan's, which an array widget the schema lets be empty is not, so a widget written for any theme reads it as
+    // `BooleanField`'s checkbox does (#5573, #5744)
+    required: props.presentation?.control ? props.presentation.control.attributes.required === true : props.required,
   };
   const arrayProps: InternalArrayFieldProps<T, S, F> = {
     ...props,
+    schema: arraySchema,
     handleAddItem,
     handleCopyItem,
     handleRemoveItem,
@@ -1077,41 +1523,17 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
     keyedFormData,
     onChange: handleChange,
   };
-  if (!(ITEMS_KEY in schema)) {
-    if (!globalFormOptions.useFallbackUiForUnsupportedType) {
-      const uiOptions = getUiOptions<T[], S, F>(uiSchema);
-      const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T[], S, F>(
-        'UnsupportedFieldTemplate',
-        registry,
-        uiOptions,
-      );
-
-      return (
-        <UnsupportedFieldTemplate
-          schema={schema}
-          fieldPathId={fieldPathId}
-          reason={translateString(TranslatableString.MissingItems)}
-          registry={registry}
-        />
-      );
-    }
-    // Add an items schema with type as undefined so it triggers FallbackField later on
-    const fallbackSchema = { ...schema, [ITEMS_KEY]: { type: undefined } };
-    arrayAsMultiProps.schema = fallbackSchema;
-    arrayProps.schema = fallbackSchema;
+  switch (mode) {
+    case 'multiSelect':
+      // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
+      return <ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />;
+    case 'customWidget':
+      return <ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />;
+    case 'fixed':
+      return <FixedArray<T, S, F> {...arrayProps} />;
+    case 'files':
+      return <ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />;
+    default:
+      return <NormalArray<T, S, F> {...arrayProps} />;
   }
-  if (schemaUtils.isMultiSelect(arrayAsMultiProps.schema)) {
-    // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
-    return <ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />;
-  }
-  if (isCustomWidget<T[], S, F>(uiSchema)) {
-    return <ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />;
-  }
-  if (isFixedItems(arrayAsMultiProps.schema)) {
-    return <FixedArray<T, S, F> {...arrayProps} />;
-  }
-  if (schemaUtils.isFilesArray(arrayAsMultiProps.schema, uiSchema)) {
-    return <ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />;
-  }
-  return <NormalArray<T, S, F> {...arrayProps} />;
 }

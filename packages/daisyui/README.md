@@ -83,7 +83,9 @@ Make sure your `src/index.css` includes the DaisyUI plugin:
   themes: all;
 }
 ```
-It's necessary to explicitely include the library as a source, as tailwindcss by [default](https://tailwindcss.com/docs/detecting-classes-in-source-files#explicitly-registering-sources) ignores everything in `.gitignore` 
+
+It's necessary to explicitely include the library as a source, as tailwindcss by [default](https://tailwindcss.com/docs/detecting-classes-in-source-files#explicitly-registering-sources) ignores everything in `.gitignore`
+
 ## Customization
 
 ### Grid Layout

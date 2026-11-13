@@ -1,0 +1,241 @@
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+
+import Form from '../src/index.ts';
+
+const user = userEvent.setup();
+
+describe('SelectWidget optgroups', () => {
+  const schema: RJSFSchema = {
+    type: 'string',
+    enum: ['foo', 'bar', 'baz', 'qux'],
+  };
+
+  it('renders a ListSubheader for each optgroups entry, followed by that group’s options', async () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+          'Group B': ['baz', 'qux'],
+        },
+      },
+    };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    await user.click(screen.getByRole('combobox'));
+
+    expect(screen.getByText('Group A')).toBeInTheDocument();
+    expect(screen.getByText('Group B')).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'foo' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'bar' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'baz' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'qux' })).toBeInTheDocument();
+  });
+
+  it('announces group headings, marked as not selectable', async () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+          'Group B': ['baz', 'qux'],
+        },
+      },
+    };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    await user.click(screen.getByRole('combobox'));
+
+    // MUI clones every child of `Select` with `role='option'`, so the headings can't be exposed as groups; they are
+    // marked `aria-disabled` instead, so they're announced but not offered as choices
+    expect(screen.getByText('Group A')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByText('Group B')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByRole('option', { name: 'Group A' })).toBeInTheDocument();
+  });
+
+  it('does not change the form data when a group heading is clicked', async () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+        },
+      },
+    };
+    const onChange = vi.fn();
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} onChange={onChange} />);
+
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByText('Group A'));
+
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('renders ungrouped options after the optgroups', async () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+        },
+      },
+    };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    await user.click(screen.getByRole('combobox'));
+
+    expect(screen.getByText('Group A')).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'baz' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'qux' })).toBeInTheDocument();
+  });
+
+  it('disables enumDisabled options inside an optgroup', async () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        enumDisabled: ['bar'],
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+        },
+      },
+    };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    await user.click(screen.getByRole('combobox'));
+
+    expect(screen.getByRole('option', { name: 'foo' })).not.toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByRole('option', { name: 'bar' })).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('selecting a grouped option fires onChange with the correct value', async () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+          'Group B': ['baz', 'qux'],
+        },
+      },
+    };
+    const onChange = vi.fn();
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} onChange={onChange} />);
+
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: 'baz' }));
+
+    expect(onChange.mock.calls[0][0]).toEqual(expect.objectContaining({ formData: 'baz' }));
+  });
+});
+
+describe('SelectWidget focus and blur', () => {
+  it.each(['indexed', 'realValue'] as const)(
+    'reports the form data value on focus and blur in the %s format',
+    async (optionValueFormat) => {
+      const onFocus = vi.fn();
+      const onBlur = vi.fn();
+      render(
+        <Form
+          schema={{ type: 'number', enum: [10, 20] }}
+          uiSchema={{ 'ui:options': { optionValueFormat } }}
+          initialFormData={10}
+          validator={validator}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />,
+      );
+
+      await user.tab();
+      expect(screen.getByRole('combobox')).toHaveFocus();
+      await user.tab();
+
+      expect(onFocus).toHaveBeenCalledWith('root', 10);
+      expect(onBlur).toHaveBeenCalledWith('root', 10);
+    },
+  );
+});
+
+describe('SelectWidget named and described by its caller', () => {
+  const schema: RJSFSchema = { type: 'string', title: 'When', format: 'date' };
+  const uiSchema: UiSchema = { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } };
+
+  it('leaves the label unshrunk for a multiple select holding null', () => {
+    function NullMultipleSelect(props: WidgetProps) {
+      const { SelectWidget } = props.registry.widgets;
+      return <SelectWidget {...props} multiple value={null} />;
+    }
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', title: 'Colors', enum: ['a', 'b'] }}
+        uiSchema={{ 'ui:widget': NullMultipleSelect }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('.MuiInputLabel-root')).toHaveAttribute('data-shrink', 'false');
+  });
+
+  it('shows a lone value of a multiple select as selected, with its label shrunk above it', () => {
+    function LoneValueMultipleSelect(props: WidgetProps) {
+      const { SelectWidget } = props.registry.widgets;
+      return <SelectWidget {...props} multiple value='a' />;
+    }
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', title: 'Colors', enum: ['a', 'b'] }}
+        uiSchema={{ 'ui:widget': LoneValueMultipleSelect }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveTextContent('a');
+    expect(container.querySelector('.MuiInputLabel-root')).toHaveAttribute('data-shrink', 'true');
+  });
+
+  it('names the combobox alone, leaving the aria-label off the field root around it', () => {
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(Array.from(container.querySelectorAll('[aria-label="When, year"]'))).toEqual([
+      screen.getByRole('combobox', { name: 'When, year' }),
+    ]);
+  });
+
+  it('describes the combobox alone, leaving the aria-describedby off the field root around it', () => {
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(container.querySelector('.MuiTextField-root[aria-describedby]')).not.toBeInTheDocument();
+  });
+});
+
+describe('SelectWidget with an htmlInput given through rjsfSlotProps', () => {
+  const schema: RJSFSchema = { type: 'string', enum: ['red', 'blue'] };
+
+  it('keeps the aria-label the form author gave the combobox', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': { mui: { rjsfSlotProps: { htmlInput: { 'aria-label': 'Pick a color' } } } },
+    };
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole('combobox', { name: 'Pick a color' })).toBeInTheDocument();
+  });
+
+  it('keeps the aria-describedby the form author gave the combobox', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': { mui: { rjsfSlotProps: { htmlInput: { 'aria-describedby': 'my-hint' } } } },
+    };
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-describedby', 'my-hint');
+  });
+
+  it('keeps an aria-label returned by the callback form', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': { mui: { rjsfSlotProps: { htmlInput: () => ({ 'aria-label': 'Pick a color' }) } } },
+    };
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole('combobox', { name: 'Pick a color' })).toBeInTheDocument();
+  });
+});

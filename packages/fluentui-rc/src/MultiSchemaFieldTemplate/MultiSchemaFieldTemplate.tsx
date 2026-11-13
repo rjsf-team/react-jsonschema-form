@@ -8,9 +8,9 @@ const useStyles = makeStyles({
 });
 
 export default function MultiSchemaFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: MultiSchemaFieldTemplateProps<T, S, F>) {
   const { selector, optionSchemaField } = props;
 
@@ -18,7 +18,8 @@ export default function MultiSchemaFieldTemplate<
 
   return (
     <div className={styles.root}>
-      <div>{selector}</div>
+      {/* No row is laid out for a selector the field doesn't render, as while an optional field has no data (#5401) */}
+      {selector ? <div>{selector}</div> : null}
       {optionSchemaField}
     </div>
   );

@@ -1,0 +1,185 @@
+import { ariaDescribedByIds } from '../src/idGenerators.ts';
+import type { FieldPresentation, Registry, ResolvedPresentationDeclaration } from '../src/index.ts';
+import { englishStringTranslator, getGroupAttributes, resolveFieldPresentation } from '../src/index.ts';
+
+const ID = 'root_foo';
+const GROUP: ResolvedPresentationDeclaration = {
+  label: 'template',
+  description: 'template',
+  errors: 'template',
+  help: 'template',
+  labelledBy: 'aria-labelledby',
+};
+
+function plan(inputs: Partial<Parameters<typeof resolveFieldPresentation>[0]> = {}): FieldPresentation {
+  return resolveFieldPresentation({ id: ID, declaration: GROUP, label: 'Foo', ...inputs });
+}
+
+describe('getGroupAttributes()', () => {
+  it('names a checkbox group by its label and marks and describes each checkbox, leaving required to the widget', () => {
+    const presentation = plan({ description: 'Describes foo', errors: ['is required'], required: true });
+    expect(getGroupAttributes({ id: ID, presentation }, 'group')).toEqual({
+      group: { role: 'group', 'aria-labelledby': `${ID}__label` },
+      option: { 'aria-describedby': `${ID}__error ${ID}__description`, 'aria-invalid': true },
+    });
+  });
+
+  describe('a required group handed the registry', () => {
+    const registry = { translateString: englishStringTranslator } as unknown as Registry;
+    const required = plan({ required: true });
+
+    it('adds the cue the widget renders to the label that names it', () => {
+      expect(getGroupAttributes({ id: ID, presentation: required, registry }, 'group')).toEqual({
+        group: { role: 'group', 'aria-labelledby': `${ID}__label ${ID}__required` },
+        option: {},
+        requiredCue: { id: `${ID}__required`, hidden: true, children: 'required' },
+      });
+    });
+
+    it('adds it to a label the widget draws itself', () => {
+      const presentation = plan({ declaration: { ...GROUP, label: 'self', labelledBy: 'for' }, required: true });
+      const { group, requiredCue } = getGroupAttributes({ id: ID, presentation, registry }, 'group', 'drawn');
+      expect(group['aria-labelledby']).toBe(`drawn ${ID}__required`);
+      expect(requiredCue?.id).toBe(`${ID}__required`);
+    });
+
+    it('takes the text in the aria-label naming a group whose label is hidden, with no cue to render', () => {
+      const presentation = plan({ showLabel: false, required: true });
+      const attributes = getGroupAttributes({ id: ID, presentation, registry }, 'group');
+      expect(attributes.group).toEqual({ role: 'group', 'aria-label': 'Foo required' });
+      expect(attributes).not.toHaveProperty('requiredCue');
+    });
+
+    it('takes the text alone as the name of a group nothing else names', () => {
+      const presentation = plan({ label: '', required: true });
+      expect(getGroupAttributes({ id: ID, presentation, registry }, 'group').group).toEqual({
+        role: 'group',
+        'aria-label': 'required',
+      });
+    });
+
+    it('says nothing where the group is not required, or the translation is empty', () => {
+      const optional = getGroupAttributes({ id: ID, presentation: plan(), registry }, 'group');
+      expect(optional.group).toEqual({ role: 'group', 'aria-labelledby': `${ID}__label` });
+      expect(optional).not.toHaveProperty('requiredCue');
+      const untranslated = { translateString: () => '' } as unknown as Registry;
+      const empty = getGroupAttributes({ id: ID, presentation: required, registry: untranslated }, 'group');
+      expect(empty.group).toEqual({ role: 'group', 'aria-labelledby': `${ID}__label` });
+      expect(empty).not.toHaveProperty('requiredCue');
+    });
+
+    it('leaves a radiogroup, which takes `required` on its radios, as it is', () => {
+      const attributes = getGroupAttributes({ id: ID, presentation: required, registry }, 'radiogroup');
+      expect(attributes.group['aria-labelledby']).toBe(`${ID}__label`);
+      expect(attributes).not.toHaveProperty('requiredCue');
+    });
+  });
+
+  it('marks a radiogroup invalid rather than its radios, which ARIA gives no aria-invalid', () => {
+    const presentation = plan({ description: 'Describes foo', errors: ['is required'] });
+    expect(getGroupAttributes({ id: ID, presentation }, 'radiogroup')).toEqual({
+      group: { role: 'radiogroup', 'aria-labelledby': `${ID}__label`, 'aria-invalid': true },
+      option: { 'aria-describedby': `${ID}__error ${ID}__description` },
+    });
+  });
+
+  it.each(['group', 'radiogroup'] as const)('marks no %s or control invalid without errors', (role) => {
+    const presentation = plan({ description: 'Describes foo' });
+    expect(getGroupAttributes({ id: ID, presentation }, role)).toEqual({
+      group: { role, 'aria-labelledby': `${ID}__label` },
+      option: { 'aria-describedby': `${ID}__description` },
+    });
+  });
+
+  it('leaves a group its plan names some other way without a reference', () => {
+    const presentation = plan({ declaration: { ...GROUP, labelledBy: 'for' } });
+    expect(getGroupAttributes({ id: ID, presentation }, 'group')).toEqual({ group: { role: 'group' }, option: {} });
+  });
+
+  it('names a group its plan names no other way by the label the widget draws', () => {
+    const presentation = plan({ declaration: { ...GROUP, label: 'self' } });
+    expect(getGroupAttributes({ id: ID, presentation }, 'radiogroup', `${ID}__label`)).toEqual({
+      group: { role: 'radiogroup', 'aria-labelledby': `${ID}__label` },
+      option: {},
+    });
+  });
+
+  it("names a group by its label's text, not the label the widget would draw, where its field draws the label", () => {
+    const presentation = plan({ declaration: { ...GROUP, label: 'self' } });
+    expect(
+      getGroupAttributes({ id: ID, presentation: { ...presentation, drawnByField: ['label'] } }, 'radiogroup', 'drawn')
+        .group,
+    ).toEqual({ role: 'radiogroup', 'aria-label': 'Foo' });
+  });
+
+  it('names a group whose label the template draws with a for by no label the widget would draw', () => {
+    const presentation = plan({ declaration: { ...GROUP, labelledBy: 'for' } });
+    expect(getGroupAttributes({ id: ID, presentation }, 'group', `${ID}__label`).group).toEqual({ role: 'group' });
+  });
+
+  it.each([
+    ['template', 'group'],
+    ['self', 'radiogroup'],
+  ] as const)('names a %s-labelled %s whose label is hidden by its text, rather than each control', (label, role) => {
+    const presentation = plan({ declaration: { ...GROUP, label }, showLabel: false });
+    expect(getGroupAttributes({ id: ID, presentation }, role, `${ID}__label`)).toEqual({
+      group: { role, 'aria-label': 'Foo' },
+      option: {},
+    });
+  });
+
+  it('names a group by the label its plan points at over the one the widget draws', () => {
+    expect(getGroupAttributes({ id: ID, presentation: plan() }, 'group', 'drawn').group).toEqual({
+      role: 'group',
+      'aria-labelledby': `${ID}__label`,
+    });
+  });
+
+  it('names a group rendered without a plan by the label the widget draws', () => {
+    expect(getGroupAttributes({ id: ID }, 'group', `${ID}__label`).group).toEqual({
+      role: 'group',
+      'aria-labelledby': `${ID}__label`,
+    });
+  });
+
+  it('describes each control of a group rendered without a plan by every part id', () => {
+    expect(getGroupAttributes({ id: ID }, 'radiogroup')).toEqual({
+      group: { role: 'radiogroup' },
+      option: { 'aria-describedby': ariaDescribedByIds(ID) },
+    });
+  });
+
+  describe('names a radiogroup no label names, where its caller hands it the registry', () => {
+    const registry = { translateString: englishStringTranslator } as Registry;
+    const untitled = plan({ label: '' });
+
+    it('by its placeholder, else the translated prompt', () => {
+      expect(getGroupAttributes({ id: ID, presentation: untitled, registry }, 'radiogroup').group).toEqual({
+        role: 'radiogroup',
+        'aria-label': 'Choose an option',
+      });
+      const placeholderProps = { id: ID, presentation: untitled, placeholder: 'Pick one', registry };
+      expect(getGroupAttributes(placeholderProps, 'radiogroup').group['aria-label']).toBe('Pick one');
+    });
+
+    it('by its label, rendered without a plan or a label the widget draws', () => {
+      expect(getGroupAttributes({ id: ID, label: 'Foo', registry }, 'radiogroup').group['aria-label']).toBe('Foo');
+    });
+
+    it('by nothing where a label names it', () => {
+      expect(getGroupAttributes({ id: ID, presentation: plan(), registry }, 'radiogroup').group).toEqual({
+        role: 'radiogroup',
+        'aria-labelledby': `${ID}__label`,
+      });
+    });
+
+    it('by nothing for a group of another role, or one handed no registry, such as a rating', () => {
+      expect(getGroupAttributes({ id: ID, presentation: untitled, registry }, 'group').group).toEqual({
+        role: 'group',
+      });
+      expect(getGroupAttributes({ id: ID, presentation: untitled }, 'radiogroup').group).toEqual({
+        role: 'radiogroup',
+      });
+    });
+  });
+});

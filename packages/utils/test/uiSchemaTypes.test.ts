@@ -1,0 +1,606 @@
+import type { ButtonHTMLAttributes } from 'react';
+
+import type {
+  DateElementFormat,
+  GlobalUISchemaOptions,
+  StrictUiSchema,
+  ThemeGlobalUISchemaOptions,
+  UiOptionsCheck,
+  UiSchema,
+  UiSchemaDefinitions,
+} from '../src/index.ts';
+
+interface Data {
+  name: string;
+  address: { city: string };
+  optionalAddress?: { city: string };
+  tags: string[];
+  items: { label: string }[];
+  thing: { common: string; onlyA: string } | { common: string; onlyB: number };
+  listOrObject: string[] | { foo: string };
+  scalarOrObject: string | { city: string };
+  pair: [string, { city: string }];
+  when: Date;
+  upload: File;
+  counts: Map<string, number>;
+  loose: unknown;
+}
+
+type Known = UiSchema<Data>;
+
+describe('UiSchema type', () => {
+  it('accepts the field names of typed form data', () => {
+    const ui: Known = {
+      'ui:title': 'Form',
+      name: { 'ui:widget': 'textarea' },
+      address: { city: { 'ui:placeholder': 'City' } },
+      optionalAddress: { city: { 'ui:placeholder': 'City' } },
+      tags: { items: { 'ui:widget': 'text' } },
+      items: { items: { label: { 'ui:title': 'Label' } } },
+    };
+
+    expect(ui.name?.['ui:widget']).toBe('textarea');
+    expect(ui.address?.city?.['ui:placeholder']).toBe('City');
+    expect(ui.items?.items).toBeDefined();
+  });
+
+  it('types additionalProperties by the index signature and leaves it open without one', () => {
+    const open: Known = { additionalProperties: { city: { 'ui:placeholder': 'City' } } };
+    const indexed: UiSchema<Record<string, { city: string }>> = {
+      additionalProperties: { city: { 'ui:placeholder': 'City' } },
+    };
+    const wrong: UiSchema<Record<string, { city: string }>> = {
+      // @ts-expect-error: TS2353, `zip` is not a field of the index signature's value
+      additionalProperties: { zip: { 'ui:placeholder': 'Zip' } },
+    };
+
+    expectTypeOf<NonNullable<Known['additionalProperties']>>().toEqualTypeOf<UiSchema>();
+    expect(open.additionalProperties?.city).toBeDefined();
+    expect([indexed, wrong]).toHaveLength(2);
+  });
+
+  it("types the options RJSF's widgets read, in both their ui:options and ui:<name> spellings", () => {
+    const ui: UiSchema = {
+      'ui:accept': '.pdf',
+      'ui:expandable': false,
+      'ui:format': 'MDY',
+      'ui:hideClearButton': true,
+      'ui:hideNowButton': true,
+      'ui:shape': 'heart',
+      'ui:stars': 3,
+      'ui:yearsRange': [2000, 2030],
+      'ui:options': {
+        accept: '.pdf',
+        expandable: false,
+        format: 'MDY',
+        hideClearButton: true,
+        hideNowButton: true,
+        shape: 'heart',
+        stars: 3,
+        yearsRange: [2000, 2030],
+      },
+    };
+    const wrongNames: UiSchema = {
+      // @ts-expect-error: TS2322, `accept` is the `accept` attribute's string
+      'ui:accept': ['.pdf'],
+      // @ts-expect-error: TS2322, `expandable` is a flag
+      'ui:expandable': 'no',
+      // @ts-expect-error: TS2322, `format` is an order of date parts
+      'ui:format': 'rgba',
+      // @ts-expect-error: TS2322, `hideClearButton` is a flag
+      'ui:hideClearButton': 'yes',
+      // @ts-expect-error: TS2322, `hideNowButton` is a flag
+      'ui:hideNowButton': 'yes',
+      // @ts-expect-error: TS2322, `shape` is `star` or `heart`
+      'ui:shape': 'circle',
+      // @ts-expect-error: TS2322, `stars` is a number
+      'ui:stars': '3',
+      // @ts-expect-error: TS2322, `yearsRange` is a first and a last year
+      'ui:yearsRange': [2000],
+    };
+    const wrongOptions: UiSchema = {
+      'ui:options': {
+        // @ts-expect-error: TS2322, `accept` is the `accept` attribute's string
+        accept: ['.pdf'],
+        // @ts-expect-error: TS2322, `expandable` is a flag
+        expandable: 'no',
+        // @ts-expect-error: TS2322, `format` is an order of date parts
+        format: 'rgba',
+        // @ts-expect-error: TS2322, `hideClearButton` is a flag
+        hideClearButton: 'yes',
+        // @ts-expect-error: TS2322, `hideNowButton` is a flag
+        hideNowButton: 'yes',
+        // @ts-expect-error: TS2322, `shape` is `star` or `heart`
+        shape: 'circle',
+        // @ts-expect-error: TS2322, `stars` is a number
+        stars: '3',
+        // @ts-expect-error: TS2322, `yearsRange` is a first and a last year
+        yearsRange: [2000],
+      },
+    };
+
+    expectTypeOf(ui['ui:options']?.stars).toEqualTypeOf<number | undefined>();
+    expectTypeOf(ui['ui:options']?.format).toEqualTypeOf<DateElementFormat | undefined>();
+    expect(ui['ui:stars']).toBe(3);
+    expect([wrongNames, wrongOptions]).toHaveLength(2);
+  });
+
+  it('accepts an `as const` uiSchema for the options that take a tuple or a literal', () => {
+    const asConst = {
+      'ui:yearsRange': [2000, 2030],
+      'ui:options': { yearsRange: [2000, 2030], shape: 'heart', format: 'MDY' },
+    } as const;
+    const ui: UiSchema = asConst;
+
+    expect(ui['ui:options']?.yearsRange).toEqual([2000, 2030]);
+  });
+
+  it('accepts a key from any branch of a union-typed field', () => {
+    const ui: Known = {
+      thing: {
+        common: { 'ui:title': 'Common' },
+        onlyA: { 'ui:title': 'A' },
+        onlyB: { 'ui:title': 'B' },
+      },
+    };
+
+    expect(ui.thing?.onlyA?.['ui:title']).toBe('A');
+  });
+
+  it('takes no field names from an array branch of a union-typed field', () => {
+    const ui: Known = { listOrObject: { foo: { 'ui:title': 'Foo' } } };
+    const nested: Known = { listOrObject: { items: { 'ui:widget': 'text' } } };
+    const wrong: Known = {
+      // @ts-expect-error: TS2353, `toLocaleString` is an Array method, not a field of Data['listOrObject']
+      listOrObject: { toLocaleString: { 'ui:title': 'Nope' } },
+    };
+
+    expect(ui.listOrObject?.foo?.['ui:title']).toBe('Foo');
+    expect(nested.listOrObject?.items).toBeDefined();
+    expect(wrong.listOrObject).toBeDefined();
+  });
+
+  it('accepts a key from the object branch of a union with a primitive, as a oneOf of mixed types produces', () => {
+    const ui: Known = { scalarOrObject: { city: { 'ui:title': 'City' } } };
+    const asLeaf: Known = { scalarOrObject: { 'ui:widget': 'text' } };
+
+    expect(ui.scalarOrObject?.city?.['ui:title']).toBe('City');
+    expect(asLeaf.scalarOrObject?.['ui:widget']).toBe('text');
+  });
+
+  it("types a tuple's items entry by what any position can hold", () => {
+    const ui: Known = { pair: { items: { city: { 'ui:title': 'City' } } } };
+
+    expect(ui.pair?.items).toBeDefined();
+  });
+
+  it('treats a value that holds no form fields of its own as a leaf', () => {
+    const ui: Known = { when: { 'ui:widget': 'alt-date' }, upload: { 'ui:widget': 'file' } };
+    const wrong: Known = {
+      // @ts-expect-error: TS2353, `getTime` is a Date method, not a field of Data['when']
+      when: { getTime: { 'ui:title': 'Nope' } },
+    };
+
+    expect(ui.when?.['ui:widget']).toBe('alt-date');
+    expect(wrong.when).toBeDefined();
+  });
+
+  it('treats any built-in class instance as a leaf, not only Date and File', () => {
+    const ui: Known = { counts: { 'ui:widget': 'counts' } };
+    const wrong: Known = {
+      // @ts-expect-error: TS2353, `size` is a Map property, not a field of Data['counts']
+      counts: { size: { 'ui:title': 'Nope' } },
+    };
+
+    expect(ui.counts?.['ui:widget']).toBe('counts');
+    expect(wrong.counts).toBeDefined();
+  });
+
+  it('leaves a field whose type says nothing about its data unconstrained', () => {
+    const ui: Known = { loose: { nested: { 'ui:title': 'Nested' } } };
+
+    expectTypeOf(ui.loose?.nested).toBeUnknown();
+    expect(ui.loose?.nested).toEqual({ 'ui:title': 'Nested' });
+  });
+
+  it('leaves the entries open for data whose index signature holds unknown values', () => {
+    interface OpenData {
+      // oxlint-disable-next-line typescript/consistent-indexed-object-style -- an interface's index signature is the case
+      [key: string]: unknown;
+    }
+    const record: UiSchema<Record<string, unknown>> = { 'ui:widget': 'custom', foo: { 'ui:title': 'Foo' } };
+    const open: UiSchema<OpenData> = { 'ui:widget': 'custom' };
+
+    expectTypeOf(record.foo).toBeUnknown();
+    expect(record.foo).toEqual({ 'ui:title': 'Foo' });
+    expectTypeOf(open.foo).toBeUnknown();
+    expect(open['ui:widget']).toBe('custom');
+  });
+
+  it('leaves a key declared beside an index signature of unknown values as open as the rest', () => {
+    const ui: UiSchema<{ name: string; [key: string]: unknown }> = {
+      name: { 'ui:wigdet': 'typo' },
+      'ui:wigdet': 'typo',
+    };
+
+    expectTypeOf(ui.name).toBeUnknown();
+    expect(ui.name).toEqual({ 'ui:wigdet': 'typo' });
+  });
+
+  it('reads a field typed `any` back as `unknown`', () => {
+    // oxlint-disable-next-line typescript/no-explicit-any -- a field typed `any` is what this test is about
+    expectTypeOf<UiSchema<{ meta: any }>['meta']>().toBeUnknown();
+  });
+
+  it('keeps the ui: namespace open for theme and application directives', () => {
+    const ui: Known = { 'ui:order': ['name', '*'], 'ui:myTheme:thing': 42 };
+
+    expect(ui['ui:myTheme:thing']).toBe(42);
+  });
+
+  it('accepts any key in an untyped uiSchema and reads nested entries back as unknown', () => {
+    const ui: UiSchema = { whatever: 1, nested: { deeper: { 'ui:widget': 'text' } }, 'ui:wigdet': 'typo' };
+
+    expectTypeOf(ui.nested).toBeUnknown();
+    expect(ui.nested).toEqual({ deeper: { 'ui:widget': 'text' } });
+  });
+
+  it('fits an untyped uiSchema into a typed one only where neither the data nor its array element has a string index signature', () => {
+    const ui: UiSchema = { notes: { 'ui:widget': 'textarea' } };
+    const named: UiSchema<{ notes: string }> = ui;
+    // @ts-expect-error TS2322, the untyped entries are `unknown`, not the `UiSchema<string>` each indexed key holds
+    const indexed: UiSchema<Record<string, string>> = ui;
+    // @ts-expect-error TS2322, `items` holds the untyped `unknown` entries where each element's indexed keys need a `UiSchema<string>`
+    const indexedElements: UiSchema<Record<string, string>[]> = ui;
+
+    expect([named, indexed, indexedElements]).toHaveLength(3);
+  });
+
+  it('rejects a field name the data does not have', () => {
+    const ui: Known = {
+      // @ts-expect-error: TS2353, `nmae` is not a field of Data
+      nmae: { 'ui:widget': 'text' },
+    };
+    const nested: Known = {
+      // @ts-expect-error: TS2353, `ctiy` is not a field of Data['address']
+      address: { ctiy: { 'ui:title': 'City' } },
+    };
+    const branch: Known = {
+      // @ts-expect-error: TS2353, `onlyC` is in no branch of Data['thing']
+      thing: { onlyC: { 'ui:title': 'C' } },
+    };
+
+    expect([ui, nested, branch]).toHaveLength(3);
+  });
+});
+
+describe('UiSchema key openness', () => {
+  it('closes field names and keeps ui: directives open for typed data', () => {
+    const fieldNamesClosed: string extends keyof Known ? false : true = true;
+    const directivesOpen: `ui:${string}` extends keyof Known ? true : false = true;
+
+    expect([fieldNamesClosed, directivesOpen]).toEqual([true, true]);
+  });
+
+  it('stays assignable to a string-indexed record', () => {
+    const ui: Known = { name: { 'ui:widget': 'textarea' } };
+    const record: Record<string, unknown> = ui;
+
+    expect(record).toBe(ui);
+  });
+});
+
+// A self-referential shape (no depth cap), matching how a recursive `$ref` (e.g.
+// packages/playground/src/samples/references.ts's `node` definition) actually behaves.
+interface TreeNode {
+  name: string;
+  children: (TreeNode | null)[];
+}
+
+interface ReferencesFormData {
+  billing_address: { street_address: string; city: string; state: string };
+  tree: TreeNode;
+  contact: { name: string; details: string };
+}
+
+// @rjsf/utils has no widgets of its own, so these tests exercise the generic Checks mechanism with a made-up example
+// vocabulary rather than a real theme's - see @rjsf/core's own tests for CoreUiOptionsChecks against real widgets.
+type ExampleChecks =
+  | UiOptionsCheck<
+      string,
+      { widget?: 'ExampleTextWidget' | 'ExampleTextareaWidget'; placeholder?: string; rows?: number }
+    >
+  | UiOptionsCheck<number, { widget?: 'ExampleRangeWidget' }>
+  | UiOptionsCheck<unknown[], { widget?: 'ExampleListWidget'; orderable?: boolean }>;
+
+describe('StrictUiSchema (vocabulary narrowing)', () => {
+  it('leaves UiSchema fully open - StrictUiSchema with a Checks union is what narrows it', () => {
+    const ui: UiSchema<ReferencesFormData> = {
+      tree: { name: { 'ui:widget': 'AnyStringWhatsoever' } },
+    };
+
+    expect(ui.tree?.name?.['ui:widget']).toBe('AnyStringWhatsoever');
+  });
+
+  it('narrows widgets per field type on a recursive, nested form-data shape', () => {
+    type Checked = StrictUiSchema<ExampleChecks, ReferencesFormData>;
+
+    const ui: Checked = {
+      tree: {
+        name: { 'ui:placeholder': 'Enter node name', 'ui:help': 'Applies at every recursion level' },
+        children: { 'ui:options': { orderable: false }, items: { 'ui:help': 'Per-item help on a recursive element' } },
+      },
+      contact: {
+        name: { 'ui:placeholder': 'Full name (e.g., John Doe)' },
+        details: { 'ui:widget': 'ExampleTextareaWidget' },
+      },
+    };
+    const badWidget: Checked = {
+      tree: {
+        // @ts-expect-error ExampleRangeWidget is a number widget; `name` is a string field
+        name: { 'ui:widget': 'ExampleRangeWidget' },
+      },
+    };
+    const badRawOption: Checked = {
+      tree: {
+        // @ts-expect-error `rows` (a string widget option) is not valid for `children`, an array field
+        children: { 'ui:rows': 4 },
+      },
+    };
+
+    expect(ui.tree?.name?.['ui:placeholder']).toBe('Enter node name');
+    expect([badWidget, badRawOption]).toHaveLength(2);
+  });
+
+  it("types a `ui:definitions` entry by unknown data, not the root form's", () => {
+    const ui = {
+      'ui:definitions': {
+        '#/$defs/str': { 'ui:widget': 'ExampleTextWidget' },
+        '#/$defs/addr': { city: { 'ui:placeholder': 'City' } },
+      },
+    } satisfies StrictUiSchema<ExampleChecks, ReferencesFormData>;
+    const badWidget = {
+      // @ts-expect-error 'Nope' is not in ExampleChecks
+      'ui:definitions': { '#/$defs/str': { 'ui:widget': 'Nope' } },
+    } satisfies StrictUiSchema<ExampleChecks, ReferencesFormData>;
+
+    expect(ui['ui:definitions']['#/$defs/str']['ui:widget']).toBe('ExampleTextWidget');
+    expect(badWidget).toBeDefined();
+  });
+
+  it('accepts a `ui:definitions` entry for a field the root form data does not have', () => {
+    const open: UiSchema<ReferencesFormData> = { 'ui:definitions': { '#/$defs/addr': { city: {} } } };
+    const definitions: UiSchemaDefinitions = { '#/$defs/addr': { city: {} } };
+
+    expect(open['ui:definitions']?.['#/$defs/addr']).toEqual(definitions['#/$defs/addr']);
+  });
+
+  it('passes an object literal checked with `satisfies` on to the open UiSchema that Form takes', () => {
+    const strict = {
+      tree: { name: { 'ui:widget': 'ExampleTextWidget' } },
+    } satisfies StrictUiSchema<ExampleChecks, ReferencesFormData>;
+    const open: UiSchema<ReferencesFormData> = strict;
+
+    expect(open.tree?.name?.['ui:widget']).toBe('ExampleTextWidget');
+  });
+
+  it('allows every name Checks declares, and nothing else, when the form data has no type', () => {
+    type Untyped = StrictUiSchema<ExampleChecks>;
+
+    const ui: Untyped = { 'ui:widget': 'ExampleRangeWidget', 'ui:placeholder': 'any string check applies' };
+    // @ts-expect-error a name no Checks member declares is still rejected
+    const bad: Untyped = { 'ui:widget': 'NotAWidget' };
+
+    expect(ui['ui:widget']).toBe('ExampleRangeWidget');
+    expect(bad).toBeDefined();
+  });
+
+  it('leaves the entries open, and the named options closed, for data whose index signature holds unknown values', () => {
+    type Checked = StrictUiSchema<ExampleChecks, Record<string, unknown>>;
+
+    const ui: Checked = { 'ui:title': 'Open', 'ui:undeclared': true, foo: { 'ui:title': 'Foo' } };
+    // @ts-expect-error a name no Checks member declares is still rejected
+    const bad: Checked = { 'ui:widget': 'NotAWidget' };
+
+    expectTypeOf(ui.foo).toBeUnknown();
+    expect(ui.foo).toEqual({ 'ui:title': 'Foo' });
+    expect(bad).toBeDefined();
+  });
+
+  it('rejects form data passed where Checks goes', () => {
+    // @ts-expect-error TS2344, Data is not a UiOptionsCheck; Checks comes before the form data
+    type Swapped = StrictUiSchema<Data>;
+
+    const ui: Swapped = {};
+    expect(ui).toEqual({});
+  });
+
+  it('allows the names of every Checks member matching part of a union field type', () => {
+    type Checked = StrictUiSchema<ExampleChecks, { amount: string | number }>;
+
+    const asText: Checked = { amount: { 'ui:widget': 'ExampleTextWidget' } };
+    const asRange: Checked = { amount: { 'ui:widget': 'ExampleRangeWidget' } };
+    // @ts-expect-error ExampleListWidget is for arrays, which neither member of the union is
+    const bad: Checked = { amount: { 'ui:widget': 'ExampleListWidget' } };
+
+    expect([asText, asRange, bad]).toHaveLength(3);
+  });
+
+  it('supports both the `ui:optionName` and `ui:options: { optionName }` forms in a StrictUiSchema', () => {
+    type Checked = StrictUiSchema<ExampleChecks, { bio: string }>;
+
+    const viaPrefix: Checked = { bio: { 'ui:placeholder': 'Tell us about yourself' } };
+    const viaOptions: Checked = { bio: { 'ui:options': { placeholder: 'Tell us about yourself' } } };
+
+    expect(viaPrefix.bio?.['ui:placeholder']).toBe('Tell us about yourself');
+    expect(viaOptions.bio?.['ui:options']?.placeholder).toBe('Tell us about yourself');
+  });
+
+  it('still type-checks the fixed keys of a field whose shape also has an index signature (additionalProperties)', () => {
+    // Mirrors what packages/playground/src/samples/patternProperties.ts's formData shape compiles to in TS.
+    interface PatternPropsFormData {
+      firstName: string;
+      lastName: string;
+      [dynamicKey: string]: string;
+    }
+    type Checked = StrictUiSchema<ExampleChecks, PatternPropsFormData>;
+
+    const ui: Checked = {
+      firstName: { 'ui:autofocus': true },
+      assKickCount: { 'ui:placeholder': 'a dynamic, non-declared key still type-checks as `string`' },
+    };
+    const bad: Checked = {
+      // @ts-expect-error firstName is `string`; ExampleRangeWidget is a number widget
+      firstName: { 'ui:widget': 'ExampleRangeWidget' },
+    };
+
+    expect(ui.firstName?.['ui:autofocus']).toBe(true);
+    expect(bad).toBeDefined();
+  });
+
+  it("checks a key declared beside a wider index signature against the index signature's value type", () => {
+    type Checked = StrictUiSchema<ExampleChecks, { name: string; [key: string]: string | number }>;
+
+    const wide: Checked = { name: { 'ui:widget': 'ExampleRangeWidget' } };
+    const typo: Checked = {
+      // @ts-expect-error TS2353, an undeclared ui: key is still rejected
+      name: { 'ui:wigdet': 'ExampleTextWidget' },
+    };
+
+    expectTypeOf<UiSchema<{ name: string; [key: string]: string | number }>['name']>().toEqualTypeOf<
+      UiSchema<string | number> | undefined
+    >();
+    expect(wide.name?.['ui:widget']).toBe('ExampleRangeWidget');
+    expect(typo).toBeDefined();
+  });
+
+  it('lets a theme/consumer extend the widget and option vocabulary via a Checks union', () => {
+    type MyThemeChecks =
+      | UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>
+      | UiOptionsCheck<number, { widget?: 'SliderWidget' }>;
+    type Checked = StrictUiSchema<MyThemeChecks, { active: boolean }>;
+
+    const ui: Checked = { active: { 'ui:widget': 'ToggleWidget' } };
+
+    expect(ui.active?.['ui:widget']).toBe('ToggleWidget');
+  });
+
+  it('accepts a check whose `then` is an interface', () => {
+    interface ToggleThen {
+      widget?: 'ToggleWidget';
+    }
+    type Checked = StrictUiSchema<UiOptionsCheck<boolean, ToggleThen>, { active: boolean }>;
+
+    const ui: Checked = { active: { 'ui:widget': 'ToggleWidget' } };
+    // @ts-expect-error a widget the check doesn't declare
+    const wrong: Checked = { active: { 'ui:widget': 'SliderWidget' } };
+
+    expect(ui.active?.['ui:widget']).toBe('ToggleWidget');
+    expect(wrong.active?.['ui:widget']).toBe('SliderWidget');
+  });
+
+  it('leaves `ui:options` open for a check without a `then` type', () => {
+    type Checked = StrictUiSchema<UiOptionsCheck<boolean>, { active: boolean }>;
+
+    const ui: Checked = { active: { 'ui:options': { myOption: 1 } } };
+    // @ts-expect-error a check without a `then` type declares no widget
+    const wrong: Checked = { active: { 'ui:widget': 'ToggleWidget' } };
+
+    expect(ui.active?.['ui:options']?.myOption).toBe(1);
+    expect(wrong.active?.['ui:widget']).toBe('ToggleWidget');
+  });
+});
+
+describe('ui:submitButtonOptions', () => {
+  it('takes button props typed by an interface, and a literal with props of its own', () => {
+    const props: ButtonHTMLAttributes<HTMLButtonElement> = { className: 'wide', disabled: true };
+    const typed: UiSchema = { 'ui:submitButtonOptions': { props } };
+    const literal: UiSchema = { 'ui:submitButtonOptions': { props: { 'data-testid': 'submit', disabled: true } } };
+
+    expect(typed['ui:submitButtonOptions']?.props?.className).toBe('wide');
+    expect(literal['ui:submitButtonOptions']?.props?.disabled).toBe(true);
+  });
+});
+
+describe('GlobalUISchemaOptions (extensions)', () => {
+  it('accepts an extension declared ahead of the uiSchema it is handed to', () => {
+    const globalOptions: GlobalUISchemaOptions<{ myKey?: number }> = { label: false, myKey: 1 };
+    const ui: UiSchema = { 'ui:globalOptions': globalOptions };
+
+    expect(ui['ui:globalOptions']).toBe(globalOptions);
+  });
+
+  it("rejects a key outside RJSF's own in a ui:globalOptions literal", () => {
+    // @ts-expect-error a plain ui:globalOptions knows only the keys RJSF reads
+    const ui: UiSchema = { 'ui:globalOptions': { myKey: 1 } };
+
+    expect(ui).toBeDefined();
+  });
+
+  it("rejects an extension reusing one of RJSF's option names, or declaring an index signature", () => {
+    // @ts-expect-error `label` is one of RJSF's keys
+    expectTypeOf<GlobalUISchemaOptions<{ label?: string }>>().not.toBeNever();
+    // @ts-expect-error `widget` is an option RJSF reads per field, which every field would read as its own
+    expectTypeOf<GlobalUISchemaOptions<{ widget?: string }>>().not.toBeNever();
+    // @ts-expect-error `enumOptions` is the list a field computes for its widget, which a global one would replace
+    expectTypeOf<GlobalUISchemaOptions<{ enumOptions?: string[] }>>().not.toBeNever();
+    // @ts-expect-error `definitions` is a key `ui:options` doesn't take, so no field could override a global one
+    expectTypeOf<GlobalUISchemaOptions<{ definitions?: object }>>().not.toBeNever();
+    // @ts-expect-error `globalOptions` is a key `ui:options` doesn't take, so no field could override a global one
+    expectTypeOf<GlobalUISchemaOptions<{ globalOptions?: object }>>().not.toBeNever();
+    // @ts-expect-error an index signature would cover every one of RJSF's keys
+    expectTypeOf<GlobalUISchemaOptions<Record<string, unknown>>>().not.toBeNever();
+  });
+
+  it("rejects a theme's key reusing RJSF's, and a user's key reusing the theme's", () => {
+    // @ts-expect-error `addable` is one of RJSF's keys
+    expectTypeOf<ThemeGlobalUISchemaOptions<{ addable?: string }>>().not.toBeNever();
+    // @ts-expect-error `gridCols` is the theme's key
+    expectTypeOf<ThemeGlobalUISchemaOptions<{ gridCols?: number }, { gridCols?: string }>>().not.toBeNever();
+  });
+
+  it('rejects the keys only their ui: spelling sets in ui:options', () => {
+    const plain: UiSchema = {
+      'ui:options': {
+        // @ts-expect-error: TS2322, only `ui:field` names a field
+        field: 'MyField',
+        // @ts-expect-error: TS2322, only `ui:fieldReplacesAnyOrOneOf` sets this
+        fieldReplacesAnyOrOneOf: true,
+        // @ts-expect-error: TS2322, only `ui:definitions` sets these
+        definitions: {},
+        // @ts-expect-error: TS2322, only `ui:globalOptions` sets these
+        globalOptions: {},
+      },
+    };
+    type Checks = UiOptionsCheck<
+      unknown,
+      { field?: 'MyField'; fieldReplacesAnyOrOneOf?: boolean; definitions?: object; globalOptions?: object }
+    >;
+    const strict: StrictUiSchema<Checks> = {
+      'ui:options': {
+        // @ts-expect-error: TS2322, only `ui:field` names a field
+        field: 'MyField',
+        // @ts-expect-error: TS2322, only `ui:fieldReplacesAnyOrOneOf` sets this
+        fieldReplacesAnyOrOneOf: true,
+        // @ts-expect-error: TS2322, only `ui:definitions` sets these
+        definitions: {},
+        // @ts-expect-error: TS2322, only `ui:globalOptions` sets these
+        globalOptions: {},
+      },
+    };
+
+    expect(plain).toBeDefined();
+    expect(strict).toBeDefined();
+  });
+
+  it("hands a theme's options with a user's extension on to the plain type RJSF takes", () => {
+    const themeOptions: ThemeGlobalUISchemaOptions<{ gridCols?: number }, { myKey?: string }> = {
+      label: false,
+      gridCols: 2,
+      myKey: 'x',
+    };
+    const rjsfOptions: GlobalUISchemaOptions = themeOptions;
+
+    expect(rjsfOptions.label).toBe(false);
+  });
+});

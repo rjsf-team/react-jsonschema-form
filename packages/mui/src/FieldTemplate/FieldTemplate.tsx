@@ -1,11 +1,21 @@
 import type { FormControlProps } from '@mui/material/FormControl';
 import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import type { TypographyProps } from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
 import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  joinClassNames,
+  templateDrawsDescription,
+  templateDrawsLabel,
+  templateDrawsPlannedLabel,
+  templateLabelFor,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldTemplate. */
 export interface FieldTemplateMuiProps extends GenericObjectType {
@@ -16,6 +26,10 @@ export interface FieldTemplateMuiProps extends GenericObjectType {
     /** Props applied to the MUI `Typography` element used for description. */
     fieldTypography?: TypographyProps;
   };
+  /** The `sx` of the MUI `FormControl` wrapping the field */
+  sx?: FormControlProps['sx'];
+  /** The class name of the MUI `FormControl` wrapping the field */
+  className?: string;
 }
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
@@ -24,9 +38,9 @@ export interface FieldTemplateMuiProps extends GenericObjectType {
  * @param props - The `FieldTemplateProps` for this component
  */
 export default function FieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     id,
@@ -34,15 +48,17 @@ export default function FieldTemplate<
     classNames,
     style,
     disabled,
-    displayLabel,
+    presentation,
     hidden,
     label,
+    keyName,
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
+    keyNotAllowed,
     readonly,
     required,
-    rawErrors = [],
     errors,
     help,
     description,
@@ -50,21 +66,23 @@ export default function FieldTemplate<
     schema,
     uiSchema,
     registry,
+    hasErrors: hasError,
   } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
-    'WrapIfAdditionalTemplate',
-    registry,
-    uiOptions,
-  );
+  const displayLabel = templateDrawsLabel<T, S, F>(props);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
+  const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
   }
 
-  const isCheckbox = uiOptions.widget === 'checkbox';
+  // The plan's description already says whether a checkbox draws its own; the guess by the `checkbox` alias is left
+  // for a template rendered without one, so a description the plan gives the template isn't dropped
+  const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
+  const drawsLabel = templateDrawsPlannedLabel<T, S, F>(props);
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, FieldTemplateMuiProps>(uiOptions);
+  const { sx: slotSx, className: slotClassName, ...slotProps } = muiSlotProps?.fieldFormControl ?? {};
 
   return (
     <WrapIfAdditionalTemplate
@@ -73,11 +91,17 @@ export default function FieldTemplate<
       disabled={disabled}
       id={id}
       label={label}
+      keyName={keyName}
+      // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
+      presentation={presentation}
+      hasErrors={hasError}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
+      propertyNamesEnum={propertyNamesEnum}
+      keyNotAllowed={keyNotAllowed}
       readonly={readonly}
       required={required}
       schema={schema}
@@ -86,14 +110,23 @@ export default function FieldTemplate<
     >
       <FormControl
         fullWidth
-        error={!!rawErrors.length}
+        error={hasError}
         required={required}
-        {...muiSlotProps?.fieldFormControl}
-        sx={otherMuiProps.sx}
-        className={otherMuiProps.className}
+        {...slotProps}
+        sx={slotSx === undefined ? otherMuiProps.sx : computeSxProps<FormControlProps>(slotSx, otherMuiProps)}
+        className={joinClassNames(slotClassName, otherMuiProps.className) || undefined}
       >
+        {drawsLabel && (
+          <FormLabel
+            id={presentation?.label.id}
+            htmlFor={templateLabelFor<T, S, F>(props)}
+            required={templateMarksRequired<T, S, F>(props)}
+          >
+            {label}
+          </FormLabel>
+        )}
         {children}
-        {displayLabel && !isCheckbox && rawDescription ? (
+        {!leavesPartsToCheckbox && templateDrawsDescription<T, S, F>(props) && rawDescription ? (
           <Typography variant='caption' color='textSecondary' {...muiSlotProps?.fieldTypography}>
             {description}
           </Typography>

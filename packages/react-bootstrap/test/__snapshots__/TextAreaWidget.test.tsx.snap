@@ -7,7 +7,7 @@ exports[`TextareaWidget > simple with errors 1`] = `
   >
     <textarea
       aria-describedby="_id__error _id__description _id__help"
-      class="form-control"
+      class="form-control is-invalid"
       id="_id"
       name="_id"
       placeholder=""

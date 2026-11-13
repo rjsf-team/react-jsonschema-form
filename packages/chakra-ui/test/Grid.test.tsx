@@ -1,14 +1,15 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { gridTests, renderGridColumn } from '@rjsf/snapshot-tests';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import WrappedForm from './WrappedForm.tsx';
 
 gridTests(WrappedForm, {
-  ColumnWidthAll: {},
-  ColumnWidth4: {},
-  ColumnWidth6: {},
-  ColumnWidth8: {},
-  Row2Columns: { templateColumns: 'repeat(2, 1fr)' },
-  Row3Columns: { templateColumns: 'repeat(3, 1fr)' },
+  ColumnWidthAll: { span: 12 },
+  ColumnWidth4: { span: 4 },
+  ColumnWidth6: { span: 6 },
+  ColumnWidth8: { span: 8 },
+  Row2Columns: { gap: 2 },
+  Row3Columns: { gap: 2 },
   ComplexUiSchema: {
     'ui:field': 'LayoutGridField',
     'ui:layoutGrid': {
@@ -210,4 +211,71 @@ gridTests(WrappedForm, {
       },
     },
   },
+});
+
+describe('GridTemplate span', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  test("sets a column's span as its colSpan", () => {
+    expect(renderGridColumn(WrappedForm, { span: 4 }).column).toHaveStyle({ gridColumn: 'span 4/span 4' });
+  });
+  test("prefers a column's own colSpan", () => {
+    expect(renderGridColumn(WrappedForm, { span: 4, colSpan: 6 }).column).toHaveStyle({ gridColumn: 'span 6/span 6' });
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a `colSpan` of its own',
+    );
+  });
+  test('lays a row without templateColumns out on 12 tracks, a column without a span across all of them', () => {
+    const { row, column } = renderGridColumn(WrappedForm, {});
+    expect(row).toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+    expect(column).toHaveStyle({ gridColumn: '1/-1' });
+  });
+  test('keeps a column without a span across the row when the row has a css of its own', () => {
+    const { row, column } = renderGridColumn(WrappedForm, {}, { css: { padding: '4px' } });
+    expect(row).toHaveStyle({ padding: '4px' });
+    expect(column).toHaveStyle({ gridColumn: '1/-1' });
+  });
+  test('leaves a row with templateColumns of its own to it', () => {
+    const { row, column } = renderGridColumn(WrappedForm, {}, { templateColumns: 'repeat(3, 1fr)' });
+    expect(row).toHaveStyle({ gridTemplateColumns: 'repeat(3, 1fr)' });
+    expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
+  });
+  test.each([
+    { gridTemplate: 'auto / 1fr 1fr' },
+    { grid: 'auto / 1fr 1fr' },
+    { style: { gridTemplate: 'auto / 1fr 1fr' } },
+    { style: { grid: 'auto / 1fr 1fr' } },
+  ])('leaves a row with a %o grid shorthand of its own to it', (rowProps) => {
+    const { row, column } = renderGridColumn(WrappedForm, {}, rowProps);
+    expect(row).not.toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+    expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
+  });
+  test.each([
+    { css: { gridTemplateColumns: '1fr 1fr' } },
+    { css: [{ padding: '4px' }, { gridTemplate: 'auto / 1fr 1fr' }] },
+  ])('leaves a row with a template in its css, %o, to it', (rowProps) => {
+    const { row, column } = renderGridColumn(WrappedForm, {}, rowProps);
+    expect(row).not.toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+    expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
+  });
+  test('warns that a half step is not a whole number', () => {
+    renderGridColumn(WrappedForm, { span: 4.5 });
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` of 4.5 in "root_name" is not a whole number, which this theme\'s grid needs',
+    );
+  });
+  test('leaves a row with templateAreas of its own to it', () => {
+    const { row, column } = renderGridColumn(WrappedForm, {}, { templateAreas: '"a b"' });
+    expect(row).not.toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+    expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
+  });
+  test.each([{ gridTemplateColumns: 'repeat(3, 1fr)' }, { gridTemplateAreas: '"a b"' }])(
+    'leaves a row with a %o style of its own to it',
+    (style) => {
+      const { row, column } = renderGridColumn(WrappedForm, {}, { style });
+      expect(row).toHaveStyle(style);
+      expect(row).not.toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+      expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
+    },
+  );
 });

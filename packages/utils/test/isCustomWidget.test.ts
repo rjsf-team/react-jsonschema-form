@@ -10,4 +10,10 @@ describe('isCustomWidget()', () => {
   it('When the function is called without a custom widget in the schema it returns false', () => {
     expect(isCustomWidget({ 'ui:fields': 'randomString' })).toBe(false);
   });
+  it('When the function is called with a widget set to undefined in the uiSchema it returns false', () => {
+    expect(isCustomWidget({ 'ui:options': { widget: undefined } })).toBe(false);
+  });
+  it('When the function is called with a hidden widget in the uiSchema it returns false', () => {
+    expect(isCustomWidget({ 'ui:widget': 'hidden' })).toBe(false);
+  });
 });

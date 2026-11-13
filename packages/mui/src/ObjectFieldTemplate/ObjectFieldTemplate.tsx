@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import type { GridProps } from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
 import type {
@@ -7,7 +8,15 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import {
+  descriptionId,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  titleDrawsOptionalDataControl,
+  titleId,
+  buttonId,
+} from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
@@ -33,9 +42,9 @@ export interface ObjectFieldTemplateMuiProps extends GenericObjectType {
  * @param props - The `ObjectFieldTemplateProps` for this component
  */
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
@@ -45,35 +54,38 @@ export default function ObjectFieldTemplate<
     disabled,
     readonly,
     uiSchema,
-    fieldPathId,
+    presentation,
+    id,
     schema,
     formData,
     optionalDataControl,
     onAddProperty,
     registry,
   } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
 
   const {
     rjsfSlotProps: { objectGridContainer, objectGridItem, objectAddButtonGridContainer, objectAddButtonGridItem } = {},
   } = getMuiProps<T, S, F, ObjectFieldTemplateMuiProps>(uiOptions);
 
   return (
-    <>
+    // A column, as the `FormControl` around it lays out its parts, so their margins don't collapse into one another
+    <Box
+      id={id}
+      role='group'
+      sx={{ display: 'flex', flexDirection: 'column' }}
+      {...getContainerAttributes(presentation, id, title)}
+    >
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -84,7 +96,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(fieldPathId)}
+          id={presentation?.description.id ?? descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -106,7 +118,7 @@ export default function ObjectFieldTemplate<
           ) : (
             <Grid
               size={{ xs: 12 }}
-              key={element.name}
+              key={element.content.key}
               {...objectGridItem}
               sx={computeSxProps<GridProps>({ mb: 1.25 }, objectGridItem)}
             >
@@ -115,7 +127,7 @@ export default function ObjectFieldTemplate<
           ),
         )}
       </Grid>
-      {canExpand<T, S, F>(schema, uiSchema, formData) && (
+      {schemaUtils.canExpand(schema, uiSchema, formData) && (
         <Grid
           container
           {...objectAddButtonGridContainer}
@@ -123,7 +135,7 @@ export default function ObjectFieldTemplate<
         >
           <Grid {...objectAddButtonGridItem}>
             <AddButton
-              id={buttonId(fieldPathId, 'add')}
+              id={buttonId(id, 'add')}
               className='rjsf-object-property-expand'
               onClick={onAddProperty}
               disabled={disabled || readonly}
@@ -133,6 +145,6 @@ export default function ObjectFieldTemplate<
           </Grid>
         </Grid>
       )}
-    </>
+    </Box>
   );
 }

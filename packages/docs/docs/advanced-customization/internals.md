@@ -39,109 +39,155 @@ This are the rules which are used when injecting the defaults:
 - When the value is an object in the form data, the defaults are deeply merged into the form data, using the rules defined here for the deep merge.
 - Then the value is an array in the form data, defaults are only injected in existing array items. No new array items will be created, even if the schema has minItems or additional items defined.
 
-A boolean property that is listed in its parent's `required` array and has no `default` of its own is populated with `false`. You can turn this off using the experimental [`requiredBooleanDefault`](../api-reference/form-props.md#requiredbooleandefault) flag, so that the property stays `undefined` until the user answers it.
+A boolean property that is listed in its parent's `required` array and has no `default` of its own is populated with `false`. You can turn this off using the [`requiredBooleanDefault`](../api-reference/form-props.md#requiredbooleandefault) flag, so that the property stays `undefined` until the user answers it.
 
 ### Merging of defaults within the schema
 
-In the schema itself, defaults of parent elements are propagated into children. So when you have a schema which defines a deeply nested object as default, these defaults will be applied to children of the current node. This also merges objects defined at different levels together, with the deeper (descendant) default taking precedence for any overlapping properties by default. You can change this behavior using the experimental [`nestedDefaultsPrecedence`](../api-reference/form-props.md#nesteddefaultsprecedence) flag. If the parent node defines properties which are not defined in the child, they will be merged so that the default for the child will be the merged defaults of parent and child.
+In the schema itself, defaults of parent elements are propagated into children. So when you have a schema which defines a deeply nested object as default, these defaults will be applied to children of the current node. This also merges objects defined at different levels together, with the deeper (descendant) default taking precedence for any overlapping properties by default. You can change this behavior using the [`nestedDefaultsPrecedence`](../api-reference/form-props.md#nesteddefaultsprecedence) flag. If the parent node defines properties which are not defined in the child, they will be merged so that the default for the child will be the merged defaults of parent and child.
 
 For arrays this is not the case. Defining an array, when a parent also defines an array, will be overwritten. This is only true when arrays are used in the same level, for objects within these arrays, they will be deeply merged again.
 
 ## Custom array field buttons
 
-The `ArrayField` component provides a UI to add, copy, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons).
-If you don't use glyphicons but still want to provide your own icons or texts for these buttons, you can easily do so using CSS:
+The `ArrayField` component provides a UI to add, copy, remove and reorder array items, and these buttons carry an inline SVG icon.
+If you want to provide your own icons or texts for these buttons, you can easily do so using CSS:
 
 > NOTE this only applies to the `@rjsf/core` theme
 
 ```css
-i.glyphicon {
+.rjsf-button-icon {
   display: none;
 }
-.btn-add::after {
+.rjsf-btn-add::after {
   content: 'Add';
 }
-.array-item-copy::after {
+.rjsf-array-item-copy::after {
   content: 'Copy';
 }
-.array-item-move-up::after {
+.rjsf-array-item-move-up::after {
   content: 'Move Up';
 }
-.array-item-move-down::after {
+.rjsf-array-item-move-down::after {
   content: 'Move Down';
 }
-.array-item-remove::after {
+.rjsf-array-item-remove::after {
   content: 'Remove';
 }
 ```
 
+## The imperative handle
+
+Use a ref when an action needs to read, update or submit the form programmatically. Type it as `FormRef<T>`, where `T` is your form-data type:
+
+```tsx
+const formRef = useRef<FormRef<MyData>>(null);
+```
+
+The handle exposes `getFormData()`, `getStatus()`, `submit()`, `reset()`, `setFieldValue()`, `validateForm()`, `validateFormWithFormData()`, `validate()` and `focusOnError()`. Form is a function component, so its ref does not expose class state or lifecycle methods.
+
+## Read form data programmatically
+
+Call `getFormData()` to read the current value without storing every `onChange` event yourself. For example, a form can save a draft from a button:
+
+```tsx
+import { useRef } from 'react';
+import Form, { type FormRef } from '@rjsf/core';
+import type { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'object', properties: { title: { type: 'string' } } };
+type Draft = { title?: string };
+
+function DraftEditor() {
+  const formRef = useRef<FormRef<Draft>>(null);
+
+  function saveDraft() {
+    const data = formRef.current?.getFormData();
+    localStorage.setItem('draft', JSON.stringify(data));
+  }
+
+  return (
+    <>
+      <Form ref={formRef} schema={schema} validator={validator} initialFormData={{ title: 'Untitled' }} />
+      <button type="button" onClick={saveDraft}>Save draft</button>
+    </>
+  );
+}
+```
+
+`getFormData()` returns the form's current value: the seed your props handed it on mount or at the last `reset()`, filled in with the schema's defaults, and every edit made since, including one React has yet to show in the inputs.
+
+Inside `onChange`, use `event.formData` to read the edit being reported. Treat data from both the event and the handle as read-only.
+
+## Read the form status
+
+Call `getStatus()` to read whether the form's data differs from its baseline (`dirty`), where (`dirtyFields`), whether the user has touched any field (`touched`), which (`touchedFields`), and how many submits have reached the form (`submitCount`, including one ignored while a promise `onSubmit` returned is pending; a submit the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set, except while a promise is pending for a click on the form's own submit button, Enter in a field that clicks it, or `submit()`, which the form ignores before that validation would run). It returns the status after every edit, `reset()` and submit, which the events carry too, after a prop change, such as a new `schema` filling in a default, which moves the baseline with the data and calls no `onChange`, and after a blur that only touches a field, which calls no `onChange` either. Call `reset(saved)` with the data a save stored to make it the new baseline; `reset()` also clears the touched fields. See [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields).
+
 ## Submit form programmatically
 
-You can use the reference to get your `Form` component and call the `submit` method to submit the form programmatically without a submit button.
-This method will dispatch the `submit` event of the form, and the function, that is passed to `onSubmit` props, will be called.
+Call `submit()` from an event handler to run validation and invoke `onSubmit` with valid data, or `onError` with validation errors:
 
 ```tsx
-import { createRef } from 'react';
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
-import { Form } from '@rjsf/core';
+import { useRef } from 'react';
+import Form, { type FormRef } from '@rjsf/core';
+import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-const onSubmit = ({ formData }) => console.log('Data submitted: ', formData);
-let yourForm;
+const schema: RJSFSchema = { type: 'string' };
 
-const schema: RJSFSchema = {
-  type: 'string',
-};
+function Editor() {
+  const formRef = useRef<FormRef<string>>(null);
 
-const formRef = createRef<Form>();
-
-render(
-  <Form schema={schema} validator={validator} onSubmit={onSubmit} ref={formRef} />,
-  document.getElementById('app'),
-);
-
-formRef.current.submit();
+  return (
+    <>
+      <Form
+        ref={formRef}
+        schema={schema}
+        validator={validator}
+        initialFormData=""
+        onSubmit={({ formData }) => console.log('Data submitted:', formData)}
+      />
+      <button type="button" onClick={() => formRef.current?.submit()}>Save</button>
+    </>
+  );
+}
 ```
 
-## Update field value in form programmatically
+`submit()` submits the form's current value through the form element before it returns: schema validation checks the value and `onSubmit` or `onError` is called. When the inputs show the value, the browser's constraint validation checks them first, as for a submit button, and an input it rejects blocks the submit. A write followed by `submit()` in the same handler submits the new value at once; the inputs have yet to show the write, so schema validation alone checks it. `validateForm()` checks the current value; `validateFormWithFormData(nextData)` checks a value without storing or submitting it.
 
-You can use the reference to get your `Form` component and call the `setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void` method to change the value of a field.
-This method will dispatch the `onChange` event of the form.
+## Change form data programmatically
+
+Use `setFieldValue(path, value)` to edit a field. The path can be a dotted string or an array of path segments. Use `''` or `[]` to replace the complete value, and pass `undefined` to clear a field. Under [`mergeDefaultsIntoFormData`](../api-reference/form-props.md#mergedefaultsintoformdata) `'useDefaultIfFormDataUndefined'`, a field with a `default` gets it back instead.
 
 ```tsx
-import { createRef } from 'react';
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
-import { Form } from '@rjsf/core';
-import validator from '@rjsf/validator-ajv8';
+// Change one field.
+formRef.current?.setFieldValue('address.city', 'Paris');
+formRef.current?.setFieldValue(['address', 'city'], 'Paris');
 
-const onChange = ({ formData }) => console.log('Data updated to: ', formData);
-let yourForm;
-
-const schema: RJSFSchema = {
-  type: 'object',
-  properties: {
-    foo: {
-      type: 'object',
-      required: ['input'],
-      properties: {
-        input: {
-          type: 'string',
-        },
-      },
-    },
-  },
-  required: ['foo'],
-};
-
-const formRef = createRef<Form>();
-
-render(
-  <Form schema={schema} validator={validator} onSubmit={onSubmit} ref={formRef} />,
-  document.getElementById('app'),
-);
-
-formRef.current.setFieldValue('foo.input', 'value');
-formRef.current.setFieldValue(['foo'], { input: 'newvalue' });
-formRef.current.setFieldValue('', { foo: { input: 'another value' } });
-formRef.current.setFieldValue([], { foo: { input: 'more values' } });
+// Replace the complete value with one edit.
+formRef.current?.setFieldValue('', { address: { city: 'Paris', country: 'France' } });
 ```
+
+The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. A `formData` passed after mount does not replace the value: call `reset(data)` to show it as the form's clean baseline, `setFieldValue('', data)` to apply it as an edit, which leaves the form dirty, or remount the form under a `key`.
+
+## Command timing
+
+Use event handlers for actions such as saving, resetting and validating. Other data reaches the form through `reset(data)` where it arrives, or `setFieldValue('', data)` when it is an edit, or a remount under a `key`; a `formData` passed after mount is ignored.
+
+An existing integration may need to issue a command when props change. Use a passive `useEffect` for that synchronization. For example, a descendant receiving a stable `formRef` can validate when its supplied schema changes:
+
+```tsx
+useEffect(() => {
+  formRef.current?.validateForm();
+}, [formRef, schema]);
+```
+
+Form takes the props of a commit in an insertion Effect, which React runs before any layout Effect of that commit. A command issued from the setup of a layout Effect, a callback ref being attached, or a class component's `componentDidMount` or `componentDidUpdate`, in the commit that renders new props, therefore sees those props wherever it sits: inside the form, such as a widget's, or in a sibling rendered before or after it. The insertion Effect is the first thing inside the form element, so the layout cleanup of a field the commit removes, which flushes a draft as a widget unmounts, sees them too. The exception is the cleanup of a sibling of the form that the commit removes: React runs it before it reaches the form, so a command from it sees the props of the commit before. Passive Effects and event handlers see the new props too.
+
+Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render, and an edit made while a validation runs has the operation that ran it validate a second time, on the edited data.
+
+Under `liveValidate: 'onBlur'`, a blur in the same event as an edit validates the edit, and its `onChange` carries the errors found.
+
+A form that has unmounted drops a change that reaches it late: `setFieldValue()` or `reset()` through a handle you kept, or a field's change, such as the value a debounced widget flushes as it unmounts or a file that finishes reading. It neither changes the data nor calls `onChange`, as in v6, so the late change of one record is never stored as the data of the form that replaced it. React asks that content an `<Activity>` hides be treated as unmounted, so a hidden form does the same until it is shown again: it drops a field's change, blur and focus, `setFieldValue()`, `reset()` and `submit()`, and `validateForm()` returns its result without calling `onError`. Its data and errors are kept for when it is shown. In development, the first `setFieldValue()`, `reset()` or `submit()` a hidden or unmounted form drops is warned about once, since the call itself is a sign that the caller has not noticed the form is hidden; a field's late change is dropped silently, as a widget flushing a draft from its Effect cleanup is expected to arrive then.
+
+Form stores edits synchronously through `useSyncExternalStore`. Wrapping a handle call in `startTransition()` does not make it non-blocking. See the [migration guide](../migration-guides/v7.x%20upgrade%20guide.md#form-owns-its-data-breaking-change) for examples of timing-dependent code to update.

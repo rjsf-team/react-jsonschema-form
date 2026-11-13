@@ -48,7 +48,9 @@ export function schemaList(schemas: object | object[] | undefined, draft04 = fal
       : doc;
   };
   if (Array.isArray(schemas)) {
-    return schemas.map((doc) => (doc !== null && typeof doc === 'object' ? withDraft04Id(doc) : doc));
+    // A list entry that is not an object is passed on as it is, for ata to reject as the runtime validator does
+    const docs: readonly unknown[] = schemas;
+    return docs.map((doc) => (doc !== null && typeof doc === 'object' ? withDraft04Id(doc) : doc)) as object[];
   }
   return Object.entries(schemas).flatMap(([key, entry]: [string, unknown]) => {
     if (entry === null || (typeof entry !== 'object' && typeof entry !== 'boolean')) {

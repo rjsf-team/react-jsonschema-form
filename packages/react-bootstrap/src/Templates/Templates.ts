@@ -3,7 +3,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } fro
 import AddButton from '../AddButton/index.ts';
 import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate/index.ts';
 import ArrayFieldTemplate from '../ArrayFieldTemplate/index.ts';
-import BaseInputTemplate from '../BaseInputTemplate/BaseInputTemplate.tsx';
+import BaseInputTemplate from '../BaseInputTemplate/index.ts';
 import CyclicSchemaExpandTemplate from '../CyclicSchemaExpandTemplate/index.ts';
 import DescriptionField from '../DescriptionField/index.ts';
 import ErrorList from '../ErrorList/index.ts';
@@ -19,11 +19,7 @@ import SubmitButton from '../SubmitButton/index.ts';
 import TitleField from '../TitleField/index.ts';
 import WrapIfAdditionalTemplate from '../WrapIfAdditionalTemplate/index.ts';
 
-export function generateTemplates<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): Partial<TemplatesType<T, S, F>> {
+export function createTemplates() {
   return {
     ArrayFieldItemTemplate,
     ArrayFieldTemplate,
@@ -52,4 +48,12 @@ export function generateTemplates<
   };
 }
 
-export default generateTemplates();
+export function generateTemplates<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): Partial<TemplatesType<T, S, F>> {
+  return createTemplates();
+}
+
+export default createTemplates();

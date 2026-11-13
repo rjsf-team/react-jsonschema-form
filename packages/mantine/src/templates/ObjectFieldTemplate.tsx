@@ -7,7 +7,18 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
+import {
+  buttonId,
+  descriptionId,
+  getErrorsToDraw,
+  getTemplates,
+  getUiOptions,
+  titleDrawsOptionalDataControl,
+  titleId,
+  getContainerAttributes,
+} from '@rjsf/utils';
+
+import { renderErrors } from '../utils.tsx';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -16,9 +27,9 @@ import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId 
  * @param props - The `ObjectFieldTemplateProps` for this component
  */
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     title,
@@ -31,31 +42,29 @@ export default function ObjectFieldTemplate<
     required,
     schema,
     uiSchema,
-    fieldPathId,
+    presentation,
+    id,
     formData,
     registry,
   } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
   const gridCols = (typeof uiOptions?.gridCols === 'number' && uiOptions?.gridCols) || undefined;
   const gridSpacing = uiOptions?.gridSpacing;
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
+  const errors = renderErrors(id, getErrorsToDraw<T, S, F>(props));
 
   return (
-    <Container id={fieldPathId.$id} p={0} fluid>
+    <Container id={id} role='group' {...getContainerAttributes(presentation, id, title)} p={0} fluid>
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -66,7 +75,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(fieldPathId)}
+          id={presentation?.description.id ?? descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -82,14 +91,14 @@ export default function ObjectFieldTemplate<
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties
           .filter((e) => !e.hidden)
-          .map((element: ObjectFieldTemplatePropertyType) => (
-            <Box key={element.name}>{element.content}</Box>
+          .map((element: ObjectFieldTemplatePropertyType<T, S, F>) => (
+            <Box key={element.content.key}>{element.content}</Box>
           ))}
       </SimpleGrid>
-      {canExpand(schema, uiSchema, formData) && (
+      {schemaUtils.canExpand(schema, uiSchema, formData) && (
         <Group mt='xs' justify='flex-end'>
           <AddButton
-            id={buttonId(fieldPathId, 'add')}
+            id={buttonId(id, 'add')}
             disabled={disabled || readonly}
             onClick={onAddProperty}
             className='rjsf-object-property-expand'
@@ -98,6 +107,7 @@ export default function ObjectFieldTemplate<
           />
         </Group>
       )}
+      {errors}
     </Container>
   );
 }

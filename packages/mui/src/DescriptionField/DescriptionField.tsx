@@ -26,13 +26,13 @@ export interface DescriptionFieldMuiProps extends GenericObjectType {
  * @param props - The `DescriptionFieldProps` for this component
  */
 export default function DescriptionField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: DescriptionFieldProps<T, S, F>) {
   const { id, description, registry, uiSchema } = props;
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { rjsfSlotProps: { descTypography } = {} } = getMuiProps<T, S, F, DescriptionFieldMuiProps>(uiOptions);
 
   if (description) {
@@ -40,6 +40,8 @@ export default function DescriptionField<
       <Typography
         id={id}
         variant='subtitle2'
+        // `subtitle2` maps to an `<h6>`, which would list every description among the form's headings
+        component='div'
         {...descTypography}
         sx={computeSxProps<TypographyProps>({ mt: 0.625 }, descTypography)}
       >

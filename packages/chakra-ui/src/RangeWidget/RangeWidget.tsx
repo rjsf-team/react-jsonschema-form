@@ -1,45 +1,143 @@
-import type { FocusEvent } from 'react';
+import { useEffect, useRef } from 'react';
 import type { SliderValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  getLabelId,
+  hasWidgetErrors,
+  labelValue,
+  numericWidgetStoresString,
+  rangeSpec,
+  toNumericValue,
+  widgetDrawsLabelText,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { Slider } from '../components/ui/slider.tsx';
-import { getChakra } from '../utils.ts';
+import { getChakra, labelledByOrNone } from '../utils.ts';
 
-export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  value,
-  readonly,
-  disabled,
-  onBlur,
-  onFocus,
-  options,
-  schema,
-  onChange,
-  label,
-  hideLabel,
-  id,
-  uiSchema,
-}: WidgetProps<T, S, F>) {
-  const handleChange = ({ value: newValue }: SliderValueChangeDetails) =>
-    onChange(newValue === undefined ? options.emptyValue : newValue[0]);
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
+export default function RangeWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const {
+    value,
+    readonly,
+    disabled,
+    required,
+    autofocus,
+    onBlur,
+    onFocus,
+    options,
+    schema,
+    onChange,
+    label,
+    id,
+    htmlName,
+    presentation,
+  } = props;
+  const thumbRef = useRef<HTMLDivElement>(null);
+  const focusOnMount = useRef(autofocus);
+  // React focuses a form control marked `autoFocus` as it mounts, but not the thumb, which is a <div>. Like
+  // `autoFocus`, this acts only on mount, so an `autofocus` that turns true later doesn't take focus from the user
+  useEffect(() => {
+    if (focusOnMount.current) {
+      // Cleared, since React runs the effect again each time an `<Activity>` around the form is shown
+      focusOnMount.current = false;
+      thumbRef.current?.focus();
+    }
+  }, []);
+  // Set by a change Zag reports during an interaction, so its end doesn't overwrite that change with the minimum while
+  // the value it rendered with is still empty, as it is when the change is committed later
+  const changedRef = useRef(false);
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const write = (nextValue: number) => onChange(storesString ? String(nextValue) : nextValue);
+  const numericValue = toNumericValue(value);
+  // Zag restores the value the slider first rendered on its form's reset, which for a range that started empty is the
+  // minimum its thumb is drawn at, so that restore empties the range instead
+  const startedEmpty = useRef(numericValue === undefined);
+  const resettingRef = useRef(false);
+  useEffect(() => {
+    const thumb = thumbRef.current;
+    const ownerDocument = startedEmpty.current ? thumb?.ownerDocument : undefined;
+    // Zag listens for the reset on the form itself, so it is caught here on its way down, before Zag restores
+    const handleReset = ({ target }: Event) => {
+      if (target === thumb?.closest('form')) {
+        resettingRef.current = true;
+        setTimeout(() => {
+          resettingRef.current = false;
+        });
+      }
+    };
+    ownerDocument?.addEventListener('reset', handleReset, true);
+    return () => ownerDocument?.removeEventListener('reset', handleReset, true);
+  }, []);
+  const handleChange = ({ value: newValue }: SliderValueChangeDetails) => {
+    if (resettingRef.current) {
+      resettingRef.current = false;
+      onChange(options.emptyValue);
+      return;
+    }
+    changedRef.current = true;
+    if (newValue === undefined) {
+      onChange(options.emptyValue);
+    } else {
+      write(newValue[0]);
+    }
+  };
+  // Zag reports only a value that changes, so a press or a key that leaves an empty range's thumb at its minimum commits
+  // the minimum itself, as moving a native range's thumb there would
+  const handleChangeEnd = ({ value: newValue }: SliderValueChangeDetails) => {
+    if (!changedRef.current && numericValue === undefined) {
+      write(newValue[0]);
+    }
+    changedRef.current = false;
+  };
 
-  const chakraProps = getChakra({ uiSchema });
+  const spec = rangeSpec<S>(schema);
+  const chakraProps = getChakra(options);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
+  const labelId = getLabelId<T, S, F>(props);
+  const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
 
   return (
-    <Field mb={1} label={labelValue(label, hideLabel || !label)} {...chakraProps}>
+    <Field
+      mb={1}
+      disabled={disabled || readonly}
+      required={required}
+      requiredMarker={templateMarksRequired<T, S, F>(props)}
+      readOnly={readonly}
+      invalid={hasWidgetErrors<T, S, F>(props)}
+      label={labelValue(label, !drawsLabel)}
+      ids={{ label: labelId }}
+      labelNamesNoControl
+      // The label has no `for`, which can't name the thumb, so a click on it focuses the thumb, as zag's own slider
+      // label does
+      onLabelClick={() => thumbRef.current?.focus()}
+      {...chakraProps}
+    >
       <Slider
-        {...rangeSpec<S>(schema)}
+        {...spec}
         id={id}
-        name={id}
+        // The thumb, which a user focuses, carries the field's id, and is named by the label through
+        // `aria-labelledby`, since a `for` can't name it
+        ids={{ thumb: () => id, label: labelId }}
+        // An empty range draws its thumb at its minimum, which isn't a value it holds, so it submits nothing
+        name={numericValue === undefined ? undefined : htmlName || id}
         disabled={disabled || readonly}
-        value={[value]}
+        value={[numericValue ?? spec.min ?? 0]}
         onValueChange={handleChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
+        onValueChangeEnd={handleChangeEnd}
+        // The thumb a user focuses is a `<div>`, which has no value to read
+        onBlur={() => onBlur(id, value)}
+        onFocus={() => onFocus(id, value)}
+        thumbProps={{
+          ref: thumbRef,
+          ...controlAttributes,
+          'aria-labelledby': labelledByOrNone(controlAttributes['aria-labelledby'], drawsLabel),
+        }}
       />
     </Field>
   );

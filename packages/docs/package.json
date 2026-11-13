@@ -11,16 +11,7 @@
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
-    "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc",
-    "precommit": "lint-staged",
-    "cs-check": "oxfmt --check \"src/**/*.{ts,tsx}\"",
-    "cs-format": "oxfmt \"src/**/*.{ts,tsx}\""
-  },
-  "lint-staged": {
-    "src/**/*.{ts,tsx}": [
-      "oxfmt"
-    ]
+    "write-heading-ids": "docusaurus write-heading-ids"
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.2",
@@ -31,8 +22,7 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.2",
     "@docusaurus/plugin-content-docs": "^3.10.2",
-    "@docusaurus/types": "^3.10.2",
-    "@tsconfig/docusaurus": "^2.0.9"
+    "@docusaurus/types": "^3.10.2"
   },
   "browserslist": {
     "production": [
@@ -47,6 +37,6 @@
     ]
   },
   "engines": {
-    "node": ">=20"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   }
 }

@@ -286,7 +286,7 @@ function MyFormComponent({ schema, formData }: PropsWithChildren<MyFormProps>) {
     }
   };
 
-  return <Form schema={schema} uiSchema={uiSchema} formData={formData} />;
+  return <Form schema={schema} uiSchema={uiSchema} initialFormData={formData} />;
 }
 
 // Placeholder for the expensive computation function

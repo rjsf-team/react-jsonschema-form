@@ -1,5 +1,68 @@
-import type { BoxProps, FormHelperTextProps, GridProps, PaperProps, SxProps, TypographyProps } from '@mui/material';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, UIOptionsType, GenericObjectType } from '@rjsf/utils';
+import type { ReactNode } from 'react';
+import type {
+  BoxProps,
+  FormControlProps,
+  FormHelperTextProps,
+  GridProps,
+  PaperProps,
+  SxProps,
+  Theme,
+  TypographyProps,
+} from '@mui/material';
+import type {
+  FormContextType,
+  GlobalUISchemaOptionsExtensions,
+  ReservedUiOptionName,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ThemeGlobalUISchemaOptions,
+  UIOptionsType,
+  UiSchema,
+  GenericObjectType,
+} from '@rjsf/utils';
+import { isObject, partId } from '@rjsf/utils';
+
+type SxArray = Extract<SxProps<Theme>, readonly unknown[]>;
+
+/** The options this theme reads from `ui:globalOptions`, beyond the ones RJSF reads */
+export interface MuiGlobalUiOptionsKeys {
+  /** The props for the MUI components every field renders, as in a field's `ui:options` */
+  mui?: GenericObjectType;
+}
+
+/** The `ui:globalOptions` this theme reads, plus a user's own `UserExtensions` */
+export type MuiGlobalUISchemaOptions<
+  UserExtensions extends GlobalUISchemaOptionsExtensions<
+    UserExtensions,
+    ReservedUiOptionName | keyof MuiGlobalUiOptionsKeys
+  > = Record<never, never>,
+> = ThemeGlobalUISchemaOptions<MuiGlobalUiOptionsKeys, UserExtensions>;
+
+/** A `UiSchema` whose `ui:options` and `ui:globalOptions` are known to carry the theme's `mui` props, and whose
+ * `ui:globalOptions` carry a user's own `UserExtensions` too.
+ *
+ * NOTE: intersects rather than using `Omit`, whose `keyof UiSchema` includes `UiSchema`'s string index signature and so
+ * erases every named member.
+ */
+export type MuiUiSchema<
+  UserExtensions extends GlobalUISchemaOptionsExtensions<
+    UserExtensions,
+    ReservedUiOptionName | keyof MuiGlobalUiOptionsKeys
+  > = Record<never, never>,
+> = UiSchema & {
+  'ui:options'?: UiSchema['ui:options'] & MuiGlobalUiOptionsKeys;
+  'ui:globalOptions'?: MuiGlobalUISchemaOptions<UserExtensions>;
+};
+
+/** The keys of `MuiGlobalUiOptionsKeys`, which the theme declares as its `globalUiOptionsKeys` */
+export const MUI_GLOBAL_UI_OPTIONS_KEYS = Object.keys({ mui: true } satisfies Record<
+  keyof MuiGlobalUiOptionsKeys,
+  true
+>);
+
+function isSxArray(sx: SxProps<Theme>): sx is SxArray {
+  return Array.isArray(sx);
+}
 
 /**
  * Extract props meant for MUI components from the `options` field of the `uiSchema`.
@@ -9,14 +72,14 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, UIOptionsType, Gene
  * @returns {P}
  */
 export function getMuiProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-  P extends GenericObjectType = GenericObjectType,
+  F extends FormContextType = FormContextType,
+  P extends object = GenericObjectType,
 >(options: UIOptionsType<T, S, F>, propsToFilter?: string[], rjsfSlotPropsOnly?: boolean): P {
-  const muiProps = (options?.mui as P) || ({} as P);
+  const muiProps = isObject(options?.mui) ? (options.mui as P) : ({} as P);
   if (rjsfSlotPropsOnly) {
-    const { rjsfSlotProps } = muiProps as any;
+    const { rjsfSlotProps }: { rjsfSlotProps?: unknown } = muiProps;
     return { rjsfSlotProps } as unknown as P;
   }
   if (propsToFilter) {
@@ -34,32 +97,211 @@ export function getMuiProps<
  * Merges default `sx` props with any `sx` provided on a MUI component's props, returning a value
  * suitable for passing directly to the MUI `sx` prop.
  *
- * When `muiProps.sx` is an array (only valid for `GridProps`), the default sx object is prepended
- * to produce an `sx` array, preserving MUI's array-merge semantics. Otherwise the two objects are
+ * When either `sx` is an array or a theme callback, the two are concatenated, defaults first, into
+ * one `sx` array, preserving MUI's array-merge semantics. Otherwise the two objects are
  * shallow-merged, with `muiProps.sx` taking precedence over the `sxProps`.
  *
- * If `muiProps` is omitted the `sxProps`` are returned as-is.
+ * If `muiProps` or its `sx` is omitted the `sxProps` are returned as-is.
  *
  * @param sxProps - The default sx styles to apply
  * @param [muiProps] - The MUI component props that may contain a user-supplied `sx`
  * @returns - The merged sx value
  */
 export function computeSxProps<MuiProps extends GridProps>(
-  sxProps: SxProps,
-  muiProps: MuiProps & { sx: any[] },
+  sxProps: SxProps<Theme>,
+  muiProps: MuiProps & { sx: SxArray },
 ): MuiProps['sx'] | MuiProps['sx'][];
-export function computeSxProps<MuiProps extends BoxProps | FormHelperTextProps | PaperProps | TypographyProps>(
-  sxProps: SxProps,
-  muiProps?: MuiProps,
-): MuiProps['sx'];
 export function computeSxProps<
-  MuiProps extends BoxProps | FormHelperTextProps | GridProps | PaperProps | TypographyProps,
->(sxProps: SxProps, muiProps?: MuiProps): MuiProps['sx'] | MuiProps['sx'][] {
-  if (!muiProps) {
+  MuiProps extends BoxProps | FormControlProps | FormHelperTextProps | PaperProps | TypographyProps,
+>(sxProps: SxProps<Theme>, muiProps?: MuiProps): MuiProps['sx'];
+export function computeSxProps<
+  MuiProps extends BoxProps | FormControlProps | FormHelperTextProps | GridProps | PaperProps | TypographyProps,
+>(sxProps: SxProps<Theme>, muiProps?: MuiProps): MuiProps['sx'] | MuiProps['sx'][] {
+  const sx: SxProps<Theme> | undefined = muiProps?.sx;
+  if (sx === undefined) {
     return sxProps;
   }
-  if (Array.isArray(muiProps?.sx)) {
-    return [sxProps, ...muiProps.sx];
+  if (isSxArray(sxProps) || isSxArray(sx) || typeof sxProps === 'function' || typeof sx === 'function') {
+    return [sxProps, sx].flat();
   }
-  return { ...sxProps, ...muiProps?.sx } as MuiProps['sx'];
+  return { ...sxProps, ...sx };
+}
+
+/** The props a form author may give a MUI slot: an object, or MUI's `(ownerState) => props` */
+export type MuiSlotProps<P extends object, O> = P | ((ownerState: O) => P);
+
+/** Gives a MUI slot `props` beneath those a form author gives it through `rjsfSlotProps`, which may be an object or
+ * MUI's `(ownerState) => props`. The author's own choice for that element is applied last, so it wins
+ *
+ * @param props - The props the widget gives the slot
+ * @param [slotProps] - The props the form author gives the slot
+ * @returns - The merged slot props, in the form the author gave theirs
+ */
+export function withSlotProps<P extends object, O>(
+  props: Partial<P>,
+  slotProps?: MuiSlotProps<P, O>,
+): MuiSlotProps<P, O> {
+  if (typeof slotProps === 'function') {
+    return (ownerState: O) => ({ ...props, ...slotProps(ownerState) });
+  }
+  return { ...props, ...slotProps } as P;
+}
+
+/** Drops `keys` from the props a form author gives a MUI slot
+ *
+ * @param props - The props the form author gives the slot, or nothing where a slot's `(ownerState) => props` returns none
+ * @param keys - The keys to drop
+ * @returns - The props without those keys
+ */
+export function omitKeys<P extends object>(props: P | undefined, keys: readonly string[]): P {
+  // Each key it drops is optional on a MUI slot, so the rest is still a `P`, which `Omit` can't say of a union such as
+  // `SelectProps`
+  return Object.fromEntries(Object.entries(props ?? {}).filter(([key]) => !keys.includes(key))) as P;
+}
+
+/** Drops `value`, `disabled`, `onChange`, `onBlur` and `onFocus` from the props a form author gives a slot whose
+ * handlers and `value` MUI uses in place of the form's, so the author can't take the form's data, focus or disabled
+ * state from it
+ *
+ * @param props - The props the form author gives the slot
+ * @returns - The props without those
+ */
+export function omitFormOwnedProps<P extends object>(props: P): P {
+  return omitKeys(props, ['value', 'disabled', 'onChange', 'onBlur', 'onFocus']);
+}
+
+/** Drops `keys` from the props a form author gives a slot, as an object or as MUI's `(ownerState) => props`
+ *
+ * @param slotProps - The props the form author gives the slot
+ * @param keys - The keys to drop
+ * @returns - The slot's props without those keys, in the form the author gave them
+ */
+export function withoutKeys<P extends object, O>(
+  slotProps: MuiSlotProps<P, O> | undefined,
+  keys: readonly string[],
+): MuiSlotProps<P, O> | undefined {
+  if (typeof slotProps === 'function') {
+    // MUI takes a slot whose `(ownerState) => props` returns nothing, which its type doesn't say
+    return (ownerState: O) => omitKeys(slotProps(ownerState) as P | undefined, keys);
+  }
+  return slotProps && omitKeys(slotProps, keys);
+}
+
+/** Drops `disabled` from the props a form author gives a slot whose `disabled` MUI puts over the form's, such as one of
+ * the `<input>` a user edits, so the author can't undo the form's disabled state there. Its handlers stay, since MUI
+ * calls them alongside the form's
+ *
+ * @param [slotProps] - The props the form author gives the slot, as an object or as MUI's `(ownerState) => props`
+ * @returns - The slot's props without `disabled`, in the form the author gave them
+ */
+export function withoutDisabled<P extends object, O>(slotProps?: MuiSlotProps<P, O>): MuiSlotProps<P, O> | undefined {
+  return withoutKeys(slotProps, ['disabled']);
+}
+
+/** Drops `value`, `disabled`, `onChange`, `onBlur` and `onFocus` from the props a form author gives a `TextField`'s
+ * `input` slot, which MUI spreads over the `TextField`'s own, and `value` and `disabled` from the `<input>` props
+ * nested in it, which MUI's `InputBase` puts over its own
+ *
+ * @param props - The props the form author gives the slot
+ * @returns - The props without those
+ */
+export function omitFormOwnedInputProps<P extends object>(props: P): P {
+  // Reads the `<input>` props the slot nests, which its type may not name
+  const rest = omitFormOwnedProps(props) as P & {
+    inputProps?: object;
+    slotProps?: { input?: MuiSlotProps<object, never> };
+  };
+  return {
+    ...rest,
+    ...(rest.inputProps && { inputProps: omitKeys(rest.inputProps, ['value', 'disabled']) }),
+    ...(rest.slotProps && {
+      slotProps: { ...rest.slotProps, input: withoutKeys(rest.slotProps.input, ['value', 'disabled']) },
+    }),
+  };
+}
+
+/** Gives the `input` slot of a MUI control's `slotProps` the `props` a widget puts on the element a user focuses,
+ * beneath the form author's own `input` slot, less the `formOwnedKeys` MUI would put over the control's own, and keeps
+ * the author's other slots as they are
+ *
+ * @param props - The props the widget gives the `input` slot
+ * @param [slotProps] - The `slotProps` the form author gives the control
+ * @param [formOwnedKeys] - The keys of the author's `input` slot to drop, by default `disabled`, `checked` and `value`
+ * @returns - The control's `slotProps`
+ */
+export function withInputSlot<S extends { input?: MuiSlotProps<object, never> }>(
+  props: object,
+  slotProps?: S,
+  formOwnedKeys: readonly string[] = ['disabled', 'checked', 'value'],
+): S {
+  return {
+    ...slotProps,
+    input: withSlotProps(props, withoutKeys(slotProps?.input, formOwnedKeys)),
+  } as S;
+}
+
+/** Resolves the props a form author gives a MUI slot, which may be MUI's `(ownerState) => props`, for an owner state
+ *
+ * @param slotProps - The props the form author gives the slot
+ * @param ownerState - The owner state MUI resolves the slot's props for
+ * @returns - The slot's props as an object
+ */
+export function resolveSlotProps<P extends object, O>(slotProps: MuiSlotProps<P, O> | undefined, ownerState: O) {
+  return typeof slotProps === 'function' ? slotProps(ownerState) : slotProps;
+}
+
+/** The id a widget gives the helper text MUI's `TextField` renders for its `helperText`, through the `formHelperText`
+ * slot, in place of the `-helper-text` id MUI derives, which another field's id can spell
+ *
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
+ * @returns - The helper text's id, a part of `id`
+ */
+function helperTextId(id: string) {
+  return partId(id, 'helperText');
+}
+
+/** The id a widget gives the label MUI's `TextField` renders for its `label`, through the `inputLabel` slot, in place of
+ * the `-label` id MUI derives, which another field's id can spell
+ *
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
+ * @returns - The label's id, a part of `id`
+ */
+export function inputLabelId(id: string) {
+  return partId(id, 'inputLabel');
+}
+
+/** The `formHelperText` slot of a widget's `TextField`: the props form authors give the helper text, with the id
+ * `helperTextId()` gives it applied last, since the control's `aria-describedby` names the helper text by that id
+ *
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
+ * @param slotProps - The props form authors give the slot, each an object or MUI's `(ownerState) => props`, later
+ *   ones winning
+ * @returns - The slot's props, as MUI's `(ownerState) => props`
+ */
+export function helperTextSlot<P extends object, O>(id: string, ...slotProps: (MuiSlotProps<P, O> | undefined)[]) {
+  return (ownerState: O) => ({
+    ...slotProps.reduce<Partial<P>>((acc, slot) => ({ ...acc, ...resolveSlotProps(slot, ownerState) }), {}),
+    id: helperTextId(id),
+  });
+}
+
+/** Adds the id `helperTextId()` gives the helper text MUI's `TextField` renders for its `helperText` to the
+ * `aria-describedby` a widget gives the `TextField`'s control. That attribute replaces the one MUI links its helper
+ * text by, and the field's plan knows only the parts RJSF draws, not this one MUI draws
+ *
+ * @param attributes - The attributes the widget gives its control
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
+ * @param helperText - The `helperText` the `TextField` is given
+ * @returns - The attributes, described by the helper text too where one renders
+ */
+export function describeByHelperText<A extends { 'aria-describedby'?: string }>(
+  attributes: A,
+  id: string,
+  helperText: ReactNode,
+): A {
+  if (!helperText) {
+    return attributes;
+  }
+  const describedBy = [attributes['aria-describedby'], helperTextId(id)].filter(Boolean).join(' ');
+  return { ...attributes, 'aria-describedby': describedBy };
 }

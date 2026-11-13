@@ -69,7 +69,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const Tab = styled(MuiTab)({
   padding: '4px',
-  fontSize: '1.25rem',
+  fontSize: '0.75rem',
   minWidth: '1rem',
   minHeight: '1rem',
   '&:hover': {
@@ -103,7 +103,7 @@ export default function SampleSelector({ onSelected, selectedSample }: SampleSel
     <Drawer variant='permanent' open={open}>
       <DrawerHeader>
         {open && (
-          <Typography component='div' variant='h4' sx={{ mr: 3 }}>
+          <Typography component='div' variant='h6' sx={{ mr: 3 }}>
             Samples
           </Typography>
         )}

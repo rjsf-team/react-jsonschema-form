@@ -40,7 +40,7 @@ const ordering: Sample = {
       'ui:widget': 'password',
     },
   },
-  formData: {
+  initialFormData: {
     firstName: 'Chuck',
     lastName: 'Norris',
     age: 75,

@@ -1,7 +1,14 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Checkbox } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  getTemplates,
+  getWidgetDescription,
+  schemaRequiresTrueValue,
+  widgetDrawsLabelText,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -9,9 +16,9 @@ import { ariaDescribedByIds, descriptionId, getTemplate, schemaRequiresTrueValue
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
     schema,
@@ -21,33 +28,34 @@ export default function CheckboxWidget<
     disabled,
     readonly,
     label,
-    hideLabel,
     autofocus,
     onChange,
     onBlur,
     onFocus,
     registry,
+    presentation,
     options,
     uiSchema,
     required,
   } = props;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const handleChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.checked);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.checked);
-  const description = options.description ?? schema.description;
+  const description = getWidgetDescription<T, S, F>(props);
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
 
   return (
     <>
-      {!hideLabel && description && (
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -56,15 +64,19 @@ export default function CheckboxWidget<
       <Checkbox
         id={id}
         name={htmlName || id}
-        label={label}
+        // Fluent marks the label by the checkbox's `required` unless the label's slot says otherwise
+        label={
+          hideLabel ? undefined : { children: label, required: marksRequired && templateMarksRequired<T, S, F>(props) }
+        }
         checked={typeof value === 'undefined' ? false : Boolean(value)}
         required={trueValueRequired}
+        aria-required={(marksRequired && !trueValueRequired) || undefined}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
       />
     </>
   );

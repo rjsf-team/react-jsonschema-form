@@ -15,13 +15,13 @@ const INITIAL_SCHEMA: ErrorSchema = {
   [ERRORS_KEY]: [INITIAL_ROOT],
   [STRING_PATH]: {
     [ERRORS_KEY]: [INITIAL_STRING],
-  } as ErrorSchema,
+  },
   [ARRAY_PATH[0]]: {
     [ARRAY_PATH[1]]: {
       [ERRORS_KEY]: [INITIAL_ARRAY],
     },
   },
-} as ErrorSchema;
+};
 
 describe('ErrorSchemaBuilder', () => {
   describe('no initial schema', () => {

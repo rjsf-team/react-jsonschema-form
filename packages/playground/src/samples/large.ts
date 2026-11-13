@@ -37,7 +37,7 @@ const large: Sample = {
       'ui:placeholder': 'Choose one',
     },
   },
-  formData: {},
+  initialFormData: {},
 };
 
 export default large;

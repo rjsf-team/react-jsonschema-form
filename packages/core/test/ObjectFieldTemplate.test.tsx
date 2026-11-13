@@ -53,7 +53,7 @@ describe('ObjectFieldTemplate', () => {
         properties: { foo: { type: 'string' }, bar: { type: 'string' } },
       },
       uiSchema: { 'ui:description': 'foobar' },
-      formData,
+      initialFormData: formData,
       templates: {
         ObjectFieldTemplate,
         TitleFieldTemplate,
@@ -72,7 +72,7 @@ describe('ObjectFieldTemplate', () => {
         'ui:description': 'foobar',
         'ui:ObjectFieldTemplate': ObjectFieldTemplate,
       },
-      formData,
+      initialFormData: formData,
       templates: {
         TitleFieldTemplate,
         DescriptionFieldTemplate,
@@ -90,7 +90,7 @@ describe('ObjectFieldTemplate', () => {
         'ui:description': 'foobar',
         'ui:ObjectFieldTemplate': ObjectFieldTemplate,
       },
-      formData,
+      initialFormData: formData,
       templates: {
         ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
         TitleFieldTemplate,

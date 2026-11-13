@@ -1,17 +1,57 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  FormContextType,
+  GroupedEnumOptionsType,
+  IndexedEnumOptionType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
+  enumOptionsValueForIndex,
+  flattenGroupedOptions,
   getOptionValueFormat,
+  groupEnumOptions,
+  hasWidgetErrors,
+  isEnumOptionsGroup,
+  listboxAriaProps,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  TranslatableString,
+  useSelectFocusHandlers,
+  widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
+import { commandListNameProps } from '../components/ui/command.tsx';
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select.tsx';
+import type { FancySelectItem, FancySelectSection } from '../components/ui/fancy-select.tsx';
 import { FancySelect } from '../components/ui/fancy-select.tsx';
 import { cn } from '../lib/utils.ts';
+
+/** Splits `groupedOptions` into the `FancySelectSection` list consumed by `FancySelect`/`FancyMultiSelect`: one
+ * section per `ui:options.optgroups` group, plus a trailing unheaded section for any ungrouped options.
+ */
+function toSections<V, S extends StrictRJSFSchema = RJSFSchema>(
+  groupedOptions: GroupedEnumOptionsType<S>[],
+  toItem: (option: IndexedEnumOptionType<S>) => FancySelectItem<V>,
+): FancySelectSection<V>[] {
+  const sections: FancySelectSection<V>[] = [];
+  const ungrouped: FancySelectItem<V>[] = [];
+  groupedOptions.forEach((item) => {
+    if (isEnumOptionsGroup<S>(item)) {
+      sections.push({ label: item.label, items: item.options.map(toItem) });
+    } else {
+      ungrouped.push(toItem(item));
+    }
+  });
+  if (ungrouped.length > 0) {
+    sections.push({ items: ungrouped });
+  }
+  return sections;
+}
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
@@ -19,81 +59,124 @@ import { cn } from '../lib/utils.ts';
  * @param props - The `WidgetProps` for this component
  */
 export default function SelectWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  id,
-  options,
-  required,
-  disabled,
-  readonly,
-  value,
-  schema,
-  multiple,
-  autofocus,
-  onChange,
-  onBlur,
-  onFocus,
-  placeholder,
-  rawErrors = [],
-  className,
-  registry,
-  uiSchema,
-}: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    options,
+    required,
+    disabled,
+    readonly,
+    value,
+    schema,
+    multiple,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+    placeholder,
+    className,
+    registry,
+    uiSchema,
+    presentation,
+  } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
-  const handleFancyFocus = () => {
-    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
-  };
+  const { handleFocus: handleFancyFocus, handleBlur: handleFancyBlur } = useSelectFocusHandlers<T, S, F>({
+    id,
+    value,
+    options,
+    onFocus,
+    onBlur,
+  });
 
-  const handleFancyBlur = () => {
-    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
-  };
+  // A single select's items are valued by their DOM values, which are what `FancySelect` selects by, and a multiple
+  // select's by the option values `FancyMultiSelect` compares the selection with
+  const toItem = <V,>(option: IndexedEnumOptionType<S>, itemValue: V): FancySelectItem<V> => ({
+    value: itemValue,
+    label: option.label,
+    index: option.index,
+    disabled: option.disabled,
+  });
+  const toDomValueItem = (option: IndexedEnumOptionType<S>) => toItem(option, domValues[option.index] ?? '');
+  const toOptionValueItem = (option: IndexedEnumOptionType<S>) => toItem(option, option.value);
 
-  const items = (enumOptions as any)?.map(({ value: enumValue, label: enumLabel }: any, index: number) => ({
-    value: multiple ? enumValue : enumOptionValueEncoder(enumValue, index, optionValueFormat),
-    label: enumLabel,
-    index,
-    disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
-  }));
+  // `optgroups` is presentational, so `items` stays in enum order: the fancy selects derive their current selection by
+  // filtering `items`, so that order reaches the array written to formData. Grouping is applied to `sections`, which
+  // is what the popup actually renders.
+  const enumOrder = flattenGroupedOptions<S>(groupEnumOptions<S>(enumOptions, undefined, enumDisabled));
+  const groups = optgroups ? groupEnumOptions<S>(enumOptions, optgroups, enumDisabled) : undefined;
 
-  const cnClassName = cn({ 'border-destructive': rawErrors.length > 0 }, className);
+  const {
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledby,
+    'aria-describedby': ariaDescribedby,
+    'aria-invalid': ariaInvalid,
+  } = widgetAriaProps(props);
+
+  const listProps = commandListNameProps(
+    listboxAriaProps<T, S, F>(props, { 'aria-labelledby': ariaLabelledby, 'aria-label': ariaLabel }),
+  );
+
+  const cnClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className);
+
+  const placeholderText = placeholder || registry.translateString(TranslatableString.SelectPlaceholder);
 
   return (
     <div className='p-0.5'>
       {!multiple ? (
         <FancySelect
-          items={items}
-          selected={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, '') as string}
+          id={id}
+          items={enumOrder.map(toDomValueItem)}
+          sections={groups && toSections(groups, toDomValueItem)}
+          selected={enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '')}
           onValueChange={(selectedValue) => {
             onChange(enumOptionValueDecoder<S>(selectedValue, enumOptions, optionValueFormat, optEmptyValue));
           }}
           autoFocus={autofocus}
           disabled={disabled || readonly}
           required={required}
-          placeholder={placeholder}
+          placeholder={placeholderText}
+          ariaLabel={ariaLabel}
+          ariaLabelledby={ariaLabelledby}
+          listProps={listProps}
+          ariaInvalid={ariaInvalid}
           className={cnClassName}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}
-          ariaDescribedby={ariaDescribedByIds(id)}
+          ariaDescribedby={ariaDescribedby}
         />
       ) : (
         <FancyMultiSelect
           id={id}
+          ariaLabel={ariaLabel}
+          ariaLabelledby={ariaLabelledby}
+          listProps={listProps}
+          placeholder={placeholderText}
+          removeItemLabel={(label) => registry.translateString(TranslatableString.RemoveItemButton, [label])}
           autoFocus={autofocus}
           disabled={disabled || readonly}
+          required={required}
           multiple
           className={cnClassName}
-          items={items}
-          selected={value}
-          onValueChange={(values) => {
-            onChange(enumOptionValueDecoder<S>(values.map(String), enumOptions, optionValueFormat, optEmptyValue));
+          items={enumOrder.map(toOptionValueItem)}
+          sections={groups && toSections(groups, toOptionValueItem)}
+          selected={value === undefined ? [] : [value].flat()}
+          onValueChange={(indexes) => {
+            // `FancyMultiSelect` reports the selected options by index whatever the `optionValueFormat`, so they're
+            // resolved as indexes rather than decoded as DOM values
+            onChange(enumOptionsValueForIndex<S>(indexes.map(String), enumOptions, optEmptyValue));
           }}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}
+          ariaDescribedby={ariaDescribedby}
+          ariaInvalid={ariaInvalid}
         />
       )}
       <SelectedOptionDescription
@@ -103,6 +186,8 @@ export default function SelectWidget<
         registry={registry}
         uiSchema={uiSchema}
         value={value}
+        hideLabel={hideLabel}
+        presentation={presentation}
       />
     </div>
   );

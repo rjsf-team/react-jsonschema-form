@@ -7,23 +7,25 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
-import { deepEquals, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix, hashForSchema } from '@rjsf/utils';
-import type { ErrorObject, ValidateFunction } from 'ajv';
-import type Ajv from 'ajv';
+import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, sharedCopyParts, withRootIdRefPrefix } from '@rjsf/utils';
+import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
+import ajvRootSchemaId from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
+import { changesData, copyForValidation } from './dataForValidation.ts';
+import localizeErrors from './localizeErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
+import withPartIdsUnder from './withPartIdsUnder.ts';
 
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */
 export default class AJV8Validator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** The AJV instance to use for all validations
    *
    * @private
@@ -48,11 +50,28 @@ export default class AJV8Validator<
    */
   private lastSeenRootSchema?: S;
 
-  /** True once a `rootSchema` has been registered with Ajv in this lifecycle.
+  /** The keys `isValid()` added schemas to Ajv under. A schema such as `{ $ref: '#/definitions/x' }` means something
+   * else under every root, and one with an `$id` of its own is keyed by that `$id` whatever root it names, so they are
+   * removed whenever another root is checked against or the one registered under the same id is replaced.
    *
    * @private
    */
-  private hasRegisteredRootSchema = false;
+  private readonly subschemaIds = new Set<string>();
+
+  /** The id the root `isValid()` last checked against is registered under, once one has been registered in this
+   * lifecycle
+   *
+   * @private
+   */
+  private currentRootSchemaId?: string;
+
+  /** Whether each function `isValid()` validated with can change the data, see `changesData()`. Ajv compiles a keyword
+   * into a function only when it was registered before the function was compiled, so asking once, at the function's
+   * first check, covers every keyword the function runs
+   *
+   * @private
+   */
+  private readonly changesDataOf = new WeakMap<ValidateFunction, boolean>();
 
   /** Constructs an `AJV8Validator` instance using the `options`
    *
@@ -85,26 +104,79 @@ export default class AJV8Validator<
    */
   reset() {
     this.ajv.removeSchema();
+    this.subschemaIds.clear();
+    this.currentRootSchemaId = undefined;
     this.lastSeenRootSchema = undefined;
-    this.hasRegisteredRootSchema = false;
+  }
+
+  /** Replaces the root registered under `rootSchemaId` with `rootSchema`, dropping the subschemas compiled against the
+   * one it replaces. Ajv also registers a root under its own `$id`, less an empty fragment, which is not
+   * `rootSchemaId` where the `uriResolver` normalizes it, so that registration is dropped too: left in place, it
+   * answers a lookup by that `$id` with the root it replaced.
+   *
+   * @param rootSchema - The root schema to register
+   * @param rootSchemaId - The id to register it under
+   * @param validate - Whether Ajv validates the root against its meta-schema
+   */
+  private replaceRootSchema(rootSchema: S, rootSchemaId: string, validate: boolean) {
+    const replaced = this.ajv.schemas[rootSchemaId]?.schema;
+    const ownId = isObject(replaced) ? replaced[ID_KEY] : undefined;
+    if (typeof ownId === 'string') {
+      this.ajv.removeSchema(ownId.replace(/#$/, ''));
+    }
+    this.ajv.removeSchema(rootSchemaId);
+    this.removeSubschemas();
+    if (isObject(rootSchema)) {
+      this.ajv.addSchema(rootSchema, rootSchemaId, undefined, validate);
+    }
+  }
+
+  /** Adds `schema`, which Ajv doesn't hold yet, under `schemaId`, for `removeSubschemas()` to remove, returning the
+   * function Ajv compiled it to
+   */
+  private addSubschema(schema: S, schemaId: string) {
+    // Ajv keys a schema by its `$id` without an empty trailing fragment, so it is removed under that key
+    this.subschemaIds.add(schemaId.replace(/#$/, ''));
+    const forAjv = withPartIdsUnder(schema, this.ajv.opts.schemaId);
+    return this.ajv.addSchema(forAjv, schemaId).getSchema(schemaId) ?? this.ajv.compile(forAjv);
+  }
+
+  /** Removes the schemas `isValid()` added, which were compiled against the root registered when they were added */
+  private removeSubschemas() {
+    this.removeSchemas(this.subschemaIds);
+    this.subschemaIds.clear();
+  }
+
+  /** Removes the schemas `isValid()` added under `ids` and every `$id` they hold, such as those of the parts an
+   * option's scoring copy holds once, which Ajv registers as the JSON pointer to it in the schema's document,
+   * `<id>#/…`, and which removing the schema leaves in place
+   */
+  private removeSchemas(ids: ReadonlySet<string>) {
+    if (ids.size === 0) {
+      return;
+    }
+    for (const [ref, target] of Object.entries(this.ajv.refs)) {
+      if (typeof target === 'string' && ids.has(target.split('#', 1)[0])) {
+        this.ajv.removeSchema(ref);
+      }
+    }
+    ids.forEach((id) => this.ajv.removeSchema(id));
   }
 
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
-   * @param schema - The schema against which to validate the form data   * @param schema
-   * @param formData - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<ErrorObject> {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
     try {
       if (schema[ID_KEY]) {
         compiledValidator = this.ajv.getSchema(schema[ID_KEY]);
       }
-      if (compiledValidator === undefined) {
-        compiledValidator = this.ajv.compile(schema);
-      }
+      compiledValidator ??= this.ajv.compile(schema);
       compiledValidator(formData);
     } catch (err) {
       compilationError = err as Error;
@@ -116,61 +188,33 @@ export default class AJV8Validator<
       // for anonymous schemas AJV uses the object reference as the key.
       // Guard with compiledValidator === undefined so that a runtime error thrown
       // by compiledValidator(formData) does not evict a correctly-compiled schema.
+      // A truthy non-string $id makes AJV throw before it caches anything, and
+      // removeSchema() would throw on it too, so there is nothing to remove.
       if (compiledValidator === undefined) {
-        this.ajv.removeSchema(schema[ID_KEY] !== undefined ? schema[ID_KEY] : (schema as object));
+        const id = schema[ID_KEY];
+        if (typeof id === 'string') {
+          this.ajv.removeSchema(id);
+        } else if (!id) {
+          this.ajv.removeSchema(schema);
+        }
       }
     }
 
     let errors;
     if (compiledValidator) {
-      if (typeof this.localizer === 'function') {
-        // Properties need to be enclosed with quotes so that
-        // `AJV8Validator#transformRJSFValidationErrors` replaces property names
-        // with `title` or `ui:title`. See #4348, #4349, #4387, and #4402.
-        (compiledValidator.errors ?? []).forEach((error) => {
-          ['missingProperty', 'property'].forEach((key) => {
-            if (error.params?.[key]) {
-              // oxlint-disable-next-line no-param-reassign
-              error.params[key] = `'${error.params[key]}'`;
-            }
-          });
-          if (error.params?.deps) {
-            // As `error.params.deps` is the comma+space separated list of missing dependencies, enclose each dependency separately.
-            // For example, `A, B` is converted into `'A', 'B'`.
-            // oxlint-disable-next-line no-param-reassign
-            error.params.deps = error.params.deps
-              .split(', ')
-              .map((v: string) => `'${v}'`)
-              .join(', ');
-          }
-        });
-        this.localizer(compiledValidator.errors);
-        // Revert to originals
-        (compiledValidator.errors ?? []).forEach((error) => {
-          ['missingProperty', 'property'].forEach((key) => {
-            if (error.params?.[key]) {
-              // oxlint-disable-next-line no-param-reassign
-              error.params[key] = error.params[key].slice(1, -1);
-            }
-          });
-          if (error.params?.deps) {
-            // Remove surrounding quotes from each missing dependency. For example, `'A', 'B'` is reverted to `A, B`.
-            // oxlint-disable-next-line no-param-reassign
-            error.params.deps = error.params.deps
-              .split(', ')
-              .map((v: string) => v.slice(1, -1))
-              .join(', ');
-          }
-        });
+      errors = compiledValidator.errors ?? undefined;
+      try {
+        if (typeof this.localizer === 'function') {
+          localizeErrors(this.localizer, compiledValidator.errors);
+        }
+      } finally {
+        // Clear errors to prevent persistent errors, see #1104
+        compiledValidator.errors = null;
       }
-      errors = compiledValidator.errors || undefined;
-
-      // Clear errors to prevent persistent errors, see #1104
-      compiledValidator.errors = null;
     }
 
     return {
-      errors: errors as unknown as Result[],
+      errors,
       validationError: compilationError,
     };
   }
@@ -185,17 +229,20 @@ export default class AJV8Validator<
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's
+   *        defaults applied; left out, they are computed here with the default `allOf` merge
    */
-  validateFormData(
+  validateFormData<T = unknown>(
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
+    const rawErrors = this.rawValidation(schema, formData);
     return processRawValidationErrors(
-      this,
+      { validator: this },
       rawErrors,
       formData,
       schema,
@@ -203,6 +250,7 @@ export default class AJV8Validator<
       transformErrors,
       uiSchema,
       this.suppressDuplicateFiltering,
+      getCustomValidateFormData,
     );
   }
 
@@ -213,65 +261,101 @@ export default class AJV8Validator<
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   handleSchemaUpdate(rootSchema: S): void {
-    if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
-      return;
+    this.registerRootSchema(rootSchema);
+  }
+
+  /** Registers `rootSchema` as `handleSchemaUpdate()` describes, returning the id it is registered under. The id is
+   * normalized through the `uriResolver` only when the root changes, since `isValid()` names the root by it on every
+   * call.
+   *
+   * @param rootSchema - The root schema used to provide $ref resolutions
+   * @returns - The id the root is registered under
+   */
+  private registerRootSchema(rootSchema: S): string {
+    if (this.lastSeenRootSchema === rootSchema && this.currentRootSchemaId !== undefined) {
+      return this.currentRootSchemaId;
     }
-    const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
+    const rootSchemaId = ajvRootSchemaId(rootSchema, this.ajv.opts.uriResolver);
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
     // if schema validator instance doesn't exist, add it.
     // else if the root schemas don't match, we should remove and add the root schema so we don't have to remove and recompile the schema every run.
-    if (this.ajv.getSchema(rootSchemaId) === undefined) {
-      this.ajv.addSchema(rootSchema, rootSchemaId);
-    } else if (!deepEquals(rootSchema, this.ajv.getSchema(rootSchemaId)?.schema)) {
-      this.ajv.removeSchema(rootSchemaId);
-      this.ajv.addSchema(rootSchema, rootSchemaId);
+    try {
+      if (this.ajv.getSchema(rootSchemaId) === undefined) {
+        this.ajv.addSchema(rootSchema, rootSchemaId);
+      } else if (!deepEquals(rootSchema, this.ajv.getSchema(rootSchemaId)?.schema)) {
+        this.replaceRootSchema(rootSchema, rootSchemaId, true);
+      }
+    } catch {
+      // A root this instance's dialect rejects, such as a 2020-12 root under the default draft-07 Ajv, is still
+      // registered, unvalidated, so a `$ref` into its definitions resolves from the first call on. The old root is
+      // dropped first because comparing against it compiles it, which throws for a rejected root.
+      this.replaceRootSchema(rootSchema, rootSchemaId, false);
+    }
+    if (this.currentRootSchemaId !== rootSchemaId) {
+      this.removeSubschemas();
+      this.currentRootSchemaId = rootSchemaId;
     }
     this.lastSeenRootSchema = rootSchema;
-    this.hasRegisteredRootSchema = true;
+    return rootSchemaId;
   }
 
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
-   * false.
+   * false. Where Ajv can change the data validated, under `useDefaults`, `coerceTypes` or `removeAdditional` or with a
+   * keyword registered with `modifying: true`, a copy of the `formData` is validated, so the `formData` itself never
+   * changes.
    *
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: S, formData: T | undefined, rootSchema: S) {
+  isValid(schema: S, formData: unknown, rootSchema: S) {
     // schemaId and compiled are declared outside the try so the catch block can
     // conditionally remove the broken schema from AJV's registry.
     let schemaId: string | undefined;
     let compiled = false;
     try {
-      this.handleSchemaUpdate(rootSchema);
-      // then rewrite the schema ref's to point to the rootSchema
-      // this accounts for the case where schema have references to models
-      // that lives in the rootSchema but not in the schema in question.
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      schemaId = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
-      let compiledValidator: ValidateFunction | undefined;
-      compiledValidator = this.ajv.getSchema(schemaId);
-      if (compiledValidator === undefined) {
-        // Add schema by an explicit ID so it can be fetched later
-        // Fall back to using compile if necessary
-        // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
-        compiledValidator =
-          this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ||
-          this.ajv.compile(schemaWithIdRefPrefix);
-      }
+      const rootSchemaId = this.registerRootSchema(rootSchema);
+      // A `$ref` local to the root, such as the `{ $ref: '#/properties/a/if' }` a form validates a condition with,
+      // names the root by the id it is registered under, whatever the schema holding it is registered as
+      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema, rootSchemaId);
+      schemaId = schemaKey(schemaWithIdRefPrefix);
+      // Add schema by an explicit ID so it can be fetched later
+      // Fall back to using compile if necessary
+      // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
+      const compiledValidator: ValidateFunction =
+        this.ajv.getSchema(schemaId) ?? this.addSubschema(schemaWithIdRefPrefix, schemaId);
       compiled = true;
-      const result = compiledValidator(formData);
-      return result;
+      let changes = this.changesDataOf.get(compiledValidator);
+      if (changes === undefined) {
+        changes = changesData(this.ajv);
+        this.changesDataOf.set(compiledValidator, changes);
+      }
+      return compiledValidator(changes ? copyForValidation(formData) : formData);
     } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.warn('Error encountered compiling schema:', e);
+      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning, and
+      // `compiled` distinguishes a schema that wouldn't compile from one that did and then threw on the form data,
+      // which would otherwise share a key whenever the two errors read alike
+      const named = schemaId === undefined ? '' : ` "${schemaId}"`;
+      logOnce(
+        compiled
+          ? `Error encountered validating form data against schema${named}:`
+          : `Error encountered compiling schema${named}:`,
+        'warn',
+        e,
+      );
       // Remove the broken schema from AJV's registry so a subsequent rawValidation
       // or isValid call does not silently reuse a cached entry that bypassed
       // meta-schema validation. Guard with !compiled so that a runtime error thrown
       // by compiledValidator(formData) does not evict a correctly-compiled schema.
       if (!compiled && schemaId !== undefined) {
-        this.ajv.removeSchema(schemaId);
+        // Only a schema holding parts it holds once, see `sharedCopyParts()`, has `$id`s registered beside it
+        const key = schemaId.replace(/#$/, '');
+        if (sharedCopyParts(schema).length === 0) {
+          this.ajv.removeSchema(key);
+        } else {
+          this.removeSchemas(new Set([key]));
+        }
       }
       return false;
     }

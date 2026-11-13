@@ -1,5 +1,17 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  // The root `knip` script deletes packages/*/lib first: knip resolves an `@rjsf/*` import through the package's
+  // `default` export condition, so a built lib/ would stand in for src/ and every export of src/index.ts would look
+  // unused. knip has no option for the `@rjsf/source` condition, and a tsconfig.json per package to map lib/ back to
+  // src/ would add a type-check program per package.
+  "ignoreIssues": {
+    // Public types cost no bundle size and name the parameters and results of the public exports.
+    "packages/utils/src/index.ts": ["types"],
+    // The index re-exports every type here with `export type *`, so each one is public.
+    "packages/utils/src/types.ts": ["types"],
+    // A module augmentation has to export the interface it merges into.
+    "packages/utils/src/jsonSchemaAugmentation.ts": ["types"],
+  },
   "workspaces": {
     ".": {
       // .github/size-limit/report.mjs: invoked with `node` from
@@ -10,33 +22,34 @@
       "ignoreBinaries": ["size-limit"],
       "ignoreDependencies": [
         // Required for nx publish
-        "@nx/js"
-      ]
+        "@nx/js",
+      ],
     },
-    "packages/daisyui": {
-      // Every src file is resolvable through the `./lib/*.js` exports wildcard,
-      // and per review (#5194) the files nothing in-repo imports stay until the
-      // next major rather than break deep imports. Treat all of src as entry
-      // points until then.
-      "entry": ["src/**/*.{ts,tsx}"],
-      // Widgets.tsx: its `default` is a compat alias for `generateWidgets` (same
-      // deep-import reasoning as above), which knip reports as a duplicate export.
-      "ignore": ["src/widgets/Widgets.tsx"],
+    // src/index.ts in these themes exports `Form` both as a named export and
+    // as `default` (a published alias, kept until the next major), which knip
+    // reports as a duplicate export.
+    "packages/chakra-ui": {
+      "ignore": ["src/index.ts"],
+    },
+    "packages/react-bootstrap": {
+      "ignore": ["src/index.ts"],
+    },
+    "packages/shadcn": {
+      // src/index.ts: see packages/chakra-ui.
+      "ignore": ["src/index.ts"],
+    },
+    "packages/utils": {
+      // `knip --production` leaves out utils' own tests, so there the index has to be imported by another package's
+      // source to count as used; the plain `knip` run still checks the tests. The production run skips exports
+      // tagged @testSeam, which exist only for utils' own tests.
+      "project": ["src/**/*.{ts,tsx}!", "test/**/*.{ts,tsx}"],
+      "includeEntryExports": true,
     },
     "packages/docs": {
       // Docusaurus scaffold kept for the homepage. It is also the only
       // TypeScript under packages/docs/src, so removing it leaves that
       // package's cs-check glob with no files to match.
       "ignore": ["src/components/HomepageFeatures/**"],
-    },
-    "packages/semantic-ui": {
-      // CSS-only package. No source file imports it, but it is a runtime
-      // dependency consumers load for the default theme (see the README).
-      "ignoreDependencies": ["semantic-ui-css"],
-    },
-    "packages/shadcn": {
-      // Published theme presets for consumers to copy; no in-repo importer.
-      "ignore": ["resources/*.css"],
     },
   },
 }

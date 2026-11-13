@@ -1,9 +1,11 @@
-import { DEFAULT_OPTIONS } from '../src/getSubmitButtonOptions.ts';
+import type { SubmitButtonOptions, UiSchema } from '../src/index.ts';
 import { getSubmitButtonOptions } from '../src/index.ts';
+
+const DEFAULT_OPTIONS: SubmitButtonOptions = { props: { disabled: false }, submitText: 'Submit', norender: false };
 
 describe('getSubmitButtonOptions', () => {
   it('default props', () => {
-    expect(getSubmitButtonOptions()).toBe(DEFAULT_OPTIONS);
+    expect(getSubmitButtonOptions()).toEqual(DEFAULT_OPTIONS);
   });
 
   it('allowed option should be false', () => {
@@ -52,5 +54,17 @@ describe('getSubmitButtonOptions', () => {
       ...DEFAULT_OPTIONS,
       submitText: 'Confirm',
     });
+  });
+
+  it('takes the default props for props a JSON uiSchema sets to null', () => {
+    const uiSchema: UiSchema = JSON.parse('{"ui:submitButtonOptions": {"props": null, "submitText": "Send"}}');
+
+    expect(getSubmitButtonOptions(uiSchema)).toEqual({ ...DEFAULT_OPTIONS, submitText: 'Send' });
+  });
+
+  it.each(['false', '"wide"', '2', '[]'])('takes the default props for props a JSON uiSchema sets to %s', (props) => {
+    const uiSchema: UiSchema = JSON.parse(`{"ui:submitButtonOptions": {"props": ${props}, "submitText": "Send"}}`);
+
+    expect(getSubmitButtonOptions(uiSchema)).toEqual({ ...DEFAULT_OPTIONS, submitText: 'Send' });
   });
 });

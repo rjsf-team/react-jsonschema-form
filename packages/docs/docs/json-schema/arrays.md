@@ -69,6 +69,20 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 > NOTE: The `items` property in `uiSchema` can also accept a function for dynamic UI schema generation based on array item data. See [Dynamic UI Schema Examples](../api-reference/dynamic-ui-schema-examples.md) for advanced use cases.
 
+### Disabling specific items
+
+The `items` function can disable an item, or make it read-only, from the item's data.
+Its move, copy and remove buttons are disabled with it:
+
+```tsx
+const uiSchema: UiSchema = {
+  items: (item: { locked?: boolean } | undefined) => (item?.locked ? { 'ui:disabled': true } : {}),
+};
+```
+
+Base the condition on the item's data, which moves with the item, not on its index.
+The other items keep their buttons, so moving one of them past a locked index, or removing one before it, puts another item at that index and the locked one somewhere else, where it can be changed or removed.
+
 ## The `additionalItems` keyword
 
 The `additionalItems` keyword allows the user to add additional items of a given schema. For example:
@@ -92,7 +106,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 ## Array item uiSchema options
 
-Any of these options can be set globally if they are contained within the `ui:globalOptions` block.
+The `orderable`, `addable`, `copyable` and `removable` options can be set globally if they are contained within the `ui:globalOptions` block, and `itemLabel` is set per array only.
 They can also be overridden on a per-field basis inside a `ui:options` block as shown below.
 
 ### `orderable` option
@@ -146,7 +160,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 ### `copyable` option
 
 A copy button is **NOT** shown by default for an item if `items` contains a schema object, or the item is an `additionalItems` instance.
-You can turn this **ON** with the `copyable` option in `uiSchema`:
+You can turn this **ON** with the `copyable` option in `uiSchema`. In an array with fixed `items`, it shows only from the last fixed item on, since a copy goes below its item and would push the fixed items after it into positions of another schema:
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -191,6 +205,48 @@ const uiSchema: UiSchema = {
 
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
+
+### `itemLabel` option
+
+An item's buttons are titled `Move up`, `Move down`, `Copy` and `Remove` by default, and screen readers announce those titles as the buttons' names, so every item in the list has buttons with the same names. Set `itemLabel` to the property of each item that names it, and the item's buttons are titled after it instead, such as `Remove report.pdf`:
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'array',
+  title: 'Attachments',
+  items: {
+    type: 'object',
+    properties: {
+      fileName: { type: 'string' },
+    },
+  },
+};
+
+const uiSchema: UiSchema = {
+  'ui:options': {
+    itemLabel: 'fileName',
+  },
+};
+
+render(
+  <Form
+    schema={schema}
+    uiSchema={uiSchema}
+    initialFormData={[{ fileName: 'report.pdf' }, { fileName: 'invoice.pdf' }]}
+    validator={validator}
+  />,
+  document.getElementById('app'),
+);
+```
+
+A dotted path, such as `'file.name'`, reads a nested property, and `'.'` names each item by its own value, for an array of strings or numbers. Since `.`, `[` and `]` always separate the parts of the path, a property whose own key contains one of them can't name the items, and a path of only separators other than `'.'`, such as `'[]'`, names nothing. An item whose value there isn't a non-empty string or a number keeps the default titles, such as one added to an array whose items have no default for that property.
+
+When more than one item has the same name, as when an item is copied, those items are numbered in the order they were added to the array, such as `Remove report.pdf (1)` and `Remove report.pdf (2)`, so their buttons can still be told apart. When the field first renders, its items are numbered in their order in the data. While the items change through the field's own buttons and inputs, a number stays with its item when items are moved or copied, and a copy takes the next number. The numbers stay consecutive, so removing one of those items renumbers the ones added after it. The order the items were added in isn't kept when the field renders again from scratch, as when a `oneOf` or `dependencies` switch brings it back, or when the array's data is replaced from outside the field, as by a form reset or `setFieldValue()`, so the numbers can change then: the items may be numbered in their order in the new data, or keep the order of the items they replaced. The numbers count only the items with that name, so adding, removing or moving an item with another name doesn't change them, and if a numbered name is already another item's name, the next free number is used. Items are named when their options give them buttons, so none are when `orderable` and `removable` are `false` and Copy can't show. Copy shows only while an item can be added, so it never does when `copyable` isn't set, when `addable` is `false`, or when `maxItems` leaves no room for another item. In an array with fixed `items`, the fixed items can't be moved or removed, so only the last of them can be named, when it can show Copy, which also needs `additionalItems`.
+
+The titles come from translatable strings: `CopyItemButton`, `MoveDownItemButton`, `MoveUpItemButton` and `RemoveItemButton`, in which `%1` is the item's name, and `ItemNameWithNumber`, in which `%1` is a shared name and `%2` its number. If you translate RJSF's strings with a custom [`translateString`](../api-reference/form-props.md#translatestring), translate these as well. A title it returns empty is left off, so that button keeps its default title, and if it returns `ItemNameWithNumber` empty, shared names aren't numbered.
 
 ## Multiple-choice list
 

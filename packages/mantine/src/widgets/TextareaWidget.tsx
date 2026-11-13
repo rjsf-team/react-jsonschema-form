@@ -2,39 +2,24 @@ import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Textarea } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { labelValue, ariaDescribedByIds } from '@rjsf/utils';
+import { labelValue, toInputValue, widgetDrawsLabel } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps, getRequiredProps } from '../utils.tsx';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
  * @param props - The `WidgetProps` for this component
  */
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): ReactElement {
-  const {
-    id,
-    name,
-    htmlName,
-    value,
-    placeholder,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    label,
-    hideLabel,
-    rawErrors,
-    options,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
+  const { id, htmlName, value, placeholder, disabled, readonly, autofocus, label, options, onChange, onBlur, onFocus } =
+    props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
   const emptyValue = options?.emptyValue;
 
   const handleChange = useCallback(
@@ -62,22 +47,27 @@ export default function TextareaWidget<
     [onFocus, id],
   );
 
+  const ariaDescribedByProps = useInputAriaProps('Textarea', props);
+  const error = getWidgetError<T, S, F>(props);
+
   return (
     <Textarea
       id={id}
-      name={htmlName || name}
-      value={value || ''}
+      name={htmlName || id}
+      value={toInputValue(value)}
       placeholder={placeholder || undefined}
-      required={required}
+      rows={options.rows}
+      {...getRequiredProps<T, S, F>(props)}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       label={labelValue(label || undefined, hideLabel, false)}
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      aria-describedby={ariaDescribedByIds(id)}
+      error={error}
       {...themeProps}
+      {...ariaDescribedByProps}
+      {...getDescriptionProps(props)}
     />
   );
 }

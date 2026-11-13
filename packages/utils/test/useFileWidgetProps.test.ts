@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import { renderHook, waitFor } from '@testing-library/react';
-import type { Mock } from 'vitest';
+import type { Mock, MockInstance } from 'vitest';
 
 import type { FileInfoType } from '../src/index.ts';
 import { useFileWidgetProps } from '../src/index.ts';
@@ -53,23 +53,27 @@ function toFileList(list: File[]) {
   return dataTransfer.files;
 }
 
+const FN_RESULT = { target: { result: 'data:text/plain;base64,' } };
+
+/** A `FileReader` constructor whose reader fires `onload` with `event` as soon as it is set */
+function fileReaderFiring(event: unknown) {
+  // A function expression, not an arrow: the hook calls `new FileReader()`
+  return function windowFileReaderSpy() {
+    return {
+      set onload(fn: (loadEvent: unknown) => void) {
+        fn(event);
+      },
+      readAsDataUrl: vi.fn(),
+    } as unknown as FileReader;
+  };
+}
+
 describe('useFileWidgetProps()', () => {
   let onChange: Mock;
-  let windowFileReaderSpy: ReturnType<typeof vi.spyOn>;
-  let FN_RESULT: any;
+  let windowFileReaderSpy: MockInstance<typeof window.FileReader>;
   beforeAll(() => {
     onChange = vi.fn();
-    FN_RESULT = { target: { result: 'data:text/plain;base64,' } };
-    // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
-    windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(function windowFileReaderSpy() {
-      return {
-        // oxlint-disable-next-line no-unused-vars
-        set onload(fn: (event: any) => void) {
-          fn(FN_RESULT);
-        },
-        readAsDataUrl: vi.fn(),
-      } as unknown as FileReader;
-    });
+    windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(fileReaderFiring(FN_RESULT));
   });
   afterEach(() => {
     onChange.mockClear();
@@ -99,6 +103,24 @@ describe('useFileWidgetProps()', () => {
     await waitFor(() => {
       // Expect the onChange handler was called with the converted file
       expect(onChange).toHaveBeenCalledWith(FILE_3_STR);
+    });
+  });
+  test('File initial value, single, handleChange with no files clears the value', async () => {
+    const { result } = renderHook(() => useFileWidgetProps(FILE_2_STR, onChange));
+    const { handleChange } = result.current;
+    // An empty selection is a cleared input
+    await handleChange(toFileList([]));
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalledWith(undefined);
+    });
+  });
+  test('File initial value, multiple, handleChange with no files clears the value', async () => {
+    const { result } = renderHook(() => useFileWidgetProps([FILE_2_STR], onChange, true));
+    const { handleChange } = result.current;
+    // An empty selection is a cleared input, not an empty append onto the existing files
+    await handleChange(toFileList([]));
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalledWith([]);
     });
   });
   test('File initial value, single, handleRemove', async () => {
@@ -179,8 +201,21 @@ describe('useFileWidgetProps()', () => {
       expect(onChange).toHaveBeenCalledWith(FILE_3_STR);
     });
   });
+  test('Bad initial value, multiple, the next selection replaces a lone value that is not a data URL', async () => {
+    const { result } = renderHook(() => useFileWidgetProps('not-a-data-url', onChange, true));
+    expect(result.current.filesInfo).toEqual([]);
+    await result.current.handleChange(toFileList([FILE_3]));
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalledWith([FILE_3_STR]);
+    });
+  });
+  test('File initial value, multiple, handleRemove of a lone data URL', () => {
+    const { result } = renderHook(() => useFileWidgetProps(FILE_2_STR, onChange, true));
+    result.current.handleRemove(0);
+    expect(onChange).toHaveBeenCalledWith([]);
+  });
   test('null, single, handleChange, NO dataURL', async () => {
-    FN_RESULT = { target: null };
+    windowFileReaderSpy.mockImplementationOnce(fileReaderFiring({ target: null }));
     const { result } = renderHook(() => useFileWidgetProps(null, onChange));
     const { filesInfo, handleChange, handleRemove } = result.current;
     expect(filesInfo).toEqual([]);
@@ -192,5 +227,25 @@ describe('useFileWidgetProps()', () => {
       // Expect the onChange handler was called with the converted file
       expect(onChange).toHaveBeenCalledWith(null);
     });
+  });
+  test('multiple, a file that could not be read stays in the list without file info', () => {
+    const { result } = renderHook(() => useFileWidgetProps([null, FILE_2_STR], onChange, true));
+    const { filesInfo, handleRemove } = result.current;
+    expect(filesInfo).toEqual([FILE_2_INFO]);
+    // The index of the file shown, as each theme's remove button passes it
+    handleRemove(0);
+    expect(onChange).toHaveBeenCalledWith([null]);
+  });
+  test('multiple, an item that is not a data URL is kept when another file is removed', () => {
+    const { result } = renderHook(() => useFileWidgetProps([42, FILE_1_STR, FILE_2_STR], onChange, true));
+    result.current.handleRemove(0);
+    expect(onChange).toHaveBeenCalledWith([42, FILE_2_STR]);
+  });
+  test('a value that holds no data URL has no files', () => {
+    expect(renderHook(() => useFileWidgetProps('', onChange)).result.current.filesInfo).toEqual([]);
+    expect(renderHook(() => useFileWidgetProps(42, onChange)).result.current.filesInfo).toEqual([]);
+    expect(renderHook(() => useFileWidgetProps([42, FILE_2_STR], onChange, true)).result.current.filesInfo).toEqual([
+      FILE_2_INFO,
+    ]);
   });
 });

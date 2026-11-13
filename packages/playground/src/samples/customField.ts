@@ -24,7 +24,7 @@ const customField: Sample = {
     },
   },
   uiSchema: {},
-  formData: {
+  initialFormData: {
     mySpecialStringField: 'special-text',
   },
 };

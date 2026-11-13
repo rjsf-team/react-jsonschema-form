@@ -934,3 +934,52 @@ export const testAnyOfDiscriminatorSchema: RJSFSchema = {
 
 export const ANSWER_1 = { answer: '1' };
 export const ANSWER_2 = { answer: '2' };
+
+/** The `cat` a resource of its own defines, which the roots below define nothing by */
+const PET_CAT: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+
+/** A draft 2020-12 root whose field `p` offers a `$ref` to the resource `pet.json` with a `kind` property beside it,
+ * which the resource declares too, as a `$ref` to its own `cat`: the two declarations merge into a property no graph
+ * holds, whose `$ref` resolves in the resource. Its other option is a `dog` of the root's.
+ */
+export const PET_RESOURCE_SCHEMA: RJSFSchema = deepFreeze<RJSFSchema>({
+  $schema: 'https://json-schema.org/draft/2020-12/schema',
+  $id: 'https://example.com/root.json',
+  $defs: {
+    pet: {
+      $id: 'pet.json',
+      $defs: { cat: PET_CAT },
+      type: 'object',
+      properties: { kind: { $ref: '#/$defs/cat' } },
+    },
+    dog: { type: 'object', properties: { kind: { type: 'string' }, bark: { type: 'string', default: 'b' } } },
+  },
+  type: 'object',
+  properties: {
+    p: { oneOf: [{ $ref: 'pet.json', properties: { kind: { title: 'Kind' } } }, { $ref: '#/$defs/dog' }] },
+  },
+});
+
+/** `PET_RESOURCE_SCHEMA` one level down: the merged property `info` holds the merged property `kind` */
+export const PET_RESOURCE_DEEP_SCHEMA: RJSFSchema = deepFreeze<RJSFSchema>({
+  $schema: 'https://json-schema.org/draft/2020-12/schema',
+  $id: 'https://example.com/root.json',
+  $defs: {
+    pet: {
+      $id: 'pet.json',
+      $defs: { cat: PET_CAT },
+      type: 'object',
+      properties: { info: { type: 'object', properties: { kind: { $ref: '#/$defs/cat' } } } },
+    },
+    dog: { type: 'object', properties: { info: { type: 'string' }, bark: { type: 'string', default: 'b' } } },
+  },
+  type: 'object',
+  properties: {
+    p: {
+      oneOf: [
+        { $ref: 'pet.json', properties: { info: { properties: { kind: { title: 'Kind' } } } } },
+        { $ref: '#/$defs/dog' },
+      ],
+    },
+  },
+});

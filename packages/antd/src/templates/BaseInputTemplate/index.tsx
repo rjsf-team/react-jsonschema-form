@@ -1,15 +1,19 @@
 import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
-import type {
-  BaseInputTemplateProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import {
+  examplesId,
+  getBaseInputProps,
+  getControlAttributes,
+  getExampleSuggestions,
+  numericWidgetStoresString,
+  offersClearButton,
+  toInputValue,
 } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
+
+import useControlState from '../../controlState.ts';
 
 const INPUT_STYLE = {
   width: '100%',
@@ -22,11 +26,12 @@ const INPUT_STYLE = {
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
+    autofocus,
     disabled,
     registry,
     id,
@@ -41,20 +46,20 @@ export default function BaseInputTemplate<
     required,
     schema,
     value,
-    type,
+    presentation,
   } = props;
-  const { formContext } = registry;
-  // InputNumber doesn't use a native <input type="number"> directly - it wraps it and controls the stepping behavior
-  // through its own props. The step prop in Ant Design expects a number, not the string "any"
-  const inputProps = getInputProps<T, S, F>(schema, type, options, false);
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  // `InputNumber` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared to
+  // receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
+  // `InputNumber` wraps its input and steps through its own `step`, which takes a number rather than `'any'`
+  const plainInput = Boolean(onChangeOverride);
+  const inputProps = getBaseInputProps<T, S, F>(props, plainInput);
+  const control = useControlState<T, S, F>({ disabled, readonly, registry });
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const handleNumberChange = (nextValue: number | null) =>
-    onChange(nextValue === null ? options.emptyValue : nextValue);
+  const handleNumberChange = (nextValue: unknown) => onChange(nextValue ?? options.emptyValue);
 
   const handleTextChange =
-    onChangeOverride ||
+    onChangeOverride ??
     (({ target }: ChangeEvent<HTMLInputElement>) => onChange(target.value === '' ? options.emptyValue : target.value));
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
@@ -72,52 +77,70 @@ export default function BaseInputTemplate<
 
   const { min, max, ...restInputProps } = inputProps;
 
-  const input =
-    inputProps.type === 'number' || inputProps.type === 'integer' ? (
-      <InputNumber
-        disabled={disabled || (readonlyAsDisabled && readonly)}
-        id={id}
-        name={htmlName || id}
-        onBlur={!readonly ? handleBlur : undefined}
-        onChange={!readonly ? handleNumberChange : undefined}
-        onFocus={!readonly ? handleFocus : undefined}
-        placeholder={placeholder}
-        required={required}
-        style={INPUT_STYLE}
-        changeOnWheel={false}
-        list={schema.examples ? examplesId(id) : undefined}
-        {...restInputProps}
-        min={typeof min === 'number' ? min : undefined}
-        max={typeof max === 'number' ? max : undefined}
-        type={undefined}
-        value={value}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    ) : (
-      <Input
-        disabled={disabled || (readonlyAsDisabled && readonly)}
-        id={id}
-        name={htmlName || id}
-        onBlur={!readonly ? handleBlur : undefined}
-        onChange={!readonly ? handleTextChange : undefined}
-        onFocus={!readonly ? handleFocus : undefined}
-        placeholder={placeholder}
-        required={required}
-        style={INPUT_STYLE}
-        list={schema.examples ? examplesId(id) : undefined}
-        {...inputProps}
-        value={value}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    );
+  const isNumeric = !plainInput && (inputProps.type === 'number' || inputProps.type === 'integer');
+
+  // A string is handed over as it is, as a string field that `ui:inputType: 'number'` renders here stores one, and
+  // `InputNumber` keeps the digits a conversion to a number would round. Its `stringMode` writes such a field a string
+  // with those digits too
+  const numberValue = typeof value === 'number' || typeof value === 'string' ? value : undefined;
+  const stringMode = numericWidgetStoresString<S>(schema, value);
+
+  const inputValue = toInputValue(value);
+  // `InputNumber` shows whatever string or number it's given, where a native number input blanks all but a number
+  const showsValue = isNumeric ? Boolean(toInputValue(numberValue)) : offersClearButton(inputValue, inputProps.type);
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
+  const controlAttributes = getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []);
+  const input = isNumeric ? (
+    <InputNumber
+      autoFocus={autofocus}
+      disabled={control.disabled}
+      id={id}
+      name={htmlName || id}
+      onBlur={!readonly ? handleBlur : undefined}
+      onChange={!readonly ? handleNumberChange : undefined}
+      onFocus={!readonly ? handleFocus : undefined}
+      placeholder={placeholder}
+      readOnly={readonly}
+      required={required}
+      style={INPUT_STYLE}
+      changeOnWheel={false}
+      list={hasExamples ? examplesId(id) : undefined}
+      {...restInputProps}
+      min={typeof min === 'number' ? min : undefined}
+      max={typeof max === 'number' ? max : undefined}
+      type={undefined}
+      stringMode={stringMode}
+      value={numberValue}
+      {...controlAttributes}
+    />
+  ) : (
+    <Input
+      autoFocus={autofocus}
+      disabled={control.disabled}
+      id={id}
+      name={htmlName || id}
+      onBlur={!readonly ? handleBlur : undefined}
+      onChange={!readonly ? handleTextChange : undefined}
+      onFocus={!readonly ? handleFocus : undefined}
+      placeholder={placeholder}
+      readOnly={readonly}
+      required={required}
+      style={INPUT_STYLE}
+      list={hasExamples ? examplesId(id) : undefined}
+      {...inputProps}
+      value={value === undefined ? undefined : inputValue}
+      {...controlAttributes}
+    />
+  );
 
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && showsValue && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

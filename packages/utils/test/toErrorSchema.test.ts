@@ -11,4 +11,10 @@ describe('toErrorSchema()', () => {
   it('puts an error without a property at the root of the ErrorSchema', () => {
     expect(toErrorSchema([{ message: 'err', stack: 'err' }])).toEqual({ __errors: ['err'] });
   });
+  it('files an error at a __proto__ path under that key without changing the prototype', () => {
+    const errorSchema = toErrorSchema([{ property: '.obj.__proto__', message: 'err', stack: '.obj.__proto__ err' }]);
+    const { obj } = errorSchema as Record<string, object>;
+    expect(Object.getPrototypeOf(obj)).toBe(Object.prototype);
+    expect(Object.getOwnPropertyDescriptor(obj, '__proto__')?.value).toEqual({ __errors: ['err'] });
+  });
 });

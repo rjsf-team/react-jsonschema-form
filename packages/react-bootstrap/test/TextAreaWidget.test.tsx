@@ -5,11 +5,12 @@ import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 describe('TextareaWidget', () => {
   test('simple without errors', () => {
-    const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps({})} />);
+    const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps()} />);
     expect(asFragment()).toMatchSnapshot();
   });
   test('simple with errors', () => {
     const { asFragment } = render(
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       <TextareaWidget {...makeWidgetMockProps({ rawErrors: ['Invalid 1', 'Invalid 2'] })} />,
     );
     expect(asFragment()).toMatchSnapshot();
@@ -18,5 +19,12 @@ describe('TextareaWidget', () => {
   test('simple without required', () => {
     const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps({ required: false })} />);
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  test('empties its text when its value is cleared to undefined', () => {
+    const { container, rerender } = render(<TextareaWidget {...makeWidgetMockProps({ value: 'abc' })} />);
+    rerender(<TextareaWidget {...makeWidgetMockProps({ value: undefined })} />);
+
+    expect(container.querySelector('textarea')).toHaveValue('');
   });
 });

@@ -16,7 +16,7 @@ export default function Example() {
 
 ## Behavior
 
-- Implements RJSF's `ValidatorType<T, S, F>` interface.
+- Implements RJSF's `ValidatorType<S, F>` interface.
 - Normalizes `undefined` before validation: undefined object members are omitted so `required` errors surface, while undefined array entries become `null`.
 - Caches schema-bound engine instances by schema `$id` (or the RJSF schema hash) and refreshes them when the schema or root schema changes.
 - Supports `customValidate`, `transformErrors`, custom formats, duplicate `anyOf`/`oneOf` filtering, and the RJSF `color` and `data-url` formats.
@@ -38,12 +38,12 @@ const validator = customizeValidator({
 
 Unknown keywords are annotations to the underlying engine, so unsupported extensions are not validation constraints.
 
-| Keyword or extension | Status | Notes |
-| --- | --- | --- |
+| Keyword or extension             | Status      | Notes                                                                                              |
+| -------------------------------- | ----------- | -------------------------------------------------------------------------------------------------- |
 | `$dynamicRef` / `$dynamicAnchor` | Unsupported | Tracked upstream in [`cfworker/json-schema#150`](https://github.com/cfworker/cfworker/issues/150). |
-| AJV `$data` references | Unsupported | AJV-specific extension; use literal schema values. |
-| OpenAPI `discriminator` | Unsupported | Use standard `oneOf` constraints without discriminator semantics. |
-| `errorMessage` from `ajv-errors` | Unsupported | Use RJSF's `transformErrors` hook instead. |
+| AJV `$data` references           | Unsupported | AJV-specific extension; use literal schema values.                                                 |
+| OpenAPI `discriminator`          | Unsupported | Use standard `oneOf` constraints without discriminator semantics.                                  |
+| `errorMessage` from `ajv-errors` | Unsupported | Use RJSF's `transformErrors` hook instead.                                                         |
 
 Precompiled-validator mode is intentionally outside this initial package. Runtime error messages also differ from AJV, and there is no `ajv-i18n` equivalent.
 

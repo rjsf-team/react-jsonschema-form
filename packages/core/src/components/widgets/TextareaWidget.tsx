@@ -1,13 +1,17 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds } from '@rjsf/utils';
+import { getControlAttributes, toInputValue } from '@rjsf/utils';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
  * @param props - The `WidgetProps` for this component
  */
-function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+function TextareaWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   id,
   options,
   placeholder,
@@ -20,7 +24,10 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   onBlur,
   onFocus,
   htmlName,
+  registry,
+  presentation,
 }: WidgetProps<T, S, F>) {
+  const { classMap } = registry;
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
       onChange(newValue === '' ? options.emptyValue : newValue),
@@ -41,8 +48,8 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
     <textarea
       id={id}
       name={htmlName || id}
-      className='form-control'
-      value={value || ''}
+      className={classMap.textarea}
+      value={toInputValue(value)}
       placeholder={placeholder}
       required={required}
       disabled={disabled}
@@ -52,7 +59,7 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
       onBlur={handleBlur}
       onFocus={handleFocus}
       onChange={handleChange}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );
 }

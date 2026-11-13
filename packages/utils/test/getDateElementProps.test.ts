@@ -1,9 +1,24 @@
-import getDateElementProps from '../src/getDateElementProps.ts';
+import getDateElementProps, { isDateElementFormat, normalizeYearsRange } from '../src/getDateElementProps.ts';
 
 describe('getDateElementProps', () => {
   const monthRange = [1, 12];
   const dayRange = [1, 31];
   const defaultYearRange = [1900, new Date().getFullYear() + 2] as [number, number];
+
+  it('gives a part the date holds as -1 an undefined value, and a part of 0 its 0', () => {
+    const date = { day: -1, month: 12, year: -1, hour: 0, minute: -1, second: 0 };
+
+    const prop = getDateElementProps(date, true);
+
+    expect(prop).toEqual([
+      { type: 'year', range: defaultYearRange, value: undefined },
+      { type: 'month', range: monthRange, value: 12 },
+      { type: 'day', range: dayRange, value: undefined },
+      { type: 'hour', range: [0, 23], value: 0 },
+      { type: 'minute', range: [0, 59], value: undefined },
+      { type: 'second', range: [0, 59], value: 0 },
+    ]);
+  });
 
   it('returns date in default(YMD) format when time is false and format is not passed', () => {
     const date = { day: 11, month: 12, year: 2023 };
@@ -100,5 +115,67 @@ describe('getDateElementProps', () => {
       { type: 'minute', range: [0, 59], value: date.minute },
       { type: 'second', range: [0, 59], value: date.second },
     ]);
+  });
+});
+
+describe('getDateElementProps() with a yearRange it cannot offer', () => {
+  it.each([
+    ['a span of a billion years', [1, 1e9]],
+    ['years too large to count one by one', [1e16, 1e16]],
+    ['a relative and an absolute year', [-10, 2030]],
+    ['years before 100', [0, 2]],
+  ] as const)('offers the default years for %s', (_, yearRange) => {
+    const [year] = getDateElementProps({ year: -1, month: -1, day: -1 }, false, yearRange);
+
+    expect(year.range).toEqual([1900, new Date().getFullYear() + 2]);
+  });
+});
+
+describe('isDateElementFormat()', () => {
+  it.each(['DMY', 'MDY', 'YMD'])('accepts %s', (format) => {
+    expect(isDateElementFormat(format)).toBe(true);
+  });
+  it.each([
+    ['another string', 'hex'],
+    ['undefined', undefined],
+    ['a number', 1],
+  ])('rejects %s', (_, format) => {
+    expect(isDateElementFormat(format)).toBe(false);
+  });
+});
+
+describe('normalizeYearsRange()', () => {
+  it('keeps two years of the same kind', () => {
+    expect(normalizeYearsRange([1990, 2030])).toEqual([1990, 2030]);
+    expect(normalizeYearsRange([-10, 0])).toEqual([-10, 0]);
+  });
+  it('reads a year held as a numeric string as its number', () => {
+    expect(normalizeYearsRange(['1990', '2030'])).toEqual([1990, 2030]);
+  });
+  it('rounds a fractional year down', () => {
+    expect(normalizeYearsRange([1990.5, 1992.5])).toEqual([1990, 1992]);
+  });
+  it('keeps years from 100 to 9999', () => {
+    expect(normalizeYearsRange([100, 9999])).toEqual([100, 9999]);
+    expect(normalizeYearsRange([9999, 100])).toEqual([9999, 100]);
+  });
+  it('ignores entries after the first two', () => {
+    expect(normalizeYearsRange([1990, 2030, 'junk'])).toEqual([1990, 2030]);
+  });
+  it.each([
+    ['undefined', undefined],
+    ['a number', 2000],
+    ['one entry', [1990]],
+    ['a year that is not a number', [1990, 'soon']],
+    ['a relative and an absolute year', [-10, 2030]],
+    ['absolute years from 0', [0, 2]],
+    ['an absolute year below 100', [99, 2030]],
+    ['an absolute year above 9999', [2000, 10000]],
+    ['a relative year before the year 100', [-3000, 0]],
+    ['a span of a billion years', [1, 1e9]],
+    ['years too large to count one by one', [1e16, 1e16]],
+    ['years too large to count one by one as numeric strings', ['10000000000000000', '10000000000000000']],
+  ])('gives undefined for %s', (_, yearsRange) => {
+    expect(normalizeYearsRange(yearsRange)).toBeUndefined();
   });
 });

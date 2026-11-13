@@ -1,58 +1,52 @@
 import type { ReactNode } from 'react';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { use, useMemo, useSyncExternalStore } from 'react';
 import type { ThemeProps } from '@rjsf/core';
-import { getDefaultRegistry } from '@rjsf/core';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
-import { generateTemplates } from '../templates/Templates.tsx';
-import { generateWidgets } from '../widgets/Widgets.tsx';
+import { generateClassMap } from '../classMap.ts';
+import { createTemplates } from '../templates/index.ts';
+import { DAISY_GLOBAL_UI_OPTIONS_KEYS } from '../utils.ts';
+import { createWidgets } from '../widgets/index.ts';
+import { FrameThemeContext } from './frameTheme.ts';
+import { DEFAULT_THEME, readStoredTheme, storeTheme, subscribeToStoredTheme } from './storedTheme.ts';
 
-/** Generates a complete theme configuration for RJSF with DaisyUI styling
- *
- * Combines templates and widgets with default fields to create a complete theme
- * that can be used with react-jsonschema-form.
+/** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: the toggle draws its
+ * own label and description and holds `false` unchecked, as the checkbox does
+ */
+function createPresentation(): ThemePresentation {
+  return {
+    widgets: {
+      toggle: { label: 'self', description: 'self', uncheckedIsFalse: true },
+    },
+    // `FieldTemplate` draws the description and help below the widget
+    fieldTemplateOrder: ['children', 'description', 'help'],
+  };
+}
+
+function createTheme() {
+  const widgets = createWidgets();
+  return {
+    templates: createTemplates(),
+    widgets: { ...widgets, boolean: widgets.toggle },
+    presentation: createPresentation(),
+    classMap: generateClassMap(),
+    globalUiOptionsKeys: [...DAISY_GLOBAL_UI_OPTIONS_KEYS],
+  };
+}
+
+/** Generates the DaisyUI theme: its templates, widgets and class map, as overrides on the core defaults
  *
  * @returns A ThemeProps object containing all necessary components for the theme
  */
 export function generateTheme<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): ThemeProps<T, S, F> {
-  const { fields } = getDefaultRegistry<T, S, F>();
-  const generatedWidgets = generateWidgets<T, S, F>();
-  const templates = generateTemplates<T, S, F>();
-
-  return {
-    templates,
-    widgets: {
-      ...generatedWidgets,
-      boolean: generatedWidgets.toggle,
-    },
-    fields,
-  };
+  return createTheme();
 }
 
-/** Default theme export with pre-generated theme components */
-const Theme = generateTheme();
-
-export default Theme;
-
-/** Interface for the theme context that manages and provides the current DaisyUI theme */
-interface ThemeContextType {
-  /** Current DaisyUI theme name */
-  theme: string;
-  /** Function to update the current theme */
-  setTheme: (theme: string) => void;
-}
-
-/** React context for sharing theme information throughout the application */
-export const ThemeContext = createContext<ThemeContextType>({
-  theme: 'night',
-  setTheme: () => {
-    /* empty */
-  },
-});
+export default createTheme();
 
 /** Props for the ThemeProvider component */
 interface ThemeProviderProps {
@@ -60,39 +54,31 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-/** ThemeProvider component that manages DaisyUI theme state and persistence
- *
- * This provider:
- * - Loads the theme from localStorage
- * - Provides theme state via context
- * - Persists theme changes to localStorage
+/** ThemeProvider component, kept for the apps that wrap their forms in it: `useTheme()` reads the stored theme itself,
+ * so the provider holds no theme of its own and renders its children as they are
  *
  * @param props - The props for the component
  */
-export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState(() => {
-    try {
-      return localStorage.getItem('daisyui-theme') || 'cupcake';
-    } catch {
-      return 'cupcake';
-    }
-  });
-
-  const handleSetTheme = useCallback((newTheme: string) => {
-    try {
-      localStorage.setItem('daisyui-theme', newTheme);
-      setTheme(newTheme);
-    } catch {
-      // Ignore localStorage errors
-    }
-  }, []);
-
-  const contextValue = useMemo(() => ({ theme, setTheme: handleSetTheme }), [theme, handleSetTheme]);
-  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
+export function ThemeProvider({ children }: ThemeProviderProps): ReactNode {
+  return children;
 }
 
-/** Custom hook for accessing the current theme and theme setter function
+/** Custom hook for accessing the current theme and theme setter function, inside a `ThemeProvider` or not. Inside a
+ * `DaisyUIFrameProvider` it names the theme that frame shows, its chosen `dataTheme` from the first render on.
+ * Elsewhere it reads the stored theme as an external store, so it follows one a caller, a frame provider or another tab
+ * stores. The server has no storage, so it renders a frame's chosen theme or the default
  *
- * @returns The current theme context with theme name and setter function
+ * @returns The current theme name, and the setter that stores a theme. A frame with a chosen `dataTheme` keeps showing
+ *          it, and a storage that refuses one leaves the theme as it was
  */
-export const useTheme = () => useContext(ThemeContext);
+export function useTheme() {
+  const frameTheme = use(FrameThemeContext);
+  // Inside a frame the snapshot is the frame's theme, which a stored theme doesn't change, so a theme stored while the
+  // frame shows another renders nothing here; the frame hands down the stored one when it shows it
+  const theme = useSyncExternalStore(
+    subscribeToStoredTheme,
+    () => frameTheme ?? readStoredTheme(),
+    () => frameTheme ?? DEFAULT_THEME,
+  );
+  return useMemo(() => ({ theme, setTheme: storeTheme }), [theme]);
+}

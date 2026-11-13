@@ -2,23 +2,24 @@ import type { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } f
 
 const REQUIRED_FIELD_SYMBOL = '*';
 
-/** The `TitleField` is the template to use to render the title of a field
+/** The `TitleField` is the template to use to render the title of a field: the `<legend>` naming the `<fieldset>` it
+ * heads, or a `<div>` where it heads none. Its `id` goes on the title's text alone, as an option selector beside a
+ * container's options is named by it, and the marker and the optional data control aren't part of that name
  *
  * @param props - The `TitleFieldProps` for this component
  */
-export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: TitleFieldProps<T, S, F>,
-) {
-  const { id, title, required, optionalDataControl } = props;
-  return (
-    <legend id={id}>
-      {title}
-      {required && <span className='required'>{REQUIRED_FIELD_SYMBOL}</span>}
-      {optionalDataControl && (
-        <span className='pull-right' style={{ marginBottom: '2px' }}>
-          {optionalDataControl}
-        </span>
-      )}
-    </legend>
+export default function TitleField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: TitleFieldProps<T, S, F>) {
+  const { id, title, required, optionalDataControl, outsideFieldset } = props;
+  const contents = (
+    <>
+      <span id={id}>{title}</span>
+      {required && <span className='rjsf-required'>{REQUIRED_FIELD_SYMBOL}</span>}
+      {optionalDataControl && <span className='rjsf-title-optional-data'>{optionalDataControl}</span>}
+    </>
   );
+  return outsideFieldset ? <div className='rjsf-title'>{contents}</div> : <legend>{contents}</legend>;
 }

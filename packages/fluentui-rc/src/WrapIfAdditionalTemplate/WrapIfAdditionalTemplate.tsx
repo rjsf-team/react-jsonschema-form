@@ -2,11 +2,30 @@ import type { CSSProperties } from 'react';
 import { Field, Input, makeStyles } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
+  AdditionalPropertyKeySelect,
+  buttonId,
+  getAdditionalKeyAttributes,
+  hasAdditionalKeyLabel,
+  hasSchemaMarker,
+  isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
+  TranslatableString,
+} from '@rjsf/utils';
+
+import { fieldLabelSlot } from '../utils.ts';
 
 const useStyles = makeStyles({
   input: {
     width: '100%',
+  },
+  // `Dropdown` ships a 250px `min-width` of its own, which overflows the column the key sits in rather than shrinking
+  // to it the way the key input does
+  keySelect: {
+    width: '100%',
+    minWidth: 0,
   },
   grow: {
     flexGrow: 1,
@@ -36,9 +55,9 @@ const containerTypes = ['object', 'array'];
  * @param props - The `WrapIfAdditionalProps` for this component
  */
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
@@ -47,9 +66,11 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
-    displayLabel,
+    keyName,
     onRemoveProperty,
+    onKeyRename,
     onKeyRenameBlur,
+    propertyNamesEnum,
     rawDescription,
     readonly,
     required,
@@ -57,12 +78,16 @@ export default function WrapIfAdditionalTemplate<
     uiSchema,
     registry,
   } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   const { templates, translateString } = registry;
   const classes = useStyles();
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
-  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const keyId = additionalKeyId(id);
+  const additional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
   const hasDescription = !!rawDescription;
   const btnStyle: CSSProperties = {
     flex: 1,
@@ -74,7 +99,10 @@ export default function WrapIfAdditionalTemplate<
   if (!additional) {
     const { type } = schema;
     // Flex grow only non container classes
-    const className = containerTypes.includes(type as string) ? classNames : `${classes.grow} ${classNames}`;
+    const className =
+      typeof type === 'string' && containerTypes.includes(type)
+        ? classNames
+        : `${classes.grow} ${classNames ?? ''}`.trim();
     return (
       <div className={className} style={style}>
         {children}
@@ -83,23 +111,42 @@ export default function WrapIfAdditionalTemplate<
   }
 
   return (
-    <Flex gap='gap.medium' vAlign='start' key={`${id}-key`} className={classNames} style={style}>
+    <Flex gap='gap.medium' vAlign='start' className={classNames} style={style}>
       <div className={classes.halfWidth}>
-        <Field label={displayLabel ? keyLabel : undefined} required={required}>
-          <Input
-            key={label}
+        {propertyNamesEnum ? (
+          <AdditionalPropertyKeySelect<T, S, F>
+            errorAttributes={keyAttributes}
+            id={keyId}
+            className={classes.keySelect}
+            label={keyLabel}
+            hideLabel={!hasKeyLabel}
+            value={keyName}
+            propertyNamesEnum={propertyNamesEnum}
+            onKeyRename={onKeyRename}
+            disabled={disabled}
+            readonly={readonly}
             required={required}
-            defaultValue={label}
-            disabled={disabled || readonly}
-            id={`${id}-key`}
-            name={`${id}-key`}
-            onBlur={!readonly ? onKeyRenameBlur : undefined}
-            type='text'
-            input={{
-              className: classes.input,
-            }}
+            registry={registry}
           />
-        </Field>
+        ) : (
+          <Field label={hasKeyLabel ? fieldLabelSlot(keyLabel, keyId) : undefined} required={required}>
+            <Input
+              key={keyName}
+              aria-label={hasKeyLabel ? undefined : keyLabel}
+              {...keyAttributes}
+              required={required}
+              defaultValue={keyName}
+              disabled={isAdditionalKeyDisabled(props)}
+              id={keyId}
+              name={keyId}
+              onBlur={!readonly ? onKeyRenameBlur : undefined}
+              type='text'
+              input={{
+                className: classes.input,
+              }}
+            />
+          </Field>
+        )}
       </div>
       <div className={classes.halfWidth}>{children}</div>
       <div className={hasDescription ? classes.alignCenter : classes.alignEnd}>
@@ -107,7 +154,7 @@ export default function WrapIfAdditionalTemplate<
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'
           style={btnStyle}
-          disabled={disabled || readonly}
+          disabled={isAdditionalRemoveDisabled(props)}
           onClick={onRemoveProperty}
           uiSchema={uiSchema}
           registry={registry}

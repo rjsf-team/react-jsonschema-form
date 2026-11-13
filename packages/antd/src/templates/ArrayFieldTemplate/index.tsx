@@ -1,29 +1,32 @@
 import { useContext } from 'react';
-import type {
-  ArrayFieldTemplateProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
+import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import {
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  buttonId,
+  titleDrawsOptionalDataControl,
 } from '@rjsf/utils';
-import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
-import classNames from 'classnames';
+
+import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
+import type { AntdFormContext } from '../../formContext.ts';
+import headingLabelColClassName from '../headingLabelColClassName.ts';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
  * @param props - The `ArrayFieldTemplateProps` props for the component
  */
 export default function ArrayFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     className,
     disabled,
-    fieldPathId,
+    id,
     items,
     optionalDataControl,
     onAddClick,
@@ -33,39 +36,31 @@ export default function ArrayFieldTemplate<
     schema,
     title,
     uiSchema,
+    presentation,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const { ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   const { formContext } = registry;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { labelAlign = 'right', rowGutter = 24 } = formContext as GenericObjectType;
+  const { rowGutter = DEFAULT_ROW_GUTTER }: AntdFormContext = formContext;
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('form');
-  const labelClsBasic = `${prefixCls}-item-label`;
-  const labelColClassName = classNames(
-    labelClsBasic,
-    labelAlign === 'left' && `${labelClsBasic}-left`,
-    // labelCol.className,
-  );
+  const labelColClassName = headingLabelColClassName(prefixCls, formContext);
 
   return (
-    <fieldset className={className} id={fieldPathId.$id}>
+    <fieldset className={className} id={id} {...getContainerAttributes(presentation, id, title)}>
       <Row gutter={rowGutter}>
-        {(uiOptions.title || title) && (
+        {title && (
           <Col className={labelColClassName} span={24}>
             <ArrayFieldTitleTemplate
-              fieldPathId={fieldPathId}
+              id={id}
               required={required}
-              title={uiOptions.title || title}
+              title={title}
               schema={schema}
               uiSchema={uiSchema}
               registry={registry}
@@ -82,7 +77,7 @@ export default function ArrayFieldTemplate<
             <Row gutter={rowGutter} justify='end'>
               <Col flex='120px'>
                 <AddButton
-                  id={buttonId(fieldPathId, 'add')}
+                  id={buttonId(id, 'add')}
                   className='rjsf-array-item-add'
                   disabled={disabled || readonly}
                   onClick={onAddClick}

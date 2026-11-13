@@ -2,7 +2,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../../src/compileSchemaValidators.ts';
 import type { CustomValidatorOptionsType, ValidatorFunctions } from '../../src/index.ts';
-import superSchemaObj from './superSchema.json';
+import superSchemaObj from './superSchema.json' with { type: 'json' };
 import { CUSTOM_OPTIONS, expectWarn } from './testData.ts';
 
 export const superSchema = superSchemaObj as unknown as RJSFSchema;
@@ -17,10 +17,10 @@ export const SUPER_SCHEMA_OPTIONS: CustomValidatorOptionsType = {
  * on the schema's keywords/formats, may `require()` AJV runtime helpers — so both are provided.
  */
 export function evalValidatorCode(code: string): ValidatorFunctions {
-  const validateFns = {};
+  const validateFns: ValidatorFunctions = {};
   // oxlint-disable-next-line no-new-func, typescript/no-implied-eval
-  new Function('exports', 'require', code)(validateFns, require);
-  return validateFns as ValidatorFunctions;
+  new Function('exports', 'require', code).call(undefined, validateFns, require);
+  return validateFns;
 }
 
 /** Compiles superSchema into standalone-validator code and loads it, entirely in memory. */

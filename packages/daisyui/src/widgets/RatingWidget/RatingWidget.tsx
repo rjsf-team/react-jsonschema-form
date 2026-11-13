@@ -1,6 +1,9 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { numericWidgetStoresString, ratingStarValues, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
+
+import { classNameOption, getGroupAndOptionProps } from '../../utils.ts';
 
 /** The `RatingWidget` component renders a star or heart rating input with DaisyUI styling
  *
@@ -18,40 +21,48 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
  * @param props - The `WidgetProps` for this component
  */
 export default function RatingWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  id,
-  value,
-  required,
-  disabled,
-  readonly,
-  autofocus,
-  onChange,
-  onFocus,
-  onBlur,
-  schema,
-  options,
-}: WidgetProps<T, S, F>) {
-  const { stars = 5, shape = 'star', color = 'orange', size = 'md', colorGradient = false } = options;
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    value,
+    label,
+    presentation,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onFocus,
+    onBlur,
+    schema,
+    options,
+  } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const { stars, shape = 'star', colorGradient } = options;
+  const size = classNameOption(options.size);
+  const color = classNameOption(options.color) ?? 'orange';
 
-  // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
-  const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
-  const min = schema.minimum || 0;
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const rating = toNumericValue(value);
+  const starValues = ratingStarValues<S>(schema, stars);
 
   // Generate shape class
   const maskClass = shape === 'heart' ? 'mask-heart' : 'mask-star-2';
 
   // Generate size class
-  const sizeClass = size === 'md' ? '' : `rating-${size}`;
+  const sizeClass = size === undefined || size === 'md' ? '' : `rating-${size}`;
 
   /** Handles change events from radio inputs */
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => {
-      onChange(parseInt(newValue, 10));
+      const starValue = Number(newValue);
+      onChange(storesString ? String(starValue) : starValue);
     },
-    [onChange],
+    [onChange, storesString],
   );
 
   /** Handles focus events for accessibility */
@@ -82,7 +93,7 @@ export default function RatingWidget<
    * @returns The appropriate color class
    */
   const getColorClass = (index: number): string => {
-    if (!colorGradient) {
+    if (colorGradient !== true) {
       return `bg-${color}-400`;
     }
 
@@ -92,30 +103,39 @@ export default function RatingWidget<
     return `bg-${colors[colorIdx]}-400`;
   };
 
+  const { group: groupProps, option: optionAttributes } = getGroupAndOptionProps({
+    id,
+    label,
+    hideLabel,
+    presentation,
+    role: 'radiogroup',
+  });
+
+  // The checked star, where Tab into the group lands, as `RadioWidget` gives it its checked radio, else the first
+  const autofocusValue = rating !== undefined && starValues.includes(rating) ? rating : starValues[0];
+
   return (
     <div className='form-control w-full'>
-      <div className={`rating gap-1 ${sizeClass}`}>
-        {[...Array(numStars)].map((_, index) => {
-          const starValue = min + index;
-          return (
-            <input
-              // oxlint-disable-next-line react/no-array-index-key
-              key={index}
-              type='radio'
-              name={id}
-              value={starValue}
-              checked={value === starValue}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              className={`mask ${maskClass} ${getColorClass(index)}`}
-              disabled={disabled || readonly}
-              required={required}
-              autoFocus={autofocus && index === 0}
-              aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
-            />
-          );
-        })}
+      <div className={`rating gap-1 ${sizeClass}`} {...groupProps}>
+        {starValues.map((starValue, index) => (
+          <input
+            // oxlint-disable-next-line react/no-array-index-key
+            key={index}
+            type='radio'
+            name={htmlName || id}
+            value={starValue}
+            checked={rating === starValue}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            className={`mask ${maskClass} ${getColorClass(index)}`}
+            disabled={disabled || readonly}
+            required={required}
+            autoFocus={autofocus && starValue === autofocusValue}
+            aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
+            {...optionAttributes}
+          />
+        ))}
       </div>
     </div>
   );

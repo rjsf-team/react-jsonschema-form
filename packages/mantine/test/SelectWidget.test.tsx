@@ -1,0 +1,316 @@
+import { MantineProvider } from '@mantine/core';
+import { getTestRegistry } from '@rjsf/core/testing';
+import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+
+import Templates from '../src/templates/index.ts';
+import SelectWidget from '../src/widgets/SelectWidget.tsx';
+import WrappedForm from './WrappedForm.tsx';
+
+const user = userEvent.setup();
+
+const schema: RJSFSchema = { type: 'string', enum: ['foo', 'bar', 'baz', 'qux'] };
+
+function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
+  return {
+    id: 'root',
+    name: 'root',
+    schema,
+    registry: getTestRegistry(schema, {}, Templates, {}),
+    options: {},
+    label: 'Select',
+    value: undefined,
+    required: false,
+    disabled: false,
+    readonly: false,
+    multiple: false,
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+    rawErrors: [],
+    uiSchema: {},
+    onChange: () => undefined,
+    onBlur: () => undefined,
+    onFocus: () => undefined,
+    ...props,
+  };
+}
+
+/** Renders the widget inside a `MantineProvider`, which its components require */
+function renderWidget(props: Partial<WidgetProps> = {}) {
+  return render(
+    <MantineProvider>
+      <SelectWidget {...makeProps(props)} />
+    </MantineProvider>,
+  );
+}
+
+describe('mantine SelectWidget optgroups', () => {
+  const enumOptions = [
+    { label: 'Foo', value: 'foo' },
+    { label: 'Bar', value: 'bar' },
+    { label: 'Baz', value: 'baz' },
+    { label: 'Qux', value: 'qux' },
+  ];
+
+  test('renders a labeled group for each optgroups entry, plus the ungrouped options', () => {
+    renderWidget({
+      options: {
+        enumOptions,
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+        },
+      },
+    });
+
+    // fireEvent.click is used instead of user.click() because jsdom lays every element out at zero size; once
+    // that reaches floating-ui's `hide()` middleware (which Mantine's Combobox dropdown always applies), it
+    // marks the dropdown `referenceHidden` and sets `display: none`, and `getByRole` then can't find the
+    // (still-present) options. That recomputation runs asynchronously, so a synchronous `fireEvent.click`
+    // beats it, but any `await` — which `user-event` requires for every interaction — gives it time to run.
+    fireEvent.click(screen.getByRole('combobox'));
+
+    expect(screen.getByText('Group A')).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Foo' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Bar' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Baz' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Qux' })).toBeInTheDocument();
+  });
+
+  test('disables enumDisabled options inside an optgroup', () => {
+    renderWidget({
+      options: {
+        enumOptions,
+        enumDisabled: ['bar'],
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+        },
+      },
+    });
+
+    // See the fireEvent.click comment above.
+    fireEvent.click(screen.getByRole('combobox'));
+
+    expect(screen.getByRole('option', { name: 'Foo' })).not.toHaveAttribute('data-combobox-disabled');
+    expect(screen.getByRole('option', { name: 'Bar' })).toHaveAttribute('data-combobox-disabled', 'true');
+  });
+
+  test('selecting a grouped option fires onChange with the correct value', () => {
+    const onChange = vi.fn();
+    renderWidget({
+      onChange,
+      options: {
+        enumOptions,
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+          'Group B': ['baz', 'qux'],
+        },
+      },
+    });
+
+    // See the fireEvent.click comment above.
+    fireEvent.click(screen.getByRole('combobox'));
+    fireEvent.click(screen.getByRole('option', { name: 'Baz' }));
+
+    expect(onChange).toHaveBeenCalledWith('baz');
+  });
+
+  test('drops a group whose options the search filtered out', () => {
+    renderWidget({
+      options: {
+        enumOptions,
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+          'Group B': ['baz', 'qux'],
+        },
+      },
+    });
+
+    const combobox = screen.getByRole('combobox');
+    // Mantine ignores an input change made while the input isn't focused, treating it as a browser autofill.
+    // These stay on fireEvent for the same reason as the fireEvent.click comment above: an awaited
+    // user-event interaction gives floating-ui's async `hide()` recomputation time to close the dropdown.
+    combobox.focus();
+    fireEvent.click(combobox);
+    fireEvent.change(combobox, { target: { value: 'ba' } });
+
+    expect(screen.getByRole('option', { name: 'Bar' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Baz' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Foo' })).not.toBeInTheDocument();
+    expect(screen.getByText('Group A')).toBeInTheDocument();
+
+    fireEvent.change(combobox, { target: { value: 'qu' } });
+
+    expect(screen.getByRole('option', { name: 'Qux' })).toBeInTheDocument();
+    expect(screen.queryByText('Group A')).not.toBeInTheDocument();
+  });
+
+  test('renders with description from options', () => {
+    const { getByText } = renderWidget({
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(getByText('Test description')).toBeInTheDocument();
+  });
+
+  test('renders with description from schema', () => {
+    const { getByText } = renderWidget({
+      schema: {
+        type: 'string',
+        description: 'Test description from schema',
+      },
+    });
+    expect(getByText('Test description from schema')).toBeInTheDocument();
+  });
+
+  test('hides description when hideLabel is true', () => {
+    const { queryByText } = renderWidget({
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
+      hideLabel: true,
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(queryByText('Test description')).not.toBeInTheDocument();
+  });
+});
+
+describe('mantine SelectWidget clicking its selected option', () => {
+  const enumOptions = [
+    { label: 'Foo', value: 'foo' },
+    { label: 'Bar', value: 'bar' },
+  ];
+
+  // A schema default leaves out the empty choice, as the other themes' placeholder option, so an `anyOf`/`oneOf` field's
+  // option selector, whose schema has one, can't be cleared (#5527)
+  test.each<[string, RJSFSchema, WidgetProps['options'], unknown[][]]>([
+    ['keeps it under a schema default', { type: 'string', default: 'foo' }, {}, []],
+    ['clears it without one', { type: 'string' }, {}, [[undefined]]],
+    [
+      'clears it under a schema default where its options set allowDeselect',
+      { type: 'string', default: 'foo' },
+      { allowDeselect: true },
+      [[undefined]],
+    ],
+  ])('%s', (_, widgetSchema, widgetOptions, changes) => {
+    const onChange = vi.fn();
+    renderWidget({ schema: widgetSchema, value: 'foo', onChange, options: { enumOptions, ...widgetOptions } });
+
+    // See the fireEvent.click comment in the optgroups tests
+    fireEvent.click(screen.getByRole('combobox'));
+    fireEvent.click(screen.getByRole('option', { name: 'Foo' }));
+
+    expect(onChange.mock.calls).toStrictEqual(changes);
+  });
+
+  test("keeps an anyOf/oneOf field's selected option, which MultiSchemaField gives its selector as a schema default", () => {
+    render(
+      <WrappedForm
+        validator={validator}
+        schema={{
+          type: 'object',
+          required: ['pet'],
+          properties: {
+            pet: {
+              oneOf: [
+                { title: 'Cat', type: 'string' },
+                { title: 'Dog', type: 'number' },
+              ],
+            },
+          },
+        }}
+      />,
+    );
+
+    // See the fireEvent.click comment in the optgroups tests
+    fireEvent.click(screen.getByRole('combobox', { name: 'pet' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Cat' }));
+
+    expect(screen.getByRole('combobox', { name: 'pet' })).toHaveValue('Cat');
+    expect(screen.getByRole('textbox', { name: 'Cat' })).toBeInTheDocument();
+  });
+});
+
+describe('mantine SelectWidget focus and blur', () => {
+  // Focusing the input opens the dropdown, which scrolls the selected option into view with an API jsdom lacks
+  beforeAll(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterAll(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
+  test.each(['indexed', 'realValue'] as const)(
+    'reports the form data value, not the label in the input, in the %s format',
+    async (optionValueFormat) => {
+      const onFocus = vi.fn();
+      const onBlur = vi.fn();
+      const enumOptions = [
+        { label: 'One', value: { a: 1 } },
+        { label: 'Two', value: { a: 2 } },
+      ];
+      renderWidget({ value: { a: 2 }, onFocus, onBlur, options: { enumOptions, optionValueFormat } });
+
+      await user.tab();
+      await user.tab();
+
+      expect(onFocus).toHaveBeenCalledWith('root', { a: 2 });
+      expect(onBlur).toHaveBeenCalledWith('root', { a: 2 });
+    },
+  );
+});
+
+describe('mantine SelectWidget rendered by a caller that names and describes it', () => {
+  const enumOptions = [
+    { label: 'Foo', value: 'foo', schema: { const: 'foo', description: 'The first one' } },
+    { label: 'Bar', value: 'bar' },
+  ];
+
+  test('names its input by the aria-label it is passed', () => {
+    renderWidget({ options: { enumOptions }, label: '', 'aria-label': 'When, year' });
+
+    expect(screen.getByRole('combobox', { name: 'When, year' })).toBeInTheDocument();
+  });
+
+  test('describes its input by the ids it is passed alone while it has no option selected', () => {
+    renderWidget({ options: { enumOptions }, 'aria-describedby': 'root_when__error root_when__help' });
+
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-describedby', 'root_when__error root_when__help');
+  });
+
+  test('still describes its input by the description of the option it has selected', () => {
+    render(
+      <MantineProvider>
+        <p id='field-help'>Pick one.</p>
+        <SelectWidget {...makeProps({ options: { enumOptions }, value: 'foo', 'aria-describedby': 'field-help' })} />
+      </MantineProvider>,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleDescription('Pick one. The first one');
+  });
+});
+
+test('mantine SelectWidget no label names keeps the aria-label its ui:options give it (#5711)', () => {
+  render(
+    <WrappedForm
+      schema={{ type: 'string', enum: ['a', 'b'] }}
+      uiSchema={{ 'ui:options': { 'aria-label': 'Fruit' } }}
+      validator={validator}
+    />,
+  );
+
+  expect(document.getElementById('root')).toHaveAccessibleName('Fruit');
+});
+
+test('mantine SelectWidget names its select by its ui:options aria-label over the label ui:label: false hides', () => {
+  render(
+    <WrappedForm
+      schema={{ type: 'string', title: 'Color', enum: ['a', 'b'] }}
+      uiSchema={{ 'ui:label': false, 'ui:options': { 'aria-label': 'Fruit' } }}
+      validator={validator}
+    />,
+  );
+
+  expect(document.getElementById('root')).toHaveAccessibleName('Fruit');
+});

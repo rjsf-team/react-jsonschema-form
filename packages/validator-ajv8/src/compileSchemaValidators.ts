@@ -13,9 +13,8 @@ export { compileSchemaValidatorsCode };
  *
  * @param schema - The schema to be compiled into a set of precompiled validators functions
  * @param output - The name of the file into which the precompiled validator functions will be generated
- * @param [options={}] - The set of `CustomValidatorOptionsType` information used to alter the AJV validator used for
- *        compiling the schema. They are the same options that are passed to the `customizeValidator()` function in
- *        order to modify the behavior of the regular AJV-based validator.
+ * @param [options={}] - The `CustomValidatorOptionsType` to compile with: the same options that are passed to the
+ *        `customizeValidator()` function to modify the behavior of the regular AJV-based validator
  */
 export default function compileSchemaValidators<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,

@@ -136,7 +136,7 @@ const schemaDependencies: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     billingDetails: {
       name: 'Randy',
     },

@@ -1,6 +1,6 @@
 import type { SyntheticEvent } from 'react';
 import { useCallback } from 'react';
-import type { IChangeEvent } from '@rjsf/core';
+import type { IChangeEvent, ThemeProps } from '@rjsf/core';
 import Form from '@rjsf/core';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
@@ -8,8 +8,9 @@ import localValidator from '@rjsf/validator-ajv8';
 import type { SubthemesType } from './SubthemeSelector.tsx';
 
 export interface ThemesType {
-  theme: any;
-  stylesheet: string;
+  theme: ThemeProps;
+  /** The stylesheet, or stylesheets, the form's frame loads */
+  stylesheet: string | string[];
   subthemes?: SubthemesType;
 }
 
@@ -32,7 +33,7 @@ export default function ThemeSelector({ theme, themes, select }: ThemeSelectorPr
 
   const onChange = useCallback(
     ({ formData }: IChangeEvent) => {
-      if (formData) {
+      if (typeof formData === 'string') {
         select(formData, themes[formData]);
       }
     },
@@ -50,7 +51,7 @@ export default function ThemeSelector({ theme, themes, select }: ThemeSelectorPr
         idPrefix='rjsf_themeSelector'
         schema={schema}
         uiSchema={uiSchema}
-        formData={theme}
+        initialFormData={theme}
         validator={localValidator}
         onChange={onChange}
       >

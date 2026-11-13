@@ -1,0 +1,1188 @@
+import type { ReactNode } from 'react';
+import type { MantineThemeComponents } from '@mantine/core';
+import { createTheme, MantineProvider, STYLE_PROPS_DATA, Tooltip } from '@mantine/core';
+import type { FormValidation, GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
+import { titleId } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+
+import { duplicateIds } from '../../../testing/duplicateIds.ts';
+import Form from '../src/index.ts';
+import WrappedForm from './WrappedForm.tsx';
+
+const user = userEvent.setup();
+
+const orderWithoutLabel = ['description', 'input', 'error'];
+
+const enumSchema: RJSFSchema = { type: 'string', enum: ['a', 'b'] };
+const checkboxesSchema: RJSFSchema = { type: 'array', items: enumSchema, uniqueItems: true };
+
+const widgets: [string, RJSFSchema, UiSchema?][] = [
+  ['text', { type: 'string' }],
+  ['number', { type: 'number' }],
+  ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
+  ['password', { type: 'string' }, { 'ui:widget': 'password' }],
+  ['select', enumSchema],
+  ['multi-select', checkboxesSchema],
+  ['checkboxes', checkboxesSchema, { 'ui:widget': 'checkboxes' }],
+  ['radio', enumSchema, { 'ui:widget': 'radio' }],
+  ['checkbox', { type: 'boolean' }],
+  ['range', { type: 'integer' }, { 'ui:widget': 'range' }],
+  ['color', { type: 'string', format: 'color' }],
+  ['file', { type: 'string', format: 'data-url' }],
+  ['time', { type: 'string', format: 'time' }],
+  ['date', { type: 'string', format: 'date' }],
+  ['date-time', { type: 'string', format: 'date-time' }],
+  ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }],
+  ['alt-datetime', { type: 'string' }, { 'ui:widget': 'alt-datetime' }],
+];
+
+const labelCases: [string, RJSFSchema, UiSchema][] = [
+  ['a shown label', { title: 'A title' }, {}],
+  ['a hidden label', { title: 'A title' }, { 'ui:label': false }],
+  [
+    'a label left out of inputWrapperOrder',
+    { title: 'A title' },
+    { 'ui:options': { inputWrapperOrder: orderWithoutLabel } },
+  ],
+  ['no title', {}, {}],
+];
+
+function renderField(schema: RJSFSchema, uiSchema: UiSchema = {}) {
+  return render(<WrappedForm schema={schema} uiSchema={uiSchema} validator={validator} />);
+}
+
+describe('aria-labelledby', () => {
+  // Mantine's `Select` and `MultiSelect` point their listbox's `aria-labelledby` at their own label id whenever a label
+  // is passed, rendered or not (https://github.com/mantinedev/mantine/issues/9219), so they are left out of the case
+  // where `inputWrapperOrder` drops the label, and covered by the skipped case below instead. Once a Mantine release
+  // fixes that, drop this filter and unskip that case.
+  const labelCaseWidgets = (labelCase: string) =>
+    labelCase.includes('inputWrapperOrder')
+      ? widgets.filter(([name]) => name !== 'select' && name !== 'multi-select')
+      : widgets;
+
+  describe.each(labelCases.filter(([, labelSchema]) => labelSchema.title))(
+    'with %s',
+    (_, labelSchema, labelUiSchema) => {
+      // The groups and the alt-date parts, whose `id` isn't on the control a user focuses, have tests of their own below
+      test.each(widgets.filter(([name]) => !['checkboxes', 'radio', 'alt-date', 'alt-datetime'].includes(name)))(
+        '%s widget is named by the field title',
+        (__, schema, uiSchema) => {
+          const { container } = renderField({ ...schema, ...labelSchema }, { ...uiSchema, ...labelUiSchema });
+
+          expect(container.querySelector('[id="root"]')).toHaveAccessibleName('A title');
+        },
+      );
+    },
+  );
+
+  describe.each(labelCases)('with %s', (labelCase, labelSchema, labelUiSchema) => {
+    test.each(labelCaseWidgets(labelCase))('%s widget only references elements that exist', (_, schema, uiSchema) => {
+      const { container } = renderField({ ...schema, ...labelSchema }, { ...uiSchema, ...labelUiSchema });
+
+      for (const el of container.querySelectorAll('[aria-labelledby]')) {
+        for (const id of el.getAttribute('aria-labelledby')!.split(/\s+/)) {
+          expect(container.querySelector(`[id="${id}"]`)).toBeInTheDocument();
+        }
+      }
+    });
+  });
+
+  test.each([
+    ['checkboxes', 'group', checkboxesSchema, { 'ui:widget': 'checkboxes' }],
+    ['radio', 'radiogroup', enumSchema, { 'ui:widget': 'radio' }],
+  ] as [string, string, RJSFSchema, UiSchema][])(
+    '%s widget names its group by the field title, whether the label is shown or hidden',
+    (_, role, schema, uiSchema) => {
+      const { rerender } = renderField({ ...schema, title: 'A title' }, uiSchema);
+
+      expect(screen.getByRole(role)).toHaveAttribute('aria-labelledby', titleId('root'));
+      expect(screen.getByRole(role)).toHaveAccessibleName('A title');
+      expect(screen.getByText('A title')).toBeVisible();
+
+      rerender(
+        <WrappedForm
+          schema={{ ...schema, title: 'A title' }}
+          uiSchema={{ ...uiSchema, 'ui:label': false }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole(role)).toHaveAttribute('aria-labelledby', titleId('root'));
+      expect(screen.getByRole(role)).toHaveAccessibleName('A title');
+      expect(screen.getByText('A title')).not.toBeVisible();
+    },
+  );
+
+  test.each([
+    ['text', 'textbox', { type: 'string' }, {}],
+    ['textarea', 'textbox', { type: 'string' }, { 'ui:widget': 'textarea' }],
+  ] as [string, string, RJSFSchema, UiSchema][])(
+    '%s widget is named by the field title its plan hands it when the label is hidden',
+    (_, role, schema, uiSchema) => {
+      renderField({ ...schema, title: 'A title' }, { ...uiSchema, 'ui:label': false });
+
+      expect(screen.getByRole(role)).toHaveAttribute('aria-label', 'A title');
+      expect(screen.getByRole(role)).toHaveAccessibleName('A title');
+    },
+  );
+
+  // Its plan names an option's control by the hidden label of the field above, as it names an option's text input
+  test.each([
+    ['checkboxes', 'group', checkboxesSchema, { 'ui:widget': 'checkboxes' }, ['a']],
+    ['radio', 'radiogroup', enumSchema, { 'ui:widget': 'radio' }, 'a'],
+    ['range', 'slider', { type: 'integer' }, { 'ui:widget': 'range' }, 3],
+  ] as [string, string, RJSFSchema, UiSchema, unknown][])(
+    "%s widget of an anyOf option is named by its field's title when ui:label: false hides both labels",
+    (_, role, schema, uiSchema, formData) => {
+      render(
+        <WrappedForm
+          schema={{ title: 'A title', anyOf: [{ ...schema, title: 'An option' }, { type: 'boolean' }] }}
+          uiSchema={{ 'ui:label': false, anyOf: [uiSchema, {}] }}
+          initialFormData={formData}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole(role)).toHaveAccessibleName('A title');
+    },
+  );
+
+  test("alt-date widget of an anyOf option names its parts by its field's title when ui:label: false hides both labels", () => {
+    render(
+      <WrappedForm
+        schema={{ title: 'A title', anyOf: [{ type: 'string', title: 'An option' }, { type: 'number' }] }}
+        uiSchema={{ 'ui:label': false, anyOf: [{ 'ui:widget': 'alt-date' }, {}] }}
+        initialFormData='2020-01-02'
+        validator={validator}
+      />,
+    );
+
+    for (const part of ['year', 'month', 'day']) {
+      expect(screen.getByRole('combobox', { name: `A title, ${part}` })).toBeInTheDocument();
+    }
+    expect(screen.queryByRole('combobox', { name: /An option/ })).not.toBeInTheDocument();
+  });
+
+  test('checkboxes widget leaves its group unlabelled when the field has no label', () => {
+    renderField(checkboxesSchema, { 'ui:widget': 'checkboxes' });
+
+    expect(screen.getByRole('group')).not.toHaveAttribute('aria-labelledby');
+  });
+
+  test('radio widget names its group by the translated prompt when the field has no label', () => {
+    renderField(enumSchema, { 'ui:widget': 'radio' });
+
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Choose an option');
+  });
+
+  describe.each([
+    ['radio', 'radiogroup', enumSchema, 'RadioWidget'],
+    ['checkboxes', 'group', checkboxesSchema, 'CheckboxesWidget'],
+  ] as [string, string, RJSFSchema, string][])(
+    '%s widget given an aria-label by its ui:options',
+    (widget, role, schema, widgetKey) => {
+      const uiOptions = { 'ui:widget': widget, 'ui:options': { 'aria-label': 'Fruit' } };
+
+      test("names its group by it where the field has no label, rather than Mantine's wrapper", () => {
+        const { container } = renderField(schema, uiOptions);
+
+        expect(screen.getByRole(role)).toHaveAccessibleName('Fruit');
+        expect(container.querySelector('.mantine-InputWrapper-root')).not.toHaveAttribute('aria-label');
+      });
+
+      test('names its group by it over a label ui:label: false hides', () => {
+        renderField({ ...schema, title: 'T' }, { ...uiOptions, 'ui:label': false });
+
+        expect(screen.getByRole(role)).toHaveAccessibleName('Fruit');
+      });
+
+      test('names its group by it over a label inputWrapperOrder leaves out', () => {
+        renderField(
+          { ...schema, title: 'T' },
+          { ...uiOptions, 'ui:options': { ...uiOptions['ui:options'], inputWrapperOrder: orderWithoutLabel } },
+        );
+
+        expect(screen.getByRole(role)).toHaveAccessibleName('Fruit');
+      });
+
+      test('leaves its group named by a label Mantine shows', () => {
+        renderField({ ...schema, title: 'T' }, uiOptions);
+
+        expect(screen.getByRole(role)).toHaveAccessibleName('T');
+      });
+
+      test('leaves its group named by a label the template draws, with no hidden title beside it', () => {
+        render(
+          <WrappedForm
+            schema={{ ...schema, title: 'T' }}
+            uiSchema={uiOptions}
+            presentation={{ widgets: { [widgetKey]: { label: 'template' } } }}
+            validator={validator}
+          />,
+        );
+
+        expect(screen.getByRole(role)).toHaveAccessibleName('T');
+        expect(screen.queryByText('Fruit')).not.toBeInTheDocument();
+      });
+    },
+  );
+
+  test.each([
+    ['checkboxes', 'ui:options', 'group', checkboxesSchema, 'checkboxes'],
+    ['checkboxes', 'theme', 'group', checkboxesSchema, 'checkboxes'],
+    ['radio', 'ui:options', 'radiogroup', enumSchema, 'radio'],
+    ['radio', 'theme', 'radiogroup', enumSchema, 'radio'],
+  ] as [string, string, string, RJSFSchema, string][])(
+    '%s widget names its group by the field title when an inputWrapperOrder from the %s leaves the label out',
+    (_, source, role, schema, widget) => {
+      const component = role === 'group' ? 'CheckboxGroup' : 'RadioGroup';
+      const components =
+        source === 'theme' ? { [component]: { defaultProps: { inputWrapperOrder: orderWithoutLabel } } } : {};
+      render(
+        <MantineProvider theme={createTheme({ components })}>
+          <Form
+            schema={{ ...schema, title: 'A title' }}
+            uiSchema={{
+              'ui:widget': widget,
+              ...(source === 'ui:options' && { 'ui:options': { inputWrapperOrder: orderWithoutLabel } }),
+            }}
+            validator={validator}
+          />
+        </MantineProvider>,
+      );
+
+      expect(screen.getByRole(role)).toHaveAccessibleName('A title');
+      expect(screen.getByText('A title')).not.toBeVisible();
+    },
+  );
+
+  test('range widget names its slider thumb by the field title, whether the label is shown or hidden', () => {
+    const { rerender } = renderField({ type: 'integer', title: 'A title' }, { 'ui:widget': 'range' });
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', titleId('root'));
+    expect(screen.getByRole('slider')).toHaveAccessibleName('A title');
+    expect(screen.getByText('A title')).toBeVisible();
+
+    rerender(
+      <WrappedForm
+        schema={{ type: 'integer', title: 'A title' }}
+        uiSchema={{ 'ui:widget': 'range', 'ui:label': false }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', titleId('root'));
+    expect(screen.getByRole('slider')).toHaveAccessibleName('A title');
+    expect(screen.getByText('A title')).not.toBeVisible();
+  });
+
+  test('range widget keeps an aria-labelledby from ui:options.thumbProps', () => {
+    renderField(
+      { type: 'integer', title: 'A title' },
+      { 'ui:widget': 'range', 'ui:options': { thumbProps: { 'aria-labelledby': 'my-label' } } },
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', 'my-label');
+  });
+
+  test('range widget keeps the slider thumb named by a thumbLabel from ui:options', () => {
+    renderField(
+      { type: 'integer', title: 'A title' },
+      { 'ui:widget': 'range', 'ui:options': { thumbLabel: 'Volume' } },
+    );
+
+    expect(screen.getByRole('slider')).not.toHaveAttribute('aria-labelledby');
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+  });
+
+  test('range widget keeps the slider thumb named by a thumbLabel from the Mantine theme', () => {
+    render(
+      <MantineProvider theme={createTheme({ components: { Slider: { defaultProps: { thumbLabel: 'Volume' } } } })}>
+        <Form
+          schema={{ type: 'integer', title: 'A title' }}
+          uiSchema={{ 'ui:widget': 'range' }}
+          validator={validator}
+        />
+      </MantineProvider>,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+  });
+
+  test('alt-date widget names each part by the field title and the part, whether the label is shown or hidden', () => {
+    const partNames = () => screen.getAllByRole('combobox').map((part) => part.getAttribute('aria-label'));
+    const { rerender } = renderField({ type: 'string', title: 'Birthday' }, { 'ui:widget': 'alt-date' });
+
+    expect(screen.getAllByRole('combobox').map((part) => part.id)).toEqual(['root__year', 'root__month', 'root__day']);
+    for (const part of screen.getAllByRole('combobox')) {
+      expect(part).toHaveAccessibleName(`Birthday, ${part.id.replace('root__', '')}`);
+      expect(part).not.toHaveAttribute('aria-labelledby');
+    }
+    expect(screen.getByText('Birthday')).toBeVisible();
+    const shownNames = partNames();
+
+    rerender(
+      <WrappedForm
+        schema={{ type: 'string', title: 'Birthday' }}
+        uiSchema={{ 'ui:widget': 'alt-date', 'ui:label': false }}
+        validator={validator}
+      />,
+    );
+
+    expect(partNames()).toEqual(shownNames);
+    expect(screen.getByRole('combobox', { name: 'Birthday, year' })).toBeInTheDocument();
+    // Each part carries the title in its own `aria-label`, so no hidden copy of it is rendered to be referenced
+    expect(screen.queryByText('Birthday')).not.toBeInTheDocument();
+  });
+
+  test('alt-date widget names each part by the part alone when the field has no label', () => {
+    renderField({ type: 'string' }, { 'ui:widget': 'alt-date' });
+
+    expect(screen.getByRole('combobox', { name: 'year' })).not.toHaveAttribute('aria-labelledby');
+  });
+
+  test('alt-date widget names each part listbox the way it names the part', () => {
+    renderField({ type: 'string', title: 'Birthday' }, { 'ui:widget': 'alt-date' });
+
+    expect(
+      screen.getAllByRole('listbox', { hidden: true }).map((listbox) => listbox.getAttribute('aria-label')),
+    ).toEqual(['Birthday, year', 'Birthday, month', 'Birthday, day']);
+  });
+
+  test('alt-date widget keeps each part named, with unique ids, when the theme gives Select a label', () => {
+    const { container } = render(
+      <MantineProvider theme={createTheme({ components: { Select: { defaultProps: { label: 'Part' } } } })}>
+        <Form
+          schema={{ type: 'string', title: 'Birthday' }}
+          uiSchema={{ 'ui:widget': 'alt-date' }}
+          validator={validator}
+        />
+      </MantineProvider>,
+    );
+
+    const ids = Array.from(container.querySelectorAll('[id^="root"]'), (el) => el.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(screen.getByRole('combobox', { name: 'Birthday, year' })).toBeInTheDocument();
+  });
+
+  // React warns about, rather than renders, an unknown prop with a function or boolean value, and only once per prop, so
+  // only the string, number and object values are checked here; the key list itself is checked by typecheck
+  test('range widget keeps the InputWrapper and other input options off the slider root element', () => {
+    const wrapperOptions = {
+      descriptionProps: {},
+      error: 'An error',
+      errorProps: {},
+      inputSize: 'md',
+      inputWrapperOrder: ['label', 'input'],
+      labelElement: 'div',
+      labelProps: {},
+      leftSection: 'Left',
+      leftSectionPointerEvents: 'none',
+      leftSectionProps: {},
+      leftSectionWidth: 10,
+      loaderProps: {},
+      loadingPosition: 'left',
+      rightSection: 'Right',
+      rightSectionPointerEvents: 'none',
+      rightSectionProps: {},
+      rightSectionWidth: 10,
+      success: 'Looks good',
+      successProps: {},
+      wrapperProps: {},
+    };
+    const { container } = renderField(
+      { type: 'integer', title: 'A title' },
+      { 'ui:widget': 'range', 'ui:options': wrapperOptions },
+    );
+
+    const root = container.querySelector('.mantine-Slider-root')!;
+    expect(root).toBeInTheDocument();
+    for (const name of Object.keys(wrapperOptions)) {
+      expect(root).not.toHaveAttribute(name.toLowerCase());
+    }
+  });
+
+  const titledWidgets: [string, string, RJSFSchema][] = [
+    ['range', 'slider', { type: 'integer' }],
+    ['alt-date', 'combobox', { type: 'string' }],
+  ];
+  const titleOptionSources = ['ui:options', 'ui:options.wrapperProps', 'theme', 'Input theme'];
+  const titledCases = titledWidgets.flatMap(([widget, role, schema]) =>
+    titleOptionSources.map((source) => [widget, source, role, schema] as [string, string, string, RJSFSchema]),
+  );
+
+  type ContainerCaseOptions = GenericObjectType & { 'ui:label'?: boolean };
+
+  function themedForm(components: MantineThemeComponents, schema: RJSFSchema, uiSchema: UiSchema, formProps = {}) {
+    return (
+      <MantineProvider theme={createTheme({ components })}>
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} {...formProps} />
+      </MantineProvider>
+    );
+  }
+
+  /** Renders `widget` titled 'A title', with `props` set in `ui:options`, its `wrapperProps`, or the theme's
+   * `InputWrapper` or `Input` `defaultProps`, as `source` names
+   */
+  function titledForm(widget: string, schema: RJSFSchema, source: string, props: GenericObjectType, formProps = {}) {
+    const componentsBySource: Record<string, MantineThemeComponents> = {
+      theme: { InputWrapper: { defaultProps: props } },
+      'Input theme': { Input: { defaultProps: props } },
+    };
+    const components = componentsBySource[source] ?? {};
+    const optionsBySource: Record<string, GenericObjectType> = {
+      'ui:options': props,
+      'ui:options.wrapperProps': { wrapperProps: props },
+    };
+    const options = optionsBySource[source];
+    return themedForm(
+      components,
+      { ...schema, title: 'A title' },
+      { 'ui:widget': widget, ...(options && { 'ui:options': options }) },
+      formProps,
+    );
+  }
+
+  test.each(titledCases)(
+    '%s widget shows no field title but keeps it as the name when an inputWrapperOrder from the %s leaves the label out',
+    (widget, source, role, schema) => {
+      render(titledForm(widget, schema, source, { inputWrapperOrder: orderWithoutLabel }));
+
+      expect(screen.queryByText('A title', { ignore: '[hidden]' })).not.toBeInTheDocument();
+      expect(screen.getAllByRole(role)[0]).toHaveAccessibleName(expect.stringMatching(/^A title/));
+    },
+  );
+
+  test.each(titledCases)(
+    '%s widget applies labelProps from the %s to the field title, except its id',
+    (widget, source, role, schema) => {
+      render(titledForm(widget, schema, source, { labelProps: { 'data-testid': 'title', id: 'mine' } }));
+
+      expect(screen.getByTestId('title')).toHaveAttribute('id', titleId('root'));
+      expect(screen.getAllByRole(role)[0]).toHaveAccessibleName(expect.stringMatching(/^A title/));
+    },
+  );
+
+  test.each(titledCases)(
+    '%s widget marks the field title required by a withAsterisk from the %s',
+    (widget, source, _, schema) => {
+      render(titledForm(widget, schema, source, { withAsterisk: true, labelProps: { 'data-testid': 'title' } }));
+
+      expect(screen.getByTestId('title')).toHaveAttribute('data-required');
+    },
+  );
+
+  test.each(titledCases)(
+    '%s widget applies descriptionProps and errorProps from the %s to its description and errors',
+    (widget, source, _, schema) => {
+      render(
+        titledForm(
+          widget,
+          { ...schema, description: 'A description' },
+          source,
+          { descriptionProps: { 'data-testid': 'description' }, errorProps: { 'data-testid': 'error' } },
+          { extraErrors: { __errors: ['An error'] } },
+        ),
+      );
+
+      expect(screen.getByTestId('description')).toHaveTextContent('A description');
+      expect(screen.getByTestId('error')).toHaveTextContent('An error');
+    },
+  );
+
+  test.each(titledWidgets)(
+    '%s widget lays out its title, description and errors by inputWrapperOrder',
+    (widget, _, schema) => {
+      const { container } = render(
+        titledForm(
+          widget,
+          { ...schema, description: 'A description' },
+          'ui:options',
+          { inputWrapperOrder: ['input', 'label', 'error'] },
+          { extraErrors: { __errors: ['An error'] } },
+        ),
+      );
+
+      const wrapper = container.querySelector('.mantine-InputWrapper-root')!;
+      const label = wrapper.querySelector(`[id="${titleId('root')}"]`)!;
+      expect(wrapper.firstElementChild!.compareDocumentPosition(label)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+      expect(label).toBeVisible();
+      expect(wrapper).not.toHaveTextContent('A description');
+      expect(wrapper).toHaveTextContent('An error');
+    },
+  );
+
+  test.each(titledWidgets)(
+    '%s widget prefers the field title options from its wrapperProps, then ui:options, then the theme, as inputs do',
+    (widget, _, schema) => {
+      const labelProps = (source: string) => ({ labelProps: { 'data-testid': 'title', 'data-source': source } });
+      const { rerender } = render(titledForm(widget, schema, 'theme', labelProps('theme')));
+
+      expect(screen.getByTestId('title')).toHaveAttribute('data-source', 'theme');
+
+      const theme = { InputWrapper: { defaultProps: labelProps('theme') } };
+      const titled = { ...schema, title: 'A title' };
+      rerender(themedForm(theme, titled, { 'ui:widget': widget, 'ui:options': labelProps('ui:options') }));
+
+      expect(screen.getByTestId('title')).toHaveAttribute('data-source', 'ui:options');
+
+      rerender(
+        themedForm(theme, titled, {
+          'ui:widget': widget,
+          'ui:options': { ...labelProps('ui:options'), wrapperProps: labelProps('wrapperProps') },
+        }),
+      );
+
+      expect(screen.getByTestId('title')).toHaveAttribute('data-source', 'wrapperProps');
+    },
+  );
+
+  test.each(
+    titledWidgets.flatMap(([widget, , schema]) =>
+      ['label', 'div'].map((labelElement) => [widget, labelElement, schema] as [string, string, RJSFSchema]),
+    ),
+  )('%s widget renders a title element %s with no for and no duplicate ids', (widget, labelElement, schema) => {
+    const { container } = render(
+      titledForm(widget, schema, 'ui:options', { labelElement, wrapperProps: { id: 'root' } }),
+    );
+
+    const title = container.querySelector(`[id="${titleId('root')}"]`)!;
+    expect(title.tagName).toBe(labelElement.toUpperCase());
+    expect(title).not.toHaveAttribute('for');
+    // Only the form's own ids, since Mantine's alt-date renders ids of its own that repeat
+    expect(duplicateIds(container, '[id^="root"]')).toEqual([]);
+  });
+
+  test.each(titledCases)(
+    '%s widget sizes its title, description and errors by a size from the %s',
+    (widget, source, _, schema) => {
+      const { container } = render(titledForm(widget, schema, source, { size: 'lg' }));
+
+      expect(container.querySelector('.mantine-InputWrapper-root')).toHaveAttribute('data-size', 'lg');
+      expect(
+        (container.querySelector(`[id="${titleId('root')}"]`) as HTMLElement).style.getPropertyValue(
+          '--input-label-size',
+        ),
+      ).toBe('var(--mantine-font-size-lg)');
+    },
+  );
+
+  test.each(
+    titledWidgets.flatMap(([widget, , schema]) =>
+      (
+        [
+          ['Input theme', { className: 'theme-root', mod: { theme: true }, mt: 'xl' }],
+          ['theme', { className: 'theme-root', mod: { theme: true }, mt: 'xl' }],
+          [
+            'Input theme',
+            {
+              classNames: { root: 'theme-root' },
+              attributes: { root: { 'data-theme': true } },
+              styles: { root: { marginTop: 20 } },
+            },
+          ],
+        ] as [string, GenericObjectType][]
+      ).map(([source, props]): [string, string, string, RJSFSchema, GenericObjectType] => [
+        widget,
+        source,
+        Object.keys(props).join(', '),
+        schema,
+        props,
+      ]),
+    ),
+  )(
+    '%s widget applies root props from the %s (%s) once, to the wrapper of each input that renders one',
+    (widget, source, _, schema, props) => {
+      const { container } = render(titledForm(widget, schema, source, props));
+
+      const fieldWrapper = container.querySelector<HTMLElement>(
+        `.mantine-InputWrapper-root:has(> [id="${titleId('root')}"])`,
+      )!;
+      const partWrappers = Array.from(container.querySelectorAll<HTMLElement>('.mantine-InputWrapper-root')).filter(
+        (wrapper) => wrapper !== fieldWrapper,
+      );
+      const rootPropsOf = (wrapper: HTMLElement) => [
+        wrapper.classList.contains('theme-root'),
+        wrapper.hasAttribute('data-theme'),
+        !!wrapper.style.marginTop,
+      ];
+      const onField = widget === 'range';
+      expect(rootPropsOf(fieldWrapper)).toEqual([onField, onField, onField]);
+      expect(partWrappers.map(rootPropsOf)).toEqual(onField ? [] : Array(3).fill([true, true, true]));
+    },
+  );
+
+  // `useFieldWrapperProps` keeps the theme's `InputWrapper` root props off the alt-date field wrapper by passing values
+  // that render nothing, chosen by each style prop's type in Mantine's `STYLE_PROPS_DATA`. These tests fail when a Mantine
+  // release adds a style prop type, makes a resolver reject those values, or otherwise lets a theme root prop through.
+  const styleValueByType: Record<string, unknown> = {
+    border: '1px solid red',
+    color: 'red',
+    fontFamily: 'mono',
+    fontSize: 'lg',
+    identity: 'inherit',
+    lineHeight: 'md',
+    radius: 'md',
+    size: 10,
+    spacing: 'md',
+    textColor: 'blue',
+  };
+
+  test("covers every style prop type in Mantine's STYLE_PROPS_DATA", () => {
+    const types = new Set(Object.values(STYLE_PROPS_DATA).map(({ type }) => type));
+
+    expect(Object.keys(styleValueByType).sort()).toEqual([...types].sort());
+  });
+
+  test('alt-date widget keeps every InputWrapper theme root prop off its field wrapper, and on each part wrapper', () => {
+    const rootProps = {
+      ...Object.fromEntries(
+        Object.entries(STYLE_PROPS_DATA).map(([name, { type }]) => [name, styleValueByType[type] ?? 'unknown type']),
+      ),
+      hiddenFrom: 'xs',
+      visibleFrom: 'xs',
+      lightHidden: true,
+      darkHidden: true,
+      className: 'theme-root',
+      style: { outline: '1px solid red' },
+      mod: { theme: true },
+      classNames: { root: 'theme-root-slot' },
+      styles: { root: { cursor: 'pointer' } },
+      attributes: { root: { 'data-theme-slot': true } },
+    };
+    const baseline = render(titledForm('alt-date', { type: 'string' }, 'ui:options', {}));
+    const baselineStyleCount = baseline.container.querySelectorAll('style').length;
+    baseline.unmount();
+
+    const { container } = render(titledForm('alt-date', { type: 'string' }, 'theme', rootProps));
+
+    const fieldWrapper = container.querySelector(`.mantine-InputWrapper-root:has(> [id="${titleId('root')}"])`)!;
+    expect(fieldWrapper).not.toHaveAttribute('style');
+    expect(Array.from(fieldWrapper.classList).filter((name) => !name.startsWith('m_'))).toEqual([
+      'mantine-InputWrapper-root',
+    ]);
+    expect(Array.from(fieldWrapper.attributes, ({ name }) => name).filter((name) => name.startsWith('data-'))).toEqual(
+      [],
+    );
+    expect(container.querySelectorAll('style')).toHaveLength(baselineStyleCount);
+
+    const partWrappers = Array.from(container.querySelectorAll<HTMLElement>('.mantine-InputWrapper-root')).filter(
+      (wrapper) => wrapper !== fieldWrapper,
+    );
+    expect(partWrappers).toHaveLength(3);
+    for (const wrapper of partWrappers) {
+      expect(wrapper).toHaveClass('theme-root', 'theme-root-slot', 'mantine-light-hidden');
+      expect(wrapper).toHaveAttribute('data-theme');
+      expect(wrapper).toHaveAttribute('data-theme-slot');
+      expect(wrapper.style.marginTop).not.toBe('');
+      expect(wrapper.style.outline).not.toBe('');
+      expect(wrapper.style.cursor).toBe('pointer');
+    }
+  });
+
+  test.each([
+    ['Input theme', { wrapperProps: { 'data-x': 'theme' } }, [false, true, true, true]],
+    ['ui:options.wrapperProps', { 'data-x': 'own' }, [true, false, false, false]],
+  ] as [string, GenericObjectType, boolean[]][])(
+    "alt-date widget applies wrapperProps from the %s once, to the field's or each part's wrapper",
+    (source, props, expected) => {
+      const { container } = render(titledForm('alt-date', { type: 'string' }, source, props));
+
+      const fieldWrapper = container.querySelector(`.mantine-InputWrapper-root:has(> [id="${titleId('root')}"])`)!;
+      const wrappers = Array.from(container.querySelectorAll('.mantine-InputWrapper-root'));
+      expect(wrappers[0]).toBe(fieldWrapper);
+      expect(wrappers.map((wrapper) => wrapper.hasAttribute('data-x'))).toEqual(expected);
+    },
+  );
+
+  test("alt-date widget styles its field's title by the classNames in the Input theme's wrapperProps, less their root", () => {
+    const { container } = render(
+      titledForm('alt-date', { type: 'string' }, 'Input theme', {
+        wrapperProps: { classNames: { label: 'theme-label', root: 'theme-root' } },
+      }),
+    );
+
+    const fieldWrapper = container.querySelector('.mantine-InputWrapper-root')!;
+    expect(document.getElementById(titleId('root'))).toHaveClass('theme-label');
+    expect(fieldWrapper).not.toHaveClass('theme-root');
+  });
+
+  test("alt-date widget orders its field's wrapper by an inputWrapperOrder in the Input theme's wrapperProps", () => {
+    const { container } = render(
+      titledForm('alt-date', { type: 'string', description: 'A description' }, 'Input theme', {
+        wrapperProps: { inputWrapperOrder: ['input', 'label'] },
+      }),
+    );
+
+    const fieldWrapper = container.querySelector('.mantine-InputWrapper-root')!;
+    expect(fieldWrapper.lastElementChild).toHaveAttribute('id', titleId('root'));
+    expect(screen.queryByText('A description')).not.toBeInTheDocument();
+  });
+
+  test('additional property key input is named by its label when the theme inputWrapperOrder leaves it out', () => {
+    render(
+      themedForm(
+        { TextInput: { defaultProps: { inputWrapperOrder: orderWithoutLabel } } },
+        { type: 'object', title: 'A title', additionalProperties: { type: 'string' } },
+        {},
+        { formData: { foo: 'bar' } },
+      ),
+    );
+
+    expect(document.getElementById('root_foo__key')).toHaveAccessibleName('foo Key');
+  });
+
+  test.each([
+    ['text', { type: 'string' }],
+    ['select', enumSchema],
+  ] as [string, RJSFSchema][])(
+    '%s widget keeps the aria-label of its ui:options when its inputWrapperOrder leaves the label out',
+    (_, schema) => {
+      renderField(
+        { ...schema, title: 'A title' },
+        { 'ui:options': { 'aria-label': 'Paint', inputWrapperOrder: orderWithoutLabel } },
+      );
+
+      expect(document.getElementById('root')).toHaveAccessibleName('Paint');
+    },
+  );
+
+  it('keeps the required cue in the name a required group of checkboxes takes from the aria-label of its ui:options', () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          required: ['c'],
+          properties: { c: { ...checkboxesSchema, title: 'A title', minItems: 1 } },
+        }}
+        uiSchema={{ c: { 'ui:widget': 'checkboxes', 'ui:label': false, 'ui:options': { 'aria-label': 'Paint' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('group', { name: 'Paint required' })).toBeInTheDocument();
+  });
+
+  test.each([
+    ['text', 'TextInput', { type: 'string' }],
+    ['select', 'Select', enumSchema],
+  ] as [string, string, RJSFSchema][])(
+    '%s widget keeps the aria-label of its theme when its inputWrapperOrder leaves the label out',
+    (_, component, schema) => {
+      render(
+        themedForm(
+          { [component]: { defaultProps: { 'aria-label': 'Paint', inputWrapperOrder: orderWithoutLabel } } },
+          { ...schema, title: 'A title' },
+          {},
+        ),
+      );
+
+      expect(document.getElementById('root')).toHaveAccessibleName('Paint');
+    },
+  );
+
+  const sizedInputs: [string, string, RJSFSchema, string][] = [
+    ['range', 'Slider', { type: 'integer' }, '.mantine-Slider-root'],
+    ['alt-date', 'Select', { type: 'string' }, '.mantine-Select-root'],
+  ];
+  /** The distinct `data-size` values of the elements `selector` finds, so that none found fails a comparison */
+  const sizesOf = (container: HTMLElement, selector: string) =>
+    new Set(Array.from(container.querySelectorAll(selector), (element) => element.getAttribute('data-size')));
+
+  test.each(
+    sizedInputs.flatMap(([widget, , schema, selector]) =>
+      titleOptionSources.map((source) => [widget, source, schema, selector] as [string, string, RJSFSchema, string]),
+    ),
+  )('%s widget sizes its inputs as its wrapper, by a size from the %s', (widget, source, schema, selector) => {
+    const { container } = render(titledForm(widget, schema, source, { size: 'xl' }));
+
+    expect(sizesOf(container, '.mantine-InputWrapper-root')).toEqual(new Set(['xl']));
+    expect(sizesOf(container, selector)).toEqual(new Set(['xl']));
+  });
+
+  // As Mantine resolves an input's size: the field's own, then its component's theme, then the Input theme
+  test.each(sizedInputs)(
+    "%s widget sizes its inputs by the %s theme over the Input theme, and by the field's own size over both",
+    (widget, component, schema, selector) => {
+      const components = { Input: { defaultProps: { size: 'xs' } }, [component]: { defaultProps: { size: 'xl' } } };
+      const { container, unmount } = render(
+        themedForm(components, { ...schema, title: 'A title' }, { 'ui:widget': widget }),
+      );
+
+      expect(sizesOf(container, selector)).toEqual(new Set(['xl']));
+      unmount();
+
+      const own = render(
+        themedForm(components, { ...schema, title: 'A title' }, { 'ui:widget': widget, 'ui:options': { size: 'md' } }),
+      );
+      expect(sizesOf(own.container, selector)).toEqual(new Set(['md']));
+    },
+  );
+
+  // As a Mantine input takes its top-level `size`, leaving `wrapperProps.size` to its wrapper
+  test.each(sizedInputs)(
+    "%s widget sizes its inputs by ui:options.size over its wrapperProps' size, which sizes its wrapper",
+    (widget, _, schema, selector) => {
+      const { container } = render(
+        titledForm(widget, schema, 'ui:options', { size: 'md', wrapperProps: { size: 'xl' } }),
+      );
+
+      expect(container.querySelector(`.mantine-InputWrapper-root:has(> [id="${titleId('root')}"])`)).toHaveAttribute(
+        'data-size',
+        'xl',
+      );
+      expect(sizesOf(container, selector)).toEqual(new Set(['md']));
+    },
+  );
+
+  test.each(titledWidgets)(
+    '%s widget applies root props from its ui:options.wrapperProps to the field wrapper',
+    (widget, _, schema) => {
+      const { container } = render(
+        titledForm(widget, schema, 'ui:options.wrapperProps', { className: 'own-root', mod: { own: true }, mt: 'xl' }),
+      );
+
+      const fieldWrapper = container.querySelector<HTMLElement>(
+        `.mantine-InputWrapper-root:has(> [id="${titleId('root')}"])`,
+      )!;
+      expect(fieldWrapper).toHaveClass('own-root');
+      expect(fieldWrapper).toHaveAttribute('data-own');
+      expect(fieldWrapper.style.marginTop).not.toBe('');
+    },
+  );
+
+  test.each(titledWidgets)(
+    '%s widget styles its title and errors by classNames from the Input theme, as Mantine inputs do',
+    (widget, _, schema) => {
+      const { container } = render(
+        titledForm(
+          widget,
+          schema,
+          'Input theme',
+          { classNames: { label: 'theme-label', error: 'theme-error' } },
+          { extraErrors: { __errors: ['An error'] } },
+        ),
+      );
+
+      expect(container.querySelector(`[id="${titleId('root')}"]`)).toHaveClass('theme-label');
+      expect(container.querySelector('.mantine-InputWrapper-error')).toHaveClass('theme-error');
+    },
+  );
+
+  test.each(
+    titledWidgets.flatMap(([widget, role, schema]) =>
+      (
+        [
+          ['a hidden label', { title: 'A title' }, { 'ui:label': false }],
+          ['a label left out of inputWrapperOrder', { title: 'A title' }, { inputWrapperOrder: orderWithoutLabel }],
+        ] as [string, RJSFSchema, ContainerCaseOptions][]
+      ).map(([labelCase, titleSchema, options]) => [widget, labelCase, role, { ...schema, ...titleSchema }, options]),
+    ) as [string, string, string, RJSFSchema, ContainerCaseOptions][],
+  )(
+    '%s widget renders inside a single-child inputContainer, such as a Tooltip, with %s',
+    (widget, _, role, schema, options) => {
+      const { 'ui:label': uiLabel, ...uiOptions } = options;
+      renderField(schema, {
+        'ui:widget': widget,
+        ...(uiLabel !== undefined && { 'ui:label': uiLabel }),
+        'ui:options': {
+          ...uiOptions,
+          inputContainer: (children: ReactNode) => <Tooltip label='Tip'>{children}</Tooltip>,
+        },
+      });
+
+      expect(screen.getAllByRole(role)[0]).toBeInTheDocument();
+    },
+  );
+
+  test.each(['theme', 'ui:options', 'ui:options.wrapperProps'])(
+    'alt-date widget renders an inputContainer from the %s around each part, not around them all',
+    (source) => {
+      const inputContainer = (children: ReactNode) => <div data-testid='container'>{children}</div>;
+      render(titledForm('alt-date', { type: 'string' }, source, { inputContainer }));
+
+      const containers = screen.getAllByTestId('container');
+      expect(containers).toHaveLength(3);
+      for (const [index, part] of screen.getAllByRole('combobox').entries()) {
+        expect(containers[index]).toContainElement(part);
+      }
+    },
+  );
+
+  test.each([
+    ...titledWidgets.map(([widget, , schema]) => [widget, schema] as [string, RJSFSchema]),
+    ['text', { type: 'string' }],
+    ['select', enumSchema],
+    ['radio', enumSchema],
+    ['checkboxes', checkboxesSchema],
+  ] as [string, RJSFSchema][])('%s widget puts each error on its own line', (widget, schema) => {
+    render(
+      titledForm(
+        widget,
+        schema,
+        'ui:options',
+        { errorProps: { 'data-testid': 'error' } },
+        { extraErrors: { __errors: ['First error', 'Second error'] } },
+      ),
+    );
+
+    const error = screen.getByTestId('error');
+    expect(error).toHaveTextContent('First error Second error');
+    expect(error.querySelectorAll('br')).toHaveLength(1);
+  });
+
+  const descriptionCases: [string, RJSFSchema][] = [
+    ['text', { type: 'string' }],
+    ['textarea', { type: 'string' }],
+    ['password', { type: 'string' }],
+    ['color', { type: 'string' }],
+    ['file', { type: 'string', format: 'data-url' }],
+    ['date', { type: 'string' }],
+    ['time', { type: 'string' }],
+    ['select', enumSchema],
+    ['radio', enumSchema],
+    ['checkboxes', checkboxesSchema],
+  ];
+  test.each(
+    descriptionCases.flatMap(([widget, schema]) =>
+      ['ui:options', 'ui:options.wrapperProps', 'theme'].map((source): [string, string, RJSFSchema] => [
+        widget,
+        source,
+        schema,
+      ]),
+    ),
+  )(
+    '%s widget applies descriptionProps from the %s to its description, rendered as a div',
+    (widget, source, schema) => {
+      render(
+        titledForm(widget, { ...schema, description: 'A description' }, source, {
+          descriptionProps: { 'data-testid': 'description' },
+        }),
+      );
+
+      const description = screen.getByTestId('description');
+      expect(description).toHaveTextContent('A description');
+      expect(description.tagName).toBe('DIV');
+    },
+  );
+
+  test('alt-date widget prefers its own wrapperProps.inputContainer over the theme wrapperProps one, as range does', () => {
+    const themeContainer = (children: ReactNode) => <div data-testid='theme-container'>{children}</div>;
+    const ownContainer = (children: ReactNode) => <div data-testid='own-container'>{children}</div>;
+    for (const component of ['Input', 'Select']) {
+      const { unmount } = render(
+        themedForm(
+          { [component]: { defaultProps: { wrapperProps: { inputContainer: themeContainer } } } },
+          { type: 'string', title: 'A title' },
+          { 'ui:widget': 'alt-date', 'ui:options': { wrapperProps: { inputContainer: ownContainer } } },
+        ),
+      );
+
+      expect(screen.getAllByTestId('own-container')).toHaveLength(3);
+      expect(screen.queryByTestId('theme-container')).not.toBeInTheDocument();
+      unmount();
+    }
+  });
+
+  test.each([
+    ['ui:options.inputContainer', false],
+    ['ui:options.wrapperProps.inputContainer', true],
+  ] as [string, boolean][])(
+    'alt-date widget renders each part with the theme Select wrapperProps given a %s',
+    (_, inWrapperProps) => {
+      const inputContainer = (children: ReactNode) => <div data-testid='container'>{children}</div>;
+      const options = inWrapperProps ? { wrapperProps: { inputContainer } } : { inputContainer };
+      const { container } = render(
+        themedForm(
+          { Select: { defaultProps: { wrapperProps: { 'data-part-wrapper': 'theme' } } } },
+          { type: 'string', title: 'A title' },
+          { 'ui:widget': 'alt-date', 'ui:options': options },
+        ),
+      );
+
+      expect(screen.getAllByTestId('container')).toHaveLength(3);
+      expect(container.querySelectorAll('[data-part-wrapper="theme"]')).toHaveLength(3);
+    },
+  );
+
+  test('alt-date widget keeps the theme Select wrapperProps on each part given a ui:options.wrapperProps without an inputContainer', () => {
+    const themeContainer = (children: ReactNode) => <div data-testid='theme-container'>{children}</div>;
+    const { container } = render(
+      themedForm(
+        {
+          Select: { defaultProps: { wrapperProps: { inputContainer: themeContainer, 'data-part-wrapper': 'theme' } } },
+        },
+        { type: 'string', title: 'A title' },
+        { 'ui:widget': 'alt-date', 'ui:options': { wrapperProps: { 'data-field': 'x' } } },
+      ),
+    );
+
+    expect(screen.getAllByTestId('theme-container')).toHaveLength(3);
+    expect(container.querySelectorAll('[data-part-wrapper="theme"]')).toHaveLength(3);
+    expect(container.querySelectorAll('[data-field="x"]')).toHaveLength(1);
+  });
+
+  test.each(['range', 'alt-date'])(
+    '%s widget prefers a theme wrapperProps.inputContainer over a ui:options one, as Mantine inputs do',
+    (widget) => {
+      const themeContainer = (children: ReactNode) => <div data-testid='theme-container'>{children}</div>;
+      const ownContainer = (children: ReactNode) => <div data-testid='own-container'>{children}</div>;
+      render(
+        themedForm(
+          { Input: { defaultProps: { wrapperProps: { inputContainer: themeContainer } } } },
+          { type: widget === 'range' ? 'integer' : 'string', title: 'A title' },
+          { 'ui:widget': widget, 'ui:options': { inputContainer: ownContainer } },
+        ),
+      );
+
+      expect(screen.getAllByTestId('theme-container')).toHaveLength(widget === 'range' ? 1 : 3);
+      expect(screen.queryByTestId('own-container')).not.toBeInTheDocument();
+    },
+  );
+
+  test('alt-date widget renders no part container when wrapperProps sets inputContainer to undefined, as a Select', () => {
+    const themeContainer = (children: ReactNode) => <div data-testid='theme-container'>{children}</div>;
+    const ownContainer = (children: ReactNode) => <div data-testid='own-container'>{children}</div>;
+    render(
+      themedForm(
+        { Select: { defaultProps: { inputContainer: themeContainer } } },
+        { type: 'string', title: 'A title' },
+        {
+          'ui:widget': 'alt-date',
+          'ui:options': { inputContainer: ownContainer, wrapperProps: { inputContainer: undefined } },
+        },
+      ),
+    );
+
+    expect(screen.queryByTestId('theme-container')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('own-container')).not.toBeInTheDocument();
+  });
+
+  test.each(titledWidgets)(
+    '%s widget renders one title when wrapperProps sets inputWrapperOrder to undefined, as Mantine uses its default',
+    (widget, role, schema) => {
+      const { container } = render(
+        titledForm(widget, schema, 'ui:options', {
+          inputWrapperOrder: orderWithoutLabel,
+          wrapperProps: { inputWrapperOrder: undefined },
+        }),
+      );
+
+      expect(container.querySelectorAll(`[id="${titleId('root')}"]`)).toHaveLength(1);
+      expect(screen.getByText('A title')).toBeVisible();
+      expect(screen.getAllByRole(role)[0]).toHaveAccessibleName(expect.stringMatching(/^A title/));
+    },
+  );
+
+  test.each(titledWidgets)(
+    '%s widget leaves the asterisk off a required field title when withAsterisk is false',
+    (widget, _, schema) => {
+      renderField(
+        { type: 'object', required: ['field'], properties: { field: { ...schema, title: 'A title' } } },
+        {
+          field: { 'ui:widget': widget, 'ui:options': { withAsterisk: false, labelProps: { 'data-testid': 'title' } } },
+        },
+      );
+
+      expect(screen.getByTestId('title')).not.toHaveAttribute('data-required');
+    },
+  );
+
+  test('range widget keeps the slider thumb named by a thumbLabel from ui:options.thumbProps', () => {
+    renderField(
+      { type: 'integer', title: 'A title' },
+      { 'ui:widget': 'range', 'ui:options': { thumbProps: { thumbLabel: 'Volume' } } },
+    );
+
+    expect(screen.getByRole('slider')).not.toHaveAttribute('aria-labelledby');
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+  });
+
+  test('range widget names the slider thumb by the title when ui:options.thumbProps unsets the thumbLabel', () => {
+    renderField(
+      { type: 'integer', title: 'A title' },
+      { 'ui:widget': 'range', 'ui:options': { thumbLabel: 'Volume', thumbProps: { thumbLabel: undefined } } },
+    );
+
+    expect(screen.getByRole('slider')).toHaveAccessibleName('A title');
+  });
+
+  const selectWidgets: [string, RJSFSchema][] = [
+    ['select', enumSchema],
+    ['multi-select', checkboxesSchema],
+  ];
+
+  // Mantine's `Select` and `MultiSelect` build their listbox's label id from the `label` prop alone
+  // (https://github.com/mantinedev/mantine/issues/9219). Skipped rather than expected to fail, so that the Mantine
+  // release fixing it can be adopted without an unrelated failure; unskip it then, and drop the filter in
+  // `labelCaseWidgets`.
+  test.skip.each(selectWidgets)(
+    '%s widget only references elements that exist when inputWrapperOrder leaves the label out',
+    (_, schema) => {
+      const { container } = renderField(
+        { ...schema, title: 'A title' },
+        { 'ui:options': { inputWrapperOrder: orderWithoutLabel } },
+      );
+
+      for (const el of container.querySelectorAll('[aria-labelledby]')) {
+        for (const id of el.getAttribute('aria-labelledby')!.split(/\s+/)) {
+          expect(container.querySelector(`[id="${id}"]`)).toBeInTheDocument();
+        }
+      }
+    },
+  );
+});
+
+describe("the field's id is on the element a user focuses", () => {
+  const controls: [string, RJSFSchema, UiSchema, string][] = [
+    ['text input', { type: 'string' }, {}, 'textbox'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'textbox'],
+    ['number input', { type: 'number' }, {}, 'textbox'],
+    ['checkbox', { type: 'boolean' }, {}, 'checkbox'],
+    ['slider', { type: 'number' }, { 'ui:widget': 'range' }, 'slider'],
+    ['select', enumSchema, {}, 'combobox'],
+    ['multi-select', checkboxesSchema, {}, 'combobox'],
+  ];
+
+  test.each(controls)("names a %s by its label, and gives it the field's id", (_, x, ui, role) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X' } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X' })).toHaveAttribute('id', 'root_x');
+  });
+
+  // A group's wrapper carries the field's id but isn't focusable, so focus goes to its first option, as core's does,
+  // and an alt-date's to its first part
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ...controls.map(([name, x, ui]): [string, RJSFSchema, UiSchema, string] => [name, x, ui, 'root_x']),
+    ['password input', { type: 'string' }, { 'ui:widget': 'password' }, 'root_x'],
+    ['radio group', enumSchema, { 'ui:widget': 'radio' }, 'root_x__0'],
+    ['checkboxes group', checkboxesSchema, { 'ui:widget': 'checkboxes' }, 'root_x__0'],
+    ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 'root_x__year'],
+  ])('moves focus to a %s with errors when focusOnFirstError is set', async (_, x, ui, focusedId) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X' } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+        focusOnFirstError
+        customValidate={(_: unknown, errors: FormValidation<{ x?: unknown }>) => {
+          errors.x?.addError('bad');
+          return errors;
+        }}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(document.activeElement).toHaveAttribute('id', focusedId);
+  });
+});

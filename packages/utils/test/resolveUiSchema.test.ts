@@ -1,5 +1,22 @@
-import type { Registry, RJSFSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src/index.ts';
-import { RJSF_REF_KEY, noop, resolveUiSchema } from '../src/index.ts';
+import type {
+  MergedClassMap,
+  Registry,
+  RJSFSchema,
+  TemplatesType,
+  UiSchema,
+  UiSchemaDefinitions,
+  ValidatorType,
+} from '../src/index.ts';
+import {
+  createSchemaUtils,
+  mergeThemePresentation,
+  noop,
+  resolveUiSchema,
+  retrieveSchema,
+  RJSF_REF_KEY,
+} from '../src/index.ts';
+import looseSchema from './schema/graph/looseSchema.ts';
+import getTestValidator from './testUtils/getTestValidator.ts';
 
 beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(noop);
@@ -15,6 +32,8 @@ const baseRegistry: Registry = {
   translateString: () => '',
   fields: {},
   widgets: {},
+  presentation: mergeThemePresentation(),
+  classMap: {} as MergedClassMap,
   templates: {} as TemplatesType,
   globalFormOptions: { idPrefix: 'root', idSeparator: '_', useFallbackUiForUnsupportedType: false },
 };
@@ -64,6 +83,36 @@ describe('resolveUiSchema() - branching keyword runtime resolution', () => {
   });
 });
 
+describe('resolveUiSchema() - non-object local uiSchema', () => {
+  // Only untyped JavaScript can put a non-object here, so these stand in for a caller the types never saw
+  it.each([
+    ['a string', 'oops'],
+    ['a number', 42],
+    ['an array', ['oops']],
+    ['true', true],
+  ])(
+    'replaces %s with an empty uiSchema, so every consumer can treat its own uiSchema as an object',
+    (_label, value) => {
+      const schema: RJSFSchema = { type: 'string' };
+
+      expect(resolveUiSchema(schema, value as unknown as UiSchema, baseRegistry)).toEqual({});
+    },
+  );
+
+  it.each([
+    ['a string', 'oops'],
+    ['a number', 42],
+    ['null', null],
+    ['true', true],
+  ])("drops a `ui:options` that is %s, leaving the caller's uiSchema untouched", (_label, value) => {
+    const schema: RJSFSchema = { type: 'string' };
+    const local = { 'ui:widget': 'textarea', 'ui:options': value } as unknown as UiSchema;
+
+    expect(resolveUiSchema(schema, local, baseRegistry)).toEqual({ 'ui:widget': 'textarea' });
+    expect(local).toHaveProperty('ui:options', value);
+  });
+});
+
 describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
   it('populates uiSchema.oneOf[i] for branches with $ref matching definitions', () => {
     const schema: RJSFSchema = {
@@ -76,9 +125,7 @@ describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
     const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
 
     const result = resolveUiSchema(schema, undefined, reg);
-    expect(result.oneOf).toHaveLength(2);
-    expect(result.oneOf[0]).toEqual({ 'ui:title': 'Option A' });
-    expect(result.oneOf[1]).toEqual({ 'ui:title': 'Option B' });
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Option A' }, { 'ui:title': 'Option B' }]);
   });
 
   it('merges local uiSchema.oneOf overrides on top of definitions', () => {
@@ -88,7 +135,7 @@ describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
     const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
 
     const result = resolveUiSchema(schema, local, reg);
-    expect(result.oneOf[0]).toEqual({ 'ui:title': 'Custom', name: { 'ui:placeholder': 'Name' } });
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Custom', name: { 'ui:placeholder': 'Name' } }]);
   });
 
   it('walks oneOf on a resolved schema (via RJSF_REF_KEY from #4967)', () => {
@@ -106,9 +153,7 @@ describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
 
     const result = resolveUiSchema(resolvedSchema, undefined, reg);
     expect(result['ui:title']).toBe('Parent');
-    expect(result.oneOf).toHaveLength(2);
-    expect(result.oneOf[0]).toEqual({ 'ui:title': 'A' });
-    expect(result.oneOf[1]).toEqual({ 'ui:title': 'B' });
+    expect(result.oneOf).toEqual([{ 'ui:title': 'A' }, { 'ui:title': 'B' }]);
   });
 
   it('does not populate uiSchema.oneOf when no options have matching definitions', () => {
@@ -130,8 +175,7 @@ describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
     const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
 
     const result = resolveUiSchema(schema, undefined, reg);
-    expect(result.oneOf[0]).toEqual({ 'ui:title': 'Known' });
-    expect(result.oneOf[1]).toBeUndefined();
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Known' }]);
   });
 
   it('resolves an unresolved $ref to walk its oneOf branches', () => {
@@ -177,7 +221,7 @@ describe('resolveUiSchema()', () => {
     const definitions = { '#/$defs/node': { name: { 'ui:placeholder': 'Node name' } } };
     const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
     const local: UiSchema = { 'ui:widget': 'textarea' };
-    expect(resolveUiSchema({ type: 'string' } as RJSFSchema, local, reg)).toEqual(local);
+    expect(resolveUiSchema({ type: 'string' }, local, reg)).toEqual(local);
   });
 
   it('returns local uiSchema when $ref has no matching definition', () => {
@@ -220,5 +264,129 @@ describe('resolveUiSchema()', () => {
       name: { 'ui:placeholder': 'Override', 'ui:disabled': true },
       'ui:order': ['name', 'children'],
     });
+  });
+});
+
+describe('resolveUiSchema() - definitions composed through allOf', () => {
+  const rootSchema: RJSFSchema = {
+    definitions: {
+      B: { type: 'object', properties: { n: { type: 'string' } } },
+      A: { allOf: [{ $ref: '#/definitions/B' }], properties: { m: { type: 'string' } } },
+    },
+    type: 'array',
+    items: { $ref: '#/definitions/A' },
+  };
+  const definitions: UiSchemaDefinitions = {
+    '#/definitions/B': { 'ui:title': 'FROM_B', 'ui:help': 'HELP_B' },
+    '#/definitions/A': { 'ui:description': 'FROM_A', 'ui:help': 'HELP_A' },
+  };
+  const validator: ValidatorType = {
+    validateFormData: () => ({ errors: [], errorSchema: {} }),
+    isValid: () => true,
+    rawValidation: () => ({}),
+  };
+
+  it('applies only the entry of the $ref the field was resolved from, not those of the definitions it composes', () => {
+    const { items } = retrieveSchema({ validator }, rootSchema, rootSchema);
+    const handedOut: RJSFSchema = typeof items === 'object' && !Array.isArray(items) ? items : {};
+    const resolved = retrieveSchema({ validator }, handedOut, rootSchema);
+    const fromA = { 'ui:description': 'FROM_A', 'ui:help': 'HELP_A' };
+    expect(resolveUiSchema(handedOut, undefined, makeRegistry(rootSchema, definitions))).toEqual(fromA);
+    expect(resolveUiSchema(resolved, undefined, makeRegistry(rootSchema, definitions))).toEqual(fromA);
+    expect(
+      resolveUiSchema({ allOf: [{ $ref: '#/definitions/B' }] }, undefined, makeRegistry(rootSchema, definitions)),
+    ).toEqual({});
+  });
+  it('applies the entry of the definition an extra key of the data names through its additionalProperties', () => {
+    const mapSchema: RJSFSchema = {
+      definitions: { A: { allOf: [{ type: 'object', properties: { a: { type: 'string' } } }] } },
+      type: 'object',
+      additionalProperties: { $ref: '#/definitions/A' },
+    };
+    const { properties } = retrieveSchema({ validator }, mapSchema, mapSchema, { k: {} });
+    const handedOut: RJSFSchema = typeof properties?.k === 'object' ? properties.k : {};
+    const resolved = retrieveSchema({ validator }, handedOut, mapSchema, {});
+    expect(Reflect.get(resolved, RJSF_REF_KEY)).toBe('#/definitions/A');
+    expect(
+      resolveUiSchema(
+        resolved,
+        undefined,
+        makeRegistry(mapSchema, { '#/definitions/A': { 'ui:description': 'FROM_A' } }),
+      ),
+    ).toEqual({ 'ui:description': 'FROM_A' });
+  });
+});
+
+describe('resolveUiSchema() - option walk through the schema graph', () => {
+  const optionDefinitions: UiSchemaDefinitions = { '#/$defs/leaf': { 'ui:title': 'Leaf' } };
+
+  it('walks the options of a definition an $anchor names, without a warning', () => {
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        node: looseSchema({ $anchor: 'nd', oneOf: [{ $ref: '#/$defs/leaf' }] }),
+        leaf: { type: 'string' },
+      },
+    };
+    const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
+    const result = resolveUiSchema({ $ref: '#nd' }, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('walks the options of the definition a chain of aliases leads to', () => {
+    const rootSchema: RJSFSchema = {
+      $defs: { alias: { $ref: '#/$defs/node' }, node: { anyOf: [{ $ref: '#/$defs/leaf' }] }, leaf: { type: 'string' } },
+    };
+    const result = resolveUiSchema({ $ref: '#/$defs/alias' }, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.anyOf).toEqual([{ 'ui:title': 'Leaf' }]);
+  });
+
+  it('walks the options of the definition an alias with sibling keywords leads to', () => {
+    const rootSchema: RJSFSchema = {
+      $defs: {
+        alias: { $ref: '#/$defs/node', type: 'string', minLength: 1 },
+        node: { oneOf: [{ $ref: '#/$defs/leaf' }, { type: 'string' }] },
+        leaf: { type: 'string' },
+      },
+    };
+    const result = resolveUiSchema({ $ref: '#/$defs/alias' }, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+  });
+
+  it('walks the options of the definition a $ref with constraints beside it names, as the allOf of both', () => {
+    const field: RJSFSchema = { $ref: '#/$defs/node', type: 'string' };
+    const rootSchema: RJSFSchema = {
+      $defs: { node: { oneOf: [{ $ref: '#/$defs/leaf' }, { type: 'string' }] }, leaf: { type: 'string' } },
+      properties: { field },
+    };
+    const result = resolveUiSchema(field, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+  });
+
+  it('walks the options of a $ref under a relative root $id from the root createSchemaUtils() hands out', () => {
+    const field: RJSFSchema = { $ref: 'child.json' };
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'nested/root.json',
+      $defs: { child: { $id: 'child.json', oneOf: [{ $ref: '#/$defs/leaf' }], $defs: { leaf: { type: 'string' } } } },
+      properties: { field },
+    };
+    const schemaUtils = createSchemaUtils({ validator: getTestValidator({}) }, rootSchema);
+    const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
+    const result = resolveUiSchema(field, undefined, makeRegistry(schemaUtils.getRootSchema(), optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('walks the options of a 2020-12 $ref beside only annotations, as of one beside nothing', () => {
+    const field: RJSFSchema = { $ref: '#/$defs/node', title: 'Node' };
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: { node: { oneOf: [{ $ref: '#/$defs/leaf' }, { type: 'number' }] }, leaf: { type: 'string' } },
+      properties: { field },
+    };
+    const result = resolveUiSchema(field, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
   });
 });

@@ -1,11 +1,20 @@
-import { Component, createRef } from 'react';
-import type { RJSFSchema } from '@rjsf/utils';
+import { Component } from 'react';
+import type {
+  DeclaredTemplatesType,
+  FieldProps,
+  GenericObjectType,
+  Registry,
+  RJSFSchema,
+  ThemePresentation,
+} from '@rjsf/utils';
+import { WIDGET_FIELD_PRESENTATION } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps, ThemeProps } from '../src/index.ts';
-import type Form from '../src/index.ts';
 import { withTheme } from '../src/index.ts';
-import { createComponent } from './testUtils.tsx';
+import { createComponent, createFormRef } from './testUtils.tsx';
 
 function WrapperClassComponent(props: ThemeProps) {
   return class extends Component<FormProps> {
@@ -186,6 +195,98 @@ describe('withTheme', () => {
   });
 
   describe('With templates', () => {
+    it('takes a whole set of declared templates', () => {
+      expectTypeOf<DeclaredTemplatesType>().toExtend<NonNullable<FormProps['templates']>>();
+    });
+
+    it('takes a template or a button that may be undefined', () => {
+      expectTypeOf<{
+        FieldTemplate: DeclaredTemplatesType['FieldTemplate'] | undefined;
+        ButtonTemplates: { SubmitButton: DeclaredTemplatesType['ButtonTemplates']['SubmitButton'] | undefined };
+      }>().toExtend<NonNullable<FormProps['templates']>>();
+    });
+
+    it('checks a declared template against its own props, beside the open custom entries', () => {
+      const unrelatedTemplate = ({ unrelated }: { unrelated: string }) => (
+        <div className='unrelated-template'>{unrelated}</div>
+      );
+      const formTemplates: FormProps['templates'] = {
+        // @ts-expect-error `FieldTemplate` takes `FieldTemplateProps`, which hold no `unrelated`
+        FieldTemplate: unrelatedTemplate,
+        MyCustomTemplate: () => <div />,
+      };
+      const theme: ThemeProps = {
+        templates: {
+          // @ts-expect-error `withTheme()` checks a theme's `FieldTemplate` as `Form` does
+          FieldTemplate: unrelatedTemplate,
+          MyCustomTemplate: () => <div />,
+        },
+      };
+
+      const fromForm = createComponent(WrapperClassComponent({}), {
+        schema: { type: 'string' },
+        validator,
+        templates: formTemplates,
+      });
+      const fromTheme = createComponent(withTheme(theme), { schema: { type: 'string' }, validator });
+
+      expect(fromForm.node.querySelectorAll('.unrelated-template')).toHaveLength(1);
+      expect(fromTheme.node.querySelectorAll('.unrelated-template')).toHaveLength(1);
+    });
+
+    it('checks each button of `ButtonTemplates` against its own props', () => {
+      const UnrelatedButton = ({ unrelated }: { unrelated: string }) => (
+        <button type='button' className='unrelated-button'>
+          {unrelated}
+        </button>
+      );
+      const formTemplates: FormProps['templates'] = {
+        // @ts-expect-error `SubmitButton` takes `SubmitButtonProps`, which hold no `unrelated`
+        ButtonTemplates: { SubmitButton: UnrelatedButton },
+      };
+      const theme: ThemeProps = {
+        // @ts-expect-error `withTheme()` checks a theme's `SubmitButton` as `Form` does
+        templates: { ButtonTemplates: { SubmitButton: UnrelatedButton } },
+      };
+
+      const fromForm = createComponent(WrapperClassComponent({}), {
+        schema: { type: 'string' },
+        validator,
+        templates: formTemplates,
+      });
+      const fromTheme = createComponent(withTheme(theme), { schema: { type: 'string' }, validator });
+
+      expect(fromForm.node.querySelectorAll('.unrelated-button')).toHaveLength(1);
+      expect(fromTheme.node.querySelectorAll('.unrelated-button')).toHaveLength(1);
+    });
+
+    it('gives a declared template written inline with no type on its props the props it declares', () => {
+      const ThemedForm = withTheme({
+        templates: {
+          FieldTemplate: (props) => {
+            expectTypeOf(props.id).toEqualTypeOf<string>();
+            return <div className='theme-field-template'>{props.id}</div>;
+          },
+        },
+      });
+      const { container } = render(<ThemedForm schema={{ type: 'string' }} validator={validator} />);
+      const { container: fromForm } = render(
+        <ThemedForm
+          schema={{ type: 'string' }}
+          validator={validator}
+          templates={{
+            FieldTemplate: (props) => {
+              expectTypeOf(props.id).toEqualTypeOf<string>();
+              return <div className='form-field-template'>{props.id}</div>;
+            },
+          }}
+        />,
+      );
+
+      expect(container.querySelector('.theme-field-template')).toHaveTextContent('root');
+      expect(fromForm.querySelector('.form-field-template')).toHaveTextContent('root');
+    });
+
     it('should use the withTheme template', () => {
       const themeTemplates = {
         FieldTemplate() {
@@ -307,8 +408,113 @@ describe('withTheme', () => {
     });
   });
 
+  describe('With presentation', () => {
+    it('layers the props over the theme over core, part by part', () => {
+      let registry: Registry | undefined;
+      const fields = {
+        StringField(props: FieldProps) {
+          registry = props.registry;
+          return null;
+        },
+      };
+      const theme: ThemeProps = {
+        fields,
+        presentation: {
+          default: { label: 'self', errors: 'self' },
+          widgets: { RadioWidget: { description: 'self' } },
+        },
+      };
+      const presentation: ThemePresentation = { widgets: { RadioWidget: { label: 'template' } } };
+      createComponent(WrapperClassComponent(theme), { schema: { type: 'string' }, presentation, validator });
+      expect(registry?.presentation.widgets.RadioWidget).toEqual({
+        label: 'template',
+        description: 'self',
+        errors: 'self',
+        labelledBy: 'aria-labelledby',
+      });
+      expect(registry?.presentation.widgets.CheckboxWidget).toEqual({
+        label: 'self',
+        description: 'self',
+        errors: 'self',
+        uncheckedIsFalse: true,
+        labelPlacement: 'beside',
+      });
+      expect(registry?.presentation.fields.StringField).toEqual(WIDGET_FIELD_PRESENTATION);
+      expect(registry?.presentation.default).toEqual({ label: 'self', errors: 'self' });
+    });
+  });
+
+  describe('With classMap', () => {
+    it("layers the props' over the theme's over core's, key by key, keeping the theme's under a prop entry left undefined", () => {
+      let registry: Registry | undefined;
+      const fields = {
+        StringField(props: FieldProps) {
+          registry = props.registry;
+          return null;
+        },
+      };
+      const theme: ThemeProps = { fields, classMap: { input: 'theme-input', select: 'theme-select' } };
+      createComponent(WrapperClassComponent(theme), {
+        schema: { type: 'string' },
+        classMap: { input: 'prop-input', select: undefined },
+        validator,
+      });
+      expect(registry?.classMap).toEqual(
+        expect.objectContaining({ input: 'prop-input', select: 'theme-select', textarea: undefined }),
+      );
+    });
+  });
+
+  describe('With globalUiOptionsKeys', () => {
+    it("reads the theme's keys and the props' from ui:globalOptions, and no other", () => {
+      let registry: Registry | undefined;
+      const fields = {
+        StringField(props: FieldProps) {
+          registry = props.registry;
+          return null;
+        },
+      };
+      const theme: ThemeProps = { fields, globalUiOptionsKeys: ['themeKey', 'shared'] };
+      // Untyped, as a JSON uiSchema is, so it can hold a key that neither declares
+      const globalOptions: GenericObjectType = { label: false, themeKey: 1, propKey: 2, shared: 3, undeclared: 4 };
+      createComponent(WrapperClassComponent(theme), {
+        schema: { type: 'string' },
+        uiSchema: { 'ui:globalOptions': globalOptions },
+        globalUiOptionsKeys: ['propKey', 'shared'],
+        validator,
+      });
+      expect(registry?.globalUiOptions).toEqual({ label: false, themeKey: 1, propKey: 2, shared: 3 });
+    });
+  });
+
+  it('infers the form data type from formData and takes the default validator', async () => {
+    const user = userEvent.setup();
+    const ThemedForm = withTheme({});
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+    const seen: (string | undefined)[] = [];
+
+    const { container } = render(
+      <ThemedForm
+        schema={schema}
+        validator={validator}
+        initialFormData={{ name: 'a' }}
+        onChange={({ formData }) => seen.push(formData?.name)}
+      />,
+    );
+    await user.type(container.querySelector('#root_name') as HTMLInputElement, 'b');
+
+    expect(seen).toEqual(['ab']);
+  });
+
+  it('renders without a theme argument, as an untyped caller could pass', () => {
+    // @ts-expect-error called with no argument
+    const ThemedForm = withTheme();
+    const { container } = render(<ThemedForm schema={{ type: 'string' }} validator={validator} />);
+    expect(container.querySelector('#root')).not.toBeNull();
+  });
+
   it('should forward the ref', () => {
-    const ref = createRef<Form>();
+    const ref = createFormRef();
     const schema: RJSFSchema = {};
     const uiSchema = {};
 

@@ -26,7 +26,10 @@ describe('getDecimalSeparator()', () => {
   });
 
   it('should return "." when languages is undefined and navigator.languages is undefined', () => {
-    vi.spyOn(navigator, 'languages', 'get').mockReturnValue(undefined as any);
+    vi.spyOn(navigator, 'languages', 'get').mockReturnValue(
+      // @ts-expect-error: TS2345, a browser that reports no languages is what this case checks
+      undefined,
+    );
     expect(getDecimalSeparator()).toEqual('.');
   });
 

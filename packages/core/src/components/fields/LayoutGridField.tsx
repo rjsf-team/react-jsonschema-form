@@ -1,58 +1,80 @@
 import type { ComponentType, ReactNode } from 'react';
+import { use, useCallback, useInsertionEffect, useMemo, useRef } from 'react';
 import type {
   FieldProps,
-  FieldPathId,
+  FieldPath,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
   Registry,
+  SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
 } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   getByPath,
+  hasSchemaMarker,
   toPath,
-  ANY_OF_KEY,
   deepEquals,
   getDiscriminatorFieldFromSchema,
-  getTemplate,
+  getTemplates,
   getTestIds,
   getPropertySchema,
+  getRenderedOptionSchema,
+  rendersOwnFieldBesideOption,
   getUiOptions,
+  getXxxOfKey,
   hashObject,
-  ID_KEY,
+  isComponentType,
+  describeUnresolvedComponent,
   isObject,
   isPlainObject,
+  isSchemaObject,
+  logOnce,
   lookupFromFormContext,
-  ONE_OF_KEY,
+  LOOKUP_MAP_NAME,
   PROPERTIES_KEY,
   READONLY_KEY,
-  toFieldPathId,
+  resolveUiSchema,
+  toFieldPath,
+  fieldPathToList,
+  fieldPathToId,
+  UI_FIELD_KEY,
   UI_OPTIONS_KEY,
-  UI_GLOBAL_OPTIONS_KEY,
   ITEMS_KEY,
-  useDeepCompareMemo,
 } from '@rjsf/utils';
+
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import useSendBlur from '../../hooks/useSendBlur.ts';
+import useUiState from '../../hooks/useUiState.ts';
+import type { UiState, UiStateReader } from '../uiState.ts';
+import { optionListKey, optionsMayDisagreeAbout, retrievedOptionsOf, shownOption } from '../uiState.ts';
+import AdditionalEntryContext from './AdditionalEntryContext.ts';
+import { declaresProperty, storedValue, withoutAdditionalFlag, withoutOptionalControls } from './fieldWidgetUtils.ts';
+import { lookUpUiField } from './namedField.ts';
+import type { ShownOption } from './ShownOptionContext.ts';
+import ShownOptionContext from './ShownOptionContext.ts';
+import TemplateWarnEntryContext, { templateWarnEntry } from './TemplateWarnEntryContext.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
  */
-export enum GridType {
-  ROW = 'ui:row',
-  COLUMN = 'ui:col',
-  COLUMNS = 'ui:columns',
-  CONDITION = 'ui:condition',
-}
+export const GridType = {
+  ROW: 'ui:row',
+  COLUMN: 'ui:col',
+  COLUMNS: 'ui:columns',
+  CONDITION: 'ui:condition',
+} as const;
+export type GridType = (typeof GridType)[keyof typeof GridType];
 
 /** The enumeration of the different operators within a condition
  */
-export enum Operators {
-  ALL = 'all',
-  SOME = 'some',
-  NONE = 'none',
-}
-
-/** Type used to represent an object that contains anything */
-type ConfigObject = Record<string, any>;
+export const Operators = {
+  ALL: 'all',
+  SOME: 'some',
+  NONE: 'none',
+} as const;
+export type Operators = (typeof Operators)[keyof typeof Operators];
 
 export interface GridProps extends GenericObjectType {
   /** The optional operator to use when comparing a field's value with the expected value for `GridType.CONDITION`
@@ -70,12 +92,12 @@ export type GridSchemaType = Partial<Record<GridType, object>>;
 
 /** The types which comprise the possibilities for the `layoutGridSchema` prop
  */
-export type LayoutGridSchemaType = GridSchemaType | ConfigObject | string;
+export type LayoutGridSchemaType = GridSchemaType | GenericObjectType | string;
 
 export interface LayoutGridFieldProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > extends FieldProps<T, S, F> {
   /** Optional string or object used to describe the current level of the `LayoutGridField`
    */
@@ -94,14 +116,26 @@ export const LAYOUT_GRID_UI_OPTION = 'layoutGrid';
  */
 export const LAYOUT_GRID_OPTION = `ui:${LAYOUT_GRID_UI_OPTION}`;
 
-/** Type used to return options list and whether it has a discriminator */
-interface OneOfOptionsInfoType<S extends StrictRJSFSchema = RJSFSchema> {
-  options: S[];
+/** Type used to return whether a oneOf/anyOf has a discriminator */
+interface OneOfOptionsInfoType {
   hasDiscriminator: boolean;
 }
 
+/** What a cell rendered in a form reads the option shown from, for options with no discriminator */
+interface OptionsShown {
+  /** The options a `SchemaField` renders, which beside the grid are those at the grid's own path */
+  beside: ShownOption | undefined;
+  /** The form's option selections, for options no `SchemaField` renders */
+  uiState: UiState;
+}
+
+/** What an edit in a cell records in the form's store for options it was read through, as `SchemaField` records an
+ * edit inside or beside an option
+ */
+type CellSelection = (uiState: UiState) => void;
+
 /** Type used to represent a React-based rendering component */
-type RenderComponent = ComponentType<any>;
+type RenderComponent = ComponentType<GenericObjectType>;
 
 /** Type used to determine what are the UIComponent and props from the grid schema */
 interface UIComponentPropsType {
@@ -110,7 +144,7 @@ interface UIComponentPropsType {
   /** The render component if specified */
   UIComponent: RenderComponent | null;
   /** Any uiProps associated with the render component */
-  uiProps: ConfigObject;
+  uiProps: GenericObjectType;
   /** The special case where the component is immediately rendered */
   rendered: ReactNode;
 }
@@ -137,8 +171,8 @@ function isNumericIndex(str: string) {
 const LAYOUT_GRID_FIELD_TEST_IDS = getTestIds();
 
 /** Computes the uiSchema for the field with `name` from the `uiProps` and `uiSchema` provided. The field UI Schema
- * will always contain a copy of the global options from the `uiSchema` (so they can be passed down) as well as
- * copying them into the local ui options. When the `forceReadonly` flag is true, then the field UI Schema is
+ * holds the field's own options, with the `uiProps` over them, but not the `ui:globalOptions`, which the field reads
+ * from the registry as every other field does. When the `forceReadonly` flag is true, then the field UI Schema is
  * updated to make "readonly" be true. When the `schemaReadonly` flag is true AND the field UI Schema does NOT have
  * the flag already provided, then we also make "readonly" true. We always make sure to return the final value of the
  * field UI Schema's "readonly" flag as `uiReadonly` along with the `fieldUiSchema` in the return value.
@@ -149,23 +183,33 @@ const LAYOUT_GRID_FIELD_TEST_IDS = getTestIds();
  * @param [schemaReadonly] - Optional flag indicating whether the schema indicates the field is readonly
  * @param [forceReadonly] - Optional flag indicating whether the Form itself is in readonly mode
  */
-export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function computeFieldUiSchema<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   field: string,
-  uiProps: ConfigObject,
+  uiProps: GenericObjectType,
   uiSchema?: UiSchema<T, S, F>,
   schemaReadonly?: boolean,
   forceReadonly?: boolean,
 ) {
-  const globalUiOptions = uiSchema?.[UI_GLOBAL_OPTIONS_KEY] ?? {};
-  const localUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(field));
-  const localUiOptions = { ...(localUiSchema?.[UI_OPTIONS_KEY] ?? {}), ...uiProps, ...globalUiOptions };
-  const fieldUiSchema = { ...localUiSchema };
+  // `required` is deliberately excluded from the grid config's own `uiProps` propagated here: unlike the rest of
+  // `uiProps`, it also has to be seen by getUiRequiredErrorSchema() for validation, which only ever sees a field's own
+  // uiSchema, so a grid-level default would make the required indicator and schema validation disagree
+  const { required: _uiPropsRequired, ...restUiProps } = uiProps;
+  // This reads the caller's uiSchema before `resolveUiSchema()` has normalized it, so neither value is known to be an
+  // object yet; spreading a non-object would scatter its characters or digits as keys
+  const rawLocalUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(field));
+  const localUiSchema = isObject(rawLocalUiSchema) ? rawLocalUiSchema : undefined;
+  const rawLocalUiOptions = localUiSchema?.[UI_OPTIONS_KEY];
+  const localUiOptions = {
+    ...(isObject(rawLocalUiOptions) ? rawLocalUiOptions : {}),
+    ...restUiProps,
+  };
+  const fieldUiSchema: UiSchema<T, S, F> = localUiSchema ? { ...localUiSchema } : {};
   if (Object.keys(localUiOptions).length > 0) {
     fieldUiSchema[UI_OPTIONS_KEY] = localUiOptions;
-  }
-  if (Object.keys(globalUiOptions).length > 0) {
-    // pass the global uiOptions down to the field uiSchema so that they can be applied to all nested fields
-    fieldUiSchema[UI_GLOBAL_OPTIONS_KEY] = globalUiOptions;
   }
   let { readonly: uiReadonly } = getUiOptions<T, S, F>(fieldUiSchema);
   if (forceReadonly === true || (uiReadonly === undefined && schemaReadonly === true)) {
@@ -182,6 +226,18 @@ export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
     }
   }
   return { fieldUiSchema, uiReadonly };
+}
+
+/** Orders two values the way `Array.prototype.sort()` does without a compare function: by their string forms, in
+ * UTF-16 code unit order.
+ */
+function compareAsStrings(a: unknown, b: unknown): number {
+  const left = String(a);
+  const right = String(b);
+  if (left === right) {
+    return 0;
+  }
+  return left < right ? -1 : 1;
 }
 
 /** Given an `operator`, `datum` and `value` determines whether this condition is considered matching. Matching
@@ -203,8 +259,8 @@ export function conditionMatches(
   datum?: unknown,
   value: unknown = '$0m3tH1nG Un3xP3cT3d',
 ): boolean {
-  const data = [datum].flat().sort();
-  const values = [value].flat().sort();
+  const data = [datum].flat().sort(compareAsStrings);
+  const values = [value].flat().sort(compareAsStrings);
   switch (operator) {
     case Operators.ALL:
       return deepEquals(data, values);
@@ -229,19 +285,23 @@ export function conditionMatches(
  * @returns - An object containing the list of `LayoutGridSchemaType` `children` and any extra `gridProps`
  * @throws - A `TypeError` when the `children` is not an array
  */
-export function findChildrenAndProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function findChildrenAndProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   layoutGridSchema: GridSchemaType,
   schemaKey: GridType,
   registry: Registry<T, S, F>,
-) {
+): { children: LayoutGridSchemaType[]; gridProps: GridProps } {
   let gridProps: GridProps = {};
-  let children = layoutGridSchema[schemaKey];
+  let children: unknown = layoutGridSchema[schemaKey];
   if (isPlainObject(children)) {
-    const { children: elements, className: toMapClassNames, ...otherProps } = children as ConfigObject;
+    const { children: elements, className: toMapClassNames, ...otherProps } = children;
     children = elements;
-    if (toMapClassNames) {
+    if (typeof toMapClassNames === 'string' && toMapClassNames) {
       const classes = toMapClassNames.split(' ');
-      const className = classes.map((ele: string) => lookupFromFormContext<T, S, F>(registry, ele, ele)).join(' ');
+      const className = classes.map((ele) => lookupFromFormContext<T, S, F>(registry, ele, ele)).join(' ');
       gridProps = { ...otherProps, className };
     } else {
       gridProps = otherProps;
@@ -250,116 +310,227 @@ export function findChildrenAndProps<T = any, S extends StrictRJSFSchema = RJSFS
   if (!Array.isArray(children)) {
     throw new TypeError(`Expected array for "${schemaKey}" in ${JSON.stringify(layoutGridSchema)}`);
   }
-  return { children: children as LayoutGridSchemaType[], gridProps };
+  // An `undefined` or `false` cell, such as a conditional one a layout built in code leaves out, is no cell: handed on,
+  // an `undefined` one would read as a grid handed no layout and render the grid's own layout inside itself
+  return { children: children.filter((child) => child !== undefined && child !== false), gridProps };
 }
 
-/** Computes the `rawSchema` and `fieldPathId` for a `schema` and a `potentialIndex`. If the `schema` is of type array,
- * has an `ITEMS_KEY` element and `potentialIndex` represents a numeric value, the element at `ITEMS_KEY` is checked
- * to see if it is an array. If it is AND the `potentialIndex`th element is available, it is used as the `rawSchema`,
- * otherwise the last value of the element is used. If it is not, then the element is used as the `rawSchema`. In
- * either case, an `fieldPathId` is computed for the array index. If the `schema` does not represent an array or the
- * `potentialIndex` is not a numeric value, then `rawSchema` is returned as undefined and given `fieldPathId` is returned
- * as is.
+/** Computes the `rawSchema` and array `index` for a `schema` and a `potentialIndex`. If the `schema` is of type
+ * array, has an `ITEMS_KEY` element and `potentialIndex` represents a numeric value, the element at `ITEMS_KEY` is
+ * checked to see if it is an array. If it is AND the `potentialIndex`th element is available, it is used as the
+ * `rawSchema`, otherwise the `additionalItems` schema is, as `ArrayField` renders the items past a tuple, flagged by
+ * `isAdditionalItem` so the caller can treat one that resolves to the empty schema as no schema, or no `rawSchema`
+ * where `additionalItems` isn't a schema. If the element is not an array, it is used as the `rawSchema`. In either
+ * case, the numeric `index` is returned so the caller can record the path segment as a number, addressing an array
+ * element rather than an object key. If the `schema` does not represent an array or the `potentialIndex` is not a
+ * numeric value, then all are returned as undefined.
  *
- * @param schema - The schema to generate the fieldPathId for
- * @param fieldPathId - The FieldPathId for the schema
+ * @param schema - The schema to check for an array item schema
  * @param potentialIndex - A string containing a potential index
- * @returns - An object containing the `rawSchema` and `fieldPathId` of an array item, otherwise an undefined `rawSchema`
+ * @returns - An object containing the numeric `index` of an array item, its `rawSchema` where one describes it and
+ *            whether that is the `additionalItems` schema, otherwise all undefined
  */
 export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S | undefined,
-  fieldPathId: FieldPathId,
   potentialIndex: string,
 ): {
   rawSchema?: S;
-  fieldPathId: FieldPathId;
+  index?: number;
+  isAdditionalItem?: boolean;
 } {
   let rawSchema: S | undefined;
-  let resultPathId = fieldPathId;
+  let index: number | undefined;
+  let isAdditionalItem: boolean | undefined;
   if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && ITEMS_KEY in schema) {
-    const index = Number(potentialIndex);
+    index = Number(potentialIndex);
     const items = schema[ITEMS_KEY];
     if (Array.isArray(items)) {
-      if (index > items.length) {
-        rawSchema = items.at(-1) as S;
-      } else {
+      if (index < items.length) {
         rawSchema = items[index] as S;
+      } else if (isSchemaObject<S>(schema.additionalItems)) {
+        rawSchema = schema.additionalItems;
+        isAdditionalItem = true;
       }
     } else {
       rawSchema = items as S;
     }
-    resultPathId = {
-      [ID_KEY]: fieldPathId[ID_KEY],
-      path: [...fieldPathId.path.slice(0, fieldPathId.path.length - 1), index],
-    };
   }
-  return { rawSchema, fieldPathId: resultPathId };
+  return { rawSchema, index, isAdditionalItem };
+}
+
+/** Returns the schema to read `key` from: `schema` where it has no oneOf/anyOf, or where its field renders beside the
+ * option (see `rendersOwnFieldBesideOption()`) and it declares `key`, else the option selected for `data`, as it is
+ * rendered, with the `required` and `type` of the schema offering it. Any other field, such as an array's, renders only
+ * the option, merged with the schema, so even what the schema declares, such as its `items`, is read from there. A
+ * property YAML leaves empty or code leaves `undefined` declares nothing. A stub `retrieveSchema()` made for an extra key
+ * says only what the data holds, so what the option declares comes first, and the stub stands for a key the option leaves
+ * undeclared.
+ *
+ * With `shown`, options with no discriminator show the option the form shows, see `shownSelection()`, and options
+ * `SchemaField` renders beside the grid, discriminated or not, render what they hold themselves, so nothing is read from
+ * them.
+ *
+ * @param schemaUtils - The `SchemaUtilsType` used to find the selected option
+ * @param schema - The schema, retrieved for `data`
+ * @param key - The key to read
+ * @param data - The data of `schema`
+ * @param fieldPath - The path of `schema`'s field
+ * @param [shown] - The options shown, which a cell rendered in a form reads
+ * @returns - The schema to read `key` from, or undefined where no option is selected, and what an edit in the cell
+ *            records of the options read, see `CellSelection`
+ */
+function schemaHolding<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  schema: S,
+  key: string,
+  data: T | undefined,
+  fieldPath: FieldPath,
+  shown?: OptionsShown,
+): { holder: S | undefined; selection?: CellSelection } {
+  const xxx = getXxxOfKey<S>(schema);
+  if (!xxx) {
+    return { holder: schema };
+  }
+  const properties: NonNullable<S['properties']> = schema[PROPERTIES_KEY] ?? {};
+  const isDiscriminated = getDiscriminatorFieldFromSchema<S>(schema) !== undefined;
+  const beside = shown?.beside?.fieldPath === fieldPath ? shown.beside : undefined;
+  const readsSelection = shown !== undefined && !isDiscriminated && !beside;
+  // An edit to a property of the object's own is released where the options can disagree about it, and otherwise keeps
+  // the option shown, as `SchemaField`'s `editOwnProperty()` does. Worked out on the edit, since nothing the cell
+  // renders reads it
+  const editOwnProperty = (uiState: UiState) => {
+    const at = shownSelection<T, S, F>(schemaUtils, schema, data, fieldPath, uiState);
+    if (!at) {
+      return;
+    }
+    if (optionsMayDisagreeAbout<S>(at.options, key)) {
+      uiState.release(fieldPath, at.list);
+    } else {
+      uiState.keep(fieldPath, at.list, at.index, data);
+    }
+  };
+  const ownProperty = () => ({ holder: schema, selection: readsSelection ? editOwnProperty : undefined });
+  if (
+    rendersOwnFieldBesideOption<S>(schema) &&
+    declaresProperty<S>(properties, key) &&
+    getByPath(properties, key) != null
+  ) {
+    return ownProperty();
+  }
+  const shownAt = readsSelection
+    ? shownSelection<T, S, F>(schemaUtils, schema, data, fieldPath, shown.uiState)
+    : undefined;
+  let selected: S | undefined;
+  if (beside) {
+    selected = beside.options[beside.selectedOption] as S | undefined;
+  } else if (shownAt) {
+    selected = shownAt.options[shownAt.index];
+  } else {
+    selected = schemaUtils.findSelectedOptionInXxxOf(schema, key, xxx, data);
+  }
+  const isStubOnly = Object.hasOwn(properties, key) && getByPath(selected?.[PROPERTIES_KEY], key) == null;
+  if (isStubOnly) {
+    return ownProperty();
+  }
+  return {
+    holder: !beside && selected ? getRenderedOptionSchema<S>(schema, selected) : undefined,
+    selection: shownAt && ((uiState: UiState) => uiState.keep(fieldPath, shownAt.list, shownAt.index, data)),
+  };
+}
+
+/** The option the form shows for `data` among `schema`'s options at `fieldPath`, which no `SchemaField` renders: the
+ * one the form's selection holds, as `useShownOption()` reads it, else the closest match for the data. Undefined for
+ * options of constants, which a select renders
+ */
+function shownSelection<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  schema: S,
+  data: T | undefined,
+  fieldPath: FieldPath,
+  uiState: UiStateReader,
+): { options: S[]; list: string; index: number } | undefined {
+  const options = retrievedOptionsOf<T, S, F>(schemaUtils, schema, data);
+  if (!options) {
+    return undefined;
+  }
+  const list = optionListKey<S>(options, schemaUtils.getRootSchema());
+  const index = shownOption<T, S, F>(schemaUtils, uiState.selection(fieldPath, list), options, data);
+  return { options, list, index };
 }
 
 /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
  * the leaf path is found and returned (along with whether that leaf path `isRequired`) OR no schema exists for an
- * element in the path. If the leaf schema element happens to be a oneOf/anyOf then also return the oneOf/anyOf as
- * `options`.
+ * element in the path. If the leaf schema element happens to be a oneOf/anyOf then also return whether it has a
+ * discriminator.
  *
  * @param registry - The registry
  * @param dottedPath - The dotted-path to the field for which to get the schema
  * @param initialSchema - The initial schema to start the search from
  * @param formData - The formData, useful for resolving a oneOf/anyOf selection in the path hierarchy
- * @param initialFieldIdPath - The initial fieldPathId to start the search from
- * @returns - An object containing the destination schema, isRequired and isReadonly flags for the field and options
- *            info if a oneOf/anyOf
+ * @param initialFieldIdPath - The initial fieldPath to start the search from
+ * @param [shown] - The options shown, see `schemaHolding()`
+ * @returns - An object containing the destination schema, isRequired and isReadonly flags for the field, whether
+ *            a oneOf/anyOf has a discriminator and, with `shown`, what an edit in the cell records of the options read on
+ *            the way
  */
 export function getSchemaDetailsForField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   registry: Registry<T, S, F>,
   dottedPath: string,
   initialSchema: S,
   formData: FieldProps<T, S, F>['formData'],
-  initialFieldIdPath: FieldPathId,
+  initialFieldPath: FieldPath,
+  shown?: OptionsShown,
 ): {
   schema?: S;
   isRequired: boolean;
   isReadonly?: boolean;
-  optionsInfo?: OneOfOptionsInfoType<S>;
-  fieldPathId: FieldPathId;
+  optionsInfo?: OneOfOptionsInfoType;
+  fieldPath: FieldPath;
+  selections?: CellSelection[];
 } {
-  const { schemaUtils, globalFormOptions } = registry;
+  const selections: CellSelection[] = [];
+  const holding = (holderSchema: S, key: string, data: T | undefined, path: FieldPath) => {
+    const { holder, selection } = schemaHolding<T, S, F>(registry.schemaUtils, holderSchema, key, data, path, shown);
+    if (selection) {
+      selections.push(selection);
+    }
+    return holder;
+  };
+  const { schemaUtils } = registry;
   let rawSchema: S = initialSchema;
-  let fieldPathId = initialFieldIdPath;
+  let fieldPath = initialFieldPath;
   const parts: string[] = dottedPath.split('.');
   const leafPath: string | undefined = parts.pop(); // pop off the last element in the list as the leaf
-  let schema: S | undefined = schemaUtils.retrieveSchema(rawSchema, formData); // always returns an object
+  // An empty path names no field, so it finds no schema rather than the parent's, which a cell would render inside itself
+  // Stubbed with the option shown beside the grid, as `SchemaField` stubs the grid's schema, so a key the option renders
+  // is left to it
+  const besideOption = shown?.beside?.fieldPath === initialFieldPath ? shown.beside.selectedOption : undefined;
+  let schema: S | undefined = dottedPath
+    ? schemaUtils.retrieveSchema(rawSchema, formData, false, besideOption)
+    : undefined;
   let innerData = formData;
-  let isReadonly: boolean | undefined = schema.readOnly;
+  let isReadonly: boolean | undefined = schema?.readOnly;
 
   // For all the remaining path parts
   parts.forEach((part) => {
-    // dive into the properties of the current schema (when it exists) and get the schema for the next part
-    fieldPathId = toFieldPathId(part, globalFormOptions, fieldPathId);
-    const schemaProperties = schema?.[PROPERTIES_KEY];
-    if (schemaProperties) {
-      rawSchema = (schemaProperties[part] ?? {}) as S;
-    } else if (schema && (ONE_OF_KEY in schema || ANY_OF_KEY in schema)) {
-      const xxx = ONE_OF_KEY in schema ? ONE_OF_KEY : ANY_OF_KEY;
-      // When the schema represents a oneOf/anyOf, find the selected schema for it and grab the inner part
-      const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
-      rawSchema = getPropertySchema<S>(selectedSchema, part);
-    } else {
-      const result = computeArraySchemasIfPresent<S>(schema, fieldPathId, part);
-      rawSchema = result.rawSchema ?? ({} as S);
-      fieldPathId = result.fieldPathId;
-    }
-    // Now drill into the innerData for the part, returning an empty object by default if it doesn't exist
-    innerData = getByPath<T>(innerData, part, {} as T);
+    // dive into the current schema, or the option holding the part, and get the schema for the next part
+    const holder = schema && holding(schema, part, innerData, fieldPath);
+    isReadonly = getNonNullishValue(holder?.readOnly, isReadonly);
+    const result = computeArraySchemasIfPresent<S>(holder, part);
+    rawSchema = result.rawSchema ?? getPropertySchema<S>(holder, part);
+    fieldPath = toFieldPath(result.index ?? part, fieldPath);
+    // Now drill into the innerData for the part
+    innerData = getByPath<T>(innerData, part);
     // Resolve any `$ref`s for the current rawSchema
     schema = schemaUtils.retrieveSchema(rawSchema, innerData);
     isReadonly = getNonNullishValue(schema.readOnly, isReadonly);
   });
 
-  let optionsInfo: OneOfOptionsInfoType<S> | undefined;
+  let optionsInfo: OneOfOptionsInfoType | undefined;
   let isRequired = false;
   // retrieveSchema will return an empty schema in the worst case scenario, convert it to undefined
   if (!schema || Object.keys(schema).length === 0) {
@@ -367,56 +538,79 @@ export function getSchemaDetailsForField<
   }
   if (schema && leafPath) {
     // When we have both a schema and a leafPath...
-    if (schema && (ONE_OF_KEY in schema || ANY_OF_KEY in schema)) {
-      const xxx = ONE_OF_KEY in schema ? ONE_OF_KEY : ANY_OF_KEY;
-      // Grab the selected schema for the oneOf/anyOf value for the leafPath using the innerData
-      schema = schemaUtils.findSelectedOptionInXxxOf(schema, leafPath, xxx, innerData);
-    }
-    fieldPathId = toFieldPathId(leafPath, globalFormOptions, fieldPathId);
-    isRequired = schema !== undefined && Array.isArray(schema.required) && schema.required.includes(leafPath);
-    const result = computeArraySchemasIfPresent<S>(schema, fieldPathId, leafPath);
+    schema = holding(schema, leafPath, innerData, fieldPath);
+    isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
+    isRequired = Array.isArray(schema?.required) && schema.required.includes(leafPath);
+    const result = computeArraySchemasIfPresent<S>(schema, leafPath);
+    fieldPath = toFieldPath(result.index ?? leafPath, fieldPath);
     if (result.rawSchema) {
-      schema = result.rawSchema;
-      fieldPathId = result.fieldPathId;
+      // An array hands its items out as written, so items written as a `$ref` are retrieved for the item's data
+      schema = schemaUtils.retrieveSchema(result.rawSchema, getByPath<T>(innerData, leafPath));
+      // An `additionalItems` that resolves to the empty schema gives no schema, as a missing one does, so the cell
+      // falls back to its `render`; the parts above the leaf treat an empty schema the same way
+      if (result.isAdditionalItem && Object.keys(schema).length === 0) {
+        schema = undefined;
+      }
     } else {
-      // Now grab the schema from the leafPath of the current schema properties
-      schema = schema?.[PROPERTIES_KEY]?.[leafPath] as S | undefined;
+      // Now grab the schema from the leafPath of the current schema properties, by own key, so a leaf named like an
+      // `Object.prototype` member that the schema doesn't declare finds no schema rather than the inherited function
+      schema = getByPath<S>(schema?.[PROPERTIES_KEY], leafPath);
       // Resolve any `$ref`s for the current schema
       schema = schema ? schemaUtils.retrieveSchema(schema) : schema;
     }
     isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
-    if (schema && (ONE_OF_KEY in schema || ANY_OF_KEY in schema)) {
-      const xxx = ONE_OF_KEY in schema ? ONE_OF_KEY : ANY_OF_KEY;
-      // Set the options if we have a schema with a oneOf/anyOf
+    const optionsKey = schema && getXxxOfKey<S>(schema);
+    if (schema && optionsKey) {
+      // Note whether a schema with a oneOf/anyOf has a discriminator
       const discriminator = getDiscriminatorFieldFromSchema(schema);
-      optionsInfo = { options: schema[xxx] as S[], hasDiscriminator: !!discriminator };
+      optionsInfo = { hasDiscriminator: !!discriminator };
     }
   }
 
-  return { schema, isRequired, isReadonly, optionsInfo, fieldPathId };
+  return { schema, isRequired, isReadonly, optionsInfo, fieldPath, selections: shown && selections };
 }
 
-/** Gets the custom render component from the `render`, by either determining that it is either already a function or
- * it is a non-function value that can be used to look up the function in the registry. If no function can be found,
- * null is returned.
+/** Gets the custom render component from the `render`, by either determining that it is already a component, which
+ * `memo()`, `forwardRef()` and `lazy()` return as an object rather than a function, or that it is a name that can be
+ * used to look up the component in the registry. If no component can be found, null is returned.
  *
- * @param render - The potential render function or lookup name to one
+ * @param render - The potential render component or lookup name to one
  * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
- * @returns - Either a render function if available, or null if not
+ * @returns - Either a render component if available, or null if not
  */
 export function getCustomRenderComponent<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(render: string | RenderComponent, registry: Registry<T, S, F>): RenderComponent | null {
-  let customRenderer: string | RenderComponent | undefined = render;
-  if (typeof customRenderer === 'string') {
-    customRenderer = lookupFromFormContext<T, S, F, string | RenderComponent | undefined>(registry, customRenderer);
-  }
-  if (typeof customRenderer === 'function') {
-    return customRenderer;
-  }
-  return null;
+  F extends FormContextType = FormContextType,
+>(render: unknown, registry: Registry<T, S, F>): RenderComponent | null {
+  const customRenderer = lookUpRender<T, S, F>(render, registry);
+  return isComponentType<unknown>(customRenderer) ? customRenderer : null;
+}
+
+/** Looks up what a cell's `render` refers to: the value in the lookup map when it is a name, otherwise the `render`
+ * itself
+ *
+ * @param render - The `render` the cell gives
+ * @param registry - The `@rjsf` Registry whose `formContext` holds the lookup map
+ * @returns - The value the `render` refers to, which is not necessarily a component
+ */
+function lookUpRender<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(render: unknown, registry: Registry<T, S, F>): unknown {
+  return typeof render === 'string' ? lookupFromFormContext<T, S, F>(registry, render) : render;
+}
+
+/** Gets the name of the field a layout cell renders: the cell itself, or the `name` of a cell object. A JSON layout can
+ * name a field by a number, which names the same property as its string; any other value names no field.
+ *
+ * @param cell - A cell of a layout grid's `children`
+ * @returns - The name of the field the cell renders, or `''` when it names none
+ */
+function cellFieldName(cell: unknown): string {
+  const name = isObject(cell) ? cell.name : cell;
+  return typeof name === 'string' || typeof name === 'number' ? String(name) : '';
 }
 
 /** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
@@ -428,19 +622,16 @@ export function getCustomRenderComponent<
  * @returns - The UIComponentPropsType computed from the gridSchema
  */
 export function computeUIComponentPropsFromGridSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject): UIComponentPropsType {
-  let name: string;
+  F extends FormContextType = FormContextType,
+>(registry: Registry<T, S, F>, gridSchema?: string | GenericObjectType): UIComponentPropsType {
+  const name = cellFieldName(gridSchema);
   let UIComponent: RenderComponent | null = null;
-  let uiProps: ConfigObject = {};
+  let uiProps: GenericObjectType = {};
   let rendered: ReactNode | undefined;
-  if (typeof gridSchema === 'string' || gridSchema === undefined) {
-    name = gridSchema ?? '';
-  } else {
-    const { name: innerName = '', render, ...innerProps } = gridSchema;
-    name = innerName;
+  if (isObject(gridSchema)) {
+    const { name: _name, render, ...innerProps } = gridSchema;
     uiProps = innerProps;
     // Transform any `$lookup=` in the uiProps props with the appropriate value
     Object.entries(uiProps).forEach(([key, prop]) => {
@@ -453,7 +644,7 @@ export function computeUIComponentPropsFromGridSchema<
       }
     });
     UIComponent = getCustomRenderComponent<T, S, F>(render, registry);
-    if (!innerName && UIComponent) {
+    if (!name && UIComponent) {
       rendered = <UIComponent {...innerProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent} />;
     }
   }
@@ -464,9 +655,9 @@ export function computeUIComponentPropsFromGridSchema<
  * The props for the LayoutGridFieldChildren component.
  */
 type LayoutGridFieldChildrenProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > = LayoutGridFieldProps<T, S, F> & {
   /** The list of strings or objects that represents the configurations for the children fields */
   childrenLayoutGridSchemaId: LayoutGridSchemaType[];
@@ -479,17 +670,22 @@ type LayoutGridFieldChildrenProps<
  *
  * @returns - The nested `LayoutGridField`s
  */
-function LayoutGridFieldChildren<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutGridFieldChildrenProps<T, S, F>,
-) {
+function LayoutGridFieldChildren<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: LayoutGridFieldChildrenProps<T, S, F>) {
   const { childrenLayoutGridSchemaId, ...layoutGridFieldProps } = props;
   const { registry, schema: rawSchema, formData } = layoutGridFieldProps;
   const { schemaUtils } = registry;
   const schema = schemaUtils.retrieveSchema(rawSchema, formData);
-  return childrenLayoutGridSchemaId.map((layoutGridSchema) => (
+  // A falsy cell, such as an empty `null` or `''` one, is keyed by its index, since those hash alike, wrapped in an array
+  // so it can't hash as a number cell does. An empty cell renders nothing, so a conditional cell ahead of it shifting its
+  // index remounts nothing, while any other cell keeps its key
+  return childrenLayoutGridSchemaId.map((layoutGridSchema, i) => (
     <LayoutGridField<T, S, F>
       {...layoutGridFieldProps}
-      key={`layoutGrid-${hashObject(layoutGridSchema)}`}
+      key={`layoutGrid-${hashObject(layoutGridSchema || [i])}`}
       schema={schema}
       layoutGridSchema={layoutGridSchema}
     />
@@ -502,9 +698,9 @@ function LayoutGridFieldChildren<T = any, S extends StrictRJSFSchema = RJSFSchem
  * current node.
  */
 type LayoutFieldProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > = LayoutGridFieldProps<T, S, F> & {
   /**  The string or object that represents the configuration for the grid field */
   layoutGridSchema: GridSchemaType;
@@ -517,18 +713,70 @@ type LayoutFieldProps<
  *
  * @returns - The rendered the children for the `GridType.CONDITION` or null
  */
-function LayoutGridCondition<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutFieldProps<T, S, F>,
-) {
+function LayoutGridCondition<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
-  const { formData, registry } = layoutGridFieldProps;
+  const { formData, registry, id, fieldPath } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.CONDITION, registry);
-  const { operator, field = '', value } = gridProps;
-  const fieldData = getByPath(formData, toPath(field), null);
+  const { operator, field, value } = gridProps;
+  // A JSON layout can hold any value here, though `GridProps` types it as a string
+  const fieldName: unknown = field;
+  if (fieldName === '' || (typeof fieldName !== 'string' && typeof fieldName !== 'number')) {
+    logOnce(
+      `${LAYOUT_GRID_OPTION} ${GridType.CONDITION} in ${fieldLabelForLog(id, fieldPath)} names no field, so it renders ` +
+        'nothing.',
+    );
+    return null;
+  }
+  const fieldData = getByPath(formData, toPath(String(fieldName)), null);
   if (conditionMatches(operator, fieldData, value)) {
     return <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />;
   }
   return null;
+}
+
+/** The options shown, which a cell reads its field by, and the form's store an edit in it keeps a selection in */
+function useOptionsShown(): OptionsShown {
+  const beside = use(ShownOptionContext);
+  // shortcut: unsubscribed, so a cell misses a selection change that leaves the data as it was, which only a selector
+  // rendered at the same path below the grid makes; subscribe as `useShownOption()` does if a layout needs both
+  const { uiState } = useUiState();
+  return useMemo(() => ({ beside, uiState }), [beside, uiState]);
+}
+
+/** Gets the id of the first field among a column's `children`, which tells one column's `span` warnings apart from
+ * another's in the same grid. A column whose children name no field, only nested grids or `render`s, gets the id of
+ * the field whose layout grid holds it.
+ *
+ * @param children - The column's `children` from its `layoutGridSchema`
+ * @param props - The props of the column, whose `registry`, `schema`, `formData` and `fieldPath` locate the field
+ * @param shown - The options shown, as its cells read them
+ * @returns - The id the column's first field renders with, or the grid's own id when it names no field
+ */
+function columnFieldId<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(children: LayoutGridSchemaType[], props: LayoutGridFieldProps<T, S, F>, shown: OptionsShown) {
+  const { registry, schema, formData, fieldPath, id } = props;
+  for (const child of children) {
+    // A name the schema doesn't hold, such as a `render` cell's, renders no field
+    const details = getSchemaDetailsForField<T, S, F>(
+      registry,
+      cellFieldName(child),
+      schema,
+      formData,
+      fieldPath,
+      shown,
+    );
+    if (details.schema) {
+      return fieldPathToId(details.fieldPath, registry.globalFormOptions);
+    }
+  }
+  return id;
 }
 
 /** Renders a `GridTemplate` as an item. The `layoutGridSchema` for the `GridType.COLUMN` is separated into the
@@ -537,17 +785,25 @@ function LayoutGridCondition<T = any, S extends StrictRJSFSchema = RJSFSchema, F
  *
  * @returns - The rendered `GridTemplate` containing the children for the `GridType.COLUMN`
  */
-function LayoutGridCol<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutFieldProps<T, S, F>,
-) {
+function LayoutGridCol<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
   const { registry, uiSchema } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMN, registry);
+  const shown = useOptionsShown();
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
+  const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (
-    <GridTemplate column data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col} {...gridProps}>
+    <GridTemplate
+      column
+      fieldId={columnFieldId<T, S, F>(children, layoutGridFieldProps, shown)}
+      data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
+      {...gridProps}
+    >
       <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
     </GridTemplate>
   );
@@ -559,20 +815,25 @@ function LayoutGridCol<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
  *
  * @returns - The rendered `GridTemplate` containing the children for the `GridType.COLUMNS`
  */
-function LayoutGridColumns<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutFieldProps<T, S, F>,
-) {
+function LayoutGridColumns<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
 
   const { registry, uiSchema } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMNS, registry);
+  const shown = useOptionsShown();
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
+  const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
-  return children.map((child) => (
+  // Keyed as `LayoutGridFieldChildren` keys a cell
+  return children.map((child, i) => (
     <GridTemplate
       column
-      key={`column-${hashObject(child)}`}
+      fieldId={columnFieldId<T, S, F>([child], layoutGridFieldProps, shown)}
+      key={`column-${hashObject(child || [i])}`}
       data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
       {...gridProps}
     >
@@ -587,18 +848,29 @@ function LayoutGridColumns<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
  *
  * @returns - The rendered `GridTemplate` containing the children for the `GridType.ROW`
  */
-function LayoutGridRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutFieldProps<T, S, F>,
-) {
+function LayoutGridRow<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
 
-  const { registry, uiSchema } = layoutGridFieldProps;
+  const { registry, uiSchema, id, fieldPath } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.ROW, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
+  const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const { span, ...rowGridProps } = gridProps;
+  const entryAbove = use(TemplateWarnEntryContext);
+  if (span !== undefined) {
+    const entry = templateWarnEntry(entryAbove, false, fieldPath, registry.globalFormOptions);
+    logOnce(
+      `span on a ui:row in ${entry.label()} is ignored, ` +
+        'since span sizes a ui:col or ui:columns rather than a row.',
+    );
+  }
 
   return (
-    <GridTemplate {...gridProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.row}>
+    <GridTemplate fieldId={id} {...rowGridProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.row}>
       <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
     </GridTemplate>
   );
@@ -608,37 +880,41 @@ function LayoutGridRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
  * The props for the LayoutGridFieldComponent.
  */
 type LayoutGridFieldComponentProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > = LayoutGridFieldProps<T, S, F> & {
   /** The string or object that represents the configuration for the grid field */
-  gridSchema?: ConfigObject | string;
+  gridSchema?: GenericObjectType | string;
 };
 
 /** Renders the field described by `gridSchema`. If `gridSchema` is not an object, then is will be assumed
  * to be the dotted-path to the field in the schema. Otherwise, we extract the `name`, and optional `render` and all
  * other props. If `name` does not exist and there is an optional `render`, we return the `render` component with only
  * specified props for that component. If `name` exists, we take the name, the initial & root schemas and the formData
- * and get the destination schema, is required state and optional oneOf/anyOf options for it. If the destination
- * schema was located along with oneOf/anyOf options then a `LayoutMultiSchemaField` will be rendered with the
- * `uiSchema`, `errorSchema`, `fieldPathId` and `formData` drilled down to the dotted-path field, spreading any other
- * props from `gridSchema` into the `ui:options`. If the destination schema located without any oneOf/anyOf options,
- * then a `SchemaField` will be rendered with the same props as mentioned in the previous sentence. If no destination
- * schema was located, but a custom render component was found, then it will be rendered with many of the non-event
- * handling props. If none of the previous render paths are valid, then a null is returned.
+ * and get the destination schema, is required state and whether its oneOf/anyOf has a discriminator. If the destination
+ * schema was located, then a `SchemaField` will be rendered with the `uiSchema`, `errorSchema`, `fieldPath` and
+ * `formData` drilled down to the dotted-path field, spreading any other props from `gridSchema` into the `ui:options`.
+ * A destination schema with discriminated oneOf/anyOf options has its `uiSchema` name the `LayoutMultiSchemaField`,
+ * which renders only its option selector. If no destination schema was located, but a custom render component was
+ * found, then it will be rendered with many of the non-event handling props. If none of the previous render paths are
+ * valid, then a null is returned.
  *
- * @returns - One of `LayoutMultiSchemaField`, `SchemaField`, a custom render component or null, depending
+ * @returns - One of `SchemaField`, a custom render component or null, depending
  */
-function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutGridFieldComponentProps<T, S, F>,
-) {
+// oxlint-disable-next-line typescript/promise-function-async -- ReactNode's type includes Promise for async components; this component is always synchronous
+function LayoutGridFieldComponent<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: LayoutGridFieldComponentProps<T, S, F>) {
   const {
     gridSchema,
     schema: initialSchema,
     uiSchema,
     errorSchema,
-    fieldPathId,
+    fieldPath: parentFieldPath,
+    id,
     onBlur,
     onFocus,
     formData,
@@ -649,59 +925,153 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
   } = props;
   const { onChange } = otherProps;
   const { fields } = registry;
-  const { SchemaField, LayoutMultiSchemaField } = fields;
+  const { SchemaField } = fields;
+  // A cell's own component is no field of the data, so its blur touches nothing: handed the cell's `onBlur`, it would
+  // be sent for the parent's path and touch every field the parent holds
+  const handleComponentBlur = useSendBlur(parentFieldPath, onBlur, 'nothing');
 
-  const uiComponentProps = computeUIComponentPropsFromGridSchema(registry, gridSchema);
+  const uiComponentProps = useMemo(
+    () => computeUIComponentPropsFromGridSchema<T, S, F>(registry, gridSchema),
+    [registry, gridSchema],
+  );
   const { name, UIComponent, uiProps } = uiComponentProps;
+  const shown = useOptionsShown();
   const {
-    schema,
+    schema: flaggedSchema,
     isRequired,
     isReadonly,
     optionsInfo,
-    fieldPathId: fieldIdSchema,
-  } = getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, fieldPathId);
-  const memoFieldPathId = useDeepCompareMemo<FieldPathId>(fieldIdSchema);
+    fieldPath,
+    selections,
+  } = useMemo(
+    () => getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, parentFieldPath, shown),
+    [registry, name, initialSchema, formData, parentFieldPath, shown],
+  );
+  const isAdditionalProperty = hasSchemaMarker(flaggedSchema, ADDITIONAL_PROPERTY_FLAG);
+  // A cell the layout names by an `additionalProperties` key keeps that key, since renaming or removing it would take
+  // the cell out of the layout, so its template draws no key input or remove button
+  const schema = useMemo(() => flaggedSchema && withoutAdditionalFlag<S>(flaggedSchema), [flaggedSchema]);
+  // Memoized so the cell's `SchemaField` keeps its uiSchema reference while nothing it is built from changed
+  const { fieldUiSchema, uiReadonly } = useMemo(
+    () => computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly),
+    [name, uiProps, uiSchema, isReadonly, readonly],
+  );
+  // A discriminated cell renders its option selector alone, the field `SchemaField` renders in place of the options
+  // once the cell names it with `ui:fieldReplacesAnyOrOneOf`. It is named over any field the cell names itself, which
+  // would render beside the options the rest of the grid lays out
+  const hasDiscriminator = optionsInfo?.hasDiscriminator ?? false;
+  const cellUiSchema = useMemo<UiSchema<T, S, F>>(() => {
+    const namedUiSchema = hasDiscriminator
+      ? {
+          ...fieldUiSchema,
+          [UI_FIELD_KEY]: 'LayoutMultiSchemaField',
+          'ui:fieldReplacesAnyOrOneOf': true,
+        }
+      : fieldUiSchema;
+    return isAdditionalProperty ? withoutOptionalControls<T, S, F>(namedUiSchema) : namedUiSchema;
+  }, [hasDiscriminator, fieldUiSchema, isAdditionalProperty]);
+  // A field the cell names never renders, since the grid names `LayoutMultiSchemaField` over it, so it is warned about,
+  // as `MultiSchemaField` warns about an option's. Naming `SchemaField` is not: `SchemaField` reads a `ui:field` naming
+  // itself as naming no field, so a cell naming it asks for its default rendering, which for a discriminated cell is the
+  // selector, as it is for a cell naming no field, and nothing it asked for goes unrendered. `MultiSchemaField` exempts
+  // `SchemaField` for the same reason. Read as `SchemaField` reads the cell's `uiSchema`, with its `ui:definitions`
+  // entry merged beneath, so a field named there is found too
+  const namesIgnoredField = useMemo(() => {
+    if (!hasDiscriminator || !schema) {
+      return false;
+    }
+    const field = resolveUiSchema<T, S, F>(schema, fieldUiSchema, registry)[UI_FIELD_KEY];
+    if (!field) {
+      return false;
+    }
+    const namedField = lookUpUiField<T, S, F>(field, fields);
+    return namedField !== fields.LayoutMultiSchemaField && namedField !== fields.SchemaField;
+  }, [hasDiscriminator, schema, fieldUiSchema, registry, fields]);
+  // An edit in the cell records the options it was read through, see `CellSelection`. Read from the last committed
+  // render rather than closed over, so the cell's field keeps its `onChange` while the data changes
+  const shownSelections = useRef(selections);
+  useInsertionEffect(() => {
+    shownSelections.current = selections;
+  }, [selections]);
+  const { uiState } = shown;
+  // The cell is cleared as `ObjectField` clears an `additionalProperties` entry, see `storedValue()`, so its key and the
+  // cell with it outlive a round trip through JSON
+  const onCellChange = useCallback<FieldProps<T, S, F>['onChange']>(
+    (value, path, newErrorSchema, changedId) => {
+      shownSelections.current?.forEach((record) => record(uiState));
+      onChange(
+        isAdditionalProperty && path === fieldPath ? storedValue(value, path, true) : value,
+        path,
+        newErrorSchema,
+        changedId,
+      );
+    },
+    [onChange, isAdditionalProperty, fieldPath, uiState],
+  );
 
   if (uiComponentProps.rendered) {
     return uiComponentProps.rendered;
   }
 
   if (schema) {
-    const Field = optionsInfo?.hasDiscriminator ? LayoutMultiSchemaField : SchemaField;
-    // Call this function to get the appropriate UISchema, which will always have its `readonly` state matching the
-    // `uiReadonly` flag that it returns. This is done since the `SchemaField` will always defer to the `readonly`
-    // state in the uiSchema over anything in the props or schema. Because we are implementing the "readonly" state of
-    // the `Form` via the prop passed to `LayoutGridField` we need to make sure the uiSchema always has a true value
-    // when it is needed
-    const { fieldUiSchema, uiReadonly } = computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly);
+    if (namesIgnoredField) {
+      logOnce(
+        `ui:field for cell '${name}' in ${fieldLabelForLog(id, parentFieldPath)} is ignored, since a cell with ` +
+          'discriminated oneOf/anyOf options renders only its option selector.',
+      );
+    }
     const namePath = toPath(name);
+    // A cell with no title is labelled as it is outside a grid: by its property name, or for an array item by its
+    // array's name and indexes, as `ArrayField` names the item. Its ids and data still come from the full path
+    const segments = fieldPathToList(fieldPath);
+    const nameIndex = segments.findLastIndex((segment) => typeof segment === 'string');
+    const cellName = segments.slice(Math.max(nameIndex, 0)).join('-');
+    // The grid's own title, such as the one `ArrayField` gives an item, labels the grid, not each cell it lays out,
+    // which `SchemaField` would otherwise label by the title ahead of the cell's name. An autofocus handed to the grid,
+    // from its own `ui:autofocus` or the array whose item it lays out, would likewise autofocus every cell, leaving the
+    // focus on whichever rendered last, so it focuses no cell, as an object's focuses none of its properties; a cell is
+    // focused by its own. The handlers and names for an `additionalProperties` entry's key edit the grid's key, not a
+    // cell's, so its cells' templates aren't handed them
+    const {
+      title: _gridTitle,
+      autofocus: _gridAutofocus,
+      onKeyRename: _onKeyRename,
+      onKeyRenameBlur: _onKeyRenameBlur,
+      onRemoveProperty: _onRemoveProperty,
+      propertyNamesEnum: _propertyNamesEnum,
+      keyNotAllowed: _keyNotAllowed,
+      ...cellProps
+    } = otherProps;
 
     return (
-      <Field
-        data-testid={
-          optionsInfo?.hasDiscriminator
-            ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField
-            : LAYOUT_GRID_FIELD_TEST_IDS.field
-        }
-        {...otherProps}
-        name={name}
-        required={isRequired}
-        readonly={uiReadonly}
-        schema={schema}
-        uiSchema={fieldUiSchema}
-        errorSchema={getByPath(errorSchema, namePath)}
-        fieldPathId={memoFieldPathId}
-        formData={getByPath(formData, namePath)}
-        onChange={onChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        options={optionsInfo?.options}
-        registry={registry}
-      />
+      <AdditionalEntryContext value={isAdditionalProperty ? fieldPath : undefined}>
+        <SchemaField
+          data-testid={
+            hasDiscriminator ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField : LAYOUT_GRID_FIELD_TEST_IDS.field
+          }
+          {...cellProps}
+          name={cellName}
+          required={isRequired}
+          readonly={uiReadonly}
+          schema={schema}
+          uiSchema={cellUiSchema}
+          errorSchema={getByPath(errorSchema, namePath)}
+          fieldPath={fieldPath}
+          id={fieldPathToId(fieldPath, registry.globalFormOptions)}
+          formData={getByPath(formData, namePath)}
+          onChange={onCellChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          registry={registry}
+        />
+      </AdditionalEntryContext>
     );
   }
 
   if (UIComponent) {
+    // Unlike `computeFieldUiSchema()` above, this renders an arbitrary user-supplied component with `uiProps` as
+    // plain component props, unconnected to schema validation — so `required` isn't stripped out here: a custom
+    // component may read it for its own purposes, and `uiProps` is otherwise passed through untouched.
     return (
       <UIComponent
         data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent}
@@ -713,12 +1083,35 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
         errorSchema={errorSchema}
         uiSchema={uiSchema}
         schema={initialSchema}
-        fieldPathId={fieldPathId}
-        onBlur={onBlur}
+        fieldPath={parentFieldPath}
+        id={id}
+        onBlur={handleComponentBlur}
         onFocus={onFocus}
         registry={registry}
         {...uiProps}
       />
+    );
+  }
+  // Warned about here, where the cell has nothing else to render, rather than wherever the `render` is looked up: a cell
+  // whose `name` resolves to a schema renders that field and never uses its `render`, good or bad
+  const render: unknown = isObject(gridSchema) ? gridSchema.render : undefined;
+  if (render) {
+    const cellName = name ? `cell '${name}'` : 'a cell';
+    const description = describeUnresolvedComponent(
+      render,
+      lookUpRender(render, registry),
+      `value in formContext.${LOOKUP_MAP_NAME}`,
+      'MyRenderer',
+    );
+    logOnce(
+      `${LAYOUT_GRID_OPTION} render for ${cellName} in ${fieldLabelForLog(id, parentFieldPath)} ${description}, so it ` +
+        'is ignored.',
+    );
+  } else if (!name && gridSchema != null) {
+    // A `null` cell is the one a layout leaves empty on purpose, and an `undefined` one is a grid handed no layout, which
+    // has been warned about
+    logOnce(
+      `${LAYOUT_GRID_OPTION} cell in ${fieldLabelForLog(id, parentFieldPath)} names no field, so it renders nothing.`,
     );
   }
   return null;
@@ -751,7 +1144,7 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
  *  ]
  * ```
  *
- * Complex `ui:row` definition, with additional `GridTemplate` (this example uses @mui/material/Grid2 native props):
+ * Complex `ui:row` definition, with additional `GridTemplate` (this example uses @mui/material/Grid native props):
  * ```
  *  "ui:row": {
  *    "spacing": 2,
@@ -810,7 +1203,7 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
  *  ```
  *
  * Most complicated `ui:col` definition, additional `GridTemplate` props and form 1, 2 and 3 children  (this example
- * uses @mui/material/Grid2 native props):
+ * uses @mui/material/Grid native props):
  * ```
  * "ui:col": {
  *    "size": { "md": 4 },
@@ -948,20 +1341,29 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
  * ```
  */
 export default function LayoutGridField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: LayoutGridFieldProps<T, S, F>) {
   /** Render the `LayoutGridField`. If there isn't a `layoutGridSchema` prop defined, then try pulling it out of the
    * `uiSchema` via `ui:LayoutGridField`. If `layoutGridSchema` is an object, then check to see if any of the properties
    * match one of the `GridType`s. If so, call the appropriate render function for the type. Otherwise, just call the
    * generic `renderField()` function with the `layoutGridSchema`.
    */
-  const { uiSchema } = props;
+  const { uiSchema, id, fieldPath } = props;
   let { layoutGridSchema } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  if (!layoutGridSchema && LAYOUT_GRID_UI_OPTION in uiOptions && isObject(uiOptions[LAYOUT_GRID_UI_OPTION])) {
-    layoutGridSchema = uiOptions[LAYOUT_GRID_UI_OPTION];
+  // Only a grid handed no layout reads its uiSchema's: a cell is handed its own, and a `null` or `''` one reading the
+  // grid's layout again would render it inside itself without end
+  if (layoutGridSchema === undefined) {
+    const uiLayoutGrid = getUiOptions<T, S, F>(uiSchema)[LAYOUT_GRID_UI_OPTION];
+    if (isObject(uiLayoutGrid)) {
+      layoutGridSchema = uiLayoutGrid;
+    } else {
+      logOnce(
+        `${LAYOUT_GRID_OPTION} in ${fieldLabelForLog(id, fieldPath)} is not an object, so the LayoutGridField renders ` +
+          'nothing.',
+      );
+    }
   }
 
   if (isObject(layoutGridSchema)) {

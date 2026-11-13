@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { ChakraProvider, EnvironmentProvider, defaultSystem } from '@chakra-ui/react';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
@@ -23,14 +24,19 @@ const memoizedCreateCacheWithContainer = weakMemoize((container: HTMLElement) =>
   return newCache;
 });
 
-export const __createChakraFrameProvider =
-  (props: any) =>
-  ({ document }: any) => (
-    <div style={{ margin: 2 }}>
-      <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
-        <EnvironmentProvider value={() => document}>
-          <ChakraProvider value={defaultSystem}>{props.children}</ChakraProvider>
-        </EnvironmentProvider>
-      </CacheProvider>
-    </div>
-  );
+export const __createChakraFrameProvider = (props: { children: ReactNode }) =>
+  function ChakraFrame({ document }: { document?: Document }) {
+    // Falling back to the host page's document would inject chakra's styles outside the frame and render it unstyled
+    if (!document) {
+      throw new Error('__createChakraFrameProvider must be rendered inside a frame that provides a document');
+    }
+    return (
+      <div style={{ margin: 2 }}>
+        <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
+          <EnvironmentProvider value={() => document}>
+            <ChakraProvider value={defaultSystem}>{props.children}</ChakraProvider>
+          </EnvironmentProvider>
+        </CacheProvider>
+      </div>
+    );
+  };

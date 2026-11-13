@@ -1,0 +1,98 @@
+import type { FormValidation, RJSFSchema } from '@rjsf/utils';
+import { act } from '@testing-library/react';
+
+import { createFormComponent, errorListMessages, createFormRef, handleOf } from './testUtils.tsx';
+
+/** Deriving state from the props honors every input that changed, whether or not the reconciler's identity-prop
+ * gate lists it. Reference retention across a derivation is `renderStability.test.tsx`'s job.
+ */
+describe('state derivation', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      a: { type: 'string', default: 'x' },
+      b: { type: 'string' },
+    },
+  };
+
+  it('a replaced customValidate takes effect on the next change', async () => {
+    const formRef = createFormRef();
+    const { node, rerender } = createFormComponent({
+      ref: formRef,
+      schema,
+      initialFormData: { b: 'y' },
+      liveValidate: 'onChange',
+    });
+    await act(async () => {
+      formRef.current!.setFieldValue('b', 'z');
+    });
+    expect(node.querySelectorAll('.rjsf-error-detail li')).toHaveLength(0);
+
+    rerender({
+      ref: formRef,
+      schema,
+      initialFormData: { b: 'y' },
+      liveValidate: 'onChange',
+      customValidate: (_data, errors: FormValidation<{ b?: string }>) => {
+        errors.b?.addError('custom');
+        return errors;
+      },
+    });
+    await act(async () => {
+      formRef.current!.setFieldValue('b', 'z');
+    });
+
+    expect(node.querySelector('.rjsf-error-detail')).toHaveTextContent('custom');
+  });
+
+  it('a root replacement through setFieldValue validates with the schema resolved for the data, as typing does', () => {
+    // The resolved schema has had the root's `then` folded into it: its constraints are reported where they apply and
+    // the `then` miss itself is not, exactly as when the same data is typed. Submit and `validateForm()` still
+    // validate the root.
+    const conditional: RJSFSchema = {
+      type: 'object',
+      properties: { c: { type: 'string' }, d: { type: 'number' } },
+      if: { properties: { c: { const: 'yes' } }, required: ['c'] },
+      then: { required: ['d'], properties: { d: { minimum: 100 } } },
+    };
+    const ref = createFormRef();
+    const { node } = createFormComponent({
+      ref,
+      schema: conditional,
+      liveValidate: 'onChange',
+      showErrorList: 'top',
+      initialFormData: { c: 'no', d: 1 },
+    });
+    act(() => handleOf(ref).setFieldValue('', { c: 'yes', d: 1 }));
+
+    expect(node.querySelector('.rjsf-errors')).toHaveTextContent('must be >= 100');
+    expect(node.querySelector('.rjsf-errors')).not.toHaveTextContent('must match "then" schema');
+  });
+
+  it('turning noValidate on drops the validator results, so turning it back off does not bring them back', () => {
+    const formRef = createFormRef();
+    const props = { ref: formRef, schema: { type: 'string', minLength: 8 } as RJSFSchema, formData: 'short' };
+    const { node, rerender } = createFormComponent(props);
+    act(() => {
+      formRef.current!.validateForm();
+    });
+    expect(errorListMessages(node)).toEqual(['must NOT have fewer than 8 characters']);
+
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
+    rerender({ ...props, noValidate: true });
+    expect(errorListMessages(node)).toEqual([]);
+
+    rerender(props);
+    expect(errorListMessages(node)).toEqual([]);
+  });
+
+  it('a changed idPrefix rebuilds the registry, so the fields render with the new ids', () => {
+    const { node, rerender } = createFormComponent({ schema });
+    expect(node.querySelector('#root_a')).not.toBeNull();
+
+    rerender({ schema, idPrefix: 'other' });
+
+    expect(node.querySelector('#root_a')).toBeNull();
+    expect(node.querySelector('#other_a')).not.toBeNull();
+  });
+});

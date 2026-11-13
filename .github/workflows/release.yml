@@ -38,13 +38,13 @@ jobs:
           if [[ "$TAG_NAME" == *alpha* || "$TAG_NAME" == *beta* || "$TAG_NAME" == *pre* ]]; then
             NPM_TAG_VALUE="next"
           fi
-          
+
           echo "NPM_TAG=${NPM_TAG_VALUE}" >> $GITHUB_ENV
           echo "Determined NPM_TAG: ${NPM_TAG_VALUE}"
       - run: pnpm exec nx release publish --tag=$NPM_TAG --provenance
         env:
           # This ensures the npm CLI knows which registry to authenticate against using OIDC
-          NPM_CONFIG_REGISTRY: "https://registry.npmjs.org/"
+          NPM_CONFIG_REGISTRY: 'https://registry.npmjs.org/'
           # If using Nx, it also needs the GitHub token for the release side
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # This tells npm to use the OIDC token for the registry

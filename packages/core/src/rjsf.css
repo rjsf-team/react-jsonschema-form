@@ -1,0 +1,369 @@
+/* The layout of `@rjsf/core`'s markup: spacing, resets and the grids. It sets no colours, borders or fonts, which
+   `rjsf-theme.css` adds, so an app with its own design system takes this file alone, or copies it and owns it */
+@layer rjsf {
+  :where(.rjsf) {
+    --rjsf-gap: 0.75rem;
+  }
+
+  :where(.rjsf .rjsf-field) {
+    margin-block-end: var(--rjsf-gap);
+  }
+
+  :where(.rjsf fieldset) {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+
+  /* Full width, as a legend otherwise sizes to its content, so the optional-data button's auto margin has room */
+  :where(.rjsf legend, .rjsf .rjsf-title) {
+    display: flex;
+    align-items: center;
+    inline-size: 100%;
+    padding: 0;
+    margin-block-end: var(--rjsf-gap);
+  }
+
+  :where(.rjsf .rjsf-title-optional-data) {
+    margin-inline-start: auto;
+  }
+
+  :where(.rjsf .rjsf-field-label) {
+    display: block;
+    margin-block-end: 0.25rem;
+  }
+
+  :where(
+    .rjsf input:not([type='checkbox'], [type='radio'], [type='range'], [type='file']),
+    .rjsf select,
+    .rjsf textarea
+  ) {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  :where(.rjsf .rjsf-checkbox, .rjsf .rjsf-radio) {
+    margin-block: 0.25rem;
+  }
+
+  /* Where the field's parts are grid rows, the group doesn't collapse this margin with the part above it, so that part's
+     own margin spaces the group */
+  :where(.rjsf .rjsf-field-radio-group > :first-child, .rjsf .rjsf-checkboxes > :first-child) {
+    margin-block-start: 0;
+  }
+
+  :where(.rjsf .rjsf-checkbox-inline, .rjsf .rjsf-radio-inline) {
+    margin-inline-end: var(--rjsf-gap);
+  }
+
+  :where(.rjsf .rjsf-checkbox label, .rjsf .rjsf-radio label, .rjsf .rjsf-checkbox-inline, .rjsf .rjsf-radio-inline) {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* A margin and vertical-align rather than a flex gap, so the spacing survives a host stylesheet that makes every
+     label inline-block */
+  :where(.rjsf input:is([type='checkbox'], [type='radio'])) {
+    margin: 0;
+    vertical-align: middle;
+  }
+
+  :where(.rjsf input:is([type='checkbox'], [type='radio']) + span) {
+    margin-inline-start: 0.375rem;
+    vertical-align: middle;
+  }
+
+  :where(.rjsf .rjsf-alt-date-list) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--rjsf-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :where(.rjsf .rjsf-field-range-wrapper) {
+    display: flex;
+    align-items: center;
+    gap: var(--rjsf-gap);
+  }
+
+  :where(.rjsf .rjsf-btn-add) {
+    display: flex;
+    margin-inline-start: auto;
+  }
+
+  /* `--rjsf-control-row` is the row of the item's control, which the toolbox sits on: the first, past a label, past a
+     description, or past both. Each item sets its own, so a nested item doesn't inherit its parent's */
+  :where(.rjsf .rjsf-array-item) {
+    --rjsf-control-row: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--rjsf-gap);
+    align-items: start;
+    margin-block-end: var(--rjsf-gap);
+  }
+
+  /* The item spaces itself, so a hidden item's toolbox keeps its gap; its field's own margin would double it */
+  :where(.rjsf .rjsf-array-item > .rjsf-field) {
+    margin-block-end: 0;
+  }
+
+  /* Only an item with a toolbox takes its track, as the gap before an empty one would narrow the item's fields */
+  :where(.rjsf .rjsf-array-item:has(> .rjsf-array-item-toolbox)) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  /* Core's `FieldTemplate` lays its parts out on the item's rows, one each, so the toolbox lines up with the control
+     however far a wrapping label or description pushes it down. Empty rows take no space, as the gap between them is
+     left to the parts' own margins, and the last, `1fr`, takes any height past the parts', such as a taller toolbox's
+     or a stretched item's, which `auto` rows would share out between the parts. A description is found by its class
+     or, drawn by a `DescriptionFieldTemplate` of your own, by the id core gives it, and the parts only from the field's
+     first child, as one drawn below the control adds no row above it */
+  :where(
+    .rjsf
+      .rjsf-array-item:has(> .rjsf-array-item-toolbox):has(
+        > .rjsf-field
+          > :first-child:is(
+            .rjsf-field-label,
+            .rjsf-field-description,
+            [id$='__description'],
+            [id$='__selectedOptionDescription']
+          )
+      )
+  ) {
+    grid-template-rows: repeat(7, auto) 1fr;
+    row-gap: 0;
+  }
+
+  :where(
+    .rjsf
+      .rjsf-array-item:has(> .rjsf-array-item-toolbox):has(
+        > .rjsf-field
+          > :first-child:is(
+            .rjsf-field-label,
+            .rjsf-field-description,
+            [id$='__description'],
+            [id$='__selectedOptionDescription']
+          )
+      )
+      > .rjsf-field
+  ) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: subgrid;
+    grid-row: 1 / -1;
+    /* The control shares the toolbox's row, so it would otherwise stretch to a taller toolbox */
+    align-items: start;
+  }
+
+  :where(
+    .rjsf
+      .rjsf-array-item:has(
+        > .rjsf-field
+          > :first-child:is(
+            .rjsf-field-label,
+            .rjsf-field-description,
+            [id$='__description'],
+            [id$='__selectedOptionDescription']
+          )
+      )
+  ) {
+    --rjsf-control-row: 2;
+  }
+
+  /* Past two parts: a label and a description, or, with no label, a description and its selected option's */
+  :where(
+    .rjsf
+      .rjsf-array-item:has(
+        > .rjsf-field
+          > :first-child:is(
+            .rjsf-field-label,
+            .rjsf-field-description,
+            [id$='__description'],
+            [id$='__selectedOptionDescription']
+          )
+          + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+      )
+  ) {
+    --rjsf-control-row: 3;
+  }
+
+  /* A select draws its selected option's description, a second one, between the field's and itself */
+  :where(
+    .rjsf
+      .rjsf-array-item:has(
+        > .rjsf-field
+          > .rjsf-field-label:first-child
+          + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+          + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+      )
+  ) {
+    --rjsf-control-row: 4;
+  }
+
+  :where(.rjsf .rjsf-array-item-toolbox) {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  /* Its column named too, as an item placed by row alone is placed before the field and would take the field's column.
+     It spans the rows below the control's too, so a toolbox taller than the control takes their height rather than
+     pushing the errors and help down */
+  :where(.rjsf .rjsf-array-item > .rjsf-array-item-toolbox) {
+    grid-column: 2;
+    grid-row: var(--rjsf-control-row) / -1;
+  }
+
+  /* A `FieldTemplate` of your own, whose parts aren't core's, or a field or widget drawing its own label above its
+     control, has the toolbox pushed down past the label it marks the item `data-display-label` for: one line of the
+     label's font, which this `<div>` inherits too, and the label's margin */
+  :where(
+    .rjsf
+      .rjsf-array-item[data-display-label]:not(:has(> .rjsf-field > .rjsf-field-label:first-child))
+      > .rjsf-array-item-toolbox
+  ) {
+    margin-block-start: calc(1lh + 0.25rem);
+  }
+
+  /* A description between them adds a line, which this file gives no margin; `rjsf-theme.css` sets the offset for its
+     own description spacing */
+  :where(
+    .rjsf
+      .rjsf-array-item[data-display-label][data-has-description]:not(
+        :has(
+          > .rjsf-field
+            > :first-child:is(
+              .rjsf-field-label,
+              .rjsf-field-description,
+              [id$='__description'],
+              [id$='__selectedOptionDescription']
+            )
+        )
+      )
+      > .rjsf-array-item-toolbox
+  ) {
+    margin-block-start: var(--rjsf-toolbox-description-offset, calc(2lh + 0.25rem));
+  }
+
+  /* The key and, where it holds core's `FieldTemplate` parts, the value lay their parts out on the row's rows, so the
+     key's input and the remove button sit on the value's control row (`--rjsf-control-row`) however far a wrapping label
+     or description pushes it down. A value of any other `FieldTemplate` spans every row, beside the key's label and
+     input, and its last row, `1fr`, takes whatever height the value needs past theirs */
+  :where(.rjsf .rjsf-additional-property) {
+    --rjsf-control-row: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    grid-template-rows: repeat(7, auto) 1fr;
+    column-gap: var(--rjsf-gap);
+    align-items: start;
+  }
+
+  :where(
+    .rjsf .rjsf-additional-property:has(> .rjsf-additional-property-key > .rjsf-field-label),
+    .rjsf
+      .rjsf-additional-property:has(
+        > .rjsf-additional-property-value
+          > :first-child:is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+      )
+  ) {
+    --rjsf-control-row: 2;
+  }
+
+  :where(
+    .rjsf
+      .rjsf-additional-property:has(
+        > .rjsf-additional-property-value
+          > :first-child:is(
+            .rjsf-field-label,
+            .rjsf-field-description,
+            [id$='__description'],
+            [id$='__selectedOptionDescription']
+          )
+          + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+      )
+  ) {
+    --rjsf-control-row: 3;
+  }
+
+  :where(
+    .rjsf
+      .rjsf-additional-property:has(
+        > .rjsf-additional-property-value
+          > .rjsf-field-label:first-child
+          + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+          + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+      )
+  ) {
+    --rjsf-control-row: 4;
+  }
+
+  :where(.rjsf .rjsf-additional-property-key, .rjsf .rjsf-additional-property-value) {
+    grid-row: 1 / -1;
+  }
+
+  /* A long unbroken key or title, such as a `snake_case` one, breaks rather than running over the next column's label */
+  :where(
+    .rjsf .rjsf-additional-property-key > .rjsf-field-label,
+    .rjsf .rjsf-additional-property-value > .rjsf-field-label
+  ) {
+    overflow-wrap: anywhere;
+  }
+
+  :where(
+    .rjsf .rjsf-additional-property-key,
+    .rjsf
+      .rjsf-additional-property-value:has(
+        > :first-child:is(
+          .rjsf-field-label,
+          .rjsf-field-description,
+          [id$='__description'],
+          [id$='__selectedOptionDescription']
+        )
+      )
+  ) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: subgrid;
+    /* The key's input shares the control's row, so it would otherwise stretch to a taller control, such as a textarea */
+    align-items: start;
+  }
+
+  /* A grid item stretches to its column, so a button a widget draws beside its control, such as the Clear button,
+     keeps its own width */
+  :where(.rjsf .rjsf-array-item > .rjsf-field > button, .rjsf .rjsf-additional-property-value > button) {
+    justify-self: start;
+  }
+
+  /* Spanning the rows below the control's too, so a key input or button taller than the control doesn't push the
+     value's errors and help down */
+  :where(
+    .rjsf .rjsf-additional-property-key > :not(.rjsf-field-label),
+    .rjsf .rjsf-additional-property > .rjsf-object-property-remove
+  ) {
+    grid-row: var(--rjsf-control-row) / -1;
+  }
+
+  :where(.rjsf .rjsf-cyclic-schema) {
+    margin-block-start: var(--rjsf-gap);
+  }
+
+  /* A custom property inherits, so each row resets it, or a column without a span takes the span of the column it is in */
+  :where(.rjsf .rjsf-grid-row) {
+    --rjsf-span: 12;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--rjsf-gap);
+  }
+
+  /* A nested row, or a field, condition or render placed in a row without a `ui:col`, takes the whole row */
+  :where(.rjsf .rjsf-grid-row > :not(.rjsf-grid-column)) {
+    grid-column: 1 / -1;
+  }
+
+  :where(.rjsf .rjsf-grid-column) {
+    grid-column: span var(--rjsf-span, 12);
+    min-width: 0;
+  }
+}

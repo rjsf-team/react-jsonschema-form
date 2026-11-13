@@ -63,6 +63,11 @@ const enumObjects: Sample = {
         type: 'string',
         enum: ['low', 'medium', 'high', 'critical'],
       },
+      category: {
+        title: 'Category (optgroups)',
+        type: 'string',
+        enum: ['apple', 'banana', 'carrot', 'potato', 'salmon', 'chicken'],
+      },
     },
   },
   uiSchema: {
@@ -100,8 +105,17 @@ const enumObjects: Sample = {
       },
       'ui:enumOrder': ['critical', 'high', '*'],
     },
+    category: {
+      'ui:options': {
+        optgroups: {
+          Fruits: ['apple', 'banana'],
+          Vegetables: ['carrot', 'potato'],
+          Meat: ['salmon', 'chicken'],
+        },
+      },
+    },
   },
-  formData: {
+  initialFormData: {
     location: {
       name: 'Amsterdam',
       lat: 52,

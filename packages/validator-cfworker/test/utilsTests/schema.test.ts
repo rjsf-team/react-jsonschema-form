@@ -11,7 +11,6 @@ import {
   isSelectTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
-  toPathSchemaTest,
 } from '../../../utils/test/schema/index.ts';
 import getTestValidator from './getTestValidator.ts';
 
@@ -29,4 +28,3 @@ isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
 retrieveSchemaTest(testValidator);
 sanitizeDataForNewSchemaTest(testValidator);
-toPathSchemaTest(testValidator);

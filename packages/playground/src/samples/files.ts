@@ -30,7 +30,7 @@ const files: Sample = {
       'ui:options': { accept: '.pdf' },
     },
   },
-  formData: {},
+  initialFormData: {},
 };
 
 export default files;

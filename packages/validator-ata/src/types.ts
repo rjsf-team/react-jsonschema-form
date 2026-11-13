@@ -1,4 +1,7 @@
+import type { Bivariant, CustomMergeAllOf, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import type { ValidationError, Validator, ValidatorOptions } from 'ata-validator';
+
+export type { ValidationError } from 'ata-validator';
 
 /** Custom format checker. Receives a string and returns true when the value
  * is considered valid for this format. Mirrors the function shape used by
@@ -56,12 +59,25 @@ export interface CustomValidatorOptionsType {
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 }
 
-/** The simplified `ValidateFunction` shape of each entry in a module written by
- * `compileSchemaValidators()`, as `createPrecompiledValidator()` consumes it.
+/** The options a precompiled validator is constructed with, all optional */
+export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
+  /** If provided, is used to localize a list of ata validation errors */
+  localizer?: Localizer;
+  /** Controls which duplicate error filtering is suppressed; see `filterDuplicateErrors` */
+  suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
+  /** The form's `customMergeAllOf`, used when resolving this validator's own root schema to check the schema it is
+   * handed against it. Without it that resolution uses the default `allOf` merge, so a form with a `customMergeAllOf`
+   * and an `allOf` in its root schema is rejected with "the schema ... differs from the rootSchema"
+   */
+  customMergeAllOf?: CustomMergeAllOf<S>;
+}
+
+/** The simplified `ValidateFunction` shape of each entry in a module written by `compileSchemaValidators()`, as
+ * `createPrecompiledValidator()` consumes it. Its call is checked bivariantly, as the AJV package's is, so a
+ * hand-written validator may declare the `data` it was written for rather than having to accept `unknown`.
  */
-export interface CompiledValidateFunction {
+export interface CompiledValidateFunction extends Bivariant<[data: unknown], boolean> {
   errors?: null | ValidationError[];
-  (data: unknown): boolean;
 }
 
 export type ValidatorFunctions = Record<string, CompiledValidateFunction>;

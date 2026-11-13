@@ -1,12 +1,13 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { gridTests, renderGridColumn } from '@rjsf/snapshot-tests';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import Form from '../src/index.ts';
 
 gridTests(Form, {
-  ColumnWidthAll: { xs: 12 },
-  ColumnWidth4: { xs: 4 },
-  ColumnWidth6: { xs: 6 },
-  ColumnWidth8: { xs: 8 },
+  ColumnWidthAll: { span: 12 },
+  ColumnWidth4: { span: 4 },
+  ColumnWidth6: { span: 6 },
+  ColumnWidth8: { span: 8 },
   ComplexUiSchema: {
     'ui:field': 'LayoutGridField',
     'ui:layoutGrid': {
@@ -213,4 +214,26 @@ gridTests(Form, {
       },
     },
   },
+});
+
+describe('GridTemplate span', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  test("sets a column's span as its xs", () => {
+    expect(renderGridColumn(Form, { span: 4 }).column).toHaveClass('col-4');
+  });
+  test("prefers a column's own xs", () => {
+    const { column } = renderGridColumn(Form, { span: 4, xs: 6 });
+    expect(column).toHaveClass('col-6');
+    expect(column).not.toHaveClass('col-4');
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has an `xs` of its own',
+    );
+  });
+  test('warns that a half step is not a whole number', () => {
+    renderGridColumn(Form, { span: 4.5 });
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` of 4.5 in "root_name" is not a whole number, which this theme\'s grid needs',
+    );
+  });
 });

@@ -1,6 +1,7 @@
-import type { ComponentType, ForwardedRef } from 'react';
-import { forwardRef } from 'react';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { ReactElement } from 'react';
+import { useMemo } from 'react';
+import type { ClassMap, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { mergeClassMaps, mergeThemePresentation } from '@rjsf/utils';
 
 import type { FormProps } from './components/Form.tsx';
 import Form from './components/Form.tsx';
@@ -8,42 +9,85 @@ import Form from './components/Form.tsx';
 /** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
  * overridden while creating a theme
  */
-export type ThemeProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
-  FormProps<T, S, F>,
-  'fields' | 'templates' | 'widgets' | '_internalFormWrapper'
->;
+export type ThemeProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = Pick<FormProps<T, S, F>, 'fields' | 'templates' | 'widgets' | 'presentation' | 'globalUiOptionsKeys'> & {
+  /** The class names of the elements `@rjsf/core` renders, by element, each replacing core's class for its element; only
+   * a `Form`'s `classMap` may extend a class with a function
+   */
+  classMap?: ClassMap;
+};
 
-/** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps` */
-export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  themeProps: ThemeProps<T, S, F>,
-): ComponentType<FormProps<T, S, F>> {
-  // @ts-expect-error TS2322 because the latest types complain about LegacyRef's string form not working with Form
-  return forwardRef<Form<T, S, F>, FormProps<T, S, F>>(
-    (
-      { fields: propFields, widgets: propWidgets, templates: propTemplates, ...directProps }: FormProps<T, S, F>,
-      ref: ForwardedRef<Form<T, S, F>>,
-    ) => {
-      const fields = { ...themeProps?.fields, ...propFields };
-      const widgets = { ...themeProps?.widgets, ...propWidgets };
-      const templates = {
-        ...themeProps?.templates,
-        ...propTemplates,
-        ButtonTemplates: {
-          ...themeProps?.templates?.ButtonTemplates,
-          ...propTemplates?.ButtonTemplates,
-        },
-      };
+/** The `Form` returned by `withTheme()`. It stays generic over the form data like `Form` itself, so `T` is inferred
+ * from `formData` or named per use (`<ThemedForm<MyData> />`) instead of being fixed when the theme is applied; a theme
+ * written for `T` serves any data assignable to it.
+ */
+export type ThemedForm<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = <TT extends T = T>(props: FormProps<TT, S, F>) => ReactElement;
 
-      return (
-        <Form<T, S, F>
-          {...themeProps}
-          {...directProps}
-          fields={fields}
-          widgets={widgets}
-          templates={templates}
-          ref={ref}
-        />
-      );
-    },
-  );
+/** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps`.
+ *
+ * Returns a plain function component, not a `forwardRef`-wrapped one. Don't pass the return value directly to
+ * `useState()` or a state setter (e.g. `useState(withTheme(theme))`, `setForm(withTheme(theme))`) — React treats a
+ * bare function passed there as a lazy initializer/updater and calls it immediately with no arguments, which crashes.
+ * Wrap it in a lazy initializer instead: `useState(() => withTheme(theme))`.
+ */
+export default function withTheme<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(themeProps: ThemeProps<T, S, F>): ThemedForm<T, S, F> {
+  return function ThemedForm<TT extends T = T>({
+    fields: propFields,
+    widgets: propWidgets,
+    templates: propTemplates,
+    presentation: propPresentation,
+    classMap: propClassMap,
+    globalUiOptionsKeys: propGlobalUiOptionsKeys,
+    ref,
+    ...directProps
+  }: FormProps<TT, S, F>) {
+    // The theme's components were typed for `T`; they render the narrower `TT` the form is given
+    const theme = themeProps as ThemeProps<TT, S, F>;
+    const fields = { ...theme?.fields, ...propFields };
+    const widgets = { ...theme?.widgets, ...propWidgets };
+    const templates = {
+      ...theme?.templates,
+      ...propTemplates,
+      ButtonTemplates: {
+        ...theme?.templates?.ButtonTemplates,
+        ...propTemplates?.ButtonTemplates,
+      },
+    };
+    // Merging is associative, so the registry layering core beneath this gives what core ← theme ← props would.
+    // Memoised, as merging builds new objects that the registry would otherwise compare deeply on every render
+    const presentation = useMemo(
+      () => mergeThemePresentation(theme?.presentation, propPresentation),
+      [theme, propPresentation],
+    );
+    // Both memoised for the reason `presentation` is
+    const classMap = useMemo(() => mergeClassMaps(theme?.classMap, propClassMap), [theme, propClassMap]);
+    const globalUiOptionsKeys = useMemo(
+      () => [...(theme?.globalUiOptionsKeys ?? []), ...(propGlobalUiOptionsKeys ?? [])],
+      [theme, propGlobalUiOptionsKeys],
+    );
+
+    return (
+      <Form<TT, S, F>
+        {...directProps}
+        fields={fields}
+        widgets={widgets}
+        templates={templates}
+        presentation={presentation}
+        classMap={classMap}
+        globalUiOptionsKeys={globalUiOptionsKeys}
+        ref={ref}
+      />
+    );
+  };
 }

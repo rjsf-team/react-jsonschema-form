@@ -24,7 +24,7 @@ const allOf: Sample = {
       },
     ],
   },
-  formData: {},
+  initialFormData: {},
 };
 
 export default allOf;

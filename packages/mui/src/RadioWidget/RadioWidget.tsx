@@ -8,16 +8,18 @@ import type { RadioGroupProps } from '@mui/material/RadioGroup';
 import RadioGroup from '@mui/material/RadioGroup';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
+  getGroupLabelling,
   getOptionValueFormat,
-  labelValue,
   optionId,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import { getMuiProps, omitKeys, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the RadioWidget. */
 export interface RadioWidgetMuiProps extends GenericObjectType {
@@ -37,15 +39,32 @@ export interface RadioWidgetMuiProps extends GenericObjectType {
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
-  const { id, htmlName, options, value, required, disabled, readonly, label, hideLabel, onChange, onBlur, onFocus } =
-    props;
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  // `disabled` and `readonly` are `false` where unset, since `FormControlLabel` takes the control's `disabled` where its
+  // own is undefined
+  const {
+    id,
+    htmlName,
+    options,
+    value,
+    required,
+    disabled = false,
+    readonly = false,
+    autofocus,
+    label,
+    onChange,
+    onBlur,
+    onFocus,
+  } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
-  const handleChange = (_: any, enumValue: any) =>
+  const handleChange: NonNullable<RadioGroupProps['onChange']> = (_, enumValue) =>
     onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
@@ -53,42 +72,68 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, '');
+  const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '');
+
+  const {
+    drawsLabel,
+    labelId,
+    group: groupAttributes,
+    option: optionAttributes,
+  } = getGroupLabelling<T, S, F>(props, 'radiogroup');
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, RadioWidgetMuiProps>(options);
+  // `required`, the field's or one the form author gives the `Radio`, which replaces it, goes on the `<input>` rather
+  // than the `Radio`, whose `FormControlLabel` would mark each option's label `*`. An author's `checked` and `value`
+  // would take the form's data, as `Radio` derives its own only where they are undefined
+  const { required: authorRequired, checked: _checked, value: _value, ...radioProps } = muiSlotProps?.radio ?? {};
+  const radioSlotProps = withInputSlot(
+    { ...optionAttributes, required: authorRequired ?? required },
+    radioProps.slotProps,
+  );
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
     <>
-      {labelValue(
-        <FormLabel required={required} htmlFor={id}>
-          {label || undefined}
-        </FormLabel>,
-        hideLabel,
+      {/* No `for`, which can't name the group's wrapper: the group points its `aria-labelledby` at the label instead */}
+      {drawsLabel && (
+        <FormLabel id={labelId} required={templateMarksRequired<T, S, F>(props)}>
+          {label}
+        </FormLabel>
       )}
+      {/* The plan's group attributes go beneath the form author's, as the plan's control attributes do on each radio */}
       <RadioGroup
+        {...groupAttributes}
         {...otherMuiProps}
         {...muiSlotProps?.radioGroup}
         id={id}
         name={htmlName || id}
         value={selectValue}
-        row={row as boolean}
+        row={row}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+            const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
             const radio = (
               <FormControlLabel
-                {...muiSlotProps?.formControlLabel}
+                // `FormControlLabel` hands its `checked` to a `Radio` given none, which would pin it
+                {...omitKeys(muiSlotProps?.formControlLabel, ['checked'])}
                 control={
-                  <Radio {...muiSlotProps?.radio} name={htmlName || id} id={optionId(id, index)} color='primary' />
+                  <Radio
+                    {...radioProps}
+                    name={htmlName || id}
+                    id={optionId(id, index)}
+                    autoFocus={radioProps.autoFocus ?? index === autofocusIndex}
+                    color='primary'
+                    slotProps={radioSlotProps}
+                  />
                 }
                 label={option.label}
-                value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
-                key={String(option.value)}
+                value={domValues[index]}
+                // oxlint-disable-next-line react/no-array-index-key
+                key={index}
                 disabled={disabled || itemDisabled || readonly}
               />
             );

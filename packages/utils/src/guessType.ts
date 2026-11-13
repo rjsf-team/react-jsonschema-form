@@ -4,7 +4,7 @@
  * @param value - The value from which to guess the type
  * @returns - The best guess for the object type
  */
-export default function guessType(value: any) {
+export default function guessType(value: unknown) {
   if (Array.isArray(value)) {
     return 'array';
   }

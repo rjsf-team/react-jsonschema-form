@@ -1,17 +1,26 @@
 import type { FocusEvent } from 'react';
 import type { CheckboxCheckedChangeDetails } from '@chakra-ui/react';
-import { Field as ChakraField, Text } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, getUiOptions, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  getTemplates,
+  getUiOptions,
+  getWidgetDescription,
+  hasWidgetErrors,
+  schemaRequiresTrueValue,
+  widgetDrawsLabelText,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
-import { Field } from '../components/ui/field.tsx';
-import { getChakra } from '../utils.ts';
+import { Field, RequiredMarker } from '../components/ui/field.tsx';
+import { getChakra, isInputElement, labelledByOrNone } from '../utils.ts';
 
 export default function CheckboxWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -19,39 +28,45 @@ export default function CheckboxWidget<
     value,
     disabled,
     readonly,
+    autofocus,
     onChange,
     onBlur,
     onFocus,
     label,
-    hideLabel,
+    presentation,
     registry,
     options,
     uiSchema,
     schema,
     required,
   } = props;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
-  const uiOptions = getUiOptions(uiSchema);
-  const isCheckbox = uiOptions.widget === 'checkbox';
-  const description = isCheckbox ? undefined : (options.description ?? schema.description);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
+  // The plan says which description this widget draws; without a plan, a template rendering the `checkbox` alias draws
+  // the description itself
+  const description =
+    presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
 
   const handleChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target?.checked);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target?.checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLElement>) =>
+    onBlur(id, isInputElement(target) ? target.checked : undefined);
+  const handleFocus = ({ target }: FocusEvent<HTMLElement>) =>
+    onFocus(id, isInputElement(target) ? target.checked : undefined);
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(options);
+  const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
 
   return (
-    <Field mb={1} required={required} {...chakraProps}>
-      {!hideLabel && description && (
+    <Field mb={1} required={trueValueRequired} invalid={hasWidgetErrors<T, S, F>(props)} id={id} {...chakraProps}>
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -60,17 +75,23 @@ export default function CheckboxWidget<
       <Checkbox
         id={id}
         name={htmlName || id}
-        checked={typeof value === 'undefined' ? false : value}
+        checked={Boolean(value)}
         disabled={disabled || readonly}
         onCheckedChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
+        // Ark points the input at the label it draws inside the checkbox, so with none drawn it is pointed at nothing
+        inputProps={{
+          ...controlAttributes,
+          'aria-labelledby': labelledByOrNone(controlAttributes['aria-labelledby'], drawsLabel),
+          autoFocus: autofocus,
+          'aria-required': (marksRequired && !trueValueRequired) || undefined,
+        }}
       >
-        {!hideLabel && label ? (
+        {drawsLabel ? (
           <Text>
             {label}
-            {trueValueRequired && <ChakraField.RequiredIndicator />}
+            {marksRequired && templateMarksRequired<T, S, F>(props) && <RequiredMarker />}
           </Text>
         ) : undefined}
       </Checkbox>

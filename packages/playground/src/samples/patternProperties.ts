@@ -28,7 +28,7 @@ const patternProperties: Sample = {
       'ui:emptyValue': '',
     },
   },
-  formData: {
+  initialFormData: {
     firstName: 'Chuck',
     lastName: 'Norris',
     assKickCount: 'infinity',
