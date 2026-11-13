@@ -404,8 +404,9 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *   - Otherwise, for each element in the `data`, stopping at `maxItems` where it differs from the old schema's, since
  *     data already past an unchanged one is left for validation to report, an element past it clearing nothing:
  *     - An element at a position both sides declare `false` is kept as it is, for validation to report
- *     - A `null` element at a position whose constraints changed, where the new position declares a `default` and
- *       doesn't allow `null`, is a cleared row, which becomes `undefined` for the defaults to fill
+ *     - A `null` element at a position whose constraints changed, where the new position fills it with a `default`, its
+ *       own or an `anyOf`/`oneOf` option's, and doesn't allow `null`, is a cleared row, which becomes `undefined` for
+ *       the defaults to fill
  *     - Where the new position's type, read through `getSchemaType()`, is "object" or "array", or its type list names
  *       "object" or "array", and it isn't a select
  *       over object or array constants (see `isWholeValueSelect()`), retrieve its schemas for that element

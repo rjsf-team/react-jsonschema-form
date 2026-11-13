@@ -169,7 +169,9 @@ function writtenKeys<S extends StrictRJSFSchema, F extends FormContextType>(
             value,
           )
         : property;
-      const propertyValue = writtenDefault<S, F>(context, rootSchema, propertySchema, value, {
+      // The fill writes the property's own `default` over the one its object hands it, as `computedDefault()` reads it
+      const propertyDefault = computedDefault<S, F>(context, propertySchema, value);
+      const propertyValue = writtenDefault<S, F>(context, rootSchema, propertySchema, propertyDefault, {
         isRequired: schema.required?.includes(key),
         isParentRequired: isRequired,
       });

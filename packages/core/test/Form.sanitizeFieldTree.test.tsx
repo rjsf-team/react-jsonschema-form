@@ -3272,6 +3272,24 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       from: optionMismatchWith('x'),
       to: optionMismatchWith('y'),
     },
+    {
+      // The fill writes a property's own `default` over the one its object hands it
+      name: "an object whose default for a key is overridden by that key's own",
+      from: {
+        type: 'object',
+        properties: {
+          o: { type: 'object', default: { c: 'x' }, properties: { c: { type: 'string', default: 'own' } } },
+          w: { type: 'string' },
+        },
+      },
+      to: {
+        type: 'object',
+        properties: {
+          o: { type: 'object', default: { c: 'y' }, properties: { c: { type: 'string', default: 'own' } } },
+          w: { type: 'string' },
+        },
+      },
+    },
   ])('keeps a clear of $name when that default changes but the fill writes the same', ({ from, to }) => {
     const data = { o: undefined, w: 'k' };
     const ref = createRef<FormRef<Record<string, unknown>>>();

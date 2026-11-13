@@ -164,6 +164,20 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
       expected: { a: 1 },
     },
     {
+      name: "a key's own default is written over the one its object hands it",
+      context: descendantWins,
+      schema: {
+        type: 'object',
+        properties: {
+          a: { type: 'string', default: 'own' },
+          c: { type: 'object', default: { x: 'own' }, properties: { x: { type: 'string' }, y: { type: 'string' } } },
+        },
+        default: { a: 'object', c: { x: 'object', y: 'object' } },
+      },
+      placement: optional,
+      expected: { a: 'own', c: { x: 'own', y: 'object' } },
+    },
+    {
       // The fill merges the option a field holding no data matches by its default into the field
       name: 'a key its option requires of a property the object declares too is written',
       context: populateRequired,

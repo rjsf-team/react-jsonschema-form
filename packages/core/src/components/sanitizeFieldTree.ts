@@ -740,8 +740,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // A property's value is judged by the default the defaults write into it, while what it hands its own properties is
   // the default it computes, which they fill from whether or not it is written itself
   const isProperty = !isItem && path.length > 0;
-  const oldComputed = filledDefaultOf(ctx.oldSchemaUtils, oldLayers, oldInherited);
-  const newComputed = filledDefaultOf(ctx.schemaUtils, newLayers, newInherited);
+  // Read only by the judge of an item or the root, and by the properties of an object, so a property holding no
+  // object, whose value is judged by its written default, runs no option pick for it
+  const isComputedRead = !isProperty || isPlainObject(newValue);
+  const oldComputed = isComputedRead ? filledDefaultOf(ctx.oldSchemaUtils, oldLayers, oldInherited) : undefined;
+  const newComputed = isComputedRead ? filledDefaultOf(ctx.schemaUtils, newLayers, newInherited) : undefined;
   // The edited value and the values holding it are the user's
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
     // The fill picks the option of a field holding no data by the field's own `default`, not by the one `Form` shows,
