@@ -2976,6 +2976,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it.each<[string, 'skipDefaults' | 'populateDefaults', unknown, unknown]>([
+          ['a property', 'skipDefaults', 'c', 'a'],
+          ['a property', 'populateDefaults', 'c', 'a'],
+          ['the root', 'skipDefaults', 'c', 'a'],
+          ['the root', 'populateDefaults', 'c', 'a'],
+          ['a property', 'populateDefaults', 'b', 'b'],
+          ['the root', 'skipDefaults', 'b', 'b'],
+        ])(
+          "gives %s whose allOf narrows its own enum to one value, under allOf %s, %j the outcome %j by the field's own options",
+          (where, allOf, value, expected) => {
+            const w: RJSFSchema = { enum: ['a', 'b'], allOf: [{ enum: ['a'] }], default: 'a' };
+            const options = { validator: testValidator, defaultFormStateBehavior: { allOf } };
+            const result =
+              where === 'the root'
+                ? getDefaultFormState(options, { schema: w, formData: value })
+                : getDefaultFormState(options, {
+                    schema: { type: 'object', properties: { w } },
+                    formData: { w: value },
+                  });
+            expect(result).toStrictEqual(where === 'the root' ? expected : { w: expected });
+          },
+        );
+
         it("folds the object's default for a key its allOf declares through that property, as for its own property", () => {
           const o: RJSFSchema = { type: 'object', properties: { y: { type: 'string', default: 'Y' } } };
           const schema: RJSFSchema = {

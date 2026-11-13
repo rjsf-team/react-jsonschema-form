@@ -2751,11 +2751,20 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   // its subschemas, so all four are read from the merged schema, retrieved with the data so that a condition on it
   // picks what it is checked against. A merge that reads no data is kept for any data, so only one whose result
   // depends on the data is planned again for it. A merge that leaves one value is a constant, whose data is kept as it
-  // is for a field that declares one, and as `populateDefaults` keeps it, as long as the field's own options take it
+  // is for a field that declares one, as long as the field's own options take it: those of its schema as written where
+  // `populateDefaults`, or the root's retrieval, already merged them away
   const mergesForData = !shouldRetrieveAllOf && formData !== undefined && holdsAnyOf(schemaToMatch, MERGING_KEYWORDS);
+  const ownOptions = () => {
+    const { graph, seeds } = field();
+    if (formData === undefined || seeds.length === 0) {
+      return undefined;
+    }
+    const own = buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } }).schema;
+    return isConstant<S>(own) ? undefined : own;
+  };
   const readSchema = mergesForData ? retrieve() : schemaToMatch;
   const nestedUnfolded = unfolded || mergesForData;
-  const optionsSchema = [readSchema, schemaToMatch].find((candidate) => !isConstant<S>(candidate));
+  const optionsSchema = [readSchema, schemaToMatch].find((candidate) => !isConstant<S>(candidate)) ?? ownOptions();
   const selectSchema =
     formData === undefined || optionsSchema === undefined
       ? undefined
