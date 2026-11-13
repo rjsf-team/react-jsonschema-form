@@ -1,5 +1,5 @@
 import { absentKeywordAllows } from '../additionalPropertiesUtils.ts';
-import { ADDITIONAL_PROPERTY_FLAG, ALL_OF_KEY, CONST_KEY, IF_KEY, ITEMS_KEY, REF_KEY } from '../constants.ts';
+import { ADDITIONAL_PROPERTY_FLAG, ALL_OF_KEY, CONST_KEY, IF_KEY, REF_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
@@ -7,6 +7,7 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isConstantSelect from '../isConstantSelect.ts';
+import isFixedItems from '../isFixedItems.ts';
 import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeObjects from '../mergeObjects.ts';
@@ -38,11 +39,14 @@ import retrieveSchema from './retrieveSchema.ts';
  * required itself where its object is the root, and a value other than an object only where it is required as well.
  * An object field's object default is first cut down key by key, as the fill builds it, with the `anyOf`/`oneOf` option
  * its own `default` matches merged into the field as the fill merges one into a field holding no data: each key its
- * `properties` declare keeps only what the defaults write into that property, read as the fill reads it, its `$ref`s
- * and `allOf` resolved and its conditions and `dependencies` applied as for a property holding no data, and any other key only
- * where `additionalProperties` seeds it, so an empty object is left where they write none of its keys. Without a
- * `placement` it is returned as computed: the root and an array item are always filled, and a field hands its
- * properties the default it computes whether or not it is written itself.
+ * `properties` declare keeps only what the defaults write into that property, read as the fill reads it: one holding an
+ * object with its `$ref`s and `allOf` resolved and its conditions and `dependencies` applied as for a property holding
+ * no data, and any other through the fill itself wherever the fill may compute more for it than its own `default`,
+ * which merges an `allOf` only under `allOf: 'populateDefaults'`, so it can take a value the object's `default` never
+ * named, such as a `const`, a `minItems` fill, a tuple's item defaults or an object built over a `null`. A key they
+ * don't declare is kept only where `additionalProperties` seeds it, so an empty object is left where they write none of
+ * its keys. Without a `placement` it is returned as computed: the root and an array item are always filled, and a field
+ * hands its properties the default it computes whether or not it is written itself.
  *
  * @param context - The `SchemaContext` whose `defaultFormStateBehavior` says which of the two defaults wins, and
  *        whether a property is filled at all
@@ -171,8 +175,8 @@ function writtenKeys<S extends StrictRJSFSchema, F extends FormContextType>(
           )
         : property;
       // A value other than an object the fill may compute beyond the property's own `default` for, through a `$ref`, an
-      // option, an `allOf`, an `if`, a `const`, array items or an object or array type, is read through the fill itself,
-      // which merges each of them, at every level, only as its own settings say. Otherwise the fill writes the
+      // option, an `allOf`, an `if`, a `const`, a tuple's items or an object or array type, is read through the fill
+      // itself, which merges each of them, at every level, only as its own settings say. Otherwise the fill writes the
       // property's own `default` over the one its object hands it, as `computedDefault()` reads it
       const isRequiredKey = schema.required?.includes(key);
       const ownDefaultSchema = isObject(value) ? propertySchema : ownDefaultSchemaOf<S>(property, rootSchema);
@@ -214,12 +218,13 @@ function ownDefaultSchemaOf<S extends StrictRJSFSchema>(schema: S, rootSchema: S
       return undefined;
     }
   }
-  // The fill builds an object or fills an array up to its `minItems` whatever value the object hands it
+  // The fill builds an object or fills an array up to its `minItems` whatever value the object hands it, and reads a
+  // tuple's defaults from its items whatever its `type`
   const type = getSchemaType<S>(own);
   return IF_KEY in own ||
     ALL_OF_KEY in own ||
     CONST_KEY in own ||
-    ITEMS_KEY in own ||
+    isFixedItems<S>(own) ||
     type === 'object' ||
     type === 'array' ||
     (getXxxOfOptions<S>(own) !== undefined && !isConstantSelect<S>(own))

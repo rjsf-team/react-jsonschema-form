@@ -321,6 +321,18 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
       expected: { o: { x: 'd' }, l: [undefined, undefined] },
     },
     {
+      // The fill reads a tuple's defaults from its items whether or not it declares a `type`
+      name: "a key's tuple without a type is read from its items' defaults",
+      context: descendantWins,
+      schema: {
+        type: 'object',
+        properties: { t: { items: [{ type: 'string', default: 'a' }] } },
+        default: { t: ['z'] },
+      },
+      placement: optional,
+      expected: { t: ['a'] },
+    },
+    {
       // The fill merges the option a field holding no data matches by its default into the field
       name: 'a key its option requires of a property the object declares too is written',
       context: populateRequired,
