@@ -2976,6 +2976,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it("folds the object's default for a key its allOf declares through that property, as for its own property", () => {
+          const o: RJSFSchema = { type: 'object', properties: { y: { type: 'string', default: 'Y' } } };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', default: { o: { x: 1 } }, properties: { o } },
+              wrapped: { type: 'object', default: { o: { x: 1 } }, allOf: [{ properties: { o } }] },
+            },
+          };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { own: {}, wrapped: {} } }),
+          ).toStrictEqual({ own: { o: { y: 'Y' } }, wrapped: { o: { y: 'Y' } } });
+        });
+
         it.each(['populateRequiredDefaults', 'skipDefaults'] as const)(
           'adds an optional property whose allOf holds a const as one with its own, under emptyObjectFields %s',
           (emptyObjectFields) => {

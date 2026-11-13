@@ -1890,7 +1890,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   }
   // A key only an `allOf` the plan left unmerged declares takes the object's default where the data lacks it, or holds
   // it as `undefined` that `mergeDefaultsIntoFormData` says a default replaces, as a property of the object's own does,
-  // whatever the object says about other keys, and is required where the merged schema requires it
+  // whatever the object says about other keys, and is required where the merged schema requires it. The default is
+  // folded through the property the merge gives the key, as one the object declares is through its own
   if (isObject(defaults)) {
     Object.keys(defaults)
       .filter(
@@ -1902,17 +1903,20 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
           isPinned(key) &&
           declaredInAllOf(key),
       )
-      .forEach((key) =>
+      .forEach((key) => {
+        const mergedSchema = mergedSchemaOf<S, F>(context, view);
+        const { graph, seeds } = fieldOf<S>(parseSchemaGraph<S>(rootSchema), getPropertySchema<S>(mergedSchema, key));
+        const child: DefaultsField<S> = { graph, seeds, expanded: view.field.expanded, edge: 'property' };
         maybeAddDefaultToObject(
           computed,
           key,
-          defaults[key],
+          foldReporting(context, `allOf:${key}`, child, childProps(key, key)).value,
           includeUndefinedValues,
           required,
-          mergedSchemaOf<S, F>(context, view).required,
+          mergedSchema.required,
           defaultFormStateBehavior?.emptyObjectFields,
-        ),
-      );
+        );
+      });
   }
   // The data is the user's: a key it holds as `undefined` stays so unless `mergeDefaultsIntoFormData` says a default
   // replaces that and one does, and one no property names and no additional property was computed for is kept as it
