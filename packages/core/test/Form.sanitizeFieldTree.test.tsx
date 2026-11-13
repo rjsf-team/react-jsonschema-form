@@ -3767,41 +3767,88 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expect(handleOf(ref).getFormData()).toEqual({ t: expected });
     },
   );
-  // The uiSchema renders the array through its own entry alone, so a value only the plain fill gives was saved, not filled
+  // The walk tells the uiSchema the array renders with, a missing entry and one its object's `$ref` brings in through
+  // `ui:definitions` included, so a value only another uiSchema's fill gives was saved, not filled
   it.each<{
     name: string;
     schemaOf: (t: RJSFSchema) => RJSFSchema;
-    uiSchemaOf: (t: UiSchema) => UiSchema;
-    at: string[];
-  }>([
-    {
-      name: 'a property',
-      schemaOf: (t) => ({ type: 'object', properties: { t } }),
-      uiSchemaOf: (t) => ({ t }),
-      at: ['t'],
-    },
-    {
-      name: 'a nested property',
-      schemaOf: (t) => ({ type: 'object', properties: { o: { type: 'object', properties: { t } } } }),
-      uiSchemaOf: (t) => ({ o: { t } }),
-      at: ['o', 't'],
-    },
-  ])(
-    "keeps $name saved as the plain fill pads it under its items' ui:initialValue when its default changes",
-    ({ schemaOf, uiSchemaOf, at }) => {
-      const withDefault = (v: string) =>
-        schemaOf({ type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [v] });
-      const saved = at.reduceRight<unknown>((held, key) => ({ [key]: held }), ['x', 'z']);
-      const props = { validator, uiSchema: uiSchemaOf({ items: { 'ui:initialValue': 'i' } }), initialFormData: saved };
+    uiSchemaOf: (iv: UiSchema) => UiSchema;
+    savedOf: (t: unknown) => unknown;
+    saved?: string[];
+    to?: string[];
+  }>(
+    (() => {
+      const property = (t: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { t } });
+      const nested = (t: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { o: property(t) } });
+      const list = (t: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { l: { type: 'array', items: t } } });
+      const filled = { saved: ['i', 'i'], to: ['q', 'q', 'q'] };
+      return [
+        { name: 'a property', schemaOf: property, uiSchemaOf: (iv) => ({ t: iv }), savedOf: (t) => ({ t }) },
+        {
+          name: 'a nested property',
+          schemaOf: nested,
+          uiSchemaOf: (iv) => ({ o: { t: iv } }),
+          savedOf: (t) => ({ o: { t } }),
+        },
+        { name: 'an item', schemaOf: list, uiSchemaOf: (iv) => ({ l: { items: iv } }), savedOf: (t) => ({ l: [t] }) },
+        {
+          name: "a tuple's additional item",
+          schemaOf: (t) => ({
+            type: 'object',
+            properties: { l: { type: 'array', items: [{ type: 'string', default: 'k' }], additionalItems: t } },
+          }),
+          uiSchemaOf: (iv) => ({ l: { additionalItems: iv } }),
+          savedOf: (t) => ({ l: ['k', t] }),
+        },
+        {
+          name: "a property whose object's $ref brings a ui:definitions entry",
+          schemaOf: (t) => ({
+            type: 'object',
+            $defs: { O: property(t) },
+            properties: { o: { $ref: '#/$defs/O' } },
+          }),
+          uiSchemaOf: (iv) => ({ o: { t: { 'ui:title': 'T' } }, 'ui:definitions': { '#/$defs/O': { t: iv } } }),
+          savedOf: (t) => ({ o: { t } }),
+        },
+        {
+          name: 'a property with no entry, beside an additionalProperties uiSchema',
+          schemaOf: property,
+          uiSchemaOf: (iv) => ({ additionalProperties: iv }),
+          savedOf: (t) => ({ t }),
+          ...filled,
+        },
+        {
+          name: 'a nested property with no entry, beside an additionalProperties uiSchema',
+          schemaOf: nested,
+          uiSchemaOf: (iv) => ({ o: { additionalProperties: iv } }),
+          savedOf: (t) => ({ o: { t } }),
+          ...filled,
+        },
+        {
+          name: "a list's item, beside an additionalItems uiSchema",
+          schemaOf: list,
+          uiSchemaOf: (iv) => ({ l: { additionalItems: iv } }),
+          savedOf: (t) => ({ l: [t] }),
+          ...filled,
+        },
+      ];
+    })(),
+  )(
+    "keeps $name saved as another uiSchema's fill pads it when its default changes",
+    ({ schemaOf, uiSchemaOf, savedOf, saved = ['x', 'z'], to = ['q'] }) => {
+      const withDefault = (d: string[]) =>
+        schemaOf({ type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: d });
+      const props = {
+        validator,
+        uiSchema: uiSchemaOf({ items: { 'ui:initialValue': 'i' } }),
+        initialFormData: savedOf(saved),
+      };
       const ref = createRef<FormRef<Record<string, unknown>>>();
-      const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+      const { rerender } = render(<Form ref={ref} schema={withDefault(['x'])} {...props} />);
 
-      rerender(<Form ref={ref} schema={withDefault('q')} {...props} />);
+      rerender(<Form ref={ref} schema={withDefault(to)} {...props} />);
 
-      expect(handleOf(ref).getFormData()).toEqual(saved);
-      const fresh = createRef<FormRef<Record<string, unknown>>>();
-      render(<Form ref={fresh} schema={withDefault('q')} {...props} />);
-      expect(handleOf(fresh).getFormData()).toEqual(saved);
+      expect(handleOf(ref).getFormData()).toEqual(savedOf(saved));
     },
   );
   // An extra key renders with the `additionalProperties` uiSchema, not the entry its name has
@@ -3827,6 +3874,29 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     const fresh = createRef<FormRef<Record<string, unknown>>>();
     render(<Form ref={fresh} schema={withDefault('q')} {...props} />);
     expect(handleOf(fresh).getFormData()).toEqual({ o: { t: ['q', 'z'] } });
+  });
+  // The option uiSchema renders the key, never its field's entry for it, which `getOptionUiSchema()` doesn't read
+  it('fills an array out anew under the option uiSchema rendering it, over its field uiSchema entry', () => {
+    const optionFor = (kind: string, d: string[]): RJSFSchema => ({
+      title: kind,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: kind, default: kind },
+        t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: d },
+      },
+    });
+    const withDefault = (d: string[]): RJSFSchema => ({ oneOf: [optionFor('a', d), optionFor('b', ['y'])] });
+    const iv = (value: string) => ({ items: { 'ui:initialValue': value } });
+    const props = { validator, uiSchema: { t: iv('j'), oneOf: [{ t: iv('i') }, {}] } };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault(['x'])} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault(['q', 'q', 'q'])} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ kind: 'a', t: ['i', 'i', 'i'] });
+    const fresh = createRef<FormRef<Record<string, unknown>>>();
+    render(<Form ref={fresh} schema={withDefault(['q', 'q', 'q'])} {...props} />);
+    expect(handleOf(fresh).getFormData()).toEqual({ kind: 'a', t: ['i', 'i', 'i'] });
   });
   // The item is filled through the option it shows, which the field's own fill reads and a fill of its raw schema alone
   // doesn't

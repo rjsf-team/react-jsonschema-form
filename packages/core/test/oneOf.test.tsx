@@ -920,6 +920,14 @@ describe('oneOf', () => {
       saved: ['x', 'z'],
       expected: ['x', 'z'],
     },
+    // The field's uiSchema holds no entry for the key, so it renders with `{}`, never its `additionalProperties` one
+    {
+      name: 'a new default, a saved value an additionalProperties uiSchema fills alike',
+      to: { default: ['y', 'y', 'y'] },
+      uiSchemaOf: (t) => ({ additionalProperties: t }),
+      saved: ['i', 'i'],
+      expected: ['i', 'i'],
+    },
     // The old option's uiSchema holds no entry for the key, so the plain fill filled it
     {
       name: "a new default, only the new option's uiSchema rendering it",
@@ -986,6 +994,15 @@ describe('oneOf', () => {
       formDataOf: (option: GenericObjectType) => ({ o: option }),
       expected: ['y', 'z'],
     })),
+    // A list's `additionalItems` uiSchema renders none of its items
+    {
+      name: 'an array item beside an additionalItems uiSchema',
+      schemaOf: (oneOf) => ({ type: 'array', minItems: 1, items: { oneOf } }),
+      uiSchemaOf: (t) => ({ additionalItems: { t } }),
+      select: '#root_0__oneof_select',
+      formDataOf: (option) => [option],
+      expected: ['y', 'z'],
+    },
     {
       name: 'an array item',
       schemaOf: (oneOf) => ({ type: 'array', minItems: 1, items: { oneOf } }),

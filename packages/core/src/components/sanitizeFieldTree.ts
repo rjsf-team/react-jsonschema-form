@@ -39,6 +39,7 @@ import {
   namesEveryType,
   ONE_OF_KEY,
   rendersOwnFieldBesideOption,
+  resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   setOwn,
   toConstant,
@@ -592,7 +593,7 @@ interface FieldPair<S> {
   oldPath?: FieldPathList;
   /** The options the fields above this one showed in the previous tree */
   shownAbove?: ShownAbove;
-  /** The uiSchema the previous tree renders `oldValue` with, where no other can render it, see `soleUiSchemaOf()` */
+  /** The uiSchema the previous tree renders `oldValue` with, where no other can, see `soleUiSchemaOf()` */
   oldUiSchema?: GenericObjectType;
 }
 
@@ -973,8 +974,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         : undefined;
       const xxxOfKey = getXxxOfOptions<S>(newLayers[0])?.key;
       const ownUiSchemas = (
-        path.length === 0
-          ? [ctx.oldTree.uiSchema]
+        oldUiSchema
+          ? [oldUiSchema]
           : uiSchemasOn(ctx, path.slice(0, -1)).flatMap((uiSchema) =>
               uiSchemasAt(uiSchema, path[path.length - 1], true),
             )
@@ -1051,7 +1052,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
             oldUiSchema:
               previousKey === undefined || hasSchemaMarker(oldChild, ADDITIONAL_PROPERTY_FLAG)
                 ? undefined
-                : soleUiSchemaOf(oldUiSchema, (uiSchema) => uiSchema[previousKey]),
+                : soleUiSchemaOf(ctx, oldUiSchema, oldChild, (uiSchema) => uiSchema[previousKey]),
           },
           childPath,
         );
@@ -1136,13 +1137,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           hasOld: Array.isArray(oldValue),
           oldPath: oldPath && hasPrevious ? [...oldPath, Number(previousIndex)] : undefined,
           shownAbove: shownHere,
-          // Past a tuple an item renders with the `additionalItems` uiSchema, as `ArrayField` reads it
+          // Past a tuple an item renders with the `additionalItems` uiSchema, as `ArrayField` reads it, and a function
+          // `items` is no entry to read
           oldUiSchema: hasPrevious
-            ? soleUiSchemaOf(oldUiSchema, (uiSchema) =>
-                Number(previousIndex) >= oldTupleLength
-                  ? uiSchema.additionalItems
-                  : getStaticItemsUiSchema(uiSchema, Number(previousIndex)),
-              )
+            ? soleUiSchemaOf(ctx, oldUiSchema, oldItem, (uiSchema) => {
+                const at = Number(previousIndex);
+                if (at >= oldTupleLength) {
+                  return uiSchema.additionalItems;
+                }
+                return Array.isArray(uiSchema.items) ? uiSchema.items[at] : uiSchema.items;
+              })
             : undefined,
         },
         [...path, index],
@@ -1196,9 +1200,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** The uiSchemas the old uiSchema can render the field at `path` with, walking only those along `path` and
  * over-counting them rather than resolving which one renders: every option's, an array's `items` and `additionalItems`
- * alike. shortcut: one a `ui:definitions` entry of an ancestor's `$ref` holds is missed, so a value it filled out isn't
- * dropped whole but judged key by key, keeping what the `ui:initialValue` filled in; upgrade once the diff carries each
- * field's resolved uiSchema
+ * alike. Read only where `soleUiSchemaOf()` can't tell the field's own. shortcut: one a `ui:definitions` entry of an
+ * ancestor's `$ref` holds is missed, so a value it filled out isn't dropped whole but judged key by key, keeping what
+ * the `ui:initialValue` filled in; upgrade once the diff carries each field's resolved uiSchema
  */
 function uiSchemasOn<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
@@ -1225,17 +1229,28 @@ function uiSchemasAt(uiSchema: GenericObjectType, key: string | number, isOwn = 
   return isOwn ? [uiSchema[key]] : [uiSchema[key], uiSchema.additionalProperties];
 }
 
-/** The uiSchema `entry` reads from the one the previous tree renders a field with, `uiSchema`, for a field below it,
- * where `uiSchema` offers no `anyOf`/`oneOf` ones that could render it instead */
-function soleUiSchemaOf(
+/** The uiSchema the previous tree renders the field `raw` describes with, the entry `entry` reads from the one it
+ * renders the field holding it with, `uiSchema`, resolved as the field resolves it: an entry the field has none of is
+ * `{}`, and a `ui:definitions` one its `$ref` names is merged beneath it. `undefined` where `uiSchema` is unknown, or
+ * offers `anyOf`/`oneOf` ones that could render the field instead, or the entry is no uiSchema, as a function `items`
+ */
+function soleUiSchemaOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
   uiSchema: GenericObjectType | undefined,
+  raw: S | boolean | undefined,
   entry: (uiSchema: GenericObjectType) => unknown,
 ): GenericObjectType | undefined {
   if (!uiSchema || ANY_OF_KEY in uiSchema || ONE_OF_KEY in uiSchema) {
     return undefined;
   }
   const reached = entry(uiSchema);
-  return isObject(reached) ? reached : undefined;
+  if (reached !== undefined && !isObject(reached)) {
+    return undefined;
+  }
+  return resolveUiSchema<T, S, F>((isObject(raw) ? raw : {}) as S, reached as UiSchema<T, S, F> | undefined, {
+    rootSchema: ctx.oldSchemaUtils.getRootSchema(),
+    uiSchemaDefinitions: ctx.oldTree.uiSchema?.[UI_DEFINITIONS_KEY],
+  });
 }
 
 /** `uiSchemas` that are objects, in order, then the uiSchemas their `anyOf`/`oneOf` options hold, theirs included, so a
@@ -1324,7 +1339,10 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       isItem: false,
       hasOld: true,
       oldPath: [],
-      oldUiSchema: isObject(previous.uiSchema) ? previous.uiSchema : undefined,
+      oldUiSchema: resolveUiSchema<T, S, F>(previous.schemaUtils.getRootSchema(), previous.uiSchema, {
+        rootSchema: previous.schemaUtils.getRootSchema(),
+        uiSchemaDefinitions: previous.uiSchema?.[UI_DEFINITIONS_KEY],
+      }),
       oldRetrieved: previous.retrievedSchema,
       newRetrieved: next.retrievedSchema,
     },
