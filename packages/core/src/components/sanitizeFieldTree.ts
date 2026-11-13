@@ -962,6 +962,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           computedDefault: unknown;
           shownHere?: ShownAbove;
           ctx: TreeContext<T, S, F>;
+          optionUiSchema?: OptionKeysUiSchema<S>;
         }
       | undefined;
     if (isSwitched && switchedFrom.heldKeys.size > 0) {
@@ -1013,8 +1014,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         computedDefault: filledDefaultOf(ctx.oldSchemaUtils, heldLayers, oldInherited),
         shownHere: oldPath === undefined ? shownAbove : { oldPath, shown: heldShown, above: shownAbove },
         ctx: heldCtx,
+        optionUiSchema: optionKeysUiSchemaOf<T, S, F>(ctx.oldSchemaUtils, heldLayers, oldValue, heldShown, oldUiSchema),
       };
     }
+    const oldOptionUiSchema = optionKeysUiSchemaOf<T, S, F>(
+      ctx.oldSchemaUtils,
+      oldLayers,
+      oldValue,
+      shown,
+      oldUiSchema,
+    );
     let result: Record<string, unknown> = newValue;
     for (const key of Object.keys(newValue)) {
       const childPath = [...path, key];
@@ -1052,7 +1061,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
             oldUiSchema:
               previousKey === undefined || hasSchemaMarker(oldChild, ADDITIONAL_PROPERTY_FLAG)
                 ? undefined
-                : soleUiSchemaOf(ctx, oldUiSchema, oldChild, (uiSchema) => uiSchema[previousKey]),
+                : soleUiSchemaOf(
+                    ctx,
+                    uiSchemaOfKey(from ? from.optionUiSchema : oldOptionUiSchema, previousKey) ?? oldUiSchema,
+                    oldChild,
+                    (uiSchema) => uiSchema[previousKey],
+                  ),
           },
           childPath,
         );
@@ -1251,6 +1265,58 @@ function soleUiSchemaOf<T, S extends StrictRJSFSchema, F extends FormContextType
     rootSchema: ctx.oldSchemaUtils.getRootSchema(),
     uiSchemaDefinitions: ctx.oldTree.uiSchema?.[UI_DEFINITIONS_KEY],
   });
+}
+
+/** The uiSchema the option a field shows renders the keys only it declares with, and those keys */
+interface OptionKeysUiSchema<S extends StrictRJSFSchema> {
+  uiSchema: GenericObjectType;
+  layers: readonly [S, S];
+}
+
+/** Where `uiSchema`, the one the field with `layers` renders with, offers `anyOf`/`oneOf` ones, the one its shown
+ * option renders the keys only that option declares with, as `getOptionUiSchema()` picks it, so the field's own entry
+ * for such a key is never read. shortcut: only one option level is read, since `shown` keys inline lists alike, and a
+ * key the field declares itself is left to the over-count; upgrade once the layers carry the option each one shows
+ */
+function optionKeysUiSchemaOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  layers: readonly S[],
+  value: unknown,
+  shown: ReadonlyMap<string, number>,
+  uiSchema: GenericObjectType | undefined,
+): OptionKeysUiSchema<S> | undefined {
+  const keyword = getXxxOfOptions<S>(layers[0])?.key;
+  if (!uiSchema || !keyword || !(keyword in uiSchema) || layers.length !== 2) {
+    return undefined;
+  }
+  const options = retrievedOptionsOf<T, S, F>(schemaUtils, layers[0], asFieldValue<T>(value));
+  const index = options ? shown.get(optionListKey<S>(options, schemaUtils.getRootSchema())) : undefined;
+  if (index === undefined) {
+    return undefined;
+  }
+  // An option the list holds no entry for renders with the field's uiSchema, whose list it doesn't read, and one whose
+  // entry is no uiSchema renders with none
+  const optionUiSchema = getOptionUiSchema(uiSchema, keyword, index);
+  let rendered: GenericObjectType = {};
+  if (optionUiSchema === uiSchema) {
+    const { [keyword]: _options, ...fieldUiSchema } = uiSchema;
+    rendered = fieldUiSchema;
+  } else if (isObject(optionUiSchema)) {
+    rendered = optionUiSchema;
+  }
+  return { uiSchema: rendered, layers: [layers[0], layers[1]] };
+}
+
+/** The option uiSchema `key` renders under, where only the option declares it, see `optionKeysUiSchemaOf()` */
+function uiSchemaOfKey<S extends StrictRJSFSchema>(
+  option: OptionKeysUiSchema<S> | undefined,
+  key: string,
+): GenericObjectType | undefined {
+  return option &&
+    !Object.hasOwn(option.layers[0].properties ?? {}, key) &&
+    Object.hasOwn(option.layers[1].properties ?? {}, key)
+    ? option.uiSchema
+    : undefined;
 }
 
 /** `uiSchemas` that are objects, in order, then the uiSchemas their `anyOf`/`oneOf` options hold, theirs included, so a
