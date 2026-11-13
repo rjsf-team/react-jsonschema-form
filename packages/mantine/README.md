@@ -8,7 +8,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/mantine/logo.png" alt="Logo" width="120" height="120">
+    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/main/packages/mantine/logo.png" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">rjsf-mantine</h3>
