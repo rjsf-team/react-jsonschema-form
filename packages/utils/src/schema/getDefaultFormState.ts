@@ -893,6 +893,9 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const onNullFill = () => {
     holdsNull = true;
   };
+  // Only the subtrees are shared: an option's joined field carries a new record of the schemas it joins on every call, so
+  // its top level is new on every pass, which nothing compares; its `additionalProperties`, which seeds the extra keys'
+  // fallback, keeps its identity
   let lastRendered: S | undefined;
   const shareRendered = (rendered: S) => {
     lastRendered = replaceEqualDeep(lastRendered, rendered);
@@ -1838,14 +1841,15 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     );
   }
   // Read from the field that decides whether the object takes extra keys, so the keys seeded are folded as it takes them,
-  // seeded where the field as retrieved holds them where that is the field
-  const extraKeySeeding = extraKeysField === view.schema ? view : retrievedView();
+  // seeded where the field as retrieved holds them where that is the field, settled only by a branch that seeds one
+  const extraKeySeeding = () => (extraKeysField === view.schema ? view : retrievedView());
   const additionalProperties =
     absentKeywordAllows<S, F>(context, extraKeysField) || extraKeysField.additionalProperties;
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
   // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or
   // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the
-  // `const` names. A `patternProperties` or `unevaluatedProperties` that takes extra keys leaves the guards in place. A
+  // `const` names. Where only a `patternProperties` or `unevaluatedProperties` takes extra keys, the object isn't closed,
+  // and the extra-key branch below runs for an `additionalProperties` alone, so the `const`'s keys aren't seeded. A
   // `ui:initialValue` takes priority over the `const` as the object's default, so beside one only the keys of the
   // `const` it gives are seeded, read from it on the first pass, the one it is the default of, as a declared key is.
   // Only a key the defaults hold has a value to seed
@@ -1892,14 +1896,15 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       (key) => formDataRequired.length === 0 || Object.hasOwn(objectConst ?? {}, key),
     );
     const keys = new Set([...formDataRequired, ...seeded.filter((key) => !isComputed(key))]);
+    const seeding = extraKeySeeding();
     [...keys].filter(isPinned).forEach((key) => {
       const { value, holdsNull } = foldReporting(
         context,
         `additional:${key}`,
         // as per spec additionalProperties may be either schema or boolean
         defaultsChild(
-          extraKeySeeding,
-          seedsAt(extraKeySeeding, ADDITIONAL_PROPERTIES_KEY),
+          seeding,
+          seedsAt(seeding, ADDITIONAL_PROPERTIES_KEY),
           'additionalKey',
           isObject(additionalProperties) ? additionalProperties : emptySchema<S>(),
         ),
@@ -1935,9 +1940,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     mayHoldNullType(additionalProperties, rootSchema)
   ) {
     const nullsOnly = nullsOnlyContext(context);
+    const seeding = extraKeySeeding();
     const child = defaultsChild(
-      extraKeySeeding,
-      seedsAt(extraKeySeeding, ADDITIONAL_PROPERTIES_KEY),
+      seeding,
+      seedsAt(seeding, ADDITIONAL_PROPERTIES_KEY),
       'additionalKey',
       additionalProperties,
     );
