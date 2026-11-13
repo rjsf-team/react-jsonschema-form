@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '@rjsf/utils';
+import type { DefaultFormStateBehavior, RJSFSchema } from '@rjsf/utils';
 
 /** A seeded source of choices, so a failing case is named by its seed alone */
 interface Rng {
@@ -29,6 +29,9 @@ function rngOf(seed: number): Rng {
     pick: (values) => values[int(values.length)],
   };
 }
+
+// Far from any seed a run names, so the settings of a seed are not the schema of another
+const SETTINGS_STREAM = 1_000_003;
 
 const STRINGS = ['a', 'b', 'c'];
 const NUMBERS = [0, 1, 2];
@@ -521,6 +524,37 @@ const differences: Record<Difference, (r: Rng, schema: RJSFSchema) => void> = {
 export interface Case {
   schema: RJSFSchema;
   data: unknown;
+  /** The form's `defaultFormStateBehavior`, for a case that is checked under settings */
+  settings?: DefaultFormStateBehavior;
+}
+
+/**
+ * The settings of a seed: each one left at its default half of the time. They are drawn apart from the schema and the
+ * data, so a seed names the same schema and data with and without them
+ */
+export function settingsOf(seed: number): DefaultFormStateBehavior {
+  const r = rngOf(seed + SETTINGS_STREAM);
+  const drawn = <V>(values: readonly V[]): V | undefined => (r.chance(0.5) ? r.pick(values) : undefined);
+  const populate = drawn(['all', 'requiredOnly', 'never'] as const);
+  const mergeExtraDefaults = drawn([true, false]);
+  const settings: DefaultFormStateBehavior = {
+    emptyObjectFields: drawn([
+      'populateAllDefaults',
+      'populateRequiredDefaults',
+      'skipDefaults',
+      'skipEmptyDefaults',
+    ] as const),
+    allOf: drawn(['populateDefaults', 'skipDefaults'] as const),
+    constAsDefaults: drawn(['always', 'skipOneOf', 'never'] as const),
+    mergeDefaultsIntoFormData: drawn(['useFormDataIfPresent', 'useDefaultIfFormDataUndefined'] as const),
+    nestedDefaultsPrecedence: drawn(['descendantWins', 'ancestorWins'] as const),
+    requiredBooleanDefault: drawn(['populateFalse', 'skip'] as const),
+    ...((populate !== undefined || mergeExtraDefaults !== undefined) && {
+      arrayMinItems: { ...(populate && { populate }), ...(mergeExtraDefaults !== undefined && { mergeExtraDefaults }) },
+    }),
+  };
+  // Without the keys left at their default, so a shrunk case prints only what was set
+  return Object.fromEntries(Object.entries(settings).filter(([, value]) => value !== undefined));
 }
 
 export function caseOf(seed: number, difference?: Difference): Case {
@@ -570,6 +604,10 @@ function candidatesOf(current: Case): Case[] {
   }
   for (const data of smaller(current.data)) {
     candidates.push({ ...current, data });
+  }
+  for (const key of Object.keys(current.settings ?? {})) {
+    const settings = Object.fromEntries(Object.entries(current.settings ?? {}).filter(([other]) => other !== key));
+    candidates.push({ ...current, settings });
   }
   // A schema that loses one of these is one the generator does not make, and fails in ways the generated one does not
   for (const schema of smaller(current.schema, ['type', '$ref', 'if'])) {
