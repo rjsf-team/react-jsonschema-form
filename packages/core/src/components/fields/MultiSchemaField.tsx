@@ -25,7 +25,6 @@ import {
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
-import useReadFieldFill from '../../hooks/useReadFieldFill.ts';
 import useSendOptionSwitch, { selectSwitchedOption } from '../../hooks/useSendOptionSwitch.ts';
 import { retrievedOptionListOf } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
@@ -82,7 +81,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   } = props;
   const { schemaUtils } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
-  const readFieldFill = useReadFieldFill(fieldPath);
   const options = useMemo(
     () => givenOptions ?? retrievedOptionListOf<T, S, F>(schemaUtils, schema, formData) ?? [],
     [givenOptions, schemaUtils, schema, formData],
@@ -222,15 +220,12 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       // `uiSchemaDefinitions` comes from the registry since an option's uiSchema is only its own sub-uiSchema and
       // never carries the root's `ui:definitions` itself.
       const newOptionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, intOption);
-      const switched = formDataForNewOption<T, S, F>(
-        schemaUtils,
-        formData,
-        newOption,
-        oldOption,
-        schema,
-        { newOptionUiSchema, oldOptionUiSchema: optionUiSchema, uiSchemaDefinitions, globalUiOptions },
-        readFieldFill(),
-      );
+      const switched = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
+        newOptionUiSchema,
+        oldOptionUiSchema: optionUiSchema,
+        uiSchemaDefinitions,
+        globalUiOptions,
+      });
 
       // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to
       selectOption(intOption);
@@ -274,7 +269,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       fieldId,
       selectOption,
       sendOptionSwitch,
-      readFieldFill,
       optionsUiSchema,
       optionUiSchema,
       renderedOption,

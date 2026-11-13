@@ -22,7 +22,6 @@ import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
-  FieldFill,
   FormContextType,
   GenericObjectType,
   PropertyPlacement,
@@ -282,8 +281,9 @@ function emptyObjectFor<S extends StrictRJSFSchema>(schema: S, formValue: unknow
 /** What a property's or an item's `formValue` takes from `newDefault`, the default the new schema fills it with, where
  * that differs from it, as `Form` judges a field whose constraints changed: the new default where the value is
  * `oldDefault`, the one the old schema filled it with, or where `isNewClear`, a newly entered property's clear, and,
- * for a scalar or a select property, `undefined` where a `readOnly` new `default` stands in for a `const`. `Form` clears
- * no array or object it walks as a container for one. `NO_VALUE` keeps the value
+ * for a scalar or a select property, `undefined` where a `readOnly` new `default` replaces an old one, standing in for a
+ * `const`, while a value the old schema gave no `default` is the data's own. `Form` clears no array or object it walks
+ * as a container for one. `NO_VALUE` keeps the value
  */
 function defaultReplacement<S extends StrictRJSFSchema>(
   newSchema: S,
@@ -299,7 +299,9 @@ function defaultReplacement<S extends StrictRJSFSchema>(
   if (isNewClear || (oldDefault !== undefined && deepEquals(oldDefault, formValue))) {
     return ownValue(newDefault);
   }
-  return isScalar && newSchema.readOnly === true ? undefined : NO_VALUE;
+  return isScalar && oldDefault !== undefined && !deepEquals(oldDefault, newDefault) && newSchema.readOnly === true
+    ? undefined
+    : NO_VALUE;
 }
 
 /** `schema` read as the `array` its type list names, as `Form` walks an array value a type list holds whichever type
@@ -385,7 +387,8 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *             - If the key is new and its form value is undefined, unless the data holds it as `undefined` and both
  *               schemas constrain it alike, or the old `default` matches the form value, then:
  *               - Replace `replacements[key]` with the new `default`
- *               - Otherwise, if the new schema is `readOnly` then replace `replacements[key]` with undefined
+ *               - Otherwise, if the new schema is `readOnly` and the old one declared a `default`, then replace
+ *                 `replacements[key]` with undefined
  *         - Get the old and new `const` values from the schema and check:
  *           - If the new `const` value does not match the form value:
  *           - If the old `const` value DOES match the form value, then:
@@ -449,8 +452,6 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  * @param [newSchema] - The new schema for which the data is being sanitized
  * @param [oldSchema] - The old schema from which the data originated
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
- * @param [fill={}] - What the defaults hand the field holding the data, the same before and after the change, for one
- *        below the root, such as the field an `anyOf`/`oneOf` switch is made in
  * @returns - The new form data, without the fields uniquely associated with the old schema. Will return `undefined` if
  *      the new schema is not an object containing properties, or where its `const` rejects object or array data, and a
  *      copy of that `const` where the data holds the old schema's
@@ -459,15 +460,18 @@ export default function sanitizeDataForNewSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  context: SchemaContext<S, F>,
-  rootSchema: S,
-  newSchema?: S,
-  oldSchema?: S,
-  data: unknown = {},
-  fill: FieldFill = {},
-): T {
-  return sanitizeWithFills<T, S, F>(context, rootSchema, newSchema, oldSchema, data, fill, fill);
+>(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: unknown = {}): T {
+  return sanitizeWithFills<T, S, F>(context, rootSchema, newSchema, oldSchema, data, {}, {});
+}
+
+/** What the defaults hand a field the sanitize descends into, which they fill its properties by */
+interface FieldFill {
+  /** The default the field holding this one was filled with for it */
+  inheritedDefault?: unknown;
+  /** Whether the field is required where it sits, as the defaults hand it `required`: an array item is where its array
+   * is. Undefined for the root
+   */
+  isRequired?: boolean;
 }
 
 /** `sanitizeDataForNewSchema()` for a value whose field the defaults reached as `oldFill` says before the change and

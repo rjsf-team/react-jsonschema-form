@@ -524,14 +524,16 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         expect(container.querySelector('#root_a__key')).toBeNull();
       });
 
-      // Without data the field matches its first option, whose defaults are what the form filled it with to start
-      it("drops another option's defaults, kept through the switch to the option shown", async () => {
+      // Without data the field matches its first option, whose defaults are what the form filled it with to start. The
+      // switch to the option shown already judges them against that option, as keys only it declared (#5824)
+      it("drops another option's defaults on the switch to the option shown", async () => {
         const { container, formData } = await selectT(unionOf({ title: 'B', type: 'object' }), {
           whenAbsent: 'allow',
           initialFormData: { kind: 's' },
           beforeSwitch: async (form) => {
-            await user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'B');
             expect(input(form, 'root_a_w').value).toBe('q');
+            await user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'B');
+            expect(form.querySelector('#root_a_w')).toBeNull();
           },
         });
 
@@ -2514,6 +2516,13 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expected: ['z'],
     },
     {
+      name: 'keeps a scalar readOnly item whose new default replaces its old one',
+      from: { type: 'array', items: { type: 'string', default: 'x', readOnly: true } },
+      to: { type: 'array', items: { type: 'string', default: 'y', readOnly: true } },
+      data: ['z'],
+      expected: ['z'],
+    },
+    {
       // utils leaves the object for the defaults, which `Form` fills key by key
       name: 'keeps an object item holding its old default, for the defaults to fill key by key',
       from: { type: 'array', items: { type: 'object', properties: { x: {}, y: {} }, default: { x: 1 } } },
@@ -2774,13 +2783,34 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: { a: 'x', b: 'z' },
       expected: { a: 'y' },
     })),
-    // A `true` key the walk has nothing to judge by, so the object holding it is swapped whole
+    // A `true` key constrains nothing, so only the default it is filled with changes
     {
-      name: 'swaps an object property with a true key holding its old default',
+      name: 'swaps a true key of an object property holding its old default for its new default',
       from: { type: 'object', default: { a: 'x' }, properties: { a: true } },
       to: { type: 'object', default: { a: 'y' }, properties: { a: true } },
       data: { a: 'x' },
       expected: { a: 'y' },
+    },
+    {
+      name: 'swaps a key of an object property that was true holding its old default for its new default',
+      from: { type: 'object', default: { a: 'x' }, properties: { a: true } },
+      to: { type: 'object', default: { a: 'y' }, properties: { a: { type: 'string' } } },
+      data: { a: 'x' },
+      expected: { a: 'y' },
+    },
+    {
+      name: 'swaps a true key of an object property beside a key the new default drops for its new default',
+      from: { type: 'object', default: { a: 'x', b: 'z' }, properties: { a: true, b: { type: 'string' } } },
+      to: { type: 'object', default: { a: 'y' }, properties: { a: true, b: { type: 'string' } } },
+      data: { a: 'x', b: 'z' },
+      expected: { a: 'y', b: 'z' },
+    },
+    {
+      name: 'swaps a true key of an object property beside an edited key for its new default',
+      from: { type: 'object', default: { a: 'x', b: 'z' }, properties: { a: true, b: { type: 'string' } } },
+      to: { type: 'object', default: { a: 'y', b: 'z' }, properties: { a: true, b: { type: 'string' } } },
+      data: { a: 'x', b: 'k' },
+      expected: { a: 'y', b: 'k' },
     },
     // Only an object `default` is filled key by key, so an object holding its old one takes a new `null` whole
     ...(
@@ -2870,6 +2900,18 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       value: data,
     });
     expect(sanitized).toEqual({ value: expected });
+  });
+  it('swaps a key of an object property that turns true holding its old default for its new default', () => {
+    const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
+    const from: RJSFSchema = { type: 'object', default: { a: 'x' }, properties: { a: { type: 'string' } } };
+    const to: RJSFSchema = { type: 'object', default: { a: 'y' }, properties: { a: true } };
+    const ref = createRef<FormRef<{ value?: unknown }>>();
+    const props = { validator, initialFormData: { value: { a: 'x' } } };
+    const { rerender } = render(<Form ref={ref} schema={wrap(from)} {...props} />);
+
+    rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ value: { a: 'y' } });
   });
   it("keeps a clear of a property holding its own null default when its parent's default changes (#5815)", () => {
     const schemaWith = (parentDefault: string): RJSFSchema => ({
@@ -3472,6 +3514,839 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     );
 
     expect(handleOf(ref).getFormData()).toEqual({ v: 'x' });
+  });
+  // A schema change judges a field as a switch does: a `readOnly` value gives way, and an old default filled out to
+  // `minItems` is still the old default
+  it.each<{ name: string; withDefault: (v: string) => RJSFSchema; data: Record<string, unknown>; expected: unknown }>([
+    {
+      name: 'swaps a saved readOnly value for the new default replacing its old one',
+      withDefault: (v) => ({ type: 'object', properties: { v: { type: 'string', default: v, readOnly: true } } }),
+      data: { v: 'k' },
+      expected: { v: 'y' },
+    },
+    {
+      name: 'swaps an array its old default filled out to minItems for its new default',
+      withDefault: (v) => ({
+        type: 'object',
+        required: ['v'],
+        properties: { v: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [v] } },
+      }),
+      data: {},
+      expected: { v: ['y', 'z'] },
+    },
+    {
+      name: 'swaps an item its old default filled out to minItems for its new default in place',
+      withDefault: (v) => ({
+        type: 'object',
+        required: ['list'],
+        properties: {
+          list: {
+            type: 'array',
+            items: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [v] },
+          },
+        },
+      }),
+      data: {
+        list: [
+          ['x', 'z'],
+          ['k', 'z'],
+        ],
+      },
+      expected: {
+        list: [
+          ['y', 'z'],
+          ['k', 'z'],
+        ],
+      },
+    },
+  ])('$name when a schema change changes it', ({ withDefault, data, expected }) => {
+    const props = { validator, initialFormData: data };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual(expected);
+  });
+  it('swaps a root item its old default filled out to minItems for its new default in place', () => {
+    const withDefault = (v: string): RJSFSchema => ({
+      type: 'array',
+      items: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [v] },
+    });
+    const props = {
+      validator,
+      initialFormData: [
+        ['x', 'z'],
+        ['k', 'z'],
+      ],
+    };
+    const ref = createRef<FormRef>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual([
+      ['y', 'z'],
+      ['k', 'z'],
+    ]);
+  });
+  // The field is filled alone with the uiSchemas along its path, so one on another field plays no part. What a
+  // `ui:initialValue` below it filled out is filled out anew from the new default in place, as a fresh mount fills it,
+  // since the fill applies the initial value only on mount
+  it.each<{ name: string; uiSchema: UiSchema; expected: unknown }>([
+    {
+      name: 'a ui:initialValue',
+      uiSchema: { other: { 'ui:initialValue': 'o' }, v: { b: { 'ui:initialValue': 'i' } } },
+      expected: { other: 'o', v: { a: 'y', b: 'i' } },
+    },
+    {
+      name: 'a ui:options initialValue',
+      uiSchema: { v: { b: { 'ui:options': { initialValue: 'i' } } } },
+      expected: { v: { a: 'y', b: 'i' } },
+    },
+  ])('fills an object its old default filled out through $name below it out anew', ({ uiSchema, expected }) => {
+    const withDefault = (v: string): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        other: { type: 'string' },
+        // Untyped, so its object default is judged whole rather than key by key
+        v: { default: { a: v }, properties: { a: { type: 'string' }, b: { type: 'string' } } },
+      },
+    });
+    const props = { validator, uiSchema };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual(expected);
+  });
+  // `LayoutMultiSchemaField` writes the selector, so a switch keeps it out of the keys put back. Here the old selector
+  // value is what the defaults fill the new option's selector with too, so judging it would keep it
+  it('keeps the selector LayoutMultiSchemaField writes when switching to an option whose selector the defaults fill alike', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      default: { p: { kind: 'a' } },
+      properties: {
+        p: {
+          type: 'object',
+          discriminator: { propertyName: 'kind' },
+          oneOf: [
+            { title: 'A', properties: { kind: { type: 'string', default: 'a' } } },
+            { title: 'B', properties: { kind: { type: 'string', default: 'b' } } },
+          ],
+        },
+      },
+    };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { container } = render(
+      <Form
+        ref={ref}
+        schema={schema}
+        uiSchema={{ p: { 'ui:field': 'LayoutMultiSchemaField', 'ui:fieldReplacesAnyOrOneOf': true } }}
+        validator={validator}
+        defaultFormStateBehavior={{ nestedDefaultsPrecedence: 'ancestorWins' }}
+      />,
+    );
+    expect(handleOf(ref).getFormData()).toEqual({ p: { kind: 'a' } });
+
+    await user.click(input(container, 'root_p__1'));
+
+    expect(handleOf(ref).getFormData()).toEqual({ p: { kind: 'b' } });
+  });
+  // An item is filled out by its array's `required`, and written whatever `emptyObjectFields` says of a property
+  it.each<{ name: string; behavior: DefaultFormStateBehavior; expected: unknown }>([
+    {
+      name: 'keeps the padding an optional array never filled',
+      behavior: { arrayMinItems: { populate: 'requiredOnly' } },
+      expected: ['x', 'd'],
+    },
+    {
+      name: 'drops the padding its old default was filled out to',
+      behavior: { emptyObjectFields: 'skipDefaults' },
+      expected: ['y', 'd'],
+    },
+  ])('$name in an item of an optional array', ({ behavior, expected }) => {
+    const withDefault = (v: string): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        outer: {
+          type: 'array',
+          items: { type: 'array', minItems: 2, default: [v], items: { type: 'string', default: 'd' } },
+        },
+      },
+    });
+    const props = { validator, defaultFormStateBehavior: behavior, initialFormData: { outer: [['x', 'd']] } };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ outer: [expected] });
+  });
+  it('fills an object its old default filled out through a ui:definitions entry below it out anew', () => {
+    const withDefault = (v: string): RJSFSchema => ({
+      $defs: { V: { default: { a: v }, properties: { a: { type: 'string' }, b: { type: 'string' } } } },
+      type: 'object',
+      properties: { v: { $ref: '#/$defs/V' } },
+    });
+    const props = { validator, uiSchema: { 'ui:definitions': { '#/$defs/V': { b: { 'ui:initialValue': 'i' } } } } };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+    expect(handleOf(ref).getFormData()).toEqual({ v: { a: 'x', b: 'i' } });
+
+    rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ v: { a: 'y', b: 'i' } });
+  });
+  // The field's own `ui:initialValue` replaced its `default`, which played no part in the value, as a fresh mount with
+  // the new schema still shows
+  it.each<{ name: string; field: (v: string) => RJSFSchema; initialValue: unknown; uiSchema?: UiSchema }>([
+    { name: 'a scalar', field: (v) => ({ type: 'string', default: v }), initialValue: 'i' },
+    {
+      name: 'an object',
+      // Untyped, so its object default is judged whole rather than key by key
+      field: (v) => ({ default: { a: v }, properties: { a: { type: 'string' } } }),
+      initialValue: { a: 'i' },
+    },
+    {
+      name: "an object, through its $ref's ui:definitions entry,",
+      field: (v) => ({ $ref: '#/$defs/V', $defs: { V: { default: { a: v }, properties: { a: { type: 'string' } } } } }),
+      initialValue: { a: 'i' },
+      uiSchema: { 'ui:definitions': { '#/$defs/V': { 'ui:initialValue': { a: 'i' } } } },
+    },
+  ])('keeps $name its own ui:initialValue filled when its default changes', ({ field, initialValue, uiSchema }) => {
+    const withDefault = (v: string): RJSFSchema => {
+      const { $defs, ...own } = field(v);
+      return { type: 'object', $defs, properties: { v: own } };
+    };
+    const props = { validator, uiSchema: uiSchema ?? { v: { 'ui:initialValue': initialValue } } };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+    expect(handleOf(ref).getFormData()).toEqual({ v: initialValue });
+
+    rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ v: initialValue });
+  });
+  // An `items` `ui:initialValue` replaces every item the default seeded, so the value holds none of the default, and a
+  // fresh mount with the new schema still shows it
+  it.each<{ name: string; array: (v: string) => RJSFSchema; initialFormData?: unknown; expected: string[] }>([
+    {
+      name: 'its one item',
+      array: (v) => ({ type: 'array', items: { type: 'string' }, default: [v] }),
+      expected: ['i'],
+    },
+    {
+      name: 'its one saved item',
+      array: (v) => ({ type: 'array', items: { type: 'string' }, default: [v] }),
+      initialFormData: { t: ['i'] },
+      expected: ['i'],
+    },
+    {
+      name: 'its two items',
+      array: (v) => ({ type: 'array', items: { type: 'string' }, default: [v, v] }),
+      expected: ['i', 'i'],
+    },
+    {
+      name: 'its items padded to minItems',
+      array: (v) => ({ type: 'array', minItems: 2, items: { type: 'string' }, default: [v] }),
+      expected: ['i', 'i'],
+    },
+  ])(
+    "keeps an array $name its items' ui:initialValue filled when its default changes",
+    ({ array, initialFormData, expected }) => {
+      const withDefault = (v: string): RJSFSchema => ({ type: 'object', properties: { t: array(v) } });
+      const props = { validator, uiSchema: { t: { items: { 'ui:initialValue': 'i' } } }, initialFormData };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+      expect(handleOf(ref).getFormData()).toEqual({ t: expected });
+
+      rerender(<Form ref={ref} schema={withDefault('y')} {...props} />);
+
+      expect(handleOf(ref).getFormData()).toEqual({ t: expected });
+    },
+  );
+  // The walk tells the uiSchema the array renders with, a missing entry and one its object's `$ref` brings in through
+  // `ui:definitions` included, so a value only another uiSchema's fill gives was saved, not filled
+  it.each<{
+    name: string;
+    schemaOf: (t: RJSFSchema) => RJSFSchema;
+    uiSchemaOf: (iv: UiSchema) => UiSchema;
+    savedOf: (t: unknown) => unknown;
+    saved?: string[];
+    to?: string[];
+  }>(
+    (() => {
+      const property = (t: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { t } });
+      const nested = (t: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { o: property(t) } });
+      const list = (t: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { l: { type: 'array', items: t } } });
+      const filled = { saved: ['i', 'i'], to: ['q', 'q', 'q'] };
+      return [
+        { name: 'a property', schemaOf: property, uiSchemaOf: (iv) => ({ t: iv }), savedOf: (t) => ({ t }) },
+        {
+          name: 'a nested property',
+          schemaOf: nested,
+          uiSchemaOf: (iv) => ({ o: { t: iv } }),
+          savedOf: (t) => ({ o: { t } }),
+        },
+        { name: 'an item', schemaOf: list, uiSchemaOf: (iv) => ({ l: { items: iv } }), savedOf: (t) => ({ l: [t] }) },
+        {
+          name: "a tuple's additional item",
+          schemaOf: (t) => ({
+            type: 'object',
+            properties: { l: { type: 'array', items: [{ type: 'string', default: 'k' }], additionalItems: t } },
+          }),
+          uiSchemaOf: (iv) => ({ l: { additionalItems: iv } }),
+          savedOf: (t) => ({ l: ['k', t] }),
+        },
+        {
+          name: "a property whose object's $ref brings a ui:definitions entry",
+          schemaOf: (t) => ({
+            type: 'object',
+            $defs: { O: property(t) },
+            properties: { o: { $ref: '#/$defs/O' } },
+          }),
+          uiSchemaOf: (iv) => ({ o: { t: { 'ui:title': 'T' } }, 'ui:definitions': { '#/$defs/O': { t: iv } } }),
+          savedOf: (t) => ({ o: { t } }),
+        },
+        {
+          name: 'an item whose $ref brings a ui:definitions entry',
+          schemaOf: (t) => ({
+            type: 'object',
+            $defs: { O: property(t) },
+            properties: { l: { type: 'array', items: { $ref: '#/$defs/O' } } },
+          }),
+          uiSchemaOf: (iv) => ({ 'ui:definitions': { '#/$defs/O': { t: iv } } }),
+          savedOf: (t) => ({ l: [{ t }] }),
+        },
+        {
+          name: "a property whose root's $ref brings a ui:definitions entry",
+          schemaOf: (t) => ({ $ref: '#/$defs/R', $defs: { R: property(t) } }),
+          uiSchemaOf: (iv) => ({ 'ui:definitions': { '#/$defs/R': { t: iv } } }),
+          savedOf: (t) => ({ t }),
+        },
+        {
+          name: 'a property with no entry, beside an additionalProperties uiSchema',
+          schemaOf: property,
+          uiSchemaOf: (iv) => ({ additionalProperties: iv }),
+          savedOf: (t) => ({ t }),
+          ...filled,
+        },
+        {
+          name: 'a nested property with no entry, beside an additionalProperties uiSchema',
+          schemaOf: nested,
+          uiSchemaOf: (iv) => ({ o: { additionalProperties: iv } }),
+          savedOf: (t) => ({ o: { t } }),
+          ...filled,
+        },
+        {
+          name: "a list's item, beside an additionalItems uiSchema",
+          schemaOf: list,
+          uiSchemaOf: (iv) => ({ l: { additionalItems: iv } }),
+          savedOf: (t) => ({ l: [t] }),
+          ...filled,
+        },
+      ];
+    })(),
+  )(
+    "keeps $name saved as another uiSchema's fill pads it when its default changes",
+    ({ schemaOf, uiSchemaOf, savedOf, saved = ['x', 'z'], to = ['q'] }) => {
+      const withDefault = (d: string[]) =>
+        schemaOf({ type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: d });
+      const props = {
+        validator,
+        uiSchema: uiSchemaOf({ items: { 'ui:initialValue': 'i' } }),
+        initialFormData: savedOf(saved),
+      };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { rerender } = render(<Form ref={ref} schema={withDefault(['x'])} {...props} />);
+
+      rerender(<Form ref={ref} schema={withDefault(to)} {...props} />);
+
+      expect(handleOf(ref).getFormData()).toEqual(savedOf(saved));
+    },
+  );
+  // An extra key renders with the `additionalProperties` uiSchema, not the entry its name has
+  it("takes the new default for an array below an extra key beside a uiSchema entry of the key's name", () => {
+    const withDefault = (d: string): RJSFSchema => ({
+      type: 'object',
+      additionalProperties: {
+        type: 'object',
+        properties: { t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [d] } },
+      },
+    });
+    const props = {
+      validator,
+      uiSchema: { o: { t: { items: { 'ui:initialValue': 'i' } } } },
+      initialFormData: { o: {} },
+    };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault('q')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ o: { t: ['q', 'z'] } });
+    const fresh = createRef<FormRef<Record<string, unknown>>>();
+    render(<Form ref={fresh} schema={withDefault('q')} {...props} />);
+    expect(handleOf(fresh).getFormData()).toEqual({ o: { t: ['q', 'z'] } });
+  });
+  // The option uiSchema renders the key, never its field's entry for it, which `getOptionUiSchema()` doesn't read
+  it.each<{ name: string; initialFormData?: Record<string, unknown>; expected: Record<string, unknown> }>([
+    { name: 'fills an array out anew', expected: { kind: 'a', t: ['i', 'i', 'i'] } },
+    {
+      name: "keeps an array saved as the field's entry fills it",
+      initialFormData: { kind: 'a', t: ['j', 'j'] },
+      expected: { kind: 'a', t: ['j', 'j'] },
+    },
+  ])('$name under the option uiSchema rendering it, over its field uiSchema entry', ({ initialFormData, expected }) => {
+    const optionFor = (kind: string, d: string[]): RJSFSchema => ({
+      title: kind,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: kind, default: kind },
+        t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: d },
+      },
+    });
+    const withDefault = (d: string[]): RJSFSchema => ({ oneOf: [optionFor('a', d), optionFor('b', ['y'])] });
+    const iv = (value: string) => ({ items: { 'ui:initialValue': value } });
+    const props = { validator, uiSchema: { t: iv('j'), oneOf: [{ t: iv('i') }, {}] }, initialFormData };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault(['x'])} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault(['q', 'q', 'q'])} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual(expected);
+    const fresh = createRef<FormRef<Record<string, unknown>>>();
+    render(<Form ref={fresh} schema={withDefault(['q', 'q', 'q'])} {...props} />);
+    expect(handleOf(fresh).getFormData()).toEqual(expected);
+  });
+  // A field showing an option renders every key with that option's uiSchema, a key the field declares itself included
+  const filledArray = (d: string[]): RJSFSchema => ({
+    type: 'array',
+    minItems: 2,
+    items: { type: 'string', default: 'z' },
+    default: d,
+  });
+  const kindOption = (kind: string, properties: RJSFSchema['properties'] = {}): RJSFSchema => ({
+    title: kind,
+    properties: { kind: { type: 'string', const: kind, default: kind }, ...properties },
+  });
+  it.each<{ name: string; schemaOf: (d: string[]) => RJSFSchema }>([
+    {
+      name: 'the field declares',
+      schemaOf: (d) => ({
+        type: 'object',
+        properties: { t: { type: 'array' } },
+        oneOf: [kindOption('a', { t: filledArray(d) }), kindOption('b')],
+      }),
+    },
+    {
+      name: "the field's then adds",
+      schemaOf: (d) => ({
+        type: 'object',
+        properties: { kind: { type: 'string' } },
+        if: { properties: { kind: { const: 'a' } } },
+        then: { properties: { t: filledArray(d) } },
+        oneOf: [kindOption('a'), kindOption('b')],
+      }),
+    },
+  ])(
+    "keeps an array $name saved as the field's entry fills it, under the option uiSchema rendering it",
+    ({ schemaOf }) => {
+      const iv = (value: string) => ({ items: { 'ui:initialValue': value } });
+      const props = {
+        validator,
+        uiSchema: { t: iv('j'), oneOf: [{ t: iv('i') }, {}] },
+        initialFormData: { kind: 'a', t: ['j', 'j'] },
+      };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { rerender } = render(<Form ref={ref} schema={schemaOf(['x'])} {...props} />);
+
+      rerender(<Form ref={ref} schema={schemaOf(['q', 'q', 'q'])} {...props} />);
+
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 'a', t: ['j', 'j'] });
+    },
+  );
+  // An option the uiSchema list holds no entry for renders with the field's uiSchema, and one with a hole with none, so
+  // another option's entry never fills it
+  const initialItems = (value: string) => ({ items: { 'ui:initialValue': value } });
+  it.each<{ name: string; uiSchema: UiSchema; saved: string[]; expected: string[] }>([
+    {
+      name: "keeps an array saved as another option's entry fills it, under the field uiSchema",
+      uiSchema: { t: initialItems('j'), oneOf: [{ t: initialItems('i') }] },
+      saved: ['i', 'i'],
+      expected: ['i', 'i'],
+    },
+    {
+      name: 'fills an array out anew under the field uiSchema an option with no entry renders with',
+      uiSchema: { t: initialItems('j'), oneOf: [{ t: initialItems('i') }] },
+      saved: ['j', 'j'],
+      expected: ['j', 'j', 'j'],
+    },
+    {
+      name: "keeps an array saved as the field's entry fills it, under an option entry that is no uiSchema",
+      uiSchema: { t: initialItems('j'), oneOf: [{ t: initialItems('i') }, null] } as UiSchema,
+      saved: ['j', 'j'],
+      expected: ['j', 'j'],
+    },
+  ])('$name', ({ uiSchema, saved, expected }) => {
+    const optionFor = (kind: string, d: string[]): RJSFSchema => ({
+      title: kind,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: kind, default: kind },
+        t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: d },
+      },
+    });
+    const withDefault = (d: string[]): RJSFSchema => ({ oneOf: [optionFor('a', ['x']), optionFor('b', d)] });
+    const props = { validator, uiSchema, initialFormData: { kind: 'b', t: saved } };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault(['y'])} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault(['q', 'q', 'q'])} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ kind: 'b', t: expected });
+  });
+  // A key the switch puts back was rendered with the uiSchema of the option switched away from, not its field's entry
+  it("keeps a put-back array saved as its field's entry fills it, under the option uiSchema switched away from", async () => {
+    const optionFor = (kind: string, d: string[]): RJSFSchema => ({
+      title: kind,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: kind, default: kind },
+        t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: d },
+      },
+    });
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { container } = render(
+      <Form
+        ref={ref}
+        schema={{ oneOf: [optionFor('a', ['x']), optionFor('b', ['y'])] }}
+        uiSchema={{ t: initialItems('j'), oneOf: [{ t: initialItems('i') }, { t: initialItems('k') }] }}
+        validator={validator}
+        initialFormData={{ kind: 'a', t: ['j', 'j'] }}
+      />,
+    );
+
+    await user.selectOptions(elementOf(container, '#root__oneof_select'), 'b');
+
+    expect(handleOf(ref).getFormData()).toEqual({ kind: 'b', t: ['j', 'j'] });
+  });
+  // Below two option levels the walk can't tell the option uiSchema, so the field's entry isn't taken as the one
+  it('fills an array out anew under the uiSchema of an option two levels down, over its field uiSchema entry', () => {
+    const withDefault = (d: string[]): RJSFSchema => ({
+      oneOf: [
+        {
+          title: 'a',
+          oneOf: [
+            {
+              type: 'object',
+              properties: { t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: d } },
+            },
+          ],
+        },
+      ],
+    });
+    const iv = (value: string) => ({ items: { 'ui:initialValue': value } });
+    const props = { validator, uiSchema: { t: iv('j'), oneOf: [{ oneOf: [{ t: iv('i') }] }] } };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault(['x'])} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault(['q', 'q', 'q'])} {...props} />);
+
+    const fresh = createRef<FormRef<Record<string, unknown>>>();
+    render(<Form ref={fresh} schema={withDefault(['q', 'q', 'q'])} {...props} />);
+    expect(handleOf(fresh).getFormData()).toEqual({ t: ['i', 'i', 'i'] });
+    expect(handleOf(ref).getFormData()).toEqual({ t: ['i', 'i', 'i'] });
+  });
+  // The item is filled through the option it shows, which the field's own fill reads and a fill of its raw schema alone
+  // doesn't
+  it('takes the new default for an array whose items render through an option', () => {
+    const option = (k: string) => ({ properties: { a: { type: 'string' }, k: { const: k, default: k } } }) as const;
+    const withDefault = (v: string): RJSFSchema => ({
+      type: 'object',
+      properties: { t: { type: 'array', default: [{ a: v }], items: { oneOf: [option('A'), option('B')] } } },
+    });
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} validator={validator} />);
+
+    rerender(<Form ref={ref} schema={withDefault('y')} validator={validator} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ t: [{ a: 'y' }] });
+  });
+  // Applied only on mount, the initial value is filled out anew from a default of another length, as a fresh mount
+  // with the new schema fills it
+  it.each<{ from: string[]; to: string[]; expected: string[] }>([
+    { from: ['x'], to: ['x', 'x'], expected: ['i', 'i'] },
+    { from: ['x'], to: ['y', 'y'], expected: ['i', 'i'] },
+    { from: ['x', 'x'], to: ['y'], expected: ['i'] },
+  ])(
+    "fills an array its items' ui:initialValue filled out anew when its default turns from $from to $to",
+    ({ from, to, expected }) => {
+      const withDefault = (d: string[]): RJSFSchema => ({
+        type: 'object',
+        properties: { t: { type: 'array', items: { type: 'string' }, default: d } },
+      });
+      const props = { validator, uiSchema: { t: { items: { 'ui:initialValue': 'i' } } } };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { rerender } = render(<Form ref={ref} schema={withDefault(from)} {...props} />);
+
+      rerender(<Form ref={ref} schema={withDefault(to)} {...props} />);
+
+      expect(handleOf(ref).getFormData()).toEqual({ t: expected });
+      const fresh = createRef<FormRef<Record<string, unknown>>>();
+      render(<Form ref={fresh} schema={withDefault(to)} {...props} />);
+      expect(handleOf(fresh).getFormData()).toEqual({ t: expected });
+    },
+  );
+  // The new default is filled out by the `required` the new schema gives the field, which `minItems` pads by
+  it.each<{ from: boolean; to: boolean; fromDefault: string[]; expected: string[] }>([
+    { from: true, to: false, fromDefault: ['x'], expected: ['i'] },
+    { from: false, to: true, fromDefault: ['x', 'x', 'x'], expected: ['i', 'i'] },
+  ])(
+    "fills an array its items' ui:initialValue filled out anew as required $to from required $from",
+    ({ from, to, fromDefault, expected }) => {
+      const withDefault = (isRequired: boolean, d: string[]): RJSFSchema => ({
+        type: 'object',
+        required: isRequired ? ['t'] : [],
+        properties: { t: { type: 'array', minItems: 2, items: { type: 'string' }, default: d } },
+      });
+      const props = {
+        validator,
+        uiSchema: { t: { items: { 'ui:initialValue': 'i' } } },
+        defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } } as DefaultFormStateBehavior,
+      };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { rerender } = render(<Form ref={ref} schema={withDefault(from, fromDefault)} {...props} />);
+
+      rerender(<Form ref={ref} schema={withDefault(to, ['y'])} {...props} />);
+
+      expect(handleOf(ref).getFormData()).toEqual({ t: expected });
+      const fresh = createRef<FormRef<Record<string, unknown>>>();
+      render(<Form ref={fresh} schema={withDefault(to, ['y'])} {...props} />);
+      expect(handleOf(fresh).getFormData()).toEqual({ t: expected });
+    },
+  );
+  // A changed default fills out what the old one filled out, or held as an array, as a fresh mount fills it: to the new
+  // schema's `minItems`, below its items, and through the `ui:definitions` its `$ref` reads
+  it.each(
+    // Typed on the return, so the rows' `ui:definitions` aren't joined into a union the `Record` rejects
+    ((): { name: string; from: RJSFSchema; to: RJSFSchema; uiSchema?: UiSchema; expected: unknown }[] => {
+      const padded = (d: string[]): RJSFSchema => ({
+        type: 'object',
+        properties: { t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: d } },
+      });
+      const objects = (d: Record<string, string>[]): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          t: {
+            type: 'array',
+            minItems: 2,
+            items: { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } },
+            default: d,
+          },
+        },
+      });
+      const initial = (minItems: number, d: string[]): RJSFSchema => ({
+        type: 'object',
+        properties: { t: { type: 'array', minItems, items: { type: 'string' }, default: d } },
+      });
+      const referenced = (d: string[]): RJSFSchema => ({
+        type: 'object',
+        $defs: { T: { type: 'array', items: { type: 'string' }, default: d } },
+        properties: { t: { $ref: '#/$defs/T' } },
+      });
+      const tuple = (d: string): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          t: {
+            type: 'array',
+            minItems: 2,
+            items: [{ type: 'string', default: 'k' }],
+            additionalItems: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [d] },
+          },
+        },
+      });
+      const rootReferenced = (d: string[]): RJSFSchema => ({
+        $ref: '#/$defs/R',
+        $defs: { R: padded(d) },
+      });
+      const pair = { a: 'x', b: 'q' };
+      return [
+        { name: 'an array holding its old default', from: padded(['x', 'x']), to: padded(['y']), expected: ['y', 'z'] },
+        // The `additionalProperties` uiSchema renders no declared key, so the plain fill padded it
+        {
+          name: 'an array holding its old default, beside an additionalProperties uiSchema',
+          from: padded(['x']),
+          to: padded(['q']),
+          uiSchema: { additionalProperties: { items: { 'ui:initialValue': 'i' } } },
+          expected: ['q', 'z'],
+        },
+        {
+          name: 'an array holding its old default, which the new one fills out alike',
+          from: padded(['x', 'z']),
+          to: padded(['x']),
+          expected: ['x', 'z'],
+        },
+        {
+          name: "an array holding its old default, which its items' ui:initialValue fills alike",
+          from: initial(1, ['i']),
+          to: initial(1, ['j']),
+          uiSchema: { t: { items: { 'ui:initialValue': 'i' } } },
+          expected: ['i'],
+        },
+        {
+          name: 'an array of objects holding its old default',
+          from: objects([pair, pair]),
+          to: objects([{ a: 'y' }]),
+          expected: [{ a: 'y' }, {}],
+        },
+        {
+          name: "an array of objects holding its old default, through its items' ui:initialValue",
+          from: objects([pair, pair]),
+          to: objects([{ a: 'y' }]),
+          uiSchema: { t: { items: { b: { 'ui:initialValue': 'i' } } } },
+          expected: [{ a: 'y' }, { b: 'i' }],
+        },
+        {
+          name: "the new minItems, through its items' ui:initialValue",
+          from: initial(1, ['x']),
+          to: initial(3, ['y']),
+          uiSchema: { t: { items: { 'ui:initialValue': 'i' } } },
+          expected: ['i', 'i', 'i'],
+        },
+        // Past the tuple the `additionalItems` uiSchema renders the item, not the `items` one
+        {
+          name: "a tuple's additional item, beside an items uiSchema",
+          from: tuple('x'),
+          to: tuple('q'),
+          uiSchema: { t: { items: { items: { 'ui:initialValue': 'i' } }, additionalItems: {} } },
+          expected: ['k', ['q', 'z']],
+        },
+        {
+          name: "a tuple's additional item, beside an items uiSchema alone",
+          from: tuple('x'),
+          to: tuple('q'),
+          uiSchema: { t: { items: { items: { 'ui:initialValue': 'i' } } } },
+          expected: ['k', ['q', 'z']],
+        },
+        {
+          name: "its root $ref's ui:definitions entry",
+          from: rootReferenced(['x']),
+          to: rootReferenced(['q', 'q', 'q']),
+          uiSchema: { 'ui:definitions': { '#/$defs/R': { t: { items: { 'ui:initialValue': 'i' } } } } },
+          expected: ['i', 'i', 'i'],
+        },
+        {
+          name: "its $ref's ui:definitions entry",
+          from: referenced(['x']),
+          to: referenced(['y', 'y']),
+          uiSchema: { 'ui:definitions': { '#/$defs/T': { items: { 'ui:initialValue': 'i' } } } },
+          expected: ['i', 'i'],
+        },
+      ];
+    })(),
+  )('fills an array out anew as a fresh mount does, for $name', ({ from, to, uiSchema, expected }) => {
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} uiSchema={uiSchema} validator={validator} />);
+
+    rerender(<Form ref={ref} schema={to} uiSchema={uiSchema} validator={validator} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ t: expected });
+    const fresh = createRef<FormRef<Record<string, unknown>>>();
+    render(<Form ref={fresh} schema={to} uiSchema={uiSchema} validator={validator} />);
+    expect(handleOf(fresh).getFormData()).toEqual({ t: expected });
+  });
+  // With no old default to tell them by, what the uiSchema filled in is kept as saved data is, as for any field
+  it.each<{ name: string; uiSchema: UiSchema; initialFormData: Record<string, unknown>; expected: string }>([
+    { name: 'a saved readOnly value', uiSchema: {}, initialFormData: { id: 'saved-123' }, expected: 'saved-123' },
+    {
+      name: 'the readOnly value a ui:initialValue filled in',
+      uiSchema: { id: { 'ui:initialValue': 'a' } },
+      initialFormData: {},
+      expected: 'a',
+    },
+  ])('keeps $name when a conditional first gives it a default', async ({ uiSchema, initialFormData, expected }) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { flag: { type: 'boolean' }, id: { type: 'string', readOnly: true } },
+      if: { properties: { flag: { const: true } }, required: ['flag'] },
+      then: { properties: { id: { default: 'gen' } } },
+    };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { container } = render(
+      <Form ref={ref} schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={initialFormData} />,
+    );
+
+    await user.click(input(container, 'root_flag'));
+
+    expect(handleOf(ref).getFormData()).toEqual({ flag: true, id: expected });
+  });
+  // A `readOnly` value gives way only to a new default, read from the field's own schema, as `sanitizeDataForNewSchema()`
+  // reads it, a select's whole value included
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; data: unknown; expected: unknown }>([
+    {
+      name: 'keeps a readOnly value when only its enum changes',
+      from: { type: 'string', readOnly: true, default: 'draft', enum: ['draft', 'approved'] },
+      to: { type: 'string', readOnly: true, default: 'draft', enum: ['draft', 'approved', 'final'] },
+      data: 'approved',
+      expected: 'approved',
+    },
+    {
+      name: "swaps a readOnly select's object value for its new default",
+      from: { type: 'object', readOnly: true, default: { a: 1 }, enum: [{ a: 1 }, { a: 2 }, { a: 3 }] },
+      to: { type: 'object', readOnly: true, default: { a: 2 }, enum: [{ a: 1 }, { a: 2 }, { a: 3 }] },
+      data: { a: 3 },
+      expected: { a: 2 },
+    },
+    {
+      name: 'keeps a readOnly object that is no select, judging it key by key',
+      from: { type: 'object', readOnly: true, default: { a: 'x' }, properties: { a: { type: 'string' } } },
+      to: { type: 'object', readOnly: true, default: { a: 'y' }, properties: { a: { type: 'string' } } },
+      data: { a: 'k' },
+      expected: { a: 'k' },
+    },
+    {
+      name: 'keeps a value only its option declares readOnly',
+      from: { default: 'x', oneOf: [{ type: 'string', readOnly: true }] },
+      to: { default: 'y', oneOf: [{ type: 'string', readOnly: true }] },
+      data: 'k',
+      expected: 'k',
+    },
+  ])('$name', ({ from, to, data, expected }) => {
+    const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
+    const props = { validator, initialFormData: { value: data } };
+    const ref = createRef<FormRef<{ value?: unknown }>>();
+    const { rerender } = render(<Form ref={ref} schema={wrap(from)} {...props} />);
+
+    rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ value: expected });
+  });
+  // A key an old `true` held is judged by the schema it takes, as any field whose constraints changed
+  it.each<{ name: string; to: RJSFSchema; data: Record<string, unknown>; expected: unknown }>([
+    {
+      name: 'swaps the value a new const rejects for the const',
+      to: { type: 'object', properties: { a: { const: 'c' } } },
+      data: { a: 'k' },
+      expected: { a: 'c' },
+    },
+    {
+      name: 'fills a clear with the new default',
+      to: { type: 'object', default: { a: 'y' }, properties: { a: { type: 'string' } } },
+      data: { a: undefined },
+      expected: { a: 'y' },
+    },
+  ])('$name of a key that was true', ({ to, data, expected }) => {
+    const from: RJSFSchema = { type: 'object', default: { a: 'x' }, properties: { a: true } };
+    const props = { validator, initialFormData: data };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} {...props} />);
+
+    rerender(<Form ref={ref} schema={to} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual(expected);
   });
   // Under `populateRequiredDefaults` the defaults fill a property only where it is required and so is its object, or its
   // object is the root, so a value equal to the default of any other is the user's

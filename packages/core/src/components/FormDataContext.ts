@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { FieldFill, FieldPath } from '@rjsf/utils';
+import type { FieldPath } from '@rjsf/utils';
 
 import type { BlurTouch } from './formState.ts';
 import type { AnnouncedMove, MoveOutcome } from './keyMove.ts';
@@ -37,10 +37,5 @@ interface FormDataAccess {
   readField<D>(path: FieldPath): D;
   /** The form's data at `path` as its last commit rendered it, which a field rendered in that commit was handed */
   readRenderedField<D>(path: FieldPath): D;
-  /** What the defaults hand the field at `path` of the form's current tree: the default it inherits from the fields
-   * above it and whether it is required there, which a field sanitizing its own data on an option switch fills its
-   * properties by, see `fieldFillAt()`
-   */
-  readFieldFill(path: FieldPath): FieldFill;
 }
 export default createContext<FormDataAccess | undefined>(undefined);

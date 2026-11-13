@@ -1,5 +1,4 @@
 import type {
-  FieldFill,
   FormContextType,
   GenericObjectType,
   GlobalUISchemaOptions,
@@ -21,7 +20,6 @@ import {
   isPlainObject,
   isSchemaObject,
   mergeSchemas,
-  setOwn,
 } from '@rjsf/utils';
 
 import { clearsIn, keepRecordedClears } from '../keepClears.ts';
@@ -61,20 +59,6 @@ function withParentRequired<S extends StrictRJSFSchema = RJSFSchema>(parentSchem
  */
 function renderedOption<S extends StrictRJSFSchema = RJSFSchema>(parentSchema?: S, option?: S): S | undefined {
   return option && parentSchema ? getRenderedOptionSchema<S>(parentSchema, option) : option;
-}
-
-/** Returns `option`, as rendered, with the `default` of the field holding it merged beneath its own, which is the
- * default the defaults read the option's properties by. `getRenderedOptionSchema()` leaves that `default` on the field,
- * since the field's value takes it, but `getDefaultFormState()` seeds the option from both
- *
- * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`
- * @param [option] - The option as it is rendered
- * @returns - The rendered option carrying the field's `default`, or `option` where the field declares none
- */
-function withFieldDefault<S extends StrictRJSFSchema = RJSFSchema>(parentSchema?: S, option?: S): S | undefined {
-  return option && parentSchema && DEFAULT_KEY in parentSchema
-    ? (mergeSchemas({ [DEFAULT_KEY]: parentSchema[DEFAULT_KEY] }, option) as S)
-    : option;
 }
 
 /** Determines whether `schema` declares a value of its own, which is what a schema that is not an object has instead
@@ -120,36 +104,32 @@ function givesKey(optionDefault: unknown, key: string): optionDefault is Generic
   return isPlainObject(optionDefault) && Object.hasOwn(optionDefault, key);
 }
 
-/** Whether two options' schemas for `key` describe the same field, so a clear of it carries over a switch. Each
- * property's default is read as the defaults fill it in the option as it is rendered, from what `fill` says the
- * defaults hand the field holding the options
+/** The default `option`'s own `default` object gives `key` */
+function optionDefaultFor<S extends StrictRJSFSchema>(option: S | undefined, key: string): unknown {
+  const optionDefault: unknown = option?.[DEFAULT_KEY];
+  return givesKey(optionDefault, key) ? optionDefault[key] : undefined;
+}
+
+/** Whether two options' schemas for `key` describe the same field, so a clear of it carries over a switch. A `Form`
+ * judges the keys it puts back itself, with what the defaults hand the field holding the options, see
+ * `sanitizeFieldTree()`, so this reads only what each option itself gives the key
  */
 function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schemaUtils: SchemaUtilsType<T, S, F>,
   key: string,
   oldOption: S | undefined,
   newOption: S | undefined,
-  fill: FieldFill,
 ): boolean {
   const oldProperty = getByPath(oldOption?.properties, key);
   const newProperty = getByPath(newOption?.properties, key);
-  const inheritedIn = (option: S | undefined) =>
-    option && getByPath(schemaUtils.getFilledDefault(option, fill.inheritedDefault), key);
-  // A rendered option already carries the `required` of the field holding it
-  const placementIn = (option: S | undefined) => ({
-    isRequired: option?.required?.includes(key),
-    isParentRequired: fill.isRequired,
-  });
   return (
     !isSchemaObject<S>(oldProperty) ||
     !isSchemaObject<S>(newProperty) ||
     schemaUtils.constrainsAlike(
       schemaUtils.retrieveSchema(oldProperty),
       schemaUtils.retrieveSchema(newProperty),
-      inheritedIn(oldOption),
-      inheritedIn(newOption),
-      placementIn(oldOption),
-      placementIn(newOption),
+      optionDefaultFor<S>(oldOption, key),
+      optionDefaultFor<S>(newOption, key),
     )
   );
 }
@@ -167,7 +147,6 @@ function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType
  * @param [oldOption] - The option switched away from, as it is rendered
  * @param [newOption] - The option switched to, as it is rendered
  * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`
- * @param [fill={}] - What the defaults hand the field holding the options
  * @returns - `data`, or a copy of it without the discarded keys
  */
 function removeDiscardedKeys<
@@ -175,14 +154,7 @@ function removeDiscardedKeys<
   T,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  data: D,
-  oldOption?: S,
-  newOption?: S,
-  parentSchema?: S,
-  fill: FieldFill = {},
-): D {
+>(schemaUtils: SchemaUtilsType<T, S, F>, data: D, oldOption?: S, newOption?: S, parentSchema?: S): D {
   const oldProperties: object = oldOption?.properties ?? {};
   const newProperties: object = newOption?.properties ?? {};
   // The schema holding the options arrives with the extra keys of its data stubbed among its `properties`, a key the
@@ -193,7 +165,7 @@ function removeDiscardedKeys<
       data[key] === undefined &&
       Object.hasOwn(oldProperties, key) &&
       (Object.hasOwn(newProperties, key)
-        ? !holdsSameField(schemaUtils, key, oldOption, newOption, fill)
+        ? !holdsSameField(schemaUtils, key, oldOption, newOption)
         : !declaresProperty<S>(parentProperties, key)),
   );
   if (discardedKeys.length === 0) {
@@ -227,32 +199,26 @@ function fieldWithOnlyOption<T, S extends StrictRJSFSchema, F extends FormContex
   };
 }
 
-/** What the switch carries for the new option, and apart from it the keys `sanitizeDataForNewSchema()` discarded that
- * only the old option declares, with their values, where the object holding the options takes extra keys through its
- * own `additionalProperties` or the new option's. `Form`'s sanitize judges such a key against the old option, as it
- * judges a field a conditional stops declaring ([#5778](https://github.com/rjsf-team/react-jsonschema-form/issues/5778)),
- * so only a form that takes the switch puts them back, see `useSendOptionSwitch()`. A new option declaring no
- * `properties`, `const` or `enum` gets nothing from the sanitize, so the switch carries the data without the keys only
- * the old option declares: the object's own fields, a field the old option re-declares among them, and its extra keys,
- * as the sanitize keeps them beside an option declaring properties. Any other `undefined` the sanitize returns, as for
- * an object `const` the data fails, is a clear and stays one.
+/** What the switch carries for the new option. A new option declaring no `properties`, `const` or `enum` gets nothing
+ * from the sanitize, so the switch carries the data without the keys only the old option declares: the object's own
+ * fields, a field the old option re-declares among them, and its extra keys, as the sanitize keeps them beside an
+ * option declaring properties. Any other `undefined` the sanitize returns, as for an object `const` the data fails, is
+ * a clear and stays one.
  *
- * @param schemaUtils - The schema utilities, to read whether the object takes extra keys
  * @param formData - The form data associated with the old option
  * @param sanitized - What the sanitize made of `formData` for the new option
- * @param options - The new option, and the options switched between as they are rendered
+ * @param options - The options switched between as they are rendered
  * @param parentSchema - The schema holding the options, its extra keys stubbed among its `properties`
- * @returns - What the switch carries, and the keys it left with their values, if any
+ * @returns - What the switch carries
  */
-function splitLeftKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schemaUtils: SchemaUtilsType<T, S, F>,
+function carriedData<T, S extends StrictRJSFSchema>(
   formData: unknown,
   sanitized: T | undefined,
-  { renderedOldOption, newOption, renderedNewOption }: { renderedOldOption?: S; newOption?: S; renderedNewOption?: S },
+  { renderedOldOption, renderedNewOption }: { renderedOldOption?: S; renderedNewOption?: S },
   parentSchema: S | undefined,
-): { carried: T | undefined; left?: GenericObjectType } {
-  if (!isPlainObject(formData) || !renderedOldOption || !newOption || !renderedNewOption || !parentSchema) {
-    return { carried: sanitized };
+): T | undefined {
+  if (!isPlainObject(formData) || !renderedOldOption || !renderedNewOption || !parentSchema) {
+    return sanitized;
   }
   const oldProperties: GenericObjectType = renderedOldOption.properties ?? {};
   const newProperties: GenericObjectType = renderedNewOption.properties ?? {};
@@ -274,23 +240,42 @@ function splitLeftKeys<T, S extends StrictRJSFSchema, F extends FormContextType>
     !(CONST_KEY in renderedNewOption) &&
     renderedNewOption.enum === undefined &&
     getSchemaType<S>(renderedNewOption) === 'object';
-  const carried =
-    sanitized === undefined && declaresNoProperties
-      ? asFieldValue<T>(Object.fromEntries(Object.entries(formData).filter(([key]) => !oldOnly.has(key))))
-      : sanitized;
-  // The option's own `additionalProperties` joins the object's, which its rendered form leaves to the object
-  const takesExtraKeys =
-    schemaUtils.allowsAdditionalProperties(parentSchema) || schemaUtils.allowsAdditionalProperties(newOption);
-  if (!takesExtraKeys || !isPlainObject(carried)) {
-    return { carried };
+  return sanitized === undefined && declaresNoProperties
+    ? asFieldValue<T>(Object.fromEntries(Object.entries(formData).filter(([key]) => !oldOnly.has(key))))
+    : sanitized;
+}
+
+/** The keys `formData` held, with their values, for a form taking the switch to put back, see `OptionSwitchData`: none
+ * where the switch carries no object, as where the new option's object `const` or `enum` replaced the data. A clear of
+ * a key neither the new option nor the field declares leaves with the old option's field, as the sanitize drops it, and
+ * so does a `null` the switch dropped, which the sanitize reads as holding no object
+ *
+ * @param formData - The form data associated with the old option
+ * @param carried - What the switch carries for the new option
+ * @param renderedNewOption - The option switched to, as it is rendered
+ * @param parentSchema - The schema holding the options, its extra keys stubbed among its `properties`
+ * @returns - The keys to put back with their values, if any
+ */
+function heldKeys<S extends StrictRJSFSchema>(
+  formData: unknown,
+  carried: unknown,
+  renderedNewOption: S | undefined,
+  parentSchema: S | undefined,
+): GenericObjectType | undefined {
+  if (!isPlainObject(formData) || !isPlainObject(carried)) {
+    return undefined;
   }
-  const left: GenericObjectType = {};
-  for (const key of oldOnly) {
-    if (formData[key] !== undefined && !Object.hasOwn(carried, key)) {
-      setOwn(left, key, formData[key]);
+  const newProperties = renderedNewOption?.properties ?? {};
+  const parentProperties = parentSchema?.properties ?? {};
+  const isDeclared = (key: string) =>
+    declaresProperty<S>(newProperties, key) || declaresProperty<S>(parentProperties, key);
+  const held = Object.entries(formData).filter(([key, value]) => {
+    if (value === undefined) {
+      return isDeclared(key);
     }
-  }
-  return { carried, left: Object.keys(left).length > 0 ? left : undefined };
+    return value !== null || Object.hasOwn(carried, key);
+  });
+  return held.length > 0 ? Object.fromEntries(held) : undefined;
 }
 
 /** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped, and
@@ -303,12 +288,13 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
   globalUiOptions?: GlobalUISchemaOptions;
 }
 
-/** What `formDataForNewOption()` makes of a switch: the data it carries, and the keys only the option switched away
- * from declared that it left out, with their values, for the field to put back where a form judges them
+/** What `formDataForNewOption()` makes of a switch: the data it carries, and the object the data held before it, whose
+ * keys a form taking the switch puts back as they were and judges against the option switched away from, with what the
+ * defaults hand the field there, which the switch alone can't see, see `sanitizeFieldTree()`
  */
 export interface OptionSwitchData<T> {
   formData: T | undefined;
-  left?: GenericObjectType;
+  held?: GenericObjectType;
 }
 
 /** Computes the form data to carry across a switch from `oldOption` to `newOption` of a `oneOf`/`anyOf`.
@@ -361,10 +347,8 @@ export interface OptionSwitchData<T> {
  * @param [uiSchemas] - Each option's own uiSchema, so its `ui:initialValue`/`ui:emptyValue` apply to the defaults
  *        computed for it, and the registry's `ui:definitions` and global UI options, which an option's uiSchema never
  *        carries itself
- * @param [fill={}] - What the defaults hand the field holding the options, which they fill its properties by: the
- *        default inherited from the fields above it and whether it is required, see `FormDataContext`
  * @returns - The form data for `newOption`, undefined when it holds nothing, as when the selection is cleared, and the
- *   keys only `oldOption` declared that it left out, see `splitLeftKeys()`
+ *   object `formData` held, see `OptionSwitchData`
  */
 export default function formDataForNewOption<
   T = unknown,
@@ -377,7 +361,6 @@ export default function formDataForNewOption<
   oldOption?: S,
   parentSchema?: S,
   uiSchemas: OptionUiSchemas<T, S, F> = {},
-  fill: FieldFill = {},
 ): OptionSwitchData<T> {
   const { uiSchemaDefinitions, globalUiOptions } = uiSchemas;
   // The defaults leave out an optional object the Optional Data Controls show without its fields, as the form's own do
@@ -385,21 +368,17 @@ export default function formDataForNewOption<
   const oldOptionUiSchema = withGlobalUiOptions<T, S, F>(uiSchemas.oldOptionUiSchema, globalUiOptions);
   const renderedNewOption = renderedOption<S>(parentSchema, newOption);
   const renderedOldOption = renderedOption<S>(parentSchema, oldOption);
-  // The data is judged by the defaults the options are filled with, which the field's own `default` takes part in
-  const defaultedNewOption = withFieldDefault<S>(parentSchema, renderedNewOption);
-  const defaultedOldOption = withFieldDefault<S>(parentSchema, renderedOldOption);
-  const { carried, left } = splitLeftKeys<T, S, F>(
-    schemaUtils,
+  let newFormData = carriedData<T, S>(
     formData,
-    schemaUtils.sanitizeDataForNewSchema(defaultedNewOption, defaultedOldOption, formData, fill),
-    { renderedOldOption, newOption, renderedNewOption },
+    schemaUtils.sanitizeDataForNewSchema(renderedNewOption, renderedOldOption, formData),
+    { renderedOldOption, renderedNewOption },
     parentSchema,
   );
-  let newFormData = carried;
+  const heldBefore = heldKeys<S>(formData, newFormData, renderedNewOption, parentSchema);
   // A `null` option renders no field, so the switch leaves the data as the sanitize did, rather than the `null` the
   // option's defaults fill in for a field that renders one
   if (newOption?.type === 'null') {
-    return { formData: newFormData, left };
+    return { formData: newFormData, held: heldBefore };
   }
   const newOptionForDefaults = withParentRequired<S>(parentSchema, newOption);
   if (newOptionForDefaults) {
@@ -569,11 +548,11 @@ export default function formDataForNewOption<
     // the clears among them and fill the rest
     if (isPlainObject(newFormData)) {
       newFormData = keepRecordedClears(
-        removeDiscardedKeys(schemaUtils, newFormData, defaultedOldOption, defaultedNewOption, parentSchema, fill),
+        removeDiscardedKeys(schemaUtils, newFormData, renderedOldOption, renderedNewOption, parentSchema),
         carriedOver,
         clearsIn(carriedOver, []),
       );
     }
   }
-  return { formData: newFormData, left };
+  return { formData: newFormData, held: heldBefore };
 }
