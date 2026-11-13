@@ -1872,7 +1872,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     });
   }
   const additionalProperties = absentKeywordAllows<S, F>(context, schema) || schema.additionalProperties;
-  if (additionalProperties && !initialDefaultsGenerated) {
+  // An object the data holds none of has no key a person left or took out, so it is filled as on a first render
+  if (additionalProperties && (!initialDefaultsGenerated || rawFormData === undefined)) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
       rootSchema,
@@ -1975,8 +1976,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
  * `fieldState` tells them. A value under a `ui:initialValue` is not one, since no later fill gives it again, and
  * neither is an extra key's. An array or object is one only where a `default` is declared for it: it was filled from
  * that default whole, so it follows it whole, and one the defaults built from what it holds has its own values told
- * apart where they are folded. A property offering `anyOf`/`oneOf` options is left out too: its defaults are those of
- * the option it shows, which is chosen by its data
+ * apart where they are folded. The value of a property offering `anyOf`/`oneOf` options is one whatever it holds: its
+ * defaults are those of the option it shows, which its data chooses, so data nobody wrote must not choose it
  *
  * @param data - The object's data
  * @param schema - The object's schema, its extra keys stubbed where the field stubs them
@@ -2002,9 +2003,10 @@ function filledKeysOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (
       value !== undefined &&
       value !== null &&
-      ((!isObject(value) && !Array.isArray(value)) || declaresDefault(key)) &&
+      ((!isObject(value) && !Array.isArray(value)) ||
+        declaresDefault(key) ||
+        getXxxOfOptions<S>(getPropertySchema<S>(schema, key)) !== undefined) &&
       !hasSchemaMarker(getPropertySchema<S>(schema, key), ADDITIONAL_PROPERTY_FLAG) &&
-      getXxxOfOptions<S>(getPropertySchema<S>(schema, key)) === undefined &&
       (propertyUiSchema === undefined || getUiOptions<T, S, F>(propertyUiSchema).initialValue === undefined) &&
       fieldState.isFilled(fieldPathFromList([...pathListOf(fieldPath), key]))
     ) {
@@ -2161,6 +2163,37 @@ function filledRowTest<T, S extends StrictRJSFSchema, F extends FormContextType>
     fieldState.isFilled?.(fieldPathFromList([...path, idx])) === true;
 }
 
+/** Whether the row at `idx` of the array field `view` holds an object or array the defaults filled in whole from a
+ * `default` its item declares, as `fieldState` tells it, and under no `ui:initialValue`. Only a row of a list whose
+ * items offer no options is one, as in `filledRowTest()`: a tuple's row and an option's are merged with the data again
+ * after the row is computed
+ */
+function isWholeFilledRow<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  { fieldState, fieldPath, uiSchema, holdsInitialValue }: FoldProps<T, S, F>,
+  item: unknown,
+  idx: number,
+): boolean {
+  if (
+    fieldState?.isFilled === undefined ||
+    holdsInitialValue === true ||
+    (!isObject(item) && !Array.isArray(item)) ||
+    getUiOptions<T, S, F>(uiSchema).initialValue !== undefined ||
+    getUiOptions<T, S, F>(getItemUiSchemaForIndex<T, S, F>(view.schema, uiSchema, idx)).initialValue !== undefined
+  ) {
+    return false;
+  }
+  const { items } = view.schema;
+  if (!isSchemaObject<S>(items) || getXxxOfOptions<S>(items) !== undefined) {
+    return false;
+  }
+  const read = resolveMergedOwnRef<S>(view.graph, seedsAt(view, 'items'), items, context.customMergeAllOf);
+  return (
+    isObject(read) && DEFAULT_KEY in read && fieldState.isFilled(fieldPathFromList([...pathListOf(fieldPath), idx]))
+  );
+}
+
 /** Computes the default value for arrays.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -2270,6 +2303,20 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
         // The array's default for the row, filled above as the row holding it is
         const parentDefaults = getByPath(defaults, idx);
         const isDefaultRow = parentDefaults !== undefined && parentDefaults !== null;
+        if (isWholeFilledRow<T, S, F>(context, view, props, item, idx)) {
+          // An object or array row nobody wrote in, whose item declares a `default`, was filled from that default whole,
+          // so it follows it whole, as a property does, see `filledKeysOf()`
+          const derived = foldChild<T, S, F>(
+            context,
+            `wholeRow:${idx}`,
+            field,
+            { ...itemProps(idx), parentDefaults, initialDefaultsGenerated: false },
+            memo,
+          );
+          if (isObject(derived) || Array.isArray(derived)) {
+            return derived;
+          }
+        }
         if (isFilledRow?.(item, idx)) {
           // A row the defaults filled in takes what they give it now: the array's default for it, or else what a row
           // holding no value is filled with. Where neither gives a value any more, the row stays as it is

@@ -230,6 +230,81 @@ describe('where a value came from, as a schema, a branch or a write changes the 
     });
   });
 
+  describe('a value the defaults filled in a field offering options', () => {
+    const sized = (size: number): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        box: { oneOf: [{ type: 'object', properties: { size: { const: size } } }, { type: 'object' }] },
+      },
+    });
+
+    it('follows a `const` of the option that changes, and keeps showing that option', () => {
+      const { form, setSchema } = mount(sized(2));
+      expect(form.getFormData()).toEqual({ box: { size: 2 } });
+      setSchema(sized(1));
+      expect(form.getFormData()).toEqual({ box: { size: 1 } });
+    });
+
+    it('stays where a person entered it, so the data shows under the option that holds it', () => {
+      const { form, setSchema, write } = mount(sized(2));
+      write(['box', 'size'], 2);
+      setSchema(sized(1));
+      expect(form.getFormData()).toEqual({ box: { size: 2 } });
+    });
+  });
+
+  describe('an object row nobody entered anything in, filled from the default of its item', () => {
+    const rows = (row: Record<string, number>): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        list: {
+          type: 'array',
+          minItems: 1,
+          items: { type: 'object', default: row, properties: { w: { type: 'number' }, h: { type: 'number' } } },
+        },
+      },
+    });
+
+    it('takes the new default whole, a key it leaves out included', () => {
+      const { form, setSchema } = mount(rows({ w: 1, h: 2 }));
+      expect(form.getFormData()).toEqual({ list: [{ w: 1, h: 2 }] });
+      setSchema(rows({ w: 3 }));
+      expect(form.getFormData()).toEqual({ list: [{ w: 3 }] });
+    });
+
+    it('keeps the value a person wrote in the row, and the keys beside it', () => {
+      const { form, setSchema, write } = mount(rows({ w: 1, h: 2 }));
+      write(['list', 0, 'h'], 5);
+      setSchema(rows({ w: 3 }));
+      expect(form.getFormData()).toEqual({ list: [{ w: 3, h: 5 }] });
+    });
+  });
+
+  describe('an object a re-render brings back, whose default names extra keys', () => {
+    const tagged: RJSFSchema = {
+      type: 'object',
+      properties: {
+        tags: { type: 'object', additionalProperties: { type: 'string' }, default: { a: 'x' } },
+      },
+    };
+
+    it('is filled with those keys, as the mount filled it', () => {
+      const { form, setSchema } = mount(tagged);
+      expect(form.getFormData()).toEqual({ tags: { a: 'x' } });
+      setSchema({ type: 'object', properties: {} });
+      expect(form.getFormData()).toEqual({});
+      setSchema(tagged);
+      expect(form.getFormData()).toEqual({ tags: { a: 'x' } });
+    });
+
+    it('keeps an object a person emptied empty', () => {
+      const { form, setSchema, write } = mount(tagged);
+      write(['tags'], {});
+      setSchema({ ...tagged, title: 'Again' });
+      expect(form.getFormData()).toEqual({ tags: {} });
+    });
+  });
+
   describe('a write from outside the fields', () => {
     const coloured = (color: string): RJSFSchema => ({
       type: 'object',

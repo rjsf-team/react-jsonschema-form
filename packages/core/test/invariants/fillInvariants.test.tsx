@@ -300,14 +300,10 @@ const differences: Partial<Record<string, Difference>> = {
 
 /** What the form is known not to do yet, by the mechanism behind it */
 const GAPS = {
-  optionOrigins:
-    'Inside an option of a oneOf or anyOf field a value is not told apart by where it came from: a filled value does not follow its default whole, and a filled const stays after the const changed',
-  rowOfArrayDefault:
-    'A row that the default of its array gave is taken for one its item’s own default gave, and follows that default when it changes',
+  optionRow:
+    'An object row of a tuple, or of a list whose items offer options, that the default of its item filled in does not take a new default whole: a key the new default leaves out stays',
   additionalItemsRow:
     'A seeded tuple row beyond `items` that equals the default of `additionalItems` follows that default, which the fill never gives to a row',
-  extraKeyOfRowDefault:
-    'A row of an array a re-render brings in is filled without the keys its item’s default holds under `additionalProperties`, which a mount fills in',
 };
 
 /**
@@ -315,13 +311,8 @@ const GAPS = {
  * regression; a seed in it that passes means the gap is closed there, and the seed is to be taken off the list
  */
 const KNOWN_GAPS: Partial<Record<string, { gap: keyof typeof GAPS; seeds: number[] }[]>> = {
-  [FOLLOWS]: [
-    { gap: 'optionOrigins', seeds: [165, 247, 249] },
-    { gap: 'rowOfArrayDefault', seeds: [226] },
-  ],
+  [FOLLOWS]: [{ gap: 'optionRow', seeds: [165] }],
   [STAYS]: [{ gap: 'additionalItemsRow', seeds: [191] }],
-  [OWNED]: [{ gap: 'optionOrigins', seeds: [287] }],
-  [RESTORES]: [{ gap: 'extraKeyOfRowDefault', seeds: [71] }],
 };
 
 function caseFor(name: string, seed: number): Case {

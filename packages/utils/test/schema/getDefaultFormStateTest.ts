@@ -11297,6 +11297,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
 
+    describe('the extra keys the default of an object names, once the form has generated its defaults', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { tags: { type: 'object', additionalProperties: { type: 'string' }, default: { a: 'x' } } },
+      };
+      const refill = (formData: unknown) =>
+        getDefaultFormState(
+          { validator: testValidator },
+          { schema, rootSchema: schema, formData, initialDefaultsGenerated: true },
+        );
+
+      it('are filled into an object the data holds none of', () => {
+        expect(refill({})).toEqual({ tags: { a: 'x' } });
+      });
+
+      it('are left out of an object the data holds, whose keys are the user’s', () => {
+        expect(refill({ tags: {} })).toEqual({ tags: {} });
+        expect(refill({ tags: { b: 'y' } })).toEqual({ tags: { b: 'y' } });
+      });
+    });
+
     describe('a value the fieldState says the defaults filled in', () => {
       /** A `fieldState` under which the values at `paths` are ones the defaults filled in */
       const filledAt = (...paths: (string | number)[][]): FormFieldState => {
@@ -11453,19 +11474,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
-      it('stays where it is an extra key, a `null`, or the value of a field offering options', () => {
+      it('stays where it is an extra key or a `null`', () => {
         const schema: RJSFSchema = {
           type: 'object',
-          default: { extra: 'e', nil: 'n', pick: 'p' },
-          properties: {
-            nil: { type: ['string', 'null'] },
-            pick: { oneOf: [{ type: 'string' }, { type: 'number' }] },
-          },
+          default: { extra: 'e', nil: 'n' },
+          properties: { nil: { type: ['string', 'null'] } },
           additionalProperties: { type: 'string' },
         };
-        const data = { extra: 'x', nil: null, pick: 'x' };
-        const fieldState = filledAt(['extra'], ['nil'], ['pick']);
-        expect(fill(schema, data, fieldState)).toEqual(data);
+        const data = { extra: 'x', nil: null };
+        expect(fill(schema, data, filledAt(['extra'], ['nil']))).toEqual(data);
+      });
+
+      describe('of a field offering options', () => {
+        const picking = (pick: unknown, size: number): RJSFSchema => ({
+          type: 'object',
+          default: { pick },
+          properties: {
+            pick: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+            box: { oneOf: [{ type: 'object', properties: { size: { const: size } } }] },
+          },
+        });
+
+        it('takes the default that gives it now, as the field holding no data is filled', () => {
+          const data = { pick: 'x', box: { size: 1 } };
+          expect(fill(picking('p', 2), data, filledAt(['pick'], ['box']))).toEqual({ pick: 'p', box: { size: 2 } });
+        });
+
+        it('stays where a person or a seed put it or a value it holds there', () => {
+          const data = { pick: 'x', box: { size: 1 } };
+          expect(fill(picking('p', 2), data, filledAt())).toEqual(data);
+        });
       });
 
       describe('an array or object filled whole', () => {
