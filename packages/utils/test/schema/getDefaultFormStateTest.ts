@@ -3093,7 +3093,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
-        it.each<[string, DefaultFormStateBehavior, unknown, string]>([
+        it.each<[string, DefaultFormStateBehavior, string | number | null, string]>([
           ["the property's own", {}, 'red', 'green'],
           ["the object's under ancestorWins", { nestedDefaultsPrecedence: 'ancestorWins' }, 'red', 'green'],
           [
