@@ -6240,7 +6240,7 @@ exports[`Three even column grid > renders person and address in three columns, n
         >
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(100% + 0rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-object"
@@ -6269,7 +6269,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(33.3333% - 0.666667rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6310,7 +6310,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(33.3333% - 0.666667rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6345,7 +6345,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(33.3333% - 0.666667rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6386,7 +6386,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(33.3333% - 0.666667rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6454,7 +6454,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.6666666666666666*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(66.6667% - 0.333333rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-array"
@@ -6588,7 +6588,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(50% - 0.5rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6629,7 +6629,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(50% - 0.5rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6664,7 +6664,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(33.3333% - 0.666667rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6705,7 +6705,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(33.3333% - 0.666667rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7615,7 +7615,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(33.3333% - 0.666667rem); min-width: 0px; overflow-wrap: break-word;"
           />
         </div>
       </div>
@@ -7648,7 +7648,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
         >
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(100% + 0rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-object"
@@ -7677,7 +7677,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(50% - 0.5rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7718,7 +7718,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(50% - 0.5rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7753,7 +7753,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(50% - 0.5rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7794,7 +7794,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(50% - 0.5rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7862,7 +7862,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(100% + 0rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-array"
@@ -7996,7 +7996,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(50% - 0.5rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -8037,7 +8037,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(50% - 0.5rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -8072,7 +8072,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(50% - 0.5rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -8113,7 +8113,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(50% - 0.5rem); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -9023,7 +9023,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
+            style="flex: 0 0 calc(100% + 0rem); min-width: 0px; overflow-wrap: break-word;"
           />
         </div>
       </div>

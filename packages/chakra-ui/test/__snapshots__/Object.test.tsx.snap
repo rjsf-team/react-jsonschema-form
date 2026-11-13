@@ -1922,7 +1922,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             checked=""
                             id="root_active"
                             name="root[active]"
-                            style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                            style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                             type="checkbox"
                             value="on"
                           />
@@ -6039,7 +6039,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           aria-labelledby="root_foo__key__label"
                           id="select:root_foo__key:select"
                           name="root_foo__key"
-                          style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                          style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                           tabindex="-1"
                         >
                           <option
@@ -6120,7 +6120,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           data-scope="select"
                           dir="ltr"
                           id="select:root_foo__key:positioner"
-                          style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                          style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                         >
                           <div
                             aria-labelledby="root_foo__key__label"
@@ -9617,7 +9617,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           aria-labelledby="root_foo__key__label"
                           id="select:root_foo__key:select"
                           name="root_foo__key"
-                          style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                          style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                           tabindex="-1"
                         >
                           <option
@@ -9698,7 +9698,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           data-scope="select"
                           dir="ltr"
                           id="select:root_foo__key:positioner"
-                          style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                          style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                         >
                           <div
                             aria-labelledby="root_foo__key__label"
@@ -10662,7 +10662,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           aria-labelledby="root_foo__key__label"
                           id="select:root_foo__key:select"
                           name="root_foo__key"
-                          style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                          style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                           tabindex="-1"
                         >
                           <option
@@ -10743,7 +10743,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           data-scope="select"
                           dir="ltr"
                           id="select:root_foo__key:positioner"
-                          style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                          style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                         >
                           <div
                             aria-labelledby="root_foo__key__label"
@@ -12816,7 +12816,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                       aria-labelledby="root__label"
                       id="select:root__anyof_select:select"
                       name="root__anyof_select"
-                      style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                      style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                       tabindex="-1"
                     >
                       <option
@@ -12892,7 +12892,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                       data-scope="select"
                       dir="ltr"
                       id="select:root__anyof_select:positioner"
-                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                     >
                       <div
                         aria-labelledby="root__label"

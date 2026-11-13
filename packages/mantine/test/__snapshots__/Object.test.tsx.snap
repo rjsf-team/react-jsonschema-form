@@ -2965,7 +2965,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           >
                             <div
                               class=""
-                              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+                              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-size: 0px;"
                             >
                               <div
                                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -2977,7 +2977,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                                   data-offset-scrollbars="y"
                                   data-scrollarea-viewport="true"
                                   data-scrollbars="xy"
-                                  style="overflow-x: scroll; overflow-y: scroll;"
+                                  style="overflow: scroll;"
                                 >
                                   <div
                                     class="m_b1336c6 mantine-ScrollArea-content"
@@ -4467,7 +4467,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           >
                             <div
                               class=""
-                              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+                              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-size: 0px;"
                             >
                               <div
                                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -4479,7 +4479,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                                   data-offset-scrollbars="y"
                                   data-scrollarea-viewport="true"
                                   data-scrollbars="xy"
-                                  style="overflow-x: scroll; overflow-y: scroll;"
+                                  style="overflow: scroll;"
                                 >
                                   <div
                                     class="m_b1336c6 mantine-ScrollArea-content"
@@ -4855,7 +4855,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           >
                             <div
                               class=""
-                              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+                              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-size: 0px;"
                             >
                               <div
                                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -4867,7 +4867,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                   data-offset-scrollbars="y"
                                   data-scrollarea-viewport="true"
                                   data-scrollbars="xy"
-                                  style="overflow-x: scroll; overflow-y: scroll;"
+                                  style="overflow: scroll;"
                                 >
                                   <div
                                     class="m_b1336c6 mantine-ScrollArea-content"
@@ -5781,7 +5781,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
             >
               <div
                 class=""
-                style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+                style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-size: 0px;"
               >
                 <div
                   class="m_d57069b5 mantine-ScrollArea-root"
@@ -5793,7 +5793,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                     data-offset-scrollbars="y"
                     data-scrollarea-viewport="true"
                     data-scrollbars="xy"
-                    style="overflow-x: scroll; overflow-y: scroll;"
+                    style="overflow: scroll;"
                   >
                     <div
                       class="m_b1336c6 mantine-ScrollArea-content"

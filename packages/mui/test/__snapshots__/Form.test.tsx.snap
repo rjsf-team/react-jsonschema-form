@@ -7462,7 +7462,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                         aria-hidden="true"
                         class="MuiInputBase-input MuiOutlinedInput-input emotion-8"
                         readonly=""
-                        style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
+                        style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0px); padding-top: 0px; padding-bottom: 0px; width: 100%;"
                         tabindex="-1"
                       />
                       <fieldset
@@ -48852,12 +48852,12 @@ exports[`single fields > slider field 1`] = `
           />
           <span
             class="MuiSlider-track emotion-3"
-            style="left: 0%; width: 56.89655172413793%;"
+            style="left: 0%; width: 56.8966%;"
           />
           <span
             class="MuiSlider-thumb MuiSlider-thumb emotion-4"
             data-index="0"
-            style="left: 56.89655172413793%;"
+            style="left: 56.8966%;"
           >
             <input
               aria-orientation="horizontal"
@@ -54188,7 +54188,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
               aria-hidden="true"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-3"
               readonly=""
-              style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
+              style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0px); padding-top: 0px; padding-bottom: 0px; width: 100%;"
               tabindex="-1"
             />
             <fieldset

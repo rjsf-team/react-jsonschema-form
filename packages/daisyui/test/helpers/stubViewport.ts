@@ -39,12 +39,24 @@ export default function stubViewport() {
     Object.defineProperty(HTMLElement.prototype, 'showPopover', { value: vi.fn(), configurable: true });
     // Shown as the stubbed `showPopover()` can't show it: jsdom's own stylesheet hides a popover not `:popover-open`,
     // which it never matches, and nothing inside an element it doesn't display can take the focus
-    const shown = document.head.appendChild(document.createElement('style'));
-    // Important, as jsdom ranks its own rule's more specific selector above it, where a browser ranks any page rule higher
-    shown.textContent = '[popover] { display: block !important; }';
+    const shown = new CSSStyleSheet();
+    shown.replaceSync('[popover] { display: block; }');
+    const adopted = document.adoptedStyleSheets;
+    document.adoptedStyleSheets = [...adopted, shown];
+    // And in every shadow root, which no stylesheet of the document's reaches
+    const { attachShadow } = Element.prototype;
+    const attach = vi.spyOn(Element.prototype, 'attachShadow').mockImplementation(function showing(
+      this: Element,
+      init,
+    ) {
+      const root = attachShadow.call(this, init);
+      root.adoptedStyleSheets = [shown];
+      return root;
+    });
     measureClientRectsFrom(0, 0);
     return () => {
-      shown.remove();
+      document.adoptedStyleSheets = adopted;
+      attach.mockRestore();
       width.mockRestore();
       height.mockRestore();
       supports.mockRestore();

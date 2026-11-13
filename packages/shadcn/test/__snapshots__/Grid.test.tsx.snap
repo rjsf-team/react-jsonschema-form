@@ -638,7 +638,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   dir="ltr"
                   id="root_employment"
                   role="radiogroup"
-                  style="outline: none;"
+                  style="outline: medium;"
                   tabindex="0"
                 >
                   <div
@@ -1604,7 +1604,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   dir="ltr"
                   id="root_employment"
                   role="radiogroup"
-                  style="outline: none;"
+                  style="outline: medium;"
                   tabindex="0"
                 >
                   <div
@@ -2601,7 +2601,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   dir="ltr"
                   id="root_employment"
                   role="radiogroup"
-                  style="outline: none;"
+                  style="outline: medium;"
                   tabindex="0"
                 >
                   <div
@@ -3421,7 +3421,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   dir="ltr"
                   id="root_employment"
                   role="radiogroup"
-                  style="outline: none;"
+                  style="outline: medium;"
                   tabindex="0"
                 >
                   <div
