@@ -881,13 +881,6 @@ function retrieveView<S extends StrictRJSFSchema, F extends FormContextType>(
   return settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
 }
 
-/** Returns `retrieveView()` in `context`, for a caller with no view retrieved once per pass to read */
-function retrieveViewOf<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-): (view: DefaultsView<S>) => DefaultsView<S> {
-  return (view) => retrieveView<S, F>(context, view);
-}
-
 /** Returns the object `const` the field whose `const` `constSchema` holds defaults to, if it defaults to one */
 function objectConstOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1734,11 +1727,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
-  const retrieved = props.retrievedViewOf ?? retrieveViewOf(context);
-  const constsLeftOut = computedOnce(() => ({
-    ...context,
-    defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' as const },
-  }));
+  const retrieved = props.retrievedViewOf ?? ((field: DefaultsView<S>) => retrieveView<S, F>(context, field));
   const constSchema = constSchemaOf<S>(view, retrieved);
   const parentConst = constSchema[CONST_KEY];
   // An object `const` the field defaults to, read as `foldView()` reads it
@@ -1880,7 +1869,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         formData: undefined,
       })
     ) {
-      const withoutConsts = foldReporting(constsLeftOut(), `withoutConsts:${key}`, child, {
+      const constsLeftOut = {
+        ...context,
+        defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' as const },
+      };
+      const withoutConsts = foldReporting(constsLeftOut, `withoutConsts:${key}`, child, {
         ...ownProps,
         nullFills: { ...nullFills, isCollapsed: true },
       }).value;
