@@ -618,13 +618,15 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** The default the defaults fill a field rendered with `layers` with, given the one it inherits, see
  * `getFilledDefault()`. The layers are one field, which the fill renders with an option's `default` merged over the
- * field's own, so only `inherited` is an ancestor's, even under `nestedDefaultsPrecedence: 'ancestorWins'`
+ * field's own, so only `inherited` is an ancestor's, even under `nestedDefaultsPrecedence: 'ancestorWins'`. The
+ * default is cut down by `fieldLayers`, which a clear narrows to the field's own layer
  */
 function filledDefaultOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schemaUtils: SchemaUtilsType<T, S, F>,
   layers: readonly S[],
   inherited: unknown,
   placement?: PropertyPlacement,
+  fieldLayers: readonly S[] = layers,
 ): unknown {
   if (inherited === undefined && !layers.some((layer) => Object.hasOwn(layer, DEFAULT_KEY))) {
     return undefined;
@@ -634,7 +636,7 @@ function filledDefaultOf<T, S extends StrictRJSFSchema, F extends FormContextTyp
       Object.hasOwn(layer, DEFAULT_KEY) ? mergeSchemas(merged, { [DEFAULT_KEY]: layer[DEFAULT_KEY] }) : merged,
     {},
   );
-  return schemaUtils.getFilledDefault({ ...fieldSchemaOf(layers), ...ownDefault }, inherited, placement);
+  return schemaUtils.getFilledDefault({ ...fieldSchemaOf(fieldLayers), ...ownDefault }, inherited, placement);
 }
 
 /** The innermost of `layers` with the keywords its default is cut down by read from them all, as the fill reads the
@@ -744,17 +746,26 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const newComputed = filledDefaultOf(ctx.schemaUtils, newLayers, newInherited);
   // The edited value and the values holding it are the user's
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
+    // The fill cuts the default of a field holding no data by the option that default matches, not the one `Form`
+    // shows, so a clear hands `getFilledDefault()` the field's own layer, options and all, for it to pick as the fill does
+    const cutLayers = (layers: S[]) => (isClear ? layers.slice(0, 1) : layers);
     const oldDefault = isProperty
-      ? filledDefaultOf(ctx.oldSchemaUtils, oldLayers, oldInherited, {
-          isRequired: oldRequired,
-          isParentRequired: oldParentRequired,
-        })
+      ? filledDefaultOf(
+          ctx.oldSchemaUtils,
+          oldLayers,
+          oldInherited,
+          { isRequired: oldRequired, isParentRequired: oldParentRequired },
+          cutLayers(oldLayers),
+        )
       : oldComputed;
     const newDefault = isProperty
-      ? filledDefaultOf(ctx.schemaUtils, newLayers, newInherited, {
-          isRequired: newRequired,
-          isParentRequired: newParentRequired,
-        })
+      ? filledDefaultOf(
+          ctx.schemaUtils,
+          newLayers,
+          newInherited,
+          { isRequired: newRequired, isParentRequired: newParentRequired },
+          cutLayers(newLayers),
+        )
       : newComputed;
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
     const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, (value) =>

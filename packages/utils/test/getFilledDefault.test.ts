@@ -123,6 +123,20 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
       expected: { c: { a: 1 } },
     },
     {
+      // Both options validate the default under the test validator, so only the discriminator picks the second
+      name: 'a key the option its default discriminates requires is written',
+      context: populateRequired,
+      schema: {
+        type: 'object',
+        discriminator: { propertyName: 'k' },
+        properties: { k: { type: 'string' }, a: { type: 'number' } },
+        oneOf: [{ properties: { k: { const: 'A' } } }, { properties: { k: { const: 'B' } }, required: ['a'] }],
+        default: { k: 'B', a: 1 },
+      },
+      placement: required,
+      expected: { a: 1 },
+    },
+    {
       name: 'a property typed by its option is cut by that option',
       context: populateRequired,
       schema: {

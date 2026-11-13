@@ -3047,6 +3047,74 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       filled: (a) => ({ c: { a } }),
       behavior: { emptyObjectFields: 'populateRequiredDefaults' },
     },
+    // The fill cuts a field holding no data by the option its own `default` matches, not the one `Form` shows for it
+    {
+      name: 'a key the option its default matches declares, not the option shown',
+      schemaWith: (a): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          o: {
+            type: 'object',
+            default: { c: { a } },
+            properties: { c: { type: 'object' } },
+            oneOf: [
+              {
+                properties: {
+                  c: { type: 'object', additionalProperties: false, properties: { b: { type: 'string' } } },
+                },
+              },
+              { properties: { c: { type: 'object', properties: { a: { type: 'string' } } } } },
+            ],
+          },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (a) => ({ c: { a } }),
+    },
+    {
+      name: "a key the option its default matches requires, not the option shown, under emptyObjectFields: 'populateRequiredDefaults'",
+      schemaWith: (a) => ({
+        type: 'object',
+        required: ['o'],
+        properties: {
+          o: {
+            type: 'object',
+            default: { c: { a } },
+            properties: { c: { type: 'object', properties: { a: { type: 'string' } } } },
+            oneOf: [
+              {
+                properties: {
+                  c: { type: 'object', additionalProperties: false, properties: { b: { type: 'string' } } },
+                },
+              },
+              { properties: { c: { type: 'object', required: ['a'] } }, required: ['c'] },
+            ],
+          },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (a) => ({ c: { a } }),
+      behavior: { emptyObjectFields: 'populateRequiredDefaults' },
+    },
+    {
+      name: "a key the option its default's discriminator picks requires, under emptyObjectFields: 'populateRequiredDefaults'",
+      schemaWith: (a) => ({
+        type: 'object',
+        required: ['o'],
+        properties: {
+          o: {
+            type: 'object',
+            default: { k: 'B', a },
+            discriminator: { propertyName: 'k' },
+            properties: { k: { type: 'string', enum: ['A', 'B'] }, a: { type: 'string' } },
+            oneOf: [{ properties: { k: { const: 'A' } } }, { properties: { k: { const: 'B' } }, required: ['a'] }],
+          },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (a) => ({ k: 'B', a }),
+      behavior: { emptyObjectFields: 'populateRequiredDefaults' },
+    },
     // The fill writes the default of a key whatever schema declares it, a `false` one an option declares included
     ...([{}, { b: { type: 'string' } }] as Record<string, RJSFSchema>[]).map((others) => ({
       name: `a key its oneOf declares false${Object.keys(others).length ? ' beside another' : ''}`,
@@ -3115,6 +3183,31 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual(wrap({ w: 'k' }));
     },
   );
+  // A clear cuts its default by the field's own layer, but still reads the `default` its option declares.
+  // `sanitizeDataForNewSchema()` reads no option's `default`, so only `Form` is checked
+  it.each<{ name: string; o: (v: string) => RJSFSchema; filled: (v: string) => unknown }>([
+    {
+      name: 'an object',
+      o: (a) => ({ type: 'object', properties: { a: { type: 'string' } }, oneOf: [{ default: { a } }] }),
+      filled: (a) => ({ a }),
+    },
+    {
+      name: 'an untyped field',
+      o: (v) => ({ oneOf: [{ type: 'string', default: v }, { type: 'number' }] }),
+      filled: (v) => v,
+    },
+  ])('gives way a clear of $name whose option declares the changed default', ({ o, filled }) => {
+    const schemaWith = (v: string): RJSFSchema => ({ type: 'object', properties: { o: o(v), w: { type: 'string' } } });
+    const data = { o: undefined, w: 'k' };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(
+      <Form ref={ref} schema={schemaWith('x')} validator={validator} initialFormData={data} />,
+    );
+
+    rerender(<Form ref={ref} schema={schemaWith('y')} validator={validator} initialFormData={data} />);
+
+    expect(handleOf(ref).getFormData()).toStrictEqual({ o: filled('y'), w: 'k' });
+  });
   // The field's `additionalProperties` seeds an extra key beside its option, which declares none
   it('gives way a clear of an object whose extra key the object seeds beside its oneOf changes default', () => {
     const schemaWith = (q: string): RJSFSchema => ({
