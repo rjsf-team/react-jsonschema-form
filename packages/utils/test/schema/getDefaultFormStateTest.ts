@@ -533,6 +533,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           expect(utils(plainDefault).getDefaultFormState(plainDefault)).toStrictEqual({ x: {} });
         });
+        it('leaves out an optional object const the optional data controls show behind their add control', () => {
+          const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'object', const: { a: 2 } } } };
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({});
+          // Once the user adds it, the `const` fills it
+          expect(utils(schema).getDefaultFormState(schema, { x: {} }, false, true, uiSchema)).toStrictEqual({
+            x: { a: 2 },
+          });
+          expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ x: { a: 2 } });
+          const required: RJSFSchema = { ...schema, required: ['x'] };
+          expect(utils(required).getDefaultFormState(required, undefined, false, false, uiSchema)).toStrictEqual({
+            x: { a: 2 },
+          });
+        });
         it('asks whether an object const beside options takes extra keys with the shown option joined', () => {
           const open: RJSFSchema = {
             type: 'object',

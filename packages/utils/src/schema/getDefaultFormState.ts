@@ -1798,7 +1798,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const propertyKeys = Object.keys(schema.properties ?? {}).filter(
     (key) => isPinned(key) || !hasSchemaMarker(getPropertySchema<S>(schema, key), ADDITIONAL_PROPERTY_FLAG),
   );
-  for (const key of [...propertyKeys, ...unmergedProperties.keys()]) {
+  [...propertyKeys, ...unmergedProperties.keys()].forEach((key) => {
     const propertySchema = unmergedProperties.get(key) ?? getPropertySchema<S>(schema, key);
     // A key the fold left unmerged has no seed under the object's `properties`, so it is seeded where the field as
     // `SchemaField` retrieves it declares it, its `$ref`, recursion and `dependencies` with it, rather than from the
@@ -1828,6 +1828,22 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // Its `required` is read from the schema that declares it, as its seeds are
     const declaring = seeding.schema;
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key, declaring);
+    // An optional object the Optional Data Controls render behind their add control while it has no value starts out
+    // without one, its object `const` included, as an empty default would: the `const` is its value once the user adds it
+    if (
+      nullFills !== undefined &&
+      isSchemaObject<S>(readProperty) &&
+      objectConstOf<S, F>(context, readProperty) !== undefined &&
+      isCollapsedByOptionalDataControls<T, S, F>(readProperty, propertySchema, ownProps.uiSchema, {
+        uiSchemaDefinitions,
+        globalUiOptions: nullFills.globalUiOptions,
+        rootSchema,
+        required: ownProps.required === true,
+        formData: ownProps.rawFormData,
+      })
+    ) {
+      return;
+    }
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
     // `null` of none of them is filled in until the user adds it
     const propertyNullFills = nullFillsForProperty<T, S, F>(context, child, propertySchema, {
@@ -1895,7 +1911,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     if (property.holdsNull) {
       onNullFill?.();
     }
-  }
+  });
   // An `allOf` or `if` the field's plan left unmerged still brings its properties into the field rendered for it
   if (
     !view.field.retrieves &&

@@ -5260,4 +5260,28 @@ describe('ObjectField', () => {
     expect(node.querySelector('#root_pet__title')).not.toBeInTheDocument();
     expect(node.querySelector('#root_pet__optionalRemove')).toBeInTheDocument();
   });
+
+  it('starts an optional object whose const fills it behind its optional data control, and adds the const', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'object', const: { a: 2 } } } };
+    const { node, getFormData } = createFormComponent({
+      schema,
+      uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
+    });
+
+    expect(node.querySelector('#root_x__optionalAdd')).toBeInTheDocument();
+    expect(getFormData()).toEqual({});
+
+    await user.click(elementOf(node, '#root_x__optionalAdd'));
+
+    expect(getFormData()).toEqual({ x: { a: 2 } });
+    expect(node.querySelector('#root_x__optionalRemove')).toBeInTheDocument();
+  });
+
+  it('fills an optional object from its const where the optional data controls are off', () => {
+    const { getFormData } = createFormComponent({
+      schema: { type: 'object', properties: { x: { type: 'object', const: { a: 2 } } } },
+    });
+
+    expect(getFormData()).toEqual({ x: { a: 2 } });
+  });
 });
