@@ -80,7 +80,6 @@ export default function RangeWidget<
       });
     }
     return () => {
-      // oxlint-disable-next-line react/immutability -- `cancelled` is local to this effect, not render state (https://github.com/oxc-project/oxc/issues/28401)
       cancelled = true;
     };
   }, []);

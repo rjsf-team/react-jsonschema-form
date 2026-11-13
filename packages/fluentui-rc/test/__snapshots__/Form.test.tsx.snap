@@ -1510,7 +1510,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                         value=""
                       >
                         <span
-                          class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                          class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         >
                           <svg
                             aria-hidden="true"
@@ -1531,7 +1531,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       </button>
                       <button
                         aria-label="Clear selection"
-                        class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                        class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         type="button"
                       >
                         <svg
@@ -2976,7 +2976,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                         value=""
                       >
                         <span
-                          class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                          class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         >
                           <svg
                             aria-hidden="true"
@@ -2997,7 +2997,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       </button>
                       <button
                         aria-label="Clear selection"
-                        class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                        class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         type="button"
                       >
                         <svg
@@ -3311,7 +3311,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           >
                             Europe
                             <span
-                              class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                              class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                             >
                               <svg
                                 aria-hidden="true"
@@ -3332,7 +3332,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           </button>
                           <button
                             aria-label="Clear selection"
-                            class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                            class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                             type="button"
                           >
                             <svg
@@ -3387,7 +3387,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             >
                               Germany
                               <span
-                                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                               >
                                 <svg
                                   aria-hidden="true"
@@ -3408,7 +3408,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             </button>
                             <button
                               aria-label="Clear selection"
-                              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                               type="button"
                             >
                               <svg
@@ -3484,7 +3484,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             >
               Subscribed
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -3505,7 +3505,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -3573,7 +3573,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             >
               Once
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -3594,7 +3594,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -3662,7 +3662,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
             >
               Unknown
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -3683,7 +3683,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -3751,7 +3751,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
             >
               Bar
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -3772,7 +3772,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -3840,7 +3840,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             >
               No
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -3861,7 +3861,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -3929,7 +3929,7 @@ exports[`select widget with options sharing a String() in the realValue format (
             >
               String
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -3950,7 +3950,7 @@ exports[`select widget with options sharing a String() in the realValue format (
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -6285,7 +6285,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             Option 1
                             <span
-                              class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                              class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                             >
                               <svg
                                 aria-hidden="true"
@@ -6306,7 +6306,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <button
                             aria-label="Clear selection"
-                            class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                            class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                             type="button"
                           >
                             <svg
@@ -6423,7 +6423,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             Option 1
                             <span
-                              class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                              class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                             >
                               <svg
                                 aria-hidden="true"
@@ -6444,7 +6444,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <button
                             aria-label="Clear selection"
-                            class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                            class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                             type="button"
                           >
                             <svg
@@ -7310,7 +7310,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             Option 1
                             <span
-                              class="fui-Dropdown__expandIcon ___17rkae9_1u1ega5 f1ewtqcl f1s2aq7o ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                              class="fui-Dropdown__expandIcon ___6rl1ue0_xbhp2l0 f1ewtqcl f1s2aq7o ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                             >
                               <svg
                                 aria-hidden="true"
@@ -7331,7 +7331,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <button
                             aria-label="Clear selection"
-                            class="fui-Dropdown__clearButton rticfuj ___1u8b2fc_1lnie44 f1ewtqcl f1s2aq7o fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                            class="fui-Dropdown__clearButton rticfuj ___wxv6qp0_1j2eh9o f1ewtqcl f1s2aq7o fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                             type="button"
                           >
                             <svg
@@ -7448,7 +7448,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             Option 1
                             <span
-                              class="fui-Dropdown__expandIcon ___17rkae9_1u1ega5 f1ewtqcl f1s2aq7o ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                              class="fui-Dropdown__expandIcon ___6rl1ue0_xbhp2l0 f1ewtqcl f1s2aq7o ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                             >
                               <svg
                                 aria-hidden="true"
@@ -7469,7 +7469,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <button
                             aria-label="Clear selection"
-                            class="fui-Dropdown__clearButton rticfuj ___1u8b2fc_1lnie44 f1ewtqcl f1s2aq7o fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                            class="fui-Dropdown__clearButton rticfuj ___wxv6qp0_1j2eh9o f1ewtqcl f1s2aq7o fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                             type="button"
                           >
                             <svg
@@ -11062,7 +11062,7 @@ exports[`single fields > select field 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -11083,7 +11083,7 @@ exports[`single fields > select field 1`] = `
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -11150,7 +11150,7 @@ exports[`single fields > select field multiple choice 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -11217,7 +11217,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -11403,7 +11403,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
             >
               foo, bar
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -11470,7 +11470,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -11537,7 +11537,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -11558,7 +11558,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -11782,7 +11782,7 @@ exports[`single fields > select field single choice formData 1`] = `
             >
               bar
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -11803,7 +11803,7 @@ exports[`single fields > select field single choice formData 1`] = `
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -11870,7 +11870,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -11891,7 +11891,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -11958,7 +11958,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -11979,7 +11979,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -12132,7 +12132,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -12153,7 +12153,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -12233,7 +12233,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
             >
               Foo
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -12254,7 +12254,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -12328,7 +12328,7 @@ exports[`single fields > select widget with selected oneOf option description an
             >
               Foo
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -12349,7 +12349,7 @@ exports[`single fields > select widget with selected oneOf option description an
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -12418,7 +12418,7 @@ exports[`single fields > select widget with selected oneOf option description be
             >
               Foo
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -12439,7 +12439,7 @@ exports[`single fields > select widget with selected oneOf option description be
             </button>
             <button
               aria-label="Clear selection"
-              class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+              class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               type="button"
             >
               <svg
@@ -13470,7 +13470,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       >
                         Yes
                         <span
-                          class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                          class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         >
                           <svg
                             aria-hidden="true"
@@ -13491,7 +13491,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       </button>
                       <button
                         aria-label="Clear selection"
-                        class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                        class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         type="button"
                       >
                         <svg

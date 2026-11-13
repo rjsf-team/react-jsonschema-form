@@ -59,7 +59,7 @@
   "dependencies": {
     "@emotion/cache": "^11.14.0",
     "@emotion/weak-memoize": "^0.4.0",
-    "lucide-react": "^1.68.0",
+    "lucide-react": "^1.72.0",
     "react-icons": "^5.7.0"
   }
 }
