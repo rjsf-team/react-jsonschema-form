@@ -831,16 +831,17 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   return planView(context, expanded, planFor(seeds), options, data, depData);
 }
 
-/** Whether the field of `schema` defaults to its `const`, or to the `const` an ancestor gives it where `inherited` says
- * there is one: unless `constAsDefaults` is `'never'` or the field's `const` is an Ajv `$data` reference
+/** Whether the field of `schema` takes a `const` as its default: its own `const`, or one `hasConst` says it has where
+ * `schema.const` doesn't show it, a `const` an ancestor gives it or its own spelled out as `undefined`; unless
+ * `constAsDefaults` is `'never'` or the field's `const` is an Ajv `$data` reference
  */
 function constIsDefault<S extends StrictRJSFSchema>(
   schema: S,
   defaultFormStateBehavior: DefaultFormStateBehavior | undefined,
-  inherited = false,
+  hasConst = false,
 ): boolean {
   return (
-    (inherited || schema[CONST_KEY] !== undefined) &&
+    (hasConst || schema[CONST_KEY] !== undefined) &&
     defaultFormStateBehavior?.constAsDefaults !== 'never' &&
     !constIsAjvDataReference(schema)
   );
@@ -1877,8 +1878,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       // No field renders a key of a `const` that closes the object, so no user fills, clears or fixes it: the `const`
       // fills in what its data lacks on every pass, as on the first, a value held as `undefined` or `null` and the
       // items of an array included, at any depth, and keeps the rest of the data
-      // Copied, since on the first pass beside a `ui:initialValue` the defaults are the uiSchema's own value
-      const keyDefault: unknown = ownValue(getByPath(constDefaults, key));
+      // Copied beside a `ui:initialValue`, since on the first pass the defaults are the uiSchema's own value; otherwise
+      // they are the copy of the `const` the field made
+      const ownDefault: unknown = getByPath(constDefaults, key);
+      const keyDefault = readsInitialValue ? ownValue(ownDefault) : ownDefault;
       const keyData: unknown = getByPath(formData, key);
       const value = shouldMergeDefaultsIntoFormData
         ? mergeDefaultsWithFormData(keyDefault, keyData, true, true)
