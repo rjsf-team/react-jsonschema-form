@@ -5,7 +5,9 @@ import {
   getArrayDefaults,
   getDefaultBasedOnSchemaType,
   getObjectDefaults,
+  mergeReachesConst,
 } from '../../src/schema/getDefaultFormState.ts';
+import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
 import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
@@ -923,7 +925,7 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     expect(defaultsOf(withField({ allOf: [{ title: 'P' }] }), { p: 'z' }, behavior)).toEqual({ p: 'b' });
   });
 
-  it('drops data a $ref property names a select without, at a root offering options it has not chosen', () => {
+  it('keeps data a $ref property names a select without, at a root offering options it has not chosen', () => {
     const withRoot = (beside: RJSFSchema): RJSFSchema => ({
       definitions: { s: { type: 'string', allOf: [{ enum: ['a', 'b'] }] } },
       type: 'object',
@@ -931,8 +933,8 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       ...beside,
     });
     const options: RJSFSchema = { anyOf: [{ required: ['k'] }, { required: ['x'] }] };
-    expect(defaultsOf(withRoot({}), { k: 'z' })).toStrictEqual({ k: undefined });
-    expect(defaultsOf(withRoot(options), { k: 'z' })).toStrictEqual({ k: undefined });
+    expect(defaultsOf(withRoot({}), { k: 'z' })).toStrictEqual({ k: 'z' });
+    expect(defaultsOf(withRoot(options), { k: 'z' })).toStrictEqual({ k: 'z' });
   });
 
   it.each<[string, RJSFSchema]>([
@@ -1445,5 +1447,64 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
       expect(counting.calls).toBe(0);
       expect(defaultsOf(dense(size), defaults)).toEqual(defaults);
     });
+  });
+});
+
+describe('mergeReachesConst()', () => {
+  it('finds a const an option reaches only through an option still being walked when it was first read', () => {
+    // X offers Q and W; Q's one option leads back through P to X, and W holds the const. Q is first read while X is
+    // still open, so it can't see W through X then
+    const graph = parseSchemaGraph({
+      definitions: { P: { oneOf: [{ oneOf: [{ oneOf: [{ $ref: '#/definitions/P' }] }, { const: 'x' }] }] } },
+    });
+    const node = (pointer: string) => {
+      const id = graph.byPointer(pointer);
+      if (id === undefined) {
+        throw new Error(`no node at ${pointer}`);
+      }
+      return id;
+    };
+    expect(mergeReachesConst(graph, node('/definitions/P/oneOf/0'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/P/oneOf/0/oneOf/0'), true)).toBe(true);
+  });
+
+  it('walks each node of a cycle that reaches no const once', () => {
+    // Each definition offers the next twice over, and the last leads back to the first, so a walk that worked out a
+    // node again on every path to it would take 2^n steps
+    const n = 24;
+    const definitions: Record<string, RJSFSchema> = {};
+    for (let index = 0; index < n; index += 1) {
+      const next = `#/definitions/D${(index + 1) % n}`;
+      definitions[`D${index}`] = { oneOf: [{ $ref: next }, { $ref: next }] };
+    }
+    const graph = parseSchemaGraph({ definitions });
+    const first = graph.byPointer('/definitions/D0');
+    const started = performance.now();
+    expect(first !== undefined && mergeReachesConst(graph, first, true)).toBe(false);
+    expect(performance.now() - started).toBeLessThan(1000);
+  });
+
+  it('settles every node of a cycle with the const one of them reaches', () => {
+    const graph = parseSchemaGraph({
+      definitions: {
+        A: { oneOf: [{ $ref: '#/definitions/B' }] },
+        B: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/C' }] },
+        C: { const: 'x' },
+      },
+    });
+    const node = (pointer: string) => graph.byPointer(pointer) ?? -1;
+    expect(mergeReachesConst(graph, node('/definitions/A'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/A/oneOf/0'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/B/oneOf/0'), true)).toBe(true);
+  });
+
+  it('leaves no node open where the graph throws', () => {
+    const graph = parseSchemaGraph({ definitions: { c: { const: 'x' } } });
+    const unknown = 1_000_000;
+    expect(() => mergeReachesConst(graph, unknown, true)).toThrow(RangeError);
+    // A node left open would answer `false` now instead of throwing again
+    expect(() => mergeReachesConst(graph, unknown, true)).toThrow(RangeError);
+    const known = graph.byPointer('/definitions/c');
+    expect(known !== undefined && mergeReachesConst(graph, known, true)).toBe(true);
   });
 });
