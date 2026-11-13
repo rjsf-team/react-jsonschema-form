@@ -1688,10 +1688,17 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
     // should always return the computedDefault since it's coming from the const.
     const hasParentConst = getByPath(parentConst, key) !== undefined;
+    // A `const` the property's `allOf` or unmerged `if`/`then` brings in counts as its own, as the fold takes it, so it
+    // is read from the property's schema merged for its data where a merge can reach one
+    const mergesConst = () =>
+      isSchemaObject<S>(readProperty) &&
+      holdsAnyOf(readProperty, MERGING_KEYWORDS) &&
+      seeds.some(({ node }) => mergeReachesConst<S>(view.graph, node)) &&
+      constValueOf<S>(retrieveField<S, F>(context, rootProvenance<S>(view.graph, seeds), formData[key])) !== undefined;
     const hasConst =
-      ((isObject(readProperty) && CONST_KEY in readProperty) || hasParentConst) &&
       defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-      !constIsAjvDataReference(readProperty);
+      !constIsAjvDataReference(readProperty) &&
+      ((isObject(readProperty) && CONST_KEY in readProperty) || hasParentConst || mergesConst());
     // A property stubbed by `stubExistingAdditionalProperties()` from `additionalProperties`/`patternProperties`
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.

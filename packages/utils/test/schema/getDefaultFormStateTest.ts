@@ -2976,6 +2976,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it.each(['populateRequiredDefaults', 'skipDefaults'] as const)(
+          'adds an optional property whose allOf holds a const as one with its own, under emptyObjectFields %s',
+          (emptyObjectFields) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              definitions: { K: { const: 'a' } },
+              properties: {
+                own: { type: 'string', const: 'a' },
+                wrapped: { type: 'string', allOf: [{ const: 'a' }] },
+                ref: { $ref: '#/definitions/K' },
+                wrappedRef: { allOf: [{ $ref: '#/definitions/K' }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+                { schema, formData: {} },
+              ),
+            ).toStrictEqual({ own: 'a', wrapped: 'a', ref: 'a', wrappedRef: 'a' });
+          },
+        );
+
         it.each<[GenericObjectType, GenericObjectType]>([
           [{}, {}],
           [{ c: 'z' }, { c: 'z' }],
