@@ -1,5 +1,5 @@
 import { absentKeywordAllows } from '../additionalPropertiesUtils.ts';
-import { ADDITIONAL_PROPERTY_FLAG, ALL_OF_KEY, IF_KEY, REF_KEY } from '../constants.ts';
+import { ADDITIONAL_PROPERTY_FLAG, ALL_OF_KEY, CONST_KEY, IF_KEY, ITEMS_KEY, REF_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
@@ -20,8 +20,9 @@ import type {
   StrictRJSFSchema,
 } from '../types.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
-import { takesValueOf, writesPropertyDefault } from './getDefaultFormState.ts';
-import { withoutKeys } from './graph/mergePlan.ts';
+import { computeDefaults, takesValueOf, writesPropertyDefault } from './getDefaultFormState.ts';
+import { refDefinition, withoutKeys } from './graph/mergePlan.ts';
+import nodeOfSchema from './graph/nodeOfSchema.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
 /** Returns the `default` the defaults fill the field `schema` describes with, given the one the field holding it was
@@ -159,27 +160,31 @@ function writtenKeys<S extends StrictRJSFSchema, F extends FormContextType>(
     // An extra key `retrieveSchema()` stubbed among the properties is seeded below, as the fill seeds one
     if (Object.hasOwn(properties, key) && !hasSchemaMarker(properties[key], ADDITIONAL_PROPERTY_FLAG)) {
       const property = (isObject(properties[key]) ? properties[key] : {}) as S;
-      // An object default is cut down by its schema, and the fill reads a default of its own through a `$ref`, the
-      // option it picks, an `if` unless under `skipEmptyDefaults` and an `allOf` only under `populateDefaults`, so only
-      // then is it resolved, with the options the fill renders for it merged in. The fill applies its conditions as for
-      // no data, not against its default
-      const propertySchema =
-        isObject(value) ||
-        REF_KEY in property ||
-        (context.defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in property) ||
-        (context.defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in property) ||
-        (getXxxOfOptions<S>(property) && !isConstantSelect<S>(property))
-          ? withFilledOptions<S, F>(
-              context,
-              rootSchema,
-              retrieveSchema<unknown, S, F>(context, property, rootSchema, undefined),
-              value,
-            )
-          : property;
-      // The fill writes the property's own `default` over the one its object hands it, as `computedDefault()` reads it
-      const propertyDefault = computedDefault<S, F>(context, propertySchema, value);
+      // An object default is cut down by its schema, resolved with the options the fill renders for it merged in, and
+      // read with its conditions applied as for no data, not against its default
+      const propertySchema = isObject(value)
+        ? withFilledOptions<S, F>(
+            context,
+            rootSchema,
+            retrieveSchema<unknown, S, F>(context, property, rootSchema, undefined),
+            value,
+          )
+        : property;
+      // A value other than an object the fill may compute beyond the property's own `default` for, through a `$ref`, an
+      // option, an `allOf`, an `if`, a `const`, array items or an object or array type, is read through the fill itself,
+      // which merges each of them, at every level, only as its own settings say. Otherwise the fill writes the
+      // property's own `default` over the one its object hands it, as `computedDefault()` reads it
+      const isRequiredKey = schema.required?.includes(key);
+      const ownDefaultSchema = isObject(value) ? propertySchema : ownDefaultSchemaOf<S>(property, rootSchema);
+      const propertyDefault = ownDefaultSchema
+        ? computedDefault<S, F>(context, ownDefaultSchema, value)
+        : computeDefaults<unknown, S, F>(context, property, {
+            rootSchema,
+            parentDefaults: value,
+            required: isRequiredKey,
+          });
       const propertyValue = writtenDefault<S, F>(context, rootSchema, propertySchema, propertyDefault, {
-        isRequired: schema.required?.includes(key),
+        isRequired: isRequiredKey,
         isParentRequired: isRequired,
       });
       if (propertyValue !== undefined) {
@@ -192,6 +197,34 @@ function writtenKeys<S extends StrictRJSFSchema, F extends FormContextType>(
     }
   }
   return written;
+}
+
+/** The schema whose own `default` the fill writes into the property `schema` describes over its object's, or
+ * `undefined` where the fill may compute another value for it. That is the property itself, or for a `$ref` to a select
+ * over constants the definition it names with the property's own keywords over it, as the fill resolves it, sparing
+ * every enum-like select a fill of its own. shortcut: a select a definition reaches only through an `allOf` or an
+ * option still gets one; upgrade once such selects are common in object defaults
+ */
+function ownDefaultSchemaOf<S extends StrictRJSFSchema>(schema: S, rootSchema: S): S | undefined {
+  let own = schema;
+  if (REF_KEY in schema) {
+    const { graph, node } = nodeOfSchema<S>(schema, rootSchema);
+    own = { ...refDefinition<S>(graph, node), ...withoutKeys(schema, REF_KEY) };
+    if (!isConstantSelect<S>(own)) {
+      return undefined;
+    }
+  }
+  // The fill builds an object or fills an array up to its `minItems` whatever value the object hands it
+  const type = getSchemaType<S>(own);
+  return IF_KEY in own ||
+    ALL_OF_KEY in own ||
+    CONST_KEY in own ||
+    ITEMS_KEY in own ||
+    type === 'object' ||
+    type === 'array' ||
+    (getXxxOfOptions<S>(own) !== undefined && !isConstantSelect<S>(own))
+    ? undefined
+    : own;
 }
 
 /** The default the defaults compute for the field `schema` describes, from its own and the inherited one */

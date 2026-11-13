@@ -3222,6 +3222,36 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       behavior: { emptyObjectFields: 'populateRequiredDefaults' },
       inRequiredObject: true,
     },
+    // The fill merges a scalar key's `allOf` only under `allOf: 'populateDefaults'`, and its `if` not under
+    // `skipEmptyDefaults`, behind a `$ref`, inside an option or beside a `$ref` alike
+    ...(
+      [
+        { name: 'an allOf behind its $ref', c: { $ref: '#/definitions/A' } },
+        {
+          name: 'an allOf inside its oneOf option',
+          c: { type: 'string', oneOf: [{ allOf: [{ default: 'own' }] }, { maxLength: 0 }] },
+        },
+        { name: 'an allOf beside its $ref', c: { $ref: '#/definitions/P', allOf: [{ default: 'own' }] } },
+        {
+          name: "an if behind its $ref under emptyObjectFields: 'skipEmptyDefaults'",
+          c: { $ref: '#/definitions/I' },
+          behavior: { emptyObjectFields: 'skipEmptyDefaults' },
+        },
+      ] as { name: string; c: RJSFSchema; behavior?: DefaultFormStateBehavior }[]
+    ).map(({ name, c, behavior }) => ({
+      name: `a scalar key whose own default ${name} declares, which the fill skips`,
+      schemaWith: (a: string): RJSFSchema => ({
+        type: 'object',
+        definitions: {
+          A: { allOf: [{ type: 'string' }, { default: 'own' }] },
+          I: { type: 'string', if: { maxLength: 100 }, then: { default: 'own' } },
+          P: { type: 'string' },
+        },
+        properties: { o: { type: 'object', default: { c: a }, properties: { c } }, w: { type: 'string' } },
+      }),
+      filled: (a: string) => ({ c: a }),
+      behavior,
+    })),
   ])(
     'gives way a clear of an object whose written default changes in $name',
     ({ schemaWith, filled, behavior, inRequiredObject }) => {

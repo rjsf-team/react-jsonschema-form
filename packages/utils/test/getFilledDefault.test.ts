@@ -83,6 +83,22 @@ describe('getFilledDefault()', () => {
     expect(context.validator.isValid).not.toHaveBeenCalled();
   });
 
+  it('reads a key that is a select over constants, or a $ref to one, by its own default, sparing it a fill', () => {
+    const context: SchemaContext = { validator: getTestValidator({}) };
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: { color: { type: 'string', default: 'x', oneOf: [{ const: 'x' }, { const: 'y' }] } },
+      properties: {
+        d: { type: 'string', oneOf: [{ const: 'x' }, { const: 'y' }] },
+        e: { $ref: '#/definitions/color' },
+      },
+      default: { d: 'y', e: 'y' },
+    };
+
+    expect(getFilledDefault(context, schema, schema, undefined, { isRequired: true })).toEqual({ d: 'y', e: 'x' });
+    expect(context.validator.isValid).not.toHaveBeenCalled();
+  });
+
   it('stops picking at an option list it has picked from, as an option leads back to it', () => {
     const rootSchema: RJSFSchema = {
       definitions: {
@@ -219,6 +235,90 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
       },
       placement: optional,
       expected: { e: 'object' },
+    },
+    {
+      // The fill merges an `allOf` only under `allOf: 'populateDefaults'`, and an `if` not under `skipEmptyDefaults`,
+      // wherever it sits: behind a `$ref`, inside an option or beside either
+      name: "a scalar key's allOf or if behind its $ref or option is read as the fill's settings say",
+      context: descendantWins,
+      schema: {
+        type: 'object',
+        definitions: { A: { allOf: [{ type: 'string' }, { default: 'own' }] }, P: { type: 'string' } },
+        properties: {
+          a: { $ref: '#/definitions/A' },
+          b: { type: 'string', oneOf: [{ allOf: [{ default: 'own' }] }, { maxLength: 0 }] },
+          c: { $ref: '#/definitions/P', allOf: [{ default: 'own' }] },
+        },
+        default: { a: 'object', b: 'object', c: 'object' },
+      },
+      placement: optional,
+      expected: { a: 'object', b: 'object', c: 'object' },
+    },
+    {
+      name: "a scalar key's if behind its $ref or option is not read under skipEmptyDefaults",
+      context: { ...descendantWins, defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' } },
+      schema: {
+        type: 'object',
+        definitions: { I: { type: 'string', if: { maxLength: 100 }, then: { default: 'own' } } },
+        properties: {
+          a: { $ref: '#/definitions/I' },
+          b: { type: 'string', oneOf: [{ if: { maxLength: 100 }, then: { default: 'own' } }, { maxLength: 0 }] },
+        },
+        default: { a: 'object', b: 'object' },
+      },
+      placement: optional,
+      expected: { a: 'object', b: 'object' },
+    },
+    {
+      // The fill writes a `const` over a default, fills an array up to its `minItems` with its items' default, and
+      // fills a required one only under `requiredOnly`, behind a `$ref` or not
+      name: "a key's const and array items are read as the fill writes them",
+      context: { ...descendantWins, defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } } },
+      schema: {
+        type: 'object',
+        definitions: { L: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' } } },
+        properties: {
+          k: { type: 'string', const: 'k' },
+          l: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' } },
+          r: { $ref: '#/definitions/L' },
+        },
+        required: ['l', 'r'],
+        default: { k: 'object', l: [], r: [] },
+      },
+      placement: optional,
+      expected: { k: 'k', l: ['z', 'z'], r: ['z', 'z'] },
+    },
+    {
+      // The fill reads a `$ref`'s own keywords over the definition's, and a `const` a definition it chains through holds
+      name: "a key's $ref to a select over constants is read with its own keywords and its chain's const",
+      context: descendantWins,
+      schema: {
+        type: 'object',
+        definitions: {
+          E: { type: 'string', enum: ['a', 'b'], default: 'a' },
+          C: { $ref: '#/definitions/E', const: 'b' },
+        },
+        properties: { s: { $ref: '#/definitions/E', default: 'b' }, c: { $ref: '#/definitions/C' } },
+        default: { s: 'q', c: 'q' },
+      },
+      placement: optional,
+      expected: { s: 'b', c: 'b' },
+    },
+    {
+      // The fill builds an object over a value that is none, and fills an array without `items` up to its `minItems`
+      name: 'a key typed object or array is read as the fill writes it over a value that is no object',
+      context: descendantWins,
+      schema: {
+        type: 'object',
+        properties: {
+          o: { type: 'object', properties: { x: { type: 'string', default: 'd' } } },
+          l: { type: 'array', minItems: 2 },
+        },
+        required: ['l'],
+        default: { o: null, l: [] },
+      },
+      placement: optional,
+      expected: { o: { x: 'd' }, l: [undefined, undefined] },
     },
     {
       // The fill merges the option a field holding no data matches by its default into the field

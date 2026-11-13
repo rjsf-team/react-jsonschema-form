@@ -2236,7 +2236,6 @@ function helperView<S extends StrictRJSFSchema, F extends FormContextType>(
  * @param rawSchema - The schema for which the default state is desired
  * @param computeDefaultsProps - Optional props for this function
  * @returns - The resulting `formData` with all the defaults provided
- * @testSeam Exported for utils' own tests
  */
 export function computeDefaults<
   T = unknown,
