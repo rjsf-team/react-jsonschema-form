@@ -544,6 +544,9 @@ interface MergedSchema<S extends StrictRJSFSchema> {
   field?: Provenance<S>;
   context?: object;
   schema?: S;
+  /** What `constSchemaOf()` gave the view, and the context it gave it for */
+  constContext?: object;
+  constSchema?: S;
 }
 
 /** The options selected for a field: the option chosen from each list, by the node holding it, and the lists chosen
@@ -2492,23 +2495,33 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
 ): S {
-  if (context.defaultFormStateBehavior?.constAsDefaults === 'never' || !holdsAnyOf(view.schema, MERGING_KEYWORDS)) {
-    return view.schema;
+  // Read by the fold, the object defaults and the fold's type for one view, so it is worked out once for the view
+  const { merged } = view;
+  if (merged.constSchema === undefined || merged.constContext !== context) {
+    let constSchema = view.schema;
+    if (context.defaultFormStateBehavior?.constAsDefaults !== 'never' && holdsAnyOf(view.schema, MERGING_KEYWORDS)) {
+      const { graph, seeds } = fieldOfView<S>(view);
+      const mergedSchema = seeds.some(({ node }) => mergeReachesConst<S>(graph, node))
+        ? mergedSchemaOf<S, F>(context, view)
+        : view.schema;
+      constSchema = constValueOf<S>(mergedSchema) === undefined ? view.schema : mergedSchema;
+    }
+    merged.constSchema = constSchema;
+    merged.constContext = context;
   }
-  const { graph, seeds } = fieldOfView<S>(view);
-  const merged = seeds.some(({ node }) => mergeReachesConst<S>(graph, node))
-    ? mergedSchemaOf<S, F>(context, view)
-    : view.schema;
-  return constValueOf<S>(merged) === undefined ? view.schema : merged;
+  return merged.constSchema;
 }
 
 /** Whether a merge from a node, by `mergeReachesConst()`, reaches a `const`, by graph, node and whether it reads the
- * options of the node's scope; for a node still being walked, the depth of the walk it is open at
+ * options of the node's scope; for a node whose answer waits on a cycle still being walked, the depth of the
+ * shallowest open node it leads back to
  */
 const constReach = new KeyedMemo<boolean | number | undefined>();
 
-/** How deep `mergeReachesConst()` is in its walk, and the shallowest open node the nodes below have read */
-const constWalk = { depth: 0, lowestRead: Infinity };
+/** How deep `mergeReachesConst()` is in its walk, the shallowest open node the nodes below have read, and the keys of
+ * the nodes whose answer waits on the cycle they lead back to
+ */
+const constWalk = { depth: 0, lowestRead: Infinity, unsettled: [] as (readonly unknown[])[] };
 
 /** Whether any subschema retrieving the node `from` may merge in declares a `const`: one in its scope, see
  * `scopeNodes()`, which holds its `$ref`, `allOf`, `then`/`else` and `dependencies` subschemas but no `if`, a condition
@@ -2534,8 +2547,9 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
     return false;
   }
   constWalk.depth += 1;
-  const { depth } = constWalk;
+  const { depth, unsettled } = constWalk;
   const outerRead = constWalk.lowestRead;
+  const settledBefore = unsettled.length;
   constWalk.lowestRead = Infinity;
   constReach.set(keys, depth);
   let reaches: boolean | undefined;
@@ -2556,13 +2570,24 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
     );
     return reaches;
   } finally {
-    // The walk is left as it was entered even where the graph throws, so no node stays open. A `const` found stays
-    // found, but none found may be only because an open node above read as none, so that answer is worked out again
-    // once the node is settled, as one the walk never finished is
+    // The walk is left as it was entered even where the graph throws, so no node stays open, and the nodes it left
+    // unsettled are worked out again. A `const` found stays found. None found may be only because an open node above
+    // read as none, so the node waits on the cycle through that node, as open as it is; once the walk is back at the
+    // first node of the cycle, every node of it reaches what that node reaches, so they settle with it, each walked
+    // once
     constWalk.depth -= 1;
-    const readAbove = constWalk.lowestRead < depth;
-    constReach.set(keys, reaches === true || !readAbove ? reaches : undefined);
-    constWalk.lowestRead = Math.min(outerRead, readAbove ? constWalk.lowestRead : Infinity);
+    const low = constWalk.lowestRead;
+    const settles = reaches !== undefined && low >= depth;
+    if (reaches === false && !settles) {
+      constReach.set(keys, low);
+      unsettled.push(keys);
+    } else {
+      constReach.set(keys, reaches);
+    }
+    if (reaches === undefined || settles) {
+      unsettled.splice(settledBefore).forEach((waiting) => constReach.set(waiting, reaches));
+    }
+    constWalk.lowestRead = Math.min(outerRead, low < depth ? low : Infinity);
   }
 }
 

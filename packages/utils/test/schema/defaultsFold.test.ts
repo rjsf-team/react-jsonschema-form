@@ -1468,6 +1468,36 @@ describe('mergeReachesConst()', () => {
     expect(mergeReachesConst(graph, node('/definitions/P/oneOf/0/oneOf/0'), true)).toBe(true);
   });
 
+  it('walks each node of a cycle that reaches no const once', () => {
+    // Each definition offers the next twice over, and the last leads back to the first, so a walk that worked out a
+    // node again on every path to it would take 2^n steps
+    const n = 24;
+    const definitions: Record<string, RJSFSchema> = {};
+    for (let index = 0; index < n; index += 1) {
+      const next = `#/definitions/D${(index + 1) % n}`;
+      definitions[`D${index}`] = { oneOf: [{ $ref: next }, { $ref: next }] };
+    }
+    const graph = parseSchemaGraph({ definitions });
+    const first = graph.byPointer('/definitions/D0');
+    const started = performance.now();
+    expect(first !== undefined && mergeReachesConst(graph, first, true)).toBe(false);
+    expect(performance.now() - started).toBeLessThan(1000);
+  });
+
+  it('settles every node of a cycle with the const one of them reaches', () => {
+    const graph = parseSchemaGraph({
+      definitions: {
+        A: { oneOf: [{ $ref: '#/definitions/B' }] },
+        B: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/C' }] },
+        C: { const: 'x' },
+      },
+    });
+    const node = (pointer: string) => graph.byPointer(pointer) ?? -1;
+    expect(mergeReachesConst(graph, node('/definitions/A'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/A/oneOf/0'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/B/oneOf/0'), true)).toBe(true);
+  });
+
   it('leaves no node open where the graph throws', () => {
     const graph = parseSchemaGraph({ definitions: { c: { const: 'x' } } });
     const unknown = 1_000_000;
