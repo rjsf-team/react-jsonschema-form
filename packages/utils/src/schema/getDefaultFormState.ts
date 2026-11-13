@@ -1782,8 +1782,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   }
   // A key a property of an `allOf` the plan left unmerged declares, whatever the data, is no extra key of the field as
   // rendered, so its data is matched to that property below and its default is the field's. A key only an unmerged
-  // `then`, `else` or `dependencies` declares stays an extra key (#5816). Each key is asked about in several places, so
-  // it is worked out once per call
+  // `then`, `else` or `dependencies` declares stays an extra key (#5816), as does one the merge leaves out, as it leaves
+  // the `allOf`'s properties out beside `additionalProperties: false`. Each key is asked about in several places, so it
+  // is worked out once per call
   const allOfKeys = new Map<string, boolean>();
   const declaredInAllOf = (key: string) => {
     if (!(ALL_OF_KEY in view.schema)) {
@@ -1792,7 +1793,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     let declared = allOfKeys.get(key);
     if (declared === undefined) {
       const { graph, seeds } = fieldOfView<S>(view);
-      declared = seeds.some(({ node }) => declaresUnconditionally<S>(graph, node, key));
+      const property: unknown = getByPath(mergedSchemaOf<S, F>(context, view).properties, key);
+      declared =
+        property !== undefined &&
+        !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG) &&
+        seeds.some(({ node }) => declaresUnconditionally<S>(graph, node, key));
       allOfKeys.set(key, declared);
     }
     return declared;

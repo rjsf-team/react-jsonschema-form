@@ -2976,6 +2976,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it.each<[GenericObjectType, GenericObjectType]>([
+          [{}, {}],
+          [{ c: 'z' }, { c: 'z' }],
+        ])(
+          "reads a key the merge leaves out of an object's allOf beside additionalProperties false as an extra key, with %j",
+          (value, expected) => {
+            const w: RJSFSchema = {
+              type: 'object',
+              additionalProperties: false,
+              default: { c: 'b' },
+              allOf: [{ properties: { c: { type: 'string', enum: ['a', 'b'], default: 'a' } } }],
+            };
+            const schema: RJSFSchema = { type: 'object', properties: { w } };
+            expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { w: value } })).toStrictEqual(
+              { w: expected },
+            );
+          },
+        );
+
         it.each<[string, RJSFSchema, RJSFSchema]>([
           ['its own', { enum: ['red', 'green', null], default: null }, {}],
           ["the object's", { enum: ['red', 'green', null] }, { default: { c: null } }],
