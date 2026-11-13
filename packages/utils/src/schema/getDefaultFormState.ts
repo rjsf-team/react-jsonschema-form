@@ -1688,11 +1688,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const isComputed = (key: string) => isDeclared(key) || unmergedProperties.has(key);
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
-  const childProps = (key: string, uiSchemaKey: string) => ({
+  const childProps = (key: string, uiSchemaKey: string, declaring = schema) => ({
     includeUndefinedValues: includeUndefinedValues === true,
     parentDefaults: getByPath(defaults, key),
     rawFormData: getByPath(formData, key),
-    required: schema.required?.includes(key),
+    required: declaring.required?.includes(key),
     shouldMergeDefaultsIntoFormData,
     initialDefaultsGenerated,
     uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaKey),
@@ -1752,7 +1752,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // property, rather than a dynamically-named entry.
     const addedByAdditionalProperty = hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG);
     const child = defaultsChild(seeding, seeds, edge, propertySchema);
-    const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
+    // Its `required` is read from the schema that declares it, as its seeds are
+    const declaring = seeding.schema;
+    const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key, declaring);
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
     // `null` of none of them is filled in until the user adds it
     const propertyNullFills = nullFillsForProperty<T, S, F>(context, child, propertySchema, {
@@ -1779,7 +1781,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         property.value,
         includeUndefinedValues,
         required,
-        schema.required,
+        declaring.required,
         defaultFormStateBehavior?.emptyObjectFields,
         hasConst,
       );
@@ -1811,7 +1813,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         property.value,
         includeUndefinedValues,
         required,
-        schema.required,
+        declaring.required,
         defaultFormStateBehavior?.emptyObjectFields,
         hasConst,
         property.holdsNull,

@@ -402,6 +402,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             }
           }
         });
+        it('reads whether a key of a const that only an unmerged allOf declares is required from that allOf', () => {
+          const k: RJSFSchema = {
+            type: 'object',
+            properties: { n: { type: 'string', default: 'd' } },
+            required: ['n'],
+          };
+          const z: RJSFSchema = { type: 'string' };
+          const inAllOf: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                properties: { z },
+                required: ['z'],
+                allOf: [{ properties: { k }, required: ['k'] }],
+                const: { k: {} },
+              },
+            },
+          };
+          const declared: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', properties: { z, k }, required: ['z', 'k'], const: { k: {} } } },
+          };
+          const requiredOnly: DefaultFormStateBehavior = { emptyObjectFields: 'populateRequiredDefaults' };
+          for (const schema of [inAllOf, declared]) {
+            expect(utils(schema, requiredOnly).getDefaultFormState(schema)).toStrictEqual({ x: { k: { n: 'd' } } });
+          }
+        });
         it('folds a key of a const that only an unmerged allOf declares from that property, not the extra-key schema', () => {
           const withDefault: RJSFSchema = {
             type: 'object',
