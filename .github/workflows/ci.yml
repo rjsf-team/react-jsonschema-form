@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, v7]
+    branches: [main]
   pull_request:
-    branches: [main, v7]
+    branches: [main]
 
 jobs:
   # None of these depend on the Node version or on a build, so they run once in their own job rather
@@ -20,7 +20,7 @@ jobs:
           run_install: false
       - uses: actions/setup-node@v7
         with:
-          node-version: 24.x
+          node-version: 26.x
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
@@ -59,12 +59,12 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-      - if: matrix.node-version == '24.x'
+      - if: matrix.node-version == '26.x'
         uses: actions/upload-artifact@v7
         with:
           name: playground
           path: packages/playground/dist
-      - if: matrix.node-version == '24.x'
+      - if: matrix.node-version == '26.x'
         uses: actions/upload-artifact@v7
         with:
           name: docs
