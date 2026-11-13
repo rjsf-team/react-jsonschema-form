@@ -271,6 +271,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(bare).getDefaultFormState(bare, undefined, false, false, uiSchema)).toStrictEqual({});
           expect(utils(bare).getDefaultFormState(bare, {}, false, true, uiSchema)).toStrictEqual({});
         });
+        it('leaves out a key of a const that closes the object which a ui:initialValue gives as undefined, unless undefined values are included', () => {
+          const two: RJSFSchema = { type: 'object', const: { a: 1, b: 2 } };
+          const uiSchema = { 'ui:initialValue': { a: 5, b: undefined } };
+          const withUndefined = (include: boolean | 'excludeObjectChildren') =>
+            utils(two).getDefaultFormState(two, undefined, include, false, uiSchema);
+          expect(withUndefined(false)).toStrictEqual({ a: 5 });
+          expect(withUndefined('excludeObjectChildren')).toStrictEqual({ a: 5, b: undefined });
+          expect(withUndefined(true)).toStrictEqual({ a: 5, b: undefined });
+        });
         it('reads the keys of a const that closes the object from a ui:initialValue, as a declared key is', () => {
           const uiSchema = { 'ui:initialValue': { a: 5, z: 1 } };
           const closed: RJSFSchema = { ...bare, additionalProperties: false };
