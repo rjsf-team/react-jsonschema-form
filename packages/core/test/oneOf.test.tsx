@@ -873,6 +873,26 @@ describe('oneOf', () => {
       uiSchemaOf: (t) => ({ oneOf: [{ t }, { t }] }),
       expected: ['i', 'i'],
     },
+    // The uiSchema the option switched to renders the key with fills it, though it differs from the old one elsewhere
+    ...[
+      { label: 'a new default', to: { default: ['y'] } },
+      { label: 'a new maxItems', to: { maxItems: 3 } },
+    ].map(({ label, to }) => ({
+      name: `${label}, each option's uiSchema titling it apart`,
+      to,
+      uiSchemaOf: (t: UiSchema): UiSchema => ({
+        oneOf: [{ t: { ...t, 'ui:title': 'A' } }, { t: { ...t, 'ui:title': 'B' } }],
+      }),
+      expected: ['i', 'i'],
+    })),
+    {
+      name: "a new default, the new option's uiSchema titling it apart beside an additionalProperties uiSchema",
+      to: { default: ['y'] },
+      uiSchemaOf: (t) => ({
+        oneOf: [{ t: { ...t, 'ui:title': 'A' } }, { t: { ...t, 'ui:title': 'B' }, additionalProperties: {} }],
+      }),
+      expected: ['i', 'i'],
+    },
     {
       name: "a new default, the new option's uiSchema leaving it out over the field's",
       to: { default: ['y'] },
@@ -904,6 +924,127 @@ describe('oneOf', () => {
       );
     },
   );
+
+  // The fill reads the uiSchema of a field switched below the root, or of an array item, at the switched field's path
+  it.each<{
+    name: string;
+    schemaOf: (option: RJSFSchema[]) => RJSFSchema;
+    uiSchemaOf: (t: UiSchema) => UiSchema;
+    select: string;
+    formDataOf: (option: GenericObjectType) => unknown;
+  }>([
+    {
+      name: 'a property',
+      schemaOf: (oneOf) => ({ type: 'object', properties: { o: { oneOf } } }),
+      uiSchemaOf: (t) => ({ o: { t } }),
+      select: '#root_o__oneof_select',
+      formDataOf: (option) => ({ o: option }),
+    },
+    {
+      name: 'an array item',
+      schemaOf: (oneOf) => ({ type: 'array', minItems: 1, items: { oneOf } }),
+      uiSchemaOf: (t) => ({ items: { t } }),
+      select: '#root_0__oneof_select',
+      formDataOf: (option) => [option],
+    },
+  ])(
+    'should fill out a key an items ui:initialValue filled anew when switching the options of $name',
+    async ({ schemaOf, uiSchemaOf, select, formDataOf }) => {
+      const optionFor = (kind: string, fieldDefault: string[]): RJSFSchema => ({
+        title: kind,
+        type: 'object',
+        properties: {
+          kind: { type: 'string', const: kind, default: kind },
+          t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: fieldDefault },
+        },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: schemaOf([optionFor('a', ['x']), optionFor('b', ['y'])]),
+        uiSchema: uiSchemaOf({ items: { 'ui:initialValue': 'i' } }),
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>(select)!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: formDataOf({ kind: 'b', t: ['i', 'i'] }) }),
+        select.slice(1),
+      );
+    },
+  );
+
+  it('should fill out a key an items ui:initialValue under ui:definitions filled anew when switching options', async () => {
+    const optionFor = (kind: string, fieldDefault: string[]): RJSFSchema => ({
+      title: kind,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: kind, default: kind },
+        t: { $ref: '#/$defs/T', default: fieldDefault },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: {
+        $defs: { T: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' } } },
+        oneOf: [optionFor('a', ['x']), optionFor('b', ['y'])],
+      },
+      uiSchema: { 'ui:definitions': { '#/$defs/T': { items: { 'ui:initialValue': 'i' } } } },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', t: ['i', 'i'] } }),
+      'root__oneof_select',
+    );
+  });
+
+  it('should fill out a key an items ui:initialValue filled anew where the option switched to renders it through an option of its own', async () => {
+    const t = (fieldDefault: string[]): RJSFSchema => ({
+      type: 'array',
+      minItems: 2,
+      items: { type: 'string', default: 'z' },
+      default: fieldDefault,
+    });
+    const kind = (name: string): RJSFSchema => ({ type: 'string', const: name, default: name });
+    const ui = { t: { items: { 'ui:initialValue': 'i' } } };
+    const { node, onChange } = createFormComponent({
+      schema: {
+        oneOf: [
+          { title: 'a', type: 'object', properties: { kind: kind('a'), t: t(['x']) } },
+          { title: 'b', type: 'object', properties: { kind: kind('b') }, oneOf: [{ properties: { t: t(['y']) } }] },
+        ],
+      },
+      uiSchema: { oneOf: [ui, { oneOf: [ui] }] },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', t: ['i', 'i'] } }),
+      'root__oneof_select',
+    );
+  });
+
+  it('should fill a scalar key anew with the ui:initialValue the option switched to renders it with', async () => {
+    const optionFor = (kind: string, fieldDefault: string): RJSFSchema => ({
+      title: kind,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: kind, default: kind },
+        t: { type: 'string', default: fieldDefault },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a', 'a'), optionFor('b', 'b')] },
+      uiSchema: { oneOf: [{ t: { 'ui:initialValue': 'i' } }, { t: { 'ui:initialValue': 'j' } }] },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', t: 'j' } }),
+      'root__oneof_select',
+    );
+  });
 
   it('should switch the same way wherever required is declared', async () => {
     // The field renders each option merged with the parent's `required` and `type`, so the defaults compared here

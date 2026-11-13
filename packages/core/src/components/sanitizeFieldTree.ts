@@ -682,8 +682,9 @@ const FILLED_KEY = 'field';
  * `required` it had, or has for the new default, and each uiSchema the old one can render it with, see
  * `uiSchemasOn()`, so the fill costs the field rather than the form. A scalar is never filled out, and a value the
  * uiSchema fills from the new default alike, as one the field's own `ui:initialValue` filled, comes back as it is. A
- * key a switch put back, a scalar included, is judged against the option switched away from, and is `DROP`ped for the
- * fill unless the option switched to renders it with a uiSchema alike, see `TreeContext.switchedToUiSchemas`
+ * key a switch put back, a scalar included, is judged against the option switched away from, and is filled out under
+ * the uiSchema the option switched to renders it with, see `TreeContext.switchedToUiSchemas`, or `DROP`ped for the fill
+ * where that is unknown
  */
 function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
@@ -737,17 +738,18 @@ function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!uiSchema) {
     return undefined;
   }
-  // A key a switch put back keeps the uiSchema that filled it only where the option switched to renders it with one
-  // alike, as a fresh mount of that option fills it; elsewhere the fill fills it out anew without
+  if (!isSwitchedAway) {
+    return fillOf(ctx.schemaUtils, newRaw, newDefault, isRequired, uiSchema) ?? DROP;
+  }
+  // A key a switch put back is filled out anew under the uiSchema the option switched to renders it with, as a fresh
+  // mount of that option fills it: the one that filled it where that option renders it alike, else its own
   const switchedTo = ctx.switchedToUiSchemas;
-  const isRenderedAlike =
-    switchedTo !== undefined &&
-    oldPath !== undefined &&
-    uiSchemasBelow(switchedTo.uiSchemas, oldPath.slice(switchedTo.depth)).some((found) => deepEquals(found, uiSchema));
-  if (isSwitchedAway && !isRenderedAlike) {
+  if (switchedTo === undefined || oldPath === undefined) {
     return DROP;
   }
-  return fillOf(ctx.schemaUtils, newRaw, newDefault, isRequired, uiSchema) ?? DROP;
+  const rendered = uiSchemasBelow(switchedTo.uiSchemas, oldPath.slice(switchedTo.depth));
+  const renderedWith = rendered.find((found) => deepEquals(found, uiSchema)) ?? rendered[0] ?? {};
+  return fillOf(ctx.schemaUtils, newRaw, newDefault, isRequired, renderedWith as UiSchema<T, S, F>) ?? DROP;
 }
 
 /** The default the defaults fill a field rendered with `layers` with, given the one it inherits, see
@@ -953,8 +955,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       | undefined;
     if (isSwitched && switchedFrom.heldKeys.size > 0) {
       // The option switched to renders the keys with its own entry of the switched field's uiSchema option list where
-      // that list holds one, and with the field's uiSchema otherwise, as `getOptionUiSchema()` picks it, so a key's old
-      // `ui:initialValue` still applies where that holds the uiSchema that filled it
+      // that list holds one, and with the field's uiSchema otherwise, as `getOptionUiSchema()` picks it, so a key is
+      // filled out anew under the uiSchema that option renders it with
       const newOptions = retrievedOptionsOf<T, S, F>(ctx.schemaUtils, newLayers[0], asFieldValue<T>(newValue));
       const newIndex = newOptions
         ? shown.get(optionListKey<S>(newOptions, ctx.schemaUtils.getRootSchema()))
@@ -1197,12 +1199,14 @@ function uiSchemasAt(uiSchema: GenericObjectType, key: string | number): unknown
   return [uiSchema[key], uiSchema.additionalProperties];
 }
 
-/** `uiSchemas` that are objects, each followed by the uiSchemas its `anyOf`/`oneOf` options hold, theirs included */
+/** `uiSchemas` that are objects, in order, then the uiSchemas their `anyOf`/`oneOf` options hold, theirs included, so a
+ * field's own uiSchema comes before its `additionalProperties` or `additionalItems` one
+ */
 function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
   const found: GenericObjectType[] = [];
   const pending = [...uiSchemas];
   while (pending.length > 0) {
-    const uiSchema = pending.pop();
+    const uiSchema = pending.shift();
     if (isObject(uiSchema) && !found.includes(uiSchema)) {
       found.push(uiSchema);
       for (const options of [uiSchema[ANY_OF_KEY], uiSchema[ONE_OF_KEY]]) {
