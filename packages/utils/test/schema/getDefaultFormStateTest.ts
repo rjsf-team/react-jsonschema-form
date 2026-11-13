@@ -3093,18 +3093,31 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
-        it.each<[string, DefaultFormStateBehavior, string]>([
-          ["the property's own", {}, 'green'],
-          ["the object's under ancestorWins", { nestedDefaultsPrecedence: 'ancestorWins' }, 'red'],
+        it.each<[string, DefaultFormStateBehavior, unknown, string]>([
+          ["the property's own", {}, 'red', 'green'],
+          ["the object's under ancestorWins", { nestedDefaultsPrecedence: 'ancestorWins' }, 'red', 'green'],
+          [
+            "the property's own under ancestorWins where its type can't hold the object's number",
+            { nestedDefaultsPrecedence: 'ancestorWins' },
+            5,
+            'green',
+          ],
+          [
+            "the property's own under ancestorWins where its type can't hold the object's null",
+            { nestedDefaultsPrecedence: 'ancestorWins' },
+            null,
+            'green',
+          ],
         ])(
           "replaces a value outside the enum of a key an object's allOf declares with %s default, as for its own property",
-          (_name, behavior, expected) => {
-            const c: RJSFSchema = { enum: ['red', 'green'], default: 'green' };
+          (name, behavior, objectDefault, ownDefault) => {
+            const c: RJSFSchema = { type: 'string', enum: ['red', 'green'], default: 'green' };
+            const expected = name.startsWith("the object's") ? objectDefault : ownDefault;
             const schema: RJSFSchema = {
               type: 'object',
               properties: {
-                own: { type: 'object', default: { c: 'red' }, properties: { c } },
-                wrapped: { type: 'object', default: { c: 'red' }, allOf: [{ properties: { c } }] },
+                own: { type: 'object', default: { c: objectDefault }, properties: { c } },
+                wrapped: { type: 'object', default: { c: objectDefault }, allOf: [{ properties: { c } }] },
               },
             };
             expect(
@@ -3130,6 +3143,49 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             own: { c: 'x' },
             wrapped: { c: 'x' },
           });
+        });
+
+        it.each<[RJSFSchema, string]>([
+          [{ const: 'q' }, 'q'],
+          [{ type: 'string' }, 'r'],
+        ])(
+          "keeps a key an object's allOf declares that the data holds beside an object const that doesn't name it, as its own property %j",
+          (c, expected) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', allOf: [{ const: { a: 1 } }], properties: { c } },
+                wrapped: { type: 'object', allOf: [{ const: { a: 1 } }, { properties: { c } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { own: { c: 'r', a: 1 }, wrapped: { c: 'r', a: 1 } } },
+              ),
+            ).toStrictEqual({ own: { c: expected, a: 1 }, wrapped: { c: expected, a: 1 } });
+          },
+        );
+
+        it("keeps the null fill of a key only an unmerged then declares that the object's default names", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['w'],
+            properties: {
+              w: {
+                type: 'object',
+                default: { c: 'x' },
+                if: true,
+                then: { required: ['c'], properties: { c: { type: 'null' } } },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' } },
+              { schema, formData: {} },
+            ),
+          ).toStrictEqual({ w: { c: null } });
         });
 
         it("fills a key an object's allOf declares beside an object const that doesn't name it, as its own property", () => {

@@ -1777,9 +1777,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   }
   // A key a property of an `allOf` the plan left unmerged declares, whatever the data, is no extra key of the field as
   // rendered, so its data is matched to that property below and its default is the field's. A key only an unmerged
-  // `then`, `else` or `dependencies` declares stays an extra key (#5816), as does one the merge leaves out, as it leaves
-  // the `allOf`'s properties out beside `additionalProperties: false`. Each key is asked about in several places, so it
-  // is worked out once per call
+  // `then`, `else` or `dependencies` declares stays an extra key (#5816), as does one the merge leaves out, as it
+  // leaves the `allOf`'s properties out beside `additionalProperties: false`. Each key is asked about in several places,
+  // so it is worked out once per call
   const allOfKeys = new Map<string, boolean>();
   const declaredInAllOf = (key: string) => {
     if (!(ALL_OF_KEY in view.schema)) {
@@ -1893,9 +1893,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // A key only an `allOf` the plan left unmerged declares is filled as a property of the object's own is, where the
   // data lacks it or holds it as `undefined` that `mergeDefaultsIntoFormData` says a default replaces: its default is
   // folded through the property the merge gives it, and it is required where the merged schema requires it. One that
-  // holds a `null` fill was added, and reported, by `branchNullFills()` above. Under `allOf: 'skipDefaults'` the
-  // `allOf`'s own defaults don't fill a key the data lacks, so one is filled only where the object's default names it
-  // or a `const` gives it its value
+  // `branchNullFills()` already filled is skipped, as its fold would give the same `null`. Under `allOf:
+  // 'skipDefaults'` the `allOf`'s own defaults don't fill a key the data lacks, so one is filled only where the object's
+  // default names it or a `const` gives it its value
   if (ALL_OF_KEY in view.schema) {
     const mergedSchema = mergedSchemaOf<S, F>(context, view);
     const rootGraph = parseSchemaGraph<S>(rootSchema);
@@ -1942,10 +1942,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // it. Only those keys are matched, as the fold computed the others. A `null` it holds was kept or replaced by the
   // field of the key, as in any other container
   if (shouldMergeDefaultsIntoFormData) {
+    // A key the `allOf` declares is a property of the field, which a `const` that doesn't name it doesn't drop
     const kept = Object.keys(formData).filter((key) => {
       const value = formData[key];
       return (
-        isPinned(key) &&
+        (isPinned(key) || declaredInAllOf(key)) &&
         ((value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior)) ||
           (!Object.hasOwn(computed, key) &&
             (value === undefined || !schema.properties || !Object.hasOwn(schema.properties, key))))
@@ -2839,7 +2840,7 @@ interface PropertyMatch {
   readonly retrievesAll: boolean;
   /** The only properties matched, where given, the others kept as the data holds them */
   readonly keys?: ReadonlySet<string>;
-  /** The object's defaults, which a value an unfolded property rejects takes first */
+  /** The object's defaults, which a value an unfolded property rejects may take, see `matchProperties()` */
   readonly defaults?: unknown;
 }
 
@@ -2847,8 +2848,9 @@ interface PropertyMatch {
  * `formDataMatching()` matches it, where it may reject the value: a value that doesn't match is left out, so the
  * property takes its defaults as one the data lacks does. `declarations` gives the declarations of `matchedSchema`, see
  * `declarationsOf()`, and `match` how the properties are matched. As the fold computes none of an unfolded property, a
- * value one rejects takes its default here, from the object's defaults, or else the property's own; with neither, a
- * value that is no object is kept, as a select keeps one its options don't offer
+ * value one rejects takes its default here: the property's own, or else the object's, the other way round under
+ * `nestedDefaultsPrecedence: 'ancestorWins'` where the property can hold the object's; with neither, a value that is no
+ * object is kept, as a select keeps one its options don't offer
  */
 function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2925,8 +2927,13 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
       if (value === undefined && unfolded) {
         // A `null` default is a default like any other, so only a missing one falls through. The property's own
         // default wins over the object's, as in the fold, unless `nestedDefaultsPrecedence` says the ancestor's does
+        // and the property can hold it
         const defaultsInOrder = [getByPath(readProperty, DEFAULT_KEY), getByPath(defaults, key)];
-        if (context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins') {
+        if (
+          context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' &&
+          isSchemaObject<S>(readProperty) &&
+          takesValueOf<S>(readProperty, defaultsInOrder[1])
+        ) {
           defaultsInOrder.reverse();
         }
         value = [...defaultsInOrder, isObjectData(matched[key]) ? undefined : matched[key]].find(
