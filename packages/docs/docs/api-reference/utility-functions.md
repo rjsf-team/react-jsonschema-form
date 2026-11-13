@@ -245,7 +245,7 @@ Tests that expect such a throw need to catch the timer's error themselves; this 
 
 ### constrainsAlike&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Says whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as `oldSchema`, the `default` the schema holding a field declares for it standing in for its own, as it does for the defaults.
+Says whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as `oldSchema`, the `default` the schema holding a field declares for it standing in where the field declares none, a `null` one counting, as it does for the defaults.
 A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the schema, so it is read as no type.
 These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across a schema change or gives way to the new schema's defaults, as `sanitizeDataForNewSchema()` and an `anyOf`/`oneOf` switch decide it.
 

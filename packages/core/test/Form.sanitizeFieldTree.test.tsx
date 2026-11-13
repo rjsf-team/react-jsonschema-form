@@ -2311,6 +2311,15 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       formExpected: ['x'],
     },
     {
+      // utils leaves the row for the defaults, which `Form` and an option switch fill
+      name: 'empties a null item holding its old null default for the new default to fill, where its position allows no null',
+      from: { type: 'array', items: { type: 'string', default: null } },
+      to: { type: 'array', items: { type: 'string', default: 'y' } },
+      data: [null, 'q'],
+      expected: [undefined, 'q'],
+      formExpected: ['y', 'q'],
+    },
+    {
       name: 'prunes an object item whose new type list names object beside another type',
       from: { type: 'array', items: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } } },
       to: { type: 'array', items: { type: ['string', 'object'], properties: { a: { type: 'number' } } } },
@@ -2450,13 +2459,18 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expected: [['y'], ['q']],
     },
     {
-      // `Form` reads an old `default: null` as no default, so the item keeps its `null`
-      name: 'swaps an item holding an old null default for the new one',
+      name: 'swaps an item holding an old null default for the new one (#5815)',
       from: { type: 'array', items: { type: ['string', 'null'], default: null } },
       to: { type: 'array', items: { type: ['string', 'null'], default: 'y' } },
       data: [null, 'q'],
       expected: ['y', 'q'],
-      formExpected: [null, 'q'],
+    },
+    {
+      name: 'swaps an item holding the old default for a new null one (#5815)',
+      from: { type: 'array', items: { type: ['string', 'null'], default: 'x' } },
+      to: { type: 'array', items: { type: ['string', 'null'], default: null } },
+      data: ['x', 'q'],
+      expected: [null, 'q'],
     },
     {
       name: 'keeps a scalar item a readOnly new default differs from',
@@ -2553,7 +2567,14 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
   });
   // A property under a type list is sanitized through the object holding it, as the array table's items are through the
   // array, where the top-level call would read the list through `getSchemaType()` alone
-  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; data: unknown; expected: unknown }>([
+  it.each<{
+    name: string;
+    from: RJSFSchema;
+    to: RJSFSchema;
+    data: unknown;
+    expected: unknown;
+    formExpected?: unknown;
+  }>([
     ...TYPE_LISTS_NAMING_ARRAY.map((type) => ({
       name: `sanitizes an array property under ${JSON.stringify(type)} as an array`,
       from: { type, properties: { a: {} }, items: { type: 'string' } } satisfies RJSFSchema,
@@ -2605,7 +2626,55 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: ['a'],
       expected: 'x',
     },
-  ])('$name', ({ from, to, data, expected }) => {
+    {
+      name: 'swaps a property holding an old null default for the new one (#5815)',
+      from: { type: ['string', 'null'], default: null },
+      to: { type: ['string', 'null'], default: 'y' },
+      data: null,
+      expected: 'y',
+    },
+    {
+      name: 'swaps a property holding the old default for a new null one (#5815)',
+      from: { type: ['string', 'null'], default: 'x' },
+      to: { type: ['string', 'null'], default: null },
+      data: 'x',
+      expected: null,
+    },
+    // A property's own `default: null` is what the defaults fill it with, not the default its parent's `default` gives it
+    ...[
+      { data: { v: null }, expected: { v: 'y' } },
+      { data: { v: 'x' }, expected: { v: 'x' } },
+    ].map(({ data, expected }) => {
+      const withOwn = (own: string | null): RJSFSchema => ({
+        type: 'object',
+        properties: { v: { type: ['string', 'null'], default: own } },
+        default: { v: 'x' },
+      });
+      return {
+        name: `reads a property's own null default over its parent's, holding ${JSON.stringify(data.v)} (#5815)`,
+        from: withOwn(null),
+        to: withOwn('y'),
+        data,
+        expected,
+      };
+    }),
+    {
+      name: "differs on an own null default giving way to its parent's: Form swaps it, utils keeps it (#5818)",
+      from: { type: 'object', properties: { v: { type: ['string', 'null'], default: null } } },
+      to: { type: 'object', properties: { v: { type: ['string', 'null'] } }, default: { v: 'z' } },
+      data: { v: null },
+      expected: { v: null },
+      formExpected: { v: 'z' },
+    },
+    {
+      name: "differs on a parent's default giving way to an own null one: Form swaps it, utils keeps it (#5818)",
+      from: { type: 'object', properties: { v: { type: ['string', 'null'] } }, default: { v: 'x' } },
+      to: { type: 'object', properties: { v: { type: ['string', 'null'], default: null } } },
+      data: { v: 'x' },
+      expected: { v: 'x' },
+      formExpected: { v: null },
+    },
+  ])('$name', ({ from, to, data, expected, formExpected = expected }) => {
     const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
     const ref = createRef<FormRef<{ value?: unknown }>>();
     const props = { validator, initialFormData: { value: data } };
@@ -2613,10 +2682,27 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
 
     rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
 
-    expect(handleOf(ref).getFormData()).toEqual({ value: expected });
+    expect(handleOf(ref).getFormData()).toEqual({ value: formExpected });
     const sanitized = createSchemaUtils({ validator }, wrap(to)).sanitizeDataForNewSchema(wrap(to), wrap(from), {
       value: data,
     });
     expect(sanitized).toEqual({ value: expected });
+  });
+  it("keeps a clear of a property holding its own null default when its parent's default changes (#5815)", () => {
+    const schemaWith = (parentDefault: string): RJSFSchema => ({
+      type: 'object',
+      default: { v: parentDefault },
+      properties: { v: { type: ['string', 'null'], default: null }, w: { type: 'string' } },
+    });
+    const from = schemaWith('x');
+    const to = schemaWith('z');
+    const data = { v: undefined, w: 'k' };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} validator={validator} initialFormData={data} />);
+
+    rerender(<Form ref={ref} schema={to} validator={validator} initialFormData={data} />);
+
+    expect(handleOf(ref).getFormData()).toStrictEqual(data);
+    expect(createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, from, data)).toStrictEqual(data);
   });
 });

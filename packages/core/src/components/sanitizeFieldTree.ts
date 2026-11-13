@@ -629,8 +629,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     switchedFrom !== undefined && path.length === switchedFrom.path.length && isPathPrefix(path, switchedFrom.path);
   const oldOwnDefault = keywordOf(oldLayers, DEFAULT_KEY);
   const newOwnDefault = keywordOf(newLayers, DEFAULT_KEY);
-  const oldDefault = oldOwnDefault ?? oldInherited;
-  const newDefault = newOwnDefault ?? newInherited;
+  // A `default: null` of its own is a default, which shadows the inherited one as it does for the defaults
+  const oldDefault = oldOwnDefault === undefined ? oldInherited : oldOwnDefault;
+  const newDefault = newOwnDefault === undefined ? newInherited : newOwnDefault;
   // The edited value and the values holding it are the user's
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
