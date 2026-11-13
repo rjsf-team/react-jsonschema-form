@@ -1727,11 +1727,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   );
   for (const key of [...propertyKeys, ...unmergedProperties.keys()]) {
     const propertySchema = unmergedProperties.get(key) ?? getPropertySchema<S>(schema, key);
-    // A key the fold left unmerged has no seed under the object's `properties`, so it is read from its property as the
-    // field renders it, rather than from the `additionalProperties` or `patternProperties` its seeds would be
-    const { seeds, edge } = unmergedProperties.has(key)
-      ? { seeds: [], edge: 'property' as const }
-      : childSeeds(view, key);
+    // A key the fold left unmerged has no seed under the object's `properties`, so it is seeded where the field as
+    // `SchemaField` retrieves it declares it, its `$ref`, recursion and `dependencies` with it, rather than from the
+    // `additionalProperties` or `patternProperties` its seeds in the fold would be
+    const seeding = unmergedProperties.has(key) ? retrievedView() : view;
+    const { seeds, edge } = childSeeds(seeding, key);
     // A property written as a `$ref` keeps its `const` and `type` in the definition it names, which is read where the
     // declaration holding that `$ref` sits, since a property declared twice is merged into one no graph holds
     const readProperty = isSchemaObject<S>(propertySchema)
@@ -1751,7 +1751,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.
     const addedByAdditionalProperty = hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG);
-    const child = defaultsChild(view, seeds, edge, propertySchema);
+    const child = defaultsChild(seeding, seeds, edge, propertySchema);
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
     // `null` of none of them is filled in until the user adds it

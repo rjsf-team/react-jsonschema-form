@@ -364,6 +364,44 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           expect(utils(nullInside).getDefaultFormState(nullInside)).toStrictEqual({ x: { a: { b: 1, n: null } } });
         });
+        it('folds a key of a const that only an unmerged allOf declares as a declared key, its $ref, recursion and dependencies included', () => {
+          const A: RJSFSchema = { type: 'object', properties: { n: { type: 'string' } } };
+          const R: RJSFSchema = {
+            type: 'object',
+            properties: { n: { type: 'string', default: 'd' }, child: { $ref: '#/definitions/R' } },
+          };
+          const D: RJSFSchema = {
+            type: 'object',
+            properties: { p: { type: 'string' } },
+            dependencies: { p: { properties: { q: { type: 'string', default: 'dq' } } } },
+          };
+          const both = (a: RJSFSchema, aConst: Record<string, string>) => {
+            const x = (declared: boolean): RJSFSchema => ({
+              definitions: { A, R, D },
+              type: 'object',
+              properties: {
+                x: declared
+                  ? { type: 'object', properties: { a }, const: { a: aConst } }
+                  : { type: 'object', allOf: [{ properties: { a } }], const: { a: aConst } },
+              },
+            });
+            return [x(false), x(true)];
+          };
+          const uiSchema = { 'ui:definitions': { '#/definitions/A': { n: { 'ui:initialValue': 'v' } } } };
+          const cases: [RJSFSchema, Record<string, string>, unknown][] = [
+            [{ $ref: '#/definitions/A' }, {}, { x: { a: { n: 'v' } } }],
+            [{ $ref: '#/definitions/R' }, {}, { x: { a: { n: 'd', child: { n: 'd' } } } }],
+            [{ $ref: '#/definitions/D' }, { p: 'x' }, { x: { a: { p: 'x', q: 'dq' } } }],
+            [D, { p: 'x' }, { x: { a: { p: 'x', q: 'dq' } } }],
+          ];
+          for (const [a, aConst, expected] of cases) {
+            for (const schema of both(a, aConst)) {
+              expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual(
+                expected,
+              );
+            }
+          }
+        });
         it('folds a key of a const that only an unmerged allOf declares from that property, not the extra-key schema', () => {
           const withDefault: RJSFSchema = {
             type: 'object',
