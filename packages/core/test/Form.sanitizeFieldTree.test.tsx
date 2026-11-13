@@ -1985,6 +1985,23 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         expect(ref.current?.getFormData()).toStrictEqual(expected);
       });
 
+      // An option's `default` decides no item's validity, so the item already failed the old entry
+      it('keeps a rejected prefix item whose option only changes its default, as sanitizeDataForNewSchema() does', () => {
+        const prefix = (a: number): RJSFSchema => ({
+          type: 'object',
+          const: { a: 1 },
+          properties: { a: { type: 'number' } },
+          oneOf: [{ default: { a } }],
+        });
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: [{ a: 2 }, 'a'] } };
+        const { rerender } = render(<Form ref={ref} schema={listSchema(prefix(1), ['a'])} {...props} />);
+
+        rerender(<Form ref={ref} schema={listSchema(prefix(3), ['a'])} {...props} />);
+
+        expect(ref.current?.getFormData()).toStrictEqual({ list: [{ a: 2 }, 'a'] });
+      });
+
       it('keeps an unfilled prefix item at a position the new prefixItems close, as sanitizeDataForNewSchema() does', () => {
         const prefixed = (second: RJSFSchema | false): RJSFSchema => ({
           type: 'object',
@@ -2472,6 +2489,22 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       to: { type: 'array', items: { type: ['string', 'null'], default: null } },
       data: ['x', 'q'],
       expected: [null, 'q'],
+    },
+    {
+      // An item's default is read as the fill reads it, an `anyOf`/`oneOf` option's included, as a property's is
+      name: "swaps an item holding its option's old default for the new one",
+      from: { type: 'array', items: { type: 'string', oneOf: [{ default: 'x' }] } },
+      to: { type: 'array', items: { type: 'string', oneOf: [{ default: 'y' }] } },
+      data: ['x', 'q'],
+      expected: ['y', 'q'],
+    },
+    {
+      name: "empties a null item for its option's new default to fill, where its position changes and allows no null",
+      from: { type: 'array', items: { type: 'string', oneOf: [{ default: 'x' }] } },
+      to: { type: 'array', items: { type: 'string', oneOf: [{ default: 'yy' }] } },
+      data: [null],
+      expected: [undefined],
+      formExpected: ['yy'],
     },
     {
       name: 'keeps a scalar item a readOnly new default differs from',
@@ -3114,6 +3147,32 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       }),
       filled: (a) => ({ k: 'B', a }),
       behavior: { emptyObjectFields: 'populateRequiredDefaults' },
+    },
+    {
+      // The object hands the property its default, which picks the property's option under `ancestorWins`
+      name: "a key the option its object's default picks requires, under nestedDefaultsPrecedence: 'ancestorWins'",
+      schemaWith: (a) => ({
+        type: 'object',
+        required: ['o'],
+        properties: {
+          o: {
+            type: 'object',
+            required: ['c'],
+            default: { c: { k: 'B', a } },
+            properties: {
+              c: {
+                type: 'object',
+                default: { k: 'A' },
+                properties: { k: { type: 'string' }, a: { type: 'string' } },
+                oneOf: [{ properties: { k: { const: 'A' } } }, { properties: { k: { const: 'B' } }, required: ['a'] }],
+              },
+            },
+          },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (a) => ({ c: { k: 'B', a } }),
+      behavior: { nestedDefaultsPrecedence: 'ancestorWins', emptyObjectFields: 'populateRequiredDefaults' },
     },
     // The fill writes the default of a key whatever schema declares it, a `false` one an option declares included
     ...([{}, { b: { type: 'string' } }] as Record<string, RJSFSchema>[]).map((others) => ({

@@ -1090,6 +1090,14 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           'a',
         ]);
       });
+      // An option's `default` decides no item's validity, so it plays no part in whether both sides declare it alike
+      it('keeps a rejected prefix item whose option only changes its default as it is', () => {
+        const withOptionDefault = (a: number) =>
+          prefixed({ type: 'object', properties: { a: { type: 'number' } }, oneOf: [{ default: { a } }] });
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(withOptionDefault(3), withOptionDefault(1), ['z', 'a']),
+        ).toStrictEqual(['z', 'a']);
+      });
       it('keeps an unfilled prefix item as a hole where its position changes type, rather than clearing the array', () => {
         const prefixed = (type: 'string' | 'number'): RJSFSchema => ({
           type: 'array',
@@ -1906,8 +1914,14 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           [{ x: 1 }],
         ),
       ).toStrictEqual([{ x: 1 }]);
+      const withXy = createSchemaUtils(
+        { validator: testValidator },
+        {
+          definitions: { xy: { type: 'object', properties: xy } },
+        },
+      );
       expect(
-        schemaUtils.sanitizeDataForNewSchema(
+        withXy.sanitizeDataForNewSchema(
           untyped({ oneOf: [{ $ref: '#/definitions/xy' }], default: { y: 1 } }),
           untyped({ oneOf: [{ $ref: '#/definitions/xy' }], default: { x: 1 } }),
           [{ x: 1 }],

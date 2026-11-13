@@ -17,6 +17,25 @@ describe('constrainsAlike()', () => {
     expect(constrainsAlike(context, declared, {}, {}, undefined, undefined)).toBe(false);
   });
 
+  it("leaves the defaults out with ignoresDefault, an anyOf/oneOf option's included", () => {
+    const withOptionDefault = (a: number): RJSFSchema => ({ type: 'object', oneOf: [{ default: { a } }] });
+
+    expect(constrainsAlike(context, withOptionDefault(1), withOptionDefault(2), {}, undefined, undefined)).toBe(false);
+    expect(
+      constrainsAlike(
+        context,
+        withOptionDefault(1),
+        withOptionDefault(2),
+        {},
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        true,
+      ),
+    ).toBe(true);
+  });
+
   it('reads the default the schema holding a field declares for it in place of its own', () => {
     const field: RJSFSchema = { type: 'string' };
 

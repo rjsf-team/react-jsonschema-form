@@ -497,7 +497,7 @@ function itemOf<S extends StrictRJSFSchema>(itemsLayer: S | undefined, index: nu
   return itemsLayer ? getItemSchema<S>(itemsLayer, index) : true;
 }
 
-/** Whether both trees constrain the item `value` at a position alike, as `constrainsAlike()` reads them, its `default`
+/** Whether both trees constrain the item `value` at a position alike, as `constrainsAlike()` reads them, the defaults
  * aside: a `default` decides no item's validity
  *
  * @param ctx - The diff's context
@@ -515,12 +515,7 @@ function constrainsItemAlike<T, S extends StrictRJSFSchema, F extends FormContex
   const data = asFieldValue<T>(value);
   const oldSchema = ctx.oldSchemaUtils.retrieveSchema(oldItem, data);
   const newSchema = ctx.schemaUtils.retrieveSchema(newItem, data);
-  return ctx.schemaUtils.constrainsAlike(
-    { ...oldSchema, default: undefined },
-    { ...newSchema, default: undefined },
-    undefined,
-    undefined,
-  );
+  return ctx.schemaUtils.constrainsAlike(oldSchema, newSchema, undefined, undefined, undefined, undefined, true);
 }
 
 /** One field of both trees: its subschema and value on each side, and the default its parent is filled with for it */
@@ -943,7 +938,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
       // A prefix item dropped would move the items after it into positions describing others. An unfilled one stays a
       // hole, one of the array being edited stays as the user wrote it, and one whose position both trees constrain
-      // alike, its `default` aside, already failed the old schema, so each stays for validation to report, as
+      // alike, the defaults aside, already failed the old schema, so each stays for validation to report, as
       // `sanitizeDataForNewSchema()` keeps it
       if (
         edited ||
