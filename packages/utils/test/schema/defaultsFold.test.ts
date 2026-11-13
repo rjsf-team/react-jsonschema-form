@@ -5,7 +5,9 @@ import {
   getArrayDefaults,
   getDefaultBasedOnSchemaType,
   getObjectDefaults,
+  mergeReachesConst,
 } from '../../src/schema/getDefaultFormState.ts';
+import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
 import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
@@ -1445,5 +1447,24 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
       expect(counting.calls).toBe(0);
       expect(defaultsOf(dense(size), defaults)).toEqual(defaults);
     });
+  });
+});
+
+describe('mergeReachesConst()', () => {
+  it('finds a const an option reaches only through an option still being walked when it was first read', () => {
+    // X offers Q and W; Q's one option leads back through P to X, and W holds the const. Q is first read while X is
+    // still open, so it can't see W through X then
+    const graph = parseSchemaGraph({
+      definitions: { P: { oneOf: [{ oneOf: [{ oneOf: [{ $ref: '#/definitions/P' }] }, { const: 'x' }] }] } },
+    });
+    const node = (pointer: string) => {
+      const id = graph.byPointer(pointer);
+      if (id === undefined) {
+        throw new Error(`no node at ${pointer}`);
+      }
+      return id;
+    };
+    expect(mergeReachesConst(graph, node('/definitions/P/oneOf/0'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/P/oneOf/0/oneOf/0'), true)).toBe(true);
   });
 });

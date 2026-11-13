@@ -1925,14 +1925,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         defaults,
       );
     }
-    // A value the merged schema rejects is left out, so the key takes the field's own defaults, as a property the fold
-    // computes does, since the fold computed none for it
+    // A value the merged schema rejects has taken the defaults in the match, since the fold computed none for it
     for (const key of kept) {
       const source = unmerged.has(key) ? matched : formData;
       if (Object.hasOwn(source, key)) {
         setOwn(computed, key, source[key]);
-      } else if (isObject(defaults) && Object.hasOwn(defaults, key)) {
-        setOwn(computed, key, defaults[key]);
       }
     }
   }
@@ -2500,28 +2497,41 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
 }
 
 /** Whether a merge from a node, by `mergeReachesConst()`, reaches a `const`, by graph, node and whether it reads the
- * options of the node's scope
+ * options of the node's scope; for a node still being walked, the depth of the walk it is open at
  */
-const constReach = new KeyedMemo<boolean>();
+const constReach = new KeyedMemo<boolean | number | undefined>();
+
+/** How deep `mergeReachesConst()` is in its walk, and the shallowest open node the nodes below have read */
+const constWalk = { depth: 0, lowestRead: Infinity };
 
 /** Whether any subschema retrieving the node `from` may merge in declares a `const`: one in its scope, see
  * `scopeNodes()`, which holds its `$ref`, `allOf`, `then`/`else` and `dependencies` subschemas but no `if`, a condition
  * never merged into the field. Retrieving a field merges an `anyOf`/`oneOf` option in only where the scope reaches
  * `dependencies`, so the options of the scope are read only there, and below an option so merged (`withOptions`). A
  * merge brings in no `const` none of them declares, so where none does the field's schema is read without being merged
+ *
+ * @testSeam Exported for utils' own tests
  */
-function mergeReachesConst<S extends StrictRJSFSchema>(
+export function mergeReachesConst<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   from: NodeId,
   withOptions = false,
 ): boolean {
   const keys = [graph, from, withOptions];
   const known = constReach.peek(keys);
-  if (known !== undefined) {
+  if (typeof known === 'boolean') {
     return known;
   }
-  // A scope that leads back to itself through an option reaches no `const` that way, so it reads as none meanwhile
-  constReach.set(keys, false);
+  // A scope that leads back to a node still open reaches no `const` that way, so the node reads as none meanwhile
+  if (known !== undefined) {
+    constWalk.lowestRead = Math.min(constWalk.lowestRead, known);
+    return false;
+  }
+  constWalk.depth += 1;
+  const { depth } = constWalk;
+  const outerRead = constWalk.lowestRead;
+  constWalk.lowestRead = Infinity;
+  constReach.set(keys, depth);
   const scope = scopeNodes<S>(graph, from, 'conditional');
   const holds = (id: NodeId, keyword: string) => {
     const node = graph.node(id);
@@ -2536,7 +2546,12 @@ function mergeReachesConst<S extends StrictRJSFSchema>(
           graph.subschemas(id, keyword).some(([, option]) => mergeReachesConst<S>(graph, option, true)),
         )),
   );
-  constReach.set(keys, reaches);
+  constWalk.depth -= 1;
+  // A `const` found stays found, but none found may be only because an open node above read as none, so that answer
+  // is worked out again once the node is settled
+  const readAbove = constWalk.lowestRead < depth;
+  constReach.set(keys, reaches || !readAbove ? reaches : undefined);
+  constWalk.lowestRead = Math.min(outerRead, readAbove ? constWalk.lowestRead : Infinity);
   return reaches;
 }
 
