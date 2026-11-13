@@ -1057,6 +1057,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     props.shouldMergeDefaultsIntoFormData,
     props.isRenderedOption,
     props.nullFills?.isCollapsed,
+    props.leavesOutObjectConst,
   ];
   const leaf = leafOf(child);
   for (const entry of [memo?.get(memoKey), leaf && leafDefaults.get(leaf)]) {
@@ -1126,14 +1127,15 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
   const constSchema = constSchemaOf<S>(view, props.retrievedViewOf);
-  const leavesOutConst = props.leavesOutObjectConst === true && isObjectData(constSchema[CONST_KEY]);
-  const constDefault = !leavesOutConst && constIsDefault<S>(constSchema, defaultFormStateBehavior);
+  const objectConst = isObjectData(constSchema[CONST_KEY]) && constIsDefault<S>(constSchema, defaultFormStateBehavior);
+  const constDefault =
+    !(props.leavesOutObjectConst && objectConst) && constIsDefault<S>(constSchema, defaultFormStateBehavior);
   if (constDefault) {
     defaults = ownValue(constSchema[CONST_KEY]);
   }
   // An object `const` beside options is the object's defaults, but the option the object shows still renders beside
   // it, as `ObjectField` renders it, so that option is folded with the `const` as its parent's defaults
-  const foldsOptionUnderConst = xxxOf !== undefined && constDefault && isObjectData(constSchema[CONST_KEY]);
+  const foldsOptionUnderConst = xxxOf !== undefined && objectConst;
   if (constDefault && !foldsOptionUnderConst) {
     // The `const` is the field's defaults
   } else if (
@@ -1865,6 +1867,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       nullFills !== undefined &&
       ownProps.rawFormData === undefined &&
       isSchemaObject<S>(readProperty) &&
+      // Only a schema that holds a `const`, offers options or merges a branch can give the object a `const` to leave out
+      (CONST_KEY in readProperty ||
+        getXxxOfOptions<S>(readProperty) !== undefined ||
+        MERGING_KEYWORDS.some((keyword) => Object.hasOwn(readProperty, keyword))) &&
       isCollapsedByOptionalDataControls<T, S, F>(readProperty, propertySchema, ownProps.uiSchema, {
         uiSchemaDefinitions,
         globalUiOptions: nullFills.globalUiOptions,

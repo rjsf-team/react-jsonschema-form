@@ -685,6 +685,31 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           expect(utils(select).getDefaultFormState(select, undefined, false, false, uiSchema)).toStrictEqual({});
           expect(utils(select).getDefaultFormState(select)).toStrictEqual({ x: { a: 1 } });
+          // A field that may also be `null` and defaults to it still opens with its `const`
+          const nullable: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: ['object', 'null'], const: { a: 1 }, default: null } },
+          };
+          expect(utils(nullable).getDefaultFormState(nullable, undefined, false, false, uiSchema)).toStrictEqual({
+            x: { a: 1 },
+          });
+          // The shown option's defaults for keys the `const` doesn't name, which the `const` leaves out, don't open it
+          const withOption: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                const: { a: 1 },
+                oneOf: [
+                  { properties: { b: { type: 'string', default: 'd' } } },
+                  { properties: { c: { type: 'string' } } },
+                ],
+              },
+            },
+          };
+          expect(utils(withOption).getDefaultFormState(withOption, undefined, false, false, uiSchema)).toStrictEqual(
+            {},
+          );
           // A `null` field beside the object `const` doesn't open it either
           const withNull: RJSFSchema = {
             type: 'object',
