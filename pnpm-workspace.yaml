@@ -7,6 +7,9 @@ overrides:
   'dompurify': ^3.4.11
   # Fixes security issues in serialize-javascript by overriding to safe version
   'serialize-javascript': ^7.0.6
+  # Fixes security issues in tinypool (via @docusaurus/core) and minimatch (via nx) by overriding to safe versions
+  'tinypool@<2.1.2': ^2.2.0
+  'minimatch@>=7.0.0 <11.0.1': ^11.0.8
 
 allowBuilds:
   '@parcel/watcher': true
