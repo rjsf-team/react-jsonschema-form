@@ -547,6 +547,53 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             x: { a: 2 },
           });
         });
+        it('collapses an optional object const behind the optional data controls only where nothing else gives it a value', () => {
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          const withY: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', const: { a: 2 } }, y: { type: 'string' } },
+          };
+          // A `null` the data holds is kept, as for an object without a `const`
+          expect(utils(withY).getDefaultFormState(withY, { x: null, y: 'k' }, false, false, uiSchema)).toStrictEqual({
+            x: null,
+            y: 'k',
+          });
+          // A `const` an unmerged `allOf` gives the object collapses it as its own `const` does
+          const viaAllOf: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', allOf: [{ const: { a: 2 } }] } },
+          };
+          expect(utils(viaAllOf).getDefaultFormState(viaAllOf, undefined, false, false, uiSchema)).toStrictEqual({});
+          // A default of its own, or one the object's defaults give it, opens it
+          const ownDefault: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', const: { a: 2 }, default: { a: 2 } } },
+          };
+          const parentDefault: RJSFSchema = {
+            type: 'object',
+            default: { x: { a: 2 } },
+            properties: { x: { type: 'object', const: { a: 2 } } },
+          };
+          for (const schema of [ownDefault, parentDefault]) {
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({
+              x: { a: 2 },
+            });
+          }
+        });
+        it('reads a primitive const an unmerged allOf or if branch gives a field as the default the plan skips', () => {
+          const viaAllOf: RJSFSchema = {
+            type: 'object',
+            properties: { s: { type: 'string', allOf: [{ const: 'x' }] } },
+          };
+          expect(utils(viaAllOf).getDefaultFormState(viaAllOf)).toStrictEqual({});
+          const viaThen: RJSFSchema = {
+            type: 'object',
+            properties: { s: { type: 'string', if: {}, then: { const: 'x' } } },
+          };
+          expect(utils(viaThen, { emptyObjectFields: 'skipEmptyDefaults' }).getDefaultFormState(viaThen)).toStrictEqual(
+            {},
+          );
+        });
         it('asks whether an object const beside options takes extra keys with the shown option joined', () => {
           const open: RJSFSchema = {
             type: 'object',

@@ -562,6 +562,10 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * retrieves anew, and the extra-key schema it hands its children keeps its identity, so their memo hits
    */
   shareExtraKeySchema?: <V>(extraKeySchema: V) => V;
+  /** Returns a view of the field as `SchemaField` retrieves it, settled once per view of the pass, so the `const` read
+   * and the object's extra keys share one retrieve
+   */
+  retrievedViewOf?: (view: DefaultsView<S>) => DefaultsView<S>;
   /** The option each field shows, which a field offering `anyOf`/`oneOf` options computes its defaults from */
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
@@ -610,6 +614,7 @@ function childPathProps<T, S extends StrictRJSFSchema, F extends FormContextType
  */
 interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> extends FoldProps<T, S, F> {
   track: (view: DefaultsView<S>) => void;
+  retrievedViewOf: (view: DefaultsView<S>) => DefaultsView<S>;
   /** Returns `raw` as `retrieveSchema()` resolves it for the field's data, retrieved once for the life of the field's
    * fixed point, whose passes all read the same data: an option and the parent beside it, which every pass would
    * otherwise retrieve again. `owner` and `slot` name what `raw` is read from, since a parent without its options is a
@@ -840,11 +845,12 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Returns the schema the `const` of the field of `view` is read from: its own, or, where it holds none and an `allOf`
  * member or an `if` branch its plan left unmerged may give it one, the field as `SchemaField` retrieves it for the
- * data. Only the `const` is read from that: the branch's other defaults stay skipped as the plan skips them
+ * data, which `retrieved` gives. Only an object `const` is read from that: the branch's other defaults, a primitive
+ * `const` included, stay skipped as the plan skips them
  */
-function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
+function constSchemaOf<S extends StrictRJSFSchema>(
   view: DefaultsView<S>,
+  retrieved: (view: DefaultsView<S>) => DefaultsView<S>,
 ): S {
   const { schema } = view;
   if (schema[CONST_KEY] !== undefined || view.field.retrieves) {
@@ -860,9 +866,26 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
       isObject(branch) &&
       (Object.hasOwn(branch, CONST_KEY) || MERGING_KEYWORDS.some((keyword) => Object.hasOwn(branch, keyword))),
   );
-  return mayGiveConst
-    ? settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options).schema
-    : schema;
+  if (!mayGiveConst) {
+    return schema;
+  }
+  const retrievedSchema = retrieved(view).schema;
+  return isObjectData(retrievedSchema[CONST_KEY]) ? retrievedSchema : schema;
+}
+
+/** Returns the field of `view` as `SchemaField` retrieves it, for the data the fold reads */
+function retrieveView<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+): DefaultsView<S> {
+  return settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
+}
+
+/** Returns `retrieveView()` in `context`, for a caller with no view retrieved once per pass to read */
+function retrieveViewOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+): (view: DefaultsView<S>) => DefaultsView<S> {
+  return (view) => retrieveView<S, F>(context, view);
 }
 
 /** Returns the object `const` the field whose `const` `constSchema` holds defaults to, if it defaults to one */
@@ -947,11 +970,18 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const retrievals = new KeyedMemo<S>();
   const retrieveOnce = (owner: object, slot: string, raw: S) =>
     retrievals.get([owner, slot], () => retrieveSchema<unknown, S, F>(context, raw, field.graph.rawRoot, data));
+  const retrievedViews = new WeakMap<DefaultsView<S>, DefaultsView<S>>();
+  const retrievedViewOf = (passView: DefaultsView<S>) => {
+    const known = retrievedViews.get(passView) ?? retrieveView<S, F>(context, passView);
+    retrievedViews.set(passView, known);
+    return known;
+  };
   const passProps = {
     ...props,
     memo: new Map<string, MemoEntry>(),
     shareExtraKeySchema,
     retrieveOnce,
+    retrievedViewOf,
     track,
     onNullFill,
   };
@@ -1098,7 +1128,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
-  const constSchema = constSchemaOf<S, F>(context, view);
+  const constSchema = constSchemaOf<S>(view, props.retrievedViewOf);
   const constDefault = constIsDefault<S>(constSchema, defaultFormStateBehavior);
   if (constDefault) {
     defaults = ownValue(constSchema[CONST_KEY]);
@@ -1704,7 +1734,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
-  const constSchema = constSchemaOf<S, F>(context, view);
+  const retrieved = props.retrievedViewOf ?? retrieveViewOf(context);
+  const constSchema = constSchemaOf<S>(view, retrieved);
   const parentConst = constSchema[CONST_KEY];
   // An object `const` the field defaults to, read as `foldView()` reads it
   const objectConst = objectConstOf<S, F>(context, constSchema);
@@ -1715,9 +1746,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // the retrieve and the join are spared every other field
   const optionOf = objectConst === undefined ? undefined : props.optionOf;
   // The field as `SchemaField` retrieves it, for the data the fold reads, which the branch `null` fill reads as well
-  const retrievedView = computedOnce(() =>
-    settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options),
-  );
+  const retrievedView = computedOnce(() => retrieved(view));
   let extraKeysField = view.schema;
   if (optionOf) {
     extraKeysField = joinOptionExtraKeys<S>(optionOf.parent(), optionOf.option());
@@ -1828,21 +1857,29 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // Its `required` is read from the schema that declares it, as its seeds are
     const declaring = seeding.schema;
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key, declaring);
-    // An optional object the Optional Data Controls render behind their add control while it has no value starts out
-    // without one, its object `const` included, as an empty default would: the `const` is its value once the user adds it
+    // An optional object the Optional Data Controls render behind their add control while the data holds nothing for it
+    // starts out without a value, its object `const` included, as an empty default would: the `const` is its value once
+    // the user adds it. A default of its own, or one the object's defaults give it, opens it as it opens any object
     if (
       nullFills !== undefined &&
+      ownProps.rawFormData === undefined &&
+      ownProps.parentDefaults === undefined &&
       isSchemaObject<S>(readProperty) &&
-      objectConstOf<S, F>(context, readProperty) !== undefined &&
       isCollapsedByOptionalDataControls<T, S, F>(readProperty, propertySchema, ownProps.uiSchema, {
         uiSchemaDefinitions,
         globalUiOptions: nullFills.globalUiOptions,
         rootSchema,
         required: ownProps.required === true,
-        formData: ownProps.rawFormData,
+        formData: undefined,
       })
     ) {
-      return;
+      const childView = settle(context, child, undefined, undefined);
+      if (
+        childView.schema[DEFAULT_KEY] === undefined &&
+        objectConstOf<S, F>(context, constSchemaOf<S>(childView, retrieveViewOf(context))) !== undefined
+      ) {
+        return;
+      }
     }
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
     // `null` of none of them is filled in until the user adds it
