@@ -7,4 +7,4 @@ ignore = "./netlify-ignore.sh"
 
 [build.environment]
 VITE_SHOW_NETLIFY_BADGE = "true"
-NODE_VERSION = "24"
+NODE_VERSION = "26"
