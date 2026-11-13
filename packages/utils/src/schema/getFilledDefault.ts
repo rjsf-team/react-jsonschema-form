@@ -25,7 +25,9 @@ import retrieveSchema from './retrieveSchema.ts';
  * filled with for it, as `getDefaultFormState()` reads the two. The field's own `default`, a `null` one included, wins
  * over the inherited one, unless the `context`'s `nestedDefaultsPrecedence` is `ancestorWins` and the field's type can
  * hold the inherited one. Two object defaults are merged instead, the winner's keys over the other's, except for a
- * select over object or array constants, which holds one of them whole.
+ * select over object or array constants, which holds one of them whole. A field offering `anyOf`/`oneOf` options is
+ * filled through the one its own `default` matches, as a field holding no data is, that option's `default` merged over
+ * the field's own.
  *
  * A property is filled with it only where `emptyObjectFields` lets the defaults write it there, as `placement` decides:
  * none is under `skipDefaults`, and under `populateRequiredDefaults` only one whose object is required, or that is
@@ -56,8 +58,14 @@ export default function getFilledDefault<
   inheritedDefault: unknown,
   placement?: PropertyPlacement,
 ): unknown {
-  const computed = computedDefault<S, F>(context, schema, inheritedDefault);
-  return placement ? writtenDefault<S, F>(context, rootSchema, schema, computed, placement) : computed;
+  const fieldDefault = computedDefault<S, F>(context, schema, inheritedDefault);
+  const field = isWholeValueSelect<S>(schema)
+    ? undefined
+    : withFilledOption<S, F>(context, rootSchema, schema, fieldDefault);
+  // The fill merges the option it picks into the field, its `default` over the field's own, so only the inherited one
+  // is an ancestor's, even under `ancestorWins`
+  const computed = field ? computedDefault<S, F>(context, field, inheritedDefault) : fieldDefault;
+  return placement ? writtenDefault<S, F>(context, rootSchema, field ?? schema, computed, placement) : computed;
 }
 
 /** The part of `computed` the defaults write into the property `schema` describes at `placement`, or `undefined` where
@@ -71,7 +79,7 @@ function writtenDefault<S extends StrictRJSFSchema, F extends FormContextType>(
   placement: PropertyPlacement,
 ): unknown {
   const isCut = isObject(computed) && !isWholeValueSelect<S>(schema);
-  const field = isCut ? withFilledOption<S, F>(context, rootSchema, schema, computed) : schema;
+  const field = (isCut && withFilledOption<S, F>(context, rootSchema, schema, computed)) || schema;
   const written =
     isCut && getSchemaType<S>(field) === 'object'
       ? writtenKeys<S, F>(context, rootSchema, field, computed, placement.isRequired)
@@ -88,18 +96,18 @@ function writtenDefault<S extends StrictRJSFSchema, F extends FormContextType>(
     : undefined;
 }
 
-/** `schema` with the `anyOf`/`oneOf` option the fill renders for it merged in, as it merges one into an object field:
- * the one its own `default` matches, as for a field holding no data
+/** `schema` with the `anyOf`/`oneOf` option the fill renders for a field holding no data merged in, as it merges one
+ * into an object field: the one its own `default` matches. Undefined where `schema` offers none
  */
 function withFilledOption<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   rootSchema: S,
   schema: S,
-  computed: GenericObjectType,
-): S {
+  computed: unknown,
+): S | undefined {
   const xxxOf = getXxxOfOptions<S>(schema);
   if (!xxxOf) {
-    return schema;
+    return undefined;
   }
   const { key, options } = xxxOf;
   // The fill matches a field holding no data by its own `default`, not the inherited one merged in. shortcut: under
@@ -112,7 +120,7 @@ function withFilledOption<S extends StrictRJSFSchema, F extends FormContextType>
     ];
   return isObject(option)
     ? (mergeSchemas(withoutKeys(schema, key), retrieveSchema<unknown, S, F>(context, option as S, rootSchema)) as S)
-    : schema;
+    : undefined;
 }
 
 /** The keys of an object field's default the defaults write, each declared property's cut down as its own placement

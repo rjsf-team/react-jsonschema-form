@@ -3183,8 +3183,76 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual(wrap({ w: 'k' }));
     },
   );
-  // A clear cuts its default by the field's own layer, but still reads the `default` its option declares.
-  // `sanitizeDataForNewSchema()` reads no option's `default`, so only `Form` is checked
+  // The fill picks the option of a field holding no data by the field's own `default`, not by an option's, and the
+  // option it picks, not the one shown, is the one whose `default` it writes
+  const optionMismatchWith = (a: string, extra: RJSFSchema['properties'] = {}): RJSFSchema => ({
+    type: 'object',
+    properties: {
+      o: {
+        type: 'object',
+        properties: { c: { type: 'object' }, ...extra },
+        oneOf: [
+          {
+            default: { c: { a }, ...(Object.keys(extra).length ? { d: 'keep' } : {}) },
+            properties: { c: { type: 'object', additionalProperties: false, properties: { b: { type: 'string' } } } },
+          },
+          { properties: { c: { type: 'object', properties: { a: { type: 'string' } } } } },
+        ],
+      },
+      w: { type: 'string' },
+    },
+  });
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema }>([
+    {
+      name: 'an object whose shown option declares a default another option matches better',
+      from: optionMismatchWith('x', { d: { type: 'string' } }),
+      to: optionMismatchWith('y', { d: { type: 'string' } }),
+    },
+    {
+      name: 'an object whose shown option declares a default another option matches better, writing none of it',
+      from: optionMismatchWith('x'),
+      to: optionMismatchWith('y'),
+    },
+  ])('keeps a clear of $name when that default changes but the fill writes the same', ({ from, to }) => {
+    const data = { o: undefined, w: 'k' };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} validator={validator} initialFormData={data} />);
+
+    rerender(<Form ref={ref} schema={to} validator={validator} initialFormData={data} />);
+
+    expect(handleOf(ref).getFormData()).toStrictEqual(data);
+    expect(createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, from, data)).toStrictEqual(data);
+  });
+  // Both sides are cut by the option the fill picks, so a clear whose default is unchanged stays cleared
+  it('keeps a clear of an object whose default fits an option other than the one shown when only a sibling changes', () => {
+    const schemaWith = (title?: string): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        o: {
+          type: 'object',
+          default: { c: { a: 'x' } },
+          properties: { c: { type: 'object' } },
+          oneOf: [
+            {
+              properties: {
+                c: { type: 'object', additionalProperties: false, properties: { b: { type: 'string' } } },
+              },
+            },
+            { properties: { c: { type: 'object', properties: { a: { type: 'string' } } } } },
+          ],
+        },
+        w: { type: 'string', title },
+      },
+    });
+    const data = { o: undefined, w: 'k' };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={schemaWith()} validator={validator} initialFormData={data} />);
+
+    rerender(<Form ref={ref} schema={schemaWith('W')} validator={validator} initialFormData={data} />);
+
+    expect(handleOf(ref).getFormData()).toStrictEqual(data);
+  });
+  // A clear reads the `default` of the option the fill picks for it, as it cuts its default by that option
   it.each<{ name: string; o: (v: string) => RJSFSchema; filled: (v: string) => unknown }>([
     {
       name: 'an object',
@@ -3207,6 +3275,10 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     rerender(<Form ref={ref} schema={schemaWith('y')} validator={validator} initialFormData={data} />);
 
     expect(handleOf(ref).getFormData()).toStrictEqual({ o: filled('y'), w: 'k' });
+    const to = schemaWith('y');
+    expect(createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, schemaWith('x'), data)).toStrictEqual({
+      w: 'k',
+    });
   });
   // The field's `additionalProperties` seeds an extra key beside its option, which declares none
   it('gives way a clear of an object whose extra key the object seeds beside its oneOf changes default', () => {

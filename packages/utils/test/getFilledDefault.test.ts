@@ -42,6 +42,39 @@ describe('getFilledDefault()', () => {
     expect(getFilledDefault(ancestorWins, schema, {}, { b: 2 })).toEqual({ b: 2 });
   });
 
+  it('merges in the default of the option its own default picks, not the first option', () => {
+    // Both options validate the default under the test validator, so only the discriminator picks the second
+    const schema: RJSFSchema = {
+      type: 'object',
+      discriminator: { propertyName: 'k' },
+      properties: { k: { type: 'string' } },
+      default: { k: 'B' },
+      oneOf: [
+        { properties: { k: { const: 'A' } }, default: { a: 1 } },
+        { properties: { k: { const: 'B' } }, default: { b: 2 } },
+      ],
+    };
+
+    expect(getFilledDefault(descendantWins, schema, {}, undefined)).toEqual({ k: 'B', b: 2 });
+  });
+
+  it.each([
+    { context: descendantWins, expected: { a: 'option', b: 'inherited' } },
+    { context: ancestorWins, expected: { a: 'inherited', b: 'inherited' } },
+  ])(
+    'merges the default of the option it picks over its own, and only the inherited one is an ancestor',
+    ({ context, expected }) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        default: { a: 'own' },
+        oneOf: [{ default: { a: 'option' } }],
+      };
+
+      expect(getFilledDefault(context, schema, {}, { a: 'inherited', b: 'inherited' })).toEqual(expected);
+      expect(getFilledDefault(context, schema, {}, undefined)).toEqual({ a: 'option' });
+    },
+  );
+
   it("reads no default for a property under emptyObjectFields: 'skipDefaults', and its own for the root or an item", () => {
     const skipDefaults: SchemaContext = {
       ...descendantWins,
