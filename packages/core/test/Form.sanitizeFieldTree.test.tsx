@@ -3767,6 +3767,67 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expect(handleOf(ref).getFormData()).toEqual({ t: expected });
     },
   );
+  // The uiSchema renders the array through its own entry alone, so a value only the plain fill gives was saved, not filled
+  it.each<{
+    name: string;
+    schemaOf: (t: RJSFSchema) => RJSFSchema;
+    uiSchemaOf: (t: UiSchema) => UiSchema;
+    at: string[];
+  }>([
+    {
+      name: 'a property',
+      schemaOf: (t) => ({ type: 'object', properties: { t } }),
+      uiSchemaOf: (t) => ({ t }),
+      at: ['t'],
+    },
+    {
+      name: 'a nested property',
+      schemaOf: (t) => ({ type: 'object', properties: { o: { type: 'object', properties: { t } } } }),
+      uiSchemaOf: (t) => ({ o: { t } }),
+      at: ['o', 't'],
+    },
+  ])(
+    "keeps $name saved as the plain fill pads it under its items' ui:initialValue when its default changes",
+    ({ schemaOf, uiSchemaOf, at }) => {
+      const withDefault = (v: string) =>
+        schemaOf({ type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [v] });
+      const saved = at.reduceRight<unknown>((held, key) => ({ [key]: held }), ['x', 'z']);
+      const props = { validator, uiSchema: uiSchemaOf({ items: { 'ui:initialValue': 'i' } }), initialFormData: saved };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+
+      rerender(<Form ref={ref} schema={withDefault('q')} {...props} />);
+
+      expect(handleOf(ref).getFormData()).toEqual(saved);
+      const fresh = createRef<FormRef<Record<string, unknown>>>();
+      render(<Form ref={fresh} schema={withDefault('q')} {...props} />);
+      expect(handleOf(fresh).getFormData()).toEqual(saved);
+    },
+  );
+  // An extra key renders with the `additionalProperties` uiSchema, not the entry its name has
+  it("takes the new default for an array below an extra key beside a uiSchema entry of the key's name", () => {
+    const withDefault = (d: string): RJSFSchema => ({
+      type: 'object',
+      additionalProperties: {
+        type: 'object',
+        properties: { t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [d] } },
+      },
+    });
+    const props = {
+      validator,
+      uiSchema: { o: { t: { items: { 'ui:initialValue': 'i' } } } },
+      initialFormData: { o: {} },
+    };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={withDefault('x')} {...props} />);
+
+    rerender(<Form ref={ref} schema={withDefault('q')} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ o: { t: ['q', 'z'] } });
+    const fresh = createRef<FormRef<Record<string, unknown>>>();
+    render(<Form ref={fresh} schema={withDefault('q')} {...props} />);
+    expect(handleOf(fresh).getFormData()).toEqual({ o: { t: ['q', 'z'] } });
+  });
   // The item is filled through the option it shows, which the field's own fill reads and a fill of its raw schema alone
   // doesn't
   it('takes the new default for an array whose items render through an option', () => {
@@ -3863,6 +3924,17 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
         $defs: { T: { type: 'array', items: { type: 'string' }, default: d } },
         properties: { t: { $ref: '#/$defs/T' } },
       });
+      const tuple = (d: string): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          t: {
+            type: 'array',
+            minItems: 2,
+            items: [{ type: 'string', default: 'k' }],
+            additionalItems: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [d] },
+          },
+        },
+      });
       const pair = { a: 'x', b: 'q' };
       return [
         { name: 'an array holding its old default', from: padded(['x', 'x']), to: padded(['y']), expected: ['y', 'z'] },
@@ -3906,6 +3978,21 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
           to: initial(3, ['y']),
           uiSchema: { t: { items: { 'ui:initialValue': 'i' } } },
           expected: ['i', 'i', 'i'],
+        },
+        // Past the tuple the `additionalItems` uiSchema renders the item, not the `items` one
+        {
+          name: "a tuple's additional item, beside an items uiSchema",
+          from: tuple('x'),
+          to: tuple('q'),
+          uiSchema: { t: { items: { items: { 'ui:initialValue': 'i' } }, additionalItems: {} } },
+          expected: ['k', ['q', 'z']],
+        },
+        {
+          name: "a tuple's additional item, beside an items uiSchema alone",
+          from: tuple('x'),
+          to: tuple('q'),
+          uiSchema: { t: { items: { items: { 'ui:initialValue': 'i' } } } },
+          expected: ['k', ['q', 'z']],
         },
         {
           name: "its $ref's ui:definitions entry",

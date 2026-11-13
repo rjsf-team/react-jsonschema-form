@@ -862,6 +862,7 @@ describe('oneOf', () => {
     to: Partial<RJSFSchema>;
     uiSchemaOf?: (t: UiSchema) => UiSchema;
     minItems?: number;
+    saved?: string[];
     expected: string[];
   }>([
     { name: 'a default the new option shares, under a new maxItems', to: { maxItems: 3 }, expected: ['i', 'i'] },
@@ -912,6 +913,13 @@ describe('oneOf', () => {
       uiSchemaOf: (t) => ({ oneOf: [{ t }, { t: { items: { 'ui:initialValue': 'j' } }, additionalProperties: t }] }),
       expected: ['j', 'j'],
     },
+    // The field's uiSchema alone renders the key, so a value only the plain fill gives was saved, not filled
+    {
+      name: 'a new default, a saved value the plain fill pads alike',
+      to: { default: ['y'] },
+      saved: ['x', 'z'],
+      expected: ['x', 'z'],
+    },
     // The old option's uiSchema holds no entry for the key, so the plain fill filled it
     {
       name: "a new default, only the new option's uiSchema rendering it",
@@ -921,7 +929,7 @@ describe('oneOf', () => {
     },
   ])(
     'should fill out a key an items ui:initialValue filled anew as the option switched to renders it, for $name',
-    async ({ to, uiSchemaOf = (t) => ({ t }), minItems = 2, expected }) => {
+    async ({ to, uiSchemaOf = (t) => ({ t }), minItems = 2, saved, expected }) => {
       const optionFor = (kind: string, t: Partial<RJSFSchema>): RJSFSchema => ({
         title: kind,
         type: 'object',
@@ -934,6 +942,7 @@ describe('oneOf', () => {
       const { node, onChange } = createFormComponent({
         schema: { oneOf: [optionFor('a', {}), optionFor('b', to)] },
         uiSchema: uiSchemaOf(t),
+        initialFormData: saved && { kind: 'a', t: saved },
       });
 
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
@@ -952,6 +961,7 @@ describe('oneOf', () => {
     uiSchemaOf: (t: UiSchema) => UiSchema;
     select: string;
     formDataOf: (option: GenericObjectType) => unknown;
+    expected?: string[];
   }>([
     {
       name: 'a property',
@@ -960,6 +970,22 @@ describe('oneOf', () => {
       select: '#root_o__oneof_select',
       formDataOf: (option) => ({ o: option }),
     },
+    // An `additionalProperties` uiSchema renders no property the object declares
+    ...[
+      { label: 'its own', uiSchemaOf: (t: UiSchema): UiSchema => ({ additionalProperties: { t } }) },
+      { label: 'an empty own', uiSchemaOf: (t: UiSchema): UiSchema => ({ o: {}, additionalProperties: { t } }) },
+      {
+        label: 'its options',
+        uiSchemaOf: (t: UiSchema): UiSchema => ({ additionalProperties: { oneOf: [{}, { t }] } }),
+      },
+    ].map(({ label, uiSchemaOf }) => ({
+      name: `a property beside an additionalProperties uiSchema in place of ${label}`,
+      schemaOf: (oneOf: RJSFSchema[]): RJSFSchema => ({ type: 'object', properties: { o: { oneOf } } }),
+      uiSchemaOf,
+      select: '#root_o__oneof_select',
+      formDataOf: (option: GenericObjectType) => ({ o: option }),
+      expected: ['y', 'z'],
+    })),
     {
       name: 'an array item',
       schemaOf: (oneOf) => ({ type: 'array', minItems: 1, items: { oneOf } }),
@@ -969,7 +995,7 @@ describe('oneOf', () => {
     },
   ])(
     'should fill out a key an items ui:initialValue filled anew when switching the options of $name',
-    async ({ schemaOf, uiSchemaOf, select, formDataOf }) => {
+    async ({ schemaOf, uiSchemaOf, select, formDataOf, expected = ['i', 'i'] }) => {
       const optionFor = (kind: string, fieldDefault: string[]): RJSFSchema => ({
         title: kind,
         type: 'object',
@@ -986,7 +1012,7 @@ describe('oneOf', () => {
       await user.selectOptions(node.querySelector<HTMLSelectElement>(select)!, '1');
 
       expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({ formData: formDataOf({ kind: 'b', t: ['i', 'i'] }) }),
+        expect.objectContaining({ formData: formDataOf({ kind: 'b', t: expected }) }),
         select.slice(1),
       );
     },
@@ -1077,6 +1103,54 @@ describe('oneOf', () => {
       'root__oneof_select',
     );
   });
+
+  // Past a tuple an item's `additionalItems` uiSchema is its own
+  it.each<{ name: string; additionalItemsOf: (d: string) => RJSFSchema; uiSchema: UiSchema; expected: unknown[] }>([
+    {
+      name: 'a scalar',
+      additionalItemsOf: (d) => ({ type: 'string', default: d }),
+      uiSchema: { 'ui:initialValue': 'i' },
+      expected: ['k', 'i'],
+    },
+    {
+      name: 'an array',
+      additionalItemsOf: (d) => ({ type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [d] }),
+      uiSchema: { items: { 'ui:initialValue': 'i' } },
+      expected: ['k', ['i', 'i']],
+    },
+  ])(
+    "should fill out a tuple's additional item $name its additionalItems uiSchema filled anew when switching options",
+    async ({ additionalItemsOf, uiSchema, expected }) => {
+      const optionFor = (kind: string, d: string): RJSFSchema => {
+        const additionalItems = additionalItemsOf(d);
+        return {
+          title: kind,
+          type: 'object',
+          properties: {
+            kind: { type: 'string', const: kind, default: kind },
+            t: {
+              type: 'array',
+              minItems: 2,
+              items: [{ type: 'string', default: 'k' }],
+              additionalItems,
+              ...(additionalItems.type === 'array' && { default: ['k', [d]] }),
+            },
+          },
+        };
+      };
+      const { node, onChange } = createFormComponent({
+        schema: { oneOf: [optionFor('a', 'x'), optionFor('b', 'y')] },
+        uiSchema: { t: { additionalItems: uiSchema } },
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { kind: 'b', t: expected } }),
+        'root__oneof_select',
+      );
+    },
+  );
 
   it('should fill a scalar key anew with the ui:initialValue the option switched to renders it with', async () => {
     const optionFor = (kind: string, fieldDefault: string): RJSFSchema => ({
