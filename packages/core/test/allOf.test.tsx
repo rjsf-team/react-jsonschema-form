@@ -93,7 +93,10 @@ describe('allOf', () => {
       definitions: { Color: COLOR },
     };
     const { node, onChange } = createFormComponent({ schema });
-    const select = node.querySelector<HTMLSelectElement>('select')!;
+    const select = node.querySelector('select');
+    if (!(select instanceof HTMLSelectElement)) {
+      throw new Error('the form renders no select');
+    }
 
     await user.selectOptions(select, 'green');
 
