@@ -66,6 +66,7 @@ import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts'
 import { closestOption } from './getClosestMatchingOption.ts';
 import { typeAllows } from './getFirstMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
+import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
   asTarget,
   cachedPolicy,
@@ -609,6 +610,12 @@ function childPathProps<T, S extends StrictRJSFSchema, F extends FormContextType
  */
 interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> extends FoldProps<T, S, F> {
   track: (view: DefaultsView<S>) => void;
+  /** Returns `raw` as `retrieveSchema()` resolves it for the field's data, retrieved once for the life of the field's
+   * fixed point, whose passes all read the same data: an option and the parent beside it, which every pass would
+   * otherwise retrieve again. `owner` and `slot` name what `raw` is read from, since a parent without its options is a
+   * new object on every call
+   */
+  retrieveOnce: (owner: object, slot: string, raw: S) => S;
 }
 
 /** Returns the policy fields are planned with: which `allOf`s and `if`s are merged, and which options. An option of a
@@ -901,7 +908,17 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     lastExtraKeySchema = shared;
     return shared;
   };
-  const passProps = { ...props, memo: new Map<string, MemoEntry>(), shareExtraKeySchema, track, onNullFill };
+  const retrievals = new KeyedMemo<S>();
+  const retrieveOnce = (owner: object, slot: string, raw: S) =>
+    retrievals.get([owner, slot], () => retrieveSchema<unknown, S, F>(context, raw, field.graph.rawRoot, data));
+  const passProps = {
+    ...props,
+    memo: new Map<string, MemoEntry>(),
+    shareExtraKeySchema,
+    retrieveOnce,
+    track,
+    onNullFill,
+  };
   const fold = (passView: DefaultsView<S>) => {
     holdsNull = false;
     return foldView(context, passView, passProps);
@@ -1409,8 +1426,9 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const listedOption: unknown = options[index];
   const rendersOwnField = rendersOwnFieldBesideOption<S>(fieldSchema, listedOption);
   const optionUiSchema = getOptionUiSchema<T, S, F>(props.uiSchema, key, index);
-  const retrieved = (raw: S) => retrieveSchema<unknown, S, F>(context, raw, rootSchema, props.rawFormData);
-  const retrievedOption = isSchemaObject<S>(listedOption) ? computedOnce(() => retrieved(listedOption)) : undefined;
+  const retrievedOption = isSchemaObject<S>(listedOption)
+    ? computedOnce(() => props.retrieveOnce(listedOption, 'option', listedOption))
+    : undefined;
   const branchProps = {
     ...props,
     // An option whose field takes the object's extra keys is asked as the field renders it, retrieved for the data, and
@@ -1424,7 +1442,9 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     optionOf:
       rendersOwnField && retrievedOption
         ? {
-            parent: computedOnce(() => (fieldSchema === remaining ? retrieved(remaining) : fieldSchema)),
+            parent: computedOnce(() =>
+              fieldSchema === remaining ? props.retrieveOnce(schema, key, remaining) : fieldSchema,
+            ),
             option: retrievedOption,
           }
         : undefined,
