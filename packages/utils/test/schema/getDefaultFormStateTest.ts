@@ -322,6 +322,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             utils(conditional, skipEmpty).getDefaultFormState(conditional, { x: { a: 1, b: undefined } }, false, true),
           ).toStrictEqual({ x: { a: 1, b: undefined } });
         });
+        it('keeps the value a key of a const that only an unmerged allOf declares folds to, null fills included', () => {
+          const nullInside: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                allOf: [
+                  {
+                    properties: {
+                      a: { type: 'object', additionalProperties: true, properties: { n: { type: 'null' } } },
+                    },
+                  },
+                ],
+                const: { a: { b: 1 } },
+              },
+            },
+          };
+          expect(utils(nullInside).getDefaultFormState(nullInside)).toStrictEqual({ x: { a: { b: 1, n: null } } });
+        });
         it('folds a key of a const that only an unmerged allOf declares from that property, not the extra-key schema', () => {
           const withDefault: RJSFSchema = {
             type: 'object',

@@ -1822,11 +1822,13 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
     mayHoldNullType(view.schema, rootSchema)
   ) {
-    branchNullFills<T, S, F>(context, view, schema, props, foldReporting).forEach(({ key, value }) => {
-      setOwn(computed, key, value);
-      fillOverUndefined(nullFills, rawFormData, key, value);
-      onNullFill?.();
-    });
+    branchNullFills<T, S, F>(context, view, schema, props, foldReporting, unmergedProperties).forEach(
+      ({ key, value }) => {
+        setOwn(computed, key, value);
+        fillOverUndefined(nullFills, rawFormData, key, value);
+        onNullFill?.();
+      },
+    );
   }
   // Read from the field that decides whether the object takes extra keys, so the keys seeded are folded as it takes them
   const additionalProperties =
@@ -1986,6 +1988,7 @@ function extraKeyKeepsData(data: unknown, value: unknown): boolean {
  * @param schema - The object's schema, its extra keys stubbed where the field stubs them
  * @param props - The props of the object field
  * @param foldReporting - Computes a child's defaults, reporting whether they hold a `null` fill
+ * @param folded - The properties the object's own fold already computed from the schema rendered for them
  * @returns - The defaults of those properties that hold such a `null`
  */
 function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -1999,6 +2002,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
     child: DefaultsField<S>,
     childFoldProps: FoldProps<T, S, F>,
   ) => { value: unknown; holdsNull: boolean },
+  folded: ReadonlyMap<string, S>,
 ): { key: string; value: unknown }[] {
   const { rawFormData, uiSchema, uiSchemaDefinitions, nullFills } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
@@ -2011,9 +2015,10 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
   return Object.keys(rendered.properties ?? {})
     .filter(
       (key) =>
-        !Object.hasOwn(ownProperties, key) ||
-        (getSchemaType<S>(getPropertySchema<S>(rendered, key)) === 'null' &&
-          getSchemaType<S>(getPropertySchema<S>(schema, key)) !== 'null'),
+        !folded.has(key) &&
+        (!Object.hasOwn(ownProperties, key) ||
+          (getSchemaType<S>(getPropertySchema<S>(rendered, key)) === 'null' &&
+            getSchemaType<S>(getPropertySchema<S>(schema, key)) !== 'null')),
     )
     .flatMap((key) => {
       const propertySchema = getPropertySchema<S>(rendered, key);
