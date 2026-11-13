@@ -110,6 +110,37 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
       expected: { a: 1 },
     },
     {
+      // The fill merges the option a field holding no data matches by its default into the field
+      name: 'a key its option requires of a property the object declares too is written',
+      context: populateRequired,
+      schema: {
+        type: 'object',
+        properties: { c: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } } },
+        oneOf: [{ properties: { c: { type: 'object', required: ['a'] } } }],
+        default: { c: { a: 1 } },
+      },
+      placement: required,
+      expected: { c: { a: 1 } },
+    },
+    {
+      name: 'a property typed by its option is cut by that option',
+      context: populateRequired,
+      schema: {
+        type: 'object',
+        properties: { c: { anyOf: [{ type: 'object', properties: { a: { type: 'number' } } }] } },
+        default: { c: { a: 1 } },
+      },
+      placement: required,
+      expected: {},
+    },
+    {
+      name: 'a true option leaves the object to its own properties',
+      context: populateRequired,
+      schema: { type: 'object', properties: { a: { type: 'number' } }, oneOf: [true], default: { a: 1 } },
+      placement: required,
+      expected: {},
+    },
+    {
       name: 'a true property is a key like any other',
       context: populateRequired,
       schema: { type: 'object', properties: { a: true }, default: { a: 1 } },
@@ -206,4 +237,21 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
 
     expect(getFilledDefault(populateRequired, schema, {}, undefined)).toEqual({ a: 1 });
   });
+
+  // The fill matches a field holding no data by its own default, so an inherited one picks no option
+  it.each([
+    { context: descendantWins, expected: undefined },
+    { context: ancestorWins, expected: { y: 1 } },
+  ])(
+    'picks the option its own default matches, not the inherited one, by nestedDefaultsPrecedence',
+    ({ context, expected }) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: false,
+        oneOf: [{ properties: { x: { type: 'number' } } }, { properties: { y: { type: 'number' } } }],
+      };
+
+      expect(getFilledDefault(context, schema, schema, { y: 1 }, optional)).toEqual(expected);
+    },
+  );
 });

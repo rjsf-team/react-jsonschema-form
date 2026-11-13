@@ -1,10 +1,13 @@
 import { absentKeywordAllows } from '../additionalPropertiesUtils.ts';
 import { ADDITIONAL_PROPERTY_FLAG } from '../constants.ts';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
+import getXxxOfOptions from '../getXxxOfOptions.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeObjects from '../mergeObjects.ts';
+import mergeSchemas from '../mergeSchemas.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -13,7 +16,9 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
 } from '../types.ts';
+import { closestOption } from './getClosestMatchingOption.ts';
 import { takesValueOf, writesPropertyDefault } from './getDefaultFormState.ts';
+import { withoutKeys } from './graph/mergePlan.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
 /** Returns the `default` the defaults fill the field `schema` describes with, given the one the field holding it was
@@ -25,9 +30,10 @@ import retrieveSchema from './retrieveSchema.ts';
  * A property is filled with it only where `emptyObjectFields` lets the defaults write it there, as `placement` decides:
  * none is under `skipDefaults`, and under `populateRequiredDefaults` only one whose object is required, or that is
  * required itself where its object is the root, and a value other than an object only where it is required as well.
- * An object field's object default is first cut down key by key, as the fill builds it: each key its `properties`
- * declare keeps only what the defaults write into that property, read as the fill reads it, its `$ref`s and `allOf`
- * resolved and its conditions and `dependencies` applied as for a property holding no data, and any other key only
+ * An object field's object default is first cut down key by key, as the fill builds it, with the `anyOf`/`oneOf` option
+ * its own `default` matches merged into the field as the fill merges one into a field holding no data: each key its
+ * `properties` declare keeps only what the defaults write into that property, read as the fill reads it, its `$ref`s
+ * and `allOf` resolved and its conditions and `dependencies` applied as for a property holding no data, and any other key only
  * where `additionalProperties` seeds it, so an empty object is left where they write none of its keys. Without a
  * `placement` it is returned as computed: the root and an array item are always filled, and a field hands its
  * properties the default it computes whether or not it is written itself.
@@ -64,9 +70,11 @@ function writtenDefault<S extends StrictRJSFSchema, F extends FormContextType>(
   computed: unknown,
   placement: PropertyPlacement,
 ): unknown {
+  const isCut = isObject(computed) && !isWholeValueSelect<S>(schema);
+  const field = isCut ? withFilledOption<S, F>(context, rootSchema, schema, computed) : schema;
   const written =
-    isObject(computed) && getSchemaType<S>(schema) === 'object' && !isWholeValueSelect<S>(schema)
-      ? writtenKeys<S, F>(context, rootSchema, schema, computed, placement.isRequired)
+    isCut && getSchemaType<S>(field) === 'object'
+      ? writtenKeys<S, F>(context, rootSchema, field, computed, placement.isRequired)
       : computed;
   // shortcut: an extra key counts as a property, though the fill seeds extra keys whatever `emptyObjectFields` says;
   // upgrade once a form's extra keys need their defaults judged under a setting that leaves properties unfilled
@@ -78,6 +86,33 @@ function writtenDefault<S extends StrictRJSFSchema, F extends FormContextType>(
   )
     ? written
     : undefined;
+}
+
+/** `schema` with the `anyOf`/`oneOf` option the fill renders for it merged in, as it merges one into an object field:
+ * the one its own `default` matches, as for a field holding no data
+ */
+function withFilledOption<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  schema: S,
+  computed: GenericObjectType,
+): S {
+  const xxxOf = getXxxOfOptions<S>(schema);
+  if (!xxxOf) {
+    return schema;
+  }
+  const { key, options } = xxxOf;
+  // The fill matches a field holding no data by its own `default`, not the inherited one merged in. shortcut: under
+  // `ancestorWins` the merged default stands in for the inherited one it matches; upgrade once the two pick apart
+  const toMatch =
+    context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' ? computed : schema.default;
+  const option: unknown =
+    options[
+      closestOption<S, F>(context, rootSchema, toMatch, options, 0, false, getDiscriminatorFieldFromSchema<S>(schema))
+    ];
+  return isObject(option)
+    ? (mergeSchemas(withoutKeys(schema, key), retrieveSchema<unknown, S, F>(context, option as S, rootSchema)) as S)
+    : schema;
 }
 
 /** The keys of an object field's default the defaults write, each declared property's cut down as its own placement

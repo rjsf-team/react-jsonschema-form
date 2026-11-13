@@ -2934,32 +2934,38 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual(refills ? { w: 'k' } : data);
     },
   );
-  // The defaults write an optional key of an optional property nowhere, a `$ref` one included, so a change to its
-  // default leaves a clear of the object holding it alone
-  it("keeps a clear of an object whose $ref property's default changes but is never written, under emptyObjectFields: 'populateRequiredDefaults'", () => {
-    const schemaWith = (a: number): RJSFSchema => ({
-      type: 'object',
-      required: ['o'],
-      definitions: { C: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'string' } } } },
-      properties: {
-        o: { type: 'object', default: { c: { a } }, properties: { c: { $ref: '#/definitions/C' } } },
-        w: { type: 'string' },
-      },
-    });
-    const from = schemaWith(1);
-    const to = schemaWith(2);
-    const data = { o: undefined, w: 'k' };
-    const defaultFormStateBehavior: DefaultFormStateBehavior = { emptyObjectFields: 'populateRequiredDefaults' };
-    const props = { validator, initialFormData: data, defaultFormStateBehavior };
-    const ref = createRef<FormRef<Record<string, unknown>>>();
-    const { rerender } = render(<Form ref={ref} schema={from} {...props} />);
+  // The defaults write an optional key of an optional property nowhere, a `$ref` one or one typed by its option
+  // included, so a change to its default leaves a clear of the object holding it alone
+  it.each<{ name: string; c: RJSFSchema }>([
+    { name: '$ref', c: { $ref: '#/definitions/C' } },
+    { name: 'oneOf-typed', c: { oneOf: [{ $ref: '#/definitions/C' }] } },
+  ])(
+    "keeps a clear of an object whose $name property's default changes but is never written, under emptyObjectFields: 'populateRequiredDefaults'",
+    ({ c }) => {
+      const schemaWith = (a: number): RJSFSchema => ({
+        type: 'object',
+        required: ['o'],
+        definitions: { C: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'string' } } } },
+        properties: {
+          o: { type: 'object', default: { c: { a } }, properties: { c } },
+          w: { type: 'string' },
+        },
+      });
+      const from = schemaWith(1);
+      const to = schemaWith(2);
+      const data = { o: undefined, w: 'k' };
+      const defaultFormStateBehavior: DefaultFormStateBehavior = { emptyObjectFields: 'populateRequiredDefaults' };
+      const props = { validator, initialFormData: data, defaultFormStateBehavior };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { rerender } = render(<Form ref={ref} schema={from} {...props} />);
 
-    rerender(<Form ref={ref} schema={to} {...props} />);
+      rerender(<Form ref={ref} schema={to} {...props} />);
 
-    expect(handleOf(ref).getFormData()).toStrictEqual(data);
-    const utils = createSchemaUtils({ validator, defaultFormStateBehavior }, to);
-    expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual(data);
-  });
+      expect(handleOf(ref).getFormData()).toStrictEqual(data);
+      const utils = createSchemaUtils({ validator, defaultFormStateBehavior }, to);
+      expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual(data);
+    },
+  );
   // The default the defaults write into an object is built key by key, so a cleared object gives way once a key they
   // write changes, wherever its key or its requiredness is declared
   it.each<{
@@ -2985,6 +2991,61 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
         },
       }),
       filled: (a) => ({ a }),
+    },
+    {
+      // The fill deep-merges a property the field and its option both declare, the option's `required` included
+      name: 'a key its oneOf requires of a property the object declares too',
+      schemaWith: (a) => ({
+        type: 'object',
+        properties: {
+          o: {
+            type: 'object',
+            default: { c: { a } },
+            properties: { c: { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } } },
+            oneOf: [{ properties: { c: { type: 'object', required: ['a'] } } }],
+          },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (a) => ({ c: { a } }),
+    },
+    {
+      name: "a key its oneOf requires of a property the object declares too, under emptyObjectFields: 'populateRequiredDefaults'",
+      schemaWith: (a) => ({
+        type: 'object',
+        required: ['o'],
+        properties: {
+          o: {
+            type: 'object',
+            default: { c: { a } },
+            properties: { c: { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } } },
+            oneOf: [{ properties: { c: { type: 'object', required: ['a'] } } }],
+          },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (a) => ({ c: { a } }),
+      behavior: { emptyObjectFields: 'populateRequiredDefaults' },
+    },
+    {
+      name: "a key the object's property requires and its oneOf redeclares, under emptyObjectFields: 'populateRequiredDefaults'",
+      schemaWith: (a) => ({
+        type: 'object',
+        required: ['o'],
+        properties: {
+          o: {
+            type: 'object',
+            default: { c: { a } },
+            properties: {
+              c: { type: 'object', required: ['a'], properties: { a: { type: 'string' }, b: { type: 'string' } } },
+            },
+            oneOf: [{ properties: { c: { type: 'object', properties: { b: { type: 'string' } } } } }],
+          },
+          w: { type: 'string' },
+        },
+      }),
+      filled: (a) => ({ c: { a } }),
+      behavior: { emptyObjectFields: 'populateRequiredDefaults' },
     },
     // The fill writes the default of a key whatever schema declares it, a `false` one an option declares included
     ...([{}, { b: { type: 'string' } }] as Record<string, RJSFSchema>[]).map((others) => ({
@@ -3054,6 +3115,35 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expect(utils.sanitizeDataForNewSchema(to, from, data)).toStrictEqual(wrap({ w: 'k' }));
     },
   );
+  // The field's `additionalProperties` seeds an extra key beside its option, which declares none
+  it('gives way a clear of an object whose extra key the object seeds beside its oneOf changes default', () => {
+    const schemaWith = (q: string): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        o: {
+          type: 'object',
+          default: { q },
+          properties: { a: { type: 'string' } },
+          additionalProperties: { type: 'string' },
+          oneOf: [{ properties: { z: { type: 'string' } } }],
+        },
+        w: { type: 'string' },
+      },
+    });
+    const data = { o: undefined, w: 'k' };
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(
+      <Form ref={ref} schema={schemaWith('x')} validator={validator} initialFormData={data} />,
+    );
+
+    rerender(<Form ref={ref} schema={schemaWith('y')} validator={validator} initialFormData={data} />);
+
+    expect(Object.entries(handleOf(ref).getFormData() ?? {})).not.toContainEqual(['o', undefined]);
+    const to = schemaWith('y');
+    expect(createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, schemaWith('x'), data)).toStrictEqual({
+      w: 'k',
+    });
+  });
   // The defaults still fill the root under `skipDefaults`, so its default is still its own
   it("swaps a root holding its old default for the new one under emptyObjectFields: 'skipDefaults'", () => {
     const ref = createRef<FormRef<string>>();

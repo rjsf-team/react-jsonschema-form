@@ -651,10 +651,14 @@ function fieldSchemaOf<S extends StrictRJSFSchema>(layers: readonly S[]): S {
       setOwn(field, keyword, value);
     }
   }
-  // A later layer's property over an earlier one's, a `false` one kept rather than dropped as `propertiesOf()` drops
-  // it: the fill still writes the default of a key an option declares `false`
+  // Merged as the fill merges an option into its field, a property both declare deep-merged, and a `false` one kept
+  // rather than dropped as `propertiesOf()` drops it: the fill still writes the default of a key an option declares
+  // `false`
   if (layers.some((layer) => layer.properties !== undefined)) {
-    field.properties = Object.assign({}, ...layers.map((layer) => layer.properties));
+    field.properties = layers.reduce<object>(
+      (merged, layer) => mergeSchemas(merged, layer.properties ?? {}),
+      {},
+    ) as S['properties'];
   }
   const required = requiredOf(layers);
   if (required) {
