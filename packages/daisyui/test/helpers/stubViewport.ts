@@ -41,7 +41,8 @@ export default function stubViewport() {
     // which it never matches, and nothing inside an element it doesn't display can take the focus
     const shown = new CSSStyleSheet();
     shown.replaceSync('[popover] { display: block; }');
-    const adopted = document.adoptedStyleSheets;
+    // A copy, as the getter returns a live array that the assignment below would change too
+    const adopted = [...document.adoptedStyleSheets];
     document.adoptedStyleSheets = [...adopted, shown];
     // And in every shadow root, which no stylesheet of the document's reaches
     const { attachShadow } = Element.prototype;

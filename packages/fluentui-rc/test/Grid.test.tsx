@@ -277,6 +277,6 @@ describe('GridTemplate span', () => {
   test("keeps a row's own display beside a template style", () => {
     const { row } = renderGridColumn(Form, {}, { style: { display: 'inline-grid', gridTemplateColumns: '1fr 1fr' } });
     // Its own style rather than the computed one, which the `fui-Field` grid it sits in blockifies to `grid`
-    expect(row).toHaveAttribute('style', expect.stringContaining('display: inline-grid'));
+    expect(row).toHaveProperty('style.display', 'inline-grid');
   });
 });
