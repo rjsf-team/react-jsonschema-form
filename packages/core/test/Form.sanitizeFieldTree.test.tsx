@@ -3835,6 +3835,90 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expect(handleOf(fresh).getFormData()).toEqual({ t: expected });
     },
   );
+  // A changed default fills out what the old one filled out, or held as an array, as a fresh mount fills it: to the new
+  // schema's `minItems`, below its items, and through the `ui:definitions` its `$ref` reads
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; uiSchema?: UiSchema; expected: unknown }>(
+    (() => {
+      const padded = (d: string[]): RJSFSchema => ({
+        type: 'object',
+        properties: { t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: d } },
+      });
+      const objects = (d: Record<string, string>[]): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          t: {
+            type: 'array',
+            minItems: 2,
+            items: { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } },
+            default: d,
+          },
+        },
+      });
+      const initial = (minItems: number, d: string[]): RJSFSchema => ({
+        type: 'object',
+        properties: { t: { type: 'array', minItems, items: { type: 'string' }, default: d } },
+      });
+      const referenced = (d: string[]): RJSFSchema => ({
+        type: 'object',
+        $defs: { T: { type: 'array', items: { type: 'string' }, default: d } },
+        properties: { t: { $ref: '#/$defs/T' } },
+      });
+      const pair = { a: 'x', b: 'q' };
+      return [
+        { name: 'an array holding its old default', from: padded(['x', 'x']), to: padded(['y']), expected: ['y', 'z'] },
+        {
+          name: 'an array holding its old default, which the new one fills out alike',
+          from: padded(['x', 'z']),
+          to: padded(['x']),
+          expected: ['x', 'z'],
+        },
+        {
+          name: "an array holding its old default, which its items' ui:initialValue fills alike",
+          from: initial(1, ['i']),
+          to: initial(1, ['j']),
+          uiSchema: { t: { items: { 'ui:initialValue': 'i' } } },
+          expected: ['i'],
+        },
+        {
+          name: 'an array of objects holding its old default',
+          from: objects([pair, pair]),
+          to: objects([{ a: 'y' }]),
+          expected: [{ a: 'y' }, {}],
+        },
+        {
+          name: "an array of objects holding its old default, through its items' ui:initialValue",
+          from: objects([pair, pair]),
+          to: objects([{ a: 'y' }]),
+          uiSchema: { t: { items: { b: { 'ui:initialValue': 'i' } } } },
+          expected: [{ a: 'y' }, { b: 'i' }],
+        },
+        {
+          name: "the new minItems, through its items' ui:initialValue",
+          from: initial(1, ['x']),
+          to: initial(3, ['y']),
+          uiSchema: { t: { items: { 'ui:initialValue': 'i' } } },
+          expected: ['i', 'i', 'i'],
+        },
+        {
+          name: "its $ref's ui:definitions entry",
+          from: referenced(['x']),
+          to: referenced(['y', 'y']),
+          uiSchema: { 'ui:definitions': { '#/$defs/T': { items: { 'ui:initialValue': 'i' } } } },
+          expected: ['i', 'i'],
+        },
+      ];
+    })(),
+  )('fills an array out anew as a fresh mount does, for $name', ({ from, to, uiSchema, expected }) => {
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} uiSchema={uiSchema} validator={validator} />);
+
+    rerender(<Form ref={ref} schema={to} uiSchema={uiSchema} validator={validator} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ t: expected });
+    const fresh = createRef<FormRef<Record<string, unknown>>>();
+    render(<Form ref={fresh} schema={to} uiSchema={uiSchema} validator={validator} />);
+    expect(handleOf(fresh).getFormData()).toEqual({ t: expected });
+  });
   // With no old default to tell them by, what the uiSchema filled in is kept as saved data is, as for any field
   it.each<{ name: string; uiSchema: UiSchema; initialFormData: Record<string, unknown>; expected: string }>([
     { name: 'a saved readOnly value', uiSchema: {}, initialFormData: { id: 'saved-123' }, expected: 'saved-123' },

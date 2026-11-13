@@ -443,17 +443,21 @@ function judge<S extends StrictRJSFSchema>(
   // `false`, nor what its own `ui:initialValue` replaced the default with
   const isNewDefault = newDefault === undefined || deepEquals(newDefault, value);
   if (!isNewDefault && !isFilledByKey()) {
-    if (isOldDefault) {
+    // A value holding the old default takes the new one as it is, but an array, which the fill fills out from it to
+    // `minItems` and below its items, is filled out from it as what the old default filled out is: in place, as a
+    // fresh mount fills it, or dropped for the fill. One that comes back as it is is kept, and judged by the rest
+    if (isOldDefault && !Array.isArray(value)) {
       return structuredClone(newDefault);
     }
-    // Dropped, or an item left unset, so the fill fills the new default out as it filled the old one, unless it is
-    // written in place. One that comes back as it is is kept, and judged by the rest
     const filledOut = oldDefault === undefined ? undefined : oldFillOut(value);
     if (filledOut === DROP) {
       return isItem ? UNSET : DROP;
     }
     if (filledOut !== undefined && !deepEquals(filledOut, value)) {
       return filledOut;
+    }
+    if (isOldDefault && filledOut === undefined) {
+      return structuredClone(newDefault);
     }
   }
   // A `readOnly` property shows the default it is filled with, which the user can't change there, so another value
@@ -670,15 +674,14 @@ function isOwnFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
 const FILLED_KEY = 'field';
 
 /** What becomes of `value` where it is what the old defaults filled the field out to from the default they filled it
- * with, padded to `minItems` or filled below through a `ui:initialValue`, which its own fill, holding that default as
- * data, leaves out: `DROP` to leave it for the fill to fill out with the new default, or, where the uiSchema played a
- * part, the new default filled out under it in place, since the fill applies a `ui:initialValue` only on the first
- * render, as a fresh mount fills it. `undefined` where it is no such value. The field is filled alone, as the property
- * of an object, with the `required` it had, or has for the new default, and each uiSchema the old one can render it
- * with, see `uiSchemasOn()`, so the fill costs the field rather than the form. A scalar is never filled out, and a value the uiSchema fills from the
- * new default alike, as one the field's own `ui:initialValue` filled, comes back as it is. A key a switch put back is
- * the exception, judged against the option switched away from, whose uiSchema is read as no longer rendering it, so it
- * is left for the fill, a scalar included
+ * with, as it is, padded to `minItems` or filled below through a `ui:initialValue`: the new default filled out in place
+ * under the same uiSchema, as a fresh mount fills it, since the fill applies a `ui:initialValue` only on the first
+ * render. `undefined` where it is no such value. The field is filled alone, as the property of an object, with the
+ * `required` it had, or has for the new default, and each uiSchema the old one can render it with, see
+ * `uiSchemasOn()`, so the fill costs the field rather than the form. A scalar is never filled out, and a value the
+ * uiSchema fills from the new default alike, as one the field's own `ui:initialValue` filled, comes back as it is. A
+ * key a switch put back is the exception, judged against the option switched away from, whose uiSchema is read as no
+ * longer rendering it, so it is `DROP`ped for the fill, a scalar included
  */
 function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
@@ -707,7 +710,7 @@ function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
     raw: S,
     fieldDefault: unknown,
     required: boolean,
-    uiSchema?: UiSchema<T, S, F>,
+    uiSchema: UiSchema<T, S, F>,
   ) => {
     const field = { ...raw, [DEFAULT_KEY]: fieldDefault };
     const holder = {
@@ -720,8 +723,8 @@ function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
       data,
       false,
       false,
-      uiSchema && ({ [FILLED_KEY]: isItem ? { items: uiSchema } : uiSchema } as UiSchema<T, S, F>),
-      uiSchema && uiSchemaDefinitions,
+      { [FILLED_KEY]: isItem ? { items: uiSchema } : uiSchema } as UiSchema<T, S, F>,
+      uiSchemaDefinitions,
     );
     return isObject(filled) ? getByPath(filled, at) : undefined;
   };
@@ -732,8 +735,7 @@ function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!uiSchema) {
     return undefined;
   }
-  // The fill reads the field's whole context, so it fills a value the uiSchema played no part in out exactly
-  if (isSwitchedAway || deepEquals(fillOf(ctx.oldSchemaUtils, oldRaw, oldDefault, wasRequired), value)) {
+  if (isSwitchedAway) {
     return DROP;
   }
   return fillOf(ctx.schemaUtils, newRaw, newDefault, isRequired, uiSchema) ?? DROP;
@@ -901,21 +903,20 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       isItem,
       acceptsNull,
       (value) => isOldFill(ctx, oldLayers, oldDefault, oldPath, shownHere, value),
+      // The field filled alone reads the uiSchema, which its own fill, through the option it showed, doesn't
       (value) =>
-        isOwnFill(ctx.oldSchemaUtils, oldLayers, oldDefault, value)
-          ? DROP
-          : oldFillOutOf(
-              ctx,
-              oldRaw,
-              newRaw,
-              oldDefault,
-              newDefault,
-              isItem,
-              oldRequired === true,
-              newRequired === true,
-              oldPath,
-              value,
-            ),
+        oldFillOutOf(
+          ctx,
+          oldRaw,
+          newRaw,
+          oldDefault,
+          newDefault,
+          isItem,
+          oldRequired === true,
+          newRequired === true,
+          oldPath,
+          value,
+        ) ?? (isOwnFill(ctx.oldSchemaUtils, oldLayers, oldDefault, value) ? DROP : undefined),
     );
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
@@ -1185,7 +1186,7 @@ function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
  * value, unless the object holds it as an extra key that constrains nothing and renders it. A field whose constraints
  * changed (`type`, `const`, `enum`, `maxItems`, or the default the defaults fill it with, see `getFilledDefault()`)
  * has its value judged again, see `judge()`: a value still holding the default the old schema filled it with takes the
- * new one, written in place. A field whose constraints did not change keeps its value, so an edit elsewhere never re-judges
+ * new one, written in place, an array filled out as a fresh mount fills it. A field whose constraints did not change keeps its value, so an edit elsewhere never re-judges
  * it. The value of the field being edited, and of the fields holding it, is the user's, and only what they hold is
  * judged. Both trees show the option the new data is shown under, so an option matched anew changes no field's
  * constraints. A switch by the selector puts back each key the data held before it, as it held it, and each is judged
