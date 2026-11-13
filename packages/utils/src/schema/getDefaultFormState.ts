@@ -2476,17 +2476,17 @@ function mergedSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   return merged.schema;
 }
 
-/** The schema whose `const` the field `view` stands for takes. Under `constAsDefaults: 'always'` a `const` a merging
- * keyword the plan left unmerged brings in takes precedence over the data as one of the field's own does, so it is
- * read from the merged schema, so that a condition on the data picks the `const`, as `formDataMatching()` reads it.
- * A merged schema left with no `const`, as where the branch holding it isn't taken, gives the field nothing, so the
- * field is read as it stands
+/** The schema whose `const` the field `view` stands for takes. A `const` a merging keyword the plan left unmerged
+ * brings in is the field's as one of its own is: it fills the field under any `constAsDefaults` but `'never'`, and
+ * under `'always'` takes precedence over the data. So it is read from the merged schema, so that a condition on the
+ * data picks the `const`, as `formDataMatching()` reads it. A merged schema left with no `const`, as where the branch
+ * holding it isn't taken, gives the field nothing, so the field is read as it stands
  */
 function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
 ): S {
-  if (context.defaultFormStateBehavior?.constAsDefaults !== 'always' || !holdsAnyOf(view.schema, MERGING_KEYWORDS)) {
+  if (context.defaultFormStateBehavior?.constAsDefaults === 'never' || !holdsAnyOf(view.schema, MERGING_KEYWORDS)) {
     return view.schema;
   }
   const { graph, seeds } = fieldOfView<S>(view);
