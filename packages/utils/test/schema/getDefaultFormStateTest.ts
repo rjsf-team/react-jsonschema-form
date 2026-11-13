@@ -462,6 +462,56 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ x: { c: 7 } });
           }
         });
+        it("stubs the data's extra keys of a root whose option holds the const as the option written into it does", () => {
+          const other: RJSFSchema = { properties: { c: { type: 'string' } } };
+          const pairs: [RJSFSchema, RJSFSchema][] = [
+            [
+              {
+                type: 'object',
+                additionalProperties: false,
+                properties: { a: { type: 'string' } },
+                oneOf: [
+                  { const: { b: 1 }, properties: { b: { type: 'number' } }, additionalProperties: { type: 'null' } },
+                  other,
+                ],
+              },
+              {
+                type: 'object',
+                additionalProperties: false,
+                properties: { a: { type: 'string' }, b: { type: 'number' } },
+                const: { b: 1 },
+              },
+            ],
+            [
+              {
+                type: 'object',
+                properties: { a: { type: 'string' } },
+                oneOf: [
+                  { const: { b: 1 }, properties: { b: { type: 'number' } }, additionalProperties: { type: 'null' } },
+                  other,
+                ],
+              },
+              {
+                type: 'object',
+                properties: { a: { type: 'string' }, b: { type: 'number' } },
+                additionalProperties: { type: 'null' },
+                const: { b: 1 },
+              },
+            ],
+          ];
+          const cases: [unknown, boolean][] = [
+            [{ e: 5 }, false],
+            [{ e: undefined, b: 1 }, false],
+            [{ e: null }, true],
+          ];
+          for (const [withOption, written] of pairs) {
+            for (const [formData, generated] of cases) {
+              expect(utils(withOption).getDefaultFormState(withOption, formData, false, generated)).toStrictEqual(
+                utils(written).getDefaultFormState(written, formData, false, generated),
+              );
+            }
+          }
+        });
         it('asks whether an object const beside options takes extra keys with the shown option joined', () => {
           const open: RJSFSchema = {
             type: 'object',
