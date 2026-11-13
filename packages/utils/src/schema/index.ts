@@ -12,7 +12,13 @@ import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
 import omitExtraData from './omitExtraData.ts';
 import retrieveSchema, { expandRefCycle, getAdditionalPropertyType, getValidationTarget } from './retrieveSchema.ts';
-import { constrainsAlike, getItemSchema, getPrefixLength, namesEveryType } from './schemaConstraints.ts';
+import sanitizeDataForNewSchema, {
+  constrainsAlike,
+  constrainsAlikeAsideDefault,
+  getItemSchema,
+  getPrefixLength,
+  namesEveryType,
+} from './sanitizeDataForNewSchema.ts';
 import { constrainsValue } from './schemaKeywords.ts';
 
 export {
@@ -40,4 +46,5 @@ export {
   namesEveryType,
   omitExtraData,
   retrieveSchema,
+  sanitizeDataForNewSchema,
 };

@@ -11,6 +11,7 @@ import {
   isSelectTest,
   omitExtraDataTest,
   retrieveSchemaTest,
+  sanitizeDataForNewSchemaTest,
 } from './schema/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
@@ -29,3 +30,4 @@ isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
 omitExtraDataTest(testValidator);
 retrieveSchemaTest(testValidator);
+sanitizeDataForNewSchemaTest(testValidator);

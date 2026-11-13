@@ -40,7 +40,6 @@ function ButtonsField(props: FieldProps) {
   const { schema: fieldSchema, registry, formData } = props;
   const options = registry.schemaUtils.retrieveSchema(fieldSchema, formData).anyOf as RJSFSchema[];
   const { selectedOption, optionsUiSchema, switchOption } = useOptionSwitch(props, options);
-  const stamp = (data: unknown) => (typeof data === 'object' ? { ...data, stamped: true } : { stamped: true });
   return (
     <div>
       <output aria-label='shown'>{selectedOption}</output>
@@ -51,7 +50,7 @@ function ButtonsField(props: FieldProps) {
         </button>
       ))}
       {options.map((option, index) => (
-        <button key={option.title} type='button' onClick={() => switchOption(index, stamp)}>
+        <button key={option.title} type='button' onClick={() => switchOption(index, { stamped: true })}>
           Stamp {option.title}
         </button>
       ))}
@@ -175,7 +174,7 @@ describe('useOptionSwitch() in a custom field', () => {
     });
   });
 
-  it('sends what `adjust` returns for the data the switch would send', async () => {
+  it("writes the field's own values into the data the switch sends", async () => {
     const form = mounted({ pet: { kind: 'cat' } });
 
     await form.pick('Stamp Dog');
@@ -184,7 +183,7 @@ describe('useOptionSwitch() in a custom field', () => {
     expect(form.data()).toEqual({ pet: { kind: 'dog', sound: 'woof', stamped: true } });
   });
 
-  it('sends what `adjust` returns for the option already shown', async () => {
+  it("writes the field's own values for the option already shown", async () => {
     const form = mounted({ pet: { kind: 'cat' } });
 
     await form.pick('Cat');
@@ -195,7 +194,7 @@ describe('useOptionSwitch() in a custom field', () => {
     expect(form.data()).toEqual({ pet: { kind: 'cat', sound: 'meow', stamped: true } });
   });
 
-  it('leaves a null option holding nothing, whatever `adjust` would return', async () => {
+  it('leaves a null option holding nothing, whatever own values the field passes', async () => {
     const form = mounted({ pet: { kind: 'cat' } });
 
     await form.pick('Stamp None');

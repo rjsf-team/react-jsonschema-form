@@ -1,17 +1,26 @@
 import { useCallback, useMemo } from 'react';
-import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import type {
+  FieldPath,
+  FieldProps,
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+} from '@rjsf/utils';
 import {
-  deepEquals,
   getDiscriminatorFieldFromSchema,
-  getRenderedOptionSchema,
-  isConstant,
+  isPlainObject,
   logOnce,
   selectOptionUiSchema,
-  toConstant,
+  setByPath,
+  toFieldPath,
 } from '@rjsf/utils';
 
-import defaultsForOption from '../components/fields/defaultsForOption.ts';
-import { optionsKeywordOf, takesTypeOf } from '../components/fields/fieldWidgetUtils.ts';
+import { optionsKeywordOf } from '../components/fields/fieldWidgetUtils.ts';
+import formDataForNewOption from '../components/fields/formDataForNewOption.ts';
+import type { OptionSwitchData } from '../components/fields/formDataForNewOption.ts';
+import { asFieldValue } from '../components/uiState.ts';
 import fieldLabelForLog from '../fieldLabelForLog.ts';
 import useOptionSelection from './useOptionSelection.ts';
 import useSendOptionSwitch, { holdsOnlyNull, selectSwitchedOption } from './useSendOptionSwitch.ts';
@@ -37,23 +46,52 @@ export interface OptionSwitchState<
    */
   optionsUiSchema: UiSchema<T, S, F>[];
   /** Switches the field to the option at `index`, or clears the selection for an `index` below 0. The field sends what
-   * it holds, filled with what the option starts from, and the form it is rendered in judges each value against the
-   * option switched away from and the one switched to: it replaces what the old option's defaults filled in and drops
-   * what the new option has no field for. Does nothing for a `disabled` or `readonly` field, or for the option already
-   * shown.
+   * it holds that the option can hold, filled with what the option starts from, and the form it is rendered in puts
+   * back each key the data held and judges it against the option switched away from: it replaces what the old
+   * option's defaults filled in and drops what the new option has no field for. Does nothing for a `disabled` or
+   * `readonly` field, or for the option already shown.
    *
-   * A field that writes a value of its own on a switch, such as the property its selector edits, passes `adjust`: it
-   * is handed what the field would send for an option that holds data, and what it returns is sent instead. The switch
-   * is then sent for the option already shown too, since the data may not hold that value yet
+   * A field that writes values of its own on a switch, such as the property its selector edits, passes them as
+   * `ownValues`, by their path in the field's object: each is written into the object the field sends for an option
+   * that holds one, and kept as written rather than judged. The switch is then sent for the option already shown too,
+   * since the data may not hold those values yet
    */
-  switchOption: (index: number, adjust?: (data: T | undefined) => T | undefined) => void;
+  switchOption: (index: number, ownValues?: GenericObjectType) => void;
+}
+
+/** `switched` with `ownValues` written into the object it sends, each at its path. Each is the field's own write, so
+ * the form keeps it rather than putting back what the data held there. Data that is no object takes none
+ *
+ * @param switched - What the switch sends, with the keys the data held before it
+ * @param ownValues - The values the field writes itself, by their key in the field's object
+ * @param fieldPath - The path of the field
+ * @returns - What the switch sends with the field's own values
+ */
+function withOwnValues<T>(
+  switched: OptionSwitchData<T>,
+  ownValues: GenericObjectType,
+  fieldPath: FieldPath,
+): OptionSwitchData<T> {
+  const { formData, held } = switched;
+  if (!isPlainObject(formData)) {
+    return switched;
+  }
+  const written: GenericObjectType = { ...formData };
+  Object.entries(ownValues).forEach(([path, value]) => setByPath(written, path, value));
+  const keep = held && Object.entries(held).filter(([key]) => !Object.hasOwn(ownValues, key));
+  return {
+    formData: asFieldValue<T>(written),
+    held: keep && Object.fromEntries(keep),
+    written: Object.keys(ownValues).map((key) => toFieldPath(key, fieldPath)),
+  };
 }
 
 /** Shows and switches the option of an `anyOf`/`oneOf` field, as `AnyOfField` and `OneOfField` do. A custom field that
  * renders its own option selector calls it with its props and its options, shows `selectedOption`, and calls
  * `switchOption()` when the user picks another: the selection and the data change together, through the form.
  *
- * Outside a `Form` nothing judges the data, so a switch only fills the option switched to.
+ * Outside a `Form` the field's own judgement of the switch stands: what the option switched to cannot hold is dropped,
+ * as `sanitizeDataForNewSchema()` drops it, and what it declares is filled.
  *
  * @param props - The field's props
  * @param options - The field's options, each retrieved for its data as `SchemaField` retrieves them
@@ -88,9 +126,9 @@ export default function useOptionSwitch<
   }, [uiSchema, schema, id, fieldPath]);
 
   const switchOption = useCallback(
-    (index: number, adjust?: (data: T | undefined) => T | undefined) => {
+    (index: number, ownValues?: GenericObjectType) => {
       const newIndex = index >= 0 ? index : -1;
-      if (disabled || readonly || (newIndex === selectedOption && !adjust)) {
+      if (disabled || readonly || (newIndex === selectedOption && !ownValues)) {
         return;
       }
       const newOption = newIndex >= 0 ? options[newIndex] : undefined;
@@ -98,29 +136,15 @@ export default function useOptionSwitch<
       // The registry's `ui:definitions` are passed beside each option's uiSchema, which never carries the root's
       const newUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, newIndex);
       const oldUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
-      // A cleared selection and a `null` option render no field, so nothing is held there. Any other option gets the
-      // data as it is: the form judges each value against the option switched to and fills what that option declares
+      const switched = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
+        newOptionUiSchema: newUiSchema,
+        oldOptionUiSchema: oldUiSchema,
+        uiSchemaDefinitions,
+        globalUiOptions,
+      });
+      // A cleared selection and a `null` option render no field, so none of the field's own values is held there
       const holdsNothing = newOption === undefined || holdsOnlyNull<S>(newOption);
-      const held: unknown = formData;
-      // `''` is what a cleared `additionalProperties` entry holds for nothing, see `storedValue()`
-      const heldNothing = held === undefined || held === null || held === '';
-      // A value of a JSON type the option cannot hold is not carried either, and neither is one that is not the
-      // constant the option names, so the field keeps its place in its container with what the option starts from
-      const renderedNewOption = newOption && getRenderedOptionSchema<S>(schema, newOption);
-      const carriesNothing =
-        heldNothing ||
-        (renderedNewOption !== undefined &&
-          (!takesTypeOf<S>(renderedNewOption, held) ||
-            (isConstant<S>(renderedNewOption) && !deepEquals(toConstant<S>(renderedNewOption), held))));
-      const carried =
-        newOption &&
-        defaultsForOption<T, S, F>(schemaUtils, schema, newOption, carriesNothing ? undefined : formData, {
-          optionUiSchema: newUiSchema,
-          uiSchemaDefinitions,
-          globalUiOptions,
-        });
-
-      const filled = holdsNothing ? undefined : carried;
+      const sent = ownValues && !holdsNothing ? withOwnValues(switched, ownValues, fieldPath) : switched;
       // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to
       selectOption(newIndex);
       let sentData: unknown;
@@ -129,16 +153,15 @@ export default function useOptionSwitch<
         {
           oldOption,
           newOption,
-          newRenderedOption: renderedNewOption,
           oldUiSchema,
           newUiSchema,
           oldIndex: selectedOption,
         },
         formData,
-        adjust && !holdsNothing ? adjust(filled) : filled,
-        (sent) => {
-          sentData = sent;
-          onChange(sent, fieldPath, undefined, changedId);
+        sent,
+        (value) => {
+          sentData = value;
+          onChange(value, fieldPath, undefined, changedId);
         },
       );
       selectSwitchedOption<T, S, F>(

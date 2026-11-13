@@ -446,12 +446,12 @@ function MyAnyOfField(props: FieldProps & { options: RJSFSchema[] }) {
 ```
 
 `switchOption(index)` selects the option and sends the field's data through `onChange` in one step, and `switchOption(-1)` clears the selection.
-The form judges each value the field held against the option switched away from and the one switched to: a value the old option's defaults filled in takes the new option's, a value the user entered stays where the new option has a field that can hold it, and one it has no field for is dropped.
+The field sends what the option switched to can hold, filled with what that option declares, and the form puts back each key the field held and judges it against the option switched away from: a value the old option's defaults filled in takes the new option's, a value the user entered stays where the new option has a field that can hold it, and one it has no field for is dropped.
 It does nothing for a `disabled` or `readonly` field, or for the option already shown.
-A field that writes a value of its own on a switch, such as the property its selector edits, passes a function as the second argument, `switchOption(index, (data) => ({ ...data, kind }))`: it is handed the data the field would send for the option and returns what is sent instead, and the switch is then sent for the option already shown too. It is not called for an option that holds nothing, a `null` one or a cleared selection.
+A field that writes values of its own on a switch, such as the property its selector edits, passes them by key as the second argument, `switchOption(index, { kind })`: each is written into the object the field sends and kept as written, and the switch is then sent for the option already shown too. None is written for an option that holds nothing, a `null` one or a cleared selection.
 The hook also returns `optionsUiSchema`, the uiSchema of each option as the field's `uiSchema` lists them under its `anyOf`/`oneOf`, empty where it lists none; an option past the end of the list renders with the field's own `uiSchema`.
 The optional third argument is the id of the control that switches, which the form's `onChange` is told the change came from; it defaults to the field's `id`.
-Outside a `Form` nothing judges the data, so a switch only fills the option switched to.
+Outside a `Form` the field's own judgement of the switch stands: what the option switched to cannot hold is dropped, as `sanitizeDataForNewSchema()` drops it.
 
 A field that has to send data of its own on a switch reads and writes the selection alone with `useOptionSelection()`, and sends the data through `onChange` itself. The form takes that data as written:
 

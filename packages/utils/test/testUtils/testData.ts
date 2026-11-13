@@ -209,6 +209,8 @@ export const oneOfSchema: RJSFSchema = deepFreeze({
   ],
 });
 export const ONE_OF_SCHEMA_OPTIONS = oneOfSchema[ONE_OF_KEY]! as RJSFSchema[];
+export const FIRST_ONE_OF: RJSFSchema = ONE_OF_SCHEMA_OPTIONS[0];
+export const SECOND_ONE_OF: RJSFSchema = ONE_OF_SCHEMA_OPTIONS[1];
 export const OPTIONAL_ONE_OF_SCHEMA: RJSFSchema = deepFreeze<RJSFSchema>({
   oneOf: [
     {

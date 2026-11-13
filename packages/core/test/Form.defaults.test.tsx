@@ -1404,9 +1404,10 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onChange, { wrap: { mode: 'b', cfg: { name: 'b' } } }, 'root_wrap_mode');
     });
 
-    // A value the defaults filled in follows its default wherever a branch declares it, on the object itself or one
-    // level up, and what the user wrote beside it stays
-    describe('a nested default is matched at the level that declares it', () => {
+    // Where a branch declares the default is what decides how much of the value it speaks for. On the object itself
+    // it declares that object's keys, so an untouched one is replaced while its edited sibling is kept; one level up
+    // it declares the whole object, which the edit no longer matches, so all of it stays
+    describe('an untouched leaf takes the new default of whichever level above it declares one', () => {
       const cfgWithNote = (name: string): RJSFSchema => ({
         type: 'object',
         default: { name },
@@ -1428,7 +1429,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b', note: 'hi' } }, 'root_mode');
       });
 
-      it('swaps the value the default above the object filled in, and keeps what the user wrote beside it', async () => {
+      it('replaces an untouched leaf beside an edited one when the branch declares the default above the object (#5818)', async () => {
         const { node, onChange } = createFormComponent({
           schema: {
             type: 'object',

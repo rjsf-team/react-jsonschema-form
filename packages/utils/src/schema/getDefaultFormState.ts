@@ -1289,7 +1289,7 @@ function copiedValue(value: unknown, copies: WeakMap<object, unknown>): unknown 
  * which can be the merged schema of a memoized plan, is shared across calls, and the caller may change the defaults it
  * is handed
  */
-function ownValue<V>(value: V): V {
+export function ownValue<V>(value: V): V {
   return asDeclared<V>(copiedValue(value, new WeakMap()));
 }
 
@@ -1362,8 +1362,9 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const ancestorPicks =
     preferParentDefaults &&
     options.some((option, index) => optionTakesValueOf<S, F>(context, view, key, index, option, defaults));
-  const inheritedDefault = ancestorPicks ? defaults : (schema.default ?? defaults);
-  // A `default: null` the field declares is its default, so it is read by the key and not by its value
+  // A `default: null` of its own is a default, which wins over the inherited one as it does for any other field
+  const inheritedDefault = ancestorPicks || schema.default === undefined ? defaults : schema.default;
+  // A field holding no data matches the default it would be filled with, its own where it declares one
   const ownOrInherited = Object.hasOwn(schema, DEFAULT_KEY) ? schema.default : defaults;
   const valueToMatch = rawFormData ?? (picksWholeOption || ancestorPicks ? inheritedDefault : ownOrInherited);
   // A constant option equal to the value is the one it picked, whatever the validator makes of the others
@@ -2195,15 +2196,25 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     const hasItemsSchema = isSchemaObject<S>(schema.items);
     defaults = defaults.map((item: unknown, idx) => {
       const isHeld = Array.isArray(rawFormData) && idx < rawFormData.length;
-      if (hasItemsSchema && !isHeld) {
+      // An item `ui:initialValue` the fill applies replaces the item the default seeds, as on a first render
+      const takesInitialValue =
+        !initialDefaultsGenerated && getUiOptions<T, S, F>(itemProps(idx).uiSchema).initialValue !== undefined;
+      if (hasItemsSchema && !isHeld && !takesInitialValue) {
         // An item of the default no row of the data stands for is filled as the row holding it will be once the data
         // does (#5831): what the item states is kept, and the defaults of the items' schema fill the rest of it
         return foldChild<T, S, F>(
           context,
           `defaultRow:${idx}`,
           itemField(view, AdditionalItemsHandling.Ignore),
-          // What the default states for the row stands, so nothing below it is taken for a value to compute again
-          { ...itemProps(idx), rawFormData: item, shouldMergeDefaultsIntoFormData: true, holdsInitialValue: true },
+          // What the default states for the row stands, so nothing below it is taken for a value to compute again, and
+          // no `ui:initialValue` below the item fills it, as none fills the row the default gives on a first render
+          {
+            ...itemProps(idx),
+            rawFormData: item,
+            shouldMergeDefaultsIntoFormData: true,
+            holdsInitialValue: true,
+            initialDefaultsGenerated: true,
+          },
           memo,
         );
       }

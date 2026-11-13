@@ -38,7 +38,7 @@ import {
   SIMPLE_ONEOF_SCHEMAS,
   withTypelessSelector,
 } from './testData/layoutData.ts';
-import { createFormComponent, setupConsoleErrorSuppression } from './testUtils.tsx';
+import { setupConsoleErrorSuppression } from './testUtils.tsx';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),
@@ -391,10 +391,18 @@ describe('LayoutMultiSchemaField', () => {
     const retrievedOptions = (oneOfSchema[ONE_OF_KEY] as RJSFSchema[]).map((opt) =>
       props.registry.schemaUtils.retrieveSchema(opt, props.formData),
     );
+    const sanitizedFormData = props.registry.schemaUtils.sanitizeDataForNewSchema(
+      retrievedOptions[0],
+      retrievedOptions[1],
+      props.formData,
+    );
     await waitFor(() => {
       expect(props.onChange).toHaveBeenCalledWith(
         {
-          ...(props.registry.schemaUtils.getDefaultFormState(retrievedOptions[0], props.formData) as GenericObjectType),
+          ...(props.registry.schemaUtils.getDefaultFormState(
+            retrievedOptions[0],
+            sanitizedFormData,
+          ) as GenericObjectType),
           [selectorField]: 'first_option',
         },
         props.fieldPath,
@@ -424,12 +432,17 @@ describe('LayoutMultiSchemaField', () => {
     const retrievedOptions = (oneOfSchema[ONE_OF_KEY] as RJSFSchema[]).map((opt) =>
       props.registry.schemaUtils.retrieveSchema(opt, props.formData),
     );
+    const sanitizedFormData = props.registry.schemaUtils.sanitizeDataForNewSchema(
+      retrievedOptions[1],
+      retrievedOptions[0],
+      props.formData,
+    );
     await waitFor(() => {
       expect(props.onChange).toHaveBeenCalledWith(
         {
           ...(props.registry.schemaUtils.getDefaultFormState(
             retrievedOptions[1],
-            props.formData,
+            sanitizedFormData,
             undefined,
             undefined,
             uiSchema,
@@ -658,17 +671,22 @@ describe('LayoutMultiSchemaField', () => {
       discriminator: { propertyName: 'answer' },
       oneOf: [optionFor('1'), optionFor('2')],
     };
-    // The field sends what it held, filled for the option picked, and the form gives each value still holding the old
-    // option's default the new one's
-    const { onChange } = createFormComponent({
+    const props = getProps({
       schema,
-      uiSchema: { [UI_FIELD_KEY]: 'LayoutMultiSchemaField', 'ui:fieldReplacesAnyOrOneOf': true },
-      initialFormData: { answer: '1', runner: { name: 'runner-1', ratio: 0 } },
+      formData: { answer: '1', runner: { name: 'runner-1', ratio: 0 } },
     });
 
-    await user.click(screen.getAllByRole('radio')[1]);
+    render(<SchemaField {...props} />);
 
-    expect(onChange.mock.lastCall?.[0].formData).toEqual({ answer: '2', runner: { name: 'runner-2', ratio: 0 } });
+    const radios = within(screen.getByTestId(RadioWidgetTestId)).getAllByRole('radio');
+    await user.click(radios[1]);
+
+    expect(props.onChange).toHaveBeenCalledWith(
+      { answer: '2', runner: { name: 'runner-2', ratio: 0 } },
+      props.fieldPath,
+      undefined,
+      DEFAULT_ID,
+    );
   });
   test('no options for radio widget, ui:hideError true, props.hideError false, no errors to hide', () => {
     const props = getProps({

@@ -11,6 +11,7 @@ import {
   isMultiSelectTest,
   isSelectTest,
   retrieveSchemaTest,
+  sanitizeDataForNewSchemaTest,
 } from '../../../utils/test/schema/index.ts';
 import getTestValidator from './getTestValidator.ts';
 
@@ -28,6 +29,7 @@ isFilesArrayTest(testValidator);
 isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
 retrieveSchemaTest(testValidator);
+sanitizeDataForNewSchemaTest(testValidator);
 
 const testValidatorDiscriminated = getTestValidator({});
 
@@ -43,3 +45,4 @@ isFilesArrayTest(testValidatorDiscriminated);
 isMultiSelectTest(testValidatorDiscriminated);
 isSelectTest(testValidatorDiscriminated);
 retrieveSchemaTest(testValidatorDiscriminated);
+sanitizeDataForNewSchemaTest(testValidatorDiscriminated);

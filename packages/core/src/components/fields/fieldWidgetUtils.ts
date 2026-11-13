@@ -651,13 +651,22 @@ export function fallbackValueKeepsWidget<T, S extends StrictRJSFSchema, F extend
   return !widget || hasWidget<T, S, F>({ ...schema, type }, widget, widgets);
 }
 
-/** Whether a field of `schema` can hold a value of the JSON type `value` has, as a schema declaring no type can */
-export function takesTypeOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
-  const types = getSchemaOwnTypes<S>(schema);
-  const valueType = guessType(value);
-  return (
-    types === undefined ||
-    types.length === 0 ||
-    types.some((type) => type === valueType || (type === 'integer' && Number.isInteger(value)))
-  );
+/** Gets the `uiSchema` the fallback UI's value field renders with on `type`, as far as its widget goes: `uiSchema`
+ * without its `ui:widget` where `fallbackValueKeepsWidget()` finds no widget implementing it for that type
+ *
+ * @param schema - The schema the fallback UI renders
+ * @param type - The type the value is on
+ * @param uiSchema - The field's uiSchema
+ * @param widgets - The registered widgets
+ * @returns - `uiSchema`, without its `ui:widget` where it is dropped
+ */
+export function fallbackValueUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  type: JSONSchema7TypeName,
+  uiSchema: UiSchema<T, S, F>,
+  widgets: Registry<T, S, F>['widgets'],
+): UiSchema<T, S, F> {
+  return fallbackValueKeepsWidget<T, S, F>(schema, type, getUiOptions<T, S, F>(uiSchema).widget, widgets)
+    ? uiSchema
+    : withoutUiWidget<T, S, F>(uiSchema);
 }

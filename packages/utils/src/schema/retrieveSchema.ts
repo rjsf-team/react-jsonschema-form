@@ -134,8 +134,8 @@ export default function retrieveSchema<
 /** The views of the schemas that merge nothing and hold no subschemas, by schema: a call root, or a subschema
  * `retrieveSchema()` handed out for a field that merges nothing. Such a view reads neither the data nor the context,
  * except for an object the context opens to extra keys, which stubs those of the data and is never kept here, and
- * `isSelect()` retrieves every property of a form on every edit, so it is retrieved once per root rather than planned
- * again on each call.
+ * `isSelect()` and `sanitizeDataForNewSchema()` retrieve every property of a form on every edit, so it is retrieved
+ * once per root rather than planned again on each call.
  */
 const leafViews = new WeakMap<object, { readonly graph: object; readonly view: object }>();
 
@@ -594,7 +594,7 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
  * @param rootSchema - The root schema the reference is looked up in
  * @returns - False for a reference that resolves to nothing or a chain of references that loops, and true otherwise
  */
-function ownRefResolves<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): boolean {
+export function ownRefResolves<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): boolean {
   return !('error' in findOwnRef<S>(schema, rootSchema));
 }
 

@@ -1,6 +1,6 @@
 import { createRef, useState } from 'react';
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
-import { buttonId, getByPath, isObject } from '@rjsf/utils';
+import type { DefaultFormStateBehavior, RJSFSchema, UiSchema } from '@rjsf/utils';
+import { buttonId, createSchemaUtils, getByPath, isObject } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -524,9 +524,9 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         expect(container.querySelector('#root_a__key')).toBeNull();
       });
 
-      // Without data the field matches its first option, whose defaults are what the form filled it with to start. They
-      // leave with that option, so the switch away from the field finds none to keep as an extra key
-      it("drops another option's defaults at the switch to the option shown, and keeps no extra key after it", async () => {
+      // Without data the field matches its first option, whose defaults are what the form filled it with to start. The
+      // switch to the option shown already judges them against that option, as keys only it declared (#5824)
+      it("drops another option's defaults on the switch to the option shown", async () => {
         const { container, formData } = await selectT(unionOf({ title: 'B', type: 'object' }), {
           whenAbsent: 'allow',
           initialFormData: { kind: 's' },
@@ -2284,7 +2284,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       it.each([
         { data: ['a', 'b'], expected: {}, outcome: 'drops the array where an item' },
         { data: ['a'], expected: { list: ['a'] }, outcome: 'keeps the array where no item' },
-      ])('$outcome reaches the new false', ({ data, expected }) => {
+      ])('$outcome reaches the new false, as sanitizeDataForNewSchema() does', ({ data, expected }) => {
         const closed = (rest: RJSFSchema | false): RJSFSchema => ({
           type: 'object',
           properties: { list: { type: 'array', prefixItems: [{ type: 'string' }], items: rest } },
@@ -2298,7 +2298,24 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         expect(ref.current?.getFormData()).toStrictEqual(expected);
       });
 
-      it('keeps an unfilled prefix item at a position the new prefixItems close', () => {
+      // An option's `default` decides no item's validity, so the item already failed the old entry
+      it('keeps a rejected prefix item whose option only changes its default, as sanitizeDataForNewSchema() does', () => {
+        const prefix = (a: number): RJSFSchema => ({
+          type: 'object',
+          const: { a: 1 },
+          properties: { a: { type: 'number' } },
+          oneOf: [{ default: { a } }],
+        });
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: [{ a: 2 }, 'a'] } };
+        const { rerender } = render(<Form ref={ref} schema={listSchema(prefix(1), ['a'])} {...props} />);
+
+        rerender(<Form ref={ref} schema={listSchema(prefix(3), ['a'])} {...props} />);
+
+        expect(ref.current?.getFormData()).toStrictEqual({ list: [{ a: 2 }, 'a'] });
+      });
+
+      it('keeps an unfilled prefix item at a position the new prefixItems close, as sanitizeDataForNewSchema() does', () => {
         const prefixed = (second: RJSFSchema | false): RJSFSchema => ({
           type: 'object',
           properties: { list: { type: 'array', prefixItems: [{ type: 'string' }, second] } },
@@ -2315,7 +2332,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       it.each([
         { rest: { type: 'string' } as RJSFSchema, cutOff: 'a rejected prefix item' },
         { rest: false as const, cutOff: 'an item past a closed tuple' },
-      ])('trims $cutOff that a new maxItems cuts off', ({ rest }) => {
+      ])('trims $cutOff that a new maxItems cuts off, as sanitizeDataForNewSchema() does', ({ rest }) => {
         const bounded = (maxItems: number | undefined, values: string[], items: RJSFSchema | false): RJSFSchema => ({
           type: 'object',
           properties: {
@@ -2393,7 +2410,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         expect(ref.current?.getFormData()).toStrictEqual({ list: ['x', 'y'] });
       });
 
-      it('keeps an inner array as it is where the new entry rejects its prefix item', () => {
+      it('keeps an inner array as it is where the new entry rejects its prefix item, as sanitizeDataForNewSchema() does', () => {
         const nested = (values: string[]): RJSFSchema => ({
           type: 'object',
           properties: {
@@ -2437,7 +2454,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
   });
 });
 
-describe('sanitizing an array position by position (#5786)', () => {
+describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () => {
   const ABSENT = Symbol('absent');
   const typedItems = (type: 'string' | 'number' | 'integer'): RJSFSchema => ({ type: 'array', items: { type } });
   const prefix = (...prefixItems: (RJSFSchema | boolean)[]): RJSFSchema => ({ type: 'array', prefixItems });
@@ -2452,6 +2469,8 @@ describe('sanitizing an array position by position (#5786)', () => {
     to: RJSFSchema;
     data: unknown[];
     expected: unknown;
+    formExpected?: unknown;
+    behavior?: DefaultFormStateBehavior;
   }>([
     {
       name: 'keeps the items at a position that now declares nothing',
@@ -2518,19 +2537,21 @@ describe('sanitizing an array position by position (#5786)', () => {
     },
     {
       // `Form` renders an array declaring no type as unsupported, so it doesn't read the old items without their types
-      name: 'removes an old array declaring no type, whose items it never rendered',
+      name: 'differs on an old array declaring no type: utils keeps the items, Form removes the array',
       from: { prefixItems: [{ type: 'number', enum: ['a'] }] },
       to: prefix({ type: 'string', enum: ['a'] }),
       data: ['b'],
-      expected: ABSENT,
+      expected: ['b'],
+      formExpected: ABSENT,
     },
     {
-      // `Form` judges no field whose constraints didn't change
-      name: 'keeps an item an unchanged scalar const rejects, for validation to report',
+      // `Form` judges no field whose constraints didn't change, and utils checks a scalar item as a scalar property is
+      name: 'differs on an unchanged scalar const: Form keeps the item it rejects, utils drops it',
       from: { type: 'array', title: 'Old', items: { type: 'string', const: 'a' } },
       to: { type: 'array', title: 'New', items: { type: 'string', const: 'a' } },
       data: ['b', 'a'],
-      expected: ['b', 'a'],
+      expected: ['a'],
+      formExpected: ['b', 'a'],
     },
     {
       name: 'keeps a prefix item whose position becomes true',
@@ -2600,8 +2621,9 @@ describe('sanitizing an array position by position (#5786)', () => {
       from: { type: 'array', items: true },
       to: { type: 'array', items: [{ enum: ['a'] }] },
       data: ['b'],
+      expected: ABSENT,
       // The defaults fill the cleared tuple with a hole at each position
-      expected: [undefined],
+      formExpected: [undefined],
     },
     {
       name: 'drops an item past the prefix the new schema rejects where the old one declared no items',
@@ -2611,12 +2633,13 @@ describe('sanitizing an array position by position (#5786)', () => {
       expected: ['a'],
     },
     {
-      // The row is left for the defaults, which fill it
+      // utils leaves the row for the defaults, which `Form` and an option switch fill
       name: 'empties a null item for the new default to fill, where its position changes and allows no null',
       from: typedItems('number'),
       to: { type: 'array', items: { type: 'string', default: 'x' } },
       data: [null],
-      expected: ['x'],
+      expected: [undefined],
+      formExpected: ['x'],
     },
     {
       // utils leaves the row for the defaults, which `Form` and an option switch fill
@@ -2649,7 +2672,7 @@ describe('sanitizing an array position by position (#5786)', () => {
       expected: [{ a: 1 }],
     },
     {
-      // The hole is left for the defaults, which fill it
+      // utils leaves the hole for the defaults, which `Form` and an option switch fill
       name: 'keeps a hole under a type list naming object beside a type it renders first',
       from: {
         type: 'array',
@@ -2662,14 +2685,16 @@ describe('sanitizing an array position by position (#5786)', () => {
         items: { type: ['string', 'object'], properties: { a: { type: 'number' } }, default: 'z' },
       },
       data: ['a', undefined, 'b'],
-      expected: ['a', 'z', 'b'],
+      expected: ['a', undefined, 'b'],
+      formExpected: ['a', 'z', 'b'],
     },
     {
       name: 'keeps a hole under a type list it renders as an object',
       from: { type: 'array', items: { type: ['object', 'string'], properties: { a: {}, b: {} } } },
       to: { type: 'array', items: { type: ['object', 'string'], properties: { a: {} } } },
       data: ['a', undefined, 'b'],
-      expected: ['a', {}, 'b'],
+      expected: ['a', undefined, 'b'],
+      formExpected: ['a', {}, 'b'],
     },
     {
       name: 'keeps a hole under a type list it renders as an array',
@@ -2769,7 +2794,30 @@ describe('sanitizing an array position by position (#5786)', () => {
       from: { type: 'array', items: { type: ['string', 'null'], default: null } },
       to: { type: 'array', items: { type: ['string', 'null'], default: 'y' } },
       data: [null, 'q'],
+      expected: ['y', 'q'],
+    },
+    {
+      name: 'swaps an item holding the old default for a new null one (#5815)',
+      from: { type: 'array', items: { type: ['string', 'null'], default: 'x' } },
+      to: { type: 'array', items: { type: ['string', 'null'], default: null } },
+      data: ['x', 'q'],
       expected: [null, 'q'],
+    },
+    {
+      // An item's default is read as the fill reads it, an `anyOf`/`oneOf` option's included, as a property's is
+      name: "swaps an item holding its option's old default for the new one",
+      from: { type: 'array', items: { type: 'string', oneOf: [{ default: 'x' }] } },
+      to: { type: 'array', items: { type: 'string', oneOf: [{ default: 'y' }] } },
+      data: ['x', 'q'],
+      expected: ['y', 'q'],
+    },
+    {
+      name: "empties a null item for its option's new default to fill, where its position changes and allows no null",
+      from: { type: 'array', items: { type: 'string', oneOf: [{ default: 'x' }] } },
+      to: { type: 'array', items: { type: 'string', oneOf: [{ default: 'yy' }] } },
+      data: [null],
+      expected: [undefined],
+      formExpected: ['yy'],
     },
     {
       name: 'keeps a scalar item a readOnly new default differs from',
@@ -2779,26 +2827,36 @@ describe('sanitizing an array position by position (#5786)', () => {
       expected: ['z'],
     },
     {
-      // The object is left for the defaults, which fill it key by key
+      name: 'keeps a scalar readOnly item whose new default replaces its old one',
+      from: { type: 'array', items: { type: 'string', default: 'x', readOnly: true } },
+      to: { type: 'array', items: { type: 'string', default: 'y', readOnly: true } },
+      data: ['z'],
+      expected: ['z'],
+    },
+    {
+      // utils leaves the object for the defaults, which `Form` fills key by key
       name: 'keeps an object item holding its old default, for the defaults to fill key by key',
       from: { type: 'array', items: { type: 'object', properties: { x: {}, y: {} }, default: { x: 1 } } },
       to: { type: 'array', items: { type: 'object', properties: { x: {}, y: {} }, default: { y: 1 } } },
       data: [{ x: 1 }],
-      expected: [{ x: 1, y: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
     },
     {
       name: 'keeps an untyped object item holding its old default, for the defaults to fill key by key',
       from: { type: 'array', items: { properties: { x: {}, y: {} }, default: { x: 1 } } },
       to: { type: 'array', items: { properties: { x: {}, y: {} }, default: { y: 1 } } },
       data: [{ x: 1 }],
-      expected: [{ x: 1, y: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
     },
     {
       name: 'keeps an object item of object options holding its old default, for the defaults to fill key by key',
       from: { type: 'array', items: { anyOf: [{ type: 'object', properties: { x: {}, y: {} } }], default: { x: 1 } } },
       to: { type: 'array', items: { anyOf: [{ type: 'object', properties: { x: {}, y: {} } }], default: { y: 1 } } },
       data: [{ x: 1 }],
-      expected: [{ x: 1, y: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
     },
     {
       name: 'swaps the old default of an object item for the new one where its options render no object',
@@ -2818,7 +2876,8 @@ describe('sanitizing an array position by position (#5786)', () => {
         items: { properties: { x: {}, y: {} }, anyOf: [{ required: ['x'] }, { required: ['y'] }], default: { y: 1 } },
       },
       data: [{ x: 1 }],
-      expected: [{ x: 1, y: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
     },
     {
       name: 'swaps the old default of an object item of object options for a scalar new one',
@@ -2847,7 +2906,16 @@ describe('sanitizing an array position by position (#5786)', () => {
       data: [{ a: 1 }],
       expected: [{ a: 2 }],
     },
-  ])('$name', ({ from, to, data, expected }) => {
+    // The defaults still fill an empty row under `skipDefaults`, so an item's default is still its own
+    {
+      name: "swaps the old default of an item for the new one under emptyObjectFields: 'skipDefaults'",
+      from: { type: 'array', items: { type: 'string', default: 'x' } },
+      to: { type: 'array', items: { type: 'string', default: 'y' } },
+      data: ['x', 'q'],
+      expected: ['y', 'q'],
+      behavior: { emptyObjectFields: 'skipDefaults' },
+    },
+  ])('$name', ({ from, to, data, expected, formExpected = expected, behavior }) => {
     const wrap = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
     const ref = createRef<FormRef<{ list?: unknown }>>();
     const props = { validator, initialFormData: { list: data }, defaultFormStateBehavior: behavior };
@@ -2856,7 +2924,13 @@ describe('sanitizing an array position by position (#5786)', () => {
     rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
 
     const formData = handleOf(ref).getFormData();
-    expect(Object.hasOwn(formData, 'list') ? formData.list : ABSENT).toEqual(expected);
+    expect(Object.hasOwn(formData, 'list') ? formData.list : ABSENT).toEqual(formExpected);
+    const sanitized = createSchemaUtils({ validator, defaultFormStateBehavior: behavior }, to).sanitizeDataForNewSchema(
+      to,
+      from,
+      data,
+    );
+    expect(sanitized === undefined ? ABSENT : sanitized).toEqual(expected);
   });
   // A property under a type list is sanitized through the object holding it, as the array table's items are through the
   // array, where the top-level call would read the list through `getSchemaType()` alone
@@ -3132,6 +3206,11 @@ describe('sanitizing an array position by position (#5786)', () => {
     rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
 
     expect(handleOf(ref).getFormData()).toEqual({ value: expected });
+    const utils = createSchemaUtils({ validator, defaultFormStateBehavior: behavior }, wrap(to));
+    const sanitized = utils.sanitizeDataForNewSchema(wrap(to), wrap(from), {
+      value: data,
+    });
+    expect(sanitized).toEqual({ value: expected });
   });
   it('swaps a key of an object property that turns true holding its old default for its new default', () => {
     const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });

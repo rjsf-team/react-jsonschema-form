@@ -13,6 +13,7 @@ import {
   isSelect,
   omitExtraData,
   retrieveSchema,
+  sanitizeDataForNewSchema,
 } from '../src/index.ts';
 import shallowAllOfMerge from '../src/schema/shallowAllOfMerge.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
@@ -126,6 +127,14 @@ const CASES: PropagationCase[] = [
     rootSchema: { allOf: [oldObjectSchema] },
     callFunction: (context, rootSchema) => omitExtraData(context, rootSchema, rootSchema, { a: 'x', b: 'y' }),
     callSchemaUtils: (schemaUtils) => schemaUtils.omitExtraData(schemaUtils.getRootSchema(), { a: 'x', b: 'y' }),
+  },
+  {
+    name: 'sanitizeDataForNewSchema',
+    rootSchema: { type: 'object', properties: { a: stringAllOf } },
+    callFunction: (context, rootSchema) =>
+      sanitizeDataForNewSchema(context, rootSchema, rootSchema, oldObjectSchema, { a: 'x' }),
+    callSchemaUtils: (schemaUtils) =>
+      schemaUtils.sanitizeDataForNewSchema(schemaUtils.getRootSchema(), oldObjectSchema, { a: 'x' }),
   },
   {
     name: 'getUiRequiredErrorSchema',

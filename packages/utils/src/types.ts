@@ -362,6 +362,13 @@ export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
    *   from. It is no part of the documented API and may change in any release
    */
   isFilled?(fieldPath: FieldPath): boolean;
+  /** Whether `ArrayField` renders the field at `fieldPath` as one widget, as a multiple select, a group of checkboxes, a
+   * file input or a custom widget, which holds `[]` with nothing chosen, so `ui:required` turns that down. Its `schema`
+   * has the type the fallback UI's selector is on pinned where the fallback UI renders the field. Without it, an array
+   * with `items` does where its schema is a multiple select or a files array, or its uiSchema names a widget, and no
+   * field other than `ArrayField` or `SchemaField`
+   */
+  rendersArrayWidget?(fieldPath: FieldPath, schema: S, uiSchema: GenericObjectType, formData: unknown): boolean;
 }
 
 declare const FIELD_PATH_BRAND: unique symbol;
@@ -2863,4 +2870,19 @@ export interface SchemaUtilsType<
     formContext?: F,
     fieldState?: FormFieldState<S>,
   ): ErrorSchema<T>;
+  /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
+   * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
+   * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the
+   * old schema that are non-existent in the new schema, or that it declares with another type, are removed from the
+   * data at every level, as is a property whose value the new schema rejects. A property the data holds as `undefined`
+   * stays so where both schemas constrain it alike, and is otherwise removed unless a value replaces it.
+   *
+   * @param [newSchema] - The new schema for which the data is being sanitized
+   * @param [oldSchema] - The old schema from which the data originated
+   * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+   * @returns - The new form data, without the fields uniquely associated with the old schema. Will return `undefined`
+   *      if the new schema is not an object containing properties, or where its object or array `const` rejects the
+   *      data, and a copy of that `const` where the data holds the old schema's
+   */
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown): T;
 }

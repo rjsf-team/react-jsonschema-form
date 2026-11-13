@@ -339,10 +339,10 @@ export interface FormState<
    * or object, each empty array or object and each key written as `undefined`, and as entered for each array or object
    * itself whose rows or keys were moved, added or removed, or that a write wrote whole. An entered value is theirs
    * even where it equals a default. A seed doesn't say whether a person or a default put a value in it, so the origin
-   * of a seeded value is not known until a change asks: one the sanitize keeps is then entered where it is not what
-   * the defaults filled the field with, and has no origin where it is. Moved with the keys the form moved, and dropped
-   * where the data stops holding the value: with a key the data drops, and where the sanitize or the defaults write
-   * another value over it, which is then one the defaults filled in
+   * of a seeded value is not known until its field's default changes: one the sanitize keeps is then entered where it
+   * is not what the defaults filled the field with, and stays seeded where it is. Moved with the keys the form moved,
+   * and dropped where the data stops holding the value: with a key the data drops, and where the sanitize or the
+   * defaults write another value over it, which is then one the defaults filled in
    */
   origins: Origins;
   /** The origins of the baseline's values: those of the seed it was derived from */

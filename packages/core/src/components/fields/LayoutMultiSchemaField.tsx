@@ -1,17 +1,10 @@
 import { useMemo } from 'react';
-import type {
-  FieldProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UiSchema,
-} from '@rjsf/utils';
-import { getByPath, isPlainObject, setByPath, fieldPathToName, getUiOptions, toFieldPath } from '@rjsf/utils';
+import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import { getByPath, fieldPathToName, getUiOptions, toFieldPath } from '@rjsf/utils';
 
 import useOptionSwitch from '../../hooks/useOptionSwitch.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
-import { asFieldValue, retrievedOptionListOf } from '../uiState.ts';
+import { retrievedOptionListOf } from '../uiState.ts';
 import { getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import {
   computeEnumOptions,
@@ -123,13 +116,9 @@ export default function LayoutMultiSchemaField<
    * @param opt - The value of the selector field the widget picked
    */
   const onOptionChange = (opt?: unknown) =>
-    // The selector cell's value is the one thing the switch writes. The form judges every other value against the
-    // option switched to and fills what that option declares
-    switchOption(getSelectedOptionIndex<S>(enumOptions, selectorField, opt), (starts) => {
-      const held: GenericObjectType = isPlainObject(starts) ? { ...starts } : {};
-      setByPath(held, selectorField, opt);
-      return asFieldValue<T>(held);
-    });
+    // The selector cell's value is the field's own write, which the form keeps rather than putting the old one back. It
+    // judges every other key the data held against the option switched away from
+    switchOption(getSelectedOptionIndex<S>(enumOptions, selectorField, opt), { [selectorField]: opt });
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
   const widgetOptions = { enumOptions, ...uiOptions };

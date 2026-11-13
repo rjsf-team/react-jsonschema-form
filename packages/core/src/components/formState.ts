@@ -46,13 +46,17 @@ import isDevelopment from '../isDevelopment.ts';
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import { copyAlongPath, getAt, isPathPrefix, replaceErrorSchemaNode } from './dataPaths.ts';
-import { schemaFieldDrawsControlsBesideOptions, schemaFieldFallbackType } from './fields/SchemaField.tsx';
+import {
+  schemaFieldDrawsControlsBesideOptions,
+  schemaFieldFallbackType,
+  schemaFieldRendersArrayWidget,
+} from './fields/SchemaField.tsx';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
 import { clearsWrittenOver, holdsClearAt, keepRecordedClears } from './keepClears.ts';
 import { keyMoveOf, moveErrorKeys, moveErrorSchemaKeys, movedPaths, withKeysMoved } from './keyMove.ts';
 import type { ContainerKeyMove, KeyMove, MoveFate } from './keyMove.ts';
-import type { ClassifiedValue, DroppedValue, FieldTree, FirstRenderFill, JudgedClears } from './sanitizeFieldTree.ts';
+import type { DroppedValue, FieldTree, FirstRenderFill, JudgedClears } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree, { alongOf, judgedClearsIn } from './sanitizeFieldTree.ts';
 import type { UiStateReader } from './uiState.ts';
 import {
@@ -381,14 +385,6 @@ function filterPaths(paths: ReadonlySet<FieldPath>, keep: (fieldPath: FieldPath)
   }
   const kept = [...paths].filter(keep);
   return kept.length === paths.size ? paths : new Set(kept);
-}
-
-/** `origins` once the sanitize worked out where the seeded values in `classified` came from: each is seeded no more,
- * an array or object with every seeded value it holds, and one a person must have entered is entered
- */
-function withClassified(origins: Origins, classified: readonly ClassifiedValue[]): Origins {
-  const entered = classified.filter(({ origin }) => origin === 'entered').map(({ path }) => fieldPathFromList(path));
-  return withOrigins(origins, pathsWithin(classified), entered, 'seeded');
 }
 
 /** Adds to `into` the path of `value`, at `path`, and of every value it holds, an array's and an object's own included */
@@ -789,23 +785,28 @@ export interface FieldChange<T> {
    * `setFieldValue()` sets it, is matched again
    */
   isFieldEdit?: boolean;
-  /** For an option switch, the switched field and the selections the form held before the switch */
+  /** For an option switch, the option switched away from, the keys the form put back, and the selections the form held
+   * before the switch
+   */
   switchedFrom?: SwitchedFrom;
-  /** For an option switch, the path of the field whose option it switched */
-  switchAt?: { path: FieldPathList };
+  /** For an option switch, the path of the field whose option it switched, and the paths of the values that field wrote
+   * itself, see `SwitchedOption`
+   */
+  switchAt?: { path: FieldPathList; written?: readonly FieldPath[] };
 }
 
-/** A switch the form took, see `SwitchedOption`: `path`, the switched field's, with the selections and expansions the
- * form showed the data under before it, which the field tree before the switch is read with at and below that field.
- * The path is the change's own, or below it where a parent field sent the switch's data at its own path
+/** The keys a switch the form took put back, see `SwitchedOption`, at `path`, the switched field's, with the selections
+ * and expansions the form showed the data under before it, which the field tree before the switch is read with below
+ * those keys. The path is the change's own, or below it where a parent field sent the switch's data at its own path
  */
 export interface SwitchedFrom {
   path: FieldPathList;
+  heldKeys: ReadonlySet<string>;
   uiState: UiStateReader;
 }
 
 /** A change being made to the data: its path, where it moved the keys of the array or object there, if it moved any,
- * and the field whose option it switched, if it is a switch
+ * and the option it switched away from, with the keys the form put back, if it is a switch
  */
 export interface FieldEdit {
   path: FieldPathList;
@@ -1505,8 +1506,10 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         { recorded: diffedOrigins, refilled },
         roundEdit,
         judged,
+        isDefaultsChanged,
       );
-      origins = withoutTaken(withClassified(origins, round.classified), round.released);
+      // A seeded value the sanitize found to be no fill of the defaults is entered from then on
+      origins = withoutTaken(withOrigins(origins, [], round.classified), round.released);
       const sanitized = replaceEqualDeep(formData, round.formData);
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
@@ -1906,8 +1909,9 @@ function collectRewritten(
  * rewrite is handed the edit's data and enters what it holds otherwise, see `collectRewritten()`.
  *
  * A change that moves keys, adds one or switches an option enters no value: what it adds is the field's seed for the
- * new key or option, which the defaults give. An array or object whose keys it moved, added or removed is entered
- * itself, so it does not pass for one the defaults filled in whole.
+ * new key or option, which the defaults give. The values a switching field wrote itself, as the selector a
+ * `LayoutMultiSchemaField` edits, are the exception: they are the person's pick. An array or object whose keys it
+ * moved, added or removed is entered itself, so it does not pass for one the defaults filled in whole.
  *
  * @param recorded - The origins recorded before the change
  * @param change - The change
@@ -1934,7 +1938,7 @@ function originsAfterChange<T>(
       const segments = fieldPathToList(at);
       return !isPathPrefix(path, segments) || getAt<unknown>(written, segments) !== undefined;
     };
-    return filterOrigins(moved, isHeld);
+    return withOrigins(filterOrigins(moved, isHeld), [], change.switchAt?.written);
   }
   const isKeyRemoval = change.newValue === ADDITIONAL_PROPERTY_KEY_REMOVE;
   if ((change.newKeyOf || change.isAnnouncedMove) && !isKeyRemoval) {
@@ -2062,7 +2066,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
   if (isContainer) {
     // Only the data and its context are derived here; the errors are reconciled below. A root write is sanitized only
     // where it stands for an edit, as the data a `transformChange` writes over one does, or where it is an option
-    // switch, which the sanitize judges. The `undefined` a clear leaves is stripped from the copy the
+    // switch that put keys back for the sanitize to judge. The `undefined` a clear leaves is stripped from the copy the
     // validator gets, so AJV never sees `{ [key]: undefined }` for a `string` field (#4518)
     const editedPath = change.editedPath ?? (isRootPath && !change.switchedFrom ? undefined : path);
     const derived = deriveFormData(
@@ -2114,7 +2118,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
  *
  * @param changed - The state the change's data left, with the errors from before it
  * @param previousFormData - The data before the change
- * @param fieldChange - The change
+ * @param change - The change
  * @param props - The current props
  * @param isValidated - Whether the change's data is validated
  * @returns - `changed` with the errors after the change
@@ -2122,12 +2126,11 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
 export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   changed: FormState<T, S, F>,
   previousFormData: T | undefined,
-  fieldChange: FieldChange<T>,
+  change: FieldChange<T>,
   props: FormProps<T, S, F>,
   isValidated: boolean,
 ): FormState<T, S, F> {
   const { formData } = changed;
-  const change = withSettledRows(fieldChange, previousFormData, formData);
   const isHidden = hiddenErrorsOf(props, changed);
   if (isValidated) {
     // The validation replaces the validator's result whole, so only the fields' own errors are carried through
@@ -2157,38 +2160,6 @@ export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends F
         : previousFormData,
     );
   return { ...changed, ...applyChangeToErrors(changed, change, props.extraErrors, getDataChange, isHidden) };
-}
-
-/** `change` with the errors under the items of an array whose option it switched going where the settle left the
- * items. The switching field keeps the errors of each item it carries over, but only the settle decides which stay: a
- * row it replaced holds another value under the same index, and an array it trimmed or refilled at another length has
- * `ArrayField` key every row anew, which mounts each row's field afresh
- *
- * @param change - The change
- * @param previousFormData - The data before the change
- * @param settled - The data the change settled as
- * @returns - The change, moving the errors of only the rows the settle kept
- */
-function withSettledRows<T>(change: FieldChange<T>, previousFormData: T | undefined, settled: T | undefined) {
-  const { switchAt, newKeyOf, newOwnKeyOf } = change;
-  const path = fieldPathToList(change.fieldPath);
-  if (!switchAt || !newKeyOf || path.length !== switchAt.path.length || !isPathPrefix(path, switchAt.path)) {
-    return change;
-  }
-  const before = getAt<unknown>(previousFormData, path);
-  const after = getAt<unknown>(settled, path);
-  if (!Array.isArray(before) || !Array.isArray(after)) {
-    return change;
-  }
-  const rows: readonly unknown[] = before;
-  const settledRows: readonly unknown[] = after;
-  const ofKeptRow =
-    (keyOf: KeyMove): KeyMove =>
-    (key) =>
-      rows.length === settledRows.length && Object.is(rows[Number(key)], settledRows[Number(key)])
-        ? keyOf(key)
-        : undefined;
-  return { ...change, newKeyOf: ofKeptRow(newKeyOf), newOwnKeyOf: newOwnKeyOf && ofKeptRow(newOwnKeyOf) };
 }
 
 /** The error members of a state with `extraErrors` as the only errors on display, as a reset or a valid submission

@@ -639,8 +639,9 @@ describe('oneOf', () => {
   });
 
   describe('keeps a value the new option declares but the fill would not write', () => {
-    // What an option declares and what the defaults fill in are not the same set, so the form writes the value the
-    // new option declares itself rather than emptying the key for a fill that would not write it
+    // What an option declares and what `computeDefaults()` acts on are not the same set, and the deletion is only
+    // safe where they agree. `sanitizeDataForNewSchema()` has already put the right value in each of these, so
+    // removing the key would empty it for good
     const kindFor = (name: string): RJSFSchema => ({ type: 'string', const: name, default: name });
 
     it('when the new default is reached through allOf', async () => {
@@ -709,9 +710,8 @@ describe('oneOf', () => {
       );
     });
 
-    it("when emptyObjectFields is 'skipDefaults', where the form writes the new default in place", async () => {
-      // The value is the default the old option declares, so it takes the one the new option declares, which the form
-      // writes itself rather than leaving to a fill this behavior keeps from writing it
+    it("when emptyObjectFields is 'skipDefaults', so the fill writes nothing", async () => {
+      // Both sets of defaults are computed the same way, so they agree that there is nothing to replace
       const optionFor = (name: string): RJSFSchema => ({
         title: name,
         type: 'object',
@@ -729,7 +729,7 @@ describe('oneOf', () => {
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
       expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({ formData: { kind: 'b', runner: { name: 'b' } } }),
+        expect.objectContaining({ formData: { kind: 'b', runner: { name: 'a' } } }),
         'root__oneof_select',
       );
     });
@@ -5218,22 +5218,7 @@ describe('oneOf', () => {
       expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
     });
 
-    // Raising writes the item, so it is the user's: another default leaves it, and its errors, where they are, while a
-    // `const` it is not replaces it, which is another value under the same index
-    it.each<[string, RJSFSchema, unknown, unknown]>([
-      [
-        'keep the item the user wrote, and the errors it raised, when the option switched to declares another default',
-        { maxItems: 3, default: ['y'] },
-        ['x'],
-        { opt: { 0: { __errors: ['Custom error'] } } },
-      ],
-      [
-        'drop the errors an item raised when the option switched to replaces the item with its const',
-        { maxItems: 3, const: ['y'] },
-        ['y'],
-        {},
-      ],
-    ])('should %s', async (_, otherOption, expectedItems, expectedErrorSchema) => {
+    it('should drop the errors an item raised when the option switched to replaces the item with its default', async () => {
       function RaisingField({ fieldPath, onChange }: FieldProps) {
         return (
           <button type='button' onClick={() => onChange('x', fieldPath, { __errors: ['Custom error'] })}>
@@ -5244,7 +5229,10 @@ describe('oneOf', () => {
       const schema = wrap({
         type: 'array',
         items: { type: 'string' },
-        anyOf: [{ minItems: 1, default: ['x'] }, otherOption],
+        anyOf: [
+          { minItems: 1, default: ['x'] },
+          { maxItems: 3, default: ['y'] },
+        ],
       });
       const { node, onChange } = createFormComponent({
         schema,
@@ -5256,8 +5244,8 @@ describe('oneOf', () => {
 
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Option 2');
 
-      expect(onChange.mock.lastCall![0].formData).toEqual({ opt: expectedItems });
-      expect(onChange.mock.lastCall![0].errorSchema).toEqual(expectedErrorSchema);
+      expect(onChange.mock.lastCall![0].formData).toEqual({ opt: ['y'] });
+      expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
     });
 
     it.each<[string, RJSFSchema, number, unknown, unknown]>([
@@ -6581,9 +6569,8 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(node.querySelector('#root_pet_a__key')).toBeNull();
     });
 
-    // The field only fills for the option picked. Nothing outside a `Form` judges what it held, so every value is
-    // handed on as it was, for the parent to judge
-    it('hands on a key only the old option declares outside a Form', async () => {
+    // Nothing outside a `Form` judges the key, so the switch leaves it out, as the sanitize did
+    it('leaves out a key only the old option declares outside a Form', async () => {
       const schema = unionOf({ additionalProperties: true });
       const onChange = vi.fn();
       render(
@@ -6609,7 +6596,7 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
 
       await user.selectOptions(screen.getByRole('combobox'), 'T');
 
-      expect(onChange.mock.lastCall?.[0]).toEqual({ kind: 's', a: 'x' });
+      expect(onChange.mock.lastCall?.[0]).toEqual({ kind: 't' });
     });
   });
 });

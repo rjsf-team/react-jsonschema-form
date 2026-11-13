@@ -16,6 +16,7 @@ import {
 
 import AdditionalEntryContext from '../components/fields/AdditionalEntryContext.ts';
 import { declaresProperty, storedValue } from '../components/fields/fieldWidgetUtils.ts';
+import type { OptionSwitchData } from '../components/fields/formDataForNewOption.ts';
 import type { MoveOutcome } from '../components/keyMove.ts';
 import type { OptionSelectionState } from './useOptionSelection.ts';
 import useSendMove from './useSendMove.ts';
@@ -24,10 +25,10 @@ import useSendMove from './useSendMove.ts';
 interface OptionSwitch<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The option switched away from */
   oldOption: S | undefined;
+  /** The option switched away from as `getRenderedOptionSchema()` renders it, when the field has already computed it */
+  oldRenderedOption?: S;
   /** The option switched to */
   newOption: S | undefined;
-  /** The option switched to as `getRenderedOptionSchema()` renders it */
-  newRenderedOption: S | undefined;
   /** The uiSchema the field of the option switched away from rendered with */
   oldUiSchema: UiSchema<T, S, F> | undefined;
   /** The uiSchema the field of the option switched to renders with */
@@ -61,12 +62,13 @@ function rendersItemFields<S extends StrictRJSFSchema>(rendered: S): boolean {
  */
 function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schema: S,
-  { oldOption, newRenderedOption: newRendered, oldUiSchema, newUiSchema }: OptionSwitch<T, S, F>,
+  { oldOption, oldRenderedOption, newOption, oldUiSchema, newUiSchema }: OptionSwitch<T, S, F>,
 ): boolean {
-  if (!oldOption || !newRendered || oldUiSchema !== newUiSchema) {
+  if (!oldOption || !newOption || oldUiSchema !== newUiSchema) {
     return false;
   }
-  const oldRendered = getRenderedOptionSchema<S>(schema, oldOption);
+  const oldRendered = oldRenderedOption ?? getRenderedOptionSchema<S>(schema, oldOption);
+  const newRendered = getRenderedOptionSchema<S>(schema, newOption);
   return (
     rendersItemFields<S>(oldRendered) &&
     rendersItemFields<S>(newRendered) &&
@@ -99,9 +101,10 @@ export function holdsOnlyNull<S extends StrictRJSFSchema>(option: S | undefined)
  * `storedValue()`, which is the value the move is announced with. What it returns says what became of the change, see
  * `FormDataAccess.sendMove()`.
  *
- * The move names the option switched away from. A form that takes the change as the switch judges every value the
- * field holds against that option and the one switched to, as it judges a field a conditional stops declaring;
- * anything else, such as a field outside a `Form` or a parent field that sends other data, keeps the data as sent.
+ * The move carries the object the data held before the switch, see `OptionSwitchData`, with the option switched away
+ * from. A form that takes the change as the switch puts each of its keys back as it was, and its sanitize judges them
+ * against that option, with what the defaults hand the field, as it judges a field a conditional changes; anything
+ * else, such as a field outside a `Form` or a parent field that sends other data, keeps the value sent.
  */
 export default function useSendOptionSwitch(fieldPath: FieldPath) {
   const sendMove = useSendMove(fieldPath);
@@ -111,7 +114,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       schema: S,
       optionSwitch: OptionSwitch<T, S, F>,
       formData: unknown,
-      newFormData: V | undefined,
+      { formData: newFormData, held: heldBefore, written }: OptionSwitchData<V>,
       send: (value: V | undefined) => void,
     ) => {
       const { oldOption, newOption, oldIndex } = optionSwitch;
@@ -144,7 +147,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       const gone = new Set([...Object.keys(declaredByOld), ...held].filter((key) => !isKept(key)));
       const isEntry = isEntryPath || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
       // An entry's `null` option holds `null` rather than the `''` of a cleared value, which no such option takes and
-      // which would reload as another option. Elsewhere it holds nothing
+      // which would reload as another option. Elsewhere it holds nothing, see `formDataForNewOption()`
       const value =
         isEntry && newFormData === undefined && holdsOnlyNull<S>(newOption)
           ? (null as V)
@@ -155,7 +158,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
           newKeyOf: (key) => (gone.has(key) && !Object.hasOwn(declaredByNew, key) ? undefined : key),
           newOwnKeyOf: (key) => (gone.has(key) ? undefined : key),
           dropsOwnErrors: true,
-          ...(oldIndex >= 0 && { switchedFrom: { index: oldIndex } }),
+          ...(oldIndex >= 0 && { switchedFrom: { index: oldIndex, held: heldBefore, written } }),
         },
         () => send(value),
       );
