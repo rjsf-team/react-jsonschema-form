@@ -1045,7 +1045,11 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
-  if (constIsDefault<S>(schema, defaultFormStateBehavior)) {
+  const constDefault = constIsDefault<S>(schema, defaultFormStateBehavior);
+  // An object `const` beside options is the object's defaults, but the option the object shows still renders beside
+  // it, as `ObjectField` renders it, so that option is folded with the `const` as its parent's defaults
+  const foldsOptionUnderConst = constDefault && xxxOf !== undefined && isObjectData(schema[CONST_KEY]);
+  if (constDefault && !foldsOptionUnderConst) {
     defaults = ownValue(schema[CONST_KEY]);
   } else if (
     isObject(defaults) &&
@@ -1088,6 +1092,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ),
     );
   } else if (xxxOf) {
+    if (foldsOptionUnderConst) {
+      defaults = ownValue(schema[CONST_KEY]);
+    }
     const choice = chooseOption<T, S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults, props);
     isWholeValue = choice.isWholeValue;
     if (choice.wholeOptions === undefined) {
@@ -1127,7 +1134,11 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // taken as a whole: filling in its properties or items would reduce it to an empty value no option allows. The
     // constant wins over an inherited default, as it does for a primitive `const`, unless constants are never defaults.
     // The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by `typeDefaults()`
-    if (rawFormData === undefined && choice.context.defaultFormStateBehavior?.constAsDefaults !== 'never') {
+    if (
+      rawFormData === undefined &&
+      !foldsOptionUnderConst &&
+      choice.context.defaultFormStateBehavior?.constAsDefaults !== 'never'
+    ) {
       defaults = ownValue(toConstant<S>(choice.wholeOptions[choice.index]));
     }
   }
@@ -1409,8 +1420,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
         ? getRenderedOptionUiSchema<T, S, F>(fieldSchema, retrievedOption(), props.uiSchema, optionUiSchema)
         : optionUiSchema,
     isRenderedOption: true,
-    // A boolean option holds no `const`, and a `const` the parent holds is its defaults before any option is folded, so
-    // only an object option is joined
+    // A boolean option holds no extra-key keyword to join, so only an object option is joined
     optionOf:
       rendersOwnField && retrievedOption
         ? {

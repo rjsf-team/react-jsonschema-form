@@ -453,6 +453,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ x: { c: 7 } });
           }
         });
+        it('asks whether an object const beside options takes extra keys with the shown option joined', () => {
+          const open: RJSFSchema = {
+            type: 'object',
+            const: { a: 1 },
+            oneOf: [{ additionalProperties: true }, { properties: { q: { type: 'string' } } }],
+          };
+          expect(utils(open).getDefaultFormState(open)).toStrictEqual({ a: 1 });
+          // A key the user removed or renamed stays so once the defaults were generated (#3759)
+          expect(utils(open).getDefaultFormState(open, {}, false, true)).toStrictEqual({});
+          expect(utils(open).getDefaultFormState(open, { b: 1 }, false, true)).toStrictEqual({ b: 1 });
+          const nested: RJSFSchema = { type: 'object', properties: { x: open } };
+          expect(utils(nested).getDefaultFormState(nested, { x: {} }, false, true)).toStrictEqual({ x: {} });
+        });
+        it('folds a key of an object const beside options as the shown option declares or takes it', () => {
+          const declared: RJSFSchema = {
+            type: 'object',
+            const: { a: 1 },
+            oneOf: [{ properties: { a: { type: 'number', default: 5 } } }],
+          };
+          const extra: RJSFSchema = {
+            type: 'object',
+            const: { a: 1 },
+            oneOf: [{ additionalProperties: { type: 'number', default: 6 } }],
+          };
+          // A key's own field's default wins over the object's `const`, wherever the field is declared
+          expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ a: 5 });
+          expect(utils(extra).getDefaultFormState(extra)).toStrictEqual({ a: 6 });
+        });
         it('folds a key of a const that only an unmerged allOf declares from that property, not the extra-key schema', () => {
           const withDefault: RJSFSchema = {
             type: 'object',
