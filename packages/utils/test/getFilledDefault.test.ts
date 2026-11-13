@@ -75,6 +75,27 @@ describe('getFilledDefault()', () => {
     },
   );
 
+  it('picks no option of a select over constants, whose options are values', () => {
+    const context: SchemaContext = { validator: getTestValidator({}) };
+    const schema: RJSFSchema = { type: 'string', default: 'b', oneOf: [{ const: 'a' }, { const: 'b' }] };
+
+    expect(getFilledDefault(context, schema, {}, undefined, { isRequired: true })).toBe('b');
+    expect(context.validator.isValid).not.toHaveBeenCalled();
+  });
+
+  it('stops picking at an option list it has picked from, as an option leads back to it', () => {
+    const rootSchema: RJSFSchema = {
+      definitions: {
+        v: { anyOf: [{ $ref: '#/definitions/w' }, { type: 'string' }] },
+        w: { oneOf: [{ $ref: '#/definitions/v' }] },
+      },
+    };
+
+    expect(getFilledDefault(descendantWins, rootSchema.definitions!.v as RJSFSchema, rootSchema, undefined)).toBe(
+      undefined,
+    );
+  });
+
   it("reads no default for a property under emptyObjectFields: 'skipDefaults', and its own for the root or an item", () => {
     const skipDefaults: SchemaContext = {
       ...descendantWins,

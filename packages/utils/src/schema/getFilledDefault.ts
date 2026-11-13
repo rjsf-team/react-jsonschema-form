@@ -1,9 +1,12 @@
 import { absentKeywordAllows } from '../additionalPropertiesUtils.ts';
 import { ADDITIONAL_PROPERTY_FLAG } from '../constants.ts';
+import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
+import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
+import isConstantSelect from '../isConstantSelect.ts';
 import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeObjects from '../mergeObjects.ts';
@@ -27,7 +30,7 @@ import retrieveSchema from './retrieveSchema.ts';
  * hold the inherited one. Two object defaults are merged instead, the winner's keys over the other's, except for a
  * select over object or array constants, which holds one of them whole. A field offering `anyOf`/`oneOf` options is
  * filled through the one its own `default` matches, as a field holding no data is, that option's `default` merged over
- * the field's own.
+ * the field's own, and so on through the options that option offers.
  *
  * A property is filled with it only where `emptyObjectFields` lets the defaults write it there, as `placement` decides:
  * none is under `skipDefaults`, and under `populateRequiredDefaults` only one whose object is required, or that is
@@ -58,14 +61,34 @@ export default function getFilledDefault<
   inheritedDefault: unknown,
   placement?: PropertyPlacement,
 ): unknown {
-  const fieldDefault = computedDefault<S, F>(context, schema, inheritedDefault);
-  const field = isWholeValueSelect<S>(schema)
-    ? undefined
-    : withFilledOption<S, F>(context, rootSchema, schema, fieldDefault);
   // The fill merges the option it picks into the field, its `default` over the field's own, so only the inherited one
   // is an ancestor's, even under `ancestorWins`
-  const computed = field ? computedDefault<S, F>(context, field, inheritedDefault) : fieldDefault;
-  return placement ? writtenDefault<S, F>(context, rootSchema, field ?? schema, computed, placement) : computed;
+  const field = withFilledOptions<S, F>(context, rootSchema, schema, inheritedDefault);
+  const computed = computedDefault<S, F>(context, field, inheritedDefault);
+  return placement ? writtenDefault<S, F>(context, rootSchema, field, computed, placement) : computed;
+}
+
+/** `schema` with the `anyOf`/`oneOf` options the fill renders for a field holding no data merged in, as it folds into
+ * the option it picks and picks again among that option's own. A select over constants is left as it is, sparing every
+ * enum-like select a validation pass. shortcut: the fill still folds into a primitive select's option, so a `default`
+ * one of its constant options declares is missed; upgrade once constant options need their own defaults read
+ */
+function withFilledOptions<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  schema: S,
+  inheritedDefault: unknown,
+  chosen: S[][] = [],
+): S {
+  const xxxOf = getXxxOfOptions<S>(schema);
+  // A list chosen from already is reached again only through an option leading back to it, which ends the choice, as
+  // it does in the fill. Compared by value, since each option is resolved into a copy
+  if (!xxxOf || isConstantSelect<S>(schema) || chosen.some((options) => deepEquals(options, xxxOf.options))) {
+    return schema;
+  }
+  chosen.push(xxxOf.options);
+  const field = withFilledOption<S, F>(context, rootSchema, schema, xxxOf, inheritedDefault);
+  return field ? withFilledOptions<S, F>(context, rootSchema, field, inheritedDefault, chosen) : schema;
 }
 
 /** The part of `computed` the defaults write into the property `schema` describes at `placement`, or `undefined` where
@@ -78,11 +101,9 @@ function writtenDefault<S extends StrictRJSFSchema, F extends FormContextType>(
   computed: unknown,
   placement: PropertyPlacement,
 ): unknown {
-  const isCut = isObject(computed) && !isWholeValueSelect<S>(schema);
-  const field = (isCut && withFilledOption<S, F>(context, rootSchema, schema, computed)) || schema;
   const written =
-    isCut && getSchemaType<S>(field) === 'object'
-      ? writtenKeys<S, F>(context, rootSchema, field, computed, placement.isRequired)
+    isObject(computed) && !isWholeValueSelect<S>(schema) && getSchemaType<S>(schema) === 'object'
+      ? writtenKeys<S, F>(context, rootSchema, schema, computed, placement.isRequired)
       : computed;
   // shortcut: an extra key counts as a property, though the fill seeds extra keys whatever `emptyObjectFields` says;
   // upgrade once a form's extra keys need their defaults judged under a setting that leaves properties unfilled
@@ -96,24 +117,22 @@ function writtenDefault<S extends StrictRJSFSchema, F extends FormContextType>(
     : undefined;
 }
 
-/** `schema` with the `anyOf`/`oneOf` option the fill renders for a field holding no data merged in, as it merges one
- * into an object field: the one its own `default` matches. Undefined where `schema` offers none
+/** `schema` with the one of its `xxxOf` options the fill renders for a field holding no data merged in, as it merges one
+ * into an object field: the one its own `default` matches. Undefined where that option is no schema
  */
 function withFilledOption<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   rootSchema: S,
   schema: S,
-  computed: unknown,
+  { key, options }: XxxOfOptions<S>,
+  inheritedDefault: unknown,
 ): S | undefined {
-  const xxxOf = getXxxOfOptions<S>(schema);
-  if (!xxxOf) {
-    return undefined;
-  }
-  const { key, options } = xxxOf;
   // The fill matches a field holding no data by its own `default`, not the inherited one merged in. shortcut: under
   // `ancestorWins` the merged default stands in for the inherited one it matches; upgrade once the two pick apart
   const toMatch =
-    context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' ? computed : schema.default;
+    context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins'
+      ? computedDefault<S, F>(context, schema, inheritedDefault)
+      : schema.default;
   const option: unknown =
     options[
       closestOption<S, F>(context, rootSchema, toMatch, options, 0, false, getDiscriminatorFieldFromSchema<S>(schema))
@@ -140,10 +159,15 @@ function writtenKeys<S extends StrictRJSFSchema, F extends FormContextType>(
     // An extra key `retrieveSchema()` stubbed among the properties is seeded below, as the fill seeds one
     if (Object.hasOwn(properties, key) && !hasSchemaMarker(properties[key], ADDITIONAL_PROPERTY_FLAG)) {
       const property = (isObject(properties[key]) ? properties[key] : {}) as S;
-      // Only an object default is cut down by its schema, so only then is it resolved. The fill applies its conditions
-      // as for no data, not against its default
+      // Only an object default is cut down by its schema, so only then is it resolved, with the options the fill
+      // renders for it merged in. The fill applies its conditions as for no data, not against its default
       const propertySchema = isObject(value)
-        ? retrieveSchema<unknown, S, F>(context, property, rootSchema, undefined)
+        ? withFilledOptions<S, F>(
+            context,
+            rootSchema,
+            retrieveSchema<unknown, S, F>(context, property, rootSchema, undefined),
+            value,
+          )
         : property;
       const propertyValue = writtenDefault<S, F>(context, rootSchema, propertySchema, value, {
         isRequired: schema.required?.includes(key),

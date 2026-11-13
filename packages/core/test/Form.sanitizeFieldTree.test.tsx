@@ -3264,6 +3264,12 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       o: (v) => ({ oneOf: [{ type: 'string', default: v }, { type: 'number' }] }),
       filled: (v) => v,
     },
+    {
+      // The fill folds into the option it picks and picks again among that option's own options
+      name: 'an object whose option offers options',
+      o: (e) => ({ type: 'object', properties: { e: { type: 'string' } }, oneOf: [{ anyOf: [{ default: { e } }] }] }),
+      filled: (e) => ({ e }),
+    },
   ])('gives way a clear of $name whose option declares the changed default', ({ o, filled }) => {
     const schemaWith = (v: string): RJSFSchema => ({ type: 'object', properties: { o: o(v), w: { type: 'string' } } });
     const data = { o: undefined, w: 'k' };
