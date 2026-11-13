@@ -11485,8 +11485,37 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema, data, filledAt(['extra'], ['nil']))).toEqual(data);
       });
 
+      describe('an object row of an array, filled whole from the `default` of its item', () => {
+        const rows = (items: RJSFSchema | RJSFSchema[]): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', items } },
+        });
+        const row = (value: Record<string, number>): RJSFSchema => ({
+          type: 'object',
+          default: value,
+          properties: { w: { type: 'number' }, h: { type: 'number' } },
+        });
+        const data = { list: [{ w: 1, h: 2 }] };
+
+        it('takes the `default` its item declares now, a key that default leaves out included', () => {
+          expect(fill(rows(row({ w: 3 })), data, filledAt(['list', 0]))).toEqual({ list: [{ w: 3 }] });
+        });
+
+        it('stays where a person or a seed put a value in it', () => {
+          expect(fill(rows(row({ w: 3 })), data, filledAt())).toEqual(data);
+        });
+
+        it('stays where the `default` its item declares gives no value', () => {
+          expect(fill(rows({ default: null }), data, filledAt(['list', 0]))).toEqual(data);
+        });
+
+        it('keeps its keys as a row of a tuple, which is merged with its data again', () => {
+          expect(fill(rows([row({ w: 3 })]), data, filledAt(['list', 0]))).toEqual(data);
+        });
+      });
+
       describe('of a field offering options', () => {
-        const picking = (pick: unknown, size: number): RJSFSchema => ({
+        const picking = (pick: string, size: number): RJSFSchema => ({
           type: 'object',
           default: { pick },
           properties: {

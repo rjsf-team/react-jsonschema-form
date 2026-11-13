@@ -2313,7 +2313,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
             { ...itemProps(idx), parentDefaults, initialDefaultsGenerated: false },
             memo,
           );
-          if (isObject(derived) || Array.isArray(derived)) {
+          if (derived !== undefined && derived !== null) {
             return derived;
           }
         }
