@@ -883,10 +883,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   for (;;) {
     // The defaults of an object field join its data key by key; any other field is its data, or its defaults when it
     // holds none
-    const depData =
-      isObject(value) || isObject(data)
-        ? { ...(isObject(value) ? value : {}), ...(isObject(data) ? data : {}) }
-        : (data ?? value);
+    const depData = isObject(value) || isObject(data) ? depDataOf(value, data, props) : (data ?? value);
     const { graph } = lastView.field;
     // Data holding what the plan checked its conditions against decides each as the plan did, so a field whose defaults
     // add nothing to its data, as every row of a filled array, asks the validator nothing more
@@ -907,6 +904,33 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     view = settle(context, field, data, depData);
     value = fold(view);
   }
+}
+
+/** What the conditions of an object field are decided against: its defaults under its data. A value the form says the
+ * defaults filled in is no data of the user's, so where the defaults computed another for it, that one decides, as it
+ * does in a form mounted with the schema
+ */
+function depDataOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  value: unknown,
+  data: unknown,
+  { fieldState, fieldPath }: FoldProps<T, S, F>,
+): GenericObjectType {
+  const computed = isObject(value) ? value : {};
+  const held = isObject(data) ? data : {};
+  const depData = { ...computed, ...held };
+  if (fieldState?.isFilled) {
+    const path = pathListOf(fieldPath);
+    for (const key of Object.keys(held)) {
+      if (
+        Object.hasOwn(computed, key) &&
+        !Object.is(computed[key], held[key]) &&
+        fieldState.isFilled(fieldPathFromList([...path, key]))
+      ) {
+        depData[key] = computed[key];
+      }
+    }
+  }
+  return depData;
 }
 
 /** Whether `data` and `other` are the same value, or objects holding the same keys with the same values */

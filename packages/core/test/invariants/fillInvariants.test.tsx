@@ -12,7 +12,8 @@ import type { Case, Difference } from './generate.ts';
 import { caseOf, firstOf, secondOf, shrink } from './generate.ts';
 
 // Each seed names one generated schema and seed data. The run is a fixed range, so it fails the same way every time;
-// `INVARIANT_RUNS` and `INVARIANT_SEED` widen or move it to look for new cases
+// `INVARIANT_RUNS` and `INVARIANT_SEED` widen or move it to look for new cases, and `INVARIANT_ALL` shrinks the seeds of a
+// known gap too, to read the case behind one
 const RUNS = Number(process.env.INVARIANT_RUNS ?? 300);
 const FIRST_SEED = Number(process.env.INVARIANT_SEED ?? 1);
 const SHRUNK_PER_INVARIANT = 3;
@@ -299,8 +300,6 @@ const differences: Partial<Record<string, Difference>> = {
 
 /** What the form is known not to do yet, by the mechanism behind it */
 const GAPS = {
-  conditionFlip:
-    'A value the re-render itself changes by following its default flips a condition or dependency, and the branch is settled against the old value: the one that closed stays filled, the one that opened is not filled',
   optionOrigins:
     'Inside an option of a oneOf or anyOf field a value is not told apart by where it came from: a filled value does not follow its default whole, and a filled const stays after the const changed',
   rowOfArrayDefault:
@@ -317,19 +316,12 @@ const GAPS = {
  */
 const KNOWN_GAPS: Partial<Record<string, { gap: keyof typeof GAPS; seeds: number[] }[]>> = {
   [FOLLOWS]: [
-    { gap: 'conditionFlip', seeds: [7, 12, 16, 94, 118, 127, 144, 152, 181, 204, 252] },
     { gap: 'optionOrigins', seeds: [165, 247, 249] },
     { gap: 'rowOfArrayDefault', seeds: [226] },
   ],
   [STAYS]: [{ gap: 'additionalItemsRow', seeds: [191] }],
-  [OWNED]: [
-    { gap: 'conditionFlip', seeds: [7, 152, 224] },
-    { gap: 'optionOrigins', seeds: [287] },
-  ],
-  [RESTORES]: [
-    { gap: 'conditionFlip', seeds: [12, 16, 17, 33, 118, 144, 155, 195] },
-    { gap: 'extraKeyOfRowDefault', seeds: [71] },
-  ],
+  [OWNED]: [{ gap: 'optionOrigins', seeds: [287] }],
+  [RESTORES]: [{ gap: 'extraKeyOfRowDefault', seeds: [71] }],
 };
 
 function caseFor(name: string, seed: number): Case {
@@ -385,7 +377,7 @@ describe('invariants of the fill and the sanitize, over generated schemas', () =
         mechanism: GAPS[gap],
         seeds: seeds.filter((seed) => seed >= FIRST_SEED && seed < last),
       }));
-      const listed = new Set(known.flatMap(({ seeds }) => seeds));
+      const listed = new Set(process.env.INVARIANT_ALL ? [] : known.flatMap(({ seeds }) => seeds));
       const unlisted = [...failing].filter(([seed]) => !listed.has(seed));
       const examples = unlisted.slice(0, SHRUNK_PER_INVARIANT).map(([seed, failure]) => shrunk(name, seed, failure));
       const closed = known

@@ -11324,6 +11324,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(nested, { a: { b: 'x', d: 1 } }, filledAt())).toEqual({ a: { b: 'x', d: 1 } });
       });
 
+      describe('deciding a condition of its object', () => {
+        const branching: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string', default: 'x' } },
+          if: { properties: { k: { const: 'x' } }, required: ['k'] },
+          then: { properties: { t: { type: 'number', default: 1 } } },
+        };
+
+        it('decides it by the default that gives the value now, not by the value it held', () => {
+          // The mock validator cannot read the data: the held value fails the `if` and the default replacing it holds
+          testValidator.setReturnValues({ isValid: [false, true] });
+          expect(fill(structuredClone(branching), { k: 'y' }, filledAt(['k']))).toEqual({ k: 'x', t: 1 });
+        });
+
+        it('decides it by the value where a person or a seed put it there', () => {
+          testValidator.setReturnValues({ isValid: [false, true] });
+          expect(fill(structuredClone(branching), { k: 'y' }, filledAt())).toEqual({ k: 'y' });
+        });
+      });
+
       it('takes the default of a parent that wins over its own (#5817)', () => {
         const schema: RJSFSchema = {
           type: 'object',

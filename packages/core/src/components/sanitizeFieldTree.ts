@@ -342,6 +342,11 @@ function isGuessed<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
   return layers.some((layer) => hasSchemaMarker(layer, GUESSED_TYPE_FLAG));
 }
 
+/** Whether a field is a key its object names no property for, held under `additionalProperties` */
+function isExtraKey<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
+  return layers.some((layer) => hasSchemaMarker(layer, ADDITIONAL_PROPERTY_FLAG));
+}
+
 /** Whether a field the old tree rendered a schema for is held by the new one only as a guessed extra key. A field with
  * no old layers, a collapsed `$ref` cycle, rendered nothing to compare with
  */
@@ -478,6 +483,16 @@ function judge<S extends StrictRJSFSchema>(
       classify();
     }
     return undefined;
+  }
+  // An extra key with a declared schema is still no field the defaults fill, so what the old field's defaults filled in
+  // leaves with that field there too. Any other value is judged by the schema the key declares
+  if (
+    !isEntered &&
+    isExtraKey(newLayers) &&
+    !isExtraKey(oldLayers) &&
+    (isOldDefault || origin === 'filled' || isFilledByOldDefaults(value))
+  ) {
+    return DROP;
   }
   // An object the defaults fill key by key holds its old default only as far as each key does, since the fill can leave
   // some of the default's keys out, so its properties are judged one by one, as `sanitizeDataForNewSchema()` does

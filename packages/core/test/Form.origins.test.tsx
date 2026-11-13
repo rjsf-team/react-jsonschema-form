@@ -188,6 +188,48 @@ describe('where a value came from, as a schema, a branch or a write changes the 
     });
   });
 
+  describe('a filled value that follows its default and decides a condition by it', () => {
+    const branching = (kind: string, extra: RJSFSchema = {}): RJSFSchema => ({
+      type: 'object',
+      ...extra,
+      properties: { kind: { type: 'string', default: kind } },
+      if: { properties: { kind: { const: 'x' } }, required: ['kind'] },
+      then: { properties: { size: { type: 'number', default: 1 } } },
+      else: { properties: { note: { type: 'string', default: 'n' } } },
+    });
+
+    it('fills the branch the new default opens and drops what the closed one filled', () => {
+      const { form, setSchema } = mount(branching('y'));
+      expect(form.getFormData()).toEqual({ kind: 'y', note: 'n' });
+      setSchema(branching('x'));
+      expect(form.getFormData()).toEqual({ kind: 'x', size: 1 });
+      setSchema(branching('y'));
+      expect(form.getFormData()).toEqual({ kind: 'y', note: 'n' });
+    });
+
+    it('drops what the closed branch filled where the object would hold its key as an extra one', () => {
+      const open: RJSFSchema = { additionalProperties: { type: 'number' } };
+      const { form, setSchema } = mount(branching('x', open));
+      setSchema(branching('y', open));
+      expect(form.getFormData()).toEqual({ kind: 'y', note: 'n' });
+    });
+
+    it('keeps a value a person entered in the closed branch as the extra key the object holds it as', () => {
+      const open: RJSFSchema = { additionalProperties: { type: 'number' } };
+      const { form, setSchema, write } = mount(branching('x', open));
+      write(['size'], 5);
+      setSchema(branching('y', open));
+      expect(form.getFormData()).toEqual({ kind: 'y', note: 'n', size: 5 });
+    });
+
+    it('decides the condition by the value where a person entered one equal to the old default', () => {
+      const { form, setSchema, write } = mount(branching('x'));
+      write(['kind'], 'x');
+      setSchema(branching('y'));
+      expect(form.getFormData()).toEqual({ kind: 'x', size: 1 });
+    });
+  });
+
   describe('a write from outside the fields', () => {
     const coloured = (color: string): RJSFSchema => ({
       type: 'object',
