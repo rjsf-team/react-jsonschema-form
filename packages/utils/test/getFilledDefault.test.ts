@@ -178,6 +178,49 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
       expected: { a: 'own', c: { x: 'own', y: 'object' } },
     },
     {
+      // The fill reads a scalar key's own default through the option it picks, a `$ref` or an `if`, and through an
+      // `allOf` only under `allOf: 'populateDefaults'`. A select over constants is left as it is (see the shortcut in
+      // `withFilledOptions()`)
+      name: "a scalar key's own default read through its option, its $ref or its if is written over its object's",
+      context: descendantWins,
+      schema: {
+        type: 'object',
+        definitions: { own: { type: 'string', default: 'ref' } },
+        properties: {
+          a: { type: 'string', oneOf: [{ default: 'option' }, { maxLength: 0 }] },
+          b: { $ref: '#/definitions/own' },
+          c: { allOf: [{ type: 'string', default: 'all' }] },
+          d: { type: 'string', oneOf: [{ const: 'x' }, { const: 'y' }] },
+          e: { type: 'string', if: { maxLength: 100 }, then: { default: 'then' } },
+        },
+        default: { a: 'object', b: 'object', c: 'object', d: 'y', e: 'object' },
+      },
+      placement: optional,
+      expected: { a: 'option', b: 'ref', c: 'object', d: 'y', e: 'then' },
+    },
+    {
+      name: "a scalar key's own default read through its allOf is written under allOf: 'populateDefaults'",
+      context: { ...descendantWins, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+      schema: {
+        type: 'object',
+        properties: { c: { allOf: [{ type: 'string', default: 'all' }] } },
+        default: { c: 'object' },
+      },
+      placement: optional,
+      expected: { c: 'all' },
+    },
+    {
+      name: "a scalar key's own default read through its if is not written under skipEmptyDefaults",
+      context: { ...descendantWins, defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' } },
+      schema: {
+        type: 'object',
+        properties: { e: { type: 'string', if: { maxLength: 100 }, then: { default: 'then' } } },
+        default: { e: 'object' },
+      },
+      placement: optional,
+      expected: { e: 'object' },
+    },
+    {
       // The fill merges the option a field holding no data matches by its default into the field
       name: 'a key its option requires of a property the object declares too is written',
       context: populateRequired,

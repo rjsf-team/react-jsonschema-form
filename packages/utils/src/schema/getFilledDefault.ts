@@ -1,5 +1,5 @@
 import { absentKeywordAllows } from '../additionalPropertiesUtils.ts';
-import { ADDITIONAL_PROPERTY_FLAG } from '../constants.ts';
+import { ADDITIONAL_PROPERTY_FLAG, ALL_OF_KEY, IF_KEY, REF_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
@@ -159,16 +159,23 @@ function writtenKeys<S extends StrictRJSFSchema, F extends FormContextType>(
     // An extra key `retrieveSchema()` stubbed among the properties is seeded below, as the fill seeds one
     if (Object.hasOwn(properties, key) && !hasSchemaMarker(properties[key], ADDITIONAL_PROPERTY_FLAG)) {
       const property = (isObject(properties[key]) ? properties[key] : {}) as S;
-      // Only an object default is cut down by its schema, so only then is it resolved, with the options the fill
-      // renders for it merged in. The fill applies its conditions as for no data, not against its default
-      const propertySchema = isObject(value)
-        ? withFilledOptions<S, F>(
-            context,
-            rootSchema,
-            retrieveSchema<unknown, S, F>(context, property, rootSchema, undefined),
-            value,
-          )
-        : property;
+      // An object default is cut down by its schema, and the fill reads a default of its own through a `$ref`, the
+      // option it picks, an `if` unless under `skipEmptyDefaults` and an `allOf` only under `populateDefaults`, so only
+      // then is it resolved, with the options the fill renders for it merged in. The fill applies its conditions as for
+      // no data, not against its default
+      const propertySchema =
+        isObject(value) ||
+        REF_KEY in property ||
+        (context.defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in property) ||
+        (context.defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in property) ||
+        (getXxxOfOptions<S>(property) && !isConstantSelect<S>(property))
+          ? withFilledOptions<S, F>(
+              context,
+              rootSchema,
+              retrieveSchema<unknown, S, F>(context, property, rootSchema, undefined),
+              value,
+            )
+          : property;
       // The fill writes the property's own `default` over the one its object hands it, as `computedDefault()` reads it
       const propertyDefault = computedDefault<S, F>(context, propertySchema, value);
       const propertyValue = writtenDefault<S, F>(context, rootSchema, propertySchema, propertyDefault, {

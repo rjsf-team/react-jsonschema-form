@@ -65,7 +65,6 @@ describe('createSchemaUtils()', () => {
     expect(ancestorWins.getFilledDefault(field, 'inherited')).toBe('inherited');
     expect(schemaUtils.constrainsAlike(field, field, 'x', 'z')).toBe(true);
     expect(ancestorWins.constrainsAlike(field, field, 'x', 'z')).toBe(false);
-    expect(ancestorWins.constrainsAlike(field, field, 'x', 'z', undefined, undefined, true)).toBe(true);
     const skipDefaults = createSchemaUtils(
       { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' } },
       rootSchema,

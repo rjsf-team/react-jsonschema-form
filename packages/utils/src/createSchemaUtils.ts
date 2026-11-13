@@ -157,7 +157,6 @@ class SchemaUtils<
    * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
    * @param [oldPlacement] - Where the field sat as a property before the change, if it is one
    * @param [newPlacement] - Where the field sits as a property after the change, if it is one
-   * @param [ignoresDefault=false] - Whether to leave the defaults out, as for whether a value is valid
    * @returns - Whether both schemas constrain the field alike
    */
   constrainsAlike(
@@ -167,7 +166,6 @@ class SchemaUtils<
     newInheritedDefault: unknown,
     oldPlacement?: PropertyPlacement,
     newPlacement?: PropertyPlacement,
-    ignoresDefault?: boolean,
   ): boolean {
     return constrainsAlike<S, F>(
       this.context,
@@ -178,7 +176,6 @@ class SchemaUtils<
       newInheritedDefault,
       oldPlacement,
       newPlacement,
-      ignoresDefault,
     );
   }
 

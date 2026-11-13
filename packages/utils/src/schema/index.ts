@@ -14,6 +14,7 @@ import omitExtraData from './omitExtraData.ts';
 import retrieveSchema, { expandRefCycle, getAdditionalPropertyType, getValidationTarget } from './retrieveSchema.ts';
 import sanitizeDataForNewSchema, {
   constrainsAlike,
+  constrainsAlikeAsideDefault,
   getItemSchema,
   getPrefixLength,
   namesEveryType,
@@ -22,6 +23,7 @@ import { constrainsValue } from './schemaKeywords.ts';
 
 export {
   constrainsAlike,
+  constrainsAlikeAsideDefault,
   constrainsValue,
   expandRefCycle,
   findFieldInSchema,

@@ -3290,6 +3290,25 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
         },
       },
     },
+    // The fill reads a key's own default through the option it picks too
+    ...(['oneOf', 'anyOf'] as const).map((keyword) => {
+      const withDefault = (c: string): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          o: {
+            type: 'object',
+            default: { c },
+            properties: { c: { type: 'string', [keyword]: [{ default: 'own' }, { maxLength: 0 }] } },
+          },
+          w: { type: 'string' },
+        },
+      });
+      return {
+        name: `an object whose default for a key is overridden by the one that key's ${keyword} option declares`,
+        from: withDefault('x'),
+        to: withDefault('y'),
+      };
+    }),
   ])('keeps a clear of $name when that default changes but the fill writes the same', ({ from, to }) => {
     const data = { o: undefined, w: 'k' };
     const ref = createRef<FormRef<Record<string, unknown>>>();

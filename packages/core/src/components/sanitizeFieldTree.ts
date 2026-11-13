@@ -12,6 +12,7 @@ import type {
 import {
   ADDITIONAL_PROPERTY_FLAG,
   CONST_KEY,
+  constrainsAlikeAsideDefault,
   deepEquals,
   DEFAULT_KEY,
   expandRefCycle,
@@ -497,8 +498,8 @@ function itemOf<S extends StrictRJSFSchema>(itemsLayer: S | undefined, index: nu
   return itemsLayer ? getItemSchema<S>(itemsLayer, index) : true;
 }
 
-/** Whether both trees constrain the item `value` at a position alike, as `constrainsAlike()` reads them, the defaults
- * aside: a `default` decides no item's validity
+/** Whether both trees constrain the item `value` at a position alike, as `constrainsAlikeAsideDefault()` reads them:
+ * a `default` decides no item's validity
  *
  * @param ctx - The diff's context
  * @param oldItem - The position's schema in the previous tree
@@ -515,7 +516,7 @@ function constrainsItemAlike<T, S extends StrictRJSFSchema, F extends FormContex
   const data = asFieldValue<T>(value);
   const oldSchema = ctx.oldSchemaUtils.retrieveSchema(oldItem, data);
   const newSchema = ctx.schemaUtils.retrieveSchema(newItem, data);
-  return ctx.schemaUtils.constrainsAlike(oldSchema, newSchema, undefined, undefined, undefined, undefined, true);
+  return constrainsAlikeAsideDefault<S>(oldSchema, newSchema);
 }
 
 /** One field of both trees: its subschema and value on each side, and the default its parent is filled with for it */

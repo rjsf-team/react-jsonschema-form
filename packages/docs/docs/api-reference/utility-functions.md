@@ -250,8 +250,7 @@ Tests that expect such a throw need to catch the timer's error themselves; this 
 ### constrainsAlike&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Says whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as `oldSchema`, each `default` read as the one the defaults fill the field with under the `context`, as a property where a placement is given, see [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype).
-A form's components ask `registry.schemaUtils.constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault, oldPlacement, newPlacement, ignoresDefault)`, which passes the form's own `context`.
-With `ignoresDefault`, the defaults are left out, an `anyOf`/`oneOf` option's included, as for whether a value is valid, which no `default` decides.
+A form's components ask `registry.schemaUtils.constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault, oldPlacement, newPlacement)`, which passes the form's own `context`.
 A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the schema, so it is read as no type.
 These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across a schema change or gives way to the new schema's defaults, as `sanitizeDataForNewSchema()` and an `anyOf`/`oneOf` switch decide it.
 
@@ -265,11 +264,25 @@ These are the constraints that decide whether a field the data holds as `undefin
 - newInheritedDefault: unknown - The default the field holding `newSchema` is filled with for it
 - [oldPlacement]: PropertyPlacement | undefined - Where the field sat as a property before the change, if it is one
 - [newPlacement]: PropertyPlacement | undefined - Where the field sits as a property after the change, if it is one
-- [ignoresDefault=false]: boolean - Whether to leave the defaults out, as for whether a value is valid
 
 #### Returns
 
 - boolean: Whether both schemas constrain the field alike
+
+### constrainsAlikeAsideDefault&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Says whether `newSchema` declares the same type, `const`, `enum` or constant options and `maxItems` as `oldSchema`, whatever `default` either declares, an `anyOf`/`oneOf` option's included, as for whether a value is valid, which no `default` decides.
+A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the schema, so it is read as no type.
+`constrainsAlike()` adds the `default` comparison to it.
+
+#### Parameters
+
+- oldSchema: S - The field's schema before the change
+- newSchema: S - The field's schema after the change
+
+#### Returns
+
+- boolean: Whether both schemas constrain the field alike, their defaults aside
 
 ### constrainsValue()
 
@@ -3795,7 +3808,7 @@ A property cleared this way, by the new `const`, its `enum` or a `readOnly` `def
 ### createSchemaUtils&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Creates a `SchemaUtilsType` interface that is based around the given `context` and `rootSchema` parameters.
-The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs, among them `allowsAdditionalProperties(schema)`, `canExpand(schema, uiSchema, formData)`, `constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault, oldPlacement, newPlacement, ignoresDefault)` and `getFilledDefault(schema, inheritedDefault, placement)`.
+The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs, among them `allowsAdditionalProperties(schema)`, `canExpand(schema, uiSchema, formData)`, `constrainsAlike(oldSchema, newSchema, oldInheritedDefault, newInheritedDefault, oldPlacement, newPlacement)` and `getFilledDefault(schema, inheritedDefault, placement)`.
 The `rootSchema` is parsed once per object and treated as immutable: a change made to it in place is not seen, even by a new `createSchemaUtils()`, so pass a new object to change it.
 
 #### Parameters

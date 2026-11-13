@@ -1,5 +1,5 @@
 import type { RJSFMarkedSchema, RJSFSchema, SchemaContext } from '../src/index.ts';
-import { constrainsAlike, GUESSED_TYPE_FLAG } from '../src/index.ts';
+import { constrainsAlike, constrainsAlikeAsideDefault, GUESSED_TYPE_FLAG } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
 const context: SchemaContext = { validator: getTestValidator({}) };
@@ -17,23 +17,12 @@ describe('constrainsAlike()', () => {
     expect(constrainsAlike(context, declared, {}, {}, undefined, undefined)).toBe(false);
   });
 
-  it("leaves the defaults out with ignoresDefault, an anyOf/oneOf option's included", () => {
+  it("leaves the defaults out with constrainsAlikeAsideDefault(), an anyOf/oneOf option's included", () => {
     const withOptionDefault = (a: number): RJSFSchema => ({ type: 'object', oneOf: [{ default: { a } }] });
 
     expect(constrainsAlike(context, withOptionDefault(1), withOptionDefault(2), {}, undefined, undefined)).toBe(false);
-    expect(
-      constrainsAlike(
-        context,
-        withOptionDefault(1),
-        withOptionDefault(2),
-        {},
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        true,
-      ),
-    ).toBe(true);
+    expect(constrainsAlikeAsideDefault(withOptionDefault(1), withOptionDefault(2))).toBe(true);
+    expect(constrainsAlikeAsideDefault(withOptionDefault(1), { ...withOptionDefault(1), maxItems: 1 })).toBe(false);
   });
 
   it('reads the default the schema holding a field declares for it in place of its own', () => {

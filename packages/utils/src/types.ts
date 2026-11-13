@@ -2687,7 +2687,6 @@ export interface SchemaUtilsType<
    * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
    * @param [oldPlacement] - Where the field sat as a property before the change, if it is one
    * @param [newPlacement] - Where the field sits as a property after the change, if it is one
-   * @param [ignoresDefault=false] - Whether to leave the defaults out, as for whether a value is valid
    * @returns - Whether both schemas constrain the field alike
    */
   constrainsAlike(
@@ -2697,7 +2696,6 @@ export interface SchemaUtilsType<
     newInheritedDefault: unknown,
     oldPlacement?: PropertyPlacement,
     newPlacement?: PropertyPlacement,
-    ignoresDefault?: boolean,
   ): boolean;
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf

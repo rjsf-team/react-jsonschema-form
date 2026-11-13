@@ -252,6 +252,7 @@ export { RESERVED_UI_OPTION_NAMES } from './globalUiOptionsKeys.ts';
 export type { SchemaMap } from './parser/schemaParser.ts';
 export { getValidationSchemas } from './parser/schemaParser.ts';
 export {
+  constrainsAlikeAsideDefault,
   constrainsValue,
   expandRefCycle,
   getAdditionalPropertyType,

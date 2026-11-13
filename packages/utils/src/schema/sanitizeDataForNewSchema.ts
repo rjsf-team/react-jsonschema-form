@@ -183,10 +183,9 @@ function itemConstReplacement<S extends StrictRJSFSchema = RJSFSchema>(
   return deepEquals(oldSchema.const, data) ? ownValue(newConst) : undefined;
 }
 
-/** Whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as
- * `oldSchema`, each `default` read as the one the defaults fill the field with, see `getFilledDefault()`.
- * A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the schema, so it is read as no
- * type. These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across
+/** Whether `newSchema` declares the same type, `const`, `enum` or constant options and `maxItems` as `oldSchema`, see
+ * `constrainsAlikeAsideDefault()`, and the same `default`, each read as the one the defaults fill the field with, see
+ * `getFilledDefault()`. These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across
  * a schema change, or gives way to the new schema's defaults, as `sanitizeDataForNewSchema()` and an `anyOf`/`oneOf`
  * switch decide it
  *
@@ -198,8 +197,6 @@ function itemConstReplacement<S extends StrictRJSFSchema = RJSFSchema>(
  * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
  * @param [oldPlacement] - Where the field sat as a property before the change, if it is one
  * @param [newPlacement] - Where the field sits as a property after the change, if it is one
- * @param [ignoresDefault=false] - Whether to leave the defaults out, as for whether a value is valid, which no
- *        `default` decides, whatever an `anyOf`/`oneOf` option declares
  * @returns - Whether both schemas constrain the field alike
  */
 export function constrainsAlike<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
@@ -211,18 +208,34 @@ export function constrainsAlike<S extends StrictRJSFSchema = RJSFSchema, F exten
   newInheritedDefault: unknown,
   oldPlacement?: PropertyPlacement,
   newPlacement?: PropertyPlacement,
-  ignoresDefault = false,
+): boolean {
+  return (
+    constrainsAlikeAsideDefault<S>(oldSchema, newSchema) &&
+    deepEquals(
+      getFilledDefault<S, F>(context, oldSchema, rootSchema, oldInheritedDefault, oldPlacement),
+      getFilledDefault<S, F>(context, newSchema, rootSchema, newInheritedDefault, newPlacement),
+    )
+  );
+}
+
+/** Whether `newSchema` declares the same type, `const`, `enum` or constant options and `maxItems` as `oldSchema`,
+ * whatever `default` either declares, an `anyOf`/`oneOf` option's included, as for whether a value is valid, which no
+ * `default` decides. A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the
+ * schema, so it is read as no type
+ *
+ * @param oldSchema - The field's schema before the change
+ * @param newSchema - The field's schema after the change
+ * @returns - Whether both schemas constrain the field alike, their defaults aside
+ */
+export function constrainsAlikeAsideDefault<S extends StrictRJSFSchema = RJSFSchema>(
+  oldSchema: S,
+  newSchema: S,
 ): boolean {
   const declaredType = (schema: S) => (hasSchemaMarker(schema, GUESSED_TYPE_FLAG) ? undefined : schema.type);
   return (
     isSameType(declaredType(oldSchema), declaredType(newSchema)) &&
     deepEquals(oldSchema.const, newSchema.const) &&
     oldSchema.maxItems === newSchema.maxItems &&
-    (ignoresDefault ||
-      deepEquals(
-        getFilledDefault<S, F>(context, oldSchema, rootSchema, oldInheritedDefault, oldPlacement),
-        getFilledDefault<S, F>(context, newSchema, rootSchema, newInheritedDefault, newPlacement),
-      )) &&
     deepEquals(enumValuesForSchema<S>(oldSchema), enumValuesForSchema<S>(newSchema))
   );
 }
@@ -926,16 +939,9 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
         return itemValue;
       }
       const oldConstraints = oldItemSchema ?? oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
-      const isAlike = constrainsAlike<S, F>(
-        context,
+      const isAlike = constrainsAlikeAsideDefault<S>(
         { ...oldConstraints, type: oldIsUntyped ? newItemSchema.type : oldConstraints.type },
         newItemSchema,
-        rootSchema,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        true,
       );
       return isAlike ? aValue : NO_VALUE;
     };
