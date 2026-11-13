@@ -3921,6 +3921,53 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     render(<Form ref={fresh} schema={withDefault(['q', 'q', 'q'])} {...props} />);
     expect(handleOf(fresh).getFormData()).toEqual(expected);
   });
+  // A field showing an option renders every key with that option's uiSchema, a key the field declares itself included
+  const filledArray = (d: string[]): RJSFSchema => ({
+    type: 'array',
+    minItems: 2,
+    items: { type: 'string', default: 'z' },
+    default: d,
+  });
+  const kindOption = (kind: string, properties: RJSFSchema['properties'] = {}): RJSFSchema => ({
+    title: kind,
+    properties: { kind: { type: 'string', const: kind, default: kind }, ...properties },
+  });
+  it.each<{ name: string; schemaOf: (d: string[]) => RJSFSchema }>([
+    {
+      name: 'the field declares',
+      schemaOf: (d) => ({
+        type: 'object',
+        properties: { t: { type: 'array' } },
+        oneOf: [kindOption('a', { t: filledArray(d) }), kindOption('b')],
+      }),
+    },
+    {
+      name: "the field's then adds",
+      schemaOf: (d) => ({
+        type: 'object',
+        properties: { kind: { type: 'string' } },
+        if: { properties: { kind: { const: 'a' } } },
+        then: { properties: { t: filledArray(d) } },
+        oneOf: [kindOption('a'), kindOption('b')],
+      }),
+    },
+  ])(
+    "keeps an array $name saved as the field's entry fills it, under the option uiSchema rendering it",
+    ({ schemaOf }) => {
+      const iv = (value: string) => ({ items: { 'ui:initialValue': value } });
+      const props = {
+        validator,
+        uiSchema: { t: iv('j'), oneOf: [{ t: iv('i') }, {}] },
+        initialFormData: { kind: 'a', t: ['j', 'j'] },
+      };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { rerender } = render(<Form ref={ref} schema={schemaOf(['x'])} {...props} />);
+
+      rerender(<Form ref={ref} schema={schemaOf(['q', 'q', 'q'])} {...props} />);
+
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 'a', t: ['j', 'j'] });
+    },
+  );
   // An option the uiSchema list holds no entry for renders with the field's uiSchema, and one with a hole with none, so
   // another option's entry never fills it
   const initialItems = (value: string) => ({ items: { 'ui:initialValue': value } });
