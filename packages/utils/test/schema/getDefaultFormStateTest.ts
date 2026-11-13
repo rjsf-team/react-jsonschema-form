@@ -382,7 +382,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ x: { a: 5 } });
           expect(utils(withDefault).getDefaultFormState(withDefault)).toStrictEqual({ x: { a: 5 } });
         });
-        it('adds the default of a property spelling out const: undefined under skipDefaults, as 6.x does', () => {
+        it('adds the default of a property that names const, as undefined, under skipDefaults', () => {
           const spread: RJSFSchema = {
             type: 'object',
             properties: { a: { type: 'string', const: undefined, default: 'd' } },
