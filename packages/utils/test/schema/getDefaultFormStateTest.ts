@@ -7130,15 +7130,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual([{ animal: 'Cat', food: 'meat' }]);
         });
 
-        // Pins a known limitation rather than intended behavior; see the matching skipDefaults test below.
-        it('should fill in the first then default in array items with no data even when its if does not match the defaulted value (known limitation)', () => {
-          const fishFirstArraySchema: RJSFSchema = { type: 'array', items: fishFirstAnimalInfoSchema };
+        it('should fill in the then default of the if the defaulted value matches in array items with no data (#5830)', () => {
+          // The mock validator cannot evaluate an `if`, so it returns what the real validators do here: every `if` holds
+          // for no data, and only the Cat one once the default is in, as the field is planned and checked again. The
+          // schema is copied so no check another test made of it is answered from the memo
+          testValidator.setReturnValues({
+            isValid: [true, true, true, false, false, true, false, false, true, false, false, true],
+          });
+          const fishFirstArraySchema: RJSFSchema = { type: 'array', items: structuredClone(fishFirstAnimalInfoSchema) };
           expect(
             getDefaultFormState(
               { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
               { schema: fishFirstArraySchema, formData: [{}], rootSchema: fishFirstArraySchema },
             ),
-          ).toEqual([{ animal: 'Cat', food: 'grass' }]);
+          ).toEqual([{ animal: 'Cat', food: 'meat' }]);
         });
       });
 
@@ -7225,10 +7230,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ animal: 'Cat' });
         });
 
-        it('should pick the if-then-else branch from the form data, so a then default whose if requires a defaulted value is left out', () => {
-          // The mock validator cannot evaluate `required`, so it returns what the real validators do here; the claim
-          // itself is only exercised by the ajv8, ata and cfworker runs of this test.
-          testValidator.setReturnValues({ isValid: [false] });
+        it('should pick the if-then-else branch from the defaults under the form data, so a then default whose if requires a defaulted value is filled in (#5830)', () => {
+          // The mock validator cannot evaluate `required`, so it returns what the real validators do here: the `if`
+          // fails for no data, holds once the default is in, and holds again when the field is planned with it. The
+          // claim itself is only exercised by the ajv8, ata and cfworker runs of this test.
+          testValidator.setReturnValues({ isValid: [false, true, true, true] });
           const requiredAnimalSchema: RJSFSchema = {
             ...animalInfoSchema,
             allOf: [{ ...animalCondition, if: { ...(animalCondition.if as RJSFSchema), required: ['animal'] } }],
@@ -7238,22 +7244,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' } },
               { schema: requiredAnimalSchema, rootSchema: requiredAnimalSchema },
             ),
-          ).toEqual({ animal: 'Cat' });
+          ).toEqual({ animal: 'Cat', food: 'meat' });
         });
 
-        // Pins a known limitation rather than intended behavior: the if is checked against the form data, not the
-        // computed defaults, so a Cat default gets the Fish entry's food. A fix that evaluates the if against the
-        // defaults is expected to change this result.
-        it('should fill in the first then default on empty data even when its if does not match the defaulted value (known limitation)', () => {
+        it('should fill in the then default of the if the defaulted value matches on empty data (#5830)', () => {
+          // The mock validator cannot evaluate an `if`, so it returns what the real validators do here: every `if` holds
+          // for no data, and only the Cat one once the default is in, as the field is planned and checked again. The
+          // schema is copied so no check another test made of it is answered from the memo
+          testValidator.setReturnValues({
+            isValid: [true, true, true, false, false, true, false, false, true, false, false, true],
+          });
+          const fishFirst = structuredClone(fishFirstAnimalInfoSchema);
           expect(
             getDefaultFormState(
               { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' } },
-              { schema: fishFirstAnimalInfoSchema, rootSchema: fishFirstAnimalInfoSchema },
+              { schema: fishFirst, rootSchema: fishFirst },
             ),
-          ).toEqual({ animal: 'Cat', food: 'grass' });
+          ).toEqual({ animal: 'Cat', food: 'meat' });
         });
 
-        it('should drop the whole allOf when a custom merger throws on the conflicting then defaults', () => {
+        it('should drop the whole allOf when a custom merger throws on the conflicting then defaults, then fill in the branch the defaulted value selects', () => {
           consoleWarnSpy.mockClear();
           const conflict = new Error('conflicting food defaults');
           const mergeAllOfUnlessFoodDefaultsConflict: CustomMergeAllOf = (schema) => {
@@ -7279,6 +7289,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ),
           ).toEqual({ animal: 'Cat', food: 'meat' });
           expect(consoleWarnSpy).not.toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
+          // The mock validator cannot evaluate an `if`, so it returns what the real validators do here: every `if` holds
+          // for no data, and only the Cat one once the default is in, as the field is planned and checked again. The
+          // schema is copied so no check another test made of it is answered from the memo
+          testValidator.setReturnValues({
+            isValid: [true, true, true, false, false, true, false, false, true, false, false, true],
+          });
+          const fishFirst = structuredClone(fishFirstAnimalInfoSchema);
           expect(
             getDefaultFormState(
               {
@@ -7286,9 +7303,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 defaultFormStateBehavior: { allOf: 'skipDefaults' },
                 customMergeAllOf: mergeAllOfUnlessFoodDefaultsConflict,
               },
-              { schema: fishFirstAnimalInfoSchema, rootSchema: fishFirstAnimalInfoSchema },
+              { schema: fishFirst, rootSchema: fishFirst },
             ),
-          ).toEqual({ animal: 'Cat' });
+          ).toEqual({ animal: 'Cat', food: 'meat' });
           expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
         });
 
@@ -11104,6 +11121,480 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData, fieldState }),
         ).toEqual({ kind: 'q', size: 'm', o: { a: 'x' } });
         expect(paths).toEqual([]);
+      });
+    });
+
+    describe('a default that decides an `if` (#5830)', () => {
+      const fill = (schema: RJSFSchema, formData?: unknown) =>
+        getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData });
+      afterEach(() => {
+        testValidator.reset?.();
+      });
+      // Built for each test, so no check another test made of a schema is answered from the memo
+      const thenSchema = (): RJSFSchema => ({
+        type: 'object',
+        properties: { k: { type: 'string', default: 'x' } },
+        if: { properties: { k: { const: 'x' } }, required: ['k'] },
+        then: { properties: { t: { type: 'number', default: 2 } } },
+      });
+      const elseSchema = (): RJSFSchema => ({
+        type: 'object',
+        properties: { k: { type: 'string', default: 'y' } },
+        if: { properties: { k: { const: 'x' } } },
+        then: { properties: { t: { type: 'number', default: 2 } } },
+        else: { properties: { e: { type: 'number', default: 3 } } },
+      });
+      const chainedSchema = (): RJSFSchema => ({
+        type: 'object',
+        properties: { k: { type: 'string', default: 'x' } },
+        allOf: [
+          {
+            if: { properties: { k: { const: 'x' } }, required: ['k'] },
+            then: { properties: { t: { type: 'string', default: 'u' } } },
+          },
+          {
+            if: { properties: { t: { const: 'u' } }, required: ['t'] },
+            then: { properties: { v: { type: 'number', default: 4 } } },
+          },
+        ],
+      });
+      // The mock validator cannot evaluate an `if`, so where every `if` holding is not what the real validators say, a
+      // test hands it their answers: the `if` of `elseSchema()` holds for no data and fails once `k` is `'y'`
+      const ELSE_ANSWERS = [true, false, false, false];
+
+      it('fills the `then` its default satisfies', () => {
+        expect(fill(thenSchema())).toEqual({ k: 'x', t: 2 });
+      });
+
+      it('fills the `else` its default selects, and nothing of the `then`', () => {
+        testValidator.setReturnValues({ isValid: [...ELSE_ANSWERS] });
+        expect(fill(elseSchema())).toEqual({ k: 'y', e: 3 });
+      });
+
+      it('fills a condition that reads what another condition defaulted', () => {
+        expect(fill(chainedSchema())).toEqual({ k: 'x', t: 'u', v: 4 });
+      });
+
+      it('fills the same for a property as for the root', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { q: thenSchema() } };
+        expect(fill(schema)).toEqual({ q: { k: 'x', t: 2 } });
+      });
+
+      it('fills the `null` of a field the `else` of an unmerged `allOf` entry brings in for a default', () => {
+        // The mock validator cannot evaluate an `if`: this one fails wherever the fill checks it, since `k` is `'y'`
+        testValidator.setReturnValues({ isValid: Array.from({ length: 8 }, () => false) });
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            r: {
+              type: 'object',
+              properties: { k: { type: 'string', default: 'y' } },
+              allOf: [{ if: { properties: { k: { const: 'x' } } }, else: { properties: { e: { type: 'null' } } } }],
+            },
+          },
+        };
+        const filled = fill(schema);
+        expect(filled).toEqual({ r: { k: 'y', e: null } });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      it('keeps the branch the data selects over the one the default would', () => {
+        expect(fill(elseSchema(), { k: 'x' })).toEqual({ k: 'x', t: 2 });
+      });
+
+      it.each([
+        { name: 'then', schema: thenSchema(), answers: [] },
+        { name: 'else', schema: elseSchema(), answers: [...ELSE_ANSWERS, false, false] },
+        { name: 'chained', schema: chainedSchema(), answers: [] },
+      ])('changes nothing when the filled data of the $name schema is filled again', ({ schema, answers }) => {
+        testValidator.setReturnValues({ isValid: answers });
+        const filled = fill(schema);
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+    });
+
+    describe('the items of an array `default` (#5831)', () => {
+      const fill = (schema: RJSFSchema, formData?: unknown) =>
+        getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData });
+      const item: RJSFSchema = {
+        type: 'object',
+        properties: { q: { type: 'number', default: 1 }, c: { const: 'c' } },
+      };
+
+      it('fills an item of the default with the defaults of its own properties', () => {
+        const schema: RJSFSchema = { type: 'array', default: [{}], items: item };
+        expect(fill(schema)).toEqual([{ q: 1, c: 'c' }]);
+      });
+
+      it('fills it the same for a default the array takes from its parent', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { list: [{}] },
+          properties: { list: { type: 'array', items: item } },
+        };
+        expect(fill(schema)).toEqual({ list: [{ q: 1, c: 'c' }] });
+      });
+
+      it('keeps what an item of the default states over the default of the items', () => {
+        const schema: RJSFSchema = { type: 'array', default: ['a', 'b'], items: { type: 'string', default: 'z' } };
+        expect(fill(schema)).toEqual(['a', 'b']);
+        const objects: RJSFSchema = { type: 'array', default: [{ q: 5 }], items: item };
+        expect(fill(objects)).toEqual([{ q: 5, c: 'c' }]);
+      });
+
+      it('keeps a `null` item of the default, as it keeps one the data holds', () => {
+        const schema: RJSFSchema = { type: 'array', default: [null], items: { type: 'string', default: 'z' } };
+        expect(fill(schema)).toEqual([null]);
+      });
+
+      it('fills an item past the rows of the data when extra defaults are merged', () => {
+        const schema: RJSFSchema = { type: 'array', default: [{}, {}], items: item };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { arrayMinItems: { mergeExtraDefaults: true } } },
+            { schema, rootSchema: schema, formData: [{ q: 3 }] },
+          ),
+        ).toEqual([
+          { q: 3, c: 'c' },
+          { q: 1, c: 'c' },
+        ]);
+      });
+
+      it('changes nothing when the filled data is filled again', () => {
+        const schema: RJSFSchema = { type: 'array', default: [{}], items: item };
+        const filled = fill(schema);
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+    });
+
+    describe('the option a field with an inherited default shows', () => {
+      const fill = (schema: RJSFSchema, formData?: unknown) =>
+        getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData });
+      const schema = (): RJSFSchema => ({
+        type: 'object',
+        default: { p: { b: 'x' } },
+        properties: {
+          p: {
+            oneOf: [
+              { type: 'object', properties: { a: { type: 'string' } }, required: ['a'] },
+              { type: 'object', properties: { kind: { const: 'o1' }, b: { type: 'string' } }, required: ['b'] },
+            ],
+          },
+        },
+      });
+
+      it('is the option the inherited default matches, as it is once the data holds that default', () => {
+        // The mock validator cannot match an option: the first rejects the default and the second takes it
+        testValidator.setReturnValues({ isValid: [false, true] });
+        expect(fill(schema())).toEqual({ p: { kind: 'o1', b: 'x' } });
+      });
+
+      it('changes nothing when the filled data is filled again', () => {
+        testValidator.setReturnValues({ isValid: [false, true, false, true] });
+        const root = schema();
+        const filled = fill(root);
+        expect(fill(root, filled)).toEqual(filled);
+      });
+    });
+
+    describe('the extra keys the default of an object names, once the form has generated its defaults', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { tags: { type: 'object', additionalProperties: { type: 'string' }, default: { a: 'x' } } },
+      };
+      const refill = (formData: unknown) =>
+        getDefaultFormState(
+          { validator: testValidator },
+          { schema, rootSchema: schema, formData, initialDefaultsGenerated: true },
+        );
+
+      it('are filled into an object the data holds none of', () => {
+        expect(refill({})).toEqual({ tags: { a: 'x' } });
+      });
+
+      it('are left out of an object the data holds, whose keys are the user’s', () => {
+        expect(refill({ tags: {} })).toEqual({ tags: {} });
+        expect(refill({ tags: { b: 'y' } })).toEqual({ tags: { b: 'y' } });
+      });
+    });
+
+    describe('a value the fieldState says the defaults filled in', () => {
+      /** A `fieldState` under which the values at `paths` are ones the defaults filled in */
+      const filledAt = (...paths: (string | number)[][]): FormFieldState => {
+        const filled = new Set(paths.map((path) => fieldPathFromList(path)));
+        return { selectedOption: () => 0, isExpanded: () => false, isFilled: (fieldPath) => filled.has(fieldPath) };
+      };
+      const fill = (schema: RJSFSchema, formData: unknown, fieldState: FormFieldState, uiSchema?: UiSchema) =>
+        getDefaultFormState(
+          { validator: testValidator },
+          { schema, rootSchema: schema, formData, fieldState, uiSchema },
+        );
+      const nested: RJSFSchema = {
+        type: 'object',
+        default: { a: { b: 'y' } },
+        properties: { a: { type: 'object', properties: { b: { type: 'string' }, d: { type: 'number' } } } },
+      };
+
+      it('takes the default that gives it now, wherever that is declared (#5818)', () => {
+        expect(fill(nested, { a: { b: 'x', d: 1 } }, filledAt(['a', 'b']))).toEqual({ a: { b: 'y', d: 1 } });
+        // A property the data lacks has no value to ask about
+        expect(fill(nested, { a: { b: 'x' } }, filledAt(['a', 'b'], ['a', 'd']))).toEqual({ a: { b: 'y' } });
+      });
+
+      it('stays where the fieldState says a person or a seed put it there', () => {
+        expect(fill(nested, { a: { b: 'x', d: 1 } }, filledAt())).toEqual({ a: { b: 'x', d: 1 } });
+      });
+
+      describe('deciding a condition of its object', () => {
+        const branching: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string', default: 'x' } },
+          if: { properties: { k: { const: 'x' } }, required: ['k'] },
+          then: { properties: { t: { type: 'number', default: 1 } } },
+        };
+
+        it('decides it by the default that gives the value now, not by the value it held', () => {
+          // The mock validator cannot read the data: the held value fails the `if` and the default replacing it holds
+          testValidator.setReturnValues({ isValid: [false, true] });
+          expect(fill(structuredClone(branching), { k: 'y' }, filledAt(['k']))).toEqual({ k: 'x', t: 1 });
+        });
+
+        it('decides it by the value where a person or a seed put it there', () => {
+          testValidator.setReturnValues({ isValid: [false, true] });
+          expect(fill(structuredClone(branching), { k: 'y' }, filledAt())).toEqual({ k: 'y' });
+        });
+      });
+
+      it('takes the default of a parent that wins over its own (#5817)', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { v: 'z' },
+          properties: { v: { type: 'string', default: 'q' }, w: { type: 'string' } },
+        };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' } },
+            { schema, rootSchema: schema, formData: { v: 'x', w: 'k' }, fieldState: filledAt(['v']) },
+          ),
+        ).toEqual({ v: 'z', w: 'k' });
+      });
+
+      it('stays where no default gives one any more', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { b: { type: 'string' } } };
+        expect(fill(schema, { b: 'x' }, filledAt(['b']))).toEqual({ b: 'x' });
+      });
+
+      it('stays where the settings leave the default that would replace it out', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { b: { type: 'string', default: 'y' } } };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' } },
+            { schema, rootSchema: schema, formData: { b: 'x' }, fieldState: filledAt(['b']) },
+          ),
+        ).toEqual({ b: 'x' });
+      });
+
+      it('stays where only the `false` a required boolean falls back to would replace it', () => {
+        const schema: RJSFSchema = { type: 'object', required: ['b'], properties: { b: { type: 'boolean' } } };
+        expect(fill(schema, { b: true }, filledAt(['b']))).toEqual({ b: true });
+      });
+
+      it('takes a `const` the property now declares', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { b: { type: 'string', const: 'c' } } };
+        expect(fill(schema, { b: 'x' }, filledAt(['b']))).toEqual({ b: 'c' });
+      });
+
+      it('stays under a `ui:initialValue`, its own or that of a field above it, which no later fill gives again', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'object', properties: { b: { type: 'string', default: 'y' } } } },
+        };
+        const data = { a: { b: 'x' } };
+        const fieldState = filledAt(['a', 'b']);
+        expect(fill(schema, data, fieldState, { a: { b: { 'ui:initialValue': 'i' } } })).toEqual(data);
+        expect(fill(schema, data, fieldState, { a: { 'ui:initialValue': { b: 'i' } } })).toEqual(data);
+        expect(fill(schema, data, fieldState)).toEqual({ a: { b: 'y' } });
+      });
+
+      describe('in an array', () => {
+        const list = (items: RJSFSchema, rest: RJSFSchema = {}): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', items, ...rest } },
+        });
+
+        it("takes the array's default for its row, beside a row a person added (#5826)", () => {
+          const schema = list({ type: 'string' }, { default: ['y', 'w'] });
+          expect(fill(schema, { list: ['x', 'w', 'k'] }, filledAt(['list', 0], ['list', 1]))).toEqual({
+            list: ['y', 'w', 'k'],
+          });
+        });
+
+        it("takes the default of the items where the array's default gives its row none", () => {
+          const schema = list({ type: 'string', default: 'z' });
+          expect(fill(schema, { list: ['x', 'k'] }, filledAt(['list', 0]))).toEqual({ list: ['z', 'k'] });
+        });
+
+        it('stays where neither gives its row a value any more', () => {
+          const schema = list({ type: 'string' });
+          expect(fill(schema, { list: ['x'] }, filledAt(['list', 0]))).toEqual({ list: ['x'] });
+        });
+
+        it("leaves what the array's default states for a row as it is, below the row too", () => {
+          const schema = list(
+            { type: 'object', properties: { q: { type: 'number', default: 2 } } },
+            { default: [{ q: 1 }] },
+          );
+          expect(fill(schema, { list: [{ q: 1 }] }, filledAt(['list', 0, 'q']))).toEqual({ list: [{ q: 1 }] });
+          expect(fill(schema, undefined, filledAt(['list', 0, 'q']))).toEqual({ list: [{ q: 1 }] });
+        });
+
+        it('takes the default of a property of a row the items fill', () => {
+          const schema = list({ type: 'object', properties: { q: { type: 'number', default: 2 } } });
+          expect(fill(schema, { list: [{ q: 1 }] }, filledAt(['list', 0, 'q']))).toEqual({ list: [{ q: 2 }] });
+        });
+
+        it('stays in a tuple, under items offering options, and under a `ui:initialValue`', () => {
+          const filled = filledAt(['list', 0]);
+          const tuple: RJSFSchema = {
+            type: 'object',
+            properties: { list: { type: 'array', items: [{ type: 'string', default: 'z' }] } },
+          };
+          expect(fill(tuple, { list: ['x'] }, filled)).toEqual({ list: ['x'] });
+          const options = list({ oneOf: [{ type: 'string', default: 'z' }, { type: 'number' }] });
+          expect(fill(options, { list: ['x'] }, filled)).toEqual({ list: ['x'] });
+          const plain = list({ type: 'string', default: 'z' });
+          expect(fill(plain, { list: ['x'] }, filled, { list: { 'ui:initialValue': ['x'] } })).toEqual({ list: ['x'] });
+          expect(fill(plain, { list: ['x'] }, filled, { 'ui:initialValue': { list: ['x'] } })).toEqual({ list: ['x'] });
+        });
+
+        it('stays where it is a `null`, an object or an array', () => {
+          const schema = list({ default: 'z' });
+          const data = { list: [null, {}, []] };
+          expect(fill(schema, data, filledAt(['list', 0], ['list', 1], ['list', 2]))).toEqual(data);
+        });
+      });
+
+      it('stays where it is an extra key or a `null`', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { extra: 'e', nil: 'n' },
+          properties: { nil: { type: ['string', 'null'] } },
+          additionalProperties: { type: 'string' },
+        };
+        const data = { extra: 'x', nil: null };
+        expect(fill(schema, data, filledAt(['extra'], ['nil']))).toEqual(data);
+      });
+
+      describe('an object row of an array, filled whole from the `default` of its item', () => {
+        const rows = (items: RJSFSchema | RJSFSchema[]): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', items } },
+        });
+        const row = (value: Record<string, number>): RJSFSchema => ({
+          type: 'object',
+          default: value,
+          properties: { w: { type: 'number' }, h: { type: 'number' } },
+        });
+        const data = { list: [{ w: 1, h: 2 }] };
+
+        it('takes the `default` its item declares now, a key that default leaves out included', () => {
+          expect(fill(rows(row({ w: 3 })), data, filledAt(['list', 0]))).toEqual({ list: [{ w: 3 }] });
+        });
+
+        it('stays where a person or a seed put a value in it', () => {
+          expect(fill(rows(row({ w: 3 })), data, filledAt())).toEqual(data);
+        });
+
+        it('stays where the `default` its item declares gives no value', () => {
+          expect(fill(rows({ default: null }), data, filledAt(['list', 0]))).toEqual(data);
+        });
+
+        it('keeps its keys as a row of a tuple, which is merged with its data again', () => {
+          expect(fill(rows([row({ w: 3 })]), data, filledAt(['list', 0]))).toEqual(data);
+        });
+      });
+
+      describe('of a field offering options', () => {
+        const picking = (pick: string, size: number): RJSFSchema => ({
+          type: 'object',
+          default: { pick },
+          properties: {
+            pick: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+            box: { oneOf: [{ type: 'object', properties: { size: { const: size } } }] },
+          },
+        });
+
+        it('takes the default that gives it now, as the field holding no data is filled', () => {
+          const data = { pick: 'x', box: { size: 1 } };
+          expect(fill(picking('p', 2), data, filledAt(['pick'], ['box']))).toEqual({ pick: 'p', box: { size: 2 } });
+        });
+
+        it('stays where a person or a seed put it or a value it holds there', () => {
+          const data = { pick: 'x', box: { size: 1 } };
+          expect(fill(picking('p', 2), data, filledAt())).toEqual(data);
+        });
+      });
+
+      describe('an array or object filled whole', () => {
+        const holding = (tags?: string[], box?: Record<string, number>): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            tags: { type: 'array', items: { type: 'string' }, ...(tags && { default: tags }) },
+            box: { type: 'object', additionalProperties: { type: 'number' }, ...(box && { default: box }) },
+          },
+        });
+        const data = { tags: ['a', 'b'], box: { w: 1, h: 2 } };
+        const whole = filledAt(['tags'], ['box']);
+
+        it('takes the `default` its field declares now, whatever its length or keys', () => {
+          expect(fill(holding(['c'], { w: 3 }), data, whole)).toEqual({ tags: ['c'], box: { w: 3 } });
+          expect(fill(holding(['d', 'e', 'f'], { w: 3, h: 4, d: 5 }), data, whole)).toEqual({
+            tags: ['d', 'e', 'f'],
+            box: { w: 3, h: 4, d: 5 },
+          });
+        });
+
+        it('takes the default an object above it declares for it, and the one a `$ref` names', () => {
+          const inherited: RJSFSchema = { ...holding(), default: { tags: ['c'], box: { w: 3 } } };
+          expect(fill(inherited, data, whole)).toEqual({ tags: ['c'], box: { w: 3 } });
+          const referenced: RJSFSchema = {
+            type: 'object',
+            definitions: { tags: { type: 'array', items: { type: 'string' }, default: ['c'] } },
+            properties: { tags: { $ref: '#/definitions/tags' }, flag: true },
+          };
+          expect(fill(referenced, { tags: ['a', 'b'], flag: ['x'] }, filledAt(['tags'], ['flag']))).toEqual({
+            tags: ['c'],
+            flag: ['x'],
+          });
+        });
+
+        it('stays as the data holds it where no `default` is declared for it', () => {
+          expect(fill(holding(), data, whole)).toEqual(data);
+        });
+
+        it('is merged with its default, row by row, where the fieldState does not say it is filled whole', () => {
+          expect(fill(holding(['c'], { w: 3 }), data, filledAt(['tags', 0]))).toEqual({
+            tags: ['c', 'b'],
+            box: data.box,
+          });
+        });
+
+        it('takes the `default` the root declares, where the root is one', () => {
+          const root: RJSFSchema = { type: 'array', items: { type: 'string' }, default: ['c'] };
+          expect(fill(root, ['a', 'b'], filledAt([]))).toEqual(['c']);
+          expect(fill(root, ['a', 'b'], filledAt())).toEqual(['a', 'b']);
+          expect(fill({ type: 'array', items: { type: 'string' } }, ['a', 'b'], filledAt([]))).toEqual(['a', 'b']);
+        });
+
+        it('stays as the data holds it where the root offers options, or declares a `null` default', () => {
+          const offering: RJSFSchema = {
+            default: ['c'],
+            oneOf: [{ type: 'array', items: { type: 'string' } }, { type: 'string' }],
+          };
+          expect(fill(offering, ['a', 'b'], filledAt([]))).toEqual(['a', 'b']);
+          const nullable: RJSFSchema = { type: ['array', 'null'], items: { type: 'string' }, default: null };
+          expect(fill(nullable, ['a', 'b'], filledAt([]))).toEqual(['a', 'b']);
+        });
       });
     });
   });

@@ -16,12 +16,12 @@ const ROOT = join(__dirname, '..', '..');
  */
 const PACKAGES = {
   '@rjsf/core': {
-    installed: '53 kB',
-    canaries: [{ label: 'Form', import: 'Form', limit: '52.5 kB' }],
+    installed: '54.5 kB',
+    canaries: [{ label: 'Form', import: 'Form', limit: '54 kB' }],
   },
   '@rjsf/utils': {
-    installed: '58 kB',
-    own: '51.5 kB',
+    installed: '59 kB',
+    own: '52.5 kB',
     canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' }],
   },
   '@rjsf/validator-ajv8': {

@@ -18,6 +18,8 @@ import SchemaExamples from './components/SchemaExamples.tsx';
 import type { CoreUiOptionsChecks } from './CoreUiOptionsChecks.ts';
 import type { OptionSelectionState } from './hooks/useOptionSelection.ts';
 import useOptionSelection from './hooks/useOptionSelection.ts';
+import type { OptionSwitchFieldProps, OptionSwitchState } from './hooks/useOptionSwitch.ts';
+import useOptionSwitch from './hooks/useOptionSwitch.ts';
 import type { ThemedForm, ThemeProps } from './withTheme.tsx';
 import withTheme from './withTheme.tsx';
 
@@ -37,6 +39,8 @@ export type {
   SchemaExamplesProps,
   CoreUiOptionsChecks,
   OptionSelectionState,
+  OptionSwitchFieldProps,
+  OptionSwitchState,
 };
 
 export * from './components/fields/index.ts';
@@ -57,5 +61,5 @@ export type {
   LayoutGridSchemaType,
 } from './components/fields/LayoutGridField.tsx';
 
-export { withTheme, RichDescription, RichHelp, SchemaExamples, useOptionSelection };
+export { withTheme, RichDescription, RichHelp, SchemaExamples, useOptionSelection, useOptionSwitch };
 export default Form;

@@ -54,6 +54,8 @@ import type { ContainerKeyMove, KeyMove } from './keyMove.ts';
 import { moveOfItems } from './keyMove.ts';
 import type { UiStateReader } from './uiState.ts';
 import { asFieldValue, fieldStateOf, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
+import type { Origins, RecordedOrigin } from './valueOrigins.ts';
+import { alongOrigins } from './valueOrigins.ts';
 
 /** The data the form fills `data` with on its first render, with the schema utilities and uiSchema `tree` is built
  * with, under the options `fieldState` says its fields show
@@ -63,6 +65,25 @@ export type FirstRenderFill<T, S extends StrictRJSFSchema, F extends FormContext
   data: T | undefined,
   fieldState: FormFieldState<S>,
 ) => unknown;
+
+/** Where a value in the data came from: a person `'entered'` it, the defaults `'filled'` it in, or a seed held it, which
+ * says nothing of which of the two it was
+ */
+export type ValueOrigin = RecordedOrigin | 'filled';
+
+/** Where the values of the data a tree was built for came from, and the paths the fill has written another value at
+ * since, in the data being sanitized: what is there now is the fill's, whatever the value before it was
+ */
+export interface DiffedOrigins {
+  recorded: Origins;
+  refilled: ReadonlySet<FieldPath>;
+}
+
+/** A value the sanitize or the fill took out of the data or wrote another over, with the path it was at */
+export interface DroppedValue {
+  path: FieldPathList;
+  value: unknown;
+}
 
 /** What the tree diff needs that does not change as it descends */
 interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
@@ -92,6 +113,22 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   judgedClears: JudgedClears | undefined;
   /** Where each array the walk dropped items of moved the items it kept, an inner array's before the array holding it */
   itemMoves: ContainerKeyMove[];
+  /** The origin, by its path in the data the previous tree is built for, of each value a person entered or a seed held
+   * and of each array or object holding one, see `alongOrigins()`
+   */
+  originAlong: Origins;
+  /** The paths, in the data being sanitized, the fill wrote another value at than the previous data held there */
+  refilled: ReadonlySet<FieldPath>;
+  /** Each value the walk dropped or wrote another over, whose path holds no value of the origin it had. An array's
+   * items are left to `itemMoves`
+   */
+  released: DroppedValue[];
+  /** The path of each value a seed held that the walk kept once the default of its field changed, and found to be no
+   * value the old defaults filled in, so a person entered it: the question is asked of it once, and a later default
+   * equal to it does not take it for its own. A seeded value that is what they filled in stays seeded, and is compared
+   * again as before
+   */
+  classified: FieldPath[];
   /** Whether the settings the defaults are computed by changed, so a field whose schema and value didn't can still be
    * filled with another default, and none is skipped
    */
@@ -120,23 +157,13 @@ export interface JudgedClears {
  */
 export function judgedClearsIn(data: unknown, recorded: ReadonlySet<FieldPath>): JudgedClears {
   const along = new Set<FieldPath>();
-  const addAlong = (path: FieldPathList) => {
-    // Longest first: a path already added was added with every path holding it
-    for (let end = path.length; end >= 0; end -= 1) {
-      const at = fieldPathFromList(path.slice(0, end));
-      if (along.has(at)) {
-        return;
-      }
-      along.add(at);
-    }
-  };
   for (const clear of clearsIn(data, [])) {
     if (typeof clear[clear.length - 1] === 'string') {
-      addAlong(clear);
+      addAlong(along, clear);
     }
   }
   for (const clear of recorded) {
-    addAlong(fieldPathToList(clear));
+    addAlong(along, fieldPathToList(clear));
   }
   return { recorded, along };
 }
@@ -315,6 +342,11 @@ function isGuessed<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
   return layers.some((layer) => hasSchemaMarker(layer, GUESSED_TYPE_FLAG));
 }
 
+/** Whether a field is a key its object names no property for, held under `additionalProperties` */
+function isExtraKey<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
+  return layers.some((layer) => hasSchemaMarker(layer, ADDITIONAL_PROPERTY_FLAG));
+}
+
 /** Whether a field the old tree rendered a schema for is held by the new one only as a guessed extra key. A field with
  * no old layers, a collapsed `$ref` cycle, rendered nothing to compare with
  */
@@ -395,10 +427,15 @@ function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: 
  * its `default`, its `const` or an empty object, which no data can tell apart from a value the user chose.
  *
  * @param acceptsNull - Whether the field's new schema holds `null`, asked only of a `null` item
- * @param isFilledByOldDefaults - Whether a value is what the defaults filled the old field with, asked only of a field
- *   that turns into a guessed extra key
+ * @param origin - Where the value came from. One a person entered is theirs whatever it equals, so it is never taken
+ *   for the old field's default or what its defaults filled out. One the defaults filled in or a seed held is compared
+ *   with them
+ * @param isFilledByOldDefaults - Whether a value is what the defaults filled the old field with, asked only of a value
+ *   no person entered of a field that turns into a guessed extra key
  * @param oldFillOut - What becomes of a value the new default differs from where the old defaults filled it out from
  *   the old one, see `oldFillOutOf()`: `DROP` to leave it for the fill, a value to write in place, or `undefined`
+ * @param classify - Told of a seeded value kept where the field's default changed that is no fill of the old defaults,
+ *   see `TreeContext.classified`
  * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
  *   judge what it holds
  */
@@ -410,8 +447,10 @@ function judge<S extends StrictRJSFSchema>(
   newDefault: unknown,
   isItem: boolean,
   acceptsNull: () => boolean,
+  origin: ValueOrigin,
   isFilledByOldDefaults: (value: unknown) => boolean,
   oldFillOut: (value: unknown) => unknown,
+  classify: () => void,
 ): unknown {
   const before = constraintsOf(oldLayers, oldDefault);
   const now = constraintsOf(newLayers, newDefault);
@@ -431,11 +470,29 @@ function judge<S extends StrictRJSFSchema>(
   if (value === null && isItem && newDefault !== undefined && !acceptsNull()) {
     return UNSET;
   }
-  const isOldDefault = oldDefault !== undefined && deepEquals(oldDefault, value);
+  const isEntered = origin === 'entered';
+  const isOldDefault = !isEntered && oldDefault !== undefined && deepEquals(oldDefault, value);
   // A guessed stub declares no `const` or `enum`, and its `default` seeds a new extra key rather than standing in for
   // the old field's, so what the old field's defaults filled in leaves with that field
   if (becomesGuessed) {
-    return isOldDefault || !guessedStubRenders(value, newLayers) || isFilledByOldDefaults(value) ? DROP : undefined;
+    const isFilled = origin === 'filled' || (origin === 'seeded' && isFilledByOldDefaults(value));
+    if (isOldDefault || !guessedStubRenders(value, newLayers) || isFilled) {
+      return DROP;
+    }
+    if (origin === 'seeded') {
+      classify();
+    }
+    return undefined;
+  }
+  // An extra key with a declared schema is still no field the defaults fill, so what the old field's defaults filled in
+  // leaves with that field there too. Any other value is judged by the schema the key declares
+  if (
+    !isEntered &&
+    isExtraKey(newLayers) &&
+    !isExtraKey(oldLayers) &&
+    (isOldDefault || origin === 'filled' || isFilledByOldDefaults(value))
+  ) {
+    return DROP;
   }
   // An object the defaults fill key by key holds its old default only as far as each key does, since the fill can leave
   // some of the default's keys out, so its properties are judged one by one, as `sanitizeDataForNewSchema()` does
@@ -449,14 +506,15 @@ function judge<S extends StrictRJSFSchema>(
   // `ui:initialValue`, is theirs too, though not what they compute for a field declaring none, as a required boolean's
   // `false`, nor what its own `ui:initialValue` replaced the default with
   const isNewDefault = newDefault === undefined || deepEquals(newDefault, value);
-  if (!isNewDefault && !isFilledByKey()) {
+  let filledOut: unknown;
+  if (!isEntered && !isNewDefault && !isFilledByKey()) {
     // A value holding the old default takes the new one as it is, but an array, which the fill fills out from it to
     // `minItems` and below its items, is filled out from it as what the old default filled out is: in place, as a
     // fresh mount fills it, or dropped for the fill. One that comes back as it is is kept, and judged by the rest
     if (isOldDefault && !Array.isArray(value)) {
       return structuredClone(newDefault);
     }
-    const filledOut = oldDefault === undefined ? undefined : oldFillOut(value);
+    filledOut = oldDefault === undefined ? undefined : oldFillOut(value);
     if (filledOut === DROP) {
       return isItem ? UNSET : DROP;
     }
@@ -464,12 +522,27 @@ function judge<S extends StrictRJSFSchema>(
       return filledOut;
     }
   }
-  // A `readOnly` property shows the default it is filled with, which the user can't change there, so another value
-  // gives way to a new one replacing an old one, as `sanitizeDataForNewSchema()` clears it: read from the field's own
-  // schema, for a scalar or a select's whole value. Where the old field declared none, the value is saved data
+  // A seeded scalar the old field's default changed under, and unlike that default, is no fill of the old defaults,
+  // whatever the new default is. An array or object can still hold values that are, which are asked about where they
+  // are judged
+  if (
+    origin === 'seeded' &&
+    oldDefault !== undefined &&
+    !deepEquals(oldDefault, newDefault) &&
+    !isOldDefault &&
+    filledOut === undefined &&
+    (typeof value !== 'object' || value === null)
+  ) {
+    classify();
+  }
+  // A `readOnly` property shows the default it is filled with, which the user can't change there, so another value no
+  // person entered gives way to a new one replacing an old one, as `sanitizeDataForNewSchema()` clears it: read from the
+  // field's own schema, for a scalar or a select's whole value. Where the old field declared none, the value is saved
+  // data, and one written through `setFieldValue()` is entered
   const isWholeValue =
     typeof value !== 'object' || value === null || newLayers.some((layer) => isWholeValueSelect<S>(layer));
   if (
+    !isEntered &&
     !isNewDefault &&
     !isItem &&
     oldDefault !== undefined &&
@@ -825,6 +898,52 @@ function requiredOf<S extends StrictRJSFSchema>(layers: readonly S[]): Set<strin
   return lists.length === 0 ? undefined : new Set(lists.flat());
 }
 
+/** Adds `path` to `along` with the path of every array and object holding it, the root's included */
+function addAlong(along: Set<FieldPath>, path: FieldPathList): void {
+  // Longest first: a path already added was added with every path holding it
+  for (let end = path.length; end >= 0; end -= 1) {
+    const at = fieldPathFromList(path.slice(0, end));
+    if (along.has(at)) {
+      return;
+    }
+    along.add(at);
+  }
+}
+
+const pathsAlong = new WeakMap<ReadonlySet<FieldPath>, ReadonlySet<FieldPath>>();
+
+/** Each of `paths` with the path of every array and object holding it, the root's included. Built once for a set, which
+ * is never changed once made, so a change that leaves the set as it was builds nothing
+ */
+export function alongOf(paths: ReadonlySet<FieldPath>): ReadonlySet<FieldPath> {
+  let along = pathsAlong.get(paths);
+  if (!along) {
+    const built = new Set<FieldPath>();
+    paths.forEach((path) => addAlong(built, fieldPathToList(path)));
+    along = built;
+    pathsAlong.set(paths, along);
+  }
+  return along;
+}
+
+/** Where the value at `path`, which was at `oldPath` of the previous data, came from, an array or object taking the
+ * origin of what it holds: entered if a person entered any of it, or else seeded if a seed held any of it. A value with
+ * no place in the previous data is one the change itself wrote, and one the fill wrote over the previous value is filled
+ */
+function originOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  oldPath: FieldPathList | undefined,
+  path: FieldPathList,
+): ValueOrigin {
+  if (ctx.refilled.size > 0 && ctx.refilled.has(fieldPathFromList(path))) {
+    return 'filled';
+  }
+  if (oldPath === undefined) {
+    return 'entered';
+  }
+  return ctx.originAlong.get(fieldPathFromList(oldPath)) ?? 'filled';
+}
+
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   pair: FieldPair<S>,
@@ -923,6 +1042,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       newDefault,
       isItem,
       acceptsNull,
+      originOf(ctx, oldPath, path),
       (value) => isOldFill(ctx, oldLayers, oldDefault, oldPath, shownHere, value),
       // The field filled alone reads the uiSchema, which its own fill, through the option it showed, doesn't
       (value) =>
@@ -939,8 +1059,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           oldUiSchema,
           value,
         ) ?? (isOwnFill(ctx.oldSchemaUtils, oldLayers, oldDefault, value) ? DROP : undefined),
+      () => {
+        ctx.classified.push(fieldPathFromList(path));
+      },
     );
     if (judged !== undefined) {
+      // A value written over leaves no value of its origin at its path, as one dropped does, which the object or
+      // array holding it reports
+      if (judged !== DROP) {
+        ctx.released.push({ path, value: newValue });
+      }
       return judged === UNSET ? undefined : judged;
     }
   }
@@ -1089,6 +1217,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           result = { ...newValue };
         }
         if (next === DROP) {
+          ctx.released.push({ path: childPath, value: newValue[key] });
           delete result[key];
         } else {
           setOwn(result, key, next);
@@ -1199,11 +1328,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
     const kept = items.filter((item) => item !== DROP);
     const bounded = kept.length > bound ? kept.slice(0, bound) : kept;
-    if (kept.length < items.length) {
-      // The items after a dropped one move down, and what the form keeps by path of them moves with them
+    if (bounded.length < items.length) {
+      // The items after a dropped one move down, and what the form keeps by path of them moves with them. One cut off
+      // goes as a dropped one does
       let next = 0;
       const newIndexes = items.map((item) => {
-        if (item === DROP) {
+        if (item === DROP || next >= bound) {
           return undefined;
         }
         next += 1;
@@ -1345,25 +1475,35 @@ function withOptionUiSchemas(uiSchemas: unknown[]): GenericObjectType[] {
  * @param next - The new tree, likewise, whose data is the data to sanitize
  * @param uiState - The form's option selections and cycle expansions
  * @param fillAsFirstRender - How the form fills data on its first render, which a field's defaults are judged by
+ * @param origins - Where the values of the data of `previous` came from, and where the fill has written since
  * @param [edit] - The change being made, if any: its path, where it moved the keys of the array or object there, so
  *        each item or property is paired with its own previous value, and the option a switch there left with the keys
  *        it put back
  * @param [judgedClears] - For a disabled or read-only form, the only values judged, see `judgedClearsIn()`
  * @param [isDefaultsChanged=false] - Whether the `defaultFormStateBehavior` the defaults are computed by changed since
  *        `previous`, so every field is judged again, however little its schema and value changed
- * @returns - The sanitized data, sharing everything it left alone with `data`, and where each array it dropped items of
- *   moved the rest, an inner array's first, with the paths of the arrays holding it as they were before
+ * @returns - The sanitized data, sharing everything it left alone with `data`; where each array it dropped items of
+ *   moved the rest, an inner array's first, with the paths of the arrays holding it as they were before; each value it
+ *   dropped or wrote over, and each seeded value it kept whose origin it worked out
  */
 export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F extends FormContextType>(
   previous: FieldTree<T, S, F>,
   next: FieldTree<T, S, F>,
   uiState: UiStateReader,
   fillAsFirstRender: FirstRenderFill<T, S, F>,
+  origins: DiffedOrigins,
   edit?: FieldEdit,
   judgedClears?: JudgedClears,
   isDefaultsChanged = false,
-): { formData: T | undefined; itemMoves: ContainerKeyMove[] } {
+): {
+  formData: T | undefined;
+  itemMoves: ContainerKeyMove[];
+  released: DroppedValue[];
+  classified: FieldPath[];
+} {
   const itemMoves: ContainerKeyMove[] = [];
+  const released: DroppedValue[] = [];
+  const classified: FieldPath[] = [];
   const sanitized = walk(
     {
       oldSchemaUtils: previous.schemaUtils,
@@ -1379,6 +1519,10 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       judgedClears,
       itemMoves,
       isDefaultsChanged,
+      originAlong: alongOrigins(origins.recorded),
+      refilled: origins.refilled,
+      released,
+      classified,
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),
@@ -1399,5 +1543,13 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
     },
     [],
   );
-  return { formData: sanitized === DROP ? undefined : asFieldValue<T>(sanitized), itemMoves };
+  if (sanitized === DROP) {
+    released.push({ path: [], value: next.formData });
+  }
+  return {
+    formData: sanitized === DROP ? undefined : asFieldValue<T>(sanitized),
+    itemMoves,
+    released,
+    classified,
+  };
 }

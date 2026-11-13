@@ -6446,11 +6446,11 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(node.querySelector('#root_pet_a__key')).toBeNull();
     });
 
-    // The form takes a parent's change as the switch only where it holds the value the switch sent, so a copy of it
-    // leaves the keys out, as outside a `Form`, while the switch itself has the typed key judged and kept
+    // The form takes a parent's change as the switch where it holds what the switch sent, the value itself or a copy
+    // of it, so each value is judged against the option switched to either way
     it.each([
       { sends: 'the value the switch sent', copy: (value: unknown) => value, expected: { kind: 't', a: 'x' } },
-      { sends: 'a copy of it', copy: (value: unknown) => structuredClone(value), expected: { kind: 't' } },
+      { sends: 'a copy of it', copy: (value: unknown) => structuredClone(value), expected: { kind: 't', a: 'x' } },
     ])('judges a typed key the switch leaves where a parent field sends $sends', async ({ copy, expected }) => {
       const schema: RJSFSchema = {
         type: 'object',

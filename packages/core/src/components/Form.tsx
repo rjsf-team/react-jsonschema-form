@@ -53,6 +53,7 @@ import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState, UiStateReader } from './uiState.ts';
 import UiStateContext from './UiStateContext.ts';
+import type { Origins } from './valueOrigins.ts';
 
 /** `T` itself for any concrete type, but not a position TypeScript infers `T` from. `FormProps` wraps the configuration
  * props and handlers in it, so `T` is inferred from `formData`/`initialFormData` (or a typed `ref`) and an unannotated
@@ -80,7 +81,8 @@ export interface FormProps<
    * the form mounts and when `reset()` is called. It is only a seed: the form owns its data after that, so passing back
    * what `onChange` reported changes nothing, and passing another value, such as a record that arrives after mount, is
    * ignored, with a warning in development only. To show other data, remount the form with a `key`, or call
-   * `setFieldValue('', data)` on its ref.
+   * `reset(data)` on its ref, which seeds the form with it. `setFieldValue('', data)` writes the data as values entered
+   * through the form, which no default changes afterwards.
    *
    * @deprecated Use `initialFormData`, which this is another name for. The form reads it only on mount and on
    * `reset()`, which the name `formData` hides by reading as a controlled value.
@@ -331,6 +333,20 @@ export interface FormState<
    * the keys the form moved, and dropped once the data no longer holds the clear
    */
   clearedPaths: ClearedPaths;
+  /** Where each value of `formData` came from, by its path: one a person entered through the form, or a write from
+   * outside the fields such as `setFieldValue()` wrote, is entered, and one the seed held that nobody has entered over
+   * since is seeded. A value with no origin here is one the defaults filled in. Recorded for each value that is no array
+   * or object, each empty array or object and each key written as `undefined`, and as entered for each array or object
+   * itself whose rows or keys were moved, added or removed, or that a write wrote whole. An entered value is theirs
+   * even where it equals a default. A seed doesn't say whether a person or a default put a value in it, so the origin
+   * of a seeded value is not known until its field's default changes: one the sanitize keeps is then entered where it
+   * is not what the defaults filled the field with, and stays seeded where it is. Moved with the keys the form moved,
+   * and dropped where the data stops holding the value: with a key the data drops, and where the sanitize or the
+   * defaults write another value over it, which is then one the defaults filled in
+   */
+  origins: Origins;
+  /** The origins of the baseline's values: those of the seed it was derived from */
+  baselineOrigins: Origins;
   /** Where `liveValidate`'s trigger fired, which decides the errors `liveErrors: 'field'` shows */
   revealed: RevealedPaths;
   /** The option selections the baseline is derived under, whenever a prop change or an omission derives it again: none

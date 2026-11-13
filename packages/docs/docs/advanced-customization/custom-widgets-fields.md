@@ -434,7 +434,26 @@ A field component will always be passed the following props:
   ```
 
 The option a union field shows is the form's state, not the field's: `SchemaField` reads it too, to stub the extra keys of an object once, with the selected option, and it outlives the field's components and follows the moves the form makes, of array items and of additional properties renamed or removed.
-A custom `AnyOfField` or `OneOfField` reads and writes it with `useOptionSelection()` from `@rjsf/core`, rather than keeping its own, and sends the data for a newly selected option through `onChange` as before:
+A custom `AnyOfField` or `OneOfField` shows and switches it with `useOptionSwitch()` from `@rjsf/core`, rather than keeping its own selection or working out the new option's data itself:
+
+```tsx
+import { useOptionSwitch } from '@rjsf/core';
+
+function MyAnyOfField(props: FieldProps & { options: RJSFSchema[] }) {
+  const { selectedOption, switchOption } = useOptionSwitch(props, props.options);
+  // render the selector on `selectedOption`; on a pick, `switchOption(index)`
+}
+```
+
+`switchOption(index)` selects the option and sends the field's data through `onChange` in one step, and `switchOption(-1)` clears the selection.
+The field sends what the option switched to can hold, filled with what that option declares, and the form puts back each key the field held and judges it against the option switched away from: a value the old option's defaults filled in takes the new option's, a value the user entered stays where the new option has a field that can hold it, and one it has no field for is dropped.
+It does nothing for a `disabled` or `readonly` field, or for the option already shown.
+A field that writes values of its own on a switch, such as the property its selector edits, passes them by key as the second argument, `switchOption(index, { kind })`: each is written into the object the field sends and kept as written, and the switch is then sent for the option already shown too. None is written for an option that holds nothing, a `null` one or a cleared selection.
+The hook also returns `optionsUiSchema`, the uiSchema of each option as the field's `uiSchema` lists them under its `anyOf`/`oneOf`, empty where it lists none; an option past the end of the list renders with the field's own `uiSchema`.
+The optional third argument is the id of the control that switches, which the form's `onChange` is told the change came from; it defaults to the field's `id`.
+Outside a `Form` the field's own judgement of the switch stands: what the option switched to cannot hold is dropped, as `sanitizeDataForNewSchema()` drops it.
+
+A field that has to send data of its own on a switch reads and writes the selection alone with `useOptionSelection()`, and sends the data through `onChange` itself. The form takes that data as written:
 
 ```tsx
 import { useOptionSelection } from '@rjsf/core';

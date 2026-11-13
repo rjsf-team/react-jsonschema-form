@@ -437,6 +437,8 @@ export function createUiState() {
       };
     },
     selection: selectionAt,
+    /** The path of each field holding a selection */
+    pickedPaths: (): FieldPath[] => [...selections.keys()],
     /** Selects option `index` of `list` at `path`, holding for the data in `holdsFor`: what the form kept for the
      * switch, or nothing where the form's data is to be matched again with the selection preferred
      */

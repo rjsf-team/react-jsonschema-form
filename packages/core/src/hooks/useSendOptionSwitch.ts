@@ -79,6 +79,15 @@ function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextT
   );
 }
 
+/** Whether `option` is one whose field renders nothing and holds `null`: a `null` type or a `null` constant
+ *
+ * @param option - The option, if one is selected
+ * @returns - True when the option holds only `null`
+ */
+export function holdsOnlyNull<S extends StrictRJSFSchema>(option: S | undefined): boolean {
+  return option !== undefined && (option.type === 'null' || (isConstant<S>(option) && toConstant<S>(option) === null));
+}
+
 /** Returns what sends the change of a `oneOf`/`anyOf` field at `fieldPath` whose option is switched. The option's
  * fields are rendered anew under the new option's schema, so the form drops the fields' own errors under every key the
  * option that was left declared or the data held: a raise of a widget that is gone, or that another widget now renders
@@ -105,7 +114,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       schema: S,
       optionSwitch: OptionSwitch<T, S, F>,
       formData: unknown,
-      { formData: newFormData, held: heldBefore }: OptionSwitchData<V>,
+      { formData: newFormData, held: heldBefore, written }: OptionSwitchData<V>,
       send: (value: V | undefined) => void,
     ) => {
       const { oldOption, newOption, oldIndex } = optionSwitch;
@@ -139,11 +148,8 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       const isEntry = isEntryPath || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
       // An entry's `null` option holds `null` rather than the `''` of a cleared value, which no such option takes and
       // which would reload as another option. Elsewhere it holds nothing, see `formDataForNewOption()`
-      const isNullOption =
-        newOption !== undefined &&
-        (newOption.type === 'null' || (isConstant<S>(newOption) && toConstant<S>(newOption) === null));
       const value =
-        isEntry && newFormData === undefined && isNullOption
+        isEntry && newFormData === undefined && holdsOnlyNull<S>(newOption)
           ? (null as V)
           : storedValue(newFormData, fieldPath, isEntry);
       return sendMove(
@@ -152,7 +158,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
           newKeyOf: (key) => (gone.has(key) && !Object.hasOwn(declaredByNew, key) ? undefined : key),
           newOwnKeyOf: (key) => (gone.has(key) ? undefined : key),
           dropsOwnErrors: true,
-          ...(oldIndex >= 0 && { switchedFrom: { index: oldIndex, held: heldBefore } }),
+          ...(oldIndex >= 0 && { switchedFrom: { index: oldIndex, held: heldBefore, written } }),
         },
         () => send(value),
       );

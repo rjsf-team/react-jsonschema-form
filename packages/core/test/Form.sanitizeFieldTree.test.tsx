@@ -1,11 +1,11 @@
 import { createRef, useState } from 'react';
 import type { DefaultFormStateBehavior, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { buttonId, createSchemaUtils, getByPath } from '@rjsf/utils';
+import { buttonId, createSchemaUtils, getByPath, isObject } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import type { FormRef, IChangeEvent } from '../src/index.ts';
+import type { FormProps, FormRef, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
 import { AcceptingParent, createParentLog, elementOf, handleOf, input, TransformingParent } from './testUtils.tsx';
 
@@ -542,14 +542,14 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       });
     });
 
-    // Without `a` the inner `else` fills `'e'`, and with it the `then` shows it, so `'e'` is what the defaults fill in,
-    // whether they filled it or the user typed it
+    // Without `a` the inner `else` would fill `'e'`, which makes the `if` hold, so the fill settles on the `then` and
+    // its `'d'` (#5830). The fill's `'d'` leaves with the field, and the same value typed by the user is theirs to keep
     it.each([
-      { start: 'the fill', initialFormData: { kind: 's' }, typed: undefined },
-      { start: "the user's", initialFormData: { kind: 's', a: 'x' }, typed: 'e' },
+      { start: 'drops the value the fill gave', initialFormData: { kind: 's' }, typed: undefined, kept: undefined },
+      { start: 'keeps the same value the user typed', initialFormData: { kind: 's', a: 'x' }, typed: 'd', kept: 'd' },
     ])(
-      'drops a value the defaults fill in under another branch than the one that shows it, from $start',
-      async ({ initialFormData, typed }) => {
+      '$start, where the defaults fill it in under another branch than the one that shows it',
+      async ({ initialFormData, typed, kept }) => {
         const schema = kindOf({
           if: { properties: { kind: { const: 's' } } },
           then: {
@@ -566,32 +566,343 @@ describe('sanitize as a diff of the field trees before and after a change', () =
               await user.clear(input(form, 'root_a'));
               await user.type(input(form, 'root_a'), typed);
             }
-            expect(input(form, 'root_a').value).toBe('e');
+            expect(input(form, 'root_a').value).toBe('d');
           },
         });
 
-        expect(formData).toEqual({ kind: 't' });
-        expect(container.querySelector('#root_a__key')).toBeNull();
+        expect(formData).toEqual(kept === undefined ? { kind: 't' } : { kind: 't', a: kept });
+        expect(container.querySelector('#root_a__key') !== null).toBe(kept !== undefined);
       },
     );
 
-    // No data tells a value the user picked apart from the same value the default filled in
-    it.each([
-      { picked: 'd', expected: { kind: 't' }, isKept: false },
-      { picked: 'e', expected: { kind: 't', a: 'e' }, isKept: true },
-    ])('keeps the pick $picked only when it is not the default', async ({ picked, expected, isKept }) => {
+    // The form records what the user picked, so a pick equal to the default is told apart from the default filled in
+    it.each([{ picked: 'd' }, { picked: 'e' }])(
+      'keeps the pick $picked, whether or not it is the default',
+      async ({ picked }) => {
+        const schema = kindOf({
+          ...ifThen({ type: 'string', enum: ['d', 'e'], default: 'd' }),
+          additionalProperties: true,
+        });
+        const { container, formData } = await selectT(schema, {
+          initialFormData: { kind: 's', a: picked === 'd' ? 'e' : 'd' },
+          beforeSwitch: (form) => user.selectOptions(elementOf(form, '#root_a'), picked),
+        });
+
+        expect(formData).toEqual({ kind: 't', a: picked });
+        expect(container.querySelector('#root_a__key')).not.toBeNull();
+      },
+    );
+
+    it('keeps a value `setFieldValue()` wrote, though it equals the default', () => {
+      const schema = kindOf({
+        ...ifThen({ type: 'string', enum: ['d', 'e'], default: 'd' }),
+        additionalProperties: true,
+      });
+      const ref = createRef<FormRef<KindData>>();
+      render(
+        <Form<KindData> schema={schema} validator={validator} initialFormData={{ kind: 's', a: 'e' }} ref={ref} />,
+      );
+
+      act(() => ref.current?.setFieldValue(['a'], 'd'));
+      act(() => ref.current?.setFieldValue(['kind'], 't'));
+
+      expect(ref.current?.getFormData()).toEqual({ kind: 't', a: 'd' });
+    });
+
+    it('drops the default the form filled in, which nobody picked', async () => {
       const schema = kindOf({
         ...ifThen({ type: 'string', enum: ['d', 'e'], default: 'd' }),
         additionalProperties: true,
       });
       const { container, formData } = await selectT(schema, {
-        initialFormData: { kind: 's', a: picked === 'd' ? 'e' : 'd' },
-        beforeSwitch: (form) => user.selectOptions(elementOf(form, '#root_a'), picked),
+        initialFormData: { kind: 's' },
+        // The select shows the default, `'d'`, by its index
+        beforeSwitch: async (form) => {
+          expect(elementOf(form, '#root_a')).toHaveValue('0');
+        },
       });
 
-      expect(formData).toEqual(expected);
-      expect(container.querySelector('#root_a__key') !== null).toBe(isKept);
+      expect(formData).toEqual({ kind: 't' });
+      expect(container.querySelector('#root_a__key')).toBeNull();
     });
+  });
+
+  describe('the option a field shows before the user picks one (#5832)', () => {
+    /** Mounts `schema`, with a field to edit beside its own, and hands back the data at mount and after `step` */
+    function around(schema: RJSFSchema, initialFormData: object, step: (form: FormRef) => void) {
+      const ref = createRef<FormRef>();
+      const withOther: RJSFSchema = { ...schema, properties: { ...schema.properties, other: { type: 'string' } } };
+      render(<Form schema={withOther} validator={validator} initialFormData={initialFormData} ref={ref} />);
+      const data: unknown = ref.current?.getFormData();
+      const mounted = isObject(data) ? structuredClone(data) : {};
+      act(() => {
+        if (ref.current) {
+          step(ref.current);
+        }
+      });
+      return { mounted, after: ref.current?.getFormData() };
+    }
+    const edit = (form: FormRef) => form.setFieldValue(['other'], 'v');
+    const reset = (form: FormRef) => form.reset();
+    const takesExtraKeys: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          oneOf: [{ additionalProperties: false }, { properties: { q: { default: 'b' } }, additionalProperties: true }],
+        },
+      },
+    };
+    const requiresKey: RJSFSchema = {
+      type: 'object',
+      properties: {
+        q: { anyOf: [{ required: ['p'], additionalProperties: {} }, { properties: { p: { type: 'null' } } }] },
+      },
+    };
+    it.each([
+      { name: 'an option taking the extra key the data holds', schema: takesExtraKeys, data: { p: { t: 2 } } },
+      { name: 'an option not requiring a key the data lacks', schema: requiresKey, data: { q: { m: 'b' } } },
+    ])('is the same at mount, after an edit elsewhere and after a reset, for $name', ({ schema, data }) => {
+      const edited = around(schema, data, edit);
+      expect(edited.after).toEqual({ ...edited.mounted, other: 'v' });
+      const afterReset = around(schema, data, reset);
+      expect(afterReset.after).toEqual(afterReset.mounted);
+    });
+  });
+
+  describe('a value an `enum` stops listing', () => {
+    const picking = (values: string[]): RJSFSchema => ({
+      type: 'object',
+      properties: { a: { type: 'string', enum: values, default: values[0] } },
+    });
+    /** Mounts `from` seeded with `initialFormData`, lets `enter` act, re-renders with `to`, and reads the data */
+    function relisted(from: RJSFSchema, to: RJSFSchema, initialFormData: object, enter?: (form: FormRef) => void) {
+      const ref = createRef<FormRef>();
+      const element = (schema: RJSFSchema) => (
+        <Form schema={schema} validator={validator} initialFormData={initialFormData} ref={ref} />
+      );
+      const { rerender } = render(element(from));
+      act(() => {
+        if (ref.current) {
+          enter?.(ref.current);
+        }
+      });
+      rerender(element(to));
+      return ref.current;
+    }
+
+    it('takes the new default where the new list offers a choice', () => {
+      const form = relisted(picking(['d', 'e']), picking(['d', 'f']), {}, (entering) =>
+        entering.setFieldValue(['a'], 'e'),
+      );
+      expect(form?.getFormData()).toEqual({ a: 'd' });
+    });
+
+    it('takes the one value a new list of one offers', () => {
+      const form = relisted(picking(['d', 'e']), picking(['f']), {}, (entering) => entering.setFieldValue(['a'], 'e'));
+      expect(form?.getFormData()).toEqual({ a: 'f' });
+    });
+
+    it('takes the new default where the form filled it in', () => {
+      const form = relisted(picking(['d', 'e']), picking(['f', 'g']), {});
+      expect(form?.getFormData()).toEqual({ a: 'f' });
+    });
+
+    it('takes the new default where the seed held it', () => {
+      const form = relisted(picking(['d', 'e']), picking(['d', 'f']), { a: 'e' });
+      expect(form?.getFormData()).toEqual({ a: 'd' });
+    });
+  });
+
+  describe('a value the defaults filled in, when the default that gave it changes', () => {
+    /** Mounts `from` with `initialFormData`, re-renders with `to`, and hands back the data at each step */
+    function reschema(
+      from: RJSFSchema,
+      to: RJSFSchema,
+      initialFormData: object,
+      behavior?: FormProps['defaultFormStateBehavior'],
+      beforeChange?: (form: FormRef) => void,
+    ) {
+      const ref = createRef<FormRef>();
+      const element = (schema: RJSFSchema) => (
+        <Form
+          schema={schema}
+          validator={validator}
+          initialFormData={initialFormData}
+          defaultFormStateBehavior={behavior}
+          ref={ref}
+        />
+      );
+      const { rerender } = render(element(from));
+      const mounted = structuredClone(ref.current?.getFormData());
+      act(() => {
+        if (ref.current) {
+          beforeChange?.(ref.current);
+        }
+      });
+      rerender(element(to));
+      return { mounted, changed: ref.current?.getFormData() };
+    }
+    const nested = (b: string): RJSFSchema => ({
+      type: 'object',
+      default: { a: { b } },
+      properties: {
+        a: { type: 'object', properties: { b: { type: 'string' }, d: { type: 'number' } } },
+      },
+    });
+
+    it('takes the new default of an ancestor, through an object declaring none (#5818)', () => {
+      const { mounted, changed } = reschema(nested('x'), nested('y'), { a: { d: 1 } });
+      expect(mounted).toEqual({ a: { b: 'x', d: 1 } });
+      expect(changed).toEqual({ a: { b: 'y', d: 1 } });
+    });
+
+    it('keeps the value once the user wrote over it', () => {
+      const { changed } = reschema(nested('x'), nested('y'), { a: { d: 1 } }, undefined, (form) =>
+        form.setFieldValue(['a', 'b'], 'mine'),
+      );
+      expect(changed).toEqual({ a: { b: 'mine', d: 1 } });
+    });
+
+    it('gives way where the user cleared the field and the parent that fills it changes its default (#5817)', () => {
+      const schema = (v: string): RJSFSchema => ({
+        type: 'object',
+        default: { v },
+        properties: { v: { type: ['string', 'null'], default: null }, w: { type: 'string' } },
+      });
+      const { changed } = reschema(
+        schema('x'),
+        schema('z'),
+        { w: 'k' },
+        { nestedDefaultsPrecedence: 'ancestorWins' },
+        (form) => form.setFieldValue(['v'], undefined),
+      );
+      expect(changed).toEqual({ v: 'z', w: 'k' });
+    });
+
+    it('settles a default that decides an `if` on mount, as after an edit (#5830)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { k: { type: 'string', default: 'x' }, other: { type: 'string' } },
+        if: { properties: { k: { const: 'x' } }, required: ['k'] },
+        then: { properties: { t: { type: 'number', default: 2 } } },
+      };
+      const { mounted, changed } = reschema(schema, schema, {}, undefined, (form) =>
+        form.setFieldValue(['other'], 'v'),
+      );
+      expect(mounted).toEqual({ k: 'x', t: 2 });
+      expect(changed).toEqual({ k: 'x', t: 2, other: 'v' });
+    });
+
+    it("fills the items of an array's default on mount, as after an edit (#5831)", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          other: { type: 'string' },
+          list: {
+            type: 'array',
+            default: [{}],
+            items: { type: 'object', properties: { q: { type: 'number', default: 1 }, c: { const: 'c' } } },
+          },
+        },
+      };
+      const { mounted, changed } = reschema(schema, schema, {}, undefined, (form) =>
+        form.setFieldValue(['other'], 'v'),
+      );
+      expect(mounted).toEqual({ list: [{ q: 1, c: 'c' }] });
+      expect(changed).toEqual({ list: [{ q: 1, c: 'c' }], other: 'v' });
+    });
+
+    describe('in an array', () => {
+      const listOf = (first: string): RJSFSchema => ({
+        type: 'object',
+        properties: { list: { type: 'array', items: { type: 'string' }, default: [first, 'w'] } },
+      });
+
+      it('keeps every row of an array written whole, as `setFieldValue()` writes one', () => {
+        const { mounted, changed } = reschema(listOf('x'), listOf('y'), {}, undefined, (form) =>
+          form.setFieldValue(['list'], ['x', 'w', 'k']),
+        );
+        expect(mounted).toEqual({ list: ['x', 'w'] });
+        expect(changed).toEqual({ list: ['x', 'w', 'k'] });
+      });
+
+      it('leaves every row as it is once the user moved, added or removed one', async () => {
+        const ref = createRef<FormRef>();
+        const element = (schema: RJSFSchema) => <Form schema={schema} validator={validator} ref={ref} />;
+        const { container, rerender } = render(element(listOf('x')));
+        await user.click(elementOf(container, '.rjsf-array-item-move-down'));
+        expect(ref.current?.getFormData()).toEqual({ list: ['w', 'x'] });
+        rerender(element(listOf('y')));
+        // The rows no longer sit where the default would fill them, so none is computed again
+        expect(ref.current?.getFormData()).toEqual({ list: ['w', 'x'] });
+      });
+
+      it('keeps a row the user wrote over', () => {
+        const { changed } = reschema(listOf('x'), listOf('y'), {}, undefined, (form) =>
+          form.setFieldValue(['list', 0], 'mine'),
+        );
+        expect(changed).toEqual({ list: ['mine', 'w'] });
+      });
+
+      it('keeps a value the user wrote that equals the default, through a move of its row', async () => {
+        // The seed's rows hold other names, so the row the user writes `'a'` into is told from one holding the default
+        const rows = (name: string): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: { type: 'array', items: { type: 'object', properties: { name: { type: 'string', default: name } } } },
+          },
+        });
+        const ref = createRef<FormRef>();
+        const element = (schema: RJSFSchema) => (
+          <Form schema={schema} validator={validator} initialFormData={{ list: [{ name: 'p' }, {}] }} ref={ref} />
+        );
+        const { container, rerender } = render(element(rows('a')));
+        expect(ref.current?.getFormData()).toEqual({ list: [{ name: 'p' }, { name: 'a' }] });
+
+        act(() => ref.current?.setFieldValue(['list', 0, 'name'], 'a'));
+        await user.click(elementOf(container, '.rjsf-array-item-move-down'));
+        expect(ref.current?.getFormData()).toEqual({ list: [{ name: 'a' }, { name: 'a' }] });
+
+        rerender(element(rows('b')));
+        // The row the form filled in, now first, takes the new default; the one the user wrote, now second, keeps `'a'`
+        expect(ref.current?.getFormData()).toEqual({ list: [{ name: 'b' }, { name: 'a' }] });
+      });
+
+      it("takes the new default of a property of a row the array's default filled", () => {
+        const rows = (name: string): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              default: [{}],
+              items: { type: 'object', properties: { name: { type: 'string', default: name } } },
+            },
+          },
+        });
+        const { mounted, changed } = reschema(rows('a'), rows('b'), {});
+        expect(mounted).toEqual({ list: [{ name: 'a' }] });
+        expect(changed).toEqual({ list: [{ name: 'b' }] });
+      });
+    });
+
+    it.each([{ own: 'q' }, { own: null }])(
+      "takes the new default of a parent that wins over the field's own $own (#5817)",
+      ({ own }) => {
+        const schema = (v: string): RJSFSchema => ({
+          type: 'object',
+          default: { v },
+          properties: { v: { type: ['string', 'null'], default: own }, w: { type: 'string' } },
+        });
+        const { mounted, changed } = reschema(
+          schema('x'),
+          schema('z'),
+          { w: 'k' },
+          { nestedDefaultsPrecedence: 'ancestorWins' },
+        );
+        expect(mounted).toEqual({ v: 'x', w: 'k' });
+        expect(changed).toEqual({ v: 'z', w: 'k' });
+      },
+    );
   });
 
   it('judges each edit against the data before it when a parent stores what onChange reports (#5250)', async () => {
@@ -4073,7 +4384,10 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
 
     rerender(<Form ref={ref} schema={withDefault('y')} validator={validator} />);
 
-    expect(handleOf(ref).getFormData()).toEqual({ t: [{ a: 'y' }] });
+    expect(handleOf(ref).getFormData()).toEqual({ t: [{ a: 'y', k: 'A' }] });
+    const fresh = createRef<FormRef<Record<string, unknown>>>();
+    render(<Form ref={fresh} schema={withDefault('y')} validator={validator} />);
+    expect(handleOf(fresh).getFormData()).toEqual({ t: [{ a: 'y', k: 'A' }] });
   });
   // Applied only on mount, the initial value is filled out anew from a default of another length, as a fresh mount
   // with the new schema fills it

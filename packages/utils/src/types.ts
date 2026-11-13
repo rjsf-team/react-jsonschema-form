@@ -353,6 +353,15 @@ export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
     formData: unknown,
     depth: number,
   ): string | undefined;
+  /** Whether the value the data holds at `fieldPath` is one the defaults filled in whole: no person entered, and no
+   * seed held, it or anything it holds. The defaults of a property the schema declares are then computed as if the data
+   * held nothing there, so the value follows whichever default gives it now, an array or object only where a `default`
+   * is declared for it. Without it, no value is taken for a filled one
+   *
+   * @internal The channel through which `@rjsf/core`'s `Form` tells `getDefaultFormState()` where its values came
+   *   from. It is no part of the documented API and may change in any release
+   */
+  isFilled?(fieldPath: FieldPath): boolean;
   /** Whether `ArrayField` renders the field at `fieldPath` as one widget, as a multiple select, a group of checkboxes, a
    * file input or a custom widget, which holds `[]` with nothing chosen, so `ui:required` turns that down. Its `schema`
    * has the type the fallback UI's selector is on pinned where the fallback UI renders the field. Without it, an array

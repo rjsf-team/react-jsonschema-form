@@ -883,12 +883,10 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       });
     });
 
-    // The same asymmetry read from the other side: what the old branch computed for a key says no more about what it
-    // declared than what the new branch computes. A required boolean's `false` and a required array's `[]` are the
-    // fill's work rather than a default the branch asked for, so a value sitting at one of them is nobody's default
-    // to replace
-    describe('keeps a value only the old branch computed a default for', () => {
-      it('leaves a required boolean the old branch declared no default for alone', async () => {
+    // A required boolean's `false` and a required array's `[]` are the fill's work rather than a default the old branch
+    // asked for. The form knows it filled each in, so each gives way to a default the new branch declares
+    describe('a value only the old branch computed a default for', () => {
+      it('gives a required boolean the old branch declared no default for the default the new branch declares', async () => {
         const { node, onChange } = createFormComponent({
           schema: modeSwap(
             { required: ['agree'], properties: { agree: { type: 'boolean' } } },
@@ -898,10 +896,10 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
         await selectMode(node, 'b');
 
-        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', agree: false }, 'root_mode');
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', agree: true }, 'root_mode');
       });
 
-      it('leaves a required array the old branch declared no default for alone', async () => {
+      it('gives a required array the old branch declared no default for the default the new branch declares', async () => {
         const { node, onChange } = createFormComponent({
           schema: modeSwap(
             { required: ['nums'], properties: { nums: { type: 'array', items: { type: 'number' } } } },
@@ -911,7 +909,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
         await selectMode(node, 'b');
 
-        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', nums: [] }, 'root_mode');
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', nums: [7] }, 'root_mode');
       });
     });
 

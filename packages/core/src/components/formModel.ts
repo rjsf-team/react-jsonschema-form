@@ -608,12 +608,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const props = committedProps;
     const path = fieldPathToList(fieldPath);
     // A parent field that sends a switch's data at its own path while the switch is being sent, holding the value the
-    // switch announced where the switch put it, sends the switch all the same, so it takes the switch as its own change
-    // does and the switching field learns what became of it. Only a switch is taken this way: a key move a parent sends
-    // another value for is its own change
+    // switch announced, or a copy of it, where the switch put it, sends the switch all the same, so it takes the switch as
+    // its own change does and the switching field learns what became of it. Only a switch is taken this way: a key move
+    // a parent sends another value for is its own change
     const isForwarded = (sent: AnnouncedMove) => {
       const at = fieldPathToList(sent.fieldPath);
-      return isPathPrefix(path, at) && Object.is(getAt<unknown>(newValue, at.slice(path.length)), sent.value);
+      if (!isPathPrefix(path, at)) {
+        return false;
+      }
+      // A parent that builds its own data from the child's, as by spreading it, sends a copy of what was announced.
+      // Shared with the announced value, a copy holding the same content is that value
+      const held = getAt<unknown>(newValue, at.slice(path.length));
+      return Object.is(replaceEqualDeep(sent.value, held), sent.value);
     };
     const move = announced?.fieldPath === fieldPath && Object.is(announced.value, newValue) ? announced : undefined;
     const forwarded = !move && announced?.switchedFrom && isForwarded(announced) ? announced : undefined;
@@ -647,6 +653,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       dropsOwnErrors: move?.dropsOwnErrors,
       isAnnouncedMove: move !== undefined,
       isFieldEdit,
+      ...(takenAt && taken?.switchedFrom && { switchAt: { path: takenAt, written: taken.switchedFrom.written } }),
     };
     const uiMove = keyMoveOf(fieldChange);
     const containerPath = uiMove && fieldPathToList(uiMove.container);

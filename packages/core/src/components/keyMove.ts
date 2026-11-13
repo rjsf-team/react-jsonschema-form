@@ -58,6 +58,8 @@ export interface SwitchedOption {
   index: number;
   /** The keys the data held before the switch, with their values, if it held an object */
   held?: GenericObjectType;
+  /** The paths of the values the switching field wrote itself, which the form records as entered */
+  written?: readonly FieldPath[];
 }
 
 /** A `KeyMove` with the path of the array or object whose keys it moved */

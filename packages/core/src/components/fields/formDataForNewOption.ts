@@ -1,4 +1,5 @@
 import type {
+  FieldPath,
   FormContextType,
   GenericObjectType,
   GlobalUISchemaOptions,
@@ -290,11 +291,14 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
 
 /** What `formDataForNewOption()` makes of a switch: the data it carries, and the object the data held before it, whose
  * keys a form taking the switch puts back as they were and judges against the option switched away from, with what the
- * defaults hand the field there, which the switch alone can't see, see `sanitizeFieldTree()`
+ * defaults hand the field there, which the switch alone can't see, see `sanitizeFieldTree()`. `written` is the paths of
+ * the values the switching field wrote itself, as the selector a `LayoutMultiSchemaField` edits, which the form records
+ * as entered
  */
 export interface OptionSwitchData<T> {
   formData: T | undefined;
   held?: GenericObjectType;
+  written?: readonly FieldPath[];
 }
 
 /** Computes the form data to carry across a switch from `oldOption` to `newOption` of a `oneOf`/`anyOf`.
