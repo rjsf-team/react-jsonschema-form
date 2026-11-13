@@ -681,7 +681,7 @@ exports[`array fields > checkboxes 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-size: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -693,7 +693,7 @@ exports[`array fields > checkboxes 1`] = `
                   data-offset-scrollbars="y"
                   data-scrollarea-viewport="true"
                   data-scrollbars="xy"
-                  style="overflow-x: scroll; overflow-y: scroll;"
+                  style="overflow: scroll;"
                 >
                   <div
                     class="m_b1336c6 mantine-ScrollArea-content"
@@ -2539,7 +2539,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-size: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -2551,7 +2551,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                   data-offset-scrollbars="y"
                   data-scrollarea-viewport="true"
                   data-scrollbars="xy"
-                  style="overflow-x: scroll; overflow-y: scroll;"
+                  style="overflow: scroll;"
                 >
                   <div
                     class="m_b1336c6 mantine-ScrollArea-content"
@@ -6426,7 +6426,7 @@ exports[`with title and description > checkboxes 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-size: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -6438,7 +6438,7 @@ exports[`with title and description > checkboxes 1`] = `
                   data-offset-scrollbars="y"
                   data-scrollarea-viewport="true"
                   data-scrollbars="xy"
-                  style="overflow-x: scroll; overflow-y: scroll;"
+                  style="overflow: scroll;"
                 >
                   <div
                     class="m_b1336c6 mantine-ScrollArea-content"
@@ -7623,7 +7623,7 @@ exports[`with title and description from both > checkboxes 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-size: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -7635,7 +7635,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                   data-offset-scrollbars="y"
                   data-scrollarea-viewport="true"
                   data-scrollbars="xy"
-                  style="overflow-x: scroll; overflow-y: scroll;"
+                  style="overflow: scroll;"
                 >
                   <div
                     class="m_b1336c6 mantine-ScrollArea-content"
@@ -8820,7 +8820,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-size: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -8832,7 +8832,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                   data-offset-scrollbars="y"
                   data-scrollarea-viewport="true"
                   data-scrollbars="xy"
-                  style="overflow-x: scroll; overflow-y: scroll;"
+                  style="overflow: scroll;"
                 >
                   <div
                     class="m_b1336c6 mantine-ScrollArea-content"
@@ -9881,7 +9881,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-size: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -9893,7 +9893,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                   data-offset-scrollbars="y"
                   data-scrollarea-viewport="true"
                   data-scrollbars="xy"
-                  style="overflow-x: scroll; overflow-y: scroll;"
+                  style="overflow: scroll;"
                 >
                   <div
                     class="m_b1336c6 mantine-ScrollArea-content"

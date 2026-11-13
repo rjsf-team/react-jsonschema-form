@@ -1480,7 +1480,7 @@ exports[`array fields > checkboxes 1`] = `
                 id="select:root:select"
                 multiple=""
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -1563,7 +1563,7 @@ exports[`array fields > checkboxes 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -5367,7 +5367,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 id="select:root:select"
                 multiple=""
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -5450,7 +5450,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -6047,7 +6047,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                                 checked=""
                                 id="root_2"
                                 name="root[2]"
-                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                 type="checkbox"
                                 value="on"
                               />
@@ -11728,7 +11728,7 @@ exports[`with title and description > checkboxes 1`] = `
                 id="select:root:select"
                 multiple=""
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -11811,7 +11811,7 @@ exports[`with title and description > checkboxes 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-labelledby="root__label"
@@ -14220,7 +14220,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 id="select:root:select"
                 multiple=""
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -14303,7 +14303,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-labelledby="root__label"
@@ -16712,7 +16712,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 id="select:root:select"
                 multiple=""
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -16795,7 +16795,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-labelledby="root__label"
@@ -18920,7 +18920,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 id="select:root:select"
                 multiple=""
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -19003,7 +19003,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Test field"

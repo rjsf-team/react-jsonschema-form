@@ -37,10 +37,10 @@
     "react": ">=19"
   },
   "devDependencies": {
-    "@fluentui/react-combobox": "^9.17.8",
-    "@fluentui/react-components": "^9.75.1",
+    "@fluentui/react-combobox": "^9.17.9",
+    "@fluentui/react-components": "^9.75.2",
     "@fluentui/react-icons": "^2.0.345",
-    "@fluentui/react-migration-v0-v9": "^9.6.42",
+    "@fluentui/react-migration-v0-v9": "^9.6.43",
     "@rjsf/core": "workspace:^",
     "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^",

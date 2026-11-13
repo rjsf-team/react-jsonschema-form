@@ -1034,7 +1034,7 @@ exports[`array fields > has errors 1`] = `
             style="margin: 0px; padding: 0px; list-style: none;"
           >
             <li
-              style="display: flex; align-items: center; padding: 8px 16px; color: rgba(0, 0, 0, 0.88); border-block-end: none;"
+              style="display: flex; align-items: center; padding: 8px 16px; color: rgba(0, 0, 0, 0.88); border-block-end: medium;"
             >
               <div
                 class="ant-space css-dev-only-do-not-override-i19pbt ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small css-var-root"
@@ -1185,6 +1185,7 @@ exports[`array fields > has errors 1`] = `
                               </div>
                               <div
                                 class="ant-form-item-additional"
+                                style="min-height: 24px;"
                               >
                                 <div
                                   class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-i19pbt"
@@ -1205,6 +1206,10 @@ exports[`array fields > has errors 1`] = `
                               </div>
                             </div>
                           </div>
+                          <div
+                            class="ant-form-item-margin-offset"
+                            style="margin-bottom: -24px;"
+                          />
                         </div>
                       </div>
                     </div>

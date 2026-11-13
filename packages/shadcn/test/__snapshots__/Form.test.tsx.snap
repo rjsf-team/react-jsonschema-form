@@ -1284,7 +1284,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
               dir="ltr"
               id="root_option"
               role="radiogroup"
-              style="outline: none;"
+              style="outline: medium;"
               tabindex="0"
             >
               <div
@@ -2916,7 +2916,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
           dir="ltr"
           id="root"
           role="radiogroup"
-          style="outline: none;"
+          style="outline: medium;"
           tabindex="0"
         >
           <div
@@ -9340,7 +9340,7 @@ exports[`single fields > radio field 1`] = `
           dir="ltr"
           id="root"
           role="radiogroup"
-          style="outline: none;"
+          style="outline: medium;"
           tabindex="0"
         >
           <div
@@ -9459,7 +9459,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
           dir="ltr"
           id="root"
           role="radiogroup"
-          style="outline: none;"
+          style="outline: medium;"
           tabindex="0"
         >
           <div
@@ -10453,7 +10453,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
           dir="ltr"
           id="root"
           role="radiogroup"
-          style="outline: none;"
+          style="outline: medium;"
           tabindex="0"
         >
           <div
@@ -10561,7 +10561,7 @@ exports[`single fields > select field single choice form disabled using radio wi
           dir="ltr"
           id="root"
           role="radiogroup"
-          style="outline: none;"
+          style="outline: medium;"
           tabindex="-1"
         >
           <div
@@ -10901,7 +10901,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
           dir="ltr"
           id="root"
           role="radiogroup"
-          style="outline: none;"
+          style="outline: medium;"
           tabindex="-1"
         >
           <div
@@ -11355,7 +11355,7 @@ exports[`single fields > slider field 1`] = `
             class="bg-primary absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
             data-orientation="horizontal"
             data-slot="slider-range"
-            style="left: 0%; right: 43.10344827586207%;"
+            style="left: 0%; right: 43.1034%;"
           />
         </span>
         <span

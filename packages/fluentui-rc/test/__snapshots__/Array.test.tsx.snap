@@ -450,7 +450,7 @@ exports[`array fields > checkboxes 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -1572,7 +1572,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -4262,7 +4262,7 @@ exports[`with title and description > checkboxes 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -5043,7 +5043,7 @@ exports[`with title and description from both > checkboxes 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -5824,7 +5824,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"
@@ -6497,7 +6497,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               value=""
             >
               <span
-                class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
               >
                 <svg
                   aria-hidden="true"

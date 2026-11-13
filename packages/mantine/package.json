@@ -34,9 +34,9 @@
     "react": ">=19.2"
   },
   "devDependencies": {
-    "@mantine/core": "^9.7.5",
-    "@mantine/dates": "^9.7.5",
-    "@mantine/hooks": "^9.7.5",
+    "@mantine/core": "^9.8.0",
+    "@mantine/dates": "^9.8.0",
+    "@mantine/hooks": "^9.8.0",
     "@rjsf/core": "workspace:^",
     "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^",

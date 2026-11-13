@@ -2048,7 +2048,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       >
                         foo
                         <span
-                          class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                          class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         >
                           <svg
                             aria-hidden="true"
@@ -2069,7 +2069,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       </button>
                       <button
                         aria-label="Clear selection"
-                        class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                        class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         type="button"
                       >
                         <svg
@@ -3004,7 +3004,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       >
                         foo
                         <span
-                          class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                          class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         >
                           <svg
                             aria-hidden="true"
@@ -3025,7 +3025,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       </button>
                       <button
                         aria-label="Clear selection"
-                        class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                        class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         type="button"
                       >
                         <svg
@@ -3211,7 +3211,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       >
                         foo
                         <span
-                          class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                          class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         >
                           <svg
                             aria-hidden="true"
@@ -3232,7 +3232,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       </button>
                       <button
                         aria-label="Clear selection"
-                        class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                        class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                         type="button"
                       >
                         <svg
@@ -3782,7 +3782,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                 >
                   Dog
                   <span
-                    class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                    class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                   >
                     <svg
                       aria-hidden="true"
@@ -3803,7 +3803,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                 </button>
                 <button
                   aria-label="Clear selection"
-                  class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                  class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                   type="button"
                 >
                   <svg

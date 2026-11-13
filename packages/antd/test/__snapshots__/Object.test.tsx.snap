@@ -5952,6 +5952,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
+                                    style="min-height: 24px;"
                                   >
                                     <div
                                       class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-i19pbt"
@@ -5972,6 +5973,10 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                                   </div>
                                 </div>
                               </div>
+                              <div
+                                class="ant-form-item-margin-offset"
+                                style="margin-bottom: -24px;"
+                              />
                             </div>
                           </div>
                           <div

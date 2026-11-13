@@ -7300,7 +7300,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-159:focus::-ms-input
                             aria-hidden="true"
                             class="MuiInputBase-input MuiOutlinedInput-input emotion-159"
                             readonly=""
-                            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
+                            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0px); padding-top: 0px; padding-bottom: 0px; width: 100%;"
                             tabindex="-1"
                           />
                           <fieldset

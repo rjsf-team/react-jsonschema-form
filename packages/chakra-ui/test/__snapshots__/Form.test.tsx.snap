@@ -1240,7 +1240,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                         aria-labelledby="field::root_tasks_0_done::label"
                                                         id="root_tasks_0_done"
                                                         name="root[tasks][0][done]"
-                                                        style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                                        style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                                         type="checkbox"
                                                         value="on"
                                                       />
@@ -1508,7 +1508,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                         checked=""
                                                         id="root_tasks_1_done"
                                                         name="root[tasks][1][done]"
-                                                        style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                                        style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                                         type="checkbox"
                                                         value="on"
                                                       />
@@ -2975,7 +2975,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                                 aria-labelledby="checkbox:root_choices__0:label"
                                 id="root_choices__0"
                                 name="root[choices][]"
-                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                 type="checkbox"
                                 value="0"
                               />
@@ -3021,7 +3021,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                                 aria-labelledby="checkbox:root_choices__1:label"
                                 id="root_choices__1"
                                 name="root[choices][]"
-                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                 type="checkbox"
                                 value="1"
                               />
@@ -3067,7 +3067,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                                 aria-labelledby="checkbox:root_choices__2:label"
                                 id="root_choices__2"
                                 name="root[choices][]"
-                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                 type="checkbox"
                                 value="2"
                               />
@@ -4081,7 +4081,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                                 data-ownedby="root_option"
                                 id="root_option__0"
                                 name="root[option]"
-                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                 type="radio"
                                 value="0"
                               />
@@ -4125,7 +4125,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                                 data-ownedby="root_option"
                                 id="root_option__1"
                                 name="root[option]"
-                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                 type="radio"
                                 value="1"
                               />
@@ -4732,7 +4732,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                             aria-labelledby="root_color__label"
                             id="select:root_color:select"
                             name="root[color]"
-                            style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                            style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                             tabindex="-1"
                           >
                             <option
@@ -4814,7 +4814,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                             data-scope="select"
                             dir="ltr"
                             id="select:root_color:positioner"
-                            style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                            style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                           >
                             <div
                               aria-labelledby="root_color__label"
@@ -5446,7 +5446,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                             aria-labelledby="field::root_active::label"
                             id="root_active"
                             name="root[active]"
-                            style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                            style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                             type="checkbox"
                             value="on"
                           />
@@ -6578,7 +6578,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                         aria-labelledby="field::root_tasks_0_done::label"
                                                         id="root_tasks_0_done"
                                                         name="root.tasks.0.done"
-                                                        style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                                        style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                                         type="checkbox"
                                                         value="on"
                                                       />
@@ -6846,7 +6846,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                         checked=""
                                                         id="root_tasks_1_done"
                                                         name="root.tasks.1.done"
-                                                        style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                                        style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                                         type="checkbox"
                                                         value="on"
                                                       />
@@ -9045,7 +9045,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                             aria-labelledby="root_color__label"
                             id="select:root_color:select"
                             name="root.color"
-                            style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                            style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                             tabindex="-1"
                           >
                             <option
@@ -9127,7 +9127,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                             data-scope="select"
                             dir="ltr"
                             id="select:root_color:positioner"
-                            style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                            style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                           >
                             <div
                               aria-labelledby="root_color__label"
@@ -9759,7 +9759,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                             aria-labelledby="field::root_active::label"
                             id="root_active"
                             name="root.active"
-                            style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                            style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                             type="checkbox"
                             value="on"
                           />
@@ -10129,7 +10129,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                     data-ownedby="root"
                     id="root__0"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="__rjsf_index:0"
                   />
@@ -10174,7 +10174,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                     data-ownedby="root"
                     id="root__1"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="__rjsf_index:1"
                   />
@@ -10840,7 +10840,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                   aria-labelledby="root_region__label"
                                   id="select:root_region__oneof_select:select"
                                   name="root_region__oneof_select"
-                                  style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                  style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                   tabindex="-1"
                                 >
                                   <option
@@ -10916,7 +10916,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                   data-scope="select"
                                   dir="ltr"
                                   id="select:root_region__oneof_select:positioner"
-                                  style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                                  style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                                 >
                                   <div
                                     aria-labelledby="root_region__label"
@@ -11033,7 +11033,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                       aria-labelledby="root_region__optionLabel"
                                       id="select:root_region:select"
                                       name="root_region"
-                                      style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                      style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                       tabindex="-1"
                                     >
                                       <option
@@ -11109,7 +11109,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                       data-scope="select"
                                       dir="ltr"
                                       id="select:root_region:positioner"
-                                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                                     >
                                       <div
                                         aria-labelledby="root_region__optionLabel"
@@ -11695,7 +11695,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -11767,7 +11767,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -12313,7 +12313,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -12395,7 +12395,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -13001,7 +13001,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -13083,7 +13083,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -13689,7 +13689,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -13766,7 +13766,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -14342,7 +14342,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -14419,7 +14419,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -14995,7 +14995,7 @@ exports[`select widget with options sharing a String() in the realValue format (
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -15072,7 +15072,7 @@ exports[`select widget with options sharing a String() in the realValue format (
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -15958,7 +15958,7 @@ exports[`single fields > checkbox field 1`] = `
                 aria-labelledby=""
                 id="root"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 type="checkbox"
                 value="on"
               />
@@ -16308,7 +16308,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
                 aria-labelledby="field::root::label"
                 id="root"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 type="checkbox"
                 value="on"
               />
@@ -16659,7 +16659,7 @@ exports[`single fields > checkbox field with label 1`] = `
                 aria-labelledby="field::root::label"
                 id="root"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 type="checkbox"
                 value="on"
               />
@@ -17021,7 +17021,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
                 aria-labelledby="field::root::label"
                 id="root"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 type="checkbox"
                 value="on"
               />
@@ -17391,7 +17391,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
                 aria-labelledby="field::root::label"
                 id="root"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 type="checkbox"
                 value="on"
               />
@@ -17795,7 +17795,7 @@ exports[`single fields > checkboxes field 1`] = `
                     aria-labelledby="checkbox:root__0:label"
                     id="root__0"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="0"
                   />
@@ -17841,7 +17841,7 @@ exports[`single fields > checkboxes field 1`] = `
                     aria-labelledby="checkbox:root__1:label"
                     id="root__1"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="1"
                   />
@@ -17887,7 +17887,7 @@ exports[`single fields > checkboxes field 1`] = `
                     aria-labelledby="checkbox:root__2:label"
                     id="root__2"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="2"
                   />
@@ -17933,7 +17933,7 @@ exports[`single fields > checkboxes field 1`] = `
                     aria-labelledby="checkbox:root__3:label"
                     id="root__3"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="3"
                   />
@@ -18381,7 +18381,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     checked=""
                     id="root__0"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="0"
                   />
@@ -18432,7 +18432,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     aria-labelledby="checkbox:root__1:label"
                     id="root__1"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="1"
                   />
@@ -18479,7 +18479,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     aria-labelledby="checkbox:root__2:label"
                     id="root__2"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="2"
                   />
@@ -18920,7 +18920,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     aria-labelledby="checkbox:root__0:label"
                     id="root__0"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="0"
                   />
@@ -18967,7 +18967,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     aria-labelledby="checkbox:root__1:label"
                     id="root__1"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="1"
                   />
@@ -19014,7 +19014,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     aria-labelledby="checkbox:root__2:label"
                     id="root__2"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="2"
                   />
@@ -24591,7 +24591,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   aria-labelledby="root_optionalObjectWithOneofs__label"
                                   id="select:root_optionalObjectWithOneofs__oneof_select:select"
                                   name="root_optionalObjectWithOneofs__oneof_select"
-                                  style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                  style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                   tabindex="-1"
                                 >
                                   <option
@@ -24672,7 +24672,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   data-scope="select"
                                   dir="ltr"
                                   id="select:root_optionalObjectWithOneofs__oneof_select:positioner"
-                                  style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                                  style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                                 >
                                   <div
                                     aria-labelledby="root_optionalObjectWithOneofs__label"
@@ -24911,7 +24911,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   aria-labelledby="root_optionalArrayWithAnyofs__label"
                                   id="select:root_optionalArrayWithAnyofs__anyof_select:select"
                                   name="root_optionalArrayWithAnyofs__anyof_select"
-                                  style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                  style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                   tabindex="-1"
                                 >
                                   <option
@@ -24992,7 +24992,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   data-scope="select"
                                   dir="ltr"
                                   id="select:root_optionalArrayWithAnyofs__anyof_select:positioner"
-                                  style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                                  style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                                 >
                                   <div
                                     aria-labelledby="root_optionalArrayWithAnyofs__label"
@@ -26761,7 +26761,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   disabled=""
                                   id="select:root_optionalObjectWithOneofs__oneof_select:select"
                                   name="root_optionalObjectWithOneofs__oneof_select"
-                                  style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                  style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                   tabindex="-1"
                                 >
                                   <option
@@ -26849,7 +26849,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   data-scope="select"
                                   dir="ltr"
                                   id="select:root_optionalObjectWithOneofs__oneof_select:positioner"
-                                  style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                                  style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                                 >
                                   <div
                                     aria-labelledby="root_optionalObjectWithOneofs__label"
@@ -27100,7 +27100,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   disabled=""
                                   id="select:root_optionalArrayWithAnyofs__anyof_select:select"
                                   name="root_optionalArrayWithAnyofs__anyof_select"
-                                  style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                  style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                                   tabindex="-1"
                                 >
                                   <option
@@ -27188,7 +27188,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   data-scope="select"
                                   dir="ltr"
                                   id="select:root_optionalArrayWithAnyofs__anyof_select:positioner"
-                                  style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                                  style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                                 >
                                   <div
                                     aria-labelledby="root_optionalArrayWithAnyofs__label"
@@ -33255,7 +33255,7 @@ exports[`single fields > radio field 1`] = `
                     data-ownedby="root"
                     id="root__0"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="0"
                   />
@@ -33299,7 +33299,7 @@ exports[`single fields > radio field 1`] = `
                     data-ownedby="root"
                     id="root__1"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="1"
                   />
@@ -33729,7 +33729,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                     data-ownedby="root"
                     id="root__0"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="0"
                   />
@@ -33774,7 +33774,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                     data-ownedby="root"
                     id="root__1"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="1"
                   />
@@ -34161,7 +34161,7 @@ exports[`single fields > required checkbox field 1`] = `
                             aria-labelledby="field::root_agree::label"
                             id="root_agree"
                             name="root_agree"
-                            style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                            style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                             type="checkbox"
                             value="on"
                           />
@@ -34557,7 +34557,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
                             checked=""
                             id="root_agree"
                             name="root_agree"
-                            style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                            style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                             type="checkbox"
                             value="on"
                           />
@@ -35625,7 +35625,7 @@ exports[`single fields > select field 1`] = `
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -35703,7 +35703,7 @@ exports[`single fields > select field 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -36281,7 +36281,7 @@ exports[`single fields > select field multiple choice 1`] = `
                 id="select:root:select"
                 multiple=""
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -36369,7 +36369,7 @@ exports[`single fields > select field multiple choice 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -37008,7 +37008,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 id="select:root:select"
                 multiple=""
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -37097,7 +37097,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -37590,7 +37590,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     aria-labelledby="checkbox:root__0:label"
                     id="root__0"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="0"
                   />
@@ -37638,7 +37638,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     disabled=""
                     id="root__1"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="1"
                   />
@@ -37687,7 +37687,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     aria-labelledby="checkbox:root__2:label"
                     id="root__2"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="2"
                   />
@@ -37733,7 +37733,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     aria-labelledby="checkbox:root__3:label"
                     id="root__3"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="checkbox"
                     value="3"
                   />
@@ -38267,7 +38267,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 id="select:root:select"
                 multiple=""
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -38355,7 +38355,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -38992,7 +38992,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 id="select:root:select"
                 multiple=""
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -39075,7 +39075,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -39683,7 +39683,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -39762,7 +39762,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -40174,7 +40174,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                     data-ownedby="root"
                     id="root__0"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="0"
                   />
@@ -40220,7 +40220,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                     disabled=""
                     id="root__1"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="1"
                   />
@@ -40591,7 +40591,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     disabled=""
                     id="root__0"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="0"
                   />
@@ -40639,7 +40639,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     disabled=""
                     id="root__1"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="1"
                   />
@@ -41171,7 +41171,7 @@ exports[`single fields > select field single choice formData 1`] = `
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -41248,7 +41248,7 @@ exports[`single fields > select field single choice formData 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -41842,7 +41842,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -41930,7 +41930,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -42625,7 +42625,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -42714,7 +42714,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -43233,7 +43233,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     disabled=""
                     id="root__0"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="0"
                   />
@@ -43281,7 +43281,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     disabled=""
                     id="root__1"
                     name="root"
-                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                    style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                     type="radio"
                     value="1"
                   />
@@ -43880,7 +43880,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                 aria-labelledby="root__label"
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -43958,7 +43958,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-labelledby="root__label"
@@ -44544,7 +44544,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -44622,7 +44622,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -45198,7 +45198,7 @@ exports[`single fields > select widget with selected oneOf option description an
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -45275,7 +45275,7 @@ exports[`single fields > select widget with selected oneOf option description an
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -45891,7 +45891,7 @@ exports[`single fields > select widget with selected oneOf option description be
                 aria-labelledby=""
                 id="select:root:select"
                 name="root"
-                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -45969,7 +45969,7 @@ exports[`single fields > select widget with selected oneOf option description be
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
               >
                 <div
                   aria-label="Select ..."
@@ -46386,7 +46386,7 @@ exports[`single fields > slider field 1`] = `
                 data-scope="slider"
                 dir="ltr"
                 id="slider:root:control"
-                style="touch-action: none; user-select: none; -webkit-user-select: none; position: relative;"
+                style="touch-action: none; user-select: none; position: relative;"
               >
                 <div
                   class="chakra-slider__track emotion-5"
@@ -51883,7 +51883,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                             aria-labelledby="root_answer__label"
                             id="select:root_answer:select"
                             name="root_answer"
-                            style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                            style="border: 0px; clip: rect(0px 0px 0px 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;"
                             tabindex="-1"
                           >
                             <option
@@ -51959,7 +51959,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                             data-scope="select"
                             dir="ltr"
                             id="select:root_answer:positioner"
-                            style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
+                            style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0px, -100vh, 0px);"
                           >
                             <div
                               aria-labelledby="root_answer__label"

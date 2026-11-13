@@ -13,10 +13,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
       >
         <div
           class="fui-Grid ___1jjz2ji_698obq0 f13qh94s figf6al f14wuttv"
-          style="column-gap: 5px; row-gap: 5px; grid-template-rows: repeat(1, 1fr); grid-template-columns: repeat(12, 1fr);"
+          style="gap: 5px; grid-template-rows: repeat(1, 1fr); grid-template-columns: repeat(12, 1fr);"
         >
           <div
-            style="grid-row: 1 / auto; grid-column: 1 / span 12;"
+            style="grid-area: 1 / 1 / auto / span 12;"
           >
             <div
               class="rjsf-field rjsf-field-object"
@@ -47,7 +47,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 2 / 1 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -84,7 +84,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 5 / span 4;"
+            style="grid-area: 2 / 5 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -114,7 +114,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 9 / span 4;"
+            style="grid-area: 2 / 9 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -151,7 +151,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 3 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 3 / 1 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -188,7 +188,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 3 / auto; grid-column: 5 / span 8; margin-top: 3px;"
+            style="grid-area: 3 / 5 / auto / span 8; margin-top: 3px;"
           >
             <div
               class="rjsf-field rjsf-field-array"
@@ -334,16 +334,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 4 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 4 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 5 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 5 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 6 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 6 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 4 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 4 / 1 / auto / span 4;"
           >
             <div
               class="rjsf-field rjsf-field-object"
@@ -353,7 +353,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               >
                 <div
                   class="fui-Grid row ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-                  style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+                  style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
                 >
                   <div>
                     <div
@@ -455,7 +455,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-                    style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+                    style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
                   >
                     <div>
                       <div
@@ -497,7 +497,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 value=""
                               >
                                 <span
-                                  class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                                  class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                                 >
                                   <svg
                                     aria-hidden="true"
@@ -518,7 +518,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </button>
                               <button
                                 aria-label="Clear selection"
-                                class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                                class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                                 type="button"
                               >
                                 <svg
@@ -584,7 +584,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
           <div
             class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-            style="grid-row: 4 / auto; grid-column: 6 / span 7; grid-template-columns: repeat(12, minmax(0, 1fr));"
+            style="grid-area: 4 / 6 / auto / span 7; grid-template-columns: repeat(12, minmax(0px, 1fr));"
           >
             <div
               style="padding: 3px 0px;"
@@ -740,7 +740,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-              style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+              style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
             >
               <div>
                 <div
@@ -817,7 +817,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           value=""
                         >
                           <span
-                            class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                            class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                           >
                             <svg
                               aria-hidden="true"
@@ -838,7 +838,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </button>
                         <button
                           aria-label="Clear selection"
-                          class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                          class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                           type="button"
                         >
                           <svg
@@ -894,10 +894,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
       >
         <div
           class="fui-Grid ___1jjz2ji_698obq0 f13qh94s figf6al f14wuttv"
-          style="column-gap: 5px; row-gap: 5px; grid-template-rows: repeat(1, 1fr); grid-template-columns: repeat(12, 1fr);"
+          style="gap: 5px; grid-template-rows: repeat(1, 1fr); grid-template-columns: repeat(12, 1fr);"
         >
           <div
-            style="grid-row: 1 / auto; grid-column: 1 / span 12;"
+            style="grid-area: 1 / 1 / auto / span 12;"
           >
             <div
               class="rjsf-field rjsf-field-object"
@@ -928,7 +928,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 2 / 1 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -965,7 +965,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 5 / span 4;"
+            style="grid-area: 2 / 5 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -995,7 +995,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 9 / span 4;"
+            style="grid-area: 2 / 9 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -1032,7 +1032,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 3 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 3 / 1 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -1069,7 +1069,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 3 / auto; grid-column: 5 / span 8; margin-top: 3px;"
+            style="grid-area: 3 / 5 / auto / span 8; margin-top: 3px;"
           >
             <div
               class="rjsf-field rjsf-field-array"
@@ -1215,16 +1215,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 4 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 4 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 5 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 5 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 6 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 6 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 4 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 4 / 1 / auto / span 4;"
           >
             <div
               class="rjsf-field rjsf-field-object"
@@ -1234,7 +1234,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               >
                 <div
                   class="fui-Grid row ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-                  style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+                  style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
                 >
                   <div>
                     <div
@@ -1336,7 +1336,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-                    style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+                    style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
                   >
                     <div>
                       <div
@@ -1378,7 +1378,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 value=""
                               >
                                 <span
-                                  class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                                  class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                                 >
                                   <svg
                                     aria-hidden="true"
@@ -1399,7 +1399,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </button>
                               <button
                                 aria-label="Clear selection"
-                                class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                                class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                                 type="button"
                               >
                                 <svg
@@ -1465,7 +1465,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
           <div
             class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-            style="grid-row: 4 / auto; grid-column: 6 / span 7; grid-template-columns: repeat(12, minmax(0, 1fr));"
+            style="grid-area: 4 / 6 / auto / span 7; grid-template-columns: repeat(12, minmax(0px, 1fr));"
           >
             <div
               style="padding: 3px 0px;"
@@ -1649,7 +1649,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-              style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+              style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
             >
               <div>
                 <div
@@ -1726,7 +1726,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           value=""
                         >
                           <span
-                            class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                            class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                           >
                             <svg
                               aria-hidden="true"
@@ -1747,7 +1747,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </button>
                         <button
                           aria-label="Clear selection"
-                          class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                          class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                           type="button"
                         >
                           <svg
@@ -1803,10 +1803,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
       >
         <div
           class="fui-Grid ___1jjz2ji_698obq0 f13qh94s figf6al f14wuttv"
-          style="column-gap: 5px; row-gap: 5px; grid-template-rows: repeat(1, 1fr); grid-template-columns: repeat(12, 1fr);"
+          style="gap: 5px; grid-template-rows: repeat(1, 1fr); grid-template-columns: repeat(12, 1fr);"
         >
           <div
-            style="grid-row: 1 / auto; grid-column: 1 / span 12;"
+            style="grid-area: 1 / 1 / auto / span 12;"
           >
             <div
               class="rjsf-field rjsf-field-object"
@@ -1837,7 +1837,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 2 / 1 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -1874,7 +1874,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 5 / span 4;"
+            style="grid-area: 2 / 5 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -1904,7 +1904,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 9 / span 4;"
+            style="grid-area: 2 / 9 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -1941,7 +1941,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 3 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 3 / 1 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -1978,7 +1978,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 3 / auto; grid-column: 5 / span 8; margin-top: 3px;"
+            style="grid-area: 3 / 5 / auto / span 8; margin-top: 3px;"
           >
             <div
               class="rjsf-field rjsf-field-array"
@@ -2124,16 +2124,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 4 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 4 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 5 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 5 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 6 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 6 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 4 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 4 / 1 / auto / span 4;"
           >
             <div
               class="rjsf-field rjsf-field-object"
@@ -2143,7 +2143,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               >
                 <div
                   class="fui-Grid row ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-                  style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+                  style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
                 >
                   <div>
                     <div
@@ -2245,7 +2245,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-                    style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+                    style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
                   >
                     <div>
                       <div
@@ -2287,7 +2287,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 value=""
                               >
                                 <span
-                                  class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                                  class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                                 >
                                   <svg
                                     aria-hidden="true"
@@ -2308,7 +2308,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </button>
                               <button
                                 aria-label="Clear selection"
-                                class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                                class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                                 type="button"
                               >
                                 <svg
@@ -2374,7 +2374,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
           <div
             class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-            style="grid-row: 4 / auto; grid-column: 6 / span 7; grid-template-columns: repeat(12, minmax(0, 1fr));"
+            style="grid-area: 4 / 6 / auto / span 7; grid-template-columns: repeat(12, minmax(0px, 1fr));"
           >
             <div
               style="padding: 3px 0px;"
@@ -2530,10 +2530,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
       >
         <div
           class="fui-Grid ___1jjz2ji_698obq0 f13qh94s figf6al f14wuttv"
-          style="column-gap: 5px; row-gap: 5px; grid-template-rows: repeat(1, 1fr); grid-template-columns: repeat(12, 1fr);"
+          style="gap: 5px; grid-template-rows: repeat(1, 1fr); grid-template-columns: repeat(12, 1fr);"
         >
           <div
-            style="grid-row: 1 / auto; grid-column: 1 / span 12;"
+            style="grid-area: 1 / 1 / auto / span 12;"
           >
             <div
               class="rjsf-field rjsf-field-object"
@@ -2564,7 +2564,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 2 / 1 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -2601,7 +2601,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 5 / span 4;"
+            style="grid-area: 2 / 5 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -2631,7 +2631,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 2 / auto; grid-column: 9 / span 4;"
+            style="grid-area: 2 / 9 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -2668,7 +2668,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 3 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 3 / 1 / auto / span 4;"
           >
             <div
               class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
@@ -2705,7 +2705,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 3 / auto; grid-column: 5 / span 8; margin-top: 3px;"
+            style="grid-area: 3 / 5 / auto / span 8; margin-top: 3px;"
           >
             <div
               class="rjsf-field rjsf-field-array"
@@ -2851,16 +2851,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            style="grid-row: 4 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 4 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 5 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 5 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 6 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 6 / 1 / auto / span 4;"
           />
           <div
-            style="grid-row: 4 / auto; grid-column: 1 / span 4;"
+            style="grid-area: 4 / 1 / auto / span 4;"
           >
             <div
               class="rjsf-field rjsf-field-object"
@@ -2870,7 +2870,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               >
                 <div
                   class="fui-Grid row ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-                  style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+                  style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
                 >
                   <div>
                     <div
@@ -2972,7 +2972,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-                    style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+                    style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
                   >
                     <div>
                       <div
@@ -3014,7 +3014,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 value=""
                               >
                                 <span
-                                  class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                                  class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                                 >
                                   <svg
                                     aria-hidden="true"
@@ -3035,7 +3035,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </button>
                               <button
                                 aria-label="Clear selection"
-                                class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                                class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                                 type="button"
                               >
                                 <svg
@@ -3101,7 +3101,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
           <div
             class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-            style="grid-row: 4 / auto; grid-column: 6 / span 7; grid-template-columns: repeat(12, minmax(0, 1fr));"
+            style="grid-area: 4 / 6 / auto / span 7; grid-template-columns: repeat(12, minmax(0px, 1fr));"
           >
             <div
               style="padding: 3px 0px;"
@@ -3257,7 +3257,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-              style="grid-template-columns: repeat(12, minmax(0, 1fr));"
+              style="grid-template-columns: repeat(12, minmax(0px, 1fr));"
             >
               <div>
                 <div
@@ -3334,7 +3334,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           value=""
                         >
                           <span
-                            class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                            class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                           >
                             <svg
                               aria-hidden="true"
@@ -3355,7 +3355,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </button>
                         <button
                           aria-label="Clear selection"
-                          class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                          class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                           type="button"
                         >
                           <svg
@@ -3411,7 +3411,7 @@ exports[`Three even column grid > renders person and address in three columns, n
       >
         <div
           class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-          style="column-gap: 5px; row-gap: 5px; grid-template-columns: repeat(12, minmax(0, 1fr));"
+          style="gap: 5px; grid-template-columns: repeat(12, minmax(0px, 1fr));"
         >
           <div
             style="grid-column: span 12 / span 12;"
@@ -3877,7 +3877,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       value=""
                     >
                       <span
-                        class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                        class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                       >
                         <svg
                           aria-hidden="true"
@@ -3898,7 +3898,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </button>
                     <button
                       aria-label="Clear selection"
-                      class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                      class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                       type="button"
                     >
                       <svg
@@ -3955,7 +3955,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
       >
         <div
           class="fui-Grid ___1vjup46_16fzhor f13qh94s figf6al f14wuttv f1ijyzbq"
-          style="column-gap: 5px; row-gap: 5px; grid-template-columns: repeat(12, minmax(0, 1fr));"
+          style="gap: 5px; grid-template-columns: repeat(12, minmax(0px, 1fr));"
         >
           <div
             style="grid-column: span 12 / span 12;"
@@ -4421,7 +4421,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       value=""
                     >
                       <span
-                        class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                        class="fui-Dropdown__expandIcon ___1tz2vmy_19jha45 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                       >
                         <svg
                           aria-hidden="true"
@@ -4442,7 +4442,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </button>
                     <button
                       aria-label="Clear selection"
-                      class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                      class="fui-Dropdown__clearButton rticfuj ___1oe5c1h_1ldcihi f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt f1amoxe3 f1h9en5y"
                       type="button"
                     >
                       <svg

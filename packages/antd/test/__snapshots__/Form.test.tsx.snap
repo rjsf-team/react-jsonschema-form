@@ -6499,6 +6499,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             </div>
             <div
               class="ant-form-item-additional"
+              style="min-height: 24px;"
             >
               <div
                 class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-i19pbt"
@@ -6527,6 +6528,10 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             </div>
           </div>
         </div>
+        <div
+          class="ant-form-item-margin-offset"
+          style="margin-bottom: -24px;"
+        />
       </div>
     </div>
     <button
@@ -7496,7 +7501,7 @@ exports[`single fields > help and error display 1`] = `
             style="margin: 0px; padding: 0px; list-style: none;"
           >
             <li
-              style="display: flex; align-items: center; padding: 8px 16px; color: rgba(0, 0, 0, 0.88); border-block-end: none;"
+              style="display: flex; align-items: center; padding: 8px 16px; color: rgba(0, 0, 0, 0.88); border-block-end: medium;"
             >
               <div
                 class="ant-space css-dev-only-do-not-override-i19pbt ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small css-var-root"
@@ -7603,6 +7608,7 @@ exports[`single fields > help and error display 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
+              style="min-height: 24px;"
             >
               <div
                 class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-i19pbt"
@@ -7630,6 +7636,10 @@ exports[`single fields > help and error display 1`] = `
             </div>
           </div>
         </div>
+        <div
+          class="ant-form-item-margin-offset"
+          style="margin-bottom: -24px;"
+        />
       </div>
     </div>
     <button
@@ -16541,7 +16551,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                         <span
                           aria-hidden="true"
                           class="ant-select-selection-item-remove"
-                          style="user-select: none; -webkit-user-select: none;"
+                          style="user-select: none;"
                           unselectable="on"
                         >
                           <span
@@ -16583,7 +16593,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                         <span
                           aria-hidden="true"
                           class="ant-select-selection-item-remove"
-                          style="user-select: none; -webkit-user-select: none;"
+                          style="user-select: none;"
                           unselectable="on"
                         >
                           <span
@@ -17884,7 +17894,7 @@ exports[`single fields > slider field 1`] = `
                   />
                   <div
                     class="ant-slider-track"
-                    style="left: 0%; width: 56.896551724137936%;"
+                    style="left: 0%; width: 56.8966%;"
                   />
                   <div
                     class="ant-slider-step"
@@ -17897,7 +17907,7 @@ exports[`single fields > slider field 1`] = `
                     aria-valuenow="75"
                     class="ant-slider-handle"
                     role="slider"
-                    style="left: 56.896551724137936%; transform: translateX(-50%);"
+                    style="left: 56.8966%; transform: translateX(-50%);"
                     tabindex="0"
                   />
                 </div>
@@ -17983,6 +17993,7 @@ exports[`single fields > string field > field with markdown help and description
             </div>
             <div
               class="ant-form-item-additional"
+              style="min-height: 24px;"
             >
               <div
                 class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-i19pbt"
@@ -18031,6 +18042,10 @@ exports[`single fields > string field > field with markdown help and description
             </div>
           </div>
         </div>
+        <div
+          class="ant-form-item-margin-offset"
+          style="margin-bottom: -24px;"
+        />
       </div>
     </div>
     <button
@@ -18104,6 +18119,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
+              style="min-height: 24px;"
             >
               <div
                 class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-i19pbt"
@@ -18143,6 +18159,10 @@ exports[`single fields > string field > field with markdown help text 1`] = `
             </div>
           </div>
         </div>
+        <div
+          class="ant-form-item-margin-offset"
+          style="margin-bottom: -24px;"
+        />
       </div>
     </div>
     <button
@@ -18216,6 +18236,7 @@ exports[`single fields > string field > field with markdown help text without a 
             </div>
             <div
               class="ant-form-item-additional"
+              style="min-height: 24px;"
             >
               <div
                 class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-i19pbt"
@@ -18244,6 +18265,10 @@ exports[`single fields > string field > field with markdown help text without a 
             </div>
           </div>
         </div>
+        <div
+          class="ant-form-item-margin-offset"
+          style="margin-bottom: -24px;"
+        />
       </div>
     </div>
     <button
@@ -18547,6 +18572,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
             </div>
             <div
               class="ant-form-item-additional"
+              style="min-height: 24px;"
             >
               <div
                 class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-i19pbt"
@@ -18581,6 +18607,10 @@ exports[`single fields > string field > required field with markdown help 1`] = 
             </div>
           </div>
         </div>
+        <div
+          class="ant-form-item-margin-offset"
+          style="margin-bottom: -24px;"
+        />
       </div>
     </div>
     <button
