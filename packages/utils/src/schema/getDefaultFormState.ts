@@ -1184,7 +1184,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       const matching =
         rawFormData === undefined && defaultFormStateBehavior?.constAsDefaults === 'always' && fieldConst !== undefined
           ? fieldConst
-          : viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
+          : viewFormDataMatching<unknown, S, F>(context, view, rawFormData, defaults);
       if (isObject(rawFormData) && matching !== undefined && initialDefaultsGenerated && !mergedAllOf) {
         // Once the form has generated its defaults, the object data of an untyped field is the user's as it stands, as
         // the extra keys of an object field are (#3759), so a nested object they cleared isn't filled in again
@@ -1808,13 +1808,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     if (isObject(defaults) && formDataRequired.length === 0) {
       Object.keys(defaults)
         .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
-        .forEach((key) => {
-          if (!declaredInAllOf(key)) {
-            keys.add(key);
-          } else if (!Object.hasOwn(formData, key) && isPinned(key)) {
-            setOwn(computed, key, defaults[key]);
-          }
-        });
+        .filter((key) => !declaredInAllOf(key))
+        .forEach((key) => keys.add(key));
     }
     [...keys].filter(isPinned).forEach((key) => {
       const { value, holdsNull } = foldReporting(
@@ -1871,6 +1866,30 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         }
       });
   }
+  // A key only an `allOf` the plan left unmerged declares takes the object's default where the data lacks it, as a
+  // property of the object's own does, whatever the object says about other keys
+  if (isObject(defaults)) {
+    Object.keys(defaults)
+      .filter(
+        (key) =>
+          !Object.hasOwn(formData, key) &&
+          !Object.hasOwn(computed, key) &&
+          (!schema.properties || !Object.hasOwn(schema.properties, key)) &&
+          isPinned(key) &&
+          declaredInAllOf(key),
+      )
+      .forEach((key) =>
+        maybeAddDefaultToObject(
+          computed,
+          key,
+          defaults[key],
+          includeUndefinedValues,
+          required,
+          schema.required,
+          defaultFormStateBehavior?.emptyObjectFields,
+        ),
+      );
+  }
   // The data is the user's: a key it holds as `undefined` stays so unless `mergeDefaultsIntoFormData` says a default
   // replaces that and one does, and one no property names and no additional property was computed for is kept as it
   // is, unless a property an `allOf` the field's plan left unmerged declares for it rejects it, or a value nested in
@@ -1903,6 +1922,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         !populatesAllOf,
         populatesAllOf,
         unmerged,
+        defaults,
       );
     }
     // A value the merged schema rejects is left out, so the key takes the field's own defaults, as a property the fold
@@ -2554,8 +2574,10 @@ function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormConte
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   formData: T | undefined,
+  defaults?: unknown,
 ): T | T[] | undefined {
-  return heldDataMatching<T, S, F>(context, viewMatchedSchema<S, F>(context, view), view.graph.rawRoot, formData);
+  const matched = viewMatchedSchema<S, F>(context, view);
+  return heldDataMatching<T, S, F>(context, matched, view.graph.rawRoot, formData, false, defaults);
 }
 
 /** The schema of the field `view` stands for as the data is matched to it, merged as `mergedSchemaOf()` merges it */
@@ -2581,8 +2603,9 @@ function heldDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   rootSchema: S,
   formData: T | undefined,
   unfolded = false,
+  defaults?: unknown,
 ): T | T[] | undefined {
-  const matching = formDataMatching<T, S, F>(context, matched, rootSchema, formData, unfolded);
+  const matching = formDataMatching<T, S, F>(context, matched, rootSchema, formData, unfolded, defaults);
   return matching === undefined && formData === null ? formData : matching;
 }
 
@@ -2639,7 +2662,8 @@ export function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unkno
 
 /** Returns `formData` matched to `matched.schema` as `ensureFormDataMatchingSchema()` matches it. `unfolded` says the
  * fold computed none of the properties of the schema, as it computes none that a merge for the data brings in, nor any
- * nested in one, so each value of them is matched here
+ * nested in one, so each value of them is matched here, and `defaults` are the field's defaults, see
+ * `matchProperties()`
  */
 function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2647,6 +2671,7 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   rootSchema: S,
   formData: T | undefined,
   unfolded = false,
+  defaults?: unknown,
 ): T | T[] | undefined {
   const { schema, field, retrieve = () => retrieveField<S, F>(context, field(), formData) } = matched;
   const { defaultFormStateBehavior } = context;
@@ -2703,6 +2728,8 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
       validFormData,
       nestedUnfolded,
       shouldRetrieveAllOf,
+      undefined,
+      defaults,
     );
   }
 
@@ -2723,7 +2750,9 @@ function declarationsOf<S extends StrictRJSFSchema>({ field, chains }: MatchedSc
  * property takes its defaults as one the data lacks does. `declarations` gives the declarations of `matchedSchema`, see
  * `declarationsOf()`, `unfolded` says the fold computed none of the properties, see `formDataMatching()`,
  * `retrievesAll` that every property is retrieved, as `allOf: 'populateDefaults'` retrieves them, and `keys`, where
- * given, names the only properties matched, the others kept as the data holds them
+ * given, names the only properties matched, the others kept as the data holds them. As the fold computes none of an
+ * unfolded property, a value one rejects takes its default here, from `defaults`, the object's defaults, or else the
+ * property's own; with neither, a value that is no object is kept, as a select keeps one its options don't offer
  */
 function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2735,6 +2764,7 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
   unfolded: boolean,
   retrievesAll: boolean,
   keys?: ReadonlySet<string>,
+  defaults?: unknown,
 ): GenericObjectType {
   if (!isObject(readSchema.properties)) {
     return data;
@@ -2794,13 +2824,21 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
         rootSchema,
         matched[key],
         unfolded,
+        getByPath(defaults, key),
       );
       // A value that doesn't match is left out, an `allOf` the property is read through or not, so the property takes
-      // its defaults as one the data lacks does
-      if (matchedProperty === undefined) {
+      // its defaults as one the data lacks does, here where the fold computes none for it
+      let value = matchedProperty;
+      if (value === undefined && unfolded) {
+        value =
+          getByPath(defaults, key) ??
+          getByPath(readProperty, DEFAULT_KEY) ??
+          (isObjectData(matched[key]) ? undefined : matched[key]);
+      }
+      if (value === undefined) {
         Reflect.deleteProperty(matched, key);
       } else {
-        setOwn(matched, key, matchedProperty);
+        setOwn(matched, key, value);
       }
     }
   }

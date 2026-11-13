@@ -2349,10 +2349,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             'b',
           ],
           [
-            'leaves out a value outside the enum of a property declared inside the allOf, its default skipped',
+            "replaces a value outside the enum of a property declared inside the allOf with the property's own default",
             { allOf: [{ type: 'object', properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
             { c: 'purple', d: 1 },
-            { d: 1 },
+            { c: 'red', d: 1 },
           ],
           [
             "replaces a value outside the enum of a property declared inside the allOf with the field's default",
@@ -2361,10 +2361,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { c: 'red' },
           ],
           [
-            'leaves out a value outside the enum nested in a $ref property declared inside the allOf',
+            "replaces a value outside the enum nested in a $ref property declared inside the allOf with the nested property's default",
             { allOf: [{ properties: { n: { $ref: '#/definitions/Nested' } } }] },
             { n: { q: 'z' }, d: 1 },
-            { n: {}, d: 1 },
+            { n: { q: 'a' }, d: 1 },
           ],
           [
             'keeps a valid value nested in a $ref property declared inside the allOf',
@@ -2373,10 +2373,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { n: { q: 'b' } },
           ],
           [
-            "leaves out a value outside the enum of a property declared inside an object field's allOf",
+            "replaces a value outside the enum of a property declared inside an object field's allOf with the property's own default",
             { type: 'object', allOf: [{ properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
             { c: 'purple', d: 1 },
-            { d: 1 },
+            { c: 'red', d: 1 },
           ],
           [
             "replaces a value outside the enum of a property declared inside an object field's allOf with the field's default",
@@ -2385,13 +2385,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { c: 'a' },
           ],
           [
-            "leaves out a value outside the enum nested in object data of a property declared inside an object field's allOf",
+            "keeps a value outside the enum nested in object data of a property declared inside an object field's allOf, with no default",
             {
               type: 'object',
               allOf: [{ properties: { c: { type: 'object', properties: { d: { enum: ['a', 'b'] } } } } }],
             },
             { c: { d: 'z' } },
-            { c: {} },
+            { c: { d: 'z' } },
           ],
           [
             "drops object data of a property an object field's allOf types as a string",
@@ -2434,10 +2434,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { c: 'red' },
           ],
           [
-            "leaves out a value outside the allOf enum of a property declared inside an object field's allOf",
+            "keeps a value outside the allOf enum of a property declared inside an object field's allOf, with no default",
             { type: 'object', allOf: [{ properties: { c: { allOf: [{ enum: ['red', 'green'] }] } } }] },
             { c: 'purple', d: 1 },
-            { d: 1 },
+            { c: 'purple', d: 1 },
           ],
           [
             'keeps a null the enum offers',
@@ -2888,8 +2888,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         );
 
         it.each<[string, string, boolean, GenericObjectType]>([
-          ['leaves out', 'zz', false, {}],
-          ['leaves out', 'zz', true, {}],
+          ['keeps', 'zz', false, { c: 'zz' }],
+          ['keeps', 'zz', true, { c: 'zz' }],
           ['keeps', 'g', false, { c: 'g' }],
           ['keeps', 'g', true, { c: 'g' }],
         ])(
@@ -2927,6 +2927,60 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 { schema, formData: { plain: 'zz', wrapped: 'zz' }, initialDefaultsGenerated },
               ),
             ).toStrictEqual({ plain: 'zz', wrapped: 'zz' });
+          },
+        );
+
+        it.each<[RJSFSchema, GenericObjectType, boolean]>(
+          [{}, { additionalProperties: true }].flatMap((beside) =>
+            [{}, { e: 'q' }].flatMap((value) =>
+              [false, true].map((generated): [RJSFSchema, GenericObjectType, boolean] => [beside, value, generated]),
+            ),
+          ),
+        )(
+          "fills a key a nested object's allOf declares from the object's default as its own property, beside %j, with %j, initialDefaultsGenerated %s",
+          (beside, value, initialDefaultsGenerated) => {
+            const c: RJSFSchema = { type: 'string' };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { c }, default: { c: 'a' }, ...beside },
+                wrapped: { type: 'object', allOf: [{ properties: { c } }], default: { c: 'a' }, ...beside },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { own: value, wrapped: value }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ own: { c: 'a', ...value }, wrapped: { c: 'a', ...value } });
+          },
+        );
+
+        it.each<[RJSFSchema, unknown, boolean]>([
+          [{ enum: ['a', 'b'] }, 'z', false],
+          [{ enum: ['a', 'b'] }, 'z', true],
+          [{ enum: ['a', 'b'], default: 'a' }, 'a', false],
+          [{ enum: ['a', 'b'], default: 'a' }, 'a', true],
+        ])(
+          "gives a value outside the enum of a key a nested object's allOf declares, as %j, the outcome %j, as the object's own property, initialDefaultsGenerated %s",
+          (c, expected, initialDefaultsGenerated) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { c } },
+                wrapped: { type: 'object', allOf: [{ properties: { c } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                {
+                  schema,
+                  formData: { own: { c: 'z', d: 1 }, wrapped: { c: 'z', d: 1 } },
+                  initialDefaultsGenerated,
+                },
+              ),
+            ).toStrictEqual({ own: { c: expected, d: 1 }, wrapped: { c: expected, d: 1 } });
           },
         );
 
