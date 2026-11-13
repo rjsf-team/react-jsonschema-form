@@ -25,7 +25,7 @@ const PACKAGES = {
     canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' }],
   },
   '@rjsf/validator-ajv8': {
-    installed: '39 kB',
+    installed: '39.5 kB',
     own: '4 kB',
     canaries: [{ label: 'createPrecompiledValidator', import: '{ createPrecompiledValidator }', limit: '2 kB' }],
     nodeOnly: ['./compileSchemaValidators'],
