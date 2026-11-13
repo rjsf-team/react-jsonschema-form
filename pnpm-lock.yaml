@@ -482,13 +482,13 @@ importers:
     devDependencies:
       '@mantine/core':
         specifier: ^9.7.5
-        version: 9.7.5(@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+        version: 9.7.5(@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
       '@mantine/dates':
         specifier: ^9.7.5
-        version: 9.7.5(@mantine/core@9.7.5(@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(dayjs@1.11.23)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+        version: 9.7.5(@mantine/core@9.7.5(@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(dayjs@1.11.23)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
       '@mantine/hooks':
-        specifier: ^9.7.5
-        version: 9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+        specifier: ^9.8.0
+        version: 9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
       '@rjsf/core':
         specifier: workspace:^
         version: link:../core
@@ -552,13 +552,13 @@ importers:
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1)
       '@mantine/core':
         specifier: ^9.7.5
-        version: 9.7.5(@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+        version: 9.7.5(@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
       '@mantine/dates':
         specifier: ^9.7.5
-        version: 9.7.5(@mantine/core@9.7.5(@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(dayjs@1.11.23)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+        version: 9.7.5(@mantine/core@9.7.5(@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(dayjs@1.11.23)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
       '@mantine/hooks':
-        specifier: ^9.7.5
-        version: 9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+        specifier: ^9.8.0
+        version: 9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
       '@mui/material':
         specifier: ^9.5.0
         version: 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
@@ -3464,8 +3464,8 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@mantine/hooks@9.7.5':
-    resolution: {integrity: sha512-+3cNisLOUkzF77SjRKkG/V+svZii9WDGvcwlaxFH58b14MNohz1zWbV+WfjZt9qfzrIPPUOedks/z6PMo5rAFA==}
+  '@mantine/hooks@9.8.0':
+    resolution: {integrity: sha512-fUA3PS8Ys2kih6VEuozgdEO0UyiGhryTJqx+Bf2lxee1XpXQ0XFXsQY7lNB4f+eBDzYCczYykQjIIuUzyJft7A==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -15352,10 +15352,10 @@ snapshots:
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
-  '@mantine/core@9.7.5(@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)':
+  '@mantine/core@9.7.5(@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@floating-ui/react': 0.27.20(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
-      '@mantine/hooks': 9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+      '@mantine/hooks': 9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
       react: 19.3.1
       react-dom: 19.3.1(@types/react@19.3.0)(react@19.3.1)
@@ -15366,10 +15366,10 @@ snapshots:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@mantine/dates@9.7.5(@mantine/core@9.7.5(@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(dayjs@1.11.23)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)':
+  '@mantine/dates@9.7.5(@mantine/core@9.7.5(@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(dayjs@1.11.23)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@mantine/core': 9.7.5(@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
-      '@mantine/hooks': 9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+      '@mantine/core': 9.7.5(@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+      '@mantine/hooks': 9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
       dayjs: 1.11.23
       react: 19.3.1
@@ -15378,7 +15378,7 @@ snapshots:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@mantine/hooks@9.7.5(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)':
+  '@mantine/hooks@9.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)':
     dependencies:
       react: 19.3.1
       react-dom: 19.3.1(@types/react@19.3.0)(react@19.3.1)
