@@ -710,6 +710,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(withOption).getDefaultFormState(withOption, undefined, false, false, uiSchema)).toStrictEqual(
             {},
           );
+          // A `patternProperties` the property matches can give it the object `const` too
+          const patterned: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object' } },
+            patternProperties: { '^x$': { const: { a: 1 } } },
+          };
+          expect(utils(patterned).getDefaultFormState(patterned, undefined, false, false, uiSchema)).toStrictEqual({});
           // A `null` field beside the object `const` doesn't open it either
           const withNull: RJSFSchema = {
             type: 'object',

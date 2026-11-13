@@ -1867,8 +1867,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       nullFills !== undefined &&
       ownProps.rawFormData === undefined &&
       isSchemaObject<S>(readProperty) &&
-      // Only a schema that holds a `const`, offers options or merges a branch can give the object a `const` to leave out
-      (CONST_KEY in readProperty ||
+      // Only a property whose seeds merge a matching `patternProperties`, or whose schema holds a `const`, offers options
+      // or merges a branch, can give the object a `const` to leave out
+      (seeds.length > 1 ||
+        CONST_KEY in readProperty ||
         getXxxOfOptions<S>(readProperty) !== undefined ||
         MERGING_KEYWORDS.some((keyword) => Object.hasOwn(readProperty, keyword))) &&
       isCollapsedByOptionalDataControls<T, S, F>(readProperty, propertySchema, ownProps.uiSchema, {
