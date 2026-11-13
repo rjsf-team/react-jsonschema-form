@@ -2850,7 +2850,8 @@ interface PropertyMatch {
  * `declarationsOf()`, and `match` how the properties are matched. As the fold computes none of an unfolded property, a
  * value one rejects takes its default here: the property's own, or else the object's, the other way round under
  * `nestedDefaultsPrecedence: 'ancestorWins'` where the property can hold the object's; with neither, a value that is no
- * object is kept, as a select keeps one its options don't offer
+ * object is kept, as a select keeps one its options don't offer. A value that is no object that a select over its own
+ * `anyOf`/`oneOf` constants doesn't offer is kept whatever defaults there are, as the fold keeps it
  */
 function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2936,14 +2937,21 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
         ) {
           defaultsInOrder.reverse();
         }
-        // A select over constants its own `anyOf`/`oneOf` offers keeps a value that is no object it doesn't offer, as
-        // the fold keeps it for a property the object declares, where only an `enum` takes its default
+        // A select whose own `anyOf`/`oneOf`, resolved, offers constants keeps a value that is no object it doesn't
+        // offer, as the fold keeps it for a property the object declares under the default `constAsDefaults`, where an
+        // `enum` with no such options takes its default
         const kept = isObjectData(matched[key]) ? undefined : matched[key];
         const keepsValue =
           kept !== undefined &&
           isSchemaObject<S>(readProperty) &&
-          !(ENUM_KEY in readProperty) &&
-          holdsAnyOf(readProperty, [ANY_OF_KEY, ONE_OF_KEY]);
+          isConstantOptionList<S>(
+            getXxxOfOptions<S>(
+              resolveDeclaredConstantOptions<S>(readProperty, () => ({
+                graph: propertyField().graph,
+                chains: chainsOfProperty(),
+              })),
+            )?.options,
+          );
         value = keepsValue ? kept : [...defaultsInOrder, kept].find((candidate) => candidate !== undefined);
       }
       if (value === undefined) {

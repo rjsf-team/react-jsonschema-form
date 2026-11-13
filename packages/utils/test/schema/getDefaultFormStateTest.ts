@@ -3128,16 +3128,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
-        it.each<[string, DefaultFormStateBehavior, boolean]>([
-          ['anyOf', {}, false],
-          ['oneOf', {}, false],
-          ['anyOf', {}, true],
-          ['anyOf', { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' }, false],
+        it.each<[string, DefaultFormStateBehavior, boolean, RJSFSchema]>([
+          ['anyOf', {}, false, {}],
+          ['oneOf', {}, false, {}],
+          ['anyOf', {}, true, {}],
+          ['anyOf', { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' }, false, {}],
+          ['anyOf', {}, false, { enum: ['red', 'green'] }],
+          ['oneOf', {}, true, { enum: ['red', 'green'] }],
         ])(
-          "keeps a value the %s constants of a key an object's allOf declares don't offer, as for its own property, under %j, initialDefaultsGenerated %s",
-          (keyword, behavior, initialDefaultsGenerated) => {
+          "keeps a value the %s constants of a key an object's allOf declares don't offer, as for its own property, under %j, initialDefaultsGenerated %s, beside %j",
+          (keyword, behavior, initialDefaultsGenerated, beside) => {
             const c: RJSFSchema = {
               type: 'string',
+              ...beside,
               [keyword]: [{ const: 'red' }, { const: 'green' }],
               default: 'green',
             };
@@ -3156,6 +3159,53 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 { schema, formData: { own: value, wrapped: value }, initialDefaultsGenerated },
               ),
             ).toStrictEqual({ own: value, wrapped: value });
+          },
+        );
+
+        it("keeps a value the $ref'd constants of a key an object's allOf declares don't offer, as for its own property", () => {
+          const c: RJSFSchema = {
+            type: 'string',
+            anyOf: [{ $ref: '#/definitions/Red' }, { $ref: '#/definitions/Green' }],
+            default: 'green',
+          };
+          const schema: RJSFSchema = {
+            type: 'object',
+            definitions: { Red: { const: 'red' }, Green: { const: 'green' } },
+            properties: {
+              own: { type: 'object', properties: { c } },
+              wrapped: { type: 'object', allOf: [{ properties: { c } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { own: { c: 'zz' }, wrapped: { c: 'zz' } } },
+            ),
+          ).toStrictEqual({ own: { c: 'zz' }, wrapped: { c: 'zz' } });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['an enum beside options that are no constants', { enum: ['red', 'green'], anyOf: [{ maxLength: 9 }] }],
+          ['object constants', { type: 'object', anyOf: [{ const: { k: 1 } }, { const: { k: 2 } }] }],
+        ])(
+          "replaces a value a key an object's allOf declares rejects with its default where it has %s, as for its own property",
+          (name, options) => {
+            const objectValued = name === 'object constants';
+            const c: RJSFSchema = { ...options, default: objectValued ? { k: 1 } : 'green' };
+            const value = objectValued ? { k: 9 } : 'zz';
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { c } },
+                wrapped: { type: 'object', allOf: [{ properties: { c } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { own: { c: value }, wrapped: { c: value } } },
+              ),
+            ).toStrictEqual({ own: { c: c.default }, wrapped: { c: c.default } });
           },
         );
 
