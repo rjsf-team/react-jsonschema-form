@@ -3866,6 +3866,14 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       const pair = { a: 'x', b: 'q' };
       return [
         { name: 'an array holding its old default', from: padded(['x', 'x']), to: padded(['y']), expected: ['y', 'z'] },
+        // The `additionalProperties` uiSchema renders no declared key, so the plain fill padded it
+        {
+          name: 'an array holding its old default, beside an additionalProperties uiSchema',
+          from: padded(['x']),
+          to: padded(['q']),
+          uiSchema: { additionalProperties: { items: { 'ui:initialValue': 'i' } } },
+          expected: ['q', 'z'],
+        },
         {
           name: 'an array holding its old default, which the new one fills out alike',
           from: padded(['x', 'z']),

@@ -732,7 +732,9 @@ function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return isObject(filled) ? getByPath(filled, at) : undefined;
   };
   const uiSchemas = oldPath === undefined ? [] : uiSchemasOn(ctx, oldPath);
-  const uiSchema = (uiSchemas.length === 0 ? [{}] : uiSchemas).find((found) =>
+  // The list over-counts, so the uiSchema that rendered the field may hold no entry for it, and the plain fill is tried
+  // after every entry
+  const uiSchema = [...uiSchemas, {}].find((found) =>
     deepEquals(fillOf(ctx.oldSchemaUtils, oldRaw, oldDefault, wasRequired, found as UiSchema<T, S, F>), value),
   ) as UiSchema<T, S, F> | undefined;
   if (!uiSchema) {
@@ -742,12 +744,14 @@ function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return fillOf(ctx.schemaUtils, newRaw, newDefault, isRequired, uiSchema) ?? DROP;
   }
   // A key a switch put back is filled out anew under the uiSchema the option switched to renders it with, as a fresh
-  // mount of that option fills it: the one that filled it where that option renders it alike, else its own
+  // mount of that option fills it: the one that filled it where that option renders it alike, else its own. Only the
+  // key's own are read, since an `additionalProperties` one renders no key the option declares. shortcut: an extra key
+  // is refilled without its `additionalProperties` uiSchema; upgrade once the diff carries each field's resolved one
   const switchedTo = ctx.switchedToUiSchemas;
   if (switchedTo === undefined || oldPath === undefined) {
     return DROP;
   }
-  const rendered = uiSchemasBelow(switchedTo.uiSchemas, oldPath.slice(switchedTo.depth));
+  const rendered = uiSchemasBelow(switchedTo.uiSchemas, oldPath.slice(switchedTo.depth), true);
   const renderedWith = rendered.find((found) => deepEquals(found, uiSchema)) ?? rendered[0] ?? {};
   return fillOf(ctx.schemaUtils, newRaw, newDefault, isRequired, renderedWith as UiSchema<T, S, F>) ?? DROP;
 }
@@ -1182,21 +1186,24 @@ function uiSchemasOn<T, S extends StrictRJSFSchema, F extends FormContextType>(
 }
 
 /** The uiSchemas the fill can render the value at `path` below a field rendered with `uiSchemas` with, as
- * `uiSchemasOn()` walks them */
-function uiSchemasBelow(uiSchemas: GenericObjectType[], path: FieldPathList): GenericObjectType[] {
+ * `uiSchemasOn()` walks them, or with `isOwn` only those its keys name, leaving out `additionalProperties` and
+ * `additionalItems` */
+function uiSchemasBelow(uiSchemas: GenericObjectType[], path: FieldPathList, isOwn = false): GenericObjectType[] {
   return path.reduce(
-    (reached, key) => withOptionUiSchemas(reached.flatMap((uiSchema) => uiSchemasAt(uiSchema, key))),
+    (reached, key) => withOptionUiSchemas(reached.flatMap((uiSchema) => uiSchemasAt(uiSchema, key, isOwn))),
     uiSchemas,
   );
 }
 
-/** The uiSchemas the fill can render the value at `key` of a field rendered with `uiSchema` with */
-function uiSchemasAt(uiSchema: GenericObjectType, key: string | number): unknown[] {
+/** The uiSchemas the fill can render the value at `key` of a field rendered with `uiSchema` with, or with `isOwn` only
+ * the one `key` names */
+function uiSchemasAt(uiSchema: GenericObjectType, key: string | number, isOwn = false): unknown[] {
   if (typeof key === 'number') {
     const { items } = uiSchema;
-    return [Array.isArray(items) ? items[key] : items, uiSchema.additionalItems];
+    const own = Array.isArray(items) ? items[key] : items;
+    return isOwn ? [own] : [own, uiSchema.additionalItems];
   }
-  return [uiSchema[key], uiSchema.additionalProperties];
+  return isOwn ? [uiSchema[key]] : [uiSchema[key], uiSchema.additionalProperties];
 }
 
 /** `uiSchemas` that are objects, in order, then the uiSchemas their `anyOf`/`oneOf` options hold, theirs included, so a
