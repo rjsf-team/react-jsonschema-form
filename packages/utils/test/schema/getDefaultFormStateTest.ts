@@ -2976,6 +2976,63 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it.each<[string, RJSFSchema, RJSFSchema]>([
+          ['its own', { enum: ['red', 'green', null], default: null }, {}],
+          ["the object's", { enum: ['red', 'green', null] }, { default: { c: null } }],
+        ])(
+          "replaces a value outside the enum of a key an object's allOf declares with %s null default",
+          (_name, c, field) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { color: { ...field, allOf: [{ type: 'object', properties: { c } }] } },
+            };
+            expect(
+              getDefaultFormState({ validator: testValidator }, { schema, formData: { color: { c: 'purple' } } }),
+            ).toStrictEqual({ color: { c: null } });
+          },
+        );
+
+        it("fills a key an object's allOf declares that the data holds as undefined from the object's default under useDefaultIfFormDataUndefined, as its own property", () => {
+          const c: RJSFSchema = { type: 'string' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', default: { c: 'D' }, properties: { c } },
+              wrapped: { type: 'object', default: { c: 'D' }, allOf: [{ properties: { c } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              {
+                validator: testValidator,
+                defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+              },
+              { schema, formData: { own: { c: undefined }, wrapped: { c: undefined } } },
+            ),
+          ).toStrictEqual({ own: { c: 'D' }, wrapped: { c: 'D' } });
+        });
+
+        it("fills a key an object's allOf requires from the object's default under populateRequiredDefaults, as its own required property", () => {
+          const properties: Record<string, RJSFSchema> = { c: { type: 'string' }, d: { type: 'string' } };
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['own', 'wrapped'],
+            properties: {
+              own: { type: 'object', default: { c: 'x', d: 'y' }, required: ['c'], properties },
+              wrapped: { type: 'object', default: { c: 'x', d: 'y' }, allOf: [{ required: ['c'], properties }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              {
+                validator: testValidator,
+                defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
+              },
+              { schema, formData: {} },
+            ),
+          ).toStrictEqual({ own: { c: 'x' }, wrapped: { c: 'x' } });
+        });
+
         it.each<[RJSFSchema, unknown, boolean]>([
           [{ enum: ['a', 'b'] }, 'z', false],
           [{ enum: ['a', 'b'] }, 'z', true],

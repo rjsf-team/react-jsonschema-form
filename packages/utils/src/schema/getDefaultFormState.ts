@@ -1873,13 +1873,15 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         }
       });
   }
-  // A key only an `allOf` the plan left unmerged declares takes the object's default where the data lacks it, as a
-  // property of the object's own does, whatever the object says about other keys
+  // A key only an `allOf` the plan left unmerged declares takes the object's default where the data lacks it, or holds
+  // it as `undefined` that `mergeDefaultsIntoFormData` says a default replaces, as a property of the object's own does,
+  // whatever the object says about other keys, and is required where the merged schema requires it
   if (isObject(defaults)) {
     Object.keys(defaults)
       .filter(
         (key) =>
-          !Object.hasOwn(formData, key) &&
+          (!Object.hasOwn(formData, key) ||
+            (formData[key] === undefined && defaultReplacesUndefined(defaultFormStateBehavior))) &&
           !Object.hasOwn(computed, key) &&
           (!schema.properties || !Object.hasOwn(schema.properties, key)) &&
           isPinned(key) &&
@@ -1892,7 +1894,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
           defaults[key],
           includeUndefinedValues,
           required,
-          schema.required,
+          mergedSchemaOf<S, F>(context, view).required,
           defaultFormStateBehavior?.emptyObjectFields,
         ),
       );
@@ -2854,10 +2856,12 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
       // its defaults as one the data lacks does, here where the fold computes none for it
       let value = matchedProperty;
       if (value === undefined && unfolded) {
-        value =
-          getByPath(defaults, key) ??
-          getByPath(readProperty, DEFAULT_KEY) ??
-          (isObjectData(matched[key]) ? undefined : matched[key]);
+        // A `null` default is a default like any other, so only a missing one falls through
+        value = [
+          getByPath(defaults, key),
+          getByPath(readProperty, DEFAULT_KEY),
+          isObjectData(matched[key]) ? undefined : matched[key],
+        ].find((candidate) => candidate !== undefined);
       }
       if (value === undefined) {
         Reflect.deleteProperty(matched, key);
