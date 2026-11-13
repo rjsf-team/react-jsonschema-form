@@ -2936,9 +2936,15 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
         ) {
           defaultsInOrder.reverse();
         }
-        value = [...defaultsInOrder, isObjectData(matched[key]) ? undefined : matched[key]].find(
-          (candidate) => candidate !== undefined,
-        );
+        // A select over constants its own `anyOf`/`oneOf` offers keeps a value that is no object it doesn't offer, as
+        // the fold keeps it for a property the object declares, where only an `enum` takes its default
+        const kept = isObjectData(matched[key]) ? undefined : matched[key];
+        const keepsValue =
+          kept !== undefined &&
+          isSchemaObject<S>(readProperty) &&
+          !(ENUM_KEY in readProperty) &&
+          holdsAnyOf(readProperty, [ANY_OF_KEY, ONE_OF_KEY]);
+        value = keepsValue ? kept : [...defaultsInOrder, kept].find((candidate) => candidate !== undefined);
       }
       if (value === undefined) {
         Reflect.deleteProperty(matched, key);
