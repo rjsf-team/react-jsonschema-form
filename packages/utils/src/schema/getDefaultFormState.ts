@@ -838,6 +838,42 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   return planView(context, expanded, planFor(seeds), options, data, depData);
 }
 
+/** Returns the schema the `const` of the field of `view` is read from: its own, or, where it holds none and an `allOf`
+ * member or an `if` branch its plan left unmerged may give it one, the field as `SchemaField` retrieves it for the
+ * data. Only the `const` is read from that: the branch's other defaults stay skipped as the plan skips them
+ */
+function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+): S {
+  const { schema } = view;
+  if (schema[CONST_KEY] !== undefined || view.field.retrieves) {
+    return schema;
+  }
+  const branches: unknown[] = [...(Array.isArray(schema.allOf) ? schema.allOf : [])];
+  if (IF_KEY in schema) {
+    branches.push(schema.then, schema.else);
+  }
+  // A branch that holds no `const` itself may still bring one through a keyword it merges
+  const mayGiveConst = branches.some(
+    (branch) =>
+      isObject(branch) &&
+      (Object.hasOwn(branch, CONST_KEY) || MERGING_KEYWORDS.some((keyword) => Object.hasOwn(branch, keyword))),
+  );
+  return mayGiveConst
+    ? settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options).schema
+    : schema;
+}
+
+/** Returns the object `const` the field whose `const` `constSchema` holds defaults to, if it defaults to one */
+function objectConstOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  constSchema: S,
+): Record<string, unknown> | undefined {
+  const value = constSchema[CONST_KEY];
+  return isObjectData(value) && constIsDefault<S>(constSchema, context.defaultFormStateBehavior) ? value : undefined;
+}
+
 /** Whether the field of `schema` takes a `const` as its default: its own `const`, or one `hasConst` says it has where
  * `schema.const` doesn't show it, a `const` an ancestor gives it or its own spelled out as `undefined`; unless
  * `constAsDefaults` is `'never'` or the field's `const` is an Ajv `$data` reference
@@ -1062,12 +1098,16 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
-  const constDefault = constIsDefault<S>(schema, defaultFormStateBehavior);
+  const constSchema = constSchemaOf<S, F>(context, view);
+  const constDefault = constIsDefault<S>(constSchema, defaultFormStateBehavior);
+  if (constDefault) {
+    defaults = ownValue(constSchema[CONST_KEY]);
+  }
   // An object `const` beside options is the object's defaults, but the option the object shows still renders beside
   // it, as `ObjectField` renders it, so that option is folded with the `const` as its parent's defaults
-  const foldsOptionUnderConst = constDefault && xxxOf !== undefined && isObjectData(schema[CONST_KEY]);
+  const foldsOptionUnderConst = xxxOf !== undefined && objectConstOf<S, F>(context, constSchema) !== undefined;
   if (constDefault && !foldsOptionUnderConst) {
-    defaults = ownValue(schema[CONST_KEY]);
+    // The `const` is the field's defaults
   } else if (
     isObject(defaults) &&
     isObject(schema.default) &&
@@ -1109,9 +1149,6 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ),
     );
   } else if (xxxOf) {
-    if (foldsOptionUnderConst) {
-      defaults = ownValue(schema[CONST_KEY]);
-    }
     const choice = chooseOption<T, S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults, props);
     isWholeValue = choice.isWholeValue;
     if (choice.wholeOptions === undefined) {
@@ -1123,7 +1160,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // doesn't hold, is left out: its default would make the object a value the `const` rejects
       const optionValue =
         foldsOptionUnderConst && isObjectData(foldedOption)
-          ? withoutKeysOutside(foldedOption, [schema[CONST_KEY], schema.properties, rawFormData])
+          ? withoutKeysOutside(foldedOption, [constSchema[CONST_KEY], schema.properties, rawFormData])
           : foldedOption;
       // Data the field takes is its own even where the option it renders through holds none of it, as an option with
       // no value, or one that is no object or takes no object, holds none of object data. Its defaults are merged
@@ -1667,10 +1704,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
-  const parentConst = view.schema[CONST_KEY];
-  // An object `const` the field defaults to, read under the checks `foldView()` reads it under
-  const objectConst =
-    isObjectData(parentConst) && constIsDefault<S>(view.schema, defaultFormStateBehavior) ? parentConst : undefined;
+  const constSchema = constSchemaOf<S, F>(context, view);
+  const parentConst = constSchema[CONST_KEY];
+  // An object `const` the field defaults to, read as `foldView()` reads it
+  const objectConst = objectConstOf<S, F>(context, constSchema);
   // `ObjectField` asks whether the user can add a key of the field as it renders it, retrieved for the data, its `allOf`
   // and `if` merged. An option's `const` is not its parent's: the field that renders the option's extra keys, its
   // parent's or, where the option offers options of its own, the option's, asks it of the parent with the option's

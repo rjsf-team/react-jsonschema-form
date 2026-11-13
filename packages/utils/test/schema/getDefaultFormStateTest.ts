@@ -512,6 +512,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             }
           }
         });
+        it('defaults a nested object to a const only an unmerged allOf or if branch gives it, and still skips its defaults', () => {
+          const viaAllOf: RJSFSchema = {
+            type: 'object',
+            required: ['x'],
+            properties: { x: { type: 'object', allOf: [{ const: { a: 1 } }] } },
+          };
+          expect(utils(viaAllOf).getDefaultFormState(viaAllOf)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(viaAllOf).getDefaultFormState(viaAllOf, { x: {} })).toStrictEqual({ x: { a: 1 } });
+          const viaThen: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', if: {}, then: { const: { a: 1 } } } },
+          };
+          expect(utils(viaThen).getDefaultFormState(viaThen)).toStrictEqual({ x: { a: 1 } });
+          // Under `allOf: 'skipDefaults'` a plain default in the same `allOf` is still skipped
+          const plainDefault: RJSFSchema = {
+            type: 'object',
+            required: ['x'],
+            properties: { x: { type: 'object', allOf: [{ properties: { b: { type: 'number', default: 2 } } }] } },
+          };
+          expect(utils(plainDefault).getDefaultFormState(plainDefault)).toStrictEqual({ x: {} });
+        });
         it('asks whether an object const beside options takes extra keys with the shown option joined', () => {
           const open: RJSFSchema = {
             type: 'object',
