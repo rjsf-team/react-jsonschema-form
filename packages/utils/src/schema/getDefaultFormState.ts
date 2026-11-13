@@ -1877,15 +1877,13 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     for (const key of closingKeys) {
       // No field renders a key of a `const` that closes the object, so no user fills, clears or fixes it: the `const`
       // fills in what its data lacks on every pass, as on the first, a value held as `undefined` or `null` and the
-      // items of an array included, at any depth, and keeps the rest of the data
+      // items an array short of the `const`'s is missing included, at any depth, and keeps the rest of the data
       // Copied beside a `ui:initialValue`, since on the first pass the defaults are the uiSchema's own value; otherwise
       // they are the copy of the `const` the field made
       const ownDefault: unknown = getByPath(constDefaults, key);
       const keyDefault = readsInitialValue ? ownValue(ownDefault) : ownDefault;
       const keyData: unknown = getByPath(formData, key);
-      const value = shouldMergeDefaultsIntoFormData
-        ? mergeDefaultsWithFormData(keyDefault, keyData, true, true)
-        : keyDefault;
+      const value = shouldMergeDefaultsIntoFormData ? fillFromConst(keyDefault, keyData) : keyDefault;
       maybeAddDefaultToObject(
         computed,
         key,
@@ -1998,6 +1996,36 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     return computed;
   }
   return computeDefaultBasedOnSchemaTypeAndDefaults<unknown, S>(view.schema, computed);
+}
+
+/** Returns `data` with what it lacks of `constValue` filled in: a missing, `undefined`, `null` or `NaN` value takes the
+ * `const`'s, an object takes the keys it lacks, at any depth, and an array whose items, so filled, are the `const`'s
+ * first items is completed to the `const`'s. An array that differs is the user's, as is any other value
+ *
+ * @param constValue - The value the `const` gives
+ * @param data - The data held for it
+ * @returns - The data with the `const` filled in
+ */
+function fillFromConst(constValue: unknown, data: unknown): unknown {
+  if (data === undefined || data === null || Number.isNaN(data)) {
+    return constValue;
+  }
+  if (Array.isArray(constValue) && Array.isArray(data)) {
+    const filled: unknown[] = data.map((item: unknown, index) =>
+      index < constValue.length ? fillFromConst(constValue[index], item) : item,
+    );
+    const prefix: unknown[] = constValue.slice(0, filled.length);
+    // Equal items keep the `const`'s identity, so a prefix of the `const` is the one `replaceEqualDeep()` hands back
+    return filled.length <= constValue.length && replaceEqualDeep(prefix, filled) === prefix ? constValue : data;
+  }
+  if (isPlainObject(constValue) && isPlainObject(data)) {
+    const filled: GenericObjectType = { ...data };
+    for (const [key, value] of Object.entries(constValue)) {
+      setOwn(filled, key, fillFromConst(value, getByPath(data, key)));
+    }
+    return filled;
+  }
+  return data;
 }
 
 /** Whether an extra key keeps the object data the user gave it over `value`, the value its field computed from that

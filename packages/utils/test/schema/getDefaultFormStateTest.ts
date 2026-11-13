@@ -250,6 +250,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             a: [{ x: 1, y: 2 }, { x: 3 }],
           });
         });
+        it("keeps an array of a const that closes the object as the user's where its items differ from the const's", () => {
+          const list: RJSFSchema = { type: 'object', const: { a: [1, 2] } };
+          expect(utils(list).getDefaultFormState(list, { a: [3] })).toStrictEqual({ a: [3] });
+          expect(utils(list).getDefaultFormState(list, { a: [3] }, false, true)).toStrictEqual({ a: [3] });
+          const rows: RJSFSchema = { type: 'object', const: { a: [{ x: 1 }, { x: 2 }] } };
+          expect(utils(rows).getDefaultFormState(rows, { a: [{ x: 5 }] }, false, true)).toStrictEqual({
+            a: [{ x: 5 }],
+          });
+        });
         it('getObjectDefaults seeds only the keys of the const that the defaults it is handed hold', () => {
           const context = { validator: testValidator, ...absent };
           expect(getObjectDefaults(context, bare, { includeUndefinedValues: true })).toStrictEqual({});
