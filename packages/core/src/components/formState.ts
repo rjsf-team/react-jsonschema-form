@@ -1350,8 +1350,13 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     const seen: string[] = [];
     let previous: FieldTree<T, S, F> = base;
     let roundEdit = edit;
+    // Settings that compute the defaults another way can fill a field anew whose schema and value didn't change
+    let isDefaultsChanged = !deepEqualsUndefinedAsMissing(
+      base.defaultsBehavior ?? {},
+      props.defaultFormStateBehavior ?? {},
+    );
     for (;;) {
-      const round = sanitizeFieldTree(previous, tree, uiState, fillAsFirstRender, roundEdit, judged);
+      const round = sanitizeFieldTree(previous, tree, uiState, fillAsFirstRender, roundEdit, judged, isDefaultsChanged);
       const sanitized = replaceEqualDeep(formData, round.formData);
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
@@ -1369,6 +1374,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       previous = tree;
       // Only the first round diffs against the data before the move: every later one diffs against data already moved
       roundEdit = edit && { path: edit.path };
+      isDefaultsChanged = false;
       formData = fill(sanitized);
       tree = treeOf(formData);
       judged = judgedOf(formData);

@@ -1,15 +1,18 @@
 import type {
+  FieldFill,
   FieldPath,
   FieldPathList,
   FormContextType,
   FormFieldState,
+  PropertyPlacement,
   SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
 } from '@rjsf/utils';
 import {
-  constrainsAlike,
+  ADDITIONAL_PROPERTY_FLAG,
   CONST_KEY,
+  constrainsAlikeAsideDefault,
   deepEquals,
   DEFAULT_KEY,
   expandRefCycle,
@@ -20,6 +23,7 @@ import {
   getItemSchema,
   getPrefixLength,
   getRenderedOptionSchema,
+  getSchemaType,
   getXxxOfOptions,
   GUESSED_TYPE_FLAG,
   hasSchemaMarker,
@@ -28,6 +32,7 @@ import {
   isPlainObject,
   isSchemaObject,
   isWholeValueSelect,
+  mergeSchemas,
   namesEveryType,
   rendersOwnFieldBesideOption,
   RJSF_REF_CYCLE_KEY,
@@ -81,6 +86,10 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   judgedClears: JudgedClears | undefined;
   /** Where each array the walk dropped items of moved the items it kept, an inner array's before the array holding it */
   itemMoves: ContainerKeyMove[];
+  /** Whether the settings the defaults are computed by changed, so a field whose schema and value didn't can still be
+   * filled with another default, and none is skipped
+   */
+  isDefaultsChanged: boolean;
 }
 
 /** The values a disabled or read-only form's sanitize judges, see `sanitizeFieldTree()`: each key holding `undefined`,
@@ -142,7 +151,7 @@ export interface FieldTree<T, S extends StrictRJSFSchema, F extends FormContextT
 
 /** Whether `path` is the edited path or one of its ancestors */
 function isEdited<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  { editedPath }: TreeContext<T, S, F>,
+  { editedPath }: Pick<TreeContext<T, S, F>, 'editedPath'>,
   path: FieldPathList,
 ): boolean {
   return editedPath !== undefined && isPathPrefix(path, editedPath);
@@ -234,7 +243,7 @@ const UNSET = Symbol('unset');
  * taken in place of the selection `uiState` holds, and a list without one is added with the option shown for `value`.
  */
 function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  ctx: TreeContext<T, S, F>,
+  ctx: Pick<TreeContext<T, S, F>, 'editedPath'>,
   schemaUtils: SchemaUtilsType<T, S, F>,
   uiState: UiStateReader,
   raw: S,
@@ -313,6 +322,22 @@ function typeOf<S extends StrictRJSFSchema>(layers: readonly S[]): unknown {
   return Array.isArray(type) ? [...new Set(type.map(String))].sort() : type;
 }
 
+/** Whether the defaults fill a field's object key by key, as `sanitizeDataForNewSchema()` reads it: the field's own
+ * `type` read as `getSchemaType()` reads it, so a type list renders as the type it names first, or, for an untyped item
+ * alone, whether it or its option declares `properties` other than the stubs `retrieveSchema()` adds for the data's
+ * extra keys. Not where a property is `true`, which the walk has nothing to judge by, so the object is judged whole */
+function fillsKeyByKey<S extends StrictRJSFSchema>(layers: readonly S[], isItem: boolean): boolean {
+  const properties = [...propertiesOf(layers).values()];
+  if (properties.includes(true)) {
+    return false;
+  }
+  const [own] = layers;
+  if (own.type !== undefined) {
+    return getSchemaType<S>(own) === 'object';
+  }
+  return isItem && properties.some((property) => !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG));
+}
+
 /** The values a field offers: its `enum`, or the constants of options that are all constants */
 function offeredValues<S extends StrictRJSFSchema>(layers: readonly S[]): unknown[] | undefined {
   const enumValues = keywordOf(layers, 'enum');
@@ -354,7 +379,7 @@ function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: 
 }
 
 /** Re-judges a value whose field's constraints changed. A cleared property is dropped, for the defaults to fill. A value
- * equal to the default the old schema declared for it is that schema's, so it becomes the new schema's default; a value
+ * equal to the default the old schema filled it with is that schema's, so it becomes the new schema's default; a value
  * of another type, or one the new `const` or `enum` rejects, is replaced as `sanitizeDataForNewSchema()` replaces it,
  * or dropped. A field the new schema only holds as an extra key whose schema is guessed from its data keeps a value
  * its stub renders, see `guessedStubRenders()`, unless the value equals what the old field's defaults fill in, such as
@@ -400,7 +425,14 @@ function judge<S extends StrictRJSFSchema>(
   if (becomesGuessed) {
     return isOldDefault || !guessedStubRenders(value, newLayers) || isFilledByOldDefaults(value) ? DROP : undefined;
   }
-  if (isOldDefault && newDefault !== undefined) {
+  // An object the defaults fill key by key holds its old default only as far as each key does, since the fill can leave
+  // some of the default's keys out, so its properties are judged one by one, as `sanitizeDataForNewSchema()` does
+  const isFilledByKey = () =>
+    isPlainObject(value) &&
+    isPlainObject(newDefault) &&
+    !newLayers.some((layer) => isWholeValueSelect<S>(layer)) &&
+    fillsKeyByKey(newLayers, isItem);
+  if (isOldDefault && newDefault !== undefined && !isFilledByKey()) {
     return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
   }
   // An item is rejected by its type only where the new schema declares one that leaves out an old type, as
@@ -466,8 +498,8 @@ function itemOf<S extends StrictRJSFSchema>(itemsLayer: S | undefined, index: nu
   return itemsLayer ? getItemSchema<S>(itemsLayer, index) : true;
 }
 
-/** Whether both trees constrain the item `value` at a position alike, as `constrainsAlike()` reads them, its `default`
- * aside: a `default` decides no item's validity
+/** Whether both trees constrain the item `value` at a position alike, as `constrainsAlikeAsideDefault()` reads them:
+ * a `default` decides no item's validity
  *
  * @param ctx - The diff's context
  * @param oldItem - The position's schema in the previous tree
@@ -484,15 +516,10 @@ function constrainsItemAlike<T, S extends StrictRJSFSchema, F extends FormContex
   const data = asFieldValue<T>(value);
   const oldSchema = ctx.oldSchemaUtils.retrieveSchema(oldItem, data);
   const newSchema = ctx.schemaUtils.retrieveSchema(newItem, data);
-  return constrainsAlike<S>(
-    { ...oldSchema, default: undefined },
-    { ...newSchema, default: undefined },
-    undefined,
-    undefined,
-  );
+  return constrainsAlikeAsideDefault<S>(oldSchema, newSchema);
 }
 
-/** One field of both trees: its subschema and value on each side, and the default its parent declares for it */
+/** One field of both trees: its subschema and value on each side, and the default its parent is filled with for it */
 interface FieldPair<S> {
   oldRaw: S | undefined;
   newRaw: S;
@@ -500,6 +527,14 @@ interface FieldPair<S> {
   newValue: unknown;
   oldInherited: unknown;
   newInherited: unknown;
+  /** Whether the defaults read the field as required on each side, as they hand it `required`: a property its object
+   * lists in `required`, or an item whose array is required. Undefined for the root
+   */
+  oldRequired?: boolean;
+  newRequired?: boolean;
+  /** For a property, whether the defaults read the object holding it as required on each side */
+  oldParentRequired?: boolean;
+  newParentRequired?: boolean;
   /** Whether the field is an array item, whose `null` or `undefined` is a placeholder the item's schema judges */
   isItem: boolean;
   /** Whether the field was in the data before: a property holding a value, or an item of an array the data held */
@@ -540,8 +575,8 @@ function oldFieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextTyp
 }
 
 /** Whether `value` is what the defaults filled the old field at `oldPath` with. Two fills are asked, since neither sees
- * all of what decides it. The field's own fill starts from the option it showed and the default it or its parent
- * declares. The form's fill, made as on its first render so a `ui:initialValue` counts, starts from the root and the
+ * all of what decides it. The field's own fill starts from the option it showed and the default the defaults fill it
+ * with. The form's fill, made as on its first render so a `ui:initialValue` counts, starts from the root and the
  * old data without the field's value, under the options the old tree showed, and sees the uiSchema, the `required`
  * and the defaults above the field.
  *
@@ -577,6 +612,70 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return deepEquals(getByPath(formFill, oldPath), value);
 }
 
+/** The default the defaults fill a field rendered with `layers` with, given the one it inherits, see
+ * `getFilledDefault()`. The layers are one field, which the fill renders with an option's `default` merged over the
+ * field's own, so only `inherited` is an ancestor's, even under `nestedDefaultsPrecedence: 'ancestorWins'`
+ */
+function filledDefaultOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  layers: readonly S[],
+  inherited: unknown,
+  placement?: PropertyPlacement,
+): unknown {
+  // Only an option `getFilledDefault()` picks can bring a default the layers don't declare
+  if (
+    inherited === undefined &&
+    !layers.some((layer) => Object.hasOwn(layer, DEFAULT_KEY)) &&
+    !getXxxOfOptions<S>(layers[layers.length - 1])
+  ) {
+    return undefined;
+  }
+  const ownDefault = layers.reduce<object>(
+    (merged, layer) =>
+      Object.hasOwn(layer, DEFAULT_KEY) ? mergeSchemas(merged, { [DEFAULT_KEY]: layer[DEFAULT_KEY] }) : merged,
+    {},
+  );
+  return schemaUtils.getFilledDefault({ ...fieldSchemaOf(layers), ...ownDefault }, inherited, placement);
+}
+
+/** The innermost of `layers` with the keywords its default is cut down by read from them all, as the fill reads the
+ * field: each layer's `properties` and `required`, and the innermost `type` and `additionalProperties` declared
+ */
+function fieldSchemaOf<S extends StrictRJSFSchema>(layers: readonly S[]): S {
+  if (layers.length === 1) {
+    return layers[0];
+  }
+  const field: S = { ...layers[layers.length - 1] };
+  for (const keyword of ['type', 'additionalProperties']) {
+    const value = keywordOf(layers, keyword);
+    if (value !== undefined) {
+      setOwn(field, keyword, value);
+    }
+  }
+  // Merged as the fill merges an option into its field, a property both declare deep-merged, and a `false` one kept
+  // rather than dropped as `propertiesOf()` drops it: the fill still writes the default of a key an option declares
+  // `false`
+  if (layers.some((layer) => layer.properties !== undefined)) {
+    field.properties = layers.reduce<object>(
+      (merged, layer) => mergeSchemas(merged, layer.properties ?? {}),
+      {},
+    ) as S['properties'];
+  }
+  const required = requiredOf(layers);
+  if (required) {
+    field.required = [...required];
+  }
+  return field;
+}
+
+/** The keys a field rendered with `layers` lists in `required`, each layer's, since an option adds to the field's.
+ * Undefined where no layer lists any, which the defaults hand the field's properties apart from an empty list
+ */
+function requiredOf<S extends StrictRJSFSchema>(layers: readonly S[]): Set<string> | undefined {
+  const lists = layers.flatMap((layer) => (Array.isArray(layer.required) ? [layer.required] : []));
+  return lists.length === 0 ? undefined : new Set(lists.flat());
+}
+
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   pair: FieldPair<S>,
@@ -589,6 +688,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     newValue,
     oldInherited,
     newInherited,
+    oldRequired,
+    newRequired,
+    oldParentRequired,
+    newParentRequired,
     isItem,
     hasOld,
     oldRetrieved,
@@ -609,7 +712,15 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return newValue;
   }
   // Nothing a field's subtree is built from differs, so neither does the subtree
-  if (!edited && oldRaw === newRaw && oldValue === newValue && Object.is(oldInherited, newInherited)) {
+  if (
+    !edited &&
+    !ctx.isDefaultsChanged &&
+    oldRaw === newRaw &&
+    oldValue === newValue &&
+    oldRequired === newRequired &&
+    oldParentRequired === newParentRequired &&
+    deepEquals(oldInherited, newInherited)
+  ) {
     return newValue;
   }
   // The old side shows the options the new side shows from the same lists: which option the data is shown under is
@@ -627,13 +738,32 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { switchedFrom } = ctx;
   const isSwitched =
     switchedFrom !== undefined && path.length === switchedFrom.path.length && isPathPrefix(path, switchedFrom.path);
-  const oldOwnDefault = keywordOf(oldLayers, DEFAULT_KEY);
-  const newOwnDefault = keywordOf(newLayers, DEFAULT_KEY);
-  // A `default: null` of its own is a default, which shadows the inherited one as it does for the defaults
-  const oldDefault = oldOwnDefault === undefined ? oldInherited : oldOwnDefault;
-  const newDefault = newOwnDefault === undefined ? newInherited : newOwnDefault;
+  // A property's value is judged by the default the defaults write into it, while what it hands its own properties is
+  // the default it computes, which they fill from whether or not it is written itself
+  const isProperty = !isItem && path.length > 0;
+  // Read only by the judge of an item or the root, and by the properties of an object, so a property holding no
+  // object, whose value is judged by its written default, runs no option pick for it
+  const isComputedRead = !isProperty || isPlainObject(newValue);
+  const oldComputed = isComputedRead ? filledDefaultOf(ctx.oldSchemaUtils, oldLayers, oldInherited) : undefined;
+  const newComputed = isComputedRead ? filledDefaultOf(ctx.schemaUtils, newLayers, newInherited) : undefined;
   // The edited value and the values holding it are the user's
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
+    // The fill picks the option of a field holding no data by the field's own `default`, not by the one `Form` shows,
+    // and writes that option's `default`, so a clear hands `getFilledDefault()` the field's own layer, options and all,
+    // for it to pick as the fill does
+    const filledLayers = (layers: S[]) => (isClear ? layers.slice(0, 1) : layers);
+    const oldDefault = isProperty
+      ? filledDefaultOf(ctx.oldSchemaUtils, filledLayers(oldLayers), oldInherited, {
+          isRequired: oldRequired,
+          isParentRequired: oldParentRequired,
+        })
+      : oldComputed;
+    const newDefault = isProperty
+      ? filledDefaultOf(ctx.schemaUtils, filledLayers(newLayers), newInherited, {
+          isRequired: newRequired,
+          isParentRequired: newParentRequired,
+        })
+      : newComputed;
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
     const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, (value) =>
       isOldFill(ctx, oldLayers, oldDefault, oldPath, shownHere, value),
@@ -649,12 +779,15 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const oldProperties = propertiesOf(oldLayers);
     const newProperties = propertiesOf(newLayers);
     const previousKeyOf = previousKeys(ctx, path, oldValue);
+    const oldRequiredKeys = requiredOf(oldLayers);
+    const newRequiredKeys = requiredOf(newLayers);
     // The keys a switch left keep their own value through it, under the option switched away from
     let leftSide:
       | {
           keys: ReadonlySet<string>;
           properties: Map<string, S | true>;
-          ownDefault: unknown;
+          required: Set<string> | undefined;
+          computedDefault: unknown;
           shownHere?: ShownAbove;
           ctx: TreeContext<T, S, F>;
         }
@@ -683,7 +816,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       leftSide = {
         keys: switchedFrom.leftKeys,
         properties: propertiesOf(leftLayers),
-        ownDefault: keywordOf(leftLayers, DEFAULT_KEY),
+        required: requiredOf(leftLayers),
+        computedDefault: filledDefaultOf(ctx.oldSchemaUtils, leftLayers, oldInherited),
         shownHere: oldPath === undefined ? shownAbove : { oldPath, shown: leftShown, above: shownAbove },
         ctx: leftCtx,
       };
@@ -699,7 +833,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (newChild !== undefined && newChild !== true) {
         const previousKey = from ? key : previousKeyOf(key);
         const previousValue = valueAt(oldValue, previousKey);
-        const oldParentDefault = from ? from.ownDefault : oldOwnDefault;
+        const oldParentDefault = from ? from.computedDefault : oldComputed;
         next = walk(
           from?.ctx ?? ctx,
           {
@@ -708,7 +842,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
             oldValue: previousValue,
             newValue: newValue[key],
             oldInherited: isPlainObject(oldParentDefault) ? getByPath(oldParentDefault, key) : undefined,
-            newInherited: isPlainObject(newOwnDefault) ? getByPath(newOwnDefault, key) : undefined,
+            newInherited: isPlainObject(newComputed) ? getByPath(newComputed, key) : undefined,
+            oldRequired: (from ? from.required : oldRequiredKeys)?.has(key),
+            newRequired: newRequiredKeys?.has(key),
+            oldParentRequired: oldRequired,
+            newParentRequired: newRequired,
             isItem: false,
             hasOld: previousValue !== undefined,
             oldPath: oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined,
@@ -790,6 +928,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           newValue: item,
           oldInherited: undefined,
           newInherited: undefined,
+          oldRequired,
+          newRequired,
           isItem: true,
           hasOld: Array.isArray(oldValue),
           oldPath: oldPath && hasPrevious ? [...oldPath, Number(previousIndex)] : undefined,
@@ -802,7 +942,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
       // A prefix item dropped would move the items after it into positions describing others. An unfilled one stays a
       // hole, one of the array being edited stays as the user wrote it, and one whose position both trees constrain
-      // alike, its `default` aside, already failed the old schema, so each stays for validation to report, as
+      // alike, the defaults aside, already failed the old schema, so each stays for validation to report, as
       // `sanitizeDataForNewSchema()` keeps it
       if (
         edited ||
@@ -844,12 +984,65 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return newValue;
 }
 
+/** What the defaults hand the field at `path` of `tree`, as the walk reads them: the default inherited from the fields
+ * above it, through the options each shows, and whether it is required where it sits. An array item inherits nothing
+ * from its array's `default`, as the walk reads it, though it is required where its array is
+ *
+ * @param tree - The field tree, as the form renders it
+ * @param uiState - The form's option selections and cycle expansions
+ * @param path - The path of the field
+ * @returns - The default the field inherits and whether it is required, each undefined where there is none
+ */
+export function fieldFillAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  tree: FieldTree<T, S, F>,
+  uiState: UiStateReader,
+  path: FieldPathList,
+): FieldFill {
+  const { schemaUtils } = tree;
+  let raw: S | boolean | undefined = schemaUtils.getRootSchema();
+  let value: unknown = tree.formData;
+  let fill: FieldFill = {};
+  for (let depth = 0; depth < path.length; depth += 1) {
+    if (typeof raw !== 'object') {
+      return {};
+    }
+    const retrieved = depth === 0 ? tree.retrievedSchema : undefined;
+    const layers: S[] = layersOf<T, S, F>(
+      {},
+      schemaUtils,
+      uiState,
+      raw,
+      value,
+      path.slice(0, depth),
+      new Map(),
+      retrieved,
+    );
+    if (layers.length === 0) {
+      return {};
+    }
+    const key = path[depth];
+    if (Array.isArray(value) && typeof key === 'number') {
+      raw = itemOf(itemsLayerOf(layers), key);
+      fill = { isRequired: fill.isRequired };
+    } else {
+      const computed = filledDefaultOf(schemaUtils, layers, fill.inheritedDefault);
+      raw = propertiesOf(layers).get(String(key));
+      fill = {
+        inheritedDefault: isPlainObject(computed) ? getByPath(computed, String(key)) : undefined,
+        isRequired: requiredOf(layers)?.has(String(key)),
+      };
+    }
+    value = valueAt(value, String(key));
+  }
+  return fill;
+}
+
 /** Sanitizes `data` for the field tree it builds, against the tree `previous` built: the diff of the two trees, field
  * by field, as each is rendered (the selected option, the expanded `$ref` cycles). A field that left the tree loses its
  * value, unless the object holds it as an extra key that constrains nothing and renders it. A field whose constraints
- * changed (`type`, `const`, `enum`, `maxItems`, or the default declared for it on its own schema or on its parent's)
- * has its value judged again, see `judge()`: a value still holding the default the old schema declared takes the new
- * one, written in place. A field whose constraints did not change keeps its value, so an edit elsewhere never re-judges
+ * changed (`type`, `const`, `enum`, `maxItems`, or the default the defaults fill it with, see `getFilledDefault()`)
+ * has its value judged again, see `judge()`: a value still holding the default the old schema filled it with takes the
+ * new one, written in place. A field whose constraints did not change keeps its value, so an edit elsewhere never re-judges
  * it. The value of the field being edited, and of the fields holding it, is the user's, and only what they hold is
  * judged. Both trees show the option the new data is shown under, so an option switch, by the selector or by matching,
  * changes no field's constraints: the data a switch sends is `formDataForNewOption()`'s. A key it leaves that only the
@@ -868,6 +1061,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param [edit] - The change being made, if any: its path, where it moved the keys of the array or object there, so
  *        each item or property is paired with its own previous value, and the option a switch there left
  * @param [judgedClears] - For a disabled or read-only form, the only values judged, see `judgedClearsIn()`
+ * @param [isDefaultsChanged=false] - Whether the `defaultFormStateBehavior` the defaults are computed by changed since
+ *        `previous`, so every field is judged again, however little its schema and value changed
  * @returns - The sanitized data, sharing everything it left alone with `data`, and where each array it dropped items of
  *   moved the rest, an inner array's first, with the paths of the arrays holding it as they were before
  */
@@ -878,6 +1073,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
   fillAsFirstRender: FirstRenderFill<T, S, F>,
   edit?: FieldEdit,
   judgedClears?: JudgedClears,
+  isDefaultsChanged = false,
 ): { formData: T | undefined; itemMoves: ContainerKeyMove[] } {
   const itemMoves: ContainerKeyMove[] = [];
   const sanitized = walk(
@@ -894,6 +1090,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       fillAsFirstRender,
       judgedClears,
       itemMoves,
+      isDefaultsChanged,
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),

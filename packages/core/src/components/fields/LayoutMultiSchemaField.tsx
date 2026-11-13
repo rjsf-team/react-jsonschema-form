@@ -11,6 +11,7 @@ import {
 } from '@rjsf/utils';
 
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
+import useReadFieldFill from '../../hooks/useReadFieldFill.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useSendOptionSwitch, { selectSwitchedOption } from '../../hooks/useSendOptionSwitch.ts';
 import { retrievedOptionListOf } from '../uiState.ts';
@@ -86,6 +87,7 @@ export default function LayoutMultiSchemaField<
   } = props;
   const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
+  const readFieldFill = useReadFieldFill(fieldPath);
   const options = useMemo(
     () => retrievedOptionListOf<T, S, F>(schemaUtils, schema, formData),
     [schemaUtils, schema, formData],
@@ -153,12 +155,15 @@ export default function LayoutMultiSchemaField<
     // never carries the root's `ui:definitions` itself.
     const newOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex);
     const oldOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex);
-    const switched = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
-      newOptionUiSchema,
-      oldOptionUiSchema,
-      uiSchemaDefinitions,
-      globalUiOptions,
-    });
+    const switched = formDataForNewOption<T, S, F>(
+      schemaUtils,
+      formData,
+      newOption,
+      oldOption,
+      schema,
+      { newOptionUiSchema, oldOptionUiSchema, uiSchemaDefinitions, globalUiOptions },
+      readFieldFill(),
+    );
     if (switched.formData) {
       setByPath(switched.formData, selectorField, opt);
     }

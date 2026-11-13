@@ -513,6 +513,106 @@ describe('oneOf', () => {
     expect(Object.hasOwn(onChange.mock.lastCall![0].formData, 'value')).toBe(true);
   });
 
+  it("should fill a clear of a property holding its own null default with the new option's default for it under ancestorWins (#5817)", async () => {
+    const optionFor = (name: string): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      default: { value: name },
+      properties: {
+        kind: { type: 'string', const: name, default: name },
+        value: { type: ['string', 'null'], default: null },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a'), optionFor('b')] },
+      defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' },
+    });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_value')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', value: 'b' } }),
+      'root__oneof_select',
+    );
+  });
+
+  it("should keep a clear of a property the parent's default fills under every option under ancestorWins (#5817)", async () => {
+    const optionFor = (name: string, a: number): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      default: { a },
+      properties: { a: { type: 'number' } },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        default: { f: { a: 1 } },
+        properties: { f: { oneOf: [optionFor('A', 2), optionFor('B', 3)] } },
+      },
+      defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' },
+    });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_f_a')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_f__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { f: { a: undefined } } }),
+      'root_f__oneof_select',
+    );
+    expect(Object.hasOwn(onChange.mock.lastCall![0].formData.f, 'a')).toBe(true);
+  });
+
+  it("should keep a clear of a property the field's own default fills under every option", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      default: { a: 'p' },
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        { title: 'B', properties: { a: { type: 'string' } }, default: { a: 'p' } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_a')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { a: undefined } }),
+      'root__oneof_select',
+    );
+    expect(Object.hasOwn(onChange.mock.lastCall![0].formData, 'a')).toBe(true);
+  });
+
+  it("should keep a clear in an item of an optional array, whose defaults fill neither option, under 'populateRequiredDefaults'", async () => {
+    const optionFor = (title: string, value: string): RJSFSchema => ({
+      title,
+      properties: { a: { type: 'string', default: value } },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        required: ['name'],
+        properties: {
+          name: { type: 'string' },
+          list: {
+            type: 'array',
+            items: { type: 'object', required: ['a'], oneOf: [optionFor('A', 'x'), optionFor('B', 'y')] },
+          },
+        },
+      },
+      initialFormData: { name: 'n', list: [{ a: 'x' }] },
+      defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
+    });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_list_0_a')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_list_0__oneof_select')!, '1');
+
+    const item = onChange.mock.lastCall![0].formData.list[0];
+    expect(item).toEqual({ a: undefined });
+    expect(Object.hasOwn(item, 'a')).toBe(true);
+  });
+
   describe('keeps a value the new option declares but the fill would not write', () => {
     // What an option declares and what `computeDefaults()` acts on are not the same set, and the deletion is only
     // safe where they agree. `sanitizeDataForNewSchema()` has already put the right value in each of these, so

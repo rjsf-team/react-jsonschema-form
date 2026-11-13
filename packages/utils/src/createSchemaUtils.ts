@@ -8,7 +8,9 @@ import {
   findSelectedOptionInXxxOf,
   getDefaultFormState,
   getDisplayLabel,
+  constrainsAlike,
   getClosestMatchingOption,
+  getFilledDefault,
   getFirstMatchingOption,
   getFromSchema,
   getUiRequiredErrorSchema,
@@ -20,11 +22,13 @@ import {
   sanitizeDataForNewSchema,
 } from './schema/index.ts';
 import type {
+  FieldFill,
   FormContextType,
   FormFieldState,
   FoundFieldType,
   GenericObjectType,
   GlobalUISchemaOptions,
+  PropertyPlacement,
   RJSFSchema,
   SchemaContext,
   SchemaFieldPath,
@@ -144,6 +148,37 @@ class SchemaUtils<
     return canExpand<T, S, F>(this.context, schema, uiSchema, formData);
   }
 
+  /** Says whether `newSchema` constrains a field as `oldSchema` did, each `default` read as the one the defaults fill
+   * the field with under the `context`'s `defaultFormStateBehavior`, see `constrainsAlike()`
+   *
+   * @param oldSchema - The field's schema before the change
+   * @param newSchema - The field's schema after the change
+   * @param oldInheritedDefault - The default the field holding `oldSchema` was filled with for it
+   * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
+   * @param [oldPlacement] - Where the field sat as a property before the change, if it is one
+   * @param [newPlacement] - Where the field sits as a property after the change, if it is one
+   * @returns - Whether both schemas constrain the field alike
+   */
+  constrainsAlike(
+    oldSchema: S,
+    newSchema: S,
+    oldInheritedDefault: unknown,
+    newInheritedDefault: unknown,
+    oldPlacement?: PropertyPlacement,
+    newPlacement?: PropertyPlacement,
+  ): boolean {
+    return constrainsAlike<S, F>(
+      this.context,
+      oldSchema,
+      newSchema,
+      this.rootSchema,
+      oldInheritedDefault,
+      newInheritedDefault,
+      oldPlacement,
+      newPlacement,
+    );
+  }
+
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
    * field is in the `required` list for its parent and if so, it is marked as required on return. At each key of the
@@ -213,6 +248,18 @@ class SchemaUtils<
       uiSchemaDefinitions,
       fieldState,
     });
+  }
+
+  /** Returns the `default` the defaults fill the field `schema` describes with, given the one the field holding it was
+   * filled with for it, under the `context`'s `defaultFormStateBehavior`, see `getFilledDefault()`
+   *
+   * @param schema - The field's schema, already retrieved
+   * @param inheritedDefault - The default the field holding this one was filled with for it, if any
+   * @param [placement] - Where the field sits as a property, left out for the root or an array item
+   * @returns - The default the field is filled with, or `undefined` where there is none
+   */
+  getFilledDefault(schema: S, inheritedDefault: unknown, placement?: PropertyPlacement): unknown {
+    return getFilledDefault<S, F>(this.context, schema, this.rootSchema, inheritedDefault, placement);
   }
 
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
@@ -408,12 +455,14 @@ class SchemaUtils<
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+   * @param [fill] - What the defaults hand the field holding the data, for one below the root, such as the field an
+   *        `anyOf`/`oneOf` switch is made in
    * @returns - The new form data, without the fields uniquely associated with the old schema. Will return `undefined`
    *      if the new schema is not an object containing properties, or where its object or array `const` rejects the
    *      data, and a copy of that `const` where the data holds the old schema's
    */
-  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown): T {
-    return sanitizeDataForNewSchema(this.context, this.rootSchema, newSchema, oldSchema, data);
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown, fill?: FieldFill): T {
+    return sanitizeDataForNewSchema(this.context, this.rootSchema, newSchema, oldSchema, data, fill);
   }
 }
 
