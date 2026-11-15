@@ -5,7 +5,7 @@ import type { EmotionCache } from '@emotion/cache';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { MantineProvider } from '@mantine/core';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme, useTheme } from '@mui/material';
 import { Widgets } from '@rjsf/antd';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
@@ -176,6 +176,7 @@ interface DemoFrameProps extends FrameComponentProps {
 
 export default function DemoFrame(props: DemoFrameProps) {
   const { children, head, theme, subtheme, style, ...frameProps } = props;
+  const { palette } = useTheme();
 
   const [ready, setReady] = useState(false);
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
@@ -193,6 +194,18 @@ export default function DemoFrame(props: DemoFrameProps) {
       }),
     );
   }, []);
+
+  let frameHead = head;
+  if (theme === 'core') {
+    // `rjsf-theme.css` takes its colours from the page's `color-scheme`, so the core preview can show the playground's
+    // own appearance; the other themes keep their own look. `Canvas` paints the frame in the matching page colour
+    frameHead = (
+      <>
+        {head}
+        <style>{`:root { color-scheme: ${palette.mode}; background: Canvas; }`}</style>
+      </>
+    );
+  }
 
   let body: ReactNode = children;
   if (theme === 'mui') {
@@ -254,9 +267,9 @@ export default function DemoFrame(props: DemoFrameProps) {
     <Frame
       ref={instanceRef}
       contentDidMount={onContentDidMount}
-      head={head}
-      // A light page behind every preview, whatever the playground's appearance; a theme's own body background is
-      // painted over it and still fills the frame
+      head={frameHead}
+      // A light page behind the previews that keep their theme's own look in a dark playground; a theme's own body
+      // background, or the core preview's `Canvas`, is painted over it and still fills the frame
       style={{ background: 'white', ...style }}
       {...frameProps}
     >
