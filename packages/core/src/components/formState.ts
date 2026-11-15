@@ -1943,7 +1943,8 @@ function originsAfterChange<T>(
   }
   const isKeyRemoval = change.newValue === ADDITIONAL_PROPERTY_KEY_REMOVE;
   if ((change.newKeyOf || change.isAnnouncedMove) && !isKeyRemoval) {
-    const isRestructured = Array.isArray(before) || isPlainObject(before);
+    // A row or key added where the data held no array or object makes one, which is the person's as much
+    const isRestructured = [before, after].some((value) => Array.isArray(value) || isPlainObject(value));
     return isRestructured ? withOrigins(moved, [], [fieldPath]) : moved;
   }
   const entered: FieldPath[] = [];

@@ -11318,6 +11318,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
 
+    describe('a row past the entries of a tuple that the data holds', () => {
+      const sized: RJSFSchema = { type: 'object', properties: { size: { type: 'number', default: 1 } } };
+      const fillRows = (list: RJSFSchema, rows: unknown[]) => {
+        const schema: RJSFSchema = { type: 'object', properties: { list } };
+        return getDefaultFormState(
+          { validator: testValidator },
+          { schema, rootSchema: schema, formData: { list: rows } },
+        );
+      };
+
+      it('is filled from the `additionalItems` its field renders it from, as a row of a list is from `items`', () => {
+        const tuple: RJSFSchema = { type: 'array', items: [{ type: 'string' }], additionalItems: sized };
+        expect(fillRows(tuple, ['a', {}, { size: 5 }])).toEqual({ list: ['a', { size: 1 }, { size: 5 }] });
+        expect(fillRows({ type: 'array', items: sized }, [{}])).toEqual({ list: [{ size: 1 }] });
+      });
+
+      it('is left as it is where the array is no tuple, or its `additionalItems` is no schema', () => {
+        expect(fillRows({ type: 'array', additionalItems: sized }, [{}])).toEqual({ list: [{}] });
+        const open: RJSFSchema = { type: 'array', items: [{ type: 'string' }], additionalItems: true };
+        expect(fillRows(open, ['a', {}])).toEqual({ list: ['a', {}] });
+      });
+    });
+
     describe('a value the fieldState says the defaults filled in', () => {
       /** A `fieldState` under which the values at `paths` are ones the defaults filled in */
       const filledAt = (...paths: (string | number)[][]): FormFieldState => {

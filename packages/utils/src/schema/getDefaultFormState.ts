@@ -2190,21 +2190,23 @@ function filledRowTest<T, S extends StrictRJSFSchema, F extends FormContextType>
   };
 }
 
+/** The item the row at `idx` of the array field `view` is rendered from, see `innerItem()`: its own entry in a tuple,
+ * or the tuple's `additionalItems` past its entries, and the `items` of a list, whose `additionalItems` says nothing
+ */
+function rowItem<S extends StrictRJSFSchema>(view: DefaultsView<S>, idx: number) {
+  return Array.isArray(view.schema.items)
+    ? innerItem(view, AdditionalItemsHandling.Fallback, idx)
+    : innerItem(view, AdditionalItemsHandling.Ignore, -1);
+}
+
 /** The schema of the row at `idx` of the array field `view`, read where its own `$ref` points */
 function rowSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   idx: number,
 ): S {
-  const { seeds, fallback } = innerItem(view, AdditionalItemsHandling.Fallback, rowIndexOf(view, idx));
+  const { seeds, fallback } = rowItem(view, idx);
   return resolveMergedOwnRef<S>(view.graph, seeds, schemaFrom(view.graph.rawRoot, fallback), context.customMergeAllOf);
-}
-
-/** The index `innerItem()` reads the schema of the row at `idx` of the array field `view` by: its own in a tuple, whose
- * rows each have a schema, and none in a list, whose rows share one
- */
-function rowIndexOf<S extends StrictRJSFSchema>(view: DefaultsView<S>, idx: number): number {
-  return Array.isArray(view.schema.items) ? idx : -1;
 }
 
 /** Computes the default value for arrays.
@@ -2315,7 +2317,8 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
       defaults = rawFormData;
     } else {
       const itemDefaults = rawFormData.map((item: unknown, idx) => {
-        const field = itemField(view, AdditionalItemsHandling.Ignore, rowIndexOf(view, idx));
+        const { seeds, edge, fallback } = rowItem(view, idx);
+        const field = defaultsChild(view, seeds, edge, fallback);
         // The array's default for the row, filled above as the row holding it is
         const parentDefaults = getByPath(defaults, idx);
         const isDefaultRow = parentDefaults !== undefined && parentDefaults !== null;
@@ -2325,14 +2328,13 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
           // the array's default for it, or else what a row holding no value is filled with. Where nothing gives a value
           // any more, the row stays as it is
           const isWhole = isObject(item) || Array.isArray(item);
-          const rowField = itemField(view, AdditionalItemsHandling.Fallback, rowIndexOf(view, idx));
           const rowProps = isWhole
             ? { ...itemProps(idx), parentDefaults, initialDefaultsGenerated: false }
             : { ...itemProps(idx), required: false };
           const derived =
             isDefaultRow && !isWhole
               ? parentDefaults
-              : foldChild<T, S, F>(context, `filled:${idx}`, rowField, rowProps, memo);
+              : foldChild<T, S, F>(context, `filled:${idx}`, field, rowProps, memo);
           // A `null` is what the defaults give only where the item declares it as its `default`
           if (
             derived !== undefined &&

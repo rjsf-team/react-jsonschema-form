@@ -380,19 +380,14 @@ const differences: Partial<Record<string, Difference>> = {
   [REPLAYS]: 'changedDefaults',
 };
 
-/** What the form is known not to do yet, by the mechanism behind it */
-const GAPS = {
-  additionalItemsRow:
-    'A seeded tuple row beyond `items` that equals the default of `additionalItems` follows that default, which the fill never gives to a row',
-};
+/** What the form is known not to do yet, by the mechanism behind it. None is known now: a gap found is named here */
+const GAPS: Record<string, string> = {};
 
 /**
  * The seeds of the default range that fail an invariant for a known gap. A seed outside this list that fails is a
  * regression; a seed in it that passes means the gap is closed there, and the seed is to be taken off the list
  */
-const KNOWN_GAPS: Partial<Record<string, { gap: keyof typeof GAPS; seeds: number[] }[]>> = {
-  [STAYS]: [{ gap: 'additionalItemsRow', seeds: [191] }],
-};
+const KNOWN_GAPS: Partial<Record<string, { gap: string; seeds: number[] }[]>> = {};
 
 const UNDER_SETTINGS = 'under generated settings: ';
 

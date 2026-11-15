@@ -363,6 +363,55 @@ describe('where a value came from, as a schema, a branch or a write changes the 
     });
   });
 
+  describe('a row past the entries of a tuple, which its `additionalItems` renders', () => {
+    const tuple = (rest: RJSFSchema, list: Record<string, unknown> = {}): RJSFSchema => ({
+      type: 'object',
+      properties: { list: { type: 'array', items: [{ type: 'string' }], additionalItems: rest, ...list } },
+    });
+    const sized: RJSFSchema = { type: 'object', properties: { size: { type: 'number', default: 1 } } };
+
+    it('is filled from the defaults of `additionalItems` where the data holds it, as a row of a list is', () => {
+      const { form } = mount(tuple(sized), { initialFormData: { list: ['a', {}, { size: 5 }] } });
+      expect(form.getFormData()).toEqual({ list: ['a', { size: 1 }, { size: 5 }] });
+    });
+
+    it('holds what a row the defaults add to reach `minItems` holds', () => {
+      const { form } = mount(tuple(sized, { minItems: 2 }));
+      expect(form.getFormData()).toEqual({ list: [undefined, { size: 1 }] });
+    });
+
+    it('follows a changed default where the seed held the old one', () => {
+      const flagged = (flag: boolean) => tuple({ type: 'boolean', default: flag });
+      const { form, setSchema } = mount(flagged(true), { initialFormData: { list: ['a', true] } });
+      setSchema(flagged(false));
+      expect(form.getFormData()).toEqual({ list: ['a', false] });
+    });
+
+    it('is left as it is where the array is no tuple, whose `additionalItems` says nothing', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { list: { type: 'array', additionalItems: { type: 'string', default: 'z' } } },
+      };
+      const { form } = mount(schema, { initialFormData: { list: [{}] } });
+      expect(form.getFormData()).toEqual({ list: [{}] });
+    });
+  });
+
+  describe('a row a person adds', () => {
+    const listed = (name: string): RJSFSchema => ({
+      type: 'object',
+      properties: { list: { type: 'array', items: { type: 'string', default: name } } },
+    });
+
+    it('stays as it was added when the default of the items changes, the first row of the array too', async () => {
+      const { container, form, setSchema } = mount(listed('x'));
+      await user.click(elementOf(container, 'button.rjsf-array-item-add'));
+      expect(form.getFormData()).toEqual({ list: ['x'] });
+      setSchema(listed('y'));
+      expect(form.getFormData()).toEqual({ list: ['x'] });
+    });
+  });
+
   describe('a write from outside the fields', () => {
     const coloured = (color: string): RJSFSchema => ({
       type: 'object',
