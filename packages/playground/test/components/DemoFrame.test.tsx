@@ -1,15 +1,20 @@
 import type { ReactNode } from 'react';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { theme as antdTheme } from 'antd';
 
 import DemoFrame from '../../src/components/DemoFrame.tsx';
 
-function PreviewMode() {
+function MuiMode() {
   return <output>{useTheme().palette.mode}</output>;
 }
 
+function AntdContainerColor() {
+  return <output>{antdTheme.useToken().token.colorBgContainer}</output>;
+}
+
 /** Renders `DemoFrame` for `theme` under a playground in `mode` and returns the preview's document once it loaded */
-function renderPreview(theme: string, mode: 'light' | 'dark', children: ReactNode = null) {
+function renderPreview(theme: string, mode: 'light' | 'dark', children: ReactNode = <output />) {
   render(
     <ThemeProvider theme={createTheme({ palette: { mode } })}>
       <DemoFrame title='Form preview' theme={theme} subtheme='light'>
@@ -31,29 +36,92 @@ function renderPreview(theme: string, mode: 'light' | 'dark', children: ReactNod
   return frameDocument;
 }
 
+async function renderedOutput(frameDocument: Document) {
+  return vi.waitFor(() => {
+    const output = frameDocument.querySelector('output');
+    if (!output) {
+      throw new Error('The preview has not rendered');
+    }
+    return output;
+  });
+}
+
 describe('DemoFrame', () => {
-  it('renders the mui preview in its default light theme under a dark playground', async () => {
-    const frameDocument = renderPreview('mui', 'dark', <PreviewMode />);
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it.each(['light', 'dark'] as const)('renders the mui preview in the %s mode of the playground', async (mode) => {
+    const frameDocument = renderPreview('mui', mode, <MuiMode />);
+
+    expect(await renderedOutput(frameDocument)).toHaveTextContent(mode);
+  });
+
+  it.each([
+    ['light', '#ffffff'],
+    ['dark', '#141414'],
+  ] as const)('renders the antd preview with the %s algorithm', async (mode, containerColor) => {
+    const frameDocument = renderPreview('antd', mode, <AntdContainerColor />);
+
+    expect(await renderedOutput(frameDocument)).toHaveTextContent(containerColor);
+  });
+
+  it.each(['light', 'dark'] as const)('renders the mantine preview in the %s color scheme', async (mode) => {
+    // Mantine reads the system scheme even when one is forced, and jsdom has no `matchMedia`
+    vi.stubGlobal(
+      'matchMedia',
+      vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })),
+    );
+    const frameDocument = renderPreview('mantine', mode);
+
+    await renderedOutput(frameDocument);
+    expect(frameDocument.body).toHaveAttribute('data-mantine-color-scheme', mode);
+  });
+
+  it.each(['light', 'dark'] as const)(
+    'paints the fluentui-rc preview page in the Teams %s background',
+    async (mode) => {
+      const frameDocument = renderPreview('fluentui-rc', mode);
+
+      await renderedOutput(frameDocument);
+      expect(getComputedStyle(frameDocument.body).backgroundColor).toBe(
+        mode === 'dark' ? 'rgb(41, 41, 41)' : 'rgb(255, 255, 255)',
+      );
+    },
+  );
+
+  it.each(['core', 'chakra-ui', 'react-bootstrap', 'shadcn'])(
+    'marks the %s preview root with the playground mode its stylesheet reads',
+    async (theme) => {
+      const frameDocument = renderPreview(theme, 'dark');
+      const root = frameDocument.documentElement;
+
+      await vi.waitFor(() => {
+        expect(getComputedStyle(root).colorScheme).toBe('dark');
+      });
+      expect(root).toHaveClass('dark');
+      expect(root).toHaveAttribute('data-bs-theme', 'dark');
+    },
+  );
+
+  it.each([
+    ['core', 'canvas'],
+    ['shadcn', 'var(--background)'],
+  ])('gives the %s preview, which paints no page of its own, a page background', async (theme, background) => {
+    const frameDocument = renderPreview(theme, 'dark');
 
     await vi.waitFor(() => {
-      expect(frameDocument.querySelector('output')).toHaveTextContent('light');
+      expect(frameDocument.documentElement.style.background).toBe(background);
     });
   });
 
-  it.each(['light', 'dark'] as const)('gives the core preview the %s appearance of the playground', async (mode) => {
-    const frameDocument = renderPreview('core', mode);
+  it.each(['bootstrap3', 'daisy-ui'])('leaves the %s preview root to its own theme', async (theme) => {
+    const frameDocument = renderPreview(theme, 'dark');
+    const root = frameDocument.documentElement;
 
-    await vi.waitFor(() => {
-      expect(getComputedStyle(frameDocument.documentElement).colorScheme).toBe(mode);
-    });
-  });
-
-  it('leaves the color scheme of other previews to their theme', async () => {
-    const frameDocument = renderPreview('bootstrap3', 'dark', <PreviewMode />);
-
-    await vi.waitFor(() => {
-      expect(frameDocument.querySelector('output')).not.toBeNull();
-    });
-    expect(getComputedStyle(frameDocument.documentElement).colorScheme).toBe('normal');
+    await renderedOutput(frameDocument);
+    expect(getComputedStyle(root).colorScheme).toBe('normal');
+    expect(root).not.toHaveClass('dark');
+    expect(root).not.toHaveAttribute('data-bs-theme');
   });
 });
