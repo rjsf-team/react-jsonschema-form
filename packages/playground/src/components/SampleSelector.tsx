@@ -63,22 +63,19 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     },
   ],
   '& .MuiTab-root.Mui-selected': {
-    backgroundColor: 'lightgray',
+    backgroundColor: theme.palette.action.selected,
   },
 }));
 
-const Tab = styled(MuiTab)({
+const Tab = styled(MuiTab)(({ theme }) => ({
   padding: '4px',
   fontSize: '0.75rem',
   minWidth: '1rem',
   minHeight: '1rem',
   '&:hover': {
-    border: `1px solid gray`,
+    border: `1px solid ${theme.palette.divider}`,
   },
-  selected: {
-    backgroundColor: 'lightgray',
-  },
-});
+}));
 
 export interface SampleSelectorProps {
   onSelected: (sampleName: string) => void;

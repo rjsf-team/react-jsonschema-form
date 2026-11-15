@@ -5,7 +5,7 @@ import type { EmotionCache } from '@emotion/cache';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { MantineProvider } from '@mantine/core';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { Widgets } from '@rjsf/antd';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
@@ -15,6 +15,9 @@ import type { FrameComponentProps } from 'react-frame-component';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 
 const DEMO_FRAME_JSS = 'demo-frame-jss';
+// The MUI preview reads its theme from React context, which crosses into the iframe, so it would otherwise take the
+// playground's own light or dark appearance rather than the default look of the theme being demonstrated
+const previewTheme = createTheme();
 
 const { SelectWidget, DateWidget } = Widgets;
 
@@ -172,7 +175,7 @@ interface DemoFrameProps extends FrameComponentProps {
 }
 
 export default function DemoFrame(props: DemoFrameProps) {
-  const { children, head, theme, subtheme, ...frameProps } = props;
+  const { children, head, theme, subtheme, style, ...frameProps } = props;
 
   const [ready, setReady] = useState(false);
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
@@ -195,8 +198,10 @@ export default function DemoFrame(props: DemoFrameProps) {
   if (theme === 'mui') {
     body = ready ? (
       <CacheProvider value={emotionCache}>
-        <CssBaseline />
-        {children}
+        <ThemeProvider theme={previewTheme}>
+          <CssBaseline />
+          {children}
+        </ThemeProvider>
       </CacheProvider>
     ) : null;
   } else if (theme === 'fluentui-rc') {
@@ -246,7 +251,15 @@ export default function DemoFrame(props: DemoFrameProps) {
   }
 
   return (
-    <Frame ref={instanceRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
+    <Frame
+      ref={instanceRef}
+      contentDidMount={onContentDidMount}
+      head={head}
+      // A light page behind every preview, whatever the playground's appearance; a theme's own body background is
+      // painted over it and still fills the frame
+      style={{ background: 'white', ...style }}
+      {...frameProps}
+    >
       <div id={DEMO_FRAME_JSS} />
       {body}
     </Frame>

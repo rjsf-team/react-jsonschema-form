@@ -9,7 +9,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { isObject } from '@rjsf/utils';
@@ -60,6 +60,7 @@ interface EditorProps<T> {
 }
 
 function Editor<T>({ title, code, accepts, onChange }: EditorProps<T>) {
+  const { palette } = useTheme();
   const [valid, setValid] = useState(true);
 
   const onCodeChange = useCallback(
@@ -87,7 +88,7 @@ function Editor<T>({ title, code, accepts, onChange }: EditorProps<T>) {
         <MonacoEditor
           language='json'
           value={code}
-          theme='vs-light'
+          theme={palette.mode === 'dark' ? 'vs-dark' : 'vs-light'}
           onChange={onCodeChange}
           height={400}
           options={monacoEditorOptions}
