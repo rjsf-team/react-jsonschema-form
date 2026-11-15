@@ -10,6 +10,14 @@ This is an advanced feature that lets you customize even more aspects of the for
 | **Per-Field Example** | `"ui:field": MyCustomField`               | `"ui:ArrayFieldTemplate": MyArrayTemplate`                     | `"ui:widget":MyCustomWidget`                                              |
 | **Documentation**     | [Custom Fields](custom-widgets-fields.md) | See documentation below                                        | [Custom Widgets](custom-widgets-fields.md)                                |
 
+### Mental Model: The House Construction Analogy
+
+To understand how Fields, Templates, and Widgets work together, consider how a room is built and furnished:
+
+- 👷 **Custom Field (General Contractor / Room Architect):** Oversees the entire room. Dictates end-to-end logic, manages state, coordinates sub-fields, and validates rules (e.g. `ObjectField`, `ArrayField`).
+- 📐 **Custom Template (Framing & Layout):** The structural scaffolding. Determines *where* elements sit relative to each other—arranging titles, descriptions, error banners, and the input slot. It doesn't care what the input control looks like.
+- 🎛️ **Custom Widget (Fixture / Appliance):** The interactive leaf control the user actually touches—the light switch, faucet, text input, toggle, or date picker. It only takes a value and fires change events.
+
 In version 5, all existing `templates` were consolidated into a new `TemplatesType` interface that is provided as part of the `Registry`.
 They can also be overloaded globally on the `Form` via the `templates` prop as well as per-field through the `uiSchema`.
 Further, many new templates were added or repurposed from existing `widgets` and `fields` in an effort to simplify the effort needed by theme authors to build new and/or maintain current themes.
@@ -24,7 +32,7 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [ArrayFieldTemplate](#arrayfieldtemplate)                       | ArrayFieldTemplateProps            | ui:ArrayFieldTemplate            | Formerly `Form.ArrayFieldTemplate` or `Registry.ArrayFieldTemplate`                                                                                                  |
 | [ArrayFieldDescriptionTemplate](#arrayfielddescriptiontemplate) | ArrayFieldDescriptionProps         | ui:ArrayFieldDescriptionTemplate | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations                                                 |
 | [ArrayFieldItemTemplate](#arrayfielditemtemplate)               | ArrayFieldItemTemplateProps        | ui:ArrayFieldItemTemplate        | Formerly an internal class for `ArrayFieldTemplate`s in all themes, refactored as a template in each theme, used in all `ArrayFieldTemplate` implementations         |
-| [ArrayFieldItemButtonsTemplate](#arrayfielditembuttontemplate)  | ArrayFieldItemButtonsTemplateProps | ui:ArrayFieldItemButonsTemplate  | Formerly an internal class for `ArrayFieldItemTemplate`s in all themes, refactored as a template in the `core`, used in all `ArrayFieldItemTemplate` implementations |
+| [ArrayFieldItemButtonsTemplate](#arrayfielditembuttonstemplate) | ArrayFieldItemButtonsTemplateProps | ui:ArrayFieldItemButtonsTemplate | Formerly an internal class for `ArrayFieldItemTemplate`s in all themes, refactored as a template in the `core`, used in all `ArrayFieldItemTemplate` implementations |
 | [ArrayFieldTitleTemplate](#arrayfieldtitletemplate)             | ArrayFieldTitleProps               | ui:ArrayFieldTitleTemplate       | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations.                                                |
 | [BaseInputTemplate](#baseinputtemplate)                         | WidgetProps                        | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                                 |
 | [CyclicSchemaExpandTemplate](#cyclicschemaexpandtemplate)       | CyclicSchemaExpandProps            | ui:CyclicSchemaExpandTemplate    | Added in RJSF v6 to support circular `$ref` cycle detection                                                                                                          |
@@ -35,6 +43,7 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [FieldHelpTemplate](#fieldhelptemplate)                         | FieldHelpProps                     | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                                  |
 | [FieldTemplate](#fieldtemplate)                                 | FieldTemplateProps                 | ui:FieldTemplate                 | Formerly `Form.FieldTemplate` or `Registry.FieldTemplate`                                                                                                            |
 | [GridTemplate](#gridtemplate)                                   | GridTemplateProps                  | ui:GridTemplate                  | Theme dependent implementations of a Grid element for either rows or columns                                                                                         |
+| [MarkdownTemplate](#markdowntemplate)                           | MarkdownTemplateProps              | ui:MarkdownTemplate              | Template for rendering markdown in descriptions, help text, and translatable strings                                                                                  |
 | [MultiSchemaFieldTemplate](#multischemafieldtemplate)           | MultiSchemaFieldTemplateProps      | ui:MultiSchemaFieldTemplate      | Formerly part of `@rjsf/core `MultiSchemaField`, refactored as a template                                                                                            |
 | [ObjectFieldTemplate](#objectfieldtemplate)                     | ObjectFieldTemplateProps           | ui:ObjectFieldTemplate           | Formerly `Form.ObjectFieldTemplate` or `Registry.ObjectFieldTemplate`                                                                                                |
 | [OptionalDataControlsTemplate](#optionaldatacontrolstemplate)   | OptionalDataControlsTemplateProps  | ui:OptionalDataControlsTemplate  | New feature in V6                                                                                                                                                    |
@@ -42,6 +51,8 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [UnsupportedFieldTemplate](#unsupportedfieldtemplate)           | UnsupportedFieldProps              | ui:UnsupportedFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix.                                                                                  |
 | [WrapIfAdditionalTemplate](#wrapifadditionaltemplate)           | WrapIfAdditionalTemplateProps      | ui:WrapIfAdditionalTemplate      | Formerly an internal component in `@rjsf.core`. Previously implemented in most themes.                                                                               |
 | [ButtonTemplates.AddButton](#addbutton)                         | IconButtonProps                    | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
+| [ButtonTemplates.ClearButton](#clearbutton)                     | IconButtonProps                    | n/a                              | Button used to clear text inputs when enabled                                                                                                                        |
+| [ButtonTemplates.CopyButton](#copybutton)                       | IconButtonProps                    | n/a                              | Button used to copy array items in `ArrayFieldItemTemplate`                                                                                                          |
 | [ButtonTemplates.MoveDownButton](#movedownbutton)               | IconButtonProps                    | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
 | [ButtonTemplates.MoveUpButton](#moveupbutton)                   | IconButtonProps                    | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
 | [ButtonTemplates.RemoveButton](#removebutton)                   | IconButtonProps                    | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
@@ -226,7 +237,7 @@ render(
 The following props are passed to each `ArrayFieldItemTemplate`:
 
 - `children`: The html for the item's content.
-- `buttonsProps`: The props to pass to the `ArrayFieldItemButtonTemplate`.
+- `buttonsProps`: The props to pass to the `ArrayFieldItemButtonsTemplate`.
 - `className`: The className string.
 - `disabled`: Whether the array item's buttons are disabled, by the array's lock or the item's own. Its inputs can stay enabled, under an item's `ui:disabled: false`.
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
@@ -240,11 +251,11 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `parentUiSchema`: The UI schema of the array item's parent array field, used for customization in some themes
 - `displayLabel`: Whether a label sits above the item's control: one the item's `FieldTemplate` draws, as the plan `SchemaField` builds for the item says, which is the `displayLabel` that template is handed, or one the item's field or widget draws itself where its theme declares it `labelPlacement: 'above'`, as a theme whose widgets draw their own label above the control does. Used to place the item's buttons beside its control rather than beside its label.
 
-## ArrayFieldItemButtonTemplate
+## ArrayFieldItemButtonsTemplate
 
-The `ArrayFieldItemButtonTemplate` is used to render the representation of the buttons used for copying, moving and deleting an item in an array.
+The `ArrayFieldItemButtonsTemplate` is used to render the representation of the buttons used for copying, moving and deleting an item in an array.
 All of the `ArrayFieldItemTemplate` implementations in all themes get this template from the `registry` in order to render array fields items' buttons.
-Currently, only the `core` them has an implementation of this template as the button rendering is identical across all themes.
+Currently, only the `core` theme has an implementation of this template as the button rendering is identical across all themes.
 If you want to change how an array field item's buttons are rendered you can customize this template (for instance to remove the move up/down and remove buttons).
 
 ```tsx
@@ -313,7 +324,7 @@ If you want a different behavior for the rendering of the title of an array fiel
 If you want a different behavior for the rendering of ALL titles in the `Form`, see [TitleFieldTemplate](#titlefieldtemplate)
 
 ```tsx
-import { ArrayFieldTitleTemplateProps, RJSFSchema, titleId } from '@rjsf/utils';
+import { ArrayFieldTitleProps, RJSFSchema, titleId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -334,14 +345,14 @@ render(
 );
 ```
 
-You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property with your Component :
+You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldTitleTemplate` property with your Component :
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
-import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate';
+import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate';
 
 const uiSchema: UiSchema = {
-  'ui:ArrayFieldDescriptionTemplate': ArrayFieldDescriptionTemplate,
+  'ui:ArrayFieldTitleTemplate': ArrayFieldTitleTemplate,
 };
 ```
 
@@ -351,7 +362,7 @@ or a string value from the `Registry` :
 import { UiSchema } from '@rjsf/utils';
 
 const uiSchema: UiSchema = {
-  'ui:ArrayFieldDescriptionTemplate': 'CustomArrayFieldDescriptionTemplate',
+  'ui:ArrayFieldTitleTemplate': 'CustomArrayFieldTitleTemplate',
 };
 ```
 
@@ -1424,6 +1435,66 @@ function AddButton(props: IconButtonProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { AddButton } }} />,
+  document.getElementById('app'),
+);
+```
+
+### ClearButton
+
+The `ClearButton` is used to clear text inputs when `allowClearTextInputs` is enabled or in widgets like `AltDateWidget`.
+You can customize the `ClearButton` to render something other than the icon button that is provided by a theme as follows:
+
+```tsx
+import React from 'react';
+import { IconButtonProps, RJSFSchema } from '@rjsf/utils';
+import { FormattedMessage } from 'react-intl';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+};
+
+function ClearButton(props: IconButtonProps) {
+  const { icon, iconType, ...btnProps } = props;
+  return (
+    <button {...btnProps}>
+      {icon} <FormattedMessage defaultMessage='Clear' />
+    </button>
+  );
+}
+
+render(
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { ClearButton } }} />,
+  document.getElementById('app'),
+);
+```
+
+### CopyButton
+
+The `CopyButton` is used to render a copy action on a `Form` for duplicating items in an array within `ArrayFieldItemTemplate`.
+You can customize the `CopyButton` to render something other than the icon button that is provided by a theme as follows:
+
+```tsx
+import React from 'react';
+import { IconButtonProps, RJSFSchema } from '@rjsf/utils';
+import { FormattedMessage } from 'react-intl';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+};
+
+function CopyButton(props: IconButtonProps) {
+  const { icon, iconType, ...btnProps } = props;
+  return (
+    <button {...btnProps}>
+      {icon} <FormattedMessage defaultMessage='Copy' />
+    </button>
+  );
+}
+
+render(
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { CopyButton } }} />,
   document.getElementById('app'),
 );
 ```
