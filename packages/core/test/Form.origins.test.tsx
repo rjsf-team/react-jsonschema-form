@@ -305,6 +305,64 @@ describe('where a value came from, as a schema, a branch or a write changes the 
     });
   });
 
+  describe('a value the defaults filled in, which only the fill makes follow its default', () => {
+    it('takes the new default as the row of a tuple', () => {
+      const pair = (first: string): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          pair: { type: 'array', minItems: 1, items: [{ type: 'string', default: first }] },
+        },
+      });
+      const { form, setSchema } = mount(pair('x'));
+      expect(form.getFormData()).toEqual({ pair: ['x'] });
+      setSchema(pair('y'));
+      expect(form.getFormData()).toEqual({ pair: ['y'] });
+    });
+
+    it('takes a `null` the new default declares, and the default that replaces a `null`', () => {
+      const nullable = (value: string | null): RJSFSchema => ({
+        type: 'object',
+        properties: { note: { type: ['string', 'null'], default: value } },
+      });
+      const { form, setSchema } = mount(nullable('x'));
+      setSchema(nullable(null));
+      expect(form.getFormData()).toEqual({ note: null });
+      setSchema(nullable('y'));
+      expect(form.getFormData()).toEqual({ note: 'y' });
+    });
+
+    it('takes the new default as a root that is no object', () => {
+      const { form, setSchema } = mount({ type: 'string', default: 'x' });
+      setSchema({ type: 'string', default: 'y' });
+      expect(form.getFormData()).toBe('y');
+    });
+
+    it('follows as a seeded value equal to the old default does, once the form has told it is one', () => {
+      const named = (name: string): RJSFSchema => ({
+        type: 'object',
+        properties: { name: { type: 'string', default: name }, other: { type: 'string', default: name } },
+      });
+      const { form, setSchema } = mount(named('a'), { initialFormData: { name: 'a', other: 'mine' } });
+      setSchema(named('b'));
+      expect(form.getFormData()).toEqual({ name: 'b', other: 'mine' });
+      // The value the seed held unlike the default is the user's, and the one that followed is the form's
+      setSchema(named('mine'));
+      expect(form.getFormData()).toEqual({ name: 'mine', other: 'mine' });
+      setSchema(named('c'));
+      expect(form.getFormData()).toEqual({ name: 'c', other: 'mine' });
+    });
+
+    it('stays where the new schema declares a default the fill gives on no mount either', () => {
+      const prefixed = (first: string): RJSFSchema => ({
+        type: 'object',
+        properties: { list: { type: 'array', prefixItems: [{ type: 'string', default: first }] } },
+      });
+      const { form, setSchema } = mount(prefixed('x'), { initialFormData: { list: ['x'] } });
+      setSchema(prefixed('y'));
+      expect(form.getFormData()).toEqual({ list: ['x'] });
+    });
+  });
+
   describe('a write from outside the fields', () => {
     const coloured = (color: string): RJSFSchema => ({
       type: 'object',

@@ -2776,11 +2776,14 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expected: ['y', 'q'],
     },
     {
+      // The fill gives no `default` of a `prefixItems` entry, on a mount either, so the form has none for the item to
+      // follow, where the utility swaps the one it reads
       name: 'swaps the old default of a prefix item for the new one',
       from: prefix({ type: 'string', default: 'x' }),
       to: prefix({ type: 'string', default: 'y' }),
       data: ['x', 'q'],
       expected: ['y', 'q'],
+      formExpected: ['x', 'q'],
     },
     {
       name: 'swaps the old default of an array item for the new one',

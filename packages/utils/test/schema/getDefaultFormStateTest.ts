@@ -11453,36 +11453,76 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(fill(schema, { list: [{ q: 1 }] }, filledAt(['list', 0, 'q']))).toEqual({ list: [{ q: 2 }] });
         });
 
-        it('stays in a tuple, under items offering options, and under a `ui:initialValue`', () => {
+        it('takes the default of its own item in a tuple, and of the option its items show', () => {
           const filled = filledAt(['list', 0]);
           const tuple: RJSFSchema = {
             type: 'object',
             properties: { list: { type: 'array', items: [{ type: 'string', default: 'z' }] } },
           };
-          expect(fill(tuple, { list: ['x'] }, filled)).toEqual({ list: ['x'] });
+          expect(fill(tuple, { list: ['x'] }, filled)).toEqual({ list: ['z'] });
           const options = list({ oneOf: [{ type: 'string', default: 'z' }, { type: 'number' }] });
-          expect(fill(options, { list: ['x'] }, filled)).toEqual({ list: ['x'] });
+          expect(fill(options, { list: ['x'] }, filled)).toEqual({ list: ['z'] });
+        });
+
+        it('takes the default of its item inside a row that is an array itself', () => {
+          const nested = list({ type: 'array', items: [{ type: 'string', default: 'z' }] });
+          expect(fill(nested, { list: [['x']] }, filledAt(['list', 0, 0]))).toEqual({ list: [['z']] });
+        });
+
+        it('stays under a `ui:initialValue`, of its array, a field above it or its own', () => {
+          const filled = filledAt(['list', 0]);
           const plain = list({ type: 'string', default: 'z' });
           expect(fill(plain, { list: ['x'] }, filled, { list: { 'ui:initialValue': ['x'] } })).toEqual({ list: ['x'] });
           expect(fill(plain, { list: ['x'] }, filled, { 'ui:initialValue': { list: ['x'] } })).toEqual({ list: ['x'] });
+          expect(fill(plain, { list: ['x'] }, filled, { list: { items: { 'ui:initialValue': 'x' } } })).toEqual({
+            list: ['x'],
+          });
         });
 
-        it('stays where it is a `null`, an object or an array', () => {
+        it('takes the default of the items whatever it held: a `null`, an object or an array', () => {
           const schema = list({ default: 'z' });
           const data = { list: [null, {}, []] };
-          expect(fill(schema, data, filledAt(['list', 0], ['list', 1], ['list', 2]))).toEqual(data);
+          expect(fill(schema, data, filledAt(['list', 0], ['list', 1], ['list', 2]))).toEqual({
+            list: ['z', 'z', 'z'],
+          });
+        });
+
+        it('takes a `null` the items declare as their default, and keeps a `null` no default gives', () => {
+          const nullable = list({ type: ['string', 'null'], default: null });
+          expect(fill(nullable, { list: ['x'] }, filledAt(['list', 0]))).toEqual({ list: [null] });
+          expect(fill(list({ type: ['string', 'null'] }), { list: [null] }, filledAt(['list', 0]))).toEqual({
+            list: [null],
+          });
         });
       });
 
-      it('stays where it is an extra key or a `null`', () => {
+      it('stays where it is an extra key', () => {
         const schema: RJSFSchema = {
           type: 'object',
-          default: { extra: 'e', nil: 'n' },
-          properties: { nil: { type: ['string', 'null'] } },
+          default: { extra: 'e' },
           additionalProperties: { type: 'string' },
         };
-        const data = { extra: 'x', nil: null };
-        expect(fill(schema, data, filledAt(['extra'], ['nil']))).toEqual(data);
+        expect(fill(schema, { extra: 'x' }, filledAt(['extra']))).toEqual({ extra: 'x' });
+      });
+
+      describe('holding or taking a `null`', () => {
+        const nullable = (value: string | null): RJSFSchema => ({
+          type: 'object',
+          properties: { nil: { type: ['string', 'null'], default: value } },
+        });
+
+        it('takes the default that gives it now where it holds a `null`', () => {
+          expect(fill(nullable('n'), { nil: null }, filledAt(['nil']))).toEqual({ nil: 'n' });
+        });
+
+        it('takes a `null` the default declares now', () => {
+          expect(fill(nullable(null), { nil: 'x' }, filledAt(['nil']))).toEqual({ nil: null });
+        });
+
+        it('keeps the `null` of a field no default gives a value', () => {
+          const schema: RJSFSchema = { type: 'object', properties: { nil: { type: ['string', 'null'] } } };
+          expect(fill(schema, { nil: null }, filledAt(['nil']))).toEqual({ nil: null });
+        });
       });
 
       describe('an object row of an array, filled whole from the `default` of its item', () => {
@@ -11505,12 +11545,21 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(fill(rows(row({ w: 3 })), data, filledAt())).toEqual(data);
         });
 
-        it('stays where the `default` its item declares gives no value', () => {
-          expect(fill(rows({ default: null }), data, filledAt(['list', 0]))).toEqual(data);
+        it('takes a `null` its item declares as its default', () => {
+          expect(fill(rows({ default: null }), data, filledAt(['list', 0]))).toEqual({ list: [null] });
         });
 
-        it('keeps its keys as a row of a tuple, which is merged with its data again', () => {
-          expect(fill(rows([row({ w: 3 })]), data, filledAt(['list', 0]))).toEqual(data);
+        it('takes the `default` of its own item whole as a row of a tuple', () => {
+          expect(fill(rows([row({ w: 3 })]), data, filledAt(['list', 0]))).toEqual({ list: [{ w: 3 }] });
+        });
+
+        it('stays where the `default` its item declares gives no value', () => {
+          expect(fill(rows({ default: undefined }), data, filledAt(['list', 0]))).toEqual(data);
+        });
+
+        it('stays where the option its items show declares no `default`, though another does', () => {
+          const offering = rows({ anyOf: [{ type: 'object' }, row({ w: 3 })] });
+          expect(fill(offering, data, filledAt(['list', 0]))).toEqual(data);
         });
       });
 
@@ -11586,12 +11635,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(fill({ type: 'array', items: { type: 'string' } }, ['a', 'b'], filledAt([]))).toEqual(['a', 'b']);
         });
 
-        it('stays as the data holds it where the root offers options, or declares a `null` default', () => {
+        it('takes the `default` of a root holding a value that is no array or object, and stays where it has none', () => {
+          expect(fill({ type: 'string', default: 'y' }, 'x', filledAt([]))).toBe('y');
+          expect(fill({ type: 'string', default: 'y' }, 'x', filledAt())).toBe('x');
+          expect(fill({ type: 'string' }, 'x', filledAt([]))).toBe('x');
+        });
+
+        it('takes the `default` of a root offering options, and stays where the root declares a `null` default', () => {
           const offering: RJSFSchema = {
             default: ['c'],
             oneOf: [{ type: 'array', items: { type: 'string' } }, { type: 'string' }],
           };
-          expect(fill(offering, ['a', 'b'], filledAt([]))).toEqual(['a', 'b']);
+          expect(fill(offering, ['a', 'b'], filledAt([]))).toEqual(['c']);
           const nullable: RJSFSchema = { type: ['array', 'null'], items: { type: 'string' }, default: null };
           expect(fill(nullable, ['a', 'b'], filledAt([]))).toEqual(['a', 'b']);
         });

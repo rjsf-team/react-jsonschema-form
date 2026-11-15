@@ -382,8 +382,6 @@ const differences: Partial<Record<string, Difference>> = {
 
 /** What the form is known not to do yet, by the mechanism behind it */
 const GAPS = {
-  optionRow:
-    'An object row of a tuple, or of a list whose items offer options, that the default of its item filled in does not take a new default whole: a key the new default leaves out stays',
   additionalItemsRow:
     'A seeded tuple row beyond `items` that equals the default of `additionalItems` follows that default, which the fill never gives to a row',
 };
@@ -393,7 +391,6 @@ const GAPS = {
  * regression; a seed in it that passes means the gap is closed there, and the seed is to be taken off the list
  */
 const KNOWN_GAPS: Partial<Record<string, { gap: keyof typeof GAPS; seeds: number[] }[]>> = {
-  [FOLLOWS]: [{ gap: 'optionRow', seeds: [165] }],
   [STAYS]: [{ gap: 'additionalItemsRow', seeds: [191] }],
 };
 

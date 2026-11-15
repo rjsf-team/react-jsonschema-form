@@ -119,6 +119,8 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   originAlong: Origins;
   /** The paths, in the data being sanitized, the fill wrote another value at than the previous data held there */
   refilled: ReadonlySet<FieldPath>;
+  /** How many seeded values the walk found to be the old defaults', whose origins it released without changing them */
+  reclassified: { count: number };
   /** Each value the walk dropped or wrote another over, whose path holds no value of the origin it had. An array's
    * items are left to `itemMoves`
    */
@@ -420,22 +422,26 @@ function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: 
 }
 
 /** Re-judges a value whose field's constraints changed. A cleared property is dropped, for the defaults to fill. A value
- * equal to the default the old schema filled it with is that schema's, so it becomes the new schema's default; a value
  * of another type, or one the new `const` or `enum` rejects, is replaced as `sanitizeDataForNewSchema()` replaces it,
- * or dropped. A field the new schema only holds as an extra key whose schema is guessed from its data keeps a value
+ * or dropped. No value is made to follow a changed `default` here: the fill computes a filled value again from the
+ * default that gives it now, see `getDefaultFormState()`. This only says which values are filled ones. A seeded value
+ * equal to what the old schema's defaults filled in is theirs, so its origin is released for the fill to follow, and
+ * one unlike it is the user's. The one exception is a key an option switch put back, which is written here: the
+ * switching field fills the option switched to before the form knows where its values came from. A field the new schema only holds as an extra key whose schema is guessed from its data keeps a value
  * its stub renders, see `guessedStubRenders()`, unless the value equals what the old field's defaults fill in, such as
  * its `default`, its `const` or an empty object, which no data can tell apart from a value the user chose.
  *
  * @param acceptsNull - Whether the field's new schema holds `null`, asked only of a `null` item
  * @param origin - Where the value came from. One a person entered is theirs whatever it equals, so it is never taken
- *   for the old field's default or what its defaults filled out. One the defaults filled in or a seed held is compared
- *   with them
+ *   for the old field's default or what its defaults filled out. A seed's is compared with them, once
  * @param isFilledByOldDefaults - Whether a value is what the defaults filled the old field with, asked only of a value
  *   no person entered of a field that turns into a guessed extra key
  * @param oldFillOut - What becomes of a value the new default differs from where the old defaults filled it out from
  *   the old one, see `oldFillOutOf()`: `DROP` to leave it for the fill, a value to write in place, or `undefined`
  * @param classify - Told of a seeded value kept where the field's default changed that is no fill of the old defaults,
  *   see `TreeContext.classified`
+ * @param isSwitchHeld - Whether the value is a key an option switch put back, judged under the option switched from
+ * @param release - Told of a seeded value that is a fill of the old defaults, which is the fill's from then on
  * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
  *   judge what it holds
  */
@@ -451,6 +457,8 @@ function judge<S extends StrictRJSFSchema>(
   isFilledByOldDefaults: (value: unknown) => boolean,
   oldFillOut: (value: unknown) => unknown,
   classify: () => void,
+  isSwitchHeld: boolean,
+  release: () => void,
 ): unknown {
   const before = constraintsOf(oldLayers, oldDefault);
   const now = constraintsOf(newLayers, newDefault);
@@ -507,7 +515,20 @@ function judge<S extends StrictRJSFSchema>(
   // `false`, nor what its own `ui:initialValue` replaced the default with
   const isNewDefault = newDefault === undefined || deepEquals(newDefault, value);
   let filledOut: unknown;
-  if (!isEntered && !isNewDefault && !isFilledByKey()) {
+  const follows = isSwitchHeld && !isEntered;
+  // A seeded value the old defaults gave is theirs from now on, for the fill to compute again
+  const isReleased =
+    origin === 'seeded' &&
+    !isSwitchHeld &&
+    !isNewDefault &&
+    !isFilledByKey() &&
+    ((isOldDefault && !Array.isArray(value)) || (oldDefault !== undefined && oldFillOut(value) !== undefined));
+  if (isReleased) {
+    release();
+  }
+  // A row the old defaults gave that the new schema rejects stays a row, emptied for the fill to fill in anew
+  const rejected = isItem && isReleased ? UNSET : DROP;
+  if (follows && !isNewDefault && !isFilledByKey()) {
     // A value holding the old default takes the new one as it is, but an array, which the fill fills out from it to
     // `minItems` and below its items, is filled out from it as what the old default filled out is: in place, as a
     // fresh mount fills it, or dropped for the fill. One that comes back as it is is kept, and judged by the rest
@@ -530,6 +551,7 @@ function judge<S extends StrictRJSFSchema>(
     oldDefault !== undefined &&
     !deepEquals(oldDefault, newDefault) &&
     !isOldDefault &&
+    !isReleased &&
     filledOut === undefined &&
     (typeof value !== 'object' || value === null)
   ) {
@@ -542,7 +564,8 @@ function judge<S extends StrictRJSFSchema>(
   const isWholeValue =
     typeof value !== 'object' || value === null || newLayers.some((layer) => isWholeValueSelect<S>(layer));
   if (
-    !isEntered &&
+    (follows || origin === 'seeded') &&
+    !isReleased &&
     !isNewDefault &&
     !isItem &&
     oldDefault !== undefined &&
@@ -558,10 +581,10 @@ function judge<S extends StrictRJSFSchema>(
     ? now.type !== undefined && !namesEveryType(before.type, now.type)
     : !deepEquals(before.type, now.type);
   if (before.type !== undefined && isTypeChange) {
-    return DROP;
+    return rejected;
   }
   if (now.const !== undefined && !deepEquals(now.const, value)) {
-    return deepEquals(before.const, value) ? now.const : DROP;
+    return deepEquals(before.const, value) ? now.const : rejected;
   }
   const { values } = now;
   if (values && !values.some((offered) => deepEquals(offered, value))) {
@@ -1062,6 +1085,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       () => {
         ctx.classified.push(fieldPathFromList(path));
       },
+      ctx.switchedToUiSchemas !== undefined,
+      () => {
+        ctx.released.push({ path, value: newValue });
+        ctx.reclassified.count += 1;
+      },
     );
     if (judged !== undefined) {
       // A value written over leaves no value of its origin at its path, as one dropped does, which the object or
@@ -1500,10 +1528,12 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
   itemMoves: ContainerKeyMove[];
   released: DroppedValue[];
   classified: FieldPath[];
+  isReclassified: boolean;
 } {
   const itemMoves: ContainerKeyMove[] = [];
   const released: DroppedValue[] = [];
   const classified: FieldPath[] = [];
+  const reclassified = { count: 0 };
   const sanitized = walk(
     {
       oldSchemaUtils: previous.schemaUtils,
@@ -1523,6 +1553,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       refilled: origins.refilled,
       released,
       classified,
+      reclassified,
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),
@@ -1551,5 +1582,6 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
     itemMoves,
     released,
     classified,
+    isReclassified: reclassified.count > 0,
   };
 }

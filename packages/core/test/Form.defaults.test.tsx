@@ -1336,44 +1336,53 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
     // A swap decided inside a property: each round of the diff judges `cfg` at its own level, against the schema the
     // previous round left it under, so the replacement the first round wrote is replaced again once `kind` retypes it
-    it('judges a replacement at its own level when the swap is decided inside a property', async () => {
-      // `mode` swaps `kind` and declares `cfg`'s value through the branch's own `default`, while `kind.v` decides
-      // `cfg`'s type — so no state of this form declares `cfg` twice, and each one is valid on its own terms
-      const wrapped: RJSFSchema = {
-        type: 'object',
-        properties: {
-          mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
-          kind: { type: 'object', properties: { v: { type: 'string' } } },
-        },
-        dependencies: {
-          mode: {
-            oneOf: [
-              { properties: { mode: { const: 'a' }, kind: kindFor('k1') }, default: { cfg: { name: 'a' } } },
-              { properties: { mode: { const: 'b' }, kind: kindFor('k2') }, default: { cfg: { name: 'mid' } } },
-            ],
+    // Under the default `allOf: 'skipDefaults'` the fill writes no `default` of the `then`, on a mount either, so `cfg`
+    // holds nothing once its type changes: what the form holds is what a form mounted with that data holds
+    it.each([
+      { name: 'the default of the branch, where the fill reads it', allOf: 'populateDefaults', cfg: { cfg: 'final' } },
+      { name: 'nothing, where the fill reads no default of the branch', allOf: 'skipDefaults', cfg: {} },
+    ] as const)(
+      'judges a replacement at its own level when the swap is decided inside a property: $name',
+      async ({ allOf, cfg }) => {
+        // `mode` swaps `kind` and declares `cfg`'s value through the branch's own `default`, while `kind.v` decides
+        // `cfg`'s type — so no state of this form declares `cfg` twice, and each one is valid on its own terms
+        const wrapped: RJSFSchema = {
+          type: 'object',
+          properties: {
+            mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+            kind: { type: 'object', properties: { v: { type: 'string' } } },
           },
-        },
-        allOf: [
-          {
-            if: { properties: { kind: { properties: { v: { const: 'k2' } }, required: ['v'] } }, required: ['kind'] },
-            then: { properties: { cfg: { type: 'string', default: 'final' } } },
-            else: { properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } } },
+          dependencies: {
+            mode: {
+              oneOf: [
+                { properties: { mode: { const: 'a' }, kind: kindFor('k1') }, default: { cfg: { name: 'a' } } },
+                { properties: { mode: { const: 'b' }, kind: kindFor('k2') }, default: { cfg: { name: 'mid' } } },
+              ],
+            },
           },
-        ],
-      };
-      const { node, onChange } = createFormComponent({
-        schema: { type: 'object', properties: { wrap: wrapped } },
-        initialFormData: { wrap: { mode: 'a', kind: { v: 'k1' }, cfg: { name: 'a' } } },
-        liveValidate: 'onChange',
-      });
+          allOf: [
+            {
+              if: { properties: { kind: { properties: { v: { const: 'k2' } }, required: ['v'] } }, required: ['kind'] },
+              then: { properties: { cfg: { type: 'string', default: 'final' } } },
+              else: { properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } } },
+            },
+          ],
+        };
+        const { node, onChange } = createFormComponent({
+          schema: { type: 'object', properties: { wrap: wrapped } },
+          initialFormData: { wrap: { mode: 'a', kind: { v: 'k1' }, cfg: { name: 'a' } } },
+          liveValidate: 'onChange',
+          defaultFormStateBehavior: { allOf },
+        });
 
-      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_wrap_mode')!, 'b');
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_wrap_mode')!, 'b');
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({ formData: { wrap: { mode: 'b', kind: { v: 'k2' }, cfg: 'final' } }, errors: [] }),
-        'root_wrap_mode',
-      );
-    });
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { wrap: { mode: 'b', kind: { v: 'k2' }, ...cfg } }, errors: [] }),
+          'root_wrap_mode',
+        );
+      },
+    );
 
     it('replaces a default holding a collapsed optional object at a level inside a property', async () => {
       // Each branch's `cfg` default leaves its optional `sub` object out, as the Optional Data Controls show it

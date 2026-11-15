@@ -1421,9 +1421,9 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // though this instance has generated defaults before.
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
   // A value is one the defaults filled in whole where no person entered, cleared or picked an option for it or for
-  // anything it holds, and no seed held any of it. An array's `default` fills its rows by position, so a value in an
+  // anything it holds, and no seed held any of it. An array's `default` fills its rows by position, so a row of an
   // array whose rows the person moved, added or removed is left as the data holds it: computed again, it would take
-  // what the default gives another row
+  // what the default gives another row. What the row holds below it is told apart as anywhere else
   let pickedAlong: ReadonlySet<FieldPath> | undefined;
   const isFilled = (fieldPath: FieldPath) => {
     pickedAlong ??= alongOf(new Set(current?.uiState.pickedPaths()));
@@ -1431,8 +1431,8 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       return false;
     }
     const path = fieldPathToList(fieldPath);
-    return !path.some(
-      (key, depth) => typeof key === 'number' && origins.get(fieldPathFromList(path.slice(0, depth))) === 'entered',
+    return !(
+      typeof path[path.length - 1] === 'number' && origins.get(fieldPathFromList(path.slice(0, -1))) === 'entered'
     );
   };
   // A pass told nothing of where its values came from takes none for a filled one
@@ -1514,7 +1514,8 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
       // does, so a default the round dropped is there again
-      if (sanitized === formData) {
+      // A seeded value found to be the old defaults' is the fill's to compute again, though the sanitize left it
+      if (sanitized === formData && !round.isReclassified) {
         break;
       }
       clearedPaths = round.itemMoves.reduce(withPathsMoved, clearedPaths);
