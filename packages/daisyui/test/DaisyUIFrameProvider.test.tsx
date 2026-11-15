@@ -61,6 +61,16 @@ describe('DaisyUIFrameProvider', () => {
     });
   });
 
+  test("fills the frame's height, so its theme colours the page below a short form", () => {
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <div>Test Content</div> });
+
+    const { container } = render(<DaisyUIFrame document={mockDocument as unknown as Document} />);
+
+    // jsdom lays nothing out and resolves no `vh` in computed styles, so the inline height the wrapper asks for stands in
+    // for the height it fills
+    expect(container.querySelector<HTMLElement>('.daisy-ui-theme')?.style.minHeight).toBe('100vh');
+  });
+
   test('uses provided theme when specified', () => {
     const DaisyUIFrame = __createDaisyUIFrameProvider({
       children: <div>Test Content</div>,

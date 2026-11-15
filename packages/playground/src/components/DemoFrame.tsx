@@ -19,8 +19,8 @@ const DEMO_FRAME_JSS = 'demo-frame-jss';
 // MUI's default look in the playground's light or dark mode, not the playground's own theme
 const muiPreviewThemes = { light: createTheme(), dark: createTheme({ palette: { mode: 'dark' } }) };
 
-/** The themes whose preview takes the playground's light or dark appearance. bootstrap3 has a single look, and
- * daisy-ui's subtheme picks its own
+/** The themes whose preview takes the playground's light or dark appearance from the frame's root or their provider.
+ * daisy-ui takes it as its subtheme until one is picked, and bootstrap3 has a single look
  */
 const FOLLOWS_APPEARANCE = new Set([
   'core',
@@ -190,7 +190,8 @@ function AntdPopupPatcher({ frameDoc }: { frameDoc?: Document }) {
 
 interface DemoFrameProps extends FrameComponentProps {
   theme: string;
-  subtheme: string;
+  /** The subtheme picked for the preview, if any */
+  subtheme: string | null;
 }
 
 export default function DemoFrame(props: DemoFrameProps) {
@@ -282,7 +283,8 @@ export default function DemoFrame(props: DemoFrameProps) {
       <FrameContextConsumer>
         {__createDaisyUIFrameProvider({
           ...props,
-          subtheme: { dataTheme: subtheme },
+          // daisyUI's own `light` and `dark` themes, until another subtheme is picked
+          subtheme: { dataTheme: subtheme || mode },
         })}
       </FrameContextConsumer>
     ) : null;

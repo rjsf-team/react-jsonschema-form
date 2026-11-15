@@ -404,7 +404,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               border: 0,
             }}
             theme={theme}
-            subtheme={subtheme || 'light'}
+            subtheme={subtheme}
           >
             <FormComponent
               key={`${loadKey}-${editKey}`}

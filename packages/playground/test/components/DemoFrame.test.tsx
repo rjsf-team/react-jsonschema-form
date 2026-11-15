@@ -14,10 +14,15 @@ function AntdContainerColor() {
 }
 
 /** Renders `DemoFrame` for `theme` under a playground in `mode` and returns the preview's document once it loaded */
-function renderPreview(theme: string, mode: 'light' | 'dark', children: ReactNode = <output />) {
+function renderPreview(
+  theme: string,
+  mode: 'light' | 'dark',
+  children: ReactNode = <output />,
+  subtheme: string | null = null,
+) {
   render(
     <ThemeProvider theme={createTheme({ palette: { mode } })}>
-      <DemoFrame title='Form preview' theme={theme} subtheme='light'>
+      <DemoFrame title='Form preview' theme={theme} subtheme={subtheme}>
         {children}
       </DemoFrame>
     </ThemeProvider>,
@@ -113,6 +118,20 @@ describe('DemoFrame', () => {
     await vi.waitFor(() => {
       expect(frameDocument.documentElement.style.background).toBe(background);
     });
+  });
+
+  it.each(['light', 'dark'] as const)("shows daisyUI's own %s theme until a subtheme is picked", async (mode) => {
+    const frameDocument = renderPreview('daisy-ui', mode);
+
+    await renderedOutput(frameDocument);
+    expect(frameDocument.querySelector('.daisy-ui-theme')).toHaveAttribute('data-theme', mode);
+  });
+
+  it('shows a picked daisy-ui subtheme whatever the playground mode', async () => {
+    const frameDocument = renderPreview('daisy-ui', 'dark', <output />, 'cupcake');
+
+    await renderedOutput(frameDocument);
+    expect(frameDocument.querySelector('.daisy-ui-theme')).toHaveAttribute('data-theme', 'cupcake');
   });
 
   it.each(['bootstrap3', 'daisy-ui'])('leaves the %s preview root to its own theme', async (theme) => {

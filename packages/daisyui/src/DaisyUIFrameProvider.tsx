@@ -97,7 +97,8 @@ function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: D
   }, [document]);
 
   return (
-    <div data-theme={theme} className='daisy-ui-theme'>
+    // The theme paints only this element, so it fills the frame's height to colour the page below a short form too
+    <div data-theme={theme} className='daisy-ui-theme' style={{ minHeight: '100vh' }}>
       <FrameThemeContext value={theme}>{children}</FrameThemeContext>
     </div>
   );
