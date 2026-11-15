@@ -8,7 +8,7 @@ const APPEARANCES = [
   { mode: 'dark', label: 'Dark' },
 ] as const;
 
-/** Picks the playground's own appearance. The form preview keeps the look of the theme selected for it. */
+/** Picks the playground's appearance, which the core theme's preview shares; other previews keep their theme's look */
 export default function AppearanceControl() {
   const { mode, setMode } = useColorScheme();
   return (
