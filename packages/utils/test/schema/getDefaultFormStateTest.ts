@@ -3520,6 +3520,30 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toStrictEqual({ typed: { arr: [] }, untyped: { arr: [] } });
         });
 
+        it.each<[string, DefaultFormStateBehavior, string]>([
+          ['deepest-wins', {}, 'own'],
+          ['ancestorWins', { nestedDefaultsPrecedence: 'ancestorWins' }, 'parent'],
+        ])(
+          'gives a nested value a field with options rejects its own default over the inherited one under %s, as a field without options',
+          (_name, defaultFormStateBehavior, expected) => {
+            const o: RJSFSchema = {
+              default: { k: 'own' },
+              allOf: [{ properties: { k: { enum: ['a', 'own', 'parent'] } } }],
+            };
+            const schema: RJSFSchema = {
+              type: 'object',
+              default: { plain: { k: 'parent' }, w: { k: 'parent' } },
+              properties: { plain: o, w: { ...o, anyOf: [{ type: 'string' }, { type: 'number' }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior },
+                { schema, formData: { plain: { k: 'z' }, w: { k: 'z' } } },
+              ),
+            ).toStrictEqual({ plain: { k: expected }, w: { k: expected } });
+          },
+        );
+
         it.each(['populateRequiredDefaults', 'skipDefaults'] as const)(
           'adds an optional property whose allOf holds a const as one with its own, under emptyObjectFields %s',
           (emptyObjectFields) => {

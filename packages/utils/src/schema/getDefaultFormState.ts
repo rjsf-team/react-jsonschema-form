@@ -1061,24 +1061,25 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     defaultFormStateBehavior?.constAsDefaults === 'never'
       ? undefined
       : constValueOf<S>(constSchemaOf<S, F>(context, view));
+  // The defaults the field's own `default` and the inherited ones give it: its own wins unless they have precedence, and
+  // two objects are merged, except for a select over object constants, whose own default and inherited default each
+  // name a whole constant, so a blend of them names none
+  const ownDefaults = (): unknown => {
+    const ownDefault = ownValue(schema.default);
+    if (
+      isObject(defaults) &&
+      isObject(ownDefault) &&
+      !isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(schema, () => view))
+    ) {
+      return preferParentDefaults ? mergeObjects(ownDefault, defaults) : mergeObjects(defaults, ownDefault);
+    }
+    return DEFAULT_KEY in schema && !preferParentDefaults ? ownDefault : defaults;
+  };
   if (fieldConst !== undefined) {
     defaults = ownValue(fieldConst);
-  } else if (
-    isObject(defaults) &&
-    isObject(schema.default) &&
-    !xxxOf &&
-    !isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(schema, () => view))
-  ) {
-    // For object defaults, merge defaults by precedence setting.
-    // Skip this for anyOf/oneOf schemas, which need special handling, and for a select over object constants,
-    // whose own default and inherited default each name a whole constant, so a blend of them names none.
-    const ownDefault = ownValue(schema.default);
-    defaults = preferParentDefaults ? mergeObjects(ownDefault, defaults) : mergeObjects(defaults, ownDefault);
-  } else if (DEFAULT_KEY in schema && !preferParentDefaults && !xxxOf) {
-    // If the schema has a default value and parentDefaults does not have precedence
-    // And if the schema does not have anyOf or oneOf (since we need to merge the defaults with the formData)
-    // Then we should use it as the default.
-    defaults = ownValue(schema.default);
+  } else if (DEFAULT_KEY in schema && !xxxOf) {
+    // A field with `anyOf` or `oneOf` merges its defaults with the data through the option it selects, below
+    defaults = ownDefaults();
   } else if (Array.isArray(schema.items) && isFixedItems<S>(schema) && !preferParentDefaults && !xxxOf) {
     // If the schema contains fixed items and parentDefaults does not have precedence
     // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
@@ -1127,14 +1128,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
               rawFormData,
             )));
       if (optionHoldsNone && shouldMergeDefaultsIntoFormData && rawFormData !== undefined) {
-        // A nested value the field's schema rejects falls back to the field's defaults, its own where it inherits none,
-        // as it does where the field has no options
-        const matching = viewFormDataMatching<unknown, S, F>(
-          context,
-          view,
-          rawFormData,
-          defaults === undefined ? ownValue(schema.default) : defaults,
-        );
+        // A nested value the field's schema rejects falls back to the field's defaults, by the same precedence as
+        // where the field has no options
+        const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData, ownDefaults());
         return matching === undefined
           ? optionValue
           : mergeDefaultsWithFormData(
