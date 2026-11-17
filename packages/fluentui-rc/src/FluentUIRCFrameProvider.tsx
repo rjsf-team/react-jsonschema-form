@@ -21,8 +21,11 @@ const FluentWrapper = (props: FluentUIRCFrameProviderProps & { targetDocument?: 
 
   return (
     <RendererProvider renderer={renderer} targetDocument={targetDocument}>
-      {/* `FluentProvider` paints only its own box, so the frame's page takes the same background around it */}
-      {targetDocument && <style>{`body { background: ${theme.colorNeutralBackground1}; }`}</style>}
+      {/* `FluentProvider` paints only its own box, so the frame's page takes the same background around it. The host's
+      own document, which a `FrameContextConsumer` with no `Frame` around it hands over, is not a frame's page */}
+      {targetDocument && targetDocument !== globalThis.document && (
+        <style>{`body { background: ${theme.colorNeutralBackground1}; }`}</style>
+      )}
       <FluentProvider targetDocument={targetDocument} theme={theme}>
         {children}
       </FluentProvider>

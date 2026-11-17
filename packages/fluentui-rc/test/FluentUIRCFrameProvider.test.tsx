@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { FrameContextConsumer } from 'react-frame-component';
 
 import { __createFluentUIRCFrameProvider } from '../src/FluentUIRCFrameProvider.tsx';
 
@@ -23,6 +24,17 @@ describe('__createFluentUIRCFrameProvider', () => {
     const FluentUIRCFrame = __createFluentUIRCFrameProvider({ children: <p>Form</p>, colorScheme: 'dark' });
 
     render(<FluentUIRCFrame />);
+
+    expect(getComputedStyle(document.body).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  });
+
+  it("leaves the host page's background alone under a FrameContextConsumer with no Frame around it", () => {
+    // The consumer's default context hands over the host page's own document
+    render(
+      <FrameContextConsumer>
+        {__createFluentUIRCFrameProvider({ children: <p>Form</p>, colorScheme: 'dark' })}
+      </FrameContextConsumer>,
+    );
 
     expect(getComputedStyle(document.body).backgroundColor).toBe('rgba(0, 0, 0, 0)');
   });
