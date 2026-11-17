@@ -1,3 +1,7 @@
+'use client';
+
+// react-day-picker creates a context as it loads, without 'use client', which breaks a server component's import
+
 import { memo } from 'react';
 import { isSameDay, isToday } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';

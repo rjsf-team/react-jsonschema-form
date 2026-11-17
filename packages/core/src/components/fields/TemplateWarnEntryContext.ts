@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, use, useMemo } from 'react';
 import { ADDITIONAL_PROPERTY_FLAG, fieldPathToList, hasSchemaMarker } from '@rjsf/utils';
 import type { FieldPath, GlobalFormOptions } from '@rjsf/utils';

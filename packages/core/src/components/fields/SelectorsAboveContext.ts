@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, use, useMemo } from 'react';
 
 /** How many selectors fields above render for the id `id`: `anyOf` and `oneOf` option selectors, and the fallback UI's

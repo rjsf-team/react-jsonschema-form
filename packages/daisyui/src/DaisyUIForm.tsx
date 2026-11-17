@@ -1,3 +1,5 @@
+'use client';
+
 import type { ThemedForm } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';

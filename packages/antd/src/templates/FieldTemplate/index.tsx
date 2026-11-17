@@ -1,3 +1,7 @@
+'use client';
+
+// @ant-design/icons creates a context as it loads, without 'use client', which breaks a server component's import
+
 import type { ReactNode } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';

@@ -1,3 +1,5 @@
+'use client';
+
 import type { ReactElement } from 'react';
 import { useMemo } from 'react';
 import type { ClassMap, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
