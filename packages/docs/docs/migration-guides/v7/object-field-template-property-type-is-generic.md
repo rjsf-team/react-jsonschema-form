@@ -12,7 +12,7 @@ related: []
 ## Detect
 
 - Your TypeScript code writes `ObjectFieldTemplatePropertyType` with explicit, non-default type arguments.
-- Your `ObjectFieldTemplate` reads `content.props` of a property as `any`, and the type checker now reports props that `schema` and `uiSchema` don't cover.
+- Your `ObjectFieldTemplate` reads `content.props` of a property as `any`, and the type checker now reports any other prop, for example `error TS2339: Property 'onChange' does not exist on type 'Pick<FieldProps<…>, "schema" | "uiSchema">'.`
 
 ## Change
 

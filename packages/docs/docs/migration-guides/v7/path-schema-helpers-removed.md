@@ -13,7 +13,7 @@ related: []
 
 - Your code calls the `Form.getUsedFormData()` or `Form.getFieldNames()` instance methods through a ref.
 - Your code imports `getUsedFormData`, `getFieldNames`, `toPathSchema` or the `PathSchema` type from `@rjsf/utils`, or calls `SchemaUtils.toPathSchema()`.
-- The type checker reports these as missing exports or members.
+- The type checker reports an import as `error TS2305: Module '"@rjsf/utils"' has no exported member 'toPathSchema'.` and a method as `error TS2339: Property 'getFieldNames' does not exist on type 'FormRef<…>'.`
 
 ## Change
 

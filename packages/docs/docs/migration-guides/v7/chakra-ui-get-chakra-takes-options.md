@@ -12,7 +12,7 @@ related: [chakra-ui-applies-chakra-option, chakra-ui-chakra-option-takes-style-p
 ## Detect
 
 - Your custom widget or template calls `getChakra(uiSchema)` or `getChakra({ uiSchema })`.
-- The type checker reports an error on that call, since a uiSchema no longer fits the parameter.
+- The type checker reports that call: `error TS2345: Argument of type 'UiSchema' is not assignable to parameter of type '(Record<string, unknown> & { 'ui:options'?: undefined; uiSchema?: undefined; }) | undefined'.`
 - Your code types the result of `getChakra()` as `Field.RootProps`.
 
 ## Change

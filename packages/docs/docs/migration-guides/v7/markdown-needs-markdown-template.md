@@ -20,16 +20,16 @@ related: [rich-description-test-ids-removed, file-info-is-plain-text]
 
 Install `markdown-to-jsx` and register the template:
 
-```tsx
-import Form from '@rjsf/core';
-import MarkdownTemplate from '@rjsf/core/markdown';
+```diff
+ import Form from '@rjsf/core';
++import MarkdownTemplate from '@rjsf/core/markdown';
 
-<Form
-  schema={schema}
-  validator={validator}
-  templates={{ MarkdownTemplate }}
-  uiSchema={{ 'ui:enableMarkdownInDescription': true }}
-/>;
+ <Form
+   schema={schema}
+   validator={validator}
++  templates={{ MarkdownTemplate }}
+   uiSchema={{ 'ui:enableMarkdownInDescription': true }}
+ />;
 ```
 
 `ui:enableMarkdownInDescription` and `ui:enableMarkdownInHelp` stay independent, default to `false`, and can still be set through `ui:globalOptions`. Translatable strings that allow markdown go through `RichDescription`, so they also need `ui:enableMarkdownInDescription`. A custom `translateString` that returns markdown keeps working once the template is registered and that option is on.

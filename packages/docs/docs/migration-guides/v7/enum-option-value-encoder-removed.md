@@ -20,13 +20,11 @@ In the `realValue` format an option's DOM value now depends on the rest of the l
 
 Encode the options once per render and read each option's value at its position:
 
-```tsx
-// v6
-value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
-// v7
-const domValues = enumOptionsDomValues(enumOptions, optionValueFormat);
-// ...
-value={domValues[index]}
+```diff
++const domValues = enumOptionsDomValues(enumOptions, optionValueFormat);
+ // ...
+-value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
++value={domValues[index]}
 ```
 
 For options from `groupEnumOptions()`, read `domValues[option.index]`, since `index` is the option's position in the ungrouped list.

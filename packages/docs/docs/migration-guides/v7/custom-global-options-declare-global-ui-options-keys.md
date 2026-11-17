@@ -19,16 +19,18 @@ related: [ui-global-options-hold-only-global-options, theme-global-options-use-t
 
 `GlobalUISchemaOptions` is closed to RJSF's twelve keys. Its `UserExtensions` parameter adds the keys your own components read, which may not reuse an option name RJSF reads for a field, or `definitions` or `globalOptions`, which only the root uiSchema's `ui:` keys set, as `ReservedUiOptionName` and `RESERVED_UI_OPTION_NAMES` list them. Declare the options against it, hand them to the uiSchema, which takes them as the plain type, and name their keys in the `Form`'s new [`globalUiOptionsKeys`](../../api-reference/form-props.md#globaluioptionskeys) prop:
 
-```ts
-import { GlobalUISchemaOptions, UiSchema } from '@rjsf/utils';
+```diff
+ import { GlobalUISchemaOptions, UiSchema } from '@rjsf/utils';
 
-const globalOptions: GlobalUISchemaOptions<{ density?: 'compact' | 'comfortable' }> = {
-  label: false,
-  density: 'compact',
-};
-const uiSchema: UiSchema = { 'ui:globalOptions': globalOptions };
+-const globalOptions: GlobalUISchemaOptions = {
++const globalOptions: GlobalUISchemaOptions<{ density?: 'compact' | 'comfortable' }> = {
+   label: false,
+   density: 'compact',
+ };
+ const uiSchema: UiSchema = { 'ui:globalOptions': globalOptions };
 
-<Form schema={schema} uiSchema={uiSchema} validator={validator} globalUiOptionsKeys={['density']} />;
+-<Form schema={schema} uiSchema={uiSchema} validator={validator} />;
++<Form schema={schema} uiSchema={uiSchema} validator={validator} globalUiOptionsKeys={['density']} />;
 ```
 
 Every field then hands the declared keys to its widget in its `options`, beneath the field's own, as it does RJSF's, and a template reads them with `getUiOptions(uiSchema, registry.globalUiOptions)`.

@@ -11,7 +11,7 @@ related: [omit-extra-data-submit-keeps-the-omitted-data]
 
 ## Detect
 
-- Your code calls `omitExtraData()` on a ref to `Form`; the type checker reports it as missing on `FormRef`.
+- Your code calls `omitExtraData()` on a ref to `Form`; the type checker reports `error TS2339: Property 'omitExtraData' does not exist on type 'FormRef<…>'.`
 
 ## Change
 

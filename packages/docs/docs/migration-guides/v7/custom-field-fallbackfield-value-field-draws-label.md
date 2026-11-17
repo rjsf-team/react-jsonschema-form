@@ -21,8 +21,8 @@ Such a custom field has the value field, below the type selector, draw the field
 "Before" is what 6.11.0 gives. With `schema: { type: 'object', properties: { val: { type: ['string', 'number'], title: 'Val', description: 'Desc' } } }` and a custom field `MyField` that draws no label or description of its own:
 
 - `MyField` named by `ui:field`. Before: the page runs out of stack, since `FallbackField` rendered its value through `SchemaField` with the `uiSchema` that names `MyField`, which [is now applied once per data path](./named-custom-field-applies-once-per-data-path.md). After: one label, `Val`, below the type selector, and one description.
-- `MyField` named by the schema's `$id`. Before: two labels, `Val` and `Value`. After: as above.
-- `MyField` named by a `ui:field` that it removes from the `uiSchema` it passes on. Before: one label, `Value`, and no description. After: as above.
+- `MyField` named by the schema's `$id`. Before: two labels, `Val` and `Value`. After: one label, `Val`, below the type selector, and one description.
+- `MyField` named by a `ui:field` that it removes from the `uiSchema` it passes on. Before: one label, `Value`, and no description. After: one label, `Val`, below the type selector, and one description.
 
 A custom field that draws its own label and description gets both a second time on every one of those routes, the second description under the same `id` as its own. Leave the label and description to the value field:
 

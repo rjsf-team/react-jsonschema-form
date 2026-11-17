@@ -18,12 +18,9 @@ related: [number-fields-render-text-input]
 
 The theme used to route `onChange` and `onChangeOverride` through one variable and hand both the value. Every other theme, and `@rjsf/core`'s own `BaseInputTemplate`, pass the raw `ChangeEvent`, and `@rjsf/mantine` now does too. Read the value off the event:
 
-```tsx
-// Before
-const onChangeOverride = (value: string) => setSomething(value);
-
-// After
-const onChangeOverride = (event: ChangeEvent<HTMLInputElement>) => setSomething(event.target.value);
+```diff
+-const onChangeOverride = (value: string) => setSomething(value);
++const onChangeOverride = (event: ChangeEvent<HTMLInputElement>) => setSomething(event.target.value);
 ```
 
 An `onChangeOverride` bypasses `onChange` entirely, so `ui:emptyValue`, which `@rjsf/core` applies when the input is cleared, doesn't reach it. Handle an empty string yourself if you need that behaviour.

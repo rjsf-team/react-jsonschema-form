@@ -25,7 +25,7 @@ The other props of `GridTemplateProps` were `any`. They are now any object, of w
 +function MyGridTemplate({ gap, ...rest }: GridTemplateProps & { gap?: number }) {
 ```
 
-`GridTemplateProps` is a type alias, so neither an `interface` that extends it nor a `declare module '@rjsf/utils'` augmentation of it compiles. Build a props type of your own by intersection instead, and declare a prop an augmentation added on the template that reads it, as above:
+`GridTemplateProps` is a type alias, so neither an `interface` that extends it nor a `declare module '@rjsf/utils'` augmentation of it compiles. Build a props type of your own by intersection instead, and declare a prop an augmentation added on the template that reads it with an intersection such as `GridTemplateProps & { gap?: number }`:
 
 ```diff
 -interface MyGridProps extends GridTemplateProps {

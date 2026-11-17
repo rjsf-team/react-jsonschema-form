@@ -11,7 +11,7 @@ related: [ui-options-types-the-options-widgets-read]
 
 ## Detect
 
-- Your custom alt-date widget passes a date element's `range` or `options.yearsRange` to a parameter typed `[number, number]`, and the type checker rejects the call.
+- Your custom alt-date widget passes a date element's `range` or `options.yearsRange` to a parameter typed `[number, number]`, and the type checker rejects the call: `error TS4104: The type 'readonly [number, number]' is 'readonly' and cannot be assigned to the mutable type '[number, number]'.`
 
 ## Change
 

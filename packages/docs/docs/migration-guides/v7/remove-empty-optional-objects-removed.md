@@ -13,7 +13,7 @@ related: []
 
 - Your `Form` passes the `removeEmptyOptionalObjects` prop.
 - Your code imports `removeOptionalEmptyObjects` from `@rjsf/utils`.
-- The type checker reports either as unknown.
+- The type checker reports the import as `error TS2305: Module '"@rjsf/utils"' has no exported member 'removeOptionalEmptyObjects'.` and the prop as `error TS2322: Type '{ removeEmptyOptionalObjects: true; … }' is not assignable to type 'IntrinsicAttributes & FormProps<…>'.` with `Property 'removeEmptyOptionalObjects' does not exist on type 'IntrinsicAttributes & FormProps<…>'.`
 
 ## Change
 

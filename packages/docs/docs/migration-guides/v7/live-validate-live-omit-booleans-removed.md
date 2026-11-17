@@ -11,7 +11,7 @@ related: []
 
 ## Detect
 
-- Your `Form` passes `liveValidate` or `liveOmit` as a boolean, including the bare `liveValidate` shorthand; the type checker reports it.
+- Your `Form` passes `liveValidate` or `liveOmit` as a boolean, including the bare `liveValidate` shorthand; the type checker reports `error TS2322: Type 'true' is not assignable to type '"onBlur" | "onChange" | undefined'.`, or the same with `'false'`.
 
 ## Change
 
