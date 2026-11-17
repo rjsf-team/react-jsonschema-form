@@ -510,6 +510,18 @@ function fillOverUndefined(nullFills: NullFills | undefined, formData: unknown, 
   }
 }
 
+/** The `null` fills of `nullFills` with none recorded yet, for a fold whose fills count only if its value is kept */
+function freshFills(nullFills: NullFills | undefined): NullFills | undefined {
+  return nullFills && { ...nullFills, overUndefined: new Map() };
+}
+
+/** Records the `null` fills of `from` in `into` */
+function addFills(into: NullFills | undefined, from: NullFills | undefined) {
+  from?.overUndefined.forEach((keys, formData) => {
+    keys.forEach((key) => fillOverUndefined(into, formData, key, null));
+  });
+}
+
 /** Puts the `null` of each `null` schema's field the form data holds as `undefined` into `merged`, see
  * `NullFills.overUndefined`. `merged` holds the keys of `formData` at every level, except those the defaults leave out,
  * such as keys an object `const` doesn't name under `constAsDefaults: 'always'` and object data a property's schema
@@ -639,6 +651,8 @@ interface MemoEntry {
   holdsNull?: boolean;
   /** Whether the fold of `value` took an object `const`, which a hit reports as its fold did */
   objectConst?: boolean;
+  /** The `null` fills the fold of `value` recorded, which a hit records as its fold did */
+  fills?: NullFills;
 }
 
 /** The props the fold hands each field: those of `computeDefaults()`, holding the data as it comes */
@@ -1137,8 +1151,10 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const track = (computed: DefaultsView<S>) => {
     lastView = computed;
   };
-  // Only the pass whose value is kept reports its `null` fill
+  // Only the pass whose value is kept reports its `null` fill, and records the `null`s it puts over the data's
+  // `undefined`: a pass whose conditions decided otherwise may have read a property as a `null` schema's field
   let holdsNull = false;
+  let passFills: NullFills | undefined;
   const onNullFill = () => {
     holdsNull = true;
   };
@@ -1151,7 +1167,8 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   };
   const fold = (passView: DefaultsView<S>) => {
     holdsNull = false;
-    return foldView(context, passView, passProps);
+    passFills = freshFills(props.nullFills);
+    return foldView(context, passView, { ...passProps, nullFills: passFills });
   };
   let value = fold(view);
   const decided = (conditions: readonly CheckedCondition[]) =>
@@ -1163,7 +1180,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // again, with the `null`s it puts over the data's `undefined`; otherwise the data is merged over them, a default
     // standing in for a value it lacks
     const depData = props.shouldMergeDefaultsIntoFormData
-      ? withNullFills(value, data, props.nullFills)
+      ? withNullFills(value, data, passFills)
       : mergeDefaultsWithFormData(value, data, false, true);
     const { graph } = lastView.field;
     // The plan checked its conditions against its own dependency data, `{}` standing in for none, so they decide alike
@@ -1181,6 +1198,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (holdsNull) {
         props.onNullFill?.();
       }
+      addFills(props.nullFills, passFills);
       return value;
     }
     seen.add(qualified);
@@ -1250,9 +1268,10 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     held?.inputs.every((input, index) => Object.is(input, inputs[index])),
   );
   if (entry === undefined) {
-    const computed: MemoEntry = { inputs };
+    const computed: MemoEntry = { inputs, fills: freshFills(props.nullFills) };
     computed.value = foldField<T, S, F>(context, child, {
       ...props,
+      nullFills: computed.fills,
       memo: undefined,
       onNullFill: () => {
         computed.holdsNull = true;
@@ -1270,6 +1289,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (entry.holdsNull) {
     props.onNullFill?.();
   }
+  addFills(props.nullFills, entry.fills);
   if (entry.objectConst) {
     props.onObjectConst?.();
   }

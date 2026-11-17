@@ -14029,6 +14029,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema, filled)).toEqual(filled);
       });
 
+      it('puts no `null` over a value the data holds as `undefined` for a branch its default does not select', () => {
+        // The `if` holds for the data alone and fails once `k` is `'x'`
+        testValidator.setReturnValues({ isValid: [true, ...Array.from({ length: 20 }, () => false)] });
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string', default: 'x' }, z: {} },
+          if: { properties: { k: { const: 'y' } } },
+          then: { properties: { z: { type: 'null' } } },
+          else: { properties: { z: { type: 'string' } } },
+        };
+        expect(fill(schema, { z: undefined })).toStrictEqual({ k: 'x', z: undefined });
+      });
+
       it('decides a condition for the data it is checked against, whatever data it was checked against before', () => {
         // `'Aa'` and `'BB'` hash alike as strings, so no check made for the one may answer for the other
         const schema: RJSFSchema = {
