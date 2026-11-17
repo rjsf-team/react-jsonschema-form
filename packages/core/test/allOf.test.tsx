@@ -1,7 +1,15 @@
 import type { RJSFSchema, FieldProps } from '@rjsf/utils';
+import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
-import { createFormComponent, setupConsoleWarnSuppression } from './testUtils.tsx';
+import {
+  createFormComponent,
+  expectToHaveBeenCalledWithFormData,
+  getSelectedOptionValue,
+  setupConsoleWarnSuppression,
+} from './testUtils.tsx';
+
+const user = userEvent.setup();
 
 setupConsoleWarnSuppression();
 
@@ -73,5 +81,26 @@ describe('allOf', () => {
     Object.keys(formContext).forEach((key) => {
       expect(node.querySelector(`code#${formContext[key]}`)).toBeInTheDocument();
     });
+  });
+  const COLOR: RJSFSchema = { type: 'string', enum: ['red', 'green', 'blue'] };
+  it.each<[string, RJSFSchema]>([
+    ['a $ref', { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' }],
+    ['an inline enum', { allOf: [COLOR], default: 'red' }],
+  ])('should keep the option picked in the select of an enum wrapped in allOf with %s', async (_name, color) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { color },
+      definitions: { Color: COLOR },
+    };
+    const { node, onChange } = createFormComponent({ schema });
+    const select = node.querySelector('select');
+    if (!(select instanceof HTMLSelectElement)) {
+      throw new Error('the form renders no select');
+    }
+
+    await user.selectOptions(select, 'green');
+
+    expectToHaveBeenCalledWithFormData(onChange, { color: 'green' }, 'root_color');
+    expect(getSelectedOptionValue(select)).toEqual('green');
   });
 });

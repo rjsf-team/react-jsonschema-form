@@ -8,6 +8,7 @@ import {
   DEFAULT_KEY,
   DEPENDENCIES_KEY,
   ELSE_KEY,
+  ENUM_KEY,
   IF_KEY,
   ONE_OF_KEY,
   PROPERTIES_KEY,
@@ -100,6 +101,7 @@ import type { Provenance } from './graph/provenance.ts';
 import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
 import { schemaFrom } from './graph/schemaFrom.ts';
+import { declaresUnconditionally, scopeOf } from './graph/validationTargets.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import { resolveDeclaredConstantOptions } from './resolveConstantOptions.ts';
 import retrieveSchema, {
@@ -119,6 +121,15 @@ const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
 /** The keywords retrieving a schema merges subschemas in through; it leaves the own keywords of a schema holding none */
 const MERGING_KEYWORDS = [REF_KEY, ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY];
+
+/** The keywords through which a schema may reject a value that is no object: the options it offers, and those that
+ * merge in subschemas that may hold them. Under `constAsDefaults: 'always'` its `const` replaces the value too
+ */
+const REJECTING_KEYWORDS = [ENUM_KEY, ONE_OF_KEY, ANY_OF_KEY, ...MERGING_KEYWORDS];
+
+function holdsAnyOf(schema: object, keywords: readonly string[]): boolean {
+  return keywords.some((keyword) => Object.hasOwn(schema, keyword));
+}
 
 /** Determines whether a schema has an allOf key AND the defaultFormStateBehavior for all of is set
  * to `populateDefaults`.
@@ -366,17 +377,56 @@ function nullsOnlyContext<S extends StrictRJSFSchema, F extends FormContextType>
   };
 }
 
+/** Marks a context under which the fold reads no schema's `default`, see `skippingDefaults()`. A context spread from
+ * one keeps the mark
+ */
+const SKIPS_DEFAULTS = Symbol('skipsDefaults');
+
+/** `context` under which `foldView()` reads each field without its `default`: under `allOf: 'skipDefaults'`, a key
+ * only an object's unmerged `allOf` declares has its own `default`, and those nested below it, from that `allOf`, which
+ * the setting skips, so it takes only what the object's default gives it, its `const`s and its `null` fills, not the
+ * `false` a required boolean takes in place of a default
+ *
+ * @param context - The `SchemaContext` the defaults are computed in
+ * @returns - The context that skips the `default`s
+ */
+function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+): SchemaContext<S, F> {
+  // Only `context` spread with the mark is kept under `context`, but the memo can't carry its type parameters
+  return skippingContexts.get([context], () => ({ ...context, [SKIPS_DEFAULTS]: true })) as SchemaContext<S, F>;
+}
+
+/** The context `skippingDefaults()` returns, per context it is built from, so it keeps its identity across the passes
+ * and calls whose memos compare the context first
+ */
+const skippingContexts = new KeyedMemo<object>();
+
+/** The schema `foldView()` reads under `skippingDefaults()`, per schema it is read from, so it keeps its identity across
+ * the passes and calls that read it, as the caches keyed on a schema need
+ */
+const schemasWithoutDefault = new WeakMap<object, StrictRJSFSchema>();
+function withoutDefault<S extends StrictRJSFSchema>(schema: S): S {
+  let stripped = schemasWithoutDefault.get(schema);
+  if (stripped === undefined) {
+    stripped = withoutKeys(schema, DEFAULT_KEY);
+    schemasWithoutDefault.set(schema, stripped);
+  }
+  // Only `schema` copied without its `default` is stored under `schema`, but the memo can't carry its type parameter
+  return stripped as S;
+}
+
 /** The context `nullsOnlyContext()` gives a key only an unmerged `allOf` declares, its ancestors' defaults winning,
  * per context it is built from, so it keeps its identity across the passes, whose memo compares the context first
  */
-const skippingContexts = new WeakMap<object, object>();
+const branchSkippingContexts = new WeakMap<object, object>();
 function skippingBranchDefaults<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
 ): SchemaContext<S, F> {
-  let skipping = skippingContexts.get(context);
+  let skipping = branchSkippingContexts.get(context);
   if (skipping === undefined) {
     skipping = nullsOnlyContext(context, 'ancestorWins');
-    skippingContexts.set(context, skipping);
+    branchSkippingContexts.set(context, skipping);
   }
   // Only `context` with the settings `nullsOnlyContext()` gives is stored under `context`, but the WeakMap can't carry
   // its type parameters
@@ -549,6 +599,21 @@ interface DefaultsView<S extends StrictRJSFSchema> {
   readonly conditions: boolean;
   readonly data: unknown;
   readonly depData: unknown;
+  /** The field's schema as last merged, see `mergedSchemaOf()` */
+  readonly merged: MergedSchema<S>;
+}
+
+/** The field a view stands for, and the schema it was last merged into with the context it was merged with */
+interface MergedSchema<S extends StrictRJSFSchema> {
+  field?: Provenance<S>;
+  context?: object;
+  schema?: S;
+  /** What `constSchemaOf()` gave the view, and the context it gave it for */
+  constContext?: object;
+  constSchema?: S;
+  /** What `isWholeValueField()` gave the view, and the context it gave it for */
+  wholeContext?: object;
+  wholeValue?: boolean;
 }
 
 /** The options selected for a field: the option chosen from each list, by the node holding it, and the lists chosen
@@ -800,6 +865,7 @@ function planView<S extends StrictRJSFSchema, F extends FormContextType>(
     conditions,
     data,
     depData,
+    merged: {},
   };
 }
 
@@ -822,6 +888,7 @@ function ownView<S extends StrictRJSFSchema>(field: DefaultsField<S>, schema: S,
     conditions: true,
     data,
     depData: data,
+    merged: {},
   };
 }
 
@@ -921,50 +988,31 @@ interface FieldConst<S extends StrictRJSFSchema> {
   readonly object?: Record<string, unknown>;
 }
 
-/** Returns the `const` of the field of `view`, read from its own schema, or, where that holds none and an `allOf` member
- * or an `if` branch its plan left unmerged may give it one, from the field as `SchemaField` retrieves it for the data,
- * which `passes` gives. Only an object `const` is read from that: the branch's other defaults, a primitive `const`
- * included, stay skipped as the plan skips them
+/** Returns the `const` of the field of `view`, read from its schema merged for its data where a merge brings one in, see
+ * `constSchemaOf()`
  */
 function fieldConstOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
-  passes: FieldPasses<S>,
 ): FieldConst<S> {
   const { defaultFormStateBehavior } = context;
-  let { schema } = view;
-  if (
-    schema[CONST_KEY] === undefined &&
-    !view.field.retrieves &&
-    (ALL_OF_KEY in schema || IF_KEY in schema) &&
-    // The retrieve merges no option, so only an object `const` it reaches without one is worth retrieving for
-    reachesObjectConst<S>(view.field, defaultFormStateBehavior, false)
-  ) {
-    const retrievedSchema = passes.retrievedViewOf(view).schema;
-    if (isObjectData(retrievedSchema[CONST_KEY])) {
-      schema = retrievedSchema;
-    }
-  }
+  const schema = constSchemaOf<S, F>(context, view);
   const isDefault = constIsDefault<S>(schema, defaultFormStateBehavior);
   const value = schema[CONST_KEY];
   return { schema, isDefault, object: isDefault && isObjectData(value) ? value : undefined };
 }
 
-/** Whether a node, by graph, leads to an object `const`, see `reachesObjectConst()`: through options keyed by its id,
- * without them by `-1 - id`
- */
+/** Whether a node, by graph, leads to an object `const`, see `reachesObjectConst()` */
 const objectConstReach = new WeakMap<object, Map<NodeId, boolean>>();
 
 /** Whether a subschema the field may merge or show declares an object `const`: one a seed of the field, or a `$ref`,
  * `allOf`, `then`/`else`, `dependencies` or `anyOf`/`oneOf` option it leads to through those, declares. Only such a
  * field can give an object `const` that its plan leaves unmerged, or that the fold leaves out, so the rest are spared
- * the retrieve and the extra fold that look for one. None does where constants are never defaults. Without
- * `viaOptions`, the `anyOf`/`oneOf` options are not followed
+ * the retrieve and the extra fold that look for one. None does where constants are never defaults
  */
 function reachesObjectConst<S extends StrictRJSFSchema>(
   { graph, seeds }: DefaultsField<S>,
   defaultFormStateBehavior: DefaultFormStateBehavior | undefined,
-  viaOptions = true,
 ): boolean {
   if (defaultFormStateBehavior?.constAsDefaults === 'never') {
     return false;
@@ -974,7 +1022,7 @@ function reachesObjectConst<S extends StrictRJSFSchema>(
     answers = new Map<NodeId, boolean>();
     objectConstReach.set(graph, answers);
   }
-  return seeds.some(({ node }) => leadsToObjectConst<S>(graph, node, answers, viaOptions));
+  return seeds.some(({ node }) => leadsToObjectConst<S>(graph, node, answers));
 }
 
 /** Whether the node `start` of `graph`, or a subschema it leads to as `reachesObjectConst()` follows them, declares an
@@ -987,28 +1035,26 @@ function leadsToObjectConst<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   start: NodeId,
   answers: Map<NodeId, boolean>,
-  viaOptions: boolean,
 ): boolean {
   const visited = new Set<NodeId>();
   const walk = (id: NodeId): boolean => {
     const node = graph.node(id);
-    const key = viaOptions ? id : -1 - id;
     // A boolean or unresolved node declares nothing
-    if (answers.has(key) || visited.has(key) || node.kind !== 'schema') {
-      return answers.get(key) === true;
+    if (answers.has(id) || visited.has(id) || node.kind !== 'schema') {
+      return answers.get(id) === true;
     }
-    visited.add(key);
+    visited.add(id);
     const reaches =
       isObjectData(node.raw[CONST_KEY]) ||
       [
         ...(node.ref === undefined ? [] : [node.ref]),
         ...[THEN_KEY, ELSE_KEY].flatMap((keyword) => graph.child(id, keyword) ?? []),
-        ...[ALL_OF_KEY, DEPENDENCIES_KEY, ...(viaOptions ? [ANY_OF_KEY, ONE_OF_KEY] : [])].flatMap((keyword) =>
+        ...[ALL_OF_KEY, DEPENDENCIES_KEY, ANY_OF_KEY, ONE_OF_KEY].flatMap((keyword) =>
           graph.subschemas(id, keyword).map(([, child]) => child),
         ),
       ].some(walk);
     if (reaches) {
-      answers.set(key, true);
+      answers.set(id, true);
     }
     return reaches;
   };
@@ -1209,7 +1255,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
  */
 function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  view: DefaultsView<S>,
+  fieldView: DefaultsView<S>,
   inputProps: ViewProps<T, S, F>,
 ): unknown {
   const { defaultFormStateBehavior } = context;
@@ -1223,9 +1269,14 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     uiSchema: localUiSchema,
     uiSchemaDefinitions,
   } = inputProps;
+  inputProps.track(fieldView);
+  // A field with no `default` has none to strip, so it is read as it stands rather than copied
+  const view =
+    SKIPS_DEFAULTS in context && DEFAULT_KEY in fieldView.schema
+      ? { ...fieldView, schema: withoutDefault(fieldView.schema) }
+      : fieldView;
   const { schema } = view;
   const rootSchema = view.field.graph.rawRoot;
-  inputProps.track(view);
   // Apply `ui:definitions` at every field, keyed by the `$ref` its plan was resolved from, so defaults see the same
   // uiSchema `SchemaField` renders with
   const uiSchema = uiSchemaDefinitions
@@ -1246,7 +1297,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
-  const fieldConst = fieldConstOf<S, F>(context, view, props.passes);
+  const fieldConst = fieldConstOf<S, F>(context, view);
   const { schema: constSchema } = fieldConst;
   if (fieldConst.object !== undefined) {
     props.onObjectConst?.();
@@ -1256,27 +1307,24 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (constDefault) {
     defaults = ownValue(constSchema[CONST_KEY]);
   }
+  // The defaults the field's own `default` and the inherited ones give it: its own wins unless they have precedence, and
+  // two objects are merged, except for a select over object constants, whose own default and inherited default each
+  // name a whole constant, so a blend of them names none
+  const ownDefaults = (): unknown => {
+    const ownDefault = ownValue(schema.default);
+    if (isObject(defaults) && isObject(ownDefault) && !isWholeValueField<S, F>(context, view)) {
+      return preferParentDefaults ? mergeObjects(ownDefault, defaults) : mergeObjects(defaults, ownDefault);
+    }
+    return DEFAULT_KEY in schema && !preferParentDefaults ? ownDefault : defaults;
+  };
   // An object `const` beside options is the object's defaults, but the option the object shows still renders beside
   // it, as `ObjectField` renders it, so that option is folded with the `const` as its parent's defaults
   const foldsOptionUnderConst = xxxOf !== undefined && fieldConst.object !== undefined;
   // Where the `const` is the field's defaults, nothing below takes their place
   if (!constDefault || foldsOptionUnderConst) {
-    if (
-      isObject(defaults) &&
-      isObject(schema.default) &&
-      !xxxOf &&
-      !isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(schema, () => view))
-    ) {
-      // For object defaults, merge defaults by precedence setting.
-      // Skip this for anyOf/oneOf schemas, which need special handling, and for a select over object constants,
-      // whose own default and inherited default each name a whole constant, so a blend of them names none.
-      const ownDefault = ownValue(schema.default);
-      defaults = preferParentDefaults ? mergeObjects(ownDefault, defaults) : mergeObjects(defaults, ownDefault);
-    } else if (DEFAULT_KEY in schema && !preferParentDefaults && !xxxOf) {
-      // If the schema has a default value and parentDefaults does not have precedence
-      // And if the schema does not have anyOf or oneOf (since we need to merge the defaults with the formData)
-      // Then we should use it as the default.
-      defaults = ownValue(schema.default);
+    if (DEFAULT_KEY in schema && !xxxOf) {
+      // A field with `anyOf` or `oneOf` merges its defaults with the data through the option it selects, below
+      defaults = ownDefaults();
     } else if (Array.isArray(schema.items) && isFixedItems<S>(schema) && !preferParentDefaults && !xxxOf) {
       // If the schema contains fixed items and parentDefaults does not have precedence
       // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
@@ -1338,7 +1386,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
                 rawFormData,
               )));
         if (optionHoldsNone && shouldMergeDefaultsIntoFormData && rawFormData !== undefined) {
-          const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
+          // A nested value the field's schema rejects falls back to the field's defaults, by the same precedence as
+          // where the field has no options
+          const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData, ownDefaults());
           return matching === undefined
             ? optionValue
             : mergeDefaultsWithFormData(
@@ -1416,33 +1466,42 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // Object data of a field whose defaults are a whole value or one of another type is the field's value as a whole,
       // so it is kept as it is where the field takes it and its defaults stand otherwise, rather than blended with them
       // key by key
-      const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
+      const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData, defaults);
       if (matching !== undefined) {
         defaultsWithFormData = matching;
       } else if (foldedType === 'whole') {
         defaultsWithFormData = defaults;
       }
-    } else if (initialDefaultsGenerated && isObject(rawFormData) && foldedType === undefined && !mergedAllOf) {
-      // Once the form has generated its defaults, the object data of an untyped field is the user's as it stands, as the
-      // extra keys of an object field are (#3759), so a nested object they cleared isn't filled in again
-      defaultsWithFormData = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
     } else if (!isObject(rawFormData) || foldedType === undefined) {
-      // A value that is no object, and object data of an untyped field, are merged with the field's defaults here. Object
-      // data of an object field is not: each of its properties was computed with its data already, its `allOf` merged
-      // or not, so the data is matched once, by the field of each property, rather than again by every object it is
-      // nested in. The data of an untyped field wins over its defaults, except where its `allOf` was merged: what its
-      // properties were computed as from that wins, as an `if`/`then` `const` does
-      defaultsWithFormData = mergeDefaultsWithFormData(
-        defaultsWithFormData,
-        viewFormDataMatching<unknown, S, F>(context, view, rawFormData),
-        mergeExtraDefaults,
-        // A value missing or `NaN` takes the defaults, as does a `null` the whole form data is; a `null` the user left in
-        // an object or array, and a key of object data the user left `undefined`, keep it unless
-        // `mergeDefaultsIntoFormData` says a default replaces it
-        (!isObject(rawFormData) && (rawFormData !== null || props.requiredAsRoot === true)) ||
-          defaultReplacesUndefined(defaultFormStateBehavior),
-        isObject(rawFormData) && mergedAllOf,
-      );
+      // A value that is no object, and object data of an untyped field, are merged with the field's defaults here.
+      // Object data of an object field is not: each of its properties was computed with its data already, its `allOf`
+      // merged or not, so the data is matched once, by the field of each property, rather than again by every object it
+      // is nested in. The data of an untyped field wins over its defaults, except where its `allOf` was merged: what
+      // its properties were computed as from that wins, as an `if`/`then` `const` does. Object data the untyped field
+      // can't take is no value of it, so its defaults stand, as a typed field's do above, before and after the form has
+      // generated its defaults. Under `constAsDefaults: 'always'` a missing value takes the field's `const`, as the
+      // match gives a field its own one, wherever the merge brings it in
+      const matching =
+        rawFormData === undefined && defaultFormStateBehavior?.constAsDefaults === 'always' && constDefault
+          ? constSchema[CONST_KEY]
+          : viewFormDataMatching<unknown, S, F>(context, view, rawFormData, defaults);
+      if (isObject(rawFormData) && matching !== undefined && initialDefaultsGenerated && !mergedAllOf) {
+        // Once the form has generated its defaults, the object data of an untyped field is the user's as it stands, as
+        // the extra keys of an object field are (#3759), so a nested object they cleared isn't filled in again
+        defaultsWithFormData = matching;
+      } else if (matching !== undefined || !isObject(rawFormData)) {
+        defaultsWithFormData = mergeDefaultsWithFormData(
+          defaultsWithFormData,
+          matching,
+          mergeExtraDefaults,
+          // A value missing or `NaN` takes the defaults, as does a `null` the whole form data is; a `null` the user
+          // left in an object or array, and a key of object data the user left `undefined`, keep it unless
+          // `mergeDefaultsIntoFormData` says a default replaces it
+          (!isObject(rawFormData) && (rawFormData !== null || props.requiredAsRoot === true)) ||
+            defaultReplacesUndefined(defaultFormStateBehavior),
+          isObject(rawFormData) && mergedAllOf,
+        );
+      }
     }
   }
 
@@ -1888,7 +1947,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const passes = props.passes ?? fieldPasses<S, F>(context, rootSchema, rawFormData);
   // An object `const` the field defaults to. Where the fold leaves its value out, it still closes the object to the
   // keys it names, so a default of the object's for those keys is still seeded, as the value it starts with
-  const objectConst = (fieldConst ?? fieldConstOf<S, F>(context, view, passes)).object;
+  const objectConst = (fieldConst ?? fieldConstOf<S, F>(context, view)).object;
   // `ObjectField` asks whether the user can add a key of the field as it renders it, retrieved for the data, its `allOf`
   // and `if` merged. An option's `const` is not its parent's: the field that renders the option's extra keys, its
   // parent's or, where the option offers options of its own, the option's, asks it of the parent with the option's
@@ -1937,14 +1996,36 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       unmergedProperties.set(key, propertySchema);
     }
   }
-  const isComputed = (key: string) => isDeclared(key) || unmergedProperties.has(key);
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
-  const childProps = (key: string, uiSchemaKey: string) => ({
+  // Whether the property `key`, seeded by `seeds`, takes a `const`: one of its own, the object's `const` for it, or one
+  // its `allOf` or unmerged `if`/`then` brings in, read from its schema merged for its data where a merge can reach
+  // one, as the fold takes it. Worked out only where a default is added, as the data holds most keys on an edit, and
+  // then once
+  const constCheck = (key: string, graph: SchemaGraph<S>, seeds: readonly Seed[], readProperty: S) => {
+    let holdsConst: boolean | undefined;
+    return () => {
+      holdsConst ??=
+        defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+        !constIsAjvDataReference(readProperty) &&
+        ((isObject(readProperty) && CONST_KEY in readProperty) ||
+          (!props.leavesOutObjectConst && getByPath(objectConst, key) !== undefined) ||
+          (isSchemaObject<S>(readProperty) &&
+            mergedConstSchemaOf<S, F>(
+              context,
+              readProperty,
+              formData[key],
+              () => rootProvenance<S>(graph, seeds),
+              (field) => retrieveField<S, F>(context, field, formData[key]),
+            ) !== undefined));
+      return holdsConst;
+    };
+  };
+  const childProps = (key: string, uiSchemaKey: string, requiredKeys = schema.required) => ({
     includeUndefinedValues: includeUndefinedValues === true,
     parentDefaults: getByPath(defaults, key),
     rawFormData: getByPath(formData, key),
-    required: schema.required?.includes(key),
+    required: requiredKeys?.includes(key),
     shouldMergeDefaultsIntoFormData,
     initialDefaultsGenerated,
     uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaKey),
@@ -1981,34 +2062,117 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const propertyKeys = Object.keys(schema.properties ?? {}).filter(
     (key) => isPinned(key) || !hasSchemaMarker(getPropertySchema<S>(schema, key), ADDITIONAL_PROPERTY_FLAG),
   );
-  [...propertyKeys, ...unmergedProperties.keys()].forEach((key) => {
+  // A key a property of an `allOf` the plan left unmerged declares, whatever the data, is no extra key of the field as
+  // rendered, so it is folded through that property below and its default is the field's. A key only an unmerged
+  // `then`, `else` or `dependencies` declares stays an extra key (#5816), as does one the merge leaves out, as it
+  // leaves the `allOf`'s properties out beside `additionalProperties: false`. Each key is asked about in several places,
+  // so it is worked out once per call, from the graph first, so the field is merged only for a key its `allOf` declares
+  const allOfField = ALL_OF_KEY in view.schema ? fieldOfView<S>(view) : undefined;
+  const allOfKeys = new Map<string, boolean>();
+  const declaredInAllOf = (key: string) => {
+    let declared = allOfKeys.get(key);
+    if (declared === undefined) {
+      declared =
+        allOfField !== undefined &&
+        allOfField.seeds.some(({ node }) => declaresUnconditionally<S>(allOfField.graph, node, key)) &&
+        getByPath(mergedSchemaOf<S, F>(context, view).properties, key) !== undefined;
+      allOfKeys.set(key, declared);
+    }
+    return declared;
+  };
+  const isComputed = (key: string) => isDeclared(key) || unmergedProperties.has(key) || declaredInAllOf(key);
+  const ownProperties = [...propertyKeys, ...unmergedProperties.keys()].map((key) => {
+    const skipsBranchDefaults = unmergedProperties.has(key);
     const propertySchema = unmergedProperties.get(key) ?? getPropertySchema<S>(schema, key);
     // A key the fold left unmerged has no seed under the object's `properties`, so it is seeded where the field as
     // `SchemaField` retrieves it declares it, its `$ref`, recursion and `dependencies` with it, rather than from the
     // `additionalProperties` or `patternProperties` its seeds in the fold would be
-    const seeding = unmergedProperties.has(key) ? retrievedView() : view;
+    const seeding = skipsBranchDefaults ? retrievedView() : view;
     const { seeds, edge } = childSeeds(seeding, key);
     // A property written as a `$ref` keeps its `const` and `type` in the definition it names, which is read where the
     // declaration holding that `$ref` sits, since a property declared twice is merged into one no graph holds
     const readProperty = isSchemaObject<S>(propertySchema)
       ? resolveMergedOwnRef<S>(view.graph, seeds, propertySchema, context.customMergeAllOf)
       : propertySchema;
-    // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
-    // should always return the computedDefault since it's coming from the const.
-    const hasParentConst = !props.leavesOutObjectConst && getByPath(objectConst, key) !== undefined;
-    // A property that names the `const` keyword is added whatever `emptyObjectFields` says, one spelling out
-    // `const: undefined`, as a schema built by spreading can, included, so its own default fills it
-    const hasConst = constIsDefault<S>(
+    return {
+      key,
+      propertySchema,
       readProperty,
-      defaultFormStateBehavior,
-      hasParentConst || (isObject(readProperty) && CONST_KEY in readProperty),
-    );
+      hasConst: constCheck(key, view.graph, seeds, readProperty),
+      child: defaultsChild(seeding, seeds, edge, propertySchema),
+      declaredIn: schema,
+      foldContext: context,
+      skipsBranchDefaults,
+    };
+  });
+  // A key only an `allOf` the plan left unmerged declares is a property of the field as rendered, so it takes the steps
+  // a property of the object's own takes, from the property the merge for the data gives it. A boolean one names no
+  // field of its own, so it is folded from no seeds, as an own property whose seeds are all booleans is. Only `allOf:
+  // 'populateDefaults'` merges the `allOf`, so the `allOf`'s defaults, the key's own and those nested below it, are
+  // skipped here, and one the data lacks is folded only where the object's default names it or a `const` gives it its
+  // value, and otherwise takes only the `null` `branchNullFills()` finds for it
+  // The key is seeded from the declarations the field's `allOf` holds, with the ref path that reaches them. A `$ref`
+  // already on that path is not entered, as the defaults stop at any `$ref` already followed, so a key that only a
+  // recursion through the `allOf` declares is not folded
+  let allOfSeeding: Seeding<S> | undefined;
+  // Only a key the data or the defaults name is folded, unless a `const` gives it its value: the object's, or one a
+  // declaration of a property in the field's scope the object doesn't declare itself reaches, or one an option of its
+  // `dependencies` brings in. Where none can, the keys are read off the data and the defaults, and the field is merged
+  // only if the `allOf` declares one
+  const constCanFill = ({ graph, seeds }: Provenance<S>) =>
+    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    (objectConst !== undefined ||
+      seeds.some(({ node }) => {
+        const { dependencies, constKeys } = constFillersOf<S>(graph, node);
+        return dependencies || constKeys.some((key) => !isDeclared(key));
+      }));
+  const allOfProperties =
+    allOfField === undefined
+      ? []
+      : (constCanFill(allOfField)
+          ? Object.keys(mergedSchemaOf<S, F>(context, view).properties ?? {})
+          : Object.keys({ ...formData, ...(isObject(defaults) ? defaults : {}) })
+        )
+          .filter((key) => !isDeclared(key) && !unmergedProperties.has(key) && declaredInAllOf(key))
+          .flatMap((key) => {
+            allOfSeeding ??= buildPlan<S, F>({
+              context,
+              ...fieldOfView<S>(view),
+              data: view.data,
+              policy: { allOf: true, conditions: false, cutRecursion: true },
+            });
+            const { seeds, edge } = childSeeds(allOfSeeding, key);
+            const mergedSchema = mergedSchemaOf<S, F>(context, view);
+            const propertySchema = getPropertySchema<S>(mergedSchema, key);
+            return edge === 'property'
+              ? [
+                  {
+                    key,
+                    propertySchema,
+                    readProperty: propertySchema,
+                    hasConst: constCheck(key, view.graph, seeds, propertySchema),
+                    child: defaultsChild(view, seeds, edge),
+                    declaredIn: mergedSchema,
+                    foldContext: skippingDefaults(context),
+                    skipsBranchDefaults: false,
+                  },
+                ]
+              : [];
+          })
+          .filter(
+            ({ key, hasConst }) => Object.hasOwn(formData, key) || getByPath(defaults, key) !== undefined || hasConst(),
+          );
+  // The keys the fold computes from a branch it left unmerged, which `branchNullFills()` leaves to them
+  const foldedBranchKeys = new Set([...unmergedProperties.keys(), ...allOfProperties.map(({ key }) => key)]);
+  for (const { key, propertySchema, readProperty, hasConst, child, declaredIn, foldContext, skipsBranchDefaults } of [
+    ...ownProperties,
+    ...allOfProperties,
+  ]) {
     // A property stubbed by `stubExistingAdditionalProperties()` from `additionalProperties`/`patternProperties`
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.
     const addedByAdditionalProperty = hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG);
-    const child = defaultsChild(seeding, seeds, edge, propertySchema);
-    const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
+    const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key, declaredIn.required);
     // Only a property that may merge or show an object `const` can have one to leave out below. The walk is cached
     // per graph, so it is asked before the retrieve the Optional Data Controls' check needs
     let reachesConst: boolean | undefined;
@@ -2031,10 +2195,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // A key the fold left unmerged has the defaults of the `allOf` or `if` declaring it skipped, as the plan skips
     // them: its field adds only its `null` fills, and the data, to the object's defaults for it, which its `const`
     // gives. The fills are those of the field holding that value, its `dependencies` and `if` read from it
-    const skipsBranchDefaults = unmergedProperties.has(key);
     const foldProperty = (memoKey: string, foldProps: FoldProps<T, S, F>) => {
       if (!skipsBranchDefaults) {
-        return foldReporting(context, memoKey, child, foldProps);
+        return foldReporting(foldContext, memoKey, child, foldProps);
       }
       const parentDefaults = ownValue(foldProps.parentDefaults);
       const over = (value: unknown) => {
@@ -2064,9 +2227,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         property.value,
         includeUndefinedValues,
         required,
-        schema.required,
+        declaredIn.required,
         defaultFormStateBehavior?.emptyObjectFields,
-        hasConst,
+        hasConst(),
       );
       if (isFormDataAvailable(added[key])) {
         // Such an object starts out without a value where only an object `const` gives it one, its own, a branch's or
@@ -2103,13 +2266,15 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     if (shouldMergeDefaultsIntoFormData && Object.hasOwn(formData, key) && formData[key] !== undefined) {
       // A property the data holds is the user's, so it is kept with its defaults merged in, as its field computed it,
       // whatever the form's settings say about adding defaults. Where its field takes none of the data, an `allOf` the
-      // property is read through decides it holds nothing, object data its schema can't take is left out, and any other
-      // value is kept as the user left it, as a select keeps a value its options no longer offer, and an extra key
-      // stubbed among the properties keeps the data `extraKeyKeepsData()` says it does. A key only an unmerged `allOf`
-      // declares, folded for its `null` fills alone, keeps its data where that fold gives it no value
-      const retrievesProperty = populatesAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty);
+      // property is read through decides object data holds nothing, as `populateDefaults` decides any value does,
+      // object data its schema can't take is left out, and any other value is kept as the user left it, as a select
+      // keeps a value its options no longer offer, its options in an `allOf` or not, and an extra key stubbed among the
+      // properties keeps the data `extraKeyKeepsData()` says it does. A key only an unmerged `allOf` or `if` declares,
+      // folded for its `null` fills alone, keeps its data where that fold gives it no value
+      const dropsData =
+        populatesAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty && isObjectData(formData[key]));
       const keepsData = addedByAdditionalProperty && extraKeyKeepsData(formData[key], property.value);
-      if ((property.value !== undefined || retrievesProperty) && !keepsData) {
+      if ((property.value !== undefined || dropsData) && !keepsData) {
         setOwn(computed, key, property.value);
       } else if (addedByAdditionalProperty || skipsBranchDefaults || !isObjectData(formData[key])) {
         setOwn(computed, key, formData[key]);
@@ -2121,23 +2286,23 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         property.value,
         includeUndefinedValues,
         required,
-        schema.required,
+        declaredIn.required,
         defaultFormStateBehavior?.emptyObjectFields,
-        hasConst && !leavesOutConst,
+        hasConst() && !leavesOutConst,
         property.holdsNull,
       );
     }
     if (property.holdsNull) {
       onNullFill?.();
     }
-  });
+  }
   // An `allOf` or `if` the field's plan left unmerged still brings its properties into the field rendered for it
   if (
     !view.field.retrieves &&
     (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
     mayHoldNullType(view.schema, rootSchema)
   ) {
-    branchNullFills<T, S, F>(context, retrievedView(), schema, props, foldReporting, unmergedProperties).forEach(
+    branchNullFills<T, S, F>(context, retrievedView(), schema, props, foldReporting, foldedBranchKeys).forEach(
       ({ key, value }) => {
         setOwn(computed, key, value);
         fillOverUndefined(nullFills, rawFormData, key, value);
@@ -2277,21 +2442,45 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // is. A `null` it holds was kept or replaced by the field of the key, as in any other container. No field renders a
   // key of a `const` that closes the object for the user to clear, so one held as `undefined` takes the `const`
   if (shouldMergeDefaultsIntoFormData) {
-    for (const key of Object.keys(formData).filter(isPinned)) {
+    for (const key of Object.keys(formData)) {
       const value = formData[key];
+      // A key the `allOf` declares is a property of the field, which a `const` that doesn't name it doesn't drop. One
+      // only a recursion through the `allOf` declares, which isn't folded, keeps its data as an extra key does
+      const isProperty = isDeclared(key) || foldedBranchKeys.has(key);
       const keptUndefined =
         value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior) && !closingKeys?.has(key);
-      const uncomputed = !Object.hasOwn(computed, key) && (value === undefined || !isComputed(key));
-      if (keptUndefined || uncomputed) {
+      const uncomputed = !Object.hasOwn(computed, key) && (value === undefined || !isProperty);
+      if ((isPinned(key) || declaredInAllOf(key)) && (keptUndefined || uncomputed)) {
         setOwn(computed, key, value);
       }
     }
   }
+  // A key a branch the plan left unmerged declares is computed among the properties, but the object it renders in
+  // lists it after them in the data's order, as it lists an extra key, so the value keeps that order too
+  const ordered = foldedBranchKeys.size > 0 ? inDataOrder(computed, formData, isDeclared) : computed;
   // Object data is the user's, an empty one too, so a `null` default only stands in for an object they left none of
   if (shouldMergeDefaultsIntoFormData && isObjectData(rawFormData)) {
-    return computed;
+    return ordered;
   }
-  return computeDefaultBasedOnSchemaTypeAndDefaults<unknown, S>(view.schema, computed);
+  return computeDefaultBasedOnSchemaTypeAndDefaults<unknown, S>(view.schema, ordered);
+}
+
+/** Returns `computed` with the keys `isDeclared` says the object declares first, as computed, then the keys `formData`
+ * holds in its order, then the rest
+ */
+function inDataOrder(
+  computed: GenericObjectType,
+  formData: GenericObjectType,
+  isDeclared: (key: string) => boolean,
+): GenericObjectType {
+  const ordered: GenericObjectType = {};
+  const keys = Object.keys(computed);
+  for (const key of [...keys.filter(isDeclared), ...Object.keys(formData), ...keys]) {
+    if (Object.hasOwn(computed, key) && !Object.hasOwn(ordered, key)) {
+      setOwn(ordered, key, computed[key]);
+    }
+  }
+  return ordered;
 }
 
 /** Returns `value` without the keys none of `keeping` holds as its own
@@ -2378,7 +2567,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
     child: DefaultsField<S>,
     childFoldProps: FoldProps<T, S, F>,
   ) => { value: unknown; holdsNull: boolean },
-  folded: ReadonlyMap<string, S>,
+  folded: ReadonlySet<string>,
 ): { key: string; value: unknown }[] {
   const { rawFormData, uiSchema, uiSchemaDefinitions, nullFills } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
@@ -2572,8 +2761,10 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
 
   let arrayDefault: unknown;
   const withItems = schema.minItems ? withItemsResolved(view, context.customMergeAllOf) : schema;
+  // Padding fills each item with the default the fill skips, so a field read without its defaults is left as given
   if (
     !schema.minItems ||
+    SKIPS_DEFAULTS in context ||
     isMultiSelect<T, S, F>(context, withItems, rootSchema) ||
     computeSkipPopulate<S, F>(context, withItems, rootSchema) ||
     schema.minItems <= defaultsLength
@@ -2625,7 +2816,7 @@ function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   view: DefaultsView<S>,
   { uiSchema, rawFormData }: FoldProps<T, S, F>,
   defaults: unknown,
-  isWholeValue = isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(view.schema, () => view)),
+  isWholeValue = isWholeValueField<S, F>(context, view),
   inheritsNull = false,
 ): FoldedType {
   // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,
@@ -2634,8 +2825,10 @@ function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return 'whole';
   }
   // A `ui:widget` that `SchemaField` renders through another listed type's field takes that type's default, so a
-  // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
-  const { schema } = view;
+  // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show.
+  // A field whose `const` a merge brings in is typed from the schema it takes that `const` from, as a field is by a
+  // `const` of its own, so an untyped field pinned to an object `const` is folded as an object
+  const schema = constSchemaOf<S, F>(context, view);
   // A value of another type a `type` list names is left as it is, as `omitExtraData()` leaves it: an object held by a
   // `['null', 'array', 'object']` has no array items spread into it, and a `null` held by a `['null', 'object']` is not
   // filled in with the object's defaults. With no value, a default of another listed type is kept the same way, so a
@@ -2694,7 +2887,12 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // `requiredBooleanDefault: 'skip'` opts out for forms that treat an
       // unanswered boolean as a distinct state and rely on `required` to flag it.
       const requiredBooleanDefault = context.defaultFormStateBehavior?.requiredBooleanDefault;
-      if (requiredBooleanDefault !== 'skip' && props.required && defaults === undefined) {
+      if (
+        requiredBooleanDefault !== 'skip' &&
+        !(SKIPS_DEFAULTS in context) &&
+        props.required &&
+        defaults === undefined
+      ) {
         return false;
       }
       return undefined;
@@ -2862,32 +3060,255 @@ export function ensureFormDataMatchingSchema<
   return formDataMatching<T, S, F>(context, { schema, field, chains }, rootSchema, formData);
 }
 
-/** `ensureFormDataMatchingSchema()` for the field `view` the fold computed. Its schema holds the options the fold
- * selected for it, so the field it is retrieved as is seeded by them too, each merged over the field's own seeds as the
- * fold merged it
+/** The schema of the field `view` stands for, merged as `retrieveSchema()` merges it for the data the view was planned
+ * with. The fold, the object defaults and the data match of a field all read it, so it is merged once for them
+ */
+function mergedSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+): S {
+  const { merged } = view;
+  if (merged.schema === undefined || merged.context !== context) {
+    merged.schema = retrieveField<S, F>(context, fieldOfView<S>(view), view.data);
+    merged.context = context;
+  }
+  return merged.schema;
+}
+
+/** The schema whose `const` the field `view` stands for takes: the merged one where `mergedConstSchemaOf()` gives one,
+ * else the field as it stands
+ */
+function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+): S {
+  // Read by the fold, the object defaults and the fold's type for one view, so it is worked out once for the view
+  const { merged } = view;
+  if (merged.constSchema === undefined || merged.constContext !== context) {
+    merged.constSchema =
+      mergedConstSchemaOf<S, F>(
+        context,
+        view.schema,
+        view.data,
+        () => fieldOfView<S>(view),
+        () => mergedSchemaOf<S, F>(context, view),
+      ) ?? view.schema;
+    merged.constContext = context;
+  }
+  return merged.constSchema;
+}
+
+/** The schema of a field, `schema` as written, merged for its `data` by `merge`, where that brings in a `const`. A
+ * `const` a merging keyword the plan left unmerged brings in is the field's as one of its own is: it fills the field
+ * under any `constAsDefaults` but `'never'`, and under `'always'` takes precedence over the data. So it is read from the
+ * merged schema, so that a condition on the data picks the `const`, as `formDataMatching()` reads it. A merged schema
+ * left with no `const`, as where the branch holding it isn't taken, gives the field none. A field that holds no data
+ * gives a condition nothing to test, so no `then`/`else` gives it a `const`
+ */
+function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  data: unknown,
+  field: () => Provenance<S>,
+  merge: (field: Provenance<S>) => S,
+): S | undefined {
+  if (context.defaultFormStateBehavior?.constAsDefaults === 'never' || !holdsAnyOf(schema, MERGING_KEYWORDS)) {
+    return undefined;
+  }
+  const provenance = field();
+  const { graph, seeds } = provenance;
+  if (!seeds.some(({ node }) => mergeReachesConst<S>(graph, node, false, data !== undefined))) {
+    return undefined;
+  }
+  const mergedSchema = merge(provenance);
+  return constValueOf<S>(mergedSchema) === undefined ? undefined : mergedSchema;
+}
+
+/** What in the scope of a node, see `scopeOf()`, can give a key of its object a `const`: whether a declaration in it
+ * holds `dependencies`, whose options can bring one in, and the keys of the properties it declares whose merge reaches
+ * one, worked out once per graph and node
+ */
+const constFillers = new KeyedMemo<{ dependencies: boolean; constKeys: readonly string[] }>();
+function constFillersOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node: NodeId) {
+  return constFillers.get([graph, node], () => {
+    const scope = scopeOf<S>(graph, node);
+    return {
+      dependencies: scope.some(({ raw }) => Object.hasOwn(raw, DEPENDENCIES_KEY)),
+      constKeys: scope.flatMap(({ id }) =>
+        graph
+          .subschemas(id, PROPERTIES_KEY)
+          .filter(([, property]) => mergeReachesConst<S>(graph, property))
+          .map(([key]) => key),
+      ),
+    };
+  });
+}
+
+/** Whether a merge from a node, by `mergeReachesConst()`, reaches a `const`, by graph, node, whether it reads the
+ * options of the node's scope and whether it reads `then`/`else`; for a node still open in the walk, its place in
+ * `constWalk.open`
+ */
+const constReach = new KeyedMemo<boolean | number | undefined>();
+
+/** The walk `mergeReachesConst()` is in, as Tarjan's strongly connected components walk it: the keys of the nodes
+ * walked whose answer is still open, in the order they were entered, and the lowest place in that list the node being
+ * walked leads back to
+ */
+const constWalk: { open: (readonly unknown[])[]; low: number } = { open: [], low: Infinity };
+
+/** Whether any subschema retrieving the node `from` may merge in declares a `const`: one its `$ref` and `allOf` merge
+ * in, see `scopeOf()`, or one its `then`/`else` and `dependencies` subschemas reach in turn, but no `if`, a condition
+ * never merged into the field. Retrieving a field merges an `anyOf`/`oneOf` option in only beside `dependencies` its
+ * `$ref` and `allOf` merge in, or in a `dependencies` entry, so options are read only there, and below an option so
+ * merged (`withOptions`). A merge for no data reads no `then`/`else` (`withConditions`). A merge brings in no `const`
+ * none of them declares, so where none does the field's schema is read without being merged
+ *
+ * @testSeam Exported for utils' own tests
+ */
+export function mergeReachesConst<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  from: NodeId,
+  withOptions = false,
+  withConditions = true,
+): boolean {
+  const keys = [graph, from, withOptions, withConditions];
+  const known = constReach.peek(keys);
+  if (typeof known === 'boolean') {
+    return known;
+  }
+  // A node still open leads back into the cycle being walked, which settles only at its first node, so it reads as
+  // none meanwhile
+  if (known !== undefined) {
+    constWalk.low = Math.min(constWalk.low, known);
+    return false;
+  }
+  const { open } = constWalk;
+  const place = open.length;
+  const outerLow = constWalk.low;
+  open.push(keys);
+  constReach.set(keys, place);
+  constWalk.low = place;
+  let reaches: boolean | undefined;
+  try {
+    const group = scopeOf<S>(graph, from, 'unconditional');
+    // The `dependencies` entries are always merged in, an option only of a list beside `dependencies`
+    const mergedLists =
+      withOptions || group.some((node) => Object.hasOwn(node.raw, DEPENDENCIES_KEY))
+        ? [ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY]
+        : [DEPENDENCIES_KEY];
+    const reachesAny = (subschemas: (NodeId | undefined)[], options: boolean) =>
+      subschemas.some((sub) => sub !== undefined && mergeReachesConst<S>(graph, sub, options, withConditions));
+    reaches = group.some(
+      (node) =>
+        Object.hasOwn(node.raw, CONST_KEY) ||
+        (withConditions && reachesAny([graph.child(node.id, THEN_KEY), graph.child(node.id, ELSE_KEY)], withOptions)) ||
+        reachesAny(
+          mergedLists.flatMap((keyword) => graph.subschemas(node.id, keyword).map(([, sub]) => sub)),
+          true,
+        ),
+    );
+    return reaches;
+  } finally {
+    // Every node entered after this one and still open leads back to a node on the path to this one, so it reaches
+    // what this one reaches: a `const` found settles them all, and a graph that throws leaves them all to be walked
+    // again. None found settles only once nothing below leads back above this node, which makes it the first node of
+    // its cycle; until then it stays open with the rest, and its caller leads back as far as it does
+    const { low } = constWalk;
+    if (reaches !== false || low === place) {
+      open.splice(place).forEach((waiting) => constReach.set(waiting, reaches));
+    }
+    constWalk.low = reaches === false && low < place ? Math.min(outerLow, low) : outerLow;
+  }
+}
+
+/** Whether the field `view` stands for is a select over whole object or array values, see `isWholeValueSelect()`. Options
+ * an `allOf` brings in make the field a select as options of its own do, whatever the data, so an `allOf` the plan left
+ * unmerged is merged for no data to ask, once for the view, and only where a subschema it merges in offers options
+ */
+function isWholeValueField<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+): boolean {
+  const { merged } = view;
+  if (merged.wholeValue === undefined || merged.wholeContext !== context) {
+    let { schema } = view;
+    let declared: Seeding<S> = view;
+    const field = !view.field.retrieves && ALL_OF_KEY in schema ? fieldOfView<S>(view) : undefined;
+    const mergesOptions = field?.seeds.some(({ node }) =>
+      scopeOf<S>(field.graph, node, 'unconditional').some(
+        ({ id, raw }) => id !== node && holdsAnyOf(raw, [ENUM_KEY, ONE_OF_KEY, ANY_OF_KEY]),
+      ),
+    );
+    if (field && mergesOptions) {
+      const plan = buildPlan<S, F>({ context, ...field, policy: { allOf: true, conditions: false } });
+      schema = plan.schema;
+      declared = { graph: view.graph, chains: plan.chains };
+    }
+    merged.wholeValue = isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(schema, () => declared));
+    merged.wholeContext = context;
+  }
+  return merged.wholeValue;
+}
+
+/** The field `view` stands for, see `viewField()`, built once for the view */
+function fieldOfView<S extends StrictRJSFSchema>(view: DefaultsView<S>): Provenance<S> {
+  const { merged } = view;
+  merged.field ??= viewField<S>(view);
+  return merged.field;
+}
+
+/** The value the `const` of `schema` gives a field, none for an AJV `$data` one, which names another value of the data
+ * rather than being one
+ */
+function constValueOf<S extends StrictRJSFSchema>(schema: S): unknown {
+  return constIsAjvDataReference<S>(schema) ? undefined : schema[CONST_KEY];
+}
+
+/** The field `view` stands for: its schema holds the options the fold selected for it, so the field is seeded by them
+ * too, each merged over the field's own seeds as the fold merged it
+ */
+function viewField<S extends StrictRJSFSchema>(view: DefaultsView<S>): Provenance<S> {
+  return rootProvenance<S>(view.graph, [
+    ...view.field.seeds,
+    ...view.choices.flatMap(({ provider, options, refPath }): Seed[] => {
+      const index = view.options.selections.get(provider);
+      return index === undefined ? [] : [{ node: options[index], refPath, scope: [`o${options[index]}`] }];
+    }),
+  ]);
+}
+
+/** `ensureFormDataMatchingSchema()` for the field `view` the fold computed, retrieved as `viewField()` gives it and
+ * merged as `mergedSchemaOf()` merges it
  */
 function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   formData: T | undefined,
+  defaults?: unknown,
 ): T | T[] | undefined {
-  let provenance: Provenance<S> | undefined;
-  const field = () => {
-    provenance ??= rootProvenance<S>(view.graph, [
-      ...view.field.seeds,
-      ...view.choices.flatMap(({ provider, options, refPath }): Seed[] => {
-        const index = view.options.selections.get(provider);
-        return index === undefined ? [] : [{ node: options[index], refPath, scope: [`o${options[index]}`] }];
-      }),
-    ]);
-    return provenance;
+  const matched: MatchedSchema<S> = {
+    schema: view.schema,
+    field: () => fieldOfView<S>(view),
+    chains: () => view.chains,
+    retrieve: () => mergedSchemaOf<S, F>(context, view),
   };
-  return formDataMatching<T, S, F>(
-    context,
-    { schema: view.schema, field, chains: () => view.chains },
-    view.graph.rawRoot,
-    formData,
-  );
+  return heldDataMatching<T, S, F>(context, matched, view.graph.rawRoot, formData, false, () => defaults);
+}
+
+/** `formDataMatching()` for the value a field holds in the form data. A `null` is how a cleared field holds its value,
+ * so one the field's options leave out is still the user's, as the fold keeps it for a property it computes, where
+ * `ensureFormDataMatchingSchema()` leaves it out as any other value the options leave out
+ */
+function heldDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  matched: MatchedSchema<S>,
+  rootSchema: S,
+  formData: T | undefined,
+  unfolded = false,
+  readDefaults?: () => unknown,
+): T | T[] | undefined {
+  const matching = formDataMatching<T, S, F>(context, matched, rootSchema, formData, unfolded, readDefaults);
+  return matching === undefined && formData === null ? formData : matching;
 }
 
 /** A schema the data is matched to, and the field it is the schema of, from whose declarations it is retrieved and its
@@ -2899,6 +3320,8 @@ interface MatchedSchema<S extends StrictRJSFSchema> {
   readonly field: () => Provenance<S>;
   /** The chains the properties of `schema` are declared in */
   readonly chains: () => readonly Keywords<S>[];
+  /** Retrieves the field for the data matched, `retrieveField()` with that data where not given */
+  readonly retrieve?: () => S;
 }
 
 /** Whether `value` is an object as JSON Schema reads data: a plain object, `null`-prototype ones included, with no
@@ -2939,42 +3362,54 @@ export function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unkno
   return typeAllows(getSchemaOwnTypes<S>(schema), value);
 }
 
-/** Returns `formData` matched to `matched.schema` as `ensureFormDataMatchingSchema()` matches it */
+/** Returns `formData` matched to `matched.schema` as `ensureFormDataMatchingSchema()` matches it. `unfolded` says the
+ * fold computed none of the properties of the schema, as it computes none that a merge for the data brings in, nor any
+ * nested in one, so each value of them is matched here, and `readDefaults` reads the field's defaults, see
+ * `matchProperties()`
+ */
 function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  { schema, field, chains }: MatchedSchema<S>,
+  matched: MatchedSchema<S>,
   rootSchema: S,
   formData: T | undefined,
+  unfolded = false,
+  readDefaults: () => unknown = () => undefined,
 ): T | T[] | undefined {
+  const { schema, field, retrieve = () => retrieveField<S, F>(context, field(), formData) } = matched;
   const { defaultFormStateBehavior } = context;
   const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior);
-  const schemaToMatch = shouldRetrieveAllOf ? retrieveField<S, F>(context, field(), formData) : schema;
-  let declaredIn: Seeding<S> | undefined;
-  const declarations = () => {
-    declaredIn ??= { graph: field().graph, chains: chains() };
-    return declaredIn;
+  const schemaToMatch = shouldRetrieveAllOf ? retrieve() : schema;
+  const declarations = declarationsOf<S>(matched);
+  // Without data there is nothing to check, so only data asks for the merged schema. A schema with nothing left to
+  // merge is read as it stands, which is what retrieving it would give, as is one `populateDefaults` already retrieved
+  // with the data. An `allOf` or `$ref` holds the options, types, `const` and properties the data is checked against in
+  // its subschemas, so all four are read from the merged schema, retrieved with the data so that a condition on it
+  // picks what it is checked against. A merge that reads no data is kept for any data, so only one whose result
+  // depends on the data is planned again for it. A merge that leaves one value is a constant, whose data is kept as it
+  // is for a field that declares one, as long as the field's own options take it: those of its schema as written where
+  // `populateDefaults`, or the root's retrieval, already merged them away
+  const mergesForData = !shouldRetrieveAllOf && formData !== undefined && holdsAnyOf(schemaToMatch, MERGING_KEYWORDS);
+  const ownOptions = () => {
+    if (formData === undefined) {
+      return undefined;
+    }
+    const own = buildPlan<S, F>({ context, ...field(), policy: { allOf: false, conditions: false } }).schema;
+    return isConstant<S>(own) ? undefined : own;
   };
-  // Without data there is nothing to check against the options of a select, so only data asks whether it is one. A
-  // schema with nothing left to merge is asked as it stands, which is what retrieving it would give
-  const isSelectField =
-    formData !== undefined &&
-    !isConstant<S>(schemaToMatch) &&
-    isConstantSelect<S>(
-      resolveDeclaredConstantOptions<S>(
-        MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
-          ? retrieveField<S, F>(context, field())
-          : schemaToMatch,
-        declarations,
-      ),
-      true,
-    );
+  const readSchema = mergesForData ? retrieve() : schemaToMatch;
+  const nestedUnfolded = unfolded || mergesForData;
+  const optionsSchema = [readSchema, schemaToMatch].find((candidate) => !isConstant<S>(candidate)) ?? ownOptions();
+  const selectSchema =
+    formData === undefined || optionsSchema === undefined
+      ? undefined
+      : resolveDeclaredConstantOptions<S>(optionsSchema, declarations);
   let validFormData: unknown = formData;
-  if (isSelectField) {
-    const getOptionsList = optionsList<T, S, F>(resolveDeclaredConstantOptions<S>(schemaToMatch, declarations));
+  if (selectSchema !== undefined && isConstantSelect<S>(selectSchema, true)) {
+    const getOptionsList = optionsList<T, S, F>(selectSchema);
     // An empty option list has no value to check the data against, so the data is kept, as it is without the list. An
     // option of object data that declares the discriminator is valued by that property, as `optionsList()` values it
     // and `LayoutMultiSchemaField` matches a pick by
-    const selectorField = getDiscriminatorFieldFromSchema<S>(schemaToMatch);
+    const selectorField = getDiscriminatorFieldFromSchema<S>(selectSchema);
     const selected = selectorField && isObjectData(formData) ? getByPath(formData, selectorField) : undefined;
     if (getOptionsList?.length !== 0) {
       validFormData = getOptionsList?.some(
@@ -2984,67 +3419,286 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
         ? formData
         : undefined;
     }
-  } else if (isObjectData(formData) && !takesValueOf<S>(schemaToMatch, formData)) {
+  } else if (isObjectData(formData) && !takesValueOf<S>(readSchema, formData)) {
     // Object data can never validate against a schema whose types leave out `object`, so it is no value of the field
     validFormData = undefined;
   }
 
   // Override the formData with the const if the constAsDefaults is set to always
-  const constTakesPrecedence = schemaToMatch[CONST_KEY] && defaultFormStateBehavior?.constAsDefaults === 'always';
-  if (constTakesPrecedence) {
-    validFormData = schemaToMatch.const;
-  } else if (isObject(validFormData) && isObject(schemaToMatch.properties)) {
-    const matched: GenericObjectType = { ...validFormData };
-    const rootGraph = parseSchemaGraph<S>(rootSchema);
-    // A property `retrieveSchema()` handed out is the field it was handed out for, and any other is declared where the
-    // declarations of the schema holding it declare it
-    const fieldOfProperty = (key: string, propertySchema: S): Provenance<S> => {
-      let declared: readonly Seed[] = [];
-      if (readProvenance<S>(propertySchema, rootGraph) === undefined) {
-        declared = seedsAt(declarations(), PROPERTIES_KEY, key);
-      }
-      return declared.length > 0 ? rootProvenance<S>(field().graph, declared) : fieldOf<S>(rootGraph, propertySchema);
-    };
-    for (const key of Object.keys(schemaToMatch.properties).filter((dataKey) => Object.hasOwn(matched, dataKey))) {
-      const propertySchema = getPropertySchema<S>(schemaToMatch, key);
-      let propertyProvenance: Provenance<S> | undefined;
-      const propertyField = () => {
-        propertyProvenance ??= fieldOfProperty(key, propertySchema);
-        return propertyProvenance;
-      };
-      // A property written as a `$ref` is matched as the definition it names, whose `allOf` it is
-      let readProperty = propertySchema;
-      if (isSchemaObject<S>(propertySchema) && typeof propertySchema[REF_KEY] === 'string') {
-        const { graph, seeds } = propertyField();
-        readProperty = resolveMergedOwnRef<S>(graph, seeds, propertySchema, context.customMergeAllOf);
-      }
-      const retrievesProperty = shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty);
-      // Object data is matched at every depth, so a value nested in it that its schema can't take is found too. A
-      // boolean schema has nothing to match the data against
-      const matchesNested = isSchemaObject<S>(readProperty) && isObjectData(matched[key]);
-      if (retrievesProperty || matchesNested) {
-        const chainsOfProperty = () => {
-          const { graph, seeds } = propertyField();
-          return buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } }).chains;
-        };
-        const matchedProperty = formDataMatching<unknown, S, F>(
-          context,
-          { schema: readProperty, field: propertyField, chains: chainsOfProperty },
-          rootSchema,
-          matched[key],
-        );
-        // Object data that doesn't match is left out, so the property takes its defaults as one the data lacks does
-        if (matchedProperty === undefined && !retrievesProperty) {
-          Reflect.deleteProperty(matched, key);
-        } else {
-          setOwn(matched, key, matchedProperty);
-        }
-      }
-    }
-    validFormData = matched;
+  const fieldConst = defaultFormStateBehavior?.constAsDefaults === 'always' ? constValueOf<S>(readSchema) : undefined;
+  if (fieldConst !== undefined) {
+    validFormData = fieldConst;
+  } else if (isObject(validFormData)) {
+    validFormData = matchProperties<S, F>(context, readSchema, matched, declarations, rootSchema, validFormData, {
+      unfolded: nestedUnfolded,
+      retrievesAll: shouldRetrieveAllOf,
+      readDefaults,
+    });
   }
 
   return asDeclared<T | T[] | undefined>(validFormData);
+}
+
+/** The object data of a property that `matchProperties()` matched as it stands without reading the defaults, by the
+ * context, the property's field and schema, the snapshot of the data, see `snapshotOf()`, and whether it is unfolded
+ */
+const keptObjects = new KeyedMemo<true>();
+
+/** The snapshot of each object of form data a call matched, kept for as long as the object, and its copy in the state
+ * the call handed back, live, see `snapshotOf()`
+ */
+const snapshotHints = new WeakMap<object, object>();
+
+/** The snapshot of each object of the data of the `getDefaultFormState()` call under way that a match asked for, and of
+ * each object in it, see `snapshotOf()`
+ */
+let callSnapshots: Map<object, object> | undefined;
+
+/** Records, in `pairs`, the counterpart in `snapshot` of each array and plain object in `data`, by key */
+function pairSnapshots(
+  data: unknown,
+  snapshot: unknown,
+  pairs: Map<object, object> | WeakMap<object, object>,
+  walked = new WeakSet<object>(),
+): void {
+  if (
+    !(Array.isArray(data) || isPlainObject(data)) ||
+    typeof snapshot !== 'object' ||
+    snapshot === null ||
+    walked.has(data)
+  ) {
+    return;
+  }
+  walked.add(data);
+  pairs.set(data, snapshot);
+  for (const [key, entry] of Object.entries(data)) {
+    pairSnapshots(entry, Reflect.get(snapshot, key), pairs, walked);
+  }
+}
+
+/** Points each object of `state`, the state a call handed back for `data`, at the snapshot taken of the object of
+ * `data` in its place, and the objects in it at theirs, see `snapshotHints`. `Form` hands that state back with an edit,
+ * whose objects a typed object field builds afresh, so the data a match took a snapshot of is not in it
+ */
+function hintState(data: unknown, state: unknown, snapshots: Map<object, object>, walked: WeakSet<object>): void {
+  if (
+    !(Array.isArray(data) || isPlainObject(data)) ||
+    typeof state !== 'object' ||
+    state === null ||
+    walked.has(data)
+  ) {
+    return;
+  }
+  walked.add(data);
+  const snapshot = snapshots.get(data);
+  if (snapshot !== undefined) {
+    pairSnapshots(state, snapshot, snapshotHints);
+    return;
+  }
+  for (const [key, entry] of Object.entries(data)) {
+    hintState(entry, Reflect.get(state, key), snapshots, walked);
+  }
+}
+
+/** Returns what the snapshot of `data` is compared with: the snapshot its hint names, see `snapshotHints`, or else, for
+ * an object or array an edit copied, one made of the snapshots its members' hints name, so only the objects on the
+ * edited path are walked
+ */
+function previousSnapshotOf(data: unknown, walked: WeakSet<object>): unknown {
+  if (!(Array.isArray(data) || isPlainObject(data)) || walked.has(data)) {
+    return undefined;
+  }
+  const hint = snapshotHints.get(data);
+  if (hint !== undefined) {
+    return hint;
+  }
+  walked.add(data);
+  return Array.isArray(data)
+    ? data.map((item: unknown) => previousSnapshotOf(item, walked))
+    : Object.fromEntries(Object.entries(data).map(([key, entry]) => [key, previousSnapshotOf(entry, walked)]));
+}
+
+/** Returns the snapshot of the object `data` of the call under way: a copy of it the fold owns, which shares every
+ * subtree equal to the snapshot last taken of it, or of the state a call handed back for it, see
+ * `previousSnapshotOf()`. A
+ * match is keyed on the snapshot rather than on `data`, which the caller may change in place between calls, so an
+ * object equal to one matched before is matched once. Only the object a match asks for is copied, with what it holds,
+ * and the hint only says which snapshot to compare it with, so data changed in place gets a snapshot of its own
+ */
+function snapshotOf(data: object): object | undefined {
+  if (callSnapshots === undefined) {
+    return undefined;
+  }
+  let snapshot = callSnapshots.get(data);
+  if (snapshot === undefined) {
+    snapshot = replaceEqualDeep(previousSnapshotOf(data, new WeakSet()), ownValue(data));
+    pairSnapshots(data, snapshot, callSnapshots);
+  }
+  return snapshot;
+}
+
+/** The declarations the properties of the schema `matched` stands for are read in */
+function declarationsOf<S extends StrictRJSFSchema>({ field, chains }: MatchedSchema<S>): () => Seeding<S> {
+  let declaredIn: Seeding<S> | undefined;
+  return () => {
+    declaredIn ??= { graph: field().graph, chains: chains() };
+    return declaredIn;
+  };
+}
+
+/** How `matchProperties()` matches the properties of object data */
+interface PropertyMatch {
+  /** Whether the fold computed none of the properties, see `formDataMatching()` */
+  readonly unfolded: boolean;
+  /** Whether every property is retrieved, as `allOf: 'populateDefaults'` retrieves them */
+  readonly retrievesAll: boolean;
+  /** Reads the object's defaults, which a value an unfolded property rejects may take, see `matchProperties()`. A match
+   * reads them only through it, so a match can tell whether any match below it read them
+   */
+  readonly readDefaults: () => unknown;
+}
+
+/** Returns the object data `data` with each property `readSchema` declares matched to the schema of that property, as
+ * `formDataMatching()` matches it, where it may reject the value: a value that doesn't match is left out, so the
+ * property takes its defaults as one the data lacks does. `declarations` gives the declarations of `matchedSchema`, see
+ * `declarationsOf()`, and `match` how the properties are matched. As the fold computes none of an unfolded property, a
+ * value one rejects takes the object's default for it here, not its own, which sits in the merge the fold left out;
+ * with none, a value that is no object is kept, as a select keeps one its options don't offer. A value that is no object
+ * that a select over its own `anyOf`/`oneOf` constants doesn't offer is kept whatever defaults there are, as the fold
+ * keeps it
+ */
+function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  readSchema: S,
+  matchedSchema: MatchedSchema<S>,
+  declarations: () => Seeding<S>,
+  rootSchema: S,
+  data: GenericObjectType,
+  { unfolded, retrievesAll, readDefaults }: PropertyMatch,
+): GenericObjectType {
+  if (!isObject(readSchema.properties)) {
+    return data;
+  }
+  const { field } = matchedSchema;
+  // Data no property rejects is handed back as it is, so a match can tell it kept the data
+  let matched: GenericObjectType = data;
+  const changed = () => {
+    if (matched === data) {
+      matched = { ...data };
+    }
+    return matched;
+  };
+  const rootGraph = parseSchemaGraph<S>(rootSchema);
+  // A property `retrieveSchema()` handed out is the field it was handed out for, and any other is declared where the
+  // declarations of the schema holding it declare it
+  const fieldOfProperty = (key: string, propertySchema: S): Provenance<S> => {
+    let declared: readonly Seed[] = [];
+    if (readProvenance<S>(propertySchema, rootGraph) === undefined) {
+      declared = seedsAt(declarations(), PROPERTIES_KEY, key);
+    }
+    return declared.length > 0 ? rootProvenance<S>(field().graph, declared) : fieldOf<S>(rootGraph, propertySchema);
+  };
+  // An extra key stubbed from `additionalProperties` keeps the data the user gave it, see `extraKeyKeepsData()`
+  const matchedKeys = Object.keys(readSchema.properties).filter(
+    (dataKey) =>
+      Object.hasOwn(matched, dataKey) &&
+      !hasSchemaMarker(getPropertySchema<S>(readSchema, dataKey), ADDITIONAL_PROPERTY_FLAG),
+  );
+  for (const key of matchedKeys) {
+    const propertySchema = getPropertySchema<S>(readSchema, key);
+    let propertyProvenance: Provenance<S> | undefined;
+    const propertyField = () => {
+      propertyProvenance ??= fieldOfProperty(key, propertySchema);
+      return propertyProvenance;
+    };
+    // A property written as a `$ref` is matched as the definition it names, whose `allOf` it is
+    let readProperty = propertySchema;
+    if (isSchemaObject<S>(propertySchema) && typeof propertySchema[REF_KEY] === 'string') {
+      const { graph, seeds } = propertyField();
+      readProperty = resolveMergedOwnRef<S>(graph, seeds, propertySchema, context.customMergeAllOf);
+    }
+    const retrievesProperty = retrievesAll || (isObject(readProperty) && ALL_OF_KEY in readProperty);
+    // Object data is matched at every depth, so a value nested in it that its schema can't take is found too, and so
+    // is any other value the fold didn't compute that its schema may reject. A boolean schema has nothing to match the
+    // data against
+    const matchesNested =
+      isSchemaObject<S>(readProperty) &&
+      (isObjectData(matched[key]) ||
+        (unfolded &&
+          (holdsAnyOf(readProperty, REJECTING_KEYWORDS) ||
+            (context.defaultFormStateBehavior?.constAsDefaults === 'always' && CONST_KEY in readProperty))));
+    // A key the user left `undefined` holds no value to reject, so it stays, as the fold keeps it, whether or not the
+    // property is read through an `allOf`
+    if (matched[key] !== undefined && (retrievesProperty || matchesNested)) {
+      const chainsOfProperty = () => {
+        const { graph, seeds } = propertyField();
+        return buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } }).chains;
+      };
+      const propertyData = matched[key];
+      let readsDefaults = false;
+      const readPropertyDefaults = () => {
+        readsDefaults = true;
+        return getByPath(readDefaults(), key);
+      };
+      const matchProperty = () =>
+        heldDataMatching<unknown, S, F>(
+          context,
+          { schema: readProperty, field: propertyField, chains: chainsOfProperty },
+          rootSchema,
+          propertyData,
+          unfolded,
+          readPropertyDefaults,
+        );
+      // Object data is matched at every depth, on every call, so an object equal to one matched before, as the data
+      // holds one after an edit elsewhere, is matched once. Only a match that kept the data as it stands without
+      // reading the defaults is remembered, as that holds whatever defaults the next call gives
+      const snapshot = isObjectData(propertyData) ? snapshotOf(propertyData) : undefined;
+      let matchedProperty: unknown;
+      if (snapshot === undefined) {
+        matchedProperty = matchProperty();
+      } else {
+        const keptKeys = [context, propertyField(), readProperty, snapshot, unfolded];
+        if (keptObjects.peek(keptKeys)) {
+          matchedProperty = propertyData;
+        } else {
+          matchedProperty = matchProperty();
+          if (matchedProperty === propertyData && !readsDefaults) {
+            keptObjects.set(keptKeys, true);
+          }
+        }
+      }
+      // A value that doesn't match is left out, an `allOf` the property is read through or not, so the property takes
+      // its defaults as one the data lacks does, here where the fold computes none for it
+      let value = matchedProperty;
+      if (value === undefined && unfolded) {
+        // A `null` default is a default like any other, so only a missing one falls through. The property's own
+        // default sits in the merge the fold left out, whose defaults are skipped
+        const objectDefault = readPropertyDefaults();
+        // A select whose own `anyOf`/`oneOf`, resolved, offers constants keeps a value that is no object it doesn't
+        // offer, as the fold keeps it for a property the object declares under the default `constAsDefaults`, where an
+        // `enum` with no such options takes the object's default
+        const kept = isObjectData(matched[key]) ? undefined : matched[key];
+        const keepsValue =
+          kept !== undefined &&
+          isSchemaObject<S>(readProperty) &&
+          isConstantOptionList<S>(
+            getXxxOfOptions<S>(
+              resolveDeclaredConstantOptions<S>(readProperty, () => ({
+                graph: propertyField().graph,
+                chains: chainsOfProperty(),
+              })),
+            )?.options,
+          );
+        value = keepsValue || objectDefault === undefined ? kept : objectDefault;
+      }
+      if (value === undefined) {
+        Reflect.deleteProperty(changed(), key);
+      } else if (!Object.is(value, matched[key])) {
+        setOwn(changed(), key, value);
+      }
+    }
+  }
+  return matched;
 }
 
 /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
@@ -3092,21 +3746,39 @@ export default function getDefaultFormState<
     globalUiOptions: getByPath<GlobalUISchemaOptions | undefined>(uiSchema, UI_GLOBAL_OPTIONS_KEY),
     overUndefined: new Map(),
   };
-  const defaults = foldField<T, S, F>(context, field, {
-    nullFills,
-    includeUndefinedValues,
-    rawFormData: formData,
-    shouldMergeDefaultsIntoFormData: true,
-    initialDefaultsGenerated,
-    requiredAsRoot: true,
-    uiSchema,
-    uiSchemaDefinitions,
-    fieldState,
-  });
+  const outerSnapshots = callSnapshots;
+  const snapshots = new Map<object, object>();
+  callSnapshots = snapshots;
+  let defaults: unknown;
+  try {
+    defaults = foldField<T, S, F>(context, field, {
+      nullFills,
+      includeUndefinedValues,
+      rawFormData: formData,
+      shouldMergeDefaultsIntoFormData: true,
+      initialDefaultsGenerated,
+      requiredAsRoot: true,
+      uiSchema,
+      uiSchemaDefinitions,
+      fieldState,
+    });
+  } finally {
+    callSnapshots = outerSnapshots;
+  }
+  if (!isObject(formData) && !Array.isArray(formData)) {
+    return asDeclared<T | T[] | null | undefined>(defaults);
+  }
   // Every field merged its own data into its defaults as it computed them, so they are the form's state as they stand.
   // A field keeps data it takes as it is, so the state is copied off the caller's data, which the caller may go on to
   // change, as the caller may change the state it is handed
-  return asDeclared<T | T[] | null | undefined>(
-    isObject(formData) || Array.isArray(formData) ? ownValue(withNullFills(defaults, formData, nullFills)) : defaults,
-  );
+  const state = ownValue(withNullFills(defaults, formData, nullFills));
+  // The next call is handed the data again, or this state with an edit, so the objects of both point at the snapshots
+  // taken of them
+  if (snapshots.size > 0) {
+    for (const [data, snapshot] of snapshots) {
+      snapshotHints.set(data, snapshot);
+    }
+    hintState(formData, state, snapshots, new WeakSet());
+  }
+  return asDeclared<T | T[] | null | undefined>(state);
 }
