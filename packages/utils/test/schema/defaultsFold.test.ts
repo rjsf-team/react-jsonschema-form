@@ -388,7 +388,9 @@ describe('getDefaultFormState() on recursive schemas', () => {
     ['one level down', { child: { name: 'c', extra: 'y', child: { name: 'd' } } }],
     [
       'several levels down',
-      { child: { name: 'c', extra: 'y', child: { name: 'd', extra: 'z', child: { name: 'e', child: { extra: 'q' } } } } },
+      {
+        child: { name: 'c', extra: 'y', child: { name: 'd', extra: 'z', child: { name: 'e', child: { extra: 'q' } } } },
+      },
     ],
   ])('keeps the data %s of the keys an allOf declares through a $ref it already followed', (_, formData) => {
     const schema: RJSFSchema = {
