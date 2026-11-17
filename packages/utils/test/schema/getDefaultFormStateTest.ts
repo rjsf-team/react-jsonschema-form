@@ -6312,6 +6312,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ensureFormDataMatchingSchema({ validator: testValidator }, holder, holder, { s: { b: 2 }, t: 1 }),
         ).toEqual({ t: 1 });
       });
+      it('drops object data an allOf below a property types as a string, with no defaults to fall back to', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { o: { allOf: [{ properties: { s: { type: 'string' } } }] } },
+        };
+        expect(
+          ensureFormDataMatchingSchema({ validator: testValidator }, schema, schema, { o: { s: { b: 2 }, t: 1 } }),
+        ).toEqual({ o: { t: 1 } });
+      });
       it('drops object data a property written as a $ref to a schema of no object type holds', () => {
         const rootSchema: RJSFSchema = {
           definitions: { S: { type: 'string' } },

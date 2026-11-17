@@ -3292,7 +3292,7 @@ function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormConte
     chains: () => view.chains,
     retrieve: () => mergedSchemaOf<S, F>(context, view),
   };
-  return heldDataMatching<T, S, F>(context, matched, view.graph.rawRoot, formData, false, defaults);
+  return heldDataMatching<T, S, F>(context, matched, view.graph.rawRoot, formData, false, () => defaults);
 }
 
 /** `formDataMatching()` for the value a field holds in the form data. A `null` is how a cleared field holds its value,
@@ -3305,9 +3305,9 @@ function heldDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   rootSchema: S,
   formData: T | undefined,
   unfolded = false,
-  defaults?: unknown,
+  readDefaults?: () => unknown,
 ): T | T[] | undefined {
-  const matching = formDataMatching<T, S, F>(context, matched, rootSchema, formData, unfolded, defaults);
+  const matching = formDataMatching<T, S, F>(context, matched, rootSchema, formData, unfolded, readDefaults);
   return matching === undefined && formData === null ? formData : matching;
 }
 
@@ -3364,7 +3364,7 @@ export function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unkno
 
 /** Returns `formData` matched to `matched.schema` as `ensureFormDataMatchingSchema()` matches it. `unfolded` says the
  * fold computed none of the properties of the schema, as it computes none that a merge for the data brings in, nor any
- * nested in one, so each value of them is matched here, and `defaults` are the field's defaults, see
+ * nested in one, so each value of them is matched here, and `readDefaults` reads the field's defaults, see
  * `matchProperties()`
  */
 function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -3373,7 +3373,7 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   rootSchema: S,
   formData: T | undefined,
   unfolded = false,
-  defaults?: unknown,
+  readDefaults: () => unknown = () => undefined,
 ): T | T[] | undefined {
   const { schema, field, retrieve = () => retrieveField<S, F>(context, field(), formData) } = matched;
   const { defaultFormStateBehavior } = context;
@@ -3432,7 +3432,7 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
     validFormData = matchProperties<S, F>(context, readSchema, matched, declarations, rootSchema, validFormData, {
       unfolded: nestedUnfolded,
       retrievesAll: shouldRetrieveAllOf,
-      defaults,
+      readDefaults,
     });
   }
 
@@ -3444,59 +3444,97 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
  */
 const keptObjects = new KeyedMemo<true>();
 
-/** How many times `matchProperties()` has read the defaults of a property whose value it rejected, so a match can
- * tell whether any match below it read them
+/** The snapshot of each object of form data a call matched, kept for as long as the object, and its copy in the state
+ * the call handed back, live, see `snapshotOf()`
  */
-let defaultsRead = 0;
+const snapshotHints = new WeakMap<object, object>();
 
-/** The form data of the `getDefaultFormState()` call under way, and the snapshot of each object in it once one is
- * asked for, see `snapshotOf()`
+/** The snapshot of each object of the data of the `getDefaultFormState()` call under way that a match asked for, and of
+ * each object in it, see `snapshotOf()`
  */
-interface CallData {
-  readonly formData: unknown;
-  snapshots?: WeakMap<object, object>;
-}
+let callSnapshots: Map<object, object> | undefined;
 
-let callData: CallData | undefined;
-
-/** The snapshot of the form data the last call that took one took, per context */
-const lastSnapshots = new WeakMap<object, unknown>();
-
-/** Records the counterpart in `snapshot` of each array and plain object in `data`, which has the same shape */
-function pairSnapshots(data: unknown, snapshot: unknown, snapshots: WeakMap<object, object>): void {
+/** Records, in `pairs`, the counterpart in `snapshot` of each array and plain object in `data`, by key */
+function pairSnapshots(
+  data: unknown,
+  snapshot: unknown,
+  pairs: Map<object, object> | WeakMap<object, object>,
+  walked = new WeakSet<object>(),
+): void {
   if (
     !(Array.isArray(data) || isPlainObject(data)) ||
     typeof snapshot !== 'object' ||
     snapshot === null ||
-    snapshots.has(data)
+    walked.has(data)
   ) {
     return;
   }
-  snapshots.set(data, snapshot);
+  walked.add(data);
+  pairs.set(data, snapshot);
   for (const [key, entry] of Object.entries(data)) {
-    pairSnapshots(entry, Reflect.get(snapshot, key), snapshots);
+    pairSnapshots(entry, Reflect.get(snapshot, key), pairs, walked);
   }
 }
 
-/** Returns the snapshot of the object `data` of the call under way: a copy of it the fold owns, which shares every
- * subtree equal to the last call's with that call's snapshot. A match is keyed on it rather than on `data`, which the
- * caller may change in place between calls, so an object equal to one matched before, whether the caller kept it or
- * copied it, is matched once
+/** Points each object of `state`, the state a call handed back for `data`, at the snapshot taken of the object of
+ * `data` in its place, and the objects in it at theirs, see `snapshotHints`. `Form` hands that state back with an edit,
+ * whose objects a typed object field builds afresh, so the data a match took a snapshot of is not in it
  */
-function snapshotOf<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  data: object,
-): object | undefined {
-  if (callData === undefined) {
+function hintState(data: unknown, state: unknown, snapshots: Map<object, object>, walked: WeakSet<object>): void {
+  if (
+    !(Array.isArray(data) || isPlainObject(data)) ||
+    typeof state !== 'object' ||
+    state === null ||
+    walked.has(data)
+  ) {
+    return;
+  }
+  walked.add(data);
+  const snapshot = snapshots.get(data);
+  if (snapshot !== undefined) {
+    pairSnapshots(state, snapshot, snapshotHints);
+    return;
+  }
+  for (const [key, entry] of Object.entries(data)) {
+    hintState(entry, Reflect.get(state, key), snapshots, walked);
+  }
+}
+
+/** Returns what the snapshot of `data` is compared with: the snapshot its hint names, see `snapshotHints`, or else, for
+ * an object or array an edit copied, one made of the snapshots its members' hints name, so only the objects on the
+ * edited path are walked
+ */
+function previousSnapshotOf(data: unknown, walked: WeakSet<object>): unknown {
+  if (!(Array.isArray(data) || isPlainObject(data)) || walked.has(data)) {
     return undefined;
   }
-  if (callData.snapshots === undefined) {
-    const snapshot = replaceEqualDeep(lastSnapshots.get(context), ownValue(callData.formData));
-    lastSnapshots.set(context, snapshot);
-    callData.snapshots = new WeakMap();
-    pairSnapshots(callData.formData, snapshot, callData.snapshots);
+  const hint = snapshotHints.get(data);
+  if (hint !== undefined) {
+    return hint;
   }
-  return callData.snapshots.get(data);
+  walked.add(data);
+  return Array.isArray(data)
+    ? data.map((item: unknown) => previousSnapshotOf(item, walked))
+    : Object.fromEntries(Object.entries(data).map(([key, entry]) => [key, previousSnapshotOf(entry, walked)]));
+}
+
+/** Returns the snapshot of the object `data` of the call under way: a copy of it the fold owns, which shares every
+ * subtree equal to the snapshot last taken of it, or of the state a call handed back for it, see
+ * `previousSnapshotOf()`. A
+ * match is keyed on the snapshot rather than on `data`, which the caller may change in place between calls, so an
+ * object equal to one matched before is matched once. Only the object a match asks for is copied, with what it holds,
+ * and the hint only says which snapshot to compare it with, so data changed in place gets a snapshot of its own
+ */
+function snapshotOf(data: object): object | undefined {
+  if (callSnapshots === undefined) {
+    return undefined;
+  }
+  let snapshot = callSnapshots.get(data);
+  if (snapshot === undefined) {
+    snapshot = replaceEqualDeep(previousSnapshotOf(data, new WeakSet()), ownValue(data));
+    pairSnapshots(data, snapshot, callSnapshots);
+  }
+  return snapshot;
 }
 
 /** The declarations the properties of the schema `matched` stands for are read in */
@@ -3514,8 +3552,10 @@ interface PropertyMatch {
   readonly unfolded: boolean;
   /** Whether every property is retrieved, as `allOf: 'populateDefaults'` retrieves them */
   readonly retrievesAll: boolean;
-  /** The object's defaults, which a value an unfolded property rejects may take, see `matchProperties()` */
-  readonly defaults?: unknown;
+  /** Reads the object's defaults, which a value an unfolded property rejects may take, see `matchProperties()`. A match
+   * reads them only through it, so a match can tell whether any match below it read them
+   */
+  readonly readDefaults: () => unknown;
 }
 
 /** Returns the object data `data` with each property `readSchema` declares matched to the schema of that property, as
@@ -3534,7 +3574,7 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
   declarations: () => Seeding<S>,
   rootSchema: S,
   data: GenericObjectType,
-  { unfolded, retrievesAll, defaults }: PropertyMatch,
+  { unfolded, retrievesAll, readDefaults }: PropertyMatch,
 ): GenericObjectType {
   if (!isObject(readSchema.properties)) {
     return data;
@@ -3595,7 +3635,11 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
         return buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } }).chains;
       };
       const propertyData = matched[key];
-      const propertyDefaults = getByPath(defaults, key);
+      let readsDefaults = false;
+      const readPropertyDefaults = () => {
+        readsDefaults = true;
+        return getByPath(readDefaults(), key);
+      };
       const matchProperty = () =>
         heldDataMatching<unknown, S, F>(
           context,
@@ -3603,31 +3647,33 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
           rootSchema,
           propertyData,
           unfolded,
-          propertyDefaults,
+          readPropertyDefaults,
         );
       // Object data is matched at every depth, on every call, so an object equal to one matched before, as the data
       // holds one after an edit elsewhere, is matched once. Only a match that kept the data as it stands without
       // reading the defaults is remembered, as that holds whatever defaults the next call gives
-      const snapshot = isObjectData(propertyData) ? snapshotOf<S, F>(context, propertyData) : undefined;
-      const keptKeys = [context, propertyField(), readProperty, snapshot, unfolded];
+      const snapshot = isObjectData(propertyData) ? snapshotOf(propertyData) : undefined;
       let matchedProperty: unknown;
-      if (snapshot !== undefined && keptObjects.peek(keptKeys)) {
-        matchedProperty = propertyData;
-      } else {
-        const readBefore = defaultsRead;
+      if (snapshot === undefined) {
         matchedProperty = matchProperty();
-        if (snapshot !== undefined && matchedProperty === propertyData && defaultsRead === readBefore) {
-          keptObjects.set(keptKeys, true);
+      } else {
+        const keptKeys = [context, propertyField(), readProperty, snapshot, unfolded];
+        if (keptObjects.peek(keptKeys)) {
+          matchedProperty = propertyData;
+        } else {
+          matchedProperty = matchProperty();
+          if (matchedProperty === propertyData && !readsDefaults) {
+            keptObjects.set(keptKeys, true);
+          }
         }
       }
       // A value that doesn't match is left out, an `allOf` the property is read through or not, so the property takes
       // its defaults as one the data lacks does, here where the fold computes none for it
       let value = matchedProperty;
       if (value === undefined && unfolded) {
-        defaultsRead += 1;
         // A `null` default is a default like any other, so only a missing one falls through. The property's own
         // default sits in the merge the fold left out, whose defaults are skipped
-        const objectDefault = getByPath(defaults, key);
+        const objectDefault = readPropertyDefaults();
         // A select whose own `anyOf`/`oneOf`, resolved, offers constants keeps a value that is no object it doesn't
         // offer, as the fold keeps it for a property the object declares under the default `constAsDefaults`, where an
         // `enum` with no such options takes the object's default
@@ -3700,8 +3746,9 @@ export default function getDefaultFormState<
     globalUiOptions: getByPath<GlobalUISchemaOptions | undefined>(uiSchema, UI_GLOBAL_OPTIONS_KEY),
     overUndefined: new Map(),
   };
-  const outerCall = callData;
-  callData = { formData };
+  const outerSnapshots = callSnapshots;
+  const snapshots = new Map<object, object>();
+  callSnapshots = snapshots;
   let defaults: unknown;
   try {
     defaults = foldField<T, S, F>(context, field, {
@@ -3716,12 +3763,22 @@ export default function getDefaultFormState<
       fieldState,
     });
   } finally {
-    callData = outerCall;
+    callSnapshots = outerSnapshots;
+  }
+  if (!isObject(formData) && !Array.isArray(formData)) {
+    return asDeclared<T | T[] | null | undefined>(defaults);
   }
   // Every field merged its own data into its defaults as it computed them, so they are the form's state as they stand.
   // A field keeps data it takes as it is, so the state is copied off the caller's data, which the caller may go on to
   // change, as the caller may change the state it is handed
-  return asDeclared<T | T[] | null | undefined>(
-    isObject(formData) || Array.isArray(formData) ? ownValue(withNullFills(defaults, formData, nullFills)) : defaults,
-  );
+  const state = ownValue(withNullFills(defaults, formData, nullFills));
+  // The next call is handed the data again, or this state with an edit, so the objects of both point at the snapshots
+  // taken of them
+  if (snapshots.size > 0) {
+    for (const [data, snapshot] of snapshots) {
+      snapshotHints.set(data, snapshot);
+    }
+    hintState(formData, state, snapshots, new WeakSet());
+  }
+  return asDeclared<T | T[] | null | undefined>(state);
 }

@@ -1497,7 +1497,7 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     );
   });
 
-  it('matches an object equal to one matched before once, for objects nested in untyped allOf $refs', () => {
+  it('matches an object the data still holds, or the state handed back holds, after an edit elsewhere once, for objects nested in untyped allOf $refs', () => {
     // Pydantic v1's shape: each object a property reaches through an untyped `allOf` holding its `$ref`
     const depth = 5;
     const definitions: Record<string, RJSFSchema> = { E: { type: 'string', enum: ['a', 'b'] } };
@@ -1521,17 +1521,16 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     const firstCall = retrieveFieldCalls.count;
     retrieveFieldCalls.count = 0;
     const edited = edit(formData, 0);
-    expect(getDefaultFormState(context, { schema, formData: edited, initialDefaultsGenerated: true })).toStrictEqual(
-      edited,
-    );
+    const state = getDefaultFormState(context, { schema, formData: edited, initialDefaultsGenerated: true });
+    expect(state).toStrictEqual(edited);
     // Only the objects on the edited path are matched again
     expect(retrieveFieldCalls.count).toBeLessThan(firstCall / 4);
     retrieveFieldCalls.count = 0;
-    const copied = structuredClone(edited);
-    expect(getDefaultFormState(context, { schema, formData: copied, initialDefaultsGenerated: true })).toStrictEqual(
-      copied,
-    );
-    // A copy of data matched before is matched as that data
+    // As `Form` does, the state handed back is edited for the next call
+    const editedState = isObject(state) ? edit(state, 0) : {};
+    expect(
+      getDefaultFormState(context, { schema, formData: editedState, initialDefaultsGenerated: true }),
+    ).toStrictEqual(editedState);
     expect(retrieveFieldCalls.count).toBeLessThan(firstCall / 4);
   });
 
@@ -1545,10 +1544,14 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
       },
     };
     const context = { validator };
-    const formData = { o: { inner: { color: 'a' } } };
-    expect(getDefaultFormState(context, { schema, formData })).toStrictEqual({ o: { inner: { color: 'a' } } });
+    const formData = { o: { inner: { color: 'a', tags: ['t'] } } };
+    expect(getDefaultFormState(context, { schema, formData })).toStrictEqual({
+      o: { inner: { color: 'a', tags: ['t'] } },
+    });
     formData.o.inner.color = 'c';
-    expect(getDefaultFormState(context, { schema, formData })).toStrictEqual({ o: { inner: { color: 'c' } } });
+    expect(getDefaultFormState(context, { schema, formData })).toStrictEqual({
+      o: { inner: { color: 'c', tags: ['t'] } },
+    });
   });
 
   it("reads a schema below a key only an object's allOf declares without its default once, across passes and calls", () => {
