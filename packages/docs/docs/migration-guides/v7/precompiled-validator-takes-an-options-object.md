@@ -14,7 +14,7 @@ related: [precompiled-validator-returns-its-class, localizer-gets-quoted-propert
 - Your code calls `createPrecompiledValidator()` from `@rjsf/validator-ajv8` or `@rjsf/validator-ata` with a `localizer` or `suppressDuplicateFiltering` as its third or fourth argument, including `createPrecompiledValidator(validateFns, schema, undefined, 'all')`.
 - Your code passes a data type argument, such as `createPrecompiledValidator<MyData>()`.
 - The type checker reports `TS2554: Expected 2-3 arguments, but got 4` for a fourth argument, or `TS2559: Type '(e: any) => void' has no properties in common with type 'PrecompiledValidatorOptionsType<JSONSchema7>'` for a `localizer` passed as the third.
-- In untyped code nothing throws: a `localizer` passed third leaves the validator reading its options off the function, finding none, and no longer localizing.
+- In untyped code that still passes them positionally, nothing reports it: a `localizer` third stops localizing, and a fourth argument is ignored. A `null` third throws a `TypeError`.
 
 ## Change
 
