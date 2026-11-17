@@ -6,7 +6,4 @@ export { default as ATAValidator } from './validator.ts';
 export { default as ATAPrecompiledValidator } from './precompiledValidator.ts';
 export type * from './types.ts';
 
-// Annotated pure so a bundler can drop it: an app that imports only
-// `createPrecompiledValidator` otherwise keeps this call, and with it all of
-// ata-validator's runtime.
-export default /* @__PURE__ */ customizeValidator();
+export { default } from './defaultValidator.ts';

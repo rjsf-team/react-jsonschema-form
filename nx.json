@@ -5,6 +5,9 @@
     }
   },
   "extends": "nx/presets/npm.json",
+  "namedInputs": {
+    "testExtras": []
+  },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
@@ -16,12 +19,12 @@
     },
     "test": {
       "cache": true,
-      "//test": "the shared vitest base/setup live outside project roots; without these inputs a warm cache serves stale results when they change",
-      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.mts"]
+      "//test": "the shared vitest base/setup live outside project roots; without these inputs a warm cache serves stale results when they change. testExtras is empty here; a project whose tests read files outside its root names them in its own namedInputs (see packages/core/project.json)",
+      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.mts", "testExtras"]
     },
     "test:update": {
       "cache": true,
-      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.mts"]
+      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.mts", "testExtras"]
     },
     "test:watch": {
       "cache": true
@@ -30,7 +33,8 @@
       "cache": true
     },
     "test-coverage": {
-      "cache": true
+      "cache": true,
+      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.mts", "testExtras"]
     },
     "publish-to-gh-pages": {
       "cache": true

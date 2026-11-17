@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, use, useMemo } from 'react';
 import type { FieldPath, UiSchema } from '@rjsf/utils';
 

@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
-import { createContext, Fragment, use, useCallback, useMemo } from 'react';
+import { Fragment, use, useCallback, useMemo } from 'react';
 import type {
   __BaseInputProps,
   BoxProps,
@@ -58,6 +58,7 @@ import {
 
 import type { MantineGlobalUiOptionsKeys } from './globalUiOptions.ts';
 import { MANTINE_GLOBAL_UI_OPTIONS_KEYS } from './globalUiOptions.ts';
+import { GroupSuccessIdContext } from './GroupSuccessIdContext.ts';
 
 /** The keys `T` declares. `keyof T` is `string` for a type with an index signature, as `UIOptionsType` and
  * `TemplatesType` have, so it would accept any name and require none.
@@ -434,8 +435,6 @@ export function useShownSuccessId(successId: string) {
   const { describedBy } = use(InputWrapperContext);
   return isRendered(describedBy, successId) ? successId : undefined;
 }
-
-const GroupSuccessIdContext = createContext<string | undefined>(undefined);
 
 /** Replaces the aria ids in the `InputWrapper` context, keeping the id of the success message Mantine renders, which
  * rjsf has no element for. Mantine only puts that id in the context when the message is rendered. The context's

@@ -19,6 +19,8 @@ export default defineConfig({
   tsconfig: 'tsconfig.lib.json',
   // Every dependency, workspace packages included, stays an import; nothing is inlined into lib/.
   deps: { neverBundle: true },
+  // Unbundled, each file keeps its own `'use client'`, so rolldown's warning that bundling may drop it doesn't apply
+  checks: { moduleLevelDirective: false },
   // TypeScript 7 no longer ships the JS compiler API, so declarations come from its native binary. rolldown-plugin-dts
   // infers this when TypeScript 7 is installed; naming it keeps the choice from changing with the inference rules.
   dts: { generator: 'tsgo' },

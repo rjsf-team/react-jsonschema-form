@@ -73,6 +73,9 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
+      - name: Check the build kept each 'use client' directive
+        run: node scripts/checkUseClientBuild.mts
+
       - if: matrix.node-version == steps.nvmrc.outputs.node-version
         uses: actions/upload-artifact@v7
         with:
