@@ -384,9 +384,19 @@ const SKIPS_DEFAULTS = Symbol('skipsDefaults');
 function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
 ): SchemaContext<S, F> {
-  const skipping = { ...context, [SKIPS_DEFAULTS]: true };
-  return skipping;
+  let skipping = skippingContexts.get(context);
+  if (skipping === undefined) {
+    skipping = { ...context, [SKIPS_DEFAULTS]: true };
+    skippingContexts.set(context, skipping);
+  }
+  // Only `context` spread with the mark is kept under `context`, but the map can't carry its type parameters
+  return skipping as SchemaContext<S, F>;
 }
+
+/** The context `skippingDefaults()` returns, per context it is built from, so it keeps its identity across the passes
+ * and calls whose memos compare the context first
+ */
+const skippingContexts = new WeakMap<object, object>();
 
 /** What in `schema` a `null` fill can come from: the `null` type, named somewhere in it, or else a `$ref`, which can
  * lead to one elsewhere in the root; worked out once for each schema
