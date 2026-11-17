@@ -1801,7 +1801,7 @@ function innerItem<S extends StrictRJSFSchema>(
  * @param propertySchema - The property's schema as the object declares it
  * @param props - The property's own uiSchema, the `ui:definitions`, the call's `nullFills`, whether the object requires
  *        the property, the property's form data, and whether it is asked even where it holds no `null` schema, asked
- *        only once the Optional Data Controls collapse the property
+ *        before the property is retrieved to ask whether the Optional Data Controls collapse it
  * @returns - The `null` fills for the property
  */
 function nullFillsForProperty<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -1840,7 +1840,7 @@ function nullFillsForProperty<T, S extends StrictRJSFSchema, F extends FormConte
     !nullFills.isCollapsed &&
     (mayHoldNullType(propertySchema, rootSchema)
       ? collapsedByControls(nullFills)
-      : mayCollapse !== undefined && collapsedByControls(nullFills) && mayCollapse());
+      : mayCollapse !== undefined && mayCollapse() && collapsedByControls(nullFills));
   return isCollapsed ? { ...nullFills, isCollapsed } : nullFills;
 }
 
@@ -2009,8 +2009,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const addedByAdditionalProperty = hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG);
     const child = defaultsChild(seeding, seeds, edge, propertySchema);
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
-    // Only a property that may merge or show an object `const` can have one to leave out below, asked only of one
-    // the Optional Data Controls collapse
+    // Only a property that may merge or show an object `const` can have one to leave out below. The walk is cached
+    // per graph, so it is asked before the retrieve the Optional Data Controls' check needs
     let reachesConst: boolean | undefined;
     const mayHoldObjectConst = () => {
       reachesConst ??= reachesObjectConst<S>(child, defaultFormStateBehavior);

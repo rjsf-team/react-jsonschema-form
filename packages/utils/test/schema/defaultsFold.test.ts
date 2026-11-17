@@ -1480,6 +1480,33 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     expect(counting.calls).toBeGreaterThan(0);
   });
 
+  it('retrieves no optional field the Optional Data Controls collapse unless it may reach an object const', () => {
+    const counting = miniValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        x: {
+          type: 'object',
+          properties: { t: { type: 'string', default: 'a' } },
+          allOf: [
+            {
+              if: { properties: { t: { const: 'a' } } },
+              then: { properties: { u: { type: 'string', default: 'u' } } },
+            },
+          ],
+        },
+      },
+    };
+    const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+    const defaults = getDefaultFormState(
+      { validator: counting, defaultFormStateBehavior: { allOf: 'skipDefaults' } },
+      { schema, rootSchema: schema, uiSchema },
+    );
+    expect(defaults).toEqual({ x: { t: 'a' } });
+    // Retrieving `x` to ask whether the controls collapse it would check its `if`
+    expect(counting.calls).toBe(0);
+  });
+
   describe('definitions that all refer to one another', () => {
     function dense(size: number): RJSFSchema {
       const definitions: Record<string, RJSFSchema> = {};
