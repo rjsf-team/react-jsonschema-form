@@ -2011,21 +2011,15 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       if (!skipsBranchDefaults) {
         return foldReporting(context, memoKey, child, foldProps);
       }
-      skippingContext ??= nullsOnlyContext(context, 'ancestorWins');
       const parentDefaults = ownValue(foldProps.parentDefaults);
-      const data = foldProps.rawFormData;
+      const over = (value: unknown) =>
+        isObject(parentDefaults) && isObject(value) ? mergeObjects(parentDefaults, value) : (value ?? parentDefaults);
+      skippingContext ??= nullsOnlyContext(context, 'ancestorWins');
       const folded = foldReporting(skippingContext, memoKey, child, {
         ...foldProps,
-        rawFormData:
-          isObject(parentDefaults) && isObject(data) ? mergeObjects(parentDefaults, data) : (data ?? parentDefaults),
+        rawFormData: over(foldProps.rawFormData),
       });
-      let { value } = folded;
-      if (parentDefaults === undefined && !folded.holdsNull) {
-        value = undefined;
-      } else if (isObject(parentDefaults) && isObject(value)) {
-        value = mergeObjects(parentDefaults, value);
-      }
-      return { ...folded, value };
+      return { ...folded, value: parentDefaults === undefined && !folded.holdsNull ? undefined : over(folded.value) };
     };
     // Compute the defaults for this node, with the parent defaults we might have from a previous run: defaults[key].
     let property = foldProperty(propertyNullFills === nullFills ? `property:${key}` : `collapsed:${key}`, {
