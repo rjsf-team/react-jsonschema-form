@@ -1697,10 +1697,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         ((isObject(readProperty) && CONST_KEY in readProperty) ||
           getByPath(parentConst, key) !== undefined ||
           (isSchemaObject<S>(readProperty) &&
-            holdsAnyOf(readProperty, MERGING_KEYWORDS) &&
-            seeds.some(({ node }) => mergeReachesConst<S>(graph, node)) &&
-            constValueOf<S>(retrieveField<S, F>(context, rootProvenance<S>(graph, seeds), formData[key])) !==
-              undefined));
+            mergedConstSchemaOf<S, F>(
+              context,
+              readProperty,
+              () => rootProvenance<S>(graph, seeds),
+              (field) => retrieveField<S, F>(context, field, formData[key]),
+            ) !== undefined));
       return holdsConst;
     };
   };
@@ -2567,11 +2569,8 @@ function mergedSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   return merged.schema;
 }
 
-/** The schema whose `const` the field `view` stands for takes. A `const` a merging keyword the plan left unmerged
- * brings in is the field's as one of its own is: it fills the field under any `constAsDefaults` but `'never'`, and
- * under `'always'` takes precedence over the data. So it is read from the merged schema, so that a condition on the
- * data picks the `const`, as `formDataMatching()` reads it. A merged schema left with no `const`, as where the branch
- * holding it isn't taken, gives the field nothing, so the field is read as it stands
+/** The schema whose `const` the field `view` stands for takes: the merged one where `mergedConstSchemaOf()` gives one,
+ * else the field as it stands
  */
 function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2580,18 +2579,40 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   // Read by the fold, the object defaults and the fold's type for one view, so it is worked out once for the view
   const { merged } = view;
   if (merged.constSchema === undefined || merged.constContext !== context) {
-    let constSchema = view.schema;
-    if (context.defaultFormStateBehavior?.constAsDefaults !== 'never' && holdsAnyOf(view.schema, MERGING_KEYWORDS)) {
-      const { graph, seeds } = fieldOfView<S>(view);
-      const mergedSchema = seeds.some(({ node }) => mergeReachesConst<S>(graph, node))
-        ? mergedSchemaOf<S, F>(context, view)
-        : view.schema;
-      constSchema = constValueOf<S>(mergedSchema) === undefined ? view.schema : mergedSchema;
-    }
-    merged.constSchema = constSchema;
+    merged.constSchema =
+      mergedConstSchemaOf<S, F>(
+        context,
+        view.schema,
+        () => fieldOfView<S>(view),
+        () => mergedSchemaOf<S, F>(context, view),
+      ) ?? view.schema;
     merged.constContext = context;
   }
   return merged.constSchema;
+}
+
+/** The schema of a field, `schema` as written, merged for its data by `merge`, where that brings in a `const`. A
+ * `const` a merging keyword the plan left unmerged brings in is the field's as one of its own is: it fills the field
+ * under any `constAsDefaults` but `'never'`, and under `'always'` takes precedence over the data. So it is read from the
+ * merged schema, so that a condition on the data picks the `const`, as `formDataMatching()` reads it. A merged schema
+ * left with no `const`, as where the branch holding it isn't taken, gives the field none
+ */
+function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  field: () => Provenance<S>,
+  merge: (field: Provenance<S>) => S,
+): S | undefined {
+  if (context.defaultFormStateBehavior?.constAsDefaults === 'never' || !holdsAnyOf(schema, MERGING_KEYWORDS)) {
+    return undefined;
+  }
+  const provenance = field();
+  const { graph, seeds } = provenance;
+  if (!seeds.some(({ node }) => mergeReachesConst<S>(graph, node))) {
+    return undefined;
+  }
+  const mergedSchema = merge(provenance);
+  return constValueOf<S>(mergedSchema) === undefined ? undefined : mergedSchema;
 }
 
 /** What in the scope of a node, see `scopeOf()`, can give a key of its object a `const`: whether a declaration in it
