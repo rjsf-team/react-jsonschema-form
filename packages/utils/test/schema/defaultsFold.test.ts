@@ -2,6 +2,7 @@ import { createSchemaUtils, getDefaultFormState, isObject } from '../../src/inde
 import type {
   CustomMergeAllOf,
   DefaultFormStateBehavior,
+  GenericObjectType,
   RJSFSchema,
   SchemaContext,
   StrictRJSFSchema,
@@ -388,19 +389,21 @@ describe('getDefaultFormState() on recursive schemas', () => {
     expect(defaultsOf(schema, defaults, behavior)).toEqual(expected);
   });
 
-  it.each<[string, RJSFSchema]>([
+  it.each<[string, RJSFSchema, GenericObjectType]>([
     [
       'a property beside it',
       { type: 'object', properties: { child: { allOf: [{ $ref: D('node') }], const: { x: 1 } } } },
+      { x: 1 },
     ],
     [
       'a property of an allOf beside it',
       { type: 'object', allOf: [{ properties: { child: { allOf: [{ $ref: D('node') }], const: { tag: 't' } } } }] },
+      { tag: 't' },
     ],
-  ])('terminates on a recursion through an allOf it leaves unmerged beside a const of %s', (_, node) => {
+  ])('terminates on a recursion through an allOf it leaves unmerged beside a const of %s', (_, node, child) => {
     const schema: RJSFSchema = { definitions: { node }, $ref: D('node') };
     for (const behavior of [undefined, { allOf: 'skipDefaults' } satisfies DefaultFormStateBehavior]) {
-      expect(defaultsOf(schema, {}, behavior)).toStrictEqual({ child: {} });
+      expect(defaultsOf(schema, {}, behavior)).toStrictEqual({ child });
     }
   });
 
@@ -906,12 +909,14 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       o: { default: { y: 2 } },
       n: { properties: { j: { type: 'string', default: 'bj' } } },
       k: { const: { d: 2 } },
+      p: { const: 'b' },
     };
     const properties: RJSFSchema['properties'] = {
       a: { type: 'string', default: 'x' },
       o: { default: { x: 1 } },
       n: { type: 'object', properties: { i: { type: 'string', default: 'bi' } } },
       k: { type: 'object', const: { c: 1 }, properties: { c: {} } },
+      p: { type: 'string', const: 'a' },
     };
     const shapes: [string, RJSFSchema][] = [
       [
@@ -926,9 +931,11 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       ['dependencies', { type: 'object', properties, dependencies: { a: { properties: branchProperties } } }],
       ['oneOf', { type: 'object', properties, oneOf: [{ properties: branchProperties }] }],
     ];
-    it.each(shapes)('is merged from a %s as the branch is merged into the field, the branch winning', (_, schema) => {
+    // The retrieved field merges the branch's keywords into the property's: a primitive the branch gives wins, while an
+    // object `default` or `const` is merged with the property's key by key, as `retrieveSchema()` merges them
+    it.each(shapes)('is merged from a %s as the branch is merged into the field', (_, schema) => {
       const defaults = defaultsOf(schema);
-      expect(defaults).toEqual({ a: 'x', o: { x: 1, y: 2 }, n: { i: 'bi', j: 'bj' }, k: { c: 1 } });
+      expect(defaults).toEqual({ a: 'x', o: { x: 1, y: 2 }, n: { i: 'bi', j: 'bj' }, k: { c: 1, d: 2 }, p: 'b' });
       expect(isObject(defaults) && isObject(defaults.n) ? Object.keys(defaults.n) : []).toEqual(['i', 'j']);
     });
     it('renders in the order and with the default the field it is merged into shows', () => {
@@ -941,6 +948,8 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       };
       expect(Object.keys(propertyOf('n', {}).properties ?? {})).toEqual(['i', 'j']);
       expect(propertyOf('o').default).toEqual({ x: 1, y: 2 });
+      expect(propertyOf('k').const).toEqual({ c: 1, d: 2 });
+      expect(propertyOf('p').const).toBe('b');
     });
   });
 
@@ -1508,6 +1517,97 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     expect(merge).not.toHaveBeenCalled();
     expect(defaultsWith({ type: 'string' }, { type: 'string', const: 'c' })).toEqual({ o: { k: 'c', x: 1 } });
     expect(merge).toHaveBeenCalled();
+  });
+
+  it('folds an optional object that may show an object const it does not take no more on a later pass of its parent', () => {
+    let folds = 0;
+    // Each fold of `x` reads the uiSchema of its property `b` once
+    const xUi = {};
+    Object.defineProperty(xUi, 'b', {
+      enumerable: true,
+      get: () => {
+        folds += 1;
+        return undefined;
+      },
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        v: { type: 'string', default: 'v' },
+        w: { type: 'string' },
+        x: {
+          type: 'object',
+          properties: { b: { type: 'string', default: 's' } },
+          oneOf: [{ properties: { k: { type: 'string' } } }, { const: { a: 1 } }],
+        },
+      },
+      dependencies: { v: { properties: { w: { type: 'string', default: 'w' } } } },
+    };
+    const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] }, x: xUi };
+    expect(getDefaultFormState({ validator }, { schema, rootSchema: schema, uiSchema })).toEqual({
+      v: 'v',
+      w: 'w',
+      x: { b: 's' },
+    });
+    // Collapsed, then opened, on the first pass; the second, which the dependency on `v` brings, reuses both
+    expect(folds).toBe(2);
+  });
+
+  it('retrieves no field for an object const only an option offers, which the retrieve never merges', () => {
+    const counting = miniValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        x: {
+          type: 'object',
+          properties: { t: { type: 'string', default: 'a' } },
+          allOf: [
+            {
+              if: { properties: { t: { const: 'a' } } },
+              then: { properties: { u: { type: 'string', default: 'u' } } },
+            },
+          ],
+          oneOf: [{ properties: { b: { type: 'string' } } }, { const: { a: 1 } }],
+        },
+      },
+    };
+    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { t: 'a' } });
+    // Retrieving `x` would check its `if`
+    expect(counting.calls).toBe(0);
+    // Where the unmerged `allOf` reaches one itself, the retrieve looks for it, and finds none where the `if` fails
+    const branch: RJSFSchema = {
+      type: 'object',
+      properties: { x: { type: 'object', allOf: [{ if: { required: ['t'] }, then: { const: { a: 1 } } }] } },
+    };
+    expect(defaultsOf(branch, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({});
+    expect(counting.calls).toBeGreaterThan(0);
+  });
+
+  it('retrieves no optional field the Optional Data Controls collapse unless it may reach an object const', () => {
+    const counting = miniValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        x: {
+          type: 'object',
+          properties: { t: { type: 'string', default: 'a' } },
+          allOf: [
+            {
+              if: { properties: { t: { const: 'a' } } },
+              then: { properties: { u: { type: 'string', default: 'u' } } },
+            },
+          ],
+        },
+      },
+    };
+    const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+    const defaults = getDefaultFormState(
+      { validator: counting, defaultFormStateBehavior: { allOf: 'skipDefaults' } },
+      { schema, rootSchema: schema, uiSchema },
+    );
+    expect(defaults).toEqual({ x: { t: 'a' } });
+    // Retrieving `x` to ask whether the controls collapse it would check its `if`
+    expect(counting.calls).toBe(0);
   });
 
   describe('definitions that all refer to one another', () => {
