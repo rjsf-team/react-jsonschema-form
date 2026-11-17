@@ -6,10 +6,11 @@ import type {
   MultiSchemaFieldTemplateProps,
   ObjectFieldTemplateProps,
   RJSFSchema,
+  SchemaUtilsType,
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getByPath, isPlainObject, noop, optionDescriptionId, ROOT_FIELD_PATH } from '@rjsf/utils';
+import { createSchemaUtils, getByPath, isPlainObject, noop, optionDescriptionId, ROOT_FIELD_PATH } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import { createPrecompiledValidator, customizeValidator } from '@rjsf/validator-ajv8';
 import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
@@ -6113,22 +6114,21 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
             { title: 'T', const: Object.fromEntries(Array.from({ length: keys }, (_, index) => [`b${index}`, 1])) },
           ],
         };
-        // Each fill reads the global options once
-        let reads = 0;
-        const uiSchema = {};
-        Object.defineProperty(uiSchema, 'ui:globalOptions', {
-          enumerable: true,
-          get: () => {
-            reads += 1;
-            return undefined;
-          },
-        });
-        const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { a: 'x' } });
-        await user.selectOptions(elementOf(node, selectorId), 'T');
-        const before = reads;
-        await user.selectOptions(elementOf(node, selectorId), 'S');
-        expect(onChange.mock.lastCall?.[0].formData).toEqual({});
-        return reads - before;
+        // The form builds its own schema utils, so the fills are counted on the prototype every instance shares
+        const sharedMethods: SchemaUtilsType = Object.getPrototypeOf(
+          createSchemaUtils({ validator: customizeValidator() }, schema),
+        );
+        const fills = vi.spyOn(sharedMethods, 'getDefaultFormState');
+        try {
+          const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x' } });
+          await user.selectOptions(elementOf(node, selectorId), 'T');
+          fills.mockClear();
+          await user.selectOptions(elementOf(node, selectorId), 'S');
+          expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+          return fills.mock.calls.length;
+        } finally {
+          fills.mockRestore();
+        }
       };
 
       expect(await fillsOnSwitchingBack(5)).toBe(await fillsOnSwitchingBack(1));
