@@ -95,17 +95,48 @@ describe('DemoFrame', () => {
     },
   );
 
-  it.each(['core', 'chakra-ui', 'react-bootstrap', 'shadcn'])(
-    'marks the %s preview root with the playground mode its stylesheet reads',
-    async (theme) => {
+  it.each([
+    ['core', false, false],
+    ['mui', false, false],
+    ['mantine', false, false],
+    ['antd', false, false],
+    ['chakra-ui', true, false],
+    ['fluentui-rc', false, false],
+    ['react-bootstrap', false, true],
+    ['shadcn', true, false],
+  ])(
+    'marks the %s preview root with the playground mode only where its stylesheet reads it',
+    async (theme, darkClass, bootstrapTheme) => {
+      // Mantine reads the system scheme even when one is forced, and jsdom has no `matchMedia`
+      vi.stubGlobal(
+        'matchMedia',
+        vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })),
+      );
       const frameDocument = renderPreview(theme, 'dark');
       const root = frameDocument.documentElement;
 
       await vi.waitFor(() => {
         expect(getComputedStyle(root).colorScheme).toBe('dark');
       });
-      expect(root).toHaveClass('dark');
-      expect(root).toHaveAttribute('data-bs-theme', 'dark');
+      expect(root.classList.contains('dark')).toBe(darkClass);
+      expect(root.hasAttribute('data-bs-theme')).toBe(bootstrapTheme);
+      if (bootstrapTheme) {
+        expect(root).toHaveAttribute('data-bs-theme', 'dark');
+      }
+    },
+  );
+
+  it.each([
+    ['core', ''],
+    ['react-bootstrap', ''],
+    ['bootstrap3', 'white'],
+    ['daisy-ui', 'white'],
+  ])(
+    'gives the %s preview frame a background of %o, so only a preview that keeps its own look shows white before its stylesheet loads',
+    (theme, background) => {
+      renderPreview(theme, 'dark');
+
+      expect(screen.getByTitle('Form preview').style.background).toBe(background);
     },
   );
 

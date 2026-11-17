@@ -5,6 +5,7 @@ import type { EmotionCache } from '@emotion/cache';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { MantineProvider } from '@mantine/core';
+import type { PaletteMode } from '@mui/material';
 import { CssBaseline, ThemeProvider, createTheme, useTheme } from '@mui/material';
 import { Widgets } from '@rjsf/antd';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
@@ -19,24 +20,53 @@ const DEMO_FRAME_JSS = 'demo-frame-jss';
 // MUI's default look in the playground's light or dark mode, not the playground's own theme
 const muiPreviewThemes = { light: createTheme(), dark: createTheme({ palette: { mode: 'dark' } }) };
 
-/** The themes whose preview takes the playground's light or dark appearance from the frame's root or their provider.
+/** How a theme's preview takes the playground's light or dark appearance from the frame's root, beyond the root's
+ * `color-scheme`, which native controls and the page canvas read
+ */
+interface PreviewAppearance {
+  /** The marker the theme's stylesheet reads: a `light`/`dark` class, or Bootstrap's `data-bs-theme` */
+  rootMarker?: 'class' | 'data-bs-theme';
+  /** The page background of a theme that paints none of its own */
+  pageBackground?: string;
+}
+
+/** The themes whose preview follows the playground's appearance through the frame's root or their provider below.
  * daisy-ui takes it as its subtheme until one is picked, and bootstrap3 has a single look
  */
-const FOLLOWS_APPEARANCE = new Set([
-  'core',
-  'mui',
-  'mantine',
-  'antd',
-  'chakra-ui',
-  'fluentui-rc',
-  'react-bootstrap',
-  'shadcn',
-]);
+const PREVIEW_APPEARANCES: Record<string, PreviewAppearance> = {
+  core: { pageBackground: 'Canvas' },
+  mui: {},
+  mantine: {},
+  antd: { pageBackground: 'Canvas' },
+  'chakra-ui': { rootMarker: 'class' },
+  'fluentui-rc': {},
+  'react-bootstrap': { rootMarker: 'data-bs-theme' },
+  shadcn: { rootMarker: 'class', pageBackground: 'var(--background)' },
+};
 
-/** The page background of the themes among those that paint none of their own: the system's page colour, or the
- * shadcn stylesheet's own background colour
- */
-const PAGE_BACKGROUNDS: Record<string, string> = { core: 'Canvas', antd: 'Canvas', shadcn: 'var(--background)' };
+/** Marks `root` with `mode` the way `appearance` reads it, and returns what undoes that */
+function markRoot(root: HTMLElement, { rootMarker, pageBackground }: PreviewAppearance, mode: PaletteMode) {
+  root.style.setProperty('color-scheme', mode);
+  if (pageBackground) {
+    root.style.setProperty('background', pageBackground);
+  }
+  if (rootMarker === 'class') {
+    root.classList.add(mode);
+  } else if (rootMarker === 'data-bs-theme') {
+    root.setAttribute('data-bs-theme', mode);
+  }
+  return () => {
+    root.style.removeProperty('color-scheme');
+    if (pageBackground) {
+      root.style.removeProperty('background');
+    }
+    if (rootMarker === 'class') {
+      root.classList.remove(mode);
+    } else if (rootMarker === 'data-bs-theme') {
+      root.removeAttribute('data-bs-theme');
+    }
+  };
+}
 
 const { SelectWidget, DateWidget } = Widgets;
 
@@ -197,8 +227,7 @@ interface DemoFrameProps extends FrameComponentProps {
 export default function DemoFrame(props: DemoFrameProps) {
   const { children, head, theme, subtheme, style, ...frameProps } = props;
   const { mode } = useTheme().palette;
-  const followsAppearance = FOLLOWS_APPEARANCE.has(theme);
-  const pageBackground = PAGE_BACKGROUNDS[theme] ?? '';
+  const appearance = Object.hasOwn(PREVIEW_APPEARANCES, theme) ? PREVIEW_APPEARANCES[theme] : undefined;
 
   const [ready, setReady] = useState(false);
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
@@ -217,26 +246,12 @@ export default function DemoFrame(props: DemoFrameProps) {
     );
   }, []);
 
-  // The frame's root element is outside React's tree, and it is where the themes look for their dark mode:
-  // `color-scheme` for core's `light-dark()` colours and native controls, a `dark` class for chakra-ui and shadcn, and
-  // `data-bs-theme` for react-bootstrap. The others take the mode through their providers below. It runs before paint
-  // so the root switches together with those providers
+  // The frame's root element is outside React's tree. It runs before paint so the root switches together with the
+  // providers below
   useLayoutEffect(() => {
-    const root = ready && followsAppearance ? instanceRef.current?.contentDocument?.documentElement : undefined;
-    if (!root) {
-      return undefined;
-    }
-    root.style.setProperty('color-scheme', mode);
-    root.style.setProperty('background', pageBackground);
-    root.classList.add(mode);
-    root.setAttribute('data-bs-theme', mode);
-    return () => {
-      root.style.removeProperty('color-scheme');
-      root.style.removeProperty('background');
-      root.classList.remove(mode);
-      root.removeAttribute('data-bs-theme');
-    };
-  }, [ready, followsAppearance, pageBackground, mode]);
+    const root = instanceRef.current?.contentDocument?.documentElement;
+    return ready && root && appearance ? markRoot(root, appearance, mode) : undefined;
+  }, [ready, appearance, mode]);
 
   let body: ReactNode = children;
   if (theme === 'mui') {
@@ -305,9 +320,9 @@ export default function DemoFrame(props: DemoFrameProps) {
       ref={instanceRef}
       contentDidMount={onContentDidMount}
       head={head}
-      // A light page behind the bootstrap3 and daisy-ui previews in a dark playground; a theme's own page background, or
-      // the one `PAGE_BACKGROUNDS` gives it, is painted over it and still fills the frame
-      style={{ background: 'white', ...style }}
+      // A light page behind the bootstrap3 and daisy-ui previews in a dark playground. A preview that follows the
+      // appearance shows the playground's page while its stylesheet loads, rather than a flash of white
+      style={{ background: appearance ? undefined : 'white', ...style }}
       {...frameProps}
     >
       <div id={DEMO_FRAME_JSS} />
