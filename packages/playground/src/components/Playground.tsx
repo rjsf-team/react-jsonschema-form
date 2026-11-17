@@ -312,12 +312,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       // without this the second sample to make the same mistake at the same field would warn about nothing. Checking
       // those warnings by hand is most of what the playground is for.
       resetLogOnce();
-      // A picked subtheme and its stylesheet stay while the theme does, and belong to the old theme once it changes
-      if (next.theme !== theme) {
-        setTheme(next.theme);
-        setStylesheet(next.stylesheet ?? null);
-        setSubtheme(null);
-      }
       if (next.sampleName) {
         setSampleName(next.sampleName);
         setUiSchemaGenerator(next.uiSchemaGenerator);

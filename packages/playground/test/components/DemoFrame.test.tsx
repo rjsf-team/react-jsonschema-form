@@ -21,8 +21,8 @@ function renderPreview(
   children: ReactNode = <output />,
   subtheme: string | null = null,
 ) {
-  const preview = (previewTheme: string) => (
-    <ThemeProvider theme={createTheme({ palette: { mode } })}>
+  const preview = (previewTheme: string, previewMode = mode) => (
+    <ThemeProvider theme={createTheme({ palette: { mode: previewMode } })}>
       <DemoFrame title='Form preview' theme={previewTheme} subtheme={subtheme}>
         {children}
       </DemoFrame>
@@ -40,7 +40,12 @@ function renderPreview(
   frameDocument.body.appendChild(mountTarget);
   // An iframe finishing loading is a browser lifecycle event, not something a user does
   fireEvent.load(iframe);
-  return { frameDocument, switchTheme: (nextTheme: string) => rerender(preview(nextTheme)) };
+  return {
+    iframe,
+    frameDocument,
+    switchTheme: (nextTheme: string) => rerender(preview(nextTheme)),
+    switchMode: (nextMode: 'light' | 'dark') => rerender(preview(theme, nextMode)),
+  };
 }
 
 async function renderedOutput(frameDocument: Document) {
@@ -63,6 +68,7 @@ const PREVIEW_MARKS: Record<string, { darkClass: boolean; background: string; co
 describe('DemoFrame', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
+    localStorage.clear();
   });
 
   it.each(['light', 'dark'] as const)('renders the mui preview in the %s mode of the playground', async (mode) => {
@@ -139,7 +145,7 @@ describe('DemoFrame', () => {
     ['core', ''],
     ['react-bootstrap', ''],
     ['bootstrap3', 'white'],
-    ['daisy-ui', 'white'],
+    ['daisy-ui', ''],
   ])(
     'gives the %s preview frame a background of %o, so only a preview that keeps its own look shows white before its stylesheet loads',
     (theme, background) => {
@@ -148,6 +154,15 @@ describe('DemoFrame', () => {
       expect(screen.getByTitle('Form preview').style.background).toBe(background);
     },
   );
+
+  it.each([
+    [null, ''],
+    ['cupcake', 'white'],
+  ])('gives the daisy-ui preview frame with the subtheme %o a background of %o', (subtheme, background) => {
+    renderPreview('daisy-ui', 'dark', <output />, subtheme);
+
+    expect(screen.getByTitle('Form preview').style.background).toBe(background);
+  });
 
   it.each([
     ['core', 'light', 'canvas'],
@@ -171,6 +186,55 @@ describe('DemoFrame', () => {
 
     await renderedOutput(frameDocument);
     expect(frameDocument.querySelector('.daisy-ui-theme')).toHaveAttribute('data-theme', mode);
+  });
+
+  it("shows daisyUI's own themes as the appearance changes without storing them as the daisyUI theme", async () => {
+    const { frameDocument, switchMode } = renderPreview('daisy-ui', 'dark');
+    await renderedOutput(frameDocument);
+
+    switchMode('light');
+
+    expect(frameDocument.querySelector('.daisy-ui-theme')).toHaveAttribute('data-theme', 'light');
+    expect(localStorage.getItem('daisyui-theme')).toBeNull();
+  });
+
+  it('stores a picked daisy-ui subtheme as the daisyUI theme', async () => {
+    const { frameDocument } = renderPreview('daisy-ui', 'dark', <output />, 'cupcake');
+
+    await renderedOutput(frameDocument);
+    expect(localStorage.getItem('daisyui-theme')).toBe('cupcake');
+  });
+
+  it.each([
+    ['core', 'dark', '<html style="color-scheme: dark">'],
+    ['core', 'light', '<html style="color-scheme: light">'],
+    ['daisy-ui', 'dark', '<html style="color-scheme: dark">'],
+    ['bootstrap3', 'dark', '<html>'],
+  ] as const)(
+    'starts the %s preview document in a %s playground with %s, before the preview has loaded',
+    (theme, mode, root) => {
+      const { iframe } = renderPreview(theme, mode);
+
+      expect(iframe.getAttribute('srcdoc')).toContain(root);
+    },
+  );
+
+  it('keeps the preview document it started with when the appearance changes, rather than reloading it', () => {
+    const { iframe, switchMode } = renderPreview('core', 'dark');
+    const srcdoc = iframe.getAttribute('srcdoc');
+
+    switchMode('light');
+
+    expect(iframe.getAttribute('srcdoc')).toBe(srcdoc);
+    expect(iframe.contentDocument?.documentElement.style.colorScheme).toBe('light');
+  });
+
+  it("follows the playground's appearance at the daisy-ui preview root until a subtheme is picked", async () => {
+    const { frameDocument } = renderPreview('daisy-ui', 'dark');
+
+    await vi.waitFor(() => {
+      expect(getComputedStyle(frameDocument.documentElement).colorScheme).toBe('dark');
+    });
   });
 
   it('shows a picked daisy-ui subtheme whatever the playground mode', async () => {
@@ -200,8 +264,11 @@ describe('DemoFrame', () => {
     expect(getComputedStyle(root).colorScheme).toBe(marks.colorScheme);
   });
 
-  it.each(['bootstrap3', 'daisy-ui'])('leaves the %s preview root to its own theme', async (theme) => {
-    const { frameDocument } = renderPreview(theme, 'dark');
+  it.each([
+    ['bootstrap3', null],
+    ['daisy-ui', 'cupcake'],
+  ])('leaves the %s preview root with the subtheme %o to its own theme', async (theme, subtheme) => {
+    const { frameDocument } = renderPreview(theme, 'dark', <output />, subtheme);
     const root = frameDocument.documentElement;
 
     await renderedOutput(frameDocument);

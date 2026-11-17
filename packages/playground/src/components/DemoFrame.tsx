@@ -36,7 +36,7 @@ interface PreviewAppearance {
 }
 
 /** The themes whose preview follows the playground's appearance through the frame's root or their provider below.
- * daisy-ui takes it as its subtheme until one is picked, and bootstrap3 has a single look
+ * daisy-ui follows it too until a subtheme is picked, and bootstrap3 has a single look
  */
 const PREVIEW_APPEARANCES: Record<string, PreviewAppearance> = {
   core: { pageBackground: 'Canvas' },
@@ -53,6 +53,11 @@ const PREVIEW_APPEARANCES: Record<string, PreviewAppearance> = {
   'react-bootstrap': { rootMarker: 'data-bs-theme' },
   shadcn: { rootMarker: 'class', pageBackground: 'var(--background)' },
 };
+
+/** daisy-ui's appearance while it shows daisyUI's own `light` or `dark` theme, which paints its page, so its root needs
+ * only the matching `color-scheme`
+ */
+const DAISY_UI_APPEARANCE: PreviewAppearance = {};
 
 /** Marks `root` with `mode` the way `appearance` reads it, and returns what undoes that */
 function markRoot(root: HTMLElement, { rootMarker, pageBackground }: PreviewAppearance, mode: PaletteMode) {
@@ -236,7 +241,16 @@ interface DemoFrameProps extends FrameComponentProps {
 export default function DemoFrame(props: DemoFrameProps) {
   const { children, head, theme, subtheme, style, ...frameProps } = props;
   const { mode } = useTheme().palette;
-  const appearance = Object.hasOwn(PREVIEW_APPEARANCES, theme) ? PREVIEW_APPEARANCES[theme] : undefined;
+  const daisyUIAppearance = theme === 'daisy-ui' && !subtheme ? DAISY_UI_APPEARANCE : undefined;
+  const appearance = Object.hasOwn(PREVIEW_APPEARANCES, theme) ? PREVIEW_APPEARANCES[theme] : daisyUIAppearance;
+  // The frame's document is loaded once, from this, so it starts in the scheme the playground was in then: a frame
+  // whose `color-scheme` differs from its `<iframe>`'s gets an opaque canvas, which would flash before `markRoot`
+  // takes over
+  // oxlint-disable-next-line react/hook-use-state
+  const [initialContent] = useState(
+    () =>
+      `<!DOCTYPE html><html${appearance ? ` style="color-scheme: ${mode}"` : ''}><head></head><body><div class="frame-root"></div></body></html>`,
+  );
 
   const [ready, setReady] = useState(false);
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
@@ -307,8 +321,10 @@ export default function DemoFrame(props: DemoFrameProps) {
       <FrameContextConsumer>
         {__createDaisyUIFrameProvider({
           ...props,
-          // daisyUI's own `light` and `dark` themes, until another subtheme is picked
+          // daisyUI's own `light` and `dark` themes, until another subtheme is picked. Only a picked one is stored as
+          // the theme daisyUI shows where none is chosen, since the appearance is the playground's, kept under its own key
           subtheme: { dataTheme: subtheme || mode },
+          storeTheme: Boolean(subtheme),
         })}
       </FrameContextConsumer>
     ) : null;
@@ -328,8 +344,9 @@ export default function DemoFrame(props: DemoFrameProps) {
     <Frame
       ref={instanceRef}
       contentDidMount={onContentDidMount}
+      initialContent={initialContent}
       head={head}
-      // A light page behind the bootstrap3 and daisy-ui previews in a dark playground. A preview that follows the
+      // A light page behind the bootstrap3 preview, and a picked daisy-ui subtheme, in a dark playground. A preview that follows the
       // appearance shows the playground's page while its stylesheet loads, rather than a flash of white
       style={{ background: appearance ? undefined : 'white', ...style }}
       {...frameProps}

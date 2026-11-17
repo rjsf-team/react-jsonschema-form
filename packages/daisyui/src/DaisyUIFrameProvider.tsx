@@ -25,6 +25,8 @@ import { DEFAULT_THEME, readStoredTheme, storeTheme, subscribeToStoredTheme } fr
 interface DaisyUIFrameProviderProps {
   children: ReactNode;
   subtheme?: { dataTheme?: string } | null;
+  /** Whether a chosen theme is stored as the one shown where none is chosen, as by default, or only shown */
+  storeTheme?: boolean;
 }
 
 /** This component has a useEffect with a cleanup function to remove the tailwind stylesheets loads upon unmount so
@@ -33,7 +35,7 @@ interface DaisyUIFrameProviderProps {
  * @param props - The component props
  */
 function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: Document }) {
-  const { children, subtheme = {}, document } = props;
+  const { children, subtheme = {}, storeTheme: storesChosenTheme = true, document } = props;
   const chosenTheme = subtheme?.dataTheme;
   // The stored theme lives outside React, so it is read as an external store, which renders the provider again when
   // another provider or another tab stores a theme. A chosen theme is shown without reading the storage at all. The
@@ -48,10 +50,10 @@ function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: D
   // components inside get the theme shown through `FrameThemeContext` meanwhile. A storage that refuses it leaves the
   // chosen theme shown all the same
   useEffect(() => {
-    if (chosenTheme) {
+    if (chosenTheme && storesChosenTheme) {
       storeTheme(chosenTheme);
     }
-  }, [chosenTheme]);
+  }, [chosenTheme, storesChosenTheme]);
 
   useEffect(() => {
     if (document) {
@@ -86,7 +88,13 @@ function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: D
       daisyLinkAllThemes.rel = 'stylesheet';
       daisyLinkAllThemes.href = 'https://cdn.jsdelivr.net/npm/daisyui@5.0.20/themes.css';
       document.head.appendChild(daisyLinkAllThemes);
+
+      // The theme's element fills the frame's height, which the body's default margin would push past until Tailwind's
+      // preflight resets it, showing a scrollbar and an unthemed strip on every load
+      const { margin } = document.body.style;
+      document.body.style.setProperty('margin', '0');
       return () => {
+        document.body.style.setProperty('margin', margin);
         configScript.remove();
         tailwindScript.remove();
         daisyLink.remove();
