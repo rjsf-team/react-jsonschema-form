@@ -1101,7 +1101,14 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
               rawFormData,
             )));
       if (optionHoldsNone && shouldMergeDefaultsIntoFormData && rawFormData !== undefined) {
-        const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
+        // A nested value the field's schema rejects falls back to the field's defaults, its own where it inherits none,
+        // as it does where the field has no options
+        const matching = viewFormDataMatching<unknown, S, F>(
+          context,
+          view,
+          rawFormData,
+          defaults === undefined ? ownValue(schema.default) : defaults,
+        );
         return matching === undefined
           ? optionValue
           : mergeDefaultsWithFormData(
@@ -1169,7 +1176,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // Object data of a field whose defaults are a whole value or one of another type is the field's value as a whole,
       // so it is kept as it is where the field takes it and its defaults stand otherwise, rather than blended with them
       // key by key
-      const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
+      const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData, defaults);
       if (matching !== undefined) {
         defaultsWithFormData = matching;
       } else if (foldedType === 'whole') {

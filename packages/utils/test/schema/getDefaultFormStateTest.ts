@@ -3262,6 +3262,38 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toStrictEqual({ typed: { c: 'b' }, untyped: { c: 'b' } });
         });
 
+        it.each<[string, RJSFSchema]>([
+          ['options of other types', { anyOf: [{ type: 'string' }, { type: 'number' }] }],
+          ['a type list that takes it whole', { type: ['string', 'object'] }],
+        ])(
+          "gives a nested value an untyped field's allOf rejects the field's object default where it has %s, as where it has none",
+          (_, keywords) => {
+            const allOf: RJSFSchema[] = [{ properties: { c: { enum: ['a', 'b'] } } }];
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                plain: { allOf, default: { c: 'a' } },
+                w: { ...keywords, allOf, default: { c: 'a' } },
+              },
+            };
+            expect(
+              getDefaultFormState({ validator: testValidator }, { schema, formData: { plain: { c: 'z' }, w: { c: 'z' } } }),
+            ).toStrictEqual({ plain: { c: 'a' }, w: { c: 'a' } });
+          },
+        );
+
+        it("gives a nested value an untyped field's allOf rejects the default its object gives it where it has options of other types, as where it has none", () => {
+          const allOf: RJSFSchema[] = [{ properties: { c: { enum: ['a', 'b'] } } }];
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: { plain: { c: 'b' }, w: { c: 'b' } },
+            properties: { plain: { allOf }, w: { anyOf: [{ type: 'string' }, { type: 'number' }], allOf } },
+          };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { plain: { c: 'z' }, w: { c: 'z' } } }),
+          ).toStrictEqual({ plain: { c: 'b' }, w: { c: 'b' } });
+        });
+
         it("keeps a value the $ref'd constants of an untyped field's allOf key don't offer, as for a typed one", () => {
           const c: RJSFSchema = {
             anyOf: [{ $ref: '#/definitions/Red' }, { $ref: '#/definitions/Green' }],
