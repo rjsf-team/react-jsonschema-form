@@ -75,16 +75,13 @@ export function filterDuplicateErrors(
  * @returns - The message with the property names quoted, when it is Ajv's own message for a property dependency
  */
 function quoteDependencyProperties(message: string, params: ErrorObject['params']): string {
-  const { property, deps, depsCount } = params;
-  if (typeof property !== 'string' || typeof deps !== 'string') {
+  if (typeof params.property !== 'string' || typeof params.deps !== 'string') {
     return message;
   }
-  const properties = depsCount === 1 ? 'property' : 'properties';
-  if (message !== `must have ${properties} ${deps} when property ${property} is present`) {
-    return message;
-  }
-  const quoted = quoteProperties(params);
-  return `must have ${properties} ${quoted.deps} when property ${quoted.property} is present`;
+  const properties = params.depsCount === 1 ? 'property' : 'properties';
+  const format = ({ deps, property }: ErrorObject['params']) =>
+    `must have ${properties} ${deps} when property ${property} is present`;
+  return message === format(params) ? format(quoteProperties(params)) : message;
 }
 
 /** Transforming the error output from ajv to format used by @rjsf/utils.
