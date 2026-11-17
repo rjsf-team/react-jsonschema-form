@@ -653,16 +653,21 @@ function fieldPasses<S extends StrictRJSFSchema, F extends FormContextType>(
   let retrievals: KeyedMemo<S> | undefined;
   let retrievedViews: KeyedMemo<DefaultsView<S>> | undefined;
   return {
-    shareExtraKeySchema: (extraKeySchema) =>
-      (lastExtraKeySchema = replaceEqualDeep(lastExtraKeySchema, extraKeySchema)),
-    retrieveOnce: (owner, slot, raw) =>
-      (retrievals ??= new KeyedMemo<S>()).get([owner, slot], () =>
-        retrieveSchema<unknown, S, F>(context, raw, rootSchema, data),
-      ),
-    retrievedViewOf: (view) =>
-      (retrievedViews ??= new KeyedMemo<DefaultsView<S>>()).get([view], () =>
+    shareExtraKeySchema(extraKeySchema) {
+      const shared = replaceEqualDeep(lastExtraKeySchema, extraKeySchema);
+      lastExtraKeySchema = shared;
+      return shared;
+    },
+    retrieveOnce(owner, slot, raw) {
+      retrievals ??= new KeyedMemo<S>();
+      return retrievals.get([owner, slot], () => retrieveSchema<unknown, S, F>(context, raw, rootSchema, data));
+    },
+    retrievedViewOf(view) {
+      retrievedViews ??= new KeyedMemo<DefaultsView<S>>();
+      return retrievedViews.get([view], () =>
         settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options),
-      ),
+      );
+    },
   };
 }
 
@@ -2022,16 +2027,14 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         // it a value, a default or `const` of its properties, a default of its own, a `ui:initialValue` or the
         // object's defaults, opens it as it opens any object. A fold that took no object `const` already computed its
         // value without
-        const withoutConst =
-          mayHoldObjectConst && isObjectData(property.value)
-            ? property.takesObjectConst
-              ? foldReporting(context, `withoutConst:${key}`, child, {
-                  ...ownProps,
-                  nullFills: propertyNullFills,
-                  leavesOutObjectConst: true,
-                })
-              : property
-            : undefined;
+        let withoutConst = mayHoldObjectConst && isObjectData(property.value) ? property : undefined;
+        if (withoutConst && property.takesObjectConst) {
+          withoutConst = foldReporting(context, `withoutConst:${key}`, child, {
+            ...ownProps,
+            nullFills: propertyNullFills,
+            leavesOutObjectConst: true,
+          });
+        }
         const valueWithout = withoutConst?.value;
         if (
           withoutConst &&
