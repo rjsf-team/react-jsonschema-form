@@ -369,6 +369,25 @@ function nullsOnlyContext<S extends StrictRJSFSchema, F extends FormContextType>
   };
 }
 
+/** Marks a context under which the fold reads no schema's `default`, see `skippingDefaults()`. A context spread from
+ * one keeps the mark
+ */
+const SKIPS_DEFAULTS = Symbol('skipsDefaults');
+
+/** `context` under which `foldView()` reads each field without its `default`: under `allOf: 'skipDefaults'`, a key
+ * only an object's unmerged `allOf` declares has its own `default`, and those nested below it, from that `allOf`, which
+ * the setting skips, so it takes only what the object's default gives it, its `const`s and its `null` fills
+ *
+ * @param context - The `SchemaContext` the defaults are computed in
+ * @returns - The context that skips the `default`s
+ */
+function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+): SchemaContext<S, F> {
+  const skipping = { ...context, [SKIPS_DEFAULTS]: true };
+  return skipping;
+}
+
 /** What in `schema` a `null` fill can come from: the `null` type, named somewhere in it, or else a `$ref`, which can
  * lead to one elsewhere in the root; worked out once for each schema
  */
@@ -993,7 +1012,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
  */
 function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  view: DefaultsView<S>,
+  fieldView: DefaultsView<S>,
   inputProps: ViewProps<T, S, F>,
 ): unknown {
   const { defaultFormStateBehavior } = context;
@@ -1007,9 +1026,11 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     uiSchema: localUiSchema,
     uiSchemaDefinitions,
   } = inputProps;
+  inputProps.track(fieldView);
+  const view =
+    SKIPS_DEFAULTS in context ? { ...fieldView, schema: withoutKeys(fieldView.schema, DEFAULT_KEY) } : fieldView;
   const { schema } = view;
   const rootSchema = view.field.graph.rawRoot;
-  inputProps.track(view);
   // Apply `ui:definitions` at every field, keyed by the `$ref` its plan was resolved from, so defaults see the same
   // uiSchema `SchemaField` renders with
   const uiSchema = uiSchemaDefinitions
@@ -1739,15 +1760,17 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       hasConst: constCheck(key, view.graph, seeds, readProperty),
       child: defaultsChild(view, seeds, edge, propertySchema),
       declaredIn: schema,
+      foldContext: context,
     };
   });
   // A key only an `allOf` the plan left unmerged declares is a property of the field as rendered, so it takes the steps
   // a property of the object's own takes, from the property the merge for the data gives it. A boolean one names no
   // field of its own, so it is folded from no seeds, as an own property whose seeds are all booleans is. Under `allOf:
-  // 'skipDefaults'` the `allOf`'s own defaults don't fill a key the data lacks, so one is folded only where the
-  // object's default names it or a `const` gives it its value, and otherwise takes only the `null` `branchNullFills()`
-  // finds for it
+  // 'skipDefaults'` the `allOf`'s defaults, the key's own and those nested below it, are skipped, so one the data lacks
+  // is folded only where the object's default names it or a `const` gives it its value, and otherwise takes only the
+  // `null` `branchNullFills()` finds for it
   const mergedSchema = ALL_OF_KEY in view.schema ? mergedSchemaOf<S, F>(context, view) : undefined;
+  const allOfContext = mergedSchema === undefined || populatesAllOf ? context : skippingDefaults(context);
   const rootGraph = parseSchemaGraph<S>(rootSchema);
   const allOfProperties =
     mergedSchema === undefined
@@ -1766,13 +1789,14 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
               hasConst: constCheck(key, graph, seeds, propertySchema),
               child: { graph, seeds, expanded: view.field.expanded, edge: 'property' as const },
               declaredIn: mergedSchema,
+              foldContext: allOfContext,
             };
           })
           .filter(
             ({ key, hasConst }) => Object.hasOwn(formData, key) || getByPath(defaults, key) !== undefined || hasConst(),
           );
   const foldedAllOfKeys = new Set(allOfProperties.map(({ key }) => key));
-  for (const { key, propertySchema, readProperty, hasConst, child, declaredIn } of [
+  for (const { key, propertySchema, readProperty, hasConst, child, declaredIn, foldContext } of [
     ...ownProperties,
     ...allOfProperties,
   ]) {
@@ -1795,7 +1819,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     });
     // Compute the defaults for this node, with the parent defaults we might have from a previous run: defaults[key].
     let property = foldReporting(
-      context,
+      foldContext,
       propertyNullFills === nullFills ? `property:${key}` : `collapsed:${key}`,
       child,
       { ...ownProps, nullFills: propertyNullFills },
@@ -1815,7 +1839,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         hasConst(),
       );
       if (isFormDataAvailable(added[key])) {
-        property = foldReporting(context, `property:${key}`, child, ownProps);
+        property = foldReporting(foldContext, `property:${key}`, child, ownProps);
       }
     }
     if (property.holdsNull) {
@@ -2209,7 +2233,10 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     arrayDefault = defaults || (!required && !requiredAsRoot) ? defaults : emptyDefault;
   } else {
     const defaultEntries: unknown[] = Array.isArray(defaults) ? defaults : [];
-    const fillerDefault = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert).default;
+    const fillerDefault =
+      SKIPS_DEFAULTS in context
+        ? undefined
+        : getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert).default;
 
     // Calculate filler entries for remaining items (minItems - existing raw data/defaults), each resolving the
     // uiSchema for its own final position (`defaultsLength + i`) the same way `ArrayField` resolves it once rendered,
@@ -2810,10 +2837,10 @@ interface PropertyMatch {
  * `formDataMatching()` matches it, where it may reject the value: a value that doesn't match is left out, so the
  * property takes its defaults as one the data lacks does. `declarations` gives the declarations of `matchedSchema`, see
  * `declarationsOf()`, and `match` how the properties are matched. As the fold computes none of an unfolded property, a
- * value one rejects takes its default here: the property's own, or else the object's, the other way round under
- * `nestedDefaultsPrecedence: 'ancestorWins'` where the property can hold the object's; with neither, a value that is no
- * object is kept, as a select keeps one its options don't offer. A value that is no object that a select over its own
- * `anyOf`/`oneOf` constants doesn't offer is kept whatever defaults there are, as the fold keeps it
+ * value one rejects takes the object's default for it here, not its own, which sits in the merge the fold left out;
+ * with none, a value that is no object is kept, as a select keeps one its options don't offer. A value that is no object
+ * that a select over its own `anyOf`/`oneOf` constants doesn't offer is kept whatever defaults there are, as the fold
+ * keeps it
  */
 function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2888,19 +2915,11 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
       let value = matchedProperty;
       if (value === undefined && unfolded) {
         // A `null` default is a default like any other, so only a missing one falls through. The property's own
-        // default wins over the object's, as in the fold, unless `nestedDefaultsPrecedence` says the ancestor's does
-        // and the property can hold it
-        const defaultsInOrder = [getByPath(readProperty, DEFAULT_KEY), getByPath(defaults, key)];
-        if (
-          context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' &&
-          isSchemaObject<S>(readProperty) &&
-          takesValueOf<S>(readProperty, defaultsInOrder[1])
-        ) {
-          defaultsInOrder.reverse();
-        }
+        // default sits in the merge the fold left out, whose defaults are skipped
+        const objectDefault = getByPath(defaults, key);
         // A select whose own `anyOf`/`oneOf`, resolved, offers constants keeps a value that is no object it doesn't
         // offer, as the fold keeps it for a property the object declares under the default `constAsDefaults`, where an
-        // `enum` with no such options takes its default
+        // `enum` with no such options takes the object's default
         const kept = isObjectData(matched[key]) ? undefined : matched[key];
         const keepsValue =
           kept !== undefined &&
@@ -2913,7 +2932,7 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
               })),
             )?.options,
           );
-        value = keepsValue ? kept : [...defaultsInOrder, kept].find((candidate) => candidate !== undefined);
+        value = keepsValue || objectDefault === undefined ? kept : objectDefault;
       }
       if (value === undefined) {
         Reflect.deleteProperty(matched, key);
