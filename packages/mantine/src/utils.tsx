@@ -359,6 +359,7 @@ const themeComponentNames = {
   ColorInput: [...wrapperThemeNames, 'ColorInput'],
   PasswordInput: [...wrapperThemeNames, 'PasswordInput'],
   DateInput: [...wrapperThemeNames, 'DateInput'],
+  DateTimePicker: [...wrapperThemeNames, 'DateTimePicker'],
 } satisfies Record<string, string[]>;
 
 export type AriaInputComponentName = keyof typeof themeComponentNames;
