@@ -174,10 +174,10 @@ export default function Page() {
 }
 ```
 
-A server component can pass only props that React can send to the client: the schemas, the data and the default `validator`, which reaches `Form` as a client reference.
-Anything that is a function, or holds one, has to come from a module that starts with `'use client'`: event handlers such as `onChange` and `onSubmit`, `customValidate`, `transformErrors`, custom widgets, fields and templates, and a validator made with `customizeValidator()`.
+A server component can pass only props that React can send to the client: the schemas, the data, the default `validator` and `@rjsf/core/markdown`'s `MarkdownTemplate`, which reach `Form` as client references.
+Anything that is a function, or holds one, has to come from a module that starts with `'use client'`: event handlers such as `onChange` and `onSubmit`, `customValidate`, `transformErrors`, custom widgets, fields and templates, and a validator made with `customizeValidator()` or `createPrecompiledValidator()`.
 The same goes for `withTheme()` and a theme's `generateForm()`, and for every export of `@rjsf/chakra-ui` and `@rjsf/fluentui-rc`, whose whole entry is a client module: call them in a client module.
 
-In a server component or a Server Action the default `validator` is only a reference, so its methods can't be called there; to validate data on the server, make a validator with `customizeValidator()`.
+In server code, such as a server component, a Server Action or a Route Handler, the default `validator` is only a reference, so its methods can't be called there; to validate data on the server, make a validator with `customizeValidator()`.
 
 A theme's own provider works as it does in any other app, though a provider that takes a value React can't send to the client, such as `@chakra-ui/react`'s `ChakraProvider` with its `system`, has to be rendered from a client module of your own.

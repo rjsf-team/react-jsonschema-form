@@ -22,7 +22,7 @@
     "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && pnpm install",
     "update-version-tags": "git tag -f $(node scripts/get-version-tag.cjs) && git push -f origin $(node scripts/get-version-tag.cjs)",
     "nuke-build-env": "rimraf .nx && rimraf pnpm-lock.yaml",
-    "sanity-check": "pnpm run cs-check && pnpm run lint && pnpm run knip && pnpm run build && pnpm run test"
+    "sanity-check": "pnpm run cs-check && pnpm run lint && pnpm run knip && pnpm run build && node scripts/checkUseClientBuild.mts && pnpm run test"
   },
   "lint-staged": {
     "pnpm-lock.yaml": "sh -c 'pnpm dedupe --check'",

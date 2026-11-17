@@ -1,6 +1,7 @@
 'use client';
 
-// The entry is the client boundary: @fluentui/react-icons breaks on a server import
+// The entry is the client boundary: most modules call @fluentui/react-components' client-only `makeStyles()` as they
+// load, and @fluentui/react-icons breaks on a server import
 
 import FluentForm from './FluentForm/index.ts';
 
