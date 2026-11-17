@@ -1,4 +1,4 @@
-import type { FocusEvent } from 'react';
+import type { FocusEvent, KeyboardEvent } from 'react';
 import { useCallback, useMemo, useRef } from 'react';
 import { DateInput, DateTimePicker } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
@@ -14,6 +14,7 @@ import {
   getWidgetError,
   useInputAriaProps,
   getRequiredProps,
+  useThemeDefaultProps,
 } from '../../utils.tsx';
 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
@@ -55,6 +56,12 @@ const offsetValueFormatter = (value?: DateStringValue | Date | null) => {
 /** Whether a dayjs `format` has a seconds token, ignoring the text of its `[...]` literals */
 const hasSeconds = (format: string) => format.replace(/\[[^\]]*\]/g, '').includes('s');
 
+const isCallback = (value: unknown): value is (...args: unknown[]) => void => typeof value === 'function';
+
+/** Whether `element` is in a `DateTimePicker`'s dropdown, which is still the field */
+const inDropdown = (element: EventTarget | null) =>
+  element instanceof Element && !!element.closest('[data-dates-dropdown], [data-dates-modal]');
+
 /** The `DateTimeInput` is a base component that used by other Date-Time widget components. With `withTime`, it
  * renders Mantine's `DateTimePicker`, a dropdown with a calendar and a time picker, instead of the typed `DateInput`.
  * When `schema.format` is `date-time` (or `datetime`), the value is converted to/from a UTC ISO string instead of the
@@ -84,6 +91,7 @@ export default function DateTimeInput<
     disabled,
     readonly,
     autofocus,
+    required,
     label,
     options,
     onChange,
@@ -120,15 +128,12 @@ export default function DateTimeInput<
   }, [onBlur, id, value]);
 
   const focusInDropdownRef = useRef(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleBlur = useCallback(
     ({ relatedTarget }: FocusEvent<HTMLElement>) => {
       // Opening the `DateTimePicker` moves focus into its dropdown, which is still the field; closing it reports the blur
-      if (
-        withTime &&
-        relatedTarget instanceof Element &&
-        relatedTarget.closest('[data-dates-dropdown], [data-dates-modal]')
-      ) {
+      if (withTime && inDropdown(relatedTarget)) {
         focusInDropdownRef.current = true;
         return;
       }
@@ -137,16 +142,22 @@ export default function DateTimeInput<
     [reportBlur, withTime],
   );
 
-  const handleFocus = useCallback(() => {
-    if (onFocus) {
-      onFocus(id, value);
-    }
-  }, [onFocus, id, value]);
+  const handleFocus = useCallback(
+    ({ relatedTarget }: FocusEvent<HTMLElement>) => {
+      // Closing the dropdown from the keyboard returns focus to the field it never left
+      if (onFocus && !(withTime && inDropdown(relatedTarget))) {
+        onFocus(id, value);
+      }
+    },
+    [onFocus, id, value, withTime],
+  );
 
   const parsedValue =
     requiresOffset || typeof value !== 'string' ? offsetValueParser(localValue) : dateParser(localValue, valueFormat);
 
-  const ariaDescribedByProps = useInputAriaProps(withTime ? 'DateTimePicker' : 'DateInput', props);
+  const component = withTime ? 'DateTimePicker' : 'DateInput';
+  const ariaDescribedByProps = useInputAriaProps(component, props);
+  const themeDefaults = useThemeDefaultProps(component);
   const error = getWidgetError<T, S, F>(props);
 
   const sharedProps = {
@@ -162,7 +173,7 @@ export default function DateTimeInput<
     onBlur: handleBlur,
     onFocus: handleFocus,
     error,
-    clearable: true,
+    clearable: themeDefaults.clearable !== false,
     ...themeProps,
     ...ariaDescribedByProps,
     ...getDescriptionProps(props),
@@ -171,6 +182,7 @@ export default function DateTimeInput<
     valueFormat: displayFormat,
     clearButtonProps: {
       'aria-label': registry.translateString(TranslatableString.ClearLabel),
+      ...asObject(themeDefaults.clearButtonProps),
       ...asObject(options.clearButtonProps),
     },
   };
@@ -185,21 +197,49 @@ export default function DateTimeInput<
     return (
       <DateTimePicker
         withSeconds={hasSeconds(valueFormat)}
+        // A combobox, unlike a button, is announced with its shown text as its value, and as required or invalid
+        // oxlint-disable-next-line jsx-a11y/role-has-required-aria-props -- Mantine's `Popover.Target` sets `aria-expanded` and `aria-controls`
+        role='combobox'
+        aria-required={required || undefined}
+        ref={buttonRef}
         {...sharedProps}
+        // Down Arrow, or Alt+Down Arrow, opens a combobox, as Enter and Space open the button
+        onKeyDown={(event: KeyboardEvent<HTMLButtonElement>) => {
+          const onKeyDownOption = options.onKeyDown ?? themeDefaults.onKeyDown;
+          if (isCallback(onKeyDownOption)) {
+            onKeyDownOption(event);
+          }
+          if (
+            !event.defaultPrevented &&
+            event.key === 'ArrowDown' &&
+            event.currentTarget.getAttribute('aria-expanded') !== 'true'
+          ) {
+            event.preventDefault();
+            event.currentTarget.click();
+          }
+        }}
         onDropdownClose={() => {
           // A submit or Enter calls this twice, once as it closes the dropdown and again from the popover closing
           if (focusInDropdownRef.current) {
             focusInDropdownRef.current = false;
-            reportBlur();
+            // Mantine returns focus to the field after a keyboard close, whose own blur reports leaving it later
+            setTimeout(() => {
+              // A field unmounted since has nothing left to blur
+              if (buttonRef.current && document.activeElement !== buttonRef.current) {
+                reportBlur();
+              }
+            });
           }
-          if (typeof options.onDropdownClose === 'function') {
-            (options.onDropdownClose as () => void)();
+          const onDropdownCloseOption = options.onDropdownClose ?? themeDefaults.onDropdownClose;
+          if (isCallback(onDropdownCloseOption)) {
+            onDropdownCloseOption();
           }
         }}
         timePickerProps={{
           hoursInputLabel: timeLabel(TranslatableString.HourLabel),
           minutesInputLabel: timeLabel(TranslatableString.MinuteLabel),
           secondsInputLabel: timeLabel(TranslatableString.SecondLabel),
+          ...asObject(themeDefaults.timePickerProps),
           ...asObject(options.timePickerProps),
         }}
       />
@@ -207,5 +247,11 @@ export default function DateTimeInput<
   }
 
   // `clearable` would otherwise also let a click on the selected day clear it
-  return <DateInput allowDeselect={false} {...sharedProps} dateParser={(v) => dateParser(v, displayFormat)} />;
+  return (
+    <DateInput
+      allowDeselect={themeDefaults.allowDeselect === true}
+      dateParser={(v) => dateParser(v, displayFormat)}
+      {...sharedProps}
+    />
+  );
 }

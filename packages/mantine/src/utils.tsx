@@ -371,7 +371,17 @@ export type AriaInputComponentName = keyof typeof themeComponentNames;
  * @returns - The theme's `wrapperProps`, or `undefined` where it gives none
  */
 export function useThemeWrapperProps(component: AriaInputComponentName) {
-  return wrapperPropsOption(useProps<GenericObjectType>(themeComponentNames[component], {}, {}).wrapperProps);
+  return wrapperPropsOption(useThemeDefaultProps(component).wrapperProps);
+}
+
+/** The `defaultProps` the theme gives `component`, for a caller that passes one of them explicitly, which would
+ * otherwise override the theme's
+ *
+ * @param component - The Mantine input whose theme `defaultProps` to resolve
+ * @returns - The theme's `defaultProps`, merged as Mantine merges them
+ */
+export function useThemeDefaultProps(component: AriaInputComponentName) {
+  return useProps<GenericObjectType>(themeComponentNames[component], {}, {});
 }
 
 /** Returns `value` when it is an object, else `undefined`

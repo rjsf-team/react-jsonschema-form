@@ -40,6 +40,7 @@ exports[`format iso-date-time 1`] = `
             data-dates-input="true"
             data-variant="default"
             id="root"
+            role="combobox"
             type="button"
           >
             <span
@@ -8293,6 +8294,7 @@ exports[`single fields > format datetime 1`] = `
             data-dates-input="true"
             data-variant="default"
             id="root"
+            role="combobox"
             type="button"
           >
             <span

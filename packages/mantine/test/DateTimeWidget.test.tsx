@@ -1,4 +1,4 @@
-import { MantineProvider } from '@mantine/core';
+import { createTheme, MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
 import { render, screen } from '@testing-library/react';
@@ -110,9 +110,25 @@ describe('DateTimeWidget', () => {
       expect(!!screen.queryByRole('spinbutton', { name: 'DateTime, second' })).toBe(withSeconds);
     });
 
-    test('reports no blur when opening the picker moves focus into it, and reports one when it closes', async () => {
+    test('exposes its value, required and invalid state as a combobox named by its label', () => {
+      renderWidget({
+        required: true,
+        // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+        rawErrors: ['bad'],
+        schema: isoDateTime,
+        value: '2024-01-10T08:00:00',
+      });
+
+      const control = screen.getByRole('combobox', { name: 'DateTime' });
+      expect(control).toHaveTextContent('2024-01-10T08:00:00');
+      expect(control).toBeRequired();
+      expect(control).toBeInvalid();
+    });
+
+    test('reports no blur or second focus when opening the picker moves focus into it, or when Escape returns focus to it', async () => {
       const onBlur = vi.fn();
-      const { container } = renderWidget({ onBlur, schema: isoDateTime, value: '2024-01-10T08:00:00' });
+      const onFocus = vi.fn();
+      const { container } = renderWidget({ onBlur, onFocus, schema: isoDateTime, value: '2024-01-10T08:00:00' });
 
       await user.click(container.querySelector('button#root')!);
 
@@ -121,10 +137,56 @@ describe('DateTimeWidget', () => {
 
       await user.keyboard('{Escape}');
 
+      expect(document.activeElement).toBe(container.querySelector('button#root'));
+      expect(onBlur).not.toHaveBeenCalled();
+      expect(onFocus).toHaveBeenCalledOnce();
+
+      await user.tab();
+
       expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00');
     });
 
-    test('reports one blur when Enter submits the picker', async () => {
+    test('calls an onKeyDown option and still opens the picker with Down Arrow', async () => {
+      const onKeyDown = vi.fn();
+      renderWidget({ options: { onKeyDown }, schema: isoDateTime, value: '2024-01-10T08:00:00' });
+
+      await user.tab();
+      await user.keyboard('{ArrowDown}');
+
+      expect(onKeyDown).toHaveBeenCalledOnce();
+      expect(screen.getByRole('combobox', { name: 'DateTime' })).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    test("calls a theme's onKeyDown", async () => {
+      const onKeyDown = vi.fn();
+      const theme = createTheme({ components: { DateTimePicker: { defaultProps: { onKeyDown } } } });
+      render(
+        <MantineProvider env='test' theme={theme}>
+          <DateTimeWidget {...makeProps({ schema: isoDateTime, value: '2024-01-10T08:00:00' })} />
+        </MantineProvider>,
+      );
+
+      await user.tab();
+      await user.keyboard('x');
+
+      expect(onKeyDown).toHaveBeenCalledOnce();
+    });
+
+    test.each(['{ArrowDown}', '{Alt>}{ArrowDown}{/Alt}'])(
+      'opens the picker on its selected day with %s',
+      async (keys) => {
+        const { container } = renderWidget({ schema: isoDateTime, value: '2024-01-10T08:00:00' });
+
+        await user.tab();
+        expect(document.activeElement).toBe(container.querySelector('button#root'));
+        await user.keyboard(keys);
+
+        expect(screen.getByRole('combobox', { name: 'DateTime' })).toHaveAttribute('aria-expanded', 'true');
+        expect(screen.getByRole('button', { name: '10 January 2024' })).toHaveFocus();
+      },
+    );
+
+    test('reports no blur when Enter submits the picker and returns focus to it', async () => {
       const onBlur = vi.fn();
       const { container } = renderWidget({ onBlur, schema: isoDateTime, value: '2024-01-10T08:00:00' });
 
@@ -133,10 +195,11 @@ describe('DateTimeWidget', () => {
       await user.keyboard('{Enter}');
 
       expect(container.querySelector('[data-dates-dropdown]')).not.toBeInTheDocument();
-      expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00');
+      expect(document.activeElement).toBe(container.querySelector('button#root'));
+      expect(onBlur).not.toHaveBeenCalled();
     });
 
-    test('calls the onDropdownClose option as well as reporting the blur when the picker closes', async () => {
+    test('calls the onDropdownClose option and reports one blur when a click outside closes the picker', async () => {
       const onBlur = vi.fn();
       const onDropdownClose = vi.fn();
       const { container } = renderWidget({
@@ -147,8 +210,9 @@ describe('DateTimeWidget', () => {
       });
 
       await user.click(container.querySelector('button#root')!);
-      await user.keyboard('{Escape}');
+      await user.click(document.body);
 
+      expect(container.querySelector('[data-dates-dropdown]')).not.toBeInTheDocument();
       expect(onDropdownClose).toHaveBeenCalledOnce();
       expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00');
     });
@@ -165,6 +229,36 @@ describe('DateTimeWidget', () => {
       expect(screen.getByRole('spinbutton', { name: 'Hours' })).toBeInTheDocument();
       expect(screen.getByRole('spinbutton', { name: 'DateTime, minute' })).toBeInTheDocument();
     });
+
+    test("merges a theme's timePickerProps under its own", async () => {
+      const theme = createTheme({
+        components: { DateTimePicker: { defaultProps: { timePickerProps: { format: '12h' } } } },
+      });
+      const { container } = render(
+        <MantineProvider env='test' theme={theme}>
+          <DateTimeWidget {...makeProps({ schema: isoDateTime, value: '2024-01-10T08:00:00' })} />
+        </MantineProvider>,
+      );
+
+      await user.click(container.querySelector('button#root')!);
+
+      expect(container.querySelector('[data-dates-dropdown]')!.textContent).toMatch(/AM|PM/);
+      expect(screen.getByRole('spinbutton', { name: 'DateTime, hour' })).toBeInTheDocument();
+    });
+  });
+
+  test.each([
+    { Widget: DateWidget, component: 'DateInput', schema: { type: 'string', format: 'date' }, value: '2024-01-10' },
+    { Widget: DateTimeWidget, component: 'DateTimePicker', schema: isoDateTime, value: '2024-01-10T08:00:00' },
+  ])("shows no Clear button on $component under a theme's clearable: false", ({ Widget, component, ...props }) => {
+    const theme = createTheme({ components: { [component]: { defaultProps: { clearable: false } } } });
+    render(
+      <MantineProvider env='test' theme={theme}>
+        <Widget {...makeProps(props as Partial<WidgetProps>)} />
+      </MantineProvider>,
+    );
+
+    expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument();
   });
 
   describe('with a bare day stored for iso-date-time', () => {
@@ -233,8 +327,58 @@ describe('DateTimeWidget', () => {
     expect(onChange).toHaveBeenLastCalledWith(undefined);
   });
 
+  test('DateWidget commits a pasted date', async () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <MantineProvider env='test'>
+        <DateWidget {...makeProps({ onChange, schema: { type: 'string', format: 'date' }, value: '2024-01-10' })} />
+      </MantineProvider>,
+    );
+
+    await user.clear(container.querySelector('input#root')!);
+    await user.paste('2024-01-15');
+
+    expect(onChange).toHaveBeenLastCalledWith('2024-01-15');
+  });
+
+  test('DateWidget parses typed text with the dateParser option', async () => {
+    const onChange = vi.fn();
+    const dateParser = (text: string) => (text === 'mid-jan' ? '2024-01-15' : null);
+    const { container } = render(
+      <MantineProvider env='test'>
+        <DateWidget
+          {...makeProps({
+            onChange,
+            options: { dateParser },
+            schema: { type: 'string', format: 'date' },
+            value: '2024-01-10',
+          })}
+        />
+      </MantineProvider>,
+    );
+
+    await user.clear(container.querySelector('input#root')!);
+    await user.paste('mid-jan');
+
+    expect(onChange).toHaveBeenLastCalledWith('2024-01-15');
+  });
+
   describe('DateWidget on a date-time field', () => {
     pinTimeZone('America/Los_Angeles');
+
+    test('commits a pasted date as local midnight in UTC, with a timezone offset', async () => {
+      const onChange = vi.fn();
+      const { container } = render(
+        <MantineProvider env='test'>
+          <DateWidget {...makeProps({ onChange, value: '2024-01-10T20:00:00.000Z' })} />
+        </MantineProvider>,
+      );
+
+      await user.clear(container.querySelector('input#root')!);
+      await user.paste('2024-01-15');
+
+      expect(onChange).toHaveBeenLastCalledWith('2024-01-15T08:00:00.000Z');
+    });
 
     test('commits a picked day as local midnight in UTC, with a timezone offset', async () => {
       const onChange = vi.fn();
