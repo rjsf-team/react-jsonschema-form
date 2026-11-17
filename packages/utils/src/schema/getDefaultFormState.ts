@@ -384,19 +384,14 @@ const SKIPS_DEFAULTS = Symbol('skipsDefaults');
 function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
 ): SchemaContext<S, F> {
-  let skipping = skippingContexts.get(context);
-  if (skipping === undefined) {
-    skipping = { ...context, [SKIPS_DEFAULTS]: true };
-    skippingContexts.set(context, skipping);
-  }
-  // Only `context` spread with the mark is kept under `context`, but the map can't carry its type parameters
-  return skipping as SchemaContext<S, F>;
+  // Only `context` spread with the mark is kept under `context`, but the memo can't carry its type parameters
+  return skippingContexts.get([context], () => ({ ...context, [SKIPS_DEFAULTS]: true })) as SchemaContext<S, F>;
 }
 
 /** The context `skippingDefaults()` returns, per context it is built from, so it keeps its identity across the passes
  * and calls whose memos compare the context first
  */
-const skippingContexts = new WeakMap<object, object>();
+const skippingContexts = new KeyedMemo<object>();
 
 /** What in `schema` a `null` fill can come from: the `null` type, named somewhere in it, or else a `$ref`, which can
  * lead to one elsewhere in the root; worked out once for each schema
@@ -1739,18 +1734,16 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // rendered, so it is folded through that property below and its default is the field's. A key only an unmerged
   // `then`, `else` or `dependencies` declares stays an extra key (#5816), as does one the merge leaves out, as it
   // leaves the `allOf`'s properties out beside `additionalProperties: false`. Each key is asked about in several places,
-  // so it is worked out once per call
+  // so it is worked out once per call, from the graph first, so the field is merged only for a key its `allOf` declares
+  const allOfField = ALL_OF_KEY in view.schema ? fieldOfView<S>(view) : undefined;
   const allOfKeys = new Map<string, boolean>();
   const declaredInAllOf = (key: string) => {
-    if (!(ALL_OF_KEY in view.schema)) {
-      return false;
-    }
     let declared = allOfKeys.get(key);
     if (declared === undefined) {
-      const { graph, seeds } = fieldOfView<S>(view);
       declared =
-        getByPath(mergedSchemaOf<S, F>(context, view).properties, key) !== undefined &&
-        seeds.some(({ node }) => declaresUnconditionally<S>(graph, node, key));
+        allOfField !== undefined &&
+        allOfField.seeds.some(({ node }) => declaresUnconditionally<S>(allOfField.graph, node, key)) &&
+        getByPath(mergedSchemaOf<S, F>(context, view).properties, key) !== undefined;
       allOfKeys.set(key, declared);
     }
     return declared;
@@ -1775,20 +1768,34 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   });
   // A key only an `allOf` the plan left unmerged declares is a property of the field as rendered, so it takes the steps
   // a property of the object's own takes, from the property the merge for the data gives it. A boolean one names no
-  // field of its own, so it is folded from no seeds, as an own property whose seeds are all booleans is. Under `allOf:
-  // 'skipDefaults'` the `allOf`'s defaults, the key's own and those nested below it, are skipped, so one the data lacks
-  // is folded only where the object's default names it or a `const` gives it its value, and otherwise takes only the
-  // `null` `branchNullFills()` finds for it
-  const mergedSchema = ALL_OF_KEY in view.schema ? mergedSchemaOf<S, F>(context, view) : undefined;
-  const allOfContext = mergedSchema === undefined || populatesAllOf ? context : skippingDefaults(context);
+  // field of its own, so it is folded from no seeds, as an own property whose seeds are all booleans is. Only `allOf:
+  // 'populateDefaults'` merges the `allOf`, so the `allOf`'s defaults, the key's own and those nested below it, are
+  // skipped here, and one the data lacks is folded only where the object's default names it or a `const` gives it its
+  // value, and otherwise takes only the `null` `branchNullFills()` finds for it
   // The key is seeded from the declarations the field's `allOf` holds, with the ref path that reaches them. A `$ref`
   // already on that path is not entered, as the defaults stop at any `$ref` already followed, so a key that only a
   // recursion through the `allOf` declares is not folded
   let allOfSeeding: Seeding<S> | undefined;
+  // Only a key the data or the defaults name is folded, unless a `const` gives it its value: the object's, or one a
+  // declaration of a property in the field's scope reaches, or one an option of its `dependencies` brings in. Where none
+  // can, the keys are read off the data and the defaults, and the field is merged only if the `allOf` declares one
+  const constCanFill = ({ graph, seeds }: Provenance<S>) =>
+    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    (parentConst !== undefined ||
+      seeds.some(({ node }) =>
+        scopeOf<S>(graph, node).some(
+          ({ id, raw }) =>
+            Object.hasOwn(raw, DEPENDENCIES_KEY) ||
+            graph.subschemas(id, PROPERTIES_KEY).some(([, property]) => mergeReachesConst<S>(graph, property)),
+        ),
+      ));
   const allOfProperties =
-    mergedSchema === undefined
+    allOfField === undefined
       ? []
-      : Object.keys(mergedSchema.properties ?? {})
+      : (constCanFill(allOfField)
+          ? Object.keys(mergedSchemaOf<S, F>(context, view).properties ?? {})
+          : Object.keys({ ...formData, ...(isObject(defaults) ? defaults : {}) })
+        )
           .filter((key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && declaredInAllOf(key))
           .flatMap((key) => {
             allOfSeeding ??= buildPlan<S, F>({
@@ -1798,6 +1805,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
               policy: { allOf: true, conditions: false, cutRecursion: true },
             });
             const { seeds, edge } = childSeeds(allOfSeeding, key);
+            const mergedSchema = mergedSchemaOf<S, F>(context, view);
             const propertySchema = getPropertySchema<S>(mergedSchema, key);
             return edge === 'property'
               ? [
@@ -1808,7 +1816,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
                     hasConst: constCheck(key, view.graph, seeds, propertySchema),
                     child: defaultsChild(view, seeds, edge),
                     declaredIn: mergedSchema,
-                    foldContext: allOfContext,
+                    foldContext: skippingDefaults(context),
                   },
                 ]
               : [];
