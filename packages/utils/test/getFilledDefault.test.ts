@@ -471,7 +471,7 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
 
   // The fill seeds the keys an object `const` that closes the object names, whatever `emptyObjectFields` says, as on
   // the issue's own schema (#5644), and no other undeclared key
-  it.each([
+  it.each<{ inherited: Record<string, number>; expected: unknown }>([
     { inherited: { a: 2 }, expected: { a: 2 } },
     { inherited: { a: 2, b: 3 }, expected: { a: 2 } },
   ])('keeps the keys of an object const that closes the object, from $inherited', ({ inherited, expected }) => {
