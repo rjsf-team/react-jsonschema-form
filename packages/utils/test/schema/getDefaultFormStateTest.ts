@@ -3722,6 +3722,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it("keeps the data of a key an object's allOf declares beside null additionalProperties once the defaults are generated, as for its own property", () => {
+          const n: RJSFSchema = { type: 'number' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', additionalProperties: { type: 'null' }, properties: { n } },
+              wrapped: { type: 'object', additionalProperties: { type: 'null' }, allOf: [{ properties: { n } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { own: { n: 5 }, wrapped: { n: 5 } }, initialDefaultsGenerated: true },
+            ),
+          ).toStrictEqual({ own: { n: 5 }, wrapped: { n: 5 } });
+        });
+
         it.each<[string, RJSFSchema]>([
           ['no if', { type: 'object' }],
           ['an if testing a const', { type: 'object', if: { const: {} }, then: {} }],

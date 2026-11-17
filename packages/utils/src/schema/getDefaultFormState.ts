@@ -1978,7 +1978,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const nullsOnly = nullsOnlyContext(context);
     const child = defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalProperties);
     Object.keys(formData)
-      .filter((key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && isPinned(key))
+      .filter(
+        (key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && isPinned(key) && !declaredInAllOf(key),
+      )
       .forEach((key) => {
         const { value, holdsNull } = foldReporting(nullsOnly, `additionalNull:${key}`, child, {
           rawFormData: getByPath(formData, key),
