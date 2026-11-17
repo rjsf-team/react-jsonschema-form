@@ -847,12 +847,14 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       o: { default: { y: 2 } },
       n: { properties: { j: { type: 'string', default: 'bj' } } },
       k: { const: { d: 2 } },
+      p: { const: 'b' },
     };
     const properties: RJSFSchema['properties'] = {
       a: { type: 'string', default: 'x' },
       o: { default: { x: 1 } },
       n: { type: 'object', properties: { i: { type: 'string', default: 'bi' } } },
       k: { type: 'object', const: { c: 1 }, properties: { c: {} } },
+      p: { type: 'string', const: 'a' },
     };
     const shapes: [string, RJSFSchema][] = [
       [
@@ -867,9 +869,11 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       ['dependencies', { type: 'object', properties, dependencies: { a: { properties: branchProperties } } }],
       ['oneOf', { type: 'object', properties, oneOf: [{ properties: branchProperties }] }],
     ];
-    it.each(shapes)('is merged from a %s as the branch is merged into the field, the branch winning', (_, schema) => {
+    // The retrieved field merges the branch's keywords into the property's: a primitive the branch gives wins, while an
+    // object `default` or `const` is merged with the property's key by key, as `retrieveSchema()` merges them
+    it.each(shapes)('is merged from a %s as the branch is merged into the field', (_, schema) => {
       const defaults = defaultsOf(schema);
-      expect(defaults).toEqual({ a: 'x', o: { x: 1, y: 2 }, n: { i: 'bi', j: 'bj' }, k: { c: 1, d: 2 } });
+      expect(defaults).toEqual({ a: 'x', o: { x: 1, y: 2 }, n: { i: 'bi', j: 'bj' }, k: { c: 1, d: 2 }, p: 'b' });
       expect(isObject(defaults) && isObject(defaults.n) ? Object.keys(defaults.n) : []).toEqual(['i', 'j']);
     });
     it('renders in the order and with the default the field it is merged into shows', () => {
@@ -882,6 +886,8 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       };
       expect(Object.keys(propertyOf('n', {}).properties ?? {})).toEqual(['i', 'j']);
       expect(propertyOf('o').default).toEqual({ x: 1, y: 2 });
+      expect(propertyOf('k').const).toEqual({ c: 1, d: 2 });
+      expect(propertyOf('p').const).toBe('b');
     });
   });
 
