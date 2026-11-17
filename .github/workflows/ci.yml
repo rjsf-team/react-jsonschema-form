@@ -7,20 +7,30 @@ on:
     branches: [main]
 
 jobs:
-  # None of these depend on the Node version or on a build, so they run once in their own job rather
-  # than on one leg of the build matrix: a failure reports on its own instead of cancelling the other
+  # Apart from the Node version-file check, none of these depend on the Node version or on a build, so
+  # they run once in their own job rather than on one leg of the build matrix: a failure reports on its own instead of cancelling the other
   # legs and withholding every build result. `cs-check` runs ahead of `lint` so the one
   # failure that has an automatic fix is never hidden behind the slowest step.
   checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # The deploy job runs only on main and takes its artifacts from the build leg matching `.nvmrc`, so a `.nvmrc`
+      # no build leg lists would pass every PR and fail only after merge. This runs before `setup-node`, which would
+      # accept `v26` or `lts/*`. Netlify's `NODE_VERSION` outranks `.nvmrc`, and nodenv reads only `.node-version`.
+      - name: Check the Node version files agree with the build matrix
+        run: |
+          v=$(tr -d '\r' < .nvmrc)
+          [[ $v =~ ^[0-9]+$ ]] || { echo "::error::.nvmrc ($v) is not a bare major"; exit 1; }
+          yq '.jobs.build.strategy.matrix."node-version"[]' .github/workflows/ci.yml | grep -qx "$v.x" || { echo "::error::no build matrix leg is $v.x, the .nvmrc version"; exit 1; }
+          [ "$(tr -d '\r' < .node-version)" = "$v" ] || { echo "::error::.node-version doesn't match .nvmrc ($v)"; exit 1; }
+          grep -qE "^ *NODE_VERSION = \"$v\"" netlify.toml || { echo "::error::netlify.toml's NODE_VERSION doesn't match .nvmrc ($v)"; exit 1; }
       - uses: pnpm/action-setup@v6
         with:
           run_install: false
       - uses: actions/setup-node@v7
         with:
-          node-version: 26.x
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
@@ -47,6 +57,10 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
+      # `checks` verifies that a leg matches `.nvmrc`.
+      - name: Read the deploy Node version
+        id: nvmrc
+        run: echo "node-version=$(tr -d '\r' < .nvmrc).x" >> "$GITHUB_OUTPUT"
 
       - name: Build with Netlify badge
         run: pnpm run build-serial
@@ -59,12 +73,12 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-      - if: matrix.node-version == '26.x'
+      - if: matrix.node-version == steps.nvmrc.outputs.node-version
         uses: actions/upload-artifact@v7
         with:
           name: playground
           path: packages/playground/dist
-      - if: matrix.node-version == '26.x'
+      - if: matrix.node-version == steps.nvmrc.outputs.node-version
         uses: actions/upload-artifact@v7
         with:
           name: docs
