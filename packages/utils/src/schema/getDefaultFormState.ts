@@ -348,10 +348,12 @@ interface NullFills {
  * leading to them
  *
  * @param context - The `SchemaContext` the defaults are computed in
+ * @param nestedDefaultsPrecedence - Whether a field's own default or the one its ancestors hand it wins
  * @returns - The context for the `null` fills alone
  */
 function nullsOnlyContext<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
+  nestedDefaultsPrecedence = context.defaultFormStateBehavior?.nestedDefaultsPrecedence,
 ): SchemaContext<S, F> {
   return {
     ...context,
@@ -359,6 +361,7 @@ function nullsOnlyContext<S extends StrictRJSFSchema, F extends FormContextType>
       ...context.defaultFormStateBehavior,
       emptyObjectFields: 'skipDefaults',
       constAsDefaults: 'never',
+      nestedDefaultsPrecedence,
     },
   };
 }
@@ -958,9 +961,10 @@ function reachesObjectConst<S extends StrictRJSFSchema>(
 }
 
 /** Whether the node `start` of `graph`, or a subschema it leads to as `reachesObjectConst()` follows them, declares an
- * object `const`, recording each answer the walk settles in `answers`, keyed as `objectConstReach` keys them, so no node is walked again once settled. A node
- * that reaches one does, whichever walk finds it. A walk that finds none settles every node it visits, since each leads
- * only to nodes the walk visits too, while one that finds one leaves a node a cycle cut short unsettled
+ * object `const`, recording each answer the walk settles in `answers`, keyed as `objectConstReach` keys them, so no
+ * node is walked again once settled. A node that reaches one does, whichever walk finds it. A walk that finds none
+ * settles every node it visits, since each leads only to nodes the walk visits too, while one that finds one leaves a
+ * node a cycle cut short unsettled
  */
 function leadsToObjectConst<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -1915,11 +1919,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const isComputed = (key: string) => isDeclared(key) || unmergedProperties.has(key);
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
-  const childProps = (key: string, uiSchemaKey: string, declaring = schema) => ({
+  const childProps = (key: string, uiSchemaKey: string) => ({
     includeUndefinedValues: includeUndefinedValues === true,
     parentDefaults: getByPath(defaults, key),
     rawFormData: getByPath(formData, key),
-    required: declaring.required?.includes(key),
+    required: schema.required?.includes(key),
     shouldMergeDefaultsIntoFormData,
     initialDefaultsGenerated,
     uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaKey),
@@ -1956,6 +1960,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const propertyKeys = Object.keys(schema.properties ?? {}).filter(
     (key) => isPinned(key) || !hasSchemaMarker(getPropertySchema<S>(schema, key), ADDITIONAL_PROPERTY_FLAG),
   );
+  let skippingContext: SchemaContext<S, F> | undefined;
   [...propertyKeys, ...unmergedProperties.keys()].forEach((key) => {
     const propertySchema = unmergedProperties.get(key) ?? getPropertySchema<S>(schema, key);
     // A key the fold left unmerged has no seed under the object's `properties`, so it is seeded where the field as
@@ -1983,9 +1988,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // property, rather than a dynamically-named entry.
     const addedByAdditionalProperty = hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG);
     const child = defaultsChild(seeding, seeds, edge, propertySchema);
-    // Its `required` is read from the schema that declares it, as its seeds are
-    const declaring = seeding.schema;
-    const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key, declaring);
+    const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
     // Only a property that may merge or show an object `const` can have one to leave out below
     const mayHoldObjectConst = reachesObjectConst<S>(child, defaultFormStateBehavior);
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
@@ -2000,13 +2003,35 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     });
     // Whether the property's own object `const` is left out of its value
     let leavesOutConst = false;
+    // A key the fold left unmerged has the defaults of the `allOf` or `if` declaring it skipped, as the plan skips
+    // them: its field adds only its `null` fills, and the data, to the object's defaults for it, which its `const`
+    // gives. The fills are those of the field holding that value, its `dependencies` and `if` read from it
+    const skipsBranchDefaults = unmergedProperties.has(key);
+    const foldProperty = (memoKey: string, foldProps: FoldProps<T, S, F>) => {
+      if (!skipsBranchDefaults) {
+        return foldReporting(context, memoKey, child, foldProps);
+      }
+      skippingContext ??= nullsOnlyContext(context, 'ancestorWins');
+      const parentDefaults = ownValue(foldProps.parentDefaults);
+      const data = foldProps.rawFormData;
+      const folded = foldReporting(skippingContext, memoKey, child, {
+        ...foldProps,
+        rawFormData:
+          isObject(parentDefaults) && isObject(data) ? mergeObjects(parentDefaults, data) : (data ?? parentDefaults),
+      });
+      let { value } = folded;
+      if (parentDefaults === undefined && !folded.holdsNull) {
+        value = undefined;
+      } else if (isObject(parentDefaults) && isObject(value)) {
+        value = mergeObjects(parentDefaults, value);
+      }
+      return { ...folded, value };
+    };
     // Compute the defaults for this node, with the parent defaults we might have from a previous run: defaults[key].
-    let property = foldReporting(
-      context,
-      propertyNullFills === nullFills ? `property:${key}` : `collapsed:${key}`,
-      child,
-      { ...ownProps, nullFills: propertyNullFills },
-    );
+    let property = foldProperty(propertyNullFills === nullFills ? `property:${key}` : `collapsed:${key}`, {
+      ...ownProps,
+      nullFills: propertyNullFills,
+    });
     if (propertyNullFills !== nullFills) {
       // Its own defaults can add it all the same, and an object added with a value renders its fields, whose `null`s
       // it then holds, as it does once the user adds it
@@ -2017,7 +2042,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         property.value,
         includeUndefinedValues,
         required,
-        declaring.required,
+        schema.required,
         defaultFormStateBehavior?.emptyObjectFields,
         hasConst,
       );
@@ -2029,7 +2054,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         // value without
         let withoutConst = mayHoldObjectConst && isObjectData(property.value) ? property : undefined;
         if (withoutConst && property.takesObjectConst) {
-          withoutConst = foldReporting(context, `withoutConst:${key}`, child, {
+          withoutConst = foldProperty(`withoutConst:${key}`, {
             ...ownProps,
             nullFills: propertyNullFills,
             leavesOutObjectConst: true,
@@ -2045,7 +2070,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         } else {
           // The collapsed fold left out the `null` fills and the collapses of the optional objects inside, so the one
           // it opens is folded again as it renders
-          property = foldReporting(context, `property:${key}`, child, ownProps);
+          property = foldProperty(`property:${key}`, ownProps);
         }
       }
     }
@@ -2073,7 +2098,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         property.value,
         includeUndefinedValues,
         required,
-        declaring.required,
+        schema.required,
         defaultFormStateBehavior?.emptyObjectFields,
         hasConst && !leavesOutConst,
         property.holdsNull,

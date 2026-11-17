@@ -415,16 +415,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           expect(utils(nullInside).getDefaultFormState(nullInside)).toStrictEqual({ x: { a: { b: 1, n: null } } });
         });
-        it('folds a key of a const that only an unmerged allOf declares as a declared key, its $ref, recursion and dependencies included', () => {
-          const A: RJSFSchema = { type: 'object', properties: { n: { type: 'string' } } };
+        it('fills the nulls of a key of a const that only an unmerged allOf declares as a declared key, its $ref, recursion and dependencies included', () => {
+          const A: RJSFSchema = { type: 'object', properties: { n: { type: 'null' } } };
           const R: RJSFSchema = {
             type: 'object',
-            properties: { n: { type: 'string', default: 'd' }, child: { $ref: '#/definitions/R' } },
+            properties: { n: { type: 'null' }, child: { $ref: '#/definitions/R' } },
           };
           const D: RJSFSchema = {
             type: 'object',
             properties: { p: { type: 'string' } },
-            dependencies: { p: { properties: { q: { type: 'string', default: 'dq' } } } },
+            dependencies: { p: { properties: { q: { type: 'null' } } } },
           };
           const both = (a: RJSFSchema, aConst: Record<string, string>) => {
             const x = (declared: boolean): RJSFSchema => ({
@@ -438,22 +438,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
             return [x(false), x(true)];
           };
-          const uiSchema = { 'ui:definitions': { '#/definitions/A': { n: { 'ui:initialValue': 'v' } } } };
           const cases: [RJSFSchema, Record<string, string>, unknown][] = [
-            [{ $ref: '#/definitions/A' }, {}, { x: { a: { n: 'v' } } }],
-            [{ $ref: '#/definitions/R' }, {}, { x: { a: { n: 'd', child: { n: 'd' } } } }],
-            [{ $ref: '#/definitions/D' }, { p: 'x' }, { x: { a: { p: 'x', q: 'dq' } } }],
-            [D, { p: 'x' }, { x: { a: { p: 'x', q: 'dq' } } }],
+            [{ $ref: '#/definitions/A' }, {}, { x: { a: { n: null } } }],
+            [{ $ref: '#/definitions/R' }, {}, { x: { a: { n: null, child: { n: null } } } }],
+            // The `dependencies` are read from the value the `const` gives the key
+            [{ $ref: '#/definitions/D' }, { p: 'x' }, { x: { a: { p: 'x', q: null } } }],
+            [D, { p: 'x' }, { x: { a: { p: 'x', q: null } } }],
           ];
           for (const [a, aConst, expected] of cases) {
             for (const schema of both(a, aConst)) {
-              expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual(
-                expected,
-              );
+              expect(utils(schema).getDefaultFormState(schema)).toStrictEqual(expected);
             }
           }
         });
-        it('reads whether a key of a const that only an unmerged allOf declares is required from that allOf', () => {
+        it("skips the required of an allOf the fold leaves unmerged for a key of a const only it declares, as allOf: 'skipDefaults' skips its defaults", () => {
           const k: RJSFSchema = {
             type: 'object',
             properties: { n: { type: 'string', default: 'd' } },
@@ -477,9 +475,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             properties: { x: { type: 'object', properties: { z, k }, required: ['z', 'k'], const: { k: {} } } },
           };
           const requiredOnly: DefaultFormStateBehavior = { emptyObjectFields: 'populateRequiredDefaults' };
-          for (const schema of [inAllOf, declared]) {
-            expect(utils(schema, requiredOnly).getDefaultFormState(schema)).toStrictEqual({ x: { k: { n: 'd' } } });
-          }
+          expect(utils(declared, requiredOnly).getDefaultFormState(declared)).toStrictEqual({ x: { k: { n: 'd' } } });
+          expect(
+            utils(inAllOf, { ...requiredOnly, allOf: 'populateDefaults' }).getDefaultFormState(inAllOf),
+          ).toStrictEqual({ x: { k: { n: 'd' } } });
+          expect(utils(inAllOf, requiredOnly).getDefaultFormState(inAllOf)).toStrictEqual({ x: { k: {} } });
         });
         it('folds the keys of an open object const from the additionalProperties an allOf merges in beside its own', () => {
           const merged: RJSFSchema = {
@@ -926,7 +926,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               x: {
                 type: 'object',
                 const: { a: 1 },
-                additionalProperties: { type: 'number' },
+                additionalProperties: { type: 'number', default: 6 },
                 allOf: [{ properties: { a: { type: 'number', default: 5 } } }],
               },
             },
@@ -937,14 +937,64 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               x: {
                 type: 'object',
                 const: { a: 1 },
-                additionalProperties: { type: 'number' },
+                additionalProperties: { type: 'number', default: 6 },
                 properties: { a: { type: 'number', default: 5 } },
               },
             },
           };
-          // A property's own default wins over the object's `const`, whether `properties` or an `allOf` declares it
+          // A property's own default wins over the object's `const`, whether `properties` or a populated `allOf`
+          // declares it, and the `allOf`'s is skipped with it where it is not populated
           expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ x: { a: 5 } });
-          expect(utils(withDefault).getDefaultFormState(withDefault)).toStrictEqual({ x: { a: 5 } });
+          expect(utils(withDefault, { allOf: 'populateDefaults' }).getDefaultFormState(withDefault)).toStrictEqual({
+            x: { a: 5 },
+          });
+          expect(utils(withDefault).getDefaultFormState(withDefault)).toStrictEqual({ x: { a: 1 } });
+        });
+        it("skips the defaults of a key of a const that only an unmerged allOf declares, as allOf: 'skipDefaults' skips that allOf's", () => {
+          const inAllOf: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                allOf: [{ const: { a: 1 }, properties: { a: { type: 'number', default: 9 } } }],
+              },
+            },
+          };
+          expect(utils(inAllOf).getDefaultFormState(inAllOf)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(inAllOf).getDefaultFormState(inAllOf, { x: {} }, false, true)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(inAllOf, { allOf: 'populateDefaults' }).getDefaultFormState(inAllOf)).toStrictEqual({
+            x: { a: 9 },
+          });
+          expect(utils(inAllOf).getDefaultFormState(inAllOf, { x: { a: 7 } }, false, true)).toStrictEqual({
+            x: { a: 7 },
+          });
+          // Nor does the skipped default give an optional object the optional data controls show a value of its own
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          expect(utils(inAllOf).getDefaultFormState(inAllOf, undefined, false, false, uiSchema)).toStrictEqual({});
+          // Below the key the `allOf`'s defaults stay skipped, while its `null` fills are filled in
+          const nested: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                const: { a: { c: 3 } },
+                allOf: [
+                  {
+                    properties: {
+                      a: {
+                        type: 'object',
+                        properties: { c: { type: 'number' }, n: { type: 'number', default: 9 }, z: { type: 'null' } },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          };
+          expect(utils(nested).getDefaultFormState(nested)).toStrictEqual({ x: { a: { c: 3, z: null } } });
+          expect(utils(nested).getDefaultFormState(nested, { x: { a: { c: 4 } } }, false, true)).toStrictEqual({
+            x: { a: { c: 4, z: null } },
+          });
         });
         it('adds the default of a property that names const, as undefined, under skipDefaults', () => {
           const spread: RJSFSchema = {
