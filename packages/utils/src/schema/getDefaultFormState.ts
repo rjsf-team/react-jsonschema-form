@@ -1985,9 +1985,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   if (shouldMergeDefaultsIntoFormData) {
     for (const key of Object.keys(formData)) {
       const value = formData[key];
-      // A key the `allOf` declares is a property of the field, which a `const` that doesn't name it doesn't drop
+      // A key the `allOf` declares is a property of the field, which a `const` that doesn't name it doesn't drop. One
+      // only a recursion through the `allOf` declares, which isn't folded, keeps its data as an extra key does
       const isProperty =
-        (schema.properties !== undefined && Object.hasOwn(schema.properties, key)) || declaredInAllOf(key);
+        (schema.properties !== undefined && Object.hasOwn(schema.properties, key)) || foldedAllOfKeys.has(key);
       const keptUndefined = value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior);
       const uncomputed = !Object.hasOwn(computed, key) && (value === undefined || !isProperty);
       if ((isPinned(key) || declaredInAllOf(key)) && (keptUndefined || uncomputed)) {

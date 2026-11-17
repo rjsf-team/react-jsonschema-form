@@ -384,6 +384,25 @@ describe('getDefaultFormState() on recursive schemas', () => {
     }
   });
 
+  it.each<[string, unknown]>([
+    ['one level down', { child: { name: 'c', extra: 'y', child: { name: 'd' } } }],
+    [
+      'several levels down',
+      { child: { name: 'c', extra: 'y', child: { name: 'd', extra: 'z', child: { name: 'e', child: { extra: 'q' } } } } },
+    ],
+  ])('keeps the data %s of the keys an allOf declares through a $ref it already followed', (_, formData) => {
+    const schema: RJSFSchema = {
+      $ref: D('Base'),
+      definitions: {
+        Base: { type: 'object', properties: { child: { $ref: D('Derived') }, name: { type: 'string' } } },
+        Derived: { type: 'object', allOf: [{ $ref: D('Base') }], properties: { extra: { type: 'string' } } },
+      },
+    };
+    for (const behavior of [undefined, { allOf: 'skipDefaults' } satisfies DefaultFormStateBehavior, populate]) {
+      expect(defaultsOf(schema, formData, behavior)).toEqual(formData);
+    }
+  });
+
   describe('a recursion through an option list a merge rebuilt', () => {
     const optA: RJSFSchema = { properties: { next: { $ref: D('node') }, a: { type: 'string', default: 'x' } } };
     const optB: RJSFSchema = { properties: { b: { type: 'string' } } };
