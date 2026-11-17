@@ -4634,6 +4634,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toStrictEqual({ typed: { arr: [] }, untyped: { arr: [] } });
         });
 
+        it("leaves a required boolean of a key only an object's allOf declares unfilled under skipDefaults, typed or not, where the object's own property fills it", () => {
+          const schema: RJSFSchema = {
+            definitions: {
+              Model: {
+                type: 'object',
+                properties: { a: { type: 'object', required: ['flag'], properties: { flag: { type: 'boolean' } } } },
+              },
+            },
+            type: 'object',
+            properties: {
+              own: { $ref: '#/definitions/Model' },
+              typed: { type: 'object', allOf: [{ $ref: '#/definitions/Model' }] },
+              untyped: { allOf: [{ $ref: '#/definitions/Model' }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { own: { a: {} }, typed: { a: {} }, untyped: { a: {} } } },
+            ),
+          ).toStrictEqual({ own: { a: { flag: false } }, typed: { a: {} }, untyped: { a: {} } });
+        });
+
         it.each<[string, DefaultFormStateBehavior, string]>([
           ['deepest-wins', {}, 'own'],
           ['ancestorWins', { nestedDefaultsPrecedence: 'ancestorWins' }, 'parent'],

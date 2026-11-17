@@ -384,7 +384,8 @@ const SKIPS_DEFAULTS = Symbol('skipsDefaults');
 
 /** `context` under which `foldView()` reads each field without its `default`: under `allOf: 'skipDefaults'`, a key
  * only an object's unmerged `allOf` declares has its own `default`, and those nested below it, from that `allOf`, which
- * the setting skips, so it takes only what the object's default gives it, its `const`s and its `null` fills
+ * the setting skips, so it takes only what the object's default gives it, its `const`s and its `null` fills, not the
+ * `false` a required boolean takes in place of a default
  *
  * @param context - The `SchemaContext` the defaults are computed in
  * @returns - The context that skips the `default`s
@@ -1269,7 +1270,11 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     uiSchemaDefinitions,
   } = inputProps;
   inputProps.track(fieldView);
-  const view = SKIPS_DEFAULTS in context ? { ...fieldView, schema: withoutDefault(fieldView.schema) } : fieldView;
+  // A field with no `default` has none to strip, so it is read as it stands rather than copied
+  const view =
+    SKIPS_DEFAULTS in context && DEFAULT_KEY in fieldView.schema
+      ? { ...fieldView, schema: withoutDefault(fieldView.schema) }
+      : fieldView;
   const { schema } = view;
   const rootSchema = view.field.graph.rawRoot;
   // Apply `ui:definitions` at every field, keyed by the `$ref` its plan was resolved from, so defaults see the same
@@ -2882,7 +2887,12 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // `requiredBooleanDefault: 'skip'` opts out for forms that treat an
       // unanswered boolean as a distinct state and rely on `required` to flag it.
       const requiredBooleanDefault = context.defaultFormStateBehavior?.requiredBooleanDefault;
-      if (requiredBooleanDefault !== 'skip' && props.required && defaults === undefined) {
+      if (
+        requiredBooleanDefault !== 'skip' &&
+        !(SKIPS_DEFAULTS in context) &&
+        props.required &&
+        defaults === undefined
+      ) {
         return false;
       }
       return undefined;
@@ -3429,10 +3439,65 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   return asDeclared<T | T[] | undefined>(validFormData);
 }
 
-/** What `matchProperties()` matched object data of a property to, by the context, the property's field and schema, the
- * data, whether it is unfolded and the defaults it falls back to
+/** The object data of a property that `matchProperties()` matched as it stands without reading the defaults, by the
+ * context, the property's field and schema, the snapshot of the data, see `snapshotOf()`, and whether it is unfolded
  */
-const matchedObjects = new KeyedMemo<unknown>();
+const keptObjects = new KeyedMemo<true>();
+
+/** How many times `matchProperties()` has read the defaults of a property whose value it rejected, so a match can
+ * tell whether any match below it read them
+ */
+let defaultsRead = 0;
+
+/** The form data of the `getDefaultFormState()` call under way, and the snapshot of each object in it once one is
+ * asked for, see `snapshotOf()`
+ */
+interface CallData {
+  readonly formData: unknown;
+  snapshots?: WeakMap<object, object>;
+}
+
+let callData: CallData | undefined;
+
+/** The snapshot of the form data the last call that took one took, per context */
+const lastSnapshots = new WeakMap<object, unknown>();
+
+/** Records the counterpart in `snapshot` of each array and plain object in `data`, which has the same shape */
+function pairSnapshots(data: unknown, snapshot: unknown, snapshots: WeakMap<object, object>): void {
+  if (
+    !(Array.isArray(data) || isPlainObject(data)) ||
+    typeof snapshot !== 'object' ||
+    snapshot === null ||
+    snapshots.has(data)
+  ) {
+    return;
+  }
+  snapshots.set(data, snapshot);
+  for (const [key, entry] of Object.entries(data)) {
+    pairSnapshots(entry, Reflect.get(snapshot, key), snapshots);
+  }
+}
+
+/** Returns the snapshot of the object `data` of the call under way: a copy of it the fold owns, which shares every
+ * subtree equal to the last call's with that call's snapshot. A match is keyed on it rather than on `data`, which the
+ * caller may change in place between calls, so an object equal to one matched before, whether the caller kept it or
+ * copied it, is matched once
+ */
+function snapshotOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  data: object,
+): object | undefined {
+  if (callData === undefined) {
+    return undefined;
+  }
+  if (callData.snapshots === undefined) {
+    const snapshot = replaceEqualDeep(lastSnapshots.get(context), ownValue(callData.formData));
+    lastSnapshots.set(context, snapshot);
+    callData.snapshots = new WeakMap();
+    pairSnapshots(callData.formData, snapshot, callData.snapshots);
+  }
+  return callData.snapshots.get(data);
+}
 
 /** The declarations the properties of the schema `matched` stands for are read in */
 function declarationsOf<S extends StrictRJSFSchema>({ field, chains }: MatchedSchema<S>): () => Seeding<S> {
@@ -3475,7 +3540,14 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
     return data;
   }
   const { field } = matchedSchema;
-  const matched: GenericObjectType = { ...data };
+  // Data no property rejects is handed back as it is, so a match can tell it kept the data
+  let matched: GenericObjectType = data;
+  const changed = () => {
+    if (matched === data) {
+      matched = { ...data };
+    }
+    return matched;
+  };
   const rootGraph = parseSchemaGraph<S>(rootSchema);
   // A property `retrieveSchema()` handed out is the field it was handed out for, and any other is declared where the
   // declarations of the schema holding it declare it
@@ -3533,18 +3605,26 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
           unfolded,
           propertyDefaults,
         );
-      // Object data is matched at every depth, on every call, so an object the data still holds after an edit elsewhere
-      // is matched once, for the field and the defaults it was matched for
-      const matchedProperty = isObjectData(propertyData)
-        ? matchedObjects.get(
-            [context, propertyField(), readProperty, propertyData, unfolded, propertyDefaults],
-            matchProperty,
-          )
-        : matchProperty();
+      // Object data is matched at every depth, on every call, so an object equal to one matched before, as the data
+      // holds one after an edit elsewhere, is matched once. Only a match that kept the data as it stands without
+      // reading the defaults is remembered, as that holds whatever defaults the next call gives
+      const snapshot = isObjectData(propertyData) ? snapshotOf<S, F>(context, propertyData) : undefined;
+      const keptKeys = [context, propertyField(), readProperty, snapshot, unfolded];
+      let matchedProperty: unknown;
+      if (snapshot !== undefined && keptObjects.peek(keptKeys)) {
+        matchedProperty = propertyData;
+      } else {
+        const readBefore = defaultsRead;
+        matchedProperty = matchProperty();
+        if (snapshot !== undefined && matchedProperty === propertyData && defaultsRead === readBefore) {
+          keptObjects.set(keptKeys, true);
+        }
+      }
       // A value that doesn't match is left out, an `allOf` the property is read through or not, so the property takes
       // its defaults as one the data lacks does, here where the fold computes none for it
       let value = matchedProperty;
       if (value === undefined && unfolded) {
+        defaultsRead += 1;
         // A `null` default is a default like any other, so only a missing one falls through. The property's own
         // default sits in the merge the fold left out, whose defaults are skipped
         const objectDefault = getByPath(defaults, key);
@@ -3566,9 +3646,9 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
         value = keepsValue || objectDefault === undefined ? kept : objectDefault;
       }
       if (value === undefined) {
-        Reflect.deleteProperty(matched, key);
-      } else {
-        setOwn(matched, key, value);
+        Reflect.deleteProperty(changed(), key);
+      } else if (!Object.is(value, matched[key])) {
+        setOwn(changed(), key, value);
       }
     }
   }
@@ -3620,17 +3700,24 @@ export default function getDefaultFormState<
     globalUiOptions: getByPath<GlobalUISchemaOptions | undefined>(uiSchema, UI_GLOBAL_OPTIONS_KEY),
     overUndefined: new Map(),
   };
-  const defaults = foldField<T, S, F>(context, field, {
-    nullFills,
-    includeUndefinedValues,
-    rawFormData: formData,
-    shouldMergeDefaultsIntoFormData: true,
-    initialDefaultsGenerated,
-    requiredAsRoot: true,
-    uiSchema,
-    uiSchemaDefinitions,
-    fieldState,
-  });
+  const outerCall = callData;
+  callData = { formData };
+  let defaults: unknown;
+  try {
+    defaults = foldField<T, S, F>(context, field, {
+      nullFills,
+      includeUndefinedValues,
+      rawFormData: formData,
+      shouldMergeDefaultsIntoFormData: true,
+      initialDefaultsGenerated,
+      requiredAsRoot: true,
+      uiSchema,
+      uiSchemaDefinitions,
+      fieldState,
+    });
+  } finally {
+    callData = outerCall;
+  }
   // Every field merged its own data into its defaults as it computed them, so they are the form's state as they stand.
   // A field keeps data it takes as it is, so the state is copied off the caller's data, which the caller may go on to
   // change, as the caller may change the state it is handed

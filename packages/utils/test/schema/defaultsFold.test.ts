@@ -1497,7 +1497,7 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     );
   });
 
-  it('matches an object the data still holds after an edit elsewhere once, for objects nested in untyped allOf $refs', () => {
+  it('matches an object equal to one matched before once, for objects nested in untyped allOf $refs', () => {
     // Pydantic v1's shape: each object a property reaches through an untyped `allOf` holding its `$ref`
     const depth = 5;
     const definitions: Record<string, RJSFSchema> = { E: { type: 'string', enum: ['a', 'b'] } };
@@ -1516,21 +1516,39 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
       level < depth - 1 && isObject(data.left) ? { ...data, left: edit(data.left, level + 1) } : { ...data, e: 'b' };
     const context = { validator };
     const formData = tree(0);
-    const generated = getDefaultFormState(context, { schema, formData });
-    expect(generated).toStrictEqual(formData);
+    retrieveFieldCalls.count = 0;
+    expect(getDefaultFormState(context, { schema, formData })).toStrictEqual(formData);
+    const firstCall = retrieveFieldCalls.count;
     retrieveFieldCalls.count = 0;
     const edited = edit(formData, 0);
     expect(getDefaultFormState(context, { schema, formData: edited, initialDefaultsGenerated: true })).toStrictEqual(
       edited,
     );
-    const afterEdit = retrieveFieldCalls.count;
+    // Only the objects on the edited path are matched again
+    expect(retrieveFieldCalls.count).toBeLessThan(firstCall / 4);
     retrieveFieldCalls.count = 0;
     const copied = structuredClone(edited);
     expect(getDefaultFormState(context, { schema, formData: copied, initialDefaultsGenerated: true })).toStrictEqual(
       copied,
     );
-    // Data copied whole is matched at every object; the edit keeps every object off its path, which is matched again
-    expect(afterEdit).toBeLessThan(retrieveFieldCalls.count / 4);
+    // A copy of data matched before is matched as that data
+    expect(retrieveFieldCalls.count).toBeLessThan(firstCall / 4);
+  });
+
+  it('matches object data the caller changed in place since the last call again', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        o: {
+          allOf: [{ properties: { inner: { type: 'object', properties: { color: { enum: ['a', 'b', 'c'] } } } } }],
+        },
+      },
+    };
+    const context = { validator };
+    const formData = { o: { inner: { color: 'a' } } };
+    expect(getDefaultFormState(context, { schema, formData })).toStrictEqual({ o: { inner: { color: 'a' } } });
+    formData.o.inner.color = 'c';
+    expect(getDefaultFormState(context, { schema, formData })).toStrictEqual({ o: { inner: { color: 'c' } } });
   });
 
   it("reads a schema below a key only an object's allOf declares without its default once, across passes and calls", () => {
