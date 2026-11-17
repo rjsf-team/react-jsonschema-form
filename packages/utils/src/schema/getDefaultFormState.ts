@@ -72,6 +72,7 @@ import { typeAllows } from './getFirstMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
+  conditionHolds,
   asTarget,
   cachedPolicy,
   childSeeds,
@@ -84,6 +85,7 @@ import buildPlan, {
   withoutKeys,
 } from './graph/mergePlan.ts';
 import type {
+  CheckedCondition,
   Keywords,
   MergePlan,
   OptionChoice,
@@ -586,6 +588,8 @@ interface DefaultsView<S extends StrictRJSFSchema> {
   readonly entries: readonly PlanEntry[];
   /** The option lists the field's plan met */
   readonly choices: readonly OptionChoice[];
+  /** Each `if` the field's plan checked */
+  readonly checked: readonly CheckedCondition[];
   /** The keywords the field's own nodes declare, before any of them is merged */
   readonly keywords: ReadonlySet<string>;
   /** Whether the rule collapsed the field, which keeps only its own keywords */
@@ -857,6 +861,7 @@ function planView<S extends StrictRJSFSchema, F extends FormContextType>(
     chains: plan.chains,
     entries: plan.entries,
     choices: plan.choices,
+    checked: plan.checked,
     keywords,
     collapsed: false,
     stubs: stubsFor(context, field, keywords),
@@ -880,6 +885,7 @@ function ownView<S extends StrictRJSFSchema>(field: DefaultsField<S>, schema: S,
     chains: ownChains(field.graph, field.seeds),
     entries: [],
     choices: [],
+    checked: [],
     keywords: new Set(Object.keys(schema)),
     collapsed: false,
     stubs: false,
@@ -1112,10 +1118,11 @@ function defaultsChild<S extends StrictRJSFSchema>(
   return { graph, seeds: useFallback ? [] : seeds, expanded, edge, fallback: useFallback ? fallback : undefined };
 }
 
-/** Computes the defaults of `field` from the fold's state at it. A field whose plan has `dependencies` is planned again
- * while the defaults computed so far, under its data, qualify a set of them it was not planned with: there is no cap on
- * the passes, since qualification only grows with the keys the defaults bring, and a set seen before ends the loop all
- * the same. A child computed in an earlier pass from the same inputs is not computed again.
+/** Computes the defaults of `field` from the fold's state at it. A field whose plan has `dependencies` or an `if` is
+ * planned again while the defaults computed so far, under its data, qualify a set of dependencies or decide a condition
+ * otherwise than it was planned with, so a default decides them as the same value in the data does. Conditions can
+ * flip each other, so the passes end at the first set and decisions seen before, with the defaults of the pass that
+ * reached them. A child computed in an earlier pass from the same inputs is not computed again.
  */
 function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1146,10 +1153,22 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return foldView(context, passView, passProps);
   };
   let value = fold(view);
-  const seen = new Set([qualifiedDependencies(lastView, data)]);
+  const decided = (conditions: readonly CheckedCondition[]) =>
+    conditions.map(({ node, satisfied }) => `${node}:${satisfied}`).join(',');
+  const seen = new Set([`${qualifiedDependencies(lastView, data)}|${decided(lastView.checked)}`]);
   for (;;) {
-    const depData = { ...(isObject(value) ? value : {}), ...(isObject(data) ? data : {}) };
-    const qualified = qualifiedDependencies(lastView, depData);
+    // The defaults of an object field join its data key by key; any other field is its data, or its defaults when it
+    // holds none
+    const depData =
+      isObject(value) || isObject(data)
+        ? { ...(isObject(value) ? value : {}), ...(isObject(data) ? data : {}) }
+        : (data ?? value);
+    const { graph } = lastView.field;
+    const redecided = lastView.checked.map(({ node }) => ({
+      node,
+      satisfied: conditionHolds<S, F>(context, graph, node, depData),
+    }));
+    const qualified = `${qualifiedDependencies(lastView, depData)}|${decided(redecided)}`;
     if (seen.has(qualified)) {
       if (holdsNull) {
         props.onNullFill?.();
@@ -2302,7 +2321,19 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
     mayHoldNullType(view.schema, rootSchema)
   ) {
-    branchNullFills<T, S, F>(context, retrievedView(), schema, props, foldReporting, foldedBranchKeys).forEach(
+    // A default computed for a property the data lacks decides a branch's `if` as the same value in the data does, so
+    // the field is retrieved again for the data over those defaults where there is one
+    const isDefaulted = Object.keys(computed).some((key) => !Object.hasOwn(formData, key));
+    const branchView = isDefaulted
+      ? settle(
+          context,
+          { ...view.field, retrieves: true },
+          view.data,
+          { ...(isObject(view.depData) ? view.depData : {}), ...computed, ...formData },
+          view.options,
+        )
+      : retrievedView();
+    branchNullFills<T, S, F>(context, branchView, schema, props, foldReporting, foldedBranchKeys).forEach(
       ({ key, value }) => {
         setOwn(computed, key, value);
         fillOverUndefined(nullFills, rawFormData, key, value);
