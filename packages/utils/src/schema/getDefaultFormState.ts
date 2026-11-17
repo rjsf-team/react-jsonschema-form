@@ -1822,7 +1822,7 @@ function nullFillsForProperty<T, S extends StrictRJSFSchema, F extends FormConte
   },
 ): NullFills | undefined {
   const rootSchema = child.graph.rawRoot;
-  const collapses = (fills: NullFills) =>
+  const collapsedByControls = (fills: NullFills) =>
     isCollapsedByOptionalDataControls<T, S, F>(
       () => settle(context, { ...child, retrieves: true }, undefined, undefined).schema,
       propertySchema,
@@ -1839,8 +1839,8 @@ function nullFillsForProperty<T, S extends StrictRJSFSchema, F extends FormConte
     nullFills !== undefined &&
     !nullFills.isCollapsed &&
     (mayHoldNullType(propertySchema, rootSchema)
-      ? collapses(nullFills)
-      : mayCollapse !== undefined && collapses(nullFills) && mayCollapse());
+      ? collapsedByControls(nullFills)
+      : mayCollapse !== undefined && collapsedByControls(nullFills) && mayCollapse());
   return isCollapsed ? { ...nullFills, isCollapsed } : nullFills;
 }
 
@@ -2012,7 +2012,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // Only a property that may merge or show an object `const` can have one to leave out below, asked only of one
     // the Optional Data Controls collapse
     let reachesConst: boolean | undefined;
-    const mayHoldObjectConst = () => (reachesConst ??= reachesObjectConst<S>(child, defaultFormStateBehavior));
+    const mayHoldObjectConst = () => {
+      reachesConst ??= reachesObjectConst<S>(child, defaultFormStateBehavior);
+      return reachesConst;
+    };
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
     // `null` of none of them is filled in until the user adds it
     const propertyNullFills = nullFillsForProperty<T, S, F>(context, child, propertySchema, {
@@ -2034,12 +2037,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         return foldReporting(context, memoKey, child, foldProps);
       }
       const parentDefaults = ownValue(foldProps.parentDefaults);
-      const over = (value: unknown) =>
-        isObject(parentDefaults) && isObject(value)
-          ? mergeObjects(parentDefaults, value)
-          : value === undefined
-            ? parentDefaults
-            : value;
+      const over = (value: unknown) => {
+        if (value === undefined) {
+          return parentDefaults;
+        }
+        return isObject(parentDefaults) && isObject(value) ? mergeObjects(parentDefaults, value) : value;
+      };
       const folded = foldReporting(skippingBranchDefaults(context), memoKey, child, {
         ...foldProps,
         rawFormData: over(foldProps.rawFormData),
