@@ -4,11 +4,20 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Follows the system appearance, the default, until the app loads and applies the stored one -->
+    <!-- Follows the system appearance, the default, until the app loads -->
     <meta name="color-scheme" content="light dark" />
     <title>react-jsonschema-form playground</title>
     <script>
       window.global = globalThis;
+      // Shows a stored Light or Dark appearance (`APPEARANCE_STORAGE_KEY` in Layout.tsx) from the first paint
+      try {
+        const appearance = localStorage.getItem('rjsf-playground-appearance');
+        if (appearance === 'light' || appearance === 'dark') {
+          document.querySelector('meta[name="color-scheme"]').content = appearance;
+        }
+      } catch {
+        // Storage can be blocked; the system appearance stands until the app loads
+      }
     </script>
   </head>
   <body>
