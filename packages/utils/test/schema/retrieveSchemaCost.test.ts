@@ -105,6 +105,20 @@ describe('the cost of an edit to a wide object', () => {
     getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: { f0: 'b' } });
     expect(validator.calls).toBe(first);
   });
+  it('checks a condition once for the defaults of an edit whose data holds them', () => {
+    const validator = miniValidator();
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', default: 'x' }, other: { type: 'string' } },
+      if: { properties: { k: { const: 'x' } }, required: ['k'] },
+      then: { properties: { t: { type: 'number', default: 2 } } },
+    };
+    const filled = getDefaultFormState({ validator }, { schema: root, rootSchema: root });
+    const first = validator.calls;
+    const edit = { ...(isObject(filled) ? filled : {}), other: 'v' };
+    expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: edit })).toEqual(edit);
+    expect(validator.calls - first).toBe(1);
+  });
   it('parses no schema anew to find the option a selector picks among options that lack the selector', () => {
     const context = { validator: miniValidator() };
     const selected: RJSFSchema = { type: 'object', properties: { kind: { const: 'hit' } } };

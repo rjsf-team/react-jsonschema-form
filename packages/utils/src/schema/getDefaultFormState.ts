@@ -1162,10 +1162,16 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // again; otherwise the data is merged over them, a default standing in for a value it lacks
     const depData = props.shouldMergeDefaultsIntoFormData ? value : mergeDefaultsWithFormData(value, data, false, true);
     const { graph } = lastView.field;
-    const redecided = lastView.checked.map(({ node }) => ({
-      node,
-      satisfied: conditionHolds<S, F>(context, graph, node, depData),
-    }));
+    // The plan checked its conditions against its own dependency data, `{}` standing in for none, so they decide alike
+    // for data equal to it, as the data of an edit is once it holds the defaults
+    const planned = lastView.depData ?? {};
+    const redecided =
+      lastView.checked.length === 0 || replaceEqualDeep(planned, depData ?? {}) === planned
+        ? lastView.checked
+        : lastView.checked.map(({ node }) => ({
+            node,
+            satisfied: conditionHolds<S, F>(context, graph, node, depData),
+          }));
     const qualified = `${qualifiedDependencies(lastView, depData)}|${decided(redecided)}`;
     if (seen.has(qualified)) {
       if (holdsNull) {

@@ -17,7 +17,6 @@ import {
   RJSF_REF_KEY,
   THEN_KEY,
 } from '../../constants.ts';
-import { hashObject } from '../../hashObject.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
@@ -208,13 +207,35 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   readonly policy?: PlanPolicy<S>;
 }
 
-/** What each `if` last decided outside a plan, with a hash of the data it decided for */
-const decisionMemo = new KeyedMemo<{ readonly hash: string; readonly holds: boolean }>();
+const conditionMemo = new KeyedMemo<boolean>();
 
-/** Whether `data` satisfies the `if` at `node`, as a plan checks it: a field with no data is checked as an empty
- * object, since `required` constrains only objects. The defaults a fill computes are new objects each time, so the
- * last check is kept by a hash of its data, which answers for equal data without the validator and holds no object a
- * caller may go on to change
+/** Whether `data` satisfies `condition`, a condition of `graph` the memo knows by `key`. A check of data that is no
+ * object is memoized for the last data it was made on. One of an object is not, since a caller may mutate the object
+ * in place between checks
+ */
+function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  graph: SchemaGraph<S>,
+  key: string,
+  condition: S,
+  data: unknown,
+): boolean {
+  if (typeof data === 'object' && data !== null) {
+    return context.validator.isValid(condition, data, graph.rawRoot);
+  }
+  const keys = [context.validator, graph, key];
+  const memoized = conditionMemo.peekLatest(keys, [data]);
+  if (memoized !== undefined) {
+    return memoized;
+  }
+  // A field with no data is checked as an empty object: `required` constrains only objects, so the missing data
+  // itself would hold every `if` that requires a key
+  const holds = context.validator.isValid(condition, data ?? {}, graph.rawRoot);
+  conditionMemo.setLatest(keys, [data], holds);
+  return holds;
+}
+
+/** Whether `data` satisfies the `if` at `node`, checked as a plan checks it
  *
  * @param context - The `SchemaContext` whose validator checks the condition
  * @param graph - The graph holding the condition
@@ -228,18 +249,9 @@ export function conditionHolds<S extends StrictRJSFSchema, F extends FormContext
   node: NodeId,
   data: unknown,
 ): boolean {
-  const keys = [context.validator, graph, node];
-  const hash = hashObject({ data });
-  const last = decisionMemo.peek(keys);
-  if (last?.hash === hash) {
-    return last.holds;
-  }
-  const holds = context.validator.isValid(targetOf(graph, node), data ?? {}, graph.rawRoot);
-  decisionMemo.set(keys, { hash, holds });
-  return holds;
+  return checkCondition(context, graph, `if:${node}`, targetOf(graph, node), data);
 }
 
-const conditionMemo = new KeyedMemo<boolean>();
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
  * object each time, as an object field's is on every edit, reuse its plan
  */
@@ -849,20 +861,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   private holds(key: string, condition: S, data: unknown): boolean {
     this.readsData = true;
-    // The memo stores no check of an object, which a caller may mutate in place between builds
-    if (typeof data === 'object' && data !== null) {
-      return this.context.validator.isValid(condition, data, this.graph.rawRoot);
-    }
-    const keys = [this.context.validator, this.graph, key];
-    const memoized = conditionMemo.peekLatest(keys, [data]);
-    if (memoized !== undefined) {
-      return memoized;
-    }
-    // A field with no data is checked as an empty object: `required` constrains only objects, so the missing data
-    // itself would hold every `if` that requires a key
-    const holds = this.context.validator.isValid(condition, data ?? {}, this.graph.rawRoot);
-    conditionMemo.setLatest(keys, [data], holds);
-    return holds;
+    return checkCondition(this.context, this.graph, key, condition, data);
   }
 
   /** Applies the `then` or `else` the `if` chooses on the data the field's dependencies qualify on, `{}` standing in

@@ -14016,6 +14016,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(filled).toEqual({ r: { q: { z: null, n: null } } });
         expect(fill(schema, filled)).toEqual(filled);
       });
+
+      it('decides a condition for the data it is checked against, whatever data it was checked against before', () => {
+        // `'Aa'` and `'BB'` hash alike as strings, so no check made for the one may answer for the other
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string', default: 'BB' } },
+          if: { properties: { k: { const: 'BB' } }, required: ['k'] },
+          then: { properties: { t: { type: 'number', default: 2 } } },
+        };
+        fill(schema, { k: 'Aa' });
+        expect(fill(schema)).toEqual({ k: 'BB', t: 2 });
+      });
     });
   });
 }
