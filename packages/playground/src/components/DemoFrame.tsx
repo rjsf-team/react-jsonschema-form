@@ -11,6 +11,7 @@ import { Widgets } from '@rjsf/antd';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
+import type { ThemeConfig } from 'antd';
 import { ConfigProvider, theme as antdTheme } from 'antd';
 import type { FrameComponentProps } from 'react-frame-component';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
@@ -19,6 +20,10 @@ const DEMO_FRAME_JSS = 'demo-frame-jss';
 // The MUI preview reads its theme from React context, which crosses into the iframe, so it gets a theme of its own:
 // MUI's default look in the playground's light or dark mode, not the playground's own theme
 const muiPreviewThemes = { light: createTheme(), dark: createTheme({ palette: { mode: 'dark' } }) };
+const antdPreviewThemes: Record<PaletteMode, ThemeConfig> = {
+  light: { algorithm: antdTheme.defaultAlgorithm },
+  dark: { algorithm: antdTheme.darkAlgorithm },
+};
 
 /** How a theme's preview takes the playground's light or dark appearance from the frame's root, beyond the root's
  * `color-scheme`, which native controls and the page canvas read
@@ -26,8 +31,8 @@ const muiPreviewThemes = { light: createTheme(), dark: createTheme({ palette: { 
 interface PreviewAppearance {
   /** The marker the theme's stylesheet reads: a `light`/`dark` class, or Bootstrap's `data-bs-theme` */
   rootMarker?: 'class' | 'data-bs-theme';
-  /** The page background of a theme that paints none of its own */
-  pageBackground?: string;
+  /** The page background of a theme that paints none of its own, alike in both modes or one for each */
+  pageBackground?: string | Record<PaletteMode, string>;
 }
 
 /** The themes whose preview follows the playground's appearance through the frame's root or their provider below.
@@ -37,7 +42,12 @@ const PREVIEW_APPEARANCES: Record<string, PreviewAppearance> = {
   core: { pageBackground: 'Canvas' },
   mui: {},
   mantine: {},
-  antd: { pageBackground: 'Canvas' },
+  antd: {
+    pageBackground: {
+      light: antdTheme.getDesignToken(antdPreviewThemes.light).colorBgContainer,
+      dark: antdTheme.getDesignToken(antdPreviewThemes.dark).colorBgContainer,
+    },
+  },
   'chakra-ui': { rootMarker: 'class' },
   'fluentui-rc': {},
   'react-bootstrap': { rootMarker: 'data-bs-theme' },
@@ -46,26 +56,25 @@ const PREVIEW_APPEARANCES: Record<string, PreviewAppearance> = {
 
 /** Marks `root` with `mode` the way `appearance` reads it, and returns what undoes that */
 function markRoot(root: HTMLElement, { rootMarker, pageBackground }: PreviewAppearance, mode: PaletteMode) {
-  root.style.setProperty('color-scheme', mode);
-  if (pageBackground) {
-    root.style.setProperty('background', pageBackground);
-  }
+  const styles = {
+    'color-scheme': mode,
+    background: typeof pageBackground === 'object' ? pageBackground[mode] : pageBackground,
+  };
+  const undos: (() => void)[] = Object.entries(styles).flatMap(([property, value]) => {
+    if (!value) {
+      return [];
+    }
+    root.style.setProperty(property, value);
+    return [() => root.style.removeProperty(property)];
+  });
   if (rootMarker === 'class') {
     root.classList.add(mode);
-  } else if (rootMarker === 'data-bs-theme') {
-    root.setAttribute('data-bs-theme', mode);
+    undos.push(() => root.classList.remove(mode));
+  } else if (rootMarker) {
+    root.setAttribute(rootMarker, mode);
+    undos.push(() => root.removeAttribute(rootMarker));
   }
-  return () => {
-    root.style.removeProperty('color-scheme');
-    if (pageBackground) {
-      root.style.removeProperty('background');
-    }
-    if (rootMarker === 'class') {
-      root.classList.remove(mode);
-    } else if (rootMarker === 'data-bs-theme') {
-      root.removeAttribute('data-bs-theme');
-    }
-  };
+  return () => undos.forEach((undo) => undo());
 }
 
 const { SelectWidget, DateWidget } = Widgets;
@@ -283,7 +292,7 @@ export default function DemoFrame(props: DemoFrameProps) {
               <AntdStyleProvider container={jssContainer}>
                 <ConfigProvider
                   getPopupContainer={() => jssContainer?.parentElement ?? frameDoc.body}
-                  theme={{ algorithm: mode === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm }}
+                  theme={antdPreviewThemes[mode]}
                 >
                   {children}
                 </ConfigProvider>

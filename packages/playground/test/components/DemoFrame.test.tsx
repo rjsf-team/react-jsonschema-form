@@ -13,20 +13,22 @@ function AntdContainerColor() {
   return <output>{antdTheme.useToken().token.colorBgContainer}</output>;
 }
 
-/** Renders `DemoFrame` for `theme` under a playground in `mode` and returns the preview's document once it loaded */
+/** Renders `DemoFrame` for `theme` under a playground in `mode` and returns the preview's document once it loaded, and
+ * a switch of the preview to another theme */
 function renderPreview(
   theme: string,
   mode: 'light' | 'dark',
   children: ReactNode = <output />,
   subtheme: string | null = null,
 ) {
-  render(
+  const preview = (previewTheme: string) => (
     <ThemeProvider theme={createTheme({ palette: { mode } })}>
-      <DemoFrame title='Form preview' theme={theme} subtheme={subtheme}>
+      <DemoFrame title='Form preview' theme={previewTheme} subtheme={subtheme}>
         {children}
       </DemoFrame>
-    </ThemeProvider>,
+    </ThemeProvider>
   );
+  const { rerender } = render(preview(theme));
   const iframe = screen.getByTitle<HTMLIFrameElement>('Form preview');
   const frameDocument = iframe.contentDocument;
   if (!frameDocument) {
@@ -38,7 +40,7 @@ function renderPreview(
   frameDocument.body.appendChild(mountTarget);
   // An iframe finishing loading is a browser lifecycle event, not something a user does
   fireEvent.load(iframe);
-  return frameDocument;
+  return { frameDocument, switchTheme: (nextTheme: string) => rerender(preview(nextTheme)) };
 }
 
 async function renderedOutput(frameDocument: Document) {
@@ -51,13 +53,20 @@ async function renderedOutput(frameDocument: Document) {
   });
 }
 
+/** What the root of a preview a test switches to carries in dark mode */
+const PREVIEW_MARKS: Record<string, { darkClass: boolean; background: string; colorScheme: string }> = {
+  core: { darkClass: false, background: 'canvas', colorScheme: 'dark' },
+  bootstrap3: { darkClass: false, background: '', colorScheme: 'normal' },
+  'chakra-ui': { darkClass: true, background: '', colorScheme: 'dark' },
+};
+
 describe('DemoFrame', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
   it.each(['light', 'dark'] as const)('renders the mui preview in the %s mode of the playground', async (mode) => {
-    const frameDocument = renderPreview('mui', mode, <MuiMode />);
+    const { frameDocument } = renderPreview('mui', mode, <MuiMode />);
 
     expect(await renderedOutput(frameDocument)).toHaveTextContent(mode);
   });
@@ -66,7 +75,7 @@ describe('DemoFrame', () => {
     ['light', '#ffffff'],
     ['dark', '#141414'],
   ] as const)('renders the antd preview with the %s algorithm', async (mode, containerColor) => {
-    const frameDocument = renderPreview('antd', mode, <AntdContainerColor />);
+    const { frameDocument } = renderPreview('antd', mode, <AntdContainerColor />);
 
     expect(await renderedOutput(frameDocument)).toHaveTextContent(containerColor);
   });
@@ -77,7 +86,7 @@ describe('DemoFrame', () => {
       'matchMedia',
       vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })),
     );
-    const frameDocument = renderPreview('mantine', mode);
+    const { frameDocument } = renderPreview('mantine', mode);
 
     await renderedOutput(frameDocument);
     expect(frameDocument.body).toHaveAttribute('data-mantine-color-scheme', mode);
@@ -86,7 +95,7 @@ describe('DemoFrame', () => {
   it.each(['light', 'dark'] as const)(
     'paints the fluentui-rc preview page in the Teams %s background',
     async (mode) => {
-      const frameDocument = renderPreview('fluentui-rc', mode);
+      const { frameDocument } = renderPreview('fluentui-rc', mode);
 
       await renderedOutput(frameDocument);
       expect(getComputedStyle(frameDocument.body).backgroundColor).toBe(
@@ -112,7 +121,7 @@ describe('DemoFrame', () => {
         'matchMedia',
         vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })),
       );
-      const frameDocument = renderPreview(theme, 'dark');
+      const { frameDocument } = renderPreview(theme, 'dark');
       const root = frameDocument.documentElement;
 
       await vi.waitFor(() => {
@@ -141,32 +150,58 @@ describe('DemoFrame', () => {
   );
 
   it.each([
-    ['core', 'canvas'],
-    ['shadcn', 'var(--background)'],
-  ])('gives the %s preview, which paints no page of its own, a page background', async (theme, background) => {
-    const frameDocument = renderPreview(theme, 'dark');
+    ['core', 'light', 'canvas'],
+    ['core', 'dark', 'canvas'],
+    ['shadcn', 'dark', 'var(--background)'],
+    ['antd', 'light', 'rgb(255, 255, 255)'],
+    ['antd', 'dark', 'rgb(20, 20, 20)'],
+  ] as const)(
+    'gives the %s preview, which paints no page of its own, a %s page background',
+    async (theme, mode, background) => {
+      const { frameDocument } = renderPreview(theme, mode);
 
-    await vi.waitFor(() => {
-      expect(frameDocument.documentElement.style.background).toBe(background);
-    });
-  });
+      await vi.waitFor(() => {
+        expect(frameDocument.documentElement.style.background).toBe(background);
+      });
+    },
+  );
 
   it.each(['light', 'dark'] as const)("shows daisyUI's own %s theme until a subtheme is picked", async (mode) => {
-    const frameDocument = renderPreview('daisy-ui', mode);
+    const { frameDocument } = renderPreview('daisy-ui', mode);
 
     await renderedOutput(frameDocument);
     expect(frameDocument.querySelector('.daisy-ui-theme')).toHaveAttribute('data-theme', mode);
   });
 
   it('shows a picked daisy-ui subtheme whatever the playground mode', async () => {
-    const frameDocument = renderPreview('daisy-ui', 'dark', <output />, 'cupcake');
+    const { frameDocument } = renderPreview('daisy-ui', 'dark', <output />, 'cupcake');
 
     await renderedOutput(frameDocument);
     expect(frameDocument.querySelector('.daisy-ui-theme')).toHaveAttribute('data-theme', 'cupcake');
   });
 
+  it.each([
+    ['shadcn', 'core'],
+    ['react-bootstrap', 'bootstrap3'],
+    ['antd', 'chakra-ui'],
+  ])('leaves no %s marker on the preview root after a switch to %s', async (theme, nextTheme) => {
+    const { frameDocument, switchTheme } = renderPreview(theme, 'dark');
+    const root = frameDocument.documentElement;
+    await vi.waitFor(() => {
+      expect(getComputedStyle(root).colorScheme).toBe('dark');
+    });
+
+    switchTheme(nextTheme);
+
+    const marks = PREVIEW_MARKS[nextTheme];
+    expect(root.classList.contains('dark')).toBe(marks.darkClass);
+    expect(root.hasAttribute('data-bs-theme')).toBe(false);
+    expect(root.style.background).toBe(marks.background);
+    expect(getComputedStyle(root).colorScheme).toBe(marks.colorScheme);
+  });
+
   it.each(['bootstrap3', 'daisy-ui'])('leaves the %s preview root to its own theme', async (theme) => {
-    const frameDocument = renderPreview(theme, 'dark');
+    const { frameDocument } = renderPreview(theme, 'dark');
     const root = frameDocument.documentElement;
 
     await renderedOutput(frameDocument);
