@@ -237,6 +237,8 @@ Specify either the name of a widget that is used to look up an implementation fr
 
 See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md) for more information about how to use this property.
 
+A `ui:widget` given as a `{ component, options }` object or as a React element rather than a component is ignored, with a `console.error`. Those carry the IDs `ui-widget-options-object` and `ui-widget-element`, which [`setWarningOptions()`](./utility-functions.md#setwarningoptions) can make throw.
+
 ### classNames
 
 The uiSchema object accepts a `ui:classNames` property for each field of the schema:

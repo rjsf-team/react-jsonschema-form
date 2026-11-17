@@ -27,6 +27,13 @@ describe('logGridSpanWarning()', () => {
     );
   });
 
+  it('ends the ignored-span warning with the ID the theme gives it', () => {
+    logGridSpanWarning('root_a', 4, { ownWidth: 'a `flex`', ownWidthId: 'antd-span-own-width' });
+    expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
+      'A layout grid column\'s `span` in "root_a" is ignored, since the column has a `flex` of its own [antd-span-own-width]',
+    );
+  });
+
   it('logs a half step where the grid needs whole spans', () => {
     logGridSpanWarning('root_b', 4.5, { wholeSpansOnly: true });
     expect(consoleWarnSpy).toHaveBeenCalledWith(

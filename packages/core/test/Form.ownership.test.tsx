@@ -1,7 +1,7 @@
 import { Activity, Component, StrictMode, startTransition, useEffect, useLayoutEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { ErrorSchema, FieldProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { buttonId, deepEquals, getTemplates, getUiOptions, noop } from '@rjsf/utils';
+import { buttonId, deepEquals, getTemplates, getUiOptions, noop, setWarningOptions } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -23,6 +23,7 @@ import {
   ListeningParent,
   renderInActivity,
   reportedBy,
+  setupConsoleErrorSuppression,
   setupConsoleWarnSuppression,
   submitForm,
   TransformingParent,
@@ -1101,7 +1102,9 @@ describe('form data ownership', () => {
       act(() => handle.submit());
 
       expect(droppedCallWarnings()).toHaveLength(1);
-      expect(droppedCallWarnings()[0][0]).toMatch(/`setFieldValue\(\)` was called on a form that is hidden/);
+      expect(droppedCallWarnings()[0][0]).toMatch(
+        /^Form "root": `setFieldValue\(\)` was called on a form that is hidden/,
+      );
       expect(handle.getFormData()).toEqual({ a: 'seed' });
 
       show();
@@ -1123,7 +1126,7 @@ describe('form data ownership', () => {
       act(() => handle.setFieldValue('a', 'dropped'));
 
       expect(droppedCallWarnings()).toHaveLength(1);
-      expect(droppedCallWarnings()[0][0]).toMatch(/`reset\(\)` was called on a form that is hidden/);
+      expect(droppedCallWarnings()[0][0]).toMatch(/^Form "root": `reset\(\)` was called on a form that is hidden/);
       expect(handle.getFormData()).toEqual({ a: 'seed' });
     });
 
@@ -2408,3 +2411,68 @@ describe('a throwing callback a field reports from an Effect', () => {
     expect(document.querySelector('form')).toBeInTheDocument();
   });
 });
+
+// oxlint-disable typescript/no-deprecated -- the warnings are about the deprecated `formData` alias
+describe("the form's own development warnings", () => {
+  const warnings = setupConsoleWarnSuppression();
+  // React reports each error a boundary catches through `console.error`
+  setupConsoleErrorSuppression();
+
+  it('end with their ID, naming the form by its idPrefix when it has no id', () => {
+    const { rerender } = render(<Form<Data> schema={schema} validator={validator} formData={{ a: 'a' }} />);
+    rerender(<Form<Data> schema={schema} validator={validator} formData={{ a: 'b' }} initialFormData={{}} />);
+
+    expect(warnings.consoleSpy.mock.calls).toEqual([
+      [expect.stringMatching(/^Form "root": `formData` changed after the form mounted.* \[form-data-ignored\]$/)],
+      [
+        'Form "root": `formData` and `initialFormData` were both passed. `formData` seeds the form and ' +
+          '`initialFormData` is ignored. Pass `initialFormData` alone. [form-data-both-seeds]',
+      ],
+    ]);
+  });
+
+  it('are given once for each form on the page, named by its id or else its idPrefix', () => {
+    render(
+      <>
+        <Form<Data> schema={schema} validator={validator} id='one' formData={{}} initialFormData={{}} />
+        <Form<Data> schema={schema} validator={validator} id='two' formData={{}} initialFormData={{}} />
+        <Form<Data> schema={schema} validator={validator} idPrefix='three' formData={{}} initialFormData={{}} />
+        <Form<Data> schema={schema} validator={validator} idPrefix='four' formData={{}} initialFormData={{}} />
+      </>,
+    );
+
+    expect(warnings.consoleSpy.mock.calls.map(([message]) => String(message).split(':')[0])).toEqual([
+      'Form "one"',
+      'Form "two"',
+      'Form "three"',
+      'Form "four"',
+    ]);
+  });
+
+  it('throw, for a boundary to catch, when throwOn selects migration warnings', () => {
+    setWarningOptions({ throwOn: ['migration'] });
+    render(
+      <Boundary>
+        <Form<Data> schema={schema} validator={validator} formData={{}} initialFormData={{}} />
+      </Boundary>,
+    );
+
+    expect(screen.getByText('Fallback')).toBeInTheDocument();
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
+  });
+
+  it('throw for a formData ignored after mount when throwOn selects its ID', () => {
+    setWarningOptions({ throwOn: ['form-data-ignored'] });
+    const inBoundary = (data: Data) => (
+      <Boundary>
+        <Form<Data> schema={schema} validator={validator} formData={data} />
+      </Boundary>
+    );
+    const { rerender } = render(inBoundary({ a: 'a' }));
+    rerender(inBoundary({ a: 'b' }));
+
+    expect(screen.getByText('Fallback')).toBeInTheDocument();
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
+  });
+});
+// oxlint-enable typescript/no-deprecated

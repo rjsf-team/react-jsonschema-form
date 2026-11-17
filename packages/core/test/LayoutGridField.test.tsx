@@ -1916,7 +1916,7 @@ describe('LayoutGridField', () => {
         render(<LayoutGridField {...props} />);
         expect(screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent)).not.toBeInTheDocument();
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-          `ui:layoutGrid cell in "${props.id}" (${props.fieldPath}) names no field, so it renders nothing.`,
+          `ui:layoutGrid cell in "${props.id}" (${props.fieldPath}) names no field, so it renders nothing. [layout-grid-renders-nothing]`,
         );
       },
     );
@@ -2287,7 +2287,7 @@ describe('a span on a ui:row', () => {
   test('warns that it is ignored', () => {
     createFormComponent({ schema, uiSchema: gridUiSchema({ span: 6 }) });
     expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
-      'span on a ui:row in "root" is ignored, since span sizes a ui:col or ui:columns rather than a row.',
+      'span on a ui:row in "root" is ignored, since span sizes a ui:col or ui:columns rather than a row. [row-span-ignored]',
     );
   });
   test('warns once for an array whose every item renders the same uiSchema entry', () => {
@@ -2300,7 +2300,9 @@ describe('a span on a ui:row', () => {
       String(message).startsWith('span on a ui:row'),
     );
     expect(rowWarnings).toEqual([
-      ['span on a ui:row in "root_[]" ([]) is ignored, since span sizes a ui:col or ui:columns rather than a row.'],
+      [
+        'span on a ui:row in "root_[]" ([]) is ignored, since span sizes a ui:col or ui:columns rather than a row. [row-span-ignored]',
+      ],
     ]);
   });
   test('warns once for an object whose every extra key renders the same uiSchema entry', () => {
@@ -2313,7 +2315,9 @@ describe('a span on a ui:row', () => {
       String(message).startsWith('span on a ui:row'),
     );
     expect(rowWarnings).toEqual([
-      ['span on a ui:row in "root_{}" ({}) is ignored, since span sizes a ui:col or ui:columns rather than a row.'],
+      [
+        'span on a ui:row in "root_{}" ({}) is ignored, since span sizes a ui:col or ui:columns rather than a row. [row-span-ignored]',
+      ],
     ]);
   });
   test("warns apart for the same mistake in two options' entries, naming each option entry", async () => {
@@ -2333,11 +2337,11 @@ describe('a span on a ui:row', () => {
     expect(rowWarnings).toEqual([
       [
         'span on a ui:row in the uiSchema.anyOf[0] entry of "root" is ignored, since span sizes a ui:col or ' +
-          'ui:columns rather than a row.',
+          'ui:columns rather than a row. [row-span-ignored]',
       ],
       [
         'span on a ui:row in the uiSchema.anyOf[1] entry of "root" is ignored, since span sizes a ui:col or ' +
-          'ui:columns rather than a row.',
+          'ui:columns rather than a row. [row-span-ignored]',
       ],
     ]);
   });
@@ -2520,7 +2524,7 @@ describe('a layout read from JSON', () => {
     };
     expect(renderedIds(layoutGrid, { flag: 1 })).toEqual([]);
     expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-      'ui:layoutGrid ui:condition in "root" names no field, so it renders nothing.',
+      'ui:layoutGrid ui:condition in "root" names no field, so it renders nothing. [layout-grid-renders-nothing]',
     );
   });
   test.each([
@@ -2532,7 +2536,7 @@ describe('a layout read from JSON', () => {
     };
     expect(renderedIds(layoutGrid, { flag: 1 })).toEqual([]);
     expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-      'ui:layoutGrid ui:condition in "root" names no field, so it renders nothing.',
+      'ui:layoutGrid ui:condition in "root" names no field, so it renders nothing. [layout-grid-renders-nothing]',
     );
   });
   test.each([
@@ -2541,7 +2545,7 @@ describe('a layout read from JSON', () => {
   ])('warns, and renders nothing, for a ui:layoutGrid that is %s', (_, layoutGrid) => {
     expect(renderedIds(layoutGrid)).toEqual([]);
     expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-      'ui:layoutGrid in "root" is not an object, so the LayoutGridField renders nothing.',
+      'ui:layoutGrid in "root" is not an object, so the LayoutGridField renders nothing. [layout-grid-renders-nothing]',
     );
   });
   test.each([
@@ -2551,7 +2555,7 @@ describe('a layout read from JSON', () => {
   ])('warns, and renders nothing, for a cell with %s and no render', (_, cell) => {
     expect(renderedIds({ 'ui:row': { children: ['a', cell] } })).toEqual(['root_a']);
     expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
-      'ui:layoutGrid cell in "root" names no field, so it renders nothing.',
+      'ui:layoutGrid cell in "root" names no field, so it renders nothing. [layout-grid-renders-nothing]',
     );
   });
   test.each([

@@ -69,6 +69,7 @@ describe('transformChange', () => {
 
     expect(reported.at(-1)?.formData).toBeUndefined();
     expect(returnedNothingWarnings()).toHaveLength(1);
+    expect(returnedNothingWarnings()[0][0]).toMatch(/^Form "root": `transformChange` returned `undefined`/);
   });
 
   it('does not warn when it returns undefined for an edit that left no data', () => {

@@ -3,6 +3,72 @@ import toDisplayString from './toDisplayString.ts';
 /** The console methods `logOnce()` can log through */
 export type LogOnceLevel = 'warn' | 'error';
 
+/** The kinds of problem a warning with an ID flags: `migration` for v6 code that now does something else, each named in
+ * the v7 upgrade-guide entry that explains it, and `config` for a uiSchema or option RJSF ignores whichever version it
+ * was written for
+ */
+export type WarningCategory = 'migration' | 'config';
+
+/** Each warning ID and its category. An ID names a kind of problem rather than one message, so it stays the same across
+ * fields, renames and rewordings
+ */
+const WARNING_CATEGORIES = {
+  'antd-span-twelfths': 'migration',
+  'antd-span-own-width': 'migration',
+  'create-schema-utils-validator-arg': 'migration',
+  'ui-options-key-ignored': 'migration',
+  'global-option-not-read': 'migration',
+  'layout-grid-renders-nothing': 'migration',
+  'option-field-ignored': 'migration',
+  'form-data-not-passed-through': 'migration',
+  'form-data-ignored': 'migration',
+  'form-data-both-seeds': 'migration',
+  'global-ui-options-key-not-read': 'config',
+  'ui-widget-options-object': 'config',
+  'ui-widget-element': 'config',
+  'row-span-ignored': 'config',
+  'layout-grid-cell-field-ignored': 'config',
+} as const satisfies Record<string, WarningCategory>;
+
+/** The ID of a warning `setWarningOptions()` can make throw */
+export type WarningId = keyof typeof WARNING_CATEGORIES;
+
+/** The options `setWarningOptions()` takes */
+export interface WarningOptions {
+  /** The categories and IDs of the warnings that throw an `RJSFWarningError` rather than log */
+  throwOn?: readonly (WarningCategory | WarningId)[];
+  /** The IDs that log, deduped as usual, even where `throwOn` selects them */
+  except?: readonly WarningId[];
+}
+
+/** @public What `logOnce()` throws for a warning whose ID `setWarningOptions()` selects, carrying that `id` and,
+ * as its `cause`, the error the warning was logged with
+ */
+export class RJSFWarningError extends Error {
+  readonly id: WarningId;
+
+  constructor(message: string, id: WarningId, options?: ErrorOptions) {
+    super(message, options);
+    this.name = 'RJSFWarningError';
+    this.id = id;
+  }
+}
+
+let warningOptions: Required<WarningOptions> = { throwOn: [], except: [] };
+
+/** @public Sets which warnings with an ID throw an `RJSFWarningError` rather than log, for every form on the page.
+ * Module-level, since several warnings are raised where no form's options reach, so it is set once from an app's
+ * development entry point or a test setup. A warning without an ID never throws, and `resetLogOnce()` leaves this
+ * setting as it is.
+ *
+ * @param [options={}] - The `throwOn` categories and IDs, and the IDs `except` keeps logging; `{}` restores the
+ *        default of logging every warning
+ */
+export function setWarningOptions(options: WarningOptions = {}) {
+  // Copied, so a caller changing its arrays afterwards can't change the setting behind it
+  warningOptions = { throwOn: [...(options.throwOn ?? [])], except: [...(options.except ?? [])] };
+}
+
 /** How many distinct messages are remembered before the oldest generation of them is dropped, so a long-running
  * process (such as a server rendering many different schemas) can't grow the set without bound. Deduping holds for a
  * working set of up to twice this and then stops abruptly: a render producing more distinct messages than that logs
@@ -38,17 +104,26 @@ let previousMessages = new Set<string>();
  * that identifies nothing, or only something as generic as a `dependencies` key, is reported for whichever schema
  * reaches it first and stays silent for the rest until the page is reloaded.
  *
+ * A warning given an `id` ends its message with it, and throws an `RJSFWarningError` instead of logging when
+ * `setWarningOptions()` selects it. A throw isn't remembered, so it throws again on the next call.
+ *
  * @param message - The message to log
  * @param [level='warn'] - Which console method to log through
  * @param [error] - The error, or any other value, to pass to the console method after the `message`
+ * @param [id] - The ID of the problem the warning flags, which `setWarningOptions()` can make throw
  */
-export default function logOnce(message: string, level: LogOnceLevel = 'warn', error?: unknown) {
+export default function logOnce(message: string, level: LogOnceLevel = 'warn', error?: unknown, id?: WarningId) {
+  const text = id === undefined ? message : `${message} [${id}]`;
+  const { throwOn, except } = warningOptions;
+  if (id !== undefined && (throwOn.includes(id) || throwOn.includes(WARNING_CATEGORIES[id])) && !except.includes(id)) {
+    throw new RJSFWarningError(text, id, error === undefined ? undefined : { cause: error });
+  }
   // The trailing separator keeps `logOnce(m)` and `logOnce(m, 'warn', '')` two messages, and the type keeps an error
   // that `toDisplayString()` could only spell as its type apart from a string error of that text
   const key =
     error === undefined
-      ? `${level}\u0000${message}`
-      : `${level}\u0000${message}\u0000${typeof error}\u0000${toDisplayString(error)}`;
+      ? `${level}\u0000${text}`
+      : `${level}\u0000${text}\u0000${typeof error}\u0000${toDisplayString(error)}`;
   // A message found in `previousMessages` is deliberately left there rather than promoted into `currentMessages`, so
   // one seen on every render is logged a second time once two rotations have displaced it. Promoting it would hold it
   // forever, at the cost of a slot in the current generation too, which is what caps how large a working set stays
@@ -61,7 +136,7 @@ export default function logOnce(message: string, level: LogOnceLevel = 'warn', e
     currentMessages = new Set();
   }
   currentMessages.add(key);
-  const args = error === undefined ? [message] : [message, error];
+  const args = error === undefined ? [text] : [text, error];
   // `level` is only type-checked, so a JS caller can pass anything; `console[level]` would throw inside the very
   // render that was trying to warn, and the key is already remembered by then, so the message would never log at all.
   // The method is called on `console` rather than through a reference taken off it, since a polyfilled or proxied

@@ -253,7 +253,7 @@ describe('GridTemplate span', () => {
     renderGridColumn(Form, { span: 16 });
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
       'A layout grid column\'s `span` of 16 in "root_name" is more than 12: `span` counts twelfths of a row, ' +
-        "where antd's counted 24ths before v7, so halve it",
+        "where antd's counted 24ths before v7, so halve it [antd-span-twelfths]",
     );
   });
   test.each([
@@ -265,7 +265,7 @@ describe('GridTemplate span', () => {
     const { column } = renderGridColumn(Form, { span: 6, ...colProps });
     expect(column).not.toHaveClass('ant-col-12');
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a `flex` or a width of its own',
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a `flex` or a width of its own [antd-span-own-width]',
     );
   });
   test.each([4.5, 12])('does not warn about a span of %s', (span) => {

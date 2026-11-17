@@ -762,7 +762,7 @@ describe('a discriminated cell of a layout grid', () => {
     const warnings = setupConsoleWarnSuppression();
     const ignoredFieldWarning =
       'ui:field for cell \'pick\' in "root" is ignored, since a cell with discriminated oneOf/anyOf options renders ' +
-      'only its option selector.';
+      'only its option selector. [layout-grid-cell-field-ignored]';
 
     // `SchemaField` merges the `ui:definitions` entry for the cell's `$ref` beneath the cell's `uiSchema`
     it.each([

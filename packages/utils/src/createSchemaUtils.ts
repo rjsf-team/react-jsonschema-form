@@ -69,6 +69,9 @@ class SchemaUtils<
     if (context && !('validator' in context) && typeof (context as GenericObjectType).isValid === 'function') {
       logOnce(
         'createSchemaUtils() takes a SchemaContext rather than a validator: pass `{ validator }`, plus any `customMergeAllOf` and `defaultFormStateBehavior`',
+        'warn',
+        undefined,
+        'create-schema-utils-validator-arg',
       );
     }
     // Snapshotted so a caller swapping a setting on the object it passed cannot change how this instance behaves

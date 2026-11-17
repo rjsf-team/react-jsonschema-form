@@ -1,4 +1,5 @@
 import logOnce from './logOnce.ts';
+import type { WarningId } from './logOnce.ts';
 
 /** Logs, once, why a layout grid column's `span` won't lay out as given: it is ignored when the column has a width of
  * its own, which a theme's `GridTemplate` lets win over it, or else it isn't a whole number in a grid that needs one.
@@ -7,18 +8,29 @@ import logOnce from './logOnce.ts';
  * @param span - The column's `span`; nothing is logged without one
  * @param [options] - What the theme's grid makes of the `span`
  * @param [options.ownWidth] - What the column has of its own that wins over `span`, such as "a `size`", when it has one
+ * @param [options.ownWidthId] - The ID of the warning that the `span` is ignored, for a theme where that is a migration
+ *        problem
  * @param [options.wholeSpansOnly=false] - Whether the theme's grid needs a whole number of twelfths
  */
 export default function logGridSpanWarning(
   fieldId: string | undefined,
   span: number | undefined,
-  { ownWidth, wholeSpansOnly = false }: { ownWidth?: string; wholeSpansOnly?: boolean } = {},
+  {
+    ownWidth,
+    ownWidthId,
+    wholeSpansOnly = false,
+  }: { ownWidth?: string; ownWidthId?: WarningId; wholeSpansOnly?: boolean } = {},
 ) {
   if (span === undefined) {
     return;
   }
   if (ownWidth) {
-    logOnce(`A layout grid column's \`span\` in "${fieldId}" is ignored, since the column has ${ownWidth} of its own`);
+    logOnce(
+      `A layout grid column's \`span\` in "${fieldId}" is ignored, since the column has ${ownWidth} of its own`,
+      'warn',
+      undefined,
+      ownWidthId,
+    );
   } else if (wholeSpansOnly && !Number.isInteger(span)) {
     logOnce(
       `A layout grid column's \`span\` of ${span} in "${fieldId}" is not a whole number, which this theme's grid needs`,

@@ -29,7 +29,7 @@ describe('pickGlobalUiOptions()', () => {
     pickGlobalUiOptions(withWidget, ['widget']);
 
     expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
-      'globalUiOptionsKeys names widget, an option RJSF reads per field, so it is not read from ui:globalOptions.',
+      'globalUiOptionsKeys names widget, an option RJSF reads per field, so it is not read from ui:globalOptions. [global-ui-options-key-not-read]',
     );
   });
   it('drops an extension key naming a template that ui:options does not declare, since getTemplates() reads it', () => {
@@ -37,7 +37,7 @@ describe('pickGlobalUiOptions()', () => {
 
     expect(pickGlobalUiOptions(withTemplate, ['MarkdownTemplate'])).toEqual({});
     expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
-      'globalUiOptionsKeys names MarkdownTemplate, an option RJSF reads per field, so it is not read from ui:globalOptions.',
+      'globalUiOptionsKeys names MarkdownTemplate, an option RJSF reads per field, so it is not read from ui:globalOptions. [global-ui-options-key-not-read]',
     );
   });
   it('drops an extension key naming the enumOptions a field computes for its widget', () => {
@@ -45,7 +45,7 @@ describe('pickGlobalUiOptions()', () => {
 
     expect(pickGlobalUiOptions(withEnumOptions, ['enumOptions'])).toEqual({});
     expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
-      'globalUiOptionsKeys names enumOptions, an option RJSF reads per field, so it is not read from ui:globalOptions.',
+      'globalUiOptionsKeys names enumOptions, an option RJSF reads per field, so it is not read from ui:globalOptions. [global-ui-options-key-not-read]',
     );
   });
   it.each(['definitions', 'globalOptions'])(
@@ -55,7 +55,7 @@ describe('pickGlobalUiOptions()', () => {
 
       expect(pickGlobalUiOptions(given, [name])).toEqual({ label: false });
       expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
-        `globalUiOptionsKeys names ${name}, which no field could override since only the root uiSchema's ui:${name} sets it, so it is not read from ui:globalOptions.`,
+        `globalUiOptionsKeys names ${name}, which no field could override since only the root uiSchema's ui:${name} sets it, so it is not read from ui:globalOptions. [global-ui-options-key-not-read]`,
       );
     },
   );
@@ -64,7 +64,7 @@ describe('pickGlobalUiOptions()', () => {
 
     expect(pickGlobalUiOptions(given)).toEqual({});
     expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
-      `ui:globalOptions.${name} is not read: only the root uiSchema's ui:${name} sets ${name}.`,
+      `ui:globalOptions.${name} is not read: only the root uiSchema's ui:${name} sets ${name}. [global-option-not-read]`,
     );
   });
   it('warns once about each option RJSF reads per field that the options hold', () => {
@@ -73,10 +73,10 @@ describe('pickGlobalUiOptions()', () => {
 
     expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      'ui:globalOptions.widget is not read: RJSF reads widget per field only.',
+      'ui:globalOptions.widget is not read: RJSF reads widget per field only. [global-option-not-read]',
     );
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      'ui:globalOptions.placeholder is not read: RJSF reads placeholder per field only.',
+      'ui:globalOptions.placeholder is not read: RJSF reads placeholder per field only. [global-option-not-read]',
     );
   });
   it('takes an extension key that is one of the options RJSF reads there without a warning', () => {

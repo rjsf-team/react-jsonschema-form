@@ -2318,8 +2318,9 @@ Nothing is logged for a column without a `span`.
 
 - fieldId: string | undefined - The column's `fieldId`, which the warning names
 - span: number | undefined - The column's `span`
-- [options]: `{ ownWidth?: string; wholeSpansOnly?: boolean }` - What the theme's grid makes of the `span`:
+- [options]: `{ ownWidth?: string; ownWidthId?: WarningId; wholeSpansOnly?: boolean }` - What the theme's grid makes of the `span`:
   - [ownWidth]: string - What the column has of its own that wins over `span`, such as ``"a `size`"``, when it has one
+  - [ownWidthId]: WarningId - The ID that ends the warning that `span` is ignored, so [`setWarningOptions()`](#setwarningoptions) can make it throw, for a theme where a `span` beside a width of the column's own is a migration problem
   - [wholeSpansOnly=false]: boolean - Whether the theme's grid needs a whole number of twelfths
 
 ### logOnce()
@@ -2334,12 +2335,14 @@ A message that outlives both generations is logged again, and a render producing
 Warnings are raised per field rather than per mistake, so a misconfigured item schema counts once per array row.
 If your tests assert on a message logged through this function, call `resetLogOnce()` before each one, otherwise only the first test to trigger it will see it logged.
 An app that swaps schemas at runtime needs it for the same reason the playground does: a wizard whose steps reuse the same field ids, a schema editor or a form builder would otherwise have the second schema's warnings held back by the first's.
+A warning given an `id` throws an `RJSFWarningError` instead when [`setWarningOptions()`](#setwarningoptions) selects it, and a throw isn't remembered, so it throws again the next time.
 
 #### Parameters
 
 - message: string - The message to log
 - [level='warn']: LogOnceLevel - Which console method to log through, either `'warn'` or `'error'`
 - [error]: unknown - The error, or any other value, to pass to the console method after the `message`
+- [id]: WarningId - The ID of the problem the warning flags, which ends the message as `[id]` and which [`setWarningOptions()`](#setwarningoptions) can make throw
 
 ### lookupFromFormContext&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType, R = unknown>()
 
@@ -2979,6 +2982,58 @@ A plain assignment to a `__proto__` key, which JSON-sourced data can hold, would
 const data = {};
 setOwn(data, '__proto__', { x: 1 }); // data has an own __proto__ key, and its prototype is still Object.prototype
 ```
+
+### setWarningOptions()
+
+Sets which warnings [`logOnce()`](#logonce) throws rather than logs, for every form on the page, to surface the problems a v6 to v7 migration leaves, or to have a test suite fail on them.
+It is a module-level setting rather than a form prop, since several warnings are raised where no form's options reach, so set it once from your app's development entry point or your test setup.
+`resetLogOnce()` leaves it as it is.
+
+A warning that flags a known problem has a stable ID, which ends its message, as in `ui:layoutGrid in "root_address" is not an object, so the LayoutGridField renders nothing. [layout-grid-renders-nothing]`.
+When `throwOn` selects that ID and `except` doesn't list it, `logOnce()` throws an `RJSFWarningError`, an `Error` carrying the warning's `id` and, as its `cause`, any error the warning was logged with.
+The throw isn't remembered, so the warning throws again on the next render rather than passing silently, and a throw while rendering tears the form down unless an error boundary catches it.
+A warning without an ID never throws, so the warnings that come from the data or schema, such as a validator error, an `allOf` that can't be merged or a `$ref` that can't be resolved, can't take down a working form.
+An ID names a kind of problem rather than one message, so excepting it lets through its later occurrences on other fields too.
+
+```ts
+import { setWarningOptions } from '@rjsf/utils';
+
+setWarningOptions({ throwOn: ['migration'] }); // every migration warning throws
+setWarningOptions({ throwOn: ['form-data-ignored'] }); // just this one, to fix one problem at a time
+setWarningOptions({ throwOn: ['migration'], except: ['antd-span-twelfths'] }); // acknowledged: still logs
+setWarningOptions({}); // the default: every warning logs
+```
+
+| Category    | What its warnings flag                                                                                                                           |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `migration` | v6 code that now does something else, each named in the [v7 upgrade guide](../migration-guides/v7.x%20upgrade%20guide.md) entry that explains it |
+| `config`    | a uiSchema or option RJSF ignores, whichever version the form was written for                                                                    |
+
+| ID                                  | Category    | Warns that                                                                                                  |
+| ----------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
+| `antd-span-twelfths`                | `migration` | an `@rjsf/antd` layout grid column's `span` is over 12, as one written in antd's 24ths is                   |
+| `antd-span-own-width`               | `migration` | an `@rjsf/antd` layout grid column's `span` is ignored, since the column has a `flex` or a width of its own |
+| `create-schema-utils-validator-arg` | `migration` | `createSchemaUtils()` was passed a validator rather than a `SchemaContext`                                  |
+| `ui-options-key-ignored`            | `migration` | `ui:options` holds `field`, `fieldReplacesAnyOrOneOf`, `definitions` or `globalOptions`, which it ignores   |
+| `global-option-not-read`            | `migration` | `ui:globalOptions` holds a per-field or root-only key, such as `widget`, which it doesn't read              |
+| `layout-grid-renders-nothing`       | `migration` | a `LayoutGridField` has no `ui:layoutGrid` object, or a cell or `ui:condition` names no field               |
+| `option-field-ignored`              | `migration` | an `anyOf`/`oneOf` option's `ui:field` is ignored, since a field is already named for that path             |
+| `form-data-not-passed-through`      | `migration` | a custom field wrapping `ArrayField` or `ObjectField` didn't pass `formData` through unchanged              |
+| `form-data-ignored`                 | `migration` | the `Form`'s `formData` changed after mount and was ignored                                                 |
+| `form-data-both-seeds`              | `migration` | the `Form` was passed both `formData` and `initialFormData`                                                 |
+| `global-ui-options-key-not-read`    | `config`    | `globalUiOptionsKeys` names a per-field or root-only key, so it isn't read from `ui:globalOptions`          |
+| `ui-widget-options-object`          | `config`    | `ui:widget` is a `{ component, options }` object                                                            |
+| `ui-widget-element`                 | `config`    | `ui:widget` is a React element rather than a component                                                      |
+| `row-span-ignored`                  | `config`    | a `ui:row` has a `span`, which sizes only a `ui:col` or `ui:columns`                                        |
+| `layout-grid-cell-field-ignored`    | `config`    | a layout grid cell with discriminated `oneOf`/`anyOf` options names a `ui:field`, which it ignores          |
+
+`WarningCategory` and `WarningId` are string-literal unions of the names above, so a typo fails type-checking.
+
+#### Parameters
+
+- [options=\{}]: WarningOptions - The warnings to throw for; left out, every warning logs
+  - [throwOn=[]]: (WarningCategory | WarningId)[] - The categories and IDs of the warnings that throw an `RJSFWarningError`
+  - [except=[]]: WarningId[] - The IDs that log, deduped as usual, even where `throwOn` selects them
 
 ### sharedCopyParts()
 

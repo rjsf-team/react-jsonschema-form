@@ -1,6 +1,6 @@
 import type { MockInstance } from 'vitest';
 
-import { logOnce, noop, resetLogOnce } from '../src/index.ts';
+import { logOnce, noop, resetLogOnce, RJSFWarningError, setWarningOptions } from '../src/index.ts';
 import { LOG_ONCE_MAX_MESSAGES } from '../src/logOnce.ts';
 
 describe('logOnce()', () => {
@@ -137,5 +137,70 @@ describe('logOnce()', () => {
     resetLogOnce();
     logOnce('a message');
     expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+  });
+  describe('with a warning ID', () => {
+    it('logs by default, ending the message with the ID', () => {
+      logOnce('a message.', 'warn', undefined, 'form-data-ignored');
+      logOnce('a message.', 'warn', undefined, 'form-data-ignored');
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message. [form-data-ignored]');
+    });
+    it('throws an RJSFWarningError, on every repeat, for an ID selected by its category', () => {
+      setWarningOptions({ throwOn: ['migration'] });
+      const cause = new Error('boom');
+      const thrown = expect.objectContaining({
+        name: 'RJSFWarningError',
+        message: 'a message: [form-data-ignored]',
+        id: 'form-data-ignored',
+        cause,
+      });
+      expect(() => logOnce('a message:', 'error', cause, 'form-data-ignored')).toThrow(RJSFWarningError);
+      expect(() => logOnce('a message:', 'error', cause, 'form-data-ignored')).toThrow(thrown);
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+    it('throws for an ID selected by itself, and logs one not selected', () => {
+      setWarningOptions({ throwOn: ['ui-widget-element'] });
+      expect(() => logOnce('a message', 'error', undefined, 'ui-widget-element')).toThrow(RJSFWarningError);
+      logOnce('another message', 'error', undefined, 'ui-widget-options-object');
+      logOnce('a third message', 'warn', undefined, 'form-data-ignored');
+      expect(consoleErrorSpy).toHaveBeenCalledExactlyOnceWith('another message [ui-widget-options-object]');
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a third message [form-data-ignored]');
+    });
+    it('logs an excepted ID, deduped, even where throwOn selects it', () => {
+      setWarningOptions({ throwOn: ['migration'], except: ['antd-span-twelfths'] });
+      logOnce('a message', 'warn', undefined, 'antd-span-twelfths');
+      logOnce('a message', 'warn', undefined, 'antd-span-twelfths');
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [antd-span-twelfths]');
+    });
+    it('never throws for a warning without an ID', () => {
+      setWarningOptions({ throwOn: ['migration', 'config'] });
+      logOnce('a message');
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message');
+    });
+    it('applies a changed setting to the next call, even for a message already logged', () => {
+      logOnce('a message', 'warn', undefined, 'form-data-both-seeds');
+      setWarningOptions({ throwOn: ['form-data-both-seeds'] });
+      expect(() => logOnce('a message', 'warn', undefined, 'form-data-both-seeds')).toThrow(RJSFWarningError);
+      setWarningOptions({});
+      logOnce('a message', 'warn', undefined, 'form-data-both-seeds');
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    });
+    it('keeps its own copy of the options, so changing them afterwards changes nothing', () => {
+      const throwOn: ('migration' | 'config')[] = [];
+      setWarningOptions({ throwOn });
+      throwOn.push('migration');
+      logOnce('a message', 'warn', undefined, 'form-data-ignored');
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [form-data-ignored]');
+    });
+    it('restores the default when called with no options', () => {
+      setWarningOptions({ throwOn: ['migration'] });
+      setWarningOptions();
+      logOnce('a message', 'warn', undefined, 'form-data-ignored');
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [form-data-ignored]');
+    });
+    it('keeps the setting across resetLogOnce()', () => {
+      setWarningOptions({ throwOn: ['config'] });
+      resetLogOnce();
+      expect(() => logOnce('a message', 'error', undefined, 'ui-widget-element')).toThrow(RJSFWarningError);
+    });
   });
 });

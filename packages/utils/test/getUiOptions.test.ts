@@ -101,7 +101,7 @@ describe('getUiOptions()', () => {
   it('returns widget object as empty, with error', () => {
     expect(getUiOptions(uiSchemaCase('widgetObject'))).toEqual(results.widgetObject);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Setting options via ui:widget object is no longer supported, use ui:options instead',
+      'Setting options via ui:widget object is no longer supported, use ui:options instead [ui-widget-options-object]',
     );
   });
   it('returns options object as options', () => {
@@ -141,7 +141,7 @@ describe('getUiOptions()', () => {
   it('drops a widget given as a React element, as it does any object that is not a component', () => {
     expect(getUiOptions({ 'ui:widget': createElement(MyWidget) as unknown as string })).toEqual({});
     expect(consoleErrorSpy).toHaveBeenLastCalledWith(
-      'ui:widget is a React element rather than a component (pass MyWidget, not <MyWidget />), so it is ignored.',
+      'ui:widget is a React element rather than a component (pass MyWidget, not <MyWidget />), so it is ignored. [ui-widget-element]',
     );
   });
   it('reads no global options from a null one, as a JSON uiSchema can give', () => {
@@ -161,7 +161,7 @@ describe('getUiOptions()', () => {
 
       expect(getUiOptions(given)).toEqual({ inline: true });
       expect(warnings.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        `ui:options.${name} is ignored, since ${name} can only be set through ui:${name}${where}. A custom widget's own option needs another name.`,
+        `ui:options.${name} is ignored, since ${name} can only be set through ui:${name}${where}. A custom widget's own option needs another name. [ui-options-key-ignored]`,
       );
     });
     it.each<[string, GenericObjectType]>([
