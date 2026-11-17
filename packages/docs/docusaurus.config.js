@@ -5,6 +5,7 @@ const { themes } = require('prism-react-renderer');
 const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
+const { sidebarItemsGenerator } = require('./plugins/upgrade-guide/sidebar.js');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'react-jsonschema-form',
@@ -42,6 +43,7 @@ const config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
+          sidebarItemsGenerator,
           editUrl: 'https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/docs/',
           lastVersion: 'current',
           versions: {
@@ -75,6 +77,8 @@ const config = {
       }),
     ],
   ],
+
+  plugins: ['./plugins/upgrade-guide'],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */

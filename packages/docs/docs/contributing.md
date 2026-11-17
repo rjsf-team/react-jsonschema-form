@@ -100,9 +100,37 @@ A breaking entry has the same shape:
 
 ## Upgrade guide
 
-A breaking change also gets a section in the upgrade guide for the next major version N, `packages/docs/docs/migration-guides/vN.x upgrade guide.md`, in the same PR. Create the file if it doesn't exist yet.
-The guide answers one question: "my code broke, what do I change?". Each section has a heading that names the change as users meet it, then says who it affects, what happened before and what happens now, and what to do instead, with a before/after `diff` when code has to change. Link the reference docs for anything more.
-New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide.
+A breaking change also gets an entry in the upgrade guide for the next major version N, in the same PR: one Markdown file, `packages/docs/docs/migration-guides/vN/<id>.md`. If the directory doesn't exist yet, also create `packages/docs/docs/migration-guides/vN.x upgrade guide.mdx` beside it, rendering `<UpgradeGuide version="vN" />`: the filtered page where readers pick their theme, validator, code and schemas.
+
+The guide answers one question: "my code broke, what do I change?". An entry is one action a reader takes: one thing to find and one change to make. Consequences of that change a reader should check are bullets under its `## Verify`. Split an entry only when a reader could need one action and not the other, or when the action differs per package (then one entry per theme or validator). A rule that reads the same in several themes is one entry listing them. Fixed crashes, unchanged behavior, rationale and new features are not entries.
+
+The id is the file name: lowercase kebab-case, at most 64 characters, naming the change as users meet it. An entry for exactly one theme or validator starts with that package's name without `@rjsf/`, e.g. `mantine-…` or `validator-ata-…`.
+
+The frontmatter says who the entry is for:
+
+- `title`: the change as users meet it, in sentence case. Plain text only: Docusaurus shows it as written, so no backticks, `*`, `[` or `<`. An `_` inside an identifier such as `ADDITIONAL_PROPERTY_FLAG` is fine.
+- `description`: one line of at most 260 characters in two sentences: what changed (the old behavior, then the new), then what to do about it. It has to make sense without the title or the body. Inline code is fine here. It is also the page's meta description and the text under the row's title on the filtered page.
+- `packages`: the packages it affects. A change every user meets lists `@rjsf/core`; `*` means every `@rjsf/*` package.
+- `uses`: how the reader's code meets it. `form` means every user of those packages, whatever their schema.
+- `schema`: optionally, the schema features it depends on. An entry with any applies only to readers whose schemas use one of them; leave it out when the schema doesn't matter.
+- `kind`: one of, in the order to apply them, `install`, `removal`, `type`, `runtime`, `markup`, `deprecation`. When several fit, pick the earliest.
+- `noticed`: how a TypeScript reader with tests first meets the change, one of `build` (installing, building or bundling fails), `type-error` (the type checker reports it; give the exact error text in `## Detect`), `runtime-error` (it throws or logs a console warning), `test` (only a test or snapshot fails) or `review` (nothing reports it, so the reader has to check). The filtered page counts the matching entries by this value.
+- `related`: optionally, ids of entries that must be read with this one.
+
+`packages/docs/plugins/upgrade-guide/vocabulary.js` is the single list of allowed `packages`, `uses`, `schema`, `kind` and `noticed` values, with what each one means; add a value there rather than inventing one in an entry.
+
+The body has no `#` title (the frontmatter `title` is the page title) and these `##` sections, in this order:
+
+- `## Detect`: concrete things to search for or observe (export, type or prop names, `ui:` keys, schema keywords, import paths, CSS classes, exact type-error text, a visible symptom) and where each one shows.
+- `## Change`: what to do, with a before/after `diff` when code has to change. Never "as above": each entry stands alone.
+- `## Verify`: what passing looks like, and the consequences of the change to check.
+- `## If you can't preserve it`: optional, only when the old behavior can't be kept.
+
+Write plain reference prose in short declarative sentences, as the rest of the docs do: no em or en dashes, no bold labels on list items, no "not X but Y" contrasts, no closing one-liners.
+
+Link another entry as `./<id>.md` and other docs with relative links; never link the `vN.x upgrade guide` page itself. `pnpm --filter ./packages/docs build` checks every entry against these rules and fails listing every problem it finds. It also writes the guide's `llms.txt`, a Markdown copy of each entry, and one combined file per theme and validator for agents.
+
+New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide; link them from the entry.
 
 ## Documentation
 

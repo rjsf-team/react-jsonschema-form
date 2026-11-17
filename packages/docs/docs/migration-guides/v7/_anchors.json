@@ -1,0 +1,672 @@
+{
+  "reading-form-internals-through-a-ref": ["form-ref-is-a-formref-handle"],
+  "form-owns-its-data-breaking-change": [
+    "initial-form-data-replaces-form-data",
+    "form-data-changes-after-mount-are-ignored",
+    "refuse-or-rewrite-edits-in-transform-change",
+    "defaults-are-filled-in-without-onchange",
+    "reset-goes-back-to-the-seed",
+    "onchange-runs-before-the-inputs-update",
+    "submit-after-edit-skips-browser-validation",
+    "live-validation-runs-for-every-edit",
+    "form-in-hidden-activity-drops-changes",
+    "custom-field-passes-form-data-to-array-object-field",
+    "callback-errors-no-longer-reach-error-boundary",
+    "get-default-form-state-fills-null-fields",
+    "set-field-value-fills-in-defaults",
+    "cleared-field-takes-a-changed-fields-default",
+    "transform-change-keeps-cleared-keys",
+    "changes-validated-as-before-6-11-1",
+    "omit-extra-data-submit-keeps-the-omitted-data",
+    "edit-clears-validator-errors-of-changed-fields",
+    "form-data-is-frozen-in-development"
+  ],
+  "the-model": ["initial-form-data-replaces-form-data"],
+  "what-to-change": [
+    "initial-form-data-replaces-form-data",
+    "form-data-changes-after-mount-are-ignored",
+    "refuse-or-rewrite-edits-in-transform-change",
+    "defaults-are-filled-in-without-onchange",
+    "reset-goes-back-to-the-seed",
+    "onchange-runs-before-the-inputs-update",
+    "submit-after-edit-skips-browser-validation",
+    "live-validation-runs-for-every-edit",
+    "form-in-hidden-activity-drops-changes",
+    "custom-field-passes-form-data-to-array-object-field",
+    "callback-errors-no-longer-reach-error-boundary"
+  ],
+  "show-other-data-after-mount": ["form-data-changes-after-mount-are-ignored"],
+  "refuse-or-rewrite-an-edit-in-transformchange": ["refuse-or-rewrite-edits-in-transform-change"],
+  "defaults-are-filled-in-without-onchange": [
+    "defaults-are-filled-in-without-onchange",
+    "get-default-form-state-fills-null-fields"
+  ],
+  "setfieldvalue-fills-in-the-defaults-of-the-value-it-writes": ["set-field-value-fills-in-defaults"],
+  "a-cleared-field-gives-way-or-stays-as-its-field-does": [
+    "cleared-field-takes-a-changed-fields-default",
+    "transform-change-keeps-cleared-keys"
+  ],
+  "reset-goes-back-to-the-seed": ["reset-goes-back-to-the-seed"],
+  "read-the-event-not-the-dom": ["onchange-runs-before-the-inputs-update"],
+  "submit-in-the-same-handler-as-an-edit": ["submit-after-edit-skips-browser-validation"],
+  "make-several-edits-as-one": ["live-validation-runs-for-every-edit"],
+  "a-form-inside-a-hidden-activity": ["form-in-hidden-activity-drops-changes"],
+  "custom-fields-that-wrap-arrayfield-or-objectfield": ["custom-field-passes-form-data-to-array-object-field"],
+  "handle-callback-errors-in-the-callback": ["callback-errors-no-longer-reach-error-boundary"],
+  "changes-and-submits-are-validated-as-before-6111": ["changes-validated-as-before-6-11-1"],
+  "also-note": [
+    "omit-extra-data-submit-keeps-the-omitted-data",
+    "edit-clears-validator-errors-of-changed-fields",
+    "form-data-is-frozen-in-development"
+  ],
+  "esm-only-packages": ["esm-only-packages", "umd-bundles-removed"],
+  "deep-imports-are-removed-breaking-change": [
+    "deep-imports-removed",
+    "compile-schema-validators-is-a-subpath",
+    "utils-default-state-internals-not-exported",
+    "theme-components-have-no-import-path"
+  ],
+  "rjsfshadcn-no-longer-ships-prebuilt-stylesheets-breaking-change": ["shadcn-prebuilt-stylesheets-removed"],
+  "getdefaultregistry-removed-breaking-change": ["get-default-registry-removed"],
+  "formgetregistry-is-now-the-buildregistry-export-breaking-change": ["form-get-registry-is-build-registry"],
+  "_internalformwrapper-removed-breaking-change": ["internal-form-wrapper-removed"],
+  "gettestregistry-moved-to-rjsfcoretesting-breaking-change": ["get-test-registry-moved-to-core-testing"],
+  "registry-members-are-read-only-breaking-change": ["registry-members-are-read-only", "test-registry-is-frozen"],
+  "schemaexamples-is-a-memo-component-breaking-change": ["schema-examples-is-a-memo-component"],
+  "registry-has-a-required-presentation-breaking-change": ["registry-requires-presentation-and-class-map"],
+  "registry-has-a-required-classmap-breaking-change": ["label-is-exported-as-fieldlabel"],
+  "rjsfcore-renders-unstyled-markup-bootstrap-3-moved-to-rjsfbootstrap3-breaking-change": [
+    "bootstrap-3-markup-moved-to-bootstrap3",
+    "core-layout-needs-rjsf-css",
+    "core-marker-classes-carry-rjsf-prefix",
+    "icon-button-draws-five-icons",
+    "field-template-keeps-core-layout-classes",
+    "layout-grid-column-width-is-span",
+    "date-element-has-no-default-class"
+  ],
+  "rjsfdaisyui-renders-cores-components-through-its-class-map-breaking-change": [
+    "daisyui-renders-core-components",
+    "theme-copies-of-core-templates-removed",
+    "daisyui-custom-buttons-add-btn-class",
+    "daisyui-file-widget-ignores-multiple-option",
+    "daisyui-checkboxes-need-presentation",
+    "themes-from-generators-need-generate-class-map"
+  ],
+  "rjsfshadcn-renders-cores-plain-html-templates-through-its-class-map-breaking-change": [
+    "shadcn-renders-core-templates"
+  ],
+  "schema-uischema-and-registry-props-are-read-only-breaking-change": ["component-props-are-read-only"],
+  "markdown-is-an-opt-in-template": [
+    "markdown-needs-markdown-template",
+    "rich-description-test-ids-removed",
+    "file-info-is-plain-text"
+  ],
+  "theme-removals": ["primereact-theme-removed", "semantic-ui-theme-removed"],
+  "rjsfprimereact": ["primereact-theme-removed"],
+  "rjsfsemantic-ui": ["semantic-ui-theme-removed"],
+  "theme-version-support-changes": [
+    "antd-requires-antd-6-7",
+    "mui-requires-material-9",
+    "mantine-requires-mantine-9-6-3",
+    "mantine-grid-gutter-is-gap"
+  ],
+  "rjsfantd": ["antd-requires-antd-6-7"],
+  "rjsfmui": ["mui-requires-material-9"],
+  "rjsfmantine": ["mantine-requires-mantine-9-6-3", "mantine-grid-gutter-is-gap"],
+  "rjsfchakra-ui-no-longer-requires-chakra-react-select-breaking-change": ["chakra-ui-drops-chakra-react-select-peer"],
+  "rjsfchakra-ui-applies-the-chakra-option-and-getchakra-takes-the-options-breaking-change": [
+    "chakra-ui-applies-chakra-option",
+    "chakra-ui-get-chakra-takes-options",
+    "chakra-ui-chakra-option-takes-style-props-only",
+    "chakra-ui-drops-emotion-is-prop-valid"
+  ],
+  "rjsfsnapshot-tests-no-longer-requires-testing-libraryjest-dom-breaking-change": [
+    "snapshot-tests-no-longer-requires-jest-dom"
+  ],
+  "each-rjsf-warning-is-logged-once-breaking-change": ["warnings-are-logged-once"],
+  "node-support": ["node-22-18-or-later-required"],
+  "react-version": ["react-19-2-required"],
+  "react-dom-is-a-peer-dependency-of-rjsfcore-breaking-change": ["react-dom-peer-of-core"],
+  "removal-of-defaultprops-support-on-widgets-breaking-change": ["widget-default-props-options-not-merged"],
+  "widget-type-breaking-change": ["widget-type-is-a-slot-component"],
+  "withtheme-breaking-change": ["with-theme-returns-a-function-component"],
+  "formpropsonsubmit-event-type-breaking-change": ["on-submit-event-is-a-submit-event", "types-react-19-2-18-required"],
+  "a-promise-onsubmit-returns-makes-the-form-pending-breaking-change": [
+    "async-on-submit-ignores-submits-until-settled",
+    "submit-button-aria-disabled-while-pending",
+    "async-on-submit-rejection-from-form-copy"
+  ],
+  "formrefreset-passed-as-an-event-handler-seeds-the-form-with-the-event-breaking-change": [
+    "form-ref-reset-as-event-handler-seeds-event"
+  ],
+  "objectfieldtemplatepropertytype-breaking-change": ["object-field-template-property-type-is-generic"],
+  "removal-of-deprecated-apis-breaking-change": [
+    "ui-root-field-id-removed",
+    "path-schema-helpers-removed",
+    "form-omit-extra-data-method-removed",
+    "remove-empty-optional-objects-removed",
+    "live-validate-live-omit-booleans-removed"
+  ],
+  "generic-defaults-are-unknown-instead-of-any-breaking-change": [
+    "form-data-type-defaults-to-unknown",
+    "form-ref-needs-form-data-type",
+    "bare-formprops-rejects-typed-handlers",
+    "change-event-form-data-undefined-for-scalar-root"
+  ],
+  "the-templates-prop-of-form-and-withtheme-checks-declared-templates-breaking-change": [
+    "templates-prop-checks-template-props",
+    "partial-templates-type-for-template-sets",
+    "templates-read-from-props-are-slot-components"
+  ],
+  "any-members-of-the-public-types-are-specific-types-breaking-change": [
+    "array-item-button-handlers-take-synthetic-event",
+    "style-option-is-css-properties",
+    "validation-error-params-are-unknown",
+    "raw-validation-returns-validator-error-type",
+    "custom-template-entries-have-never-props",
+    "ui-schema-entries-are-unknown",
+    "widget-value-is-unknown",
+    "field-and-widget-props-reject-undeclared-props",
+    "base-input-template-props-reject-extra-attributes",
+    "key-rename-handlers-are-optional",
+    "undeclared-ui-options-are-unknown",
+    "form-context-type-is-object",
+    "rjsf-schema-custom-keywords-need-augmentation",
+    "rjsf-schema-has-no-index-signature",
+    "generic-object-type-values-are-unknown",
+    "generic-symbol-object-type-removed",
+    "grid-template-props-declare-own-props",
+    "submit-button-options-props-are-unknown",
+    "bare-ui-schema-rejects-record-data",
+    "alt-date-widgets-read-only-string-dates",
+    "mantine-file-widget-passes-empty-files"
+  ],
+  "rjsfmarkedschema-has-no-index-signature-and-its-markers-are-unknown-breaking-change": [
+    "rjsf-marked-schema-has-no-index-signature"
+  ],
+  "additional_property_flag-counts-only-when-set-to-a-truthy-value-breaking-change": [
+    "additional-property-flag-counts-only-when-truthy"
+  ],
+  "createprecompiledvalidator-returns-its-validator-class-breaking-change": ["precompiled-validator-returns-its-class"],
+  "createprecompiledvalidator-takes-its-localizer-in-an-options-object-breaking-change": [
+    "precompiled-validator-takes-an-options-object"
+  ],
+  "a-localizer-gets-quoted-property-names-from-a-precompiled-or-ata-validator-breaking-change": [
+    "localizer-gets-quoted-property-names"
+  ],
+  "validatortype-and-customizevalidator-take-the-schema-as-their-first-type-argument-breaking-change": [
+    "validator-type-takes-schema-type-first"
+  ],
+  "baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change": [
+    "base-input-template-multiple-only-on-file-input"
+  ],
+  "rjsfdaisyui-ignores-a-size-color-or-colorgradient-of-another-type-breaking-change": [
+    "daisyui-rating-toggle-options-need-their-types"
+  ],
+  "altdatewidget-uses-the-default-years-for-a-yearsrange-reaching-before-100-breaking-change": [
+    "alt-date-years-range-before-100-uses-default-years"
+  ],
+  "withtheme-returns-a-themedform-breaking-change": ["with-theme-returns-a-themed-form"],
+  "errorschemat-and-formvalidationt-node-shapes-breaking-change": [
+    "typed-error-schema-matches-the-error-tree",
+    "form-validation-nodes-are-optional"
+  ],
+  "an-array-of-item-errors-is-keyed-by-index-breaking-change": ["error-schema-array-items-keyed-by-index"],
+  "extraerrors-now-blocks-submission-by-default-breaking-change": ["extra-errors-block-submit-by-default"],
+  "removal-of-the-experimental_experimental_-prefix-breaking-change": ["experimental-prefix-dropped"],
+  "timedate-time-formats-now-require-a-timezone-offset-breaking-change": [
+    "validator-ajv8-time-format-requires-timezone-offset",
+    "time-widget-appends-utc-offset"
+  ],
+  "uischemat-checks-field-names-breaking-change": [
+    "ui-schema-rejects-field-names-not-in-form-data",
+    "ui-schema-record-data-rejects-ui-keys",
+    "ui-schema-field-named-classnames-anyof-oneof",
+    "ui-schema-recursive-type-exceeds-stack-depth"
+  ],
+  "uioptions-types-the-options-rjsfs-widgets-read-breaking-change": [
+    "ui-options-types-the-options-widgets-read",
+    "ui-schema-variable-needs-annotation-for-typed-options",
+    "alt-date-range-is-a-readonly-tuple"
+  ],
+  "ratingwidget-stars-run-from-minimum-to-maximum-breaking-change": ["rating-widget-stars-run-from-minimum-to-maximum"],
+  "uischemadefinitions-drops-its-t-parameter-breaking-change": ["ui-schema-definitions-drops-form-data-type"],
+  "rjsfmantines-onchangeoverride-now-receives-the-change-event-breaking-change": [
+    "mantine-on-change-override-receives-the-change-event"
+  ],
+  "rjsfmantines-selectwidget-keeps-its-value-under-a-schema-default-breaking-change": [
+    "mantine-select-keeps-its-value-under-a-default"
+  ],
+  "rjsfmantines-colorwidget-reads-colorformat-instead-of-format-breaking-change": [
+    "mantine-color-widget-reads-color-format"
+  ],
+  "rjsfmantines-altdatewidget-renders-its-date-parts-through-selectwidget-breaking-change": [
+    "mantine-alt-date-parts-render-through-select-widget",
+    "mantine-alt-date-parts-show-two-digits",
+    "mantine-alt-date-parts-submit-the-option-index"
+  ],
+  "rjsfantds-onchangeoverride-is-now-called-for-a-numeric-field-breaking-change": [
+    "antd-on-change-override-called-for-numeric-field"
+  ],
+  "rjsfantds-gridtemplate-reads-a-columns-span-as-twelfths-breaking-change": [
+    "antd-grid-span-counts-twelfths",
+    "antd-grid-column-own-width-drops-span"
+  ],
+  "rjsfantd-starts-an-object-and-an-array-heading-and-labelalign-aligns-field-labels-too-breaking-change": [
+    "antd-object-and-array-headings-start",
+    "antd-label-align-aligns-field-labels"
+  ],
+  "a-layout-grid-row-without-a-column-template-lays-out-on-12-tracks-in-chakra-ui-fluentui-rc-and-shadcn-breaking-change": [
+    "layout-grid-row-without-template-uses-12-tracks"
+  ],
+  "a-custom-gridtemplate-is-handed-a-fieldid-breaking-change": ["custom-grid-template-receives-field-id"],
+  "field-identity-is-a-fieldpath-string-instead-of-a-fieldpathid-object-breaking-change": [
+    "fieldpathid-prop-is-fieldpath-and-id",
+    "optional-data-controls-beside-options-render-once",
+    "change-event-has-no-fieldpathid",
+    "tofieldpathid-and-usedeepcomparememo-removed"
+  ],
+  "ids-cant-collide-or-split-an-id-list-breaking-change": [
+    "ids-cant-collide-or-split-an-id-list",
+    "custom-part-ids-use-part-id",
+    "daisyui-time-input-id-renamed",
+    "mantine-part-ids-renamed",
+    "mui-part-ids-renamed",
+    "ids-change-native-form-field-names"
+  ],
+  "ichangeevent-members-are-read-only-breaking-change": [
+    "change-event-members-are-readonly",
+    "change-event-edit-removed"
+  ],
+  "ichangeevent-has-required-dirty-dirtyfields-touched-touchedfields-and-submitcount-and-formref-a-required-getstatus-breaking-change": [
+    "change-event-and-form-ref-need-status-members"
+  ],
+  "uiemptyvalue-extended-scope-breaking-change": ["ui-empty-value-fills-blank-fields-on-mount"],
+  "shallow-comparison-replaces-experimental_componentupdatestrategy-breaking-change": [
+    "experimental-component-update-strategy-removed",
+    "form-props-need-stable-references",
+    "callback-form-data-and-retrieved-schemas-are-shared"
+  ],
+  "a-type-list-follows-its-uiwidget-to-the-field-and-class-it-renders-breaking-change": [
+    "type-list-ui-widget-picks-the-field",
+    "type-list-field-class-names-the-rendered-field"
+  ],
+  "a-typeless-oneofanyof-of-constants-now-renders-as-a-select-breaking-change": [
+    "typeless-constant-options-render-a-select",
+    "schema-with-anyof-and-oneof-reads-anyof-first",
+    "labelled-boolean-constant-options-default-to-a-select",
+    "typeless-falsy-const-writes-data-with-const-as-defaults-never"
+  ],
+  "a-boolean-enum-labels-its-values-yesno-breaking-change": ["boolean-enum-values-labelled-yes-no"],
+  "uienumorder-orders-constant-anyofoneof-options-breaking-change": [
+    "ui-enum-order-orders-booleans-and-constant-options"
+  ],
+  "enumvalue-includes-null-objects-and-arrays-breaking-change": ["enum-value-type-includes-null-objects-and-arrays"],
+  "numberinteger-fields-no-longer-render-a-native-input-typenumber-by-default-breaking-change": [
+    "number-fields-render-text-input",
+    "number-pattern-blocks-submit-of-non-numeric-data",
+    "number-input-title-tooltip-and-name",
+    "number-field-form-data-can-hold-a-string"
+  ],
+  "a-baseinputtemplate-of-your-own-forwards-inputmode-and-pattern-breaking-change": [
+    "custom-base-input-template-forwards-input-mode-and-pattern",
+    "mui-html-input-slot-props-override-derived-attributes"
+  ],
+  "fieldtemplateprops-gains-a-required-keyname-breaking-change": [
+    "field-template-props-requires-key-name",
+    "custom-wrap-if-additional-template-reads-key-name"
+  ],
+  "uihideerror-now-suppresses-the-themes-error-styling-breaking-change": [
+    "ui-hide-error-suppresses-theme-error-styling",
+    "chakra-ui-checkboxes-invalid-only-with-visible-errors",
+    "custom-widget-error-state-from-has-widget-errors",
+    "custom-templates-take-error-state-from-has-errors",
+    "custom-field-rendering-field-template-passes-has-errors"
+  ],
+  "a-discriminated-cell-of-a-layout-grid-renders-through-schemafield-breaking-change": [
+    "layout-grid-discriminated-cell-renders-a-field-wrapper",
+    "layout-grid-cell-custom-selector-widget-and-template",
+    "custom-layout-multi-schema-field-renders-only-the-selector"
+  ],
+  "a-layoutgridfield-with-no-layout-or-a-cell-or-condition-naming-no-field-renders-nothing-breaking-change": [
+    "layout-grid-without-layout-or-field-renders-nothing"
+  ],
+  "a-layout-grid-cell-is-named-by-its-property-name-not-its-dotted-path-breaking-change": [
+    "layout-grid-cell-labelled-by-property-name",
+    "layout-grid-cell-name-prop-is-the-property-name"
+  ],
+  "enumoptionstypevalue-is-unknown-breaking-change": ["enum-option-value-is-unknown"],
+  "anyoffield-and-oneoffield-take-their-options-already-retrieved-breaking-change": [
+    "anyof-oneof-field-options-are-already-retrieved"
+  ],
+  "fieldtemplatepropsrawhelp-carries-an-element-uihelp-breaking-change": ["field-template-raw-help-can-be-an-element"],
+  "clearing-a-custom-error-now-also-clears-it-from-the-error-list-breaking-change": [
+    "cleared-custom-error-leaves-the-error-list"
+  ],
+  "an-error-a-field-raises-is-kept-apart-from-the-validators-breaking-change": [
+    "field-raised-errors-kept-apart-from-validator-errors"
+  ],
+  "the-errorschema-passed-to-onchange-holds-only-the-fields-own-errors-breaking-change": [
+    "onchange-error-schema-is-the-field-own-errors",
+    "array-field-no-longer-passes-error-schema-on-item-moves"
+  ],
+  "a-custom-arrayschemafield-is-handed-each-items-own-errors-as-rawerrors-breaking-change": [
+    "custom-array-schema-field-raw-errors-are-the-item-errors"
+  ],
+  "novalidate-now-turns-off-live-validation-on-blur-breaking-change": ["no-validate-turns-off-blur-validation"],
+  "formrefvalidate-takes-only-the-data-breaking-change": ["form-ref-validate-takes-only-the-data"],
+  "rjsfdaisyui-applies-uiclassnames-and-uistyle-on-the-field-wrapper-breaking-change": [
+    "daisyui-ui-class-names-and-style-on-field-wrapper",
+    "daisyui-wrap-if-additional-template-applies-style"
+  ],
+  "rjsfmantine-widgets-reference-rjsfs-ids-for-labels-and-descriptions-breaking-change": [
+    "mantine-markup-uses-rjsf-ids",
+    "mantine-group-labels-take-the-title-id",
+    "mantine-wrapper-options-reach-every-widget",
+    "mantine-inputs-named-by-field-id",
+    "mantine-custom-widgets-draw-errors-by-their-key"
+  ],
+  "getdisplaylabel-reads-a-booleans-widget-from-the-reduced-ui-options-breaking-change": [
+    "boolean-widget-in-ui-options-gets-its-label",
+    "unregistered-widget-component-takes-theme-default-label"
+  ],
+  "rjsfdaisyuis-date-and-label-markup-changed-breaking-change": [
+    "daisyui-date-widgets-commit-the-field-format",
+    "daisyui-field-label-and-widget-markup-changed",
+    "daisyui-custom-group-widgets-use-get-group-props",
+    "daisyui-date-picker-trigger-and-popup-markup-changed"
+  ],
+  "rjsfdaisyuis-usetheme-reads-the-stored-theme-and-themecontext-is-removed-breaking-change": [
+    "daisyui-use-theme-reads-the-stored-theme",
+    "daisyui-theme-context-removed"
+  ],
+  "rjsfdaisyui-no-longer-ships-srcstylescss-or-depends-on-tailwindcss-breaking-change": [
+    "daisyui-styles-css-and-tailwindcss-removed"
+  ],
+  "rjsfshadcns-selectwidget-names-its-combobox-and-fills-empty-placeholders-breaking-change": [
+    "shadcn-select-names-its-combobox-and-fills-placeholders"
+  ],
+  "rjsfshadcns-multiple-selectwidget-takes-its-fields-id-and-opens-only-on-user-action-breaking-change": [
+    "shadcn-multi-select-takes-field-id-and-opens-on-action"
+  ],
+  "rjsfshadcns-selectwidget-names-its-list-of-options-by-the-fields-label-breaking-change": [
+    "select-open-list-named-by-field-label"
+  ],
+  "rjsfshadcns-rangewidget-ignores-name-disabled-value-and-defaultvalue-from-uioptionsprops-breaking-change": [
+    "shadcn-range-ignores-form-controlled-props"
+  ],
+  "rjsfmantine-ignores-id-name-value-defaultvalue-readonly-autofocus-data-multiple-error-onchange-onblur-and-onfocus-in-uioptions-breaking-change": [
+    "mantine-ignores-form-controlled-ui-options"
+  ],
+  "rjsfmuis-widgets-keep-the-forms-value-disabled-state-and-handlers-over-uioptionsmui-breaking-change": [
+    "mui-ignores-form-controlled-props-in-ui-options-mui"
+  ],
+  "rjsfmuis-descriptions-render-a-div-rather-than-an-h6-breaking-change": ["mui-descriptions-render-a-div"],
+  "an-objects-or-an-arrays-group-has-rolegroup-and-the-fields-id-breaking-change": [
+    "object-and-array-groups-have-role-group"
+  ],
+  "altdatewidget-date-parts-are-named-in-every-theme-breaking-change": [
+    "alt-date-parts-named-by-field-label",
+    "translate-string-table-needs-new-keys",
+    "custom-select-widget-applies-aria-props",
+    "presentation-declares-description-order"
+  ],
+  "altdatewidget-hands-an-unset-date-part-on-as-undefined-and-usealtdatewidgetprops-returns-buttonsdisabled-breaking-change": [
+    "alt-date-unset-part-is-undefined",
+    "use-alt-date-widget-props-returns-buttons-disabled"
+  ],
+  "enumoptionvalueencoder-is-removed-in-favor-of-enumoptionsdomvalues-breaking-change": [
+    "enum-option-value-encoder-removed",
+    "enum-option-dom-values-use-index-prefix"
+  ],
+  "rjsfutils-schema-functions-take-a-schemacontext-in-place-of-the-validator-breaking-change": [
+    "schema-functions-take-schema-context",
+    "get-default-form-state-takes-a-props-object",
+    "schema-utils-type-adds-constrains-alike-and-get-filled-default",
+    "custom-merge-all-of-applies-in-every-schema-function",
+    "precompiled-validator-takes-custom-merge-all-of"
+  ],
+  "findselectedoptioninxxxof-returns-the-closest-option-for-options-with-no-discriminator-breaking-change": [
+    "find-selected-option-returns-closest-option"
+  ],
+  "a-layoutgridfield-cell-naming-a-property-beside-anyofoneof-or-of-options-with-no-discriminator-renders-the-field-breaking-change": [
+    "layout-grid-cell-beside-options-renders-the-field",
+    "layout-grid-cell-of-discriminated-option-renders-nothing"
+  ],
+  "a-layoutgridfield-cell-naming-a-property-of-discriminated-options-beside-the-grid-renders-nothing-breaking-change": [
+    "layout-grid-cell-of-discriminated-option-renders-nothing"
+  ],
+  "a-property-declared-beside-anyofoneof-and-in-an-option-is-read-from-beside-them-breaking-change": [
+    "property-beside-options-read-from-beside"
+  ],
+  "a-custom-objectfieldtemplate-asks-registryschemautilscanexpand-breaking-change": [
+    "object-field-template-calls-schema-utils-can-expand",
+    "schema-utils-type-gains-can-expand"
+  ],
+  "an-id-under-an-unknown-keyword-such-as-components-or-x--names-no-schema-breaking-change": [
+    "ref-to-id-under-unknown-keyword-throws"
+  ],
+  "localtoutc-can-return-null-breaking-change": ["local-to-utc-can-return-null"],
+  "a-non-object-fields-anyofoneof-option-renders-with-its-parents-keywords-breaking-change": [
+    "non-object-option-inherits-field-keywords",
+    "draft-04-boolean-exclusive-bounds-unsupported-in-options"
+  ],
+  "an-option-selector-stays-a-select-for-a-text-updown-or-range-uiwidget-its-options-inherit-breaking-change": [
+    "option-selector-stays-select-under-inherited-widget"
+  ],
+  "an-anyofoneof-option-naming-no-type-takes-its-fields-type-for-the-optional-data-controls-breaking-change": [
+    "optional-data-controls-read-typeless-options-as-field-type"
+  ],
+  "an-empty-object-counts-as-added-data-for-the-optional-data-controls-breaking-change": [
+    "optional-object-holding-empty-object-renders-open",
+    "is-form-data-available-true-for-empty-object",
+    "optional-object-with-options-draws-one-add-control"
+  ],
+  "an-optional-object-only-an-object-const-fills-starts-behind-its-add-button-breaking-change": [
+    "optional-object-filled-only-by-const-starts-behind-add"
+  ],
+  "a-fields-label-description-help-and-errors-are-drawn-where-its-plan-says-breaking-change": [
+    "display-label-raw-errors-hide-label-deprecated",
+    "field-template-reads-the-presentation-plan",
+    "custom-field-draws-own-label-and-description",
+    "array-field-item-display-label-follows-plan",
+    "widget-reads-the-presentation-plan",
+    "fields-draw-their-labels-differently",
+    "any-of-one-of-field-labelled-once-by-its-template",
+    "ui-label-false-and-empty-ui-title-change-what-shows",
+    "required-array-widget-needs-min-items",
+    "label-and-title-ids-move-to-spans",
+    "widget-under-built-in-key-takes-its-declaration",
+    "mantine-field-error-template-shows-unshown-errors",
+    "chakra-ui-ids-on-focused-elements",
+    "daisyui-title-label-ids-and-combobox-triggers",
+    "fluentui-rc-group-labels-required-and-title-ids",
+    "mui-slider-group-title-and-error-ids",
+    "react-bootstrap-group-label-title-and-help-ids",
+    "shadcn-range-group-label-title-and-help-ids"
+  ],
+  "breaking-changes-schema-resolution": [
+    "expand-cycle-reveals-one-level-per-click",
+    "retrieve-schema-leaves-nested-refs-unresolved",
+    "retrieved-schemas-carry-rjsf-provenance-key",
+    "ui-definitions-reach-anchor-and-extra-key-refs",
+    "validator-conditions-with-refs-hold-under-an-id-root",
+    "keywords-beside-a-ref-merge-as-an-allof",
+    "recursive-ref-defaults-stop-at-the-cycle",
+    "defaults-fill-more-then-dependency-and-ref-option-shapes",
+    "all-of-defaults-behavior-reaches-more-shapes",
+    "get-default-form-state-self-merging-root-gives-empty-object",
+    "root-schema-changed-in-place-is-not-reread",
+    "get-root-schema-returns-the-schema-as-passed",
+    "ui-definitions-keyed-by-ref-as-written",
+    "make-all-references-absolute-removed",
+    "option-scoring-reads-options-as-json-schema",
+    "precompiled-validator-code-must-be-regenerated",
+    "custom-validator-is-valid-receives-refs",
+    "dependency-oneof-option-matched-through-allof",
+    "validator-ata-precompiled-documents-inline-their-refs",
+    "junk-option-id-removed"
+  ],
+  "retrieveschema-resolves-one-level-at-a-time-breaking-change": [
+    "retrieve-schema-leaves-nested-refs-unresolved",
+    "retrieved-schemas-carry-rjsf-provenance-key"
+  ],
+  "expand-cycle-reveals-one-level-per-click-breaking-change": ["expand-cycle-reveals-one-level-per-click"],
+  "markers-on-resolved-schemas-breaking-change": [
+    "ui-definitions-reach-anchor-and-extra-key-refs",
+    "retrieve-schema-leaves-nested-refs-unresolved",
+    "retrieved-schemas-carry-rjsf-provenance-key",
+    "validator-conditions-with-refs-hold-under-an-id-root"
+  ],
+  "keywords-beside-a-ref-breaking-change": ["keywords-beside-a-ref-merge-as-an-allof"],
+  "getdefaultformstate-folds-over-the-schema-graph-breaking-change": [
+    "recursive-ref-defaults-stop-at-the-cycle",
+    "defaults-fill-more-then-dependency-and-ref-option-shapes",
+    "keywords-beside-a-ref-merge-as-an-allof",
+    "all-of-defaults-behavior-reaches-more-shapes",
+    "get-default-form-state-self-merging-root-gives-empty-object"
+  ],
+  "the-root-schema-is-treated-as-immutable-breaking-change": ["root-schema-changed-in-place-is-not-reread"],
+  "createschemautils-no-longer-rewrites-the-roots-refs-breaking-change": [
+    "get-root-schema-returns-the-schema-as-passed",
+    "ui-definitions-keyed-by-ref-as-written",
+    "make-all-references-absolute-removed"
+  ],
+  "option-matching-and-precompiled-validators-breaking-change": [
+    "option-scoring-reads-options-as-json-schema",
+    "precompiled-validator-code-must-be-regenerated",
+    "all-of-defaults-behavior-reaches-more-shapes"
+  ],
+  "validators-are-handed-pointers-into-the-root-schema-breaking-change": [
+    "custom-validator-is-valid-receives-refs",
+    "validator-conditions-with-refs-hold-under-an-id-root",
+    "option-scoring-reads-options-as-json-schema",
+    "dependency-oneof-option-matched-through-allof",
+    "precompiled-validator-code-must-be-regenerated",
+    "validator-ata-precompiled-documents-inline-their-refs",
+    "junk-option-id-removed"
+  ],
+  "option-selection-and-cycle-expansion-are-form-state": [
+    "selected-option-stays-while-you-type",
+    "custom-anyof-oneof-field-uses-option-selection",
+    "extra-keys-stubbed-once-with-the-selected-option",
+    "custom-objectfield-schema-must-be-retrieved",
+    "get-closest-matching-option-always-returns-an-option",
+    "custom-validator-isvalid-must-not-change-data",
+    "validator-ajv8-isvalid-validates-a-copy",
+    "switch-from-null-option-restores-default",
+    "ref-cycle-expansion-uses-expand-ref-cycle"
+  ],
+  "the-selected-option-no-longer-follows-the-data-while-you-type-breaking-change": [
+    "selected-option-stays-while-you-type",
+    "custom-anyof-oneof-field-uses-option-selection"
+  ],
+  "an-objects-extra-keys-are-stubbed-once-with-the-selected-option-breaking-change": [
+    "extra-keys-stubbed-once-with-the-selected-option",
+    "custom-objectfield-schema-must-be-retrieved"
+  ],
+  "getclosestmatchingoption-picks-among-the-candidates-breaking-change": [
+    "get-closest-matching-option-always-returns-an-option",
+    "selected-option-stays-while-you-type"
+  ],
+  "a-validators-isvalid-must-leave-the-data-as-it-is-breaking-change": [
+    "custom-validator-isvalid-must-not-change-data",
+    "validator-ajv8-isvalid-validates-a-copy"
+  ],
+  "switching-from-a-null-option-restores-the-fields-default": ["switch-from-null-option-restores-default"],
+  "cycle-expansion-is-form-state-breaking-change": ["ref-cycle-expansion-uses-expand-ref-cycle"],
+  "sanitize-is-a-diff-of-the-field-trees-breaking-change": [
+    "sanitize-keeps-or-drops-values-by-field-tree",
+    "option-switch-keeps-keys-the-new-option-takes",
+    "ui-required-and-omit-extra-data-read-option-on-screen"
+  ],
+  "uirequired-and-omitting-extra-data-read-the-option-on-screen": [
+    "ui-required-and-omit-extra-data-read-option-on-screen"
+  ],
+  "a-field-is-named-once-per-data-path-breaking-change": [
+    "named-custom-field-applies-once-per-data-path",
+    "custom-field-rendering-schemafield-gets-default-field"
+  ],
+  "getuioptions-returns-a-fields-options-alone-breaking-change": ["get-ui-options-returns-field-options-alone"],
+  "uioptions-ignores-field-and-the-other-keys-it-doesnt-take-breaking-change": [
+    "ui-options-field-and-reserved-keys-move-out",
+    "typed-ui-options-rejects-field-keys"
+  ],
+  "a-custom-field-rendering-fallbackfield-without-a-plan-has-the-value-field-draw-its-label-breaking-change": [
+    "custom-field-fallbackfield-value-field-draws-label"
+  ],
+  "uiglobaloptions-hold-only-the-options-rjsf-reads-there-breaking-change": [
+    "ui-global-options-hold-only-global-options",
+    "custom-global-options-declare-global-ui-options-keys",
+    "theme-global-options-use-theme-types",
+    "mantine-global-options-no-longer-reach-mantine-props",
+    "layout-grid-cells-read-globals-from-registry"
+  ],
+  "a-forbidden-extra-key-says-so-on-its-row-breaking-change": [
+    "forbidden-extra-key-row-shows-error",
+    "custom-templates-forward-key-not-allowed"
+  ],
+  "a-dependency-anyof-or-a-dependency-oneof-whose-options-dont-declare-the-dependencys-key-now-applies-breaking-change": [
+    "dependency-oneof-without-key-now-applies",
+    "dependency-anyof-merges-without-selector"
+  ],
+  "gridtype-operators-and-translatablestring-are-as-const-objects-breaking-change": [
+    "translatable-string-is-a-const-object"
+  ],
+  "mergeobjects-and-mergeschemas-require-an-object-first-argument-breaking-change": [
+    "merge-objects-requires-object-first-argument"
+  ],
+  "the-root-field-never-renders-the-optional-data-controls-breaking-change": [
+    "root-field-has-no-optional-data-controls"
+  ],
+  "an-additionalproperties-entry-never-renders-the-optional-data-controls-breaking-change": [
+    "additional-property-entry-has-no-optional-data-controls"
+  ],
+  "rjsfantds-colspan-is-keyed-by-the-widget-a-property-renders-breaking-change": [
+    "antd-col-span-keyed-by-rendered-widget",
+    "antd-custom-object-properties-set-rendered-as"
+  ],
+  "rjsfantd-and-rjsfmantine-leave-out-a-property-hidden-by-deprecatedhandling-or-uidefinitions-breaking-change": [
+    "hidden-property-left-out-in-antd-and-mantine"
+  ],
+  "a-ref-cycle-whose-field-renders-hidden-has-no-expand-button-breaking-change": [
+    "ref-cycle-hidden-field-has-no-expand-button"
+  ],
+  "an-array-items-handlers-do-only-what-its-buttons-can-breaking-change": [
+    "array-templates-disable-buttons-that-cannot-act",
+    "array-drag-and-drop-keeps-orderable-on"
+  ],
+  "copy-shows-only-from-a-tuples-last-fixed-item-on-breaking-change": ["tuple-copy-shows-from-last-fixed-item"],
+  "a-disabled-or-read-only-array-item-disables-its-own-buttons-breaking-change": [
+    "disabled-array-item-disables-its-buttons"
+  ],
+  "sanitizedatafornewschema-removes-the-keys-it-discards-and-leaves-out-objects-the-data-doesnt-hold-breaking-change": [
+    "sanitize-data-for-new-schema-removes-discarded-keys"
+  ],
+  "utilities-no-other-rjsf-package-uses-are-no-longer-exported-from-rjsfutils-breaking-change": [
+    "utils-exports-only-what-rjsf-packages-use"
+  ],
+  "propertynamesenum-renders-the-key-as-a-dropdown": [
+    "property-names-enum-key-renders-as-a-dropdown",
+    "custom-field-template-forwards-property-names-enum"
+  ],
+  "multiple-types-and-unconstrained-properties-can-be-edited-through-the-fallback-ui": [
+    "fallback-ui-renders-type-lists-with-a-type-selector",
+    "type-list-starting-with-null-renders-its-first-other-type"
+  ],
+  "changes-to-existing-utility-functions": [
+    "enum-option-helpers-match-options-by-encoded-value",
+    "ancestor-wins-default-applies-where-the-property-type-holds-it",
+    "defaults-drop-object-data-a-non-object-schema-holds",
+    "untyped-field-object-default-no-longer-fills-data",
+    "object-or-array-select-displays-its-label",
+    "removed-option-scoring-and-root-schema-utils",
+    "property-names-like-proto-are-read-as-own-keys",
+    "options-list-returns-undefined-for-non-constant-options",
+    "type-list-starting-with-null-renders-its-first-other-type",
+    "untyped-additional-property-renders-its-constraints",
+    "schema-change-keeps-data-the-new-schema-still-allows",
+    "should-render-optional-field-takes-a-field-path"
+  ],
+  "the-default-validator-is-a-client-module-breaking-change": ["validator-default-export-is-a-client-module"]
+}

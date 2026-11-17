@@ -1189,7 +1189,7 @@ const uiSchema: UiSchema = {
 
 ## Type-safe UiSchema
 
-`UiSchema<T>` checks that a nested key names a real field of `T` (see the [v7 upgrade guide](../migration-guides/v7.x%20upgrade%20guide.md#uischemat-checks-field-names-breaking-change)), but by default it does not check the _values_ given to a field's `ui:widget`/`ui:field`/`ui:options` against that field's type - a widget name that doesn't apply to the field it's on (`{ 'ui:widget': 'RangeWidget' }` on a `string` field), or a typo in a `ui:`-prefixed option name (`ui:wigdet`), still only surfaces at runtime, if at all.
+`UiSchema<T>` checks that a nested key names a real field of `T` (see the [v7 upgrade guide](../migration-guides/v7/ui-schema-rejects-field-names-not-in-form-data.md)), but by default it does not check the _values_ given to a field's `ui:widget`/`ui:field`/`ui:options` against that field's type - a widget name that doesn't apply to the field it's on (`{ 'ui:widget': 'RangeWidget' }` on a `string` field), or a typo in a `ui:`-prefixed option name (`ui:wigdet`), still only surfaces at runtime, if at all.
 
 `StrictUiSchema<Checks, T, S, F>` is the opt-in form of `UiSchema` that closes that gap. Pass it a `Checks` union and it narrows `ui:widget`, `ui:field` and `ui:options` (and their `ui:`-prefixed equivalents, e.g. `ui:placeholder`) to only the values valid for each field's form-data type, recursing into nested objects/arrays the same way. `@rjsf/utils` itself has no widgets of its own, so it has no vocabulary to pass - each theme exports its own `Checks` union next to its widgets; `@rjsf/core` exports `CoreUiOptionsChecks`, describing its own built-in widget/field/option vocabulary:
 
