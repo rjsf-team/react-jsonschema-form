@@ -13848,6 +13848,17 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema, ['x'])).toEqual(['x']);
       });
 
+      it('leaves an item of the default as it states it under `populate: never`, as it leaves a row', () => {
+        const schema: RJSFSchema = { type: 'array', default: [{}], items: item };
+        const fillNever = (formData?: unknown) =>
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } } },
+            { schema, rootSchema: schema, formData },
+          );
+        expect(fillNever([{}])).toEqual([{}]);
+        expect(fillNever()).toEqual([{}]);
+      });
+
       it('fills an item past the rows of the data when extra defaults are merged', () => {
         const schema: RJSFSchema = { type: 'array', default: [{}, {}], items: item };
         expect(

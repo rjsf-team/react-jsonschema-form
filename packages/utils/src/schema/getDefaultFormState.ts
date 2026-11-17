@@ -2702,8 +2702,9 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
 
   // Inject defaults into existing array defaults
   if (Array.isArray(defaults)) {
-    // Only an `items` schema has defaults to fill an item with: without one the item stays the copy it is
-    const hasItemsSchema = isSchemaObject<S>(schema.items);
+    // Only an `items` schema has defaults to fill an item with, and `populate: 'never'` fills no row the data holds
+    // with them: without either the item stays the copy it is
+    const fillsItems = !neverPopulate && isSchemaObject<S>(schema.items);
     defaults = defaults.map((item: unknown, idx) => {
       const isHeld = Array.isArray(rawFormData) && idx < rawFormData.length;
       const stated = foldChild<T, S, F>(
@@ -2719,7 +2720,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
         },
         memo,
       );
-      if (!hasItemsSchema || isHeld) {
+      if (!fillsItems || isHeld) {
         return stated;
       }
       // An item of the default no row of the data stands for is filled as the row holding it will be once the data
