@@ -6082,6 +6082,28 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       },
     );
 
+    // The keys an option's object `const` fills are a default, whether or not the option declares them, so switching
+    // back clears them rather than leaving a key no field renders
+    it.each<{ declares: string; option: RJSFSchema }>([
+      { declares: 'beside properties', option: { properties: { b: {} }, const: { b: 1 } } },
+      { declares: 'alone', option: { const: { b: 1 } } },
+    ])('clears the keys a const $declares filled on switching back', async ({ option }) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        [keyword]: [
+          { title: 'S', properties: { a: { type: 'string' } }, required: ['a'] },
+          { title: 'T', ...option },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x' } });
+
+      await user.selectOptions(elementOf(node, selectorId), 'T');
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 1 });
+      await user.selectOptions(elementOf(node, selectorId), 'S');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+    });
+
     // As when the new option declares a property, which the sanitize keeps the object's own keys beside, whether or not
     // the form's sanitize keeps the key the switch leaves beside them
     it.each<{ case: string; a: RJSFSchema; name?: RJSFSchema; initial: string; expected?: KindData }>([

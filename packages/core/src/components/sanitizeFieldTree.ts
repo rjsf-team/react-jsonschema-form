@@ -1078,9 +1078,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         );
       } else if (
         newChild === undefined &&
-        oldChild !== undefined &&
         !isEdited(ctx, childPath) &&
-        judgesAt(ctx, childPath, newValue[key], false)
+        judgesAt(ctx, childPath, newValue[key], false) &&
+        // A key the option switched away from fills without declaring it, as a key its object `const` names, renders
+        // under neither option, so it drops where the old fill puts it back, as the keys that option declares do
+        (oldChild !== undefined ||
+          (from !== undefined &&
+            oldPath !== undefined &&
+            isOldFill(from.ctx, [], undefined, [...oldPath, key], from.shownHere, newValue[key])))
       ) {
         next = DROP;
       }
