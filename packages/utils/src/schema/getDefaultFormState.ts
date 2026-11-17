@@ -2250,8 +2250,10 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
 
   let arrayDefault: unknown;
   const withItems = schema.minItems ? withItemsResolved(view, context.customMergeAllOf) : schema;
+  // Padding fills each item with the default the fill skips, so a field read without its defaults is left as given
   if (
     !schema.minItems ||
+    SKIPS_DEFAULTS in context ||
     isMultiSelect<T, S, F>(context, withItems, rootSchema) ||
     computeSkipPopulate<S, F>(context, withItems, rootSchema) ||
     schema.minItems <= defaultsLength
@@ -2260,10 +2262,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     arrayDefault = defaults || (!required && !requiredAsRoot) ? defaults : emptyDefault;
   } else {
     const defaultEntries: unknown[] = Array.isArray(defaults) ? defaults : [];
-    const fillerDefault =
-      SKIPS_DEFAULTS in context
-        ? undefined
-        : getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert).default;
+    const fillerDefault = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert).default;
 
     // Calculate filler entries for remaining items (minItems - existing raw data/defaults), each resolving the
     // uiSchema for its own final position (`defaultsLength + i`) the same way `ArrayField` resolves it once rendered,

@@ -3476,7 +3476,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         );
 
         it.each<[string, GenericObjectType, DefaultFormStateBehavior]>([
-          ['skipDefaults', { k: { n: [undefined] } }, {}],
+          ['skipDefaults', { k: {} }, {}],
           ['populateDefaults', { k: { y: 'Y', n: [1] } }, { allOf: 'populateDefaults' }],
         ])(
           "gives a key only an object's allOf declares the defaults nested in that allOf under %s as %j",
@@ -3503,6 +3503,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toStrictEqual({ own: { k: { y: 'Y', n: [1] } }, wrapped });
           },
         );
+
+        it("leaves an array key only an object's allOf declares as the object's default gives it under skipDefaults, without padding it to its minItems, as below an untyped field's allOf", () => {
+          const allOf: RJSFSchema[] = [
+            { properties: { arr: { type: 'array', minItems: 2, items: { type: 'string', default: 'i' } } } },
+          ];
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              typed: { type: 'object', default: { arr: [] }, allOf },
+              untyped: { default: { arr: [] }, allOf },
+            },
+          };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { typed: {}, untyped: {} } }),
+          ).toStrictEqual({ typed: { arr: [] }, untyped: { arr: [] } });
+        });
 
         it.each(['populateRequiredDefaults', 'skipDefaults'] as const)(
           'adds an optional property whose allOf holds a const as one with its own, under emptyObjectFields %s',
