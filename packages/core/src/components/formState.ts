@@ -1311,8 +1311,9 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // A reset re-runs the same "initial" defaults pass a first render does, so `ui:initialValue` applies again even
   // though this instance has generated defaults before.
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
-  // The defaults of a field offering options are those of the option it shows, which is the form's to keep
-  const fieldState = uiState && fieldStateOf(uiState, schemaUtils, heldPath);
+  // The defaults of a field offering options are those of the option it shows, which is the form's to keep. On
+  // construction there is no `uiState` yet, but the fields still show the option they match, so the fill asks the same
+  const fieldState = fieldStateOf(uiState ?? createUiState(), schemaUtils, heldPath);
   const defaultsOf = (
     utils: SchemaUtilsType<T, S, F>,
     ui: UiSchema<T, S, F> | undefined,
