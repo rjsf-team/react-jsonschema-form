@@ -1596,16 +1596,14 @@ describe('mergeReachesConst()', () => {
           const found = graph.node(id);
           return found.kind === 'schema' ? found : undefined;
         };
-        // The scope of a node, as `scopeAt()` walks it, and whether a plain search from a node finds a `const`
+        // The unconditional scope of a node, as `scopeAt()` walks it, and whether a plain search from a node finds a `const`
         const scope = (id: number, found = new Set<number>()) => {
           const member = schemaNode(id);
           if (member !== undefined && !found.has(id)) {
             found.add(id);
-            [member.ref, graph.child(id, 'then'), graph.child(id, 'else')]
-              .concat(
-                ['allOf', 'dependencies'].flatMap((keyword) => graph.subschemas(id, keyword).map(([, sub]) => sub)),
-              )
-              .forEach((sub) => sub !== undefined && scope(sub, found));
+            [member.ref, ...graph.subschemas(id, 'allOf').map(([, sub]) => sub)].forEach(
+              (sub) => sub !== undefined && scope(sub, found),
+            );
           }
           return found;
         };
@@ -1620,13 +1618,21 @@ describe('mergeReachesConst()', () => {
               if (members.some((member) => 'const' in member.raw)) {
                 return true;
               }
-              if (options || members.some((member) => 'dependencies' in member.raw)) {
-                members.forEach((member) =>
+              const readsOptions = options || members.some((member) => 'dependencies' in member.raw);
+              members.forEach((member) => {
+                if (readsOptions) {
                   ['anyOf', 'oneOf'].forEach((keyword) =>
                     graph.subschemas(member.id, keyword).forEach(([, option]) => pending.push([option, true])),
-                  ),
-                );
-              }
+                  );
+                }
+                ['then', 'else'].forEach((keyword) => {
+                  const branch = graph.child(member.id, keyword);
+                  if (branch !== undefined) {
+                    pending.push([branch, options]);
+                  }
+                });
+                graph.subschemas(member.id, 'dependencies').forEach(([, entry]) => pending.push([entry, true]));
+              });
             }
           }
           return false;
@@ -1646,6 +1652,20 @@ describe('mergeReachesConst()', () => {
     expect(mismatches).toEqual([]);
     // 2,000 graphs are walked, which takes a few seconds under coverage
   }, 30_000);
+
+  it('reads the options of a field only where retrieving it merges one, beside its own dependencies or in an entry', () => {
+    const graph = parseSchemaGraph({
+      definitions: {
+        Beside: { oneOf: [{ const: 'a' }], dependencies: { x: { properties: { y: {} } } } },
+        InThen: { oneOf: [{ const: 'a' }], if: {}, then: { dependencies: { x: { properties: { y: {} } } } } },
+        InEntry: { dependencies: { x: { oneOf: [{ const: 'a' }] } } },
+      },
+    });
+    const node = (pointer: string) => graph.byPointer(pointer) ?? -1;
+    expect(mergeReachesConst(graph, node('/definitions/Beside'))).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/InThen'))).toBe(false);
+    expect(mergeReachesConst(graph, node('/definitions/InEntry'))).toBe(true);
+  });
 
   it('settles every node of a cycle with the const one of them reaches', () => {
     const graph = parseSchemaGraph({

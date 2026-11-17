@@ -7,11 +7,13 @@ import {
   CONST_KEY,
   DEFAULT_KEY,
   DEPENDENCIES_KEY,
+  ELSE_KEY,
   ENUM_KEY,
   IF_KEY,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  THEN_KEY,
   UI_DEFINITIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
 } from '../constants.ts';
@@ -2591,11 +2593,12 @@ const constReach = new KeyedMemo<boolean | number | undefined>();
  */
 const constWalk: { open: (readonly unknown[])[]; low: number } = { open: [], low: Infinity };
 
-/** Whether any subschema retrieving the node `from` may merge in declares a `const`: one in its scope, see
- * `scopeOf()`, which holds its `$ref`, `allOf`, `then`/`else` and `dependencies` subschemas but no `if`, a condition
- * never merged into the field. Retrieving a field merges an `anyOf`/`oneOf` option in only where the scope reaches
- * `dependencies`, so the options of the scope are read only there, and below an option so merged (`withOptions`). A
- * merge brings in no `const` none of them declares, so where none does the field's schema is read without being merged
+/** Whether any subschema retrieving the node `from` may merge in declares a `const`: one its `$ref` and `allOf` merge
+ * in, see `scopeOf()`, or one its `then`/`else` and `dependencies` subschemas reach in turn, but no `if`, a condition
+ * never merged into the field. Retrieving a field merges an `anyOf`/`oneOf` option in only beside `dependencies` its
+ * `$ref` and `allOf` merge in, or in a `dependencies` entry, so options are read only there, and below an option so
+ * merged (`withOptions`). A merge brings in no `const` none of them declares, so where none does the field's schema is
+ * read without being merged
  *
  * @testSeam Exported for utils' own tests
  */
@@ -2623,15 +2626,22 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
   constWalk.low = place;
   let reaches: boolean | undefined;
   try {
-    const scope = scopeOf<S>(graph, from);
-    const readsOptions = withOptions || scope.some((node) => Object.hasOwn(node.raw, DEPENDENCIES_KEY));
-    reaches = scope.some(
+    const group = scopeOf<S>(graph, from, 'unconditional');
+    // The `dependencies` entries are always merged in, an option only of a list beside `dependencies`
+    const mergedLists =
+      withOptions || group.some((node) => Object.hasOwn(node.raw, DEPENDENCIES_KEY))
+        ? [ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY]
+        : [DEPENDENCIES_KEY];
+    const reachesAny = (subschemas: (NodeId | undefined)[], options: boolean) =>
+      subschemas.some((sub) => sub !== undefined && mergeReachesConst<S>(graph, sub, options));
+    reaches = group.some(
       (node) =>
         Object.hasOwn(node.raw, CONST_KEY) ||
-        (readsOptions &&
-          [ANY_OF_KEY, ONE_OF_KEY].some((keyword) =>
-            graph.subschemas(node.id, keyword).some(([, option]) => mergeReachesConst<S>(graph, option, true)),
-          )),
+        reachesAny([graph.child(node.id, THEN_KEY), graph.child(node.id, ELSE_KEY)], withOptions) ||
+        reachesAny(
+          mergedLists.flatMap((keyword) => graph.subschemas(node.id, keyword).map(([, sub]) => sub)),
+          true,
+        ),
     );
     return reaches;
   } finally {
