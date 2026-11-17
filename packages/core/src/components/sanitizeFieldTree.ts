@@ -645,19 +645,28 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (isOwnFill(ctx.oldSchemaUtils, oldLayers, oldDefault, value)) {
     return true;
   }
-  if (oldPath === undefined) {
-    return false;
+  return oldPath !== undefined && deepEquals(getByPath(oldFormFillWithout(ctx, [oldPath], shownAbove), oldPath), value);
+}
+
+/** The form's fill of the old data without the values at `oldPaths`, see `isOldFill()` */
+function oldFormFillWithout<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  oldPaths: readonly FieldPathList[],
+  shownAbove: ShownAbove | undefined,
+): unknown {
+  const copies = new WeakSet<object>();
+  let withoutValues = ctx.oldData;
+  for (const oldPath of oldPaths) {
+    withoutValues = copyAlongPath(withoutValues, oldPath, copies);
+    const holder: unknown = oldPath.length === 1 ? withoutValues : getByPath(withoutValues, oldPath.slice(0, -1));
+    // The fill fills an `undefined` item but skips a hole, which deleting it would leave
+    if (Array.isArray(holder)) {
+      holder[Number(oldPath[oldPath.length - 1])] = undefined;
+    } else {
+      unsetByPath(withoutValues, oldPath);
+    }
   }
-  const withoutValue = copyAlongPath(ctx.oldData, oldPath);
-  const holder: unknown = oldPath.length === 1 ? withoutValue : getByPath(withoutValue, oldPath.slice(0, -1));
-  // The fill fills an `undefined` item but skips a hole, which deleting it would leave
-  if (Array.isArray(holder)) {
-    holder[Number(oldPath[oldPath.length - 1])] = undefined;
-  } else {
-    unsetByPath(withoutValue, oldPath);
-  }
-  const formFill = ctx.fillAsFirstRender(ctx.oldTree, asFieldValue<T>(withoutValue), oldFieldStateOf(ctx, shownAbove));
-  return deepEquals(getByPath(formFill, oldPath), value);
+  return ctx.fillAsFirstRender(ctx.oldTree, asFieldValue<T>(withoutValues), oldFieldStateOf(ctx, shownAbove));
 }
 
 /** Whether `value` is what the field's own fill fills it with, starting from the option it showed and, as its data,
@@ -1030,6 +1039,21 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       shown,
       oldUiSchema,
     );
+    // The keys an object `const` of the option switched away from filled without either option declaring them, which
+    // that `const` fills all at once, so the old fill without them is made once for all of them
+    let undeclaredFill: { value: unknown } | undefined;
+    const undeclaredFillOf = (from: NonNullable<typeof heldSide>, heldPath: FieldPathList) => {
+      undeclaredFill ??= {
+        value: oldFormFillWithout(
+          from.ctx,
+          [...from.keys]
+            .filter((key) => !newProperties.has(key) && !from.properties.has(key))
+            .map((key) => [...heldPath, key]),
+          from.shownHere,
+        ),
+      };
+      return undeclaredFill.value;
+    };
     let result: Record<string, unknown> = newValue;
     for (const key of Object.keys(newValue)) {
       const childPath = [...path, key];
@@ -1085,7 +1109,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         (oldChild !== undefined ||
           (from !== undefined &&
             oldPath !== undefined &&
-            isOldFill(from.ctx, [], undefined, [...oldPath, key], from.shownHere, newValue[key])))
+            (newValue[key] === undefined ||
+              deepEquals(getByPath(undeclaredFillOf(from, oldPath), [...oldPath, key]), newValue[key]))))
       ) {
         next = DROP;
       }

@@ -6104,6 +6104,36 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(onChange.mock.lastCall?.[0].formData).toEqual({});
     });
 
+    it('fills the old data as many times on switching back for five keys a const filled as for one', async () => {
+      const fillsOnSwitchingBack = async (keys: number) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          [keyword]: [
+            { title: 'S', properties: { a: { type: 'string' } }, required: ['a'] },
+            { title: 'T', const: Object.fromEntries(Array.from({ length: keys }, (_, index) => [`b${index}`, 1])) },
+          ],
+        };
+        // Each fill reads the global options once
+        let reads = 0;
+        const uiSchema = {};
+        Object.defineProperty(uiSchema, 'ui:globalOptions', {
+          enumerable: true,
+          get: () => {
+            reads += 1;
+            return undefined;
+          },
+        });
+        const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { a: 'x' } });
+        await user.selectOptions(elementOf(node, selectorId), 'T');
+        const before = reads;
+        await user.selectOptions(elementOf(node, selectorId), 'S');
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+        return reads - before;
+      };
+
+      expect(await fillsOnSwitchingBack(5)).toBe(await fillsOnSwitchingBack(1));
+    });
+
     // As when the new option declares a property, which the sanitize keeps the object's own keys beside, whether or not
     // the form's sanitize keeps the key the switch leaves beside them
     it.each<{ case: string; a: RJSFSchema; name?: RJSFSchema; initial: string; expected?: KindData }>([
