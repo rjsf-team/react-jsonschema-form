@@ -629,7 +629,7 @@ class FieldPasses<S extends StrictRJSFSchema, F extends FormContextType> {
   private readonly rootSchema: S;
   private readonly data: unknown;
   private retrievals?: KeyedMemo<S>;
-  private retrievedViews?: WeakMap<DefaultsView<S>, DefaultsView<S>>;
+  private retrievedViews?: KeyedMemo<DefaultsView<S>>;
   private lastExtraKeySchema: unknown;
 
   constructor(context: SchemaContext<S, F>, rootSchema: S, data: unknown) {
@@ -663,13 +663,8 @@ class FieldPasses<S extends StrictRJSFSchema, F extends FormContextType> {
    * and the object's extra keys share one retrieve
    */
   retrievedViewOf(view: DefaultsView<S>): DefaultsView<S> {
-    this.retrievedViews ??= new WeakMap();
-    let known = this.retrievedViews.get(view);
-    if (known === undefined) {
-      known = retrieveView<S, F>(this.context, view);
-      this.retrievedViews.set(view, known);
-    }
-    return known;
+    this.retrievedViews ??= new KeyedMemo<DefaultsView<S>>();
+    return this.retrievedViews.get([view], () => retrieveView<S, F>(this.context, view));
   }
 }
 
@@ -1340,10 +1335,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // The constant wins over an inherited default, as it does for a primitive `const`, unless constants are never
       // defaults. The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by
       // `typeDefaults()`
+      // Any constant is reported, since only an object one is left out, and only an object value is folded without it
+      props.onObjectConst?.();
       const constant = toConstant<S>(choice.wholeOptions[choice.index]);
-      if (isObjectData(constant)) {
-        props.onObjectConst?.();
-      }
       if (
         rawFormData === undefined &&
         !foldsOptionUnderConst &&
