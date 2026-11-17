@@ -544,11 +544,11 @@ const NO_OPTIONS: OptionState = { selections: new Map(), chosen: new Set() };
 /** A child computed in an earlier pass of its object's dependency fixed point, and what it was computed from */
 interface MemoEntry {
   readonly inputs: readonly unknown[];
-  readonly value: unknown;
-  /** Whether `value` holds a `null` fill, which a hit reports again */
-  readonly holdsNull: boolean;
-  /** Whether the fold of `value` took an object `const`, which a hit reports again */
-  readonly objectConst: boolean;
+  value?: unknown;
+  /** Whether `value` holds a `null` fill, which a hit reports as its fold did */
+  holdsNull?: boolean;
+  /** Whether the fold of `value` took an object `const`, which a hit reports as its fold did */
+  objectConst?: boolean;
 }
 
 /** The props the fold hands each field: those of `computeDefaults()`, holding the data as it comes */
@@ -563,7 +563,7 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    */
   memo?: Map<string, MemoEntry>;
   /** What the passes of the field's fixed point share */
-  passes?: FieldPasses<S, F>;
+  passes?: FieldPasses<S>;
   /** Whether the field's object `const`, its own, a branch's or its shown option's, is left out of its defaults, to
    * tell whether anything else gives an optional object a value; its children's `const`s still count
    */
@@ -620,54 +620,50 @@ function childPathProps<T, S extends StrictRJSFSchema, F extends FormContextType
  */
 interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> extends FoldProps<T, S, F> {
   track: (view: DefaultsView<S>) => void;
-  passes: FieldPasses<S, F>;
+  passes: FieldPasses<S>;
 }
 
-/** What the passes of a field's dependency fixed point share, all of which read the same data. Only a field with an
- * object `const` or options uses it, so its stores are made on first use
- */
-class FieldPasses<S extends StrictRJSFSchema, F extends FormContextType> {
-  private readonly context: SchemaContext<S, F>;
-  private readonly rootSchema: S;
-  private readonly data: unknown;
-  private retrievals?: KeyedMemo<S>;
-  private retrievedViews?: KeyedMemo<DefaultsView<S>>;
-  private lastExtraKeySchema: unknown;
-
-  constructor(context: SchemaContext<S, F>, rootSchema: S, data: unknown) {
-    this.context = context;
-    this.rootSchema = rootSchema;
-    this.data = data;
-  }
-
+/** What the passes of a field's dependency fixed point share, all of which read the same data */
+interface FieldPasses<S extends StrictRJSFSchema> {
   /** Returns the `additionalProperties` of the object field as rendered, retrieved or joined with an option, sharing
    * what is equal with the one the last pass read. Each pass plans the field anew, so it retrieves anew, and the
    * extra-key schema it hands its children keeps its identity, so their memo hits
    */
-  shareExtraKeySchema<V>(extraKeySchema: V): V {
-    const shared = replaceEqualDeep(this.lastExtraKeySchema, extraKeySchema);
-    this.lastExtraKeySchema = shared;
-    return shared;
-  }
-
+  shareExtraKeySchema<V>(extraKeySchema: V): V;
   /** Returns `raw` as `retrieveSchema()` resolves it for the field's data, retrieved once for the life of the fixed
    * point: an option and the parent beside it, which every pass would otherwise retrieve again. `owner` and `slot` name
    * what `raw` is read from, since a parent without its options is a new object on every call
    */
-  retrieveOnce(owner: object, slot: string, raw: S): S {
-    this.retrievals ??= new KeyedMemo<S>();
-    return this.retrievals.get([owner, slot], () =>
-      retrieveSchema<unknown, S, F>(this.context, raw, this.rootSchema, this.data),
-    );
-  }
-
+  retrieveOnce(owner: object, slot: string, raw: S): S;
   /** Returns a view of the field as `SchemaField` retrieves it, settled once per view of a pass, so the `const` read
    * and the object's extra keys share one retrieve
    */
-  retrievedViewOf(view: DefaultsView<S>): DefaultsView<S> {
-    this.retrievedViews ??= new KeyedMemo<DefaultsView<S>>();
-    return this.retrievedViews.get([view], () => retrieveView<S, F>(this.context, view));
-  }
+  retrievedViewOf(view: DefaultsView<S>): DefaultsView<S>;
+}
+
+/** Returns the `FieldPasses` of a field's fixed point over `data`. Only a field with an object `const` or options uses
+ * them, so their stores are made on first use
+ */
+function fieldPasses<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  data: unknown,
+): FieldPasses<S> {
+  let lastExtraKeySchema: unknown;
+  let retrievals: KeyedMemo<S> | undefined;
+  let retrievedViews: KeyedMemo<DefaultsView<S>> | undefined;
+  return {
+    shareExtraKeySchema: (extraKeySchema) =>
+      (lastExtraKeySchema = replaceEqualDeep(lastExtraKeySchema, extraKeySchema)),
+    retrieveOnce: (owner, slot, raw) =>
+      (retrievals ??= new KeyedMemo<S>()).get([owner, slot], () =>
+        retrieveSchema<unknown, S, F>(context, raw, rootSchema, data),
+      ),
+    retrievedViewOf: (view) =>
+      (retrievedViews ??= new KeyedMemo<DefaultsView<S>>()).get([view], () =>
+        settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options),
+      ),
+  };
 }
 
 /** Returns the policy fields are planned with: which `allOf`s and `if`s are merged, and which options. An option of a
@@ -890,40 +886,9 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   return planView(context, expanded, planFor(seeds), options, data, depData);
 }
 
-/** Returns the schema the `const` of the field of `view` is read from: its own, or, where it holds none and an `allOf`
- * member or an `if` branch its plan left unmerged may give it one, the field as `SchemaField` retrieves it for the
- * data, which `passes` gives. Only an object `const` is read from that: the branch's other defaults, a primitive
- * `const` included, stay skipped as the plan skips them
- */
-function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
-  view: DefaultsView<S>,
-  passes: FieldPasses<S, F>,
-  defaultFormStateBehavior: DefaultFormStateBehavior | undefined,
-): S {
-  const { schema } = view;
-  if (
-    schema[CONST_KEY] !== undefined ||
-    view.field.retrieves ||
-    !(ALL_OF_KEY in schema || IF_KEY in schema) ||
-    !reachesObjectConst<S>(view.field, defaultFormStateBehavior)
-  ) {
-    return schema;
-  }
-  const retrievedSchema = passes.retrievedViewOf(view).schema;
-  return isObjectData(retrievedSchema[CONST_KEY]) ? retrievedSchema : schema;
-}
-
-/** Returns the field of `view` as `SchemaField` retrieves it, for the data the fold reads */
-function retrieveView<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  view: DefaultsView<S>,
-): DefaultsView<S> {
-  return settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
-}
-
 /** The `const` of a field, worked out once per view */
 interface FieldConst<S extends StrictRJSFSchema> {
-  /** The schema the `const` is read from, see `constSchemaOf()` */
+  /** The schema the `const` is read from, see `fieldConstOf()` */
   readonly schema: S;
   /** Whether the field takes the `const` as its default, see `constIsDefault()` */
   readonly isDefault: boolean;
@@ -931,30 +896,50 @@ interface FieldConst<S extends StrictRJSFSchema> {
   readonly object?: Record<string, unknown>;
 }
 
-/** Returns the `const` of the field of `view`, read from the field `passes` retrieves where `constSchemaOf()` says */
+/** Returns the `const` of the field of `view`, read from its own schema, or, where that holds none and an `allOf` member
+ * or an `if` branch its plan left unmerged may give it one, from the field as `SchemaField` retrieves it for the data,
+ * which `passes` gives. Only an object `const` is read from that: the branch's other defaults, a primitive `const`
+ * included, stay skipped as the plan skips them
+ */
 function fieldConstOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
-  passes: FieldPasses<S, F>,
+  passes: FieldPasses<S>,
 ): FieldConst<S> {
   const { defaultFormStateBehavior } = context;
-  const schema = constSchemaOf<S, F>(view, passes, defaultFormStateBehavior);
+  let { schema } = view;
+  if (
+    schema[CONST_KEY] === undefined &&
+    !view.field.retrieves &&
+    (ALL_OF_KEY in schema || IF_KEY in schema) &&
+    // The retrieve merges no option, so only an object `const` it reaches without one is worth retrieving for
+    reachesObjectConst<S>(view.field, defaultFormStateBehavior, false)
+  ) {
+    const retrievedSchema = passes.retrievedViewOf(view).schema;
+    if (isObjectData(retrievedSchema[CONST_KEY])) {
+      schema = retrievedSchema;
+    }
+  }
   const isDefault = constIsDefault<S>(schema, defaultFormStateBehavior);
   const value = schema[CONST_KEY];
   return { schema, isDefault, object: isDefault && isObjectData(value) ? value : undefined };
 }
 
-/** Whether a node, by graph, leads to an object `const`, see `reachesObjectConst()` */
+/** Whether a node, by graph, leads to an object `const`, see `reachesObjectConst()`: through options keyed by its id,
+ * without them by `-1 - id`
+ */
 const objectConstReach = new WeakMap<object, Map<NodeId, boolean>>();
 
 /** Whether a subschema the field may merge or show declares an object `const`: one a seed of the field, or a `$ref`,
  * `allOf`, `then`/`else`, `dependencies` or `anyOf`/`oneOf` option it leads to through those, declares. Only such a
  * field can give an object `const` that its plan leaves unmerged, or that the fold leaves out, so the rest are spared
- * the retrieve and the extra fold that look for one. None does where constants are never defaults
+ * the retrieve and the extra fold that look for one. None does where constants are never defaults. Without
+ * `viaOptions`, the `anyOf`/`oneOf` options are not followed
  */
 function reachesObjectConst<S extends StrictRJSFSchema>(
   { graph, seeds }: DefaultsField<S>,
   defaultFormStateBehavior: DefaultFormStateBehavior | undefined,
+  viaOptions = true,
 ): boolean {
   if (defaultFormStateBehavior?.constAsDefaults === 'never') {
     return false;
@@ -964,11 +949,11 @@ function reachesObjectConst<S extends StrictRJSFSchema>(
     answers = new Map<NodeId, boolean>();
     objectConstReach.set(graph, answers);
   }
-  return seeds.some(({ node }) => leadsToObjectConst<S>(graph, node, answers));
+  return seeds.some(({ node }) => leadsToObjectConst<S>(graph, node, answers, viaOptions));
 }
 
 /** Whether the node `start` of `graph`, or a subschema it leads to as `reachesObjectConst()` follows them, declares an
- * object `const`, recording each answer the walk settles in `answers`, so no node is walked again once settled. A node
+ * object `const`, recording each answer the walk settles in `answers`, keyed as `objectConstReach` keys them, so no node is walked again once settled. A node
  * that reaches one does, whichever walk finds it. A walk that finds none settles every node it visits, since each leads
  * only to nodes the walk visits too, while one that finds one leaves a node a cycle cut short unsettled
  */
@@ -976,33 +961,35 @@ function leadsToObjectConst<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   start: NodeId,
   answers: Map<NodeId, boolean>,
+  viaOptions: boolean,
 ): boolean {
   const visited = new Set<NodeId>();
   const walk = (id: NodeId): boolean => {
     const node = graph.node(id);
+    const key = viaOptions ? id : -1 - id;
     // A boolean or unresolved node declares nothing
-    if (answers.has(id) || visited.has(id) || node.kind !== 'schema') {
-      return answers.get(id) === true;
+    if (answers.has(key) || visited.has(key) || node.kind !== 'schema') {
+      return answers.get(key) === true;
     }
-    visited.add(id);
+    visited.add(key);
     const reaches =
       isObjectData(node.raw[CONST_KEY]) ||
       [
         ...(node.ref === undefined ? [] : [node.ref]),
         ...[THEN_KEY, ELSE_KEY].flatMap((keyword) => graph.child(id, keyword) ?? []),
-        ...[ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY].flatMap((keyword) =>
+        ...[ALL_OF_KEY, DEPENDENCIES_KEY, ...(viaOptions ? [ANY_OF_KEY, ONE_OF_KEY] : [])].flatMap((keyword) =>
           graph.subschemas(id, keyword).map(([, child]) => child),
         ),
       ].some(walk);
     if (reaches) {
-      answers.set(id, true);
+      answers.set(key, true);
     }
     return reaches;
   };
   const reaches = walk(start);
   if (!reaches) {
-    for (const id of visited) {
-      answers.set(id, false);
+    for (const key of visited) {
+      answers.set(key, false);
     }
   }
   return reaches;
@@ -1078,7 +1065,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const passProps = {
     ...props,
     memo: new Map<string, MemoEntry>(),
-    passes: new FieldPasses<S, F>(context, field.graph.rawRoot, data),
+    passes: fieldPasses<S, F>(context, field.graph.rawRoot, data),
     track,
     onNullFill,
   };
@@ -1160,41 +1147,34 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     props.leavesOutObjectConst,
   ];
   const leaf = leafOf(child);
-  for (const entry of [memo?.get(memoKey), leaf && leafDefaults.get(leaf)]) {
-    if (entry?.inputs.every((input, index) => Object.is(input, inputs[index]))) {
-      if (entry.holdsNull) {
-        props.onNullFill?.();
-      }
-      if (entry.objectConst) {
-        props.onObjectConst?.();
-      }
-      return entry.value;
+  let entry = [memo?.get(memoKey), leaf && leafDefaults.get(leaf)].find((held) =>
+    held?.inputs.every((input, index) => Object.is(input, inputs[index])),
+  );
+  if (entry === undefined) {
+    const computed: MemoEntry = { inputs };
+    computed.value = foldField<T, S, F>(context, child, {
+      ...props,
+      memo: undefined,
+      onNullFill: () => {
+        computed.holdsNull = true;
+      },
+      onObjectConst: () => {
+        computed.objectConst = true;
+      },
+    });
+    memo?.set(memoKey, computed);
+    if (leaf !== undefined && (typeof computed.value !== 'object' || computed.value === null)) {
+      leafDefaults.set(leaf, computed);
     }
+    entry = computed;
   }
-  let holdsNull = false;
-  let objectConst = false;
-  const value = foldField<T, S, F>(context, child, {
-    ...props,
-    memo: undefined,
-    onNullFill: () => {
-      holdsNull = true;
-    },
-    onObjectConst: () => {
-      objectConst = true;
-    },
-  });
-  if (holdsNull) {
+  if (entry.holdsNull) {
     props.onNullFill?.();
   }
-  if (objectConst) {
+  if (entry.objectConst) {
     props.onObjectConst?.();
   }
-  const entry = { inputs, value, holdsNull, objectConst };
-  memo?.set(memoKey, entry);
-  if (leaf !== undefined && (typeof value !== 'object' || value === null)) {
-    leafDefaults.set(leaf, entry);
-  }
-  return value;
+  return entry.value;
 }
 
 /** Computes the defaults of a field from its view: the `const`, `default` and parent defaults that apply to it, the
@@ -1875,7 +1855,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
-  const passes = props.passes ?? new FieldPasses<S, F>(context, rootSchema, rawFormData);
+  const passes = props.passes ?? fieldPasses<S, F>(context, rootSchema, rawFormData);
   // An object `const` the field defaults to. Where the fold leaves its value out, it still closes the object to the
   // keys it names, so a default of the object's for those keys is still seeded, as the value it starts with
   const objectConst = (fieldConst ?? fieldConstOf<S, F>(context, view, passes)).object;
@@ -2036,30 +2016,34 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         defaultFormStateBehavior?.emptyObjectFields,
         hasConst,
       );
-      // Such an object starts out without a value where only an object `const` gives it one, its own, a branch's or its
-      // option's, as an empty default would: the `const` is its value once the user adds it. Whatever else gives it a
-      // value, a default or `const` of its properties, a default of its own, a `ui:initialValue` or the object's
-      // defaults, opens it as it opens any object. A fold that took no object `const` already computed its value without
-      let withoutConst =
-        isFormDataAvailable(added[key]) && mayHoldObjectConst && isObjectData(property.value) ? property : undefined;
-      if (withoutConst?.takesObjectConst) {
-        withoutConst = foldReporting(context, `withoutConst:${key}`, child, {
-          ...ownProps,
-          nullFills: propertyNullFills,
-          leavesOutObjectConst: true,
-        });
-      }
-      const valueWithout = withoutConst?.value;
-      if (
-        withoutConst &&
-        (valueWithout === undefined || (isObjectData(valueWithout) && Object.keys(valueWithout).length === 0))
-      ) {
-        property = withoutConst;
-        leavesOutConst = true;
-      } else if (isFormDataAvailable(added[key])) {
-        // The collapsed fold left out the `null` fills and the collapses of the optional objects inside, so the one
-        // it opens is folded again as it renders
-        property = foldReporting(context, `property:${key}`, child, ownProps);
+      if (isFormDataAvailable(added[key])) {
+        // Such an object starts out without a value where only an object `const` gives it one, its own, a branch's or
+        // its option's, as an empty default would: the `const` is its value once the user adds it. Whatever else gives
+        // it a value, a default or `const` of its properties, a default of its own, a `ui:initialValue` or the
+        // object's defaults, opens it as it opens any object. A fold that took no object `const` already computed its
+        // value without
+        const withoutConst =
+          mayHoldObjectConst && isObjectData(property.value)
+            ? property.takesObjectConst
+              ? foldReporting(context, `withoutConst:${key}`, child, {
+                  ...ownProps,
+                  nullFills: propertyNullFills,
+                  leavesOutObjectConst: true,
+                })
+              : property
+            : undefined;
+        const valueWithout = withoutConst?.value;
+        if (
+          withoutConst &&
+          (valueWithout === undefined || (isObjectData(valueWithout) && Object.keys(valueWithout).length === 0))
+        ) {
+          property = withoutConst;
+          leavesOutConst = true;
+        } else {
+          // The collapsed fold left out the `null` fills and the collapses of the optional objects inside, so the one
+          // it opens is folded again as it renders
+          property = foldReporting(context, `property:${key}`, child, ownProps);
+        }
       }
     }
     if (property.holdsNull) {

@@ -1444,6 +1444,36 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     expect(folds).toBe(2);
   });
 
+  it('retrieves no field for an object const only an option offers, which the retrieve never merges', () => {
+    const counting = miniValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        x: {
+          type: 'object',
+          properties: { t: { type: 'string', default: 'a' } },
+          allOf: [
+            {
+              if: { properties: { t: { const: 'a' } } },
+              then: { properties: { u: { type: 'string', default: 'u' } } },
+            },
+          ],
+          oneOf: [{ properties: { b: { type: 'string' } } }, { const: { a: 1 } }],
+        },
+      },
+    };
+    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { t: 'a' } });
+    // Retrieving `x` would check its `if`
+    expect(counting.calls).toBe(0);
+    // Where the unmerged `allOf` reaches one itself, the retrieve looks for it, and finds none where the `if` fails
+    const branch: RJSFSchema = {
+      type: 'object',
+      properties: { x: { type: 'object', allOf: [{ if: { required: ['t'] }, then: { const: { a: 1 } } }] } },
+    };
+    expect(defaultsOf(branch, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({});
+    expect(counting.calls).toBeGreaterThan(0);
+  });
+
   describe('definitions that all refer to one another', () => {
     function dense(size: number): RJSFSchema {
       const definitions: Record<string, RJSFSchema> = {};
