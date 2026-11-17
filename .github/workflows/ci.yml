@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  # None of these depend on the Node version or on a build, so they run once in their own job rather
-  # than on one leg of the build matrix: a failure reports on its own instead of cancelling the other
+  # Apart from the Node version-file check, none of these depend on the Node version or on a build, so
+  # they run once in their own job rather than on one leg of the build matrix: a failure reports on its own instead of cancelling the other
   # legs and withholding every build result. `cs-check` runs ahead of `lint` so the one
   # failure that has an automatic fix is never hidden behind the slowest step.
   checks:
@@ -22,7 +22,7 @@ jobs:
         run: |
           v=$(tr -d '\r' < .nvmrc)
           [[ $v =~ ^[0-9]+$ ]] || { echo "::error::.nvmrc ($v) is not a bare major"; exit 1; }
-          sed -n '/^  build:/,/^  [a-z_]*:$/p' .github/workflows/ci.yml | grep -qE "^ *node-version: \[.*\b$v\.x\b" || { echo "::error::no build matrix leg is $v.x, the .nvmrc version"; exit 1; }
+          yq '.jobs.build.strategy.matrix."node-version"[]' .github/workflows/ci.yml | grep -qx "$v.x" || { echo "::error::no build matrix leg is $v.x, the .nvmrc version"; exit 1; }
           [ "$(tr -d '\r' < .node-version)" = "$v" ] || { echo "::error::.node-version doesn't match .nvmrc ($v)"; exit 1; }
           grep -qE "^ *NODE_VERSION = \"$v\"" netlify.toml || { echo "::error::netlify.toml's NODE_VERSION doesn't match .nvmrc ($v)"; exit 1; }
       - uses: pnpm/action-setup@v6
