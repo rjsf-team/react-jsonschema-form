@@ -1,3 +1,7 @@
+'use client';
+
+// The entry is the client boundary: @fluentui/react-icons breaks on a server import
+
 import FluentForm from './FluentForm/index.ts';
 
 export { default as Form, generateForm } from './FluentForm/index.ts';

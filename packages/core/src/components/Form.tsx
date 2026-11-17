@@ -1,3 +1,5 @@
+'use client';
+
 import type { ElementType, MouseEvent, ReactNode, Ref, SubmitEvent } from 'react';
 import {
   memo,

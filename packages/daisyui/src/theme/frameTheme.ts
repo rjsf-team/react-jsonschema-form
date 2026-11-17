@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext } from 'react';
 
 /** The theme the `DaisyUIFrameProvider` around a component shows, handed down so that `useTheme()` names it from the

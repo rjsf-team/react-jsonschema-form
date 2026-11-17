@@ -1,3 +1,7 @@
+'use client';
+
+// @ant-design/icons creates a context as it loads, without 'use client', which breaks a server component's import
+
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,

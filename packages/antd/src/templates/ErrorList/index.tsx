@@ -1,3 +1,7 @@
+'use client';
+
+// @ant-design/icons creates a context as it loads, without 'use client', which breaks a server component's import
+
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';

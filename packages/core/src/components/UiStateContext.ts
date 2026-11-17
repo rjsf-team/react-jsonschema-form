@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext } from 'react';
 
 import type { UiState } from './uiState.ts';

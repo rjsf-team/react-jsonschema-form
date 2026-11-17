@@ -11,6 +11,6 @@
     "types": ["vitest/globals", "node", "@testing-library/jest-dom/vitest"],
     "customConditions": ["@rjsf/source"]
   },
-  "include": ["packages/*/src", "packages/*/test", "testing"],
+  "include": ["packages/*/src", "packages/*/test", "testing", "tsdown.base.mts"],
   "exclude": ["packages/chakra-ui", "packages/docs", "packages/playground"]
 }
