@@ -47,6 +47,9 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
+      - name: Read the deploy Node version
+        id: nvmrc
+        run: echo "node-version=$(cat .nvmrc).x" >> "$GITHUB_OUTPUT"
 
       - name: Build with Netlify badge
         run: pnpm run build-serial
@@ -59,12 +62,12 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-      - if: matrix.node-version == '26.x'
+      - if: matrix.node-version == steps.nvmrc.outputs.node-version
         uses: actions/upload-artifact@v7
         with:
           name: playground
           path: packages/playground/dist
-      - if: matrix.node-version == '26.x'
+      - if: matrix.node-version == steps.nvmrc.outputs.node-version
         uses: actions/upload-artifact@v7
         with:
           name: docs
