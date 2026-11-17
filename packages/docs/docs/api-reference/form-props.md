@@ -253,11 +253,11 @@ Which schema that is depends on what the form is doing:
 - Some actions compute defaults from a subschema as if it were the root, such as adding an array item or optional data, or switching a `oneOf` or `anyOf` option, so that subschema's own `allOf` provides its defaults with either value. When switching options, though, the `if` of an `if-then-else` in the new option's `allOf` is checked against the data of the option being left, so under `skipDefaults` its `then` default is filled in only when that data matches the `if`.
 - The option picked on the initial render is not computed as if it were the root, even when its `oneOf` or `anyOf` is in the root schema, so under `skipDefaults` its `allOf` is left out until the user switches away from that option and back.
 
-The branch of an `if-then-else` is picked from the form data, not from the computed defaults, except in a `dependencies` entry, as the last item below says:
+The branch of an `if-then-else` is picked from the form data with the computed defaults filled in, so a default decides the `if` as the same value in the form data does, and a value the form data holds wins over the default:
 
-- When the `if` lists a property in `required` and only a default provides that property, the `then` default is left out until the form data holds the value, for instance on the initial render.
-- Without `required`, a missing property still satisfies the `if`'s `properties`, so such an `if` passes with no data, and its `then` default is filled in even when the `if` does not match the defaulted value.
-- With one `allOf` entry per `enum` value and no form data, the default `allOf` merger merges the `then` defaults of all the entries, and the first entry that defaults a property wins. A `customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf` instead.
+- When the `if` lists a property in `required` and only a default provides that property, the `then` default is filled in, on the initial render too.
+- Without `required`, a missing property still satisfies the `if`'s `properties`, but a default that does not match the `if` picks the `else`, so the `then` default is left out.
+- With one `allOf` entry per `enum` value and no form data, the `then` default of the entry the defaulted value matches is filled in. A `customMergeAllOf` that throws on the conflicting `default`s the entries bring together still warns about them, before the defaulted value picks its entry.
 
 An `allOf` in an object property or in an array's `items` is skipped as a whole, plain property defaults included, so it usually needs `populateDefaults` to provide its defaults.
 This is specific to `allOf`:
