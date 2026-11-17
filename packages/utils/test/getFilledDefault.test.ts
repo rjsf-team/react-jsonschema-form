@@ -1,5 +1,5 @@
 import type { PropertyPlacement, RJSFSchema, SchemaContext } from '../src/index.ts';
-import { getFilledDefault } from '../src/index.ts';
+import { getDefaultFormState, getFilledDefault } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
 const descendantWins: SchemaContext = { validator: getTestValidator({}) };
@@ -467,6 +467,20 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
     },
   ])('$name', ({ context, schema, placement, expected }) => {
     expect(getFilledDefault(context, schema, schema, undefined, placement)).toEqual(expected);
+  });
+
+  // The fill seeds the keys an object `const` that closes the object names, whatever `emptyObjectFields` says, as on
+  // the issue's own schema (#5644), and no other undeclared key
+  it.each([
+    { inherited: { a: 2 }, expected: { a: 2 } },
+    { inherited: { a: 2, b: 3 }, expected: { a: 2 } },
+  ])('keeps the keys of an object const that closes the object, from $inherited', ({ inherited, expected }) => {
+    const x: RJSFSchema = { type: 'object', const: { a: 2 } };
+    const root: RJSFSchema = { type: 'object', default: { x: inherited }, properties: { x } };
+
+    expect(getDefaultFormState(descendantWins, { schema: root, rootSchema: root })).toEqual({ x: expected });
+    expect(getFilledDefault(descendantWins, x, root, inherited, optional)).toEqual(expected);
+    expect(getFilledDefault(populateRequired, x, root, inherited, required)).toEqual(expected);
   });
 
   it('leaves the object default whole without a placement', () => {

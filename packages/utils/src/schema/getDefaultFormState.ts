@@ -1011,6 +1011,19 @@ function leadsToObjectConst<S extends StrictRJSFSchema>(
   return reaches;
 }
 
+/** The object `const` the object field `schema` takes as its default where it closes the object to the keys it names:
+ * the field takes no extra key, so the defaults seed a key it names that no property declares from it alone, whatever
+ * `emptyObjectFields` says. `objectConst` is the one the field defaults to, read off `schema` where not given, as
+ * `getFilledDefault()` reads it
+ */
+export function closingConstOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  objectConst: unknown = constIsDefault<S>(schema, context.defaultFormStateBehavior) ? schema[CONST_KEY] : undefined,
+): GenericObjectType | undefined {
+  return isObjectData(objectConst) && !allowsAdditionalProperties<S, F>(context, schema) ? objectConst : undefined;
+}
+
 /** Whether the field of `schema` takes a `const` as its default: its own `const`, or one `hasConst` says it has where
  * `schema.const` doesn't show it, a `const` an ancestor gives it or its own spelled out as `undefined`; unless
  * `constAsDefaults` is `'never'` or the field's `const` is an Ajv `$data` reference
@@ -2104,7 +2117,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // `ui:initialValue` takes priority over the `const` as the object's default, so beside one only the keys of the
   // `const` it gives are seeded, read from it on the first pass, the one it is the default of, as a declared key is.
   // Only a key the defaults hold has a value to seed
-  const closingConst = objectConst && !takesExtraKeys ? objectConst : undefined;
+  const closingConst = objectConst && closingConstOf<S, F>(context, extraKeysField, objectConst);
   const readsInitialValue = closingConst && getUiOptions<T, S, F>(uiSchema).initialValue !== undefined;
   const constDefaults =
     closingConst && isObject(defaults) && !(readsInitialValue && initialDefaultsGenerated) ? defaults : undefined;
