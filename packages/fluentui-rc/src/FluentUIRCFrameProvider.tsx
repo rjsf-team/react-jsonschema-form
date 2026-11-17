@@ -22,7 +22,7 @@ const FluentWrapper = (props: FluentUIRCFrameProviderProps & { targetDocument?: 
   return (
     <RendererProvider renderer={renderer} targetDocument={targetDocument}>
       {/* `FluentProvider` paints only its own box, so the frame's page takes the same background around it */}
-      <style>{`body { background: ${theme.colorNeutralBackground1}; }`}</style>
+      {targetDocument && <style>{`body { background: ${theme.colorNeutralBackground1}; }`}</style>}
       <FluentProvider targetDocument={targetDocument} theme={theme}>
         {children}
       </FluentProvider>
