@@ -16,7 +16,7 @@ related: []
 
 ## Change
 
-Once the form has generated its defaults (`initialDefaultsGenerated`), `getDefaultFormState()` keeps an untyped field's object data as it stands, as it already did for a `type: 'object'` field. With `{ default: { a: 1 } }` and data `{ b: 2 }`, the result used to be `{ a: 1, b: 2 }` and is now `{ b: 2 }`.
+Once the form has generated its defaults (`initialDefaultsGenerated`), `getDefaultFormState()` keeps an untyped field's object data as it stands, as it already did for a `type: 'object'` field. With `{ default: { a: 1 } }` and data `{ b: 2 }`, the result used to be `{ a: 1, b: 2 }` and is now `{ b: 2 }`. Object data the field can't take, such as one its `allOf` types as a string, still takes its defaults.
 
 To keep filling those keys, give the field a type and declare them as properties with defaults ([#5523](https://github.com/rjsf-team/react-jsonschema-form/issues/5523)):
 

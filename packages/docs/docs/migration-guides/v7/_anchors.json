@@ -662,6 +662,8 @@
     "ancestor-wins-default-applies-where-the-property-type-holds-it",
     "defaults-drop-object-data-a-non-object-schema-holds",
     "untyped-field-object-default-no-longer-fills-data",
+    "all-of-one-value-options-keep-the-data",
+    "all-of-const-takes-precedence-under-const-as-defaults-always",
     "object-or-array-select-displays-its-label",
     "removed-option-scoring-and-root-schema-utils",
     "property-names-like-proto-are-read-as-own-keys",
