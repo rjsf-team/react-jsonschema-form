@@ -1700,6 +1700,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
             mergedConstSchemaOf<S, F>(
               context,
               readProperty,
+              formData[key],
               () => rootProvenance<S>(graph, seeds),
               (field) => retrieveField<S, F>(context, field, formData[key]),
             ) !== undefined));
@@ -2583,6 +2584,7 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
       mergedConstSchemaOf<S, F>(
         context,
         view.schema,
+        view.data,
         () => fieldOfView<S>(view),
         () => mergedSchemaOf<S, F>(context, view),
       ) ?? view.schema;
@@ -2591,15 +2593,17 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   return merged.constSchema;
 }
 
-/** The schema of a field, `schema` as written, merged for its data by `merge`, where that brings in a `const`. A
+/** The schema of a field, `schema` as written, merged for its `data` by `merge`, where that brings in a `const`. A
  * `const` a merging keyword the plan left unmerged brings in is the field's as one of its own is: it fills the field
  * under any `constAsDefaults` but `'never'`, and under `'always'` takes precedence over the data. So it is read from the
  * merged schema, so that a condition on the data picks the `const`, as `formDataMatching()` reads it. A merged schema
- * left with no `const`, as where the branch holding it isn't taken, gives the field none
+ * left with no `const`, as where the branch holding it isn't taken, gives the field none. A field that holds no data
+ * gives a condition nothing to test, so no `then`/`else` gives it a `const`
  */
 function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   schema: S,
+  data: unknown,
   field: () => Provenance<S>,
   merge: (field: Provenance<S>) => S,
 ): S | undefined {
@@ -2608,7 +2612,7 @@ function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextTy
   }
   const provenance = field();
   const { graph, seeds } = provenance;
-  if (!seeds.some(({ node }) => mergeReachesConst<S>(graph, node))) {
+  if (!seeds.some(({ node }) => mergeReachesConst<S>(graph, node, false, data !== undefined))) {
     return undefined;
   }
   const mergedSchema = merge(provenance);
@@ -2635,8 +2639,9 @@ function constFillersOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node:
   });
 }
 
-/** Whether a merge from a node, by `mergeReachesConst()`, reaches a `const`, by graph, node and whether it reads the
- * options of the node's scope; for a node still open in the walk, its place in `constWalk.open`
+/** Whether a merge from a node, by `mergeReachesConst()`, reaches a `const`, by graph, node, whether it reads the
+ * options of the node's scope and whether it reads `then`/`else`; for a node still open in the walk, its place in
+ * `constWalk.open`
  */
 const constReach = new KeyedMemo<boolean | number | undefined>();
 
@@ -2650,8 +2655,8 @@ const constWalk: { open: (readonly unknown[])[]; low: number } = { open: [], low
  * in, see `scopeOf()`, or one its `then`/`else` and `dependencies` subschemas reach in turn, but no `if`, a condition
  * never merged into the field. Retrieving a field merges an `anyOf`/`oneOf` option in only beside `dependencies` its
  * `$ref` and `allOf` merge in, or in a `dependencies` entry, so options are read only there, and below an option so
- * merged (`withOptions`). A merge brings in no `const` none of them declares, so where none does the field's schema is
- * read without being merged
+ * merged (`withOptions`). A merge for no data reads no `then`/`else` (`withConditions`). A merge brings in no `const`
+ * none of them declares, so where none does the field's schema is read without being merged
  *
  * @testSeam Exported for utils' own tests
  */
@@ -2659,8 +2664,9 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   from: NodeId,
   withOptions = false,
+  withConditions = true,
 ): boolean {
-  const keys = [graph, from, withOptions];
+  const keys = [graph, from, withOptions, withConditions];
   const known = constReach.peek(keys);
   if (typeof known === 'boolean') {
     return known;
@@ -2686,11 +2692,11 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
         ? [ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY]
         : [DEPENDENCIES_KEY];
     const reachesAny = (subschemas: (NodeId | undefined)[], options: boolean) =>
-      subschemas.some((sub) => sub !== undefined && mergeReachesConst<S>(graph, sub, options));
+      subschemas.some((sub) => sub !== undefined && mergeReachesConst<S>(graph, sub, options, withConditions));
     reaches = group.some(
       (node) =>
         Object.hasOwn(node.raw, CONST_KEY) ||
-        reachesAny([graph.child(node.id, THEN_KEY), graph.child(node.id, ELSE_KEY)], withOptions) ||
+        (withConditions && reachesAny([graph.child(node.id, THEN_KEY), graph.child(node.id, ELSE_KEY)], withOptions)) ||
         reachesAny(
           mergedLists.flatMap((keyword) => graph.subschemas(node.id, keyword).map(([, sub]) => sub)),
           true,

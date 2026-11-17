@@ -2726,22 +2726,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toStrictEqual({ field: { k: 'd', a: 5 } });
         });
 
-        it('fills an empty field with the const a condition left unmerged holds under constAsDefaults always', () => {
-          const schema: RJSFSchema = {
-            type: 'object',
-            properties: { f: { type: 'string', if: { minLength: 0 }, then: { const: 'k' }, else: { const: 'k' } } },
-          };
-          expect(
-            getDefaultFormState(
-              {
-                validator: testValidator,
-                defaultFormStateBehavior: { constAsDefaults: 'always', emptyObjectFields: 'skipEmptyDefaults' },
-              },
-              { schema, formData: {} },
-            ),
-          ).toStrictEqual({ f: 'k' });
-        });
-
         it.each<[string, RJSFSchema]>([
           ['its own', { type: 'string', const: { $data: '1/a' } }],
           ['an allOf', { allOf: [{ type: 'string', const: { $data: '1/a' } }] }],
@@ -3775,6 +3759,51 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toStrictEqual({ f: { d: 1, a: 2 } });
           },
         );
+
+        it.each<[string, RJSFSchema, DefaultFormStateBehavior]>([
+          ['its allOf', { type: 'number', allOf: [{ if: { minimum: 10 }, then: { const: 10 } }] }, {}],
+          [
+            'its allOf under skipEmptyDefaults',
+            { type: 'number', allOf: [{ if: { minimum: 10 }, then: { const: 10 } }] },
+            { emptyObjectFields: 'skipEmptyDefaults' },
+          ],
+          [
+            'itself under skipEmptyDefaults',
+            { type: 'number', if: { minimum: 10 }, then: { const: 10 } },
+            { emptyObjectFields: 'skipEmptyDefaults' },
+          ],
+          [
+            'itself under constAsDefaults always and skipEmptyDefaults',
+            { type: 'number', if: { minimum: 0 }, then: { const: 10 }, else: { const: 10 } },
+            { constAsDefaults: 'always', emptyObjectFields: 'skipEmptyDefaults' },
+          ],
+          [
+            'the else of its allOf',
+            { type: 'number', allOf: [{ if: { maximum: 10 }, then: {}, else: { const: 10 } }] },
+            {},
+          ],
+        ])(
+          'leaves an empty field the const of a then/else in %s, which no data takes, unfilled',
+          (_name, n, defaultFormStateBehavior) => {
+            const schema: RJSFSchema = { type: 'object', required: ['n'], properties: { n } };
+            expect(
+              getDefaultFormState({ validator: testValidator, defaultFormStateBehavior }, { schema, formData: {} }),
+            ).toStrictEqual({});
+          },
+        );
+
+        it('fills a field with the const of a then its data takes', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { n: { type: 'number', allOf: [{ if: { minimum: 10 }, then: { const: 10 } }] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { n: 12 } },
+            ),
+          ).toStrictEqual({ n: 10 });
+        });
       });
 
       it("skips the constant default of a schema's anyOf under skipOneOf when it also has a oneOf", () => {
