@@ -2,6 +2,7 @@ import type { ComponentProps } from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import AppearanceControl from '../../src/components/AppearanceControl.tsx';
 import Editors from '../../src/components/Editors.tsx';
 import { APPEARANCE_STORAGE_KEY, Layout } from '../../src/layout/Layout.tsx';
 
@@ -52,6 +53,7 @@ function stubSystemDark(matches: boolean) {
 function renderPlaygroundShell() {
   render(
     <Layout>
+      <AppearanceControl />
       <Editors {...editorsProps} />
     </Layout>,
   );

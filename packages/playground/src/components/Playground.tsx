@@ -20,6 +20,7 @@ import { createSchemaUtils, resetLogOnce } from '@rjsf/utils';
 import { samples } from '../samples/index.ts';
 import type { Sample, UiSchemaForTheme } from '../samples/Sample.ts';
 import base64 from '../utils/base64.ts';
+import AppearanceControl from './AppearanceControl.tsx';
 import DemoFrame from './DemoFrame.tsx';
 import Editors from './Editors.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx';
@@ -377,6 +378,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     <Box sx={{ display: 'flex', width: '100%' }}>
       <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
       <Box sx={{ width: '100%' }}>
+        <Box component='header' sx={{ display: 'flex', justifyContent: 'flex-end', pt: 1 }}>
+          <AppearanceControl />
+        </Box>
         {sharedSetupError !== undefined && <Alert severity='error'>Unable to load form setup data.</Alert>}
         <Editors
           loadKey={loadKey}
