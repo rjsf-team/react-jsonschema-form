@@ -3209,6 +3209,100 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        it.each<[string, RJSFSchema, unknown]>([
+          [
+            'an enum of objects',
+            {
+              type: 'object',
+              properties: { x: { type: 'number', default: 1 }, y: { type: 'string' } },
+              enum: [
+                { x: 1, y: 'p' },
+                { x: 2, y: 'q' },
+              ],
+              default: { y: 'p' },
+            },
+            'z',
+          ],
+          ['an untyped enum of objects', { enum: [{ y: 'p' }, { y: 'q' }], default: { y: 'p' } }, 5],
+          ['an enum of a string and an object', { enum: ['p', { y: 'p' }], default: 'p' }, 'z'],
+          ['an enum of arrays', { type: 'array', items: { type: 'string' }, enum: [['p'], ['q']], default: ['p'] }, ['z']],
+        ])(
+          "keeps a value of another type that a key an object's allOf declares with %s doesn't offer, as for its own property",
+          (_, c, value) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { c } },
+                wrapped: { type: 'object', allOf: [{ properties: { c } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { own: { c: value }, wrapped: { c: value } } },
+              ),
+            ).toStrictEqual({ own: { c: value }, wrapped: { c: value } });
+          },
+        );
+
+        it("gives an untyped field's allOf key the field's default under ancestorWins where its value is rejected, as for a typed one", () => {
+          const c: RJSFSchema = { enum: ['a', 'b'], default: 'a' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              typed: { type: 'object', default: { c: 'b' }, allOf: [{ properties: { c } }] },
+              untyped: { default: { c: 'b' }, allOf: [{ properties: { c } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' } },
+              { schema, formData: { typed: { c: 'z' }, untyped: { c: 'z' } } },
+            ),
+          ).toStrictEqual({ typed: { c: 'b' }, untyped: { c: 'b' } });
+        });
+
+        it("keeps a value the $ref'd constants of an untyped field's allOf key don't offer, as for a typed one", () => {
+          const c: RJSFSchema = {
+            anyOf: [{ $ref: '#/definitions/Red' }, { $ref: '#/definitions/Green' }],
+            default: 'green',
+          };
+          const schema: RJSFSchema = {
+            type: 'object',
+            definitions: { Red: { const: 'red' }, Green: { const: 'green' } },
+            properties: {
+              typed: { type: 'object', allOf: [{ properties: { c } }] },
+              untyped: { allOf: [{ properties: { c } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { typed: { c: 'zz' }, untyped: { c: 'zz' } } },
+            ),
+          ).toStrictEqual({ typed: { c: 'zz' }, untyped: { c: 'zz' } });
+        });
+
+        it.each<DefaultFormStateBehavior['emptyObjectFields']>(['skipDefaults', 'populateRequiredDefaults'])(
+          "fills the null of a key an object's allOf declares inside the object's default for it under %s, as for its own property",
+          (emptyObjectFields) => {
+            const n: RJSFSchema = { type: 'object', properties: { z: { type: 'null' }, a: { type: 'number' } } };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', default: { n: {} }, properties: { n } },
+                wrapped: { type: 'object', default: { n: {} }, allOf: [{ properties: { n } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+                { schema, formData: { own: {}, wrapped: {} } },
+              ),
+            ).toStrictEqual({ own: { n: { z: null } }, wrapped: { n: { z: null } } });
+          },
+        );
+
         it("gives a nullable key an object's allOf requires the object's default over its null, as its own property", () => {
           const c: RJSFSchema = { type: 'null' };
           const schema: RJSFSchema = {
