@@ -5,7 +5,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import type { Theme, CSSObject } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import MuiTab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
@@ -63,7 +63,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     },
   ],
   '& .MuiTab-root.Mui-selected': {
-    backgroundColor: theme.palette.action.selected,
+    backgroundColor: alpha(
+      theme.palette.primary.main,
+      theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
+    ),
   },
 }));
 
