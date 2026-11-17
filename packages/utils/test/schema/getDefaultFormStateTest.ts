@@ -577,6 +577,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             properties: { x: { type: 'object', allOf: [{ const: { a: 2 } }] } },
           };
           expect(utils(viaAllOf).getDefaultFormState(viaAllOf, undefined, false, false, uiSchema)).toStrictEqual({});
+          // So does one whose `type` comes through the `allOf` too, written there or in the definition a `$ref` names
+          const typedInAllOf: RJSFSchema = { allOf: [{ type: 'object', const: { a: 2 } }] };
+          const typedViaAllOf: RJSFSchema = { type: 'object', properties: { x: typedInAllOf } };
+          const typedViaRef: RJSFSchema = {
+            type: 'object',
+            properties: { x: { $ref: '#/$defs/X' } },
+            $defs: { X: typedInAllOf },
+          };
+          for (const schema of [typedViaAllOf, typedViaRef]) {
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({});
+            expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ x: { a: 2 } });
+          }
           // A default of its own, or one the object's defaults give it, opens it
           const ownDefault: RJSFSchema = {
             type: 'object',
@@ -651,6 +663,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(filled).getDefaultFormState(filled, undefined, false, false, uiSchema)).toStrictEqual([{}]);
           const held: RJSFSchema = { type: 'array', items };
           expect(utils(held).getDefaultFormState(held, [{}], false, false, uiSchema)).toStrictEqual([{}]);
+        });
+        it('includes an optional object behind the optional data controls as an empty one under includeUndefinedValues, with or without a const', () => {
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          const viaAllOf: RJSFSchema = { type: 'object', allOf: [{ properties: { a: { type: 'string' } } }] };
+          const shapes: RJSFSchema[] = [
+            { type: 'object', properties: { x: viaAllOf } },
+            { type: 'object', properties: { x: { $ref: '#/$defs/X' } }, $defs: { X: viaAllOf } },
+            { type: 'object', properties: { x: { type: 'object', const: { a: 2 } } } },
+          ];
+          for (const schema of shapes) {
+            expect(utils(schema).getDefaultFormState(schema, undefined, true, false, uiSchema)).toStrictEqual({
+              x: {},
+            });
+          }
         });
         it('opens an optional object that a property const gives a value, and collapses only an object const', () => {
           const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
