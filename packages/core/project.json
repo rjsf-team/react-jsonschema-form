@@ -1,7 +1,12 @@
 {
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "//namedInputs": "testExtras adds every package's src, which test/useClientBoundaries.test.ts reads; without it a warm cache serves a stale pass when a theme or validator changes",
+  "//namedInputs": "testExtras adds every published package's src, which test/useClientBoundaries.test.ts reads; without it a warm cache serves a stale pass when a theme or validator changes",
   "namedInputs": {
-    "testExtras": ["{workspaceRoot}/packages/*/src/**/*"]
+    "testExtras": [
+      "{workspaceRoot}/packages/*/src/**/*",
+      "!{workspaceRoot}/packages/docs/**/*",
+      "!{workspaceRoot}/packages/playground/**/*",
+      "!{workspaceRoot}/packages/snapshot-tests/**/*"
+    ]
   }
 }

@@ -26,6 +26,7 @@ jobs:
       - run: pnpm run build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
+      - run: node scripts/checkUseClientBuild.mts
       - run: pnpm test
       - run: pnpm run lint
       - name: Determine npm tag based on release version

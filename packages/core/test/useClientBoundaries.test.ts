@@ -1,12 +1,12 @@
 /** @vitest-environment node */
 import { globSync, readFileSync } from 'node:fs';
 
-const packages = `${import.meta.dirname}/../..`;
-
 // A server component imports a package's root, which loads the listed modules on the server; each one creates a context,
 // calls a client-only function or library as it loads, or is a value `Form` needs as a client reference.
 // scripts/checkUseClientBuild.mts checks the same list against the build.
-const BOUNDARIES: string[] = JSON.parse(readFileSync(`${packages}/../testing/useClientBoundaries.json`, 'utf8'));
+import BOUNDARIES from '../../../testing/useClientBoundaries.json' with { type: 'json' };
+
+const packages = `${import.meta.dirname}/../..`;
 
 // A package whose root is a boundary makes every module it loads a client module
 const isBoundary = (path: string) =>
@@ -28,7 +28,7 @@ describe("'use client' boundaries", () => {
     ['creates a context', /createContext[<(]/],
     [
       'calls withTheme() or generateForm() as it loads',
-      /^(?!(?:export (?:default )?)?function |\/[/*])\S.*\b(?:withTheme|generateForm)(?:<[^>]*>)?\(/m,
+      /^(?!(?:export (?:default )?)?function |\/[/*])\S.*\b(?:withTheme|generateForm)(?:<.*>)?\(/m,
     ],
   ])('lists every source module that %s', (_, pattern) => {
     const unlisted = SOURCES.filter(([path, source]) => pattern.test(source) && !isBoundary(path)).map(
