@@ -21,7 +21,7 @@ import type {
   StrictRJSFSchema,
 } from '../types.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
-import { computeDefaults, takesValueOf, writesPropertyDefault } from './getDefaultFormState.ts';
+import { closingConstOf, computeDefaults, takesValueOf, writesPropertyDefault } from './getDefaultFormState.ts';
 import { refDefinition, withoutKeys } from './graph/mergePlan.ts';
 import nodeOfSchema from './graph/nodeOfSchema.ts';
 import retrieveSchema from './retrieveSchema.ts';
@@ -44,9 +44,10 @@ import retrieveSchema from './retrieveSchema.ts';
  * no data, and any other through the fill itself wherever the fill may compute more for it than its own `default`,
  * which merges an `allOf` only under `allOf: 'populateDefaults'`, so it can take a value the object's `default` never
  * named, such as a `const`, a `minItems` fill, a tuple's item defaults or an object built over a `null`. A key they
- * don't declare is kept only where `additionalProperties` seeds it, so an empty object is left where they write none of
- * its keys. Without a `placement` it is returned as computed: the root and an array item are always filled, and a field
- * hands its properties the default it computes whether or not it is written itself.
+ * don't declare is kept only where `additionalProperties` seeds it, or an object `const` that closes the object names
+ * it, see `closingConstOf()`, so an empty object is left where they write none of its keys. Without a `placement` it
+ * is returned as computed: the root and an array item are always filled, and a field hands its properties the default
+ * it computes whether or not it is written itself.
  *
  * @param context - The `SchemaContext` whose `defaultFormStateBehavior` says which of the two defaults wins, and
  *        whether a property is filled at all
@@ -122,8 +123,8 @@ function writtenDefault<S extends StrictRJSFSchema, F extends FormContextType>(
     : undefined;
 }
 
-/** `schema` with the one of its `xxxOf` options the fill renders for a field holding no data merged in, as it merges one
- * into an object field: the one its own `default` matches. Undefined where that option is no schema
+/** `schema` with the one of its `xxxOf` options the fill renders for a field holding no data merged in, as it merges
+ * one into an object field: the one its own `default` matches. Undefined where that option is no schema
  */
 function withFilledOption<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -159,6 +160,7 @@ function writtenKeys<S extends StrictRJSFSchema, F extends FormContextType>(
 ): GenericObjectType {
   const properties = schema.properties ?? {};
   const seedsExtraKeys = absentKeywordAllows<S, F>(context, schema) || Boolean(schema.additionalProperties);
+  const closingConst = closingConstOf<S, F>(context, schema);
   const written: GenericObjectType = {};
   for (const [key, value] of Object.entries(computed)) {
     // An extra key `retrieveSchema()` stubbed among the properties is seeded below, as the fill seeds one
@@ -194,9 +196,14 @@ function writtenKeys<S extends StrictRJSFSchema, F extends FormContextType>(
       if (propertyValue !== undefined) {
         written[key] = propertyValue;
       }
-    } else if (seedsExtraKeys && writesPropertyDefault(value, false, isRequired)) {
-      // The fill seeds an extra key whatever `emptyObjectFields` says. shortcut: its object default is judged whole
-      // rather than key by key against `additionalProperties`; upgrade once an extra key's nested defaults need judging
+    } else if (
+      closingConst
+        ? Object.hasOwn(closingConst, key) && value !== undefined
+        : seedsExtraKeys && writesPropertyDefault(value, false, isRequired)
+    ) {
+      // The fill seeds an extra key, and a key of an object `const` that closes the object, whatever
+      // `emptyObjectFields` says. shortcut: an extra key's object default is judged whole rather than key by key
+      // against `additionalProperties`; upgrade once an extra key's nested defaults need judging
       written[key] = value;
     }
   }
