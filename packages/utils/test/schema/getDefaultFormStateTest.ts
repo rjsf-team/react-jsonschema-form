@@ -13842,6 +13842,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema)).toEqual([null]);
       });
 
+      it('keeps an item of the default the items reject, as it keeps one the data holds', () => {
+        const schema: RJSFSchema = { type: 'array', default: ['x'], items: { type: 'string', enum: ['a', 'b'] } };
+        expect(fill(schema)).toEqual(['x']);
+        expect(fill(schema, ['x'])).toEqual(['x']);
+      });
+
       it('fills an item past the rows of the data when extra defaults are merged', () => {
         const schema: RJSFSchema = { type: 'array', default: [{}, {}], items: item };
         expect(

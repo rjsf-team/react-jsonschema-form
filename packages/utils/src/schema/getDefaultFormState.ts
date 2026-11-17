@@ -2723,12 +2723,13 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
         return stated;
       }
       // An item of the default no row of the data stands for is filled as the row holding it will be once the data
-      // does (#5831): what the item states is kept, and the defaults of the items' schema fill the rest of it
+      // does (#5831): what the item states is kept, and the defaults of the items' schema fill the rest of it. The row
+      // is filled under the item too, so a value the items' schema rejects as data stands, as it does in that row
       return foldChild<T, S, F>(
         context,
         `defaultRow:${idx}`,
         itemField(view, AdditionalItemsHandling.Ignore),
-        { ...itemProps(idx), rawFormData: stated, shouldMergeDefaultsIntoFormData: true },
+        { ...itemProps(idx), rawFormData: stated, parentDefaults: stated, shouldMergeDefaultsIntoFormData: true },
         memo,
       );
     });
