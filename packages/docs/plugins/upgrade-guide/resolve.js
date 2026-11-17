@@ -5,7 +5,7 @@
 const path = require('node:path');
 
 const { filteredPageFile } = require('./layout.js');
-const { KINDS } = require('./vocabulary.js');
+const { ALWAYS_PACKAGES, KINDS } = require('./vocabulary.js');
 
 /**
  * @typedef {import('./entries.js').Entry & { permalink: string }} ResolvedEntry
@@ -108,15 +108,13 @@ function resolveVersions(versions, permalinks) {
 }
 
 /**
- * Whether an entry applies to a user of `packageId`: every user has `@rjsf/core` and `@rjsf/utils`.
+ * Whether an entry applies to a user of `packageId`: every user has the vocabulary's `always` packages.
  *
  * @param {{ packages: string[] }} entry
  * @param {string} packageId
  */
 function appliesToPackage(entry, packageId) {
-  return entry.packages.some(
-    (pkg) => pkg === '*' || pkg === '@rjsf/core' || pkg === '@rjsf/utils' || pkg === packageId,
-  );
+  return entry.packages.some((pkg) => pkg === packageId || ALWAYS_PACKAGES.includes(pkg));
 }
 
 module.exports = { permalinksFromAllContent, permalinksFromPlugins, resolveVersions, appliesToPackage };

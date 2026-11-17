@@ -1,84 +1,27 @@
-import { useEffect, useState, type ComponentType, type ReactNode } from 'react';
+import { memo, useCallback, useEffect, useState, type ComponentType, type ReactNode } from 'react';
 import Link from '@docusaurus/Link';
 import { useHistory, useLocation } from '@docusaurus/router';
 import MDXContent from '@theme/MDXContent';
 
+import {
+  chosenPackages,
+  decodeHash,
+  markdownUrl,
+  matches,
+  readFilters,
+  toMarkdownDocument,
+  writeFilters,
+  type Choice,
+  type Entry,
+  type Filters,
+  type Guide,
+  type Noticed,
+} from './filters.ts';
 import styles from './styles.module.css';
-
-// The shape of the `v<N>.json` plugins/upgrade-guide/index.js writes.
-interface Package {
-  id: string;
-  short: string;
-  group: 'always' | 'theme' | 'validator' | 'other';
-  removed: boolean;
-}
-
-interface Choice {
-  id: string;
-  label: string;
-  detect: string;
-}
-
-interface Kind {
-  id: string;
-  label: string;
-  description: string;
-}
-
-interface Noticed {
-  id: string;
-  label: string;
-  short: string;
-  hint: string;
-}
-
-interface Entry {
-  id: string;
-  title: string;
-  description: string;
-  packages: string[];
-  uses: string[];
-  schema: string[];
-  kind: string;
-  noticed: string;
-  permalink: string;
-}
-
-interface Guide {
-  uses: Choice[];
-  schema: Choice[];
-  kinds: Kind[];
-  noticed: Noticed[];
-  packages: Package[];
-  entries: Entry[];
-  anchors: Record<string, string[]>;
-  llmsTxt: string;
-  combined: Record<string, string>;
-}
-
-interface Filters {
-  theme: string;
-  validator: string;
-  uses: string[];
-  schema: string[];
-  other: string[];
-  noticed: string;
-}
 
 type HeadingProps = { children?: ReactNode };
 type Body = ComponentType<{ components?: Record<string, ComponentType<HeadingProps>> }>;
 
-/** Every user has these, so their entries always show. `*` is every package. */
-const ALWAYS = ['*', '@rjsf/core', '@rjsf/utils'];
-/** Every user renders a form, so a `form` entry shows whatever else is ticked; it has no checkbox. */
-const EVERY_USER = 'form';
-const NOTICED_BADGE: Record<string, string> = {
-  build: 'badge--warning',
-  'type-error': 'badge--danger',
-  'runtime-error': 'badge--primary',
-  test: 'badge--info',
-  review: 'badge--secondary',
-};
 /**
  * An entry's sections are `##` headings on its own page. Inside a row they sit under the row's `h3`, and they take no
  * id, which would repeat in every open row and turn each into a page anchor.
@@ -90,9 +33,13 @@ const ROW_HEADINGS = {
   h5: ({ children }: HeadingProps) => <h6>{children}</h6>,
   h6: ({ children }: HeadingProps) => <h6>{children}</h6>,
 };
+/** Copy as Markdown fetches every shown entry's `.md` copy; this many at a time, so a long list can't flood the server. */
+const COPY_CONCURRENCY = 6;
 
 const guides = new Map<string, Promise<Guide>>();
 const bodies = new Map<string, Promise<Body>>();
+/** The bodies that have loaded, so a row that remounts (a filter hid it, then showed it) renders its body at once. */
+const loadedBodies = new Map<string, Body>();
 
 /**
  * The version's entries and vocabulary, which the plugin writes to its generated data directory. A lazy import makes
@@ -123,98 +70,28 @@ function loadBody(version: string, id: string): Promise<Body> {
     body = import(
       /* webpackInclude: /[\\/]v\d+[\\/][a-z0-9-]+\.md$/ */
       `@site/docs/migration-guides/${version}/${id}.md`
-    ).then((module: { default: Body }) => module.default);
+    ).then((module: { default: Body }) => {
+      loadedBodies.set(key, module.default);
+      return module.default;
+    });
     body.catch(() => bodies.delete(key));
     bodies.set(key, body);
   }
   return body;
 }
 
-function shortNames(packages: Package[], group: Package['group']) {
-  return packages.filter((pkg) => pkg.group === group).map((pkg) => pkg.short);
-}
-
-function readFilters(search: string, guide: Guide): Filters {
-  const { packages } = guide;
-  const params = new URLSearchParams(search);
-  const one = (key: string, allowed: string[]) => {
-    const value = params.get(key) ?? '';
-    return allowed.includes(value) ? value : '';
+/** `map` over `items`, at most `limit` calls in flight at once, the results in `items`' order. */
+async function mapConcurrently<T, R>(items: T[], limit: number, map: (item: T) => Promise<R>): Promise<R[]> {
+  const results: R[] = [];
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const index = next++;
+      results[index] = await map(items[index]);
+    }
   };
-  const many = (key: string, allowed: string[]) =>
-    (params.get(key) ?? '').split(',').filter((value) => allowed.includes(value));
-  return {
-    theme: one('theme', shortNames(packages, 'theme')),
-    validator: one('validator', shortNames(packages, 'validator')),
-    uses: many(
-      'uses',
-      guide.uses.map((use) => use.id),
-    ),
-    schema: many(
-      'schema',
-      guide.schema.map((feature) => feature.id),
-    ),
-    other: many('other', shortNames(packages, 'other')),
-    noticed: one(
-      'noticed',
-      guide.noticed.map((noticed) => noticed.id),
-    ),
-  };
-}
-
-/** Every value is `[a-z0-9-]`, so the query is built by hand to keep the commas readable in a shared link. */
-function writeFilters({ theme, validator, uses, schema, other, noticed }: Filters) {
-  const params = [
-    theme && `theme=${theme}`,
-    validator && `validator=${validator}`,
-    uses.length > 0 && `uses=${uses.join(',')}`,
-    schema.length > 0 && `schema=${schema.join(',')}`,
-    other.length > 0 && `other=${other.join(',')}`,
-    noticed && `noticed=${noticed}`,
-  ].filter(Boolean);
-  return params.length > 0 ? `?${params.join('&')}` : '';
-}
-
-function matches(entry: Entry, packages: Set<string>, uses: string[], schema: string[]) {
-  return (
-    entry.packages.some((pkg) => packages.has(pkg)) &&
-    (uses.length === 0 || entry.uses.some((use) => use === EVERY_USER || uses.includes(use))) &&
-    (schema.length === 0 || entry.schema.length === 0 || entry.schema.some((feature) => schema.includes(feature)))
-  );
-}
-
-function decodeHash(hash: string) {
-  try {
-    return decodeURIComponent(hash.replace(/^#/, ''));
-  } catch {
-    return '';
-  }
-}
-
-/** The `.md` copy postBuild writes beside the entry's page. */
-function markdownUrl(entry: Entry) {
-  return new URL(`${entry.permalink.replace(/\/$/, '')}.md`, window.location.origin).href;
-}
-
-/**
- * One Markdown document of `rows`, in order. Each entry keeps its body's `##` sections, so its title is a `#` heading.
- */
-function combine(rows: Entry[], texts: string[], version: string, kinds: Kind[]) {
-  const count = `${rows.length} ${rows.length === 1 ? 'entry' : 'entries'}`;
-  const parts = [
-    `> react-jsonschema-form ${version} upgrade guide: the ${count} that ${rows.length === 1 ? 'matches' : 'match'} ${window.location.href}, in the order to apply them.`,
-  ];
-  rows.forEach((entry, index) => {
-    const kind = kinds.find(({ id }) => id === entry.kind)?.label ?? entry.kind;
-    const facts = [
-      `- kind: ${kind}; noticed: \`${entry.noticed}\``,
-      `- packages: ${entry.packages.map((pkg) => `\`${pkg}\``).join(', ')}`,
-      `- source: ${markdownUrl(entry)}`,
-    ];
-    const body = texts[index].replace(/^---\r?\n[\s\S]*?\r?\n---[ \t]*\r?\n/, '').trim();
-    parts.push(`# ${entry.title}\n\n${facts.join('\n')}\n\n${entry.description}\n\n${body}`);
-  });
-  return `${parts.join('\n\n')}\n`;
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
 }
 
 /** Renders a frontmatter `description` or a vocabulary text, whose only Markdown is inline code. */
@@ -294,6 +171,76 @@ function EntryBody({ entry, body }: { entry: Entry; body: Body | Error | undefin
   );
 }
 
+/** One entry. It owns its body, so a body loading re-renders its row alone. */
+const Row = memo(function Row({
+  version,
+  entry,
+  noticed,
+  isOpen,
+  onToggle,
+}: {
+  version: string;
+  entry: Entry;
+  noticed: Noticed | undefined;
+  isOpen: boolean;
+  onToggle: (id: string) => void;
+}) {
+  const [body, setBody] = useState<Body | Error | undefined>(() => loadedBodies.get(`${version}/${entry.id}`));
+
+  useEffect(() => {
+    if (!isOpen || (body !== undefined && !(body instanceof Error))) {
+      return undefined;
+    }
+    // A body that failed to load tries again when its row next opens, however it opens.
+    setBody(undefined);
+    let current = true;
+    loadBody(version, entry.id).then(
+      (loaded) => current && setBody(() => loaded),
+      (error: unknown) => current && setBody(error instanceof Error ? error : new Error(String(error))),
+    );
+    return () => {
+      current = false;
+    };
+    // Only opening the row starts a load; the body it sets mustn't start another.
+  }, [isOpen, version, entry.id]);
+
+  const badge = noticed?.badge ?? 'badge--secondary';
+  return (
+    <li id={entry.id} className={styles.entry}>
+      <div className={styles.header}>
+        <h3 className={styles.entryHeading}>
+          <button
+            type='button'
+            className={styles.toggle}
+            aria-expanded={isOpen}
+            aria-controls={isOpen ? `${entry.id}-body` : undefined}
+            onClick={() => onToggle(entry.id)}
+          >
+            <span className={styles.marker} aria-hidden='true'>
+              {isOpen ? '▾' : '▸'}
+            </span>
+            {entry.title}
+          </button>
+        </h3>
+        <span className={styles.badges}>
+          <span className={`badge ${badge}`} title={noticed?.hint}>
+            {noticed?.short ?? entry.noticed}
+          </span>
+          {entry.packages.map((pkg) => (
+            <span key={pkg} className='badge badge--secondary' title={pkg === '*' ? undefined : pkg}>
+              {pkg === '*' ? 'every package' : pkg.replace(/^@rjsf\//, '')}
+            </span>
+          ))}
+        </span>
+      </div>
+      <p className={styles.description}>
+        <InlineMarkdown text={entry.description} />
+      </p>
+      {isOpen && <EntryBody entry={entry} body={body} />}
+    </li>
+  );
+});
+
 export default function UpgradeGuide({ version }: { version: string }): ReactNode {
   const [guide, setGuide] = useState<Guide | Error>();
 
@@ -311,7 +258,7 @@ export default function UpgradeGuide({ version }: { version: string }): ReactNod
     throw guide;
   }
   return guide ? (
-    <Rows version={version} guide={guide} />
+    <FilteredGuide version={version} guide={guide} />
   ) : (
     <p className={styles.guide} role='status'>
       Loading the {version} entries…
@@ -319,27 +266,21 @@ export default function UpgradeGuide({ version }: { version: string }): ReactNod
   );
 }
 
-function Rows({ version, guide }: { version: string; guide: Guide }): ReactNode {
+function FilteredGuide({ version, guide }: { version: string; guide: Guide }): ReactNode {
   const location = useLocation();
   const history = useHistory();
   const [open, setOpen] = useState<ReadonlySet<string>>(new Set());
-  const [loaded, setLoaded] = useState<Readonly<Record<string, Body | Error>>>({});
   const [copyStatus, setCopyStatus] = useState('');
 
-  // Rows mount only once the guide's data has loaded, after hydration, so they read the query and hash at once.
+  // The guide mounts only once its data has loaded, after hydration, so it reads the query and hash at once.
   const filters = readFilters(location.search, guide);
   const hash = decodeHash(location.hash);
   const byId = new Map(guide.entries.map((entry) => [entry.id, entry]));
   const hashEntry = byId.get(hash);
   const anchorIds = !hashEntry && Object.hasOwn(guide.anchors, hash) ? guide.anchors[hash] : [];
 
-  const byShort = new Map(guide.packages.map((pkg) => [pkg.short, pkg]));
-  const chosen = new Set(
-    [...ALWAYS, ...[filters.theme, filters.validator, ...filters.other].map((short) => byShort.get(short)?.id)].filter(
-      (id): id is string => id !== undefined,
-    ),
-  );
-  const shown = guide.entries.filter((entry) => matches(entry, chosen, filters.uses, filters.schema));
+  const chosen = chosenPackages(guide, filters);
+  const shown = guide.entries.filter((entry) => matches(entry, chosen, filters, guide.everyUserUse));
   const rows = filters.noticed ? shown.filter((entry) => entry.noticed === filters.noticed) : shown;
   const groups = guide.kinds
     .map((kind) => ({ kind, entries: rows.filter((entry) => entry.kind === kind.id) }))
@@ -348,15 +289,15 @@ function Rows({ version, guide }: { version: string; guide: Guide }): ReactNode 
   const themes = guide.packages.filter((pkg) => pkg.group === 'theme');
   const validators = guide.packages.filter((pkg) => pkg.group === 'validator');
   const others = guide.packages.filter((pkg) => pkg.group === 'other');
-  const codeChoices = guide.uses.filter((use) => use.id !== EVERY_USER);
+  const codeChoices = guide.uses.filter((use) => use.id !== guide.everyUserUse);
   const allOpen = rows.length > 0 && rows.every((entry) => open.has(entry.id));
   const hashEntryShown = hashEntry !== undefined && rows.includes(hashEntry);
 
+  // Only a new hash can name another old anchor or entry; a filter change mustn't scroll back to the hash's entry.
   useEffect(() => {
     if (anchorIds.length === 1) {
       history.replace({ pathname: location.pathname, search: location.search, hash: `#${anchorIds[0]}` });
     }
-    // Only a new hash can name another old anchor.
   }, [hash]);
 
   useEffect(() => {
@@ -364,19 +305,7 @@ function Rows({ version, guide }: { version: string; guide: Guide }): ReactNode 
       setOpen((previous) => new Set(previous).add(hashEntry.id));
       document.getElementById(hashEntry.id)?.scrollIntoView();
     }
-  }, [hash, hashEntryShown]);
-
-  useEffect(() => {
-    for (const id of open) {
-      if (!(id in loaded)) {
-        loadBody(version, id).then(
-          (body) => setLoaded((previous) => ({ ...previous, [id]: body })),
-          (error: unknown) =>
-            setLoaded((previous) => ({ ...previous, [id]: error instanceof Error ? error : new Error(String(error)) })),
-        );
-      }
-    }
-  }, [open]);
+  }, [hash]);
 
   const update = (next: Partial<Filters>) =>
     history.replace({
@@ -385,19 +314,18 @@ function Rows({ version, guide }: { version: string; guide: Guide }): ReactNode 
       hash: location.hash,
     });
 
-  const toggle = (id: string) => {
-    setOpen((previous) => {
-      const next = new Set(previous);
-      if (!next.delete(id)) {
-        next.add(id);
-      }
-      return next;
-    });
-    // A row that failed to load tries again when it next opens.
-    if (loaded[id] instanceof Error) {
-      setLoaded(({ [id]: _failed, ...rest }) => rest);
-    }
-  };
+  // Stable, so a row that neither opens nor closes skips the render.
+  const toggle = useCallback(
+    (id: string) =>
+      setOpen((previous) => {
+        const next = new Set(previous);
+        if (!next.delete(id)) {
+          next.add(id);
+        }
+        return next;
+      }),
+    [],
+  );
 
   const toggleAll = () =>
     setOpen((previous) => {
@@ -420,17 +348,17 @@ function Rows({ version, guide }: { version: string; guide: Guide }): ReactNode 
       return;
     }
     setCopyStatus('Copying…');
+    const { href, origin } = window.location;
     try {
-      const texts = await Promise.all(
-        rows.map(async (entry) => {
-          const response = await fetch(markdownUrl(entry));
-          if (!response.ok) {
-            throw new Error(`${markdownUrl(entry)} answered ${response.status}`);
-          }
-          return response.text();
-        }),
-      );
-      await navigator.clipboard.writeText(combine(rows, texts, version, guide.kinds));
+      const texts = await mapConcurrently(rows, COPY_CONCURRENCY, async (entry) => {
+        const url = markdownUrl(entry, origin);
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`${url} answered ${response.status}`);
+        }
+        return response.text();
+      });
+      await navigator.clipboard.writeText(toMarkdownDocument(rows, texts, version, guide.kinds, { href, origin }));
       setCopyStatus(`Copied ${rows.length} ${rows.length === 1 ? 'entry' : 'entries'} as Markdown.`);
     } catch (error) {
       setCopyStatus(`Copying failed: ${error instanceof Error ? error.message : String(error)}.`);
@@ -565,7 +493,7 @@ function Rows({ version, guide }: { version: string; guide: Guide }): ReactNode 
             onClick={() => update({ noticed: filters.noticed === noticed.id ? '' : noticed.id })}
           >
             <span className={styles.count}>{shown.filter((entry) => entry.noticed === noticed.id).length}</span>
-            <span className={`badge ${NOTICED_BADGE[noticed.id] ?? 'badge--secondary'}`}>{noticed.label}</span>
+            <span className={`badge ${noticed.badge}`}>{noticed.label}</span>
           </button>
         ))}
       </div>
@@ -606,47 +534,16 @@ function Rows({ version, guide }: { version: string; guide: Guide }): ReactNode 
           </h2>
           <p className={styles.kindDescription}>{kind.description}</p>
           <ul className={styles.entries}>
-            {entries.map((entry) => {
-              const isOpen = open.has(entry.id);
-              const noticed = noticedById.get(entry.noticed);
-              return (
-                <li key={entry.id} id={entry.id} className={styles.entry}>
-                  <div className={styles.header}>
-                    <h3 className={styles.entryHeading}>
-                      <button
-                        type='button'
-                        className={styles.toggle}
-                        aria-expanded={isOpen}
-                        aria-controls={isOpen ? `${entry.id}-body` : undefined}
-                        onClick={() => toggle(entry.id)}
-                      >
-                        <span className={styles.marker} aria-hidden='true'>
-                          {isOpen ? '▾' : '▸'}
-                        </span>
-                        {entry.title}
-                      </button>
-                    </h3>
-                    <span className={styles.badges}>
-                      <span
-                        className={`badge ${NOTICED_BADGE[entry.noticed] ?? 'badge--secondary'}`}
-                        title={noticed?.hint}
-                      >
-                        {noticed?.short ?? entry.noticed}
-                      </span>
-                      {entry.packages.map((pkg) => (
-                        <span key={pkg} className='badge badge--secondary' title={pkg === '*' ? undefined : pkg}>
-                          {pkg === '*' ? 'every package' : pkg.replace(/^@rjsf\//, '')}
-                        </span>
-                      ))}
-                    </span>
-                  </div>
-                  <p className={styles.description}>
-                    <InlineMarkdown text={entry.description} />
-                  </p>
-                  {isOpen && <EntryBody entry={entry} body={loaded[entry.id]} />}
-                </li>
-              );
-            })}
+            {entries.map((entry) => (
+              <Row
+                key={entry.id}
+                version={version}
+                entry={entry}
+                noticed={noticedById.get(entry.noticed)}
+                isOpen={open.has(entry.id)}
+                onToggle={toggle}
+              />
+            ))}
           </ul>
         </section>
       ))}

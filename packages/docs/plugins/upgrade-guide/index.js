@@ -12,7 +12,7 @@ const { loadVersions } = require('./entries.js');
 const { GUIDES_DIR } = require('./layout.js');
 const { writeOutputs } = require('./outputs.js');
 const { permalinksFromAllContent, permalinksFromPlugins, resolveVersions } = require('./resolve.js');
-const { KINDS, NOTICED, SCHEMA, USES } = require('./vocabulary.js');
+const { EVERY_USER_USE, KINDS, NOTICED, SCHEMA, USES } = require('./vocabulary.js');
 
 /** @typedef {import('./entries.js').Version[]} Content */
 
@@ -49,6 +49,7 @@ function upgradeGuidePlugin(context) {
           `${version.name}.json`,
           JSON.stringify({
             uses: USES,
+            everyUserUse: EVERY_USER_USE,
             schema: SCHEMA,
             kinds: KINDS,
             noticed: NOTICED,

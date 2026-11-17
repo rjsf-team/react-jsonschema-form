@@ -128,7 +128,7 @@ The body has no `#` title (the frontmatter `title` is the page title) and these 
 
 Write plain reference prose in short declarative sentences, as the rest of the docs do: no em or en dashes, no bold labels on list items, no "not X but Y" contrasts, no closing one-liners.
 
-Link another entry as `./<id>.md` and other docs with relative links; never link the `vN.x upgrade guide` page itself. `pnpm --filter ./packages/docs build` checks every entry against these rules and fails listing every problem it finds. It also writes the guide's `llms.txt`, a Markdown copy of each entry, and one combined file per theme and validator for agents.
+Link another entry as `./<id>.md` and other docs with relative links to their `.md` or `.mdx` file under `packages/docs/docs`, which must be a published page: not a draft, and not a `_` file or in a `_` directory. Never link the `vN.x upgrade guide` page itself. `pnpm --filter ./packages/docs build` checks every entry against these rules and fails listing every problem it finds. It also writes the guide's `llms.txt`, a Markdown copy of each entry, and one combined file per theme and validator for agents.
 
 New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide; link them from the entry.
 

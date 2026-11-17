@@ -8,11 +8,12 @@ const path = require('node:path');
 const { localMarkdownFile } = require('./entries.js');
 const { demoteHeadings, mapLinks } = require('./markdown.js');
 const { appliesToPackage } = require('./resolve.js');
-const { KINDS, NOTICED, SCHEMA, USES } = require('./vocabulary.js');
+const { ALWAYS_PACKAGES, EVERY_USER_USE, KINDS, NOTICED, SCHEMA, USES } = require('./vocabulary.js');
 
 /** How a reader or agent decides whether an entry applies: the rule the filtered page applies to its checkboxes. */
-const APPLIES_RULE =
-  'An entry applies to you when all three hold: your package.json has one of its `packages` (`*` is every `@rjsf/*` package, and every user has `@rjsf/core` and `@rjsf/utils`); its `uses` lists `form` (every user) or something your code does; and its `schema` is empty (`any`) or names something at least one of your schemas has.';
+const APPLIES_RULE = `An entry applies to you when all three hold: your package.json has one of its \`packages\` (\`*\` is every \`@rjsf/*\` package, and every user has ${andList(
+  codes(ALWAYS_PACKAGES.filter((id) => id !== '*')),
+)}); its \`uses\` lists \`${EVERY_USER_USE}\` (every user) or something your code does; and its \`schema\` is empty (\`any\`) or names something at least one of your schemas has.`;
 
 /**
  * @typedef {import('./resolve.js').ResolvedVersion} ResolvedVersion
@@ -130,7 +131,7 @@ function renderCombined(version, packageId, entries, site) {
     ? [
         `# react-jsonschema-form ${version.name} upgrade guide for ${packageId}`,
         '',
-        `> Every ${version.name} breaking change that applies to a user of \`${packageId}\`: the entries for \`${packageId}\`, for every package (\`*\`), for \`@rjsf/core\` and for \`@rjsf/utils\`, in apply order. ${count}. ${noticedSummary(entries)}`,
+        `> Every ${version.name} breaking change that applies to a user of \`${packageId}\`: the entries for \`${packageId}\` and for ${andList(codes(ALWAYS_PACKAGES))}, in apply order. ${count}. ${noticedSummary(entries)}`,
       ]
     : [
         `# react-jsonschema-form ${version.name} upgrade guide, every entry`,
@@ -206,6 +207,9 @@ function rewriteLinks(entry, version, site) {
     if (file === undefined) {
       return new URL(destination, absolute(site, entry.permalink)).href;
     }
+    if (file === null) {
+      throw new Error(`${entry.source}: the link \`${destination}\` has a malformed \`%\` escape.`);
+    }
     const suffixStart = destination.search(/[?#]/);
     const suffix = suffixStart === -1 ? '' : destination.slice(suffixStart);
     const source = path.posix.join(version.sourceDir, file);
@@ -238,8 +242,22 @@ function absolute(site, sitePath) {
 }
 
 /** @param {string[]} values */
+function codes(values) {
+  return values.map((value) => `\`${value}\``);
+}
+
+/** @param {string[]} values */
 function codeList(values) {
-  return values.map((value) => `\`${value}\``).join(', ');
+  return codes(values).join(', ');
+}
+
+/**
+ * `a`, `a and b`, `a, b and c`.
+ *
+ * @param {string[]} values
+ */
+function andList(values) {
+  return values.length > 1 ? `${values.slice(0, -1).join(', ')} and ${values.at(-1)}` : values.join('');
 }
 
 /**

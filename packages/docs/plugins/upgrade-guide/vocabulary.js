@@ -1,21 +1,24 @@
 // @ts-check
 // The single list of values an upgrade guide entry's frontmatter may use. The plugin validates entries against it and
-// hands it to the filtered page through global data, so adding a value here is the whole change.
+// writes it to the filtered page's data, so adding a value here is the whole change.
 
 /**
  * @typedef {{ id: string; label: string; detect: string }} Use
  * @typedef {{ id: string; label: string; detect: string }} SchemaFeature
  * @typedef {{ id: string; label: string; description: string }} Kind
- * @typedef {{ id: string; label: string; short: string; hint: string }} Noticed
- * `label` heads a summary tile, `short` is a row's badge.
+ * @typedef {{ id: string; label: string; short: string; hint: string; badge: string }} Noticed
+ * `label` heads a summary tile, `short` is a row's badge, `badge` is the Infima class that colours both.
  * @typedef {'always' | 'theme' | 'validator' | 'other'} PackageGroup
  * @typedef {{ id: string; group: PackageGroup; removedIn?: number }} PackageDefinition
  * @typedef {{ id: string; short: string; group: PackageGroup; removed: boolean }} Package
  */
 
+/** Every user renders a form, so an entry with this use applies whatever else the reader's code does. */
+const EVERY_USER_USE = 'form';
+
 /** @type {Use[]} */
 const USES = [
-  { id: 'form', label: 'Renders a form', detect: 'Your code renders `<Form>` (every user).' },
+  { id: EVERY_USER_USE, label: 'Renders a form', detect: 'Your code renders `<Form>` (every user).' },
   { id: 'typescript', label: 'TypeScript', detect: 'Your code is TypeScript.' },
   { id: 'ui-schema', label: 'uiSchema', detect: 'Your code uses `ui:` keys or a `uiSchema`.' },
   {
@@ -133,26 +136,36 @@ const NOTICED = [
     label: 'Build or install fails',
     short: 'build fails',
     hint: 'Installing, bundling or loading RJSF under Node fails.',
+    badge: 'badge--warning',
   },
   {
     id: 'type-error',
     label: 'The type checker reports it',
     short: 'type error',
     hint: 'Detect gives the exact error text.',
+    badge: 'badge--danger',
   },
   {
     id: 'runtime-error',
     label: 'It throws or warns at runtime',
     short: 'runtime error',
     hint: 'The form throws or logs a console warning.',
+    badge: 'badge--primary',
   },
   {
     id: 'test',
     label: 'A test or snapshot fails',
     short: 'test fails',
     hint: 'The type checker and the console stay quiet.',
+    badge: 'badge--info',
   },
-  { id: 'review', label: 'Nothing reports it', short: 'review', hint: 'Read the entry and check your form yourself.' },
+  {
+    id: 'review',
+    label: 'Nothing reports it',
+    short: 'review',
+    hint: 'Read the entry and check your form yourself.',
+    badge: 'badge--secondary',
+  },
 ];
 
 /**
@@ -182,6 +195,9 @@ const PACKAGES = [
   { id: '@rjsf/snapshot-tests', group: 'other' },
 ];
 
+/** The packages every user has: an entry naming any of them applies to every user. */
+const ALWAYS_PACKAGES = PACKAGES.filter(({ group }) => group === 'always').map(({ id }) => id);
+
 /**
  * The packages an entry of major version `version` may name: a package removed in that version is still there (its
  * users need the entry saying so) and marked removed; one removed in an earlier version is gone.
@@ -200,4 +216,4 @@ function packagesForVersion(version) {
   );
 }
 
-module.exports = { USES, SCHEMA, KINDS, NOTICED, packagesForVersion };
+module.exports = { USES, SCHEMA, KINDS, NOTICED, EVERY_USER_USE, ALWAYS_PACKAGES, packagesForVersion };

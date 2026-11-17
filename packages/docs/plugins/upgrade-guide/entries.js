@@ -72,6 +72,7 @@ async function loadVersions(siteDir, docsDir, parseFrontMatter) {
       versions.push(
         await loadVersion(
           siteDir,
+          docsDir,
           path.join(guidesDir, dir.name),
           dir.name,
           Number(match[1]),
@@ -93,6 +94,7 @@ async function loadVersions(siteDir, docsDir, parseFrontMatter) {
 
 /**
  * @param {string} siteDir
+ * @param {string} docsDir
  * @param {string} dir
  * @param {string} name
  * @param {number} number
@@ -100,7 +102,7 @@ async function loadVersions(siteDir, docsDir, parseFrontMatter) {
  * @param {string[]} errors
  * @returns {Promise<Version>}
  */
-async function loadVersion(siteDir, dir, name, number, parseFrontMatter, errors) {
+async function loadVersion(siteDir, docsDir, dir, name, number, parseFrontMatter, errors) {
   const packages = packagesForVersion(number);
   const files = (await fs.readdir(dir, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name));
   const relativeDir = path.relative(siteDir, dir);
@@ -136,7 +138,12 @@ async function loadVersion(siteDir, dir, name, number, parseFrontMatter, errors)
   ]);
   for (const entry of entries) {
     validateEntry(entry, packages, ids, reserved, path.join(relativeDir, `${entry.id}.md`), errors);
-    await validateLinks(entry, siteDir, dir, name, ids, path.join(relativeDir, `${entry.id}.md`), errors);
+    await validateLinks(
+      entry,
+      { siteDir, docsDir, dir, name, ids, parseFrontMatter },
+      path.join(relativeDir, `${entry.id}.md`),
+      errors,
+    );
   }
 
   return {
@@ -386,19 +393,23 @@ function validateSections(body, at, errors) {
 
 /**
  * A link to `<id>.md` in the entry's directory must name an entry; a link to any other `.md`/`.mdx` must name a file
- * that exists. Docusaurus only warns about either (`onBrokenMarkdownLinks`), and postBuild needs both to resolve. No
- * link may go to the version's filtered page, which took over the single-page guide's URL: every section of that guide
- * is an entry now.
+ * under the docs directory that the docs plugin publishes: no `_` file or directory, no draft. Docusaurus only warns
+ * about a broken one (`onBrokenMarkdownLinks`), and postBuild needs every one to have a page. No link may go to the
+ * version's filtered page, which took over the single-page guide's URL: every section of that guide is an entry now.
  *
  * @param {Entry} entry
- * @param {string} siteDir
- * @param {string} dir
- * @param {string} name
- * @param {Set<string>} ids
+ * @param {{
+ *   siteDir: string;
+ *   docsDir: string;
+ *   dir: string;
+ *   name: string;
+ *   ids: Set<string>;
+ *   parseFrontMatter: ParseFrontMatter;
+ * }} version
  * @param {string} at
  * @param {string[]} errors
  */
-async function validateLinks(entry, siteDir, dir, name, ids, at, errors) {
+async function validateLinks(entry, { siteDir, docsDir, dir, name, ids, parseFrontMatter }, at, errors) {
   const guidePage = filteredPageName(name);
   for (const destination of linkDestinations(entry.body)) {
     if (namesPage(destination, guidePage)) {
@@ -409,16 +420,54 @@ async function validateLinks(entry, siteDir, dir, name, ids, at, errors) {
     if (file === undefined) {
       continue;
     }
+    if (file === null) {
+      errors.push(`${at}: the link \`${destination}\` has a malformed \`%\` escape.`);
+      continue;
+    }
     const target = path.resolve(dir, file);
     if (path.dirname(target) === dir && target.endsWith('.md')) {
       if (!ids.has(path.basename(target, '.md'))) {
         errors.push(`${at}: the link \`${destination}\` names no entry of this version.`);
       }
-    } else if (!(await isFile(target))) {
-      errors.push(
-        `${at}: the link \`${destination}\` names \`${path.relative(siteDir, target)}\`, which doesn't exist.`,
-      );
+      continue;
     }
+    const unpublished = await whyUnpublished(target, docsDir, parseFrontMatter);
+    if (unpublished) {
+      errors.push(`${at}: the link \`${destination}\` names \`${path.relative(siteDir, target)}\`, ${unpublished}.`);
+    }
+  }
+}
+
+/**
+ * Why the docs plugin makes no page of the Markdown file `target`, or `undefined` if it makes one. These are its
+ * default `exclude` globs (the site sets none) and production's dropping of drafts.
+ *
+ * @param {string} target
+ * @param {string} docsDir
+ * @param {ParseFrontMatter} parseFrontMatter
+ * @returns {Promise<string | undefined>}
+ */
+async function whyUnpublished(target, docsDir, parseFrontMatter) {
+  const relative = path.relative(docsDir, target);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) {
+    return 'which is outside the docs directory';
+  }
+  if (relative.split(path.sep).some((segment) => segment.startsWith('_'))) {
+    return 'which the docs plugin skips as a `_` file or directory';
+  }
+  if (!(await isFile(target))) {
+    return "which doesn't exist";
+  }
+  const fileContent = await fs.readFile(target, 'utf8');
+  try {
+    const { frontMatter } = await parseFrontMatter({
+      filePath: target,
+      fileContent,
+      defaultParseFrontMatter: parseFrontMatter,
+    });
+    return frontMatter.draft === true ? 'which is a draft' : undefined;
+  } catch (error) {
+    return `whose frontmatter is unreadable: ${error instanceof Error ? error.message : String(error)}`;
   }
 }
 
@@ -446,15 +495,22 @@ function namesPage(destination, page) {
 }
 
 /**
- * The file path a relative link to a Markdown file names, or `undefined` for any other link.
+ * The file path a relative link to a Markdown file names, `null` for a relative link whose path has a malformed `%`
+ * escape, or `undefined` for any other link.
  *
  * @param {string} destination
+ * @returns {string | null | undefined}
  */
 function localMarkdownFile(destination) {
   if (/^[a-z][a-z0-9+.-]*:/i.test(destination) || destination.startsWith('/') || destination.startsWith('#')) {
     return undefined;
   }
-  const file = decodeURI(destination.replace(/[?#].*$/, ''));
+  let file;
+  try {
+    file = decodeURI(destination.replace(/[?#].*$/, ''));
+  } catch {
+    return null;
+  }
   return /\.mdx?$/.test(file) ? file : undefined;
 }
 
