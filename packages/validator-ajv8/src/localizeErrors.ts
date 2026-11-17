@@ -7,7 +7,7 @@ import type { Localizer } from './types.ts';
  * @param params - The params of an error
  * @returns - The copy of the `params` with `missingProperty`, `property` and each of the `deps` quoted
  */
-function quoteProperties(params: ErrorObject['params']): ErrorObject['params'] {
+export function quoteProperties(params: ErrorObject['params']): ErrorObject['params'] {
   const quoted = { ...params };
   for (const key of ['missingProperty', 'property']) {
     const value: unknown = params[key];

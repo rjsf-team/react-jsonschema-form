@@ -24,6 +24,7 @@ import {
 } from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
 
+import { quoteProperties } from './localizeErrors.ts';
 import type { SuppressDuplicateFilteringType } from './types.ts';
 
 /** Filters duplicate errors from `anyOf`/`oneOf` schema paths according to the `suppressDuplicateFiltering` flag.
@@ -65,6 +66,27 @@ export function filterDuplicateErrors(
   }, []);
 }
 
+/** Quotes the property names in Ajv's own message for a property dependency, which, unlike its other messages and the
+ * localized ones, leaves them bare, so that they can be replaced with their `title` or `ui:title` (#4402). A message
+ * that isn't Ajv's own, such as a localizer's, is returned as it is.
+ *
+ * @param message - The message of the error
+ * @param params - The params of the error
+ * @returns - The message with the property names quoted, when it is Ajv's own message for a property dependency
+ */
+function quoteDependencyProperties(message: string, params: ErrorObject['params']): string {
+  const { property, deps, depsCount } = params;
+  if (typeof property !== 'string' || typeof deps !== 'string') {
+    return message;
+  }
+  const properties = depsCount === 1 ? 'property' : 'properties';
+  if (message !== `must have ${properties} ${deps} when property ${property} is present`) {
+    return message;
+  }
+  const quoted = quoteProperties(params);
+  return `must have ${properties} ${quoted.deps} when property ${quoted.property} is present`;
+}
+
 /** Transforming the error output from ajv to format used by @rjsf/utils.
  * At some point, components should be updated to support ajv.
  *
@@ -85,7 +107,7 @@ export function transformRJSFValidationErrors<
 ): RJSFValidationError[] {
   const errorList = errors.map((e: ErrorObject) => {
     const { instancePath, keyword, params, schemaPath, parentSchema, ...rest } = e;
-    let { message = '' } = rest;
+    let message = quoteDependencyProperties(rest.message ?? '', params);
     let property = instancePath.replace(/\//g, '.');
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';

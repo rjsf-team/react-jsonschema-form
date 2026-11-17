@@ -40,6 +40,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 ## @rjsf/validator-ajv8
 
 - Fixed apps that import only `createPrecompiledValidator` bundling all of AJV anyway: the default export's `customizeValidator()` call is now marked pure, so bundlers drop it ([#5559](https://github.com/rjsf-team/react-jsonschema-form/pull/5559))
+- Fix the error for a missing `dependentRequired` or `dependencies` property naming the properties by their keys rather than their `title` or `ui:title` when no localizer is passed; without a title, the keys are now quoted as in the `required` error ([#4402](https://github.com/rjsf-team/react-jsonschema-form/issues/4402))
 
 ## @rjsf/validator-ata
 
