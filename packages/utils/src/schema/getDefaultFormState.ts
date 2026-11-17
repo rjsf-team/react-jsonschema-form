@@ -1157,12 +1157,10 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     conditions.map(({ node, satisfied }) => `${node}:${satisfied}`).join(',');
   const seen = new Set([`${qualifiedDependencies(lastView, data)}|${decided(lastView.checked)}`]);
   for (;;) {
-    // The defaults of an object field join its data key by key; any other field is its data, or its defaults when it
-    // holds none
-    const depData =
-      isObject(value) || isObject(data)
-        ? { ...(isObject(value) ? value : {}), ...(isObject(data) ? data : {}) }
-        : (data ?? value);
+    // Merged into the data, the defaults are the data as the fill leaves it at every level, a nested default beside
+    // the data of its object and one replacing data the field doesn't take included, which a fill of that data reads
+    // again; otherwise the data is merged over them, a default standing in for a value it lacks
+    const depData = props.shouldMergeDefaultsIntoFormData ? value : mergeDefaultsWithFormData(value, data, false, true);
     const { graph } = lastView.field;
     const redecided = lastView.checked.map(({ node }) => ({
       node,
@@ -2321,15 +2319,20 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
     mayHoldNullType(view.schema, rootSchema)
   ) {
-    // A default computed for a property the data lacks decides a branch's `if` as the same value in the data does, so
-    // the field is retrieved again for the data over those defaults where there is one
-    const isDefaulted = Object.keys(computed).some((key) => !Object.hasOwn(formData, key));
+    // A default computed for a property decides a branch's `if` as the same value in the data does, so the field is
+    // retrieved again for the data the fill leaves where it left a property otherwise than the data holds it. Merged
+    // into the data, a computed property is the data as the fill leaves it, a nested default beside the data of its
+    // object included; otherwise the data is merged over it, as `foldField()` merges it for the field's own conditions
+    const isDefaulted = Object.keys(computed).some(
+      (key) => !Object.hasOwn(formData, key) || computed[key] !== formData[key],
+    );
+    const filled = { ...(isObject(view.depData) ? view.depData : {}), ...computed };
     const branchView = isDefaulted
       ? settle(
           context,
           { ...view.field, retrieves: true },
           view.data,
-          { ...(isObject(view.depData) ? view.depData : {}), ...computed, ...formData },
+          shouldMergeDefaultsIntoFormData ? filled : mergeDefaultsWithFormData(filled, formData, false, true),
           view.options,
         )
       : retrievedView();

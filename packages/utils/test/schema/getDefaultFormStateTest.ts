@@ -13826,8 +13826,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
 
     describe('a default that decides an `if` (#5830)', () => {
-      const fill = (schema: RJSFSchema, formData?: unknown) =>
-        getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData });
+      const fill = (schema: RJSFSchema, formData?: unknown, defaultFormStateBehavior?: DefaultFormStateBehavior) =>
+        getDefaultFormState(
+          { validator: testValidator, defaultFormStateBehavior },
+          { schema, rootSchema: schema, formData },
+        );
       afterEach(() => {
         testValidator.reset?.();
       });
@@ -13910,6 +13913,107 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       ])('changes nothing when the filled data of the $name schema is filled again', ({ schema, answers }) => {
         testValidator.setReturnValues({ isValid: answers });
         const filled = fill(schema);
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      it.each([
+        {
+          name: 'beside the data of the object holding it',
+          formData: { r: { k: 'a' } },
+          expected: { r: { k: 'a', j: 'x' }, t: 2 },
+        },
+        {
+          name: 'over data held as `undefined`',
+          formData: { r: { j: undefined } },
+          expected: { r: { j: 'x' }, t: 2 },
+          behavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' } as const,
+        },
+        {
+          name: 'over data its field does not take',
+          formData: { r: { j: 'z' } },
+          expected: { r: { j: 'x' }, t: 2 },
+        },
+      ])('fills the `then` a nested default satisfies $name', ({ formData, expected, behavior }) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            r: {
+              type: 'object',
+              properties: { k: { type: 'string' }, j: { type: 'string', enum: ['x', 'y'], default: 'x' } },
+            },
+          },
+          if: { properties: { r: { properties: { j: { const: 'x' } }, required: ['j'] } }, required: ['r'] },
+          then: { properties: { t: { type: 'number', default: 2 } } },
+        };
+        const filled = fill(schema, formData, behavior);
+        expect(filled).toEqual(expected);
+        expect(fill(schema, filled, behavior)).toEqual(filled);
+      });
+
+      it.each([
+        { name: 'beside the data of the object holding it', formData: { r: { s: { k: 'a' } } } },
+        {
+          name: 'over data held as `undefined`',
+          formData: { r: { s: { j: undefined } } },
+          behavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' } as const,
+        },
+        { name: 'over data its field does not take', formData: { r: { s: { j: 'z' } } } },
+      ])(
+        'fills the `null` of a field the `then` of an unmerged `allOf` entry brings in for a nested default $name',
+        ({ formData, behavior }) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              r: {
+                type: 'object',
+                properties: {
+                  s: {
+                    type: 'object',
+                    properties: { k: { type: 'string' }, j: { type: 'string', enum: ['x', 'y'], default: 'x' } },
+                  },
+                },
+                allOf: [
+                  {
+                    if: { properties: { s: { properties: { j: { const: 'x' } }, required: ['j'] } }, required: ['s'] },
+                    then: { properties: { n: { type: 'null' } } },
+                  },
+                ],
+              },
+            },
+          };
+          const filled = fill(schema, formData, behavior);
+          expect(filled).toEqual({ r: { s: { ...formData.r.s, j: 'x' }, n: null } });
+          expect(fill(schema, filled, behavior)).toEqual(filled);
+        },
+      );
+
+      it('fills the `null` of the `then` a `null` decides, in a field the fill brings in for its `null`s alone', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            r: {
+              type: 'object',
+              allOf: [
+                {
+                  properties: {
+                    q: {
+                      type: 'object',
+                      properties: { z: { type: 'null' } },
+                      allOf: [
+                        {
+                          if: { properties: { z: { const: null } }, required: ['z'] },
+                          then: { properties: { n: { type: 'null' } } },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const filled = fill(schema, { r: {} });
+        expect(filled).toEqual({ r: { q: { z: null, n: null } } });
         expect(fill(schema, filled)).toEqual(filled);
       });
     });
