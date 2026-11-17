@@ -14017,6 +14017,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema, filled)).toEqual(filled);
       });
 
+      it('fills the `then` the `null` decides that the fill puts over a value the data holds as `undefined`', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { r: { type: 'object', properties: { z: { type: 'null' } } } },
+          if: { properties: { r: { properties: { z: { const: null } }, required: ['z'] } }, required: ['r'] },
+          then: { properties: { n: { type: 'string', default: 'w' } } },
+        };
+        const filled = fill(schema, { r: { z: undefined } });
+        expect(filled).toEqual({ r: { z: null }, n: 'w' });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
       it('decides a condition for the data it is checked against, whatever data it was checked against before', () => {
         // `'Aa'` and `'BB'` hash alike as strings, so no check made for the one may answer for the other
         const schema: RJSFSchema = {

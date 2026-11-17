@@ -518,11 +518,12 @@ function fillOverUndefined(nullFills: NullFills | undefined, formData: unknown, 
  *
  * @param merged - The defaults merged into the form data
  * @param formData - The form data, whose objects `nullFills` names
- * @param nullFills - The `null` fills of the call
+ * @param nullFills - The `null` fills of the call, if any
  * @returns - `merged` with the `null`s in, or `merged` itself when it takes none
  */
-function withNullFills<V>(merged: V, formData: unknown, nullFills: NullFills): V {
+function withNullFills<V>(merged: V, formData: unknown, nullFills: NullFills | undefined): V {
   if (
+    !nullFills ||
     nullFills.overUndefined.size === 0 ||
     typeof merged !== 'object' ||
     merged === null ||
@@ -1159,8 +1160,11 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   for (;;) {
     // Merged into the data, the defaults are the data as the fill leaves it at every level, a nested default beside
     // the data of its object and one replacing data the field doesn't take included, which a fill of that data reads
-    // again; otherwise the data is merged over them, a default standing in for a value it lacks
-    const depData = props.shouldMergeDefaultsIntoFormData ? value : mergeDefaultsWithFormData(value, data, false, true);
+    // again, with the `null`s it puts over the data's `undefined`; otherwise the data is merged over them, a default
+    // standing in for a value it lacks
+    const depData = props.shouldMergeDefaultsIntoFormData
+      ? withNullFills(value, data, props.nullFills)
+      : mergeDefaultsWithFormData(value, data, false, true);
     const { graph } = lastView.field;
     // The plan checked its conditions against its own dependency data, `{}` standing in for none, so they decide alike
     // for data equal to it, as the data of an edit is once it holds the defaults
