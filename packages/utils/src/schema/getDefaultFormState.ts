@@ -366,6 +366,23 @@ function nullsOnlyContext<S extends StrictRJSFSchema, F extends FormContextType>
   };
 }
 
+/** The context `nullsOnlyContext()` gives a key only an unmerged `allOf` declares, its ancestors' defaults winning,
+ * per context it is built from, so it keeps its identity across the passes, whose memo compares the context first
+ */
+const skippingContexts = new WeakMap<object, object>();
+function skippingBranchDefaults<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+): SchemaContext<S, F> {
+  let skipping = skippingContexts.get(context);
+  if (skipping === undefined) {
+    skipping = nullsOnlyContext(context, 'ancestorWins');
+    skippingContexts.set(context, skipping);
+  }
+  // Only `context` with the settings `nullsOnlyContext()` gives is stored under `context`, but the WeakMap can't carry
+  // its type parameters
+  return skipping as SchemaContext<S, F>;
+}
+
 /** What in `schema` a `null` fill can come from: the `null` type, named somewhere in it, or else a `$ref`, which can
  * lead to one elsewhere in the root; worked out once for each schema
  */
@@ -1783,7 +1800,8 @@ function innerItem<S extends StrictRJSFSchema>(
  * @param child - The property's field
  * @param propertySchema - The property's schema as the object declares it
  * @param props - The property's own uiSchema, the `ui:definitions`, the call's `nullFills`, whether the object requires
- *        the property, the property's form data, and whether it is asked even where it holds no `null` schema
+ *        the property, the property's form data, and whether it is asked even where it holds no `null` schema, asked
+ *        only once the Optional Data Controls collapse the property
  * @returns - The `null` fills for the property
  */
 function nullFillsForProperty<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -1796,30 +1814,33 @@ function nullFillsForProperty<T, S extends StrictRJSFSchema, F extends FormConte
     nullFills,
     isRequired,
     formData,
-    mayCollapse = false,
+    mayCollapse,
   }: Pick<FoldProps<T, S, F>, 'uiSchema' | 'uiSchemaDefinitions' | 'nullFills'> & {
     isRequired?: boolean;
     formData: unknown;
-    mayCollapse?: boolean;
+    mayCollapse?: () => boolean;
   },
 ): NullFills | undefined {
   const rootSchema = child.graph.rawRoot;
-  const isCollapsed =
-    nullFills !== undefined &&
-    !nullFills.isCollapsed &&
-    (mayCollapse || mayHoldNullType(propertySchema, rootSchema)) &&
+  const collapses = (fills: NullFills) =>
     isCollapsedByOptionalDataControls<T, S, F>(
       () => settle(context, { ...child, retrieves: true }, undefined, undefined).schema,
       propertySchema,
       uiSchema,
       {
         uiSchemaDefinitions,
-        globalUiOptions: nullFills.globalUiOptions,
+        globalUiOptions: fills.globalUiOptions,
         rootSchema,
         required: isRequired === true,
         formData,
       },
     );
+  const isCollapsed =
+    nullFills !== undefined &&
+    !nullFills.isCollapsed &&
+    (mayHoldNullType(propertySchema, rootSchema)
+      ? collapses(nullFills)
+      : mayCollapse !== undefined && collapses(nullFills) && mayCollapse());
   return isCollapsed ? { ...nullFills, isCollapsed } : nullFills;
 }
 
@@ -1960,7 +1981,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const propertyKeys = Object.keys(schema.properties ?? {}).filter(
     (key) => isPinned(key) || !hasSchemaMarker(getPropertySchema<S>(schema, key), ADDITIONAL_PROPERTY_FLAG),
   );
-  let skippingContext: SchemaContext<S, F> | undefined;
   [...propertyKeys, ...unmergedProperties.keys()].forEach((key) => {
     const propertySchema = unmergedProperties.get(key) ?? getPropertySchema<S>(schema, key);
     // A key the fold left unmerged has no seed under the object's `properties`, so it is seeded where the field as
@@ -1989,8 +2009,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const addedByAdditionalProperty = hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG);
     const child = defaultsChild(seeding, seeds, edge, propertySchema);
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
-    // Only a property that may merge or show an object `const` can have one to leave out below
-    const mayHoldObjectConst = reachesObjectConst<S>(child, defaultFormStateBehavior);
+    // Only a property that may merge or show an object `const` can have one to leave out below, asked only of one
+    // the Optional Data Controls collapse
+    let reachesConst: boolean | undefined;
+    const mayHoldObjectConst = () => (reachesConst ??= reachesObjectConst<S>(child, defaultFormStateBehavior));
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
     // `null` of none of them is filled in until the user adds it
     const propertyNullFills = nullFillsForProperty<T, S, F>(context, child, propertySchema, {
@@ -2013,9 +2035,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       }
       const parentDefaults = ownValue(foldProps.parentDefaults);
       const over = (value: unknown) =>
-        isObject(parentDefaults) && isObject(value) ? mergeObjects(parentDefaults, value) : (value ?? parentDefaults);
-      skippingContext ??= nullsOnlyContext(context, 'ancestorWins');
-      const folded = foldReporting(skippingContext, memoKey, child, {
+        isObject(parentDefaults) && isObject(value)
+          ? mergeObjects(parentDefaults, value)
+          : value === undefined
+            ? parentDefaults
+            : value;
+      const folded = foldReporting(skippingBranchDefaults(context), memoKey, child, {
         ...foldProps,
         rawFormData: over(foldProps.rawFormData),
       });
@@ -2046,7 +2071,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         // it a value, a default or `const` of its properties, a default of its own, a `ui:initialValue` or the
         // object's defaults, opens it as it opens any object. A fold that took no object `const` already computed its
         // value without
-        let withoutConst = mayHoldObjectConst && isObjectData(property.value) ? property : undefined;
+        let withoutConst = mayHoldObjectConst() && isObjectData(property.value) ? property : undefined;
         if (withoutConst && property.takesObjectConst) {
           withoutConst = foldProperty(`withoutConst:${key}`, {
             ...ownProps,
@@ -2077,12 +2102,13 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       // whatever the form's settings say about adding defaults. Where its field takes none of the data, an `allOf` the
       // property is read through decides it holds nothing, object data its schema can't take is left out, and any other
       // value is kept as the user left it, as a select keeps a value its options no longer offer, and an extra key
-      // stubbed among the properties keeps the data `extraKeyKeepsData()` says it does
+      // stubbed among the properties keeps the data `extraKeyKeepsData()` says it does. A key only an unmerged `allOf`
+      // declares, folded for its `null` fills alone, keeps its data where that fold gives it no value
       const retrievesProperty = populatesAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty);
       const keepsData = addedByAdditionalProperty && extraKeyKeepsData(formData[key], property.value);
       if ((property.value !== undefined || retrievesProperty) && !keepsData) {
         setOwn(computed, key, property.value);
-      } else if (addedByAdditionalProperty || !isObjectData(formData[key])) {
+      } else if (addedByAdditionalProperty || skipsBranchDefaults || !isObjectData(formData[key])) {
         setOwn(computed, key, formData[key]);
       }
     } else {

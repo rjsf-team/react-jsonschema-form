@@ -588,6 +588,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(required).getDefaultFormState(required, undefined, false, false, uiSchema)).toStrictEqual({
             x: { a: 2 },
           });
+          // Where constants are never defaults, the object is collapsed as one without a `const` is
+          const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
+          expect(utils(schema, never).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({});
         });
         it('opens an optional object the optional data controls show whose option holding no const gives it a value', () => {
           const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
@@ -995,6 +998,49 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(utils(nested).getDefaultFormState(nested, { x: { a: { c: 4 } } }, false, true)).toStrictEqual({
             x: { a: { c: 4, z: null } },
           });
+        });
+        it("keeps the object data of a key of a const that only an unmerged allOf declares beside a ui:initialValue that doesn't name it", () => {
+          const b: RJSFSchema = { type: 'object', properties: { b: { type: 'number' } } };
+          const x = (declared: boolean): RJSFSchema => ({
+            type: 'object',
+            const: { a: { b: 1 } },
+            ...(declared ? { properties: { a: b } } : { allOf: [{ properties: { a: b } }] }),
+          });
+          const uiSchema = { x: { 'ui:initialValue': { z: 1 } } };
+          for (const declared of [false, true]) {
+            const schema: RJSFSchema = { type: 'object', properties: { x: x(declared) } };
+            for (const initialDefaultsGenerated of [false, true]) {
+              expect(
+                utils(schema).getDefaultFormState(
+                  schema,
+                  { x: { a: { b: 5 } } },
+                  false,
+                  initialDefaultsGenerated,
+                  uiSchema,
+                ),
+              ).toStrictEqual({ x: { a: { b: 5 } } });
+            }
+          }
+        });
+        it('keeps a null the data holds for a key of a const that only an unmerged allOf declares', () => {
+          const a: RJSFSchema = { type: ['number', 'null'] };
+          for (const declared of [false, true]) {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                x: {
+                  type: 'object',
+                  const: { a: 1 },
+                  ...(declared ? { properties: { a } } : { allOf: [{ properties: { a } }] }),
+                },
+              },
+            };
+            for (const initialDefaultsGenerated of [false, true]) {
+              expect(
+                utils(schema).getDefaultFormState(schema, { x: { a: null } }, false, initialDefaultsGenerated),
+              ).toStrictEqual({ x: { a: null } });
+            }
+          }
         });
         it('adds the default of a property that names const, as undefined, under skipDefaults', () => {
           const spread: RJSFSchema = {
