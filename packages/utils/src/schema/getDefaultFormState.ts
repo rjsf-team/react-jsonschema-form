@@ -560,19 +560,12 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * would be computed from the same inputs again
    */
   memo?: Map<string, MemoEntry>;
-  /** Returns the `additionalProperties` of the object field as rendered, retrieved or joined with an option, sharing
-   * what is equal with the one the last pass of the field's fixed point read. Each pass plans the field anew, so it
-   * retrieves anew, and the extra-key schema it hands its children keeps its identity, so their memo hits
-   */
-  shareExtraKeySchema?: <V>(extraKeySchema: V) => V;
+  /** What the passes of the field's fixed point share */
+  passes?: FieldPasses<S, F>;
   /** Whether the field's object `const`, its own, a branch's or its shown option's, is left out of its defaults, to
    * tell whether anything else gives an optional object a value; its children's `const`s still count
    */
   leavesOutObjectConst?: boolean;
-  /** Returns a view of the field as `SchemaField` retrieves it, settled once per view of the pass, so the `const` read
-   * and the object's extra keys share one retrieve
-   */
-  retrievedViewOf?: (view: DefaultsView<S>) => DefaultsView<S>;
   /** The option each field shows, which a field offering `anyOf`/`oneOf` options computes its defaults from */
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
@@ -621,13 +614,59 @@ function childPathProps<T, S extends StrictRJSFSchema, F extends FormContextType
  */
 interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> extends FoldProps<T, S, F> {
   track: (view: DefaultsView<S>) => void;
-  retrievedViewOf: (view: DefaultsView<S>) => DefaultsView<S>;
-  /** Returns `raw` as `retrieveSchema()` resolves it for the field's data, retrieved once for the life of the field's
-   * fixed point, whose passes all read the same data: an option and the parent beside it, which every pass would
-   * otherwise retrieve again. `owner` and `slot` name what `raw` is read from, since a parent without its options is a
-   * new object on every call
+  passes: FieldPasses<S, F>;
+}
+
+/** What the passes of a field's dependency fixed point share, all of which read the same data. Only a field with an
+ * object `const` or options uses it, so its stores are made on first use
+ */
+class FieldPasses<S extends StrictRJSFSchema, F extends FormContextType> {
+  private readonly context: SchemaContext<S, F>;
+  private readonly rootSchema: S;
+  private readonly data: unknown;
+  private retrievals?: KeyedMemo<S>;
+  private retrievedViews?: WeakMap<DefaultsView<S>, DefaultsView<S>>;
+  private lastExtraKeySchema: unknown;
+
+  constructor(context: SchemaContext<S, F>, rootSchema: S, data: unknown) {
+    this.context = context;
+    this.rootSchema = rootSchema;
+    this.data = data;
+  }
+
+  /** Returns the `additionalProperties` of the object field as rendered, retrieved or joined with an option, sharing
+   * what is equal with the one the last pass read. Each pass plans the field anew, so it retrieves anew, and the
+   * extra-key schema it hands its children keeps its identity, so their memo hits
    */
-  retrieveOnce: (owner: object, slot: string, raw: S) => S;
+  shareExtraKeySchema<V>(extraKeySchema: V): V {
+    const shared = replaceEqualDeep(this.lastExtraKeySchema, extraKeySchema);
+    this.lastExtraKeySchema = shared;
+    return shared;
+  }
+
+  /** Returns `raw` as `retrieveSchema()` resolves it for the field's data, retrieved once for the life of the fixed
+   * point: an option and the parent beside it, which every pass would otherwise retrieve again. `owner` and `slot` name
+   * what `raw` is read from, since a parent without its options is a new object on every call
+   */
+  retrieveOnce(owner: object, slot: string, raw: S): S {
+    this.retrievals ??= new KeyedMemo<S>();
+    return this.retrievals.get([owner, slot], () =>
+      retrieveSchema<unknown, S, F>(this.context, raw, this.rootSchema, this.data),
+    );
+  }
+
+  /** Returns a view of the field as `SchemaField` retrieves it, settled once per view of a pass, so the `const` read
+   * and the object's extra keys share one retrieve
+   */
+  retrievedViewOf(view: DefaultsView<S>): DefaultsView<S> {
+    this.retrievedViews ??= new WeakMap();
+    let known = this.retrievedViews.get(view);
+    if (known === undefined) {
+      known = retrieveView<S, F>(this.context, view);
+      this.retrievedViews.set(view, known);
+    }
+    return known;
+  }
 }
 
 /** Returns the policy fields are planned with: which `allOf`s and `if`s are merged, and which options. An option of a
@@ -852,23 +891,24 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Returns the schema the `const` of the field of `view` is read from: its own, or, where it holds none and an `allOf`
  * member or an `if` branch its plan left unmerged may give it one, the field as `SchemaField` retrieves it for the
- * data, which `retrieved` gives. Only an object `const` is read from that: the branch's other defaults, a primitive
+ * data, which `passes` gives. Only an object `const` is read from that: the branch's other defaults, a primitive
  * `const` included, stay skipped as the plan skips them
  */
-function constSchemaOf<S extends StrictRJSFSchema>(
+function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   view: DefaultsView<S>,
-  retrieved: (view: DefaultsView<S>) => DefaultsView<S>,
+  passes: FieldPasses<S, F>,
+  defaultFormStateBehavior: DefaultFormStateBehavior | undefined,
 ): S {
   const { schema } = view;
   if (
     schema[CONST_KEY] !== undefined ||
     view.field.retrieves ||
     !(ALL_OF_KEY in schema || IF_KEY in schema) ||
-    !reachesObjectConst<S>(view.field)
+    !reachesObjectConst<S>(view.field, defaultFormStateBehavior)
   ) {
     return schema;
   }
-  const retrievedSchema = retrieved(view).schema;
+  const retrievedSchema = passes.retrievedViewOf(view).schema;
   return isObjectData(retrievedSchema[CONST_KEY]) ? retrievedSchema : schema;
 }
 
@@ -890,14 +930,15 @@ interface FieldConst<S extends StrictRJSFSchema> {
   readonly object?: Record<string, unknown>;
 }
 
-/** Returns the `const` of the field of `view`, read from the field `retrieved` returns where `constSchemaOf()` says */
+/** Returns the `const` of the field of `view`, read from the field `passes` retrieves where `constSchemaOf()` says */
 function fieldConstOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
-  retrieved: (view: DefaultsView<S>) => DefaultsView<S>,
+  passes: FieldPasses<S, F>,
 ): FieldConst<S> {
-  const schema = constSchemaOf<S>(view, retrieved);
-  const isDefault = constIsDefault<S>(schema, context.defaultFormStateBehavior);
+  const { defaultFormStateBehavior } = context;
+  const schema = constSchemaOf<S, F>(view, passes, defaultFormStateBehavior);
+  const isDefault = constIsDefault<S>(schema, defaultFormStateBehavior);
   const value = schema[CONST_KEY];
   return { schema, isDefault, object: isDefault && isObjectData(value) ? value : undefined };
 }
@@ -908,12 +949,38 @@ const objectConstReach = new WeakMap<object, Map<NodeId, boolean>>();
 /** Whether a subschema the field may merge or show declares an object `const`: one a seed of the field, or a `$ref`,
  * `allOf`, `then`/`else`, `dependencies` or `anyOf`/`oneOf` option it leads to through those, declares. Only such a
  * field can give an object `const` that its plan leaves unmerged, or that the fold leaves out, so the rest are spared
- * the retrieve and the extra fold that look for one. Each node's answer is worked out by a walk of its own, which a
- * cycle can't cut short, once per graph
+ * the retrieve and the extra fold that look for one. None does where constants are never defaults. Each node's answer
+ * is worked out by a walk of its own, which a cycle can't cut short, once per graph
  */
-function reachesObjectConst<S extends StrictRJSFSchema>({ graph, seeds }: DefaultsField<S>): boolean {
-  const answers = objectConstReach.get(graph) ?? new Map<NodeId, boolean>();
-  objectConstReach.set(graph, answers);
+function reachesObjectConst<S extends StrictRJSFSchema>(
+  { graph, seeds }: DefaultsField<S>,
+  defaultFormStateBehavior: DefaultFormStateBehavior | undefined,
+): boolean {
+  if (defaultFormStateBehavior?.constAsDefaults === 'never') {
+    return false;
+  }
+  let answers = objectConstReach.get(graph);
+  if (answers === undefined) {
+    answers = new Map<NodeId, boolean>();
+    objectConstReach.set(graph, answers);
+  }
+  for (const { node } of seeds) {
+    let reaches = answers.get(node);
+    if (reaches === undefined) {
+      reaches = leadsToObjectConst<S>(graph, node);
+      answers.set(node, reaches);
+    }
+    if (reaches) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/** Whether the node `start` of `graph`, or a subschema it leads to as `reachesObjectConst()` follows them, declares an
+ * object `const`
+ */
+function leadsToObjectConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, start: NodeId): boolean {
   const visited = new Set<NodeId>();
   // A boolean or unresolved node declares nothing
   const walk = (id: NodeId): boolean => {
@@ -933,15 +1000,7 @@ function reachesObjectConst<S extends StrictRJSFSchema>({ graph, seeds }: Defaul
       ].some(walk)
     );
   };
-  return seeds.some(({ node }) => {
-    let reaches = answers.get(node);
-    if (reaches === undefined) {
-      visited.clear();
-      reaches = walk(node);
-      answers.set(node, reaches);
-    }
-    return reaches;
-  });
+  return walk(start);
 }
 
 /** Whether the field of `schema` takes a `const` as its default: its own `const`, or one `hasConst` says it has where
@@ -1007,28 +1066,10 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const onNullFill = () => {
     holdsNull = true;
   };
-  // Only the `additionalProperties` the extra keys' fallback is read from is shared, not the whole field around it
-  let lastExtraKeySchema: unknown;
-  const shareExtraKeySchema = <V>(extraKeySchema: V) => {
-    const shared = replaceEqualDeep(lastExtraKeySchema, extraKeySchema);
-    lastExtraKeySchema = shared;
-    return shared;
-  };
-  const retrievals = new KeyedMemo<S>();
-  const retrieveOnce = (owner: object, slot: string, raw: S) =>
-    retrievals.get([owner, slot], () => retrieveSchema<unknown, S, F>(context, raw, field.graph.rawRoot, data));
-  const retrievedViews = new WeakMap<DefaultsView<S>, DefaultsView<S>>();
-  const retrievedViewOf = (passView: DefaultsView<S>) => {
-    const known = retrievedViews.get(passView) ?? retrieveView<S, F>(context, passView);
-    retrievedViews.set(passView, known);
-    return known;
-  };
   const passProps = {
     ...props,
     memo: new Map<string, MemoEntry>(),
-    shareExtraKeySchema,
-    retrieveOnce,
-    retrievedViewOf,
+    passes: new FieldPasses<S, F>(context, field.graph.rawRoot, data),
     track,
     onNullFill,
   };
@@ -1176,7 +1217,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
-  const fieldConst = fieldConstOf<S, F>(context, view, props.retrievedViewOf);
+  const fieldConst = fieldConstOf<S, F>(context, view, props.passes);
   const { schema: constSchema } = fieldConst;
   const leavesOutConst = props.leavesOutObjectConst === true && fieldConst.object !== undefined;
   const constDefault = fieldConst.isDefault && !leavesOutConst;
@@ -1186,107 +1227,110 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // An object `const` beside options is the object's defaults, but the option the object shows still renders beside
   // it, as `ObjectField` renders it, so that option is folded with the `const` as its parent's defaults
   const foldsOptionUnderConst = xxxOf !== undefined && fieldConst.object !== undefined;
-  if (constDefault && !foldsOptionUnderConst) {
-    // The `const` is the field's defaults
-  } else if (
-    isObject(defaults) &&
-    isObject(schema.default) &&
-    !xxxOf &&
-    !isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(schema, () => view))
-  ) {
-    // For object defaults, merge defaults by precedence setting.
-    // Skip this for anyOf/oneOf schemas, which need special handling, and for a select over object constants,
-    // whose own default and inherited default each name a whole constant, so a blend of them names none.
-    const ownDefault = ownValue(schema.default);
-    defaults = preferParentDefaults ? mergeObjects(ownDefault, defaults) : mergeObjects(defaults, ownDefault);
-  } else if (DEFAULT_KEY in schema && !preferParentDefaults && !xxxOf) {
-    // If the schema has a default value and parentDefaults does not have precedence
-    // And if the schema does not have anyOf or oneOf (since we need to merge the defaults with the formData)
-    // Then we should use it as the default.
-    defaults = ownValue(schema.default);
-  } else if (Array.isArray(schema.items) && isFixedItems<S>(schema) && !preferParentDefaults && !xxxOf) {
-    // If the schema contains fixed items and parentDefaults does not have precedence
-    // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
-    // option, which it is met into below, so its defaults are those of the option as rendered
-    defaults = schema.items.map((_item, idx) =>
-      foldChild<T, S, F>(
-        context,
-        `tuple:${idx}`,
-        itemField(view, AdditionalItemsHandling.Fallback, idx),
-        {
-          includeUndefinedValues,
-          parentDefaults: Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
-          rawFormData: Array.isArray(rawFormData) ? rawFormData[idx] : undefined,
-          required,
-          shouldMergeDefaultsIntoFormData,
-          initialDefaultsGenerated,
-          uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx),
-          uiSchemaDefinitions,
-          nullFills: props.nullFills,
-          ...childPathProps<T, S, F>(props, idx),
-        },
-        props.memo,
-      ),
-    );
-  } else if (xxxOf) {
-    const choice = chooseOption<T, S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults, props);
-    isWholeValue = choice.isWholeValue;
-    if (choice.wholeOptions === undefined) {
-      // The `ui:initialValue` the object takes in its `const`'s place is the object's, whichever uiSchema its option has
-      const initialValue = foldsOptionUnderConst ? getUiOptions<T, S, F>(uiSchema).initialValue : undefined;
-      const foldedOption = foldOption<T, S, F>(
-        choice.context,
-        view,
-        xxxOf,
-        choice.index,
-        { ...props, parentDefaults: defaults },
-        initialValue,
-      );
-      // Under the object's own `const`, a key only the option declares, which the `const` doesn't name and the data
-      // doesn't hold, is left out: its default would make the object a value the `const` rejects
-      const optionValue =
-        foldsOptionUnderConst && isObjectData(foldedOption)
-          ? withoutKeysOutside(foldedOption, [constSchema[CONST_KEY], schema.properties, rawFormData])
-          : foldedOption;
-      // Data the field takes is its own even where the option it renders through holds none of it, as an option with
-      // no value, or one that is no object or takes no object, holds none of object data. Its defaults are merged
-      // beneath the data, as an object field's are
-      const optionHoldsNone =
-        optionValue === undefined ||
-        (isObjectData(rawFormData) &&
-          (!isObjectData(optionValue) ||
-            !optionTakesValueOf<S, F>(
-              context,
-              view,
-              xxxOf.key,
-              choice.index,
-              xxxOf.options[choice.index],
-              rawFormData,
-            )));
-      if (optionHoldsNone && shouldMergeDefaultsIntoFormData && rawFormData !== undefined) {
-        const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
-        return matching === undefined
-          ? optionValue
-          : mergeDefaultsWithFormData(
-              optionValue,
-              matching,
-              defaultFormStateBehavior?.arrayMinItems?.mergeExtraDefaults,
-              defaultReplacesUndefined(defaultFormStateBehavior),
-            );
-      }
-      return optionValue;
-    }
-    // Resolved here rather than by recursing into the option as a primitive select is, since the option's constant is
-    // taken as a whole: filling in its properties or items would reduce it to an empty value no option allows. The
-    // constant wins over an inherited default, as it does for a primitive `const`, unless constants are never defaults.
-    // The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by `typeDefaults()`
+  // Where the `const` is the field's defaults, nothing below takes their place
+  if (!constDefault || foldsOptionUnderConst) {
     if (
-      rawFormData === undefined &&
-      !foldsOptionUnderConst &&
-      !(props.leavesOutObjectConst && isObjectData(toConstant<S>(choice.wholeOptions[choice.index]))) &&
-      choice.context.defaultFormStateBehavior?.constAsDefaults !== 'never'
+      isObject(defaults) &&
+      isObject(schema.default) &&
+      !xxxOf &&
+      !isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(schema, () => view))
     ) {
-      defaults = ownValue(toConstant<S>(choice.wholeOptions[choice.index]));
+      // For object defaults, merge defaults by precedence setting.
+      // Skip this for anyOf/oneOf schemas, which need special handling, and for a select over object constants,
+      // whose own default and inherited default each name a whole constant, so a blend of them names none.
+      const ownDefault = ownValue(schema.default);
+      defaults = preferParentDefaults ? mergeObjects(ownDefault, defaults) : mergeObjects(defaults, ownDefault);
+    } else if (DEFAULT_KEY in schema && !preferParentDefaults && !xxxOf) {
+      // If the schema has a default value and parentDefaults does not have precedence
+      // And if the schema does not have anyOf or oneOf (since we need to merge the defaults with the formData)
+      // Then we should use it as the default.
+      defaults = ownValue(schema.default);
+    } else if (Array.isArray(schema.items) && isFixedItems<S>(schema) && !preferParentDefaults && !xxxOf) {
+      // If the schema contains fixed items and parentDefaults does not have precedence
+      // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
+      // option, which it is met into below, so its defaults are those of the option as rendered
+      defaults = schema.items.map((_item, idx) =>
+        foldChild<T, S, F>(
+          context,
+          `tuple:${idx}`,
+          itemField(view, AdditionalItemsHandling.Fallback, idx),
+          {
+            includeUndefinedValues,
+            parentDefaults: Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
+            rawFormData: Array.isArray(rawFormData) ? rawFormData[idx] : undefined,
+            required,
+            shouldMergeDefaultsIntoFormData,
+            initialDefaultsGenerated,
+            uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx),
+            uiSchemaDefinitions,
+            nullFills: props.nullFills,
+            ...childPathProps<T, S, F>(props, idx),
+          },
+          props.memo,
+        ),
+      );
+    } else if (xxxOf) {
+      const choice = chooseOption<T, S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults, props);
+      isWholeValue = choice.isWholeValue;
+      if (choice.wholeOptions === undefined) {
+        // The object's `ui:initialValue` stands in its `const`'s place, whichever uiSchema its option has
+        const initialValue = foldsOptionUnderConst ? getUiOptions<T, S, F>(uiSchema).initialValue : undefined;
+        const foldedOption = foldOption<T, S, F>(
+          choice.context,
+          view,
+          xxxOf,
+          choice.index,
+          { ...props, parentDefaults: defaults },
+          initialValue,
+        );
+        // Under the object's own `const`, a key only the option declares, which the `const` doesn't name and the data
+        // doesn't hold, is left out: its default would make the object a value the `const` rejects. A key the
+        // `ui:initialValue` names is kept, since that value stands in the `const`'s place
+        const optionValue =
+          foldsOptionUnderConst && isObjectData(foldedOption)
+            ? withoutKeysOutside(foldedOption, [constSchema[CONST_KEY], schema.properties, rawFormData, initialValue])
+            : foldedOption;
+        // Data the field takes is its own even where the option it renders through holds none of it, as an option with
+        // no value, or one that is no object or takes no object, holds none of object data. Its defaults are merged
+        // beneath the data, as an object field's are
+        const optionHoldsNone =
+          optionValue === undefined ||
+          (isObjectData(rawFormData) &&
+            (!isObjectData(optionValue) ||
+              !optionTakesValueOf<S, F>(
+                context,
+                view,
+                xxxOf.key,
+                choice.index,
+                xxxOf.options[choice.index],
+                rawFormData,
+              )));
+        if (optionHoldsNone && shouldMergeDefaultsIntoFormData && rawFormData !== undefined) {
+          const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
+          return matching === undefined
+            ? optionValue
+            : mergeDefaultsWithFormData(
+                optionValue,
+                matching,
+                defaultFormStateBehavior?.arrayMinItems?.mergeExtraDefaults,
+                defaultReplacesUndefined(defaultFormStateBehavior),
+              );
+        }
+        return optionValue;
+      }
+      // Resolved here rather than by recursing into the option as a primitive select is, since the option's constant
+      // is taken as a whole: filling in its properties or items would reduce it to an empty value no option allows.
+      // The constant wins over an inherited default, as it does for a primitive `const`, unless constants are never
+      // defaults. The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by
+      // `typeDefaults()`
+      if (
+        rawFormData === undefined &&
+        !foldsOptionUnderConst &&
+        !(props.leavesOutObjectConst && isObjectData(toConstant<S>(choice.wholeOptions[choice.index]))) &&
+        choice.context.defaultFormStateBehavior?.constAsDefaults !== 'never'
+      ) {
+        defaults = ownValue(toConstant<S>(choice.wholeOptions[choice.index]));
+      }
     }
   }
 
@@ -1559,7 +1603,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const rendersOwnField = rendersOwnFieldBesideOption<S>(fieldSchema, listedOption);
   const optionUiSchema = getOptionUiSchema<T, S, F>(props.uiSchema, key, index);
   const retrievedOption = isSchemaObject<S>(listedOption)
-    ? computedOnce(() => props.retrieveOnce(listedOption, 'option', listedOption))
+    ? computedOnce(() => props.passes.retrieveOnce(listedOption, 'option', listedOption))
     : undefined;
   // An option whose field takes the object's extra keys is asked as the field renders it, retrieved for the data, and
   // only where it has a uiSchema of its own for the object's to lie beneath
@@ -1569,7 +1613,6 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       : optionUiSchema;
   let uiSchema = renderedUiSchema;
   if (initialValue !== undefined && getUiOptions<T, S, F>(renderedUiSchema).initialValue === undefined) {
-    /* v8 ignore next -- an option's uiSchema is picked from the object's, which holds the initial value */
     const carrying: UiSchema<T, S, F> = renderedUiSchema ? { ...renderedUiSchema } : {};
     carrying['ui:initialValue'] = initialValue;
     uiSchema = carrying;
@@ -1583,7 +1626,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       rendersOwnField && retrievedOption
         ? {
             parent: computedOnce(() =>
-              fieldSchema === remaining ? props.retrieveOnce(schema, key, remaining) : fieldSchema,
+              fieldSchema === remaining ? props.passes.retrieveOnce(schema, key, remaining) : fieldSchema,
             ),
             option: retrievedOption,
           }
@@ -1805,10 +1848,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
-  const retrieved = props.retrievedViewOf ?? ((field: DefaultsView<S>) => retrieveView<S, F>(context, field));
+  const passes = props.passes ?? new FieldPasses<S, F>(context, rootSchema, rawFormData);
   // An object `const` the field defaults to. Where the fold leaves its value out, it still closes the object to the
   // keys it names, so a default of the object's for those keys is still seeded, as the value it starts with
-  const objectConst = (fieldConst ?? fieldConstOf<S, F>(context, view, retrieved)).object;
+  const objectConst = (fieldConst ?? fieldConstOf<S, F>(context, view, passes)).object;
   // `ObjectField` asks whether the user can add a key of the field as it renders it, retrieved for the data, its `allOf`
   // and `if` merged. An option's `const` is not its parent's: the field that renders the option's extra keys, its
   // parent's or, where the option offers options of its own, the option's, asks it of the parent with the option's
@@ -1816,7 +1859,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // the retrieve and the join are spared every other field
   const optionOf = objectConst === undefined ? undefined : props.optionOf;
   // The field as `SchemaField` retrieves it, for the data the fold reads, which the branch `null` fill reads as well
-  const retrievedView = computedOnce(() => retrieved(view));
+  const retrievedView = computedOnce(() => passes.retrievedViewOf(view));
   let extraKeysField = view.schema;
   if (optionOf) {
     extraKeysField = joinOptionExtraKeys<S>(optionOf.parent(), optionOf.option());
@@ -1928,7 +1971,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const declaring = seeding.schema;
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key, declaring);
     // Only a property that may merge or show an object `const` can have one to leave out below
-    const mayHoldObjectConst = reachesObjectConst<S>(child);
+    const mayHoldObjectConst = reachesObjectConst<S>(child, defaultFormStateBehavior);
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
     // `null` of none of them is filled in until the user adds it
     const propertyNullFills = nullFillsForProperty<T, S, F>(context, child, propertySchema, {
@@ -2039,9 +2082,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const ownAdditionalProperties =
     absentKeywordAllows<S, F>(context, extraKeysField) || extraKeysField.additionalProperties;
   const additionalProperties =
-    extraKeysField !== view.schema && props.shareExtraKeySchema
-      ? props.shareExtraKeySchema(ownAdditionalProperties)
-      : ownAdditionalProperties;
+    extraKeysField !== view.schema ? passes.shareExtraKeySchema(ownAdditionalProperties) : ownAdditionalProperties;
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
   // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or
   // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the

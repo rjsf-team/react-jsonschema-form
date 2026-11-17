@@ -323,12 +323,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           for (const initialValue of [{ a: 5 }, { z: 1 }]) {
             const parentOnly = { 'ui:initialValue': initialValue };
             const spelled = { ...parentOnly, oneOf: [{}, {}] };
+            // A list the uiSchema spells out with a hole at the option gives the option no uiSchema of its own
+            const holeyOptions: UiSchema[] = [];
+            holeyOptions[1] = {};
+            const holey = { ...parentOnly, oneOf: holeyOptions };
             const firstPass = utils(schema).getDefaultFormState(schema, undefined, false, false, parentOnly);
-            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, spelled)).toStrictEqual(
-              firstPass,
-            );
             const later = utils(schema).getDefaultFormState(schema, {}, false, true, parentOnly);
-            expect(utils(schema).getDefaultFormState(schema, {}, false, true, spelled)).toStrictEqual(later);
+            for (const uiSchema of [spelled, holey]) {
+              expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual(
+                firstPass,
+              );
+              expect(utils(schema).getDefaultFormState(schema, {}, false, true, uiSchema)).toStrictEqual(later);
+            }
           }
           expect(
             utils(schema).getDefaultFormState(schema, undefined, false, false, {
@@ -843,6 +849,30 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ k: 'x' });
           expect(utils(schema).getDefaultFormState(schema, { k: 'x', z: 'r' })).toStrictEqual({ k: 'x', z: 'r' });
+        });
+        it('keeps a key the ui:initialValue of an object const beside options names, which the const does not', () => {
+          const options: RJSFSchema[] = [
+            { properties: { b: { type: 'string', default: 'q' } } },
+            { properties: { c: { type: 'string' } } },
+          ];
+          const open: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', additionalProperties: true, const: { a: 1 }, oneOf: options } },
+          };
+          const initialValue = (value: object) => ({ x: { 'ui:initialValue': value } });
+          const withoutOptions: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', additionalProperties: true, const: { a: 1 } } },
+          };
+          const extraKey = initialValue({ a: 5, z: 1 });
+          expect(utils(open).getDefaultFormState(open, undefined, false, false, extraKey)).toStrictEqual({
+            x: { a: 5, z: 1 },
+          });
+          expect(
+            utils(withoutOptions).getDefaultFormState(withoutOptions, undefined, false, false, extraKey),
+          ).toStrictEqual({ x: { a: 5, z: 1 } });
+          // A default of the shown option for a key neither names is still left out, open as the object is
+          expect(utils(open).getDefaultFormState(open)).toStrictEqual({ x: { a: 1 } });
         });
         it('folds a key of an object const beside options as the shown option declares or takes it', () => {
           const declared: RJSFSchema = {
