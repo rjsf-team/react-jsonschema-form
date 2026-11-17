@@ -1,6 +1,6 @@
 ---
 title: A property whose allOf narrows its options to one value keeps the value its data gives
-description: "Under `allOf: 'skipDefaults'`, a property whose `allOf` narrows its options to one value used to replace its data with its `default`; it now keeps the data, and the other `allOf` settings now take the default for a value its own options leave out. Declare a `const` to force the value."
+description: "A property whose `allOf` narrows its options to one value now keeps its data under `allOf: 'skipDefaults'`, and takes its default for a value its own options lack under the other settings. Declare a `const` to force the value."
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, form-props]
 schema: [defaults, enums]

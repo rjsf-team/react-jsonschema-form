@@ -1,6 +1,6 @@
 ---
 title: Under constAsDefaults always, a const from allOf takes precedence over the data
-description: "Under `constAsDefaults: 'always'`, an object `const` in an `allOf`, or an `anyOf`/`oneOf` constant of a key only an `allOf` declares, used to leave the data alone; it now replaces it as the field's own `const` does. Name every key to keep in the `const`, or add the value to the options."
+description: "Under `constAsDefaults: 'always'`, an object `const` or `anyOf`/`oneOf` constants in an `allOf` now replace the data, as the field's own do. Name every key to keep in the `const`, or add the value to the options."
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form-props]
 schema: [defaults, enums]
