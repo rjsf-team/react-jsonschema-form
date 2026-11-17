@@ -316,9 +316,46 @@ function scopeAt<S extends StrictRJSFSchema>(
   return members;
 }
 
-/** Returns the nodes `scopeAt()` lists for the node `id` reached at no place in particular */
-function scopeOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): ObjectNode<S>[] {
-  return scopeAt(graph, id, undefined).map(({ node }) => node);
+/** The nodes `scopeOf()` lists for a node of a graph, and the graph they belong to */
+interface Scope<S extends StrictRJSFSchema> {
+  readonly graph: SchemaGraph<S>;
+  readonly nodes: readonly ObjectNode<S>[];
+}
+
+/** The scopes `scopeOf()` lists, per graph, node and follow */
+// oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
+const scopes = new KeyedMemo<Scope<StrictRJSFSchema>>();
+
+function isScopeOf<S extends StrictRJSFSchema>(
+  // oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
+  value: Scope<StrictRJSFSchema> | undefined,
+  graph: SchemaGraph<S>,
+): value is Scope<S> {
+  return value?.graph === graph;
+}
+
+/** Returns the nodes `scopeAt()` lists for the node `id` reached at no place in particular: the node, what its `$ref`
+ * resolves to and its `allOf` entries, and for `conditional` its `then`/`else` and `dependencies` schemas too. The
+ * defaults read a field's scope on every call, so each is walked once per graph, node and follow
+ *
+ * @param graph - The graph of the root
+ * @param id - The node whose scope is read
+ * @param [follow='conditional'] - Whether the conditional subschemas are followed
+ * @returns - The nodes of the scope
+ */
+export function scopeOf<S extends StrictRJSFSchema = RJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  follow: 'unconditional' | 'conditional' = 'conditional',
+): readonly ObjectNode<S>[] {
+  const keys = [graph, id, follow];
+  const known = scopes.peek(keys);
+  if (isScopeOf<S>(known, graph)) {
+    return known.nodes;
+  }
+  const nodes = scopeAt(graph, id, undefined, follow).map(({ node }) => node);
+  scopes.set(keys, { graph, nodes });
+  return nodes;
 }
 
 /** Returns the declarations of the property `key` in the scope of the option `id` reached at `place`, each at the place
@@ -354,28 +391,23 @@ export function declaredProperties<S extends StrictRJSFSchema = RJSFSchema>(
   id: NodeId,
   key: string,
 ): readonly NodeId[] {
-  return declarations.get([graph, id, key], () => declarationsAt(graph, id, undefined, key).map((found) => found.id));
+  return declarations.get([graph, id, key], () => {
+    const always = declaredInScope<S>(graph, id, key, 'unconditional');
+    return always.length > 0 ? always : declaredInScope<S>(graph, id, key, 'conditional').slice(0, 1);
+  });
 }
 
-/** Returns the nodes `scopeAt()` lists for the node `id` reached at no place in particular: the node, what its `$ref`
- * resolves to and its `allOf` entries, and for `conditional` its `then`/`else` and `dependencies` schemas too. The
- * defaults read a field's scope on every call, so each is walked once per graph and node
- *
- * @param graph - The graph of the root
- * @param id - The node whose scope is read
- * @param follow - Whether the conditional subschemas are followed
- * @returns - The nodes of the scope
+/** Returns the nodes of the property `key` that the scope `scopeOf()` lists for the node `id` declares, as
+ * `declarationsAt()` finds them reached at no place in particular
  */
-export function scopeNodes<S extends StrictRJSFSchema = RJSFSchema>(
+function declaredInScope<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   id: NodeId,
+  key: string,
   follow: 'unconditional' | 'conditional',
-): readonly NodeId[] {
-  return scopes.get([graph, id, follow], () => scopeAt(graph, id, undefined, follow).map(({ node }) => node.id));
+): NodeId[] {
+  return scopeOf<S>(graph, id, follow).flatMap((node) => graph.child(node.id, PROPERTIES_KEY, key) ?? []);
 }
-
-/** The nodes `scopeNodes()` lists, per graph, node and follow */
-const scopes = new KeyedMemo<readonly NodeId[]>();
 
 /** Returns whether a subschema that applies wherever the node `id` applies, whatever the data, declares the property
  * `key`: the node, what its `$ref` resolves to or one of its `allOf` entries, but no `then`, `else` or `dependencies`
@@ -391,7 +423,7 @@ export function declaresUnconditionally<S extends StrictRJSFSchema = RJSFSchema>
   id: NodeId,
   key: string,
 ): boolean {
-  return scopeNodes<S>(graph, id, 'unconditional').some((node) => graph.child(node, PROPERTIES_KEY, key) !== undefined);
+  return declaredInScope<S>(graph, id, key, 'unconditional').length > 0;
 }
 
 /** The nodes `declaredProperties()` finds, per graph, option and key: an option is matched on its discriminator on
@@ -1124,7 +1156,7 @@ function readDeclaredKeys<S extends StrictRJSFSchema, F extends FormContextType>
   graph: SchemaGraph<S>,
   id: NodeId,
 ): DeclaredKeys {
-  const scope = scopeOf(graph, id);
+  const scope = scopeOf<S>(graph, id);
   const declaring = scope.flatMap((node) => (isObject(node.raw.properties) ? [Object.keys(node.raw.properties)] : []));
   if (declaring.length === 0) {
     return true;

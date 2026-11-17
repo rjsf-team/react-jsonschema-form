@@ -97,7 +97,7 @@ import type { Provenance } from './graph/provenance.ts';
 import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
 import { schemaFrom } from './graph/schemaFrom.ts';
-import { declaresUnconditionally, scopeNodes } from './graph/validationTargets.ts';
+import { declaresUnconditionally, scopeOf } from './graph/validationTargets.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import { resolveDeclaredConstantOptions } from './resolveConstantOptions.ts';
 import retrieveSchema, {
@@ -2544,22 +2544,18 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
 }
 
 /** Whether a merge from a node, by `mergeReachesConst()`, reaches a `const`, by graph, node and whether it reads the
- * options of the node's scope; for a node whose answer waits on a cycle still being walked, the depth of the
- * shallowest open node it leads back to
+ * options of the node's scope; for a node still open in the walk, its place in `constWalk.open`
  */
 const constReach = new KeyedMemo<boolean | number | undefined>();
 
-/** How deep `mergeReachesConst()` is in its walk, the shallowest open node the nodes below have read, and the keys of
- * the nodes whose answer waits on the cycle they lead back to
+/** The walk `mergeReachesConst()` is in, as Tarjan's strongly connected components walk it: the keys of the nodes
+ * walked whose answer is still open, in the order they were entered, and the lowest place in that list the node being
+ * walked leads back to
  */
-const constWalk: { depth: number; lowestRead: number; unsettled: (readonly unknown[])[] } = {
-  depth: 0,
-  lowestRead: Infinity,
-  unsettled: [],
-};
+const constWalk: { open: (readonly unknown[])[]; low: number } = { open: [], low: Infinity };
 
 /** Whether any subschema retrieving the node `from` may merge in declares a `const`: one in its scope, see
- * `scopeNodes()`, which holds its `$ref`, `allOf`, `then`/`else` and `dependencies` subschemas but no `if`, a condition
+ * `scopeOf()`, which holds its `$ref`, `allOf`, `then`/`else` and `dependencies` subschemas but no `if`, a condition
  * never merged into the field. Retrieving a field merges an `anyOf`/`oneOf` option in only where the scope reaches
  * `dependencies`, so the options of the scope are read only there, and below an option so merged (`withOptions`). A
  * merge brings in no `const` none of them declares, so where none does the field's schema is read without being merged
@@ -2576,53 +2572,41 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
   if (typeof known === 'boolean') {
     return known;
   }
-  // A scope that leads back to a node still open reaches no `const` that way, so the node reads as none meanwhile
+  // A node still open leads back into the cycle being walked, which settles only at its first node, so it reads as
+  // none meanwhile
   if (known !== undefined) {
-    constWalk.lowestRead = Math.min(constWalk.lowestRead, known);
+    constWalk.low = Math.min(constWalk.low, known);
     return false;
   }
-  constWalk.depth += 1;
-  const { depth, unsettled } = constWalk;
-  const outerRead = constWalk.lowestRead;
-  const settledBefore = unsettled.length;
-  constWalk.lowestRead = Infinity;
-  constReach.set(keys, depth);
+  const { open } = constWalk;
+  const place = open.length;
+  const outerLow = constWalk.low;
+  open.push(keys);
+  constReach.set(keys, place);
+  constWalk.low = place;
   let reaches: boolean | undefined;
   try {
-    const scope = scopeNodes<S>(graph, from, 'conditional');
-    const holds = (id: NodeId, keyword: string) => {
-      const node = graph.node(id);
-      return node.kind === 'schema' && Object.hasOwn(node.raw, keyword);
-    };
-    const readsOptions = withOptions || scope.some((id) => holds(id, DEPENDENCIES_KEY));
+    const scope = scopeOf<S>(graph, from);
+    const readsOptions = withOptions || scope.some((node) => Object.hasOwn(node.raw, DEPENDENCIES_KEY));
     reaches = scope.some(
-      (id) =>
-        holds(id, CONST_KEY) ||
+      (node) =>
+        Object.hasOwn(node.raw, CONST_KEY) ||
         (readsOptions &&
           [ANY_OF_KEY, ONE_OF_KEY].some((keyword) =>
-            graph.subschemas(id, keyword).some(([, option]) => mergeReachesConst<S>(graph, option, true)),
+            graph.subschemas(node.id, keyword).some(([, option]) => mergeReachesConst<S>(graph, option, true)),
           )),
     );
     return reaches;
   } finally {
-    // The walk is left as it was entered even where the graph throws, so no node stays open, and the nodes it left
-    // unsettled are worked out again. A `const` found stays found. None found may be only because an open node above
-    // read as none, so the node waits on the cycle through that node, as open as it is; once the walk is back at the
-    // first node of the cycle, every node of it reaches what that node reaches, so they settle with it, each walked
-    // once
-    constWalk.depth -= 1;
-    const low = constWalk.lowestRead;
-    const settles = reaches !== undefined && low >= depth;
-    if (reaches === false && !settles) {
-      constReach.set(keys, low);
-      unsettled.push(keys);
-    } else {
-      constReach.set(keys, reaches);
+    // Every node entered after this one and still open leads back to a node on the path to this one, so it reaches
+    // what this one reaches: a `const` found settles them all, and a graph that throws leaves them all to be walked
+    // again. None found settles only once nothing below leads back above this node, which makes it the first node of
+    // its cycle; until then it stays open with the rest, and its caller leads back as far as it does
+    const low = constWalk.low;
+    if (reaches !== false || low === place) {
+      open.splice(place).forEach((waiting) => constReach.set(waiting, reaches));
     }
-    if (reaches === undefined || settles) {
-      unsettled.splice(settledBefore).forEach((waiting) => constReach.set(waiting, reaches));
-    }
-    constWalk.lowestRead = Math.min(outerRead, low < depth ? low : Infinity);
+    constWalk.low = reaches === false && low < place ? Math.min(outerLow, low) : outerLow;
   }
 }
 

@@ -1471,17 +1471,140 @@ describe('mergeReachesConst()', () => {
   it('walks each node of a cycle that reaches no const once', () => {
     // Each definition offers the next twice over, and the last leads back to the first, so a walk that worked out a
     // node again on every path to it would take 2^n steps
-    const n = 24;
-    const definitions: Record<string, RJSFSchema> = {};
-    for (let index = 0; index < n; index += 1) {
-      const next = `#/definitions/D${(index + 1) % n}`;
-      definitions[`D${index}`] = { oneOf: [{ $ref: next }, { $ref: next }] };
+    const subschemaReads = (n: number) => {
+      const definitions: Record<string, RJSFSchema> = {};
+      for (let index = 0; index < n; index += 1) {
+        const next = `#/definitions/D${(index + 1) % n}`;
+        definitions[`D${index}`] = { oneOf: [{ $ref: next }, { $ref: next }] };
+      }
+      const graph = parseSchemaGraph({ definitions });
+      const subschemas = vi.spyOn(graph, 'subschemas');
+      const first = graph.byPointer('/definitions/D0');
+      expect(first !== undefined && mergeReachesConst(graph, first, true)).toBe(false);
+      return subschemas.mock.calls.length;
+    };
+    // Each definition added costs the same number of reads, however many there are
+    const reads = [12, 24, 48].map(subschemaReads);
+    expect(reads[2] - reads[1]).toBe(2 * (reads[1] - reads[0]));
+  });
+
+  it('answers a node of a cycle the same whichever node of it is asked first', () => {
+    const graph = parseSchemaGraph({
+      definitions: {
+        D0: { oneOf: [{ oneOf: [{ $ref: '#/definitions/D1' }, { $ref: '#/definitions/D2' }] }] },
+        D1: {
+          oneOf: [
+            {
+              oneOf: [
+                { $ref: '#/definitions/D1' },
+                { oneOf: [{ $ref: '#/definitions/D0' }, { $ref: '#/definitions/D2' }, { const: 'x' }] },
+                { $ref: '#/definitions/D1' },
+              ],
+            },
+          ],
+        },
+        D2: { oneOf: [{ $ref: '#/definitions/D0' }] },
+      },
+    });
+    const node = (pointer: string) => graph.byPointer(pointer) ?? -1;
+    expect(mergeReachesConst(graph, node('/definitions/D1/oneOf/0'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/D1/oneOf/0/oneOf/1/oneOf/1'), true)).toBe(true);
+  });
+
+  it('answers every node of a random graph as a plain reachability walk does, in any order', () => {
+    // A deterministic generator, so a failing graph can be found again by its seed
+    const random = (seed: number) => {
+      let state = seed;
+      return () => {
+        state = (state * 1_103_515_245 + 12_345) % 2_147_483_648;
+        return state / 2_147_483_648;
+      };
+    };
+    const definitionCount = 3;
+    const schemaOf = (next: () => number, depth: number): RJSFSchema => {
+      const pick = next();
+      const ref = { $ref: `#/definitions/D${Math.floor(next() * definitionCount)}` };
+      if (depth === 0 || pick < 0.3) {
+        return ref;
+      }
+      if (pick < 0.37) {
+        return { const: 'x' };
+      }
+      const entries = () => Array.from({ length: 1 + Math.floor(next() * 3) }, () => schemaOf(next, depth - 1));
+      if (pick < 0.85) {
+        return { oneOf: entries() };
+      }
+      if (pick < 0.9) {
+        return { anyOf: entries() };
+      }
+      if (pick < 0.93) {
+        return { allOf: entries() };
+      }
+      if (pick < 0.97) {
+        return { if: {}, then: schemaOf(next, depth - 1) };
+      }
+      return { dependencies: { a: schemaOf(next, depth - 1) }, oneOf: entries() };
+    };
+    const mismatches: unknown[] = [];
+    for (let seed = 1; seed <= 500; seed += 1) {
+      const next = random(seed);
+      const definitions: Record<string, RJSFSchema> = {};
+      for (let index = 0; index < definitionCount; index += 1) {
+        definitions[`D${index}`] = schemaOf(next, 4);
+      }
+      // Each order is asked of a graph of its own, as the answers are kept for as long as the graph lives
+      for (let order = 0; order < 4; order += 1) {
+        const graph = parseSchemaGraph({ definitions: structuredClone(definitions) });
+        const schemaNode = (id: number) => {
+          const found = graph.node(id);
+          return found.kind === 'schema' ? found : undefined;
+        };
+        // The scope of a node, as `scopeAt()` walks it, and whether a plain search from a node finds a `const`
+        const scope = (id: number, found = new Set<number>()) => {
+          const member = schemaNode(id);
+          if (member !== undefined && !found.has(id)) {
+            found.add(id);
+            [member.ref, graph.child(id, 'then'), graph.child(id, 'else')]
+              .concat(['allOf', 'dependencies'].flatMap((keyword) => graph.subschemas(id, keyword).map(([, sub]) => sub)))
+              .forEach((sub) => sub !== undefined && scope(sub, found));
+          }
+          return found;
+        };
+        const reaches = (from: number, withOptions: boolean) => {
+          const seen = new Set<string>();
+          const pending: [number, boolean][] = [[from, withOptions]];
+          for (let state = pending.pop(); state !== undefined; state = pending.pop()) {
+            const [id, options] = state;
+            if (!seen.has(`${id} ${options}`)) {
+              seen.add(`${id} ${options}`);
+              const members = [...scope(id)].flatMap((member) => schemaNode(member) ?? []);
+              if (members.some((member) => 'const' in member.raw)) {
+                return true;
+              }
+              if (options || members.some((member) => 'dependencies' in member.raw)) {
+                members.forEach((member) =>
+                  ['anyOf', 'oneOf'].forEach((keyword) =>
+                    graph.subschemas(member.id, keyword).forEach(([, option]) => pending.push([option, true])),
+                  ),
+                );
+              }
+            }
+          }
+          return false;
+        };
+        Array.from({ length: graph.size }, (_, id) => id)
+          .filter((id) => schemaNode(id) !== undefined)
+          .flatMap((id) => [true, false].map((withOptions): [number, boolean, number] => [id, withOptions, next()]))
+          .sort((a, b) => a[2] - b[2])
+          .forEach(([id, withOptions]) => {
+            const expected = reaches(id, withOptions);
+            if (mergeReachesConst(graph, id, withOptions) !== expected) {
+              mismatches.push({ seed, order, pointer: graph.node(id).pointer, withOptions, expected });
+            }
+          });
+      }
     }
-    const graph = parseSchemaGraph({ definitions });
-    const first = graph.byPointer('/definitions/D0');
-    const started = performance.now();
-    expect(first !== undefined && mergeReachesConst(graph, first, true)).toBe(false);
-    expect(performance.now() - started).toBeLessThan(1000);
+    expect(mismatches).toEqual([]);
   });
 
   it('settles every node of a cycle with the const one of them reaches', () => {
