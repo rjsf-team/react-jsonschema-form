@@ -368,6 +368,22 @@ describe('getDefaultFormState() on recursive schemas', () => {
     expect(defaultsOf(schema, defaults, behavior)).toEqual(expected);
   });
 
+  it.each<[string, RJSFSchema]>([
+    [
+      'a property beside it',
+      { type: 'object', properties: { child: { allOf: [{ $ref: D('node') }], const: { x: 1 } } } },
+    ],
+    [
+      'a property of an allOf beside it',
+      { type: 'object', allOf: [{ properties: { child: { allOf: [{ $ref: D('node') }], const: { tag: 't' } } } }] },
+    ],
+  ])('terminates on a recursion through an allOf it leaves unmerged beside a const of %s', (_, node) => {
+    const schema: RJSFSchema = { definitions: { node }, $ref: D('node') };
+    for (const behavior of [undefined, { allOf: 'skipDefaults' } satisfies DefaultFormStateBehavior]) {
+      expect(defaultsOf(schema, {}, behavior)).toStrictEqual({ child: {} });
+    }
+  });
+
   describe('a recursion through an option list a merge rebuilt', () => {
     const optA: RJSFSchema = { properties: { next: { $ref: D('node') }, a: { type: 'string', default: 'x' } } };
     const optB: RJSFSchema = { properties: { b: { type: 'string' } } };

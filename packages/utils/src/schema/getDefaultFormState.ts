@@ -1688,11 +1688,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       return holdsConst;
     };
   };
-  const childProps = (key: string, uiSchemaKey: string) => ({
+  const childProps = (key: string, uiSchemaKey: string, requiredKeys = schema.required) => ({
     includeUndefinedValues: includeUndefinedValues === true,
     parentDefaults: getByPath(defaults, key),
     rawFormData: getByPath(formData, key),
-    required: schema.required?.includes(key),
+    required: requiredKeys?.includes(key),
     shouldMergeDefaultsIntoFormData,
     initialDefaultsGenerated,
     uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaKey),
@@ -1771,26 +1771,37 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // `null` `branchNullFills()` finds for it
   const mergedSchema = ALL_OF_KEY in view.schema ? mergedSchemaOf<S, F>(context, view) : undefined;
   const allOfContext = mergedSchema === undefined || populatesAllOf ? context : skippingDefaults(context);
-  const rootGraph = parseSchemaGraph<S>(rootSchema);
+  // The key is seeded from the declarations the field's `allOf` holds, with the ref path that reaches them. A `$ref`
+  // already on that path is not entered, as the defaults stop at any `$ref` already followed, so a key that only a
+  // recursion through the `allOf` declares is not folded
+  let allOfSeeding: Seeding<S> | undefined;
   const allOfProperties =
     mergedSchema === undefined
       ? []
       : Object.keys(mergedSchema.properties ?? {})
           .filter((key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && declaredInAllOf(key))
-          .map((key) => {
+          .flatMap((key) => {
+            allOfSeeding ??= buildPlan<S, F>({
+              context,
+              ...fieldOfView<S>(view),
+              data: view.data,
+              policy: { allOf: true, conditions: false, cutRecursion: true },
+            });
+            const { seeds, edge } = childSeeds(allOfSeeding, key);
             const propertySchema = getPropertySchema<S>(mergedSchema, key);
-            const { graph, seeds } = isSchemaObject<S>(propertySchema)
-              ? fieldOf<S>(rootGraph, propertySchema)
-              : { graph: view.graph, seeds: [] };
-            return {
-              key,
-              propertySchema,
-              readProperty: propertySchema,
-              hasConst: constCheck(key, graph, seeds, propertySchema),
-              child: { graph, seeds, expanded: view.field.expanded, edge: 'property' as const },
-              declaredIn: mergedSchema,
-              foldContext: allOfContext,
-            };
+            return edge === 'property'
+              ? [
+                  {
+                    key,
+                    propertySchema,
+                    readProperty: propertySchema,
+                    hasConst: constCheck(key, view.graph, seeds, propertySchema),
+                    child: defaultsChild(view, seeds, edge),
+                    declaredIn: mergedSchema,
+                    foldContext: allOfContext,
+                  },
+                ]
+              : [];
           })
           .filter(
             ({ key, hasConst }) => Object.hasOwn(formData, key) || getByPath(defaults, key) !== undefined || hasConst(),
@@ -1804,10 +1815,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.
     const addedByAdditionalProperty = hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG);
-    const ownProps = {
-      ...childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key),
-      required: declaredIn.required?.includes(key),
-    };
+    const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key, declaredIn.required);
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
     // `null` of none of them is filled in until the user adds it
     const propertyNullFills = nullFillsForProperty<T, S, F>(context, child, propertySchema, {
