@@ -2042,9 +2042,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       ) {
         property = withoutConst;
         leavesOutConst = true;
-      } else if (isFormDataAvailable(added[key]) && mayHoldNullType(propertySchema, rootSchema)) {
-        // Collapsing changes only the `null` fills, so where none can come from the property its collapsed defaults
-        // are already the ones it opens with
+      } else if (isFormDataAvailable(added[key])) {
+        // The collapsed fold left out the `null` fills and the collapses of the optional objects inside, so the one
+        // it opens is folded again as it renders
         property = foldReporting(context, `property:${key}`, child, ownProps);
       }
     }

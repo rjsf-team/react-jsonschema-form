@@ -708,6 +708,21 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const held: RJSFSchema = { type: 'array', items };
           expect(utils(held).getDefaultFormState(held, [{}], false, false, uiSchema)).toStrictEqual([{}]);
         });
+        it('collapses the optional object consts inside an optional object const that opens, as inside one without a const', () => {
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          const inside: RJSFSchema = {
+            type: 'object',
+            properties: { b: { type: 'string', default: 's' }, y: { type: 'object', const: { c: 1 } } },
+          };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { x: { ...inside, const: { a: 1 } }, z: inside },
+          };
+          expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({
+            x: { b: 's', a: 1 },
+            z: { b: 's' },
+          });
+        });
         it('includes an optional object behind the optional data controls as an empty one under includeUndefinedValues, with or without a const', () => {
           const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
           const viaAllOf: RJSFSchema = { type: 'object', allOf: [{ properties: { a: { type: 'string' } } }] };
