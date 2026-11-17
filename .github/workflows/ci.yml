@@ -47,9 +47,14 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
+      # The deploy job runs only on main, so a `.nvmrc` no leg matches would otherwise pass every PR and fail only
+      # after merge, when no leg uploads the artifacts.
       - name: Read the deploy Node version
         id: nvmrc
-        run: echo "node-version=$(cat .nvmrc).x" >> "$GITHUB_OUTPUT"
+        run: |
+          v=$(tr -d '\r' < .nvmrc)
+          grep -qE "^ *node-version: \[.*\b$v\.x\b" .github/workflows/ci.yml || { echo "::error::.nvmrc ($v) is not a bare major that a build matrix leg lists"; exit 1; }
+          echo "node-version=$v.x" >> "$GITHUB_OUTPUT"
 
       - name: Build with Netlify badge
         run: pnpm run build-serial
