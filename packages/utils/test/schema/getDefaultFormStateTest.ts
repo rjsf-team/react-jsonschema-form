@@ -314,6 +314,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }
           expect(utils(two).getDefaultFormState(two, { a: 5 }, false, true, uiSchema)).toStrictEqual({ a: 5 });
         });
+        it('reads the ui:initialValue of an object const beside options whether or not the uiSchema spells out its options', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            const: { a: 1 },
+            oneOf: [{ properties: { a: { type: 'number' } } }, { properties: { b: { type: 'number' } } }],
+          };
+          for (const initialValue of [{ a: 5 }, { z: 1 }]) {
+            const parentOnly = { 'ui:initialValue': initialValue };
+            const spelled = { ...parentOnly, oneOf: [{}, {}] };
+            const firstPass = utils(schema).getDefaultFormState(schema, undefined, false, false, parentOnly);
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, spelled)).toStrictEqual(
+              firstPass,
+            );
+            const later = utils(schema).getDefaultFormState(schema, {}, false, true, parentOnly);
+            expect(utils(schema).getDefaultFormState(schema, {}, false, true, spelled)).toStrictEqual(later);
+          }
+          expect(
+            utils(schema).getDefaultFormState(schema, undefined, false, false, {
+              'ui:initialValue': { a: 5 },
+              oneOf: [{}, {}],
+            }),
+          ).toStrictEqual({ a: 5 });
+        });
         it('hands out the keys of a const that closes the object read from a ui:initialValue as copies', () => {
           const nested: RJSFSchema = { type: 'object', const: { a: { b: 1 } } };
           const initialValue = { a: { b: 1 } };

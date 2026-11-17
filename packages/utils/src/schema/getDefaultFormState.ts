@@ -1232,10 +1232,16 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const choice = chooseOption<T, S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults, props);
     isWholeValue = choice.isWholeValue;
     if (choice.wholeOptions === undefined) {
-      const foldedOption = foldOption<T, S, F>(choice.context, view, xxxOf, choice.index, {
-        ...props,
-        parentDefaults: defaults,
-      });
+      // The `ui:initialValue` the object takes in its `const`'s place is the object's, whichever uiSchema its option has
+      const initialValue = foldsOptionUnderConst ? getUiOptions<T, S, F>(uiSchema).initialValue : undefined;
+      const foldedOption = foldOption<T, S, F>(
+        choice.context,
+        view,
+        xxxOf,
+        choice.index,
+        { ...props, parentDefaults: defaults },
+        initialValue,
+      );
       // Under the object's own `const`, a key only the option declares, which the `const` doesn't name and the data
       // doesn't hold, is left out: its default would make the object a value the `const` rejects
       const optionValue =
@@ -1527,7 +1533,8 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * field beside the option, so the option is merged into the whole field: the field is planned again with the option
  * selected, its seeds joining the plan with the ref path of the node offering it. Any other field renders only the
  * option, as `getRenderedOptionSchema()` renders it, so its defaults are those of the option as rendered, the option's
- * children still seeded beside the field's own. The option's `uiSchema` entry is the one its fields see.
+ * children still seeded beside the field's own. The option's `uiSchema` entry is the one its fields see, with the
+ * object's `initialValue` where it has none of its own.
  */
 function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1535,6 +1542,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   { key, options }: XxxOfOptions<S>,
   index: number,
   props: ViewProps<T, S, F>,
+  initialValue?: unknown,
 ): unknown {
   const { schema, field } = view;
   const { graph } = field;
@@ -1553,14 +1561,22 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const retrievedOption = isSchemaObject<S>(listedOption)
     ? computedOnce(() => props.retrieveOnce(listedOption, 'option', listedOption))
     : undefined;
+  // An option whose field takes the object's extra keys is asked as the field renders it, retrieved for the data, and
+  // only where it has a uiSchema of its own for the object's to lie beneath
+  const renderedUiSchema =
+    rendersOwnField && optionUiSchema !== props.uiSchema && retrievedOption
+      ? getRenderedOptionUiSchema<T, S, F>(fieldSchema, retrievedOption(), props.uiSchema, optionUiSchema)
+      : optionUiSchema;
+  let uiSchema = renderedUiSchema;
+  if (initialValue !== undefined && getUiOptions<T, S, F>(renderedUiSchema).initialValue === undefined) {
+    /* v8 ignore next -- an option's uiSchema is picked from the object's, which holds the initial value */
+    const carrying: UiSchema<T, S, F> = renderedUiSchema ? { ...renderedUiSchema } : {};
+    carrying['ui:initialValue'] = initialValue;
+    uiSchema = carrying;
+  }
   const branchProps = {
     ...props,
-    // An option whose field takes the object's extra keys is asked as the field renders it, retrieved for the data, and
-    // only where it has a uiSchema of its own for the object's to lie beneath
-    uiSchema:
-      rendersOwnField && optionUiSchema !== props.uiSchema && retrievedOption
-        ? getRenderedOptionUiSchema<T, S, F>(fieldSchema, retrievedOption(), props.uiSchema, optionUiSchema)
-        : optionUiSchema,
+    uiSchema,
     isRenderedOption: true,
     // A boolean option holds no extra-key keyword to join, so only an object option is joined
     optionOf:
