@@ -395,6 +395,20 @@ function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>
  */
 const skippingContexts = new KeyedMemo<object>();
 
+/** The schema `foldView()` reads under `skippingDefaults()`, per schema it is read from, so it keeps its identity across
+ * the passes and calls that read it, as the caches keyed on a schema need
+ */
+const schemasWithoutDefault = new WeakMap<object, StrictRJSFSchema>();
+function withoutDefault<S extends StrictRJSFSchema>(schema: S): S {
+  let stripped = schemasWithoutDefault.get(schema);
+  if (stripped === undefined) {
+    stripped = withoutKeys(schema, DEFAULT_KEY);
+    schemasWithoutDefault.set(schema, stripped);
+  }
+  // Only `schema` copied without its `default` is stored under `schema`, but the memo can't carry its type parameter
+  return stripped as S;
+}
+
 /** What in `schema` a `null` fill can come from: the `null` type, named somewhere in it, or else a `$ref`, which can
  * lead to one elsewhere in the root; worked out once for each schema
  */
@@ -1034,8 +1048,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     uiSchemaDefinitions,
   } = inputProps;
   inputProps.track(fieldView);
-  const view =
-    SKIPS_DEFAULTS in context ? { ...fieldView, schema: withoutKeys(fieldView.schema, DEFAULT_KEY) } : fieldView;
+  const view = SKIPS_DEFAULTS in context ? { ...fieldView, schema: withoutDefault(fieldView.schema) } : fieldView;
   const { schema } = view;
   const rootSchema = view.field.graph.rawRoot;
   // Apply `ui:definitions` at every field, keyed by the `$ref` its plan was resolved from, so defaults see the same
@@ -1775,18 +1788,17 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // recursion through the `allOf` declares is not folded
   let allOfSeeding: Seeding<S> | undefined;
   // Only a key the data or the defaults name is folded, unless a `const` gives it its value: the object's, or one a
-  // declaration of a property in the field's scope reaches, or one an option of its `dependencies` brings in. Where none
-  // can, the keys are read off the data and the defaults, and the field is merged only if the `allOf` declares one
+  // declaration of a property in the field's scope the object doesn't declare itself reaches, or one an option of its
+  // `dependencies` brings in. Where none can, the keys are read off the data and the defaults, and the field is merged
+  // only if the `allOf` declares one
+  const isOwnKey = (key: string) => schema.properties !== undefined && Object.hasOwn(schema.properties, key);
   const constCanFill = ({ graph, seeds }: Provenance<S>) =>
     defaultFormStateBehavior?.constAsDefaults !== 'never' &&
     (parentConst !== undefined ||
-      seeds.some(({ node }) =>
-        scopeOf<S>(graph, node).some(
-          ({ id, raw }) =>
-            Object.hasOwn(raw, DEPENDENCIES_KEY) ||
-            graph.subschemas(id, PROPERTIES_KEY).some(([, property]) => mergeReachesConst<S>(graph, property)),
-        ),
-      ));
+      seeds.some(({ node }) => {
+        const { dependencies, constKeys } = constFillersOf<S>(graph, node);
+        return dependencies || constKeys.some((key) => !isOwnKey(key));
+      }));
   const allOfProperties =
     allOfField === undefined
       ? []
@@ -1794,7 +1806,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
           ? Object.keys(mergedSchemaOf<S, F>(context, view).properties ?? {})
           : Object.keys({ ...formData, ...(isObject(defaults) ? defaults : {}) })
         )
-          .filter((key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && declaredInAllOf(key))
+          .filter((key) => !isOwnKey(key) && declaredInAllOf(key))
           .flatMap((key) => {
             allOfSeeding ??= buildPlan<S, F>({
               context,
@@ -1926,7 +1938,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const keys = new Set<string>();
     const formDataRequired: string[] = [];
     Object.keys(formData)
-      .filter((key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && !declaredInAllOf(key))
+      .filter((key) => !isOwnKey(key) && !declaredInAllOf(key))
       .forEach((key) => {
         keys.add(key);
         formDataRequired.push(key);
@@ -1978,9 +1990,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const nullsOnly = nullsOnlyContext(context);
     const child = defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalProperties);
     Object.keys(formData)
-      .filter(
-        (key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && isPinned(key) && !declaredInAllOf(key),
-      )
+      .filter((key) => !isOwnKey(key) && isPinned(key) && !declaredInAllOf(key))
       .forEach((key) => {
         const { value, holdsNull } = foldReporting(nullsOnly, `additionalNull:${key}`, child, {
           rawFormData: getByPath(formData, key),
@@ -2582,6 +2592,26 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
     merged.constContext = context;
   }
   return merged.constSchema;
+}
+
+/** What in the scope of a node, see `scopeOf()`, can give a key of its object a `const`: whether a declaration in it
+ * holds `dependencies`, whose options can bring one in, and the keys of the properties it declares whose merge reaches
+ * one, worked out once per graph and node
+ */
+const constFillers = new KeyedMemo<{ dependencies: boolean; constKeys: readonly string[] }>();
+function constFillersOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node: NodeId) {
+  return constFillers.get([graph, node], () => {
+    const scope = scopeOf<S>(graph, node);
+    return {
+      dependencies: scope.some(({ raw }) => Object.hasOwn(raw, DEPENDENCIES_KEY)),
+      constKeys: scope.flatMap(({ id }) =>
+        graph
+          .subschemas(id, PROPERTIES_KEY)
+          .filter(([, property]) => mergeReachesConst<S>(graph, property))
+          .map(([key]) => key),
+      ),
+    };
+  });
 }
 
 /** Whether a merge from a node, by `mergeReachesConst()`, reaches a `const`, by graph, node and whether it reads the

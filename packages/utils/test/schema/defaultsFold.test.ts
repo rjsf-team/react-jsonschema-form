@@ -1,5 +1,11 @@
 import { createSchemaUtils, getDefaultFormState, isObject } from '../../src/index.ts';
-import type { DefaultFormStateBehavior, RJSFSchema, SchemaContext } from '../../src/index.ts';
+import type {
+  CustomMergeAllOf,
+  DefaultFormStateBehavior,
+  RJSFSchema,
+  SchemaContext,
+  StrictRJSFSchema,
+} from '../../src/index.ts';
 import {
   computeDefaults,
   getArrayDefaults,
@@ -8,8 +14,22 @@ import {
   mergeReachesConst,
 } from '../../src/schema/getDefaultFormState.ts';
 import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
+import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
+
+// Recorded, so a test can count the schemas the fold copies
+const withoutKeysCalls = vi.hoisted((): [object, (string | symbol)[]][] => []);
+vi.mock(import('../../src/schema/graph/mergePlan.ts'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    withoutKeys: <S extends StrictRJSFSchema>(schema: S, ...keys: (string | symbol)[]) => {
+      withoutKeysCalls.push([schema, keys]);
+      return actual.withoutKeys(schema, ...keys);
+    },
+  };
+});
 
 const validator = miniValidator();
 
@@ -1447,6 +1467,47 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     expect(defaultsOf({ type: 'object', properties, dependencies })).toEqual(
       Object.fromEntries(Array.from({ length }, (_, key) => [`k${key}`, 'v'])),
     );
+  });
+
+  it("reads a schema below a key only an object's allOf declares without its default once, across passes and calls", () => {
+    const leaf: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', default: 'x' }, b: { type: 'object', properties: { c: { default: 1 } } } },
+    };
+    const o: RJSFSchema = { type: 'object', allOf: [{ properties: { k1: leaf, k2: leaf } }] };
+    const schema: RJSFSchema = { type: 'object', properties: { o } };
+    const formData = { o: { k1: {}, k2: { b: {}, a: 'q' } } };
+    const copies = () =>
+      withoutKeysCalls.filter(([, keys]) => keys.length === 1 && keys[0] === 'default').map(([copied]) => copied);
+    const before = copies().length;
+    expect(defaultsOf(schema, formData)).toEqual({ o: { k1: {}, k2: { a: 'q', b: {} } } });
+    const copied = copies().slice(before);
+    expect(copied.length).toBeGreaterThan(0);
+    expect(new Set(copied).size).toBe(copied.length);
+    expect(defaultsOf(schema, formData)).toEqual({ o: { k1: {}, k2: { a: 'q', b: {} } } });
+    expect(copies()).toHaveLength(before + copied.length);
+  });
+
+  it("merges an object for its allOf's keys only where a const can fill one, not for a const on a property of its own", () => {
+    const merge = vi.fn<CustomMergeAllOf>((schema) => {
+      const merged = shallowAllOfMerge(schema);
+      return isObject(merged) ? merged : {};
+    });
+    const defaultsWith = (own: RJSFSchema, allOfKey: RJSFSchema) =>
+      getDefaultFormState(
+        { validator, customMergeAllOf: merge },
+        {
+          schema: {
+            type: 'object',
+            properties: { o: { type: 'object', properties: { own }, allOf: [{ properties: { k: allOfKey } }] } },
+          },
+          formData: { o: { x: 1 } },
+        },
+      );
+    expect(defaultsWith({ type: 'string', const: 'c' }, { type: 'string' })).toEqual({ o: { own: 'c', x: 1 } });
+    expect(merge).not.toHaveBeenCalled();
+    expect(defaultsWith({ type: 'string' }, { type: 'string', const: 'c' })).toEqual({ o: { k: 'c', x: 1 } });
+    expect(merge).toHaveBeenCalled();
   });
 
   describe('definitions that all refer to one another', () => {
