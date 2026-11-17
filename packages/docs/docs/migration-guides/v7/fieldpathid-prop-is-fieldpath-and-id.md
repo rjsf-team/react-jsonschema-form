@@ -24,7 +24,7 @@ Field identity is now two primitive strings.
 - `fieldPath` is a `FieldPath` such as `friends[0].firstName` and says where the data lives. It drives `onChange` writes. Property names are separated by `.`, array indexes are bracketed, and `\ . [ ]` inside a property name are backslash-escaped. The root form is the empty string, exported as `ROOT_FIELD_PATH`.
 - `id` is the DOM id such as `root_friends_0_firstName` and says what the element is called. It drives `htmlFor`, focus and accessibility attributes. Some ids differ from v6, as [Some rendered ids change so they cannot collide or split an id list](./ids-cant-collide-or-split-an-id-list.md) describes.
 
-`FieldProps` and `FieldTemplateProps` receive both. `ArrayFieldTemplate`, `ArrayFieldTitleTemplate`, `ArrayFieldDescriptionTemplate`, `ArrayFieldItemButtonsTemplate`, `CyclicSchemaExpandTemplate`, `FieldErrorTemplate`, `FieldHelpTemplate`, `ObjectFieldTemplate` and `UnsupportedFieldTemplate` receive `id` instead of `fieldPathId`. The id helpers accept only a `string` id:
+`FieldProps` and `FieldTemplateProps` receive both. `ArrayFieldTemplate`, `ArrayFieldTitleTemplate`, `ArrayFieldDescriptionTemplate`, `ArrayFieldItemButtonsTemplate`, `CyclicSchemaExpandTemplate`, `FieldErrorTemplate`, `FieldHelpTemplate`, `ObjectFieldTemplate` and `UnsupportedFieldTemplate` receive `id` instead of `fieldPathId`. Widgets and the other templates, such as `TitleFieldTemplate`, `DescriptionFieldTemplate`, `WrapIfAdditionalTemplate` and `BaseInputTemplate`, never received `fieldPathId` and have nothing to change here. The id helpers accept only a `string` id:
 
 ```diff
 -const { fieldPathId } = props;
