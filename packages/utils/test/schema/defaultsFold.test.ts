@@ -2,6 +2,7 @@ import { createSchemaUtils, getDefaultFormState, isObject } from '../../src/inde
 import type {
   CustomMergeAllOf,
   DefaultFormStateBehavior,
+  FormContextType,
   GenericObjectType,
   RJSFSchema,
   SchemaContext,
@@ -15,6 +16,7 @@ import {
   mergeReachesConst,
 } from '../../src/schema/getDefaultFormState.ts';
 import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
+import type { Provenance } from '../../src/schema/graph/provenance.ts';
 import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
@@ -28,6 +30,23 @@ vi.mock(import('../../src/schema/graph/mergePlan.ts'), async (importOriginal) =>
     withoutKeys: <S extends StrictRJSFSchema>(schema: S, ...keys: (string | symbol)[]) => {
       withoutKeysCalls.push([schema, keys]);
       return actual.withoutKeys(schema, ...keys);
+    },
+  };
+});
+
+// Counted, so a test can count the fields matched to their data
+const retrieveFieldCalls = vi.hoisted(() => ({ count: 0 }));
+vi.mock(import('../../src/schema/retrieveSchema.ts'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    retrieveField: <S extends StrictRJSFSchema, F extends FormContextType>(
+      context: SchemaContext<S, F>,
+      field: Provenance<S>,
+      data?: unknown,
+    ) => {
+      retrieveFieldCalls.count += 1;
+      return actual.retrieveField(context, field, data);
     },
   };
 });
@@ -1478,6 +1497,42 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     );
   });
 
+  it('matches an object the data still holds after an edit elsewhere once, for objects nested in untyped allOf $refs', () => {
+    // Pydantic v1's shape: each object a property reaches through an untyped `allOf` holding its `$ref`
+    const depth = 5;
+    const definitions: Record<string, RJSFSchema> = { E: { type: 'string', enum: ['a', 'b'] } };
+    for (let level = 0; level < depth; level += 1) {
+      const properties: Record<string, RJSFSchema> = { e: { title: 'E', allOf: [{ $ref: D('E') }] } };
+      if (level < depth - 1) {
+        properties.left = { title: 'Left', allOf: [{ $ref: D(`M${level + 1}`) }] };
+        properties.right = { title: 'Right', allOf: [{ $ref: D(`M${level + 1}`) }] };
+      }
+      definitions[`M${level}`] = { type: 'object', properties };
+    }
+    const schema: RJSFSchema = { definitions, $ref: D('M0') };
+    const tree = (level: number): GenericObjectType =>
+      level < depth - 1 ? { e: 'a', left: tree(level + 1), right: tree(level + 1) } : { e: 'a' };
+    const edit = (data: GenericObjectType, level: number): GenericObjectType =>
+      level < depth - 1 && isObject(data.left) ? { ...data, left: edit(data.left, level + 1) } : { ...data, e: 'b' };
+    const context = { validator };
+    const formData = tree(0);
+    const generated = getDefaultFormState(context, { schema, formData });
+    expect(generated).toStrictEqual(formData);
+    retrieveFieldCalls.count = 0;
+    const edited = edit(formData, 0);
+    expect(getDefaultFormState(context, { schema, formData: edited, initialDefaultsGenerated: true })).toStrictEqual(
+      edited,
+    );
+    const afterEdit = retrieveFieldCalls.count;
+    retrieveFieldCalls.count = 0;
+    const copied = structuredClone(edited);
+    expect(getDefaultFormState(context, { schema, formData: copied, initialDefaultsGenerated: true })).toStrictEqual(
+      copied,
+    );
+    // Data copied whole is matched at every object; the edit keeps every object off its path, which is matched again
+    expect(afterEdit).toBeLessThan(retrieveFieldCalls.count / 4);
+  });
+
   it("reads a schema below a key only an object's allOf declares without its default once, across passes and calls", () => {
     const leaf: RJSFSchema = {
       type: 'object',
@@ -1574,13 +1629,14 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { t: 'a' } });
     // Retrieving `x` would check its `if`
     expect(counting.calls).toBe(0);
-    // Where the unmerged `allOf` reaches one itself, the retrieve looks for it, and finds none where the `if` fails
+    // Where the unmerged `allOf` reaches one itself in a `then`, an empty field gives the `if` nothing to test, so
+    // nothing is retrieved
     const branch: RJSFSchema = {
       type: 'object',
       properties: { x: { type: 'object', allOf: [{ if: { required: ['t'] }, then: { const: { a: 1 } } }] } },
     };
     expect(defaultsOf(branch, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({});
-    expect(counting.calls).toBeGreaterThan(0);
+    expect(counting.calls).toBe(0);
   });
 
   it('retrieves no optional field the Optional Data Controls collapse unless it may reach an object const', () => {
