@@ -1,20 +1,86 @@
 import type { ReactNode } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
 import type { EmotionCache } from '@emotion/cache';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { MantineProvider } from '@mantine/core';
-import { CssBaseline } from '@mui/material';
+import type { PaletteMode } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme, useTheme } from '@mui/material';
 import { Widgets } from '@rjsf/antd';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
-import { ConfigProvider } from 'antd';
+import type { ThemeConfig } from 'antd';
+import { ConfigProvider, theme as antdTheme } from 'antd';
 import type { FrameComponentProps } from 'react-frame-component';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 
 const DEMO_FRAME_JSS = 'demo-frame-jss';
+// The MUI preview reads its theme from React context, which crosses into the iframe, so it gets a theme of its own:
+// MUI's default look in the playground's light or dark mode, not the playground's own theme
+const muiPreviewThemes = { light: createTheme(), dark: createTheme({ palette: { mode: 'dark' } }) };
+const antdPreviewThemes: Record<PaletteMode, ThemeConfig> = {
+  light: { algorithm: antdTheme.defaultAlgorithm },
+  dark: { algorithm: antdTheme.darkAlgorithm },
+};
+
+/** How a theme's preview takes the playground's light or dark appearance from the frame's root, beyond the root's
+ * `color-scheme`, which native controls and the page canvas read
+ */
+interface PreviewAppearance {
+  /** The marker the theme's stylesheet reads: a `light`/`dark` class, or Bootstrap's `data-bs-theme` */
+  rootMarker?: 'class' | 'data-bs-theme';
+  /** The page background of a theme that paints none of its own, alike in both modes or one for each */
+  pageBackground?: string | Record<PaletteMode, string>;
+}
+
+/** The themes whose preview follows the playground's appearance through the frame's root or their provider below.
+ * daisy-ui follows it too until a subtheme is picked, and bootstrap3 has a single look
+ */
+const PREVIEW_APPEARANCES: Record<string, PreviewAppearance> = {
+  core: { pageBackground: 'Canvas' },
+  mui: {},
+  mantine: {},
+  antd: {
+    pageBackground: {
+      light: antdTheme.getDesignToken(antdPreviewThemes.light).colorBgContainer,
+      dark: antdTheme.getDesignToken(antdPreviewThemes.dark).colorBgContainer,
+    },
+  },
+  'chakra-ui': { rootMarker: 'class' },
+  'fluentui-rc': {},
+  'react-bootstrap': { rootMarker: 'data-bs-theme' },
+  shadcn: { rootMarker: 'class', pageBackground: 'var(--background)' },
+};
+
+/** daisy-ui's appearance while it shows daisyUI's own `light` or `dark` theme, which paints its page, so its root needs
+ * only the matching `color-scheme`
+ */
+const DAISY_UI_APPEARANCE: PreviewAppearance = {};
+
+/** Marks `root` with `mode` the way `appearance` reads it, and returns what undoes that */
+function markRoot(root: HTMLElement, { rootMarker, pageBackground }: PreviewAppearance, mode: PaletteMode) {
+  const styles = {
+    'color-scheme': mode,
+    background: typeof pageBackground === 'object' ? pageBackground[mode] : pageBackground,
+  };
+  const undos: (() => void)[] = Object.entries(styles).flatMap(([property, value]) => {
+    if (!value) {
+      return [];
+    }
+    root.style.setProperty(property, value);
+    return [() => root.style.removeProperty(property)];
+  });
+  if (rootMarker === 'class') {
+    root.classList.add(mode);
+    undos.push(() => root.classList.remove(mode));
+  } else if (rootMarker) {
+    root.setAttribute(rootMarker, mode);
+    undos.push(() => root.removeAttribute(rootMarker));
+  }
+  return () => undos.forEach((undo) => undo());
+}
 
 const { SelectWidget, DateWidget } = Widgets;
 
@@ -168,11 +234,23 @@ function AntdPopupPatcher({ frameDoc }: { frameDoc?: Document }) {
 
 interface DemoFrameProps extends FrameComponentProps {
   theme: string;
-  subtheme: string;
+  /** The subtheme picked for the preview, if any */
+  subtheme: string | null;
 }
 
 export default function DemoFrame(props: DemoFrameProps) {
-  const { children, head, theme, subtheme, ...frameProps } = props;
+  const { children, head, theme, subtheme, style, ...frameProps } = props;
+  const { mode } = useTheme().palette;
+  const daisyUIAppearance = theme === 'daisy-ui' && !subtheme ? DAISY_UI_APPEARANCE : undefined;
+  const appearance = Object.hasOwn(PREVIEW_APPEARANCES, theme) ? PREVIEW_APPEARANCES[theme] : daisyUIAppearance;
+  // The frame's document is loaded once, from this, so it starts in the scheme the playground was in then: a frame
+  // whose `color-scheme` differs from its `<iframe>`'s gets an opaque canvas, which would flash before `markRoot`
+  // takes over
+  // oxlint-disable-next-line react/hook-use-state
+  const [initialContent] = useState(
+    () =>
+      `<!DOCTYPE html><html${appearance ? ` style="color-scheme: ${mode}"` : ''}><head></head><body><div class="frame-root"></div></body></html>`,
+  );
 
   const [ready, setReady] = useState(false);
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
@@ -191,16 +269,27 @@ export default function DemoFrame(props: DemoFrameProps) {
     );
   }, []);
 
+  // The frame's root element is outside React's tree. It runs before paint so the root switches together with the
+  // providers below
+  useLayoutEffect(() => {
+    const root = instanceRef.current?.contentDocument?.documentElement;
+    return ready && root && appearance ? markRoot(root, appearance, mode) : undefined;
+  }, [ready, appearance, mode]);
+
   let body: ReactNode = children;
   if (theme === 'mui') {
     body = ready ? (
       <CacheProvider value={emotionCache}>
-        <CssBaseline />
-        {children}
+        <ThemeProvider theme={muiPreviewThemes[mode]}>
+          <CssBaseline />
+          {children}
+        </ThemeProvider>
       </CacheProvider>
     ) : null;
   } else if (theme === 'fluentui-rc') {
-    body = <FrameContextConsumer>{__createFluentUIRCFrameProvider(props)}</FrameContextConsumer>;
+    body = (
+      <FrameContextConsumer>{__createFluentUIRCFrameProvider({ children, colorScheme: mode })}</FrameContextConsumer>
+    );
   } else if (theme === 'chakra-ui') {
     body = <FrameContextConsumer>{__createChakraFrameProvider(props)}</FrameContextConsumer>;
   } else if (theme === 'antd') {
@@ -215,7 +304,10 @@ export default function DemoFrame(props: DemoFrameProps) {
             <>
               <AntdPopupPatcher frameDoc={frameDoc} />
               <AntdStyleProvider container={jssContainer}>
-                <ConfigProvider getPopupContainer={() => jssContainer?.parentElement ?? frameDoc.body}>
+                <ConfigProvider
+                  getPopupContainer={() => jssContainer?.parentElement ?? frameDoc.body}
+                  theme={antdPreviewThemes[mode]}
+                >
                   {children}
                 </ConfigProvider>
               </AntdStyleProvider>
@@ -229,7 +321,10 @@ export default function DemoFrame(props: DemoFrameProps) {
       <FrameContextConsumer>
         {__createDaisyUIFrameProvider({
           ...props,
-          subtheme: { dataTheme: subtheme },
+          // daisyUI's own `light` and `dark` themes, until another subtheme is picked. Only a picked one is stored as
+          // the theme daisyUI shows where none is chosen, since the appearance is the playground's, kept under its own key
+          subtheme: { dataTheme: subtheme || mode },
+          storeTheme: Boolean(subtheme),
         })}
       </FrameContextConsumer>
     ) : null;
@@ -237,7 +332,7 @@ export default function DemoFrame(props: DemoFrameProps) {
     body = ready ? (
       <FrameContextConsumer>
         {({ document }) => (
-          <MantineProvider getRootElement={() => document?.body} cssVariablesSelector='body'>
+          <MantineProvider getRootElement={() => document?.body} cssVariablesSelector='body' forceColorScheme={mode}>
             {children}
           </MantineProvider>
         )}
@@ -246,7 +341,16 @@ export default function DemoFrame(props: DemoFrameProps) {
   }
 
   return (
-    <Frame ref={instanceRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
+    <Frame
+      ref={instanceRef}
+      contentDidMount={onContentDidMount}
+      initialContent={initialContent}
+      head={head}
+      // A light page behind the bootstrap3 preview, and a picked daisy-ui subtheme, in a dark playground. A preview that follows the
+      // appearance shows the playground's page while its stylesheet loads, rather than a flash of white
+      style={{ background: appearance ? undefined : 'white', ...style }}
+      {...frameProps}
+    >
       <div id={DEMO_FRAME_JSS} />
       {body}
     </Frame>

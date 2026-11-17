@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Ties `dark:` utilities to the `dark` class on the preview's root, as the theme variables are, not to the system */
+@custom-variant dark (&:is(.dark *));
+
 /* The playground aliases @rjsf/shadcn to its source, so scan the same files the alias resolves to. */
 @source "../../../../shadcn/src";
 
