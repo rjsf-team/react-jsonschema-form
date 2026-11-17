@@ -1410,6 +1410,40 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     );
   });
 
+  it('folds an optional object that may show an object const it does not take no more on a later pass of its parent', () => {
+    let folds = 0;
+    // Each fold of `x` reads the uiSchema of its property `b` once
+    const xUi = {};
+    Object.defineProperty(xUi, 'b', {
+      enumerable: true,
+      get: () => {
+        folds += 1;
+        return undefined;
+      },
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        v: { type: 'string', default: 'v' },
+        w: { type: 'string' },
+        x: {
+          type: 'object',
+          properties: { b: { type: 'string', default: 's' } },
+          oneOf: [{ properties: { k: { type: 'string' } } }, { const: { a: 1 } }],
+        },
+      },
+      dependencies: { v: { properties: { w: { type: 'string', default: 'w' } } } },
+    };
+    const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] }, x: xUi };
+    expect(getDefaultFormState({ validator }, { schema, rootSchema: schema, uiSchema })).toEqual({
+      v: 'v',
+      w: 'w',
+      x: { b: 's' },
+    });
+    // Collapsed, then opened, on the first pass; the second, which the dependency on `v` brings, reuses both
+    expect(folds).toBe(2);
+  });
+
   describe('definitions that all refer to one another', () => {
     function dense(size: number): RJSFSchema {
       const definitions: Record<string, RJSFSchema> = {};

@@ -547,6 +547,8 @@ interface MemoEntry {
   readonly value: unknown;
   /** Whether `value` holds a `null` fill, which a hit reports again */
   readonly holdsNull: boolean;
+  /** Whether the fold of `value` took an object `const`, which a hit reports again */
+  readonly objectConst: boolean;
 }
 
 /** The props the fold hands each field: those of `computeDefaults()`, holding the data as it comes */
@@ -1163,22 +1165,34 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (entry.holdsNull) {
         props.onNullFill?.();
       }
-      // Not recorded, so a value kept from an earlier pass may have taken one
-      props.onObjectConst?.();
+      if (entry.objectConst) {
+        props.onObjectConst?.();
+      }
       return entry.value;
     }
   }
   let holdsNull = false;
-  const onNullFill = () => {
-    holdsNull = true;
-  };
-  const value = foldField<T, S, F>(context, child, { ...props, memo: undefined, onNullFill });
+  let objectConst = false;
+  const value = foldField<T, S, F>(context, child, {
+    ...props,
+    memo: undefined,
+    onNullFill: () => {
+      holdsNull = true;
+    },
+    onObjectConst: () => {
+      objectConst = true;
+    },
+  });
   if (holdsNull) {
     props.onNullFill?.();
   }
-  memo?.set(memoKey, { inputs, value, holdsNull });
+  if (objectConst) {
+    props.onObjectConst?.();
+  }
+  const entry = { inputs, value, holdsNull, objectConst };
+  memo?.set(memoKey, entry);
   if (leaf !== undefined && (typeof value !== 'object' || value === null)) {
-    leafDefaults.set(leaf, { inputs, value, holdsNull });
+    leafDefaults.set(leaf, entry);
   }
   return value;
 }
