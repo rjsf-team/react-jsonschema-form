@@ -323,11 +323,9 @@ interface Scope<S extends StrictRJSFSchema> {
 }
 
 /** The scopes `scopeOf()` lists, per graph, node and follow */
-// oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
 const scopes = new KeyedMemo<Scope<StrictRJSFSchema>>();
 
 function isScopeOf<S extends StrictRJSFSchema>(
-  // oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
   value: Scope<StrictRJSFSchema> | undefined,
   graph: SchemaGraph<S>,
 ): value is Scope<S> {

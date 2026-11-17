@@ -3225,7 +3225,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ],
           ['an untyped enum of objects', { enum: [{ y: 'p' }, { y: 'q' }], default: { y: 'p' } }, 5],
           ['an enum of a string and an object', { enum: ['p', { y: 'p' }], default: 'p' }, 'z'],
-          ['an enum of arrays', { type: 'array', items: { type: 'string' }, enum: [['p'], ['q']], default: ['p'] }, ['z']],
+          [
+            'an enum of arrays',
+            { type: 'array', items: { type: 'string' }, enum: [['p'], ['q']], default: ['p'] },
+            ['z'],
+          ],
         ])(
           "keeps a value of another type that a key an object's allOf declares with %s doesn't offer, as for its own property",
           (_, c, value) => {
@@ -3277,7 +3281,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               },
             };
             expect(
-              getDefaultFormState({ validator: testValidator }, { schema, formData: { plain: { c: 'z' }, w: { c: 'z' } } }),
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { plain: { c: 'z' }, w: { c: 'z' } } },
+              ),
             ).toStrictEqual({ plain: { c: 'a' }, w: { c: 'a' } });
           },
         );
@@ -3290,7 +3297,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             properties: { plain: { allOf }, w: { anyOf: [{ type: 'string' }, { type: 'number' }], allOf } },
           };
           expect(
-            getDefaultFormState({ validator: testValidator }, { schema, formData: { plain: { c: 'z' }, w: { c: 'z' } } }),
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { plain: { c: 'z' }, w: { c: 'z' } } },
+            ),
           ).toStrictEqual({ plain: { c: 'b' }, w: { c: 'b' } });
         });
 

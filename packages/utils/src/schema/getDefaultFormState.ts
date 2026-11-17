@@ -1649,16 +1649,24 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const computed: GenericObjectType = {};
   // Whether the property `key`, seeded by `seeds`, takes a `const`: one of its own, the object's `const` for it, or one
   // its `allOf` or unmerged `if`/`then` brings in, read from its schema merged for its data where a merge can reach
-  // one, as the fold takes it
-  const holdsConst = (key: string, graph: SchemaGraph<S>, seeds: readonly Seed[], readProperty: S) =>
-    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-    !constIsAjvDataReference(readProperty) &&
-    ((isObject(readProperty) && CONST_KEY in readProperty) ||
-      getByPath(parentConst, key) !== undefined ||
-      (isSchemaObject<S>(readProperty) &&
-        holdsAnyOf(readProperty, MERGING_KEYWORDS) &&
-        seeds.some(({ node }) => mergeReachesConst<S>(graph, node)) &&
-        constValueOf<S>(retrieveField<S, F>(context, rootProvenance<S>(graph, seeds), formData[key])) !== undefined));
+  // one, as the fold takes it. Worked out only where a default is added, as the data holds most keys on an edit, and
+  // then once
+  const constCheck = (key: string, graph: SchemaGraph<S>, seeds: readonly Seed[], readProperty: S) => {
+    let holdsConst: boolean | undefined;
+    return () => {
+      holdsConst ??=
+        defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+        !constIsAjvDataReference(readProperty) &&
+        ((isObject(readProperty) && CONST_KEY in readProperty) ||
+          getByPath(parentConst, key) !== undefined ||
+          (isSchemaObject<S>(readProperty) &&
+            holdsAnyOf(readProperty, MERGING_KEYWORDS) &&
+            seeds.some(({ node }) => mergeReachesConst<S>(graph, node)) &&
+            constValueOf<S>(retrieveField<S, F>(context, rootProvenance<S>(graph, seeds), formData[key])) !==
+              undefined));
+      return holdsConst;
+    };
+  };
   const childProps = (key: string, uiSchemaKey: string) => ({
     includeUndefinedValues: includeUndefinedValues === true,
     parentDefaults: getByPath(defaults, key),
@@ -1697,7 +1705,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     (key) => isPinned(key) || !hasSchemaMarker(getPropertySchema<S>(schema, key), ADDITIONAL_PROPERTY_FLAG),
   );
   // A key a property of an `allOf` the plan left unmerged declares, whatever the data, is no extra key of the field as
-  // rendered, so its data is matched to that property below and its default is the field's. A key only an unmerged
+  // rendered, so it is folded through that property below and its default is the field's. A key only an unmerged
   // `then`, `else` or `dependencies` declares stays an extra key (#5816), as does one the merge leaves out, as it
   // leaves the `allOf`'s properties out beside `additionalProperties: false`. Each key is asked about in several places,
   // so it is worked out once per call
@@ -1719,24 +1727,26 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const ownProperties = propertyKeys.map((key) => {
     const propertySchema = getPropertySchema<S>(schema, key);
     const { seeds, edge } = childSeeds(view, key);
+    // A property written as a `$ref` keeps its `const` and `type` in the definition it names, which is read where the
+    // declaration holding that `$ref` sits, since a property declared twice is merged into one no graph holds
+    const readProperty = isSchemaObject<S>(propertySchema)
+      ? resolveMergedOwnRef<S>(view.graph, seeds, propertySchema, context.customMergeAllOf)
+      : propertySchema;
     return {
       key,
       propertySchema,
-      // A property written as a `$ref` keeps its `const` and `type` in the definition it names, which is read where
-      // the declaration holding that `$ref` sits, since a property declared twice is merged into one no graph holds
-      readProperty: isSchemaObject<S>(propertySchema)
-        ? resolveMergedOwnRef<S>(view.graph, seeds, propertySchema, context.customMergeAllOf)
-        : propertySchema,
-      graph: view.graph,
-      seeds,
+      readProperty,
+      hasConst: constCheck(key, view.graph, seeds, readProperty),
       child: defaultsChild(view, seeds, edge, propertySchema),
       declaredIn: schema,
-      fromAllOf: false,
     };
   });
   // A key only an `allOf` the plan left unmerged declares is a property of the field as rendered, so it takes the steps
   // a property of the object's own takes, from the property the merge for the data gives it. A boolean one names no
-  // field of its own, so it is folded from no seeds, as an own property whose seeds are all booleans is
+  // field of its own, so it is folded from no seeds, as an own property whose seeds are all booleans is. Under `allOf:
+  // 'skipDefaults'` the `allOf`'s own defaults don't fill a key the data lacks, so one is folded only where the
+  // object's default names it or a `const` gives it its value, and otherwise takes only the `null` `branchNullFills()`
+  // finds for it
   const mergedSchema = ALL_OF_KEY in view.schema ? mergedSchemaOf<S, F>(context, view) : undefined;
   const rootGraph = parseSchemaGraph<S>(rootSchema);
   const allOfProperties =
@@ -1753,34 +1763,19 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
               key,
               propertySchema,
               readProperty: propertySchema,
-              graph,
-              seeds,
+              hasConst: constCheck(key, graph, seeds, propertySchema),
               child: { graph, seeds, expanded: view.field.expanded, edge: 'property' as const },
               declaredIn: mergedSchema,
-              fromAllOf: true,
             };
-          });
-  // The keys only an `allOf` declares that were folded here, whose `null` fill was found with the rest of their defaults
-  const foldedAllOfKeys = new Set<string>();
-  for (const { key, propertySchema, readProperty, graph, seeds, child, declaredIn, fromAllOf } of [
+          })
+          .filter(
+            ({ key, hasConst }) => Object.hasOwn(formData, key) || getByPath(defaults, key) !== undefined || hasConst(),
+          );
+  const foldedAllOfKeys = new Set(allOfProperties.map(({ key }) => key));
+  for (const { key, propertySchema, readProperty, hasConst, child, declaredIn } of [
     ...ownProperties,
     ...allOfProperties,
   ]) {
-    // Worked out only where a default is added, as the data holds most keys on an edit, and then once
-    let isConst: boolean | undefined;
-    const hasConst = () => {
-      isConst ??= holdsConst(key, graph, seeds, readProperty);
-      return isConst;
-    };
-    // Under `allOf: 'skipDefaults'` the `allOf`'s own defaults don't fill a key the data lacks, so one only it declares
-    // is filled only where the object's default names it or a `const` gives it its value, and otherwise only with the
-    // `null` `branchNullFills()` finds for it
-    if (fromAllOf) {
-      if (!Object.hasOwn(formData, key) && getByPath(defaults, key) === undefined && !hasConst()) {
-        continue;
-      }
-      foldedAllOfKeys.add(key);
-    }
     // A property stubbed by `stubExistingAdditionalProperties()` from `additionalProperties`/`patternProperties`
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.
@@ -1959,7 +1954,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     for (const key of Object.keys(formData)) {
       const value = formData[key];
       // A key the `allOf` declares is a property of the field, which a `const` that doesn't name it doesn't drop
-      const isProperty = (schema.properties !== undefined && Object.hasOwn(schema.properties, key)) || declaredInAllOf(key);
+      const isProperty =
+        (schema.properties !== undefined && Object.hasOwn(schema.properties, key)) || declaredInAllOf(key);
       const keptUndefined = value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior);
       const uncomputed = !Object.hasOwn(computed, key) && (value === undefined || !isProperty);
       if ((isPinned(key) || declaredInAllOf(key)) && (keptUndefined || uncomputed)) {
@@ -2594,7 +2590,7 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
     // what this one reaches: a `const` found settles them all, and a graph that throws leaves them all to be walked
     // again. None found settles only once nothing below leads back above this node, which makes it the first node of
     // its cycle; until then it stays open with the rest, and its caller leads back as far as it does
-    const low = constWalk.low;
+    const { low } = constWalk;
     if (reaches !== false || low === place) {
       open.splice(place).forEach((waiting) => constReach.set(waiting, reaches));
     }

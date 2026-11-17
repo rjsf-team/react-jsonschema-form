@@ -1565,7 +1565,9 @@ describe('mergeReachesConst()', () => {
           if (member !== undefined && !found.has(id)) {
             found.add(id);
             [member.ref, graph.child(id, 'then'), graph.child(id, 'else')]
-              .concat(['allOf', 'dependencies'].flatMap((keyword) => graph.subschemas(id, keyword).map(([, sub]) => sub)))
+              .concat(
+                ['allOf', 'dependencies'].flatMap((keyword) => graph.subschemas(id, keyword).map(([, sub]) => sub)),
+              )
               .forEach((sub) => sub !== undefined && scope(sub, found));
           }
           return found;
@@ -1605,7 +1607,8 @@ describe('mergeReachesConst()', () => {
       }
     }
     expect(mismatches).toEqual([]);
-  });
+    // 2,000 graphs are walked, which takes a few seconds under coverage
+  }, 30_000);
 
   it('settles every node of a cycle with the const one of them reaches', () => {
     const graph = parseSchemaGraph({
