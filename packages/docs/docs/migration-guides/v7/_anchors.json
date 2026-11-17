@@ -392,6 +392,9 @@
   "rjsfshadcns-multiple-selectwidget-takes-its-fields-id-and-opens-only-on-user-action-breaking-change": [
     "shadcn-multi-select-takes-field-id-and-opens-on-action"
   ],
+  "rjsfdaisyuis-selectwidget-names-its-open-list-of-options-by-the-fields-label-breaking-change": [
+    "select-open-list-named-by-field-label"
+  ],
   "rjsfshadcns-selectwidget-names-its-list-of-options-by-the-fields-label-breaking-change": [
     "select-open-list-named-by-field-label"
   ],
