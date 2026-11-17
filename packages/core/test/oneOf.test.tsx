@@ -6,10 +6,11 @@ import type {
   MultiSchemaFieldTemplateProps,
   ObjectFieldTemplateProps,
   RJSFSchema,
+  SchemaUtilsType,
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getByPath, isPlainObject, noop, optionDescriptionId, ROOT_FIELD_PATH } from '@rjsf/utils';
+import { createSchemaUtils, getByPath, isPlainObject, noop, optionDescriptionId, ROOT_FIELD_PATH } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import { createPrecompiledValidator, customizeValidator } from '@rjsf/validator-ajv8';
 import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
@@ -6051,24 +6052,86 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(node.querySelector('#root_a__key') !== null).toBe(expected?.a !== undefined);
     });
 
-    // The sanitize clears data the new option's object `const` or `enum` rejects, which the switch leaves as v7 does
-    it.each<{ declares: string; option: RJSFSchema; expected: unknown }>([
-      { declares: 'a const beside properties', option: { properties: { b: {} }, const: { b: 1 } }, expected: { b: 1 } },
-      { declares: 'a const alone', option: { const: { b: 1 } }, expected: {} },
-      { declares: 'an enum alone', option: { enum: [{ b: 1 }] }, expected: undefined },
-    ])('leaves the data $declares clears as it was, keeping no extra key', async ({ option, expected }) => {
+    // The sanitize clears data the new option's object `const` or `enum` rejects. The switch then defaults the object to
+    // the option's `const`, whose key is an extra key where the option doesn't declare it, and leaves an `enum`'s clear,
+    // since an `enum` lists values for the user to pick from rather than one to default to
+    it.each<{ declares: string; option: RJSFSchema; expected: unknown; extraKey: boolean }>([
+      {
+        declares: 'a const beside properties',
+        option: { properties: { b: {} }, const: { b: 1 } },
+        expected: { b: 1 },
+        extraKey: false,
+      },
+      { declares: 'a const alone', option: { const: { b: 1 } }, expected: { b: 1 }, extraKey: true },
+      { declares: 'an enum alone', option: { enum: [{ b: 1 }] }, expected: undefined, extraKey: false },
+    ])(
+      "clears the key $declares rejects and defaults to the option's const, if any",
+      async ({ option, expected, extraKey }) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          [keyword]: [
+            { title: 'S', properties: { a: { type: 'string' } } },
+            { title: 'T', ...option },
+          ],
+          additionalProperties: true,
+        };
+        const { node, formData } = await selectT(schema, { initialFormData: { a: 'x' } });
+
+        expect(formData).toEqual(expected);
+        expect(node.querySelector('#root_a__key')).toBeNull();
+        expect(node.querySelector('#root_b__key') !== null).toBe(extraKey);
+      },
+    );
+
+    // The keys an option's object `const` fills are a default, whether or not the option declares them, so switching
+    // back clears them rather than leaving a key no field renders
+    it.each<{ declares: string; option: RJSFSchema }>([
+      { declares: 'beside properties', option: { properties: { b: {} }, const: { b: 1 } } },
+      { declares: 'alone', option: { const: { b: 1 } } },
+    ])('clears the keys a const $declares filled on switching back', async ({ option }) => {
       const schema: RJSFSchema = {
         type: 'object',
         [keyword]: [
-          { title: 'S', properties: { a: { type: 'string' } } },
+          { title: 'S', properties: { a: { type: 'string' } }, required: ['a'] },
           { title: 'T', ...option },
         ],
-        additionalProperties: true,
       };
-      const { node, formData } = await selectT(schema, { initialFormData: { a: 'x' } });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x' } });
 
-      expect(formData).toEqual(expected);
-      expect(node.querySelector('#root_a__key')).toBeNull();
+      await user.selectOptions(elementOf(node, selectorId), 'T');
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 1 });
+      await user.selectOptions(elementOf(node, selectorId), 'S');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+    });
+
+    it('fills the old data as many times on switching back for five keys a const filled as for one', async () => {
+      const fillsOnSwitchingBack = async (keys: number) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          [keyword]: [
+            { title: 'S', properties: { a: { type: 'string' } }, required: ['a'] },
+            { title: 'T', const: Object.fromEntries(Array.from({ length: keys }, (_, index) => [`b${index}`, 1])) },
+          ],
+        };
+        // The form builds its own schema utils, so the fills are counted on the prototype every instance shares
+        const sharedMethods: SchemaUtilsType = Object.getPrototypeOf(
+          createSchemaUtils({ validator: customizeValidator() }, schema),
+        );
+        const fills = vi.spyOn(sharedMethods, 'getDefaultFormState');
+        try {
+          const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x' } });
+          await user.selectOptions(elementOf(node, selectorId), 'T');
+          fills.mockClear();
+          await user.selectOptions(elementOf(node, selectorId), 'S');
+          expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+          return fills.mock.calls.length;
+        } finally {
+          fills.mockRestore();
+        }
+      };
+
+      expect(await fillsOnSwitchingBack(5)).toBe(await fillsOnSwitchingBack(1));
     });
 
     // As when the new option declares a property, which the sanitize keeps the object's own keys beside, whether or not

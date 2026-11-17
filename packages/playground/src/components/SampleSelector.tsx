@@ -5,7 +5,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import type { Theme, CSSObject } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import MuiTab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
@@ -63,22 +63,22 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     },
   ],
   '& .MuiTab-root.Mui-selected': {
-    backgroundColor: 'lightgray',
+    backgroundColor: alpha(
+      theme.palette.primary.main,
+      theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
+    ),
   },
 }));
 
-const Tab = styled(MuiTab)({
+const Tab = styled(MuiTab)(({ theme }) => ({
   padding: '4px',
   fontSize: '0.75rem',
   minWidth: '1rem',
   minHeight: '1rem',
   '&:hover': {
-    border: `1px solid gray`,
+    border: `1px solid ${theme.palette.divider}`,
   },
-  selected: {
-    backgroundColor: 'lightgray',
-  },
-});
+}));
 
 export interface SampleSelectorProps {
   onSelected: (sampleName: string) => void;

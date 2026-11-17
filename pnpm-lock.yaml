@@ -472,6 +472,9 @@ importers:
       '@rjsf/validator-ajv8':
         specifier: workspace:^
         version: link:../validator-ajv8
+      react-frame-component:
+        specifier: ^5.3.2
+        version: 5.3.2(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(prop-types@15.8.1)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
 
   packages/mantine:
     dependencies:
