@@ -1019,15 +1019,6 @@ function constIsDefault<S extends StrictRJSFSchema>(
   );
 }
 
-/** Returns `compute`, which computes its value on the first call only */
-function computedOnce<V>(compute: () => V): () => V {
-  let computed: { value: V } | undefined;
-  return () => {
-    computed ??= { value: compute() };
-    return computed.value;
-  };
-}
-
 /** Returns the child of `view` that `seeds` seed, reached through `edge`. A subschema the schema's own keywords stand
  * in for, `fallback`, such as the stub of a key whose type is guessed from its data where `additionalProperties` is
  * `true`, is read as it stands where no seed is more than a boolean: the same object on every call, so a pass of a
@@ -1603,7 +1594,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const rendersOwnField = rendersOwnFieldBesideOption<S>(fieldSchema, listedOption);
   const optionUiSchema = getOptionUiSchema<T, S, F>(props.uiSchema, key, index);
   const retrievedOption = isSchemaObject<S>(listedOption)
-    ? computedOnce(() => props.passes.retrieveOnce(listedOption, 'option', listedOption))
+    ? () => props.passes.retrieveOnce(listedOption, 'option', listedOption)
     : undefined;
   // An option whose field takes the object's extra keys is asked as the field renders it, retrieved for the data, and
   // only where it has a uiSchema of its own for the object's to lie beneath
@@ -1625,9 +1616,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     optionOf:
       rendersOwnField && retrievedOption
         ? {
-            parent: computedOnce(() =>
-              fieldSchema === remaining ? props.passes.retrieveOnce(schema, key, remaining) : fieldSchema,
-            ),
+            parent: () => (fieldSchema === remaining ? props.passes.retrieveOnce(schema, key, remaining) : fieldSchema),
             option: retrievedOption,
           }
         : undefined,
@@ -1859,7 +1848,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // the retrieve and the join are spared every other field
   const optionOf = objectConst === undefined ? undefined : props.optionOf;
   // The field as `SchemaField` retrieves it, for the data the fold reads, which the branch `null` fill reads as well
-  const retrievedView = computedOnce(() => passes.retrievedViewOf(view));
+  const retrievedView = () => passes.retrievedViewOf(view);
   let extraKeysField = view.schema;
   if (optionOf) {
     extraKeysField = joinOptionExtraKeys<S>(optionOf.parent(), optionOf.option());
