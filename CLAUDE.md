@@ -9,6 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm run test:update` fans out to the 10 packages that own snapshots (`@rjsf/snapshot-tests` for core's, plus the 9 themes); `cd packages/<pkg> && pnpm run test:update` updates one.
 
 CI is three jobs.
+
 - `checks` first checks that `.node-version`, `netlify.toml`'s `NODE_VERSION` and a `build` matrix leg all match `.nvmrc`'s major, then runs `pnpm dedupe --check`, `cs-check`, lint (which is also the typecheck) and knip in that order, once, on the `.nvmrc` version — none of those four depends on the Node version or on a build.
 - `build` runs the build on Node 22, 24 and 26, then `scripts/checkUseClientBuild.mts`, which checks the build kept the `'use client'` directive on each module `testing/useClientBoundaries.json` lists.
 - `test` runs the tests on the same three, beside the build since they need none, split across two runners: the themes except bootstrap3 on one, bootstrap3 and every other package on the other. `pnpm run sanity-check` runs all of that locally except `pnpm dedupe --check`, which the pre-commit hook already runs on a staged `pnpm-lock.yaml`, and the Node version-file check. The per-package configs are build-only (see below).
