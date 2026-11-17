@@ -54,7 +54,10 @@ export class RJSFWarningError extends Error {
   }
 }
 
-let warningOptions: Required<WarningOptions> = { throwOn: [], except: [] };
+/** The IDs `logOnce()` throws for, worked out when the options are set, so `logOnce()` checks one `Set` and the
+ * category table stays out of a bundle that never imports `setWarningOptions()`
+ */
+let throwingIds = new Set<string>();
 
 /** @public Sets which warnings with an ID throw an `RJSFWarningError` rather than log, for every form on the page.
  * Module-level, since several warnings are raised where no form's options reach, so it is set once from an app's
@@ -64,9 +67,15 @@ let warningOptions: Required<WarningOptions> = { throwOn: [], except: [] };
  * @param [options={}] - The `throwOn` categories and IDs, and the IDs `except` keeps logging; `{}` restores the
  *        default of logging every warning
  */
-export function setWarningOptions(options: WarningOptions = {}) {
-  // Copied, so a caller changing its arrays afterwards can't change the setting behind it
-  warningOptions = { throwOn: [...(options.throwOn ?? [])], except: [...(options.except ?? [])] };
+export function setWarningOptions({ throwOn = [], except = [] }: WarningOptions = {}) {
+  // Widened, since `Object.entries()` reads the table's IDs as plain strings
+  const selected: readonly string[] = throwOn;
+  const excepted: readonly string[] = except;
+  throwingIds = new Set(
+    Object.entries(WARNING_CATEGORIES)
+      .filter(([id, category]) => (selected.includes(id) || selected.includes(category)) && !excepted.includes(id))
+      .map(([id]) => id),
+  );
 }
 
 /** How many distinct messages are remembered before the oldest generation of them is dropped, so a long-running
@@ -114,8 +123,7 @@ let previousMessages = new Set<string>();
  */
 export default function logOnce(message: string, level: LogOnceLevel = 'warn', error?: unknown, id?: WarningId) {
   const text = id === undefined ? message : `${message} [${id}]`;
-  const { throwOn, except } = warningOptions;
-  if (id !== undefined && (throwOn.includes(id) || throwOn.includes(WARNING_CATEGORIES[id])) && !except.includes(id)) {
+  if (id !== undefined && throwingIds.has(id)) {
     throw new RJSFWarningError(text, id, error === undefined ? undefined : { cause: error });
   }
   // The trailing separator keeps `logOnce(m)` and `logOnce(m, 'warn', '')` two messages, and the type keeps an error
