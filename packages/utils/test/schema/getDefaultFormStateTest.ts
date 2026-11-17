@@ -589,6 +589,21 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             x: { a: 2 },
           });
         });
+        it('opens an optional object the optional data controls show whose option holding no const gives it a value', () => {
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                oneOf: [{ properties: { k: { type: 'string', default: 'd' } } }, { const: { k: 'c' } }],
+              },
+            },
+          };
+          expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({
+            x: { k: 'd' },
+          });
+        });
         it('collapses an optional object const behind the optional data controls only where nothing else gives it a value', () => {
           const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
           const withY: RJSFSchema = {
