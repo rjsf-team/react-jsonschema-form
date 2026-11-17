@@ -949,8 +949,7 @@ const objectConstReach = new WeakMap<object, Map<NodeId, boolean>>();
 /** Whether a subschema the field may merge or show declares an object `const`: one a seed of the field, or a `$ref`,
  * `allOf`, `then`/`else`, `dependencies` or `anyOf`/`oneOf` option it leads to through those, declares. Only such a
  * field can give an object `const` that its plan leaves unmerged, or that the fold leaves out, so the rest are spared
- * the retrieve and the extra fold that look for one. None does where constants are never defaults. Each node's answer
- * is worked out by a walk of its own, which a cycle can't cut short, once per graph
+ * the retrieve and the extra fold that look for one. None does where constants are never defaults
  */
 function reachesObjectConst<S extends StrictRJSFSchema>(
   { graph, seeds }: DefaultsField<S>,
@@ -964,32 +963,28 @@ function reachesObjectConst<S extends StrictRJSFSchema>(
     answers = new Map<NodeId, boolean>();
     objectConstReach.set(graph, answers);
   }
-  for (const { node } of seeds) {
-    let reaches = answers.get(node);
-    if (reaches === undefined) {
-      reaches = leadsToObjectConst<S>(graph, node);
-      answers.set(node, reaches);
-    }
-    if (reaches) {
-      return true;
-    }
-  }
-  return false;
+  return seeds.some(({ node }) => leadsToObjectConst<S>(graph, node, answers));
 }
 
 /** Whether the node `start` of `graph`, or a subschema it leads to as `reachesObjectConst()` follows them, declares an
- * object `const`
+ * object `const`, recording each answer the walk settles in `answers`, so no node is walked again once settled. A node
+ * that reaches one does, whichever walk finds it. A walk that finds none settles every node it visits, since each leads
+ * only to nodes the walk visits too, while one that finds one leaves a node a cycle cut short unsettled
  */
-function leadsToObjectConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, start: NodeId): boolean {
+function leadsToObjectConst<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  start: NodeId,
+  answers: Map<NodeId, boolean>,
+): boolean {
   const visited = new Set<NodeId>();
-  // A boolean or unresolved node declares nothing
   const walk = (id: NodeId): boolean => {
     const node = graph.node(id);
-    if (visited.has(id) || node.kind !== 'schema') {
-      return false;
+    // A boolean or unresolved node declares nothing
+    if (answers.has(id) || visited.has(id) || node.kind !== 'schema') {
+      return answers.get(id) === true;
     }
     visited.add(id);
-    return (
+    const reaches =
       isObjectData(node.raw[CONST_KEY]) ||
       [
         ...(node.ref === undefined ? [] : [node.ref]),
@@ -997,10 +992,19 @@ function leadsToObjectConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, s
         ...[ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY].flatMap((keyword) =>
           graph.subschemas(id, keyword).map(([, child]) => child),
         ),
-      ].some(walk)
-    );
+      ].some(walk);
+    if (reaches) {
+      answers.set(id, true);
+    }
+    return reaches;
   };
-  return walk(start);
+  const reaches = walk(start);
+  if (!reaches) {
+    for (const id of visited) {
+      answers.set(id, false);
+    }
+  }
+  return reaches;
 }
 
 /** Whether the field of `schema` takes a `const` as its default: its own `const`, or one `hasConst` says it has where
