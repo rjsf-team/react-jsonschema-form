@@ -11,7 +11,8 @@ import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJS
  * @param registry - The `Registry` from which to read the templates
  * @param [uiOptions={}] - The `UIOptionsType` from which to read alternate templates
  * @param [entryLabel] - Builds the label of the uiSchema entry the field is rendered from, for the warning an invalid
- * override logs; omitted by callers that only resolve, which stay silent
+ * override logs, handed the template's name as `getTemplate()` describes; omitted by callers that only resolve, which
+ * stay silent
  * @returns - The templates from either the `uiSchema` or `registry`
  */
 export default function getTemplates<
@@ -21,7 +22,7 @@ export default function getTemplates<
 >(
   registry: Registry<T, S, F>,
   uiOptions: UIOptionsType<T, S, F> = {},
-  entryLabel?: () => string,
+  entryLabel?: (key: string) => string,
 ): Readonly<TemplatesType<T, S, F>> {
   // Every field and widget calls this on each render, so the registry's own map is returned as-is, without allocating,
   // unless an override actually applies

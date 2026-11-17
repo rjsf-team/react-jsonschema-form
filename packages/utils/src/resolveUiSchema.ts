@@ -1,4 +1,11 @@
-import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY, UI_OPTIONS_KEY } from './constants.ts';
+import {
+  ANY_OF_KEY,
+  ONE_OF_KEY,
+  REF_KEY,
+  RJSF_REF_KEY,
+  UI_DEFINITION_ORIGIN_KEY,
+  UI_OPTIONS_KEY,
+} from './constants.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
@@ -16,6 +23,14 @@ function mergeDefinition<T, S extends StrictRJSFSchema, F extends FormContextTyp
   localUiSchema: UiSchema<T, S, F>,
 ): UiSchema<T, S, F> {
   return mergeObjects(definition, localUiSchema) as UiSchema<T, S, F>;
+}
+
+/** Records on `merged`, the entry a `ui:definitions` entry was merged under, the definition's key, the entry as the
+ * uiSchema gave it and the definition, for the warnings to tell which of the two holds a key. Not enumerable, so a spread
+ * of the entry or a comparison with one written by hand doesn't see it
+ */
+function recordDefinitionOrigin(merged: object, ref: string, local: unknown, definition: unknown) {
+  Object.defineProperty(merged, UI_DEFINITION_ORIGIN_KEY, { value: { ref, local, definition } });
 }
 
 /** Returns the name a `ui:definitions` entry for `schema` is keyed by. The marker comes first: a schema resolved from a
@@ -70,6 +85,13 @@ export default function resolveUiSchema<
     result = { ...result };
     delete result[UI_OPTIONS_KEY];
   }
+  // Recorded last, on the object handed back, since filling in the options below copies it
+  const recorded = (resolved: UiSchema<T, S, F>) => {
+    if (ref && definitionUiSchema) {
+      recordDefinitionOrigin(resolved, ref, localUiSchema, definitionUiSchema);
+    }
+    return resolved;
+  };
 
   // Walk oneOf/anyOf branches to populate uiSchema[keyword][i] so MultiSchemaField
   // can read dropdown option titles at the parent level.
@@ -80,7 +102,7 @@ export default function resolveUiSchema<
         resolvedSchema = resolveOwnRef<S>(schema, registry.rootSchema);
       } catch (e) {
         logOnce('could not resolve $ref in resolveUiSchema:\n', { error: e });
-        return result;
+        return recorded(result);
       }
     }
 
@@ -94,17 +116,21 @@ export default function resolveUiSchema<
         for (let i = 0; i < schemaOptions.length; i++) {
           const optionRef = definitionRef(schemaOptions[i]);
           if (optionRef && optionRef in definitions) {
-            uiSchemaArray[i] = mergeDefinition(definitions[optionRef], uiSchemaArray[i] || {});
+            const local = uiSchemaArray[i];
+            uiSchemaArray[i] = mergeDefinition(definitions[optionRef], local || {});
+            recordDefinitionOrigin(uiSchemaArray[i], optionRef, local, definitions[optionRef]);
             hasExpanded = true;
           }
         }
 
+        // On a copy, since `result` may be the caller's own uiSchema, which would then hold the merged entries in place of
+        // the ones it gave the next time it is resolved
         if (hasExpanded) {
-          (result as GenericObjectType)[keyword] = uiSchemaArray;
+          result = { ...result, [keyword]: uiSchemaArray };
         }
       }
     }
   }
 
-  return result;
+  return recorded(result);
 }

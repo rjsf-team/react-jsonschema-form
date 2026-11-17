@@ -51,7 +51,7 @@ export function isTemplateName(name: string): boolean {
  * it. Keyed weakly, so an unmounted field's entry is let go
  */
 const builtMessages = new WeakMap<
-  () => string,
+  (key: string) => string,
   Map<string, { override: unknown; template: unknown; message: string }>
 >();
 
@@ -62,7 +62,7 @@ export function warnOnInvalidOverride(
   name: string,
   override: unknown,
   template: unknown,
-  entryLabel: () => string,
+  entryLabel: (key: string) => string,
 ): void {
   let byName = builtMessages.get(entryLabel);
   if (!byName) {
@@ -76,7 +76,7 @@ export function warnOnInvalidOverride(
   }
   // The value may sit under `ui:${name}` or under `ui:options`, so the warning names both rather than send the
   // user looking for a key that isn't there
-  const target = `${name} (ui:${name} or ui:options) for ${entryLabel()}`;
+  const target = `${name} (ui:${name} or ui:options) for ${entryLabel(name)}`;
   const description = describeUnresolvedComponent(override, template, 'registered template', 'MyTemplate');
   const message = `${target} ${description}, so it is ignored.`;
   byName.set(name, { override, template, message });

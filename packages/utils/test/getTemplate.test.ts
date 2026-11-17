@@ -113,6 +113,13 @@ describe('getTemplate', () => {
     );
   });
 
+  it("hands the entryLabel the template's name, the option the override is read under", () => {
+    const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', 'Typo']]);
+    const entryLabel = vi.fn((key: string) => `"root" (${key})`);
+    getTemplate('FieldTemplate', registry, invalidOptions, entryLabel);
+    expect(entryLabel).toHaveBeenCalledExactlyOnceWith('FieldTemplate');
+  });
+
   it('resolves an invalid override silently without an entryLabel', () => {
     const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', createElement(FakeTemplate)]]);
     expect(getTemplate('FieldTemplate', registry, invalidOptions)).toBe(FakeTemplate);

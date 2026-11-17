@@ -98,8 +98,8 @@ import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
-import TemplateWarnEntryContext, { useTemplateWarnEntry } from './TemplateWarnEntryContext.ts';
-import type { TemplateWarnEntry } from './TemplateWarnEntryContext.ts';
+import TemplateWarnEntryContext, { definitionRecordOf, useTemplateWarnEntry } from './TemplateWarnEntryContext.ts';
+import type { DefinitionRecord, TemplateWarnEntry } from './TemplateWarnEntryContext.ts';
 import type { ShownOptionField } from './useSchemaFieldPresentation.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
@@ -263,7 +263,7 @@ function warnOfUnshownOptionLabels<
         : `its options come from its constant \`${keyword}\``;
       const alternative = showsOverEnum && enumBehind ? `, or drop the \`${keyword}\` to show the \`enum\`` : '';
       logOnce(
-        `${entry.label()} sets ui:enumNames, which applies only to \`enum\` values, but ${source}, so it is ignored. ` +
+        `${entry.label('enumNames')} sets ui:enumNames, which applies only to \`enum\` values, but ${source}, so it is ignored. ` +
           `Label those options with a \`title\` or a \`ui:title\` in \`uiSchema.${keyword}\`${alternative}.`,
       );
     }
@@ -370,6 +370,10 @@ interface FieldWidgetPlan<T, S extends StrictRJSFSchema, F extends FormContextTy
   deprecatedHandling: ReturnType<typeof getDeprecatedHandling>;
   /** Whether the field renders hidden */
   hidden: boolean;
+  /** What `resolveUiSchema()` recorded when it merged a `ui:definitions` entry under the field's own, read before the
+   * steps after it copy the uiSchema
+   */
+  definitionRecord: DefinitionRecord | undefined;
 }
 
 /** Creates the function a field's widget and `deprecatedHandling` are resolved by, from the props its `SchemaField` is
@@ -456,7 +460,17 @@ function createFieldWidgetResolver<
     const uiOptions = overGlobalUiOptions(globalUiOptions, ownUiOptions);
     const deprecatedHandling = getDeprecatedHandling<T, S, F>(selectSchemaInfo.schema, uiOptions);
     const hidden = ownUiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
-    return { selectSchemaInfo, uiField, uiSchema, ownUiOptions, uiOptions, deprecatedHandling, hidden };
+    const definitionRecord = definitionRecordOf(ownUiSchema);
+    return {
+      selectSchemaInfo,
+      uiField,
+      uiSchema,
+      ownUiOptions,
+      uiOptions,
+      deprecatedHandling,
+      hidden,
+      definitionRecord,
+    };
   };
   return { resolve, resolveOwnUiSchema };
 }
@@ -1292,10 +1306,11 @@ export function useSchemaFieldPlan<
   // returns for a value that may still be mutated, and so refuses the memos below that depend on it
   const resolveFieldWidget = useMemo(() => createFieldWidgetResolver<T, S, F>().resolve, []);
   const isRefCycle = hasSchemaMarker(_schema, RJSF_REF_CYCLE_KEY);
-  const { selectSchemaInfo, uiField, uiSchema, ownUiOptions, uiOptions, deprecatedHandling, hidden } = useMemo(
-    () => resolveFieldWidget(_schema, _uiSchema, formData, registry, isRefCycle, namedAbove),
-    [resolveFieldWidget, _schema, _uiSchema, formData, registry, isRefCycle, namedAbove],
-  );
+  const { selectSchemaInfo, uiField, uiSchema, ownUiOptions, uiOptions, deprecatedHandling, hidden, definitionRecord } =
+    useMemo(
+      () => resolveFieldWidget(_schema, _uiSchema, formData, registry, isRefCycle, namedAbove),
+      [resolveFieldWidget, _schema, _uiSchema, formData, registry, isRefCycle, namedAbove],
+    );
   const { schema, xxxOfKey } = selectSchemaInfo;
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
@@ -1539,6 +1554,7 @@ export function useSchemaFieldPlan<
     effectiveRequired,
     hideError,
     hidden,
+    definitionRecord,
     // A label drawn above shows that field's title rather than this one, so a field below titled as this one says
     // something no label says yet, and keeps its heading
     title: presentation?.label.by === 'above' && inheritedPresentation ? inheritedPresentation.title : title,
@@ -1611,6 +1627,7 @@ function SchemaFieldRender<
     effectiveRequired,
     hideError,
     hidden,
+    definitionRecord,
     title,
     label,
     schemaDescription,
@@ -1747,7 +1764,7 @@ function SchemaFieldRender<
   // the keys above a field nested beneath one, collapse like array indexes. Rendered as a shown `anyOf`/`oneOf`
   // option, the field renders at the option field's own path, so it takes the option entry rather than name the
   // entry above itself
-  const templateEntry = useTemplateWarnEntry(schema, fieldPath, registry.globalFormOptions);
+  const templateEntry = useTemplateWarnEntry(schema, fieldPath, registry.globalFormOptions, definitionRecord);
 
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's

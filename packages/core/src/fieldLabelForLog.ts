@@ -36,6 +36,8 @@ export interface EntryAnchor {
   noun?: string;
   /** Builds the label of the entry the option's entry sits in */
   owner: () => string;
+  /** Builds the label of that entry as the uiSchema gives it, naming no `ui:definitions` entry merged above */
+  localOwner?: () => string;
   /** The `ui:definitions` key of the option's `$ref`, whose entry `resolveUiSchema()` merges under the option's own, so
    * a mistake below it may sit in either, and the label names both
    */

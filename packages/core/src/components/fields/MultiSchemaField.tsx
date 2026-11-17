@@ -41,7 +41,12 @@ import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
-import TemplateWarnEntryContext, { optionWarnEntry, useTemplateWarnEntry } from './TemplateWarnEntryContext.ts';
+import TemplateWarnEntryContext, {
+  definitionHolding,
+  definitionRecordOf,
+  optionWarnEntry,
+  useTemplateWarnEntry,
+} from './TemplateWarnEntryContext.ts';
 
 /** The keywords describing an object's extra keys */
 const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY];
@@ -143,29 +148,14 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // The entry this field renders from, which the `SchemaField` rendering it provides, so an option nested in another
   // option's entry names both
   const entry = useTemplateWarnEntry(schema, fieldPath, globalFormOptions);
-  // `resolveUiSchema()` merges the `ui:definitions` entry of the option's `$ref` under its entry, which can't be told
-  // apart here from what the `uiSchema` gave it, so the labels name both
+  // `resolveUiSchema()` merges the `ui:definitions` entry of the option's `$ref` under its entry, recording the entry the
+  // `uiSchema` gave, so a warning about one key names the one holding it, and one about the entry names both
+  const definitionRecord = optionUiSchema === uiSchema ? undefined : definitionRecordOf(optionUiSchema);
   const optionRef: unknown = option ? (Reflect.get(option, RJSF_REF_KEY) ?? option.$ref) : undefined;
   const definition =
     typeof optionRef === 'string' && uiSchemaDefinitions && Object.hasOwn(uiSchemaDefinitions, optionRef)
       ? optionRef
       : undefined;
-  // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't
-  // tell apart from a `uiSchema` it inherits, so a field the option's own entry names is warned about here instead,
-  // unless it is `SchemaField`, which renders the option the same either way
-  const namedForPath = use(NamedFieldContext)?.fieldPath === fieldPath;
-  if (rendersOption && namedForPath && optionUiSchema !== uiSchema) {
-    const optionField = getUiOptions<T, S, F>(optionUiSchema).field;
-    if (optionField && lookUpUiField<T, S, F>(optionField, fields) !== fields.SchemaField) {
-      logOnce(
-        `ui:field in uiSchema.${xxxOfKey}[${selectedOption}]` +
-          `${definition ? ` (or ui:definitions['${definition}'])` : ''} for ${entry.label()} is ` +
-          'ignored, since a field is already named for that path, so the option is rendered as though no ui:field ' +
-          'were given.',
-        { id: 'option-field-ignored' },
-      );
-    }
-  }
   // A custom container field renders an entry with no context, which leaves its flag
   const isEntryPath = use(AdditionalEntryContext) === fieldPath || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
   // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed. An option's own uiSchema
@@ -194,11 +184,54 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     optionUiSchema?.additionalProperties === undefined && optionFieldUiSchema?.additionalProperties !== undefined;
   const rendersFromField = optionUiSchema === uiSchema;
   const keySchemaFromField = EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(schema, keyword));
+  // Keyed on the record's parts, since `resolveUiSchema()` records afresh whenever it runs again for the same entries
+  const recordedRef = definitionRecord?.ref;
+  const recordedLocal = definitionRecord?.local;
+  const recordedDefinition = definitionRecord?.definition;
   const optionEntry = useMemo(
     () =>
-      optionWarnEntry(entry, rendersFromField, keysFromField, keySchemaFromField, xxxOfKey, selectedOption, definition),
-    [entry, rendersFromField, keysFromField, keySchemaFromField, xxxOfKey, selectedOption, definition],
+      optionWarnEntry(
+        entry,
+        rendersFromField,
+        keysFromField,
+        keySchemaFromField,
+        xxxOfKey,
+        selectedOption,
+        globalFormOptions,
+        definition,
+        recordedRef === undefined
+          ? undefined
+          : { ref: recordedRef, local: recordedLocal, definition: recordedDefinition },
+      ),
+    [
+      entry,
+      rendersFromField,
+      keysFromField,
+      keySchemaFromField,
+      xxxOfKey,
+      selectedOption,
+      globalFormOptions,
+      definition,
+      recordedRef,
+      recordedLocal,
+      recordedDefinition,
+    ],
   );
+  // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't
+  // tell apart from a `uiSchema` it inherits, so a field the option's own entry names is warned about here instead,
+  // unless it is `SchemaField`, which renders the option the same either way
+  const namedForPath = use(NamedFieldContext)?.fieldPath === fieldPath;
+  if (rendersOption && namedForPath && optionUiSchema !== uiSchema) {
+    const optionField = getUiOptions<T, S, F>(optionUiSchema).field;
+    if (optionField && lookUpUiField<T, S, F>(optionField, fields) !== fields.SchemaField) {
+      logOnce(
+        `ui:field in ${definitionHolding(optionEntry, 'field') ?? `uiSchema.${xxxOfKey}[${selectedOption}]`} ` +
+          `for ${entry.label()} is ignored, since a field is already named for that path, so the option is rendered as ` +
+          'though no ui:field were given.',
+        { id: 'option-field-ignored' },
+      );
+    }
+  }
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to

@@ -2234,7 +2234,7 @@ describe('SchemaField', () => {
       expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
     });
 
-    it("names the option's ui:definitions entry beside its own, which resolveUiSchema() merges under it", () => {
+    it("names the option's ui:definitions entry when it holds the ui:field, rather than the option's own", () => {
       const { node } = createFormComponent({
         schema: {
           $defs: { Foo: { minLength: 2 } },
@@ -2247,8 +2247,8 @@ describe('SchemaField', () => {
 
       expect(node.querySelector('.option-field')).not.toBeInTheDocument();
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        'ui:field in uiSchema.anyOf[0] (or ui:definitions[\'#/$defs/Foo\']) for "root" is ignored, since a field is ' +
-          'already named for that path, so the option is rendered as though no ui:field were given. [option-field-ignored]',
+        'ui:field in ui:definitions[\'#/$defs/Foo\'] for "root" is ignored, since a field is already named for that ' +
+          'path, so the option is rendered as though no ui:field were given. [option-field-ignored]',
       );
     });
 
@@ -2636,6 +2636,22 @@ describe('SchemaField', () => {
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
           expect.stringContaining('"root_{}" ({}) has an `enum` beside'),
         );
+      });
+
+      it("should name an extra key a typed object field takes from an option's own additionalProperties after the option", async () => {
+        const objectOption = { additionalProperties: enumBesideTitles } satisfies RJSFSchema;
+        const { node } = createFormComponent({
+          schema: { type: 'object', anyOf: [objectOption, objectOption] },
+          initialFormData: { extra: 'a' },
+        });
+
+        await user.selectOptions(node.querySelector('#root__anyof_select')!, 'Option 2');
+
+        // The field renders the extra key, but only the selected option's `additionalProperties` describes it
+        expect(consoleWarnSuppression.consoleSpy.mock.calls.map(([message]) => String(message).slice(0, 46))).toEqual([
+          'the anyOf[0]{} schema of "root" has an `enum` ',
+          'the anyOf[1]{} schema of "root" has an `enum` ',
+        ]);
       });
 
       it("should name an extra key of an option's own additionalProperties after the option", async () => {
@@ -3862,7 +3878,7 @@ describe('SchemaField', () => {
           anyOf: [{ $ref: '#/$defs/Foo' }, { type: 'number' }],
         };
 
-        it('names both places for a mistake in the option entry', () => {
+        it('names the definition for a mistake it holds in the option entry', () => {
           createFormComponent({
             schema,
             uiSchema: { 'ui:definitions': { '#/$defs/Foo': { 'ui:FieldTemplate': typo } } },
@@ -3870,12 +3886,12 @@ describe('SchemaField', () => {
 
           // No `uiSchema.anyOf` is written, but `resolveUiSchema()` fills `uiSchema.anyOf[0]` in from the definition
           expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root" (or ' +
-              "ui:definitions['#/$defs/Foo']) names no registered template ('Typo'), so it is ignored.",
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the ui:definitions[\'#/$defs/Foo\'] entry of "root" ' +
+              "names no registered template ('Typo'), so it is ignored.",
           );
         });
 
-        it('names both places for a mistake below the option entry, beside keys the uiSchema gives it', () => {
+        it('names the definition for a mistake it holds below the option entry, beside keys the uiSchema gives it', () => {
           createFormComponent({
             schema,
             uiSchema: {
@@ -3885,10 +3901,136 @@ describe('SchemaField', () => {
           });
 
           expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0].b entry of "root" (or ' +
-              "ui:definitions['#/$defs/Foo'].b) names no registered template ('Typo'), so it is ignored.",
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the ui:definitions[\'#/$defs/Foo\'].b entry of "root" ' +
+              "names no registered template ('Typo'), so it is ignored.",
           );
         });
+
+        it("names the option's own entry for a mistake it holds, beside a definition", () => {
+          createFormComponent({
+            schema,
+            uiSchema: {
+              'ui:definitions': { '#/$defs/Foo': { 'ui:title': 'Foo' } },
+              anyOf: [{ b: { 'ui:options': { FieldTemplate: typo } } }],
+            },
+          });
+
+          expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0].b entry of "root" names no ' +
+              "registered template ('Typo'), so it is ignored.",
+          );
+        });
+
+        it("names an option's own entry nested in a definition's option without the definition", () => {
+          createFormComponent({
+            schema: {
+              $defs: { Foo: { anyOf: [{ type: 'string' }, { type: 'number' }] } },
+              anyOf: [{ $ref: '#/$defs/Foo' }, { type: 'boolean' }],
+            },
+            uiSchema: {
+              'ui:definitions': { '#/$defs/Foo': { 'ui:title': 'Foo' } },
+              anyOf: [{ anyOf: [{ 'ui:FieldTemplate': typo }] }],
+            },
+          });
+
+          expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of the uiSchema.anyOf[0] ' +
+              'entry of "root" names no registered template (\'Typo\'), so it is ignored.',
+          );
+        });
+      });
+
+      it('names a definition for a mistake it holds outside an option, once for every field it is merged under', () => {
+        createFormComponent({
+          schema: {
+            definitions: { Name: { type: 'string' } },
+            type: 'object',
+            properties: { first: { $ref: '#/definitions/Name' }, last: { $ref: '#/definitions/Name' } },
+          },
+          uiSchema: {
+            'ui:definitions': { '#/definitions/Name': { 'ui:FieldTemplate': typo } },
+            last: { 'ui:title': 'Last' },
+          },
+        });
+
+        // A definition is one entry however many fields `$ref` it, as an `items` entry is
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          "FieldTemplate (ui:FieldTemplate or ui:options) for the ui:definitions['#/definitions/Name'] entry of " +
+            '"root" names no registered template (\'Typo\'), so it is ignored.',
+        );
+      });
+
+      it('names the outer definition for a mistake it holds above a field merging a definition of its own', () => {
+        createFormComponent({
+          schema: {
+            $defs: { A: { type: 'object', properties: { b: { $ref: '#/$defs/B' } } }, B: { type: 'string' } },
+            type: 'object',
+            properties: { a: { $ref: '#/$defs/A' } },
+          },
+          uiSchema: {
+            'ui:definitions': { '#/$defs/A': { b: { 'ui:FieldTemplate': typo } }, '#/$defs/B': { 'ui:title': 'B' } },
+          },
+        });
+
+        // B's entry is merged over the one A's definition gives `b`, so the mistake still sits in A's
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for the ui:definitions[\'#/$defs/A\'].b entry of "root" ' +
+            "names no registered template ('Typo'), so it is ignored.",
+        );
+      });
+
+      it("names a field's definition for a mistake it holds in an option's entry, writing the option's place", () => {
+        createFormComponent({
+          schema: {
+            $defs: {
+              Root: { anyOf: [{ type: 'object', properties: { c: { type: 'string' } } }, { type: 'number' }] },
+            },
+            $ref: '#/$defs/Root',
+          },
+          uiSchema: { 'ui:definitions': { '#/$defs/Root': { anyOf: [{ c: { 'ui:FieldTemplate': typo } }] } } },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          "FieldTemplate (ui:FieldTemplate or ui:options) for the ui:definitions['#/$defs/Root'].anyOf[0].c entry of " +
+            '"root" names no registered template (\'Typo\'), so it is ignored.',
+        );
+      });
+
+      it('names the definition for a ui:field it holds beside a ui:options.field the field ignores', () => {
+        createFormComponent({
+          schema: {
+            definitions: { Name: { type: 'string' } },
+            type: 'object',
+            properties: { first: { $ref: '#/definitions/Name' } },
+          },
+          uiSchema: {
+            'ui:definitions': { '#/definitions/Name': { 'ui:field': 'Typo' } },
+            first: { 'ui:options': { field: 'Other' } },
+          },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
+          expect.stringMatching(/^ui:field for the ui:definitions\['#\/definitions\/Name'\] entry of "root" /),
+        );
+      });
+
+      it("names a field's own entry for a mistake it holds, beside a definition", () => {
+        createFormComponent({
+          schema: {
+            definitions: { Name: { type: 'string' } },
+            type: 'object',
+            properties: { first: { $ref: '#/definitions/Name' } },
+          },
+          uiSchema: {
+            'ui:definitions': { '#/definitions/Name': { 'ui:title': 'Name' } },
+            first: { 'ui:FieldTemplate': typo },
+          },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_first" (first) names no registered template ' +
+            "('Typo'), so it is ignored.",
+        );
       });
 
       it('names an option entry below another option entry after both', () => {
