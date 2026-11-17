@@ -8,10 +8,11 @@ import Playground from '../../src/components/Playground.tsx';
 const user = userEvent.setup();
 
 // jsdom mounts nothing inside the demo frame's iframe, so the form renders in the page, inside an element that shows
-// the subtheme the frame was given
+// the subtheme and the stylesheets the frame was given
 vi.mock('../../src/components/DemoFrame.tsx', () => ({
-  default: ({ children, subtheme }: { children: ReactNode; subtheme: string | null }) => (
+  default: ({ children, head, subtheme }: { children: ReactNode; head: ReactNode; subtheme: string | null }) => (
     <div data-testid='demo-frame' data-subtheme={subtheme ?? 'none'}>
+      {head}
       {children}
     </div>
   ),
@@ -24,8 +25,12 @@ function renderPlayground() {
   const { container } = render(
     <Playground
       themes={{
-        core: { stylesheet: '', theme: {}, subthemes: { coreSubtheme: { stylesheet: '' } } },
-        other: { stylesheet: '', theme: {}, subthemes: { otherSubtheme: { stylesheet: '' } } },
+        core: { stylesheet: 'core.css', theme: {}, subthemes: { coreSubtheme: { stylesheet: 'coreSubtheme.css' } } },
+        other: {
+          stylesheet: 'other.css',
+          theme: {},
+          subthemes: { otherSubtheme: { stylesheet: 'otherSubtheme.css' } },
+        },
       }}
       validators={{ AJV8: validator }}
     />,
@@ -45,7 +50,9 @@ function renderPlayground() {
     }
     return user.selectOptions(selector, option);
   };
-  return { firstName, reset, select };
+  const stylesheets = () =>
+    Array.from(screen.getByTestId('demo-frame').querySelectorAll('link'), (link) => link.getAttribute('href'));
+  return { firstName, reset, select, stylesheets };
 }
 
 describe('Playground', () => {
@@ -77,14 +84,17 @@ describe('Playground', () => {
     expect(screen.getByTestId('demo-frame')).toHaveAttribute('data-subtheme', 'none');
   });
 
-  it("drops the picked subtheme when a sample loads the theme's own stylesheet", async () => {
-    const { select } = renderPlayground();
+  it('keeps the picked subtheme and its stylesheet across a sample load, which keeps the theme', async () => {
+    const { select, stylesheets } = renderPlayground();
     await select('rjsf_subthemeSelector', 'coreSubtheme');
 
     await user.click(screen.getByRole('tab', { name: 'Nested' }));
 
     await vi.waitFor(() => {
-      expect(screen.getByTestId('demo-frame')).toHaveAttribute('data-subtheme', 'none');
+      expect(screen.getByRole('tab', { name: 'Nested', selected: true })).toBeInTheDocument();
     });
+    expect(screen.getByTestId('demo-frame')).toHaveAttribute('data-subtheme', 'coreSubtheme');
+    expect(stylesheets()).toEqual(['coreSubtheme.css']);
+    expect(screen.getByRole('combobox', { name: 'Subtheme' })).toHaveValue('0');
   });
 });
