@@ -15,6 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # The deploy job runs only on main and takes its artifacts from the build leg matching `.nvmrc`, so a `.nvmrc`
+      # no build leg lists would pass every PR and fail only after merge. This runs before `setup-node`, which would
+      # accept `v26` or `lts/*`. Netlify's `NODE_VERSION` outranks `.nvmrc`, and nodenv reads only `.node-version`.
+      - name: Check the Node version files agree with the build matrix
+        run: |
+          v=$(tr -d '\r' < .nvmrc)
+          [[ $v =~ ^[0-9]+$ ]] || { echo "::error::.nvmrc ($v) is not a bare major"; exit 1; }
+          sed -n '/^  build:/,/^  [a-z_]*:$/p' .github/workflows/ci.yml | grep -qE "^ *node-version: \[.*\b$v\.x\b" || { echo "::error::no build matrix leg is $v.x, the .nvmrc version"; exit 1; }
+          [ "$(tr -d '\r' < .node-version)" = "$v" ] || { echo "::error::.node-version doesn't match .nvmrc ($v)"; exit 1; }
+          grep -qE "^ *NODE_VERSION = \"$v\"" netlify.toml || { echo "::error::netlify.toml's NODE_VERSION doesn't match .nvmrc ($v)"; exit 1; }
       - uses: pnpm/action-setup@v6
         with:
           run_install: false
@@ -47,14 +57,10 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
-      # The deploy job runs only on main, so a `.nvmrc` no leg matches would otherwise pass every PR and fail only
-      # after merge, when no leg uploads the artifacts.
+      # `checks` verifies that a leg matches `.nvmrc`.
       - name: Read the deploy Node version
         id: nvmrc
-        run: |
-          v=$(tr -d '\r' < .nvmrc)
-          grep -qE "^ *node-version: \[.*\b$v\.x\b" .github/workflows/ci.yml || { echo "::error::.nvmrc ($v) is not a bare major that a build matrix leg lists"; exit 1; }
-          echo "node-version=$v.x" >> "$GITHUB_OUTPUT"
+        run: echo "node-version=$(tr -d '\r' < .nvmrc).x" >> "$GITHUB_OUTPUT"
 
       - name: Build with Netlify badge
         run: pnpm run build-serial
