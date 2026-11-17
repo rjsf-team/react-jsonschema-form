@@ -4073,7 +4073,10 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
 
     rerender(<Form ref={ref} schema={withDefault('y')} validator={validator} />);
 
-    expect(handleOf(ref).getFormData()).toEqual({ t: [{ a: 'y' }] });
+    expect(handleOf(ref).getFormData()).toEqual({ t: [{ a: 'y', k: 'A' }] });
+    const fresh = createRef<FormRef<Record<string, unknown>>>();
+    render(<Form ref={fresh} schema={withDefault('y')} validator={validator} />);
+    expect(handleOf(fresh).getFormData()).toEqual({ t: [{ a: 'y', k: 'A' }] });
   });
   // Applied only on mount, the initial value is filled out anew from a default of another length, as a fresh mount
   // with the new schema fills it
@@ -4207,7 +4210,7 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
           from: objects([pair, pair]),
           to: objects([{ a: 'y' }]),
           uiSchema: { t: { items: { b: { 'ui:initialValue': 'i' } } } },
-          expected: [{ a: 'y' }, { b: 'i' }],
+          expected: [{ a: 'y', b: 'i' }, { b: 'i' }],
         },
         {
           name: "the new minItems, through its items' ui:initialValue",
