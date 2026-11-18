@@ -59,10 +59,10 @@ Exports `validator-ajv8` plugin for `react-jsonschema-form`.
 
 #### React JsonSchema Form Utils
 
-- `@rjsf/utils >= 5.0.0`
+- `@rjsf/utils >= 7`
 
 ```bash
-yarn add @rjsf/core
+yarn add @rjsf/utils
 ```
 
 ### Installation

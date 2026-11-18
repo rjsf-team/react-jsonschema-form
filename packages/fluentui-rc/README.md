@@ -64,9 +64,9 @@ Fluent UI React Components (v9) theme, fields and widgets for `react-jsonschema-
 - `@fluentui/react-components >= 9`
 - `@fluentui/react-icons >= 2`
 - `@fluentui/react-migration-v0-v9 >= 9`
-- `@rjsf/core >= 6`
-- `@rjsf/utils >= 6`
-- `@rjsf/validator-ajv8 >= 6`
+- `@rjsf/core >= 7`
+- `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`
 
 ```bash
 yarn add @fluentui/react-components @fluentui/react-icons @fluentui/react-migration-v0-v9 @rjsf/core @rjsf/utils @rjsf/validator-ajv8
@@ -130,4 +130,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/fluentui-rc
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/fluentui-rc.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/fluentui-rc
-[product-screenshot]: https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/fluentui-rc/screenshot.png?raw=true

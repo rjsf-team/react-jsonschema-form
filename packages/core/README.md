@@ -115,4 +115,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/core
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/core.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/core
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/core/screenshot.png

@@ -64,12 +64,12 @@ Exports `chakra-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@chakra-ui/react >= 3`
-- `@rjsf/core >= 6`
-- `@rjsf/utils >= 6`
-- `@rjsf/validator-ajv8 >= 6`
+- `@chakra-ui/react >= 3.16.1`
+- `@rjsf/core >= 7`
+- `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`
 
-Refer to the [rjsf installation guide](https://rjsf-team.github.io/react-jsonschema-form/docs/#installation) and [chakra-ui installation guide](https://chakra-ui.com/docs/getting-started#installation) and for more details.
+Refer to the [rjsf installation guide](https://rjsf-team.github.io/react-jsonschema-form/docs/#installation) and [chakra-ui installation guide](https://chakra-ui.com/docs/get-started/installation) for more details.
 
 ---
 
@@ -104,7 +104,7 @@ const Form = withTheme(ChakraUITheme);
 
 ## Optional Chakra UI Theme properties
 
-- To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/usage/objects#additional-properties).
+- To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema#uioptions).
 
 You can use `ChakraProvider`, to customize the components at a theme level.\
 And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize the styling of the form widgets.
@@ -125,7 +125,7 @@ And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize th
 }
 ```
 
-It accepts the theme accessible [style props](https://chakra-ui.com/docs/features/style-props) provided by [Chakra](https://chakra-ui.com/docs/getting-started) and [Emotion](https://emotion.sh/docs/introduction).
+It accepts the theme accessible [style props](https://chakra-ui.com/docs/styling/overview) provided by [Chakra](https://chakra-ui.com/docs) and [Emotion](https://emotion.sh/docs/introduction).
 
 <!-- ROADMAP -->
 
@@ -160,4 +160,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/chakra-ui
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/chakra-ui.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/chakra-ui
-[product-screenshot]: ./screenshot.png

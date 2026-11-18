@@ -35,11 +35,9 @@ This package integrates [DaisyUI](https://daisyui.com/), [Tailwind CSS](https://
 ### Prerequisites
 
 - `daisyui >= 5`
-- `@fluentui/react-icons >= 2`
-- `@fluentui/react-migration-v0-v9 >= 9`
-- `@rjsf/core >= 6`
-- `@rjsf/utils >= 6`
-- `@rjsf/validator-ajv8 >= 6`
+- `@rjsf/core >= 7`
+- `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`
 
 ### Installation
 

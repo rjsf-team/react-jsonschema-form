@@ -70,10 +70,11 @@
 - `@mantine/dates >= 9.6.3`
 - `react >= 19.2`
 - `dayjs >= 1.8.0`
-- `@rjsf/core >= 6.0.0`
+- `@rjsf/core >= 7`
+- `@rjsf/utils >= 7`
 
 ```sh
-npm install @mantine/core @mantine/hooks @mantine/dates dayjs @rjsf/core
+npm install @mantine/core @mantine/hooks @mantine/dates dayjs @rjsf/core @rjsf/utils
 ```
 
 ### Installation
@@ -103,7 +104,7 @@ const Form = withTheme(MantineTheme);
 
 ## Optional Mantine Theme properties
 
-- To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/usage/objects#additional-properties).
+- To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema#uioptions).
 
 #### Mantine Widget Optional Properties
 

@@ -69,9 +69,9 @@ NOTE: This theme requires React 19, so you will need to upgrade if you are on an
 - `@mui/icons-material >= 9`
 - `@emotion/react >= 11`
 - `@emotion/styled >= 11`
-- `@rjsf/core >= 6`
-- `@rjsf/utils >= 6`
-- `@rjsf/validator-ajv8 >= 6`
+- `@rjsf/core >= 7`
+- `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`
 
 ```bash
 yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core @rjsf/utils @rjsf/validator-ajv8
