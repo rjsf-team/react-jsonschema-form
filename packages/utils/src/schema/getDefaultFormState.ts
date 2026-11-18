@@ -1572,7 +1572,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
-  const fieldConst = fieldConstOf<S, F>(context, view);
+  const readConst = fieldConstOf<S, F>(context, view);
+  // An option's `const` is the value of one choice, which an inherited value picks in its place, as it picks the option
+  // of a list the field offers itself
+  const fieldConst =
+    defaults !== undefined && optionConstSchemas.has(readConst.schema)
+      ? { ...readConst, isDefault: false, object: undefined }
+      : readConst;
   const { schema: constSchema } = fieldConst;
   if (fieldConst.object !== undefined) {
     props.onObjectConst?.();
@@ -3516,9 +3522,11 @@ function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextTy
   if (constValueOf<S>(mergedSchema) !== undefined) {
     return mergedSchema;
   }
-  // The fold selects among the options of the field's own list itself, so only a list the merge brings in is read
+  // The fold selects among the options of the field's own list itself, so only a list the merge brings in is read. An
+  // option's `const` is the value of one choice, not a constraint on the field, so as for a list the field offers
+  // itself it only fills a field that holds no data, never replacing data that picks another option
   const offered = getXxxOfOptions<S>(mergedSchema);
-  if (offered === undefined || offered.key in schema) {
+  if (offered === undefined || offered.key in schema || data !== undefined) {
     return undefined;
   }
   // Under `constAsDefaults: 'skipOneOf'` the constant of a `oneOf` option is no default, as for a `oneOf` the field
@@ -3527,21 +3535,27 @@ function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextTy
     return undefined;
   }
   const { options } = offered;
-  // With no data, the option the field shows is the one its own `default` names, as the option selector picks it
+  // The option the field shows is the one its own `default` names, as the option selector picks it
   const index = closestOption<S, F>(
     context,
     graph.rawRoot,
-    data === undefined && DEFAULT_KEY in schema ? schema[DEFAULT_KEY] : data,
+    schema[DEFAULT_KEY],
     options,
     0,
     false,
     getDiscriminatorFieldFromSchema<S>(mergedSchema),
   );
   const option = options[index];
-  return isSchemaObject<S>(option) && constValueOf<S>(option) !== undefined
-    ? { ...mergedSchema, [CONST_KEY]: option[CONST_KEY] }
-    : undefined;
+  if (!isSchemaObject<S>(option) || constValueOf<S>(option) === undefined) {
+    return undefined;
+  }
+  const optionConst = { ...mergedSchema, [CONST_KEY]: option[CONST_KEY] };
+  optionConstSchemas.add(optionConst);
+  return optionConst;
 }
+
+/** The schemas `mergedConstSchemaOf()` gives a field the `const` of an option of, whose value an inherited one replaces */
+const optionConstSchemas = new WeakSet<object>();
 
 /** Whether an `anyOf`/`oneOf` option offered by a subschema a merge of the node `from` brings in, one its `$ref` or
  * `allOf` merges in, or its `then`/`else` or `dependencies` where the merge reads them (`withConditions`), reaches a

@@ -7150,6 +7150,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ x: { a: 2 } });
           });
         });
+        it('but keeps the data the field holds, which picks the option, as for a list the field offers itself', () => {
+          const objects = rootOf({ allOf: [{ oneOf: [{ const: { k: 'a', v: 1 } }, { const: { k: 'b', v: 2 } }] }] });
+          expect(getDefaultFormState(skipping, { schema: objects, formData: { x: { k: 'b', v: 2 } } })).toStrictEqual({
+            x: { k: 'b', v: 2 },
+          });
+          const numbers: RJSFSchema = {
+            type: 'object',
+            required: ['n'],
+            properties: { n: { type: 'number', allOf: [{ oneOf: [{ const: 1 }, { const: 2 }] }] } },
+          };
+          expect(getDefaultFormState(skipping, { schema: numbers, formData: { n: 7 } })).toStrictEqual({ n: 7 });
+        });
+        it("but takes the value an ancestor's const gives the field, which picks the option", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            const: { x: { k: 'b', v: 2 } },
+            properties: {
+              x: { type: 'object', allOf: [{ oneOf: [{ const: { k: 'a', v: 1 } }, { const: { k: 'b', v: 2 } }] }] },
+            },
+          };
+          expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ x: { k: 'b', v: 2 } });
+        });
         it("but takes none of a oneOf option's under constAsDefaults: 'skipOneOf', as of the field's own oneOf", () => {
           const skipOneOf = {
             validator: testValidator,
@@ -7165,10 +7187,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             getDefaultFormState(skipOneOf, { schema: rootOf({ allOf: [{ anyOf: [{ const: C }] }] }) }),
           ).toStrictEqual({ x: C });
         });
-        it('but takes none where the option its data matches holds none', () => {
+        it('but takes none where the option the field shows holds none', () => {
           const schema = rootOf({
-            allOf: [{ oneOf: [{ properties: { p: { type: 'string' } }, required: ['p'] }, { const: C }] }],
+            allOf: [{ oneOf: [{ properties: { p: { type: 'string' } } }, { const: C }] }],
           });
+          expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ x: {} });
           expect(getDefaultFormState(skipping, { schema, formData: { x: { p: 'q' } } })).toStrictEqual({
             x: { p: 'q' },
           });
