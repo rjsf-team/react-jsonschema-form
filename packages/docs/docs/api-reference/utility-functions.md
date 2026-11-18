@@ -1018,7 +1018,7 @@ Without a plan, the label is marked only where the box is natively required.
 
 #### Returns
 
-- { trueValueRequired: boolean; marksRequired: boolean }: `trueValueRequired`, for the box's native `required`, and `marksRequired`, for its label's marker
+- \{ trueValueRequired: boolean, marksRequired: boolean }: `trueValueRequired`, for the box's native `required`, and `marksRequired`, for its label's marker
 
 ### getDecimalSeparator(languages?: string | string[])
 
