@@ -12,7 +12,7 @@ This package integrates [DaisyUI](https://daisyui.com/), [Tailwind CSS](https://
 
 ## Screenshots
 
-[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/daisyui)
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/react-jsonschema-form/)
 
 ## Features
 
