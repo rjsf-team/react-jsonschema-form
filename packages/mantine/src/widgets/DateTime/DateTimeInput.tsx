@@ -177,9 +177,13 @@ export default function DateTimeInput<
   }, [reportFocus]);
   const handleFieldBlur = ({ relatedTarget }: FocusEvent<HTMLDivElement>) => {
     const field = fieldRef.current;
-    const target = relatedTarget as Node | null;
     // Focus going to an element outside the field and its modal leaves it now, before that element reports its focus
-    if (target && field && !field.contains(target) && !field.ownerDocument.getElementById(modalId)?.contains(target)) {
+    if (
+      relatedTarget &&
+      field &&
+      !field.contains(relatedTarget) &&
+      !field.ownerDocument.getElementById(modalId)?.contains(relatedTarget)
+    ) {
       leaveField();
       return;
     }
@@ -289,9 +293,9 @@ export default function DateTimeInput<
           }}
           onDropdownClose={() => {
             setModalOpened(false);
-            // A pointer submit removes the focused dropdown; a modal returns focus to the button itself
-            // shortcut: a modal with `modalProps.returnFocus: false` leaves the field without a blur, handle it if asked
-            if (!inModal) {
+            // A pointer submit removes the focused dropdown; a modal returns focus to the button itself, unless its
+            // `returnFocus` or `trapFocus`, both of which Mantine requires for that, is `false`
+            if (!inModal || modalProps.returnFocus === false || modalProps.trapFocus === false) {
               leaveFieldIfFocusLost();
             }
             const onDropdownCloseOption = themeProps.onDropdownClose ?? themeDefaults.onDropdownClose;

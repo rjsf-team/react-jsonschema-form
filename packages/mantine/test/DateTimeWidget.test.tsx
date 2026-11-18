@@ -508,6 +508,49 @@ describe('DateTimeWidget', () => {
     expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00');
   });
 
+  test('DateTimeWidget reports a blur when its modal closes with returnFocus: false, and a focus when clicked again', async () => {
+    const onBlur = vi.fn();
+    const onFocus = vi.fn();
+    const { container } = renderWidget({
+      onBlur,
+      onFocus,
+      schema: isoDateTime,
+      value: '2024-01-10T08:00:00',
+      options: { dropdownType: 'modal', modalProps: { returnFocus: false } },
+    });
+    const button = container.querySelector('button#root')!;
+
+    await user.click(button);
+    await user.keyboard('{Escape}');
+
+    await waitFor(() => expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00'));
+    expect(document.activeElement).toBe(document.body);
+
+    await user.click(button);
+
+    expect(onFocus).toHaveBeenCalledTimes(2);
+  });
+
+  test('DateTimeWidget reports a blur when its modal closes with trapFocus: false after a click inside it', async () => {
+    const onBlur = vi.fn();
+    const { container } = renderWidget({
+      onBlur,
+      schema: isoDateTime,
+      value: '2024-01-10T08:00:00',
+      options: {
+        dropdownType: 'modal',
+        modalProps: { trapFocus: false },
+        submitButtonProps: { 'aria-label': 'Submit' },
+      },
+    });
+
+    await pickDay(container, '10 January 2024');
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    await waitFor(() => expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00'));
+    expect(document.activeElement).toBe(document.body);
+  });
+
   test('DateTimeWidget reports no blur when its picker opens inside an iframe, and one when focus leaves it', async () => {
     const iframe = document.createElement('iframe');
     document.body.append(iframe);
