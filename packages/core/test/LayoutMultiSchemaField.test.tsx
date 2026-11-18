@@ -570,6 +570,35 @@ describe('LayoutMultiSchemaField', () => {
       );
     });
   });
+  test("doesn't fill the options of an option with no entry from the field's own oneOf entries, on a switch", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { type: 'object', properties: { name: { type: 'string', const: 'first' } } },
+        {
+          type: 'object',
+          properties: { name: { type: 'string', const: 'second' } },
+          oneOf: [
+            { type: 'object', properties: { x: { type: 'string' } } },
+            { type: 'object', properties: { y: { type: 'string' } } },
+          ],
+        },
+      ],
+    };
+    const uiSchema = {
+      [UI_OPTIONS_KEY]: { optionsSchemaSelector: 'name' },
+      [UI_WIDGET_KEY]: 'select',
+      [ONE_OF_KEY]: [{ x: { 'ui:initialValue': 'leak' } }],
+    };
+    const props = getProps({ schema, formData: { name: 'first' }, uiSchema });
+    render(<SchemaField {...props} />);
+
+    await user.selectOptions(screen.getByRole('combobox'), '1');
+
+    await waitFor(() => {
+      expect(props.onChange).toHaveBeenLastCalledWith({ name: 'second' }, props.fieldPath, undefined, DEFAULT_ID);
+    });
+  });
   test('custom selector field, ui:hideError false, props.hideError true, required true, autofocus true', async () => {
     const selectorField = 'name';
     const props = getProps({

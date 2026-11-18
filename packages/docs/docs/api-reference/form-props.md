@@ -251,7 +251,7 @@ Which schema that is depends on what the form is doing:
 
 - When the form computes defaults from the root schema, a root-level `allOf` provides its defaults with either value.
 - Some actions compute defaults from a subschema as if it were the root, such as adding an array item or optional data, or switching a `oneOf` or `anyOf` option, so that subschema's own `allOf` provides its defaults with either value. When switching options, the `if` of an `if-then-else` in the new option's `allOf` is checked against the data of the option being left with the new option's defaults filled in, so its `then` default is filled in when that data, or a default of the new option for a value the data lacks, matches the `if`.
-- The option picked on the initial render is not computed as if it were the root, even when its `oneOf` or `anyOf` is in the root schema, so under `skipDefaults` its `allOf` is left out until the user switches away from that option and back.
+- The option picked on the initial render is not computed as if it were the root, even when its `oneOf` or `anyOf` is in the root schema, so under `skipDefaults` its `allOf` is left out until the user switches away from that option and back. The same goes for an option offered by an `allOf` in an object property or in an array's `items`: that `allOf` is skipped as a whole on the initial render, so the option starts without its defaults, a `ui:initialValue` included, and switching to it fills them in, as an array item added after the initial render has them.
 
 The branch of an `if-then-else` is picked from the form data with the computed defaults filled in, so a default decides the `if` as the same value in the form data does, and a value the form data holds wins over the default:
 
