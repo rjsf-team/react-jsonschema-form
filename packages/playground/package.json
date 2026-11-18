@@ -22,7 +22,7 @@
     "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "^2.2.0",
+    "@ant-design/cssinjs": "^2.1.2",
     "@ant-design/icons": "^6.3.4",
     "@chakra-ui/react": "^3.38.0",
     "@emotion/react": "^11.14.0",

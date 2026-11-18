@@ -605,6 +605,14 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   const targets = new Map<unknown, GenericObjectType>();
   let targetCount = 0;
   const taken = new Set([...[...formIds].map(documentKey), ...reading.extras]);
+  // A generated `$id` a `$ref` of the form or of an extra names would make that `$ref` resolve in the module where it
+  // names nothing at runtime
+  JSON.stringify([schema, ...winners.values()], (key, value: unknown) => {
+    if (key === REF_KEY && typeof value === 'string') {
+      taken.add(documentKey(value));
+    }
+    return value;
+  });
   const targetId = (): string => {
     let id: string;
     do {
@@ -630,7 +638,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   }
   if (extras.some(([id]) => id === undefined)) {
     logOnce(
-      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are left out of the precompiled module; ata needs an $id to register one, so the runtime validator rejects them too',
+      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id, or whose only $id is a fragment such as #frag, are left out of the precompiled module; ata needs an $id to register one, so the runtime validator rejects them too',
     );
   }
   const dropped = [

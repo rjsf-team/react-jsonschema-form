@@ -460,6 +460,28 @@ describe('ataOptionsOverrides.schemas next to the root', () => {
     expect(v.isValid(root.properties!.x as RJSFSchema, 'abc', root)).toBe(true);
   });
 
+  it('refuses an additionalMetaSchemas entry whose only $id is a fragment, for every validation', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
+    onTestFinished(() => warn.mockRestore());
+    const v = customizeValidator({ additionalMetaSchemas: [{ $id: '#frag', maxLength: 2 }] });
+    const root = { type: 'object', properties: { x: { type: 'string' } } } as RJSFSchema;
+    const { validationError } = v.rawValidation(root, { x: 'abc' });
+    expect(validationError?.message).toBe(
+      'Schema in additionalMetaSchemas must have an $id other than a fragment, not #frag',
+    );
+    expect(v.isValid(root.properties!.x as RJSFSchema, 'abc', root)).toBe(false);
+  });
+
+  it.each(['#', '#1', '#/x'])(
+    'keeps an additionalMetaSchemas entry whose $id %s ata does not read as an anchor',
+    (id) => {
+      const v = customizeValidator({ additionalMetaSchemas: [{ $id: id, maxLength: 2 }] });
+      const root = { type: 'object', properties: { x: { type: 'string' } } } as RJSFSchema;
+      expect(v.rawValidation(root, { x: 'abc' }).validationError).toBeUndefined();
+      expect(v.isValid(root.properties!.x as RJSFSchema, 'abc', root)).toBe(true);
+    },
+  );
+
   it('keeps a boolean record entry what it is for the root and every sub-schema', () => {
     const v = customizeValidator(
       // A boolean entry, which the options type rules out but callers can still pass
@@ -733,6 +755,17 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
     const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json#', definitions: { X: { type: 'string' } } };
     expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a $ref to the anchor a root whose $id is only a fragment names itself by', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      $id: '#root',
+      type: 'object',
+      properties: { n: { type: 'integer' }, child: { $ref: '#root' } },
+    };
+    expect(validator.isValid(rootSchema, { n: 1, child: { n: 2 } }, rootSchema)).toBe(true);
+    expect(validator.isValid(rootSchema, { n: 1, child: { n: 'x' } }, rootSchema)).toBe(false);
+    expect(validator.isValid(rootSchema.properties!.child as RJSFSchema, { n: 2 }, rootSchema)).toBe(true);
   });
   it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold, a # ending it', () => {
     const validator = customizeValidator();
