@@ -461,6 +461,18 @@ describe('resolveUiSchema() - the options of an allOf member', () => {
     ['two members', { allOf: [fooOrBar, fooOrBar] }],
     ['the field and a member', { ...fooOrBar, allOf: [fooOrBar] }],
     ['a member and a then branch', { allOf: [fooOrBar], if: { type: 'object' }, then: other }],
+    [
+      'a member and a then branch naming its $ref',
+      { allOf: [{ $ref: '#/$defs/FooOrBar' }], if: { type: 'object' }, then: { $ref: '#/$defs/FooOrBar' } },
+    ],
+    [
+      'a nested member and a then branch naming its $ref',
+      {
+        allOf: [{ allOf: [{ $ref: '#/$defs/FooOrBar' }] }],
+        if: { type: 'object' },
+        then: { $ref: '#/$defs/FooOrBar' },
+      },
+    ],
     ['the field and an else branch', { ...fooOrBar, if: { type: 'object' }, then: {}, else: other }],
     ['the field and a dependencies entry', { ...fooOrBar, dependencies: { c: other, d: ['c'] } }],
   ])('merges none where %s offer a list, whose positions the merged list need not keep', (_label, schema) => {

@@ -82,7 +82,7 @@ function offeredOptions<S extends StrictRJSFSchema>(
   }
   const lists: Record<OptionsKeyword, unknown[][]> = { [ONE_OF_KEY]: [], [ANY_OF_KEY]: [] };
   const conditional = new Set<OptionsKeyword>();
-  const followed = new Set<string>(fieldRef ? [fieldRef] : []);
+  const followed = new Set<string>(fieldRef ? [`false|${fieldRef}`] : []);
   const collect = (node: unknown, inBranch: boolean) => {
     if (!isObject(node)) {
       return;
@@ -91,11 +91,13 @@ function offeredOptions<S extends StrictRJSFSchema>(
     const ref = stringKeyword(node, REF_KEY);
     const isFollowed = ref !== undefined && node !== schema;
     if (isFollowed) {
-      // A member naming a definition already followed is one whose `allOf` loops back to it
-      if (followed.has(ref)) {
+      // A member naming a definition already followed is one whose `allOf` loops back to it. A branch is followed
+      // apart, as its list is conditional even where a member offers the same one
+      const visit = `${inBranch}|${ref}`;
+      if (followed.has(visit)) {
         return;
       }
-      followed.add(ref);
+      followed.add(visit);
       resolved = tryResolveOwnRef<S>(resolved, rootSchema);
       if (!resolved) {
         return;
