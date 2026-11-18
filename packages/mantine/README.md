@@ -72,9 +72,10 @@
 - `dayjs >= 1.8.0`
 - `@rjsf/core >= 7`
 - `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`
 
 ```sh
-npm install @mantine/core @mantine/hooks @mantine/dates dayjs @rjsf/core @rjsf/utils
+npm install @mantine/core @mantine/hooks @mantine/dates dayjs @rjsf/core @rjsf/utils @rjsf/validator-ajv8
 ```
 
 ### Installation

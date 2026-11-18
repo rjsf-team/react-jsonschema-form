@@ -12,7 +12,7 @@ This is an advanced feature that lets you customize even more aspects of the for
 
 To understand how Fields, Templates, and Widgets work together, consider how a room is built and furnished:
 
-- 👷 **Custom Field (General Contractor / Room Architect):** Oversees the entire room. Dictates end-to-end logic, manages state and coordinates sub-fields (e.g. `ObjectField`, `ArrayField`).
+- 👷 **Custom Field (General Contractor / Room Architect):** Oversees the entire room. Dictates end-to-end logic and coordinates sub-fields (e.g. `ObjectField`, `ArrayField`).
 - 📐 **Custom Template (Framing & Layout):** The structural scaffolding. Determines _where_ elements sit relative to each other—arranging titles, descriptions, error banners, and the input slot. It doesn't care what the input control looks like.
 - 🎛️ **Custom Widget (Fixture / Appliance):** The interactive leaf control the user actually touches—the light switch, faucet, text input, toggle, or date picker. It only takes a value and fires change events.
 
@@ -20,7 +20,8 @@ In version 5, all existing `templates` were consolidated into a new `TemplatesTy
 They can also be overloaded globally on the `Form` via the `templates` prop as well as per-field through the `uiSchema`.
 Further, many new templates were added or repurposed from existing `widgets` and `fields` in an effort to simplify the effort needed by theme authors to build new and/or maintain current themes.
 These new templates can also be overridden by individual users to customize the specific needs of their application.
-A special category of templates, `ButtonTemplates`, were also added to support the easy replacement of the `Submit` button on the form, the `Add` and `Remove` buttons associated with `additionalProperties` and `patternProperties` on objects and elements of arrays, the `Move up` and `Move down` buttons used for reordering arrays, the `Copy` button that duplicates an array item, and the `Clear` button that empties a text input.
+A special category of templates, `ButtonTemplates`, were also added to support the easy replacement of the `Submit` button on the form, the `Add` and `Remove` buttons associated with `additionalProperties` and `patternProperties` on objects and elements of arrays, the `Move up` and `Move down` buttons used for reordering arrays, and the `Copy` button that duplicates an array item.
+Version 6 added the `Clear` button that empties a text input.
 This category, unlike the others, can only be overridden globally via the `templates` prop on `Form`.
 
 Below is the table that lists all the `templates`, their props interface, their `uiSchema` name and from where they originated in the previous version of RJSF:
@@ -1419,13 +1420,14 @@ import { FormattedMessage } from 'react-intl';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
-  type: 'string',
+  type: 'array',
+  items: { type: 'string' },
 };
 
 function AddButton(props: IconButtonProps) {
   const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
-    <button {...btnProps}>
+    <button type='button' {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Add' />
     </button>
   );
@@ -1459,7 +1461,7 @@ const uiSchema: UiSchema = {
 function ClearButton(props: IconButtonProps) {
   const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
-    <button {...btnProps}>
+    <button type='button' {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Clear' />
     </button>
   );
@@ -1500,7 +1502,7 @@ const uiSchema: UiSchema = {
 function CopyButton(props: IconButtonProps) {
   const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
-    <button {...btnProps}>
+    <button type='button' {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Copy' />
     </button>
   );
@@ -1530,20 +1532,26 @@ import { FormattedMessage } from 'react-intl';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
-  type: 'string',
+  type: 'array',
+  items: { type: 'string' },
 };
 
 function MoveDownButton(props: IconButtonProps) {
   const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
-    <button {...btnProps}>
+    <button type='button' {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Move Down' />
     </button>
   );
 }
 
 render(
-  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { MoveDownButton } }} />,
+  <Form
+    schema={schema}
+    formData={['first', 'second']}
+    validator={validator}
+    templates={{ ButtonTemplates: { MoveDownButton } }}
+  />,
   document.getElementById('app'),
 );
 ```
@@ -1560,20 +1568,26 @@ import { FormattedMessage } from 'react-intl';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
-  type: 'string',
+  type: 'array',
+  items: { type: 'string' },
 };
 
 function MoveUpButton(props: IconButtonProps) {
   const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
-    <button {...btnProps}>
+    <button type='button' {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Move Up' />
     </button>
   );
 }
 
 render(
-  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { MoveUpButton } }} />,
+  <Form
+    schema={schema}
+    formData={['first', 'second']}
+    validator={validator}
+    templates={{ ButtonTemplates: { MoveUpButton } }}
+  />,
   document.getElementById('app'),
 );
 ```
@@ -1590,20 +1604,26 @@ import { FormattedMessage } from 'react-intl';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
-  type: 'string',
+  type: 'array',
+  items: { type: 'string' },
 };
 
 function RemoveButton(props: IconButtonProps) {
   const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
-    <button {...btnProps}>
+    <button type='button' {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Remove' />
     </button>
   );
 }
 
 render(
-  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { RemoveButton } }} />,
+  <Form
+    schema={schema}
+    formData={['first', 'second']}
+    validator={validator}
+    templates={{ ButtonTemplates: { RemoveButton } }}
+  />,
   document.getElementById('app'),
 );
 ```
