@@ -250,7 +250,7 @@ Optional enumerated flag controlling how empty defaults are populated when `allO
 Which schema that is depends on what the form is doing:
 
 - When the form computes defaults from the root schema, a root-level `allOf` provides its defaults with either value.
-- Some actions compute defaults from a subschema as if it were the root, such as adding an array item or optional data, or switching a `oneOf` or `anyOf` option, so that subschema's own `allOf` provides its defaults with either value. When switching options, though, the `if` of an `if-then-else` in the new option's `allOf` is checked against the data of the option being left, so under `skipDefaults` its `then` default is filled in only when that data matches the `if`.
+- Some actions compute defaults from a subschema as if it were the root, such as adding an array item or optional data, or switching a `oneOf` or `anyOf` option, so that subschema's own `allOf` provides its defaults with either value. When switching options, the `if` of an `if-then-else` in the new option's `allOf` is checked against the data of the option being left with the new option's defaults filled in, so its `then` default is filled in when that data, or a default of the new option for a value the data lacks, matches the `if`.
 - The option picked on the initial render is not computed as if it were the root, even when its `oneOf` or `anyOf` is in the root schema, so under `skipDefaults` its `allOf` is left out until the user switches away from that option and back.
 
 The branch of an `if-then-else` is picked from the form data with the computed defaults filled in, so a default decides the `if` as the same value in the form data does, and a value the form data holds wins over the default:
