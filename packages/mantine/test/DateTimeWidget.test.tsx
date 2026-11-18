@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { createTheme, MantineProvider } from '@mantine/core';
+import type { MantineThemeOverride } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -37,9 +38,9 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
   };
 }
 
-function renderWidget(props: Partial<WidgetProps> = {}) {
+function renderWidget(props: Partial<WidgetProps> = {}, theme?: MantineThemeOverride) {
   return render(
-    <MantineProvider env='test'>
+    <MantineProvider env='test' theme={theme}>
       <DateTimeWidget {...makeProps(props)} />
     </MantineProvider>,
   );
@@ -477,6 +478,7 @@ describe('DateTimeWidget', () => {
 
   test.each([
     ['Escape closes', async () => user.keyboard('{Escape}')],
+    ['a click on its overlay closes', async () => user.click(document.querySelector('.mantine-Modal-overlay')!)],
     [
       'Enter submits',
       async () => {
@@ -531,24 +533,102 @@ describe('DateTimeWidget', () => {
     expect(onFocus).toHaveBeenCalledTimes(2);
   });
 
-  test('DateTimeWidget reports a blur when its modal closes with trapFocus: false after a click inside it', async () => {
+  test.each([
+    ["the picker's modalProps", { returnFocus: false }, false],
+    ["the picker's modalProps", { trapFocus: false }, false],
+    ["the theme's Modal defaults", { returnFocus: false }, true],
+    ["the theme's Modal defaults", { trapFocus: false }, true],
+  ])(
+    'DateTimeWidget reports a blur when its modal closes after a click inside it with %s %o, and a focus when clicked again',
+    async (_, modalProps, inTheme) => {
+      const onBlur = vi.fn();
+      const onFocus = vi.fn();
+      const { container } = renderWidget(
+        {
+          onBlur,
+          onFocus,
+          schema: isoDateTime,
+          value: '2024-01-10T08:00:00',
+          options: {
+            dropdownType: 'modal',
+            submitButtonProps: { 'aria-label': 'Submit' },
+            ...(inTheme ? {} : { modalProps }),
+          },
+        },
+        inTheme ? createTheme({ components: { Modal: { defaultProps: modalProps } } }) : undefined,
+      );
+      const button = container.querySelector('button#root')!;
+
+      // Without `trapFocus`, focus moves into the modal only when something in it is clicked
+      await pickDay(container, '10 January 2024');
+      await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+      await waitFor(() => expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00'));
+      expect(document.activeElement).toBe(document.body);
+
+      await user.click(button);
+
+      expect(onFocus).toHaveBeenCalledTimes(2);
+    },
+  );
+
+  test('DateTimeWidget reports its blur when focus an overlay click dropped tabs out of its open modal', async () => {
+    const events: string[] = [];
+    const { container } = render(
+      <MantineProvider env='test'>
+        <input aria-label='Other' onFocus={() => events.push('focus other')} />
+        <DateTimeWidget
+          {...makeProps({
+            schema: isoDateTime,
+            value: '2024-01-10T08:00:00',
+            options: { dropdownType: 'modal', modalProps: { trapFocus: false, closeOnClickOutside: false } },
+            onBlur: (id) => events.push(`blur ${id}`),
+            onFocus: (id) => events.push(`focus ${id}`),
+          })}
+        />
+      </MantineProvider>,
+    );
+
+    await user.click(container.querySelector('button#root')!);
+    await user.click(document.querySelector('.mantine-Modal-overlay')!);
+    await user.tab();
+
+    expect(screen.getByRole('textbox', { name: 'Other' })).toHaveFocus();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(events).toEqual(['focus root', 'blur root', 'focus other']);
+  });
+
+  test('DateTimeWidget reports no blur when focus an overlay click dropped returns to its modal in a shadow root', async () => {
+    const host = document.createElement('div');
+    document.body.append(host);
+    const container = host.attachShadow({ mode: 'open' }).appendChild(document.createElement('div'));
     const onBlur = vi.fn();
-    const { container } = renderWidget({
-      onBlur,
-      schema: isoDateTime,
-      value: '2024-01-10T08:00:00',
-      options: {
-        dropdownType: 'modal',
-        modalProps: { trapFocus: false },
-        submitButtonProps: { 'aria-label': 'Submit' },
-      },
-    });
+    const onFocus = vi.fn();
+    render(
+      <MantineProvider env='test'>
+        <DateTimeWidget
+          {...makeProps({
+            onBlur,
+            onFocus,
+            schema: isoDateTime,
+            value: '2024-01-10T08:00:00',
+            options: {
+              dropdownType: 'modal',
+              modalProps: { withinPortal: false, trapFocus: false, closeOnClickOutside: false },
+            },
+          })}
+        />
+      </MantineProvider>,
+      { container },
+    );
 
-    await pickDay(container, '10 January 2024');
-    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    await user.click(container.querySelector('button#root')!);
+    await user.click(container.querySelector('.mantine-Modal-overlay')!);
+    await user.click(container.querySelector('[role="dialog"] [role="spinbutton"]')!);
 
-    await waitFor(() => expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00'));
-    expect(document.activeElement).toBe(document.body);
+    expect(onBlur).not.toHaveBeenCalled();
+    expect(onFocus).toHaveBeenCalledOnce();
+    host.remove();
   });
 
   test('DateTimeWidget reports no blur when its picker opens inside an iframe, and one when focus leaves it', async () => {

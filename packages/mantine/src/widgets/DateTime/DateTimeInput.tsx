@@ -1,7 +1,8 @@
 import type { FocusEvent, KeyboardEvent, MouseEvent } from 'react';
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { DateInput, DateTimePicker } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
+import { useDidUpdate } from '@mantine/hooks';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   dateElementAriaLabel,
@@ -66,6 +67,13 @@ const offsetValueFormatter = (value?: DateStringValue | Date | null) => {
 
 /** Whether a dayjs `format` has a seconds token, ignoring the text of its `[...]` literals */
 const hasSeconds = (format: string) => format.replace(/\[[^\]]*\]/g, '').includes('s');
+
+// The delay `useFocusReturn` in `@mantine/hooks` waits before a closed modal returns focus
+const MANTINE_FOCUS_RETURN_DELAY = 10;
+
+/** Whether `node` is outside a field and its modal, which renders in a portal outside it */
+const isOutsideField = (field: HTMLElement, modalId: string, node: Node) =>
+  !field.contains(node) && !field.ownerDocument.getElementById(modalId)?.contains(node);
 
 const isCallback = (value: unknown): value is (...args: unknown[]) => void => typeof value === 'function';
 
@@ -178,28 +186,55 @@ export default function DateTimeInput<
   const handleFieldBlur = ({ relatedTarget }: FocusEvent<HTMLDivElement>) => {
     const field = fieldRef.current;
     // Focus going to an element outside the field and its modal leaves it now, before that element reports its focus
-    if (
-      relatedTarget &&
-      field &&
-      !field.contains(relatedTarget) &&
-      !field.ownerDocument.getElementById(modalId)?.contains(relatedTarget)
-    ) {
+    if (relatedTarget && field && isOutsideField(field, modalId, relatedTarget)) {
       leaveField();
+      return;
+    }
+    // Focus an open modal drops, such as to a click on its overlay, is settled where it lands next or once the modal
+    // closes
+    if (modalOpened) {
       return;
     }
     // Otherwise a focus inside the field that follows in the same task only moves focus within it
     leaveTimerRef.current = setTimeout(leaveField);
   };
-  // Removing a focused element, such as the Clear button or the dropdown, moves focus to the body without a blur in
-  // some browsers
-  const leaveFieldIfFocusLost = useCallback(() => {
-    setTimeout(() => {
-      // Focus can still be in a dropdown that is closing, which some browsers then remove without a blur
-      if (buttonRef.current?.ownerDocument.activeElement !== buttonRef.current) {
+  // A modal without `trapFocus` can leave focus dropped to the body while open, from where a Tab leaves the field; the
+  // capture listener reports the blur before the element focus lands on reports its focus
+  useEffect(() => {
+    const field = fieldRef.current;
+    if (!modalOpened || !field) {
+      return undefined;
+    }
+    const doc = field.ownerDocument;
+    const leaveIfOutside = (event: Event) => {
+      // The node focused rather than `event.target`, which is the shadow host of a form rendered in a shadow root
+      const [target] = event.composedPath();
+      if (isOutsideField(field, modalId, target as Node)) {
         leaveField();
       }
-    });
-  }, [leaveField]);
+    };
+    doc.addEventListener('focusin', leaveIfOutside, true);
+    return () => doc.removeEventListener('focusin', leaveIfOutside, true);
+  }, [modalOpened, modalId, leaveField]);
+  // Removing a focused element, such as the Clear button or the dropdown, moves focus to the body without a blur in
+  // some browsers
+  const leaveFieldIfFocusLost = useCallback(
+    (delay?: number) => {
+      setTimeout(() => {
+        // Focus can still be in a dropdown or modal that is closing, which some browsers then remove without a blur
+        if (buttonRef.current?.ownerDocument.activeElement !== buttonRef.current) {
+          leaveField();
+        }
+      }, delay);
+    },
+    [leaveField],
+  );
+  // Runs after the commit that closes the modal, whose effect started its equal-delay focus-return timer first
+  useDidUpdate(() => {
+    if (!modalOpened) {
+      leaveFieldIfFocusLost(MANTINE_FOCUS_RETURN_DELAY);
+    }
+  }, [modalOpened]);
 
   const parsedValue =
     requiresOffset || typeof value !== 'string' ? offsetValueParser(localValue) : dateParser(localValue, valueFormat);
@@ -292,10 +327,10 @@ export default function DateTimeInput<
             }
           }}
           onDropdownClose={() => {
-            setModalOpened(false);
-            // A pointer submit removes the focused dropdown; a modal returns focus to the button itself, unless its
-            // `returnFocus` or `trapFocus`, both of which Mantine requires for that, is `false`
-            if (!inModal || modalProps.returnFocus === false || modalProps.trapFocus === false) {
+            // A pointer submit removes the focused dropdown; a modal's close is checked once it could have returned focus
+            if (inModal) {
+              setModalOpened(false);
+            } else {
               leaveFieldIfFocusLost();
             }
             const onDropdownCloseOption = themeProps.onDropdownClose ?? themeDefaults.onDropdownClose;
