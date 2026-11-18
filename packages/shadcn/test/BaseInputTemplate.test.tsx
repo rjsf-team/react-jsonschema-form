@@ -57,6 +57,14 @@ describe('BaseInputTemplate', () => {
     expect(container.querySelector('input')).toBeDisabled();
   });
 
+  test('sets no placeholder on a range, as a browser ignores one there', () => {
+    const { container } = render(
+      <BaseInputTemplate type='range' {...makeWidgetMockProps({ value: 3, placeholder: 'Pick one' })} />,
+    );
+
+    expect(container.querySelector('input')).not.toHaveAttribute('placeholder');
+  });
+
   test('shows nothing for an object value', () => {
     const { container } = render(
       <BaseInputTemplate {...makeWidgetMockProps({ schema: { type: 'string' }, value: { a: 1 } })} />,

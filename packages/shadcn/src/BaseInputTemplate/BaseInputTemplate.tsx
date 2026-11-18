@@ -86,16 +86,18 @@ export default function BaseInputTemplate<
   const inputValue = toInputValue(value);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
+  const isRange = inputProps.type === 'range';
   return (
     <div className='p-0.5'>
       <Input
         id={id}
         name={htmlName || id}
-        placeholder={placeholder}
+        // A browser ignores `placeholder` and `readonly` on a range input, so a read-only range is disabled to keep it
+        // from being dragged
+        placeholder={isRange ? undefined : placeholder}
         autoFocus={autofocus}
         required={required}
-        // A browser ignores `readonly` on a range input, so a read-only range is disabled to keep it from being dragged
-        disabled={disabled || (inputProps.type === 'range' && readonly)}
+        disabled={disabled || (isRange && readonly)}
         readOnly={readonly}
         list={hasExamples ? examplesId(id) : undefined}
         title={title}
