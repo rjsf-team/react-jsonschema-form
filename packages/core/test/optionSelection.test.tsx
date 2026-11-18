@@ -954,9 +954,7 @@ describe('option selection as form state', () => {
     const nested = (depth: number): unknown => (depth === 0 ? null : { child: nested(depth - 1) });
 
     it('matches each option list once per level of data, so the matching grows linearly with depth', () => {
-      // From five levels deep the defaults stop short of the innermost list, which they score as the field does at
-      // shallower depths, so only from there does each level add the same matching
-      const counts = [5, 6, 7, 8, 9].map((depth) => {
+      const counts = [1, 2, 3, 4, 5].map((depth) => {
         const counting = customizeValidator();
         const isValid = vi.spyOn(counting, 'isValid');
         createFormComponent({ schema, initialFormData: nested(depth) }, counting);
@@ -1688,6 +1686,82 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#switch')).toHaveTextContent('0');
     expect(node.querySelector('#root_b__key')).toHaveValue('b');
   });
+
+  // The field matches its options retrieved for its data, which adds the extra keys an `additionalProperties` takes to
+  // an option's `properties`, and the fill matches them as written with those keys declared alike
+  describe.each<[string, RJSFSchema, object | undefined, object]>([
+    [
+      'adding the default of the option it shows',
+      {
+        type: 'object',
+        properties: {
+          x: { type: 'string' },
+          p: {
+            oneOf: [
+              { additionalProperties: false },
+              { properties: { q: { default: 'b' } }, additionalProperties: true },
+            ],
+          },
+        },
+      },
+      { p: { t: 2 } },
+      { p: { q: 'b', t: 2 } },
+    ],
+    [
+      'leaving out the default of an option it does not show',
+      {
+        type: 'object',
+        properties: {
+          x: { type: 'string' },
+          q: {
+            anyOf: [{ required: ['p'], additionalProperties: {} }, { properties: { p: { type: 'null' } } }],
+          },
+        },
+      },
+      { q: { m: 'b' } },
+      { q: { m: 'b' } },
+    ],
+    [
+      'for the default it holds',
+      {
+        type: 'object',
+        properties: {
+          x: { type: 'string' },
+          p: {
+            default: { t: 2 },
+            oneOf: [
+              { additionalProperties: false },
+              { properties: { q: { default: 'b' } }, additionalProperties: true },
+            ],
+          },
+        },
+      },
+      undefined,
+      { p: { q: 'b', t: 2 } },
+    ],
+  ])(
+    'a field whose options declare no type fills its first render from the option it shows, %s (#5832)',
+    (_, schema, initialFormData, filled) => {
+      it('and gives the same data after a reset', () => {
+        const ref = createFormRef();
+        createFormComponent({ ref, schema, initialFormData });
+        expect(handleOf(ref).getFormData()).toEqual(filled);
+
+        act(() => handleOf(ref).reset());
+
+        expect(handleOf(ref).getFormData()).toEqual(filled);
+      });
+
+      it('and after an edit to another field', async () => {
+        const ref = createFormRef();
+        const { node } = createFormComponent({ ref, schema, initialFormData });
+
+        await user.type(elementOf(node, '#root_x'), 'a');
+
+        expect(handleOf(ref).getFormData()).toEqual({ x: 'a', ...filled });
+      });
+    },
+  );
 });
 
 describe('omitting extra data', () => {
@@ -1919,64 +1993,6 @@ describe('cycle expansion as form state', () => {
 
     expect(node.querySelector('#root_0_child_name')).toBeInTheDocument();
   });
-
-  // Options that declare no `type` match the data as written apart from as retrieved for it, which adds the data's
-  // extra keys to an option's `properties`
-  describe.each<[string, RJSFSchema, object, object]>([
-    [
-      'adding the default of the option it shows',
-      {
-        type: 'object',
-        properties: {
-          x: { type: 'string' },
-          p: {
-            oneOf: [
-              { additionalProperties: false },
-              { properties: { q: { default: 'b' } }, additionalProperties: true },
-            ],
-          },
-        },
-      },
-      { p: { t: 2 } },
-      { p: { q: 'b', t: 2 } },
-    ],
-    [
-      'leaving out the default of an option it does not show',
-      {
-        type: 'object',
-        properties: {
-          x: { type: 'string' },
-          q: {
-            anyOf: [{ required: ['p'], additionalProperties: {} }, { properties: { p: { type: 'null' } } }],
-          },
-        },
-      },
-      { q: { m: 'b' } },
-      { q: { m: 'b' } },
-    ],
-  ])(
-    'a field whose options declare no type fills its first render from the option it shows, %s (#5832)',
-    (_, schema, initialFormData, filled) => {
-      it('and gives the same data after a reset', () => {
-        const ref = createFormRef();
-        createFormComponent({ ref, schema, initialFormData });
-        expect(handleOf(ref).getFormData()).toEqual(filled);
-
-        act(() => handleOf(ref).reset());
-
-        expect(handleOf(ref).getFormData()).toEqual(filled);
-      });
-
-      it('and after an edit to another field', async () => {
-        const ref = createFormRef();
-        const { node } = createFormComponent({ ref, schema, initialFormData });
-
-        await user.type(elementOf(node, '#root_x'), 'a');
-
-        expect(handleOf(ref).getFormData()).toEqual({ x: 'a', ...filled });
-      });
-    },
-  );
 });
 
 function getSelected(select: HTMLSelectElement) {
