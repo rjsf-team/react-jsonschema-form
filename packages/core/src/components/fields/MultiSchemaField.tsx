@@ -15,6 +15,7 @@ import {
   logOnce,
   optionSelectorId,
   PATTERN_PROPERTIES_KEY,
+  resolveUiSchema,
   resolveWidget,
   RJSF_REF_KEY,
   selectOptionUiSchema,
@@ -54,6 +55,20 @@ const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, U
 
 /** The widgets the option index has an implementation of that would show the index as a number to edit */
 const VALUE_ENTRY_WIDGETS = new Set<unknown>(['text', 'updown', 'range', 'TextWidget', 'UpDownWidget', 'RangeWidget']);
+
+/** Returns the `ui:definitions` key of an option's `$ref`, where `ui:definitions` has an entry for it
+ *
+ * @param option - The option, with its own `$ref` resolved, if one is
+ * @param [uiSchemaDefinitions] - The form's `ui:definitions`
+ * @returns - The key, or undefined
+ */
+function optionDefinitionRef<S extends StrictRJSFSchema>(
+  option: S,
+  uiSchemaDefinitions: object | undefined,
+): string | undefined {
+  const ref: unknown = Reflect.get(option, RJSF_REF_KEY) ?? option.$ref;
+  return typeof ref === 'string' && uiSchemaDefinitions && Object.hasOwn(uiSchemaDefinitions, ref) ? ref : undefined;
+}
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It shows
  * the option `useOptionSelection()` holds for the field, selects another when the user picks one, and cleans up any
@@ -120,20 +135,39 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const title = titleOption ?? schema.title;
 
+  // `resolveUiSchema()` merges an option's `ui:definitions` entry under its `uiSchema.anyOf[i]`/`oneOf[i]` only where the
+  // field's schema lists the options itself, so one it doesn't reach, such as an option inside an `allOf`, is merged
+  // below, the same way. Keyed on the refs, as a string, rather than on the options, which are retrieved afresh as the
+  // data changes
+  const optionRefs = JSON.stringify(options.map((opt) => optionDefinitionRef(opt, uiSchemaDefinitions) ?? null));
+  const { rootSchema } = registry;
   // First we will check to see if there is an anyOf/oneOf override for the UI schema. Computed here, ahead of
   // `onOptionChange`, so that callback can pass the old and new options' own uiSchemas to `formDataForNewOption`,
   // letting `ui:initialValue`/`ui:emptyValue` on those options' fields apply on selection.
   // Memoized so the common case (no `uiSchema.oneOf`/`anyOf` override) doesn't hand `onOptionChange`'s `useCallback`
   // a fresh `[]` on every render, which would otherwise break its memoization.
   const optionsUiSchema = useMemo<UiSchema<T, S, F>[]>(() => {
+    let given: UiSchema<T, S, F>[] = [];
     if (uiSchema && xxxOfKey in uiSchema) {
       if (Array.isArray(uiSchema[xxxOfKey])) {
-        return uiSchema[xxxOfKey];
+        given = uiSchema[xxxOfKey];
+      } else {
+        logOnce(`uiSchema.${xxxOfKey} is not an array for ${fieldLabelForLog(id, fieldPath)}`);
       }
-      logOnce(`uiSchema.${xxxOfKey} is not an array for ${fieldLabelForLog(id, fieldPath)}`);
     }
-    return [];
-  }, [xxxOfKey, uiSchema, id, fieldPath]);
+    const refs: (string | null)[] = JSON.parse(optionRefs);
+    const unmerged = refs.flatMap((ref, i) => (ref !== null && !definitionRecordOf(given[i]) ? [{ ref, i }] : []));
+    if (unmerged.length === 0) {
+      return given;
+    }
+    const merged = [...given];
+    for (const { ref, i } of unmerged) {
+      // A schema naming only the definition it came from, which is all `resolveUiSchema()` reads to merge it
+      const refOnly = { [RJSF_REF_KEY]: ref } as unknown as S;
+      merged[i] = resolveUiSchema<T, S, F>(refOnly, given[i], { rootSchema, uiSchemaDefinitions });
+    }
+    return merged;
+  }, [xxxOfKey, uiSchema, id, fieldPath, optionRefs, rootSchema, uiSchemaDefinitions]);
 
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
@@ -154,13 +188,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const definitionRecord = useStableDefinitionRecord(
     optionUiSchema === uiSchema ? undefined : definitionRecordOf(optionUiSchema),
   );
-  // Read from the option too, since an option `resolveUiSchema()` doesn't reach, such as one inside an `allOf`, has its
-  // definition merged by its own `SchemaField`, which records nothing at this path
-  const optionRef: unknown = option ? (Reflect.get(option, RJSF_REF_KEY) ?? option.$ref) : undefined;
-  const definition =
-    typeof optionRef === 'string' && uiSchemaDefinitions && Object.hasOwn(uiSchemaDefinitions, optionRef)
-      ? optionRef
-      : undefined;
+  // The option's anchor names the definition too, read from the option beside the record
+  const definition = option ? optionDefinitionRef(option, uiSchemaDefinitions) : undefined;
   // A custom container field renders an entry with no context, which leaves its flag
   const isEntryPath = use(AdditionalEntryContext) === fieldPath || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
   // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed. An option's own uiSchema

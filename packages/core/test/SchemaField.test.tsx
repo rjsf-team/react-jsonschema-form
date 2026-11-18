@@ -4038,22 +4038,55 @@ describe('SchemaField', () => {
         );
       });
 
-      it("names an option's definition where the option sits in an allOf, which resolveUiSchema() doesn't reach", () => {
-        createFormComponent({
-          schema: {
-            $defs: { Foo: { type: 'object', properties: { c: { type: 'string' } } } },
-            allOf: [{ anyOf: [{ $ref: '#/$defs/Foo' }, { type: 'number' }] }],
-          },
-          uiSchema: {
-            'ui:definitions': { '#/$defs/Foo': { c: { 'ui:FieldTemplate': typo } } },
-            anyOf: [{ 'ui:title': 'Local' }],
-          },
+      describe('an option inside an allOf, which resolveUiSchema() does not reach', () => {
+        const allOfSchema: RJSFSchema = {
+          $defs: { Foo: { type: 'object', properties: { c: { type: 'string' } } }, Bar: { type: 'number' } },
+          allOf: [{ anyOf: [{ $ref: '#/$defs/Foo' }, { $ref: '#/$defs/Bar' }] }],
+        };
+
+        it("names the option's definition for a mistake it holds, beside keys the uiSchema gives the option", () => {
+          createFormComponent({
+            schema: allOfSchema,
+            uiSchema: {
+              'ui:definitions': { '#/$defs/Foo': { c: { 'ui:FieldTemplate': typo } } },
+              anyOf: [{ 'ui:title': 'Local' }],
+            },
+          });
+
+          expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the ui:definitions[\'#/$defs/Foo\'].c entry of "root" ' +
+              "names no registered template ('Typo'), so it is ignored.",
+          );
         });
 
-        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-          'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0].c entry of "root" ' +
-            "(or ui:definitions['#/$defs/Foo'].c) names no registered template ('Typo'), so it is ignored.",
-        );
+        it("names the option's definition where the uiSchema gives the option no entry", () => {
+          createFormComponent({
+            schema: allOfSchema,
+            uiSchema: { 'ui:definitions': { '#/$defs/Foo': { c: { 'ui:FieldTemplate': typo } } } },
+          });
+
+          expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the ui:definitions[\'#/$defs/Foo\'].c entry of "root" ' +
+              "names no registered template ('Typo'), so it is ignored.",
+          );
+        });
+
+        it("titles the selector's options from their definitions", () => {
+          const { node } = createFormComponent({
+            schema: allOfSchema,
+            uiSchema: {
+              'ui:definitions': {
+                '#/$defs/Foo': { 'ui:title': 'FooTitle' },
+                '#/$defs/Bar': { 'ui:title': 'BarTitle' },
+              },
+            },
+          });
+
+          expect([...node.querySelectorAll('#root__anyof_select option')].map((o) => o.textContent)).toEqual([
+            'FooTitle',
+            'BarTitle',
+          ]);
+        });
       });
 
       it('names the definition for a ui:field it holds beside a ui:options.field the field ignores', () => {
