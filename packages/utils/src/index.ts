@@ -141,7 +141,7 @@ import listboxAriaProps from './listboxAriaProps.ts';
 import localToUTC from './localToUTC.ts';
 import logGridSpanWarning from './logGridSpanWarning.ts';
 import logOnce, { resetLogOnce } from './logOnce.ts';
-import type { LogOnceLevel, WarningCategory, WarningId, WarningOptions } from './logOnce.ts';
+import type { LogOnceLevel, LogOnceOptions, WarningCategory, WarningId, WarningOptions } from './logOnce.ts';
 import logUnsupportedDefaultForEnum from './logUnsupportedDefaultForEnum.ts';
 import lookupFromFormContext from './lookupFromFormContext.ts';
 import mergeClassMaps from './mergeClassMaps.ts';
@@ -294,6 +294,7 @@ export type {
   FileInfoType,
   GroupRole,
   LogOnceLevel,
+  LogOnceOptions,
   ObjectPath,
   PresentationSource,
   PresentationSubject,

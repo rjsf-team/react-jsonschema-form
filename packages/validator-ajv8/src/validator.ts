@@ -341,8 +341,7 @@ export default class AJV8Validator<
         compiled
           ? `Error encountered validating form data against schema${named}:`
           : `Error encountered compiling schema${named}:`,
-        'warn',
-        e,
+        { error: e },
       );
       // Remove the broken schema from AJV's registry so a subsequent rawValidation
       // or isValid call does not silently reuse a cached entry that bypassed

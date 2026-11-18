@@ -3,6 +3,20 @@ import toDisplayString from './toDisplayString.ts';
 /** The console methods `logOnce()` can log through */
 export type LogOnceLevel = 'warn' | 'error';
 
+/** How `logOnce()` logs a message */
+export interface LogOnceOptions {
+  /** Which console method to log through, `'warn'` unless given */
+  level?: LogOnceLevel;
+  /** The error, or any other value, to pass to the console method after the message */
+  error?: unknown;
+  /** The ID of the problem the warning flags, which ends the message and which `setWarningOptions()` can make throw */
+  id?: WarningId;
+  /** Whether to skip a message already logged, `true` unless given. A caller that limits its own warning, such as to
+   * once per form, passes `false`, so a later form logs it too
+   */
+  dedupe?: boolean;
+}
+
 /** The kinds of problem a warning with an ID flags: `migration` for v6 code that now does something else, each named in
  * the v7 upgrade-guide entry that explains it, and `config` for a uiSchema or option RJSF ignores whichever version it
  * was written for
@@ -117,33 +131,33 @@ let previousMessages = new Set<string>();
  * `setWarningOptions()` selects it. A throw isn't remembered, so it throws again on the next call.
  *
  * @param message - The message to log
- * @param [level='warn'] - Which console method to log through
- * @param [error] - The error, or any other value, to pass to the console method after the `message`
- * @param [id] - The ID of the problem the warning flags, which `setWarningOptions()` can make throw
+ * @param [options={}] - The `level`, `error`, `id` and `dedupe` to log the message with
  */
-export default function logOnce(message: string, level: LogOnceLevel = 'warn', error?: unknown, id?: WarningId) {
+export default function logOnce(message: string, { level = 'warn', error, id, dedupe = true }: LogOnceOptions = {}) {
   const text = id === undefined ? message : `${message} [${id}]`;
   if (id !== undefined && throwingIds.has(id)) {
     throw new RJSFWarningError(text, id, error === undefined ? undefined : { cause: error });
   }
-  // The trailing separator keeps `logOnce(m)` and `logOnce(m, 'warn', '')` two messages, and the type keeps an error
-  // that `toDisplayString()` could only spell as its type apart from a string error of that text
-  const key =
-    error === undefined
-      ? `${level}\u0000${text}`
-      : `${level}\u0000${text}\u0000${typeof error}\u0000${toDisplayString(error)}`;
-  // A message found in `previousMessages` is deliberately left there rather than promoted into `currentMessages`, so
-  // one seen on every render is logged a second time once two rotations have displaced it. Promoting it would hold it
-  // forever, at the cost of a slot in the current generation too, which is what caps how large a working set stays
-  // deduped: the largest one that survives, of exactly twice the cap, would drop to one log per pass.
-  if (currentMessages.has(key) || previousMessages.has(key)) {
-    return;
+  if (dedupe) {
+    // The trailing separator keeps `logOnce(m)` and `logOnce(m, { error: '' })` two messages, and the type keeps an error
+    // that `toDisplayString()` could only spell as its type apart from a string error of that text
+    const key =
+      error === undefined
+        ? `${level}\u0000${text}`
+        : `${level}\u0000${text}\u0000${typeof error}\u0000${toDisplayString(error)}`;
+    // A message found in `previousMessages` is deliberately left there rather than promoted into `currentMessages`, so
+    // one seen on every render is logged a second time once two rotations have displaced it. Promoting it would hold it
+    // forever, at the cost of a slot in the current generation too, which is what caps how large a working set stays
+    // deduped: the largest one that survives, of exactly twice the cap, would drop to one log per pass.
+    if (currentMessages.has(key) || previousMessages.has(key)) {
+      return;
+    }
+    if (currentMessages.size >= LOG_ONCE_MAX_MESSAGES) {
+      previousMessages = currentMessages;
+      currentMessages = new Set();
+    }
+    currentMessages.add(key);
   }
-  if (currentMessages.size >= LOG_ONCE_MAX_MESSAGES) {
-    previousMessages = currentMessages;
-    currentMessages = new Set();
-  }
-  currentMessages.add(key);
   const args = error === undefined ? [text] : [text, error];
   // `level` is only type-checked, so a JS caller can pass anything; `console[level]` would throw inside the very
   // render that was trying to warn, and the key is already remembered by then, so the message would never log at all.

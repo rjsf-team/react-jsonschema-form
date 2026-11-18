@@ -42,9 +42,7 @@ export default function pickGlobalUiOptions(
         ROOT_ONLY_NAMES.has(key)
           ? `globalUiOptionsKeys names ${key}, which no field could override since only the root uiSchema's ui:${key} sets it, so it is not read from ui:globalOptions.`
           : `globalUiOptionsKeys names ${key}, an option RJSF reads per field, so it is not read from ui:globalOptions.`,
-        'warn',
-        undefined,
-        'global-ui-options-key-not-read',
+        { id: 'global-ui-options-key-not-read' },
       );
     } else if (Object.hasOwn(globals, key)) {
       picked[key] = globals[key];
@@ -56,9 +54,7 @@ export default function pickGlobalUiOptions(
         ROOT_ONLY_NAMES.has(key)
           ? `ui:globalOptions.${key} is not read: only the root uiSchema's ui:${key} sets ${key}.`
           : `ui:globalOptions.${key} is not read: RJSF reads ${key} per field only.`,
-        'warn',
-        undefined,
-        'global-option-not-read',
+        { id: 'global-option-not-read' },
       );
     }
   }

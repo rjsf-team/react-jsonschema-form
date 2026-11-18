@@ -2449,6 +2449,24 @@ describe("the form's own development warnings", () => {
     ]);
   });
 
+  it('are given again by a form remounted with a key, under the same name', () => {
+    const ignored = () =>
+      warnings.consoleSpy.mock.calls.filter(([message]) =>
+        String(message).includes('`formData` changed after the form mounted'),
+      );
+    const view = (key: string, data: Data) => (
+      <Form<Data> key={key} schema={schema} validator={validator} formData={data} />
+    );
+    const { rerender } = render(view('1', { a: 'a' }));
+    rerender(view('1', { a: 'b' }));
+    rerender(view('1', { a: 'c' }));
+    expect(ignored()).toHaveLength(1);
+
+    rerender(view('2', { a: 'd' }));
+    rerender(view('2', { a: 'e' }));
+    expect(ignored()).toHaveLength(2);
+  });
+
   it('throw, for a boundary to catch, when throwOn selects migration warnings', () => {
     setWarningOptions({ throwOn: ['migration'] });
     render(

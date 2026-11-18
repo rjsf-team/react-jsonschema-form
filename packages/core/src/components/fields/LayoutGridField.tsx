@@ -728,9 +728,7 @@ function LayoutGridCondition<
     logOnce(
       `${LAYOUT_GRID_OPTION} ${GridType.CONDITION} in ${fieldLabelForLog(id, fieldPath)} names no field, so it renders ` +
         'nothing.',
-      'warn',
-      undefined,
-      'layout-grid-renders-nothing',
+      { id: 'layout-grid-renders-nothing' },
     );
     return null;
   }
@@ -869,9 +867,7 @@ function LayoutGridRow<
     logOnce(
       `span on a ui:row in ${entry.label()} is ignored, ` +
         'since span sizes a ui:col or ui:columns rather than a row.',
-      'warn',
-      undefined,
-      'row-span-ignored',
+      { id: 'row-span-ignored' },
     );
   }
 
@@ -1024,9 +1020,7 @@ function LayoutGridFieldComponent<
       logOnce(
         `ui:field for cell '${name}' in ${fieldLabelForLog(id, parentFieldPath)} is ignored, since a cell with ` +
           'discriminated oneOf/anyOf options renders only its option selector.',
-        'warn',
-        undefined,
-        'layout-grid-cell-field-ignored',
+        { id: 'layout-grid-cell-field-ignored' },
       );
     }
     const namePath = toPath(name);
@@ -1121,9 +1115,7 @@ function LayoutGridFieldComponent<
     // has been warned about
     logOnce(
       `${LAYOUT_GRID_OPTION} cell in ${fieldLabelForLog(id, parentFieldPath)} names no field, so it renders nothing.`,
-      'warn',
-      undefined,
-      'layout-grid-renders-nothing',
+      { id: 'layout-grid-renders-nothing' },
     );
   }
   return null;
@@ -1374,9 +1366,7 @@ export default function LayoutGridField<
       logOnce(
         `${LAYOUT_GRID_OPTION} in ${fieldLabelForLog(id, fieldPath)} is not an object, so the LayoutGridField renders ` +
           'nothing.',
-        'warn',
-        undefined,
-        'layout-grid-renders-nothing',
+        { id: 'layout-grid-renders-nothing' },
       );
     }
   }

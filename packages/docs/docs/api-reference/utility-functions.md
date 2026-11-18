@@ -2340,9 +2340,11 @@ A warning given an `id` throws an `RJSFWarningError` instead when [`setWarningOp
 #### Parameters
 
 - message: string - The message to log
-- [level='warn']: LogOnceLevel - Which console method to log through, either `'warn'` or `'error'`
-- [error]: unknown - The error, or any other value, to pass to the console method after the `message`
-- [id]: WarningId - The ID of the problem the warning flags, which ends the message as `[id]` and which [`setWarningOptions()`](#setwarningoptions) can make throw
+- [options={}]: LogOnceOptions - How to log the message:
+  - [level='warn']: LogOnceLevel - Which console method to log through, either `'warn'` or `'error'`
+  - [error]: unknown - The error, or any other value, to pass to the console method after the `message`
+  - [id]: WarningId - The ID of the problem the warning flags, which ends the message as `[id]` and which [`setWarningOptions()`](#setwarningoptions) can make throw
+  - [dedupe=true]: boolean - Whether to skip a message already logged. A caller that limits its own warning, as `Form` does to once per form, passes `false`, so a remounted form warns again; it still throws when `setWarningOptions()` selects its `id`
 
 ### lookupFromFormContext&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType, R = unknown>()
 
@@ -2989,9 +2991,10 @@ Sets which warnings [`logOnce()`](#logonce) throws rather than logs, for every f
 It is a module-level setting rather than a form prop, since several warnings are raised where no form's options reach, so set it once from your app's development entry point or your test setup.
 `resetLogOnce()` leaves it as it is.
 
-A warning that flags a known problem has a stable ID, which ends its message, as in `ui:layoutGrid in "root_address" is not an object, so the LayoutGridField renders nothing. [layout-grid-renders-nothing]`.
+A warning that flags a known problem has a stable ID, which ends its message, as in `ui:layoutGrid in "root_address" (address) is not an object, so the LayoutGridField renders nothing. [layout-grid-renders-nothing]`.
 When `throwOn` selects that ID and `except` doesn't list it, `logOnce()` throws an `RJSFWarningError`, an `Error` carrying the warning's `id` and, as its `cause`, any error the warning was logged with.
-The throw isn't remembered, so the warning throws again on the next render rather than passing silently, and a throw while rendering tears the form down unless an error boundary catches it.
+The throw isn't remembered, so the warning throws again on the next render rather than passing silently.
+A throw while rendering tears the form down unless an error boundary catches it, and one raised by an edit, such as adding an array item, throws out of that event handler and leaves the edit undone.
 A warning without an ID never throws, so the warnings that come from the data or schema, such as a validator error, an `allOf` that can't be merged or a `$ref` that can't be resolved, can't take down a working form.
 An ID names a kind of problem rather than one message, so excepting it lets through its later occurrences on other fields too.
 

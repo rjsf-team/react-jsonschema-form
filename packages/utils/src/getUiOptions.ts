@@ -63,9 +63,7 @@ export default function getUiOptions<
         isElement
           ? `ui:widget ${describeElementGivenAsComponent('MyWidget')}, so it is ignored.`
           : 'Setting options via ui:widget object is no longer supported, use ui:options instead',
-        'error',
-        undefined,
-        isElement ? 'ui-widget-element' : 'ui-widget-options-object',
+        { level: 'error', id: isElement ? 'ui-widget-element' : 'ui-widget-options-object' },
       );
     } else if (key === UI_OPTIONS_KEY && isObject(value)) {
       for (const [name, option] of Object.entries(value)) {
@@ -74,9 +72,7 @@ export default function getUiOptions<
         } else if (option !== undefined) {
           logOnce(
             `ui:options.${name} is ignored, since ${name} can only be set through ui:${name}${FORM_KEYS.includes(`ui:${name}`) ? ' on the root uiSchema' : ''}. A custom widget's own option needs another name.`,
-            'warn',
-            undefined,
-            'ui-options-key-ignored',
+            { id: 'ui-options-key-ignored' },
           );
         }
       }

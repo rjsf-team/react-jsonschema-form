@@ -248,7 +248,7 @@ export default class CFWorkerValidator<
       // dereferences, leaving `$ref` resolution and keyword checks to `validate()`, so a schema defect such as a
       // dangling `$ref` or an unparseable `pattern` throws from there and would be reported as a problem with the data
       const named = id === undefined ? '' : ` "${id}"`;
-      logOnce(`Error encountered validating schema${named}:`, 'warn', error);
+      logOnce(`Error encountered validating schema${named}:`, { error });
       return false;
     }
   }

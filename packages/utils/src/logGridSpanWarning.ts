@@ -25,12 +25,9 @@ export default function logGridSpanWarning(
     return;
   }
   if (ownWidth) {
-    logOnce(
-      `A layout grid column's \`span\` in "${fieldId}" is ignored, since the column has ${ownWidth} of its own`,
-      'warn',
-      undefined,
-      ownWidthId,
-    );
+    logOnce(`A layout grid column's \`span\` in "${fieldId}" is ignored, since the column has ${ownWidth} of its own`, {
+      id: ownWidthId,
+    });
   } else if (wholeSpansOnly && !Number.isInteger(span)) {
     logOnce(
       `A layout grid column's \`span\` of ${span} in "${fieldId}" is not a whole number, which this theme's grid needs`,

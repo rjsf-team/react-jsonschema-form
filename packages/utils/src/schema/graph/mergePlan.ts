@@ -315,7 +315,7 @@ export function mergeAllOf<S extends StrictRJSFSchema, F extends FormContextType
   try {
     return context.customMergeAllOf ? context.customMergeAllOf(schema) : shallowAllOfMerge(schema);
   } catch (error) {
-    logOnce('could not merge subschemas in allOf:\n', 'warn', error);
+    logOnce('could not merge subschemas in allOf:\n', { error });
     return withoutKeys(schema, ALL_OF_KEY);
   }
 }
@@ -651,7 +651,7 @@ export function conjoinDefinition<S extends StrictRJSFSchema>(
     );
     return nested.length === 0 ? merged : schemaFrom(template, { ...merged, [ALL_OF_KEY]: nested });
   } catch (error) {
-    logOnce('could not merge subschemas in allOf:\n', 'warn', error);
+    logOnce('could not merge subschemas in allOf:\n', { error });
     return schemaFrom(template, { [ALL_OF_KEY]: [beside, definition] });
   }
 }
