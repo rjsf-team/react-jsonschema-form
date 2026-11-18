@@ -48,7 +48,7 @@
 
 Ant Design theme, fields and widgets for `react-jsonschema-form`.
 
-[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/antd)
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/react-jsonschema-form/)
 
 ### Built With
 
@@ -61,12 +61,12 @@ Ant Design theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `antd >= 5`
-- `@ant-design/icons >= 5`
+- `antd >= 6.7`
+- `@ant-design/icons >= 6`
 - `dayjs >= 1.8.0`
-- `@rjsf/core >= 6`
-- `@rjsf/utils >= 6`
-- `@rjsf/validator-ajv8 >= 6`
+- `@rjsf/core >= 7`
+- `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`
 
 ```sh
 npm install antd @ant-design/icons dayjs @rjsf/core @rjsf/utils @rjsf/validator-ajv8
@@ -143,4 +143,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/antd
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/antd.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/antd
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/antd/screenshot.png

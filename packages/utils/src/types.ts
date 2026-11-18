@@ -1592,7 +1592,7 @@ export type ArrayFieldItemTemplateProps<
 > = RJSFBaseProps<T, S, F> & {
   /** The html for the item's content */
   children: ReactNode;
-  /** The props to pass to the `ArrayFieldItemButtonTemplate` */
+  /** The props to pass to the `ArrayFieldItemButtonsTemplate` */
   buttonsProps: ArrayFieldItemButtonsTemplateProps<T, S, F>;
   /** The className string */
   className: string;

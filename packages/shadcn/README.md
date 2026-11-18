@@ -40,7 +40,7 @@
 
 Exports `shadcn` theme, fields and widgets for `react-jsonschema-form`.
 
-[![product-screenshot](./screenshot.png)](https://rjsf-team.github.io/@rjsf/shadcn)
+[![product-screenshot](./screenshot.png)](https://rjsf-team.github.io/react-jsonschema-form/)
 
 [Live demo](https://react-jsonschema-form-shadcn-boilerplate.vercel.app/)
 
@@ -56,9 +56,9 @@ Exports `shadcn` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@rjsf/core >= 6`
-- `@rjsf/utils >= 6`
-- `@rjsf/validator-ajv8 >= 6`
+- `@rjsf/core >= 7`
+- `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`
 
 ```bash
 yarn add @rjsf/core @rjsf/utils @rjsf/validator-ajv8
@@ -133,7 +133,7 @@ npm install @radix-ui/react-direction --save
 1. Wrap your layout with DirectionProvider:
 
    ```tsx
-   import {DirectionProvider as RadixDirectionProvider} from '@radix-ui/react-direction;
+   import {DirectionProvider as RadixDirectionProvider} from '@radix-ui/react-direction';
 
    function Layout({children, direction}) {
        return (
@@ -155,7 +155,7 @@ npm install @radix-ui/react-direction --save
 
 ## Updating to latest shadCN version
 
-- Simply copy the shadcn components into shadcn/src/components/ui and rebuilt the packages or using the shadcn CLI at
+- Simply copy the shadcn components into shadcn/src/components/ui and rebuild the packages, or use the shadcn CLI at
   the root level with the components.json
 - For RTL version, you might need component from [here](https://github.com/shadcn-ui/ui/pull/1638)
   by [nahasco](https://github.com/nahasco)
@@ -175,18 +175,3 @@ rjsf team: [https://github.com/orgs/rjsf-team/people](https://github.com/orgs/rj
 
 GitHub
 repository: [https://github.com/rjsf-team/react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form)
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-[build-shield]: https://github.com/rjsf-team/react-jsonschema-form/workflows/CI/badge.svg
-[build-url]: https://github.com/rjsf-team/react-jsonschema-form/actions
-[contributors-shield]: https://img.shields.io/github/contributors/rjsf-team/react-jsonschema-form.svg
-[contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
-[license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
-[license-url]: https://choosealicense.com/licenses/apache-2.0/
-[npm-shield]: https://img.shields.io/npm/v/@rjsf/shadcn/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rjsf/shadcn
-[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/shadcn.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/@rjsf/shadcn
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/shadcn/screenshot.png

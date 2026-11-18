@@ -12,7 +12,7 @@ This package integrates [DaisyUI](https://daisyui.com/), [Tailwind CSS](https://
 
 ## Screenshots
 
-[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/daisyui)
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/react-jsonschema-form/)
 
 ## Features
 
@@ -34,12 +34,10 @@ This package integrates [DaisyUI](https://daisyui.com/), [Tailwind CSS](https://
 
 ### Prerequisites
 
-- `daisyui >= 5`
-- `@fluentui/react-icons >= 2`
-- `@fluentui/react-migration-v0-v9 >= 9`
-- `@rjsf/core >= 6`
-- `@rjsf/utils >= 6`
-- `@rjsf/validator-ajv8 >= 6`
+- `daisyui >= 5.0.29`
+- `@rjsf/core >= 7`
+- `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`
 
 ### Installation
 
@@ -93,7 +91,6 @@ It's necessary to explicitely include the library as a source, as tailwindcss by
 The DaisyUI theme supports the standard RJSF layout grid system. You can use grid layouts by incorporating the `LayoutGridField` in your UI schema:
 
 ```jsx
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import Form from '@rjsf/daisyui';
 import validator from '@rjsf/validator-ajv8';
 
@@ -118,15 +115,13 @@ const uiSchema = {
             children: [
               {
                 'ui:col': {
-                  xs: 12,
-                  sm: 6,
+                  span: 6,
                   children: ['firstName'],
                 },
               },
               {
                 'ui:col': {
-                  xs: 12,
-                  sm: 6,
+                  span: 6,
                   children: ['lastName'],
                 },
               },
@@ -138,15 +133,13 @@ const uiSchema = {
             children: [
               {
                 'ui:col': {
-                  xs: 12,
-                  sm: 6,
+                  span: 6,
                   children: ['email'],
                 },
               },
               {
                 'ui:col': {
-                  xs: 12,
-                  sm: 6,
+                  span: 6,
                   children: ['phone'],
                 },
               },
@@ -210,13 +203,14 @@ git clone https://github.com/rjsf-team/react-jsonschema-form.git
 cd react-jsonschema-form
 
 # Install dependencies
-npm install
+pnpm install
 
 # Build packages
-npm run build
+pnpm run build
 
 # Run playground
-npm run start:playground
+cd packages/playground
+pnpm start
 ```
 
 To test the DaisyUI theme specifically, select it from the themes dropdown in the playground.
@@ -234,4 +228,4 @@ Apache-2.0
 [contributors-shield]: https://img.shields.io/github/contributors/rjsf-team/react-jsonschema-form.svg?style=flat-square
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
-[license-url]: https://github.com/rjsf-team/react-jsonschema-form/blob/main/LICENSE
+[license-url]: https://github.com/rjsf-team/react-jsonschema-form/blob/main/LICENSE.md

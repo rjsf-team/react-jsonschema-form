@@ -67,7 +67,7 @@ import Form from '../src';
 
 arrayTests(Form); // OR
 // formTests(Form);
-// gridTests(Form);
+// gridTests(Form, gridOptions); // gridOptions: your GridTemplate's row and column props, see GridRenderCustomOptions
 // objectTests(Form);
 ```
 
@@ -117,4 +117,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/snapshot-tests
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/snapshot-tests.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/snapshot-tests
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/snapshot-tests/screenshot.png

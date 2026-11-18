@@ -47,7 +47,7 @@
 
 Core logic and the unstyled default theme for `react-jsonschema-form`: toolkit-independent HTML5 markup carrying `rjsf-` marker classes, and two optional stylesheets that style it with HTML5 and CSS3 alone: `@rjsf/core/rjsf.css` for its layout and `@rjsf/core/rjsf-theme.css` for a default look.
 
-[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/core)
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/react-jsonschema-form/)
 
 ### Built With
 
@@ -59,7 +59,16 @@ Core logic and the unstyled default theme for `react-jsonschema-form`: toolkit-i
 
 ### Prerequisites
 
-None: the form renders the browser's own controls. To style them without a CSS framework, import the optional stylesheets, the layout and, on top of it, the default look:
+- `react >= 19.2`
+- `react-dom >= 19.2`
+- `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`, or another validator to pass to `Form`
+
+```sh
+npm install @rjsf/utils @rjsf/validator-ajv8
+```
+
+No UI library is needed: the form renders the browser's own controls. To style them without a CSS framework, import the optional stylesheets, the layout and, on top of it, the default look:
 
 ```js
 import '@rjsf/core/rjsf.css';
@@ -115,4 +124,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/core
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/core.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/core
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/core/screenshot.png

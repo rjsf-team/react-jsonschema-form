@@ -49,7 +49,7 @@
 
 Exports `MUI` version 9 theme, fields, and widgets for `react-jsonschema-form`.
 
-[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/mui)
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/react-jsonschema-form/)
 
 ### Built With
 
@@ -67,11 +67,11 @@ NOTE: This theme requires React 19, so you will need to upgrade if you are on an
 
 - `@mui/material >= 9`
 - `@mui/icons-material >= 9`
-- `@emotion/react >= 11`
-- `@emotion/styled >= 11`
-- `@rjsf/core >= 6`
-- `@rjsf/utils >= 6`
-- `@rjsf/validator-ajv8 >= 6`
+- `@emotion/react >= 11.7.0`
+- `@emotion/styled >= 11.6.0`
+- `@rjsf/core >= 7`
+- `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`
 
 ```bash
 yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core @rjsf/utils @rjsf/validator-ajv8
@@ -161,4 +161,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/mui
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/mui.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/mui
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/e2e1181d1020f18cad0c80c661ddae28edb9794e/packages/mui/screenshot.png

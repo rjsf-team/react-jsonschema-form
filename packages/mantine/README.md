@@ -8,7 +8,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/mantine/logo.png" alt="Logo" width="120" height="120">
+    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/main/packages/mantine/logo.png" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">rjsf-mantine</h3>
@@ -50,7 +50,7 @@
 
 `Mantine` theme, fields and widgets for `react-jsonschema-form`.
 
-[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/mantine)
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/react-jsonschema-form/)
 
 ### Built With
 
@@ -70,10 +70,12 @@
 - `@mantine/dates >= 9.6.3`
 - `react >= 19.2`
 - `dayjs >= 1.8.0`
-- `@rjsf/core >= 6.0.0`
+- `@rjsf/core >= 7`
+- `@rjsf/utils >= 7`
+- `@rjsf/validator-ajv8 >= 7`
 
 ```sh
-npm install @mantine/core @mantine/hooks @mantine/dates dayjs @rjsf/core
+npm install @mantine/core @mantine/hooks @mantine/dates dayjs @rjsf/core @rjsf/utils @rjsf/validator-ajv8
 ```
 
 ### Installation
@@ -103,7 +105,7 @@ const Form = withTheme(MantineTheme);
 
 ## Optional Mantine Theme properties
 
-- To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/usage/objects#additional-properties).
+- To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema#uioptions).
 
 #### Mantine Widget Optional Properties
 
@@ -153,4 +155,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/mantine
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/mantine.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/mantine
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/mantine/screenshot.png
