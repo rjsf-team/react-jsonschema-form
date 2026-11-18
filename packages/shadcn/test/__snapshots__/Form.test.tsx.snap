@@ -87,7 +87,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
         >
           <fieldset
             aria-labelledby="root_tasks__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_tasks"
           >
             <legend
@@ -584,7 +584,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
         >
           <fieldset
             aria-labelledby="root_tags__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_tags"
           >
             <legend
@@ -1654,7 +1654,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
         >
           <fieldset
             aria-labelledby="root_tasks__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_tasks"
           >
             <legend
@@ -2151,7 +2151,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
         >
           <fieldset
             aria-labelledby="root_tags__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_tags"
           >
             <legend
@@ -5412,7 +5412,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -5477,7 +5477,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -5542,7 +5542,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArray__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -5610,7 +5610,7 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -5732,7 +5732,7 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -5982,7 +5982,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <div
@@ -6247,7 +6247,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -6313,7 +6313,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -6379,7 +6379,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArray__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -6448,7 +6448,7 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -6572,7 +6572,7 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -6825,7 +6825,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <div
@@ -7131,7 +7131,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -7196,7 +7196,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -7261,7 +7261,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArray__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -7329,7 +7329,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -7568,7 +7568,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -7710,7 +7710,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_optionalArrayWithAnyofs__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend
@@ -7971,7 +7971,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -8037,7 +8037,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -8074,7 +8074,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArray__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -8143,7 +8143,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -8349,7 +8349,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -8464,7 +8464,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_optionalArrayWithAnyofs__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend
@@ -8612,7 +8612,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -8734,7 +8734,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -8876,7 +8876,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
             >
               <fieldset
                 aria-labelledby="root_optionalArrayWithAnyofs__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend
@@ -9024,7 +9024,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -9119,7 +9119,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -9234,7 +9234,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
             >
               <fieldset
                 aria-labelledby="root_optionalArrayWithAnyofs__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend

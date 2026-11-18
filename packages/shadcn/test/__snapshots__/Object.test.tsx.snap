@@ -519,7 +519,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
         >
           <fieldset
             aria-labelledby="root_tags__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_tags"
           >
             <legend
@@ -1206,7 +1206,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
         >
           <fieldset
             aria-labelledby="root_items__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_items"
           >
             <legend
@@ -2074,7 +2074,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
             >
               <fieldset
                 aria-labelledby="root_foo__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_foo"
               >
                 <legend

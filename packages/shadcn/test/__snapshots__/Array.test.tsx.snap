@@ -9,7 +9,7 @@ exports[`array fields > array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -72,7 +72,7 @@ exports[`array fields > array icons 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -550,7 +550,7 @@ exports[`array fields > fixed array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -803,7 +803,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -1191,7 +1191,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -1549,7 +1549,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -1690,7 +1690,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-array min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-array min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -1703,7 +1703,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_0"
               >
                 <div
@@ -2073,7 +2073,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_1"
               >
                 <div
@@ -2494,7 +2494,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -2882,7 +2882,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -3174,7 +3174,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -3570,7 +3570,7 @@ exports[`with title and description > array 1`] = `
       <fieldset
         aria-describedby="root__description"
         aria-labelledby="root__title"
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -3660,7 +3660,7 @@ exports[`with title and description > array icons 1`] = `
       <fieldset
         aria-describedby="root__description"
         aria-labelledby="root__title"
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -4175,7 +4175,7 @@ exports[`with title and description > fixed array 1`] = `
       <fieldset
         aria-describedby="root__description"
         aria-labelledby="root__title"
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -4328,7 +4328,7 @@ exports[`with title and description from both > array 1`] = `
       <fieldset
         aria-describedby="root__description"
         aria-labelledby="root__title"
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -4418,7 +4418,7 @@ exports[`with title and description from both > array icons 1`] = `
       <fieldset
         aria-describedby="root__description"
         aria-labelledby="root__title"
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -4933,7 +4933,7 @@ exports[`with title and description from both > fixed array 1`] = `
       <fieldset
         aria-describedby="root__description"
         aria-labelledby="root__title"
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -5086,7 +5086,7 @@ exports[`with title and description from uiSchema > array 1`] = `
       <fieldset
         aria-describedby="root__description"
         aria-labelledby="root__title"
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -5176,7 +5176,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
       <fieldset
         aria-describedby="root__description"
         aria-labelledby="root__title"
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -5691,7 +5691,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
       <fieldset
         aria-describedby="root__description"
         aria-labelledby="root__title"
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -5842,7 +5842,7 @@ exports[`with title and description with global label off > array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -5905,7 +5905,7 @@ exports[`with title and description with global label off > array icons 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -6333,7 +6333,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
