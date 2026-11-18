@@ -2674,8 +2674,9 @@ An option is labelled with the first of its names. One with no name is labelled 
 
 Given a list of `properties` and an `order` list, returns a list that contains the `properties` ordered correctly.
 If `order` is not an array, then the untouched `properties` list is returned.
-Otherwise `properties` is ordered per the `order` list.
-If `order` contains a '_' then any `properties` that are not mentioned explicity in `order` will be places in the location of the `_`.
+Otherwise `properties` is ordered per the `order` list, each listed property placed once, at its first entry.
+Any `properties` that `order` doesn't list are placed at its first '\*', or at the end when it has none, so none is ever dropped.
+A name in `order` that isn't among the `properties`, and every '\*' after the first, is ignored.
 
 #### Parameters
 
@@ -2685,10 +2686,6 @@ If `order` contains a '_' then any `properties` that are not mentioned explicity
 #### Returns
 
 - string[]: A list with the `properties` ordered
-
-#### Throws
-
-- Error when the properties cannot be ordered correctly
 
 ### padTimeSeconds()
 
@@ -3077,6 +3074,7 @@ setWarningOptions({}); // the default: every warning logs
 | `ui-widget-element`                 | `config`    | `ui:widget` is a React element rather than a component                                                      |
 | `row-span-ignored`                  | `config`    | a `ui:row` has a `span`, which sizes only a `ui:col` or `ui:columns`                                        |
 | `layout-grid-cell-field-ignored`    | `config`    | a layout grid cell with discriminated `oneOf`/`anyOf` options names a `ui:field`, which it ignores          |
+| `ui-order-incomplete`               | `config`    | a `ui:order` with no `*` leaves out a declared property, which renders after the listed ones                |
 
 `WarningCategory` and `WarningId` are string-literal unions of the names above, so a typo fails type-checking. In a setup file in plain JavaScript, `setWarningOptions()` ignores a name it doesn't know and warns about it, and throws a `TypeError` for a `throwOn` or `except` that isn't an array.
 
