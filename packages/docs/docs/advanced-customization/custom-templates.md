@@ -12,9 +12,9 @@ This is an advanced feature that lets you customize even more aspects of the for
 
 To understand how Fields, Templates, and Widgets work together, consider how a room is built and furnished:
 
-- 👷 **Custom Field (General Contractor / Room Architect):** Oversees the entire room. Dictates end-to-end logic and coordinates sub-fields (e.g. `ObjectField`, `ArrayField`).
+- 👷 **Custom Field (General Contractor / Room Architect):** Oversees the entire room. Dictates end-to-end logic and coordinates any sub-fields, as the built-in `ObjectField` and `ArrayField` do.
 - 📐 **Custom Template (Framing & Layout):** The structural scaffolding. Determines _where_ elements sit relative to each other—arranging titles, descriptions, error banners, and the input slot. It doesn't care what the input control looks like.
-- 🎛️ **Custom Widget (Fixture / Appliance):** The interactive leaf control the user actually touches—the light switch, faucet, text input, toggle, or date picker. It only takes a value and fires change events.
+- 🎛️ **Custom Widget (Fixture / Appliance):** The interactive leaf control the user actually touches—the light switch, faucet, text input, toggle, or date picker. It only takes a value and fires change, focus and blur events.
 
 In version 5, all existing `templates` were consolidated into a new `TemplatesType` interface that is provided as part of the `Registry`.
 They can also be overloaded globally on the `Form` via the `templates` prop as well as per-field through the `uiSchema`.
@@ -254,7 +254,7 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 
 The `ArrayFieldItemButtonsTemplate` is used to render the representation of the buttons used for copying, moving and deleting an item in an array.
 All of the `ArrayFieldItemTemplate` implementations in all themes get this template from the `registry` in order to render array fields items' buttons.
-Currently, only the `core` theme has an implementation of this template as the button rendering is identical across all themes.
+Most themes use the `core` implementation of this template, since the button rendering is identical across them; `@rjsf/daisyui` provides its own.
 If you want to change how an array field item's buttons are rendered you can customize this template (for instance to remove the move up/down and remove buttons).
 
 ```tsx
