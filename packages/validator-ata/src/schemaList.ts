@@ -8,8 +8,8 @@ export function isDraft04(schema: unknown, inherited: boolean) {
 }
 
 /** A schema's own `$id`, the one a `$ref` can reach it by: non-empty and not just a fragment.
- * ata also keeps a document under a fragment `$id` such as `#frag`, but a `$ref: '#frag'` is read
- * as a fragment of the document it is in, as JSON Schema defines it, and never reaches it. */
+ * ata reads a fragment `$id` such as `#frag` as an anchor, so a document with only that has no `$id`
+ * to be registered under. */
 export function ownId(schema: object) {
   const id = (schema as { $id?: unknown }).$id;
   return typeof id === 'string' && id !== '' && !id.startsWith('#') ? id : undefined;
@@ -58,9 +58,9 @@ export function schemaList(schemas: object | object[] | undefined, draft04 = fal
     }
     const doc = typeof entry === 'boolean' ? asObjectSchema(entry) : withDraft04Id(entry);
     const own = ownId(doc);
-    // In a list, the empty key would be an empty `$id`, which ata rejects, so such an entry goes
-    // in only by its own `$id`.
-    const keyed = key === '' ? [] : [{ ...doc, $id: key }];
+    // In a list, the empty key would be an empty `$id` and a fragment key such as `#k` an anchor, both
+    // of which ata rejects, so such an entry goes in only by its own `$id`.
+    const keyed = key === '' || key.startsWith('#') ? [] : [{ ...doc, $id: key }];
     return own && own !== key ? [...keyed, doc] : keyed;
   });
 }

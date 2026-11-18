@@ -602,13 +602,17 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     }
   }
   const reading = readRoot(schema, winners);
-  const schemas = Object.entries(schemaMaps).map(([key, listed]) => {
-    const { [ID_KEY]: _id, ...withoutId } = listed;
-    return { ...standalone(withoutId, reading), [ID_KEY]: key };
-  });
   const targets = new Map<unknown, GenericObjectType>();
   let targetCount = 0;
   const taken = new Set([...[...formIds].map(documentKey), ...reading.extras]);
+  // A generated `$id` a `$ref` of the form or of an extra names would make that `$ref` resolve in the module where it
+  // names nothing at runtime
+  JSON.stringify([schema, ...winners.values()], (key, value: unknown) => {
+    if (key === REF_KEY && typeof value === 'string') {
+      taken.add(documentKey(value));
+    }
+    return value;
+  });
   const targetId = (): string => {
     let id: string;
     do {
@@ -617,6 +621,12 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     } while (taken.has(id));
     return id;
   };
+  // The module exports each by its index, so the `$id` only registers it with ata, which reads a fragment-only one
+  // such as `#root` as an anchor and rejects the document for having no `$id`
+  const schemas = Object.entries(schemaMaps).map(([key, listed]) => {
+    const { [ID_KEY]: _id, ...withoutId } = listed;
+    return { ...standalone(withoutId, reading), [ID_KEY]: key.startsWith('#') ? targetId() : key };
+  });
   const rootKey = schemaKey(schema);
   const bundled = [...winners].map(([id, extra]) => linkedToForm(extra, id, reading, targets, targetId, rootKey));
   for (const [id, extra] of winners) {
@@ -626,14 +636,9 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
       );
     }
   }
-  // One with only a fragment `$id` is left out without a warning: no `$ref` reaches it at runtime.
-  const unnamed = (extra: unknown) => {
-    const id = extra !== null && typeof extra === 'object' ? (extra as { $id?: unknown }).$id : undefined;
-    return typeof id !== 'string' || id === '';
-  };
-  if (extras.some(([id, extra]) => id === undefined && unnamed(extra))) {
+  if (extras.some(([id]) => id === undefined)) {
     logOnce(
-      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are left out of the precompiled module; ata needs an $id to register one, so the runtime validator rejects them too',
+      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id, or whose only $id is a fragment such as #frag, are left out of the precompiled module; ata needs an $id to register one, so the runtime validator may reject or ignore them',
     );
   }
   const dropped = [

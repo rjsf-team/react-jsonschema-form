@@ -12,11 +12,34 @@ import type {
 import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
-import createAtaInstance from './createAtaInstance.ts';
+import createAtaInstance, { ANCHOR_ID_REGEX } from './createAtaInstance.ts';
 import localizeErrors from './localizeErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import { isDraft04, schemaList } from './schemaList.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
+
+/** ata reads a fragment-only `$id` such as `#root` as the schema's anchor, but drops it where the schema already has
+ * an `$anchor` of another name, and loses it where the `$id` is replaced, so a `$ref: '#root'` names nothing. Returns
+ * `schema` carrying that anchor: as its `$anchor` where it has none, else on an alias under `$defs` that refers to the
+ * document.
+ *
+ * @param schema - The schema handed to ata
+ * @param id - The `$id` the schema was given, which `schema` may no longer carry
+ */
+function withFragmentIdAnchor<T extends object>(schema: T, id: unknown): T {
+  if (typeof id !== 'string' || !ANCHOR_ID_REGEX.test(id)) {
+    return schema;
+  }
+  const name = id.slice(1);
+  const { $anchor, $defs } = schema as { $anchor?: unknown; $defs?: object };
+  if ($anchor === undefined) {
+    return { ...schema, $anchor: name };
+  }
+  if ($anchor === name) {
+    return schema;
+  }
+  return { ...schema, $defs: { ...$defs, __rjsf_fragmentId: { $anchor: name, allOf: [{ $ref: '#' }] } } };
+}
 
 /** `ValidatorType` implementation backed by `ata-validator`.
  *
@@ -182,7 +205,7 @@ export default class ATAValidator<
 
     try {
       const id = schemaKey(schema);
-      const validator = this.getOrBuild(id, schema);
+      const validator = this.getOrBuild(id, withFragmentIdAnchor(schema, schema[ID_KEY]));
       const result = validator.validate(ATAValidator.cloneForValidation(formData));
       errors = result.valid ? undefined : result.errors;
 
@@ -245,10 +268,13 @@ export default class ATAValidator<
     // Inject $id into a copy of the rootSchema so ata's schema registry can
     // resolve `<rootSchemaId>#/...` refs produced by `withRootIdRefPrefix`.
     // The original user-supplied schema is left untouched.
+    const ownId: unknown = rootSchema[ID_KEY];
+    // A `$ref: '#root'` in the root, prefixed to `<rootSchemaId>#root` by `withRootIdRefPrefix`, still has to find the
+    // anchor ata read the replaced fragment-only `$id` as
     const rootWithId =
-      rootSchema[ID_KEY] === rootSchemaId
+      ownId === rootSchemaId
         ? (rootSchema as object)
-        : { ...(rootSchema as object), [ID_KEY]: rootSchemaId };
+        : withFragmentIdAnchor({ ...(rootSchema as object), [ID_KEY]: rootSchemaId }, ownId);
     // Compared with the root registered last rather than with the validator cached under its id, which
     // `rawValidation()` of a root that was not registered builds beside the registered one
     if (this.cachedRootSchema === undefined || !deepEquals(this.cachedRootSchema, rootWithId)) {

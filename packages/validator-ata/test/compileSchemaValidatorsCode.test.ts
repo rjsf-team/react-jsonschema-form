@@ -174,7 +174,7 @@ describe('compileSchemaValidatorsCode', () => {
       expect(typeof loadModule(code).root).toBe('function');
       expect(warn).toHaveBeenCalledTimes(2);
       expect(warn.mock.calls[0][0]).toMatch(
-        /entries without an \$id are left out of the precompiled module; ata needs an \$id to register one, so the runtime validator rejects them too/,
+        /entries without an \$id, or whose only \$id is a fragment such as #frag, are left out of the precompiled module; ata needs an \$id to register one, so the runtime validator may reject or ignore them/,
       );
       expect(warn.mock.calls[1][0]).toMatch(
         /extenderFn, ataOptionsOverrides\.coerceTypes, ataOptionsOverrides\.removeAdditional cannot be carried into a precompiled validator and are ignored; the precompiled and runtime validators may disagree/,
@@ -333,26 +333,30 @@ describe('compileSchemaValidatorsCode', () => {
       expect(agree(refersTo('https://e.com/d4'), { x: 'ab' }, options)).toBe(false);
     });
 
-    test('leaves out an extra with only a fragment $id, which no $ref reaches at runtime', () => {
-      // ata keeps it under `#frag`, but `$ref: '#frag'` is read as a fragment of the referring
-      // document, so the runtime validator never applies it, from the root or a sub-schema.
+    test('leaves out an entry with only a fragment $id, with a warning, as the runtime validator rejects it', () => {
+      // ata reads `#frag` as an anchor, so the entry has no `$id` to be registered under. Under a
+      // record key it has one, and `$ref: '#frag'` still never reaches it.
       const frag = { $id: '#frag', maxLength: 2 };
       const form = { type: 'object', properties: { x: { type: 'string', not: { $ref: '#frag' } } } } as RJSFSchema;
       const sub = { type: 'string', not: { $ref: '#frag' } } as RJSFSchema;
-      for (const options of [
-        { additionalMetaSchemas: [frag] },
-        { ataOptionsOverrides: { schemas: [frag] } },
-        { ataOptionsOverrides: { schemas: { 'urn:k': frag } } },
-      ]) {
+      const cases: [CustomValidatorOptionsType, boolean][] = [
+        [{ additionalMetaSchemas: [frag] }, false],
+        [{ ataOptionsOverrides: { schemas: [frag] } }, false],
+        [{ ataOptionsOverrides: { schemas: { 'urn:k': frag } } }, true],
+      ];
+      for (const [options, valid] of cases) {
         const runtime = customizeValidator(options);
-        expect(runtime.isValid(form, { x: 'ab' }, form)).toBe(true);
-        expect(runtime.isValid(sub, 'ab', form)).toBe(true);
+        expect(runtime.isValid(form, { x: 'ab' }, form)).toBe(valid);
+        expect(runtime.isValid(sub, 'ab', form)).toBe(valid);
       }
       expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [frag] })).toBe(
         compileSchemaValidatorsCode(schema),
       );
       expect(compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { schemas: [frag] } })).toBe(
         compileSchemaValidatorsCode(schema),
+      );
+      expect(warn.mock.calls.flat().join('\n')).toMatch(
+        /entries without an \$id, or whose only \$id is a fragment such as #frag, are left out/,
       );
     });
 
@@ -364,7 +368,9 @@ describe('compileSchemaValidatorsCode', () => {
         ataOptionsOverrides: { schemas: [true] },
       } as unknown as CustomValidatorOptionsType;
       expect(compileSchemaValidatorsCode(schema, options)).toBe(compileSchemaValidatorsCode(schema));
-      expect(warn.mock.calls.flat().join('\n')).toMatch(/entries without an \$id are left out/);
+      expect(warn.mock.calls.flat().join('\n')).toMatch(
+        /entries without an \$id, or whose only \$id is a fragment such as #frag, are left out/,
+      );
     });
 
     // The runtime validator for the root, the runtime validator for a sub-schema of it, and the
@@ -683,6 +689,23 @@ describe('compileSchemaValidatorsCode', () => {
       };
       expect(agree(form, { x: 1, y: true }, options)).toBe(true);
       expect(agree(form, { x: 1, y: 2 }, options)).toBe(false);
+    });
+
+    test('generates no target $id a $ref of the form names, which names nothing at runtime', () => {
+      const form = {
+        $id: '#root',
+        type: 'object',
+        properties: { y: { $ref: 'urn:rjsf:form-target:0' } },
+      } as RJSFSchema;
+      expect(customizeValidator().isValid(form, { y: {} }, form)).toBe(false);
+      const module = loadModule(compileSchemaValidatorsCode(form));
+      expect(() => module[schemaKey(form)]({ y: {} })).toThrow(/was not compiled to a standalone validator/);
+    });
+
+    test('generates no target $id a $ref of an extra names, which names nothing at runtime', () => {
+      const form = { $id: '#root', type: 'object', properties: { y: { $ref: 'urn:ext' } } } as RJSFSchema;
+      const options = { additionalMetaSchemas: [{ $id: 'urn:ext', $ref: 'urn:rjsf:form-target:0' }] };
+      expect(agree(form, { y: 5 }, options)).toBe(true);
     });
 
     test("reads a resource nested in the subschema an extra names against that subschema's $id, as at runtime", () => {

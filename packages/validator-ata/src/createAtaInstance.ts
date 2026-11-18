@@ -26,6 +26,11 @@ export const COLOR_FORMAT_REGEX =
  */
 export const DATA_URL_FORMAT_REGEX = /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/;
 
+/** A fragment-only `$id` that ata reads as an `$anchor`, by the plain-name pattern it matches them with. ata keeps any
+ * other fragment-only `$id`, such as `#` or `#/x`, as the `$id`.
+ */
+export const ANCHOR_ID_REGEX = /^#[A-Za-z][A-Za-z0-9_.:-]*$/;
+
 /** Coerces the user-supplied custom format value into the `(value: string)
  * => boolean` shape expected by ata. Strings are treated as RegExp source
  * (anchored at both ends if not already), RegExps are converted to a `.test`
@@ -70,6 +75,12 @@ export default function createAtaInstance(schema: object, options: CustomValidat
 
   if (Array.isArray(additionalMetaSchemas)) {
     for (const meta of additionalMetaSchemas) {
+      const id = (meta as { $id?: unknown } | null)?.$id;
+      // ata reads a fragment-only `$id` as an anchor, which registers the entry under no `$id` and breaks every `$ref`
+      // (ata-core/ata-validator#121), so it is refused as an entry without an `$id` is
+      if (typeof id === 'string' && ANCHOR_ID_REGEX.test(id)) {
+        throw new Error(`Schema in additionalMetaSchemas must have an $id other than a fragment, not ${id}`);
+      }
       validator.addSchema(meta);
     }
   }
