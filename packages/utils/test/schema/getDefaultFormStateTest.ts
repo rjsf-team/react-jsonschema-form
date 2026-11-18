@@ -329,8 +329,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           for (const initialValue of [{ a: 5 }, { z: 1 }]) {
             const parentOnly = { 'ui:initialValue': initialValue };
             const spelled = { ...parentOnly, oneOf: [{}, {}] };
-            // A list the uiSchema spells out with a hole at the option gives the option the field's uiSchema, and one with
-            // `null` there, which only untyped code can write, gives it none
+            // A list the uiSchema spells out with a hole at the option gives the option the field's uiSchema, and one
+            // with `null` there, which only untyped code can write, gives it none
             const holeyOptions: UiSchema[] = [];
             holeyOptions[1] = {};
             const holey = { ...parentOnly, oneOf: holeyOptions };

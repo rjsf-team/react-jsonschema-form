@@ -2412,7 +2412,7 @@ Recursively merge deeply nested objects.
 
 ### mergeOptionDefinitions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Merges the `ui:definitions` entry each `anyOf`/`oneOf` option's ref names under the option's uiSchema entry, where `resolveUiSchema()` didn't merge one, and records its origin under `UI_DEFINITION_ORIGIN_KEY`, as `resolveUiSchema()` does for an option the field's schema lists itself.
+Merges the `ui:definitions` entry each `anyOf`/`oneOf` option's ref names under the option's uiSchema entry, where `resolveUiSchema()` didn't merge one, and records its origin under `UI_DEFINITION_ORIGIN_KEY`, as `resolveUiSchema()` does for an option the field's schema offers.
 `resolveUiSchema()` reads the schema as it is written, so it doesn't reach the options a `then`/`else` or a `dependencies` entry offers, which `retrieveSchema()` hoists to the field only where the data selects it, nor any the field offers beside such a list or beside another list an `allOf` member offers.
 The `anyOf`/`oneOf` field and `getUiRequiredErrorSchema()` call this, so they agree on the entry such an option has.
 
@@ -2864,6 +2864,7 @@ Each part is placed `template` or `self` by its declared owner, `above` when a f
 Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
 Called at runtime for each field. When the schema contains a `$ref`, looks up the corresponding uiSchema definition from `registry.uiSchemaDefinitions` and merges it with local overrides.
 For schemas with `oneOf`/`anyOf` branches, its own or those of an `allOf` member, also populates `uiSchema[keyword][i]` for branches whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option titles.
+It populates none for a keyword that two lists, or a `then`/`else` or `dependencies` entry, offer, since the list the field shows then need not keep the written positions; `mergeOptionDefinitions()` merges those.
 
 Resolution order (later sources override earlier):
 

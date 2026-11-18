@@ -147,9 +147,9 @@ export default function LayoutMultiSchemaField<
     const oldOption = enumOptions[oldOptionIndex]?.schema;
 
     // The newly-selected option's own uiSchema is resolved the same way AnyOfField's optionsUiSchema/optionUiSchema
-    // does — `uiSchema.oneOf[i]`/`uiSchema.anyOf[i]` when declared as an array holding an entry at that option's index,
-    // falling back to this field's own uiSchema otherwise — so per-option ui:initialValue/ui:emptyValue overrides apply the
-    // same way here as they do when the same schema is rendered through plain SchemaField/AnyOfField.
+    // does — `uiSchema.oneOf[i]`/`uiSchema.anyOf[i]` when declared as an array holding an entry at that option's
+    // index, falling back to this field's own uiSchema otherwise — so per-option ui:initialValue/ui:emptyValue overrides
+    // apply the same way here as they do when the same schema is rendered through plain SchemaField/AnyOfField.
     // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
     // never carries the root's `ui:definitions` itself.
     const newOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex);
