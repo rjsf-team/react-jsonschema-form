@@ -191,7 +191,8 @@ function propertyScore<
 /** Recursive function that calculates the score of a `formData` against the given `schema`. The computation is fairly
  * simple. Initially the total score is 0. When `schema.properties` object exists, then each property's form value,
  * read from `formData` with its `key`, is scored against the property's schema, as `propertyScore()` describes, and
- * the scores are added up. A schema without `properties` scores 1 when its `type` is the guessed-type of `formData`.
+ * the scores are added up, the keys of `formData` its own `additionalProperties` takes stubbed among them first, as
+ * `scoredOption()` describes. A schema without `properties` scores 1 when its `type` is the guessed-type of `formData`.
  * The score of each `allOf` entry, read through its `$ref`, is added to the schema's own, so options sharing a base
  * through a `$ref` beside their own keywords or through an `allOf` are told apart by the properties each adds. An
  * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does. Where an

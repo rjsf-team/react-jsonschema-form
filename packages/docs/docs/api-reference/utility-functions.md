@@ -3621,7 +3621,7 @@ A tie goes to the `selectedOption` when it is a candidate and to the first candi
 The score is the number of matching properties, more heavily favoring options with matching default or const values.
 A property written as a `$ref` is scored as the definition it names, and each `$ref` scoring follows resolves in the resource of the declaration holding it, including one in a property declared both beside a `$ref` and in the definition it names.
 A property holding an `anyOf`/`oneOf` of its own scores what the option picked among those scores, plus one where the data matches it.
-A key of the data that an option's own `additionalProperties` (or `unevaluatedProperties`) of `true` or a schema takes is scored as the property `retrieveSchema()` adds for it, so an option scores the same as written and retrieved for the data.
+A key of the data that an option's own `additionalProperties` (or `unevaluatedProperties`) of `true` or a schema takes is scored as the property `retrieveSchema()` adds for it, so an option scores the same as written and retrieved for the data; an option holding an `allOf`, an `if` or `dependencies` is scored as written.
 The pick is remembered per option list and data object, so a recursion through option lists matches each level once.
 Within one call it is reused without looking at the data again, since a validator's `isValid()` must not change the data it checks.
 A later call reuses it only while the data still holds what a copy kept with it holds, so data mutated in place between calls is matched for what it holds now; that comparison costs time in proportion to the data below the option list, once per call.
