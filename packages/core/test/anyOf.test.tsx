@@ -1,5 +1,5 @@
 import { createRef, StrictMode, useEffect, useState } from 'react';
-import type { FieldProps, FieldTemplateProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FieldProps, FieldTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { descriptionId, noop, toFieldPath, toInputValue } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import validator, { createPrecompiledValidator } from '@rjsf/validator-ajv8';
@@ -1858,6 +1858,57 @@ describe('anyOf', () => {
 
       const transformerId = node.querySelector<HTMLSelectElement>('select#root_components_0_fn_transformer_id');
       expect(getSelectedOptionValue(transformerId!)).toEqual('to_absolute');
+    });
+
+    // The inner field is the outer field's option with no entry of its own, so it renders with the outer field's
+    // uiSchema, and its own options are the ones read at the index the outer list's `Bar` entry sits at
+    const shown: RJSFSchema = {
+      type: 'object',
+      properties: { x: { type: 'string' }, z: { type: 'string' }, w: { type: 'string' } },
+    };
+    const other: RJSFSchema = { type: 'object', properties: { y: { type: 'string' } } };
+    const bar: UiSchema = { 'ui:title': 'BarTitle', z: { 'ui:initialValue': 'leak' }, w: { 'ui:required': true } };
+    it.each<[string, RJSFSchema[], UiSchema]>([
+      [
+        "a ui:definitions entry merged for the field's next option",
+        [{ anyOf: [other, shown] }, { $ref: '#/$defs/Bar' }],
+        { 'ui:definitions': { '#/$defs/Bar': bar } },
+      ],
+      [
+        "the field's own list, too short to reach the option",
+        [{ $ref: '#/$defs/Bar' }, { anyOf: [shown, other] }],
+        { anyOf: [bar] },
+      ],
+    ])(
+      "doesn't hand the options of an option with no entry the field's own entries, from %s",
+      async (_label, anyOf, uiSchema) => {
+        const { node, onSubmit } = createFormComponent({
+          schema: { $defs: { Bar: { type: 'number' } }, anyOf },
+          uiSchema,
+          initialFormData: { x: 'a' },
+        });
+
+        expect(
+          [...elementOf(node, '#root__anyof_select2', HTMLSelectElement).options].map((o) => o.textContent),
+        ).toEqual(['Option 1', 'Option 2']);
+        expect(elementOf(node, '#root_z', HTMLInputElement).value).toBe('');
+        expect(elementOf(node, 'label[for="root_w"]').textContent).not.toContain('*');
+        await submitForm(node, user, true);
+        expect(onSubmit).toHaveBeenCalled();
+      },
+    );
+
+    it("doesn't fill the options of an option with no entry from the field's own entries, on a switch to it", async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { $defs: { Bar: { type: 'number' } }, anyOf: [{ $ref: '#/$defs/Bar' }, { anyOf: [shown, other] }] },
+        uiSchema: { anyOf: [bar] },
+        initialFormData: 1,
+      });
+
+      await user.selectOptions(elementOf(node, '#root__anyof_select', HTMLSelectElement), 'Option 2');
+
+      expect(elementOf(node, '#root_z', HTMLInputElement).value).toBe('');
+      expect(onChange.mock.lastCall?.[0].formData).toHaveProperty('z', undefined);
     });
   });
   describe('hideError works with anyOf', () => {

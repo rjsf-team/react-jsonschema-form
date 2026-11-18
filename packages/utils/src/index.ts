@@ -66,7 +66,7 @@ import getGroupLabelling from './getGroupLabelling.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getLabelId from './getLabelId.ts';
 import getOptionSelectorSchema from './getOptionSelectorSchema.ts';
-import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
+import getOptionUiSchema, { selectOptionUiSchema, withoutFieldOptions } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import type { PresentationSource, PresentationSubject } from './getPresentationDeclaration.ts';
 import getPresentationDeclaration, { WIDGET_FIELD_PRESENTATION } from './getPresentationDeclaration.ts';
@@ -519,6 +519,7 @@ export {
   widgetAriaProps,
   widgetDrawsLabel,
   widgetDrawsLabelText,
+  withoutFieldOptions,
   withRootIdRefPrefix,
   rootSchemaIdOf,
   keywordShape,

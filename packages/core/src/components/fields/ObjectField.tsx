@@ -53,6 +53,7 @@ import {
   isObject,
   TranslatableString,
   templateMarksRequired,
+  withoutFieldOptions,
 } from '@rjsf/utils';
 
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
@@ -774,11 +775,15 @@ export default function ObjectField<
         if (refs.length === 0 || refs.some((ref) => !seen.has(ref))) {
           return seed(
             getRenderedOptionSchema<S>(optionsResolvedKeySchema, openedOption),
-            getRenderedOptionUiSchema<T, S, F>(
-              optionsResolvedKeySchema,
-              openedOption,
+            withoutFieldOptions<T, S, F>(
+              getRenderedOptionUiSchema<T, S, F>(
+                optionsResolvedKeySchema,
+                openedOption,
+                resolvedKeyUiSchema,
+                getOptionUiSchema<T, S, F>(resolvedKeyUiSchema, xxxOf.key, 0),
+              ),
               resolvedKeyUiSchema,
-              getOptionUiSchema<T, S, F>(resolvedKeyUiSchema, xxxOf.key, 0),
+              xxxOf.key,
             ),
             refs.length === 0 ? seen : new Set([...seen, ...refs]),
           );

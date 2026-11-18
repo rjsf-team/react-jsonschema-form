@@ -22,6 +22,7 @@ import {
   shouldRenderOptionalField,
   TranslatableString,
   UNEVALUATED_PROPERTIES_KEY,
+  withoutFieldOptions,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
@@ -136,9 +137,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const title = titleOption ?? schema.title;
 
   // `resolveUiSchema()` merges an option's `ui:definitions` entry under its `uiSchema.anyOf[i]`/`oneOf[i]` only where the
-  // field's schema lists the options itself, so one it doesn't reach, such as an option inside an `allOf`, is merged by
-  // `mergeOptionDefinitions()`, as the `ui:required` walk merges it. Keyed on the refs, as a string, rather than on the
-  // options, which are retrieved afresh as the data changes
+  // field's schema as written offers the options, so one it doesn't reach, such as an option a `then` branch offers, is
+  // merged by `mergeOptionDefinitions()`, as the `ui:required` walk merges it. Keyed on the refs, as a string, rather
+  // than on the options, which are retrieved afresh as the data changes
   const optionRefs = JSON.stringify(options.map((opt) => optionDefinitionRef(opt, uiSchemaDefinitions) ?? null));
   const { rootSchema } = registry;
   // First we will check to see if there is an anyOf/oneOf override for the UI schema. Computed here, ahead of
@@ -270,8 +271,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       // never carries the root's `ui:definitions` itself.
       const newOptionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, intOption);
       const switched = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
-        newOptionUiSchema,
-        oldOptionUiSchema: optionUiSchema,
+        newOptionUiSchema: withoutFieldOptions<T, S, F>(newOptionUiSchema, uiSchema, xxxOfKey),
+        oldOptionUiSchema: withoutFieldOptions<T, S, F>(optionUiSchema, uiSchema, xxxOfKey),
         uiSchemaDefinitions,
         globalUiOptions,
       });
@@ -324,6 +325,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       uiSchema,
       uiSchemaDefinitions,
       globalUiOptions,
+      xxxOfKey,
     ],
   );
 

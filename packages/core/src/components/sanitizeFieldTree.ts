@@ -45,6 +45,7 @@ import {
   toConstant,
   UI_DEFINITIONS_KEY,
   unsetByPath,
+  withoutFieldOptions,
 } from '@rjsf/utils';
 
 import { copyAlongPath, isPathPrefix } from './dataPaths.ts';
@@ -1326,11 +1327,7 @@ function shownOptionUiSchemaOf<T, S extends StrictRJSFSchema, F extends FormCont
   }
   // An option the list holds no entry for renders with the field's uiSchema, whose list it doesn't read, and one whose
   // entry is no uiSchema renders with none
-  const optionUiSchema = getOptionUiSchema(uiSchema, keyword, index);
-  if (optionUiSchema === uiSchema) {
-    const { [keyword]: _options, ...fieldUiSchema } = uiSchema;
-    return fieldUiSchema;
-  }
+  const optionUiSchema = withoutFieldOptions(getOptionUiSchema(uiSchema, keyword, index), uiSchema, keyword);
   return isObject(optionUiSchema) ? optionUiSchema : {};
 }
 

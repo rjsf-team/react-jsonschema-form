@@ -329,13 +329,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           for (const initialValue of [{ a: 5 }, { z: 1 }]) {
             const parentOnly = { 'ui:initialValue': initialValue };
             const spelled = { ...parentOnly, oneOf: [{}, {}] };
-            // A list the uiSchema spells out with a hole at the option gives the option no uiSchema of its own
+            // A list the uiSchema spells out with a hole at the option gives the option the field's uiSchema, and one with
+            // `null` there, which only untyped code can write, gives it none
             const holeyOptions: UiSchema[] = [];
             holeyOptions[1] = {};
             const holey = { ...parentOnly, oneOf: holeyOptions };
+            const nulled = { ...parentOnly, oneOf: [null, {}] as unknown as UiSchema[] };
             const firstPass = utils(schema).getDefaultFormState(schema, undefined, false, false, parentOnly);
             const later = utils(schema).getDefaultFormState(schema, {}, false, true, parentOnly);
-            for (const uiSchema of [spelled, holey]) {
+            for (const uiSchema of [spelled, holey, nulled]) {
               expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual(
                 firstPass,
               );
@@ -13452,6 +13454,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { schema, rootSchema: schema, includeUndefinedValues: false, uiSchema },
           ),
         ).toEqual({ thing: { a: 'x' } });
+      });
+
+      it("doesn't hand the field's anyOf entries to the options of an option with no entry of its own", () => {
+        const schema: RJSFSchema = {
+          anyOf: [
+            {
+              anyOf: [
+                { type: 'object', properties: { y: { type: 'string' } } },
+                { type: 'object', properties: { x: { type: 'string' }, z: { type: 'string' } } },
+              ],
+            },
+            { type: 'number' },
+          ],
+        };
+        const anyOf: UiSchema[] = [];
+        anyOf[1] = { z: { 'ui:initialValue': 'leak' } };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema, rootSchema: schema, formData: { x: 'a' }, uiSchema: { anyOf } },
+          ),
+        ).toEqual({ x: 'a' });
       });
     });
 

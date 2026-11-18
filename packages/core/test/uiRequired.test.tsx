@@ -50,6 +50,26 @@ describe('ui:required enforcement', () => {
       expect(errorListMessages(node)).toEqual([".c must have required property 'c'"]);
     });
 
+    const cOrBar: RJSFSchema[] = [{ type: 'object', properties: { c: { type: 'string' } } }, { $ref: '#/$defs/Bar' }];
+    it.each<[string, RJSFSchema]>([
+      ['inside an allOf', { allOf: [{ anyOf: cOrBar }] }],
+      ['listed directly', { anyOf: cOrBar }],
+    ])(
+      "enforces the field's ui:required for an option %s with no entry, before one with a ui:definitions entry",
+      async (_label, offering) => {
+        const schema: RJSFSchema = { $defs: { Bar: { type: 'number' } }, ...offering };
+        const uiSchema: UiSchema = {
+          'ui:definitions': { '#/$defs/Bar': { 'ui:title': 'BarTitle' } },
+          c: { 'ui:required': true },
+        };
+        const { node, onSubmit } = createFormComponent({ schema, uiSchema });
+        expect(elementOf(node, 'label[for="root_c"]').textContent).toContain('*');
+        await submitForm(node, user, true);
+        expect(onSubmit).not.toHaveBeenCalled();
+        expect(errorListMessages(node)).toEqual([".c must have required property 'c'"]);
+      },
+    );
+
     it('enforces ui:required on a field nested inside array items', async () => {
       const schema: RJSFSchema = {
         type: 'object',

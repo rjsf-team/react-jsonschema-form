@@ -1149,6 +1149,23 @@ describe('getUiRequiredErrorSchema()', () => {
         ),
       );
 
+    const holeBeforeEntry: UiSchema[] = [];
+    holeBeforeEntry[1] = {};
+    it.each<[string, UiSchema[], string[]]>([
+      ["a hole before another option's entry, which takes the field's uiSchema", holeBeforeEntry, ['.thing.a']],
+      // Only untyped code can write a `null` entry
+      ['null, which gives it no uiSchema', [null, {}] as unknown as UiSchema[], []],
+    ])("reads the field's ui:required for the option an entry of %s stands for", (_, oneOf, expected) => {
+      const uiSchema: UiSchema = { thing: { a: { 'ui:required': true }, oneOf } };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        { type: 'object', properties: { thing: { oneOf: [objectOption] } } },
+        uiSchema,
+        { thing: {} },
+      );
+      expect(toErrorList(errorSchema).map(({ property }) => property)).toEqual(expected);
+    });
+
     describe.each<[string, RJSFSchema]>([
       ['an object beside an empty anyOf', { ...objectOption, anyOf: [] }],
       ['an object beside an empty oneOf', { ...objectOption, oneOf: [] }],
