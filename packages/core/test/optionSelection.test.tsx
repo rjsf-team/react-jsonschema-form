@@ -1739,6 +1739,37 @@ describe('option selection as form state', () => {
       });
     },
   );
+
+  describe("under additionalPropertiesWhenAbsent: 'allow', a field fills its first render from the option it shows, where one option's absent keyword takes the extra keys", () => {
+    const schema = besideX({
+      p: {
+        oneOf: [
+          { type: 'object', properties: { a: { type: 'number' } } },
+          { type: 'object', properties: { b: { type: 'number', default: 5 } }, additionalProperties: true },
+        ],
+      },
+    });
+    const props = { schema, initialFormData: { p: { t: 2 } }, additionalPropertiesWhenAbsent: 'allow' as const };
+
+    it('and gives the same data after a reset', () => {
+      const ref = createFormRef();
+      createFormComponent({ ref, ...props });
+      expect(handleOf(ref).getFormData()).toEqual({ p: { t: 2 } });
+
+      act(() => handleOf(ref).reset());
+
+      expect(handleOf(ref).getFormData()).toEqual({ p: { t: 2 } });
+    });
+
+    it('and after an edit to another field', async () => {
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ref, ...props });
+
+      await user.type(elementOf(node, '#root_x'), 'a');
+
+      expect(handleOf(ref).getFormData()).toEqual({ x: 'a', p: { t: 2 } });
+    });
+  });
 });
 
 describe('omitting extra data', () => {
