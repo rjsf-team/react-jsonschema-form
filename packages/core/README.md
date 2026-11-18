@@ -47,7 +47,7 @@
 
 Core logic and the unstyled default theme for `react-jsonschema-form`: toolkit-independent HTML5 markup carrying `rjsf-` marker classes, and two optional stylesheets that style it with HTML5 and CSS3 alone: `@rjsf/core/rjsf.css` for its layout and `@rjsf/core/rjsf-theme.css` for a default look.
 
-[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/core)
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/react-jsonschema-form/)
 
 ### Built With
 

@@ -40,7 +40,7 @@
 
 Exports `shadcn` theme, fields and widgets for `react-jsonschema-form`.
 
-[![product-screenshot](./screenshot.png)](https://rjsf-team.github.io/@rjsf/shadcn)
+[![product-screenshot](./screenshot.png)](https://rjsf-team.github.io/react-jsonschema-form/)
 
 [Live demo](https://react-jsonschema-form-shadcn-boilerplate.vercel.app/)
 

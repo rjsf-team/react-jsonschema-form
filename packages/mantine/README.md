@@ -50,7 +50,7 @@
 
 `Mantine` theme, fields and widgets for `react-jsonschema-form`.
 
-[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/mantine)
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/react-jsonschema-form/)
 
 ### Built With
 
