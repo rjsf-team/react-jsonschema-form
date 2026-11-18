@@ -76,7 +76,8 @@ let throwingIds = new Set<string>();
 /** @public Sets which warnings with an ID throw an `RJSFWarningError` rather than log, for every form on the page.
  * Module-level, since several warnings are raised where no form's options reach, so it is set once from an app's
  * development entry point or a test setup. A warning without an ID never throws, and `resetLogOnce()` leaves this
- * setting as it is.
+ * setting as it is. A name it doesn't know, such as a misspelt ID from a setup file in plain JavaScript, is ignored
+ * with a warning.
  *
  * @param [options={}] - The `throwOn` categories and IDs, and the IDs `except` keeps logging; `{}` restores the
  *        default of logging every warning
@@ -85,6 +86,21 @@ export function setWarningOptions({ throwOn = [], except = [] }: WarningOptions 
   // Widened, since `Object.entries()` reads the table's IDs as plain strings
   const selected: readonly string[] = throwOn;
   const excepted: readonly string[] = except;
+  // A plain-JS setup file isn't type-checked, so a misspelt name would otherwise turn the setting off without a word
+  const ids = Object.keys(WARNING_CATEGORIES);
+  const idsAndCategories: readonly string[] = [...ids, ...Object.values(WARNING_CATEGORIES)];
+  for (const name of selected) {
+    if (!idsAndCategories.includes(name)) {
+      // oxlint-disable-next-line no-console
+      console.warn(`setWarningOptions() ignores "${name}" in \`throwOn\`, since it isn't a warning category or ID`);
+    }
+  }
+  for (const name of excepted) {
+    if (!ids.includes(name)) {
+      // oxlint-disable-next-line no-console
+      console.warn(`setWarningOptions() ignores "${name}" in \`except\`, since it isn't a warning ID`);
+    }
+  }
   throwingIds = new Set(
     Object.entries(WARNING_CATEGORIES)
       .filter(([id, category]) => (selected.includes(id) || selected.includes(category)) && !excepted.includes(id))

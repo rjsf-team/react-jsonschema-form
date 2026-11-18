@@ -3030,7 +3030,7 @@ setWarningOptions({}); // the default: every warning logs
 | `row-span-ignored`                  | `config`    | a `ui:row` has a `span`, which sizes only a `ui:col` or `ui:columns`                                        |
 | `layout-grid-cell-field-ignored`    | `config`    | a layout grid cell with discriminated `oneOf`/`anyOf` options names a `ui:field`, which it ignores          |
 
-`WarningCategory` and `WarningId` are string-literal unions of the names above, so a typo fails type-checking.
+`WarningCategory` and `WarningId` are string-literal unions of the names above, so a typo fails type-checking. In a setup file in plain JavaScript, `setWarningOptions()` ignores a name it doesn't know and warns about it.
 
 #### Parameters
 

@@ -205,6 +205,19 @@ describe('logOnce()', () => {
       logOnce('a message', { id: 'form-data-ignored' });
       expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [form-data-ignored]');
     });
+    it('warns about, and ignores, a name that is no category or ID, as from an untyped JS caller', () => {
+      setWarningOptions({
+        throwOn: ['form-data-ignore', 'migration'],
+        except: ['config', 'antd-span-twelfths'],
+      } as never);
+      expect(consoleWarnSpy.mock.calls).toEqual([
+        ['setWarningOptions() ignores "form-data-ignore" in `throwOn`, since it isn\'t a warning category or ID'],
+        ['setWarningOptions() ignores "config" in `except`, since it isn\'t a warning ID'],
+      ]);
+      expect(() => logOnce('a message', { id: 'form-data-ignored' })).toThrow(RJSFWarningError);
+      logOnce('a message', { id: 'antd-span-twelfths' });
+      expect(consoleWarnSpy).toHaveBeenLastCalledWith('a message [antd-span-twelfths]');
+    });
     it('keeps the setting across resetLogOnce()', () => {
       setWarningOptions({ throwOn: ['config'] });
       resetLogOnce();
