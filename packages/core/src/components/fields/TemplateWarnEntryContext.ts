@@ -7,6 +7,7 @@ import {
   fieldPathToList,
   hasSchemaMarker,
   isObject,
+  mergeObjects,
   UI_DEFINITION_ORIGIN_KEY,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
@@ -121,21 +122,40 @@ export function useStableDefinitionRecord(record: DefinitionRecord | undefined):
   return useMemo(() => (ref === undefined ? undefined : { ref, local, definition }), [ref, local, definition]);
 }
 
-/** Whether `entry`, walked down `path`, holds the uiSchema option `key`, as `ui:key` or in `ui:options`
+/** Whether `entry` gives the uiSchema option `key` through `slot`, either `ui:key` or `ui:options`
  *
  * @param entry - The uiSchema entry
- * @param path - The keys leading from `entry` to the one asked about
+ * @param slot - `ui:key`, or `ui:options` for `ui:options.key`
  * @param key - The option's name, without `ui:`
- * @returns - Whether the entry holds the option
+ * @returns - Whether the entry gives it there
  */
-function holdsUiOption(entry: unknown, path: string[], key: string): boolean {
-  const at: unknown = getAt(entry, path);
-  if (!isObject(at)) {
+function holdsSlot(entry: unknown, slot: string, key: string): boolean {
+  if (!isObject(entry)) {
     return false;
   }
-  const options: unknown = at[UI_OPTIONS_KEY];
+  if (slot !== UI_OPTIONS_KEY) {
+    return Object.hasOwn(entry, slot);
+  }
+  const options: unknown = entry[UI_OPTIONS_KEY];
+  return isObject(options) && Object.hasOwn(options, key);
+}
+
+/** Which spelling of the uiSchema option `key` the entry `resolveUiSchema()` merges from `local` and `definition` gives
+ * the value `getUiOptions()` reads: where both a `ui:key` and a `ui:options.key` are given, the later one in the merged
+ * entry
+ *
+ * @param local - The entry the uiSchema gives
+ * @param definition - The `ui:definitions` entry merged under it
+ * @param key - The option's name, without `ui:`
+ * @returns - `ui:key` or `ui:options`, or undefined where neither gives one
+ */
+function winningSlot(local: unknown, definition: unknown, key: string): string | undefined {
+  const merged = mergeObjects(isObject(definition) ? definition : {}, isObject(local) ? local : {});
+  const uiKey = `ui:${key}`;
   // `getUiOptions()` ignores a `ui:options.field`, so only `ui:field` names a field
-  return Object.hasOwn(at, `ui:${key}`) || (key !== 'field' && isObject(options) && Object.hasOwn(options, key));
+  return Object.keys(merged).findLast(
+    (name) => (name === uiKey || (key !== 'field' && name === UI_OPTIONS_KEY)) && holdsSlot(merged, name, key),
+  );
 }
 
 /** Returns the way from a merged entry, of a field with `depth` path segments, to the entry of the field at `fieldPath`:
@@ -190,11 +210,19 @@ function holderOf(
   key: string,
 ): string | undefined {
   const { fieldPath, additionalDepths, optionSteps = [] } = entry;
+  let slot: string | undefined;
   for (let at = entry.definitionOrigin; at; at = at.parent) {
     const steps = optionSteps.slice(at.stepsBefore);
     const below = pathBelow(fieldPath, at.depth, additionalDepths, steps, `ui:definitions['${at.ref}']`);
-    if (!holdsUiOption(at.local, below.keys, key)) {
-      return holdsUiOption(at.definition, below.keys, key) ? below.written : undefined;
+    const local: unknown = getAt(at.local, below.keys);
+    const definition: unknown = getAt(at.definition, below.keys);
+    // Only the nearest merge's key order is the one `getUiOptions()` reads, since a nearer definition's keys come first
+    slot ??= winningSlot(local, definition, key);
+    if (slot === undefined) {
+      return undefined;
+    }
+    if (!holdsSlot(local, slot, key)) {
+      return holdsSlot(definition, slot, key) ? below.written : undefined;
     }
   }
   return 'local';

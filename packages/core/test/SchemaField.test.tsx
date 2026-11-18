@@ -3960,6 +3960,25 @@ describe('SchemaField', () => {
         );
       });
 
+      it("names the definition when its ui:FieldTemplate comes after the field's own ui:options and so wins", () => {
+        createFormComponent({
+          schema: {
+            definitions: { Name: { type: 'string' } },
+            type: 'object',
+            properties: { first: { $ref: '#/definitions/Name' } },
+          },
+          uiSchema: {
+            'ui:definitions': { '#/definitions/Name': { 'ui:options': { label: true }, 'ui:FieldTemplate': typo } },
+            first: { 'ui:options': { FieldTemplate: 'AlsoBad' } },
+          },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          "FieldTemplate (ui:FieldTemplate or ui:options) for the ui:definitions['#/definitions/Name'] entry of " +
+            '"root" names no registered template (\'Typo\'), so it is ignored.',
+        );
+      });
+
       it('names the outer definition for a mistake it holds above a field merging a definition of its own', () => {
         createFormComponent({
           schema: {
@@ -3973,6 +3992,29 @@ describe('SchemaField', () => {
         });
 
         // B's entry is merged over the one A's definition gives `b`, so the mistake still sits in A's
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for the ui:definitions[\'#/$defs/A\'].b entry of "root" ' +
+            "names no registered template ('Typo'), so it is ignored.",
+        );
+      });
+
+      it("names the outer definition where an inner definition's keys come first and so let its ui:options win", () => {
+        createFormComponent({
+          schema: {
+            $defs: { A: { type: 'object', properties: { b: { $ref: '#/$defs/B' } } }, B: { type: 'string' } },
+            type: 'object',
+            properties: { a: { $ref: '#/$defs/A' } },
+          },
+          uiSchema: {
+            'ui:definitions': {
+              '#/$defs/A': { b: { 'ui:options': { FieldTemplate: typo } } },
+              '#/$defs/B': { 'ui:FieldTemplate': 'Inner' as unknown as typeof typo },
+            },
+            a: { b: { 'ui:FieldTemplate': 'AlsoBad' as unknown as typeof typo } },
+          },
+        });
+
+        // B's `ui:FieldTemplate` comes first in b's entry, so the `ui:options` A's definition gives `b` comes after it
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
           'FieldTemplate (ui:FieldTemplate or ui:options) for the ui:definitions[\'#/$defs/A\'].b entry of "root" ' +
             "names no registered template ('Typo'), so it is ignored.",
