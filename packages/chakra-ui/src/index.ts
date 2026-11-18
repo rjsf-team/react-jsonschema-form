@@ -1,3 +1,7 @@
+'use client';
+
+// The entry is the client boundary: @ark-ui/react, which @chakra-ui/react uses, breaks on a server import
+
 import Form from './Form/index.ts';
 
 export { default as Form, generateForm } from './Form/index.ts';

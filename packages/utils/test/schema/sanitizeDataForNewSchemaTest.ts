@@ -1,4 +1,4 @@
-import type { RJSFMarkedSchema, SchemaUtilsType, RJSFSchema } from '../../src/index.ts';
+import type { DefaultFormStateBehavior, RJSFMarkedSchema, SchemaUtilsType, RJSFSchema } from '../../src/index.ts';
 import {
   createSchemaUtils,
   getItemSchema,
@@ -168,6 +168,45 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       // is cleared rather than left sitting in a number field
       expect(schemaUtils.sanitizeDataForNewSchema(typedSchema, freeFormSchema, { aKey: 'text' })).toEqual({});
     });
+    it("keeps a clear the field's fill makes alike, reading the default the field holding the data inherits (#5817)", () => {
+      const context = {
+        validator: testValidator,
+        defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' as const },
+      };
+      const withField = (a: number, parentDefault?: RJSFSchema['default']): RJSFSchema => ({
+        type: 'object',
+        ...(parentDefault !== undefined && { default: parentDefault }),
+        properties: { f: { type: 'object', default: { a }, properties: { a: { type: 'number' } } } },
+      });
+      const sanitize = (parentDefault?: RJSFSchema['default']) => {
+        const newSchema = withField(3, parentDefault);
+        return sanitizeDataForNewSchema(context, newSchema, newSchema, withField(2, parentDefault), {
+          f: { a: undefined },
+        });
+      };
+
+      expect(sanitize()).toStrictEqual({ f: {} });
+      expect(sanitize({ f: { a: 1 } })).toStrictEqual({ f: { a: undefined } });
+    });
+    it("reads an object its parent lists no `required` for as the defaults do under 'populateRequiredDefaults'", () => {
+      const context = {
+        validator: testValidator,
+        defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' as const },
+      };
+      const withDefault = (fill: string): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          inner: { type: 'object', required: ['a'], properties: { a: { type: 'string', default: fill } } },
+        },
+      });
+      const filled = createSchemaUtils(context, withDefault('x')).getDefaultFormState(withDefault('x'), { inner: {} });
+
+      expect(filled).toEqual({ inner: { a: 'x' } });
+      expect(sanitizeDataForNewSchema(context, withDefault('y'), withDefault('y'), withDefault('x'), filled)).toEqual({
+        inner: { a: 'y' },
+      });
+    });
+
     describe('keys and objects the new schema does not take', () => {
       const withX = (x: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { x } });
       const xWith = (key: string, extra?: RJSFSchema): RJSFSchema => ({
@@ -574,6 +613,49 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           enumField: 'oldData',
         }),
       ).toStrictEqual({});
+    });
+    it('replaces invalid enum data with the default the defaults fill the field with (#5817, #5818)', () => {
+      const withEnum = (parentDefault: string, values: string[], ownDefault?: string): RJSFSchema => ({
+        type: 'object',
+        default: { v: parentDefault },
+        properties: {
+          v: { type: 'string', enum: values, ...(ownDefault && { default: ownDefault }) },
+          w: { type: 'string' },
+        },
+      });
+      const sanitize = (ownDefault?: string, nestedDefaultsPrecedence?: 'ancestorWins') => {
+        const newSchema = withEnum('c', ['c', 'd'], ownDefault);
+        const context = { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence } };
+        return sanitizeDataForNewSchema(context, newSchema, newSchema, withEnum('b', ['a', 'b'], ownDefault), {
+          v: 'a',
+          w: 'k',
+        });
+      };
+
+      expect(sanitize()).toEqual({ v: 'c', w: 'k' });
+      expect(sanitize('d')).toEqual({ v: 'd', w: 'k' });
+      expect(sanitize('d', 'ancestorWins')).toEqual({ v: 'c', w: 'k' });
+    });
+    it('replaces a cleared enum value with its own default only where the defaults fill it with that one', () => {
+      const withEnum = (parentDefault: string, values: string[]): RJSFSchema => ({
+        type: 'object',
+        default: { v: parentDefault },
+        properties: { v: { type: 'string', enum: values, default: values[1] }, w: { type: 'string' } },
+      });
+      const sanitize = (defaultFormStateBehavior: DefaultFormStateBehavior) => {
+        const newSchema = withEnum('c', ['c', 'd']);
+        return sanitizeDataForNewSchema(
+          { validator: testValidator, defaultFormStateBehavior },
+          newSchema,
+          newSchema,
+          withEnum('b', ['a', 'b']),
+          { v: undefined, w: 'k' },
+        );
+      };
+
+      expect(sanitize({})).toStrictEqual({ v: 'd', w: 'k' });
+      expect(sanitize({ nestedDefaultsPrecedence: 'ancestorWins' })).toStrictEqual({ w: 'k' });
+      expect(sanitize({ emptyObjectFields: 'skipDefaults' })).toStrictEqual({ w: 'k' });
     });
     it('replaces invalid oneOf const and enum data', () => {
       const oldSchema: RJSFSchema = {
@@ -1005,6 +1087,14 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           2,
           'a',
         ]);
+      });
+      // An option's `default` decides no item's validity, so it plays no part in whether both sides declare it alike
+      it('keeps a rejected prefix item whose option only changes its default as it is', () => {
+        const withOptionDefault = (a: number) =>
+          prefixed({ type: 'object', properties: { a: { type: 'number' } }, oneOf: [{ default: { a } }] });
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(withOptionDefault(3), withOptionDefault(1), ['z', 'a']),
+        ).toStrictEqual(['z', 'a']);
       });
       it('keeps an unfilled prefix item as a hole where its position changes type, rather than clearing the array', () => {
         const prefixed = (type: 'string' | 'number'): RJSFSchema => ({
@@ -1822,8 +1912,14 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           [{ x: 1 }],
         ),
       ).toStrictEqual([{ x: 1 }]);
+      const withXy = createSchemaUtils(
+        { validator: testValidator },
+        {
+          definitions: { xy: { type: 'object', properties: xy } },
+        },
+      );
       expect(
-        schemaUtils.sanitizeDataForNewSchema(
+        withXy.sanitizeDataForNewSchema(
           untyped({ oneOf: [{ $ref: '#/definitions/xy' }], default: { y: 1 } }),
           untyped({ oneOf: [{ $ref: '#/definitions/xy' }], default: { x: 1 } }),
           [{ x: 1 }],
@@ -2165,6 +2261,29 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         expect(schemaUtils.sanitizeDataForNewSchema(objectWith(newK), objectWith(oldK), { k: value })).toStrictEqual(
           {},
         );
+      });
+      it('keeps a value a readOnly default newly given to it differs from, as saved data', () => {
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            objectWith({ type: 'string', default: 'n', readOnly: true }),
+            objectWith({ type: 'string' }),
+            { k: 'u' },
+          ),
+        ).toStrictEqual({ k: 'u' });
+      });
+      it.each<[string, RJSFSchema]>([
+        ['an unchanged readOnly default', { type: 'string', default: 'n', readOnly: true }],
+        ['a default made readOnly', { type: 'string', default: 'n' }],
+      ])('keeps a value %s differs from, as Form does', (_, oldK) => {
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            objectWith({ type: 'string', default: 'n', readOnly: true }),
+            objectWith(oldK),
+            {
+              k: 'u',
+            },
+          ),
+        ).toStrictEqual({ k: 'u' });
       });
       it('keeps an array whose items change type, without the items', () => {
         const oldK: RJSFSchema = { type: 'array', items: { type: 'number' } };

@@ -162,6 +162,12 @@ export default function LayoutMultiSchemaField<
     if (switched.formData) {
       setByPath(switched.formData, selectorField, opt);
     }
+    // The selector holds the option picked, which the form keeps rather than putting the old one back
+    if (switched.held && Object.hasOwn(switched.held, selectorField)) {
+      const held = { ...switched.held };
+      delete held[selectorField];
+      switched.held = held;
+    }
     // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to
     selectOption(newOptionIndex);
     let sentData: unknown;

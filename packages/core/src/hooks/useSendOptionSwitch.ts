@@ -92,10 +92,10 @@ function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextT
  * `storedValue()`, which is the value the move is announced with. What it returns says what became of the change, see
  * `FormDataAccess.sendMove()`.
  *
- * The keys only the old option declared that `formDataForNewOption()` left out stay out of the value sent, and the move
- * carries them with the option switched away from. A form that takes the change as the switch puts them back, and its
- * sanitize judges them against that option as it judges a field a conditional stops declaring; anything else, such as
- * a field outside a `Form` or a parent field that sends other data, leaves them out.
+ * The move carries the object the data held before the switch, see `OptionSwitchData`, with the option switched away
+ * from. A form that takes the change as the switch puts each of its keys back as it was, and its sanitize judges them
+ * against that option, with what the defaults hand the field, as it judges a field a conditional changes; anything
+ * else, such as a field outside a `Form` or a parent field that sends other data, keeps the value sent.
  */
 export default function useSendOptionSwitch(fieldPath: FieldPath) {
   const sendMove = useSendMove(fieldPath);
@@ -105,7 +105,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       schema: S,
       optionSwitch: OptionSwitch<T, S, F>,
       formData: unknown,
-      { formData: newFormData, left }: OptionSwitchData<V>,
+      { formData: newFormData, held: heldBefore }: OptionSwitchData<V>,
       send: (value: V | undefined) => void,
     ) => {
       const { oldOption, newOption, oldIndex } = optionSwitch;
@@ -152,7 +152,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
           newKeyOf: (key) => (gone.has(key) && !Object.hasOwn(declaredByNew, key) ? undefined : key),
           newOwnKeyOf: (key) => (gone.has(key) ? undefined : key),
           dropsOwnErrors: true,
-          ...(oldIndex >= 0 && { switchedFrom: { index: oldIndex, left } }),
+          ...(oldIndex >= 0 && { switchedFrom: { index: oldIndex, held: heldBefore } }),
         },
         () => send(value),
       );

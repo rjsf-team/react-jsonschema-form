@@ -22,7 +22,7 @@
     "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && pnpm install",
     "update-version-tags": "git tag -f $(node scripts/get-version-tag.cjs) && git push -f origin $(node scripts/get-version-tag.cjs)",
     "nuke-build-env": "rimraf .nx && rimraf pnpm-lock.yaml",
-    "sanity-check": "pnpm run cs-check && pnpm run lint && pnpm run knip && pnpm run build && pnpm run test"
+    "sanity-check": "pnpm run cs-check && pnpm run lint && pnpm run knip && pnpm run build && node scripts/checkUseClientBuild.mts && pnpm run test"
   },
   "lint-staged": {
     "pnpm-lock.yaml": "sh -c 'pnpm dedupe --check'",
@@ -37,7 +37,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.9",
-    "@types/node": "^24.13.2",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitest/coverage-v8": "^5.1.0",

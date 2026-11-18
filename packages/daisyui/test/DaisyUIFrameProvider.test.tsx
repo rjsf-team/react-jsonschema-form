@@ -18,6 +18,7 @@ const mockDocument = {
   head: {
     appendChild: vi.fn(),
   },
+  body: { style: { setProperty: vi.fn() } },
   createElement: vi.fn((tagName) => ({
     tagName,
     textContent: '',
@@ -59,6 +60,43 @@ describe('DaisyUIFrameProvider', () => {
     await waitFor(() => {
       expect(mockRemove).toHaveBeenCalledTimes(4);
     });
+  });
+
+  test("fills the frame's height, so its theme colours the page below a short form", () => {
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <div>Test Content</div> });
+
+    const { container } = render(<DaisyUIFrame document={mockDocument as unknown as Document} />);
+
+    // jsdom lays nothing out and resolves no `vh` in computed styles, so the inline height the wrapper asks for stands in
+    // for the height it fills
+    expect(container.querySelector<HTMLElement>('.daisy-ui-theme')?.style.minHeight).toBe('100vh');
+  });
+
+  test("removes the frame body's margin, which would push the page past the frame's height, until it unmounts", () => {
+    const frameDocument = document.implementation.createHTMLDocument('frame');
+    frameDocument.body.style.margin = '8px';
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <div>Test Content</div> });
+
+    const { unmount } = render(<DaisyUIFrame document={frameDocument} />);
+
+    expect(frameDocument.body.style.margin).toBe('0px');
+    unmount();
+    expect(frameDocument.body.style.margin).toBe('8px');
+  });
+
+  test('shows a chosen theme without storing it when told not to', () => {
+    localStorageMock['daisyui-theme'] = 'cupcake';
+    const DaisyUIFrame = __createDaisyUIFrameProvider({
+      children: <div>Test Content</div>,
+      subtheme: { dataTheme: 'dark' },
+      storeTheme: false,
+    });
+
+    const { container } = render(<DaisyUIFrame />);
+
+    expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
+    expect(mockSetItem).not.toHaveBeenCalled();
+    expect(localStorageMock['daisyui-theme']).toBe('cupcake');
   });
 
   test('uses provided theme when specified', () => {

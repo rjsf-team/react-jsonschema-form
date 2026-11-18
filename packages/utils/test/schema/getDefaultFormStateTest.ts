@@ -91,6 +91,1074 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(forbidding.getDefaultFormState(dependent, { b: 'x' })).toEqual({ b: 'x', c: 'filled' });
       });
     });
+    describe('an object const naming keys no property declares', () => {
+      const constProperty: RJSFSchema = { type: 'object', const: { a: 2 } };
+      const withParentDefault: RJSFSchema = {
+        type: 'object',
+        default: { x: { a: 2 } },
+        properties: { x: constProperty },
+      };
+      const withoutParentDefault: RJSFSchema = { type: 'object', properties: { x: constProperty } };
+      const bare: RJSFSchema = { type: 'object', const: { a: 1 } };
+      describe.each([
+        ['forbids', {}],
+        ['allows', { additionalPropertiesWhenAbsent: 'allow' as const }],
+      ])('where the context %s extra keys', (_, absent) => {
+        const utils = (schema: RJSFSchema, defaultFormStateBehavior?: DefaultFormStateBehavior) =>
+          createSchemaUtils({ validator: testValidator, defaultFormStateBehavior, ...absent }, schema);
+        it('defaults a property to its const, beside a parent default and without one', () => {
+          expect(utils(withParentDefault).getDefaultFormState(withParentDefault)).toStrictEqual({ x: { a: 2 } });
+          expect(utils(withoutParentDefault).getDefaultFormState(withoutParentDefault)).toStrictEqual({ x: { a: 2 } });
+        });
+        it('defaults a bare object const to its value', () => {
+          expect(utils(bare).getDefaultFormState(bare)).toStrictEqual({ a: 1 });
+          expect(utils(bare, { constAsDefaults: 'skipOneOf' }).getDefaultFormState(bare)).toStrictEqual({ a: 1 });
+          const prototypeNamed: RJSFSchema = { type: 'object', const: { toString: 1 } };
+          expect(utils(prototypeNamed).getDefaultFormState(prototypeNamed, {})).toStrictEqual({ toString: 1 });
+        });
+        it('fills the const into empty object data, and keeps the keys the data holds', () => {
+          expect(utils(withoutParentDefault).getDefaultFormState(withoutParentDefault, { x: {} })).toStrictEqual({
+            x: { a: 2 },
+          });
+          expect(utils(bare).getDefaultFormState(bare, { a: 3 })).toStrictEqual({ a: 3 });
+        });
+        it('keeps a nested object of the const whole', () => {
+          const nested: RJSFSchema = { type: 'object', const: { a: { b: 1 } } };
+          expect(utils(nested).getDefaultFormState(nested)).toStrictEqual({ a: { b: 1 } });
+        });
+        it('fills the keys no property declares beside the ones its properties compute', () => {
+          const declared: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'number' } },
+            const: { a: 1, b: 2 },
+          };
+          expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ a: 1, b: 2 });
+        });
+        it('keeps what its properties and additionalProperties compute for a key, as their own defaults win', () => {
+          const ownDefaults: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'number', default: 5 } },
+            additionalProperties: { type: 'number', default: 6 },
+            const: { a: 1, b: 2 },
+          };
+          expect(utils(ownDefaults).getDefaultFormState(ownDefaults)).toStrictEqual({ a: 5, b: 6 });
+        });
+        it('leaves the extra keys the data holds once the defaults were generated, as for a default', () => {
+          const extra: RJSFSchema = { type: 'object', additionalProperties: { type: 'number' }, const: { b: 2 } };
+          expect(utils(extra).getDefaultFormState(extra, {}, false, true)).toStrictEqual({});
+          expect(utils(extra).getDefaultFormState(extra, { c: 2 }, false, true)).toStrictEqual({ c: 2 });
+          // On the first pass the defaults are computed without the data and merged beneath it, as for a `default`
+          expect(utils(extra).getDefaultFormState(extra, { c: 2 })).toStrictEqual({ c: 2, b: 2 });
+          const withDefault: RJSFSchema = { ...extra, const: undefined, default: { b: 2 } };
+          expect(utils(withDefault).getDefaultFormState(withDefault, { c: 2 })).toStrictEqual({ c: 2, b: 2 });
+        });
+        it('seeds the keys of a nested open object const beside the extra keys the data holds on the first pass', () => {
+          const nested: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', additionalProperties: { type: 'number' }, const: { b: 2 } } },
+          };
+          expect(utils(nested).getDefaultFormState(nested, { x: { c: 3 } })).toStrictEqual({ x: { c: 3, b: 2 } });
+          expect(utils(nested).getDefaultFormState(nested, { x: { c: 3 } }, false, true)).toStrictEqual({
+            x: { c: 3 },
+          });
+        });
+        it('seeds only the keys of the const beside the extra keys the data holds, read from a ui:initialValue', () => {
+          const nested: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', additionalProperties: { type: 'number' }, const: { b: 2 } } },
+          };
+          const data = { x: { c: 3 } };
+          const initialValue = (value: object) => ({ x: { 'ui:initialValue': value } });
+          expect(utils(nested).getDefaultFormState(nested, data, false, false, initialValue({ z: 9 }))).toStrictEqual({
+            x: { c: 3 },
+          });
+          expect(
+            utils(nested).getDefaultFormState(nested, data, false, false, initialValue({ b: 5, z: 9 })),
+          ).toStrictEqual({ x: { c: 3, b: 5 } });
+        });
+        it('seeds no key of the const where patternProperties or unevaluatedProperties let the user add, remove or rename keys', () => {
+          const patterned: RJSFSchema = {
+            type: 'object',
+            patternProperties: { '^x': { type: 'number' } },
+            const: { x1: 1 },
+          };
+          const unevaluated: RJSFSchema = {
+            type: 'object',
+            unevaluatedProperties: { type: 'number' },
+            const: { a: 1 },
+          };
+          expect(utils(patterned).getDefaultFormState(patterned, {})).toStrictEqual({});
+          expect(utils(patterned).getDefaultFormState(patterned, { x2: 1 })).toStrictEqual({ x2: 1 });
+          expect(utils(patterned).getDefaultFormState(patterned, {}, false, true)).toStrictEqual({});
+          expect(utils(unevaluated).getDefaultFormState(unevaluated, {})).toStrictEqual({});
+        });
+        it('fills the keys of a const that closes the object whatever the data holds, and once the defaults were generated', () => {
+          const two: RJSFSchema = { type: 'object', const: { a: 1, b: 2 } };
+          expect(utils(two).getDefaultFormState(two, { a: 3 })).toStrictEqual({ a: 3, b: 2 });
+          expect(utils(two, { constAsDefaults: 'always' }).getDefaultFormState(two, { a: 1 })).toStrictEqual({
+            a: 1,
+            b: 2,
+          });
+          expect(utils(bare).getDefaultFormState(bare, {}, false, true)).toStrictEqual({ a: 1 });
+          const unevaluatedClosed: RJSFSchema = { ...bare, unevaluatedProperties: false };
+          expect(utils(unevaluatedClosed).getDefaultFormState(unevaluatedClosed, {}, false, true)).toStrictEqual({
+            a: 1,
+          });
+          const regenerated = utils(withoutParentDefault).getDefaultFormState(
+            withoutParentDefault,
+            undefined,
+            false,
+            true,
+          );
+          expect(regenerated).toStrictEqual({ x: { a: 2 } });
+        });
+        it('refills a nested object of a const that closes the object where the data holds part of it', () => {
+          const nested: RJSFSchema = { type: 'object', const: { a: { b: 1, c: 2 } } };
+          expect(utils(nested).getDefaultFormState(nested, { a: { b: 1 } })).toStrictEqual({ a: { b: 1, c: 2 } });
+          expect(utils(nested).getDefaultFormState(nested, { a: { b: 1 } }, false, true)).toStrictEqual({
+            a: { b: 1, c: 2 },
+          });
+          expect(utils(nested).getDefaultFormState(nested, { a: { b: 3 } }, false, true)).toStrictEqual({
+            a: { b: 3, c: 2 },
+          });
+        });
+        it('fills a key of a const that closes the object where the data holds it as undefined, which a declared key keeps', () => {
+          expect(utils(bare).getDefaultFormState(bare, { a: undefined })).toStrictEqual({ a: 1 });
+          expect(utils(bare).getDefaultFormState(bare, { a: undefined }, false, true)).toStrictEqual({ a: 1 });
+          const declared: RJSFSchema = { ...bare, properties: { a: { type: 'number' } } };
+          expect(utils(declared).getDefaultFormState(declared, { a: undefined }, false, true)).toStrictEqual({
+            a: undefined,
+          });
+        });
+        it('fills a key of a const that closes the object where the data holds it as null, at any depth', () => {
+          expect(utils(bare).getDefaultFormState(bare, { a: null })).toStrictEqual({ a: 1 });
+          expect(utils(bare).getDefaultFormState(bare, { a: null }, false, true)).toStrictEqual({ a: 1 });
+          const nested: RJSFSchema = { type: 'object', const: { a: { b: 1, c: 2 } } };
+          expect(utils(nested).getDefaultFormState(nested, { a: { b: null } }, false, true)).toStrictEqual({
+            a: { b: 1, c: 2 },
+          });
+          const declared: RJSFSchema = { ...bare, properties: { a: { type: ['number', 'null'] } } };
+          expect(utils(declared).getDefaultFormState(declared, { a: null }, false, true)).toStrictEqual({ a: null });
+        });
+        it('completes an array of a const that closes the object where the data holds fewer items', () => {
+          const list: RJSFSchema = { type: 'object', const: { a: [1, 2] } };
+          expect(utils(list).getDefaultFormState(list, { a: [1] })).toStrictEqual({ a: [1, 2] });
+          expect(utils(list).getDefaultFormState(list, { a: [1] }, false, true)).toStrictEqual({ a: [1, 2] });
+          expect(utils(list).getDefaultFormState(list, { a: [3, 4, 5] }, false, true)).toStrictEqual({ a: [3, 4, 5] });
+          const rows: RJSFSchema = { type: 'object', const: { a: [{ x: 1, y: 2 }, { x: 3 }] } };
+          expect(utils(rows).getDefaultFormState(rows, { a: [{ x: 1 }] }, false, true)).toStrictEqual({
+            a: [{ x: 1, y: 2 }, { x: 3 }],
+          });
+        });
+        it('fills a key of a const that closes the object held as NaN, and keeps one held as another kind of object', () => {
+          expect(utils(bare).getDefaultFormState(bare, { a: Number.NaN }, false, true)).toStrictEqual({ a: 1 });
+          class Holder {
+            b = 2;
+          }
+          const held = new Holder();
+          const nested: RJSFSchema = { type: 'object', const: { a: { b: 1, c: 2 } } };
+          const state = utils(nested).getDefaultFormState(nested, { a: held }, false, true);
+          expect(isObject(state) && state.a).toBe(held);
+        });
+        it("keeps an array of a const that closes the object as the user's where its items differ from the const's", () => {
+          const list: RJSFSchema = { type: 'object', const: { a: [1, 2] } };
+          expect(utils(list).getDefaultFormState(list, { a: [3] })).toStrictEqual({ a: [3] });
+          expect(utils(list).getDefaultFormState(list, { a: [3] }, false, true)).toStrictEqual({ a: [3] });
+          const rows: RJSFSchema = { type: 'object', const: { a: [{ x: 1 }, { x: 2 }] } };
+          expect(utils(rows).getDefaultFormState(rows, { a: [{ x: 5 }] }, false, true)).toStrictEqual({
+            a: [{ x: 5 }],
+          });
+        });
+        it('getObjectDefaults seeds only the keys of the const that the defaults it is handed hold', () => {
+          const context = { validator: testValidator, ...absent };
+          expect(getObjectDefaults(context, bare, { includeUndefinedValues: true })).toStrictEqual({});
+          expect(getObjectDefaults(context, bare, { includeUndefinedValues: true }, { a: 1 })).toStrictEqual({ a: 1 });
+          // A `const` an `allOf` gives the object is read from the object retrieved
+          const viaAllOf: RJSFSchema = { type: 'object', allOf: [{ const: { a: 1 } }] };
+          expect(getObjectDefaults(context, viaAllOf, {}, { a: 1 })).toStrictEqual({ a: 1 });
+        });
+        it('keeps an empty object the const holds', () => {
+          const emptyMeta: RJSFSchema = { type: 'object', const: { meta: {} } };
+          expect(utils(emptyMeta).getDefaultFormState(emptyMeta)).toStrictEqual({ meta: {} });
+          const open: RJSFSchema = { ...emptyMeta, additionalProperties: true };
+          expect(utils(open).getDefaultFormState(open)).toStrictEqual({ meta: {} });
+        });
+        it('seeds no key of a ui:initialValue that the const closing the object does not name', () => {
+          const closed: RJSFSchema = { type: 'object', const: { a: 1 }, additionalProperties: false };
+          const uiSchema = { 'ui:initialValue': { z: 1 } };
+          expect(utils(closed).getDefaultFormState(closed, undefined, false, false, uiSchema)).toStrictEqual({});
+        });
+        it('seeds no key of a const beside a ui:initialValue, on the first pass or once the defaults were generated', () => {
+          const uiSchema = { 'ui:initialValue': { z: 1 } };
+          expect(utils(bare).getDefaultFormState(bare, undefined, false, false, uiSchema)).toStrictEqual({});
+          expect(utils(bare).getDefaultFormState(bare, {}, false, true, uiSchema)).toStrictEqual({});
+        });
+        it('leaves out a key of a const that closes the object which a ui:initialValue gives as undefined, unless undefined values are included', () => {
+          const two: RJSFSchema = { type: 'object', const: { a: 1, b: 2 } };
+          const uiSchema = { 'ui:initialValue': { a: 5, b: undefined } };
+          const withUndefined = (include: boolean | 'excludeObjectChildren') =>
+            utils(two).getDefaultFormState(two, undefined, include, false, uiSchema);
+          expect(withUndefined(false)).toStrictEqual({ a: 5 });
+          expect(withUndefined('excludeObjectChildren')).toStrictEqual({ a: 5, b: undefined });
+          expect(withUndefined(true)).toStrictEqual({ a: 5, b: undefined });
+        });
+        it('reads the keys of a const that closes the object from a ui:initialValue, as a declared key is', () => {
+          const uiSchema = { 'ui:initialValue': { a: 5, z: 1 } };
+          const closed: RJSFSchema = { ...bare, additionalProperties: false };
+          const declared: RJSFSchema = { ...bare, properties: { a: { type: 'number' } } };
+          const two: RJSFSchema = { type: 'object', const: { a: 1, b: 2 } };
+          for (const schema of [bare, closed, declared, two]) {
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({
+              a: 5,
+            });
+          }
+          expect(utils(two).getDefaultFormState(two, { a: 5 }, false, true, uiSchema)).toStrictEqual({ a: 5 });
+        });
+        it('reads the ui:initialValue of an object const beside options whether or not the uiSchema spells out its options', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            const: { a: 1 },
+            oneOf: [{ properties: { a: { type: 'number' } } }, { properties: { b: { type: 'number' } } }],
+          };
+          for (const initialValue of [{ a: 5 }, { z: 1 }]) {
+            const parentOnly = { 'ui:initialValue': initialValue };
+            const spelled = { ...parentOnly, oneOf: [{}, {}] };
+            // A list the uiSchema spells out with a hole at the option gives the option no uiSchema of its own
+            const holeyOptions: UiSchema[] = [];
+            holeyOptions[1] = {};
+            const holey = { ...parentOnly, oneOf: holeyOptions };
+            const firstPass = utils(schema).getDefaultFormState(schema, undefined, false, false, parentOnly);
+            const later = utils(schema).getDefaultFormState(schema, {}, false, true, parentOnly);
+            for (const uiSchema of [spelled, holey]) {
+              expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual(
+                firstPass,
+              );
+              expect(utils(schema).getDefaultFormState(schema, {}, false, true, uiSchema)).toStrictEqual(later);
+            }
+          }
+          expect(
+            utils(schema).getDefaultFormState(schema, undefined, false, false, {
+              'ui:initialValue': { a: 5 },
+              oneOf: [{}, {}],
+            }),
+          ).toStrictEqual({ a: 5 });
+        });
+        it('hands out the keys of a const that closes the object read from a ui:initialValue as copies', () => {
+          const nested: RJSFSchema = { type: 'object', const: { a: { b: 1 } } };
+          const initialValue = { a: { b: 1 } };
+          const state = utils(nested).getDefaultFormState(nested, undefined, false, false, {
+            'ui:initialValue': initialValue,
+          });
+          expect(state).toStrictEqual({ a: { b: 1 } });
+          expect(isObject(state) && state.a).not.toBe(initialValue.a);
+        });
+        it('asks whether an object takes extra keys, and which keys it declares, of the field with its allOf merged', () => {
+          const open: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', const: { a: 1 }, allOf: [{ additionalProperties: true }] } },
+          };
+          expect(utils(open).getDefaultFormState(open)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(open).getDefaultFormState(open, { x: {} }, false, true)).toStrictEqual({ x: {} });
+          const declared: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: { type: 'object', const: { a: 1 }, allOf: [{ properties: { a: { type: 'number' } } }] },
+            },
+          };
+          expect(utils(declared).getDefaultFormState(declared, { x: { a: undefined } }, false, true)).toStrictEqual({
+            x: { a: undefined },
+          });
+        });
+        it('fills a key of a const that only a property its fold leaves unmerged declares, which keeps a value the user cleared', () => {
+          const declared: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: { type: 'object', const: { a: 1 }, allOf: [{ properties: { a: { type: 'number' } } }] },
+            },
+          };
+          expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(declared).getDefaultFormState(declared, { x: {} }, false, true)).toStrictEqual({ x: { a: 1 } });
+          const conditional: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                const: { a: 1, b: 2 },
+                properties: { a: {} },
+                if: { properties: { a: { const: 1 } } },
+                then: { properties: { b: {} } },
+              },
+            },
+          };
+          const skipEmpty: DefaultFormStateBehavior = { emptyObjectFields: 'skipEmptyDefaults' };
+          expect(utils(conditional, skipEmpty).getDefaultFormState(conditional)).toStrictEqual({ x: { a: 1, b: 2 } });
+          expect(
+            utils(conditional, skipEmpty).getDefaultFormState(conditional, { x: { a: 1, b: undefined } }, false, true),
+          ).toStrictEqual({ x: { a: 1, b: undefined } });
+        });
+        it('keeps the value a key of a const that only an unmerged allOf declares folds to, null fills included', () => {
+          const nullInside: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                allOf: [
+                  {
+                    properties: {
+                      a: { type: 'object', additionalProperties: true, properties: { n: { type: 'null' } } },
+                    },
+                  },
+                ],
+                const: { a: { b: 1 } },
+              },
+            },
+          };
+          expect(utils(nullInside).getDefaultFormState(nullInside)).toStrictEqual({ x: { a: { b: 1, n: null } } });
+        });
+        it('fills the nulls of a key of a const that only an unmerged allOf declares as a declared key, its $ref, recursion and dependencies included', () => {
+          const A: RJSFSchema = { type: 'object', properties: { n: { type: 'null' } } };
+          const R: RJSFSchema = {
+            type: 'object',
+            properties: { n: { type: 'null' }, child: { $ref: '#/definitions/R' } },
+          };
+          const D: RJSFSchema = {
+            type: 'object',
+            properties: { p: { type: 'string' } },
+            dependencies: { p: { properties: { q: { type: 'null' } } } },
+          };
+          const both = (a: RJSFSchema, aConst: Record<string, string>) => {
+            const x = (declared: boolean): RJSFSchema => ({
+              definitions: { A, R, D },
+              type: 'object',
+              properties: {
+                x: declared
+                  ? { type: 'object', properties: { a }, const: { a: aConst } }
+                  : { type: 'object', allOf: [{ properties: { a } }], const: { a: aConst } },
+              },
+            });
+            return [x(false), x(true)];
+          };
+          const cases: [RJSFSchema, Record<string, string>, unknown][] = [
+            [{ $ref: '#/definitions/A' }, {}, { x: { a: { n: null } } }],
+            [{ $ref: '#/definitions/R' }, {}, { x: { a: { n: null, child: { n: null } } } }],
+            // The `dependencies` are read from the value the `const` gives the key
+            [{ $ref: '#/definitions/D' }, { p: 'x' }, { x: { a: { p: 'x', q: null } } }],
+            [D, { p: 'x' }, { x: { a: { p: 'x', q: null } } }],
+          ];
+          for (const [a, aConst, expected] of cases) {
+            for (const schema of both(a, aConst)) {
+              expect(utils(schema).getDefaultFormState(schema)).toStrictEqual(expected);
+            }
+          }
+        });
+        it("skips the required of an allOf the fold leaves unmerged for a key of a const only it declares, as allOf: 'skipDefaults' skips its defaults", () => {
+          const k: RJSFSchema = {
+            type: 'object',
+            properties: { n: { type: 'string', default: 'd' } },
+            required: ['n'],
+          };
+          const z: RJSFSchema = { type: 'string' };
+          const inAllOf: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                properties: { z },
+                required: ['z'],
+                allOf: [{ properties: { k }, required: ['k'] }],
+                const: { k: {} },
+              },
+            },
+          };
+          const declared: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', properties: { z, k }, required: ['z', 'k'], const: { k: {} } } },
+          };
+          const requiredOnly: DefaultFormStateBehavior = { emptyObjectFields: 'populateRequiredDefaults' };
+          expect(utils(declared, requiredOnly).getDefaultFormState(declared)).toStrictEqual({ x: { k: { n: 'd' } } });
+          expect(
+            utils(inAllOf, { ...requiredOnly, allOf: 'populateDefaults' }).getDefaultFormState(inAllOf),
+          ).toStrictEqual({ x: { k: { n: 'd' } } });
+          expect(utils(inAllOf, requiredOnly).getDefaultFormState(inAllOf)).toStrictEqual({ x: { k: {} } });
+        });
+        it('folds the keys of an open object const from the additionalProperties an allOf merges in beside its own', () => {
+          const merged: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                additionalProperties: { type: 'number' },
+                allOf: [{ additionalProperties: { type: 'number', default: 7 } }],
+                const: { c: 1 },
+              },
+            },
+          };
+          const plain: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: { type: 'object', additionalProperties: { type: 'number', default: 7 }, const: { c: 1 } },
+            },
+          };
+          // An `additionalProperties` default wins over the `const` for a key it computes, wherever it is declared
+          for (const schema of [merged, plain]) {
+            expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ x: { c: 7 } });
+          }
+        });
+        it("stubs the data's extra keys of a root whose option holds the const as the option written into it does", () => {
+          const other: RJSFSchema = { properties: { c: { type: 'string' } } };
+          const pairs: [RJSFSchema, RJSFSchema][] = [
+            [
+              {
+                type: 'object',
+                additionalProperties: false,
+                properties: { a: { type: 'string' } },
+                oneOf: [
+                  { const: { b: 1 }, properties: { b: { type: 'number' } }, additionalProperties: { type: 'null' } },
+                  other,
+                ],
+              },
+              {
+                type: 'object',
+                additionalProperties: false,
+                properties: { a: { type: 'string' }, b: { type: 'number' } },
+                const: { b: 1 },
+              },
+            ],
+            [
+              {
+                type: 'object',
+                properties: { a: { type: 'string' } },
+                oneOf: [
+                  { const: { b: 1 }, properties: { b: { type: 'number' } }, additionalProperties: { type: 'null' } },
+                  other,
+                ],
+              },
+              {
+                type: 'object',
+                properties: { a: { type: 'string' }, b: { type: 'number' } },
+                additionalProperties: { type: 'null' },
+                const: { b: 1 },
+              },
+            ],
+          ];
+          const cases: [unknown, boolean][] = [
+            [{ e: 5 }, false],
+            [{ e: undefined, b: 1 }, false],
+            [{ e: null }, true],
+          ];
+          for (const [withOption, written] of pairs) {
+            for (const [formData, generated] of cases) {
+              expect(utils(withOption).getDefaultFormState(withOption, formData, false, generated)).toStrictEqual(
+                utils(written).getDefaultFormState(written, formData, false, generated),
+              );
+            }
+          }
+        });
+        it('defaults a nested object to a const only an unmerged allOf or if branch gives it, and still skips its defaults', () => {
+          const viaAllOf: RJSFSchema = {
+            type: 'object',
+            required: ['x'],
+            properties: { x: { type: 'object', allOf: [{ const: { a: 1 } }] } },
+          };
+          expect(utils(viaAllOf).getDefaultFormState(viaAllOf)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(viaAllOf).getDefaultFormState(viaAllOf, { x: {} })).toStrictEqual({ x: { a: 1 } });
+          const viaThen: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', if: {}, then: { const: { a: 1 } } } },
+          };
+          expect(utils(viaThen).getDefaultFormState(viaThen)).toStrictEqual({ x: { a: 1 } });
+          // Under `allOf: 'skipDefaults'` a plain default in the same `allOf` is still skipped
+          const plainDefault: RJSFSchema = {
+            type: 'object',
+            required: ['x'],
+            properties: { x: { type: 'object', allOf: [{ properties: { b: { type: 'number', default: 2 } } }] } },
+          };
+          expect(utils(plainDefault).getDefaultFormState(plainDefault)).toStrictEqual({ x: {} });
+        });
+        it('leaves out an optional object const the optional data controls show behind their add control', () => {
+          const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'object', const: { a: 2 } } } };
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({});
+          // Once the user adds it, the `const` fills it
+          expect(utils(schema).getDefaultFormState(schema, { x: {} }, false, true, uiSchema)).toStrictEqual({
+            x: { a: 2 },
+          });
+          expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ x: { a: 2 } });
+          const required: RJSFSchema = { ...schema, required: ['x'] };
+          expect(utils(required).getDefaultFormState(required, undefined, false, false, uiSchema)).toStrictEqual({
+            x: { a: 2 },
+          });
+          // Where constants are never defaults, the object is collapsed as one without a `const` is
+          const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
+          expect(utils(schema, never).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({});
+        });
+        it('opens an optional object the optional data controls show whose option holding no const gives it a value', () => {
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                oneOf: [{ properties: { k: { type: 'string', default: 'd' } } }, { const: { k: 'c' } }],
+              },
+            },
+          };
+          expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({
+            x: { k: 'd' },
+          });
+        });
+        it('collapses an optional object const behind the optional data controls only where nothing else gives it a value', () => {
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          const withY: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', const: { a: 2 } }, y: { type: 'string' } },
+          };
+          // A `null` the data holds is kept, as for an object without a `const`
+          expect(utils(withY).getDefaultFormState(withY, { x: null, y: 'k' }, false, false, uiSchema)).toStrictEqual({
+            x: null,
+            y: 'k',
+          });
+          // A `const` an unmerged `allOf` gives the object collapses it as its own `const` does
+          const viaAllOf: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', allOf: [{ const: { a: 2 } }] } },
+          };
+          expect(utils(viaAllOf).getDefaultFormState(viaAllOf, undefined, false, false, uiSchema)).toStrictEqual({});
+          // So does one whose `type` comes through the `allOf` too, written there or in the definition a `$ref` names
+          const typedInAllOf: RJSFSchema = { allOf: [{ type: 'object', const: { a: 2 } }] };
+          const typedViaAllOf: RJSFSchema = { type: 'object', properties: { x: typedInAllOf } };
+          const typedViaRef: RJSFSchema = {
+            type: 'object',
+            properties: { x: { $ref: '#/$defs/X' } },
+            $defs: { X: typedInAllOf },
+          };
+          for (const schema of [typedViaAllOf, typedViaRef]) {
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({});
+            expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ x: { a: 2 } });
+          }
+          // A default of its own, or one the object's defaults give it, opens it
+          const ownDefault: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', const: { a: 2 }, default: { a: 2 } } },
+          };
+          const parentDefault: RJSFSchema = {
+            type: 'object',
+            default: { x: { a: 2 } },
+            properties: { x: { type: 'object', const: { a: 2 } } },
+          };
+          for (const schema of [ownDefault, parentDefault]) {
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({
+              x: { a: 2 },
+            });
+          }
+          // So does a `ui:initialValue`
+          const withProperty: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', const: { a: 2 }, properties: { a: { type: 'number' } } } },
+          };
+          const initialValue = { ...uiSchema, x: { 'ui:initialValue': { a: 2 } } };
+          for (const schema of [withProperty, withY]) {
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, initialValue)).toStrictEqual({
+              x: { a: 2 },
+            });
+          }
+          // The `const` of the option the object shows collapses it as its own does
+          const viaOption: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: { type: 'object', oneOf: [{ const: { a: 1 } }, { properties: { b: { type: 'string' } } }] },
+            },
+          };
+          expect(utils(viaOption).getDefaultFormState(viaOption, undefined, false, false, uiSchema)).toStrictEqual({});
+          // An optional object without a `const` that a default of one of its properties gives a value opens, with the
+          // `null` of its `null` field
+          const withNull: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                properties: { n: { type: 'null' }, s: { type: 'string', default: 'd' } },
+              },
+            },
+          };
+          expect(utils(withNull).getDefaultFormState(withNull, undefined, false, false, uiSchema)).toStrictEqual({
+            x: { n: null, s: 'd' },
+          });
+          // and stays out where the form adds only the defaults of what is required
+          const requiredInside: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                required: ['s'],
+                properties: { n: { type: 'null' }, s: { type: 'string', default: 'd' } },
+              },
+            },
+          };
+          expect(
+            utils(requiredInside, { emptyObjectFields: 'populateRequiredDefaults' }).getDefaultFormState(
+              requiredInside,
+              undefined,
+              false,
+              false,
+              uiSchema,
+            ),
+          ).toStrictEqual({});
+          // An item `minItems` adds collapses it as an item the data holds does
+          const items: RJSFSchema = { type: 'object', properties: { x: { type: 'object', const: { a: 2 } } } };
+          const filled: RJSFSchema = { type: 'array', minItems: 1, items };
+          expect(utils(filled).getDefaultFormState(filled, undefined, false, false, uiSchema)).toStrictEqual([{}]);
+          const held: RJSFSchema = { type: 'array', items };
+          expect(utils(held).getDefaultFormState(held, [{}], false, false, uiSchema)).toStrictEqual([{}]);
+        });
+        it('collapses the optional object consts inside an optional object const that opens, as inside one without a const', () => {
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          const inside: RJSFSchema = {
+            type: 'object',
+            properties: { b: { type: 'string', default: 's' }, y: { type: 'object', const: { c: 1 } } },
+          };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { x: { ...inside, const: { a: 1 } }, z: inside },
+          };
+          expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({
+            x: { b: 's', a: 1 },
+            z: { b: 's' },
+          });
+        });
+        it('includes an optional object behind the optional data controls as an empty one under includeUndefinedValues, with or without a const', () => {
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          const viaAllOf: RJSFSchema = { type: 'object', allOf: [{ properties: { a: { type: 'string' } } }] };
+          const shapes: RJSFSchema[] = [
+            { type: 'object', properties: { x: viaAllOf } },
+            { type: 'object', properties: { x: { $ref: '#/$defs/X' } }, $defs: { X: viaAllOf } },
+            { type: 'object', properties: { x: { type: 'object', const: { a: 2 } } } },
+          ];
+          for (const schema of shapes) {
+            expect(utils(schema).getDefaultFormState(schema, undefined, true, false, uiSchema)).toStrictEqual({
+              x: {},
+            });
+          }
+        });
+        it('opens an optional object that a property const gives a value, and collapses only an object const', () => {
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          const shapes: [RJSFSchema, unknown][] = [
+            [{ type: 'object', properties: { a: { type: 'string', const: 'k' } } }, { a: 'k' }],
+            [
+              { type: 'object', properties: { kind: { type: 'string', const: 'k' }, name: { type: 'string' } } },
+              { kind: 'k' },
+            ],
+            [
+              { type: 'object', properties: { a: { type: 'string', oneOf: [{ const: 'p' }, { const: 'q' }] } } },
+              { a: 'p' },
+            ],
+            [
+              {
+                type: 'object',
+                properties: { o: { type: 'object', properties: { a: { type: 'string', const: 'k' } } } },
+              },
+              { o: { a: 'k' } },
+            ],
+          ];
+          for (const [x, expected] of shapes) {
+            const schema: RJSFSchema = { type: 'object', properties: { x } };
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({
+              x: expected,
+            });
+          }
+          // A select over object constants is filled from the option it shows, and collapses as its own `const` does
+          const select: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] } },
+          };
+          expect(utils(select).getDefaultFormState(select, undefined, false, false, uiSchema)).toStrictEqual({});
+          expect(utils(select).getDefaultFormState(select)).toStrictEqual({ x: { a: 1 } });
+          // A field that may also be `null` and defaults to it still opens with its `const`
+          const nullable: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: ['object', 'null'], const: { a: 1 }, default: null } },
+          };
+          expect(utils(nullable).getDefaultFormState(nullable, undefined, false, false, uiSchema)).toStrictEqual({
+            x: { a: 1 },
+          });
+          // The shown option's defaults for keys the `const` doesn't name, which the `const` leaves out, don't open it
+          const withOption: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                const: { a: 1 },
+                oneOf: [
+                  { properties: { b: { type: 'string', default: 'd' } } },
+                  { properties: { c: { type: 'string' } } },
+                ],
+              },
+            },
+          };
+          expect(utils(withOption).getDefaultFormState(withOption, undefined, false, false, uiSchema)).toStrictEqual(
+            {},
+          );
+          // A `patternProperties` the property matches can give it the object `const` too
+          const patterned: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object' } },
+            patternProperties: { '^x$': { const: { a: 1 } } },
+          };
+          expect(utils(patterned).getDefaultFormState(patterned, undefined, false, false, uiSchema)).toStrictEqual({});
+          // A `null` field beside the object `const` doesn't open it either
+          const withNull: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: { type: 'object', const: { a: 2 }, properties: { a: { type: 'number' }, n: { type: 'null' } } },
+            },
+          };
+          expect(utils(withNull).getDefaultFormState(withNull, undefined, false, false, uiSchema)).toStrictEqual({});
+          // Nor does a `ui:initialValue` once the defaults were generated, where it no longer applies
+          const initialValue = { ...uiSchema, x: { 'ui:initialValue': { a: 2 } } };
+          expect(utils(withNull).getDefaultFormState(withNull, {}, false, true, initialValue)).toStrictEqual({});
+          // An array is filled from its `const` under the controls for arrays, as without them
+          const arrays = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['array' as const] } };
+          const list: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'array', const: ['a'], items: { type: 'string' } } },
+          };
+          expect(utils(list).getDefaultFormState(list, undefined, false, false, arrays)).toStrictEqual({ x: ['a'] });
+        });
+        it('takes a primitive const an unmerged allOf gives a field, but not one an if branch gives an empty field', () => {
+          const viaAllOf: RJSFSchema = {
+            type: 'object',
+            properties: { s: { type: 'string', allOf: [{ const: 'x' }] } },
+          };
+          expect(utils(viaAllOf).getDefaultFormState(viaAllOf)).toStrictEqual({ s: 'x' });
+          const viaThen: RJSFSchema = {
+            type: 'object',
+            properties: { s: { type: 'string', if: {}, then: { const: 'x' } } },
+          };
+          expect(utils(viaThen, { emptyObjectFields: 'skipEmptyDefaults' }).getDefaultFormState(viaThen)).toStrictEqual(
+            {},
+          );
+        });
+        it("keeps an extra key the option's own retrieve stubs as the user's once the defaults were generated", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                properties: { p: { type: 'string' } },
+                oneOf: [
+                  {
+                    const: { a: { z: 1 } },
+                    additionalProperties: { type: 'object', properties: { m: { type: 'number', default: 3 } } },
+                  },
+                  { properties: { q: { type: 'string' } } },
+                ],
+              },
+            },
+          };
+          // `a` is an extra key of the open object, not a property the option declares, so it isn't filled again (#3759)
+          expect(utils(schema).getDefaultFormState(schema, { x: { a: {} } }, false, true)).toStrictEqual({
+            x: { a: {} },
+          });
+        });
+        it('asks whether an object const beside options takes extra keys with the shown option joined', () => {
+          const open: RJSFSchema = {
+            type: 'object',
+            const: { a: 1 },
+            oneOf: [{ additionalProperties: true }, { properties: { q: { type: 'string' } } }],
+          };
+          expect(utils(open).getDefaultFormState(open)).toStrictEqual({ a: 1 });
+          // A key the user removed or renamed stays so once the defaults were generated (#3759)
+          expect(utils(open).getDefaultFormState(open, {}, false, true)).toStrictEqual({});
+          expect(utils(open).getDefaultFormState(open, { b: 1 }, false, true)).toStrictEqual({ b: 1 });
+          const nested: RJSFSchema = { type: 'object', properties: { x: open } };
+          expect(utils(nested).getDefaultFormState(nested, { x: {} }, false, true)).toStrictEqual({ x: {} });
+        });
+        it("leaves out a key only the shown option beside an object const declares, which the const doesn't name", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            const: { k: 'x' },
+            properties: { k: { type: 'string' } },
+            oneOf: [{ properties: { z: { type: 'string', default: 'q' } } }, { properties: { w: { type: 'string' } } }],
+          };
+          expect(utils(schema).getDefaultFormState(schema)).toStrictEqual({ k: 'x' });
+          expect(utils(schema).getDefaultFormState(schema, { k: 'x', z: 'r' })).toStrictEqual({ k: 'x', z: 'r' });
+        });
+        it('keeps a key the ui:initialValue of an object const beside options names, which the const does not', () => {
+          const options: RJSFSchema[] = [
+            { properties: { b: { type: 'string', default: 'q' } } },
+            { properties: { c: { type: 'string' } } },
+          ];
+          const open: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', additionalProperties: true, const: { a: 1 }, oneOf: options } },
+          };
+          const initialValue = (value: object) => ({ x: { 'ui:initialValue': value } });
+          const withoutOptions: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', additionalProperties: true, const: { a: 1 } } },
+          };
+          const extraKey = initialValue({ a: 5, z: 1 });
+          expect(utils(open).getDefaultFormState(open, undefined, false, false, extraKey)).toStrictEqual({
+            x: { a: 5, z: 1 },
+          });
+          expect(
+            utils(withoutOptions).getDefaultFormState(withoutOptions, undefined, false, false, extraKey),
+          ).toStrictEqual({ x: { a: 5, z: 1 } });
+          // A default of the shown option for a key neither names is still left out, open as the object is
+          expect(utils(open).getDefaultFormState(open)).toStrictEqual({ x: { a: 1 } });
+        });
+        it('folds a key of an object const beside options as the shown option declares or takes it', () => {
+          const declared: RJSFSchema = {
+            type: 'object',
+            const: { a: 1 },
+            oneOf: [{ properties: { a: { type: 'number', default: 5 } } }],
+          };
+          const extra: RJSFSchema = {
+            type: 'object',
+            const: { a: 1 },
+            oneOf: [{ additionalProperties: { type: 'number', default: 6 } }],
+          };
+          // A key's own field's default wins over the object's `const`, wherever the field is declared
+          expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ a: 5 });
+          expect(utils(extra).getDefaultFormState(extra)).toStrictEqual({ a: 6 });
+        });
+        it('folds a key of a const that only an unmerged allOf declares from that property, not the extra-key schema', () => {
+          const withDefault: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                const: { a: 1 },
+                additionalProperties: { type: 'number', default: 6 },
+                allOf: [{ properties: { a: { type: 'number', default: 5 } } }],
+              },
+            },
+          };
+          const declared: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                const: { a: 1 },
+                additionalProperties: { type: 'number', default: 6 },
+                properties: { a: { type: 'number', default: 5 } },
+              },
+            },
+          };
+          // A property's own default wins over the object's `const`, whether `properties` or a populated `allOf`
+          // declares it, and the `allOf`'s is skipped with it where it is not populated
+          expect(utils(declared).getDefaultFormState(declared)).toStrictEqual({ x: { a: 5 } });
+          expect(utils(withDefault, { allOf: 'populateDefaults' }).getDefaultFormState(withDefault)).toStrictEqual({
+            x: { a: 5 },
+          });
+          expect(utils(withDefault).getDefaultFormState(withDefault)).toStrictEqual({ x: { a: 1 } });
+        });
+        it("skips the defaults of a key of a const that only an unmerged allOf declares, as allOf: 'skipDefaults' skips that allOf's", () => {
+          const inAllOf: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                allOf: [{ const: { a: 1 }, properties: { a: { type: 'number', default: 9 } } }],
+              },
+            },
+          };
+          expect(utils(inAllOf).getDefaultFormState(inAllOf)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(inAllOf).getDefaultFormState(inAllOf, { x: {} }, false, true)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(inAllOf, { allOf: 'populateDefaults' }).getDefaultFormState(inAllOf)).toStrictEqual({
+            x: { a: 9 },
+          });
+          expect(utils(inAllOf).getDefaultFormState(inAllOf, { x: { a: 7 } }, false, true)).toStrictEqual({
+            x: { a: 7 },
+          });
+          // Nor does the skipped default give an optional object the optional data controls show a value of its own
+          const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+          expect(utils(inAllOf).getDefaultFormState(inAllOf, undefined, false, false, uiSchema)).toStrictEqual({});
+          // Below the key the `allOf`'s defaults stay skipped, while its `null` fills are filled in
+          const nested: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                const: { a: { c: 3 } },
+                allOf: [
+                  {
+                    properties: {
+                      a: {
+                        type: 'object',
+                        properties: { c: { type: 'number' }, n: { type: 'number', default: 9 }, z: { type: 'null' } },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          };
+          expect(utils(nested).getDefaultFormState(nested)).toStrictEqual({ x: { a: { c: 3, z: null } } });
+          expect(utils(nested).getDefaultFormState(nested, { x: { a: { c: 4 } } }, false, true)).toStrictEqual({
+            x: { a: { c: 4, z: null } },
+          });
+        });
+        it("keeps the object data of a key of a const that only an unmerged allOf declares beside a ui:initialValue that doesn't name it", () => {
+          const b: RJSFSchema = { type: 'object', properties: { b: { type: 'number' } } };
+          const x = (declared: boolean): RJSFSchema => ({
+            type: 'object',
+            const: { a: { b: 1 } },
+            ...(declared ? { properties: { a: b } } : { allOf: [{ properties: { a: b } }] }),
+          });
+          const uiSchema = { x: { 'ui:initialValue': { z: 1 } } };
+          for (const declared of [false, true]) {
+            const schema: RJSFSchema = { type: 'object', properties: { x: x(declared) } };
+            for (const initialDefaultsGenerated of [false, true]) {
+              expect(
+                utils(schema).getDefaultFormState(
+                  schema,
+                  { x: { a: { b: 5 } } },
+                  false,
+                  initialDefaultsGenerated,
+                  uiSchema,
+                ),
+              ).toStrictEqual({ x: { a: { b: 5 } } });
+            }
+          }
+        });
+        it('keeps a null the data holds for a key of a const that only an unmerged allOf declares', () => {
+          const a: RJSFSchema = { type: ['number', 'null'] };
+          for (const declared of [false, true]) {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                x: {
+                  type: 'object',
+                  const: { a: 1 },
+                  ...(declared ? { properties: { a } } : { allOf: [{ properties: { a } }] }),
+                },
+              },
+            };
+            for (const initialDefaultsGenerated of [false, true]) {
+              expect(
+                utils(schema).getDefaultFormState(schema, { x: { a: null } }, false, initialDefaultsGenerated),
+              ).toStrictEqual({ x: { a: null } });
+            }
+          }
+        });
+        it('adds the default of a property that names const, as undefined, under skipDefaults', () => {
+          const spread: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string', const: undefined, default: 'd' } },
+          };
+          expect(utils(spread, { emptyObjectFields: 'skipDefaults' }).getDefaultFormState(spread)).toStrictEqual({
+            a: 'd',
+          });
+        });
+        it("asks whether an option's parent takes extra keys of the parent with its allOf merged", () => {
+          const parent: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                type: 'object',
+                allOf: [{ additionalProperties: true }],
+                oneOf: [{ const: { b: 1 } }, { properties: { c: { type: 'string' } } }],
+              },
+            },
+          };
+          expect(utils(parent).getDefaultFormState(parent, { x: {} }, false, true)).toStrictEqual({ x: {} });
+          const typedByAllOf: RJSFSchema = {
+            type: 'object',
+            properties: {
+              x: {
+                allOf: [{ type: 'object', additionalProperties: true }],
+                oneOf: [{ const: { b: 1 } }, { properties: { c: { type: 'string' } } }],
+              },
+            },
+          };
+          expect(utils(typedByAllOf).getDefaultFormState(typedByAllOf)).toStrictEqual({ x: { b: 1 } });
+          expect(utils(typedByAllOf).getDefaultFormState(typedByAllOf, { x: {} }, false, true)).toStrictEqual({
+            x: {},
+          });
+        });
+        it("fills a mixed oneOf option's const under skipOneOf, whether or not the option declares its keys", () => {
+          const skipOneOf: DefaultFormStateBehavior = { constAsDefaults: 'skipOneOf' };
+          const other: RJSFSchema = { properties: { b: { type: 'string' } } };
+          const undeclared: RJSFSchema = { type: 'object', oneOf: [{ const: { a: 1 } }, other] };
+          const declared: RJSFSchema = {
+            type: 'object',
+            oneOf: [{ const: { a: 1 }, properties: { a: { type: 'number' } } }, other],
+          };
+          expect(utils(undeclared, skipOneOf).getDefaultFormState(undeclared)).toStrictEqual({ a: 1 });
+          expect(utils(declared, skipOneOf).getDefaultFormState(declared)).toStrictEqual({ a: 1 });
+        });
+        it('defaults to none of it when constants are never defaults', () => {
+          const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
+          expect(utils(withoutParentDefault, never).getDefaultFormState(withoutParentDefault)).toStrictEqual({});
+          expect(utils(bare, never).getDefaultFormState(bare)).toStrictEqual({});
+        });
+      });
+      test("keeps the guards for an option's const where the parent's field takes extra keys, as an explicit additionalProperties does", () => {
+        const options: RJSFSchema = {
+          type: 'object',
+          oneOf: [{ const: { b: 1 } }, { required: ['z'], properties: { z: { type: 'string' } } }],
+        };
+        const allowing = createSchemaUtils(
+          { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' },
+          options,
+        );
+        const explicit: RJSFSchema = { ...options, additionalProperties: true };
+        const explicitUtils = createSchemaUtils({ validator: testValidator }, explicit);
+        for (const [utils, schema] of [
+          [allowing, options],
+          [explicitUtils, explicit],
+        ] as const) {
+          expect(utils.getDefaultFormState(schema, {})).toStrictEqual({ b: 1 });
+          expect(utils.getDefaultFormState(schema, {}, false, true)).toStrictEqual({});
+          expect(utils.getDefaultFormState(schema, { c: 1 }, false, true)).toStrictEqual({ c: 1 });
+        }
+        const closed = createSchemaUtils({ validator: testValidator }, options);
+        expect(closed.getDefaultFormState(options, {}, false, true)).toStrictEqual({ b: 1 });
+      });
+      test("keeps the guards for an option's const where the option offers options of its own", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: true,
+          oneOf: [
+            {
+              const: { b: 1 },
+              anyOf: [
+                { properties: { x: { type: 'string' } } },
+                { properties: { y: { type: 'number' } }, required: ['y'] },
+              ],
+            },
+            { properties: { z: { type: 'string' } }, required: ['z'] },
+          ],
+        };
+        const utils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(utils.getDefaultFormState(schema, {}, false, true)).toStrictEqual({});
+        expect(utils.getDefaultFormState(schema, { c: 1 }, false, true)).toStrictEqual({ c: 1 });
+      });
+      test("folds the keys of an option's const through the extra-key schema of the field that decides they close the object", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: false,
+          oneOf: [
+            { const: { b: 1 }, additionalProperties: { type: 'number', default: 7 } },
+            { properties: { z: { type: 'string' } }, required: ['z'] },
+          ],
+        };
+        const utils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(utils.getDefaultFormState(schema, {})).toStrictEqual({ b: 1 });
+        expect(utils.getDefaultFormState(schema, {}, false, true)).toStrictEqual({ b: 1 });
+      });
+      test('folds the keys of a const that closes the object without the uiSchema of its additional properties', () => {
+        const schema: RJSFSchema = { type: 'object', const: { a: 1 } };
+        const uiSchema = { additionalProperties: { 'ui:initialValue': 7 } };
+        const utils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(utils.getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({ a: 1 });
+        expect(utils.getDefaultFormState(schema, {}, false, true, uiSchema)).toStrictEqual({ a: 1 });
+      });
+      test('computeDefaults gives the const without data, which getDefaultFormState merges in', () => {
+        expect(computeDefaults({ validator: testValidator }, bare, { rawFormData: { a: 3 } })).toStrictEqual({ a: 1 });
+      });
+    });
     describe('an explicitly undefined property schema', () => {
       // A JS-authored schema can conditionally omit a property with `{ properties: { foo: cond ? {...} : undefined } }`
       const schema = {
@@ -2267,6 +3335,1630 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe('an enum property wrapped in allOf', () => {
+        const COLOR: RJSFSchema = { type: 'string', enum: ['red', 'green', 'blue'] };
+        const SHAPE: RJSFSchema = { oneOf: [{ const: { k: 'a' } }, { const: { k: 'b' } }] };
+        const KIND: RJSFSchema = {
+          discriminator: { propertyName: 'kind' },
+          oneOf: [
+            { const: { kind: 'a', v: 1 }, properties: { kind: { const: 'a' } } },
+            { const: { kind: 'b', v: 1 }, properties: { kind: { const: 'b' } } },
+          ],
+        };
+        const NESTED: RJSFSchema = { type: 'object', properties: { q: { enum: ['a', 'b'], default: 'a' } } };
+        const definitions = { Color: COLOR, Shape: SHAPE, Kind: KIND, Nested: NESTED };
+        it.each<[string, RJSFSchema, unknown, unknown]>([
+          ['keeps a valid value of a $ref', { allOf: [{ $ref: '#/definitions/Color' }] }, 'green', 'green'],
+          [
+            'keeps a valid value of a $ref with a default',
+            { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' },
+            'green',
+            'green',
+          ],
+          ['keeps a valid value of an inline enum', { allOf: [COLOR] }, 'green', 'green'],
+          [
+            'keeps a valid value of an inline enum with a default',
+            { allOf: [COLOR], default: 'red' },
+            'green',
+            'green',
+          ],
+          [
+            'replaces a value outside the enum with the default',
+            { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' },
+            'purple',
+            'red',
+          ],
+          [
+            'keeps a valid value of a oneOf of constants',
+            { allOf: [{ oneOf: [{ const: 'red' }, { const: 'green' }] }], default: 'red' },
+            'green',
+            'green',
+          ],
+          [
+            'keeps a valid value of an enum an allOf picks by a condition on the value',
+            { allOf: [{ type: 'string', if: { const: 'x' }, then: { enum: ['x'] }, else: { enum: ['y', 'z'] } }] },
+            'x',
+            'x',
+          ],
+          [
+            'replaces a value an allOf leaves out of the enum with the default',
+            { ...COLOR, allOf: [{ enum: ['red', 'green'] }], default: 'red' },
+            'blue',
+            'red',
+          ],
+          [
+            'replaces object data outside the enum with the default',
+            { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' },
+            { x: 1 },
+            'red',
+          ],
+          [
+            'keeps a null the enum leaves out rather than filling it with the default, as a plain enum does',
+            { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' },
+            null,
+            null,
+          ],
+          [
+            'keeps a value of an allOf that narrows the enum to one value, as a field declaring one value does',
+            { allOf: [{ enum: ['a'] }], default: 'a' },
+            'b',
+            'b',
+          ],
+          [
+            "replaces a value outside the field's own enum with the default where the allOf narrows it to one value",
+            { type: 'string', enum: ['a', 'b'], allOf: [{ enum: ['a'] }], default: 'a' },
+            'c',
+            'a',
+          ],
+          [
+            "keeps a value of the field's own enum where the allOf narrows it to one value",
+            { type: 'string', enum: ['a', 'b'], allOf: [{ enum: ['a'] }], default: 'a' },
+            'b',
+            'b',
+          ],
+          [
+            'keeps a value outside the enum of a property declared inside the allOf, whose own default skipDefaults skips',
+            { allOf: [{ type: 'object', properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
+            { c: 'purple', d: 1 },
+            { c: 'purple', d: 1 },
+          ],
+          [
+            "replaces a value outside the enum of a property declared inside the allOf with the field's default",
+            { allOf: [{ type: 'object', properties: { c: { enum: ['red', 'green'] } } }], default: { c: 'red' } },
+            { c: 'purple' },
+            { c: 'red' },
+          ],
+          [
+            'keeps a value outside the enum nested in a $ref property declared inside the allOf, whose default skipDefaults skips',
+            { allOf: [{ properties: { n: { $ref: '#/definitions/Nested' } } }] },
+            { n: { q: 'z' }, d: 1 },
+            { n: { q: 'z' }, d: 1 },
+          ],
+          [
+            'keeps a valid value nested in a $ref property declared inside the allOf',
+            { allOf: [{ properties: { n: { $ref: '#/definitions/Nested' } } }] },
+            { n: { q: 'b' } },
+            { n: { q: 'b' } },
+          ],
+          [
+            "keeps a value outside the enum of a property declared inside an object field's allOf, whose own default skipDefaults skips",
+            { type: 'object', allOf: [{ properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
+            { c: 'purple', d: 1 },
+            { c: 'purple', d: 1 },
+          ],
+          [
+            "replaces a value outside the enum of a property declared inside an object field's allOf with the field's default",
+            { type: 'object', allOf: [{ properties: { c: { enum: ['a', 'b'] } } }], default: { c: 'a' } },
+            { c: 'z' },
+            { c: 'a' },
+          ],
+          [
+            "keeps a value outside the enum nested in object data of a property declared inside an object field's allOf, with no default",
+            {
+              type: 'object',
+              allOf: [{ properties: { c: { type: 'object', properties: { d: { enum: ['a', 'b'] } } } } }],
+            },
+            { c: { d: 'z' } },
+            { c: { d: 'z' } },
+          ],
+          [
+            "drops object data of a property an object field's allOf types as a string",
+            { type: 'object', allOf: [{ properties: { c: { type: 'string' } } }] },
+            { c: { z: 1 }, d: 1 },
+            { d: 1 },
+          ],
+          [
+            "keeps a valid value of a property declared inside an object field's allOf",
+            { type: 'object', allOf: [{ properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
+            { c: 'green', d: 1 },
+            { c: 'green', d: 1 },
+          ],
+          [
+            'keeps a valid value of a property declared inside the allOf',
+            { allOf: [{ type: 'object', properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
+            { c: 'green', d: 1 },
+            { c: 'green', d: 1 },
+          ],
+          [
+            "drops object data of a field declared inside a parent's allOf that types it as a string",
+            { allOf: [{ properties: { c: { allOf: [{ type: 'string' }] } } }] },
+            { c: { z: 1 }, d: 1 },
+            { d: 1 },
+          ],
+          [
+            "replaces a value outside the allOf enum of a property declared inside the allOf with the field's default",
+            { default: { c: 'red' }, allOf: [{ properties: { c: { allOf: [{ enum: ['red', 'green'] }] } } }] },
+            { c: 'purple' },
+            { c: 'red' },
+          ],
+          [
+            "replaces a value outside the allOf enum of a property declared inside an object field's allOf with the field's default",
+            {
+              type: 'object',
+              default: { c: 'red' },
+              allOf: [{ properties: { c: { allOf: [{ enum: ['red', 'green'] }] } } }],
+            },
+            { c: 'purple' },
+            { c: 'red' },
+          ],
+          [
+            "keeps a value outside the allOf enum of a property declared inside an object field's allOf, with no default",
+            { type: 'object', allOf: [{ properties: { c: { allOf: [{ enum: ['red', 'green'] }] } } }] },
+            { c: 'purple', d: 1 },
+            { c: 'purple', d: 1 },
+          ],
+          [
+            'keeps a null the enum offers',
+            { allOf: [{ type: ['string', 'null'], enum: ['red', null] }], default: 'red' },
+            null,
+            null,
+          ],
+          [
+            'replaces a value outside a oneOf of constants with the default',
+            { allOf: [{ oneOf: [{ const: 'red' }, { const: 'green' }] }], default: 'red' },
+            'blue',
+            'red',
+          ],
+          ['keeps a valid value of an inline object-valued select', { allOf: [SHAPE] }, { k: 'b' }, { k: 'b' }],
+          [
+            'keeps a valid value of an object-valued select through a $ref',
+            { allOf: [{ $ref: '#/definitions/Shape' }] },
+            { k: 'b' },
+            { k: 'b' },
+          ],
+          [
+            'replaces an invalid value of an inline object-valued select with the default',
+            { allOf: [SHAPE], default: { k: 'a' } },
+            { k: 'z' },
+            { k: 'a' },
+          ],
+          [
+            'replaces an invalid value of an object-valued select through a $ref with the default',
+            { allOf: [{ $ref: '#/definitions/Shape' }], default: { k: 'a' } },
+            { k: 'z' },
+            { k: 'a' },
+          ],
+          [
+            'keeps a value of an object-valued select its discriminator names',
+            { allOf: [{ $ref: '#/definitions/Kind' }] },
+            { kind: 'b', v: 9 },
+            { kind: 'b', v: 9 },
+          ],
+          ['drops object data an allOf types as a string', { allOf: [{ type: 'string' }] }, { x: 1 }, undefined],
+          [
+            'keeps object data a condition in the allOf types as an object',
+            {
+              allOf: [
+                {
+                  if: { required: ['kind'] },
+                  then: { type: 'object', properties: { kind: { type: 'string' } } },
+                  else: { type: 'string' },
+                },
+              ],
+            },
+            { kind: 'a' },
+            { kind: 'a' },
+          ],
+          [
+            'keeps a valid value of an object-valued select a condition in the allOf picks',
+            {
+              allOf: [
+                {
+                  if: { properties: { k: { const: 'a' } }, required: ['k'] },
+                  then: { oneOf: [{ const: { k: 'a' } }] },
+                  else: { oneOf: [{ const: { k: 'b' } }] },
+                },
+              ],
+            },
+            { k: 'a' },
+            { k: 'a' },
+          ],
+        ])('%s', (_name, color, value, expected) => {
+          const schema: RJSFSchema = { type: 'object', properties: { color }, definitions };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { color: value } }),
+          ).toStrictEqual({ color: expected });
+        });
+
+        it.each<[string, RJSFSchema, unknown, unknown]>([
+          [
+            'replaces an invalid value of an object-valued select with the default',
+            { allOf: [SHAPE], default: { k: 'a' } },
+            { k: 'z' },
+            { k: 'a' },
+          ],
+          [
+            'replaces object data an allOf types as a string with the default',
+            { allOf: [{ type: 'string' }], default: 'd' },
+            { x: 1 },
+            'd',
+          ],
+          [
+            'keeps a valid value of an object-valued select',
+            { allOf: [SHAPE], default: { k: 'a' } },
+            { k: 'b' },
+            { k: 'b' },
+          ],
+        ])('%s once the defaults are generated', (_name, color, value, expected) => {
+          const schema: RJSFSchema = { type: 'object', properties: { color }, definitions };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { color: value }, initialDefaultsGenerated: true },
+            ),
+          ).toStrictEqual({ color: expected });
+        });
+
+        it('keeps a null the enum leaves out under populateDefaults too', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { color: { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' } },
+            definitions,
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+              { schema, formData: { color: null } },
+            ),
+          ).toStrictEqual({ color: null });
+        });
+
+        it('replaces the data with the const an allOf holds under constAsDefaults always', () => {
+          const schema: RJSFSchema = { type: 'object', properties: { color: { allOf: [{ const: 'red' }] } } };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { color: 'blue' } },
+            ),
+          ).toEqual({ color: 'red' });
+        });
+
+        it('replaces the data of a property declared inside the allOf with its const under constAsDefaults always', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { color: { allOf: [{ properties: { c: { const: 'red' } } }] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { color: { c: 'blue' } } },
+            ),
+          ).toStrictEqual({ color: { c: 'red' } });
+        });
+
+        it("keeps the data of an object field whose allOf's const is no object under constAsDefaults always", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { color: { type: 'object', allOf: [{ const: 'k' }] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { color: { d: 1 } } },
+            ),
+          ).toStrictEqual({ color: { d: 1 } });
+        });
+
+        it('fills an empty field with the const an allOf holds under constAsDefaults always', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { plain: { const: 'red' }, wrapped: { allOf: [{ const: 'red' }] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: {} },
+            ),
+          ).toStrictEqual({ plain: 'red', wrapped: 'red' });
+        });
+
+        it.each<[DefaultFormStateBehavior['constAsDefaults'], GenericObjectType]>([
+          [undefined, { plain: 'k', wrapped: 'k' }],
+          ['skipOneOf', { plain: 'k', wrapped: 'k' }],
+          ['never', {}],
+        ])(
+          'fills an empty field with the const an allOf holds as with its own, constAsDefaults %s',
+          (constAsDefaults, expected) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { plain: { const: 'k' }, wrapped: { allOf: [{ const: 'k' }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: constAsDefaults ? { constAsDefaults } : {} },
+                { schema, formData: {} },
+              ),
+            ).toStrictEqual(expected);
+          },
+        );
+
+        it.each([[[]], [['plain', 'wrapped']]])(
+          'fills an empty object field with the object const its allOf holds under constAsDefaults always, as with its own, required %j',
+          (required) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              required,
+              properties: {
+                plain: { type: 'object', const: { a: 1 } },
+                wrapped: { type: 'object', allOf: [{ const: { a: 1 } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: {} },
+              ),
+            ).toStrictEqual({ plain: { a: 1 }, wrapped: { a: 1 } });
+          },
+        );
+
+        it.each<[string, RJSFSchema, GenericObjectType, GenericObjectType]>([
+          ['drops a key it does not name', { type: 'object' }, { b: 'x' }, { a: 1 }],
+          ['keeps the data of a key it names', { type: 'object' }, { a: 2, b: 'x' }, { a: 2 }],
+          [
+            'fills a property it names that the data lacks',
+            { type: 'object', properties: { a: { type: 'number' } } },
+            { b: 'x' },
+            { a: 1 },
+          ],
+        ])(
+          "%s, for an object field's allOf const under constAsDefaults always as for its own const",
+          (_name, field, value, expected) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { own: { ...field, const: { a: 1 } }, wrapped: { ...field, allOf: [{ const: { a: 1 } }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { own: value, wrapped: value } },
+              ),
+            ).toStrictEqual({ own: expected, wrapped: expected });
+          },
+        );
+
+        it.each([false, true])(
+          "keeps the data of the keys an untyped field's allOf const names under constAsDefaults always as for its own const, initialDefaultsGenerated %s",
+          (initialDefaultsGenerated) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { own: { const: { a: 1 } }, wrapped: { allOf: [{ const: { a: 1 } }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { own: { a: 2, b: 3 }, wrapped: { a: 2, b: 3 } }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ own: { a: 2 }, wrapped: { a: 2 } });
+          },
+        );
+
+        it.each<[string, GenericObjectType, GenericObjectType]>([
+          ['drops a key it does not name', { a: 'y', extra: 1 }, { a: 'y' }],
+          ['fills a property it names that the data lacks', {}, { a: 'x' }],
+        ])(
+          '%s, for an object const a condition left unmerged holds under constAsDefaults always',
+          (_name, formData, expected) => {
+            const field: RJSFSchema = {
+              type: 'object',
+              properties: { a: { type: 'string' } },
+              if: { properties: { a: { type: 'string' } } },
+              then: { const: { a: 'x' } },
+            };
+            const schema: RJSFSchema = { type: 'object', properties: { field } };
+            expect(
+              getDefaultFormState(
+                {
+                  validator: testValidator,
+                  defaultFormStateBehavior: { constAsDefaults: 'always', emptyObjectFields: 'skipEmptyDefaults' },
+                },
+                { schema, formData: { field: formData } },
+              ),
+            ).toStrictEqual({ field: expected });
+          },
+        );
+
+        it("pins the data to an object field's dependencies const on a key only a default fills, beside an allOf", () => {
+          const field: RJSFSchema = {
+            type: 'object',
+            properties: { k: { type: 'string', default: 'd' } },
+            allOf: [{ properties: { a: { type: 'number' } } }],
+            dependencies: { k: { const: { k: 'd', a: 1 } } },
+          };
+          const schema: RJSFSchema = { type: 'object', properties: { field } };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { field: { a: 5, b: 6 } } },
+            ),
+          ).toStrictEqual({ field: { k: 'd', a: 5 } });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['its own', { type: 'string', const: { $data: '1/a' } }],
+          ['an allOf', { allOf: [{ type: 'string', const: { $data: '1/a' } }] }],
+        ])('keeps the data over an AJV $data const of %s under constAsDefaults always', (_name, b) => {
+          const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' }, b } };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { a: 'x', b: 'y' } },
+            ),
+          ).toStrictEqual({ a: 'x', b: 'y' });
+        });
+
+        it.each([false, true])(
+          'pins no keys from a dependency option only the data without its defaults matches beside an allOf under constAsDefaults always, initialDefaultsGenerated %s',
+          (initialDefaultsGenerated) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                o: {
+                  type: 'object',
+                  properties: { k: { type: 'string', default: 'b' }, j: { type: 'string', default: 'b' } },
+                  allOf: [{ properties: { other: { type: 'string' } } }],
+                  dependencies: {
+                    k: {
+                      anyOf: [
+                        { properties: { z: { type: 'string' } }, const: { k: 'b', j: 'b', pinned: 'A' } },
+                        { properties: { j: { type: 'string' } } },
+                      ],
+                    },
+                  },
+                },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { o: { other: 'x' } }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ o: { k: 'b', j: 'b', other: 'x' } });
+          },
+        );
+
+        it.each<[string, RJSFSchema, string]>([
+          ['no const', { type: 'string', enum: ['a', 'b'] }, 'b'],
+          ['a const', { const: 'a' }, 'a'],
+        ])(
+          'reads a field whose allOf reaches one definition twice beside a boolean entry and %s under constAsDefaults always',
+          (_name, definition, expected) => {
+            const schema: RJSFSchema = {
+              definitions: { d: definition },
+              type: 'object',
+              properties: { a: { allOf: [true, { $ref: '#/definitions/d' }, { $ref: '#/definitions/d' }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { a: 'b' } },
+              ),
+            ).toStrictEqual({ a: expected });
+          },
+        );
+
+        it('keeps the data of a field beside an allOf whose const is undefined under constAsDefaults always', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { allOf: [{ type: 'string' }], const: undefined } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { a: 'x' } },
+            ),
+          ).toStrictEqual({ a: 'x' });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['an object field', { type: 'object', allOf: [{ properties: { c: { enum: ['red', 'green'] } } }] }],
+          [
+            'an untyped field',
+            { allOf: [{ type: 'object', properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
+          ],
+        ])('keeps a null the enum of a property declared inside the allOf of %s leaves out', (_name, color) => {
+          const schema: RJSFSchema = { type: 'object', properties: { color } };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { color: { c: null, d: 1 } } }),
+          ).toStrictEqual({ color: { c: null, d: 1 } });
+        });
+
+        it.each([0, false, '', null])('replaces the data with a const of %j under constAsDefaults always', (value) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { plain: { const: value }, wrapped: { allOf: [{ const: value }] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { plain: 5, wrapped: 5 } },
+            ),
+          ).toStrictEqual({ plain: value, wrapped: value });
+        });
+
+        it.each<[string, GenericObjectType, boolean]>([
+          ['a key', { c: undefined }, false],
+          ['a key nested one level deeper', { n: { c: undefined } }, false],
+          ['a key', { c: undefined }, true],
+        ])(
+          'keeps %s the user left undefined below an allOf whose enum declares it, initialDefaultsGenerated %s',
+          (_name, value, initialDefaultsGenerated) => {
+            const enumProperty: RJSFSchema = { properties: { c: { enum: ['a', 'b'] } } };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { obj: { allOf: [{ properties: { ...enumProperty.properties, n: enumProperty } }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { obj: value }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ obj: value });
+          },
+        );
+
+        it.each([false, true])(
+          'keeps a key the user left undefined that an allOf declares through an allOf of its own, initialDefaultsGenerated %s',
+          (initialDefaultsGenerated) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { obj: { allOf: [{ properties: { c: { allOf: [{ enum: ['a', 'b'] }] } } }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { obj: { c: undefined } }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ obj: { c: undefined } });
+          },
+        );
+
+        it.each<[string, RJSFSchema, GenericObjectType]>([
+          ['an object field', { type: 'object' }, { extra: { a: 1 } }],
+          ['an untyped field', {}, { extra: { a: 1 }, c: 'x' }],
+          [
+            'an object field, for a value nested in it',
+            { type: 'object', additionalProperties: { type: 'object', properties: { n: { type: 'string' } } } },
+            { extra: { n: { a: 1 } } },
+          ],
+        ])(
+          "keeps the object data of an extra key its schema can't take beside the allOf of %s once the defaults are generated",
+          (_name, field, value) => {
+            const o: RJSFSchema = {
+              additionalProperties: { type: 'string' },
+              allOf: [{ properties: { c: { type: 'string' } } }],
+              ...field,
+            };
+            const schema: RJSFSchema = { type: 'object', properties: { o } };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { o: value }, initialDefaultsGenerated: true },
+              ),
+            ).toStrictEqual({ o: value });
+          },
+        );
+
+        it.each<[string, string, boolean, GenericObjectType]>([
+          ['keeps', 'zz', false, { c: 'zz' }],
+          ['keeps', 'zz', true, { c: 'zz' }],
+          ['keeps', 'g', false, { c: 'g' }],
+          ['keeps', 'g', true, { c: 'g' }],
+        ])(
+          '%s a value %j of a key only the allOf of an object taking extra keys declares, as its enum offers it or not, initialDefaultsGenerated %s',
+          (_name, value, initialDefaultsGenerated, expected) => {
+            const o: RJSFSchema = {
+              type: 'object',
+              properties: { a: { type: 'string' } },
+              additionalProperties: true,
+              allOf: [{ properties: { c: { enum: ['r', 'g'] } } }],
+            };
+            const schema: RJSFSchema = { type: 'object', properties: { o } };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { o: { c: value } }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ o: expected });
+          },
+        );
+
+        it.each([false, true])(
+          'keeps a value the options of an allOf leave out where the field has no default, as a plain enum does, initialDefaultsGenerated %s',
+          (initialDefaultsGenerated) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                plain: { type: 'string', enum: ['r', 'g'] },
+                wrapped: { allOf: [{ type: 'string', enum: ['r', 'g'] }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { plain: 'zz', wrapped: 'zz' }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ plain: 'zz', wrapped: 'zz' });
+          },
+        );
+
+        it.each<[RJSFSchema, GenericObjectType, boolean]>(
+          [{}, { additionalProperties: true }].flatMap((beside) =>
+            [{}, { e: 'q' }].flatMap((value) =>
+              [false, true].map((generated): [RJSFSchema, GenericObjectType, boolean] => [beside, value, generated]),
+            ),
+          ),
+        )(
+          "fills a key a nested object's allOf declares from the object's default as its own property, beside %j, with %j, initialDefaultsGenerated %s",
+          (beside, value, initialDefaultsGenerated) => {
+            const c: RJSFSchema = { type: 'string' };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { c }, default: { c: 'a' }, ...beside },
+                wrapped: { type: 'object', allOf: [{ properties: { c } }], default: { c: 'a' }, ...beside },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { own: value, wrapped: value }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ own: { c: 'a', ...value }, wrapped: { c: 'a', ...value } });
+          },
+        );
+
+        it.each<[string, 'skipDefaults' | 'populateDefaults', unknown, unknown]>([
+          ['a property', 'skipDefaults', 'c', 'a'],
+          ['a property', 'populateDefaults', 'c', 'a'],
+          ['the root', 'skipDefaults', 'c', 'a'],
+          ['the root', 'populateDefaults', 'c', 'a'],
+          ['a property', 'populateDefaults', 'b', 'b'],
+          ['the root', 'skipDefaults', 'b', 'b'],
+        ])(
+          "gives %s whose allOf narrows its own enum to one value, under allOf %s, %j the outcome %j by the field's own options",
+          (where, allOf, value, expected) => {
+            const w: RJSFSchema = { enum: ['a', 'b'], allOf: [{ enum: ['a'] }], default: 'a' };
+            const options = { validator: testValidator, defaultFormStateBehavior: { allOf } };
+            const result =
+              where === 'the root'
+                ? getDefaultFormState(options, { schema: w, formData: value })
+                : getDefaultFormState(options, {
+                    schema: { type: 'object', properties: { w } },
+                    formData: { w: value },
+                  });
+            expect(result).toStrictEqual(where === 'the root' ? expected : { w: expected });
+          },
+        );
+
+        it("fills a key an object's allOf requires through its fold as required under populateRequiredDefaults, without the defaults the allOf nests in it", () => {
+          const b: RJSFSchema = {
+            type: 'object',
+            required: ['c'],
+            properties: { c: { type: 'string', default: 'z' } },
+          };
+          const zz: RJSFSchema = { type: 'string' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', required: ['zz', 'b'], properties: { zz, b }, default: { b: {} } },
+              wrapped: {
+                type: 'object',
+                required: ['zz'],
+                properties: { zz },
+                default: { b: {} },
+                allOf: [{ required: ['b'], properties: { b } }],
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' } },
+              { schema, formData: { own: {}, wrapped: {} } },
+            ),
+          ).toStrictEqual({ own: { b: { c: 'z' } }, wrapped: { b: {} } });
+        });
+
+        it.each<[DefaultFormStateBehavior]>([
+          [{ constAsDefaults: 'always' }],
+          [{ emptyObjectFields: 'populateRequiredDefaults' }],
+          [{ emptyObjectFields: 'skipDefaults' }],
+        ])(
+          "fills a key the data lacks with the const of an object's allOf property, as of its own, under %j",
+          (behavior) => {
+            const a: RJSFSchema = { const: 'c' };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { a } },
+                wrapped: { type: 'object', allOf: [{ properties: { a } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: behavior },
+                { schema, formData: { own: {}, wrapped: {} } },
+              ),
+            ).toStrictEqual({ own: { a: 'c' }, wrapped: { a: 'c' } });
+          },
+        );
+
+        it("keeps a key an object's allOf declares that the data holds as undefined under useDefaultIfFormDataUndefined where only the allOf gives it a default", () => {
+          const a: RJSFSchema = { enum: ['x', 'y'], default: 'x' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', properties: { a } },
+              wrapped: { type: 'object', allOf: [{ properties: { a } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              {
+                validator: testValidator,
+                defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+              },
+              { schema, formData: { own: { a: undefined }, wrapped: { a: undefined } } },
+            ),
+          ).toStrictEqual({ own: { a: 'x' }, wrapped: { a: undefined } });
+        });
+
+        it.each([false, true])(
+          "matches a key an object's allOf declares that an object const pins, at any depth, taking the const over its own default, initialDefaultsGenerated %s",
+          (initialDefaultsGenerated) => {
+            const c: RJSFSchema = { enum: ['a', 'b'], default: 'a' };
+            const d: RJSFSchema = { type: 'object', properties: { d: c } };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', allOf: [{ const: { c: 'b', n: { d: 'a' } } }], properties: { c, n: d } },
+                wrapped: { type: 'object', allOf: [{ const: { c: 'b', n: { d: 'a' } } }, { properties: { c, n: d } }] },
+              },
+            };
+            const value = { c: 'zz', n: { d: 'zz' } };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { own: value, wrapped: value }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ own: { c: 'a', n: { d: 'a' } }, wrapped: { c: 'b', n: { d: 'a' } } });
+          },
+        );
+
+        it.each<[string, DefaultFormStateBehavior, string | number | null, string]>([
+          ["the property's own", {}, 'red', 'green'],
+          ["the object's under ancestorWins", { nestedDefaultsPrecedence: 'ancestorWins' }, 'red', 'red'],
+          [
+            "the property's own under ancestorWins where its type can't hold the object's number",
+            { nestedDefaultsPrecedence: 'ancestorWins' },
+            5,
+            'green',
+          ],
+          [
+            "the property's own under ancestorWins where its type can't hold the object's null",
+            { nestedDefaultsPrecedence: 'ancestorWins' },
+            null,
+            'green',
+          ],
+        ])(
+          "replaces a value outside the enum of a key an object's allOf declares with the object's default, where its own property takes %s default",
+          (_name, behavior, objectDefault, expected) => {
+            const c: RJSFSchema = { type: 'string', enum: ['red', 'green'], default: 'green' };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', default: { c: objectDefault }, properties: { c } },
+                wrapped: { type: 'object', default: { c: objectDefault }, allOf: [{ properties: { c } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: behavior },
+                { schema, formData: { own: { c: 'zz' }, wrapped: { c: 'zz' } } },
+              ),
+            ).toStrictEqual({ own: { c: expected }, wrapped: { c: objectDefault } });
+          },
+        );
+
+        it.each<[string, DefaultFormStateBehavior, boolean, RJSFSchema]>([
+          ['anyOf', {}, false, {}],
+          ['oneOf', {}, false, {}],
+          ['anyOf', {}, true, {}],
+          ['anyOf', { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' }, false, {}],
+          ['anyOf', {}, false, { enum: ['red', 'green'] }],
+          ['oneOf', {}, true, { enum: ['red', 'green'] }],
+        ])(
+          "keeps a value the %s constants of a key an object's allOf declares don't offer, as for its own property, under %j, initialDefaultsGenerated %s, beside %j",
+          (keyword, behavior, initialDefaultsGenerated, beside) => {
+            const c: RJSFSchema = {
+              type: 'string',
+              ...beside,
+              [keyword]: [{ const: 'red' }, { const: 'green' }],
+              default: 'green',
+            };
+            const nested: RJSFSchema = { type: 'object', properties: { c } };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { c, x: nested } },
+                wrapped: { type: 'object', allOf: [{ properties: { c, x: nested } }] },
+              },
+            };
+            const value = { c: 'zz', x: { c: 'zz' } };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: behavior },
+                { schema, formData: { own: value, wrapped: value }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ own: value, wrapped: value });
+          },
+        );
+
+        it("keeps a value the $ref'd constants of a key an object's allOf declares don't offer, as for its own property", () => {
+          const c: RJSFSchema = {
+            type: 'string',
+            anyOf: [{ $ref: '#/definitions/Red' }, { $ref: '#/definitions/Green' }],
+            default: 'green',
+          };
+          const schema: RJSFSchema = {
+            type: 'object',
+            definitions: { Red: { const: 'red' }, Green: { const: 'green' } },
+            properties: {
+              own: { type: 'object', properties: { c } },
+              wrapped: { type: 'object', allOf: [{ properties: { c } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { own: { c: 'zz' }, wrapped: { c: 'zz' } } },
+            ),
+          ).toStrictEqual({ own: { c: 'zz' }, wrapped: { c: 'zz' } });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['an enum beside options that are no constants', { enum: ['red', 'green'], anyOf: [{ maxLength: 9 }] }],
+          ['object constants', { type: 'object', anyOf: [{ const: { k: 1 } }, { const: { k: 2 } }] }],
+        ])(
+          "replaces a value a property rejects with its default where it has %s, and drops object data or keeps any other value for a key only an object's allOf declares, whose own default skipDefaults skips",
+          (name, options) => {
+            const objectValued = name === 'object constants';
+            const c: RJSFSchema = { ...options, default: objectValued ? { k: 1 } : 'green' };
+            const value = objectValued ? { k: 9 } : 'zz';
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { c } },
+                wrapped: { type: 'object', allOf: [{ properties: { c } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { own: { c: value }, wrapped: { c: value } } },
+              ),
+            ).toStrictEqual({ own: { c: c.default }, wrapped: objectValued ? {} : { c: value } });
+          },
+        );
+
+        it.each<[string, RJSFSchema, unknown]>([
+          [
+            'an enum of objects',
+            {
+              type: 'object',
+              properties: { x: { type: 'number', default: 1 }, y: { type: 'string' } },
+              enum: [
+                { x: 1, y: 'p' },
+                { x: 2, y: 'q' },
+              ],
+              default: { y: 'p' },
+            },
+            'z',
+          ],
+          ['an untyped enum of objects', { enum: [{ y: 'p' }, { y: 'q' }], default: { y: 'p' } }, 5],
+          ['an enum of a string and an object', { enum: ['p', { y: 'p' }], default: 'p' }, 'z'],
+          [
+            'an enum of arrays',
+            { type: 'array', items: { type: 'string' }, enum: [['p'], ['q']], default: ['p'] },
+            ['z'],
+          ],
+        ])(
+          "keeps a value of another type that a key an object's allOf declares with %s doesn't offer, as for its own property",
+          (_, c, value) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { c } },
+                wrapped: { type: 'object', allOf: [{ properties: { c } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { own: { c: value }, wrapped: { c: value } } },
+              ),
+            ).toStrictEqual({ own: { c: value }, wrapped: { c: value } });
+          },
+        );
+
+        it("gives an untyped field's allOf key the field's default under ancestorWins where its value is rejected, as for a typed one", () => {
+          const c: RJSFSchema = { enum: ['a', 'b'], default: 'a' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              typed: { type: 'object', default: { c: 'b' }, allOf: [{ properties: { c } }] },
+              untyped: { default: { c: 'b' }, allOf: [{ properties: { c } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' } },
+              { schema, formData: { typed: { c: 'z' }, untyped: { c: 'z' } } },
+            ),
+          ).toStrictEqual({ typed: { c: 'b' }, untyped: { c: 'b' } });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['options of other types', { anyOf: [{ type: 'string' }, { type: 'number' }] }],
+          ['a type list that takes it whole', { type: ['string', 'object'] }],
+        ])(
+          "gives a nested value an untyped field's allOf rejects the field's object default where it has %s, as where it has none",
+          (_, keywords) => {
+            const allOf: RJSFSchema[] = [{ properties: { c: { enum: ['a', 'b'] } } }];
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                plain: { allOf, default: { c: 'a' } },
+                w: { ...keywords, allOf, default: { c: 'a' } },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { plain: { c: 'z' }, w: { c: 'z' } } },
+              ),
+            ).toStrictEqual({ plain: { c: 'a' }, w: { c: 'a' } });
+          },
+        );
+
+        it("gives a nested value an untyped field's allOf rejects the default its object gives it where it has options of other types, as where it has none", () => {
+          const allOf: RJSFSchema[] = [{ properties: { c: { enum: ['a', 'b'] } } }];
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: { plain: { c: 'b' }, w: { c: 'b' } },
+            properties: { plain: { allOf }, w: { anyOf: [{ type: 'string' }, { type: 'number' }], allOf } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { plain: { c: 'z' }, w: { c: 'z' } } },
+            ),
+          ).toStrictEqual({ plain: { c: 'b' }, w: { c: 'b' } });
+        });
+
+        it("keeps a value the $ref'd constants of an untyped field's allOf key don't offer, as for a typed one", () => {
+          const c: RJSFSchema = {
+            anyOf: [{ $ref: '#/definitions/Red' }, { $ref: '#/definitions/Green' }],
+            default: 'green',
+          };
+          const schema: RJSFSchema = {
+            type: 'object',
+            definitions: { Red: { const: 'red' }, Green: { const: 'green' } },
+            properties: {
+              typed: { type: 'object', allOf: [{ properties: { c } }] },
+              untyped: { allOf: [{ properties: { c } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { typed: { c: 'zz' }, untyped: { c: 'zz' } } },
+            ),
+          ).toStrictEqual({ typed: { c: 'zz' }, untyped: { c: 'zz' } });
+        });
+
+        it.each<DefaultFormStateBehavior['emptyObjectFields']>(['skipDefaults', 'populateRequiredDefaults'])(
+          "fills the null of a key an object's allOf declares inside the object's default for it under %s, as for its own property",
+          (emptyObjectFields) => {
+            const n: RJSFSchema = { type: 'object', properties: { z: { type: 'null' }, a: { type: 'number' } } };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', default: { n: {} }, properties: { n } },
+                wrapped: { type: 'object', default: { n: {} }, allOf: [{ properties: { n } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+                { schema, formData: { own: {}, wrapped: {} } },
+              ),
+            ).toStrictEqual({ own: { n: { z: null } }, wrapped: { n: { z: null } } });
+          },
+        );
+
+        it("gives a nullable key an object's allOf requires the object's default over its null, as its own property", () => {
+          const c: RJSFSchema = { type: 'null' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['own', 'wrapped'],
+            properties: {
+              own: { type: 'object', default: { c: 'x' }, required: ['c'], properties: { c } },
+              wrapped: { type: 'object', default: { c: 'x' }, allOf: [{ required: ['c'], properties: { c } }] },
+            },
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, formData: {} })).toStrictEqual({
+            own: { c: 'x' },
+            wrapped: { c: 'x' },
+          });
+        });
+
+        it.each<[RJSFSchema, string]>([
+          [{ const: 'q' }, 'q'],
+          [{ type: 'string' }, 'r'],
+        ])(
+          "keeps a key an object's allOf declares that the data holds beside an object const that doesn't name it, as its own property %j",
+          (c, expected) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', allOf: [{ const: { a: 1 } }], properties: { c } },
+                wrapped: { type: 'object', allOf: [{ const: { a: 1 } }, { properties: { c } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { own: { c: 'r', a: 1 }, wrapped: { c: 'r', a: 1 } } },
+              ),
+            ).toStrictEqual({ own: { c: expected, a: 1 }, wrapped: { c: expected, a: 1 } });
+          },
+        );
+
+        it("keeps the null fill of a key only an unmerged then declares that the object's default names", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['w'],
+            properties: {
+              w: {
+                type: 'object',
+                default: { c: 'x' },
+                if: true,
+                then: { required: ['c'], properties: { c: { type: 'null' } } },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' } },
+              { schema, formData: {} },
+            ),
+          ).toStrictEqual({ w: { c: null } });
+        });
+
+        it.each([false, true])(
+          'keeps the data of an object whose properties are null, beside an allOf or not, with constAsDefaults always %s',
+          (always) => {
+            const plain: RJSFSchema = { type: 'object' };
+            const withAllOf: RJSFSchema = { type: 'object', allOf: [{ properties: { k: { type: 'string' } } }] };
+            // Generated schemas can hold a `properties: null` no JSON Schema type allows
+            Reflect.set(plain, 'properties', null);
+            Reflect.set(withAllOf, 'properties', null);
+            const context = {
+              validator: testValidator,
+              defaultFormStateBehavior: always ? { constAsDefaults: 'always' as const } : undefined,
+            };
+            expect(getDefaultFormState(context, { schema: plain, formData: { x: 1 } })).toStrictEqual({ x: 1 });
+            expect(getDefaultFormState(context, { schema: withAllOf, formData: { x: 1 } })).toStrictEqual({ x: 1 });
+          },
+        );
+
+        it.each<[string, RJSFSchema]>([
+          [
+            'typed, its options in an allOf',
+            { type: 'object', allOf: [{ enum: [{ a: 1 }, { a: 2 }] }], default: { a: 1 } },
+          ],
+          ['untyped, its options in an allOf', { allOf: [{ enum: [{ a: 1 }, { a: 2 }] }], default: { a: 1 } }],
+          ['its options its own', { type: 'object', enum: [{ a: 1 }, { a: 2 }], default: { a: 1 } }],
+        ])("replaces object data a select over object constants doesn't offer with its default, %s", (_name, o) => {
+          const schema: RJSFSchema = { type: 'object', properties: { o } };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { o: { a: 3 } } }),
+          ).toStrictEqual({ o: { a: 1 } });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['through an allOf $ref', { allOf: [{ $ref: '#/definitions/E' }], default: { a: 1 } }],
+          ['of its own', { type: 'object', enum: [{ a: 1 }, { b: 2 }], default: { a: 1 } }],
+        ])(
+          "gives a select over object constants its own default unblended with an ancestor's, its options %s",
+          (_name, o) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              default: { o: { b: 2 } },
+              properties: { o },
+              definitions: { E: { type: 'object', enum: [{ a: 1 }, { b: 2 }] } },
+            };
+            expect(getDefaultFormState({ validator: testValidator }, { schema })).toStrictEqual({ o: { a: 1 } });
+          },
+        );
+
+        it("keeps the data's key order for a key only an object's allOf declares beside a key its allOf const names", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              o: { type: 'object', allOf: [{ const: { a: 1 } }, { properties: { k: { type: 'string' } } }] },
+            },
+          };
+          const defaults = getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+            { schema, formData: { o: { a: 1, k: 'v' } } },
+          );
+          expect(defaults).toStrictEqual({ o: { a: 1, k: 'v' } });
+          expect(isObject(defaults) && isObject(defaults.o) ? Object.keys(defaults.o) : []).toStrictEqual(['a', 'k']);
+        });
+
+        it("fills a key an object's allOf declares beside an object const that doesn't name it, as its own property", () => {
+          const b: RJSFSchema = { const: 'q' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', allOf: [{ const: { a: 1 } }], properties: { b } },
+              wrapped: { type: 'object', allOf: [{ const: { a: 1 } }, { properties: { b } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { own: {}, wrapped: {} } },
+            ),
+          ).toStrictEqual({ own: { b: 'q', a: 1 }, wrapped: { b: 'q', a: 1 } });
+        });
+
+        it("fills a key an object's allOf declares with a boolean schema from the object's default, as its own", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', default: { t: 5 }, properties: { t: true } },
+              wrapped: { type: 'object', default: { t: 5 }, allOf: [{ properties: { t: true } }] },
+            },
+          };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { own: {}, wrapped: {} } }),
+          ).toStrictEqual({ own: { t: 5 }, wrapped: { t: 5 } });
+        });
+
+        it("folds the object's default for a key its allOf declares through that property, without the defaults the allOf nests in it", () => {
+          const o: RJSFSchema = { type: 'object', properties: { y: { type: 'string', default: 'Y' } } };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', default: { o: { x: 1 } }, properties: { o } },
+              wrapped: { type: 'object', default: { o: { x: 1 } }, allOf: [{ properties: { o } }] },
+            },
+          };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { own: {}, wrapped: {} } }),
+          ).toStrictEqual({ own: { o: { y: 'Y' } }, wrapped: {} });
+        });
+
+        it.each<[string, GenericObjectType, DefaultFormStateBehavior, unknown, unknown]>([
+          ['skipDefaults', {}, {}, 'q', 'p'],
+          ['skipDefaults', { k: 'z' }, {}, 'q', 'p'],
+          ['populateDefaults', {}, { allOf: 'populateDefaults' }, 'p', 'p'],
+          ['ancestorWins', {}, { nestedDefaultsPrecedence: 'ancestorWins' }, 'q', 'q'],
+        ])(
+          "gives a key only an object's allOf declares the object's default over its own under %s, with %j",
+          (_name, value, defaultFormStateBehavior, wrapped, own) => {
+            const k: RJSFSchema = { enum: ['p', 'q'], default: 'p' };
+            const o: RJSFSchema = { type: 'object', additionalProperties: true, default: { k: 'q' } };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { ...o, properties: { k } },
+                wrapped: { ...o, allOf: [{ properties: { k } }] },
+                untyped: { default: { k: 'q' }, allOf: [{ properties: { k } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior },
+                { schema, formData: { own: value, wrapped: value, untyped: value } },
+              ),
+            ).toStrictEqual({ own: { k: own }, wrapped: { k: wrapped }, untyped: { k: wrapped } });
+          },
+        );
+
+        it.each<[string, GenericObjectType, DefaultFormStateBehavior]>([
+          ['skipDefaults', { k: {} }, {}],
+          ['populateDefaults', { k: { y: 'Y', n: [1] } }, { allOf: 'populateDefaults' }],
+        ])(
+          "gives a key only an object's allOf declares the defaults nested in that allOf under %s as %j",
+          (_name, wrapped, defaultFormStateBehavior) => {
+            const k: RJSFSchema = {
+              type: 'object',
+              properties: {
+                y: { type: 'string', default: 'Y' },
+                n: { type: 'array', minItems: 1, items: { default: 1 } },
+              },
+            };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { k } },
+                wrapped: { type: 'object', allOf: [{ properties: { k } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior },
+                { schema, formData: { own: { k: {} }, wrapped: { k: {} } } },
+              ),
+            ).toStrictEqual({ own: { k: { y: 'Y', n: [1] } }, wrapped });
+          },
+        );
+
+        it("leaves an array key only an object's allOf declares as the object's default gives it under skipDefaults, without padding it to its minItems, as below an untyped field's allOf", () => {
+          const allOf: RJSFSchema[] = [
+            { properties: { arr: { type: 'array', minItems: 2, items: { type: 'string', default: 'i' } } } },
+          ];
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              typed: { type: 'object', default: { arr: [] }, allOf },
+              untyped: { default: { arr: [] }, allOf },
+            },
+          };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { typed: {}, untyped: {} } }),
+          ).toStrictEqual({ typed: { arr: [] }, untyped: { arr: [] } });
+        });
+
+        it("leaves a required boolean of a key only an object's allOf declares unfilled under skipDefaults, typed or not, where the object's own property fills it", () => {
+          const schema: RJSFSchema = {
+            definitions: {
+              Model: {
+                type: 'object',
+                properties: { a: { type: 'object', required: ['flag'], properties: { flag: { type: 'boolean' } } } },
+              },
+            },
+            type: 'object',
+            properties: {
+              own: { $ref: '#/definitions/Model' },
+              typed: { type: 'object', allOf: [{ $ref: '#/definitions/Model' }] },
+              untyped: { allOf: [{ $ref: '#/definitions/Model' }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { own: { a: {} }, typed: { a: {} }, untyped: { a: {} } } },
+            ),
+          ).toStrictEqual({ own: { a: { flag: false } }, typed: { a: {} }, untyped: { a: {} } });
+        });
+
+        it.each<[string, DefaultFormStateBehavior, string]>([
+          ['deepest-wins', {}, 'own'],
+          ['ancestorWins', { nestedDefaultsPrecedence: 'ancestorWins' }, 'parent'],
+        ])(
+          'gives a nested value a field with options rejects its own default over the inherited one under %s, as a field without options',
+          (_name, defaultFormStateBehavior, expected) => {
+            const o: RJSFSchema = {
+              default: { k: 'own' },
+              allOf: [{ properties: { k: { enum: ['a', 'own', 'parent'] } } }],
+            };
+            const schema: RJSFSchema = {
+              type: 'object',
+              default: { plain: { k: 'parent' }, w: { k: 'parent' } },
+              properties: { plain: o, w: { ...o, anyOf: [{ type: 'string' }, { type: 'number' }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior },
+                { schema, formData: { plain: { k: 'z' }, w: { k: 'z' } } },
+              ),
+            ).toStrictEqual({ plain: { k: expected }, w: { k: expected } });
+          },
+        );
+
+        it.each(['populateRequiredDefaults', 'skipDefaults'] as const)(
+          'adds an optional property whose allOf holds a const as one with its own, under emptyObjectFields %s',
+          (emptyObjectFields) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              definitions: { K: { const: 'a' } },
+              properties: {
+                own: { type: 'string', const: 'a' },
+                wrapped: { type: 'string', allOf: [{ const: 'a' }] },
+                ref: { $ref: '#/definitions/K' },
+                wrappedRef: { allOf: [{ $ref: '#/definitions/K' }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+                { schema, formData: {} },
+              ),
+            ).toStrictEqual({ own: 'a', wrapped: 'a', ref: 'a', wrappedRef: 'a' });
+          },
+        );
+
+        it.each<[GenericObjectType, GenericObjectType]>([
+          [{}, {}],
+          [{ c: 'z' }, { c: 'z' }],
+        ])(
+          "reads a key the merge leaves out of an object's allOf beside additionalProperties false as an extra key, with %j",
+          (value, expected) => {
+            const w: RJSFSchema = {
+              type: 'object',
+              additionalProperties: false,
+              default: { c: 'b' },
+              allOf: [{ properties: { c: { type: 'string', enum: ['a', 'b'], default: 'a' } } }],
+            };
+            const schema: RJSFSchema = { type: 'object', properties: { w } };
+            expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { w: value } })).toStrictEqual(
+              { w: expected },
+            );
+          },
+        );
+
+        it.each<[string, RJSFSchema, RJSFSchema, string | null]>([
+          [
+            'keeps it beside its own null default, which skipDefaults skips',
+            { enum: ['red', 'green', null], default: null },
+            {},
+            'purple',
+          ],
+          [
+            "replaces it with the object's null default",
+            { enum: ['red', 'green', null] },
+            { default: { c: null } },
+            null,
+          ],
+        ])("%s, for a value outside the enum of a key an object's allOf declares", (_name, c, field, expected) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { color: { ...field, allOf: [{ type: 'object', properties: { c } }] } },
+          };
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { color: { c: 'purple' } } }),
+          ).toStrictEqual({ color: { c: expected } });
+        });
+
+        it("fills a key an object's allOf declares that the data holds as undefined from the object's default under useDefaultIfFormDataUndefined, as its own property", () => {
+          const c: RJSFSchema = { type: 'string' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', default: { c: 'D' }, properties: { c } },
+              wrapped: { type: 'object', default: { c: 'D' }, allOf: [{ properties: { c } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              {
+                validator: testValidator,
+                defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+              },
+              { schema, formData: { own: { c: undefined }, wrapped: { c: undefined } } },
+            ),
+          ).toStrictEqual({ own: { c: 'D' }, wrapped: { c: 'D' } });
+        });
+
+        it("fills a key an object's allOf requires from the object's default under populateRequiredDefaults, as its own required property", () => {
+          const properties: Record<string, RJSFSchema> = { c: { type: 'string' }, d: { type: 'string' } };
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['own', 'wrapped'],
+            properties: {
+              own: { type: 'object', default: { c: 'x', d: 'y' }, required: ['c'], properties },
+              wrapped: { type: 'object', default: { c: 'x', d: 'y' }, allOf: [{ required: ['c'], properties }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              {
+                validator: testValidator,
+                defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
+              },
+              { schema, formData: {} },
+            ),
+          ).toStrictEqual({ own: { c: 'x' }, wrapped: { c: 'x' } });
+        });
+
+        it.each<[RJSFSchema, unknown, boolean]>([
+          [{ enum: ['a', 'b'] }, 'z', false],
+          [{ enum: ['a', 'b'] }, 'z', true],
+          [{ enum: ['a', 'b'], default: 'a' }, 'a', false],
+          [{ enum: ['a', 'b'], default: 'a' }, 'a', true],
+        ])(
+          "keeps a value outside the enum of a key a nested object's allOf declares, as %j, where the object's own property takes %j, initialDefaultsGenerated %s",
+          (c, expected, initialDefaultsGenerated) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                own: { type: 'object', properties: { c } },
+                wrapped: { type: 'object', allOf: [{ properties: { c } }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                {
+                  schema,
+                  formData: { own: { c: 'z', d: 1 }, wrapped: { c: 'z', d: 1 } },
+                  initialDefaultsGenerated,
+                },
+              ),
+            ).toStrictEqual({ own: { c: expected, d: 1 }, wrapped: { c: 'z', d: 1 } });
+          },
+        );
+
+        it.each<[string, RJSFSchema]>([
+          ['without an allOf', {}],
+          ['beside an unrelated allOf', { allOf: [{ title: 'x' }] }],
+        ])('matches no key only an unmerged then declares %s, see #5816', (_name, beside) => {
+          const o: RJSFSchema = {
+            type: 'object',
+            properties: { k: { type: 'string' } },
+            if: { properties: { k: { const: 'x' } } },
+            then: { properties: { c: { enum: ['red', 'green'] } } },
+            ...beside,
+          };
+          const schema: RJSFSchema = { type: 'object', properties: { o } };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' } },
+              { schema, formData: { o: { k: 'x', c: 'blue' } } },
+            ),
+          ).toStrictEqual({ o: { k: 'x', c: 'blue' } });
+        });
+
+        it.each<[GenericObjectType, boolean, GenericObjectType]>([
+          [{}, false, { a: 'x' }],
+          [{ a: 'y' }, false, { a: 'y' }],
+          [{ a: 'y' }, true, { a: 'y' }],
+          [{ a: 'z' }, false, { a: 'x' }],
+          [{ a: 'z' }, true, { a: 'x' }],
+        ])(
+          "reads a key an object's allOf declares by that property whether its value comes from the data %j or the default, initialDefaultsGenerated %s",
+          (value, initialDefaultsGenerated, expected) => {
+            const o: RJSFSchema = {
+              type: 'object',
+              additionalProperties: { type: 'number' },
+              default: { a: 'x' },
+              allOf: [{ properties: { a: { enum: ['x', 'y'] } } }],
+            };
+            const schema: RJSFSchema = { type: 'object', properties: { o } };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, formData: { o: value }, initialDefaultsGenerated },
+              ),
+            ).toStrictEqual({ o: expected });
+          },
+        );
+
+        it("keeps the data of a key an object's allOf declares beside null additionalProperties once the defaults are generated, as for its own property", () => {
+          const n: RJSFSchema = { type: 'number' };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              own: { type: 'object', additionalProperties: { type: 'null' }, properties: { n } },
+              wrapped: { type: 'object', additionalProperties: { type: 'null' }, allOf: [{ properties: { n } }] },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { own: { n: 5 }, wrapped: { n: 5 } }, initialDefaultsGenerated: true },
+            ),
+          ).toStrictEqual({ own: { n: 5 }, wrapped: { n: 5 } });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['no if', { type: 'object' }],
+          ['an if testing a const', { type: 'object', if: { const: {} }, then: {} }],
+        ])('folds an untyped field whose allOf holds %s alike under constAsDefaults always', (_name, member) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { f: { default: { d: 1 }, allOf: [member] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { f: { a: 2 } } },
+            ),
+          ).toStrictEqual({ f: { d: 1, a: 2 } });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['no const', {}],
+          ['a const', { const: { k: 'e' } }],
+        ])(
+          "folds an untyped field whose allOf's else, which the data doesn't take, holds %s alike under constAsDefaults always",
+          (_name, otherwise) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                f: { default: { d: 1 }, allOf: [{ type: 'object' }, { if: true, then: {}, else: otherwise }] },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+                { schema, formData: { f: { a: 2 } } },
+              ),
+            ).toStrictEqual({ f: { d: 1, a: 2 } });
+          },
+        );
+
+        it.each<[string, RJSFSchema, DefaultFormStateBehavior]>([
+          ['its allOf', { type: 'number', allOf: [{ if: { minimum: 10 }, then: { const: 10 } }] }, {}],
+          [
+            'its allOf under skipEmptyDefaults',
+            { type: 'number', allOf: [{ if: { minimum: 10 }, then: { const: 10 } }] },
+            { emptyObjectFields: 'skipEmptyDefaults' },
+          ],
+          [
+            'itself under skipEmptyDefaults',
+            { type: 'number', if: { minimum: 10 }, then: { const: 10 } },
+            { emptyObjectFields: 'skipEmptyDefaults' },
+          ],
+          [
+            'itself under constAsDefaults always and skipEmptyDefaults',
+            { type: 'number', if: { minimum: 0 }, then: { const: 10 }, else: { const: 10 } },
+            { constAsDefaults: 'always', emptyObjectFields: 'skipEmptyDefaults' },
+          ],
+          [
+            'the else of its allOf',
+            { type: 'number', allOf: [{ if: { maximum: 10 }, then: {}, else: { const: 10 } }] },
+            {},
+          ],
+        ])(
+          'leaves an empty field the const of a then/else in %s, which no data takes, unfilled',
+          (_name, n, defaultFormStateBehavior) => {
+            const schema: RJSFSchema = { type: 'object', required: ['n'], properties: { n } };
+            expect(
+              getDefaultFormState({ validator: testValidator, defaultFormStateBehavior }, { schema, formData: {} }),
+            ).toStrictEqual({});
+          },
+        );
+
+        it('fills a field with the const of a then its data takes', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { n: { type: 'number', allOf: [{ if: { minimum: 10 }, then: { const: 10 } }] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { n: 12 } },
+            ),
+          ).toStrictEqual({ n: 10 });
+        });
+      });
+
       it("skips the constant default of a schema's anyOf under skipOneOf when it also has a oneOf", () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -2729,6 +5421,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
           o: { b: 2 },
         });
+      });
+      it("defaults a oneOf select to the constant matching its own null default over its parent's (#5817)", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { o: { a: 1 } },
+          properties: { o: { default: null, oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }, { const: null }] } },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({ o: null });
       });
       it('keeps its own default when constants are never defaults', () => {
         const schema: RJSFSchema = {
@@ -3611,6 +6311,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           ensureFormDataMatchingSchema({ validator: testValidator }, holder, holder, { s: { b: 2 }, t: 1 }),
         ).toEqual({ t: 1 });
+      });
+      it('drops object data an allOf below a property types as a string, with no defaults to fall back to', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { o: { allOf: [{ properties: { s: { type: 'string' } } }] } },
+        };
+        expect(
+          ensureFormDataMatchingSchema({ validator: testValidator }, schema, schema, { o: { s: { b: 2 }, t: 1 } }),
+        ).toEqual({ o: { t: 1 } });
       });
       it('drops object data a property written as a $ref to a schema of no object type holds', () => {
         const rootSchema: RJSFSchema = {

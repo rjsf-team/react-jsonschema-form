@@ -1,13 +1,55 @@
 import { createSchemaUtils, getDefaultFormState, isObject } from '../../src/index.ts';
-import type { DefaultFormStateBehavior, RJSFSchema, SchemaContext } from '../../src/index.ts';
+import type {
+  CustomMergeAllOf,
+  DefaultFormStateBehavior,
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  SchemaContext,
+  StrictRJSFSchema,
+} from '../../src/index.ts';
 import {
   computeDefaults,
   getArrayDefaults,
   getDefaultBasedOnSchemaType,
   getObjectDefaults,
+  mergeReachesConst,
 } from '../../src/schema/getDefaultFormState.ts';
+import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
+import type { Provenance } from '../../src/schema/graph/provenance.ts';
+import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
+
+// Recorded, so a test can count the schemas the fold copies
+const withoutKeysCalls = vi.hoisted((): [object, (string | symbol)[]][] => []);
+vi.mock(import('../../src/schema/graph/mergePlan.ts'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    withoutKeys: <S extends StrictRJSFSchema>(schema: S, ...keys: (string | symbol)[]) => {
+      withoutKeysCalls.push([schema, keys]);
+      return actual.withoutKeys(schema, ...keys);
+    },
+  };
+});
+
+// Counted, so a test can count the fields matched to their data
+const retrieveFieldCalls = vi.hoisted(() => ({ count: 0 }));
+vi.mock(import('../../src/schema/retrieveSchema.ts'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    retrieveField: <S extends StrictRJSFSchema, F extends FormContextType>(
+      context: SchemaContext<S, F>,
+      field: Provenance<S>,
+      data?: unknown,
+    ) => {
+      retrieveFieldCalls.count += 1;
+      return actual.retrieveField(context, field, data);
+    },
+  };
+});
 
 const validator = miniValidator();
 
@@ -364,6 +406,45 @@ describe('getDefaultFormState() on recursive schemas', () => {
     const defaults = defaultsOf(schema, undefined, behavior);
     expect(defaults).toEqual(expected);
     expect(defaultsOf(schema, defaults, behavior)).toEqual(expected);
+  });
+
+  it.each<[string, RJSFSchema, GenericObjectType]>([
+    [
+      'a property beside it',
+      { type: 'object', properties: { child: { allOf: [{ $ref: D('node') }], const: { x: 1 } } } },
+      { x: 1 },
+    ],
+    [
+      'a property of an allOf beside it',
+      { type: 'object', allOf: [{ properties: { child: { allOf: [{ $ref: D('node') }], const: { tag: 't' } } } }] },
+      { tag: 't' },
+    ],
+  ])('terminates on a recursion through an allOf it leaves unmerged beside a const of %s', (_, node, child) => {
+    const schema: RJSFSchema = { definitions: { node }, $ref: D('node') };
+    for (const behavior of [undefined, { allOf: 'skipDefaults' } satisfies DefaultFormStateBehavior]) {
+      expect(defaultsOf(schema, {}, behavior)).toStrictEqual({ child });
+    }
+  });
+
+  it.each<[string, unknown]>([
+    ['one level down', { child: { name: 'c', extra: 'y', child: { name: 'd' } } }],
+    [
+      'several levels down',
+      {
+        child: { name: 'c', extra: 'y', child: { name: 'd', extra: 'z', child: { name: 'e', child: { extra: 'q' } } } },
+      },
+    ],
+  ])('keeps the data %s of the keys an allOf declares through a $ref it already followed', (_, formData) => {
+    const schema: RJSFSchema = {
+      $ref: D('Base'),
+      definitions: {
+        Base: { type: 'object', properties: { child: { $ref: D('Derived') }, name: { type: 'string' } } },
+        Derived: { type: 'object', allOf: [{ $ref: D('Base') }], properties: { extra: { type: 'string' } } },
+      },
+    };
+    for (const behavior of [undefined, { allOf: 'skipDefaults' } satisfies DefaultFormStateBehavior, populate]) {
+      expect(defaultsOf(schema, formData, behavior)).toEqual(formData);
+    }
   });
 
   describe('a recursion through an option list a merge rebuilt', () => {
@@ -847,12 +928,14 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       o: { default: { y: 2 } },
       n: { properties: { j: { type: 'string', default: 'bj' } } },
       k: { const: { d: 2 } },
+      p: { const: 'b' },
     };
     const properties: RJSFSchema['properties'] = {
       a: { type: 'string', default: 'x' },
       o: { default: { x: 1 } },
       n: { type: 'object', properties: { i: { type: 'string', default: 'bi' } } },
       k: { type: 'object', const: { c: 1 }, properties: { c: {} } },
+      p: { type: 'string', const: 'a' },
     };
     const shapes: [string, RJSFSchema][] = [
       [
@@ -867,9 +950,11 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       ['dependencies', { type: 'object', properties, dependencies: { a: { properties: branchProperties } } }],
       ['oneOf', { type: 'object', properties, oneOf: [{ properties: branchProperties }] }],
     ];
-    it.each(shapes)('is merged from a %s as the branch is merged into the field, the branch winning', (_, schema) => {
+    // The retrieved field merges the branch's keywords into the property's: a primitive the branch gives wins, while an
+    // object `default` or `const` is merged with the property's key by key, as `retrieveSchema()` merges them
+    it.each(shapes)('is merged from a %s as the branch is merged into the field', (_, schema) => {
       const defaults = defaultsOf(schema);
-      expect(defaults).toEqual({ a: 'x', o: { x: 1, y: 2 }, n: { i: 'bi', j: 'bj' }, k: { c: 1 } });
+      expect(defaults).toEqual({ a: 'x', o: { x: 1, y: 2 }, n: { i: 'bi', j: 'bj' }, k: { c: 1, d: 2 }, p: 'b' });
       expect(isObject(defaults) && isObject(defaults.n) ? Object.keys(defaults.n) : []).toEqual(['i', 'j']);
     });
     it('renders in the order and with the default the field it is merged into shows', () => {
@@ -882,6 +967,8 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       };
       expect(Object.keys(propertyOf('n', {}).properties ?? {})).toEqual(['i', 'j']);
       expect(propertyOf('o').default).toEqual({ x: 1, y: 2 });
+      expect(propertyOf('k').const).toEqual({ c: 1, d: 2 });
+      expect(propertyOf('p').const).toBe('b');
     });
   });
 
@@ -923,7 +1010,7 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     expect(defaultsOf(withField({ allOf: [{ title: 'P' }] }), { p: 'z' }, behavior)).toEqual({ p: 'b' });
   });
 
-  it('drops data a $ref property names a select without, at a root offering options it has not chosen', () => {
+  it('keeps data a $ref property names a select without, at a root offering options it has not chosen', () => {
     const withRoot = (beside: RJSFSchema): RJSFSchema => ({
       definitions: { s: { type: 'string', allOf: [{ enum: ['a', 'b'] }] } },
       type: 'object',
@@ -931,8 +1018,8 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       ...beside,
     });
     const options: RJSFSchema = { anyOf: [{ required: ['k'] }, { required: ['x'] }] };
-    expect(defaultsOf(withRoot({}), { k: 'z' })).toStrictEqual({ k: undefined });
-    expect(defaultsOf(withRoot(options), { k: 'z' })).toStrictEqual({ k: undefined });
+    expect(defaultsOf(withRoot({}), { k: 'z' })).toStrictEqual({ k: 'z' });
+    expect(defaultsOf(withRoot(options), { k: 'z' })).toStrictEqual({ k: 'z' });
   });
 
   it.each<[string, RJSFSchema]>([
@@ -1410,6 +1497,196 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     );
   });
 
+  it('matches an object the data still holds, or the state handed back holds, after an edit elsewhere once, for objects nested in untyped allOf $refs', () => {
+    // Pydantic v1's shape: each object a property reaches through an untyped `allOf` holding its `$ref`
+    const depth = 5;
+    const definitions: Record<string, RJSFSchema> = { E: { type: 'string', enum: ['a', 'b'] } };
+    for (let level = 0; level < depth; level += 1) {
+      const properties: Record<string, RJSFSchema> = { e: { title: 'E', allOf: [{ $ref: D('E') }] } };
+      if (level < depth - 1) {
+        properties.left = { title: 'Left', allOf: [{ $ref: D(`M${level + 1}`) }] };
+        properties.right = { title: 'Right', allOf: [{ $ref: D(`M${level + 1}`) }] };
+      }
+      definitions[`M${level}`] = { type: 'object', properties };
+    }
+    const schema: RJSFSchema = { definitions, $ref: D('M0') };
+    const tree = (level: number): GenericObjectType =>
+      level < depth - 1 ? { e: 'a', left: tree(level + 1), right: tree(level + 1) } : { e: 'a' };
+    const edit = (data: GenericObjectType, level: number): GenericObjectType =>
+      level < depth - 1 && isObject(data.left) ? { ...data, left: edit(data.left, level + 1) } : { ...data, e: 'b' };
+    const context = { validator };
+    const formData = tree(0);
+    retrieveFieldCalls.count = 0;
+    expect(getDefaultFormState(context, { schema, formData })).toStrictEqual(formData);
+    const firstCall = retrieveFieldCalls.count;
+    retrieveFieldCalls.count = 0;
+    const edited = edit(formData, 0);
+    const state = getDefaultFormState(context, { schema, formData: edited, initialDefaultsGenerated: true });
+    expect(state).toStrictEqual(edited);
+    // Only the objects on the edited path are matched again
+    expect(retrieveFieldCalls.count).toBeLessThan(firstCall / 4);
+    retrieveFieldCalls.count = 0;
+    // As `Form` does, the state handed back is edited for the next call
+    const editedState = isObject(state) ? edit(state, 0) : {};
+    expect(
+      getDefaultFormState(context, { schema, formData: editedState, initialDefaultsGenerated: true }),
+    ).toStrictEqual(editedState);
+    expect(retrieveFieldCalls.count).toBeLessThan(firstCall / 4);
+  });
+
+  it('matches object data the caller changed in place since the last call again', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        o: {
+          allOf: [{ properties: { inner: { type: 'object', properties: { color: { enum: ['a', 'b', 'c'] } } } } }],
+        },
+      },
+    };
+    const context = { validator };
+    const formData = { o: { inner: { color: 'a', tags: ['t'] } } };
+    expect(getDefaultFormState(context, { schema, formData })).toStrictEqual({
+      o: { inner: { color: 'a', tags: ['t'] } },
+    });
+    formData.o.inner.color = 'c';
+    expect(getDefaultFormState(context, { schema, formData })).toStrictEqual({
+      o: { inner: { color: 'c', tags: ['t'] } },
+    });
+  });
+
+  it("reads a schema below a key only an object's allOf declares without its default once, across passes and calls", () => {
+    const leaf: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', default: 'x' }, b: { type: 'object', properties: { c: { default: 1 } } } },
+    };
+    const o: RJSFSchema = { type: 'object', allOf: [{ properties: { k1: leaf, k2: leaf } }] };
+    const schema: RJSFSchema = { type: 'object', properties: { o } };
+    const formData = { o: { k1: {}, k2: { b: {}, a: 'q' } } };
+    const copies = () =>
+      withoutKeysCalls.filter(([, keys]) => keys.length === 1 && keys[0] === 'default').map(([copied]) => copied);
+    const before = copies().length;
+    expect(defaultsOf(schema, formData)).toEqual({ o: { k1: {}, k2: { a: 'q', b: {} } } });
+    const copied = copies().slice(before);
+    expect(copied.length).toBeGreaterThan(0);
+    expect(new Set(copied).size).toBe(copied.length);
+    expect(defaultsOf(schema, formData)).toEqual({ o: { k1: {}, k2: { a: 'q', b: {} } } });
+    expect(copies()).toHaveLength(before + copied.length);
+  });
+
+  it("merges an object for its allOf's keys only where a const can fill one, not for a const on a property of its own", () => {
+    const merge = vi.fn<CustomMergeAllOf>((schema) => {
+      const merged = shallowAllOfMerge(schema);
+      return isObject(merged) ? merged : {};
+    });
+    const defaultsWith = (own: RJSFSchema, allOfKey: RJSFSchema) =>
+      getDefaultFormState(
+        { validator, customMergeAllOf: merge },
+        {
+          schema: {
+            type: 'object',
+            properties: { o: { type: 'object', properties: { own }, allOf: [{ properties: { k: allOfKey } }] } },
+          },
+          formData: { o: { x: 1 } },
+        },
+      );
+    expect(defaultsWith({ type: 'string', const: 'c' }, { type: 'string' })).toEqual({ o: { own: 'c', x: 1 } });
+    expect(merge).not.toHaveBeenCalled();
+    expect(defaultsWith({ type: 'string' }, { type: 'string', const: 'c' })).toEqual({ o: { k: 'c', x: 1 } });
+    expect(merge).toHaveBeenCalled();
+  });
+
+  it('folds an optional object that may show an object const it does not take no more on a later pass of its parent', () => {
+    let folds = 0;
+    // Each fold of `x` reads the uiSchema of its property `b` once
+    const xUi = {};
+    Object.defineProperty(xUi, 'b', {
+      enumerable: true,
+      get: () => {
+        folds += 1;
+        return undefined;
+      },
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        v: { type: 'string', default: 'v' },
+        w: { type: 'string' },
+        x: {
+          type: 'object',
+          properties: { b: { type: 'string', default: 's' } },
+          oneOf: [{ properties: { k: { type: 'string' } } }, { const: { a: 1 } }],
+        },
+      },
+      dependencies: { v: { properties: { w: { type: 'string', default: 'w' } } } },
+    };
+    const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] }, x: xUi };
+    expect(getDefaultFormState({ validator }, { schema, rootSchema: schema, uiSchema })).toEqual({
+      v: 'v',
+      w: 'w',
+      x: { b: 's' },
+    });
+    // Collapsed, then opened, on the first pass; the second, which the dependency on `v` brings, reuses both
+    expect(folds).toBe(2);
+  });
+
+  it('retrieves no field for an object const only an option offers, which the retrieve never merges', () => {
+    const counting = miniValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        x: {
+          type: 'object',
+          properties: { t: { type: 'string', default: 'a' } },
+          allOf: [
+            {
+              if: { properties: { t: { const: 'a' } } },
+              then: { properties: { u: { type: 'string', default: 'u' } } },
+            },
+          ],
+          oneOf: [{ properties: { b: { type: 'string' } } }, { const: { a: 1 } }],
+        },
+      },
+    };
+    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { t: 'a' } });
+    // Retrieving `x` would check its `if`
+    expect(counting.calls).toBe(0);
+    // Where the unmerged `allOf` reaches one itself in a `then`, an empty field gives the `if` nothing to test, so
+    // nothing is retrieved
+    const branch: RJSFSchema = {
+      type: 'object',
+      properties: { x: { type: 'object', allOf: [{ if: { required: ['t'] }, then: { const: { a: 1 } } }] } },
+    };
+    expect(defaultsOf(branch, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({});
+    expect(counting.calls).toBe(0);
+  });
+
+  it('retrieves no optional field the Optional Data Controls collapse unless it may reach an object const', () => {
+    const counting = miniValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        x: {
+          type: 'object',
+          properties: { t: { type: 'string', default: 'a' } },
+          allOf: [
+            {
+              if: { properties: { t: { const: 'a' } } },
+              then: { properties: { u: { type: 'string', default: 'u' } } },
+            },
+          ],
+        },
+      },
+    };
+    const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object' as const] } };
+    const defaults = getDefaultFormState(
+      { validator: counting, defaultFormStateBehavior: { allOf: 'skipDefaults' } },
+      { schema, rootSchema: schema, uiSchema },
+    );
+    expect(defaults).toEqual({ x: { t: 'a' } });
+    // Retrieving `x` to ask whether the controls collapse it would check its `if`
+    expect(counting.calls).toBe(0);
+  });
+
   describe('definitions that all refer to one another', () => {
     function dense(size: number): RJSFSchema {
       const definitions: Record<string, RJSFSchema> = {};
@@ -1445,5 +1722,210 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
       expect(counting.calls).toBe(0);
       expect(defaultsOf(dense(size), defaults)).toEqual(defaults);
     });
+  });
+});
+
+describe('mergeReachesConst()', () => {
+  it('finds a const an option reaches only through an option still being walked when it was first read', () => {
+    // X offers Q and W; Q's one option leads back through P to X, and W holds the const. Q is first read while X is
+    // still open, so it can't see W through X then
+    const graph = parseSchemaGraph({
+      definitions: { P: { oneOf: [{ oneOf: [{ oneOf: [{ $ref: '#/definitions/P' }] }, { const: 'x' }] }] } },
+    });
+    const node = (pointer: string) => {
+      const id = graph.byPointer(pointer);
+      if (id === undefined) {
+        throw new Error(`no node at ${pointer}`);
+      }
+      return id;
+    };
+    expect(mergeReachesConst(graph, node('/definitions/P/oneOf/0'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/P/oneOf/0/oneOf/0'), true)).toBe(true);
+  });
+
+  it('walks each node of a cycle that reaches no const once', () => {
+    // Each definition offers the next twice over, and the last leads back to the first, so a walk that worked out a
+    // node again on every path to it would take 2^n steps
+    const subschemaReads = (n: number) => {
+      const definitions: Record<string, RJSFSchema> = {};
+      for (let index = 0; index < n; index += 1) {
+        const next = `#/definitions/D${(index + 1) % n}`;
+        definitions[`D${index}`] = { oneOf: [{ $ref: next }, { $ref: next }] };
+      }
+      const graph = parseSchemaGraph({ definitions });
+      const subschemas = vi.spyOn(graph, 'subschemas');
+      const first = graph.byPointer('/definitions/D0');
+      expect(first !== undefined && mergeReachesConst(graph, first, true)).toBe(false);
+      return subschemas.mock.calls.length;
+    };
+    // Each definition added costs the same number of reads, however many there are
+    const reads = [12, 24, 48].map(subschemaReads);
+    expect(reads[2] - reads[1]).toBe(2 * (reads[1] - reads[0]));
+  });
+
+  it('answers a node of a cycle the same whichever node of it is asked first', () => {
+    const graph = parseSchemaGraph({
+      definitions: {
+        D0: { oneOf: [{ oneOf: [{ $ref: '#/definitions/D1' }, { $ref: '#/definitions/D2' }] }] },
+        D1: {
+          oneOf: [
+            {
+              oneOf: [
+                { $ref: '#/definitions/D1' },
+                { oneOf: [{ $ref: '#/definitions/D0' }, { $ref: '#/definitions/D2' }, { const: 'x' }] },
+                { $ref: '#/definitions/D1' },
+              ],
+            },
+          ],
+        },
+        D2: { oneOf: [{ $ref: '#/definitions/D0' }] },
+      },
+    });
+    const node = (pointer: string) => graph.byPointer(pointer) ?? -1;
+    expect(mergeReachesConst(graph, node('/definitions/D1/oneOf/0'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/D1/oneOf/0/oneOf/1/oneOf/1'), true)).toBe(true);
+  });
+
+  it('answers every node of a random graph as a plain reachability walk does, in any order', () => {
+    // A deterministic generator, so a failing graph can be found again by its seed
+    const random = (seed: number) => {
+      let state = seed;
+      return () => {
+        state = (state * 1_103_515_245 + 12_345) % 2_147_483_648;
+        return state / 2_147_483_648;
+      };
+    };
+    const definitionCount = 3;
+    const schemaOf = (next: () => number, depth: number): RJSFSchema => {
+      const pick = next();
+      const ref = { $ref: `#/definitions/D${Math.floor(next() * definitionCount)}` };
+      if (depth === 0 || pick < 0.3) {
+        return ref;
+      }
+      if (pick < 0.37) {
+        return { const: 'x' };
+      }
+      const entries = () => Array.from({ length: 1 + Math.floor(next() * 3) }, () => schemaOf(next, depth - 1));
+      if (pick < 0.85) {
+        return { oneOf: entries() };
+      }
+      if (pick < 0.9) {
+        return { anyOf: entries() };
+      }
+      if (pick < 0.93) {
+        return { allOf: entries() };
+      }
+      if (pick < 0.97) {
+        return { if: {}, then: schemaOf(next, depth - 1) };
+      }
+      return { dependencies: { a: schemaOf(next, depth - 1) }, oneOf: entries() };
+    };
+    const mismatches: unknown[] = [];
+    for (let seed = 1; seed <= 500; seed += 1) {
+      const next = random(seed);
+      const definitions: Record<string, RJSFSchema> = {};
+      for (let index = 0; index < definitionCount; index += 1) {
+        definitions[`D${index}`] = schemaOf(next, 4);
+      }
+      // Each order is asked of a graph of its own, as the answers are kept for as long as the graph lives
+      for (let order = 0; order < 4; order += 1) {
+        const graph = parseSchemaGraph({ definitions: structuredClone(definitions) });
+        const schemaNode = (id: number) => {
+          const found = graph.node(id);
+          return found.kind === 'schema' ? found : undefined;
+        };
+        // The unconditional scope of a node, as `scopeAt()` walks it, and whether a plain search from a node finds a `const`
+        const scope = (id: number, found = new Set<number>()) => {
+          const member = schemaNode(id);
+          if (member !== undefined && !found.has(id)) {
+            found.add(id);
+            [member.ref, ...graph.subschemas(id, 'allOf').map(([, sub]) => sub)].forEach(
+              (sub) => sub !== undefined && scope(sub, found),
+            );
+          }
+          return found;
+        };
+        const reaches = (from: number, withOptions: boolean) => {
+          const seen = new Set<string>();
+          const pending: [number, boolean][] = [[from, withOptions]];
+          for (let state = pending.pop(); state !== undefined; state = pending.pop()) {
+            const [id, options] = state;
+            if (!seen.has(`${id} ${options}`)) {
+              seen.add(`${id} ${options}`);
+              const members = [...scope(id)].flatMap((member) => schemaNode(member) ?? []);
+              if (members.some((member) => 'const' in member.raw)) {
+                return true;
+              }
+              const readsOptions = options || members.some((member) => 'dependencies' in member.raw);
+              members.forEach((member) => {
+                if (readsOptions) {
+                  ['anyOf', 'oneOf'].forEach((keyword) =>
+                    graph.subschemas(member.id, keyword).forEach(([, option]) => pending.push([option, true])),
+                  );
+                }
+                ['then', 'else'].forEach((keyword) => {
+                  const branch = graph.child(member.id, keyword);
+                  if (branch !== undefined) {
+                    pending.push([branch, options]);
+                  }
+                });
+                graph.subschemas(member.id, 'dependencies').forEach(([, entry]) => pending.push([entry, true]));
+              });
+            }
+          }
+          return false;
+        };
+        Array.from({ length: graph.size }, (_, id) => id)
+          .filter((id) => schemaNode(id) !== undefined)
+          .flatMap((id) => [true, false].map((withOptions): [number, boolean, number] => [id, withOptions, next()]))
+          .sort((a, b) => a[2] - b[2])
+          .forEach(([id, withOptions]) => {
+            const expected = reaches(id, withOptions);
+            if (mergeReachesConst(graph, id, withOptions) !== expected) {
+              mismatches.push({ seed, order, pointer: graph.node(id).pointer, withOptions, expected });
+            }
+          });
+      }
+    }
+    expect(mismatches).toEqual([]);
+    // 2,000 graphs are walked, which takes a few seconds under coverage
+  }, 30_000);
+
+  it('reads the options of a field only where retrieving it merges one, beside its own dependencies or in an entry', () => {
+    const graph = parseSchemaGraph({
+      definitions: {
+        Beside: { oneOf: [{ const: 'a' }], dependencies: { x: { properties: { y: {} } } } },
+        InThen: { oneOf: [{ const: 'a' }], if: {}, then: { dependencies: { x: { properties: { y: {} } } } } },
+        InEntry: { dependencies: { x: { oneOf: [{ const: 'a' }] } } },
+      },
+    });
+    const node = (pointer: string) => graph.byPointer(pointer) ?? -1;
+    expect(mergeReachesConst(graph, node('/definitions/Beside'))).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/InThen'))).toBe(false);
+    expect(mergeReachesConst(graph, node('/definitions/InEntry'))).toBe(true);
+  });
+
+  it('settles every node of a cycle with the const one of them reaches', () => {
+    const graph = parseSchemaGraph({
+      definitions: {
+        A: { oneOf: [{ $ref: '#/definitions/B' }] },
+        B: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/C' }] },
+        C: { const: 'x' },
+      },
+    });
+    const node = (pointer: string) => graph.byPointer(pointer) ?? -1;
+    expect(mergeReachesConst(graph, node('/definitions/A'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/A/oneOf/0'), true)).toBe(true);
+    expect(mergeReachesConst(graph, node('/definitions/B/oneOf/0'), true)).toBe(true);
+  });
+
+  it('leaves no node open where the graph throws', () => {
+    const graph = parseSchemaGraph({ definitions: { c: { const: 'x' } } });
+    const unknown = 1_000_000;
+    expect(() => mergeReachesConst(graph, unknown, true)).toThrow(RangeError);
+    // A node left open would answer `false` now instead of throwing again
+    expect(() => mergeReachesConst(graph, unknown, true)).toThrow(RangeError);
+    const known = graph.byPointer('/definitions/c');
+    expect(known !== undefined && mergeReachesConst(graph, known, true)).toBe(true);
   });
 });

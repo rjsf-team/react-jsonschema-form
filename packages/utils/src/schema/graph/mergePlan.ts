@@ -136,6 +136,10 @@ export interface PlanPolicy<S extends StrictRJSFSchema = RJSFSchema> {
    * `optionsInheritRefPath` is set.
    */
   readonly selectOption?: (request: OptionRequest<S>) => number | undefined;
+  /** Whether `selectOption` chooses only from a list `OptionChoice.dependencies` flags, leaving any other unchosen, so
+   * it isn't asked about another list and a plan that meets no flagged list reads no data for its options
+   */
+  readonly dependencyOptionsOnly?: boolean;
   /** Whether the chosen option keeps the ref path of the node offering it instead of restarting it. A restart is
    * bounded by the data only where the data reaches the option, so an option the defaults choose without data keeps the
    * path and its recursion collapses like any other.
@@ -1003,9 +1007,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       list: Reflect.get(provider.node.raw, keyword),
       dependencies,
     };
-    this.readsData ||= this.policy.selectOption !== undefined;
+    const selectOption = dependencies || !this.policy.dependencyOptionsOnly ? this.policy.selectOption : undefined;
+    this.readsData ||= selectOption !== undefined;
     const propertyName = getByPath(provider.node.raw, DISCRIMINATOR_PATH);
-    const chosen = this.policy.selectOption?.({
+    const chosen = selectOption?.({
       ...request,
       graph: this.graph,
       data: this.data,
@@ -1087,6 +1092,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     cutRecursion: policy?.cutRecursion ?? false,
     selectOption: policy?.selectOption,
     optionsInheritRefPath: policy?.optionsInheritRefPath ?? false,
+    dependencyOptionsOnly: policy?.dependencyOptionsOnly ?? false,
     optionPolicy: policy?.optionPolicy,
   };
   const keys = [
@@ -1099,6 +1105,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     resolved.cutRecursion,
     resolved.selectOption,
     resolved.optionsInheritRefPath,
+    resolved.dependencyOptionsOnly,
     resolved.optionPolicy?.allOf,
     resolved.optionPolicy?.conditions,
   ];

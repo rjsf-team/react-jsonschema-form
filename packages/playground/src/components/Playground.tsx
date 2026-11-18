@@ -20,6 +20,7 @@ import { createSchemaUtils, resetLogOnce } from '@rjsf/utils';
 import { samples } from '../samples/index.ts';
 import type { Sample, UiSchemaForTheme } from '../samples/Sample.ts';
 import base64 from '../utils/base64.ts';
+import AppearanceControl from './AppearanceControl.tsx';
 import DemoFrame from './DemoFrame.tsx';
 import Editors from './Editors.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx';
@@ -290,6 +291,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     (newTheme: string, { stylesheet: newStylesheet }: ThemesType) => {
       setTheme(newTheme);
       setStylesheet(newStylesheet);
+      setSubtheme(null);
       // Read from the form at the switch rather than from `formData`, which changes with every edit and would rebuild
       // the theme selector each time
       const form = playGroundFormRef.current;
@@ -310,8 +312,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       // without this the second sample to make the same mistake at the same field would warn about nothing. Checking
       // those warnings by hand is most of what the playground is for.
       resetLogOnce();
-      setTheme(next.theme);
-      setStylesheet(next.stylesheet ?? null);
       if (next.sampleName) {
         setSampleName(next.sampleName);
         setUiSchemaGenerator(next.uiSchemaGenerator);
@@ -372,6 +372,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     <Box sx={{ display: 'flex', width: '100%' }}>
       <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
       <Box sx={{ width: '100%' }}>
+        <Box component='header' sx={{ display: 'flex', justifyContent: 'flex-end', pt: 1 }}>
+          <AppearanceControl />
+        </Box>
         {sharedSetupError !== undefined && <Alert severity='error'>Unable to load form setup data.</Alert>}
         <Editors
           loadKey={loadKey}
@@ -404,7 +407,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               border: 0,
             }}
             theme={theme}
-            subtheme={subtheme || 'light'}
+            subtheme={subtheme}
           >
             <FormComponent
               key={`${loadKey}-${editKey}`}

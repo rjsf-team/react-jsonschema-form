@@ -4381,7 +4381,7 @@ describe('clearing a field with a schema default does not re-apply the default (
         expect(getFormData()).toEqual({ o: { x: 'X' } });
       });
 
-      it('keeps a field the user cleared empty', async () => {
+      it('fills a field the user cleared, since the default filling it changed (#5818)', async () => {
         const ref = createFormRef();
         const { node, rerender, getFormData } = createFormComponent({
           ref,
@@ -4393,7 +4393,7 @@ describe('clearing a field with a schema default does not re-apply the default (
 
         rerender({ ref, schema: withAncestorDefault, defaultFormStateBehavior });
 
-        expect(getFormData()).toEqual({ o: { x: undefined } });
+        expect(getFormData()).toEqual({ o: { x: 'X' } });
       });
     });
 
@@ -4423,7 +4423,7 @@ describe('clearing a field with a schema default does not re-apply the default (
         expect(getFormData()).toEqual({ list: [{ o: { x: 'D' } }, { o: { x: 'D' } }] });
       });
 
-      it('keeps a copied row empty where the user cleared the row it copies', async () => {
+      it('fills a copied row as it fills the cleared row it copies, since the default filling both changed (#5818)', async () => {
         const { node, rerender, getFormData } = createFormComponent({
           schema,
           uiSchema,
@@ -4435,7 +4435,7 @@ describe('clearing a field with a schema default does not re-apply the default (
         await user.click(elementOf(node, '.rjsf-array-item-copy'));
         rerender({ schema: withItemDefault, uiSchema, defaultFormStateBehavior });
 
-        expect(getFormData()).toEqual({ list: [{ o: { x: undefined } }, { o: { x: undefined } }] });
+        expect(getFormData()).toEqual({ list: [{ o: { x: 'D' } }, { o: { x: 'D' } }] });
       });
 
       it('renders the data the form holds once a write drops a clear, under a merge mode that keeps clears', async () => {

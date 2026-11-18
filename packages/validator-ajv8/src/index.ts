@@ -6,6 +6,4 @@ export { default as AJV8PrecompiledValidator } from './precompiledValidator.ts';
 export { default as AJV8Validator } from './validator.ts';
 export type * from './types.ts';
 
-// Annotated pure so a bundler can drop it: an app that imports only
-// `createPrecompiledValidator` otherwise keeps this call, and with it AJV.
-export default /* @__PURE__ */ customizeValidator();
+export { default } from './defaultValidator.ts';

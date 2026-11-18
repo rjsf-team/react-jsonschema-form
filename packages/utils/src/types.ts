@@ -218,6 +218,20 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
   readonly widgets?: Readonly<Record<string, unknown>>;
 }
 
+/** Where a property sits, which decides whether the defaults write its default under `emptyObjectFields`, see
+ * `getFilledDefault()`
+ */
+export interface PropertyPlacement {
+  /** Whether the object holding the property lists it in its `required`, undefined where that object lists no
+   * `required`, so its own properties read their requiredness as the root's do
+   */
+  isRequired?: boolean;
+  /** Whether that object is required itself, undefined for the root or an object the defaults reach with no
+   * `required` of its own
+   */
+  isParentRequired?: boolean;
+}
+
 /** The props for the `getDefaultFormState()` schema function */
 export interface GetDefaultFormStateProps<
   T = unknown,
@@ -2652,6 +2666,25 @@ export interface SchemaUtilsType<
    *          and has an allowed property name left to take
    */
   canExpand(schema: S, uiSchema?: UiSchema<T, S, F>, formData?: T): boolean;
+  /** Says whether `newSchema` constrains a field as `oldSchema` did, each `default` read as the one the defaults fill
+   * the field with under the `SchemaContext`'s `defaultFormStateBehavior`, see `constrainsAlike()`
+   *
+   * @param oldSchema - The field's schema before the change
+   * @param newSchema - The field's schema after the change
+   * @param oldInheritedDefault - The default the field holding `oldSchema` was filled with for it
+   * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
+   * @param [oldPlacement] - Where the field sat as a property before the change, if it is one
+   * @param [newPlacement] - Where the field sits as a property after the change, if it is one
+   * @returns - Whether both schemas constrain the field alike
+   */
+  constrainsAlike(
+    oldSchema: S,
+    newSchema: S,
+    oldInheritedDefault: unknown,
+    newInheritedDefault: unknown,
+    oldPlacement?: PropertyPlacement,
+    newPlacement?: PropertyPlacement,
+  ): boolean;
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
    * field is in the `required` list for its parent and if so, it is marked as required on return. At each key of the
@@ -2715,6 +2748,15 @@ export interface SchemaUtilsType<
    * @deprecated Kept through v7 for a field rendered without a plan, which says what draws its label
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions): boolean;
+  /** Returns the `default` the defaults fill the field `schema` describes with, given the one the field holding it was
+   * filled with for it, under the `SchemaContext`'s `defaultFormStateBehavior`, see `getFilledDefault()`
+   *
+   * @param schema - The field's schema, already retrieved
+   * @param inheritedDefault - The default the field holding this one was filled with for it, if any
+   * @param [placement] - Where the field sits as a property, left out for the root or an array item
+   * @returns - The default the field is filled with, or `undefined` where there is none
+   */
+  getFilledDefault(schema: S, inheritedDefault: unknown, placement?: PropertyPlacement): unknown;
   /** Determines which of the given `options` provided most closely matches the `formData`.
    * Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
    *

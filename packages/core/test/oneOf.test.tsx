@@ -6,10 +6,11 @@ import type {
   MultiSchemaFieldTemplateProps,
   ObjectFieldTemplateProps,
   RJSFSchema,
+  SchemaUtilsType,
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getByPath, isPlainObject, noop, optionDescriptionId, ROOT_FIELD_PATH } from '@rjsf/utils';
+import { createSchemaUtils, getByPath, isPlainObject, noop, optionDescriptionId, ROOT_FIELD_PATH } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import { createPrecompiledValidator, customizeValidator } from '@rjsf/validator-ajv8';
 import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
@@ -513,6 +514,131 @@ describe('oneOf', () => {
     expect(Object.hasOwn(onChange.mock.lastCall![0].formData, 'value')).toBe(true);
   });
 
+  it("should fill a clear of a property holding its own null default with the new option's default for it under ancestorWins (#5817)", async () => {
+    const optionFor = (name: string): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      default: { value: name },
+      properties: {
+        kind: { type: 'string', const: name, default: name },
+        value: { type: ['string', 'null'], default: null },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a'), optionFor('b')] },
+      defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' },
+    });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_value')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', value: 'b' } }),
+      'root__oneof_select',
+    );
+  });
+
+  it("should keep a clear of a property the parent's default fills under every option under ancestorWins (#5817)", async () => {
+    const optionFor = (name: string, a: number): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      default: { a },
+      properties: { a: { type: 'number' } },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        default: { f: { a: 1 } },
+        properties: { f: { oneOf: [optionFor('A', 2), optionFor('B', 3)] } },
+      },
+      defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' },
+    });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_f_a')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_f__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { f: { a: undefined } } }),
+      'root_f__oneof_select',
+    );
+    expect(Object.hasOwn(onChange.mock.lastCall![0].formData.f, 'a')).toBe(true);
+  });
+
+  it("should keep a clear of a property the field's own default fills under every option", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      default: { a: 'p' },
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        { title: 'B', properties: { a: { type: 'string' } }, default: { a: 'p' } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_a')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { a: undefined } }),
+      'root__oneof_select',
+    );
+    expect(Object.hasOwn(onChange.mock.lastCall![0].formData, 'a')).toBe(true);
+  });
+
+  it("should keep a clear of a property the outer field's default fills under every option of an inner oneOf (#5824)", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      default: { a: 'p' },
+      anyOf: [
+        {
+          oneOf: [
+            { title: 'A', default: { a: 'p' }, properties: { a: { type: 'string' } } },
+            { title: 'B', properties: { a: { type: 'string' } } },
+          ],
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_a')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { a: undefined } }),
+      'root__oneof_select',
+    );
+    expect(Object.hasOwn(onChange.mock.lastCall![0].formData, 'a')).toBe(true);
+  });
+
+  it("should keep a clear in an item of an optional array, whose defaults fill neither option, under 'populateRequiredDefaults'", async () => {
+    const optionFor = (title: string, value: string): RJSFSchema => ({
+      title,
+      properties: { a: { type: 'string', default: value } },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        required: ['name'],
+        properties: {
+          name: { type: 'string' },
+          list: {
+            type: 'array',
+            items: { type: 'object', required: ['a'], oneOf: [optionFor('A', 'x'), optionFor('B', 'y')] },
+          },
+        },
+      },
+      initialFormData: { name: 'n', list: [{ a: 'x' }] },
+      defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
+    });
+    await user.clear(node.querySelector<HTMLInputElement>('#root_list_0_a')!);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_list_0__oneof_select')!, '1');
+
+    const item = onChange.mock.lastCall![0].formData.list[0];
+    expect(item).toEqual({ a: undefined });
+    expect(Object.hasOwn(item, 'a')).toBe(true);
+  });
+
   describe('keeps a value the new option declares but the fill would not write', () => {
     // What an option declares and what `computeDefaults()` acts on are not the same set, and the deletion is only
     // safe where they agree. `sanitizeDataForNewSchema()` has already put the right value in each of these, so
@@ -726,6 +852,342 @@ describe('oneOf', () => {
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ formData: { kind: 'b', mode: 'y' } }),
+      'root__oneof_select',
+    );
+  });
+
+  // Where the option switched to renders the key with the same uiSchema, its `ui:initialValue` still fills it out, as a
+  // fresh mount of that option does; an option uiSchema of its own leaving it out renders it without
+  it.each<{
+    name: string;
+    to: Partial<RJSFSchema>;
+    uiSchemaOf?: (t: UiSchema) => UiSchema;
+    minItems?: number;
+    saved?: string[];
+    expected: string[];
+  }>([
+    { name: 'a default the new option shares, under a new maxItems', to: { maxItems: 3 }, expected: ['i', 'i'] },
+    { name: 'a new default', to: { default: ['y'] }, expected: ['i', 'i'] },
+    { name: 'a new default without minItems', to: { default: ['y'] }, minItems: 0, expected: ['i'] },
+    {
+      name: "a new default, each option's uiSchema alike",
+      to: { default: ['y'] },
+      uiSchemaOf: (t) => ({ oneOf: [{ t }, { t }] }),
+      expected: ['i', 'i'],
+    },
+    // The uiSchema the option switched to renders the key with fills it, though it differs from the old one elsewhere
+    ...[
+      { label: 'a new default', to: { default: ['y'] } },
+      { label: 'a new maxItems', to: { maxItems: 3 } },
+    ].map(({ label, to }) => ({
+      name: `${label}, each option's uiSchema titling it apart`,
+      to,
+      uiSchemaOf: (t: UiSchema): UiSchema => ({
+        oneOf: [{ t: { ...t, 'ui:title': 'A' } }, { t: { ...t, 'ui:title': 'B' } }],
+      }),
+      expected: ['i', 'i'],
+    })),
+    {
+      name: "a new default, the new option's uiSchema titling it apart beside an additionalProperties uiSchema",
+      to: { default: ['y'] },
+      uiSchemaOf: (t) => ({
+        oneOf: [{ t: { ...t, 'ui:title': 'A' } }, { t: { ...t, 'ui:title': 'B' }, additionalProperties: {} }],
+      }),
+      expected: ['i', 'i'],
+    },
+    {
+      name: "a new default, the new option's uiSchema leaving it out over the field's",
+      to: { default: ['y'] },
+      uiSchemaOf: (t) => ({ t, oneOf: [{ t }, {}] }),
+      expected: ['y', 'z'],
+    },
+    // An `additionalProperties` uiSchema renders no key the options declare, so the plain fill fills it on both sides
+    {
+      name: 'a new default, beside an additionalProperties uiSchema',
+      to: { default: ['y'] },
+      uiSchemaOf: (t) => ({ additionalProperties: t }),
+      expected: ['y', 'z'],
+    },
+    {
+      name: "a new default, the new option's uiSchema rendering it beside an additionalProperties uiSchema",
+      to: { default: ['y'] },
+      uiSchemaOf: (t) => ({ oneOf: [{ t }, { t: { items: { 'ui:initialValue': 'j' } }, additionalProperties: t }] }),
+      expected: ['j', 'j'],
+    },
+    // The field's uiSchema alone renders the key, so a value only the plain fill gives was saved, not filled
+    {
+      name: 'a new default, a saved value the plain fill pads alike',
+      to: { default: ['y'] },
+      saved: ['x', 'z'],
+      expected: ['x', 'z'],
+    },
+    // The field's uiSchema holds no entry for the key, so it renders with `{}`, never its `additionalProperties` one
+    {
+      name: 'a new default, a saved value an additionalProperties uiSchema fills alike',
+      to: { default: ['y', 'y', 'y'] },
+      uiSchemaOf: (t) => ({ additionalProperties: t }),
+      saved: ['i', 'i'],
+      expected: ['i', 'i'],
+    },
+    // The old option's uiSchema holds no entry for the key, so the plain fill filled it
+    {
+      name: "a new default, only the new option's uiSchema rendering it",
+      to: { default: ['y'] },
+      uiSchemaOf: (t) => ({ oneOf: [{}, { t }] }),
+      expected: ['i', 'i'],
+    },
+  ])(
+    'should fill out a key an items ui:initialValue filled anew as the option switched to renders it, for $name',
+    async ({ to, uiSchemaOf = (t) => ({ t }), minItems = 2, saved, expected }) => {
+      const optionFor = (kind: string, t: Partial<RJSFSchema>): RJSFSchema => ({
+        title: kind,
+        type: 'object',
+        properties: {
+          kind: { type: 'string', const: kind, default: kind },
+          t: { type: 'array', minItems, items: { type: 'string', default: 'z' }, default: ['x'], ...t } as RJSFSchema,
+        },
+      });
+      const t = { items: { 'ui:initialValue': 'i' } };
+      const { node, onChange } = createFormComponent({
+        schema: { oneOf: [optionFor('a', {}), optionFor('b', to)] },
+        uiSchema: uiSchemaOf(t),
+        initialFormData: saved && { kind: 'a', t: saved },
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { kind: 'b', t: expected } }),
+        'root__oneof_select',
+      );
+    },
+  );
+
+  // The fill reads the uiSchema of a field switched below the root, or of an array item, at the switched field's path
+  it.each<{
+    name: string;
+    schemaOf: (option: RJSFSchema[]) => RJSFSchema;
+    uiSchemaOf: (t: UiSchema) => UiSchema;
+    select: string;
+    formDataOf: (option: GenericObjectType) => unknown;
+    expected?: string[];
+  }>([
+    {
+      name: 'a property',
+      schemaOf: (oneOf) => ({ type: 'object', properties: { o: { oneOf } } }),
+      uiSchemaOf: (t) => ({ o: { t } }),
+      select: '#root_o__oneof_select',
+      formDataOf: (option) => ({ o: option }),
+    },
+    // An `additionalProperties` uiSchema renders no property the object declares
+    ...[
+      { label: 'its own', uiSchemaOf: (t: UiSchema): UiSchema => ({ additionalProperties: { t } }) },
+      { label: 'an empty own', uiSchemaOf: (t: UiSchema): UiSchema => ({ o: {}, additionalProperties: { t } }) },
+      {
+        label: 'its options',
+        uiSchemaOf: (t: UiSchema): UiSchema => ({ additionalProperties: { oneOf: [{}, { t }] } }),
+      },
+    ].map(({ label, uiSchemaOf }) => ({
+      name: `a property beside an additionalProperties uiSchema in place of ${label}`,
+      schemaOf: (oneOf: RJSFSchema[]): RJSFSchema => ({ type: 'object', properties: { o: { oneOf } } }),
+      uiSchemaOf,
+      select: '#root_o__oneof_select',
+      formDataOf: (option: GenericObjectType) => ({ o: option }),
+      expected: ['y', 'z'],
+    })),
+    // A list's `additionalItems` uiSchema renders none of its items
+    {
+      name: 'an array item beside an additionalItems uiSchema',
+      schemaOf: (oneOf) => ({ type: 'array', minItems: 1, items: { oneOf } }),
+      uiSchemaOf: (t) => ({ additionalItems: { t } }),
+      select: '#root_0__oneof_select',
+      formDataOf: (option) => [option],
+      expected: ['y', 'z'],
+    },
+    {
+      name: 'an array item',
+      schemaOf: (oneOf) => ({ type: 'array', minItems: 1, items: { oneOf } }),
+      uiSchemaOf: (t) => ({ items: { t } }),
+      select: '#root_0__oneof_select',
+      formDataOf: (option) => [option],
+    },
+  ])(
+    'should fill out a key an items ui:initialValue filled anew when switching the options of $name',
+    async ({ schemaOf, uiSchemaOf, select, formDataOf, expected = ['i', 'i'] }) => {
+      const optionFor = (kind: string, fieldDefault: string[]): RJSFSchema => ({
+        title: kind,
+        type: 'object',
+        properties: {
+          kind: { type: 'string', const: kind, default: kind },
+          t: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: fieldDefault },
+        },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: schemaOf([optionFor('a', ['x']), optionFor('b', ['y'])]),
+        uiSchema: uiSchemaOf({ items: { 'ui:initialValue': 'i' } }),
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>(select)!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: formDataOf({ kind: 'b', t: expected }) }),
+        select.slice(1),
+      );
+    },
+  );
+
+  it('should fill out a key an items ui:initialValue under ui:definitions filled anew when switching options', async () => {
+    const optionFor = (kind: string, fieldDefault: string[]): RJSFSchema => ({
+      title: kind,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: kind, default: kind },
+        t: { $ref: '#/$defs/T', default: fieldDefault },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: {
+        $defs: { T: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' } } },
+        oneOf: [optionFor('a', ['x']), optionFor('b', ['y'])],
+      },
+      uiSchema: { 'ui:definitions': { '#/$defs/T': { items: { 'ui:initialValue': 'i' } } } },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', t: ['i', 'i'] } }),
+      'root__oneof_select',
+    );
+  });
+
+  it('should fill out a key an items ui:initialValue filled anew where the option switched to renders it through an option of its own', async () => {
+    const t = (fieldDefault: string[]): RJSFSchema => ({
+      type: 'array',
+      minItems: 2,
+      items: { type: 'string', default: 'z' },
+      default: fieldDefault,
+    });
+    const kind = (name: string): RJSFSchema => ({ type: 'string', const: name, default: name });
+    const ui = { t: { items: { 'ui:initialValue': 'i' } } };
+    const { node, onChange } = createFormComponent({
+      schema: {
+        oneOf: [
+          { title: 'a', type: 'object', properties: { kind: kind('a'), t: t(['x']) } },
+          { title: 'b', type: 'object', properties: { kind: kind('b') }, oneOf: [{ properties: { t: t(['y']) } }] },
+        ],
+      },
+      uiSchema: { oneOf: [ui, { oneOf: [ui] }] },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', t: ['i', 'i'] } }),
+      'root__oneof_select',
+    );
+  });
+
+  // Of the uiSchemas the option switched to holds for the key, the one that filled it where the old option rendered it
+  it('should fill out a key an items ui:initialValue filled anew under the uiSchema that filled it, of those the option switched to holds', async () => {
+    const t = (fieldDefault: string[]): RJSFSchema => ({
+      type: 'array',
+      minItems: 2,
+      items: { type: 'string', default: 'z' },
+      default: fieldDefault,
+    });
+    const kind = (name: string): RJSFSchema => ({ type: 'string', const: name, default: name });
+    const iv = { items: { 'ui:initialValue': 'i' } };
+    const ivj = { items: { 'ui:initialValue': 'j' } };
+    const { node, onChange } = createFormComponent({
+      schema: {
+        oneOf: [
+          { title: 'a', type: 'object', properties: { kind: kind('a'), t: t(['x']) } },
+          {
+            title: 'b',
+            type: 'object',
+            properties: { kind: kind('b'), t: t(['y']) },
+            anyOf: [{ properties: { x: { type: 'string' } } }, { properties: { w: { type: 'string' } } }],
+          },
+        ],
+      },
+      uiSchema: { oneOf: [{ t: iv }, { t: ivj, anyOf: [{ t: iv }, {}] }] },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', t: ['i', 'i'] } }),
+      'root__oneof_select',
+    );
+  });
+
+  // Past a tuple an item's `additionalItems` uiSchema is its own
+  it.each<{ name: string; additionalItemsOf: (d: string) => RJSFSchema; uiSchema: UiSchema; expected: unknown[] }>([
+    {
+      name: 'a scalar',
+      additionalItemsOf: (d) => ({ type: 'string', default: d }),
+      uiSchema: { 'ui:initialValue': 'i' },
+      expected: ['k', 'i'],
+    },
+    {
+      name: 'an array',
+      additionalItemsOf: (d) => ({ type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [d] }),
+      uiSchema: { items: { 'ui:initialValue': 'i' } },
+      expected: ['k', ['i', 'i']],
+    },
+  ])(
+    "should fill out a tuple's additional item $name its additionalItems uiSchema filled anew when switching options",
+    async ({ additionalItemsOf, uiSchema, expected }) => {
+      const optionFor = (kind: string, d: string): RJSFSchema => {
+        const additionalItems = additionalItemsOf(d);
+        return {
+          title: kind,
+          type: 'object',
+          properties: {
+            kind: { type: 'string', const: kind, default: kind },
+            t: {
+              type: 'array',
+              minItems: 2,
+              items: [{ type: 'string', default: 'k' }],
+              additionalItems,
+              ...(additionalItems.type === 'array' && { default: ['k', [d]] }),
+            },
+          },
+        };
+      };
+      const { node, onChange } = createFormComponent({
+        schema: { oneOf: [optionFor('a', 'x'), optionFor('b', 'y')] },
+        uiSchema: { t: { additionalItems: uiSchema } },
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { kind: 'b', t: expected } }),
+        'root__oneof_select',
+      );
+    },
+  );
+
+  it('should fill a scalar key anew with the ui:initialValue the option switched to renders it with', async () => {
+    const optionFor = (kind: string, fieldDefault: string): RJSFSchema => ({
+      title: kind,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: kind, default: kind },
+        t: { type: 'string', default: fieldDefault },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a', 'a'), optionFor('b', 'b')] },
+      uiSchema: { oneOf: [{ t: { 'ui:initialValue': 'i' } }, { t: { 'ui:initialValue': 'j' } }] },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', t: 'j' } }),
       'root__oneof_select',
     );
   });
@@ -5590,24 +6052,86 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(node.querySelector('#root_a__key') !== null).toBe(expected?.a !== undefined);
     });
 
-    // The sanitize clears data the new option's object `const` or `enum` rejects, which the switch leaves as v7 does
-    it.each<{ declares: string; option: RJSFSchema; expected: unknown }>([
-      { declares: 'a const beside properties', option: { properties: { b: {} }, const: { b: 1 } }, expected: { b: 1 } },
-      { declares: 'a const alone', option: { const: { b: 1 } }, expected: {} },
-      { declares: 'an enum alone', option: { enum: [{ b: 1 }] }, expected: undefined },
-    ])('leaves the data $declares clears as it was, keeping no extra key', async ({ option, expected }) => {
+    // The sanitize clears data the new option's object `const` or `enum` rejects. The switch then defaults the object to
+    // the option's `const`, whose key is an extra key where the option doesn't declare it, and leaves an `enum`'s clear,
+    // since an `enum` lists values for the user to pick from rather than one to default to
+    it.each<{ declares: string; option: RJSFSchema; expected: unknown; extraKey: boolean }>([
+      {
+        declares: 'a const beside properties',
+        option: { properties: { b: {} }, const: { b: 1 } },
+        expected: { b: 1 },
+        extraKey: false,
+      },
+      { declares: 'a const alone', option: { const: { b: 1 } }, expected: { b: 1 }, extraKey: true },
+      { declares: 'an enum alone', option: { enum: [{ b: 1 }] }, expected: undefined, extraKey: false },
+    ])(
+      "clears the key $declares rejects and defaults to the option's const, if any",
+      async ({ option, expected, extraKey }) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          [keyword]: [
+            { title: 'S', properties: { a: { type: 'string' } } },
+            { title: 'T', ...option },
+          ],
+          additionalProperties: true,
+        };
+        const { node, formData } = await selectT(schema, { initialFormData: { a: 'x' } });
+
+        expect(formData).toEqual(expected);
+        expect(node.querySelector('#root_a__key')).toBeNull();
+        expect(node.querySelector('#root_b__key') !== null).toBe(extraKey);
+      },
+    );
+
+    // The keys an option's object `const` fills are a default, whether or not the option declares them, so switching
+    // back clears them rather than leaving a key no field renders
+    it.each<{ declares: string; option: RJSFSchema }>([
+      { declares: 'beside properties', option: { properties: { b: {} }, const: { b: 1 } } },
+      { declares: 'alone', option: { const: { b: 1 } } },
+    ])('clears the keys a const $declares filled on switching back', async ({ option }) => {
       const schema: RJSFSchema = {
         type: 'object',
         [keyword]: [
-          { title: 'S', properties: { a: { type: 'string' } } },
+          { title: 'S', properties: { a: { type: 'string' } }, required: ['a'] },
           { title: 'T', ...option },
         ],
-        additionalProperties: true,
       };
-      const { node, formData } = await selectT(schema, { initialFormData: { a: 'x' } });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x' } });
 
-      expect(formData).toEqual(expected);
-      expect(node.querySelector('#root_a__key')).toBeNull();
+      await user.selectOptions(elementOf(node, selectorId), 'T');
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 1 });
+      await user.selectOptions(elementOf(node, selectorId), 'S');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+    });
+
+    it('fills the old data as many times on switching back for five keys a const filled as for one', async () => {
+      const fillsOnSwitchingBack = async (keys: number) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          [keyword]: [
+            { title: 'S', properties: { a: { type: 'string' } }, required: ['a'] },
+            { title: 'T', const: Object.fromEntries(Array.from({ length: keys }, (_, index) => [`b${index}`, 1])) },
+          ],
+        };
+        // The form builds its own schema utils, so the fills are counted on the prototype every instance shares
+        const sharedMethods: SchemaUtilsType = Object.getPrototypeOf(
+          createSchemaUtils({ validator: customizeValidator() }, schema),
+        );
+        const fills = vi.spyOn(sharedMethods, 'getDefaultFormState');
+        try {
+          const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x' } });
+          await user.selectOptions(elementOf(node, selectorId), 'T');
+          fills.mockClear();
+          await user.selectOptions(elementOf(node, selectorId), 'S');
+          expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+          return fills.mock.calls.length;
+        } finally {
+          fills.mockRestore();
+        }
+      };
+
+      expect(await fillsOnSwitchingBack(5)).toBe(await fillsOnSwitchingBack(1));
     });
 
     // As when the new option declares a property, which the sanitize keeps the object's own keys beside, whether or not

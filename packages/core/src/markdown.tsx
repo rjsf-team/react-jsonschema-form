@@ -1,3 +1,5 @@
+'use client';
+
 import type { FormContextType, MarkdownTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTestIds } from '@rjsf/utils';
 import { Markdown } from 'markdown-to-jsx/react';

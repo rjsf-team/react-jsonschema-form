@@ -7,16 +7,31 @@ import Playground from '../../src/components/Playground.tsx';
 
 const user = userEvent.setup();
 
-// jsdom mounts nothing inside the demo frame's iframe, so the form renders in the page
+// jsdom mounts nothing inside the demo frame's iframe, so the form renders in the page, inside an element that shows
+// the subtheme and the stylesheets the frame was given
 vi.mock('../../src/components/DemoFrame.tsx', () => ({
-  default: ({ children }: { children: ReactNode }) => children,
+  default: ({ children, head, subtheme }: { children: ReactNode; head: ReactNode; subtheme: string | null }) => (
+    <div data-testid='demo-frame' data-subtheme={subtheme ?? 'none'}>
+      {head}
+      {children}
+    </div>
+  ),
 }));
 
-/** Renders the playground on the `Simple` sample, whose `firstName` is `Chuck`, under two themes alike */
+/** Renders the playground on the `Simple` sample, whose `firstName` is `Chuck`, under two themes alike, each with a
+ * subtheme of its own
+ */
 function renderPlayground() {
   const { container } = render(
     <Playground
-      themes={{ core: { stylesheet: '', theme: {} }, other: { stylesheet: '', theme: {} } }}
+      themes={{
+        core: { stylesheet: 'core.css', theme: {}, subthemes: { coreSubtheme: { stylesheet: 'coreSubtheme.css' } } },
+        other: {
+          stylesheet: 'other.css',
+          theme: {},
+          subthemes: { otherSubtheme: { stylesheet: 'otherSubtheme.css' } },
+        },
+      }}
       validators={{ AJV8: validator }}
     />,
   );
@@ -28,7 +43,16 @@ function renderPlayground() {
     return input;
   };
   const reset = () => user.click(screen.getByTitle('Click me to reset the form programmatically.'));
-  return { container, firstName, reset };
+  const select = (id: string, option: string) => {
+    const selector = container.querySelector(`#${id}`);
+    if (!selector) {
+      throw new Error(`#${id} is not rendered`);
+    }
+    return user.selectOptions(selector, option);
+  };
+  const stylesheets = () =>
+    Array.from(screen.getByTestId('demo-frame').querySelectorAll('link'), (link) => link.getAttribute('href'));
+  return { firstName, reset, select, stylesheets };
 }
 
 describe('Playground', () => {
@@ -42,15 +66,35 @@ describe('Playground', () => {
   });
 
   it('keeps an edit across a theme switch, which remounts the form', async () => {
-    const { container, firstName } = renderPlayground();
+    const { firstName, select } = renderPlayground();
     await user.type(firstName(), 'X');
-    const themeSelect = container.querySelector('#rjsf_themeSelector');
-    if (!themeSelect) {
-      throw new Error('The theme selector is not rendered');
-    }
 
-    await user.selectOptions(themeSelect, 'other');
+    await select('rjsf_themeSelector', 'other');
 
     expect(firstName()).toHaveValue('ChuckX');
+  });
+
+  it("drops the picked subtheme on a theme switch, since it isn't one of the new theme's", async () => {
+    const { select } = renderPlayground();
+    await select('rjsf_subthemeSelector', 'coreSubtheme');
+    expect(screen.getByTestId('demo-frame')).toHaveAttribute('data-subtheme', 'coreSubtheme');
+
+    await select('rjsf_themeSelector', 'other');
+
+    expect(screen.getByTestId('demo-frame')).toHaveAttribute('data-subtheme', 'none');
+  });
+
+  it('keeps the picked subtheme and its stylesheet across a sample load, which keeps the theme', async () => {
+    const { select, stylesheets } = renderPlayground();
+    await select('rjsf_subthemeSelector', 'coreSubtheme');
+
+    await user.click(screen.getByRole('tab', { name: 'Nested' }));
+
+    await vi.waitFor(() => {
+      expect(screen.getByRole('tab', { name: 'Nested', selected: true })).toBeInTheDocument();
+    });
+    expect(screen.getByTestId('demo-frame')).toHaveAttribute('data-subtheme', 'coreSubtheme');
+    expect(stylesheets()).toEqual(['coreSubtheme.css']);
+    expect(screen.getByRole('combobox', { name: 'Subtheme' })).toHaveValue('0');
   });
 });

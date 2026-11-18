@@ -17,16 +17,16 @@ jobs:
       - uses: pnpm/action-setup@v6
         with:
           run_install: false
-      - name: Use Node.js 24.x
-        uses: actions/setup-node@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 24.x
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
+      - run: node scripts/checkUseClientBuild.mts
       - run: pnpm test
       - run: pnpm run lint
       - name: Determine npm tag based on release version
@@ -47,5 +47,3 @@ jobs:
           NPM_CONFIG_REGISTRY: 'https://registry.npmjs.org/'
           # If using Nx, it also needs the GitHub token for the release side
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # This tells npm to use the OIDC token for the registry
-          NODE_AUTH_TOKEN: ${{ steps.get_id_token.outputs.token }}
