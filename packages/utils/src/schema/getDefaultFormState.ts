@@ -3521,11 +3521,17 @@ function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextTy
   if (offered === undefined || offered.key in schema) {
     return undefined;
   }
+  // Under `constAsDefaults: 'skipOneOf'` the constant of a `oneOf` option is no default, as for a `oneOf` the field
+  // offers itself
+  if (context.defaultFormStateBehavior?.constAsDefaults === 'skipOneOf' && Boolean(mergedSchema[ONE_OF_KEY]?.length)) {
+    return undefined;
+  }
   const { options } = offered;
+  // With no data, the option the field shows is the one its own `default` names, as the option selector picks it
   const index = closestOption<S, F>(
     context,
     graph.rawRoot,
-    data,
+    data === undefined && DEFAULT_KEY in schema ? schema[DEFAULT_KEY] : data,
     options,
     0,
     false,

@@ -7126,6 +7126,45 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
           expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ x: C });
         });
+        describe("the option a field's own default names, where it holds no data", () => {
+          beforeEach(() => {
+            // The mock validator cannot tell which option a value matches, so it answers each check as the real ones do
+            testValidator.setReturnValues({ isValid: asRealValidator });
+          });
+          afterAll(() => {
+            testValidator.reset?.();
+          });
+          it('of a primitive field', () => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              required: ['n'],
+              properties: { n: { type: 'number', allOf: [{ oneOf: [{ const: 3 }, { const: 4 }] }], default: 4 } },
+            };
+            expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ n: 4 });
+          });
+          it('of an object field', () => {
+            const schema = rootOf({
+              allOf: [{ oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }],
+              default: { a: 2 },
+            });
+            expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ x: { a: 2 } });
+          });
+        });
+        it("but takes none of a oneOf option's under constAsDefaults: 'skipOneOf', as of the field's own oneOf", () => {
+          const skipOneOf = {
+            validator: testValidator,
+            defaultFormStateBehavior: { constAsDefaults: 'skipOneOf' as const },
+          };
+          const nested = rootOf({ allOf: [{ oneOf: [{ const: C }] }] });
+          const own = rootOf({ oneOf: [{ const: C }] });
+          expect(getDefaultFormState(skipOneOf, { schema: nested })).toStrictEqual(
+            getDefaultFormState(skipOneOf, { schema: own }),
+          );
+          expect(getDefaultFormState(skipOneOf, { schema: nested })).toStrictEqual({});
+          expect(
+            getDefaultFormState(skipOneOf, { schema: rootOf({ allOf: [{ anyOf: [{ const: C }] }] }) }),
+          ).toStrictEqual({ x: C });
+        });
         it('but takes none where the option its data matches holds none', () => {
           const schema = rootOf({
             allOf: [{ oneOf: [{ properties: { p: { type: 'string' } }, required: ['p'] }, { const: C }] }],
