@@ -13807,5 +13807,118 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(paths).toEqual([]);
       });
     });
+
+    describe('the items of an array `default` (#5831)', () => {
+      const fill = (schema: RJSFSchema, formData?: unknown) =>
+        getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData });
+      const item: RJSFSchema = {
+        type: 'object',
+        properties: { q: { type: 'number', default: 1 }, c: { const: 'c' } },
+      };
+
+      it('fills an item of the default with the defaults of its own properties', () => {
+        const schema: RJSFSchema = { type: 'array', default: [{}], items: item };
+        expect(fill(schema)).toEqual([{ q: 1, c: 'c' }]);
+      });
+
+      it('fills it the same for a default the array takes from its parent', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { list: [{}] },
+          properties: { list: { type: 'array', items: item } },
+        };
+        expect(fill(schema)).toEqual({ list: [{ q: 1, c: 'c' }] });
+      });
+
+      it('keeps what an item of the default states over the default of the items', () => {
+        const schema: RJSFSchema = { type: 'array', default: ['a', 'b'], items: { type: 'string', default: 'z' } };
+        expect(fill(schema)).toEqual(['a', 'b']);
+        const objects: RJSFSchema = { type: 'array', default: [{ q: 5 }], items: item };
+        expect(fill(objects)).toEqual([{ q: 5, c: 'c' }]);
+      });
+
+      it('keeps a `null` item of the default, as it keeps one the data holds', () => {
+        const schema: RJSFSchema = { type: 'array', default: [null], items: { type: 'string', default: 'z' } };
+        expect(fill(schema)).toEqual([null]);
+      });
+
+      it('keeps an item of the default the items reject, as it keeps one the data holds', () => {
+        const schema: RJSFSchema = { type: 'array', default: ['x'], items: { type: 'string', enum: ['a', 'b'] } };
+        expect(fill(schema)).toEqual(['x']);
+        expect(fill(schema, ['x'])).toEqual(['x']);
+      });
+
+      it('keeps an item of the default the items reject over their own default, as it keeps one the data holds', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          default: ['x', 'a'],
+          items: { type: 'string', enum: ['a', 'b'], default: 'b' },
+        };
+        expect(fill(schema)).toEqual(['x', 'a']);
+        expect(fill(schema, ['x', 'a'])).toEqual(['x', 'a']);
+        const multiSelect: RJSFSchema = {
+          type: 'array',
+          uniqueItems: true,
+          default: ['x'],
+          items: { enum: ['a', 'b'], default: 'a' },
+        };
+        expect(fill(multiSelect)).toEqual(['x']);
+        expect(fill(multiSelect, ['x'])).toEqual(['x']);
+      });
+
+      it('reads an item of the default by `items`, not by an `additionalItems` beside it', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          default: [{}],
+          items: item,
+          additionalItems: { type: 'object', properties: { z: { type: 'number', default: 9 } } },
+        };
+        expect(fill(schema)).toEqual([{ q: 1, c: 'c' }]);
+        expect(fill(schema, [{}])).toEqual([{ q: 1, c: 'c' }]);
+      });
+
+      it('fills an item of the default as the form does without `shouldMergeDefaultsIntoFormData`', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          default: [{ e: null }],
+          items: {
+            type: 'object',
+            properties: { e: { type: ['string', 'null'], default: 'a' }, q: { type: 'number', default: 1 } },
+          },
+        };
+        expect(fill(schema)).toEqual([{ e: null, q: 1 }]);
+        expect(computeDefaults({ validator: testValidator }, schema, { rootSchema: schema })).toEqual(fill(schema));
+      });
+
+      it('leaves an item of the default as it states it under `populate: never`, as it leaves a row', () => {
+        const schema: RJSFSchema = { type: 'array', default: [{}], items: item };
+        const fillNever = (formData?: unknown) =>
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } } },
+            { schema, rootSchema: schema, formData },
+          );
+        expect(fillNever([{}])).toEqual([{}]);
+        expect(fillNever()).toEqual([{}]);
+      });
+
+      it('fills an item past the rows of the data when extra defaults are merged', () => {
+        const schema: RJSFSchema = { type: 'array', default: [{}, {}], items: item };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { arrayMinItems: { mergeExtraDefaults: true } } },
+            { schema, rootSchema: schema, formData: [{ q: 3 }] },
+          ),
+        ).toEqual([
+          { q: 3, c: 'c' },
+          { q: 1, c: 'c' },
+        ]);
+      });
+
+      it('changes nothing when the filled data is filled again', () => {
+        const schema: RJSFSchema = { type: 'array', default: [{}], items: item };
+        const filled = fill(schema);
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+    });
   });
 }

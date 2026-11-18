@@ -2700,23 +2700,52 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     ...childPathProps<T, S, F>(props, idx),
   });
 
+  // If the populate 'requiredOnly' flag is set then we only merge and include extra defaults if they are required.
+  // Or if populate 'all' is set we merge and include extra defaults.
+  const mergeExtraDefaults = ((ignoreMinItemsFlagSet && required) || isPopulateAll) && arrayMergeExtraDefaults;
+
   // Inject defaults into existing array defaults
   if (Array.isArray(defaults)) {
-    defaults = defaults.map((item: unknown, idx) =>
-      foldChild<T, S, F>(
+    const rows = Array.isArray(rawFormData) ? rawFormData : undefined;
+    // The merge with the data below drops the items of the default past its rows, so they are not computed
+    const kept = rows && !mergeExtraDefaults ? defaults.slice(0, rows.length) : defaults;
+    const hasItemsSchema = isSchemaObject<S>(schema.items);
+    // Only an `items` schema has defaults to fill an item with, and `populate: 'never'` fills no row the data holds
+    // with them: without either the item stays the copy it is
+    const fillsItems = !neverPopulate && hasItemsSchema;
+    defaults = kept.map((item: unknown, idx) => {
+      const isHeld = rows !== undefined && idx < rows.length;
+      // An item an `items` schema describes is no item past a tuple, which is all `additionalItems` describes, so it is
+      // read against no schema here, which applies its uiSchema, a `ui:initialValue` included, as over any default
+      const stated = foldChild<T, S, F>(
         context,
         `default:${idx}`,
-        itemField(view, AdditionalItemsHandling.Fallback, idx),
+        itemField(view, hasItemsSchema ? AdditionalItemsHandling.Ignore : AdditionalItemsHandling.Fallback, idx),
         {
           ...itemProps(idx),
           parentDefaults: item,
-          rawFormData: Array.isArray(rawFormData) ? rawFormData[idx] : undefined,
+          rawFormData: rows?.[idx],
           // An item the data holds is one a field renders
-          onNullFill: Array.isArray(rawFormData) && idx < rawFormData.length ? onNullFill : undefined,
+          onNullFill: isHeld ? onNullFill : undefined,
         },
         memo,
-      ),
-    );
+      );
+      if (!fillsItems || isHeld) {
+        return stated;
+      }
+      // An item of the default no row of the data stands for is filled as the row holding it will be once the data
+      // does (#5831): what it states is that row's data, merged in as the form merges it even for a caller computing
+      // the defaults alone, so they agree on it, and then over the row as the array's data is, which keeps a value the
+      // items' schema rejects
+      const row = foldChild<T, S, F>(
+        context,
+        `defaultRow:${idx}`,
+        itemField(view, AdditionalItemsHandling.Ignore),
+        { ...itemProps(idx), rawFormData: stated, parentDefaults: stated, shouldMergeDefaultsIntoFormData: true },
+        memo,
+      );
+      return mergeDefaultsWithFormData(row, stated, mergeExtraDefaults, true);
+    });
   }
 
   // Deeply inject defaults into already existing form data
@@ -2735,9 +2764,6 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
         ),
       );
 
-      // If the populate 'requiredOnly' flag is set then we only merge and include extra defaults if they are required.
-      // Or if populate 'all' is set we merge and include extra defaults.
-      const mergeExtraDefaults = ((ignoreMinItemsFlagSet && required) || isPopulateAll) && arrayMergeExtraDefaults;
       defaults = mergeDefaultsWithFormData(defaults, itemDefaults, mergeExtraDefaults);
     }
   }
