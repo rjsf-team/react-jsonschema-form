@@ -6860,6 +6860,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }),
         ).toEqual({});
       });
+      it("skips the default of a nested field's own allOf but takes its const, where the root's own allOf keeps its default", () => {
+        const defaultFormStateBehavior: DefaultFormStateBehavior = { allOf: 'skipDefaults' };
+        const context = { validator: testValidator, defaultFormStateBehavior };
+        const nestedDefault: RJSFSchema = {
+          type: 'object',
+          properties: { x: { type: 'number', allOf: [{ default: 3 }] } },
+        };
+        const nestedConst: RJSFSchema = {
+          type: 'object',
+          properties: { x: { type: 'number', allOf: [{ const: 3 }] } },
+        };
+        const rootDefault: RJSFSchema = {
+          type: 'object',
+          allOf: [{ properties: { x: { type: 'number', default: 3 } } }],
+        };
+        expect(getDefaultFormState(context, { schema: nestedDefault })).toStrictEqual({});
+        expect(getDefaultFormState(context, { schema: nestedConst })).toStrictEqual({ x: 3 });
+        expect(getDefaultFormState(context, { schema: rootDefault })).toStrictEqual({ x: 3 });
+      });
     });
     describe('default form state behavior: arrayMinItems.populate = "never"', () => {
       it('should not be filled if minItems defined and required', () => {
