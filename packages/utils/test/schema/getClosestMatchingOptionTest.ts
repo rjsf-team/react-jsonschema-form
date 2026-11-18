@@ -1,6 +1,7 @@
 import type { RJSFSchema, SchemaUtilsType } from '../../src/index.ts';
 import { createSchemaUtils, getByPath, getClosestMatchingOption, isSchemaObject } from '../../src/index.ts';
 import { calculateIndexScore } from '../../src/schema/getClosestMatchingOption.ts';
+import { DECLARED_ABOVE_KEY } from '../../src/schemaMarkers.ts';
 import {
   oneOfData,
   oneOfSchema,
@@ -45,6 +46,10 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     });
     it('returns 0 when formData is empty object', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, {})).toEqual(0);
+    });
+    it('leaves unstubbed an option whose additionalProperties takes only keys a field above declares', () => {
+      const option = { type: 'object', additionalProperties: true, [DECLARED_ABOVE_KEY]: ['a'] } as RJSFSchema;
+      expect(calculateIndexScore({ validator: testValidator }, option, option, { a: 1 })).toEqual(1);
     });
     it('scores a $ref property beside keywords of its own once, when the definition merges itself in through its allOf', () => {
       const rootSchema: RJSFSchema = {

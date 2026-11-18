@@ -1166,7 +1166,12 @@ function extraKeyKeywords<S extends StrictRJSFSchema>(schema: S): S {
  * @param data - The data the keys are read from
  * @returns - The extra keys of the data
  */
-function extraKeysOf<S extends StrictRJSFSchema>(schema: S, joined: S, option: S | undefined, data: unknown): string[] {
+export function extraKeysOf<S extends StrictRJSFSchema>(
+  schema: S,
+  joined: S,
+  option: S | undefined,
+  data: unknown,
+): string[] {
   if (!isObject(data)) {
     return [];
   }

@@ -16,7 +16,13 @@ import type { MergePlan, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { readProvenance } from './graph/provenance.ts';
-import { fieldOf, optionMatchKey, optionNode, stubExistingAdditionalProperties } from './retrieveSchema.ts';
+import {
+  extraKeysOf,
+  fieldOf,
+  optionMatchKey,
+  optionNode,
+  stubExistingAdditionalProperties,
+} from './retrieveSchema.ts';
 
 /** Where a schema scoring reads is declared: the graph and the seeds of the field it is the schema of */
 interface Where<S extends StrictRJSFSchema> {
@@ -189,10 +195,12 @@ function propertyScore<
 }
 
 /** Recursive function that calculates the score of a `formData` against the given `schema`. The computation is fairly
- * simple. Initially the total score is 0. When `schema.properties` object exists, then each property's form value,
- * read from `formData` with its `key`, is scored against the property's schema, as `propertyScore()` describes, and
- * the scores are added up, the keys of `formData` its own `additionalProperties` takes stubbed among them first, as
- * `scoredOption()` describes. A schema without `properties` scores 1 when its `type` is the guessed-type of `formData`.
+ * simple. Initially the total score is 0. First the keys of `formData` that the schema's own `additionalProperties`
+ * takes are stubbed among its `properties`, as `scoredOption()` describes, so a schema taking extra keys the data holds
+ * scores as one with `properties`, whether or not it declares any, unless it holds an `allOf`, an `if` or
+ * `dependencies`. When `schema.properties` object exists, then each property's form value, read from `formData` with its
+ * `key`, is scored against the property's schema, as `propertyScore()` describes, and the scores are added up. A schema
+ * without `properties` scores 1 when its `type` is the guessed-type of `formData`.
  * The score of each `allOf` entry, read through its `$ref`, is added to the schema's own, so options sharing a base
  * through a `$ref` beside their own keywords or through an `allOf` are told apart by the properties each adds. An
  * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does. Where an
@@ -379,18 +387,17 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const plan = planAt<S, F>(context, where ?? whereOf<S>(option, rootSchema));
   const { schema } = plan;
-  const declared: object = schema.properties ?? {};
   // shortcut: retrieval also stubs the keys a `patternProperties` alone or an absent keyword under
-  // `additionalPropertiesWhenAbsent: 'allow'` takes, which still score as nothing here, and an option with an `allOf`,
+  // `additionalPropertiesWhenAbsent: 'allow'` takes, which still score as nothing here, an option with an `allOf`,
   // `if` or `dependencies` is not stubbed at all, since retrieval may declare a key through them that a stub here would
-  // score by its guessed type; upgrade once the matcher reads its "none of these" rules off the retrieved option. Data
-  // holding no extra key is left as it is, since the copy would hold an empty `properties`, which scores apart from none
+  // score by its guessed type, and an option handed out above without being retrieved for the data is scored without
+  // stubs; upgrade once the matcher reads its "none of these" rules off the retrieved option. Data holding no extra key
+  // is left as it is, since the copy would hold an empty `properties`, which scores apart from none
   if (
-    !isObject(formData) ||
     (additionalPropertiesKeyword<S>(schema) ?? false) === false ||
     // The plan merges `dependencies` away without data, so its chains, not its schema, say which ones it declares
     plan.chains.some((chain) => [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY].some((keyword) => chain.has(keyword))) ||
-    Object.keys(formData).every((key) => Object.hasOwn(declared, key))
+    extraKeysOf<S>(schema, schema, undefined, formData).length === 0
   ) {
     return { schema, plan };
   }
