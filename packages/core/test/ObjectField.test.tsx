@@ -34,6 +34,7 @@ import {
   fieldErrorsById,
   handleOf,
   input,
+  setupConsoleWarnSuppression,
   submitForm,
 } from './testUtils.tsx';
 import { TextWidgetTest } from './TextWidgetTest.tsx';
@@ -987,26 +988,75 @@ describe('ObjectField', () => {
       expect(labels).toEqual(['baz', 'qux', 'bar', 'foo']);
     });
 
-    it('should throw when order list misses an existing property', () => {
-      const { node } = createFormComponent({
-        schema,
-        uiSchema: {
-          'ui:order': ['baz', 'bar'],
-        },
-      });
-
-      expect(node.querySelector('.rjsf-config-error')).toHaveTextContent(/does not contain properties 'foo', 'qux'/);
-    });
-
-    it('should throw when more than one wildcard is present', () => {
+    it('should insert unordered properties at the first wildcard when more than one is present', () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
           'ui:order': ['baz', '*', 'bar', '*'],
         },
       });
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l: Element) => l.textContent);
 
-      expect(node.querySelector('.rjsf-config-error')).toHaveTextContent(/contains more than one wildcard/);
+      expect(labels).toEqual(['baz', 'foo', 'qux', 'bar']);
+    });
+
+    describe('an order without a wildcard that leaves declared properties out', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      it('does not warn when the order has a wildcard to place them', () => {
+        createFormComponent({ schema, uiSchema: { 'ui:order': ['baz', '*'] } });
+
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
+
+      it('renders them after the listed properties and warns once, naming the entry', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            'ui:order': ['baz', 'bar'],
+          },
+        });
+        const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l: Element) => l.textContent);
+
+        expect(labels).toEqual(['baz', 'bar', 'foo', 'qux']);
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `"root" sets a ui:order with no '*' that leaves out 'foo', 'qux'. The properties it leaves out render after ` +
+            "the ones it lists, so list them, or add '*' where they should go. [ui-order-incomplete]",
+        );
+      });
+
+      it('warns once, not once per row, for an array whose items entry leaves properties out', () => {
+        const { node } = createFormComponent({
+          schema: { type: 'array', items: schema },
+          uiSchema: { items: { 'ui:order': ['qux'] } },
+          initialFormData: [{}, {}, {}],
+        });
+
+        expect(node.querySelectorAll('#root_2_foo')).toHaveLength(1);
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringMatching(
+            /^"root_\[\]" \(\[\]\) sets a ui:order with no '\*' that leaves out 'foo', 'bar', 'baz'/,
+          ),
+        );
+      });
+
+      it('renders a key held under additionalProperties after the listed properties without warning', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+            additionalProperties: { type: 'string' },
+          },
+          uiSchema: {
+            'ui:order': ['bar', 'foo'],
+          },
+          initialFormData: { foo: 'a', bar: 'b', extra: 'c' },
+        });
+        const inputIds = [].map.call(node.querySelectorAll('input'), (i: HTMLInputElement) => i.id);
+
+        expect(inputIds).toEqual(['root_bar', 'root_foo', 'root_extra__key', 'root_extra']);
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
     });
 
     it('should order referenced schema definitions', () => {

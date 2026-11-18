@@ -51,6 +51,7 @@ import {
   fieldPathToId,
   resolveUiSchema,
   isObject,
+  logOnce,
   TranslatableString,
   templateMarksRequired,
 } from '@rjsf/utils';
@@ -60,7 +61,6 @@ import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
 import FormDataContext from '../FormDataContext.ts';
-import RichDescription from '../RichDescription.tsx';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import {
   declaresProperty,
@@ -74,6 +74,7 @@ import {
 import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import { createIsSchemaFieldHidden, createSchemaFieldRenderedAs } from './SchemaField.tsx';
 import { useShownOptionBeside } from './ShownOptionContext.ts';
+import TemplateWarnEntryContext, { templateWarnEntry } from './TemplateWarnEntryContext.ts';
 
 /** Creates what keeps an object's `createIsSchemaFieldHidden()` and `createSchemaFieldRenderedAs()` functions, one of
  * each per property name, as each property's `SchemaField` keeps its own plan, so a property whose own schema, uiSchema
@@ -602,6 +603,7 @@ export default function ObjectField<
   const description = uiOptions.description ?? schema.description;
   const renderOptionalField = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema, fieldPath);
   const controlsDrawnBeside = use(OptionalControlsBesideContext) === fieldPath;
+  const warnEntryAbove = use(TemplateWarnEntryContext);
   const hasFormData = isFormDataAvailable<T>(formData);
   // Kept in a closure rather than a ref, since `react/refs` rejects reading or writing a ref during render
   const propertyLayouts = useMemo(() => createPropertyLayouts<T, S, F>(), []);
@@ -964,37 +966,34 @@ export default function ObjectField<
   );
 
   if (!renderOptionalField || hasFormData) {
-    try {
-      const definedPropertySet = new Set(definedPropertyOrder);
-      // A set, since an add that never reaches the data, as under a custom field that keeps the change to itself, leaves
-      // its key in the order, and the next add picks that key again
-      const orderedSet = new Set(additionalPropertyOrder);
-      const currentAdditionalProperties = [...orderedSet].filter(
-        (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),
-      );
-      // A property in the data but not in the order was not added or renamed here: the parent supplied it, or put the
-      // name a rename took away back. Either way it renders, after the ones whose order is known
-      const unorderedAdditionalProperties = schemaAdditionalProperties.filter((property) => !orderedSet.has(property));
-      orderedProperties = orderProperties(
-        [...definedPropertyOrder, ...currentAdditionalProperties, ...unorderedAdditionalProperties],
-        uiOptions.order,
-      );
-    } catch (err) {
-      return (
-        <div>
-          <p className='rjsf-config-error' style={{ color: 'red' }}>
-            <RichDescription
-              description={translateString(TranslatableString.InvalidObjectField, [
-                name || 'root',
-                err instanceof Error ? err.message : String(err),
-              ])}
-              registry={registry}
-              uiSchema={uiSchema}
-            />
-          </p>
-          <pre>{JSON.stringify(schema)}</pre>
-        </div>
-      );
+    const definedPropertySet = new Set(definedPropertyOrder);
+    // A set, since an add that never reaches the data, as under a custom field that keeps the change to itself, leaves
+    // its key in the order, and the next add picks that key again
+    const orderedSet = new Set(additionalPropertyOrder);
+    const currentAdditionalProperties = [...orderedSet].filter(
+      (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),
+    );
+    // A property in the data but not in the order was not added or renamed here: the parent supplied it, or put the
+    // name a rename took away back. Either way it renders, after the ones whose order is known
+    const unorderedAdditionalProperties = schemaAdditionalProperties.filter((property) => !orderedSet.has(property));
+    const { order } = uiOptions;
+    orderedProperties = orderProperties(
+      [...definedPropertyOrder, ...currentAdditionalProperties, ...unorderedAdditionalProperties],
+      order,
+    );
+    if (Array.isArray(order) && !order.includes('*')) {
+      // Only declared properties, since an order written for them can't know the keys `additionalProperties` lets the
+      // data hold
+      const listed = new Set(order);
+      const unlisted = definedPropertyOrder.filter((property) => !listed.has(property));
+      if (unlisted.length) {
+        const entry = templateWarnEntry(warnEntryAbove, false, fieldPath, registry.globalFormOptions);
+        logOnce(
+          `${entry.label('order')} sets a ui:order with no '*' that leaves out '${unlisted.join("', '")}'. The ` +
+            "properties it leaves out render after the ones it lists, so list them, or add '*' where they should go.",
+          { id: 'ui-order-incomplete' },
+        );
+      }
     }
   }
 

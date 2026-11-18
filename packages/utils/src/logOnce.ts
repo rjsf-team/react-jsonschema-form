@@ -42,6 +42,7 @@ const WARNING_CATEGORIES = {
   'ui-widget-element': 'config',
   'row-span-ignored': 'config',
   'layout-grid-cell-field-ignored': 'config',
+  'ui-order-incomplete': 'config',
 } as const satisfies Record<string, WarningCategory>;
 
 /** The ID of a warning `setWarningOptions()` can make throw */
