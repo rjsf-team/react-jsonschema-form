@@ -85,7 +85,7 @@ export default function resolveUiSchema<
     result = { ...result };
     delete result[UI_OPTIONS_KEY];
   }
-  // Recorded last, on the object handed back, since filling in the options below copies it
+  // Recorded last, on the object handed back, since the `ui:options` copy above drops a property that isn't enumerable
   const recorded = (resolved: UiSchema<T, S, F>) => {
     if (ref && definitionUiSchema) {
       recordDefinitionOrigin(resolved, ref, localUiSchema, definitionUiSchema);
@@ -123,10 +123,13 @@ export default function resolveUiSchema<
           }
         }
 
-        // On a copy, since `result` may be the caller's own uiSchema, which would then hold the merged entries in place of
-        // the ones it gave the next time it is resolved
         if (hasExpanded) {
-          result = { ...result, [keyword]: uiSchemaArray };
+          // The caller's own uiSchema is copied, or it would hold the merged entries in place of the ones it gave the next
+          // time it is resolved
+          if (result === localUiSchema) {
+            result = { ...result };
+          }
+          (result as GenericObjectType)[keyword] = uiSchemaArray;
         }
       }
     }

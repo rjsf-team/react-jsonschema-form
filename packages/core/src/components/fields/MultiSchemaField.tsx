@@ -45,6 +45,7 @@ import TemplateWarnEntryContext, {
   definitionHolding,
   definitionRecordOf,
   optionWarnEntry,
+  useStableDefinitionRecord,
   useTemplateWarnEntry,
 } from './TemplateWarnEntryContext.ts';
 
@@ -150,7 +151,11 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const entry = useTemplateWarnEntry(schema, fieldPath, globalFormOptions);
   // `resolveUiSchema()` merges the `ui:definitions` entry of the option's `$ref` under its entry, recording the entry the
   // `uiSchema` gave, so a warning about one key names the one holding it, and one about the entry names both
-  const definitionRecord = optionUiSchema === uiSchema ? undefined : definitionRecordOf(optionUiSchema);
+  const definitionRecord = useStableDefinitionRecord(
+    optionUiSchema === uiSchema ? undefined : definitionRecordOf(optionUiSchema),
+  );
+  // Read from the option too, since an option `resolveUiSchema()` doesn't reach, such as one inside an `allOf`, has its
+  // definition merged by its own `SchemaField`, which records nothing at this path
   const optionRef: unknown = option ? (Reflect.get(option, RJSF_REF_KEY) ?? option.$ref) : undefined;
   const definition =
     typeof optionRef === 'string' && uiSchemaDefinitions && Object.hasOwn(uiSchemaDefinitions, optionRef)
@@ -184,10 +189,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     optionUiSchema?.additionalProperties === undefined && optionFieldUiSchema?.additionalProperties !== undefined;
   const rendersFromField = optionUiSchema === uiSchema;
   const keySchemaFromField = EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(schema, keyword));
-  // Keyed on the record's parts, since `resolveUiSchema()` records afresh whenever it runs again for the same entries
-  const recordedRef = definitionRecord?.ref;
-  const recordedLocal = definitionRecord?.local;
-  const recordedDefinition = definitionRecord?.definition;
   const optionEntry = useMemo(
     () =>
       optionWarnEntry(
@@ -199,9 +200,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         selectedOption,
         globalFormOptions,
         definition,
-        recordedRef === undefined
-          ? undefined
-          : { ref: recordedRef, local: recordedLocal, definition: recordedDefinition },
+        definitionRecord,
       ),
     [
       entry,
@@ -212,9 +211,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       selectedOption,
       globalFormOptions,
       definition,
-      recordedRef,
-      recordedLocal,
-      recordedDefinition,
+      definitionRecord,
     ],
   );
   // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't

@@ -898,8 +898,8 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       );
     }
   }
-  const selected: unknown =
-    selectedOption === undefined ? undefined : getXxxOfOptions<S>(merged)?.options[selectedOption];
+  const xxxOf = selectedOption === undefined ? undefined : getXxxOfOptions<S>(merged);
+  const selected: unknown = selectedOption === undefined ? undefined : xxxOf?.options[selectedOption];
   let option: S | undefined;
   if (isSchemaObject<S>(selected)) {
     option = retrieveSchema<unknown, S, F>(context, selected, graph.rawRoot, data);
@@ -924,13 +924,13 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // Where the field declares no extra-key keyword and the selected option does, only the option's describe the keys the
   // field renders
-  const optionKey = takesExtraKeys ? getXxxOfOptions<S>(merged)?.key : undefined;
   const extraKeyOption =
+    stubsExtraKeys &&
     option !== undefined &&
-    optionKey &&
+    xxxOf &&
     !EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(merged, keyword)) &&
     EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(option, keyword))
-      ? `${optionKey}[${selectedOption}]`
+      ? `${xxxOf.key}[${selectedOption}]`
       : undefined;
   const view = handOut(
     takesExtraKeys

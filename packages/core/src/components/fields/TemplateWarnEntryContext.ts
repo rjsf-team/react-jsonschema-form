@@ -7,14 +7,14 @@ import {
   fieldPathToList,
   hasSchemaMarker,
   isObject,
-  toFieldPath,
   UI_DEFINITION_ORIGIN_KEY,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 import type { FieldPath, GlobalFormOptions } from '@rjsf/utils';
 
-import { anchoredEntryLabel, entryLabelForLog } from '../../fieldLabelForLog.ts';
-import type { EntryAnchor } from '../../fieldLabelForLog.ts';
+import { anchoredEntryLabel, entryLabelForLog, writeEntrySegment } from '../../fieldLabelForLog.ts';
+import type { EntryAnchor, OptionAnchor } from '../../fieldLabelForLog.ts';
+import { getAt } from '../dataPaths.ts';
 
 /** The uiSchema entry a field at `fieldPath` renders from, for a warning about that entry. A shown `anyOf`/`oneOf`
  * option renders at the `MultiSchemaField`'s own path, so a label built from that path would name the field's entry
@@ -43,7 +43,7 @@ export interface TemplateWarnEntry {
    */
   additionalDepths?: readonly number[];
   /** The option entry this one sits beneath, which the labels of the entries below it are written after */
-  anchor?: EntryAnchor;
+  anchor?: OptionAnchor;
   /** The option schema this one sits beneath, which the schema labels of the fields below it are written after */
   schemaAnchor?: EntryAnchor;
   /** Set on a shown option's entry where the field holding the option declares extra-key keywords: that field's entry,
@@ -108,16 +108,17 @@ export function definitionRecordOf(uiSchema: unknown): DefinitionRecord | undefi
   return isObject(record) && typeof record.ref === 'string' ? (record as DefinitionRecord) : undefined;
 }
 
-/** Returns the origin a `definitionRecordOf()` record describes, for an entry of a field with `depth` path segments,
- * below the `parent` origin and `stepsBefore` option steps
+/** Keeps the record `resolveUiSchema()` recorded while its parts stay the same, since it records afresh whenever it runs
+ * again for the same entries and the entries built from it are provided to everything below
+ *
+ * @param record - The record, as `definitionRecordOf()` reads it
+ * @returns - The record, the same object while its parts are
  */
-function definitionOriginOf(
-  record: DefinitionRecord | undefined,
-  depth: number,
-  parent: DefinitionOrigin | undefined,
-  stepsBefore: number,
-): DefinitionOrigin | undefined {
-  return record ? { ...record, depth, parent, stepsBefore } : undefined;
+export function useStableDefinitionRecord(record: DefinitionRecord | undefined): DefinitionRecord | undefined {
+  const ref = record?.ref;
+  const local = record?.local;
+  const definition = record?.definition;
+  return useMemo(() => (ref === undefined ? undefined : { ref, local, definition }), [ref, local, definition]);
 }
 
 /** Whether `entry`, walked down `path`, holds the uiSchema option `key`, as `ui:key` or in `ui:options`
@@ -127,12 +128,8 @@ function definitionOriginOf(
  * @param key - The option's name, without `ui:`
  * @returns - Whether the entry holds the option
  */
-function holdsUiOption(entry: unknown, path: readonly string[], key: string): boolean {
-  let at = entry;
-  for (const segment of path) {
-    // An option's entry sits in its keyword's array, which `isObject()` doesn't take
-    at = typeof at === 'object' && at !== null ? Reflect.get(at, segment) : undefined;
-  }
+function holdsUiOption(entry: unknown, path: string[], key: string): boolean {
+  const at: unknown = getAt(entry, path);
   if (!isObject(at)) {
     return false;
   }
@@ -143,65 +140,61 @@ function holdsUiOption(entry: unknown, path: readonly string[], key: string): bo
 
 /** Returns the way from a merged entry, of a field with `depth` path segments, to the entry of the field at `fieldPath`:
  * its uiSchema keys, an array index being its array's `items`, an extra key its object's `additionalProperties` and an
- * option its `anyOf`/`oneOf` and index, and a function writing that path after a base, as the labels write it
+ * option its `anyOf`/`oneOf` and index, and that path written after `base`, as the labels write it
  *
  * @param fieldPath - The `FieldPath` of the field
  * @param depth - The number of path segments of the field holding the merged entry
  * @param additionalDepths - The indexes of the path segments that are an extra key
  * @param steps - The option steps below the merged entry
- * @returns - The keys, and the writer
+ * @param base - What the written path starts from
+ * @returns - The keys, and the written path
  */
 function pathBelow(
   fieldPath: FieldPath,
   depth: number,
   additionalDepths: readonly number[] | undefined,
   steps: readonly OptionStep[],
-): { keys: string[]; write: (base: string) => string } {
+  base: string,
+): { keys: string[]; written: string } {
   const segments = fieldPathToList(fieldPath);
   const keys: string[] = [];
-  const writers: ((written: string) => string)[] = [];
+  let written = base;
   const optionsAt = (index: number) => {
     for (const step of steps.filter((candidate) => candidate.depth === index)) {
       keys.push(step.keyword, String(step.index));
-      writers.push((written) => `${written}.${step.keyword}[${step.index}]`);
+      written = `${written}.${step.keyword}[${step.index}]`;
     }
   };
   for (let index = depth; index < segments.length; index += 1) {
     optionsAt(index);
     const segment = segments[index];
+    const isExtraKey = additionalDepths?.includes(index) ?? false;
     if (typeof segment === 'number') {
       keys.push('items');
-      writers.push((written) => `${written}[]`);
-    } else if (additionalDepths?.includes(index)) {
-      keys.push('additionalProperties');
-      writers.push((written) => `${written}{}`);
     } else {
-      keys.push(segment);
-      writers.push((written) => toFieldPath(segment, written as FieldPath));
+      keys.push(isExtraKey ? 'additionalProperties' : segment);
     }
+    written = writeEntrySegment(written, segment, isExtraKey);
   }
   optionsAt(segments.length);
-  return { keys, write: (base) => writers.reduce((written, writer) => writer(written), base) };
+  return { keys, written };
 }
 
-/** Where the uiSchema option `key` of the entry of the field at `fieldPath` comes from: the place in a `ui:definitions`
- * entry holding it, written as `ui:definitions['#/$defs/Foo'].b`, `local` where the uiSchema gives it, or undefined where
- * neither holds it. A key the entry the uiSchema gives a merged definition holds came from the definition merged above,
- * if there is one, so the origins are walked outward from the nearest
+/** Where the uiSchema option `key` of `entry` comes from: the place in a `ui:definitions` entry holding it, written as
+ * `ui:definitions['#/$defs/Foo'].b`, `local` where the uiSchema gives it, or undefined where neither holds it. A key the
+ * entry the uiSchema gives a merged definition holds came from the definition merged above, if there is one, so the
+ * origins are walked outward from the nearest
  */
 function holderOf(
-  origin: DefinitionOrigin | undefined,
-  fieldPath: FieldPath,
-  additionalDepths: readonly number[] | undefined,
-  steps: readonly OptionStep[] | undefined,
+  entry: Pick<TemplateWarnEntry, 'definitionOrigin' | 'fieldPath' | 'additionalDepths' | 'optionSteps'>,
   key: string,
-): { definition: string } | 'local' | undefined {
-  for (let at = origin; at; at = at.parent) {
-    const below = pathBelow(fieldPath, at.depth, additionalDepths, steps?.slice(at.stepsBefore) ?? []);
+): string | undefined {
+  const { fieldPath, additionalDepths, optionSteps = [] } = entry;
+  for (let at = entry.definitionOrigin; at; at = at.parent) {
+    const steps = optionSteps.slice(at.stepsBefore);
+    const below = pathBelow(fieldPath, at.depth, additionalDepths, steps, `ui:definitions['${at.ref}']`);
     if (!holdsUiOption(at.local, below.keys, key)) {
-      return holdsUiOption(at.definition, below.keys, key)
-        ? { definition: below.write(`ui:definitions['${at.ref}']`) }
-        : undefined;
+      return holdsUiOption(at.definition, below.keys, key) ? below.written : undefined;
     }
   }
   return 'local';
@@ -215,13 +208,13 @@ function holderOf(
  * @returns - The place, if a definition holds it
  */
 export function definitionHolding(entry: TemplateWarnEntry, key: string): string | undefined {
-  const holder = holderOf(entry.definitionOrigin, entry.fieldPath, entry.additionalDepths, entry.optionSteps, key);
-  return typeof holder === 'object' ? holder.definition : undefined;
+  const holder = holderOf(entry, key);
+  return holder === 'local' ? undefined : holder;
 }
 
 /** Returns `anchor` naming its entry, and the one it sits in, as the uiSchema gives them, for a key the uiSchema holds */
-function localAnchorOf(anchor: EntryAnchor): EntryAnchor {
-  return { ...anchor, definition: undefined, owner: anchor.localOwner ?? anchor.owner };
+function localAnchorOf(anchor: OptionAnchor): OptionAnchor {
+  return { ...anchor, definition: undefined, owner: anchor.localOwner };
 }
 
 /** Wraps an entry's `fallback` label so that, given a uiSchema option, it names where the option comes from: a place in
@@ -230,19 +223,17 @@ function localAnchorOf(anchor: EntryAnchor): EntryAnchor {
  *
  * @param fallback - The label for no key, or for one nothing holds
  * @param local - The label of the entry the uiSchema gives
- * @param origin - The definition merged under the entry or one above it
- * @param holder - Returns where a key comes from, as `holderOf()` does
+ * @param entry - The parts of the entry `holderOf()` reads
  * @param idPrefix - The form's `idPrefix`
  * @returns - The keyed label
  */
 function keyedLabel(
   fallback: () => string,
   local: () => string,
-  origin: DefinitionOrigin | undefined,
-  holder: (key: string) => ReturnType<typeof holderOf>,
+  entry: Parameters<typeof holderOf>[0],
   idPrefix: string,
 ): (key?: string) => string {
-  if (!origin) {
+  if (!entry.definitionOrigin) {
     return fallback;
   }
   const byKey = new Map<string, string>();
@@ -252,11 +243,11 @@ function keyedLabel(
     }
     let built = byKey.get(key);
     if (built === undefined) {
-      const from = holder(key);
-      if (typeof from === 'object') {
-        built = `the ${from.definition} entry of "${idPrefix}"`;
+      const from = holderOf(entry, key);
+      if (from === 'local') {
+        built = local();
       } else {
-        built = from === 'local' ? local() : fallback();
+        built = from ? `the ${from} entry of "${idPrefix}"` : fallback();
       }
       byKey.set(key, built);
     }
@@ -324,15 +315,19 @@ export function templateWarnEntry(
   const fallbackLabel = anchor ? anchoredTo(anchor) : plainLabel;
   const optionSteps = entryAbove?.optionSteps;
   const originAbove = entryAbove?.definitionOrigin;
-  const definitionOrigin =
-    definitionOriginOf(definitionRecord, fieldPathToList(fieldPath).length, originAbove, optionSteps?.length ?? 0) ??
-    originAbove;
+  const definitionOrigin = definitionRecord
+    ? {
+        ...definitionRecord,
+        depth: fieldPathToList(fieldPath).length,
+        parent: originAbove,
+        stepsBefore: optionSteps?.length ?? 0,
+      }
+    : originAbove;
   const localLabel = anchor ? anchoredTo(localAnchorOf(anchor)) : plainLabel;
   const label = keyedLabel(
     fallbackLabel,
     localLabel,
-    definitionOrigin,
-    (key) => holderOf(definitionOrigin, fieldPath, additionalDepths, optionSteps, key),
+    { definitionOrigin, fieldPath, additionalDepths, optionSteps },
     globalFormOptions.idPrefix,
   );
   const schemaLabel = schemaAnchor ? anchoredTo(schemaAnchor) : plainLabel;
@@ -357,7 +352,7 @@ export function templateWarnEntry(
  * @param fieldPath - The `FieldPath` identifying the field in the form
  * @param globalFormOptions - The `GlobalFormOptions` its labels' ids are built from
  * @param [definitionRecord] - What `resolveUiSchema()` recorded on the field's uiSchema, as `definitionRecordOf()` reads
- *        it, whose parts key the memo since a parent may rebuild the uiSchema on every render
+ *        it, kept by its parts since a parent may rebuild the uiSchema on every render
  * @returns - The field's entry
  */
 export function useTemplateWarnEntry(
@@ -370,21 +365,10 @@ export function useTemplateWarnEntry(
   const isAdditional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
   const option: unknown = isObject(schema) ? Reflect.get(schema, EXTRA_KEY_OPTION_KEY) : undefined;
   const extraKeyOption = typeof option === 'string' ? option : undefined;
-  // Keyed on the record's parts, since `resolveUiSchema()` records afresh whenever it runs again for the same entries
-  const ref = definitionRecord?.ref;
-  const local = definitionRecord?.local;
-  const definition = definitionRecord?.definition;
+  const record = useStableDefinitionRecord(definitionRecord);
   return useMemo(
-    () =>
-      templateWarnEntry(
-        entryAbove,
-        isAdditional,
-        fieldPath,
-        globalFormOptions,
-        extraKeyOption,
-        ref === undefined ? undefined : { ref, local, definition },
-      ),
-    [entryAbove, isAdditional, fieldPath, globalFormOptions, extraKeyOption, ref, local, definition],
+    () => templateWarnEntry(entryAbove, isAdditional, fieldPath, globalFormOptions, extraKeyOption, record),
+    [entryAbove, isAdditional, fieldPath, globalFormOptions, extraKeyOption, record],
   );
 }
 
@@ -437,13 +421,13 @@ export function optionWarnEntry(
   const localLabel = lazyLabel(() => anchoredEntryLabel(localAnchorOf(anchor)));
   // The option's own entry, and the definition of its `$ref` merged under it, sit below this step
   const optionSteps = [...(entry.optionSteps ?? []), { depth, keyword: xxxOfKey, index: selectedOption }];
-  const definitionOrigin =
-    definitionOriginOf(definitionRecord, depth, entry.definitionOrigin, optionSteps.length) ?? entry.definitionOrigin;
+  const definitionOrigin = definitionRecord
+    ? { ...definitionRecord, depth, parent: entry.definitionOrigin, stepsBefore: optionSteps.length }
+    : entry.definitionOrigin;
   const label = keyedLabel(
     fallbackLabel,
     localLabel,
-    definitionOrigin,
-    (key) => holderOf(definitionOrigin, entry.fieldPath, entry.additionalDepths, optionSteps, key),
+    { definitionOrigin, fieldPath: entry.fieldPath, additionalDepths: entry.additionalDepths, optionSteps },
     globalFormOptions.idPrefix,
   );
   // A field that is itself an option taking its own field's extra keys hands on that field's entry, which they render from

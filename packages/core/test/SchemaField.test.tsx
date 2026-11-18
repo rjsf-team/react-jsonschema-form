@@ -3996,6 +3996,24 @@ describe('SchemaField', () => {
         );
       });
 
+      it("names an option's definition where the option sits in an allOf, which resolveUiSchema() doesn't reach", () => {
+        createFormComponent({
+          schema: {
+            $defs: { Foo: { type: 'object', properties: { c: { type: 'string' } } } },
+            allOf: [{ anyOf: [{ $ref: '#/$defs/Foo' }, { type: 'number' }] }],
+          },
+          uiSchema: {
+            'ui:definitions': { '#/$defs/Foo': { c: { 'ui:FieldTemplate': typo } } },
+            anyOf: [{ 'ui:title': 'Local' }],
+          },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0].c entry of "root" ' +
+            "(or ui:definitions['#/$defs/Foo'].c) names no registered template ('Typo'), so it is ignored.",
+        );
+      });
+
       it('names the definition for a ui:field it holds beside a ui:options.field the field ignores', () => {
         createFormComponent({
           schema: {
