@@ -2395,20 +2395,6 @@ Recursively merge deeply nested objects.
 
 - GenericObjectType: A new object that is the merge of the two given objects
 
-### mergeSchemas()
-
-Recursively merge deeply nested schemas.
-The difference between mergeSchemas and mergeObjects is that mergeSchemas only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values. NOTE: Uses shallow comparison for the duplicate checking.
-
-#### Parameters
-
-- obj1: object - The first object to merge
-- obj2: object - The second object to merge
-
-#### Returns
-
-- GenericObjectType: The merged schema object
-
 ### mergeOptionDefinitions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Merges the `ui:definitions` entry each `anyOf`/`oneOf` option's ref names under the option's uiSchema entry, where `resolveUiSchema()` didn't merge one, and records its origin under `UI_DEFINITION_ORIGIN_KEY`, as `resolveUiSchema()` does for an option the field's schema lists itself.
@@ -2424,6 +2410,20 @@ The `anyOf`/`oneOf` field and `getUiRequiredErrorSchema()` call this, so they ag
 #### Returns
 
 - UiSchema&lt;T, S, F>[]: `optionsUiSchema`, or a copy with the merged entries where there are any
+
+### mergeSchemas()
+
+Recursively merge deeply nested schemas.
+The difference between mergeSchemas and mergeObjects is that mergeSchemas only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values. NOTE: Uses shallow comparison for the duplicate checking.
+
+#### Parameters
+
+- obj1: object - The first object to merge
+- obj2: object - The second object to merge
+
+#### Returns
+
+- GenericObjectType: The merged schema object
 
 ### mergeThemePresentation()
 
