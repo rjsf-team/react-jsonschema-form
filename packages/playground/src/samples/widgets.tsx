@@ -1,4 +1,5 @@
-import { toInputValue } from '@rjsf/utils';
+import type { WidgetProps } from '@rjsf/utils';
+import { getControlAttributes, toInputValue, widgetDrawsLabelText } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
@@ -244,23 +245,20 @@ const widgets: Sample = {
       'ui:readonly': true,
     },
     widgetOptions: {
-      'ui:widget': ({
-        value,
-        onChange,
-        options,
-      }: {
-        value: unknown;
-        onChange: (value: unknown) => void;
-        options: { backgroundColor: string };
-      }) => {
-        const { backgroundColor } = options;
+      'ui:widget': (props: WidgetProps) => {
+        const { id, label, value, onChange, options } = props;
         return (
-          <input
-            className='form-control'
-            onChange={(event) => onChange(event.target.value)}
-            style={{ backgroundColor }}
-            value={toInputValue(value)}
-          />
+          <>
+            {widgetDrawsLabelText(props) && <label htmlFor={id}>{label}</label>}
+            <input
+              id={id}
+              {...getControlAttributes(props)}
+              className='form-control'
+              onChange={(event) => onChange(event.target.value)}
+              style={{ backgroundColor: options.backgroundColor as string }}
+              value={toInputValue(value)}
+            />
+          </>
         );
       },
       'ui:options': {
@@ -268,30 +266,27 @@ const widgets: Sample = {
       },
     },
     selectWidgetOptions: {
-      'ui:widget': ({
-        value,
-        onChange,
-        options,
-      }: {
-        value: unknown;
-        onChange: (value: unknown) => void;
-        options: { enumOptions: { label: string; value: unknown }[]; backgroundColor: string };
-      }) => {
-        const { enumOptions, backgroundColor } = options;
+      'ui:widget': (props: WidgetProps) => {
+        const { id, label, value, onChange, options } = props;
         return (
-          <select
-            className='form-control'
-            style={{ backgroundColor }}
-            value={toInputValue(value)}
-            onChange={(event) => onChange(event.target.value)}
-          >
-            {enumOptions.map(({ label: enumLabel, value: enumValue }, i) => (
-              // oxlint-disable-next-line react/no-array-index-key
-              <option key={i} value={toInputValue(enumValue)}>
-                {enumLabel}
-              </option>
-            ))}
-          </select>
+          <>
+            {widgetDrawsLabelText(props) && <label htmlFor={id}>{label}</label>}
+            <select
+              id={id}
+              {...getControlAttributes(props)}
+              className='form-control'
+              style={{ backgroundColor: options.backgroundColor as string }}
+              value={toInputValue(value)}
+              onChange={(event) => onChange(event.target.value)}
+            >
+              {options.enumOptions?.map(({ label: enumLabel, value: enumValue }, i) => (
+                // oxlint-disable-next-line react/no-array-index-key
+                <option key={i} value={toInputValue(enumValue)}>
+                  {enumLabel}
+                </option>
+              ))}
+            </select>
+          </>
         );
       },
       'ui:options': {

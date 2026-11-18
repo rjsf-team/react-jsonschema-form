@@ -440,7 +440,8 @@ exports[`array fields > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -462,7 +463,8 @@ exports[`array fields > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -484,7 +486,8 @@ exports[`array fields > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -1565,7 +1568,8 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -1587,7 +1591,8 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -1609,7 +1614,8 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -4063,7 +4069,8 @@ exports[`with title and description > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -4085,7 +4092,8 @@ exports[`with title and description > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -4107,7 +4115,8 @@ exports[`with title and description > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -4841,7 +4850,8 @@ exports[`with title and description from both > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -4863,7 +4873,8 @@ exports[`with title and description from both > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -4885,7 +4896,8 @@ exports[`with title and description from both > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -5619,7 +5631,8 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -5641,7 +5654,8 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -5663,7 +5677,8 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -6297,7 +6312,8 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -6319,7 +6335,8 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -6341,7 +6358,8 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"

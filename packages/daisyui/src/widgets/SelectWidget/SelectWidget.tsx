@@ -383,15 +383,19 @@ export default function SelectWidget<
       >
         <div className='flex items-center gap-2'>
           {/* Drawn only: the option is what takes focus, keys and clicks, and says it is selected, so the checkbox would
-              be a second tab stop whose own click on Space undoes the option's */}
+              be a second tab stop whose own click on Space undoes the option's, and ARIA forbids a focusable control
+              inside an option whatever its tab index. `inert` keeps it from focus and the pointer; `aria-hidden` says
+              again what `inert` does for Testing Library, which ignores it, and the lint rule against `aria-hidden` on
+              a focusable element, which ignores it too, needs the tab index */}
           {isMultiple && (
             <input
               type='checkbox'
-              className='checkbox checkbox-sm pointer-events-none'
+              className='checkbox checkbox-sm'
               checked={isSelected}
               readOnly
               tabIndex={-1}
               aria-hidden
+              inert
             />
           )}
           <span>{option.label}</span>

@@ -10776,7 +10776,8 @@ exports[`single fields > select field multiple choice 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -10798,7 +10799,8 @@ exports[`single fields > select field multiple choice 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -10820,7 +10822,8 @@ exports[`single fields > select field multiple choice 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -10842,7 +10845,8 @@ exports[`single fields > select field multiple choice 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -10928,7 +10932,8 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -10952,7 +10957,8 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -10974,7 +10980,8 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -10996,7 +11003,8 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -11187,7 +11195,8 @@ exports[`single fields > select field multiple choice formData 1`] = `
                   <input
                     aria-hidden="true"
                     checked=""
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -11210,7 +11219,8 @@ exports[`single fields > select field multiple choice formData 1`] = `
                   <input
                     aria-hidden="true"
                     checked=""
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -11232,7 +11242,8 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -11254,7 +11265,8 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -11340,7 +11352,8 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -11362,7 +11375,8 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"
@@ -11384,7 +11398,8 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 >
                   <input
                     aria-hidden="true"
-                    class="checkbox checkbox-sm pointer-events-none"
+                    class="checkbox checkbox-sm"
+                    inert=""
                     readonly=""
                     tabindex="-1"
                     type="checkbox"

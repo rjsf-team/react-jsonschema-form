@@ -67,7 +67,47 @@ function duplicateIds(elements: Element[]) {
   return repeats;
 }
 
-function expectContract(container: HTMLElement, { presentsNothing }: ContractCase, errored: boolean, exempt?: string) {
+/** The axe run last started, which the next one waits for */
+let lastAxeRun: Promise<unknown> = Promise.resolve();
+
+/** The WCAG A and AA rules axe-core finds broken in `container`, each with axe's account of why, other than on the
+ * elements `exempt` selects, which are skipped alone, not with what they hold, as the other checks skip them. A rule
+ * may report an ancestor of the element at fault, as `nested-interactive` reports the option holding a focusable
+ * control, so a node is skipped too when every element axe relates it to is exempt
+ */
+async function axeViolations(container: HTMLElement, exempt?: string) {
+  // Loaded on first use, so the test files importing this package only for its other suites don't load axe-core
+  const { default: axe } = await import('axe-core');
+  const isExempt = (element?: Element) => !!exempt && !!element?.matches(exempt);
+  // axe-core refuses a run while another is going, and a case that times out leaves its run going, so each run waits
+  // for the one before it rather than failing every case after a slow one
+  const run = lastAxeRun.then(async () =>
+    axe.run(container, {
+      runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'],
+      resultTypes: ['violations'],
+      elementRef: true,
+      // jsdom draws nothing, so contrast is never decided there and only logs jsdom's missing canvas
+      rules: { 'color-contrast': { enabled: false } },
+    }),
+  );
+  lastAxeRun = run.catch(() => undefined);
+  const { violations } = await run;
+  return violations.flatMap(({ id, nodes }) =>
+    nodes
+      .filter(({ element, any, all, none }) => {
+        const related = [...any, ...all, ...none].flatMap(({ relatedNodes = [] }) => relatedNodes);
+        return !isExempt(element) && !(related.length > 0 && related.every((node) => isExempt(node.element)));
+      })
+      .map(({ html, failureSummary }) => `${id}: ${html}\n${failureSummary}`),
+  );
+}
+
+async function expectContract(
+  container: HTMLElement,
+  { presentsNothing }: ContractCase,
+  errored: boolean,
+  exempt?: string,
+) {
   const checked = (selector: string) =>
     [...container.querySelectorAll<HTMLElement>(selector)].filter((element) => !exempt || !element.matches(exempt));
 
@@ -113,19 +153,23 @@ function expectContract(container: HTMLElement, { presentsNothing }: ContractCas
     expect(errorId, 'the id the error is drawn under').toBeDefined();
     expect(checked(`[aria-describedby~="${errorId}"]`), `the elements ${errorId} describes`).not.toEqual([]);
   }
+
+  expect(await axeViolations(container, exempt)).toEqual([]);
 }
 
 /** Pins the presentation contract every theme's fields keep, the same way in core and every theme: an accessible name
  * and at most one label per control, including an option selector's and each date part's, one description, help and
  * error per field, every id a label or an ARIA reference names on the page, `aria-invalid` on each control an error
- * describes, or on its radio group, and nowhere while clean, and no id carried twice (#5592). Each case is drawn once
+ * describes, or on its radio group, and nowhere while clean, no id carried twice (#5592), and no break of the WCAG A
+ * and AA rules axe-core can decide in jsdom. Each case is drawn once
  * clean and once with an error.
  *
  * @param Form - The theme's `Form` component
  * @param widgets - The widgets the theme registers, merged over core's defaults to decide the widgets that render
  * @param [fixtures] - Schemas for widgets this package does not know, keyed by the name they are registered under
- * @param [exempt] - A selector for the elements a theme knows break the contract, which the checks skip; each part of
- *        it should name the open issue that tracks the break
+ * @param [exempt] - A selector for the elements a theme knows break the contract, which the checks skip, along with an
+ *        element axe faults only for elements it matches, as it faults an option for a focusable control inside; each
+ *        part of it should name the open issue that tracks the break
  */
 export function presentationContractTests(
   Form: ComponentType<FormProps>,
@@ -206,12 +250,15 @@ export function presentationContractTests(
     ]),
   ];
 
-  describe('every field keeps the presentation contract', () => {
+  // axe-core refuses a run while another is going, so the cases stay sequential under `sequence.concurrent`. Each case
+  // renders a themed form, drives it and runs axe, and the first of a file also loads the theme and axe-core, which a
+  // slow CI runner has taken past the default 5s
+  describe('every field keeps the presentation contract', { concurrent: false, timeout: 30_000 }, () => {
     describe.each([
       ['clean', false],
       ['errored', true],
     ])('%s', (_, errored) => {
-      test.each(cases)('%s', (name, contractCase) => {
+      test.each(cases)('%s', async (name, contractCase) => {
         // A widget with no fixture is one this suite would silently skip
         if (name in allWidgets) {
           expect(Object.hasOwn(allFixtures, name)).toBe(true);
@@ -234,7 +281,7 @@ export function presentationContractTests(
           />,
         );
 
-        expectContract(container, contractCase, errored, exempt);
+        await expectContract(container, contractCase, errored, exempt);
       });
     });
   });
