@@ -1492,4 +1492,34 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onChange, { k: 'x', t: 2, other: 'v' }, 'root_other');
     });
   });
+
+  describe('the items of an array `default` (#5831)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        other: { type: 'string' },
+        list: {
+          type: 'array',
+          default: [{}],
+          items: { type: 'object', properties: { q: { type: 'number', default: 1 }, c: { const: 'c' } } },
+        },
+      },
+    };
+
+    it('fills an item of the default with the defaults of its own properties on mount', async () => {
+      const { node, onSubmit } = createFormComponent({ schema });
+
+      await submitForm(node, user);
+
+      expectToHaveBeenCalledWithFormData(onSubmit, { list: [{ q: 1, c: 'c' }] }, true);
+    });
+
+    it('holds the same after an edit of another field as on mount', async () => {
+      const { node, onChange } = createFormComponent({ schema });
+
+      await user.type(elementOf(node, '#root_other'), 'v');
+
+      expectToHaveBeenCalledWithFormData(onChange, { other: 'v', list: [{ q: 1, c: 'c' }] }, 'root_other');
+    });
+  });
 });
