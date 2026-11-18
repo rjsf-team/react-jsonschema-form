@@ -23,37 +23,41 @@ exports[`format iso-date-time 1`] = `
       class="rjsf-field rjsf-field-string"
     >
       <div
-        class="m_46b77525 mantine-InputWrapper-root mantine-DateTimePicker-root"
-        data-size="sm"
+        style="display: contents;"
       >
         <div
-          class="m_6c018570 mantine-Input-wrapper mantine-DateTimePicker-wrapper"
-          data-multiline="true"
+          class="m_46b77525 mantine-InputWrapper-root mantine-DateTimePicker-root"
           data-size="sm"
-          data-variant="default"
-          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
         >
-          <button
-            aria-expanded="false"
-            aria-haspopup="dialog"
-            class="m_6fa5e2aa m_8fb7ebe7 mantine-Input-input mantine-DateTimePicker-input"
-            data-dates-input="true"
+          <div
+            class="m_6c018570 mantine-Input-wrapper mantine-DateTimePicker-wrapper"
+            data-multiline="true"
+            data-size="sm"
             data-variant="default"
-            id="root"
-            role="combobox"
-            type="button"
+            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
           >
-            <span
-              class="m_88bacfd0 mantine-InputPlaceholder-placeholder mantine-DateTimePicker-placeholder"
-            />
-          </button>
+            <button
+              aria-expanded="false"
+              aria-haspopup="dialog"
+              class="m_6fa5e2aa m_8fb7ebe7 mantine-Input-input mantine-DateTimePicker-input"
+              data-dates-input="true"
+              data-variant="default"
+              id="root"
+              role="combobox"
+              type="button"
+            >
+              <span
+                class="m_88bacfd0 mantine-InputPlaceholder-placeholder mantine-DateTimePicker-placeholder"
+              />
+            </button>
+          </div>
         </div>
+        <input
+          name="root"
+          type="hidden"
+          value=""
+        />
       </div>
-      <input
-        name="root"
-        type="hidden"
-        value=""
-      />
     </div>
     <button
       class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
@@ -8277,37 +8281,41 @@ exports[`single fields > format datetime 1`] = `
       class="rjsf-field rjsf-field-string"
     >
       <div
-        class="m_46b77525 mantine-InputWrapper-root mantine-DateTimePicker-root"
-        data-size="sm"
+        style="display: contents;"
       >
         <div
-          class="m_6c018570 mantine-Input-wrapper mantine-DateTimePicker-wrapper"
-          data-multiline="true"
+          class="m_46b77525 mantine-InputWrapper-root mantine-DateTimePicker-root"
           data-size="sm"
-          data-variant="default"
-          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
         >
-          <button
-            aria-expanded="false"
-            aria-haspopup="dialog"
-            class="m_6fa5e2aa m_8fb7ebe7 mantine-Input-input mantine-DateTimePicker-input"
-            data-dates-input="true"
+          <div
+            class="m_6c018570 mantine-Input-wrapper mantine-DateTimePicker-wrapper"
+            data-multiline="true"
+            data-size="sm"
             data-variant="default"
-            id="root"
-            role="combobox"
-            type="button"
+            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
           >
-            <span
-              class="m_88bacfd0 mantine-InputPlaceholder-placeholder mantine-DateTimePicker-placeholder"
-            />
-          </button>
+            <button
+              aria-expanded="false"
+              aria-haspopup="dialog"
+              class="m_6fa5e2aa m_8fb7ebe7 mantine-Input-input mantine-DateTimePicker-input"
+              data-dates-input="true"
+              data-variant="default"
+              id="root"
+              role="combobox"
+              type="button"
+            >
+              <span
+                class="m_88bacfd0 mantine-InputPlaceholder-placeholder mantine-DateTimePicker-placeholder"
+              />
+            </button>
+          </div>
         </div>
+        <input
+          name="root"
+          type="hidden"
+          value=""
+        />
       </div>
-      <input
-        name="root"
-        type="hidden"
-        value=""
-      />
     </div>
     <button
       class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"

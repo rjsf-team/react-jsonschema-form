@@ -426,7 +426,7 @@ function isInputContainer(value: unknown): value is NonNullable<InputWrapperProp
 }
 
 /** The id `ownProps` give an element, or `fallback` where they give none */
-function ownIdOr(ownProps: GenericObjectType | undefined, fallback: string): string {
+export function ownIdOr(ownProps: GenericObjectType | undefined, fallback: string): string {
   const ownId: unknown = ownProps?.id;
   return typeof ownId === 'string' && ownId ? ownId : fallback;
 }

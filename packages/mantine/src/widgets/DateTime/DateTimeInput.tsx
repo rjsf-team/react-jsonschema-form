@@ -1,9 +1,17 @@
-import type { FocusEvent, KeyboardEvent } from 'react';
-import { useCallback, useMemo, useRef } from 'react';
+import type { KeyboardEvent, MouseEvent } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { DateInput, DateTimePicker } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, labelValue, TranslatableString, widgetDrawsLabel } from '@rjsf/utils';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import {
+  dateElementAriaLabel,
+  dateElementLabel,
+  getDateTimeLocalValue,
+  labelValue,
+  partId,
+  TranslatableString,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
@@ -14,6 +22,7 @@ import {
   getWidgetError,
   useInputAriaProps,
   getRequiredProps,
+  ownIdOr,
   useThemeDefaultProps,
 } from '../../utils.tsx';
 
@@ -21,6 +30,8 @@ import {
 dayjs.extend(customParseFormat);
 
 const FORMAT_OPTIONS = new Set(['valueFormat', 'displayFormat']);
+// `DateInput`'s own props, which `DateTimePicker` would pass on to its `<button>`
+const DATE_TIME_EXCLUDED_OPTIONS = new Set([...FORMAT_OPTIONS, 'dateParser', 'fixOnBlur', 'allowDeselect']);
 
 const dateParser = (input: string | undefined, format: string) => {
   if (!input) {
@@ -57,10 +68,6 @@ const offsetValueFormatter = (value?: DateStringValue | Date | null) => {
 const hasSeconds = (format: string) => format.replace(/\[[^\]]*\]/g, '').includes('s');
 
 const isCallback = (value: unknown): value is (...args: unknown[]) => void => typeof value === 'function';
-
-/** Whether `element` is in a `DateTimePicker`'s dropdown, which is still the field */
-const inDropdown = (element: EventTarget | null) =>
-  element instanceof Element && !!element.closest('[data-dates-dropdown], [data-dates-modal]');
 
 /** The `DateTimeInput` is a base component that used by other Date-Time widget components. With `withTime`, it
  * renders Mantine's `DateTimePicker`, a dropdown with a calendar and a time picker, instead of the typed `DateInput`.
@@ -108,7 +115,11 @@ export default function DateTimeInput<
     typeof options.displayFormat === 'string' && options.displayFormat ? options.displayFormat : valueFormat;
 
   const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
-  const themeProps = cleanupOptions(options, props, FORMAT_OPTIONS);
+  const themeProps: GenericObjectType = cleanupOptions(
+    options,
+    props,
+    withTime ? DATE_TIME_EXCLUDED_OPTIONS : FORMAT_OPTIONS,
+  );
 
   const handleChange = useCallback(
     (nextValue: DateStringValue | null) => {
@@ -121,36 +132,59 @@ export default function DateTimeInput<
     [onChange, valueFormat, requiresOffset, options.emptyValue],
   );
 
+  // Read when the field's focus changes, which can come after a change made in the same event, such as the clamping
+  // of an out-of-range value as the dropdown closes
+  const latestRef = useRef({ id, value, onBlur, onFocus });
+  useLayoutEffect(() => {
+    latestRef.current = { id, value, onBlur, onFocus };
+  });
   const reportBlur = useCallback(() => {
-    if (onBlur) {
-      onBlur(id, value);
+    const latest = latestRef.current;
+    if (latest.onBlur) {
+      latest.onBlur(latest.id, latest.value);
     }
-  }, [onBlur, id, value]);
+  }, []);
+  const reportFocus = useCallback(() => {
+    const latest = latestRef.current;
+    if (latest.onFocus) {
+      latest.onFocus(latest.id, latest.value);
+    }
+  }, []);
 
-  const focusInDropdownRef = useRef(false);
+  // A `DateTimePicker`'s field is its button, its dropdown and its modal, which focus moves between
+  const fieldRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const handleBlur = useCallback(
-    ({ relatedTarget }: FocusEvent<HTMLElement>) => {
-      // Opening the `DateTimePicker` moves focus into its dropdown, which is still the field; closing it reports the blur
-      if (withTime && inDropdown(relatedTarget)) {
-        focusInDropdownRef.current = true;
-        return;
-      }
+  const [modalOpened, setModalOpened] = useState(false);
+  const focusWithinRef = useRef(false);
+  const leaveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const leaveField = useCallback(() => {
+    // A field unmounted since has nothing left to blur
+    if (focusWithinRef.current && fieldRef.current) {
+      focusWithinRef.current = false;
       reportBlur();
-    },
-    [reportBlur, withTime],
-  );
-
-  const handleFocus = useCallback(
-    ({ relatedTarget }: FocusEvent<HTMLElement>) => {
-      // Closing the dropdown from the keyboard returns focus to the field it never left
-      if (onFocus && !(withTime && inDropdown(relatedTarget))) {
-        onFocus(id, value);
+    }
+  }, [reportBlur]);
+  const handleFieldFocus = useCallback(() => {
+    clearTimeout(leaveTimerRef.current);
+    if (!focusWithinRef.current) {
+      focusWithinRef.current = true;
+      reportFocus();
+    }
+  }, [reportFocus]);
+  // A focus inside the field that follows a blur in the same task only moves focus within it
+  const handleFieldBlur = useCallback(() => {
+    leaveTimerRef.current = setTimeout(leaveField);
+  }, [leaveField]);
+  // Removing a focused element, such as the Clear button or the dropdown, moves focus to the body without a blur in
+  // some browsers
+  const leaveFieldIfFocusLost = useCallback(() => {
+    setTimeout(() => {
+      // Focus can still be in a dropdown that is closing, which some browsers then remove without a blur
+      if (buttonRef.current?.ownerDocument.activeElement !== buttonRef.current) {
+        leaveField();
       }
-    },
-    [onFocus, id, value, withTime],
-  );
+    });
+  }, [leaveField]);
 
   const parsedValue =
     requiresOffset || typeof value !== 'string' ? offsetValueParser(localValue) : dateParser(localValue, valueFormat);
@@ -160,6 +194,11 @@ export default function DateTimeInput<
   const themeDefaults = useThemeDefaultProps(component);
   const error = getWidgetError<T, S, F>(props);
 
+  // The picker closes through the popover's `onClose`, which one in the options would replace
+  const { onClose: _ignoredOnClose, ...popoverOptions } = {
+    ...asObject(themeDefaults.popoverProps),
+    ...asObject(themeProps.popoverProps),
+  };
   const sharedProps = {
     id,
     name: htmlName || id,
@@ -170,79 +209,98 @@ export default function DateTimeInput<
     autoFocus: autofocus,
     label: labelValue(label || undefined, hideLabel, false),
     onChange: handleChange,
-    onBlur: handleBlur,
-    onFocus: handleFocus,
     error,
     clearable: themeDefaults.clearable !== false,
     ...themeProps,
     ...ariaDescribedByProps,
     ...getDescriptionProps(props),
-    popoverProps: { withinPortal: false },
+    popoverProps: { ...popoverOptions, withinPortal: false },
     classNames: typeof options?.classNames === 'object' ? options.classNames : undefined,
     valueFormat: displayFormat,
     clearButtonProps: {
       'aria-label': registry.translateString(TranslatableString.ClearLabel),
       ...asObject(themeDefaults.clearButtonProps),
-      ...asObject(options.clearButtonProps),
+      ...asObject(themeProps.clearButtonProps),
     },
   };
 
   if (withTime) {
     const { translateString } = registry;
     // Named like `AltDateWidget`'s parts, so two date-time fields' segments can be told apart
-    const timeLabel = (part: TranslatableString) =>
-      label
-        ? translateString(TranslatableString.DateElementAriaLabel, [label, translateString(part)])
-        : translateString(part);
+    const timeLabel = (part: string) =>
+      dateElementAriaLabel(dateElementLabel(part, translateString), translateString, label);
+    const inModal = (themeProps.dropdownType ?? themeDefaults.dropdownType) === 'modal';
+    const modalProps = { ...asObject(themeDefaults.modalProps), ...asObject(themeProps.modalProps) };
+    const modalId = ownIdOr(modalProps, partId(id, 'modal'));
+    // Mantine names the popover's dropdown as the one it controls, which a modal leaves unrendered
+    const popoverProps: GenericObjectType =
+      inModal && modalOpened ? { ...sharedProps.popoverProps, 'aria-controls': modalId } : sharedProps.popoverProps;
     return (
-      <DateTimePicker
-        withSeconds={hasSeconds(valueFormat)}
-        // A combobox, unlike a button, is announced with its shown text as its value, and as required or invalid
-        // oxlint-disable-next-line jsx-a11y/role-has-required-aria-props -- Mantine's `Popover.Target` sets `aria-expanded` and `aria-controls`
-        role='combobox'
-        aria-required={required || undefined}
-        ref={buttonRef}
-        {...sharedProps}
-        // Down Arrow, or Alt+Down Arrow, opens a combobox, as Enter and Space open the button
-        onKeyDown={(event: KeyboardEvent<HTMLButtonElement>) => {
-          const onKeyDownOption = options.onKeyDown ?? themeDefaults.onKeyDown;
-          if (isCallback(onKeyDownOption)) {
-            onKeyDownOption(event);
-          }
-          if (
-            !event.defaultPrevented &&
-            event.key === 'ArrowDown' &&
-            event.currentTarget.getAttribute('aria-expanded') !== 'true'
-          ) {
-            event.preventDefault();
-            event.currentTarget.click();
-          }
-        }}
-        onDropdownClose={() => {
-          // A submit or Enter calls this twice, once as it closes the dropdown and again from the popover closing
-          if (focusInDropdownRef.current) {
-            focusInDropdownRef.current = false;
-            // Mantine returns focus to the field after a keyboard close, whose own blur reports leaving it later
-            setTimeout(() => {
-              // A field unmounted since has nothing left to blur
-              if (buttonRef.current && document.activeElement !== buttonRef.current) {
-                reportBlur();
-              }
-            });
-          }
-          const onDropdownCloseOption = options.onDropdownClose ?? themeDefaults.onDropdownClose;
-          if (isCallback(onDropdownCloseOption)) {
-            onDropdownCloseOption();
-          }
-        }}
-        timePickerProps={{
-          hoursInputLabel: timeLabel(TranslatableString.HourLabel),
-          minutesInputLabel: timeLabel(TranslatableString.MinuteLabel),
-          secondsInputLabel: timeLabel(TranslatableString.SecondLabel),
-          ...asObject(themeDefaults.timePickerProps),
-          ...asObject(options.timePickerProps),
-        }}
-      />
+      // `display: contents` keeps it out of the layout, and React's focus events reach it from the modal's portal too
+      <div ref={fieldRef} style={{ display: 'contents' }} onFocus={handleFieldFocus} onBlur={handleFieldBlur}>
+        <DateTimePicker
+          withSeconds={hasSeconds(valueFormat)}
+          // A combobox, unlike a button, is announced with its shown text as its value, and as required or invalid
+          // oxlint-disable-next-line jsx-a11y/role-has-required-aria-props -- Mantine's `Popover.Target` sets `aria-expanded`, and `aria-controls` while the picker is open
+          role='combobox'
+          aria-required={required || undefined}
+          ref={buttonRef}
+          {...sharedProps}
+          popoverProps={popoverProps}
+          modalProps={{ ...modalProps, id: modalId }}
+          onClick={(event: MouseEvent<HTMLButtonElement>) => {
+            const onClickOption = themeProps.onClick ?? themeDefaults.onClick;
+            if (isCallback(onClickOption)) {
+              onClickOption(event);
+            }
+            // The button is covered while the modal is open, so a click only opens it
+            if (inModal) {
+              setModalOpened(true);
+            }
+          }}
+          onChange={(nextValue: DateStringValue | null) => {
+            handleChange(nextValue);
+            // Only the Clear button commits an empty value, and it is removed as it does
+            if (!nextValue) {
+              leaveFieldIfFocusLost();
+            }
+          }}
+          // Down Arrow, or Alt+Down Arrow, opens a combobox, as Enter and Space open the button
+          onKeyDown={(event: KeyboardEvent<HTMLButtonElement>) => {
+            const onKeyDownOption = themeProps.onKeyDown ?? themeDefaults.onKeyDown;
+            if (isCallback(onKeyDownOption)) {
+              onKeyDownOption(event);
+            }
+            if (
+              !event.defaultPrevented &&
+              event.key === 'ArrowDown' &&
+              event.currentTarget.getAttribute('aria-expanded') !== 'true'
+            ) {
+              event.preventDefault();
+              event.currentTarget.click();
+            }
+          }}
+          onDropdownClose={() => {
+            setModalOpened(false);
+            // A pointer submit removes the focused dropdown; a modal returns focus to the button itself
+            // shortcut: a modal with `modalProps.returnFocus: false` leaves the field without a blur, handle it if asked
+            if (!inModal) {
+              leaveFieldIfFocusLost();
+            }
+            const onDropdownCloseOption = themeProps.onDropdownClose ?? themeDefaults.onDropdownClose;
+            if (isCallback(onDropdownCloseOption)) {
+              onDropdownCloseOption();
+            }
+          }}
+          timePickerProps={{
+            hoursInputLabel: timeLabel('hour'),
+            minutesInputLabel: timeLabel('minute'),
+            secondsInputLabel: timeLabel('second'),
+            ...asObject(themeDefaults.timePickerProps),
+            ...asObject(themeProps.timePickerProps),
+          }}
+        />
+      </div>
     );
   }
 
@@ -251,6 +309,8 @@ export default function DateTimeInput<
     <DateInput
       allowDeselect={themeDefaults.allowDeselect === true}
       dateParser={(v) => dateParser(v, displayFormat)}
+      onBlur={reportBlur}
+      onFocus={reportFocus}
       {...sharedProps}
     />
   );

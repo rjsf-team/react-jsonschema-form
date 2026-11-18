@@ -322,6 +322,33 @@ A form validates with the same schema object until its schema changes, and passe
 
 - (schema: S, formData?: unknown) => void: A function that takes the `schema` to validate with and the `formData` the schema may have been resolved for, and throws when the schema is neither the `rootSchema` nor its resolution
 
+### dateElementAriaLabel()
+
+Returns the accessible name of a date or time part: the field's label and the part's translated name combined through `TranslatableString.DateElementAriaLabel`, such as `When, year`, so a locale controls both the order and the punctuation. The label is kept even when the field hides it on screen, since that is when the parts of two date fields are otherwise impossible to tell apart. Only an empty label leaves the part's name alone. `DateElement` names an `AltDateWidget`'s parts with it, and a widget of your own that renders date or time parts, such as a time picker's segments, can name them the same way.
+
+#### Parameters
+
+- elementLabel: string - The translated name of the part, as returned by [dateElementLabel()](#dateelementlabel)
+- translateString: Registry['translateString'] - The `translateString` function from the `registry`
+- [label]: string | undefined - The label of the field the part belongs to
+
+#### Returns
+
+- string: The accessible name of the part
+
+### dateElementLabel()
+
+Returns the translated name of a date or time part: `year`, `month`, `day`, `hour`, `minute` and `second` go through `TranslatableString.YearLabel`, `MonthLabel`, `DayLabel`, `HourLabel`, `MinuteLabel` and `SecondLabel`, and any other `type` is returned as it is.
+
+#### Parameters
+
+- type: string - The type of the part, such as `year`, as a `DateElementProp` gives it
+- translateString: Registry['translateString'] - The `translateString` function from the `registry`
+
+#### Returns
+
+- string: The translated name of the part
+
 ### deepEquals()
 
 Implements a deep equals that treats all functions as equivalent and tracks circular references, so self-referential inputs do not recurse infinitely.

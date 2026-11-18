@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { createTheme, MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import pinTimeZone from '../../../testing/pinTimeZone.ts';
@@ -143,7 +144,13 @@ describe('DateTimeWidget', () => {
 
       await user.tab();
 
+      expect(screen.getByRole('button', { name: 'Clear' })).toHaveFocus();
+      expect(onBlur).not.toHaveBeenCalled();
+
+      await user.tab();
+
       expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00');
+      expect(onFocus).toHaveBeenCalledOnce();
     });
 
     test('calls an onKeyDown option and still opens the picker with Down Arrow', async () => {
@@ -443,6 +450,216 @@ describe('DateTimeWidget', () => {
 
     expect(document.querySelector('[data-dates-modal]')).toContainElement(document.activeElement as HTMLElement);
     expect(onBlur).not.toHaveBeenCalled();
+  });
+
+  test.each(['popover', 'modal'])(
+    'DateTimeWidget names its open %s as the element it controls',
+    async (dropdownType) => {
+      const { container } = renderWidget({
+        schema: isoDateTime,
+        value: '2024-01-10T08:00:00',
+        options: { dropdownType },
+      });
+      const button = container.querySelector('button#root')!;
+
+      await user.click(button);
+
+      expect(button).toHaveAttribute('aria-expanded', 'true');
+      const controlled = document.getElementById(button.getAttribute('aria-controls')!);
+      expect(controlled).toContainElement(screen.getByRole('button', { name: '10 January 2024' }));
+
+      await user.keyboard('{Escape}');
+
+      await waitFor(() => expect(button).toHaveAttribute('aria-expanded', 'false'));
+      expect(button).not.toHaveAttribute('aria-controls');
+    },
+  );
+
+  test.each([
+    ['Escape closes', async () => user.keyboard('{Escape}')],
+    [
+      'Enter submits',
+      async () => {
+        await user.click(screen.getByRole('spinbutton', { name: 'DateTime, hour' }));
+        await user.keyboard('{Enter}');
+      },
+    ],
+  ])('DateTimeWidget reports no blur or second focus when %s its modal and returns focus to it', async (_, close) => {
+    const onBlur = vi.fn();
+    const onFocus = vi.fn();
+    const { container } = renderWidget({
+      onBlur,
+      onFocus,
+      schema: isoDateTime,
+      value: '2024-01-10T08:00:00',
+      options: { dropdownType: 'modal' },
+    });
+    const button = container.querySelector('button#root')!;
+
+    await user.click(button);
+    await close();
+
+    await waitFor(() => expect(document.activeElement).toBe(button));
+    expect(onBlur).not.toHaveBeenCalled();
+    expect(onFocus).toHaveBeenCalledOnce();
+
+    await user.click(document.body);
+
+    expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00');
+  });
+
+  test('DateTimeWidget reports no blur when its picker opens inside an iframe, and one when focus leaves it', async () => {
+    const iframe = document.createElement('iframe');
+    document.body.append(iframe);
+    const frameDocument = iframe.contentDocument!;
+    const frameUser = userEvent.setup({ document: frameDocument });
+    const onBlur = vi.fn();
+    const onFocus = vi.fn();
+    render(
+      <MantineProvider env='test'>
+        <DateTimeWidget {...makeProps({ onBlur, onFocus, schema: isoDateTime, value: '2024-01-10T08:00:00' })} />
+      </MantineProvider>,
+      { container: frameDocument.body },
+    );
+    const button = frameDocument.querySelector('button#root')!;
+
+    await frameUser.click(button);
+
+    expect(frameDocument.querySelector('[data-dates-dropdown]')).toContainElement(
+      frameDocument.activeElement as HTMLElement,
+    );
+    expect(onBlur).not.toHaveBeenCalled();
+    expect(onFocus).toHaveBeenCalledOnce();
+
+    await frameUser.click(frameDocument.body);
+
+    expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00');
+    expect(onFocus).toHaveBeenCalledOnce();
+    iframe.remove();
+  });
+
+  test('DateTimeWidget reports one blur when a click on its submit button closes the picker', async () => {
+    const onBlur = vi.fn();
+    const { container } = renderWidget({
+      onBlur,
+      schema: isoDateTime,
+      value: '2024-01-10T08:00:00',
+      options: { submitButtonProps: { 'aria-label': 'Submit' } },
+    });
+
+    await user.click(container.querySelector('button#root')!);
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(container.querySelector('[data-dates-dropdown]')).not.toBeInTheDocument();
+    expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00');
+  });
+
+  test('DateTimeWidget reports a blur when its focused Clear button is removed, and a focus when focus returns', async () => {
+    const onBlur = vi.fn();
+    const onFocus = vi.fn();
+    function StatefulWidget() {
+      const [value, setValue] = useState<unknown>('2024-01-10T08:00:00');
+      return <DateTimeWidget {...makeProps({ onBlur, onFocus, schema: isoDateTime, value, onChange: setValue })} />;
+    }
+    const { container } = render(
+      <MantineProvider env='test'>
+        <StatefulWidget />
+      </MantineProvider>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+    expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument();
+    await waitFor(() => expect(onBlur).toHaveBeenCalledOnce());
+
+    await user.click(container.querySelector('button#root')!);
+
+    expect(onFocus).toHaveBeenCalledTimes(2);
+  });
+
+  test('DateTimeWidget ignores global options of the names it reads that the field does not set', async () => {
+    const onKeyDown = vi.fn();
+    const onDropdownClose = vi.fn();
+    // Core hands a widget the global options as its own, so the widget can tell them apart only by the uiSchema
+    const globalUiOptions = {
+      onKeyDown,
+      onDropdownClose,
+      clearButtonProps: { 'aria-label': 'Global clear' },
+      timePickerProps: { hoursInputLabel: 'Global hour' },
+    };
+    const registry = getTestRegistry(isoDateTime, {}, Templates, {});
+    const { container } = renderWidget({
+      registry: { ...registry, globalUiOptions },
+      options: globalUiOptions,
+      schema: isoDateTime,
+      value: '2024-01-10T08:00:00',
+    });
+
+    expect(screen.getByRole('button', { name: 'Clear' })).toBeInTheDocument();
+    await user.tab();
+    await user.keyboard('x');
+    await user.click(container.querySelector('button#root')!);
+    expect(screen.getByRole('spinbutton', { name: 'DateTime, hour' })).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+
+    expect(onKeyDown).not.toHaveBeenCalled();
+    expect(onDropdownClose).not.toHaveBeenCalled();
+  });
+
+  test("DateTimeWidget merges the theme's and the field's popoverProps", async () => {
+    const theme = createTheme({
+      components: {
+        DateTimePicker: { defaultProps: { popoverProps: { classNames: { dropdown: 'theme-dropdown' } } } },
+      },
+    });
+    const { container } = render(
+      <MantineProvider env='test' theme={theme}>
+        <DateTimeWidget
+          {...makeProps({
+            schema: isoDateTime,
+            value: '2024-01-10T08:00:00',
+            options: { popoverProps: { position: 'top' } },
+          })}
+        />
+      </MantineProvider>,
+    );
+
+    await user.click(container.querySelector('button#root')!);
+
+    const dropdown = container.querySelector('[data-dates-dropdown]');
+    expect(dropdown).toHaveClass('theme-dropdown');
+    expect(dropdown).toHaveAttribute('data-position', 'top');
+  });
+
+  test("DateTimeWidget keeps Mantine's close handling under a popoverProps onClose option", async () => {
+    const onBlur = vi.fn();
+    const onDropdownClose = vi.fn();
+    const { container } = renderWidget({
+      onBlur,
+      schema: isoDateTime,
+      value: '2024-01-10T08:00:00',
+      options: { onDropdownClose, popoverProps: { onClose: vi.fn() } },
+    });
+
+    await user.click(container.querySelector('button#root')!);
+    await user.click(document.body);
+
+    expect(container.querySelector('[data-dates-dropdown]')).not.toBeInTheDocument();
+    expect(onDropdownClose).toHaveBeenCalledOnce();
+    expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00');
+  });
+
+  test("DateTimeWidget leaves DateInput's own options off its button", () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const { container } = renderWidget({
+      schema: isoDateTime,
+      value: '2024-01-10T08:00:00',
+      options: { dateParser: () => null, fixOnBlur: false, allowDeselect: true },
+    });
+
+    expect(container.querySelector('button#root')).toBeInTheDocument();
+    expect(consoleError).not.toHaveBeenCalled();
+    consoleError.mockRestore();
   });
 
   test('shows an epoch at UTC midnight as its day for a field with a custom valueFormat', () => {
