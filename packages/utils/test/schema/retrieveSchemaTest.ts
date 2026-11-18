@@ -4,6 +4,7 @@ import { EXTRA_KEYS_ELSEWHERE_FLAG } from '../../src/constants.ts';
 import type { RJSFMarkedSchema, RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  EXTRA_KEY_OPTION_KEY,
   GUESSED_TYPE_FLAG,
   getAdditionalPropertySchema,
   createSchemaUtils,
@@ -3371,7 +3372,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const field = retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0);
         expect(field.properties).toEqual({
           name: { type: 'string' },
-          k: { type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true },
+          // Recorded for the warnings, which name the key's schema after the option describing it
+          k: { type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true, [EXTRA_KEY_OPTION_KEY]: 'oneOf[0]' },
         });
         // The field takes the option's extra-key keyword, which its add button and the seed of a new key read
         expect(field.additionalProperties).toEqual({ type: 'number' });

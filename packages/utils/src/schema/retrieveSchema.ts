@@ -14,6 +14,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  EXTRA_KEY_OPTION_KEY,
   EXTRA_KEYS_ELSEWHERE_FLAG,
   GUESSED_TYPE_FLAG,
   IF_KEY,
@@ -897,8 +898,8 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       );
     }
   }
-  const selected: unknown =
-    selectedOption === undefined ? undefined : getXxxOfOptions<S>(merged)?.options[selectedOption];
+  const xxxOf = selectedOption === undefined ? undefined : getXxxOfOptions<S>(merged);
+  const selected: unknown = selectedOption === undefined ? undefined : xxxOf?.options[selectedOption];
   let option: S | undefined;
   if (isSchemaObject<S>(selected)) {
     option = retrieveSchema<unknown, S, F>(context, selected, graph.rawRoot, data);
@@ -921,9 +922,19 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   if (takesExtraKeys && !stubsExtraKeys) {
     holds.push(holdsNoExtraKey);
   }
+  // Where the field declares no extra-key keyword and the selected option does, only the option's describe the keys the
+  // field renders
+  const extraKeyOption =
+    stubsExtraKeys &&
+    option !== undefined &&
+    xxxOf &&
+    !EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(merged, keyword)) &&
+    EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(option, keyword))
+      ? `${xxxOf.key}[${selectedOption}]`
+      : undefined;
   const view = handOut(
     takesExtraKeys
-      ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data, option)
+      ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data, option, extraKeyOption)
       : fieldSchema,
     field,
   );
@@ -1203,13 +1214,15 @@ function holdsNoExtraKeyOf<S extends StrictRJSFSchema>(
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [aFormData] - The current formData, if any, to assist retrieving a schema
  * @param [option] - The option selected beside the schema, retrieved for the data
+ * @param [extraKeyOption] - The option, as `anyOf[1]`, whose extra-key keywords alone describe the keys, recorded on
+ *        each stub under `EXTRA_KEY_OPTION_KEY`
  * @returns - The updated schema with additional properties stubbed
  */
 export function stubExistingAdditionalProperties<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, theSchema: S, rootSchema?: S, aFormData?: T, option?: S): S {
+>(context: SchemaContext<S, F>, theSchema: S, rootSchema?: S, aFormData?: T, option?: S, extraKeyOption?: string): S {
   const joined = option === undefined ? theSchema : withOptionExtraKeys<S>(theSchema, option);
   // Clone the schema so that we don't ruin the consumer's original
   const schema = {
@@ -1243,6 +1256,9 @@ export function stubExistingAdditionalProperties<
       stub = guessedTypeSchema<S>(formData[key]);
     }
     Reflect.set(stub, ADDITIONAL_PROPERTY_FLAG, true);
+    if (extraKeyOption !== undefined) {
+      Reflect.set(stub, EXTRA_KEY_OPTION_KEY, extraKeyOption);
+    }
     setOwn(schema.properties, key, stub);
   }
   return schema;

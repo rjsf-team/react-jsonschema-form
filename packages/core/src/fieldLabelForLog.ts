@@ -42,6 +42,29 @@ export interface EntryAnchor {
   definition?: string;
 }
 
+/** An option's own uiSchema entry, which the entries below it are named after */
+export interface OptionAnchor extends EntryAnchor {
+  /** Builds the label of the entry the option's entry sits in as the uiSchema gives it, naming no `ui:definitions` entry
+   * merged above
+   */
+  localOwner: () => string;
+}
+
+/** Writes `segment` of a field's path after `written`, as an entry label writes it: an array index as `[]` and an extra
+ * key, which `isExtraKey` says the segment is, as `{}`, since every row or key one entry renders reads alike
+ *
+ * @param written - The path written so far
+ * @param segment - The segment to write
+ * @param isExtraKey - Whether the segment is an additional property's key
+ * @returns - The path with the segment written after it
+ */
+export function writeEntrySegment(written: string, segment: string | number, isExtraKey: boolean): string {
+  if (typeof segment === 'number') {
+    return `${written}[]`;
+  }
+  return isExtraKey ? `${written}{}` : toFieldPath(segment, written as FieldPath);
+}
+
 /** Names an entry at or below an option's entry, after that entry and, where the option's `$ref` has one, its
  * `ui:definitions` entry
  *
@@ -84,10 +107,13 @@ export function entryLabelForLog(
   };
   const start = anchor?.depth ?? 0;
   const pathFrom = (base: string) =>
-    segments.slice(start).reduce<string>((entryPath, segment, offset) => {
-      const collapsed = marker(start + offset, segment);
-      return collapsed ? `${entryPath}${collapsed}` : toFieldPath(segment, entryPath as FieldPath);
-    }, base);
+    segments
+      .slice(start)
+      .reduce<string>(
+        (entryPath, segment, offset) =>
+          writeEntrySegment(entryPath, segment, collapsedKeys?.includes(start + offset) ?? false),
+        base,
+      );
   if (anchor) {
     return anchoredEntryLabel(anchor, pathFrom);
   }

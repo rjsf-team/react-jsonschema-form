@@ -1,11 +1,21 @@
 'use client';
 
 import { createContext, use, useMemo } from 'react';
-import { ADDITIONAL_PROPERTY_FLAG, fieldPathToList, hasSchemaMarker } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  EXTRA_KEY_OPTION_KEY,
+  fieldPathToList,
+  hasSchemaMarker,
+  isObject,
+  mergeObjects,
+  UI_DEFINITION_ORIGIN_KEY,
+  UI_OPTIONS_KEY,
+} from '@rjsf/utils';
 import type { FieldPath, GlobalFormOptions } from '@rjsf/utils';
 
-import { anchoredEntryLabel, entryLabelForLog } from '../../fieldLabelForLog.ts';
-import type { EntryAnchor } from '../../fieldLabelForLog.ts';
+import { anchoredEntryLabel, entryLabelForLog, writeEntrySegment } from '../../fieldLabelForLog.ts';
+import type { EntryAnchor, OptionAnchor } from '../../fieldLabelForLog.ts';
+import { getAt } from '../dataPaths.ts';
 
 /** The uiSchema entry a field at `fieldPath` renders from, for a warning about that entry. A shown `anyOf`/`oneOf`
  * option renders at the `MultiSchemaField`'s own path, so a label built from that path would name the field's entry
@@ -17,8 +27,13 @@ import type { EntryAnchor } from '../../fieldLabelForLog.ts';
 export interface TemplateWarnEntry {
   /** The path of the field whose entry `label` names */
   fieldPath: FieldPath;
-  /** Builds the label once, when something is actually invalid */
-  label: () => string;
+  /** Builds the label once per `key`, when something is actually invalid. Given the uiSchema option a warning is about,
+   * such as `field` or `FieldTemplate`, it names whichever holds the option, where a `ui:definitions` entry is merged
+   * under the entry the uiSchema gives: that entry, or the definition
+   */
+  label: (key?: string) => string;
+  /** Builds the label of the entry as the uiSchema gives it, naming no `ui:definitions` entry merged under it or above */
+  localLabel: () => string;
   /** Builds the label of the schema the field renders, for a warning about the schema's shape rather than its `uiSchema`.
    * An option with no `uiSchema` entry of its own renders from its field's, so only this one tells such an option apart
    */
@@ -29,7 +44,7 @@ export interface TemplateWarnEntry {
    */
   additionalDepths?: readonly number[];
   /** The option entry this one sits beneath, which the labels of the entries below it are written after */
-  anchor?: EntryAnchor;
+  anchor?: OptionAnchor;
   /** The option schema this one sits beneath, which the schema labels of the fields below it are written after */
   schemaAnchor?: EntryAnchor;
   /** Set on a shown option's entry where the field holding the option declares extra-key keywords: that field's entry,
@@ -42,6 +57,230 @@ export interface TemplateWarnEntry {
    * Only the option's extra keys read it, since every field below builds an entry of its own without it
    */
   extraKeysFrom?: TemplateWarnEntry;
+  /** The nearest `ui:definitions` entry merged under this entry or one above it, whose holder `label` names */
+  definitionOrigin?: DefinitionOrigin;
+  /** The options this entry sits below that render from an entry of their own, in the order they nest, which a uiSchema
+   * path from a definition above them takes along with the data path
+   */
+  optionSteps?: readonly OptionStep[];
+}
+
+/** An option rendered from its own `uiSchema.anyOf[i]`/`uiSchema.oneOf[i]` entry, which renders at its field's data path
+ * and so leaves no segment of its own in it
+ */
+interface OptionStep {
+  /** How many path segments the field holding the option has */
+  depth: number;
+  /** The keyword holding the options */
+  keyword: string;
+  /** The index of the option */
+  index: number;
+}
+
+/** A `ui:definitions` entry `resolveUiSchema()` merged under the uiSchema entry of a field or an option, which the
+ * entries below that one are merged from too
+ */
+export interface DefinitionOrigin {
+  /** How many path segments the field holding the merged entry has */
+  depth: number;
+  /** The `ui:definitions` key */
+  ref: string;
+  /** The entry as the uiSchema gave it */
+  local: unknown;
+  /** The `ui:definitions` entry merged under it */
+  definition: unknown;
+  /** The definition merged above this one, whose merged entry the `local` one comes from */
+  parent?: DefinitionOrigin;
+  /** How many of the `optionSteps` lie above the merged entry, so a path from it takes only those after */
+  stepsBefore: number;
+}
+
+/** What `resolveUiSchema()` records under `UI_DEFINITION_ORIGIN_KEY` */
+export type DefinitionRecord = Pick<DefinitionOrigin, 'ref' | 'local' | 'definition'>;
+
+/** Returns what `resolveUiSchema()` recorded on `uiSchema` when it merged a `ui:definitions` entry under it. It is built
+ * afresh whenever `resolveUiSchema()` runs again, so a memo is keyed on its parts rather than on it
+ *
+ * @param uiSchema - The uiSchema as `resolveUiSchema()` resolved it
+ * @returns - The record, or undefined where no definition was merged
+ */
+export function definitionRecordOf(uiSchema: unknown): DefinitionRecord | undefined {
+  const record: unknown = isObject(uiSchema) ? Reflect.get(uiSchema, UI_DEFINITION_ORIGIN_KEY) : undefined;
+  return isObject(record) && typeof record.ref === 'string' ? (record as DefinitionRecord) : undefined;
+}
+
+/** Keeps the record `resolveUiSchema()` recorded while its parts stay the same, since it records afresh whenever it runs
+ * again for the same entries and the entries built from it are provided to everything below
+ *
+ * @param record - The record, as `definitionRecordOf()` reads it
+ * @returns - The record, the same object while its parts are
+ */
+export function useStableDefinitionRecord(record: DefinitionRecord | undefined): DefinitionRecord | undefined {
+  const ref = record?.ref;
+  const local = record?.local;
+  const definition = record?.definition;
+  return useMemo(() => (ref === undefined ? undefined : { ref, local, definition }), [ref, local, definition]);
+}
+
+/** Whether `entry` gives the uiSchema option `key` through `slot`, either `ui:key` or `ui:options`
+ *
+ * @param entry - The uiSchema entry
+ * @param slot - `ui:key`, or `ui:options` for `ui:options.key`
+ * @param key - The option's name, without `ui:`
+ * @returns - Whether the entry gives it there
+ */
+function holdsSlot(entry: unknown, slot: string, key: string): boolean {
+  if (!isObject(entry)) {
+    return false;
+  }
+  if (slot !== UI_OPTIONS_KEY) {
+    return Object.hasOwn(entry, slot);
+  }
+  const options: unknown = entry[UI_OPTIONS_KEY];
+  return isObject(options) && Object.hasOwn(options, key);
+}
+
+/** Which spelling of the uiSchema option `key` the entry `resolveUiSchema()` merges from `local` and `definition` gives
+ * the value `getUiOptions()` reads: where both a `ui:key` and a `ui:options.key` are given, the later one in the merged
+ * entry
+ *
+ * @param local - The entry the uiSchema gives
+ * @param definition - The `ui:definitions` entry merged under it
+ * @param key - The option's name, without `ui:`
+ * @returns - `ui:key` or `ui:options`, or undefined where neither gives one
+ */
+function winningSlot(local: unknown, definition: unknown, key: string): string | undefined {
+  const merged = mergeObjects(isObject(definition) ? definition : {}, isObject(local) ? local : {});
+  const uiKey = `ui:${key}`;
+  // `getUiOptions()` ignores a `ui:options.field`, so only `ui:field` names a field
+  return Object.keys(merged).findLast(
+    (name) => (name === uiKey || (key !== 'field' && name === UI_OPTIONS_KEY)) && holdsSlot(merged, name, key),
+  );
+}
+
+/** Returns the way from a merged entry, of a field with `depth` path segments, to the entry of the field at `fieldPath`:
+ * its uiSchema keys, an array index being its array's `items`, an extra key its object's `additionalProperties` and an
+ * option its `anyOf`/`oneOf` and index, and that path written after `base`, as the labels write it
+ *
+ * @param fieldPath - The `FieldPath` of the field
+ * @param depth - The number of path segments of the field holding the merged entry
+ * @param additionalDepths - The indexes of the path segments that are an extra key
+ * @param steps - The option steps below the merged entry
+ * @param base - What the written path starts from
+ * @returns - The keys, and the written path
+ */
+function pathBelow(
+  fieldPath: FieldPath,
+  depth: number,
+  additionalDepths: readonly number[] | undefined,
+  steps: readonly OptionStep[],
+  base: string,
+): { keys: string[]; written: string } {
+  const segments = fieldPathToList(fieldPath);
+  const keys: string[] = [];
+  let written = base;
+  const optionsAt = (index: number) => {
+    for (const step of steps.filter((candidate) => candidate.depth === index)) {
+      keys.push(step.keyword, String(step.index));
+      written = `${written}.${step.keyword}[${step.index}]`;
+    }
+  };
+  for (let index = depth; index < segments.length; index += 1) {
+    optionsAt(index);
+    const segment = segments[index];
+    const isExtraKey = additionalDepths?.includes(index) ?? false;
+    if (typeof segment === 'number') {
+      keys.push('items');
+    } else {
+      keys.push(isExtraKey ? 'additionalProperties' : segment);
+    }
+    written = writeEntrySegment(written, segment, isExtraKey);
+  }
+  optionsAt(segments.length);
+  return { keys, written };
+}
+
+/** Where the uiSchema option `key` of `entry` comes from: the place in a `ui:definitions` entry holding it, written as
+ * `ui:definitions['#/$defs/Foo'].b`, `local` where the uiSchema gives it, or undefined where neither holds it. A key the
+ * entry the uiSchema gives a merged definition holds came from the definition merged above, if there is one, so the
+ * origins are walked outward from the nearest
+ */
+function holderOf(
+  entry: Pick<TemplateWarnEntry, 'definitionOrigin' | 'fieldPath' | 'additionalDepths' | 'optionSteps'>,
+  key: string,
+): string | undefined {
+  const { fieldPath, additionalDepths, optionSteps = [] } = entry;
+  let slot: string | undefined;
+  for (let at = entry.definitionOrigin; at; at = at.parent) {
+    const steps = optionSteps.slice(at.stepsBefore);
+    const below = pathBelow(fieldPath, at.depth, additionalDepths, steps, `ui:definitions['${at.ref}']`);
+    const local: unknown = getAt(at.local, below.keys);
+    const definition: unknown = getAt(at.definition, below.keys);
+    // Only the nearest merge's key order is the one `getUiOptions()` reads, since a nearer definition's keys come first
+    slot ??= winningSlot(local, definition, key);
+    if (slot === undefined) {
+      return undefined;
+    }
+    if (!holdsSlot(local, slot, key)) {
+      return holdsSlot(definition, slot, key) ? below.written : undefined;
+    }
+  }
+  return 'local';
+}
+
+/** Returns the place in a `ui:definitions` entry holding the uiSchema option `key` of `entry`, written as
+ * `ui:definitions['#/$defs/Foo'].b`, or undefined where the uiSchema gives it or nothing does
+ *
+ * @param entry - The entry
+ * @param key - The option's name, without `ui:`
+ * @returns - The place, if a definition holds it
+ */
+export function definitionHolding(entry: TemplateWarnEntry, key: string): string | undefined {
+  const holder = holderOf(entry, key);
+  return holder === 'local' ? undefined : holder;
+}
+
+/** Returns `anchor` naming its entry, and the one it sits in, as the uiSchema gives them, for a key the uiSchema holds */
+function localAnchorOf(anchor: OptionAnchor): OptionAnchor {
+  return { ...anchor, definition: undefined, owner: anchor.localOwner };
+}
+
+/** Wraps an entry's `fallback` label so that, given a uiSchema option, it names where the option comes from: a place in
+ * a `ui:definitions` entry, of the form whose root uiSchema holds it, or the entry the uiSchema gives, as `local`
+ * labels it. Each key's label is built once
+ *
+ * @param fallback - The label for no key, or for one nothing holds
+ * @param local - The label of the entry the uiSchema gives
+ * @param entry - The parts of the entry `holderOf()` reads
+ * @param idPrefix - The form's `idPrefix`
+ * @returns - The keyed label
+ */
+function keyedLabel(
+  fallback: () => string,
+  local: () => string,
+  entry: Parameters<typeof holderOf>[0],
+  idPrefix: string,
+): (key?: string) => string {
+  if (!entry.definitionOrigin) {
+    return fallback;
+  }
+  const byKey = new Map<string, string>();
+  return (key) => {
+    if (key === undefined) {
+      return fallback();
+    }
+    let built = byKey.get(key);
+    if (built === undefined) {
+      const from = holderOf(entry, key);
+      if (from === 'local') {
+        built = local();
+      } else {
+        built = from ? `the ${from} entry of "${idPrefix}"` : fallback();
+      }
+      byKey.set(key, built);
+    }
+    return built;
+  };
 }
 
 const TemplateWarnEntryContext = createContext<TemplateWarnEntry | undefined>(undefined);
@@ -66,6 +305,10 @@ function lazyLabel(build: () => string): () => string {
  * @param isAdditional - Whether the schema the field renders is an additional property's stub
  * @param fieldPath - The `FieldPath` identifying the field in the form
  * @param globalFormOptions - The `GlobalFormOptions` its labels' ids are built from
+ * @param [extraKeyOption] - The option, as `anyOf[1]`, whose extra-key keywords alone describe the extra key the field
+ *        is, where `retrieveSchema()` recorded one
+ * @param [definitionRecord] - What `resolveUiSchema()` recorded on the field's uiSchema, as `definitionRecordOf()` reads
+ *        it, where it merged a `ui:definitions` entry under the field's own
  * @returns - The field's entry
  */
 export function templateWarnEntry(
@@ -73,6 +316,8 @@ export function templateWarnEntry(
   isAdditional: boolean,
   fieldPath: FieldPath,
   globalFormOptions: GlobalFormOptions,
+  extraKeyOption?: string,
+  definitionRecord?: DefinitionRecord,
 ): TemplateWarnEntry {
   if (entryAbove?.fieldPath === fieldPath) {
     return entryAbove;
@@ -80,14 +325,51 @@ export function templateWarnEntry(
   const depthsAbove = entryAbove?.additionalDepths;
   const additionalDepths = isAdditional ? [...(depthsAbove ?? []), fieldPathToList(fieldPath).length - 1] : depthsAbove;
   const anchor = isAdditional && entryAbove?.extraKeysFrom ? entryAbove.extraKeysFrom.anchor : entryAbove?.anchor;
-  const schemaAnchor =
-    isAdditional && entryAbove?.optionFieldEntry ? entryAbove.optionFieldEntry.schemaAnchor : entryAbove?.schemaAnchor;
+  let schemaAnchor = entryAbove?.schemaAnchor;
+  if (isAdditional && extraKeyOption && entryAbove) {
+    // The object renders the key whichever option describes it, so the key's schema is named after that option
+    schemaAnchor = {
+      depth: fieldPathToList(fieldPath).length - 1,
+      prefix: extraKeyOption,
+      owner: entryAbove.schemaLabel,
+      noun: 'schema',
+    };
+  } else if (isAdditional && entryAbove?.optionFieldEntry) {
+    schemaAnchor = entryAbove.optionFieldEntry.schemaAnchor;
+  }
   const anchoredTo = (labelAnchor?: EntryAnchor) =>
     lazyLabel(() => entryLabelForLog(fieldPath, globalFormOptions, additionalDepths, labelAnchor));
   const plainLabel = anchoredTo();
-  const label = anchor ? anchoredTo(anchor) : plainLabel;
+  const fallbackLabel = anchor ? anchoredTo(anchor) : plainLabel;
+  const optionSteps = entryAbove?.optionSteps;
+  const originAbove = entryAbove?.definitionOrigin;
+  const definitionOrigin = definitionRecord
+    ? {
+        ...definitionRecord,
+        depth: fieldPathToList(fieldPath).length,
+        parent: originAbove,
+        stepsBefore: optionSteps?.length ?? 0,
+      }
+    : originAbove;
+  const localLabel = anchor ? anchoredTo(localAnchorOf(anchor)) : plainLabel;
+  const label = keyedLabel(
+    fallbackLabel,
+    localLabel,
+    { definitionOrigin, fieldPath, additionalDepths, optionSteps },
+    globalFormOptions.idPrefix,
+  );
   const schemaLabel = schemaAnchor ? anchoredTo(schemaAnchor) : plainLabel;
-  return { fieldPath, label, schemaLabel, additionalDepths, anchor, schemaAnchor };
+  return {
+    fieldPath,
+    label,
+    localLabel,
+    schemaLabel,
+    additionalDepths,
+    anchor,
+    schemaAnchor,
+    definitionOrigin,
+    optionSteps,
+  };
 }
 
 /** The entry of the field at `fieldPath`, as `templateWarnEntry()` builds it from the one above. Memoized on whether
@@ -97,18 +379,24 @@ export function templateWarnEntry(
  * @param schema - The schema the field renders
  * @param fieldPath - The `FieldPath` identifying the field in the form
  * @param globalFormOptions - The `GlobalFormOptions` its labels' ids are built from
+ * @param [definitionRecord] - What `resolveUiSchema()` recorded on the field's uiSchema, as `definitionRecordOf()` reads
+ *        it, kept by its parts since a parent may rebuild the uiSchema on every render
  * @returns - The field's entry
  */
 export function useTemplateWarnEntry(
   schema: unknown,
   fieldPath: FieldPath,
   globalFormOptions: GlobalFormOptions,
+  definitionRecord?: DefinitionRecord,
 ): TemplateWarnEntry {
   const entryAbove = use(TemplateWarnEntryContext);
   const isAdditional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
+  const option: unknown = isObject(schema) ? Reflect.get(schema, EXTRA_KEY_OPTION_KEY) : undefined;
+  const extraKeyOption = typeof option === 'string' ? option : undefined;
+  const record = useStableDefinitionRecord(definitionRecord);
   return useMemo(
-    () => templateWarnEntry(entryAbove, isAdditional, fieldPath, globalFormOptions),
-    [entryAbove, isAdditional, fieldPath, globalFormOptions],
+    () => templateWarnEntry(entryAbove, isAdditional, fieldPath, globalFormOptions, extraKeyOption, record),
+    [entryAbove, isAdditional, fieldPath, globalFormOptions, extraKeyOption, record],
   );
 }
 
@@ -123,7 +411,11 @@ export function useTemplateWarnEntry(
  * @param keySchemaFromField - Whether the field declares extra-key keywords, which the option's extra keys are described by
  * @param xxxOfKey - The keyword holding the options
  * @param selectedOption - The index of the option shown
+ * @param globalFormOptions - The `GlobalFormOptions` holding the `idPrefix` a label naming a `ui:definitions` entry
+ *        names the form by
  * @param [definition] - The `ui:definitions` key of the option's `$ref`, where `ui:definitions` has an entry for it
+ * @param [definitionRecord] - What `resolveUiSchema()` recorded on the option's own entry when it merged that
+ *        definition under it, as `definitionRecordOf()` reads it
  * @returns - The option's entry
  */
 export function optionWarnEntry(
@@ -133,7 +425,9 @@ export function optionWarnEntry(
   keySchemaFromField: boolean,
   xxxOfKey: string,
   selectedOption: number,
+  globalFormOptions: GlobalFormOptions,
   definition?: string,
+  definitionRecord?: DefinitionRecord,
 ): TemplateWarnEntry {
   const schemaLabel = lazyLabel(() => `the ${xxxOfKey}[${selectedOption}] option of ${entry.schemaLabel()}`);
   const depth = fieldPathToList(entry.fieldPath).length;
@@ -148,12 +442,36 @@ export function optionWarnEntry(
     depth,
     prefix: `uiSchema.${xxxOfKey}[${selectedOption}]`,
     owner: entry.label,
+    localOwner: entry.localLabel,
     definition,
   };
-  const label = lazyLabel(() => anchoredEntryLabel(anchor));
+  const fallbackLabel = lazyLabel(() => anchoredEntryLabel(anchor));
+  const localLabel = lazyLabel(() => anchoredEntryLabel(localAnchorOf(anchor)));
+  // The option's own entry, and the definition of its `$ref` merged under it, sit below this step
+  const optionSteps = [...(entry.optionSteps ?? []), { depth, keyword: xxxOfKey, index: selectedOption }];
+  const definitionOrigin = definitionRecord
+    ? { ...definitionRecord, depth, parent: entry.definitionOrigin, stepsBefore: optionSteps.length }
+    : entry.definitionOrigin;
+  const label = keyedLabel(
+    fallbackLabel,
+    localLabel,
+    { definitionOrigin, fieldPath: entry.fieldPath, additionalDepths: entry.additionalDepths, optionSteps },
+    globalFormOptions.idPrefix,
+  );
   // A field that is itself an option taking its own field's extra keys hands on that field's entry, which they render from
   const extraKeysFrom = keysFromField ? (entry.extraKeysFrom ?? entry) : undefined;
-  return { ...entry, label, schemaLabel, anchor, extraKeysFrom, schemaAnchor, optionFieldEntry };
+  return {
+    ...entry,
+    label,
+    localLabel,
+    schemaLabel,
+    anchor,
+    extraKeysFrom,
+    schemaAnchor,
+    optionFieldEntry,
+    definitionOrigin,
+    optionSteps,
+  };
 }
 
 export default TemplateWarnEntryContext;

@@ -1,4 +1,11 @@
-import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY, UI_OPTIONS_KEY } from './constants.ts';
+import {
+  ANY_OF_KEY,
+  ONE_OF_KEY,
+  REF_KEY,
+  RJSF_REF_KEY,
+  UI_DEFINITION_ORIGIN_KEY,
+  UI_OPTIONS_KEY,
+} from './constants.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
@@ -18,10 +25,18 @@ function mergeDefinition<T, S extends StrictRJSFSchema, F extends FormContextTyp
   return mergeObjects(definition, localUiSchema) as UiSchema<T, S, F>;
 }
 
+/** Records on `merged`, the entry a `ui:definitions` entry was merged under, the definition's key, the entry as the
+ * uiSchema gave it and the definition, for the warnings to tell which of the two holds a key. Not enumerable, so a spread
+ * of the entry or a comparison with one written by hand doesn't see it
+ */
+function recordDefinitionOrigin(merged: object, ref: string, local: unknown, definition: unknown) {
+  Object.defineProperty(merged, UI_DEFINITION_ORIGIN_KEY, { value: { ref, local, definition } });
+}
+
 /** Returns the name a `ui:definitions` entry for `schema` is keyed by. The marker comes first: a schema resolved from a
  * definition is named by the definition it came from, where a `$ref` it still holds is one nothing has followed yet.
  */
-function definitionRef(schema: unknown): string | undefined {
+export function definitionRef(schema: unknown): string | undefined {
   return stringKeyword(schema, RJSF_REF_KEY) ?? stringKeyword(schema, REF_KEY);
 }
 
@@ -70,6 +85,13 @@ export default function resolveUiSchema<
     result = { ...result };
     delete result[UI_OPTIONS_KEY];
   }
+  // Recorded last, on the object handed back, since the `ui:options` copy above drops a property that isn't enumerable
+  const recorded = (resolved: UiSchema<T, S, F>) => {
+    if (ref && definitionUiSchema) {
+      recordDefinitionOrigin(resolved, ref, localUiSchema, definitionUiSchema);
+    }
+    return resolved;
+  };
 
   // Walk oneOf/anyOf branches to populate uiSchema[keyword][i] so MultiSchemaField
   // can read dropdown option titles at the parent level.
@@ -80,7 +102,7 @@ export default function resolveUiSchema<
         resolvedSchema = resolveOwnRef<S>(schema, registry.rootSchema);
       } catch (e) {
         logOnce('could not resolve $ref in resolveUiSchema:\n', { error: e });
-        return result;
+        return recorded(result);
       }
     }
 
@@ -94,17 +116,65 @@ export default function resolveUiSchema<
         for (let i = 0; i < schemaOptions.length; i++) {
           const optionRef = definitionRef(schemaOptions[i]);
           if (optionRef && optionRef in definitions) {
-            uiSchemaArray[i] = mergeDefinition(definitions[optionRef], uiSchemaArray[i] || {});
+            const local = uiSchemaArray[i];
+            uiSchemaArray[i] = mergeDefinition(definitions[optionRef], local || {});
+            recordDefinitionOrigin(uiSchemaArray[i], optionRef, local, definitions[optionRef]);
             hasExpanded = true;
           }
         }
 
         if (hasExpanded) {
+          // The caller's own uiSchema is copied, or it would hold the merged entries in place of the ones it gave the next
+          // time it is resolved
+          if (result === localUiSchema) {
+            result = { ...result };
+          }
           (result as GenericObjectType)[keyword] = uiSchemaArray;
         }
       }
     }
   }
 
-  return result;
+  return recorded(result);
+}
+
+/** Merges the `ui:definitions` entry each `anyOf`/`oneOf` option's ref names under the option's uiSchema entry, where
+ * `resolveUiSchema()` didn't merge one, and records its origin, as `resolveUiSchema()` does for an option the field's
+ * schema lists itself. `resolveUiSchema()` reads the options of the schema it is given, so it doesn't reach the options
+ * of an `allOf` member, which `retrieveSchema()` hoists to the field. The `anyOf`/`oneOf` field and the `ui:required`
+ * walk call this, so they agree on the entry such an option has
+ *
+ * @param refs - The `ui:definitions` key each option's schema is named by, as `resolveUiSchema()` reads it, if any
+ * @param optionsUiSchema - The field's `uiSchema.anyOf`/`oneOf` entries, or `[]` where it gives none
+ * @param registry - The registry containing `uiSchemaDefinitions`
+ * @returns - `optionsUiSchema`, or a copy with the merged entries where there are any
+ */
+export function mergeOptionDefinitions<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  refs: readonly (string | null | undefined)[],
+  optionsUiSchema: UiSchema<T, S, F>[],
+  registry: Pick<Registry<T, S, F>, 'rootSchema' | 'uiSchemaDefinitions'>,
+): UiSchema<T, S, F>[] {
+  const definitions = registry.uiSchemaDefinitions;
+  let merged = optionsUiSchema;
+  refs.forEach((ref, i) => {
+    const local: unknown = optionsUiSchema[i];
+    if (
+      !ref ||
+      !definitions ||
+      !Object.hasOwn(definitions, ref) ||
+      (isObject(local) && UI_DEFINITION_ORIGIN_KEY in local)
+    ) {
+      return;
+    }
+    if (merged === optionsUiSchema) {
+      merged = [...optionsUiSchema];
+    }
+    // A schema naming only the definition, which is all `resolveUiSchema()` reads to merge it
+    merged[i] = resolveUiSchema<T, S, F>({ [RJSF_REF_KEY]: ref } as unknown as S, optionsUiSchema[i], registry);
+  });
+  return merged;
 }

@@ -4,7 +4,9 @@ import type { JSONSchema7TypeName } from 'json-schema';
  * utility functions. In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG`,
  * `GUESSED_TYPE_FLAG`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY` and `RJSF_PROVENANCE_KEY` Symbols that are added to a
  * schema under certain conditions by the `retrieveSchema()` utility, the `EXTRA_KEYS_ELSEWHERE_FLAG` Symbol that
- * `getRenderedOptionSchema()` adds, and the `PINNED_TYPE_FLAG` Symbol that the fallback UI adds. Using Symbols keeps
+ * `getRenderedOptionSchema()` adds, the `EXTRA_KEY_OPTION_KEY` Symbol `retrieveSchema()` adds to the stub of an extra key
+ * an option describes, the `UI_DEFINITION_ORIGIN_KEY` Symbol `resolveUiSchema()` adds to a uiSchema entry it merged a
+ * definition under, and the `PINNED_TYPE_FLAG` Symbol that the fallback UI adds. Using Symbols keeps
  * these internal markers invisible to JSON serialisation and JSON Schema validators (AJV, ATA, etc.), which only
  * enumerate string-keyed properties.
  */
@@ -29,6 +31,16 @@ export const ERRORS_KEY = '__errors';
  * in turn
  */
 export const EXTRA_KEYS_ELSEWHERE_FLAG = Symbol('__extra_keys_elsewhere');
+/** Set by `retrieveSchema()` on the stub of an extra key that only the selected `anyOf`/`oneOf` option's extra-key
+ * keywords describe, the object offering it declaring none: that option, as `anyOf[1]`, which a warning about the stub's
+ * schema is named after, since the object renders the key whichever option describes it
+ */
+export const EXTRA_KEY_OPTION_KEY = Symbol('__extra_key_option');
+/** Set by `resolveUiSchema()`, as a property that isn't enumerable, on a uiSchema entry it merged a `ui:definitions`
+ * entry under: `{ ref, local, definition }`, the definition's key, the entry as the uiSchema gave it and the definition,
+ * so that a warning about a key the entry holds can name the one of the two that holds it
+ */
+export const UI_DEFINITION_ORIGIN_KEY = Symbol('__ui_definition_origin');
 export const GUESSED_TYPE_FLAG = Symbol('__guessed_type');
 export const ID_KEY = '$id';
 export const IF_KEY = 'if';

@@ -167,7 +167,7 @@ import replaceEqualDeep from './replaceEqualDeep.ts';
 import resolveDefaultWidget from './resolveDefaultWidget.ts';
 import type { FieldPresentationInputs } from './resolveFieldPresentation.ts';
 import resolveFieldPresentation from './resolveFieldPresentation.ts';
-import resolveUiSchema from './resolveUiSchema.ts';
+import resolveUiSchema, { mergeOptionDefinitions } from './resolveUiSchema.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import { keywordShape, normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
@@ -234,6 +234,8 @@ export {
   UNEVALUATED_PROPERTIES_KEY,
   RJSF_REF_KEY,
   RJSF_REF_CYCLE_KEY,
+  EXTRA_KEY_OPTION_KEY,
+  UI_DEFINITION_ORIGIN_KEY,
   SCHEMA_KEY,
   DEFAULT_ID_PREFIX,
   DEFAULT_ID_SEPARATOR,
@@ -444,6 +446,7 @@ export {
   lookupFromFormContext,
   mergeClassMaps,
   mergeObjects,
+  mergeOptionDefinitions,
   mergeSchemas,
   mergeThemePresentation,
   noop,

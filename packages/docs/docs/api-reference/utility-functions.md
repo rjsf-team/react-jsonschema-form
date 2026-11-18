@@ -15,10 +15,12 @@ An `additionalProperties` schema that constrains the value some other way withou
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
 `RJSF_PROVENANCE_KEY` is the Symbol `retrieveSchema()` adds to every subschema it hands out, recording where the subschema came from. Only `retrieveSchema()` writes or reads what it holds. It is exported so that a test can strip it, as RJSF's own test setup does, and compare a retrieved schema with the same schema written by hand.
 `UNEVALUATED_PROPERTIES_KEY` is the `unevaluatedProperties` keyword, which an object naming no `additionalProperties` is read through in its place.
+`EXTRA_KEY_OPTION_KEY` is the Symbol `retrieveSchema()` sets on the stub of an extra key that only the selected `anyOf`/`oneOf` option's extra-key keywords describe, the object offering it declaring none: that option, as `anyOf[1]`, which `@rjsf/core`'s warnings name the key's schema after.
+`UI_DEFINITION_ORIGIN_KEY` is the Symbol `resolveUiSchema()` sets, as a property that isn't enumerable, on a uiSchema entry it merged a `ui:definitions` entry under: `{ ref, local, definition }`, the definition's key, the entry as the uiSchema gave it and the definition, so a warning about one key names whichever of the two holds it.
 `WIDGET_FIELD_PRESENTATION` is the `PresentationDeclaration` of a field that renders its value with a single widget and leaves every part to whoever that widget says draws it, for a theme or `@rjsf/core` to declare such a field with (see [getPresentationDeclaration()](#getpresentationdeclaration)). It is defined in [getPresentationDeclaration.ts](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getPresentationDeclaration.ts) rather than with the other constants.
 `DEFAULT_BOOLEAN_WIDGET` is the registry key the `checkbox` alias of a `boolean` resolves to (`CheckboxWidget`), so a theme can read that widget from its registry, as `registry.widgets[DEFAULT_BOOLEAN_WIDGET]`, without copying the key. It is defined next to the widget map in [getWidget.tsx](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getWidget.tsx) rather than with the other constants.
 
-The constants it exports from `constants.ts` are `ADDITIONAL_PROPERTY_FLAG`, `ADDITIONAL_PROPERTIES_KEY`, `ALL_OF_KEY`, `ANY_OF_KEY`, `CONST_KEY`, `DEFAULT_KEY`, `ELSE_KEY`, `ERRORS_KEY`, `GUESSED_TYPE_FLAG`, `ID_KEY`, `ITEMS_KEY`, `ONE_OF_KEY`, `PATTERN_PROPERTIES_KEY`, `PINNED_TYPE_FLAG`, `PROPERTIES_KEY`, `READONLY_KEY`, `REQUIRED_KEY`, `SUBMIT_BTN_OPTIONS_KEY`, `REF_KEY`, `THEN_KEY`, `UNEVALUATED_PROPERTIES_KEY`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`, `SCHEMA_KEY`, `DEFAULT_ID_PREFIX`, `DEFAULT_ID_SEPARATOR`, `LOOKUP_MAP_NAME`, `RJSF_ADDITIONAL_PROPERTIES_FLAG`, `ROOT_SCHEMA_PREFIX`, `UI_FIELD_KEY`, `UI_WIDGET_KEY`, `UI_OPTIONS_KEY`, `UI_GLOBAL_OPTIONS_KEY`, `UI_DEFINITIONS_KEY`, `JSON_SCHEMA_DRAFT_2019_09`, `JSON_SCHEMA_DRAFT_2020_12` and `JSON_SCHEMA_TYPES`; that file also holds keys only RJSF's own code reads.
+The constants it exports from `constants.ts` are `ADDITIONAL_PROPERTY_FLAG`, `ADDITIONAL_PROPERTIES_KEY`, `ALL_OF_KEY`, `ANY_OF_KEY`, `CONST_KEY`, `DEFAULT_KEY`, `ELSE_KEY`, `ERRORS_KEY`, `GUESSED_TYPE_FLAG`, `ID_KEY`, `ITEMS_KEY`, `ONE_OF_KEY`, `PATTERN_PROPERTIES_KEY`, `PINNED_TYPE_FLAG`, `PROPERTIES_KEY`, `READONLY_KEY`, `REQUIRED_KEY`, `SUBMIT_BTN_OPTIONS_KEY`, `REF_KEY`, `THEN_KEY`, `UNEVALUATED_PROPERTIES_KEY`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`, `SCHEMA_KEY`, `DEFAULT_ID_PREFIX`, `DEFAULT_ID_SEPARATOR`, `LOOKUP_MAP_NAME`, `RJSF_ADDITIONAL_PROPERTIES_FLAG`, `ROOT_SCHEMA_PREFIX`, `UI_FIELD_KEY`, `UI_WIDGET_KEY`, `UI_OPTIONS_KEY`, `UI_GLOBAL_OPTIONS_KEY`, `UI_DEFINITIONS_KEY`, `JSON_SCHEMA_DRAFT_2019_09`, `JSON_SCHEMA_DRAFT_2020_12`, `JSON_SCHEMA_TYPES`, `EXTRA_KEY_OPTION_KEY` and `UI_DEFINITION_ORIGIN_KEY`; that file also holds keys only RJSF's own code reads.
 
 ## Types
 
@@ -1685,8 +1687,10 @@ left out. Destructure the templates a component renders from the result, e.g.
 
 - registry: Registry&lt;T, S, F> - The `Registry` from which to read the templates
 - [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read alternate templates
-- [entryLabel]: () => string - Names the uiSchema entry in the warning an invalid override logs. It is read once
-  while the override stays the same, so pass a new function when the label changes
+- [entryLabel]: (key: string) => string - Names the uiSchema entry in the warning an invalid override logs, handed the
+  template's name, the option the override is read under, so a label can name whichever of a merged `ui:definitions`
+  entry and the entry the uiSchema gives holds it. It is read once per name while the override stays the same, so pass a
+  new function when the label changes
 
 #### Returns
 
@@ -2390,6 +2394,22 @@ Recursively merge deeply nested objects.
 #### Returns
 
 - GenericObjectType: A new object that is the merge of the two given objects
+
+### mergeOptionDefinitions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Merges the `ui:definitions` entry each `anyOf`/`oneOf` option's ref names under the option's uiSchema entry, where `resolveUiSchema()` didn't merge one, and records its origin under `UI_DEFINITION_ORIGIN_KEY`, as `resolveUiSchema()` does for an option the field's schema lists itself.
+`resolveUiSchema()` reads the options of the schema it is given, so it doesn't reach the options of an `allOf` member, which `retrieveSchema()` hoists to the field.
+The `anyOf`/`oneOf` field and `getUiRequiredErrorSchema()` call this, so they agree on the entry such an option has.
+
+#### Parameters
+
+- refs: readonly (string | null | undefined)[] - The `ui:definitions` key each option's schema is named by, as `resolveUiSchema()` reads it, if any
+- optionsUiSchema: UiSchema&lt;T, S, F>[] - The field's `uiSchema.anyOf`/`oneOf` entries, or `[]` where it gives none
+- registry: Pick&lt;Registry&lt;T, S, F>, 'rootSchema' | 'uiSchemaDefinitions'> - The registry containing `uiSchemaDefinitions`
+
+#### Returns
+
+- UiSchema&lt;T, S, F>[]: `optionsUiSchema`, or a copy with the merged entries where there are any
 
 ### mergeSchemas()
 

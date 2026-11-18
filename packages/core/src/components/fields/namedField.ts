@@ -76,7 +76,7 @@ export interface NamedFieldResolution<
   /** Builds the warning for each `ui:field` or `$id` that was given but names no field, from the label of the uiSchema
    * entry the field renders from, which only the `SchemaField` logging them knows; the rest is built once, here
    */
-  ignored: readonly ((entryLabel: () => string) => string)[];
+  ignored: readonly ((entryLabel: (key: string) => string) => string)[];
   /** The field's `uiSchema` as everything rendering or labelling its data reads it: as given where it names a field
    * written for the schema, which reads it itself, and otherwise naming no field. Where none is written for the schema
    * the data renders as though none were named — none resolved, or the one that did is `SchemaField` or `FallbackField`
@@ -126,7 +126,7 @@ export function resolveNamedField<
   schemaId: string | undefined,
   fields: Registry<T, S, F>['fields'],
 ): NamedFieldResolution<T, S, F> {
-  const ignored: ((entryLabel: () => string) => string)[] = [];
+  const ignored: ((entryLabel: (key: string) => string) => string)[] = [];
   const named = (namedField: Field<T, S, F>, namedFieldKey: string | undefined): NamedFieldResolution<T, S, F> => ({
     namedField,
     namedFieldKey,
@@ -143,7 +143,7 @@ export function resolveNamedField<
       return named(resolved, typeof ownField === 'string' ? ownField : undefined);
     }
     const message = ignoredMessage(ownField, resolved, 'field is rendered as though no ui:field were given');
-    ignored.push((entryLabel) => `ui:field for ${entryLabel()} ${message}`);
+    ignored.push((entryLabel) => `ui:field for ${entryLabel('field')} ${message}`);
   }
   if (schemaId) {
     const resolved = lookUpUiField<T, S, F>(schemaId, fields);
