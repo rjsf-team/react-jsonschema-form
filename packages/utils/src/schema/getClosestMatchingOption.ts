@@ -6,7 +6,6 @@ import guessType from '../guessType.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import { getByPath } from '../pathUtils.ts';
-import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { optionMatches, optionNodeOf, simpleDiscriminatorMatch } from './getFirstMatchingOption.ts';
 import type { OptionNode } from './getFirstMatchingOption.ts';
@@ -91,7 +90,11 @@ function propertyWhere<S extends StrictRJSFSchema>(parent: Scored<S>, rootSchema
     let seeds = byKey.get(key);
     if (seeds === undefined) {
       seeds = seedsAt(plan, PROPERTIES_KEY, key);
-      byKey.set(key, seeds);
+      // A key the plan doesn't declare, such as an extra key stubbed for the data, isn't kept, so that the long-lived
+      // plan doesn't collect every key name the data has held
+      if (seeds.length > 0) {
+        byKey.set(key, seeds);
+      }
     }
     if (seeds.length > 0) {
       return { graph: plan.graph, seeds };
@@ -106,8 +109,6 @@ function propertyWhere<S extends StrictRJSFSchema>(parent: Scored<S>, rootSchema
 interface Listing<S extends StrictRJSFSchema> {
   readonly seeding: Seeding<S>;
   readonly keyword: string;
-  /** The schema of the field offering the options, which says whether it stubs an option's extra keys itself */
-  readonly field?: S;
 }
 
 /** Returns where the option `option`, at `index` of the list `listing` names, is declared: where a declaration of the
@@ -375,17 +376,8 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Returns an option as scoring reads it: a schema `retrieveSchema()` handed out as it stands, and any other through
  * the plan of the subschema it stands for, where `where` says or else where `retrieveSchema()` would read it, with the
- * extra keys of `formData` that it takes stubbed among its `properties`, as the option handed out for that data, which
- * a field shows, holds them
- *
- * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says what an absent keyword takes
- * @param option - The option to score
- * @param rootSchema - The root JSON schema of the entire form
- * @param formData - The data the option is scored against
- * @param [where] - Where the option is declared
- * @param [besideField=false] - Whether the field offering the option renders its own field beside it, which stubs
- *        the keys an absent keyword takes, so the option leaves them unstubbed, as retrieval does
- * @returns - The option as scoring reads it
+ * extra keys of `formData` that its own `additionalProperties` or `patternProperties` takes stubbed among its
+ * `properties`, as the option handed out for that data, which a field shows, holds them
  */
 function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -393,23 +385,20 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
   rootSchema: S,
   formData: unknown,
   where?: Where<S>,
-  besideField = false,
 ): Scored<S> {
   if (isHandedOut(option) && typeof option[REF_KEY] !== 'string') {
     return { schema: option };
   }
   const plan = planAt<S, F>(context, where ?? whereOf<S>(option, rootSchema));
   const { schema } = plan;
-  // shortcut: an option with an `allOf`, `if` or `dependencies` is not stubbed at all, since retrieval may declare a key
-  // through them that a stub here would score by its guessed type, and an option handed out above without being
-  // retrieved for the data is scored without stubs; upgrade once the matcher reads its "none of these" rules off the
-  // retrieved option (#5886). Data holding no extra key is left as it is, since the copy would hold an empty
-  // `properties`, which scores apart from none
+  // shortcut: retrieval also stubs the keys an absent keyword under `additionalPropertiesWhenAbsent: 'allow'` takes,
+  // which still score as nothing here, so the context is read as `'forbid'`; an option with an `allOf`, `if` or
+  // `dependencies` is not stubbed at all, since retrieval may declare a key through them that a stub here would score
+  // by its guessed type, and an option handed out above without being retrieved for the data is scored without stubs;
+  // upgrade once the matcher reads its "none of these" rules off the retrieved option (#5886). Data holding no extra
+  // key is left as it is, since the copy would hold an empty `properties`, which scores apart from none
   if (
-    !allowsAdditionalProperties<S, F>(
-      besideField ? { ...context, additionalPropertiesWhenAbsent: 'forbid' } : context,
-      schema,
-    ) ||
+    !allowsAdditionalProperties<S, F>({ ...context, additionalPropertiesWhenAbsent: 'forbid' }, schema) ||
     // The plan merges `dependencies` away without data, so its chains, not its schema, say which ones it declares
     plan.chains.some((chain) => [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY].some((keyword) => chain.has(keyword))) ||
     extraKeysOf<S>(schema, schema, undefined, formData).length === 0
@@ -479,10 +468,6 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const optionNodes = options.map((option) => optionNodeOf<S>(option, rootSchema));
   const declaredAt = (index: number, option: S) =>
     listing === undefined ? undefined : listedAt<S>(listing, index, option);
-  // Retrieval leaves an option's extra keys to a field rendering its own field beside it (see `retrieveSchema()`)
-  const besideField = options.map(
-    (option) => listing?.field !== undefined && rendersOwnFieldBesideOption<S>(listing.field, option),
-  );
   const compute = (whereDeclared: (index: number, option: S) => Where<S> | undefined) =>
     scoreOptions<T, S, F>(
       context,
@@ -494,7 +479,6 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       relax,
       discriminatorField,
       whereDeclared,
-      besideField,
     );
   if (typeof formData !== 'object' || formData === null) {
     return compute(declaredAt);
@@ -511,7 +495,6 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     relax,
     discriminatorField,
     selectedOption,
-    ...besideField,
     ...declared.flatMap((where) =>
       where === undefined ? [undefined] : [where.graph, ...where.seeds.map((seed) => seed.node)],
     ),
@@ -612,7 +595,6 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
   relax: boolean,
   discriminatorField: string | undefined,
   declaredAt: (index: number, option: S) => Where<S> | undefined,
-  besideField: readonly boolean[],
 ): BestOption {
   const optionScore = (index: number) => {
     const option = options[index];
@@ -622,7 +604,7 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return scopeScore<T, S, F>(
       context,
       rootSchema,
-      scoredOption<S, F>(context, option, rootSchema, formData, declaredAt(index, option), besideField[index]),
+      scoredOption<S, F>(context, option, rootSchema, formData, declaredAt(index, option)),
       formData,
       new Set(),
     );

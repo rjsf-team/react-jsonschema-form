@@ -1922,7 +1922,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
           0,
           false,
           getDiscriminatorFieldFromSchema<S>(schema),
-          { seeding: view, keyword: key, field: view.schema },
+          { seeding: view, keyword: key },
         );
   return { context: optionContext, index, isWholeValue, wholeOptions };
 }
