@@ -7049,6 +7049,44 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(getDefaultFormState(context, { schema: nestedConst })).toStrictEqual({ x: 3 });
         expect(getDefaultFormState(context, { schema: rootDefault })).toStrictEqual({ x: 3 });
       });
+      describe("takes a const in the option a nested field's allOf member offers (#5895)", () => {
+        const C = { a: 1, b: 2 };
+        const rootOf = (field: RJSFSchema): RJSFSchema => ({
+          type: 'object',
+          required: ['x'],
+          properties: { x: { type: 'object', ...field } },
+        });
+        const skipping = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
+        it.each<[string, RJSFSchema]>([
+          ['a oneOf', { allOf: [{ oneOf: [{ const: C }] }] }],
+          ['an anyOf', { allOf: [{ anyOf: [{ const: C }] }] }],
+        ])('in %s', (_, field) => {
+          expect(getDefaultFormState(skipping, { schema: rootOf(field) })).toStrictEqual({ x: C });
+        });
+        it('the option a primitive field shows being the one closest to its data', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['n'],
+            properties: { n: { type: 'number', allOf: [{ oneOf: [{ const: 3 }, { const: 4 }] }] } },
+          };
+          expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ n: 3 });
+          expect(getDefaultFormState(skipping, { schema, formData: { n: 4 } })).toStrictEqual({ n: 4 });
+        });
+        it('but skips a default beside the const in the same option', () => {
+          const schema = rootOf({
+            allOf: [{ oneOf: [{ const: C, properties: { c: { type: 'number', default: 5 } } }] }],
+          });
+          expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ x: C });
+        });
+        it('but takes none where the option its data matches holds none', () => {
+          const schema = rootOf({
+            allOf: [{ oneOf: [{ properties: { p: { type: 'string' } }, required: ['p'] }, { const: C }] }],
+          });
+          expect(getDefaultFormState(skipping, { schema, formData: { x: { p: 'q' } } })).toStrictEqual({
+            x: { p: 'q' },
+          });
+        });
+      });
     });
     describe('default form state behavior: arrayMinItems.populate = "never"', () => {
       it('should not be filled if minItems defined and required', () => {

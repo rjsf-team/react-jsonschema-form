@@ -1594,6 +1594,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `nonEmptyErrorMessages()`, which gives the error messages a `FieldErrorTemplate` draws, dropping an empty one ([#5882](https://github.com/rjsf-team/react-jsonschema-form/pull/5882), [#5603](https://github.com/rjsf-team/react-jsonschema-form/issues/5603))
 - **BREAKING CHANGE:** Change `getDefaultFormState()` to give each key of an object `const` the `const`'s value over the key's own `default` at any depth, whatever `nestedDefaultsPrecedence` says. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#an-object-const-wins-over-the-defaults-beneath-it-breaking-change) ([#5897](https://github.com/rjsf-team/react-jsonschema-form/pull/5897), [#5819](https://github.com/rjsf-team/react-jsonschema-form/issues/5819))
 - Fix `getDefaultFormState()` leaving out the keys of an object's `const` or `default` where only `patternProperties` or `unevaluatedProperties` takes them, and filling a key a pattern matches from `additionalProperties` ([#5897](https://github.com/rjsf-team/react-jsonschema-form/pull/5897), [#5819](https://github.com/rjsf-team/react-jsonschema-form/issues/5819))
+- Fix `getDefaultFormState()` leaving out, under `allOf: 'skipDefaults'`, the `const` of the `oneOf`/`anyOf` option that a nested field's `allOf` offers ([#TODO](https://github.com/rjsf-team/react-jsonschema-form/pull/TODO), [#5895](https://github.com/rjsf-team/react-jsonschema-form/issues/5895))
 
 ## @rjsf/validator-ajv8
 

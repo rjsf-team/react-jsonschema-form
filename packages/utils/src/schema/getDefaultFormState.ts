@@ -3469,7 +3469,9 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
  * `const` a merging keyword the plan left unmerged brings in is the field's as one of its own is: it fills the field
  * under any `constAsDefaults` but `'never'`, and under `'always'` takes precedence over the data. So it is read from the
  * merged schema, so that a condition on the data picks the `const`, as `formDataMatching()` reads it. A merged schema
- * left with no `const`, as where the branch holding it isn't taken, gives the field none. A field that holds no data
+ * left with no `const`, as where the branch holding it isn't taken, gives the field none. Where the merge brings in an
+ * `anyOf`/`oneOf` list the field doesn't offer itself, the `const` of the option the field shows, the one closest to
+ * its data, is the field's, as where that list is merged under `allOf: 'populateDefaults'`. A field that holds no data
  * gives a condition nothing to test, so no `then`/`else` gives it a `const`, and `onAbsent` is told where one would
  * have
  */
@@ -3486,14 +3488,59 @@ function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextTy
   }
   const provenance = field();
   const { graph, seeds } = provenance;
-  if (!seeds.some(({ node }) => mergeReachesConst<S>(graph, node, false, data !== undefined))) {
-    if (data === undefined && onAbsent && seeds.some(({ node }) => mergeReachesConst<S>(graph, node, false, true))) {
+  const reaches = (withConditions: boolean) =>
+    seeds.some(
+      ({ node }) =>
+        mergeReachesConst<S>(graph, node, false, withConditions) ||
+        mergedOptionReachesConst<S>(graph, node, withConditions),
+    );
+  if (!reaches(data !== undefined)) {
+    if (data === undefined && onAbsent && reaches(true)) {
       onAbsent();
     }
     return undefined;
   }
   const mergedSchema = merge(provenance);
-  return constValueOf<S>(mergedSchema) === undefined ? undefined : mergedSchema;
+  if (constValueOf<S>(mergedSchema) !== undefined) {
+    return mergedSchema;
+  }
+  // The fold selects among the options of the field's own list itself, so only a list the merge brings in is read
+  const offered = getXxxOfOptions<S>(mergedSchema);
+  if (offered === undefined || offered.key in schema) {
+    return undefined;
+  }
+  const { options } = offered;
+  const index = closestOption<S, F>(
+    context,
+    graph.rawRoot,
+    data,
+    options,
+    0,
+    false,
+    getDiscriminatorFieldFromSchema<S>(mergedSchema),
+  );
+  const option = options[index];
+  return isSchemaObject<S>(option) && constValueOf<S>(option) !== undefined
+    ? { ...mergedSchema, [CONST_KEY]: option[CONST_KEY] }
+    : undefined;
+}
+
+/** Whether an `anyOf`/`oneOf` option offered by a subschema a merge of the node `from` brings in, one its `$ref` or
+ * `allOf` merges in, or its `then`/`else` or `dependencies` where the merge reads them (`withConditions`), reaches a
+ * `const`, by `mergeReachesConst()`. The node's own options are the fold's to select, so they are not read
+ */
+function mergedOptionReachesConst<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  from: NodeId,
+  withConditions: boolean,
+): boolean {
+  return scopeOf<S>(graph, from, withConditions ? 'conditional' : 'unconditional').some(
+    ({ id }) =>
+      id !== from &&
+      [ANY_OF_KEY, ONE_OF_KEY].some((keyword) =>
+        graph.subschemas(id, keyword).some(([, option]) => mergeReachesConst<S>(graph, option, true, withConditions)),
+      ),
+  );
 }
 
 /** What in the scope of a node, see `scopeOf()`, can give a key of its object a `const`: whether a declaration in it
