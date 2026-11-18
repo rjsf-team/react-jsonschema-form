@@ -147,6 +147,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(fill(undeclaredBelow, behavior)).toStrictEqual({ k: { x: 1 } });
         });
       });
+      it("leaves out a key only the shown option declares under an ancestor's const, as under the object's own", () => {
+        const option: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'number' } },
+          oneOf: [{ properties: { q: { type: 'string', default: 'd' } } }],
+        };
+        expect(fill({ type: 'object', const: { o: { a: 1 } }, properties: { o: option } })).toStrictEqual({
+          o: { a: 1 },
+        });
+        expect(fill({ type: 'object', properties: { o: { ...option, const: { a: 1 } } } })).toStrictEqual({
+          o: { a: 1 },
+        });
+        expect(fill({ type: 'object', properties: { o: option } })).toStrictEqual({ o: { q: 'd' } });
+      });
       it('gives a declared key and an extra key the const alike', () => {
         const mixed: RJSFSchema = {
           type: 'object',
@@ -265,6 +279,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(unevaluatedDefault)).toStrictEqual({ a: 4 });
         expect(fill({ ...unevaluatedDefault, unevaluatedProperties: true })).toStrictEqual({ a: 1 });
         expect(fill(closedBeside)).toStrictEqual({ x1: 1 });
+      });
+      it("seeds a default's key no pattern matches only where the context allows it, as omitExtraData keeps it, unless the const names it", () => {
+        const schema: RJSFSchema = { ...patterned, default: { x1: 1, y: 2 } };
+        expect(fill(schema)).toStrictEqual({ x1: 1 });
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' },
+            { schema, initialDefaultsGenerated: false },
+          ),
+        ).toStrictEqual({ x1: 1, y: 2 });
+        expect(fill({ type: 'object', properties: { o: schema } })).toStrictEqual({ o: { x1: 1 } });
+        expect(fill({ ...patterned, const: { x1: 1, y: 2 } })).toStrictEqual({ x1: 1, y: 2 });
       });
     });
     describe('an object const naming keys no property declares', () => {

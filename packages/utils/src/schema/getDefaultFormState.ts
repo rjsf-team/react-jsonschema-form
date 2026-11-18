@@ -1,5 +1,6 @@
 import {
   absentKeywordAllows,
+  additionalPropertiesKeyword,
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
 } from '../additionalPropertiesUtils.ts';
@@ -1638,12 +1639,15 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           { ...props, parentDefaults: defaults },
           initialValue,
         );
-        // Under the object's own `const`, a key only the option declares, which the `const` doesn't name and the data
-        // doesn't hold, is left out: its default would make the object a value the `const` rejects. A key the
-        // `ui:initialValue` names is kept, since that value stands in the `const`'s place
+        // Under the object's own `const`, or the value an ancestor's gives it, a key only the option declares, which the
+        // `const` doesn't name and the data doesn't hold, is left out: its default would make the object a value the
+        // `const` rejects. A key the `ui:initialValue` names is kept, since that value stands in the `const`'s place
+        const givenObjectConst =
+          preferParentDefaults && isObjectData(props.parentConst) ? props.parentConst : undefined;
+        const closingValue = foldsOptionUnderConst ? constSchema[CONST_KEY] : givenObjectConst;
         const optionValue =
-          foldsOptionUnderConst && isObjectData(foldedOption)
-            ? withoutKeysOutside(foldedOption, [constSchema[CONST_KEY], schema.properties, rawFormData, initialValue])
+          closingValue !== undefined && isObjectData(foldedOption)
+            ? withoutKeysOutside(foldedOption, [closingValue, schema.properties, rawFormData, initialValue])
             : foldedOption;
         // Data the field takes is its own even where the option it renders through holds none of it, as an option with
         // no value, or one that is no object or takes no object, holds none of object data. Its defaults are merged
@@ -2607,12 +2611,18 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     extraKeysField !== view.schema ? passes.shareExtraKeySchema(ownAdditionalProperties) : ownAdditionalProperties;
   // An extra key is folded through the schema the field renders it with, as `getAdditionalPropertySchema()` picks it:
   // the patterns its name matches, else `additionalProperties`, else `unevaluatedProperties`. A key the object rejects
-  // has no field
+  // has no field, nor does one no pattern matches where no keyword describes it and the context reads the absence as
+  // forbidding it, which `omitExtraData` prunes, unless the object's `const` names it
+  const describesUnmatched =
+    additionalPropertiesKeyword<S>(extraKeysField) !== undefined || absentKeywordAllows<S, F>(context, extraKeysField);
   const extraKeyChild = (seeding: DefaultsView<S>, key: string) => {
     if (getAdditionalPropertySchema<S>(extraKeysField, key) === false) {
       return undefined;
     }
     const patterned = childSeeds(seeding, key);
+    if (patterned.edge !== 'patternKey' && !describesUnmatched && !Object.hasOwn(objectConst ?? {}, key)) {
+      return undefined;
+    }
     const keyword =
       extraKeysField.additionalProperties === undefined && UNEVALUATED_PROPERTIES_KEY in extraKeysField
         ? UNEVALUATED_PROPERTIES_KEY
