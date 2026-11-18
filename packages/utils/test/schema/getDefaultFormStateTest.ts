@@ -147,6 +147,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(fill(undeclaredBelow, behavior)).toStrictEqual({ k: { x: 1 } });
         });
       });
+      it.each([false, true])(
+        "gives a row of an array the data holds the const's value, its own or an ancestor's, initialDefaultsGenerated %s",
+        (initialDefaultsGenerated) => {
+          const item: RJSFSchema = { type: 'object', properties: { v: { type: 'number', default: 9 } } };
+          const fillRows = (schema: RJSFSchema) =>
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { l: [{}] }, initialDefaultsGenerated },
+            );
+          expect(
+            fillRows({ type: 'object', const: { l: [{ v: 1 }] }, properties: { l: { type: 'array', items: item } } }),
+          ).toStrictEqual({ l: [{ v: 1 }] });
+          expect(
+            fillRows({ type: 'object', properties: { l: { type: 'array', const: [{ v: 1 }], items: item } } }),
+          ).toStrictEqual({ l: [{ v: 1 }] });
+          expect(fillRows({ type: 'object', properties: { l: { type: 'array', items: item } } })).toStrictEqual({
+            l: [{ v: 9 }],
+          });
+        },
+      );
       it("leaves out a key only the shown option declares under an ancestor's const, as under the object's own", () => {
         const option: RJSFSchema = {
           type: 'object',

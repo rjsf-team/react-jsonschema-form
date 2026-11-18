@@ -1557,7 +1557,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     : localUiSchema;
   const props = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
-  let defaults: unknown = parentDefaults;
+  // A value an ancestor's `const` gives the field stands in for inherited defaults that don't reach it, as for a row of
+  // an array the data holds once the defaults were generated, whose defaults are read from the row
+  let defaults: unknown = parentDefaults === undefined ? inputProps.parentConst : parentDefaults;
   // An ancestor default wins only where the field's type can hold it, so a `null` or `false` one gives way to the own
   // default of a field whose type allows neither. A value an ancestor's `const` gives wins whatever the setting says
   const preferParentDefaults =
