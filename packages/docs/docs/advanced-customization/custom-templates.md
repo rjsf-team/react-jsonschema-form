@@ -12,7 +12,7 @@ This is an advanced feature that lets you customize even more aspects of the for
 
 To understand how Fields, Templates, and Widgets work together, consider how a room is built and furnished:
 
-- 👷 **Custom Field (General Contractor / Room Architect):** Oversees the entire room. Dictates end-to-end logic, manages state, coordinates sub-fields, and shows the errors the validator reports for it (e.g. `ObjectField`, `ArrayField`).
+- 👷 **Custom Field (General Contractor / Room Architect):** Oversees the entire room. Dictates end-to-end logic, manages state and coordinates sub-fields (e.g. `ObjectField`, `ArrayField`).
 - 📐 **Custom Template (Framing & Layout):** The structural scaffolding. Determines _where_ elements sit relative to each other—arranging titles, descriptions, error banners, and the input slot. It doesn't care what the input control looks like.
 - 🎛️ **Custom Widget (Fixture / Appliance):** The interactive leaf control the user actually touches—the light switch, faucet, text input, toggle, or date picker. It only takes a value and fires change events.
 
@@ -20,7 +20,7 @@ In version 5, all existing `templates` were consolidated into a new `TemplatesTy
 They can also be overloaded globally on the `Form` via the `templates` prop as well as per-field through the `uiSchema`.
 Further, many new templates were added or repurposed from existing `widgets` and `fields` in an effort to simplify the effort needed by theme authors to build new and/or maintain current themes.
 These new templates can also be overridden by individual users to customize the specific needs of their application.
-A special category of templates, `ButtonTemplates`, were also added to support the easy replacement of the `Submit` button on the form, the `Add` and `Remove` buttons associated with `additionalProperties` and `patternProperties` on objects and elements of arrays, as well as the `Move up` and `Move down` buttons used for reordering arrays.
+A special category of templates, `ButtonTemplates`, were also added to support the easy replacement of the `Submit` button on the form, the `Add` and `Remove` buttons associated with `additionalProperties` and `patternProperties` on objects and elements of arrays, the `Move up` and `Move down` buttons used for reordering arrays, the `Copy` button that duplicates an array item, and the `Clear` button that empties a text input.
 This category, unlike the others, can only be overridden globally via the `templates` prop on `Form`.
 
 Below is the table that lists all the `templates`, their props interface, their `uiSchema` name and from where they originated in the previous version of RJSF:
@@ -1423,7 +1423,7 @@ const schema: RJSFSchema = {
 };
 
 function AddButton(props: IconButtonProps) {
-  const { icon, iconType, ...btnProps } = props;
+  const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
     <button {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Add' />
@@ -1457,7 +1457,7 @@ const uiSchema: UiSchema = {
 };
 
 function ClearButton(props: IconButtonProps) {
-  const { icon, iconType, ...btnProps } = props;
+  const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
     <button {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Clear' />
@@ -1498,7 +1498,7 @@ const uiSchema: UiSchema = {
 };
 
 function CopyButton(props: IconButtonProps) {
-  const { icon, iconType, ...btnProps } = props;
+  const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
     <button {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Copy' />
@@ -1534,7 +1534,7 @@ const schema: RJSFSchema = {
 };
 
 function MoveDownButton(props: IconButtonProps) {
-  const { icon, iconType, ...btnProps } = props;
+  const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
     <button {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Move Down' />
@@ -1564,7 +1564,7 @@ const schema: RJSFSchema = {
 };
 
 function MoveUpButton(props: IconButtonProps) {
-  const { icon, iconType, ...btnProps } = props;
+  const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
     <button {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Move Up' />
@@ -1594,7 +1594,7 @@ const schema: RJSFSchema = {
 };
 
 function RemoveButton(props: IconButtonProps) {
-  const { icon, iconType, ...btnProps } = props;
+  const { icon, iconType, registry, uiSchema, ...btnProps } = props;
   return (
     <button {...btnProps}>
       {icon} <FormattedMessage defaultMessage='Remove' />

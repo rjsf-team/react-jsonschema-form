@@ -34,7 +34,7 @@ This package integrates [DaisyUI](https://daisyui.com/), [Tailwind CSS](https://
 
 ### Prerequisites
 
-- `daisyui >= 5`
+- `daisyui >= 5.0.29`
 - `@rjsf/core >= 7`
 - `@rjsf/utils >= 7`
 - `@rjsf/validator-ajv8 >= 7`

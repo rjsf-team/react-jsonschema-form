@@ -61,9 +61,9 @@ Fluent UI React Components (v9) theme, fields and widgets for `react-jsonschema-
 
 ### Prerequisites
 
-- `@fluentui/react-components >= 9`
-- `@fluentui/react-icons >= 2`
-- `@fluentui/react-migration-v0-v9 >= 9`
+- `@fluentui/react-components >= 9.63.0`
+- `@fluentui/react-icons >= 2.0.298`
+- `@fluentui/react-migration-v0-v9 >= 9.3.10`
 - `@rjsf/core >= 7`
 - `@rjsf/utils >= 7`
 - `@rjsf/validator-ajv8 >= 7`

@@ -67,8 +67,8 @@ NOTE: This theme requires React 19, so you will need to upgrade if you are on an
 
 - `@mui/material >= 9`
 - `@mui/icons-material >= 9`
-- `@emotion/react >= 11`
-- `@emotion/styled >= 11`
+- `@emotion/react >= 11.7.0`
+- `@emotion/styled >= 11.6.0`
 - `@rjsf/core >= 7`
 - `@rjsf/utils >= 7`
 - `@rjsf/validator-ajv8 >= 7`

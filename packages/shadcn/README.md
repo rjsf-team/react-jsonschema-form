@@ -155,7 +155,7 @@ npm install @radix-ui/react-direction --save
 
 ## Updating to latest shadCN version
 
-- Simply copy the shadcn components into shadcn/src/components/ui and rebuild the packages or using the shadcn CLI at
+- Simply copy the shadcn components into shadcn/src/components/ui and rebuild the packages, or use the shadcn CLI at
   the root level with the components.json
 - For RTL version, you might need component from [here](https://github.com/shadcn-ui/ui/pull/1638)
   by [nahasco](https://github.com/nahasco)
