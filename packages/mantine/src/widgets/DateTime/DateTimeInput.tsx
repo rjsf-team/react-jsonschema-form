@@ -1,5 +1,5 @@
 import type { FocusEvent, KeyboardEvent, MouseEvent } from 'react';
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { DateInput, DateTimePicker } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
 import { useDidUpdate } from '@mantine/hooks';
@@ -70,6 +70,10 @@ const hasSeconds = (format: string) => format.replace(/\[[^\]]*\]/g, '').include
 
 // The delay `useFocusReturn` in `@mantine/hooks` waits before a closed modal returns focus
 const MANTINE_FOCUS_RETURN_DELAY = 10;
+
+/** Whether `node` is outside a field and its modal, which renders in a portal outside it */
+const isOutsideField = (field: HTMLElement, modalId: string, node: Node) =>
+  !field.contains(node) && !field.ownerDocument.getElementById(modalId)?.contains(node);
 
 const isCallback = (value: unknown): value is (...args: unknown[]) => void => typeof value === 'function';
 
@@ -182,22 +186,36 @@ export default function DateTimeInput<
   const handleFieldBlur = ({ relatedTarget }: FocusEvent<HTMLDivElement>) => {
     const field = fieldRef.current;
     // Focus going to an element outside the field and its modal leaves it now, before that element reports its focus
-    if (
-      relatedTarget &&
-      field &&
-      !field.contains(relatedTarget) &&
-      !field.ownerDocument.getElementById(modalId)?.contains(relatedTarget)
-    ) {
+    if (relatedTarget && field && isOutsideField(field, modalId, relatedTarget)) {
       leaveField();
       return;
     }
-    // Focus an open modal drops, such as to a click on its overlay, is checked once the modal closes
+    // Focus an open modal drops, such as to a click on its overlay, is settled where it lands next or once the modal
+    // closes
     if (modalOpened) {
       return;
     }
     // Otherwise a focus inside the field that follows in the same task only moves focus within it
     leaveTimerRef.current = setTimeout(leaveField);
   };
+  // A modal without `trapFocus` can leave focus dropped to the body while open, from where a Tab leaves the field; the
+  // capture listener reports the blur before the element focus lands on reports its focus
+  useEffect(() => {
+    const field = fieldRef.current;
+    if (!modalOpened || !field) {
+      return undefined;
+    }
+    const doc = field.ownerDocument;
+    const leaveIfOutside = (event: Event) => {
+      // The node focused rather than `event.target`, which is the shadow host of a form rendered in a shadow root
+      const [target] = event.composedPath();
+      if (isOutsideField(field, modalId, target as Node)) {
+        leaveField();
+      }
+    };
+    doc.addEventListener('focusin', leaveIfOutside, true);
+    return () => doc.removeEventListener('focusin', leaveIfOutside, true);
+  }, [modalOpened, modalId, leaveField]);
   // Removing a focused element, such as the Clear button or the dropdown, moves focus to the body without a blur in
   // some browsers
   const leaveFieldIfFocusLost = useCallback(

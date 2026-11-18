@@ -572,6 +572,65 @@ describe('DateTimeWidget', () => {
     },
   );
 
+  test('DateTimeWidget reports its blur when focus an overlay click dropped tabs out of its open modal', async () => {
+    const events: string[] = [];
+    const { container } = render(
+      <MantineProvider env='test'>
+        <input aria-label='Other' onFocus={() => events.push('focus other')} />
+        <DateTimeWidget
+          {...makeProps({
+            schema: isoDateTime,
+            value: '2024-01-10T08:00:00',
+            options: { dropdownType: 'modal', modalProps: { trapFocus: false, closeOnClickOutside: false } },
+            onBlur: (id) => events.push(`blur ${id}`),
+            onFocus: (id) => events.push(`focus ${id}`),
+          })}
+        />
+      </MantineProvider>,
+    );
+
+    await user.click(container.querySelector('button#root')!);
+    await user.click(document.querySelector('.mantine-Modal-overlay')!);
+    await user.tab();
+
+    expect(screen.getByRole('textbox', { name: 'Other' })).toHaveFocus();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(events).toEqual(['focus root', 'blur root', 'focus other']);
+  });
+
+  test('DateTimeWidget reports no blur when focus an overlay click dropped returns to its modal in a shadow root', async () => {
+    const host = document.createElement('div');
+    document.body.append(host);
+    const container = host.attachShadow({ mode: 'open' }).appendChild(document.createElement('div'));
+    const onBlur = vi.fn();
+    const onFocus = vi.fn();
+    render(
+      <MantineProvider env='test'>
+        <DateTimeWidget
+          {...makeProps({
+            onBlur,
+            onFocus,
+            schema: isoDateTime,
+            value: '2024-01-10T08:00:00',
+            options: {
+              dropdownType: 'modal',
+              modalProps: { withinPortal: false, trapFocus: false, closeOnClickOutside: false },
+            },
+          })}
+        />
+      </MantineProvider>,
+      { container },
+    );
+
+    await user.click(container.querySelector('button#root')!);
+    await user.click(container.querySelector('.mantine-Modal-overlay')!);
+    await user.click(container.querySelector('[role="dialog"] [role="spinbutton"]')!);
+
+    expect(onBlur).not.toHaveBeenCalled();
+    expect(onFocus).toHaveBeenCalledOnce();
+    host.remove();
+  });
+
   test('DateTimeWidget reports no blur when its picker opens inside an iframe, and one when focus leaves it', async () => {
     const iframe = document.createElement('iframe');
     document.body.append(iframe);
