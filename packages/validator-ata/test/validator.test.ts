@@ -453,6 +453,13 @@ describe('ataOptionsOverrides.schemas next to the root', () => {
     }
   });
 
+  it('leaves out a record entry under a fragment key, which ata would read as an anchor and reject', () => {
+    const v = customizeValidator({ ataOptionsOverrides: { schemas: { '#k': { maxLength: 2 } } } });
+    const root = { type: 'object', properties: { x: { type: 'string' } } } as RJSFSchema;
+    expect(v.validateFormData({ x: 'abc' }, root).errors).toEqual([]);
+    expect(v.isValid(root.properties!.x as RJSFSchema, 'abc', root)).toBe(true);
+  });
+
   it('keeps a boolean record entry what it is for the root and every sub-schema', () => {
     const v = customizeValidator(
       // A boolean entry, which the options type rules out but callers can still pass

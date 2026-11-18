@@ -333,20 +333,23 @@ describe('compileSchemaValidatorsCode', () => {
       expect(agree(refersTo('https://e.com/d4'), { x: 'ab' }, options)).toBe(false);
     });
 
-    test('leaves out an extra with only a fragment $id, which no $ref reaches at runtime', () => {
-      // ata keeps it under `#frag`, but `$ref: '#frag'` is read as a fragment of the referring
-      // document, so the runtime validator never applies it, from the root or a sub-schema.
+    test('leaves out a list entry with only a fragment $id, with a warning, as the runtime validator rejects it', () => {
+      // ata reads `#frag` as an anchor, so the entry has no `$id` to be registered under. Under a
+      // record key it has one, and `$ref: '#frag'` still never reaches it. The `false` for
+      // `additionalMetaSchemas` is ata throwing from `addSchema()`'s `undefined` key
+      // (ata-core/ata-validator#121), so this expectation can change with ata's fix.
       const frag = { $id: '#frag', maxLength: 2 };
       const form = { type: 'object', properties: { x: { type: 'string', not: { $ref: '#frag' } } } } as RJSFSchema;
       const sub = { type: 'string', not: { $ref: '#frag' } } as RJSFSchema;
-      for (const options of [
-        { additionalMetaSchemas: [frag] },
-        { ataOptionsOverrides: { schemas: [frag] } },
-        { ataOptionsOverrides: { schemas: { 'urn:k': frag } } },
-      ]) {
+      const cases: [CustomValidatorOptionsType, boolean][] = [
+        [{ additionalMetaSchemas: [frag] }, false],
+        [{ ataOptionsOverrides: { schemas: [frag] } }, false],
+        [{ ataOptionsOverrides: { schemas: { 'urn:k': frag } } }, true],
+      ];
+      for (const [options, valid] of cases) {
         const runtime = customizeValidator(options);
-        expect(runtime.isValid(form, { x: 'ab' }, form)).toBe(true);
-        expect(runtime.isValid(sub, 'ab', form)).toBe(true);
+        expect(runtime.isValid(form, { x: 'ab' }, form)).toBe(valid);
+        expect(runtime.isValid(sub, 'ab', form)).toBe(valid);
       }
       expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [frag] })).toBe(
         compileSchemaValidatorsCode(schema),
@@ -354,6 +357,7 @@ describe('compileSchemaValidatorsCode', () => {
       expect(compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { schemas: [frag] } })).toBe(
         compileSchemaValidatorsCode(schema),
       );
+      expect(warn.mock.calls.flat().join('\n')).toMatch(/entries without an \$id are left out/);
     });
 
     test('leaves out a list entry that is not an object, with a warning', () => {
