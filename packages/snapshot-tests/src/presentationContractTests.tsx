@@ -67,6 +67,9 @@ function duplicateIds(elements: Element[]) {
   return repeats;
 }
 
+/** The axe run last started, which the next one waits for */
+let lastAxeRun: Promise<unknown> = Promise.resolve();
+
 /** The WCAG A and AA rules axe-core finds broken in `container`, each with axe's account of why, other than on the
  * elements `exempt` selects, which are skipped alone, not with what they hold, as the other checks skip them. A rule
  * may report an ancestor of the element at fault, as `nested-interactive` reports the option holding a focusable
@@ -76,13 +79,19 @@ async function axeViolations(container: HTMLElement, exempt?: string) {
   // Loaded on first use, so the test files importing this package only for its other suites don't load axe-core
   const { default: axe } = await import('axe-core');
   const isExempt = (element?: Element) => !!exempt && !!element?.matches(exempt);
-  const { violations } = await axe.run(container, {
-    runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'],
-    resultTypes: ['violations'],
-    elementRef: true,
-    // jsdom draws nothing, so contrast is never decided there and only logs jsdom's missing canvas
-    rules: { 'color-contrast': { enabled: false } },
-  });
+  // axe-core refuses a run while another is going, and a case that times out leaves its run going, so each run waits
+  // for the one before it rather than failing every case after a slow one
+  const run = lastAxeRun.then(async () =>
+    axe.run(container, {
+      runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'],
+      resultTypes: ['violations'],
+      elementRef: true,
+      // jsdom draws nothing, so contrast is never decided there and only logs jsdom's missing canvas
+      rules: { 'color-contrast': { enabled: false } },
+    }),
+  );
+  lastAxeRun = run.catch(() => undefined);
+  const { violations } = await run;
   return violations.flatMap(({ id, nodes }) =>
     nodes
       .filter(({ element, any, all, none }) => {
@@ -243,6 +252,11 @@ export function presentationContractTests(
 
   // axe-core refuses a run while another is going, so the cases stay sequential under `sequence.concurrent`
   describe('every field keeps the presentation contract', { concurrent: false }, () => {
+    // The first run loads axe-core and builds its rules, which a slow runner can take past a case's timeout; that run
+    // then keeps going, and every later case fails on it with "Axe is already running"
+    beforeAll(async () => {
+      await axeViolations(document.body);
+    }, 30_000);
     describe.each([
       ['clean', false],
       ['errored', true],
