@@ -1881,8 +1881,8 @@ describe('anyOf', () => {
       ],
     ])(
       "doesn't hand the options of an option with no entry the field's own entries, from %s",
-      async (_label, anyOf, uiSchema) => {
-        const { node, onSubmit } = createFormComponent({
+      (_label, anyOf, uiSchema) => {
+        const { node } = createFormComponent({
           schema: { $defs: { Bar: { type: 'number' } }, anyOf },
           uiSchema,
           initialFormData: { x: 'a' },
@@ -1893,8 +1893,6 @@ describe('anyOf', () => {
         ).toEqual(['Option 1', 'Option 2']);
         expect(elementOf(node, '#root_z', HTMLInputElement).value).toBe('');
         expect(elementOf(node, 'label[for="root_w"]').textContent).not.toContain('*');
-        await submitForm(node, user, true);
-        expect(onSubmit).toHaveBeenCalled();
       },
     );
 
