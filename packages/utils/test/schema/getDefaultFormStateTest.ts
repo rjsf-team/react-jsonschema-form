@@ -147,6 +147,40 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(fill(undeclaredBelow, behavior)).toStrictEqual({ k: { x: 1 } });
         });
       });
+      it.each([false, true])(
+        "gives a row of an array the data holds the const's value, its own or an ancestor's, initialDefaultsGenerated %s",
+        (initialDefaultsGenerated) => {
+          const item: RJSFSchema = { type: 'object', properties: { v: { type: 'number', default: 9 } } };
+          const fillRows = (schema: RJSFSchema) =>
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { l: [{}] }, initialDefaultsGenerated },
+            );
+          expect(
+            fillRows({ type: 'object', const: { l: [{ v: 1 }] }, properties: { l: { type: 'array', items: item } } }),
+          ).toStrictEqual({ l: [{ v: 1 }] });
+          expect(
+            fillRows({ type: 'object', properties: { l: { type: 'array', const: [{ v: 1 }], items: item } } }),
+          ).toStrictEqual({ l: [{ v: 1 }] });
+          expect(fillRows({ type: 'object', properties: { l: { type: 'array', items: item } } })).toStrictEqual({
+            l: [{ v: 9 }],
+          });
+        },
+      );
+      it("leaves out a key only the shown option declares under an ancestor's const, as under the object's own", () => {
+        const option: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'number' } },
+          oneOf: [{ properties: { q: { type: 'string', default: 'd' } } }],
+        };
+        expect(fill({ type: 'object', const: { o: { a: 1 } }, properties: { o: option } })).toStrictEqual({
+          o: { a: 1 },
+        });
+        expect(fill({ type: 'object', properties: { o: { ...option, const: { a: 1 } } } })).toStrictEqual({
+          o: { a: 1 },
+        });
+        expect(fill({ type: 'object', properties: { o: option } })).toStrictEqual({ o: { q: 'd' } });
+      });
       it('gives a declared key and an extra key the const alike', () => {
         const mixed: RJSFSchema = {
           type: 'object',
@@ -265,6 +299,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(unevaluatedDefault)).toStrictEqual({ a: 4 });
         expect(fill({ ...unevaluatedDefault, unevaluatedProperties: true })).toStrictEqual({ a: 1 });
         expect(fill(closedBeside)).toStrictEqual({ x1: 1 });
+      });
+      it("seeds a default's key no pattern matches only where the context allows it, as omitExtraData keeps it, unless the const names it", () => {
+        const schema: RJSFSchema = { ...patterned, default: { x1: 1, y: 2 } };
+        expect(fill(schema)).toStrictEqual({ x1: 1 });
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' },
+            { schema, initialDefaultsGenerated: false },
+          ),
+        ).toStrictEqual({ x1: 1, y: 2 });
+        expect(fill({ type: 'object', properties: { o: schema } })).toStrictEqual({ o: { x1: 1 } });
+        expect(fill({ ...patterned, const: { x1: 1, y: 2 } })).toStrictEqual({ x1: 1, y: 2 });
       });
     });
     describe('an object const naming keys no property declares', () => {
@@ -499,13 +545,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           for (const initialValue of [{ a: 5 }, { z: 1 }]) {
             const parentOnly = { 'ui:initialValue': initialValue };
             const spelled = { ...parentOnly, oneOf: [{}, {}] };
-            // A list the uiSchema spells out with a hole at the option gives the option no uiSchema of its own
+            // A list the uiSchema spells out with a hole at the option gives the option the field's uiSchema, and one
+            // with `null` there, which only untyped code can write, gives it none
             const holeyOptions: UiSchema[] = [];
             holeyOptions[1] = {};
             const holey = { ...parentOnly, oneOf: holeyOptions };
+            const nulled = { ...parentOnly, oneOf: [null, {}] as unknown as UiSchema[] };
             const firstPass = utils(schema).getDefaultFormState(schema, undefined, false, false, parentOnly);
             const later = utils(schema).getDefaultFormState(schema, {}, false, true, parentOnly);
-            for (const uiSchema of [spelled, holey]) {
+            for (const uiSchema of [spelled, holey, nulled]) {
               expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual(
                 firstPass,
               );
@@ -13679,6 +13727,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { schema, rootSchema: schema, includeUndefinedValues: false, uiSchema },
           ),
         ).toEqual({ thing: { a: 'x' } });
+      });
+
+      it("doesn't hand the field's anyOf entries to the options of an option with no entry of its own", () => {
+        const schema: RJSFSchema = {
+          anyOf: [
+            {
+              anyOf: [
+                { type: 'object', properties: { y: { type: 'string' } } },
+                { type: 'object', properties: { x: { type: 'string' }, z: { type: 'string' } } },
+              ],
+            },
+            { type: 'number' },
+          ],
+        };
+        const anyOf: UiSchema[] = [];
+        anyOf[1] = { z: { 'ui:initialValue': 'leak' } };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema, rootSchema: schema, formData: { x: 'a' }, uiSchema: { anyOf } },
+          ),
+        ).toEqual({ x: 'a' });
       });
     });
 

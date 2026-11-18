@@ -29,34 +29,26 @@ describe('orderProperties()', () => {
     const order = ['quux', 'foo', '*', 'corge', 'baz'];
     expect(orderProperties(properties, order)).toEqual(['foo', 'qux', 'bar', 'baz']);
   });
-  it('throws error when * is missing and there is one more prop than ordered', () => {
-    const properties = ['foo', 'bar', 'baz'];
-    const order = ['foo', 'baz'];
-    expect(() => orderProperties(properties, order)).toThrow("uiSchema order list does not contain property 'bar'");
-  });
-  it('throws error when * is missing and there are a few more props than ordered', () => {
-    const properties = ['foo', 'bar', 'baz'];
-    const order = ['foo'];
-    expect(() => orderProperties(properties, order)).toThrow(
-      "uiSchema order list does not contain properties 'bar', 'baz'",
-    );
+  it('places the properties the order does not list at the end when it has no *', () => {
+    expect(orderProperties(['foo', 'bar', 'baz'], ['baz'])).toEqual(['baz', 'foo', 'bar']);
   });
   it('places a property named __proto__ at the wildcard', () => {
     expect(orderProperties(['foo', '__proto__'], ['foo', '*'])).toEqual(['foo', '__proto__']);
   });
-  it('throws error when * is missing and a property named __proto__ is not ordered', () => {
-    expect(() => orderProperties(['foo', '__proto__'], ['foo'])).toThrow(
-      "uiSchema order list does not contain property '__proto__'",
-    );
+  it('places a property named __proto__ at the end when the order has no * and does not list it', () => {
+    expect(orderProperties(['__proto__', 'foo'], ['foo'])).toEqual(['foo', '__proto__']);
   });
   it('should remove from order an Object.prototype member that is not in properties', () => {
     expect(orderProperties(['foo'], ['toString', '*'])).toEqual(['foo']);
   });
-  it('throws error when there are multiple *s in order', () => {
-    const properties = ['foo', 'bar', 'baz'];
-    const order = ['*', 'foo', '*'];
-    expect(() => orderProperties(properties, order)).toThrow(
-      'uiSchema order list contains more than one wildcard item',
-    );
+  it('places the properties the order does not list at the first * and ignores the others', () => {
+    expect(orderProperties(['foo', 'bar', 'baz'], ['bar', '*', 'foo', '*'])).toEqual(['bar', 'baz', 'foo']);
+  });
+  it('places a property listed more than once at its first entry', () => {
+    expect(orderProperties(['foo', 'bar', 'baz'], ['foo', 'bar', 'foo', '*', 'bar'])).toEqual(['foo', 'bar', 'baz']);
+  });
+  it('places a property named * among the ones the order does not list', () => {
+    expect(orderProperties(['foo', '*'], ['foo', '*'])).toEqual(['foo', '*']);
+    expect(orderProperties(['*', 'foo'], ['foo'])).toEqual(['foo', '*']);
   });
 });

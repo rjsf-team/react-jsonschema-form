@@ -1,5 +1,6 @@
 import {
   absentKeywordAllows,
+  additionalPropertiesKeyword,
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
 } from '../additionalPropertiesUtils.ts';
@@ -25,7 +26,7 @@ import {
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
-import getOptionUiSchema from '../getOptionUiSchema.ts';
+import getOptionUiSchema, { withoutFieldOptions } from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import { renderOption } from '../getRenderedOptionSchema.ts';
 import getRenderedOptionUiSchema from '../getRenderedOptionUiSchema.ts';
@@ -1556,7 +1557,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     : localUiSchema;
   const props = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
-  let defaults: unknown = parentDefaults;
+  // A value an ancestor's `const` gives the field stands in for inherited defaults that don't reach it, as for a row of
+  // an array the data holds once the defaults were generated, whose defaults are read from the row
+  let defaults: unknown = parentDefaults === undefined ? inputProps.parentConst : parentDefaults;
   // An ancestor default wins only where the field's type can hold it, so a `null` or `false` one gives way to the own
   // default of a field whose type allows neither. A value an ancestor's `const` gives wins whatever the setting says
   const preferParentDefaults =
@@ -1638,12 +1641,15 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           { ...props, parentDefaults: defaults },
           initialValue,
         );
-        // Under the object's own `const`, a key only the option declares, which the `const` doesn't name and the data
-        // doesn't hold, is left out: its default would make the object a value the `const` rejects. A key the
-        // `ui:initialValue` names is kept, since that value stands in the `const`'s place
+        // Under the object's own `const`, or the value an ancestor's gives it, a key only the option declares, which the
+        // `const` doesn't name and the data doesn't hold, is left out: its default would make the object a value the
+        // `const` rejects. A key the `ui:initialValue` names is kept, since that value stands in the `const`'s place
+        const givenObjectConst =
+          preferParentDefaults && isObjectData(props.parentConst) ? props.parentConst : undefined;
+        const closingValue = foldsOptionUnderConst ? constSchema[CONST_KEY] : givenObjectConst;
         const optionValue =
-          foldsOptionUnderConst && isObjectData(foldedOption)
-            ? withoutKeysOutside(foldedOption, [constSchema[CONST_KEY], schema.properties, rawFormData, initialValue])
+          closingValue !== undefined && isObjectData(foldedOption)
+            ? withoutKeysOutside(foldedOption, [closingValue, schema.properties, rawFormData, initialValue])
             : foldedOption;
         // Data the field takes is its own even where the option it renders through holds none of it, as an option with
         // no value, or one that is no object or takes no object, holds none of object data. Its defaults are merged
@@ -1988,9 +1994,9 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     rendersOwnField && optionUiSchema !== props.uiSchema && retrievedOption
       ? getRenderedOptionUiSchema<T, S, F>(fieldSchema, retrievedOption(), props.uiSchema, optionUiSchema)
       : optionUiSchema;
-  let uiSchema = renderedUiSchema;
-  if (initialValue !== undefined && getUiOptions<T, S, F>(renderedUiSchema).initialValue === undefined) {
-    const carrying: UiSchema<T, S, F> = renderedUiSchema ? { ...renderedUiSchema } : {};
+  let uiSchema = withoutFieldOptions<T, S, F>(renderedUiSchema, props.uiSchema, key);
+  if (initialValue !== undefined && getUiOptions<T, S, F>(uiSchema).initialValue === undefined) {
+    const carrying: UiSchema<T, S, F> = uiSchema ? { ...uiSchema } : {};
     carrying['ui:initialValue'] = initialValue;
     uiSchema = carrying;
   }
@@ -2607,12 +2613,18 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     extraKeysField !== view.schema ? passes.shareExtraKeySchema(ownAdditionalProperties) : ownAdditionalProperties;
   // An extra key is folded through the schema the field renders it with, as `getAdditionalPropertySchema()` picks it:
   // the patterns its name matches, else `additionalProperties`, else `unevaluatedProperties`. A key the object rejects
-  // has no field
+  // has no field, nor does one no pattern matches where no keyword describes it and the context reads the absence as
+  // forbidding it, which `omitExtraData` prunes, unless the object's `const` names it
+  const describesUnmatched =
+    additionalPropertiesKeyword<S>(extraKeysField) !== undefined || absentKeywordAllows<S, F>(context, extraKeysField);
   const extraKeyChild = (seeding: DefaultsView<S>, key: string) => {
     if (getAdditionalPropertySchema<S>(extraKeysField, key) === false) {
       return undefined;
     }
     const patterned = childSeeds(seeding, key);
+    if (patterned.edge !== 'patternKey' && !describesUnmatched && !Object.hasOwn(objectConst ?? {}, key)) {
+      return undefined;
+    }
     const keyword =
       extraKeysField.additionalProperties === undefined && UNEVALUATED_PROPERTIES_KEY in extraKeysField
         ? UNEVALUATED_PROPERTIES_KEY

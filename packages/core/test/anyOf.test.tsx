@@ -1,5 +1,5 @@
 import { createRef, StrictMode, useEffect, useState } from 'react';
-import type { FieldProps, FieldTemplateProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FieldProps, FieldTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { descriptionId, noop, toFieldPath, toInputValue } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import validator, { createPrecompiledValidator } from '@rjsf/validator-ajv8';
@@ -1858,6 +1858,116 @@ describe('anyOf', () => {
 
       const transformerId = node.querySelector<HTMLSelectElement>('select#root_components_0_fn_transformer_id');
       expect(getSelectedOptionValue(transformerId!)).toEqual('to_absolute');
+    });
+
+    // The inner field is the outer field's option with no entry of its own, so it renders with the outer field's
+    // uiSchema, and its own options are the ones read at the index the outer list's `Bar` entry sits at
+    const shown: RJSFSchema = {
+      type: 'object',
+      properties: { x: { type: 'string' }, z: { type: 'string' }, w: { type: 'string' } },
+    };
+    const other: RJSFSchema = { type: 'object', properties: { y: { type: 'string' } } };
+    const bar: UiSchema = { 'ui:title': 'BarTitle', z: { 'ui:initialValue': 'leak' }, w: { 'ui:required': true } };
+    it.each<[string, RJSFSchema[], UiSchema]>([
+      [
+        "a ui:definitions entry merged for the field's next option",
+        [{ anyOf: [other, shown] }, { $ref: '#/$defs/Bar' }],
+        { 'ui:definitions': { '#/$defs/Bar': bar } },
+      ],
+      [
+        "the field's own list, too short to reach the option",
+        [{ $ref: '#/$defs/Bar' }, { anyOf: [shown, other] }],
+        { anyOf: [bar] },
+      ],
+    ])(
+      "doesn't hand the options of an option with no entry the field's own entries, from %s",
+      (_label, anyOf, uiSchema) => {
+        const { node } = createFormComponent({
+          schema: { $defs: { Bar: { type: 'number' } }, anyOf },
+          uiSchema,
+          initialFormData: { x: 'a' },
+        });
+
+        expect(
+          [...elementOf(node, '#root__anyof_select2', HTMLSelectElement).options].map((o) => o.textContent),
+        ).toEqual(['Option 1', 'Option 2']);
+        expect(elementOf(node, '#root_z', HTMLInputElement).value).toBe('');
+        expect(elementOf(node, 'label[for="root_w"]').textContent).not.toContain('*');
+      },
+    );
+
+    it("doesn't fill the options of an option with no entry from the field's own entries, on a switch to it", async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { $defs: { Bar: { type: 'number' } }, anyOf: [{ $ref: '#/$defs/Bar' }, { anyOf: [shown, other] }] },
+        uiSchema: { anyOf: [bar] },
+        initialFormData: 1,
+      });
+
+      await user.selectOptions(elementOf(node, '#root__anyof_select', HTMLSelectElement), 'Option 2');
+
+      expect(elementOf(node, '#root_z', HTMLInputElement).value).toBe('');
+      expect(onChange.mock.lastCall?.[0].formData).toHaveProperty('z', undefined);
+    });
+  });
+
+  describe('an option offered by an allOf below the root (#5889)', () => {
+    const bar: RJSFSchema = { title: 'Bar', type: 'object', properties: { d: { type: 'string', default: 'dfltD' } } };
+    const withDefault: RJSFSchema = {
+      title: 'Foo',
+      type: 'object',
+      properties: { c: { type: 'string', default: 'dfltC' } },
+    };
+    const withoutDefault: RJSFSchema = { title: 'Foo', type: 'object', properties: { c: { type: 'string' } } };
+    const fromDefinition: UiSchema = { 'ui:definitions': { '#/$defs/Foo': { c: { 'ui:initialValue': 'dfltC' } } } };
+    const schemaWith = (placement: 'property' | 'items', foo: RJSFSchema): RJSFSchema => {
+      const field: RJSFSchema = { allOf: [{ anyOf: [{ $ref: '#/$defs/Foo' }, { $ref: '#/$defs/Bar' }] }] };
+      const $defs = { Foo: foo, Bar: bar };
+      return placement === 'property'
+        ? { $defs, type: 'object', properties: { p: field } }
+        : { $defs, type: 'array', minItems: 1, items: field };
+    };
+    // A switch computes the new option's defaults as if it were the root, which `skipDefaults` never skips, while the
+    // option shown on mount sits in an `allOf` skipped as a whole
+    it.each<
+      [string, 'property' | 'items', RJSFSchema, UiSchema | undefined, 'skipDefaults' | 'populateDefaults', string]
+    >([
+      ['an object property, under skipDefaults', 'property', withDefault, undefined, 'skipDefaults', ''],
+      ["an array's items, under skipDefaults", 'items', withDefault, undefined, 'skipDefaults', ''],
+      [
+        'an object property, its value from a ui:definitions entry, under skipDefaults',
+        'property',
+        withoutDefault,
+        fromDefinition,
+        'skipDefaults',
+        '',
+      ],
+      ['an object property, under populateDefaults', 'property', withDefault, undefined, 'populateDefaults', 'dfltC'],
+    ])(
+      'fills an option inside an allOf in %s on a switch to it, whatever the mount filled',
+      async (_label, placement, foo, uiSchema, allOf, mounted) => {
+        const id = placement === 'property' ? 'root_p' : 'root_0';
+        const { node } = createFormComponent({
+          schema: schemaWith(placement, foo),
+          uiSchema,
+          defaultFormStateBehavior: { allOf },
+        });
+        const select = elementOf(node, `#${id}__anyof_select`, HTMLSelectElement);
+
+        expect(elementOf(node, `#${id}_c`, HTMLInputElement).value).toBe(mounted);
+        await user.selectOptions(select, 'Bar');
+        expect(elementOf(node, `#${id}_d`, HTMLInputElement).value).toBe('dfltD');
+        await user.selectOptions(select, 'Foo');
+        expect(elementOf(node, `#${id}_c`, HTMLInputElement).value).toBe('dfltC');
+      },
+    );
+
+    it('fills the option of an array item added after mount, under skipDefaults', async () => {
+      const { node } = createFormComponent({ schema: schemaWith('items', withDefault) });
+
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
+
+      expect(elementOf(node, '#root_0_c', HTMLInputElement).value).toBe('');
+      expect(elementOf(node, '#root_1_c', HTMLInputElement).value).toBe('dfltC');
     });
   });
   describe('hideError works with anyOf', () => {

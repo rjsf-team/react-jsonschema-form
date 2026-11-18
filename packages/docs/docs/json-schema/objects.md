@@ -87,6 +87,8 @@ const uiSchema: UiSchema = {
 };
 ```
 
+A property the list leaves out is never hidden. Without a `"*"`, the properties it doesn't name render after the ones it does, as if it ended with `"*"`, and a warning names the uiSchema entry and the declared properties it leaves out. A key held under `additionalProperties`, which an order written for the declared properties can't know about, goes there too, without a warning. A name in the list that the object doesn't have is skipped, a property listed twice renders at its first entry, and only the first `"*"` places the unlisted properties.
+
 ## Additional and pattern properties
 
 The `additionalProperties` keyword allows the user to add properties with arbitrary key names. Set this keyword equal to a schema object:

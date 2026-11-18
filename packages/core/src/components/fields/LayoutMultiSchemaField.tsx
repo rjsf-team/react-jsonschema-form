@@ -8,6 +8,7 @@ import {
   fieldPathToName,
   getUiOptions,
   toFieldPath,
+  withoutFieldOptions,
 } from '@rjsf/utils';
 
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
@@ -146,16 +147,16 @@ export default function LayoutMultiSchemaField<
     const oldOption = enumOptions[oldOptionIndex]?.schema;
 
     // The newly-selected option's own uiSchema is resolved the same way AnyOfField's optionsUiSchema/optionUiSchema
-    // does — `uiSchema.oneOf[i]`/`uiSchema.anyOf[i]` when declared as an array reaching that option's index, falling
-    // back to this field's own uiSchema otherwise — so per-option ui:initialValue/ui:emptyValue overrides apply the
-    // same way here as they do when the same schema is rendered through plain SchemaField/AnyOfField.
+    // does — `uiSchema.oneOf[i]`/`uiSchema.anyOf[i]` when declared as an array holding an entry at that option's
+    // index, falling back to this field's own uiSchema otherwise — so per-option ui:initialValue/ui:emptyValue overrides
+    // apply the same way here as they do when the same schema is rendered through plain SchemaField/AnyOfField.
     // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
     // never carries the root's `ui:definitions` itself.
     const newOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex);
     const oldOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex);
     const switched = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
-      newOptionUiSchema,
-      oldOptionUiSchema,
+      newOptionUiSchema: withoutFieldOptions<T, S, F>(newOptionUiSchema, uiSchema, keyword),
+      oldOptionUiSchema: withoutFieldOptions<T, S, F>(oldOptionUiSchema, uiSchema, keyword),
       uiSchemaDefinitions,
       globalUiOptions,
     });

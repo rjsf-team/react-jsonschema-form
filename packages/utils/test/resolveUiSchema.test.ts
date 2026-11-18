@@ -430,6 +430,90 @@ describe('resolveUiSchema() - the definition origin it records', () => {
   });
 });
 
+describe('resolveUiSchema() - the options of an allOf member', () => {
+  const fooOrBar = { anyOf: [{ $ref: '#/$defs/Foo' }, { $ref: '#/$defs/Bar' }] };
+  const $defs: RJSFSchema['$defs'] = {
+    Foo: { type: 'object', properties: { c: { type: 'string' } } },
+    Bar: { type: 'number' },
+    FooOrBar: fooOrBar,
+    Loop: { allOf: [{ $ref: '#/$defs/Loop' }] },
+  };
+  const definitions = { '#/$defs/Foo': { 'ui:title': 'Foo' }, '#/$defs/Bar': { 'ui:title': 'Bar' } };
+
+  it.each<[string, RJSFSchema]>([
+    ['inline', { allOf: [fooOrBar] }],
+    ['named by a $ref', { allOf: [{ $ref: '#/$defs/FooOrBar' }] }],
+    ['in a nested allOf', { allOf: [{ allOf: [fooOrBar] }] }],
+    ['beside a member that loops back to itself', { allOf: [{ $ref: '#/$defs/Loop' }, fooOrBar] }],
+    ['beside a boolean member', { allOf: [true, fooOrBar] }],
+    ['beside a then branch offering none', { allOf: [fooOrBar], if: { type: 'object' }, then: { required: ['c'] } }],
+  ])('merges the definitions of the options a member offers %s', (_label, schema) => {
+    const rootSchema: RJSFSchema = { $defs, ...schema };
+    const local: UiSchema = { anyOf: [{ 'ui:description': 'Mine' }] };
+    const result = resolveUiSchema(rootSchema, local, makeRegistry(rootSchema, definitions));
+    expect(result.anyOf).toEqual([{ 'ui:title': 'Foo', 'ui:description': 'Mine' }, { 'ui:title': 'Bar' }]);
+    expect(Reflect.get(result.anyOf![0], UI_DEFINITION_ORIGIN_KEY)).toMatchObject({ ref: '#/$defs/Foo' });
+    expect(local).toEqual({ anyOf: [{ 'ui:description': 'Mine' }] });
+  });
+
+  const other: RJSFSchema = { anyOf: [{ type: 'string' }] };
+  it.each<[string, RJSFSchema]>([
+    ['two members', { allOf: [fooOrBar, fooOrBar] }],
+    ['the field and a member', { ...fooOrBar, allOf: [fooOrBar] }],
+    ['a member and a then branch', { allOf: [fooOrBar], if: { type: 'object' }, then: other }],
+    [
+      'a member and a then branch naming its $ref',
+      { allOf: [{ $ref: '#/$defs/FooOrBar' }], if: { type: 'object' }, then: { $ref: '#/$defs/FooOrBar' } },
+    ],
+    [
+      'a nested member and a then branch naming its $ref',
+      {
+        allOf: [{ allOf: [{ $ref: '#/$defs/FooOrBar' }] }],
+        if: { type: 'object' },
+        then: { $ref: '#/$defs/FooOrBar' },
+      },
+    ],
+    ['the field and an else branch', { ...fooOrBar, if: { type: 'object' }, then: {}, else: other }],
+    ['the field and a dependencies entry', { ...fooOrBar, dependencies: { c: other, d: ['c'] } }],
+  ])('merges none where %s offer a list, whose positions the merged list need not keep', (_label, schema) => {
+    const rootSchema: RJSFSchema = { $defs, ...schema };
+    expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions))).toEqual({});
+  });
+
+  it("merges the field's own options where its allOf loops back to the definition it is", () => {
+    const rootSchema: RJSFSchema = { $defs: { ...$defs, Node: { ...fooOrBar, allOf: [{ $ref: '#/$defs/Node' }] } } };
+    const result = resolveUiSchema({ $ref: '#/$defs/Node' }, undefined, makeRegistry(rootSchema, definitions));
+    expect(result.anyOf).toEqual([{ 'ui:title': 'Foo' }, { 'ui:title': 'Bar' }]);
+  });
+
+  it.each<[string, RJSFSchema['$defs'], string]>([
+    ['the field is named by an alias of', { Alias: { $ref: '#/$defs/Node' } }, '#/$defs/Alias'],
+    [
+      'its allOf loops back through an alias to',
+      { Node: { ...fooOrBar, allOf: [{ $ref: '#/$defs/Alias' }] }, Alias: { $ref: '#/$defs/Node' } },
+      '#/$defs/Node',
+    ],
+  ])("merges the field's own options where %s the definition it is", (_label, extra, ref) => {
+    const rootSchema: RJSFSchema = {
+      $defs: { ...$defs, Node: { ...fooOrBar, allOf: [{ $ref: '#/$defs/Node' }] }, ...extra },
+    };
+    const result = resolveUiSchema({ $ref: ref }, undefined, makeRegistry(rootSchema, definitions));
+    expect(result.anyOf).toEqual([{ 'ui:title': 'Foo' }, { 'ui:title': 'Bar' }]);
+  });
+
+  it('reads a boolean schema, which a field can be handed, as offering no options', () => {
+    // A field's schema can be `true`, which the schema types don't admit
+    const schema = true as unknown as RJSFSchema;
+    expect(resolveUiSchema(schema, undefined, makeRegistry({}, definitions))).toEqual({});
+  });
+
+  it('skips a member whose $ref names nothing', () => {
+    const rootSchema: RJSFSchema = { $defs, allOf: [{ $ref: '#/$defs/Missing' }, fooOrBar] };
+    const result = resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions));
+    expect(result.anyOf).toEqual([{ 'ui:title': 'Foo' }, { 'ui:title': 'Bar' }]);
+  });
+});
+
 describe('mergeOptionDefinitions()', () => {
   const registry = makeRegistry({}, { '#/$defs/Foo': { 'ui:title': 'Foo' }, '#/$defs/Bar': { 'ui:title': 'Bar' } });
 

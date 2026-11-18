@@ -1468,7 +1468,7 @@ Only an own property counts, so a selector named `__proto__` that the option doe
 
 ### getOptionUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Returns the uiSchema for the `oneOf`/`anyOf` option at `index`, resolved the way `AnyOfField` resolves it: `uiSchema[keyword][index]` when that keyword's uiSchema is declared as an array reaching `index`, falling back to `uiSchema` itself otherwise.
+Returns the uiSchema for the `oneOf`/`anyOf` option at `index`, resolved the way `AnyOfField` resolves it: `uiSchema[keyword][index]` when that keyword's uiSchema is declared as an array holding an entry at `index`, falling back to `uiSchema` itself otherwise.
 Once a branch declares its own array-form uiSchema for `keyword`, a plain per-key entry on the parent uiSchema, say `uiSchema.thing.a`, is never consulted for that branch's own fields.
 Using this everywhere an option is resolved, rather than only where one is rendered, is what keeps the rest of the library agreeing with what the user sees.
 
@@ -2412,8 +2412,8 @@ Recursively merge deeply nested objects.
 
 ### mergeOptionDefinitions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Merges the `ui:definitions` entry each `anyOf`/`oneOf` option's ref names under the option's uiSchema entry, where `resolveUiSchema()` didn't merge one, and records its origin under `UI_DEFINITION_ORIGIN_KEY`, as `resolveUiSchema()` does for an option the field's schema lists itself.
-`resolveUiSchema()` reads the options of the schema it is given, so it doesn't reach the options of an `allOf` member, which `retrieveSchema()` hoists to the field.
+Merges the `ui:definitions` entry each `anyOf`/`oneOf` option's ref names under the option's uiSchema entry, where `resolveUiSchema()` didn't merge one, and records its origin under `UI_DEFINITION_ORIGIN_KEY`, as `resolveUiSchema()` does for an option the field's schema offers.
+`resolveUiSchema()` reads the schema as it is written, so it doesn't reach the options a `then`/`else` or a `dependencies` entry offers, which `retrieveSchema()` hoists to the field only where the data selects it, nor any the field offers beside such a list or beside another list an `allOf` member offers.
 The `anyOf`/`oneOf` field and `getUiRequiredErrorSchema()` call this, so they agree on the entry such an option has.
 
 #### Parameters
@@ -2674,8 +2674,9 @@ An option is labelled with the first of its names. One with no name is labelled 
 
 Given a list of `properties` and an `order` list, returns a list that contains the `properties` ordered correctly.
 If `order` is not an array, then the untouched `properties` list is returned.
-Otherwise `properties` is ordered per the `order` list.
-If `order` contains a '_' then any `properties` that are not mentioned explicity in `order` will be places in the location of the `_`.
+Otherwise `properties` is ordered per the `order` list, each listed property placed once, at its first entry.
+Any `properties` that `order` doesn't list are placed at its first '\*', or at the end when it has none, so none is ever dropped.
+A name in `order` that isn't among the `properties`, and every '\*' after the first, is ignored.
 
 #### Parameters
 
@@ -2685,10 +2686,6 @@ If `order` contains a '_' then any `properties` that are not mentioned explicity
 #### Returns
 
 - string[]: A list with the `properties` ordered
-
-#### Throws
-
-- Error when the properties cannot be ordered correctly
 
 ### padTimeSeconds()
 
@@ -2866,7 +2863,8 @@ Each part is placed `template` or `self` by its declared owner, `above` when a f
 
 Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
 Called at runtime for each field. When the schema contains a `$ref`, looks up the corresponding uiSchema definition from `registry.uiSchemaDefinitions` and merges it with local overrides.
-For schemas with `oneOf`/`anyOf` branches, also populates `uiSchema[keyword][i]` for branches whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option titles.
+For schemas with `oneOf`/`anyOf` branches, its own or those of an `allOf` member, also populates `uiSchema[keyword][i]` for branches whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option titles.
+It populates none for a keyword that two lists, or a `then`/`else` or `dependencies` entry, offer, since the list the field shows then need not keep the written positions; `mergeOptionDefinitions()` merges those.
 
 Resolution order (later sources override earlier):
 
@@ -2975,7 +2973,7 @@ Return a consistent `id` for the description of the option a select widget has s
 
 ### selectOptionUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Returns the uiSchema for the option at `index` from an already-resolved array of per-option uiSchemas: `optionsUiSchema[index]` when that array reaches `index`, falling back to `uiSchema` itself otherwise.
+Returns the uiSchema for the option at `index` from an already-resolved array of per-option uiSchemas: `optionsUiSchema[index]` when that array holds an entry at `index`, falling back to `uiSchema` itself otherwise.
 This is the lookup half of `getOptionUiSchema()`, split out for a caller that has already derived, and memoized, its own `optionsUiSchema` array — `AnyOfField` and `MultiSchemaField` do, reusing it across a render — so it is not re-derived from `uiSchema` on every lookup.
 
 #### Parameters
@@ -3077,6 +3075,7 @@ setWarningOptions({}); // the default: every warning logs
 | `ui-widget-element`                 | `config`    | `ui:widget` is a React element rather than a component                                                      |
 | `row-span-ignored`                  | `config`    | a `ui:row` has a `span`, which sizes only a `ui:col` or `ui:columns`                                        |
 | `layout-grid-cell-field-ignored`    | `config`    | a layout grid cell with discriminated `oneOf`/`anyOf` options names a `ui:field`, which it ignores          |
+| `ui-order-incomplete`               | `config`    | a `ui:order` with no `*` leaves out a declared property, which renders after the listed ones                |
 
 `WarningCategory` and `WarningId` are string-literal unions of the names above, so a typo fails type-checking. In a setup file in plain JavaScript, `setWarningOptions()` ignores a name it doesn't know and warns about it, and throws a `TypeError` for a `throwOn` or `except` that isn't an array.
 
@@ -3549,6 +3548,22 @@ A label holding only a required field's `*` would name the control "star", so a 
 #### Returns
 
 - boolean: True when the widget draws a label with text
+
+### withoutFieldOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns the uiSchema an `anyOf`/`oneOf` option's fields read, given the one `selectOptionUiSchema()` or `getOptionUiSchema()` picked for it.
+Where that is the field's own uiSchema, which an option with no entry of its own falls back to, it is taken without the field's `keyword` list, which describes the field's options rather than any the option offers in turn.
+The same object is handed back where there is no list to drop.
+
+#### Parameters
+
+- optionUiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema picked for the option
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The field's uiSchema
+- keyword: 'oneOf' | 'anyOf' - Which of `oneOf`/`anyOf` the field offers its options under
+
+#### Returns
+
+- UiSchema&lt;T, S, F> | undefined: `optionUiSchema`, without the field's `keyword` list where it is the field's uiSchema
 
 ### withRootIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

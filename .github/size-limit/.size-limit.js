@@ -20,8 +20,8 @@ const PACKAGES = {
     canaries: [{ label: 'Form', import: 'Form', limit: '53.5 kB' }],
   },
   '@rjsf/utils': {
-    installed: '63.5 kB',
-    own: '58 kB',
+    installed: '64 kB',
+    own: '57.5 kB',
     canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1.1 kB' }],
   },
   '@rjsf/validator-ajv8': {
