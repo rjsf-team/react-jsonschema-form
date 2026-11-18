@@ -174,7 +174,7 @@ describe('compileSchemaValidatorsCode', () => {
       expect(typeof loadModule(code).root).toBe('function');
       expect(warn).toHaveBeenCalledTimes(2);
       expect(warn.mock.calls[0][0]).toMatch(
-        /entries without an \$id, or whose only \$id is a fragment such as #frag, are left out of the precompiled module; ata needs an \$id to register one, so the runtime validator rejects them too/,
+        /entries without an \$id, or whose only \$id is a fragment such as #frag, are left out of the precompiled module; ata needs an \$id to register one, so the runtime validator may reject or ignore them/,
       );
       expect(warn.mock.calls[1][0]).toMatch(
         /extenderFn, ataOptionsOverrides\.coerceTypes, ataOptionsOverrides\.removeAdditional cannot be carried into a precompiled validator and are ignored; the precompiled and runtime validators may disagree/,

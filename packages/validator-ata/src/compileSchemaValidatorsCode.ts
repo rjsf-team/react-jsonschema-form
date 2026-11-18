@@ -638,7 +638,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   }
   if (extras.some(([id]) => id === undefined)) {
     logOnce(
-      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id, or whose only $id is a fragment such as #frag, are left out of the precompiled module; ata needs an $id to register one, so the runtime validator rejects them too',
+      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id, or whose only $id is a fragment such as #frag, are left out of the precompiled module; ata needs an $id to register one, so the runtime validator may reject or ignore them',
     );
   }
   const dropped = [
