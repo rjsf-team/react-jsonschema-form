@@ -250,13 +250,10 @@ export function presentationContractTests(
     ]),
   ];
 
-  // axe-core refuses a run while another is going, so the cases stay sequential under `sequence.concurrent`
-  describe('every field keeps the presentation contract', { concurrent: false }, () => {
-    // The first run loads axe-core and builds its rules, which a slow runner can take past a case's timeout; that run
-    // then keeps going, and every later case fails on it with "Axe is already running"
-    beforeAll(async () => {
-      await axeViolations(document.body);
-    }, 30_000);
+  // axe-core refuses a run while another is going, so the cases stay sequential under `sequence.concurrent`. Each case
+  // renders a themed form, drives it and runs axe, and the first of a file also loads the theme and axe-core, which a
+  // slow CI runner has taken past the default 5s
+  describe('every field keeps the presentation contract', { concurrent: false, timeout: 30_000 }, () => {
     describe.each([
       ['clean', false],
       ['errored', true],
