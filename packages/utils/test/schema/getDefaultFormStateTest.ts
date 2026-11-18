@@ -13848,6 +13848,48 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema, ['x'])).toEqual(['x']);
       });
 
+      it('keeps an item of the default the items reject over their own default, as it keeps one the data holds', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          default: ['x', 'a'],
+          items: { type: 'string', enum: ['a', 'b'], default: 'b' },
+        };
+        expect(fill(schema)).toEqual(['x', 'a']);
+        expect(fill(schema, ['x', 'a'])).toEqual(['x', 'a']);
+        const multiSelect: RJSFSchema = {
+          type: 'array',
+          uniqueItems: true,
+          default: ['x'],
+          items: { enum: ['a', 'b'], default: 'a' },
+        };
+        expect(fill(multiSelect)).toEqual(['x']);
+        expect(fill(multiSelect, ['x'])).toEqual(['x']);
+      });
+
+      it('reads an item of the default by `items`, not by an `additionalItems` beside it', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          default: [{}],
+          items: item,
+          additionalItems: { type: 'object', properties: { z: { type: 'number', default: 9 } } },
+        };
+        expect(fill(schema)).toEqual([{ q: 1, c: 'c' }]);
+        expect(fill(schema, [{}])).toEqual([{ q: 1, c: 'c' }]);
+      });
+
+      it('fills an item of the default as the form does without `shouldMergeDefaultsIntoFormData`', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          default: [{ e: null }],
+          items: {
+            type: 'object',
+            properties: { e: { type: ['string', 'null'], default: 'a' }, q: { type: 'number', default: 1 } },
+          },
+        };
+        expect(fill(schema)).toEqual([{ e: null, q: 1 }]);
+        expect(computeDefaults({ validator: testValidator }, schema, { rootSchema: schema })).toEqual(fill(schema));
+      });
+
       it('leaves an item of the default as it states it under `populate: never`, as it leaves a row', () => {
         const schema: RJSFSchema = { type: 'array', default: [{}], items: item };
         const fillNever = (formData?: unknown) =>
