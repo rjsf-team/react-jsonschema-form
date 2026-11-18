@@ -372,7 +372,8 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Returns an option as scoring reads it: a schema `retrieveSchema()` handed out as it stands, and any other through
  * the plan of the subschema it stands for, where `where` says or else where `retrieveSchema()` would read it, with the
- * extra keys of `formData` that its own `additionalProperties` takes stubbed among its `properties`, as the option
+ * extra keys of `formData` that its own `additionalProperties` or `patternProperties` takes stubbed among its
+ * `properties`, as the option
  * handed out for that data, which a field shows, holds them
  */
 function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
@@ -387,14 +388,15 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const plan = planAt<S, F>(context, where ?? whereOf<S>(option, rootSchema));
   const { schema } = plan;
-  // shortcut: retrieval also stubs the keys a `patternProperties` alone or an absent keyword under
-  // `additionalPropertiesWhenAbsent: 'allow'` takes, which still score as nothing here, an option with an `allOf`,
+  // shortcut: retrieval also stubs the keys an absent keyword under `additionalPropertiesWhenAbsent: 'allow'` takes,
+  // which still score as nothing here, an option with an `allOf`,
   // `if` or `dependencies` is not stubbed at all, since retrieval may declare a key through them that a stub here would
   // score by its guessed type, and an option handed out above without being retrieved for the data is scored without
   // stubs; upgrade once the matcher reads its "none of these" rules off the retrieved option. Data holding no extra key
   // is left as it is, since the copy would hold an empty `properties`, which scores apart from none
   if (
-    (additionalPropertiesKeyword<S>(schema) ?? false) === false ||
+    (Object.keys(schema.patternProperties ?? {}).length === 0 &&
+      (additionalPropertiesKeyword<S>(schema) ?? false) === false) ||
     // The plan merges `dependencies` away without data, so its chains, not its schema, say which ones it declares
     plan.chains.some((chain) => [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY].some((keyword) => chain.has(keyword))) ||
     extraKeysOf<S>(schema, schema, undefined, formData).length === 0

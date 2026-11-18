@@ -101,7 +101,7 @@ describe('matching options through the schema graph', () => {
     expect(getFirstMatchingOption({ validator: miniValidator() }, { s_a: 'x' }, oneOf, rootSchema)).toBe(1);
   });
   // A validator failing every option leaves the pick to the score (#5832)
-  describe('scores the extra keys an additionalProperties takes as the options retrieved for the data do', () => {
+  describe('scores the extra keys an additionalProperties or patternProperties takes as the options retrieved for the data do', () => {
     const validator = { ...miniValidator(), isValid: () => false };
     const takesExtraKeys: RJSFSchema[] = [
       { additionalProperties: false },
@@ -109,6 +109,19 @@ describe('matching options through the schema graph', () => {
     ];
     it.each<[string, RJSFSchema[], object, number]>([
       ['above an option naming no properties', takesExtraKeys, { t: 2 }, 1],
+      [
+        'that a patternProperties alone takes, above an option naming no properties',
+        [
+          { additionalProperties: false },
+          {
+            properties: { q: { default: 'b' } },
+            patternProperties: { '^t': { type: 'number' } },
+            additionalProperties: false,
+          },
+        ],
+        { t: 2 },
+        1,
+      ],
       [
         'tying with a property the data leaves out',
         [{ required: ['p'], additionalProperties: {} }, { properties: { p: { type: 'null' } } }],
