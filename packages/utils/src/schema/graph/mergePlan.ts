@@ -121,7 +121,7 @@ export interface OptionChoice {
 export interface OptionRequest<S extends StrictRJSFSchema = RJSFSchema> extends Omit<OptionChoice, 'selected'> {
   readonly graph: SchemaGraph<S>;
   readonly data: unknown;
-  /** The data the plan's `dependencies` qualify against */
+  /** The data the plan's `dependencies` qualify against and its `if`s are checked against, see `PlanInput.depData` */
   readonly depData: unknown;
 }
 
@@ -923,10 +923,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     const conditionNode = this.graph.node(condition);
     // A boolean `if` holds or fails whatever the data, which needs no validator to say, nor a precompiled one to have a
-    // function for the schema it reads as
+    // function for the schema it reads as. An `if` is known by the schema holding it, whose branches it selects: one
+    // shared by several schemas is decided for each, as a fill may fix it for one whose branches take it back alone
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(`if:${condition}`, targetOf(this.graph, condition))
+        ? this.holds(`if:${conditionProvider.node.id}`, targetOf(this.graph, condition))
         : conditionNode.kind !== 'boolean' || conditionNode.value;
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);
@@ -1145,9 +1146,11 @@ function isPlanOf<S extends StrictRJSFSchema>(
 
 /** Builds the merge plan of the field `input.seeds` seed, memoized per seeds, data, policy and context: the same
  * inputs give the same plan object while the data is the last the plan was built for, and a plan whose build read
- * nothing of the data is the same object for any data. A check of an `if` or a dependency condition is memoized per
- * node for the last data it was made on, so a parent's lookahead and the child's own build do not check the same
- * condition twice, unless the data is an object, which is checked again on every build.
+ * nothing of the data is the same object for any data. The `if`s and dependency conditions are checked against the
+ * dependency data, see `checkCondition()`: a check is memoized per condition for the last data it was made on, so a
+ * parent's lookahead and the child's own build do not check the same condition twice. Where that data is an object,
+ * only a copy `ownedDepData()` made is memoized, by its identity, which is why its holder must not mutate it; another
+ * object is checked again on every build.
  *
  * @param input - The graph, seeds, data, policy and context of the field
  * @returns - The field's merge plan

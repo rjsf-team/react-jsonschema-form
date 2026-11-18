@@ -14172,6 +14172,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(fill(twoConditions, filled)).toEqual(filled);
         });
 
+        it.each([
+          { order: 'after', reversed: false },
+          { order: 'before', reversed: true },
+        ])(
+          'fills the branch the settled default selects for a condition $order the one taking it back',
+          ({ reversed }) => {
+            // Both entries share one `if`, which flips with `k`, but only `takingBack`'s branches take back the `k`
+            // that selects them; `following` reads the `k` the fill settles on
+            const kIsX: RJSFSchema = { properties: { k: { const: 'x' } }, required: ['k'] };
+            const takingBack: RJSFSchema = {
+              if: kIsX,
+              then: { properties: { k: { default: 'y' } } },
+              else: { properties: { k: { default: 'x' } } },
+            };
+            const following: RJSFSchema = {
+              if: kIsX,
+              then: { properties: { t: { type: 'number', default: 1 } } },
+              else: { properties: { e: { type: 'number', default: 2 } } },
+            };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              allOf: reversed ? [following, takingBack] : [takingBack, following],
+            };
+            const filled = fill(schema, {});
+            expect(filled).toEqual({ k: 'x', t: 1 });
+            expect(fill(schema, filled)).toEqual(filled);
+          },
+        );
+
         it('fills the branch the data alone selects for a condition of a string field', () => {
           const stringField: RJSFSchema = {
             type: 'object',

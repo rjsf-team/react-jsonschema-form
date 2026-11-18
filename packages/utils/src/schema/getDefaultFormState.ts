@@ -813,9 +813,7 @@ function fieldPasses<S extends StrictRJSFSchema, F extends FormContextType>(
       retrievals ??= new KeyedMemo<S>();
       return retrievals.get([owner, slot, depData], () => {
         const root = parseSchemaGraph<S>(rootSchema);
-        const { schema, plan } = retrieveFieldFor<S, F>(context, root, fieldOf<S>(root, raw), data, depData);
-        retrievedPlans.push(plan);
-        return schema;
+        return retrieveRead<S, F>(context, root, fieldOf<S>(root, raw), data, depData, retrievedPlans);
       });
     },
     retrievedViewOf(view) {
@@ -1214,8 +1212,10 @@ interface FieldPass<S extends StrictRJSFSchema> {
  * so a default decides them as the same value in the data does. The passes end once the defaults of a pass decide what
  * it was planned with. A condition can flip from pass to pass, a branch taking back the default that selects it, and
  * then no pass ends them: once a pass would decide as an earlier one did, each condition that flipped since is decided
- * by the data alone, and the passes go on to settle the others. Where anything else flipped, the field's data is no
- * object, or the passes outnumber the decisions of the last one, the field is computed as its data alone decides it.
+ * by the data alone, and the passes go on to settle the others. Once they settle, each such condition but the last is
+ * decided by the defaults again where the passes still settle, as one that flipped only because it reads the default
+ * of another does. Where anything else flipped, the field's data is no object, or the passes outnumber the decisions
+ * of the last one, the field is computed as its data alone decides it.
  * A child computed in an earlier pass from the same inputs is not computed again.
  */
 function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -1311,55 +1311,24 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
     return decisions;
   };
-  const first = fold(data);
-  // The conditions decided by the data alone, as the first pass decided them, whatever the defaults
-  let fixed: FixedCondition<S>[] = [];
-  const fixedKeys = new Set<string>();
-  // What each pass since the last condition was fixed was planned with, in order, by its key
-  let seen = new Map<string, Decisions>();
-  // What to do once the passes would decide as an earlier one did: those since then decide alike but for the
-  // conditions that flip from pass to pass, each a branch taking back the default that selects it, which are fixed
-  // as the data alone decides them for the passes to settle the rest. Should anything else flip, or nothing new be
-  // fixed, the field is computed as its data alone decides it
-  const fixFlipping = (repeated: string, depData: unknown): FieldPass<S> | undefined => {
-    const cycle = [...seen.values()].slice([...seen.keys()].indexOf(repeated));
-    const flipping = [...cycle[0].keys()].filter(
-      (key) =>
-        !fixedKeys.has(key) &&
-        cycle.every((decisions) => decisions.has(key)) &&
-        cycle.some((decisions) => decisions.get(key) !== cycle[0].get(key)),
-    );
-    const added: FixedCondition<S>[] = [];
-    for (const key of flipping) {
-      const condition = conditions.get(key);
-      if (condition === undefined) {
-        return undefined;
+  // How the passes from `start` end, each condition of `fixed` decided as fixed: on a pass whose defaults decide what
+  // it was planned with, or once a pass would decide as an earlier one did, with what each pass since decided and the
+  // data the next would be planned for. Past the pass cap, no pass since is known to repeat
+  const passesFrom = (start: FieldPass<S>, fixed: readonly FixedCondition<S>[]): PassesEnd<S> => {
+    const seen = new Map<string, Decisions>();
+    const cycleFrom = (key: string, depData: unknown) => ({
+      cycle: [...seen.values()].slice([...seen.keys()].indexOf(key)),
+      depData,
+    });
+    for (let count = 1, pass = start; ; count += 1) {
+      const planned = decisionsOf(pass.readers, pass.depData, false);
+      if (planned.size === 0) {
+        return { settled: pass };
       }
-      fixedKeys.add(key);
-      const { graph, checked } = condition;
-      added.push({
-        graph,
-        key: checked.key,
-        satisfied: checkCondition(context, graph, checked.key, checked.condition, data),
-      });
-    }
-    if (added.length === 0) {
-      return undefined;
-    }
-    fixed = [...fixed, ...added];
-    seen = new Map();
-    return fold(ownedDepData(depData, fixed));
-  };
-  let pass = first;
-  for (let count = 1; ; count += 1) {
-    const planned = decisionsOf(pass.readers, pass.depData, false);
-    if (planned.size === 0) {
-      return kept(pass);
-    }
-    const plannedKey = keyOfDecisions(planned);
-    let repeated: string | undefined = plannedKey;
-    let { depData } = pass;
-    if (!seen.has(plannedKey)) {
+      const plannedKey = keyOfDecisions(planned);
+      if (seen.has(plannedKey)) {
+        return cycleFrom(plannedKey, pass.depData);
+      }
       seen.set(plannedKey, planned);
       // Merged into the data, the defaults are the data as the fill leaves it at every level, a nested default beside
       // the data of its object and one replacing data the field doesn't take included, which a fill of that data
@@ -1376,28 +1345,75 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       const shared = replaceEqualDeep(plannedFor, filled ?? {});
       const redecides = shared !== plannedFor;
       const next = redecides ? ownedDepData(shared, fixed) : shared;
-      depData = filled === undefined || filled === null ? filled : next;
+      const depData = filled === undefined || filled === null ? filled : next;
       const decisionsKey = keyOfDecisions(decisionsOf(pass.readers, depData, redecides));
       if (decisionsKey === plannedKey) {
-        return kept(pass);
+        return { settled: pass };
       }
-      repeated = seen.has(decisionsKey) ? decisionsKey : undefined;
-      if (repeated === undefined && count > planned.size) {
-        return kept(first);
+      if (seen.has(decisionsKey)) {
+        return cycleFrom(decisionsKey, depData);
       }
-    }
-    if (repeated === undefined) {
+      if (count > planned.size) {
+        return { cycle: [], depData };
+      }
       pass = fold(depData);
-    } else {
-      const settling = fixFlipping(repeated, depData);
-      if (settling === undefined) {
+    }
+  };
+  const first = fold(data);
+  // The conditions decided by the data alone, as the first pass decided them, whatever the defaults, by decision
+  const fixed = new Map<string, FixedCondition<S>>();
+  let end = passesFrom(first, []);
+  // The passes since the one a pass would repeat decide alike but for what flips from pass to pass. Each condition
+  // that flips is fixed as the data alone decides it, for the passes to settle the rest. Should anything else flip, or
+  // nothing new, the field is computed as its data alone decides it
+  while (!('settled' in end)) {
+    const { cycle, depData } = end;
+    const flipping = [...new Set(cycle.flatMap((decisions) => [...decisions.keys()]))].filter(
+      (key) =>
+        !fixed.has(key) &&
+        cycle.every((decisions) => decisions.has(key)) &&
+        cycle.some((decisions) => decisions.get(key) !== cycle[0].get(key)),
+    );
+    if (flipping.length === 0) {
+      return kept(first);
+    }
+    for (const key of flipping) {
+      const condition = conditions.get(key);
+      if (condition === undefined) {
         return kept(first);
       }
-      pass = settling;
-      count = 0;
+      const { graph, checked } = condition;
+      const satisfied = checkCondition(context, graph, checked.key, checked.condition, data);
+      fixed.set(key, { graph, key: checked.key, satisfied });
+    }
+    const all = [...fixed.values()];
+    end = passesFrom(fold(ownedDepData(depData, all)), all);
+  }
+  // A condition may flip only as it reads the default of one that takes it back, and settle once that one is fixed:
+  // each fixed condition is decided by the defaults again where the passes then settle with the others fixed. The last
+  // one is kept, since with none fixed the passes cycled
+  let { settled } = end;
+  for (const [key, condition] of fixed) {
+    if (fixed.size === 1) {
+      break;
+    }
+    const others = [...fixed.values()].filter((other) => other !== condition);
+    const released = passesFrom(fold(ownedDepData(settled.depData, others)), others);
+    if ('settled' in released) {
+      fixed.delete(key);
+      settled = released.settled;
     }
   }
+  return kept(settled);
 }
+
+/** How the passes of a field's fixed point end: on the pass whose defaults decide what it was planned with, or in a
+ * cycle, with what each pass of it decided, none where the passes outnumbered the decisions, and the data the next
+ * pass would be planned for
+ */
+type PassesEnd<S extends StrictRJSFSchema> =
+  | { readonly settled: FieldPass<S> }
+  | { readonly cycle: readonly Decisions[]; readonly depData: unknown };
 
 /** A decision a plan made from its dependency data: whether a condition held, a set of `dependencies` qualified or
  * there was data, or the option chosen of a list
@@ -3320,12 +3336,26 @@ function mergedSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   if (merged.schema === undefined || merged.context !== context) {
     const field = fieldOfView<S>(view);
     const root = parseSchemaGraph<S>(field.graph.rawRoot);
-    const { schema, plan } = retrieveFieldFor<S, F>(context, root, field, view.data, view.depData);
-    merged.schema = schema;
+    merged.schema = retrieveRead<S, F>(context, root, field, view.data, view.depData, (merged.readers ??= []));
     merged.context = context;
-    (merged.readers ??= []).push(plan);
   }
   return merged.schema;
+}
+
+/** Returns `field` as `retrieveFieldFor()` retrieves it in `root`, and adds the plan of the retrieve to `readers`: the
+ * fixed point of the field reads what every retrieve made for it decided, as it reads what its own plan decided
+ */
+function retrieveRead<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  root: SchemaGraph<S>,
+  field: Provenance<S>,
+  data: unknown,
+  depData: unknown,
+  readers: Reader<S>[],
+): S {
+  const { schema, plan } = retrieveFieldFor<S, F>(context, root, field, data, depData);
+  readers.push(plan);
+  return schema;
 }
 
 /** The schema whose `const` the field `view` stands for takes: the merged one where `mergedConstSchemaOf()` gives one,
