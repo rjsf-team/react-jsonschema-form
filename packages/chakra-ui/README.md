@@ -117,7 +117,7 @@ And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize th
     "chakra": {
       "p": "1rem",
       "color": "blue.200",
-      "sx": {
+      "css": {
         "margin": "0 auto"
       }
     }

@@ -73,14 +73,14 @@ yarn add @rjsf/react-bootstrap
 ## Usage
 
 ```js
-import Form from 'packages/react-bootstrap';
+import Form from '@rjsf/react-bootstrap';
 ```
 
 or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as BootstrapTheme } from 'packages/react-bootstrap';
+import { Theme as BootstrapTheme } from '@rjsf/react-bootstrap';
 
 const Form = withTheme(BootstrapTheme);
 ```

@@ -67,7 +67,7 @@ import Form from '../src';
 
 arrayTests(Form); // OR
 // formTests(Form);
-// gridTests(Form);
+// gridTests(Form, gridOptions); // gridOptions: your GridTemplate's column props for each width, see GridRenderCustomOptions
 // objectTests(Form);
 ```
 

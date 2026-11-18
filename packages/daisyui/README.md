@@ -91,7 +91,6 @@ It's necessary to explicitely include the library as a source, as tailwindcss by
 The DaisyUI theme supports the standard RJSF layout grid system. You can use grid layouts by incorporating the `LayoutGridField` in your UI schema:
 
 ```jsx
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import Form from '@rjsf/daisyui';
 import validator from '@rjsf/validator-ajv8';
 
@@ -116,15 +115,13 @@ const uiSchema = {
             children: [
               {
                 'ui:col': {
-                  xs: 12,
-                  sm: 6,
+                  span: 6,
                   children: ['firstName'],
                 },
               },
               {
                 'ui:col': {
-                  xs: 12,
-                  sm: 6,
+                  span: 6,
                   children: ['lastName'],
                 },
               },
@@ -136,15 +133,13 @@ const uiSchema = {
             children: [
               {
                 'ui:col': {
-                  xs: 12,
-                  sm: 6,
+                  span: 6,
                   children: ['email'],
                 },
               },
               {
                 'ui:col': {
-                  xs: 12,
-                  sm: 6,
+                  span: 6,
                   children: ['phone'],
                 },
               },
@@ -208,13 +203,14 @@ git clone https://github.com/rjsf-team/react-jsonschema-form.git
 cd react-jsonschema-form
 
 # Install dependencies
-npm install
+pnpm install
 
 # Build packages
-npm run build
+pnpm run build
 
 # Run playground
-npm run start:playground
+cd packages/playground
+pnpm start
 ```
 
 To test the DaisyUI theme specifically, select it from the themes dropdown in the playground.
