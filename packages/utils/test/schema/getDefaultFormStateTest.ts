@@ -200,6 +200,73 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         },
       );
     });
+    describe('the extra keys of an object const or default, seeded through the schema that describes each (#5819)', () => {
+      const fill = (schema: RJSFSchema, formData?: unknown, behavior?: DefaultFormStateBehavior, generated = false) =>
+        getDefaultFormState(
+          { validator: testValidator, defaultFormStateBehavior: behavior },
+          { schema, formData, initialDefaultsGenerated: generated },
+        );
+      const patterned: RJSFSchema = { type: 'object', patternProperties: { '^x': { type: 'number' } } };
+      const unevaluated: RJSFSchema = { type: 'object', unevaluatedProperties: { type: 'number' } };
+      describe.each([
+        ['forbids', {}],
+        ['allows', { additionalPropertiesWhenAbsent: 'allow' as const }],
+      ])('where the context %s extra keys', (_name, absent) => {
+        const fillIn = (schema: RJSFSchema, formData?: unknown, generated = false) =>
+          getDefaultFormState(
+            { validator: testValidator, ...absent },
+            { schema, formData, initialDefaultsGenerated: generated },
+          );
+        it('seeds the keys of a const or default where only patternProperties or unevaluatedProperties take extra keys', () => {
+          expect(fillIn({ ...patterned, const: { x1: 1 } })).toStrictEqual({ x1: 1 });
+          expect(fillIn({ ...patterned, default: { x1: 1 } })).toStrictEqual({ x1: 1 });
+          expect(fillIn({ ...unevaluated, const: { a: 1 } })).toStrictEqual({ a: 1 });
+          expect(fillIn({ ...unevaluated, default: { a: 1 } })).toStrictEqual({ a: 1 });
+        });
+        it('seeds no key of a default once the defaults were generated, nor beside the extra keys the data holds, as additionalProperties seeds none', () => {
+          const additional: RJSFSchema = { type: 'object', additionalProperties: { type: 'number' } };
+          for (const open of [additional, patterned, unevaluated]) {
+            const schema: RJSFSchema = { ...open, default: { x1: 1 } };
+            expect(fillIn(schema, {}, true)).toStrictEqual({});
+            const nested: RJSFSchema = { type: 'object', properties: { o: schema } };
+            expect(fillIn(nested, { o: { x2: 5 } })).toStrictEqual({ o: { x2: 5 } });
+            expect(fillIn(nested, { o: {} })).toStrictEqual({ o: { x1: 1 } });
+          }
+        });
+      });
+      it('folds a key a pattern matches through that pattern, even beside additionalProperties', () => {
+        const patternDefault: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^x': { type: 'number', default: 7 } },
+        };
+        const besideAdditional: RJSFSchema = {
+          ...patternDefault,
+          additionalProperties: { type: 'number', default: 6 },
+        };
+        expect(fill({ ...patternDefault, default: { x1: 1 } })).toStrictEqual({ x1: 7 });
+        expect(
+          fill({ ...patternDefault, default: { x1: 1 } }, undefined, { nestedDefaultsPrecedence: 'ancestorWins' }),
+        ).toStrictEqual({ x1: 1 });
+        expect(fill({ ...besideAdditional, default: { x1: 1, y: 2 } })).toStrictEqual({ x1: 7, y: 6 });
+        // The `const` wins over the pattern's `default` as over any other
+        expect(fill({ ...besideAdditional, const: { x1: 1 } })).toStrictEqual({ x1: 1 });
+      });
+      it('folds a key no pattern matches through unevaluatedProperties, and seeds none the object rejects', () => {
+        const unevaluatedDefault: RJSFSchema = {
+          type: 'object',
+          unevaluatedProperties: { type: 'number', default: 4 },
+          default: { a: 1 },
+        };
+        const closedBeside: RJSFSchema = {
+          ...patterned,
+          additionalProperties: false,
+          default: { x1: 1, y: 2 },
+        };
+        expect(fill(unevaluatedDefault)).toStrictEqual({ a: 4 });
+        expect(fill({ ...unevaluatedDefault, unevaluatedProperties: true })).toStrictEqual({ a: 1 });
+        expect(fill(closedBeside)).toStrictEqual({ x1: 1 });
+      });
+    });
     describe('an object const naming keys no property declares', () => {
       const constProperty: RJSFSchema = { type: 'object', const: { a: 2 } };
       const withParentDefault: RJSFSchema = {
@@ -285,7 +352,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             utils(nested).getDefaultFormState(nested, data, false, false, initialValue({ b: 5, z: 9 })),
           ).toStrictEqual({ x: { c: 3, b: 5 } });
         });
-        it('seeds no key of the const where patternProperties or unevaluatedProperties let the user add, remove or rename keys', () => {
+        it('seeds the keys of the const where patternProperties or unevaluatedProperties take extra keys, as additionalProperties does (#5819)', () => {
           const patterned: RJSFSchema = {
             type: 'object',
             patternProperties: { '^x': { type: 'number' } },
@@ -296,10 +363,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             unevaluatedProperties: { type: 'number' },
             const: { a: 1 },
           };
-          expect(utils(patterned).getDefaultFormState(patterned, {})).toStrictEqual({});
-          expect(utils(patterned).getDefaultFormState(patterned, { x2: 1 })).toStrictEqual({ x2: 1 });
+          expect(utils(patterned).getDefaultFormState(patterned, {})).toStrictEqual({ x1: 1 });
+          expect(utils(patterned).getDefaultFormState(patterned, { x2: 1 })).toStrictEqual({ x2: 1, x1: 1 });
           expect(utils(patterned).getDefaultFormState(patterned, {}, false, true)).toStrictEqual({});
-          expect(utils(unevaluated).getDefaultFormState(unevaluated, {})).toStrictEqual({});
+          expect(utils(unevaluated).getDefaultFormState(unevaluated, {})).toStrictEqual({ a: 1 });
         });
         it('fills the keys of a const that closes the object whatever the data holds, and once the defaults were generated', () => {
           const two: RJSFSchema = { type: 'object', const: { a: 1, b: 2 } };

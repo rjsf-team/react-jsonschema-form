@@ -1,4 +1,8 @@
-import { absentKeywordAllows, allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
+import {
+  absentKeywordAllows,
+  allowsAdditionalProperties,
+  getAdditionalPropertySchema,
+} from '../additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -16,6 +20,7 @@ import {
   THEN_KEY,
   UI_DEFINITIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
@@ -2600,14 +2605,36 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     absentKeywordAllows<S, F>(context, extraKeysField) || extraKeysField.additionalProperties;
   const additionalProperties =
     extraKeysField !== view.schema ? passes.shareExtraKeySchema(ownAdditionalProperties) : ownAdditionalProperties;
+  // An extra key is folded through the schema the field renders it with, as `getAdditionalPropertySchema()` picks it:
+  // the patterns its name matches, else `additionalProperties`, else `unevaluatedProperties`. A key the object rejects
+  // has no field
+  const extraKeyChild = (seeding: DefaultsView<S>, key: string) => {
+    if (getAdditionalPropertySchema<S>(extraKeysField, key) === false) {
+      return undefined;
+    }
+    const patterned = childSeeds(seeding, key);
+    const keyword =
+      extraKeysField.additionalProperties === undefined && UNEVALUATED_PROPERTIES_KEY in extraKeysField
+        ? UNEVALUATED_PROPERTIES_KEY
+        : ADDITIONAL_PROPERTIES_KEY;
+    // as per spec additionalProperties may be either schema or boolean
+    return patterned.edge === 'patternKey'
+      ? defaultsChild(seeding, patterned.seeds, patterned.edge, emptySchema<S>())
+      : defaultsChild(
+          seeding,
+          seedsAt(seeding, keyword),
+          'additionalKey',
+          isObject(additionalProperties) ? additionalProperties : emptySchema<S>(),
+        );
+  };
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
   // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or
   // renames one, so the guards that keep a key the user removed or renamed from coming back don't hold back the keys the
-  // `const` names. Where only a `patternProperties` or `unevaluatedProperties` takes extra keys, the object isn't closed,
-  // and the extra-key branch below runs for an `additionalProperties` alone, so the `const`'s keys aren't seeded. A
-  // `ui:initialValue` takes priority over the `const` as the object's default, so beside one only the keys of the
-  // `const` it gives are seeded, read from it on the first pass, the one it is the default of, as a declared key is.
-  // Only a key the defaults hold has a value to seed
+  // `const` names. Where a `patternProperties` or `unevaluatedProperties` takes extra keys, the object isn't closed, and
+  // the extra-key branch below seeds the `const`'s keys as it seeds a `default`'s. A `ui:initialValue` takes priority
+  // over the `const` as the object's default, so beside one only the keys of the `const` it gives are seeded, read from
+  // it on the first pass, the one it is the default of, as a declared key is. Only a key the defaults hold has a value
+  // to seed
   const closingConst = objectConst && closingConstOf<S, F>(context, extraKeysField, objectConst);
   const readsInitialValue = closingConst && getUiOptions<T, S, F>(uiSchema).initialValue !== undefined;
   const constDefaults =
@@ -2640,7 +2667,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         value !== undefined,
       );
     }
-  } else if (additionalProperties && !initialDefaultsGenerated) {
+  } else if (!initialDefaultsGenerated && allowsAdditionalProperties<S, F>(context, extraKeysField)) {
     const formDataRequired = Object.keys(formData).filter((key) => !isComputed(key));
     // Only seed keys from schema defaults when formData has no additionalProperties of its own.
     // If the user already has data (e.g. after a key rename), injecting default keys would
@@ -2653,16 +2680,14 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const keys = new Set([...formDataRequired, ...seeded.filter((key) => !isComputed(key))]);
     const seeding = extraKeySeeding();
     [...keys].filter(isPinned).forEach((key) => {
+      const child = extraKeyChild(seeding, key);
+      if (child === undefined) {
+        return;
+      }
       const { value, holdsNull } = foldReporting(
         context,
         `additional:${key}`,
-        // as per spec additionalProperties may be either schema or boolean
-        defaultsChild(
-          seeding,
-          seedsAt(seeding, ADDITIONAL_PROPERTIES_KEY),
-          'additionalKey',
-          isObject(additionalProperties) ? additionalProperties : emptySchema<S>(),
-        ),
+        child,
         // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
         // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
         childProps(key, ADDITIONAL_PROPERTIES_KEY),
