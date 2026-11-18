@@ -252,7 +252,7 @@ export function retrieveField<S extends StrictRJSFSchema, F extends FormContextT
   field: Provenance<S>,
   data?: unknown,
 ): S {
-  return buildView<S, F>(context, parseSchemaGraph<S>(field.graph.rawRoot), field, data, false);
+  return retrieveFieldFor<S, F>(context, parseSchemaGraph<S>(field.graph.rawRoot), field, data, data).schema;
 }
 
 /** `retrieveField()` with its conditions, `dependencies` and the options they bring decided by `depData`, with the plan

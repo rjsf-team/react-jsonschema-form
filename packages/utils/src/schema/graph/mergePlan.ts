@@ -212,11 +212,61 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
 const conditionMemo = new KeyedMemo<boolean>();
 
-/** Whether `data` satisfies `condition`, a condition of `graph` the memo knows by `key`. A check of data that is no
- * object is memoized for the last data it was made on. One of an object is not, since a caller may mutate the object
- * in place between checks
+/** How the conditions checked against dependency data a fill of the defaults copied for itself are decided, by the
+ * copy: each the fill fixed, under its graph and key, as fixed, and each other, under the validator too, as the
+ * validator first checked it
  */
-function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
+const ownedDecisions = new WeakMap<object, KeyedMemo<boolean>>();
+
+/** A condition a fill decides as `satisfied`, whatever the data */
+export interface FixedCondition<S extends StrictRJSFSchema = RJSFSchema> {
+  readonly graph: SchemaGraph<S>;
+  readonly key: string;
+  readonly satisfied: boolean;
+}
+
+/** Returns a shallow copy of the object or array `depData`, against which each condition is checked once, and each of
+ * `fixed` is decided as fixed. Only the caller holds the copy, and it must neither mutate it nor hand it out: nothing
+ * can then change it between checks, so they are memoized by its identity. Other data is returned as it is, its checks
+ * memoized by value already
+ *
+ * @param depData - The dependency data to copy
+ * @param fixed - The conditions decided whatever the data
+ * @returns - The copy, or `depData` where it is no object or array
+ */
+export function ownedDepData<S extends StrictRJSFSchema>(
+  depData: unknown,
+  fixed: readonly FixedCondition<S>[],
+): unknown {
+  let copy: object;
+  if (Array.isArray(depData)) {
+    copy = Array.from<unknown>(depData);
+  } else if (isObject(depData)) {
+    copy = { ...depData };
+  } else {
+    return depData;
+  }
+  const decisions = new KeyedMemo<boolean>();
+  for (const { graph, key, satisfied } of fixed) {
+    decisions.set([graph, key], satisfied);
+  }
+  ownedDecisions.set(copy, decisions);
+  return copy;
+}
+
+/** Returns whether `data` satisfies `condition`, a condition of `graph` the memo knows by `key`. A check of data that
+ * is no object is memoized for the last data it was made on. One of an object is memoized only for a copy
+ * `ownedDepData()` made, which also decides the conditions fixed for it; another object is checked on every call,
+ * since a caller may mutate it in place between checks
+ *
+ * @param context - The `SchemaContext` whose validator checks the condition
+ * @param graph - The graph the condition is a node of
+ * @param key - The key the memo knows the condition by, see `CheckedCondition`
+ * @param condition - The condition
+ * @param data - The data to check it against
+ * @returns - Whether the condition holds
+ */
+export function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
   key: string,
@@ -224,7 +274,9 @@ function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   data: unknown,
 ): boolean {
   if (typeof data === 'object' && data !== null) {
-    return context.validator.isValid(condition, data, graph.rawRoot);
+    const owned = ownedDecisions.get(data);
+    const check = () => context.validator.isValid(condition, data, graph.rawRoot);
+    return owned ? (owned.peek([graph, key]) ?? owned.get([context.validator, graph, key], check)) : check();
   }
   const keys = [context.validator, graph, key];
   const memoized = conditionMemo.peekLatest(keys, [data]);
@@ -236,23 +288,6 @@ function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   const holds = context.validator.isValid(condition, data ?? {}, graph.rawRoot);
   conditionMemo.setLatest(keys, [data], holds);
   return holds;
-}
-
-/** Whether `data` satisfies a condition a plan checked, checked as the plan checked it
- *
- * @param context - The `SchemaContext` whose validator checks the condition
- * @param graph - The graph of the plan that checked it
- * @param checked - The condition as the plan checked it
- * @param data - The data to check it against
- * @returns - Whether the condition holds
- */
-export function conditionHolds<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  graph: SchemaGraph<S>,
-  { key, condition }: CheckedCondition<S>,
-  data: unknown,
-): boolean {
-  return checkCondition(context, graph, key, condition, data);
 }
 
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new

@@ -14148,6 +14148,67 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(filled).toEqual({ a: 'e', t: 1 });
           expect(fill(schema, filled)).toEqual(filled);
         });
+
+        it('fills the branch a default selects for every other condition of the field', () => {
+          // The first entry takes back the default of `k` that selects it, which leaves the default of `m` to decide
+          // the second entry
+          const twoConditions: RJSFSchema = {
+            type: 'object',
+            properties: { k: { type: 'string' }, m: { type: 'string', default: 'x' } },
+            allOf: [
+              {
+                if: { properties: { k: { const: 'x' } }, required: ['k'] },
+                then: { properties: { k: { default: 'y' } } },
+                else: { properties: { k: { default: 'x' } } },
+              },
+              {
+                if: { properties: { m: { const: 'x' } }, required: ['m'] },
+                then: { properties: { t: { type: 'number', default: 2 } } },
+              },
+            ],
+          };
+          const filled = fill(twoConditions, {});
+          expect(filled).toEqual({ k: 'x', m: 'x', t: 2 });
+          expect(fill(twoConditions, filled)).toEqual(filled);
+        });
+
+        it('fills the branch the data alone selects for a condition of a string field', () => {
+          const stringField: RJSFSchema = {
+            type: 'object',
+            properties: { s: { type: 'string', if: { const: 'x' }, then: { default: 'y' }, else: { default: 'x' } } },
+          };
+          expect(fill(stringField, {})).toEqual({ s: 'x' });
+        });
+
+        it('fills the option the data alone matches where an option takes back the default that matches it', () => {
+          const options: RJSFSchema = {
+            type: 'object',
+            properties: { k: { type: 'string', default: 'x' } },
+            dependencies: { z: ['k'] },
+            oneOf: [
+              { properties: { k: { enum: ['x'], default: 'y' } }, required: ['k'] },
+              { properties: { k: { enum: ['y'], default: 'x' } }, required: ['k'] },
+            ],
+          };
+          expect(fill(options, {})).toEqual({ k: 'y' });
+        });
+
+        it('fills the branch the data alone selects once the passes outnumber the decisions, each deciding otherwise', () => {
+          // The passes select the branches of `a` and `b` failing both, then `a`'s alone, then `b`'s alone, and stop
+          // there, before the branch of both, which its own defaults select
+          const branch = (a: string, b: string): RJSFSchema => ({
+            properties: { a: { default: a }, b: { default: b } },
+          });
+          const bIsOne: RJSFSchema = { properties: { b: { const: '1' } }, required: ['b'] };
+          const twoBits: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' }, b: { type: 'string' } },
+            if: { properties: { a: { const: '1' } }, required: ['a'] },
+            then: { if: bIsOne, then: branch('1', '1'), else: branch('2', '1') },
+            else: { if: bIsOne, then: branch('1', '1'), else: branch('1', '2') },
+          };
+          expect(fill(twoBits, {})).toEqual({ a: '1', b: '2' });
+        });
       });
     });
   });

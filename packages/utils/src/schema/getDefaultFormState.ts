@@ -72,13 +72,14 @@ import { typeAllows } from './getFirstMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
-  conditionHolds,
+  checkCondition,
   asTarget,
   cachedPolicy,
   childSeeds,
   declaresKeyword,
   emptySchema,
   ownChains,
+  ownedDepData,
   seedsAt,
   seedsKey,
   tupleSeeds,
@@ -86,6 +87,7 @@ import buildPlan, {
 } from './graph/mergePlan.ts';
 import type {
   CheckedCondition,
+  FixedCondition,
   Keywords,
   MergePlan,
   OptionChoice,
@@ -1210,10 +1212,11 @@ interface FieldPass<S extends StrictRJSFSchema> {
  * its plan or in a retrieve of the field, is planned again while the defaults computed so far, under its data, qualify
  * a set of dependencies, decide a condition or match an option of a list they flag otherwise than it was planned with,
  * so a default decides them as the same value in the data does. The passes end once the defaults of a pass decide what
- * it was planned with. Conditions can flip each other, a branch taking back the default that selects it, and then no
- * pass ends them: once a pass would decide as an earlier one did, or the passes outnumber the decisions of the last
- * one, the field is computed as its data alone decides it. A child computed in an earlier pass from the same inputs is
- * not computed again.
+ * it was planned with. A condition can flip from pass to pass, a branch taking back the default that selects it, and
+ * then no pass ends them: once a pass would decide as an earlier one did, each condition that flipped since is decided
+ * by the data alone, and the passes go on to settle the others. Where anything else flipped, the field's data is no
+ * object, or the passes outnumber the decisions of the last one, the field is computed as its data alone decides it.
+ * A child computed in an earlier pass from the same inputs is not computed again.
  */
 function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1267,55 +1270,146 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       dependencyOption(matchContext, { ...choice, graph: reader.graph, data, depData }, depData)
     );
   };
-  // What `readers` qualify, decide and choose for `depData`, each as its plan did unless `redecides`
-  const decisionsOf = (readers: readonly Reader<S>[], depData: unknown, redecides: boolean) =>
-    readers
-      .flatMap((reader) => [
-        qualifiedDependencies(reader, depData),
-        ...reader.checked.map(
-          (checked) =>
-            `${checked.key}:${redecides ? conditionHolds<S, F>(context, reader.graph, checked, depData) : checked.satisfied}`,
-        ),
-        ...reader.choices
-          .filter(({ dependencies }) => dependencies)
-          .map((choice) => `${choice.provider}:${redecides ? optionFor(reader, choice, depData) : choice.selected}`),
-        reader.present === undefined ? '' : `${redecides ? depData !== undefined : reader.present}`,
-      ])
-      .join(';');
+  // The graphs the readers are plans of, whose places key their decisions, and the conditions among the decisions, by
+  // decision, which the passes may fix
+  const graphs: SchemaGraph<S>[] = [];
+  const conditions = new Map<string, { graph: SchemaGraph<S>; checked: CheckedCondition<S> }>();
+  // What `readers` qualify, decide and choose for `depData`, each as its plan did unless `redecides`, by decision: a
+  // condition, set of `dependencies` or option list several readers met is decided once
+  const decisionsOf = (readers: readonly Reader<S>[], depData: unknown, redecides: boolean): Decisions => {
+    const decisions: Decisions = new Map();
+    const decide = (graph: SchemaGraph<S>, id: string, decision: () => Decision) => {
+      const known = graphs.indexOf(graph);
+      const key = `${known === -1 ? graphs.push(graph) - 1 : known}/${id}`;
+      if (!decisions.has(key)) {
+        decisions.set(key, decision());
+      }
+      return key;
+    };
+    for (const reader of readers) {
+      for (const [node, key] of dependencyKeysOf(reader)) {
+        decide(reader.graph, `d${node}:${key}`, () => getByPath(depData, key) !== undefined);
+      }
+      for (const checked of reader.checked) {
+        const key = decide(reader.graph, `c${checked.key}`, () =>
+          redecides
+            ? checkCondition<S, F>(context, reader.graph, checked.key, checked.condition, depData)
+            : checked.satisfied,
+        );
+        conditions.set(key, { graph: reader.graph, checked });
+      }
+      for (const choice of reader.choices.filter(({ dependencies }) => dependencies)) {
+        // A reader the fold selected the option for decides as selected, whatever another one matched
+        const selection = reader.options?.selections.get(choice.provider);
+        decide(reader.graph, `o${choice.provider}:${selection ?? ''}`, () =>
+          redecides ? optionFor(reader, choice, depData) : choice.selected,
+        );
+      }
+      if (reader.present !== undefined) {
+        decide(reader.graph, 'p', () => (redecides ? depData !== undefined : reader.present));
+      }
+    }
+    return decisions;
+  };
   const first = fold(data);
-  const seen = new Set<string>();
-  for (let count = 1, pass = first; ; count += 1) {
-    const decisionCount = pass.readers.reduce((total, reader) => total + decisionCountOf(reader), 0);
-    if (decisionCount === 0) {
-      return kept(pass);
+  // The conditions decided by the data alone, as the first pass decided them, whatever the defaults
+  let fixed: FixedCondition<S>[] = [];
+  const fixedKeys = new Set<string>();
+  // What each pass since the last condition was fixed was planned with, in order, by its key
+  let seen = new Map<string, Decisions>();
+  // What to do once the passes would decide as an earlier one did: those since then decide alike but for the
+  // conditions that flip from pass to pass, each a branch taking back the default that selects it, which are fixed
+  // as the data alone decides them for the passes to settle the rest. Should anything else flip, or nothing new be
+  // fixed, the field is computed as its data alone decides it
+  const fixFlipping = (repeated: string, depData: unknown): FieldPass<S> | undefined => {
+    const cycle = [...seen.values()].slice([...seen.keys()].indexOf(repeated));
+    const flipping = [...cycle[0].keys()].filter(
+      (key) =>
+        !fixedKeys.has(key) &&
+        cycle.every((decisions) => decisions.has(key)) &&
+        cycle.some((decisions) => decisions.get(key) !== cycle[0].get(key)),
+    );
+    const added: FixedCondition<S>[] = [];
+    for (const key of flipping) {
+      const condition = conditions.get(key);
+      if (condition === undefined) {
+        return undefined;
+      }
+      fixedKeys.add(key);
+      const { graph, checked } = condition;
+      added.push({
+        graph,
+        key: checked.key,
+        satisfied: checkCondition(context, graph, checked.key, checked.condition, data),
+      });
     }
+    if (added.length === 0) {
+      return undefined;
+    }
+    fixed = [...fixed, ...added];
+    seen = new Map();
+    return fold(ownedDepData(depData, fixed));
+  };
+  let pass = first;
+  for (let count = 1; ; count += 1) {
     const planned = decisionsOf(pass.readers, pass.depData, false);
-    if (seen.has(planned)) {
-      return kept(first);
-    }
-    seen.add(planned);
-    // Merged into the data, the defaults are the data as the fill leaves it at every level, a nested default beside
-    // the data of its object and one replacing data the field doesn't take included, which a fill of that data reads
-    // again, with the `null`s it puts over the data's `undefined`; otherwise the data is merged over them, a default
-    // standing in for a value it lacks
-    const filled: unknown = props.shouldMergeDefaultsIntoFormData
-      ? withNullFills(pass.folded, data, pass.fills)
-      : mergeDefaultsWithFormData(pass.folded, data, false, true);
-    // The plans checked their conditions against their dependency data, `{}` standing in for none, so they decide
-    // alike for data equal to it, as the data of an edit is once it holds the defaults. Data that differs is handed to
-    // the next pass as the copy the comparison built, which shares with this pass's data what the two hold alike
-    const plannedFor: unknown = pass.depData ?? {};
-    const shared = replaceEqualDeep(plannedFor, filled ?? {});
-    const depData = filled === undefined || filled === null ? filled : shared;
-    const decisions = decisionsOf(pass.readers, depData, shared !== plannedFor);
-    if (decisions === planned) {
+    if (planned.size === 0) {
       return kept(pass);
     }
-    if (seen.has(decisions) || count > decisionCount) {
-      return kept(first);
+    const plannedKey = keyOfDecisions(planned);
+    let repeated: string | undefined = plannedKey;
+    let { depData } = pass;
+    if (!seen.has(plannedKey)) {
+      seen.set(plannedKey, planned);
+      // Merged into the data, the defaults are the data as the fill leaves it at every level, a nested default beside
+      // the data of its object and one replacing data the field doesn't take included, which a fill of that data
+      // reads again, with the `null`s it puts over the data's `undefined`; otherwise the data is merged over them, a
+      // default standing in for a value it lacks
+      const filled: unknown = props.shouldMergeDefaultsIntoFormData
+        ? withNullFills(pass.folded, data, pass.fills)
+        : mergeDefaultsWithFormData(pass.folded, data, false, true);
+      // The plans checked their conditions against their dependency data, `{}` standing in for none, so they decide
+      // alike for data equal to it, as the data of an edit is once it holds the defaults. Data that differs is handed
+      // to the next pass as a copy of the one the comparison built, which shares with this pass's data what the two
+      // hold alike, and which the fill owns, so the next pass's plans reuse the checks made against it here
+      const plannedFor: unknown = pass.depData ?? {};
+      const shared = replaceEqualDeep(plannedFor, filled ?? {});
+      const redecides = shared !== plannedFor;
+      const next = redecides ? ownedDepData(shared, fixed) : shared;
+      depData = filled === undefined || filled === null ? filled : next;
+      const decisionsKey = keyOfDecisions(decisionsOf(pass.readers, depData, redecides));
+      if (decisionsKey === plannedKey) {
+        return kept(pass);
+      }
+      repeated = seen.has(decisionsKey) ? decisionsKey : undefined;
+      if (repeated === undefined && count > planned.size) {
+        return kept(first);
+      }
     }
-    pass = fold(depData);
+    if (repeated === undefined) {
+      pass = fold(depData);
+    } else {
+      const settling = fixFlipping(repeated, depData);
+      if (settling === undefined) {
+        return kept(first);
+      }
+      pass = settling;
+      count = 0;
+    }
   }
+}
+
+/** A decision a plan made from its dependency data: whether a condition held, a set of `dependencies` qualified or
+ * there was data, or the option chosen of a list
+ */
+type Decision = boolean | number | undefined;
+
+/** What the plans of a pass decided, by decision */
+type Decisions = Map<string, Decision>;
+
+/** `decisions` as a key equal for equal decisions in the same order */
+function keyOfDecisions(decisions: Decisions): string {
+  return [...decisions].map(([key, decision]) => `${key}=${decision}`).join(';');
 }
 
 /** The `dependencies` keys of the nodes a plan merged, by node */
@@ -1325,20 +1419,6 @@ function dependencyKeysOf<S extends StrictRJSFSchema>({ graph, entries }: Reader
     const dependencies: unknown = node.kind === 'schema' ? node.raw.dependencies : undefined;
     return isObject(dependencies) ? Object.keys(dependencies).map((key) => [id, key]) : [];
   });
-}
-
-/** How many decisions a plan made from its dependency data, see `Reader` */
-function decisionCountOf<S extends StrictRJSFSchema>(reader: Reader<S>): number {
-  const choices = reader.choices.filter(({ dependencies }) => dependencies).length;
-  return reader.checked.length + dependencyKeysOf(reader).length + choices + (reader.present === undefined ? 0 : 1);
-}
-
-/** The `dependencies` of a plan whose keys `depData` holds a value for, as a key equal for equal sets */
-function qualifiedDependencies<S extends StrictRJSFSchema>(reader: Reader<S>, depData: unknown): string {
-  return dependencyKeysOf(reader)
-    .filter(([, key]) => getByPath(depData, key) !== undefined)
-    .map(([id, key]) => `${id}:${key}`)
-    .join(',');
 }
 
 /** The defaults last computed for a field seeded by one leaf subschema, by the subschema, and what they were computed

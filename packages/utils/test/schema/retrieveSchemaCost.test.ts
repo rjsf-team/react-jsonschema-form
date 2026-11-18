@@ -119,6 +119,30 @@ describe('the cost of an edit to a wide object', () => {
     expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: edit })).toEqual(edit);
     expect(validator.calls - first).toBe(1);
   });
+  it('checks a condition a default decides once against each data the first fill plans for', () => {
+    const validator = miniValidator();
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', default: 'x' } },
+      if: { properties: { k: { const: 'x' } }, required: ['k'] },
+      then: { properties: { t: { type: 'number', default: 2 } } },
+    };
+    expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root })).toEqual({ k: 'x', t: 2 });
+    // `{}`, the `{ k: 'x' }` its defaults fill it with and the `{ k: 'x', t: 2 }` the `then` adds
+    expect(validator.calls).toBe(3);
+  });
+  it('checks a condition the plans of a pass share once for the data they share', () => {
+    const validator = miniValidator();
+    // The object `const` reads the field as retrieved, whose plan checks the `if` the field's own plan checks
+    const r: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', default: 'x' } },
+      allOf: [{ if: { properties: { k: { const: 'x' } }, required: ['k'] }, then: { const: { k: 'x', c: 1 } } }],
+    };
+    const root: RJSFSchema = { type: 'object', properties: { r } };
+    expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root })).toEqual({ r: { k: 'x', c: 1 } });
+    expect(validator.calls).toBe(2);
+  });
   it('parses no schema anew to find the option a selector picks among options that lack the selector', () => {
     const context = { validator: miniValidator() };
     const selected: RJSFSchema = { type: 'object', properties: { kind: { const: 'hit' } } };
