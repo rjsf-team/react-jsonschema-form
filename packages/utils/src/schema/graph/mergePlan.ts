@@ -80,6 +80,10 @@ export interface PlanEntry {
  */
 export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
   readonly key: string;
+  /** The key the decision is known by: an `if` is decided for each schema holding it, whose branches it selects, and
+   * a fill may fix it for one whose branches take it back alone. Its check is the condition's, under `key`
+   */
+  readonly site: string;
   readonly condition: S;
   readonly satisfied: boolean;
 }
@@ -213,7 +217,7 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 const conditionMemo = new KeyedMemo<boolean>();
 
 /** How the conditions checked against dependency data a fill of the defaults copied for itself are decided, by the
- * copy: each the fill fixed, under its graph and key, as fixed, and each other, under the validator too, as the
+ * copy: each the fill fixed, under its graph and site, as fixed, and each other, under the validator too, as the
  * validator first checked it
  */
 const ownedDecisions = new WeakMap<object, KeyedMemo<boolean>>();
@@ -221,7 +225,8 @@ const ownedDecisions = new WeakMap<object, KeyedMemo<boolean>>();
 /** A condition a fill decides as `satisfied`, whatever the data */
 export interface FixedCondition<S extends StrictRJSFSchema = RJSFSchema> {
   readonly graph: SchemaGraph<S>;
-  readonly key: string;
+  /** See `CheckedCondition.site` */
+  readonly site: string;
   readonly satisfied: boolean;
 }
 
@@ -247,36 +252,34 @@ export function ownedDepData<S extends StrictRJSFSchema>(
     return depData;
   }
   const decisions = new KeyedMemo<boolean>();
-  for (const { graph, key, satisfied } of fixed) {
-    decisions.set([graph, key], satisfied);
+  for (const { graph, site, satisfied } of fixed) {
+    decisions.set([graph, site], satisfied);
   }
   ownedDecisions.set(copy, decisions);
   return copy;
 }
 
-/** Returns whether `data` satisfies `condition`, a condition of `graph` the memo knows by `key`. A check of data that
+/** Returns whether `data` satisfies `checked.condition`, a condition of `graph`. A check of data that
  * is no object is memoized for the last data it was made on. One of an object is memoized only for a copy
  * `ownedDepData()` made, which also decides the conditions fixed for it; another object is checked on every call,
  * since a caller may mutate it in place between checks
  *
  * @param context - The `SchemaContext` whose validator checks the condition
  * @param graph - The graph the condition is a node of
- * @param key - The key the memo knows the condition by, see `CheckedCondition`
- * @param condition - The condition
+ * @param checked - The condition, with the keys its check and its decision are known by, see `CheckedCondition`
  * @param data - The data to check it against
  * @returns - Whether the condition holds
  */
 export function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
-  key: string,
-  condition: S,
+  { key, site, condition }: Omit<CheckedCondition<S>, 'satisfied'>,
   data: unknown,
 ): boolean {
   if (typeof data === 'object' && data !== null) {
     const owned = ownedDecisions.get(data);
     const check = () => context.validator.isValid(condition, data, graph.rawRoot);
-    return owned ? (owned.peek([graph, key]) ?? owned.get([context.validator, graph, key], check)) : check();
+    return owned ? (owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], check)) : check();
   }
   const keys = [context.validator, graph, key];
   const memoized = conditionMemo.peekLatest(keys, [data]);
@@ -897,10 +900,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return isSchemaObject<S>(merged) && this.context.customMergeAllOf ? merged : schemaFrom(schema, merged);
   }
 
-  private holds(key: string, condition: S): boolean {
+  private holds(key: string, condition: S, site = key): boolean {
     this.readsData = true;
-    const satisfied = checkCondition(this.context, this.graph, key, condition, this.depData);
-    this.checked.push({ key, condition, satisfied });
+    const satisfied = checkCondition(this.context, this.graph, { key, site, condition }, this.depData);
+    this.checked.push({ key, site, condition, satisfied });
     return satisfied;
   }
 
@@ -923,11 +926,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     const conditionNode = this.graph.node(condition);
     // A boolean `if` holds or fails whatever the data, which needs no validator to say, nor a precompiled one to have a
-    // function for the schema it reads as. An `if` is known by the schema holding it, whose branches it selects: one
-    // shared by several schemas is decided for each, as a fill may fix it for one whose branches take it back alone
+    // function for the schema it reads as
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(`if:${conditionProvider.node.id}`, targetOf(this.graph, condition))
+        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), `if:${conditionProvider.node.id}`)
         : conditionNode.kind !== 'boolean' || conditionNode.value;
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);

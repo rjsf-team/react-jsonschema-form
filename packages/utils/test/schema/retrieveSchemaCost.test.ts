@@ -131,6 +131,24 @@ describe('the cost of an edit to a wide object', () => {
     // `{}`, the `{ k: 'x' }` its defaults fill it with and the `{ k: 'x', t: 2 }` the `then` adds
     expect(validator.calls).toBe(3);
   });
+  it('checks an `if` several `allOf` entries share once against each data the fill copies', () => {
+    const validator = miniValidator();
+    const shared: RJSFSchema = { properties: { k: { const: 'x' } }, required: ['k'] };
+    const entry = (key: string): RJSFSchema => ({
+      if: shared,
+      then: { properties: { [key]: { type: 'number', default: 1 } } },
+    });
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', default: 'x' } },
+      allOf: [entry('t'), entry('u')],
+    };
+    const filled = getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: {} });
+    expect(filled).toEqual({ k: 'x', t: 1, u: 1 });
+    // The `{}` of the call for each entry, since the caller may mutate it between checks, then once for both the
+    // `{ k: 'x' }` and `{ k: 'x', t: 1, u: 1 }` the fill copies
+    expect(validator.calls).toBe(4);
+  });
   it('checks a condition the plans of a pass share once for the data they share', () => {
     const validator = miniValidator();
     // The object `const` reads the field as retrieved, whose plan checks the `if` the field's own plan checks

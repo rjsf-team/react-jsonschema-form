@@ -1291,10 +1291,8 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
         decide(reader.graph, `d${node}:${key}`, () => getByPath(depData, key) !== undefined);
       }
       for (const checked of reader.checked) {
-        const key = decide(reader.graph, `c${checked.key}`, () =>
-          redecides
-            ? checkCondition<S, F>(context, reader.graph, checked.key, checked.condition, depData)
-            : checked.satisfied,
+        const key = decide(reader.graph, `c${checked.site}`, () =>
+          redecides ? checkCondition<S, F>(context, reader.graph, checked, depData) : checked.satisfied,
         );
         conditions.set(key, { graph: reader.graph, checked });
       }
@@ -1383,8 +1381,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
         return kept(first);
       }
       const { graph, checked } = condition;
-      const satisfied = checkCondition(context, graph, checked.key, checked.condition, data);
-      fixed.set(key, { graph, key: checked.key, satisfied });
+      fixed.set(key, { graph, site: checked.site, satisfied: checkCondition(context, graph, checked, data) });
     }
     const all = [...fixed.values()];
     end = passesFrom(fold(ownedDepData(depData, all)), all);
