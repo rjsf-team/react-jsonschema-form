@@ -20,6 +20,7 @@ import {
   fieldPathToId,
   fieldPathToList,
   isPlainObject,
+  logOnce,
   partId,
   setByPath,
 } from '@rjsf/utils';
@@ -321,15 +322,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     pendingSubmit = undefined;
     onPendingChange(false);
   };
+  // Each warning is limited to once per form by its own flag rather than by `logOnce()`'s page-wide dedupe, so a form
+  // remounted with a `key`, or the next one with the same name, warns again
+  const formLabel = () => `Form "${committedProps.id ?? rendered.registry.globalFormOptions.idPrefix}"`;
   const warnDroppedCall = (method: string) => {
     if (!isDevelopment || isDroppedCallWarned) {
       return;
     }
-    isDroppedCallWarned = true;
-    // oxlint-disable-next-line no-console
-    console.warn(
-      `Form: \`${method}()\` was called on a form that is hidden by \`<Activity>\` or a \`<Suspense>\` fallback, or has unmounted, and was dropped. React asks that hidden content be treated as unmounted, so the form takes calls again once it is shown. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-inside-a-hidden-activity`,
+    logOnce(
+      `${formLabel()}: \`${method}()\` was called on a form that is hidden by \`<Activity>\` or a \`<Suspense>\` fallback, or has unmounted, and was dropped. React asks that hidden content be treated as unmounted, so the form takes calls again once it is shown. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-inside-a-hidden-activity`,
+      { dedupe: false },
     );
+    isDroppedCallWarned = true;
   };
 
   /** The form's current state, the one an operation starts from: the store's, under the props of the last commit, and
@@ -520,11 +524,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
     const returned = props.transformChange ? props.transformChange(next, base.formData) : next;
     if (isDevelopment && returned === undefined && next !== undefined && !isEmptyTransformWarned) {
-      isEmptyTransformWarned = true;
-      // oxlint-disable-next-line no-console
-      console.warn(
-        'Form: `transformChange` returned `undefined` for an edit that left the form with data, so the form now holds no data. A function body that does not return on every path does this: return `next` to take an edit and `previous` to refuse it.',
+      logOnce(
+        `${formLabel()}: \`transformChange\` returned \`undefined\` for an edit that left the form with data, so the form now holds no data. A function body that does not return on every path does this: return \`next\` to take an edit and \`previous\` to refuse it.`,
+        { dedupe: false },
       );
+      isEmptyTransformWarned = true;
     }
     if (Object.is(returned, next)) {
       return { next: applyChangeToErrorsOf(edited, base.formData, change, props, isValidated) };
@@ -1075,16 +1079,17 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         lastFormDataProp = formData;
         return;
       }
-      lastFormDataProp = formData;
       if (formData === undefined || isHeld(formData) || deepEqualsUndefinedAsMissing(formData, current().formData)) {
+        lastFormDataProp = formData;
         return;
       }
+      logOnce(
+        `${formLabel()}: \`formData\` changed after the form mounted and was ignored. Like \`initialFormData\`, it seeds the form on mount and on \`reset()\` only, and the form owns its data after that. To show other data, remount the form with a \`key\`, or call \`setFieldValue('', data)\` on its ref. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#show-other-data-after-mount`,
+        { id: 'form-data-ignored', dedupe: false },
+      );
+      lastFormDataProp = formData;
       isIgnoredFormDataWarned = true;
       heldScalars.clear();
-      // oxlint-disable-next-line no-console
-      console.warn(
-        "Form: `formData` changed after the form mounted and was ignored. Like `initialFormData`, it seeds the form on mount and on `reset()` only, and the form owns its data after that. To show other data, remount the form with a `key`, or call `setFieldValue('', data)` on its ref. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#show-other-data-after-mount",
-      );
     },
     /** Warns, once, that both `formData` and `initialFormData` were passed, naming the one the form seeds from. Called
      * after the commit that passed them, in development only
@@ -1093,11 +1098,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       if (isBothSeedsWarned || formData === undefined || initialFormData === undefined) {
         return;
       }
-      isBothSeedsWarned = true;
-      // oxlint-disable-next-line no-console
-      console.warn(
-        'Form: `formData` and `initialFormData` were both passed. `formData` seeds the form and `initialFormData` is ignored. Pass `initialFormData` alone.',
+      logOnce(
+        `${formLabel()}: \`formData\` and \`initialFormData\` were both passed. \`formData\` seeds the form and \`initialFormData\` is ignored. Pass \`initialFormData\` alone.`,
+        { id: 'form-data-both-seeds', dedupe: false },
       );
+      isBothSeedsWarned = true;
     },
     handle,
     handleSubmit,

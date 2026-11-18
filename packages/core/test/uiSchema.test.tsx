@@ -269,7 +269,7 @@ describe('uiSchema', () => {
           widgets,
         });
         expect(consoleErrorSpy).toHaveBeenCalledWith(
-          'Setting options via ui:widget object is no longer supported, use ui:options instead',
+          'Setting options via ui:widget object is no longer supported, use ui:options instead [ui-widget-options-object]',
         );
       });
 

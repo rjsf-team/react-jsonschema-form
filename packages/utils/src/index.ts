@@ -141,7 +141,7 @@ import listboxAriaProps from './listboxAriaProps.ts';
 import localToUTC from './localToUTC.ts';
 import logGridSpanWarning from './logGridSpanWarning.ts';
 import logOnce, { resetLogOnce } from './logOnce.ts';
-import type { LogOnceLevel } from './logOnce.ts';
+import type { LogOnceLevel, LogOnceOptions, WarningCategory, WarningId, WarningOptions } from './logOnce.ts';
 import logUnsupportedDefaultForEnum from './logUnsupportedDefaultForEnum.ts';
 import lookupFromFormContext from './lookupFromFormContext.ts';
 import mergeClassMaps from './mergeClassMaps.ts';
@@ -294,6 +294,7 @@ export type {
   FileInfoType,
   GroupRole,
   LogOnceLevel,
+  LogOnceOptions,
   ObjectPath,
   PresentationSource,
   PresentationSubject,
@@ -307,6 +308,9 @@ export type {
   UseTimeWidgetPropsResult,
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   VisibleErrorsProps,
+  WarningCategory,
+  WarningId,
+  WarningOptions,
   WidgetAliasFor,
   WidgetAriaPropsInput,
 };
@@ -517,6 +521,10 @@ export {
   dotNotationNameGenerator,
 };
 
+/** @public Set from an app's development entry point or a test setup to make chosen warnings throw, which no other RJSF
+ * package's source does
+ */
+export { RJSFWarningError, setWarningOptions } from './logOnce.ts';
 /** @public The stamp `retrieveSchema()` leaves on each subschema, which consumers' tests strip to compare one with a
  * schema written by hand
  */

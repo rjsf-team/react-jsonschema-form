@@ -189,7 +189,7 @@ describe('getTemplate', () => {
     );
     expect(globals).toEqual({ label: false });
     expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-      'ui:globalOptions.FieldTemplate is not read: RJSF reads FieldTemplate per field only.',
+      'ui:globalOptions.FieldTemplate is not read: RJSF reads FieldTemplate per field only. [global-option-not-read]',
     );
   });
 

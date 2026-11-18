@@ -162,6 +162,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
           `${definition ? ` (or ui:definitions['${definition}'])` : ''} for ${entry.label()} is ` +
           'ignored, since a field is already named for that path, so the option is rendered as though no ui:field ' +
           'were given.',
+        { id: 'option-field-ignored' },
       );
     }
   }

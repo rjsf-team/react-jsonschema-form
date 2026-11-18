@@ -306,7 +306,7 @@ export default class ATAValidator<
       // the validator is built, so a schema defect such as an unparseable `pattern` throws from `validate()` and would
       // be reported as a problem with the data
       const named = id === undefined ? '' : ` "${id}"`;
-      logOnce(`Error encountered validating schema${named}:`, 'warn', e);
+      logOnce(`Error encountered validating schema${named}:`, { error: e });
       return false;
     }
   }

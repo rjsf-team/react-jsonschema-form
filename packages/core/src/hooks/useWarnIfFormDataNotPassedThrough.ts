@@ -30,6 +30,7 @@ function useWarnIfFormDataNotPassedThrough(fieldName: string, id: string, fieldP
     }
     logOnce(
       `${fieldName} ${fieldLabelForLog(id, fieldPath)} was rendered with other \`formData\` than the form holds at its \`fieldPath\`. A custom field wrapping it must pass \`formData\` through unchanged, or adding, removing, renaming and reordering act on items it doesn't show. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#custom-fields-that-wrap-arrayfield-or-objectfield`,
+      { id: 'form-data-not-passed-through' },
     );
   }, [access, fieldName, id, fieldPath, formData]);
 }

@@ -23,9 +23,8 @@ export default function logUnsupportedDefaultForEnum<S extends StrictRJSFSchema 
     enumOptionsIndexForValue<S>(schema.default, enumOptions, multiple) === undefined
   ) {
     const defaultText = toDisplayString(schema.default);
-    logOnce(
-      `The schema default value "${defaultText}" is not one of the values in the enum options for "${id}"`,
-      'error',
-    );
+    logOnce(`The schema default value "${defaultText}" is not one of the values in the enum options for "${id}"`, {
+      level: 'error',
+    });
   }
 }

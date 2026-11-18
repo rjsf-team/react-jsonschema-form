@@ -21,6 +21,7 @@ export default function GridTemplate(props: GridTemplateProps & Pick<ColProps, '
       logOnce(
         `A layout grid column's \`span\` of ${span} in "${fieldId}" is more than 12: \`span\` counts twelfths of a row, ` +
           "where antd's counted 24ths before v7, so halve it",
+        { id: 'antd-span-twelfths' },
       );
     }
     // The `ant-col-*` class `span` names would still cap a width of the column's own with its `max-width`, so it's left off
@@ -29,7 +30,10 @@ export default function GridTemplate(props: GridTemplateProps & Pick<ColProps, '
       style?.flex !== undefined ||
       style?.flexBasis !== undefined ||
       style?.width !== undefined;
-    logGridSpanWarning(fieldId, span, { ownWidth: ownsWidth ? 'a `flex` or a width' : undefined });
+    logGridSpanWarning(fieldId, span, {
+      ownWidth: ownsWidth ? 'a `flex` or a width' : undefined,
+      ownWidthId: 'antd-span-own-width',
+    });
     if (!ownsWidth && span !== undefined && !Number.isInteger(span * 2)) {
       logOnce(
         `A layout grid column's \`span\` of ${span} in "${fieldId}" is finer than a half step, which antd's 24 columns ` +

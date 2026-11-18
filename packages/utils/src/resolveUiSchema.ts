@@ -79,7 +79,7 @@ export default function resolveUiSchema<
       try {
         resolvedSchema = resolveOwnRef<S>(schema, registry.rootSchema);
       } catch (e) {
-        logOnce('could not resolve $ref in resolveUiSchema:\n', 'warn', e);
+        logOnce('could not resolve $ref in resolveUiSchema:\n', { error: e });
         return result;
       }
     }

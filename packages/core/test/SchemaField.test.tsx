@@ -2188,7 +2188,7 @@ describe('SchemaField', () => {
       expect(node.querySelector('.option-field')).not.toBeInTheDocument();
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
         'ui:field in uiSchema.anyOf[0] for "root" is ignored, since a field is already named for that path, so the ' +
-          'option is rendered as though no ui:field were given.',
+          'option is rendered as though no ui:field were given. [option-field-ignored]',
       );
     });
 
@@ -2248,7 +2248,7 @@ describe('SchemaField', () => {
       expect(node.querySelector('.option-field')).not.toBeInTheDocument();
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
         'ui:field in uiSchema.anyOf[0] (or ui:definitions[\'#/$defs/Foo\']) for "root" is ignored, since a field is ' +
-          'already named for that path, so the option is rendered as though no ui:field were given.',
+          'already named for that path, so the option is rendered as though no ui:field were given. [option-field-ignored]',
       );
     });
 
@@ -2271,7 +2271,7 @@ describe('SchemaField', () => {
       expect(node.querySelector('.option-field')).not.toBeInTheDocument();
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
         'ui:field in uiSchema.anyOf[0] for "root" is ignored, since a field is already named for that path, so the ' +
-          'option is rendered as though no ui:field were given.',
+          'option is rendered as though no ui:field were given. [option-field-ignored]',
       );
     });
   });

@@ -39,7 +39,7 @@ export default function getItemUiSchemaForItem<
       // a real path: the root array's own item. Naming the index alone keeps the message from claiming to be about a
       // field it knows nothing about
       const itemLabel = arrayFieldPath === undefined ? `item at index ${index}` : toFieldPath(index, arrayFieldPath);
-      logOnce(`Error executing dynamic uiSchema.items function for ${itemLabel}:`, 'error', e);
+      logOnce(`Error executing dynamic uiSchema.items function for ${itemLabel}:`, { level: 'error', error: e });
       return undefined;
     }
   }
