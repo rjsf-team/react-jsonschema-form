@@ -26,7 +26,13 @@ import {
   RECURSIVE_REF,
   RECURSIVE_REF_ALLOF,
 } from '../testUtils/testData.ts';
-import type { TestValidatorType } from './types.ts';
+import { check } from './graph/miniValidator.ts';
+import type { IsValidAnswer, TestValidatorType } from './types.ts';
+
+/** Answers the mock validator's `isValid()` for the schema and data of each call, as the real validators do, for a test
+ * whose outcome an `if` decides: the answers hold whatever order the fill checks its conditions in
+ */
+const asRealValidator: IsValidAnswer = (schema, formData, rootSchema) => check(schema, formData, rootSchema);
 
 const ENUM_WITH_DEFAULT: RJSFSchema = { type: 'string', enum: ['x', 'y'], default: 'x' };
 
@@ -2394,13 +2400,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
         describe('an object with deep nested dependencies with formData', () => {
           beforeEach(() => {
-            // Mock isValid so that withExactlyOneSubschema works as expected
-            testValidator.setReturnValues({
-              isValid: [
-                true, // First oneOf... first === first
-                false, // Second oneOf... second !== first
-              ],
-            });
+            // The mock validator cannot evaluate a dependency's `oneOf`, so it answers each check as the real ones do
+            testValidator.setReturnValues({ isValid: asRealValidator });
           });
           afterAll(() => {
             // Reset the testValidator
@@ -3073,10 +3074,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
       describe('an object with non valid formData for enum properties', () => {
         beforeEach(() => {
-          // Mock isValid so that withExactlyOneSubschema works as expected
-          testValidator.setReturnValues({
-            isValid: [false, true],
-          });
+          // The mock validator cannot evaluate a dependency's `oneOf`, so it answers each check as the real ones do
+          testValidator.setReturnValues({ isValid: asRealValidator });
         });
         afterAll(() => {
           // Reset the testValidator
@@ -9831,15 +9830,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual([{ animal: 'Cat', food: 'meat' }]);
         });
 
-        // Pins a known limitation rather than intended behavior; see the matching skipDefaults test below.
-        it('should fill in the first then default in array items with no data even when its if does not match the defaulted value (known limitation)', () => {
+        it('should fill in the then default of the if the defaulted value matches in array items with no data (#5830)', () => {
+          testValidator.setReturnValues({ isValid: asRealValidator });
           const fishFirstArraySchema: RJSFSchema = { type: 'array', items: fishFirstAnimalInfoSchema };
           expect(
             getDefaultFormState(
               { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
               { schema: fishFirstArraySchema, formData: [{}], rootSchema: fishFirstArraySchema },
             ),
-          ).toEqual([{ animal: 'Cat', food: 'grass' }]);
+          ).toEqual([{ animal: 'Cat', food: 'meat' }]);
         });
       });
 
@@ -9926,10 +9925,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ animal: 'Cat' });
         });
 
-        it('should pick the if-then-else branch from the form data, so a then default whose if requires a defaulted value is left out', () => {
-          // The mock validator cannot evaluate `required`, so it returns what the real validators do here; the claim
-          // itself is only exercised by the ajv8, ata and cfworker runs of this test.
-          testValidator.setReturnValues({ isValid: [false] });
+        it('should pick the if-then-else branch from the defaults under the form data, so a then default whose if requires a defaulted value is filled in (#5830)', () => {
+          testValidator.setReturnValues({ isValid: asRealValidator });
           const requiredAnimalSchema: RJSFSchema = {
             ...animalInfoSchema,
             allOf: [{ ...animalCondition, if: { ...(animalCondition.if as RJSFSchema), required: ['animal'] } }],
@@ -9939,22 +9936,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' } },
               { schema: requiredAnimalSchema, rootSchema: requiredAnimalSchema },
             ),
-          ).toEqual({ animal: 'Cat' });
+          ).toEqual({ animal: 'Cat', food: 'meat' });
         });
 
-        // Pins a known limitation rather than intended behavior: the if is checked against the form data, not the
-        // computed defaults, so a Cat default gets the Fish entry's food. A fix that evaluates the if against the
-        // defaults is expected to change this result.
-        it('should fill in the first then default on empty data even when its if does not match the defaulted value (known limitation)', () => {
+        it('should fill in the then default of the if the defaulted value matches on empty data (#5830)', () => {
+          testValidator.setReturnValues({ isValid: asRealValidator });
           expect(
             getDefaultFormState(
               { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' } },
               { schema: fishFirstAnimalInfoSchema, rootSchema: fishFirstAnimalInfoSchema },
             ),
-          ).toEqual({ animal: 'Cat', food: 'grass' });
+          ).toEqual({ animal: 'Cat', food: 'meat' });
         });
 
-        it('should drop the whole allOf when a custom merger throws on the conflicting then defaults', () => {
+        it('should drop the whole allOf when a custom merger throws on the conflicting then defaults, then fill in the branch the defaulted value selects', () => {
           consoleWarnSpy.mockClear();
           const conflict = new Error('conflicting food defaults');
           const mergeAllOfUnlessFoodDefaultsConflict: CustomMergeAllOf = (schema) => {
@@ -9980,6 +9975,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ),
           ).toEqual({ animal: 'Cat', food: 'meat' });
           expect(consoleWarnSpy).not.toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
+          testValidator.setReturnValues({ isValid: asRealValidator });
           expect(
             getDefaultFormState(
               {
@@ -9989,7 +9985,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               },
               { schema: fishFirstAnimalInfoSchema, rootSchema: fishFirstAnimalInfoSchema },
             ),
-          ).toEqual({ animal: 'Cat' });
+          ).toEqual({ animal: 'Cat', food: 'meat' });
           expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
         });
 
@@ -11221,7 +11217,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         'nested allOf',
         'properties outside allOf',
       ])('should populate dependency defaults when formData is undefined with %s', (variant) => {
-        testValidator.setReturnValues({ isValid: [true, false] });
+        testValidator.setReturnValues({ isValid: asRealValidator });
         const dependencySchema: RJSFSchema = {
           type: 'object',
           required: ['type'],
@@ -11553,7 +11549,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
       it("applies a dependency's oneOf option that declares the property in an allOf entry", () => {
-        testValidator.setReturnValues({ isValid: [false, true] });
+        testValidator.setReturnValues({ isValid: asRealValidator });
         const schema: RJSFSchema = {
           type: 'object',
           properties: { k: { type: 'string', enum: ['a', 'b'] } },
@@ -11577,15 +11573,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ k: 'b', kb: 'B' });
       });
       it('should populate defaults for nested dependencies in arrays when matching enum values in oneOf', () => {
-        // Mock isValid so that withExactlyOneSubschema works as expected
-        testValidator.setReturnValues({
-          isValid: [
-            true, // First oneOf... first === first
-            false, // Second oneOf... second !== first
-            false, // First oneOf... first !== second
-            true, // Second oneOf... second === second
-          ],
-        });
+        // The mock validator cannot evaluate a dependency's `oneOf`, so it answers each check as the real ones do
+        testValidator.setReturnValues({ isValid: asRealValidator });
         const schema: RJSFSchema = {
           type: 'array',
           items: {
@@ -13805,6 +13794,451 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData, fieldState }),
         ).toEqual({ kind: 'q', size: 'm', o: { a: 'x' } });
         expect(paths).toEqual([]);
+      });
+    });
+
+    describe('a default that decides an `if` (#5830)', () => {
+      const fill = (schema: RJSFSchema, formData?: unknown, defaultFormStateBehavior?: DefaultFormStateBehavior) =>
+        getDefaultFormState(
+          { validator: testValidator, defaultFormStateBehavior },
+          { schema, rootSchema: schema, formData },
+        );
+      // The mock validator cannot evaluate an `if`, so it answers each check as the real validators do
+      beforeEach(() => {
+        testValidator.setReturnValues({ isValid: asRealValidator });
+      });
+      afterEach(() => {
+        testValidator.reset?.();
+      });
+      const thenSchema: RJSFSchema = {
+        type: 'object',
+        properties: { k: { type: 'string', default: 'x' } },
+        if: { properties: { k: { const: 'x' } }, required: ['k'] },
+        then: { properties: { t: { type: 'number', default: 2 } } },
+      };
+      const elseSchema: RJSFSchema = {
+        type: 'object',
+        properties: { k: { type: 'string', default: 'y' } },
+        if: { properties: { k: { const: 'x' } } },
+        then: { properties: { t: { type: 'number', default: 2 } } },
+        else: { properties: { e: { type: 'number', default: 3 } } },
+      };
+      const chainedSchema: RJSFSchema = {
+        type: 'object',
+        properties: { k: { type: 'string', default: 'x' } },
+        allOf: [
+          {
+            if: { properties: { k: { const: 'x' } }, required: ['k'] },
+            then: { properties: { t: { type: 'string', default: 'u' } } },
+          },
+          {
+            if: { properties: { t: { const: 'u' } }, required: ['t'] },
+            then: { properties: { v: { type: 'number', default: 4 } } },
+          },
+        ],
+      };
+
+      it('fills the `then` its default satisfies', () => {
+        expect(fill(thenSchema)).toEqual({ k: 'x', t: 2 });
+      });
+
+      it('fills the `else` its default selects, and nothing of the `then`', () => {
+        expect(fill(elseSchema)).toEqual({ k: 'y', e: 3 });
+      });
+
+      it('fills a condition that reads what another condition defaulted', () => {
+        expect(fill(chainedSchema)).toEqual({ k: 'x', t: 'u', v: 4 });
+      });
+
+      it('fills the same for a property as for the root', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { q: thenSchema } };
+        expect(fill(schema)).toEqual({ q: { k: 'x', t: 2 } });
+      });
+
+      it('fills the `null` of a field the `else` of an unmerged `allOf` entry brings in for a default', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            r: {
+              type: 'object',
+              properties: { k: { type: 'string', default: 'y' } },
+              allOf: [{ if: { properties: { k: { const: 'x' } } }, else: { properties: { e: { type: 'null' } } } }],
+            },
+          },
+        };
+        const filled = fill(schema);
+        expect(filled).toEqual({ r: { k: 'y', e: null } });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      it('keeps the branch the data selects over the one the default would', () => {
+        expect(fill(elseSchema, { k: 'x' })).toEqual({ k: 'x', t: 2 });
+      });
+
+      it.each([
+        { name: 'then', schema: thenSchema },
+        { name: 'else', schema: elseSchema },
+        { name: 'chained', schema: chainedSchema },
+      ])('changes nothing when the filled data of the $name schema is filled again', ({ schema }) => {
+        const filled = fill(schema);
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      it.each([
+        {
+          name: 'beside the data of the object holding it',
+          formData: { r: { k: 'a' } },
+          expected: { r: { k: 'a', j: 'x' }, t: 2 },
+        },
+        {
+          name: 'over data held as `undefined`',
+          formData: { r: { j: undefined } },
+          expected: { r: { j: 'x' }, t: 2 },
+          behavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' } as const,
+        },
+        {
+          name: 'over data its field does not take',
+          formData: { r: { j: 'z' } },
+          expected: { r: { j: 'x' }, t: 2 },
+        },
+      ])('fills the `then` a nested default satisfies $name', ({ formData, expected, behavior }) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            r: {
+              type: 'object',
+              properties: { k: { type: 'string' }, j: { type: 'string', enum: ['x', 'y'], default: 'x' } },
+            },
+          },
+          if: { properties: { r: { properties: { j: { const: 'x' } }, required: ['j'] } }, required: ['r'] },
+          then: { properties: { t: { type: 'number', default: 2 } } },
+        };
+        const filled = fill(schema, formData, behavior);
+        expect(filled).toEqual(expected);
+        expect(fill(schema, filled, behavior)).toEqual(filled);
+      });
+
+      it.each([
+        { name: 'beside the data of the object holding it', formData: { r: { s: { k: 'a' } } } },
+        {
+          name: 'over data held as `undefined`',
+          formData: { r: { s: { j: undefined } } },
+          behavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' } as const,
+        },
+        { name: 'over data its field does not take', formData: { r: { s: { j: 'z' } } } },
+      ])(
+        'fills the `null` of a field the `then` of an unmerged `allOf` entry brings in for a nested default $name',
+        ({ formData, behavior }) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              r: {
+                type: 'object',
+                properties: {
+                  s: {
+                    type: 'object',
+                    properties: { k: { type: 'string' }, j: { type: 'string', enum: ['x', 'y'], default: 'x' } },
+                  },
+                },
+                allOf: [
+                  {
+                    if: { properties: { s: { properties: { j: { const: 'x' } }, required: ['j'] } }, required: ['s'] },
+                    then: { properties: { n: { type: 'null' } } },
+                  },
+                ],
+              },
+            },
+          };
+          const filled = fill(schema, formData, behavior);
+          expect(filled).toEqual({ r: { s: { ...formData.r.s, j: 'x' }, n: null } });
+          expect(fill(schema, filled, behavior)).toEqual(filled);
+        },
+      );
+
+      it('fills the `null` of the `then` a `null` decides, in a field the fill brings in for its `null`s alone', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            r: {
+              type: 'object',
+              allOf: [
+                {
+                  properties: {
+                    q: {
+                      type: 'object',
+                      properties: { z: { type: 'null' } },
+                      allOf: [
+                        {
+                          if: { properties: { z: { const: null } }, required: ['z'] },
+                          then: { properties: { n: { type: 'null' } } },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const filled = fill(schema, { r: {} });
+        expect(filled).toEqual({ r: { q: { z: null, n: null } } });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      it('fills the `then` the `null` decides that the fill puts over a value the data holds as `undefined`', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { r: { type: 'object', properties: { z: { type: 'null' } } } },
+          if: { properties: { r: { properties: { z: { const: null } }, required: ['z'] } }, required: ['r'] },
+          then: { properties: { n: { type: 'string', default: 'w' } } },
+        };
+        const filled = fill(schema, { r: { z: undefined } });
+        expect(filled).toEqual({ r: { z: null }, n: 'w' });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      it('puts no `null` over a value the data holds as `undefined` for a branch its default does not select', () => {
+        // The `if` holds for the data alone and fails once `k` is `'x'`
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string', default: 'x' }, z: {} },
+          if: { properties: { k: { const: 'y' } } },
+          then: { properties: { z: { type: 'null' } } },
+          else: { properties: { z: { type: 'string' } } },
+        };
+        expect(fill(schema, { z: undefined })).toStrictEqual({ k: 'x', z: undefined });
+      });
+
+      it('decides a condition for the data it is checked against, whatever data it was checked against before', () => {
+        // `'Aa'` and `'BB'` hash alike as strings, so no check made for the one may answer for the other
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string', default: 'BB' } },
+          if: { properties: { k: { const: 'BB' } }, required: ['k'] },
+          then: { properties: { t: { type: 'number', default: 2 } } },
+        };
+        fill(schema, { k: 'Aa' });
+        expect(fill(schema)).toEqual({ k: 'BB', t: 2 });
+      });
+
+      it('fills the `null` of the branch an `allOf` entry selects for the defaults that are kept', () => {
+        // The first pass fills the `t` of the `then`, which the `k` it also fills takes back for the `else`
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            r: { ...elseSchema, allOf: [{ if: { required: ['t'] }, else: { properties: { n: { type: 'null' } } } }] },
+          },
+        };
+        const filled = fill(schema);
+        expect(filled).toEqual({ r: { k: 'y', e: 3, n: null } });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      it.each([
+        { branch: 'then', expected: { r: { k: 'x', m: { q: 1, n: null } } } },
+        { branch: 'else', expected: { r: { k: 'x', m: { q: 1 } } } },
+      ])(
+        'reads a key of an object `const` as the property the `$branch` of an unmerged `allOf` entry declares for a default',
+        ({ branch, expected }) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              r: {
+                type: 'object',
+                const: { m: { q: 1 } },
+                properties: { k: { type: 'string', default: 'x' } },
+                allOf: [
+                  {
+                    if: { properties: { k: { const: 'x' } }, required: ['k'] },
+                    [branch]: {
+                      properties: { m: { type: 'object', properties: { q: { type: 'number' }, n: { type: 'null' } } } },
+                    },
+                  },
+                ],
+              },
+            },
+          };
+          const filled = fill(schema);
+          expect(filled).toEqual(expected);
+          expect(fill(schema, filled)).toEqual(filled);
+        },
+      );
+
+      it.each([
+        { name: 'an unmerged `allOf` entry', behavior: undefined },
+        { name: 'an `if` under `skipEmptyDefaults`', behavior: { emptyObjectFields: 'skipEmptyDefaults' } as const },
+      ])('fills the object `const` the `then` of $name brings in for a default', ({ name, behavior }) => {
+        const condition: RJSFSchema = {
+          if: { properties: { k: { const: 'x' } }, required: ['k'] },
+          then: { const: { k: 'x', c: 1 } },
+        };
+        const r: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string', default: 'x' } },
+          ...(name.startsWith('an unmerged') ? { allOf: [condition] } : condition),
+        };
+        const schema: RJSFSchema = { type: 'object', properties: { r } };
+        const filled = fill(schema, undefined, behavior);
+        expect(filled).toEqual({ r: { k: 'x', c: 1 } });
+        expect(fill(schema, filled, behavior)).toEqual(filled);
+      });
+
+      // `k` holds an object in the data, so its dependency is qualified for the data alone, and only the nested default
+      // of `j` decides which option the dependency's `oneOf` matches
+      const nestedKey: RJSFSchema = { type: 'object', properties: { j: { type: 'string', default: 'x' } } };
+      const optionOf = (value: string, key: string, fill: number): RJSFSchema => ({
+        properties: {
+          k: { properties: { j: { enum: [value] } }, required: ['j'] },
+          [key]: { type: 'number', default: fill },
+        },
+      });
+
+      it('fills the option of a `dependencies` `oneOf` a nested default matches', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: nestedKey },
+          dependencies: { k: { oneOf: [optionOf('y', 'b', 2), optionOf('x', 'a', 1)] } },
+        };
+        const filled = fill(schema, { k: {} });
+        expect(filled).toEqual({ k: { j: 'x' }, a: 1 });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      it('fills the option of a `oneOf` beside `dependencies` a nested default matches', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: nestedKey },
+          dependencies: { z: ['k'] },
+          oneOf: [optionOf('y', 'b', 2), optionOf('x', 'a', 1)],
+        };
+        const filled = fill(schema, { k: {} });
+        expect(filled).toEqual({ k: { j: 'x' }, a: 1 });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      describe('a branch that takes back the default that selects it', () => {
+        // The `else` fills the `'e'` that selects the `then`, whose `'d'` selects the `else` again: no fill is the one
+        // its own defaults select, so the defaults decide nothing here and the data alone does
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          if: { properties: { a: { const: 'e' } }, required: ['a'] },
+          then: { properties: { a: { default: 'd' }, t: { type: 'number', default: 1 } } },
+          else: { properties: { a: { default: 'e' } } },
+        };
+
+        it('fills the branch the data alone selects', () => {
+          expect(fill(schema)).toEqual({ a: 'e' });
+        });
+
+        it('fills the branch the data alone selects where the branch taken back brings a condition of its own', () => {
+          const nested: RJSFSchema = {
+            ...schema,
+            then: {
+              ...(schema.then as RJSFSchema),
+              if: { required: ['t'] },
+              then: { properties: { u: { type: 'number', default: 2 } } },
+            },
+          };
+          expect(fill(nested)).toEqual({ a: 'e' });
+        });
+
+        it('fills the branch the filled data selects once the data holds it, and nothing more after that', () => {
+          const filled = fill(schema, fill(schema));
+          expect(filled).toEqual({ a: 'e', t: 1 });
+          expect(fill(schema, filled)).toEqual(filled);
+        });
+
+        it('fills the branch a default selects for every other condition of the field', () => {
+          // The first entry takes back the default of `k` that selects it, which leaves the default of `m` to decide
+          // the second entry
+          const twoConditions: RJSFSchema = {
+            type: 'object',
+            properties: { k: { type: 'string' }, m: { type: 'string', default: 'x' } },
+            allOf: [
+              {
+                if: { properties: { k: { const: 'x' } }, required: ['k'] },
+                then: { properties: { k: { default: 'y' } } },
+                else: { properties: { k: { default: 'x' } } },
+              },
+              {
+                if: { properties: { m: { const: 'x' } }, required: ['m'] },
+                then: { properties: { t: { type: 'number', default: 2 } } },
+              },
+            ],
+          };
+          const filled = fill(twoConditions, {});
+          expect(filled).toEqual({ k: 'x', m: 'x', t: 2 });
+          expect(fill(twoConditions, filled)).toEqual(filled);
+        });
+
+        it.each([
+          { order: 'after', reversed: false },
+          { order: 'before', reversed: true },
+        ])(
+          'fills the branch the settled default selects for a condition $order the one taking it back',
+          ({ reversed }) => {
+            // Both entries share one `if`, which flips with `k`, but only `takingBack`'s branches take back the `k`
+            // that selects them; `following` reads the `k` the fill settles on
+            const kIsX: RJSFSchema = { properties: { k: { const: 'x' } }, required: ['k'] };
+            const takingBack: RJSFSchema = {
+              if: kIsX,
+              then: { properties: { k: { default: 'y' } } },
+              else: { properties: { k: { default: 'x' } } },
+            };
+            const following: RJSFSchema = {
+              if: kIsX,
+              then: { properties: { t: { type: 'number', default: 1 } } },
+              else: { properties: { e: { type: 'number', default: 2 } } },
+            };
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              allOf: reversed ? [following, takingBack] : [takingBack, following],
+            };
+            const filled = fill(schema, {});
+            expect(filled).toEqual({ k: 'x', t: 1 });
+            expect(fill(schema, filled)).toEqual(filled);
+          },
+        );
+
+        it('fills the branch the data alone selects for a condition of a string field', () => {
+          const stringField: RJSFSchema = {
+            type: 'object',
+            properties: { s: { type: 'string', if: { const: 'x' }, then: { default: 'y' }, else: { default: 'x' } } },
+          };
+          expect(fill(stringField, {})).toEqual({ s: 'x' });
+        });
+
+        it('fills the option the data alone matches where an option takes back the default that matches it', () => {
+          const options: RJSFSchema = {
+            type: 'object',
+            properties: { k: { type: 'string', default: 'x' } },
+            dependencies: { z: ['k'] },
+            oneOf: [
+              { properties: { k: { enum: ['x'], default: 'y' } }, required: ['k'] },
+              { properties: { k: { enum: ['y'], default: 'x' } }, required: ['k'] },
+            ],
+          };
+          expect(fill(options, {})).toEqual({ k: 'y' });
+        });
+
+        it('fills the branch the data alone selects once the passes outnumber the decisions, each deciding otherwise', () => {
+          // The passes select the branches of `a` and `b` failing both, then `a`'s alone, then `b`'s alone, and stop
+          // there, before the branch of both, which its own defaults select
+          const branch = (a: string, b: string): RJSFSchema => ({
+            properties: { a: { default: a }, b: { default: b } },
+          });
+          const bIsOne: RJSFSchema = { properties: { b: { const: '1' } }, required: ['b'] };
+          const twoBits: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' }, b: { type: 'string' } },
+            if: { properties: { a: { const: '1' } }, required: ['a'] },
+            then: { if: bIsOne, then: branch('1', '1'), else: branch('2', '1') },
+            else: { if: bIsOne, then: branch('1', '1'), else: branch('1', '2') },
+          };
+          expect(fill(twoBits, {})).toEqual({ a: '1', b: '2' });
+        });
       });
     });
 

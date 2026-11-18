@@ -1468,6 +1468,31 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     });
   });
 
+  describe('a default that decides an `if` (#5830)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', default: 'x' }, other: { type: 'string' } },
+      if: { properties: { k: { const: 'x' } }, required: ['k'] },
+      then: { properties: { t: { type: 'number', default: 2 } } },
+    };
+
+    it('fills the `then` default on mount', async () => {
+      const { node, onSubmit } = createFormComponent({ schema });
+
+      await submitForm(node, user);
+
+      expectToHaveBeenCalledWithFormData(onSubmit, { k: 'x', t: 2 }, true);
+    });
+
+    it('holds the same after an edit of another field as on mount', async () => {
+      const { node, onChange } = createFormComponent({ schema });
+
+      await user.type(elementOf(node, '#root_other'), 'v');
+
+      expectToHaveBeenCalledWithFormData(onChange, { k: 'x', t: 2, other: 'v' }, 'root_other');
+    });
+  });
+
   describe('the items of an array `default` (#5831)', () => {
     const schema: RJSFSchema = {
       type: 'object',

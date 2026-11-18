@@ -3771,6 +3771,39 @@ describe('AJV8Validator localizing the errors of a custom keyword', () => {
   });
 });
 
+describe('getDefaultFormState() for an option whose own fill is data it rejects (#5830)', () => {
+  const rootSchema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      p: {
+        anyOf: [
+          { properties: { r: { default: 1 } } },
+          {
+            properties: { kind: {} },
+            additionalProperties: false,
+            if: { required: ['k'] },
+            else: { properties: { e: { const: 2 } } },
+          },
+        ],
+      },
+    },
+  };
+
+  // A known limit, not a contract: a default decides an `if` within one fill, but not which option a field shows.
+  // The option is chosen from the data, as the form renders it, not from the defaults the option then fills. Those of
+  // the second option hold an `e` its own `additionalProperties` rejects, so no fill of it stays on it, and the next
+  // fill chooses the first option, whose `r` the data then holds beside the `e`. A fill that chose the option from
+  // its own defaults would settle in one call, and this test should then expect that
+  it('known limit: takes a second fill to settle, since the option is chosen from the data alone', () => {
+    const schemaUtils = createSchemaUtils({ validator: new AJV8Validator({}) }, rootSchema);
+    const first = schemaUtils.getDefaultFormState(rootSchema, { p: { kind: 'o2' } });
+    expect(first).toEqual({ p: { kind: 'o2', e: 2 } });
+    const second = schemaUtils.getDefaultFormState(rootSchema, first);
+    expect(second).toEqual({ p: { r: 1, kind: 'o2', e: 2 } });
+    expect(schemaUtils.getDefaultFormState(rootSchema, second)).toEqual(second);
+  });
+});
+
 describe('package surface', () => {
   it('exports the validator classes as values', () => {
     const schema: RJSFSchema = { $id: 'surface', type: 'string' };

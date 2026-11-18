@@ -542,11 +542,11 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       });
     });
 
-    // Without `a` the inner `else` fills `'e'`, and with it the `then` shows it, so `'e'` is what the defaults fill in,
-    // whether they filled it or the user typed it
+    // Without `a` the inner `else` would fill `'e'`, which makes the `if` hold, so the fill settles on the `then` and
+    // its `'d'` (#5830). That is what the defaults fill in, whether they filled it or the user typed it
     it.each([
       { start: 'the fill', initialFormData: { kind: 's' }, typed: undefined },
-      { start: "the user's", initialFormData: { kind: 's', a: 'x' }, typed: 'e' },
+      { start: "the user's", initialFormData: { kind: 's', a: 'x' }, typed: 'd' },
     ])(
       'drops a value the defaults fill in under another branch than the one that shows it, from $start',
       async ({ initialFormData, typed }) => {
@@ -566,7 +566,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
               await user.clear(input(form, 'root_a'));
               await user.type(input(form, 'root_a'), typed);
             }
-            expect(input(form, 'root_a').value).toBe('e');
+            expect(input(form, 'root_a').value).toBe('d');
           },
         });
 

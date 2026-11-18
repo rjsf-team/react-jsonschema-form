@@ -105,6 +105,62 @@ describe('the cost of an edit to a wide object', () => {
     getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: { f0: 'b' } });
     expect(validator.calls).toBe(first);
   });
+  it('checks a condition once for the defaults of an edit whose data holds them', () => {
+    const validator = miniValidator();
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', default: 'x' }, other: { type: 'string' } },
+      if: { properties: { k: { const: 'x' } }, required: ['k'] },
+      then: { properties: { t: { type: 'number', default: 2 } } },
+    };
+    const filled = getDefaultFormState({ validator }, { schema: root, rootSchema: root });
+    const first = validator.calls;
+    const edit = { ...(isObject(filled) ? filled : {}), other: 'v' };
+    expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: edit })).toEqual(edit);
+    expect(validator.calls - first).toBe(1);
+  });
+  it('checks a condition a default decides once against each data the first fill plans for', () => {
+    const validator = miniValidator();
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', default: 'x' } },
+      if: { properties: { k: { const: 'x' } }, required: ['k'] },
+      then: { properties: { t: { type: 'number', default: 2 } } },
+    };
+    expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root })).toEqual({ k: 'x', t: 2 });
+    // `{}`, the `{ k: 'x' }` its defaults fill it with and the `{ k: 'x', t: 2 }` the `then` adds
+    expect(validator.calls).toBe(3);
+  });
+  it('checks an `if` several `allOf` entries share once against each data the fill copies', () => {
+    const validator = miniValidator();
+    const shared: RJSFSchema = { properties: { k: { const: 'x' } }, required: ['k'] };
+    const entry = (key: string): RJSFSchema => ({
+      if: shared,
+      then: { properties: { [key]: { type: 'number', default: 1 } } },
+    });
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', default: 'x' } },
+      allOf: [entry('t'), entry('u')],
+    };
+    const filled = getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: {} });
+    expect(filled).toEqual({ k: 'x', t: 1, u: 1 });
+    // The `{}` of the call for each entry, since the caller may mutate it between checks, then once for both the
+    // `{ k: 'x' }` and `{ k: 'x', t: 1, u: 1 }` the fill copies
+    expect(validator.calls).toBe(4);
+  });
+  it('checks a condition the plans of a pass share once for the data they share', () => {
+    const validator = miniValidator();
+    // The object `const` reads the field as retrieved, whose plan checks the `if` the field's own plan checks
+    const r: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', default: 'x' } },
+      allOf: [{ if: { properties: { k: { const: 'x' } }, required: ['k'] }, then: { const: { k: 'x', c: 1 } } }],
+    };
+    const root: RJSFSchema = { type: 'object', properties: { r } };
+    expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root })).toEqual({ r: { k: 'x', c: 1 } });
+    expect(validator.calls).toBe(2);
+  });
   it('parses no schema anew to find the option a selector picks among options that lack the selector', () => {
     const context = { validator: miniValidator() };
     const selected: RJSFSchema = { type: 'object', properties: { kind: { const: 'hit' } } };

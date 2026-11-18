@@ -75,6 +75,19 @@ export interface PlanEntry {
   readonly refPath: RefPath;
 }
 
+/** A condition a plan checked against its data, an `if` or the `properties[key]` of a dependency's `oneOf` option, by
+ * the key the condition memo knows it by, and whether the data satisfied it
+ */
+export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
+  readonly key: string;
+  /** The key the decision is known by: an `if` is decided for each schema holding it, whose branches it selects, and
+   * a fill may fix it for one whose branches take it back alone. Its check is the condition's, under `key`
+   */
+  readonly site: string;
+  readonly condition: S;
+  readonly satisfied: boolean;
+}
+
 /** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
 interface Provider<S extends StrictRJSFSchema = RJSFSchema> {
   readonly node: ObjectNode<S>;
@@ -103,6 +116,8 @@ export interface OptionChoice {
   /** Whether the schema offering the options has `dependencies`, or is a `dependencies` entry offering an `anyOf` or a
    * `oneOf` no option of which declares its key: the cases `retrieveSchema()` merges an option */
   readonly dependencies: boolean;
+  /** The `discriminator.propertyName` of the node holding the options */
+  readonly discriminator?: string;
   readonly selected?: number;
 }
 
@@ -110,10 +125,8 @@ export interface OptionChoice {
 export interface OptionRequest<S extends StrictRJSFSchema = RJSFSchema> extends Omit<OptionChoice, 'selected'> {
   readonly graph: SchemaGraph<S>;
   readonly data: unknown;
-  /** The data the plan's `dependencies` qualify against */
+  /** The data the plan's `dependencies` qualify against and its `if`s are checked against, see `PlanInput.depData` */
   readonly depData: unknown;
-  /** The `discriminator.propertyName` of the node holding the options */
-  readonly discriminator?: string;
 }
 
 /** The policies a view of the plan sets, which are not part of the recursion rule */
@@ -178,6 +191,8 @@ export interface MergePlan<S extends StrictRJSFSchema = RJSFSchema> {
    */
   readonly chains: readonly Keywords<S>[];
   readonly choices: readonly OptionChoice[];
+  /** Each condition the plan checked, in the order it checked them */
+  readonly checked: readonly CheckedCondition<S>[];
   /** Whether the plan was built from the data, which it is only where it checked a condition, qualified a dependency or
    * asked for an option; a plan that was not holds for any data
    */
@@ -189,16 +204,95 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   readonly context: SchemaContext<S, F>;
   readonly graph: SchemaGraph<S>;
   readonly seeds: readonly Seed[];
-  /** The field's data, which an `if` and option choice read */
+  /** The field's data, which an option choice reads */
   readonly data?: unknown;
-  /** The data `dependencies` qualify against, the field's data unless given: the defaults view passes the defaults
-   * accumulated so far under the data
+  /** The data an `if` is checked against and `dependencies` qualify against, the field's data unless given: the
+   * defaults view passes the defaults accumulated so far under the data, so a default decides a condition as the same
+   * value in the data does
    */
   readonly depData?: unknown;
   readonly policy?: PlanPolicy<S>;
 }
 
 const conditionMemo = new KeyedMemo<boolean>();
+
+/** How the conditions checked against dependency data a fill of the defaults copied for itself are decided, by the
+ * copy: each the fill fixed, under its graph and site, as fixed, and each other, under the validator too, as the
+ * validator first checked it
+ */
+const ownedDecisions = new WeakMap<object, KeyedMemo<boolean>>();
+
+/** A condition a fill decides as `satisfied`, whatever the data */
+export interface FixedCondition<S extends StrictRJSFSchema = RJSFSchema> {
+  readonly graph: SchemaGraph<S>;
+  /** See `CheckedCondition.site` */
+  readonly site: string;
+  readonly satisfied: boolean;
+}
+
+/** Returns a shallow copy of the object or array `depData`, against which each condition is checked once, and each of
+ * `fixed` is decided as fixed. Only the caller holds the copy, and it must neither mutate it nor hand it out: nothing
+ * can then change it between checks, so they are memoized by its identity. Other data is returned as it is, its checks
+ * memoized by value already
+ *
+ * @param depData - The dependency data to copy
+ * @param fixed - The conditions decided whatever the data
+ * @returns - The copy, or `depData` where it is no object or array
+ */
+export function ownedDepData<S extends StrictRJSFSchema>(
+  depData: unknown,
+  fixed: readonly FixedCondition<S>[],
+): unknown {
+  let copy: object;
+  if (Array.isArray(depData)) {
+    copy = Array.from<unknown>(depData);
+  } else if (isObject(depData)) {
+    copy = { ...depData };
+  } else {
+    return depData;
+  }
+  const decisions = new KeyedMemo<boolean>();
+  for (const { graph, site, satisfied } of fixed) {
+    decisions.set([graph, site], satisfied);
+  }
+  ownedDecisions.set(copy, decisions);
+  return copy;
+}
+
+/** Returns whether `data` satisfies `checked.condition`, a condition of `graph`. A check of data that
+ * is no object is memoized for the last data it was made on. One of an object is memoized only for a copy
+ * `ownedDepData()` made, which also decides the conditions fixed for it; another object is checked on every call,
+ * since a caller may mutate it in place between checks
+ *
+ * @param context - The `SchemaContext` whose validator checks the condition
+ * @param graph - The graph the condition is a node of
+ * @param checked - The condition, with the keys its check and its decision are known by, see `CheckedCondition`
+ * @param data - The data to check it against
+ * @returns - Whether the condition holds
+ */
+export function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  graph: SchemaGraph<S>,
+  { key, site, condition }: Omit<CheckedCondition<S>, 'satisfied'>,
+  data: unknown,
+): boolean {
+  if (typeof data === 'object' && data !== null) {
+    const owned = ownedDecisions.get(data);
+    const check = () => context.validator.isValid(condition, data, graph.rawRoot);
+    return owned ? (owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], check)) : check();
+  }
+  const keys = [context.validator, graph, key];
+  const memoized = conditionMemo.peekLatest(keys, [data]);
+  if (memoized !== undefined) {
+    return memoized;
+  }
+  // A field with no data is checked as an empty object: `required` constrains only objects, so the missing data
+  // itself would hold every `if` that requires a key
+  const holds = context.validator.isValid(condition, data ?? {}, graph.rawRoot);
+  conditionMemo.setLatest(keys, [data], holds);
+  return holds;
+}
+
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
  * object each time, as an object field's is on every edit, reuse its plan
  */
@@ -599,6 +693,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private readonly entries: PlanEntry[] = [];
   private readonly seen = new Set<NodeId>();
   private readonly choices: OptionChoice[] = [];
+  private readonly checked: CheckedCondition<S>[] = [];
   private readonly context: SchemaContext<S, F>;
   private readonly graph: SchemaGraph<S>;
   private readonly data: unknown;
@@ -658,6 +753,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       schema: merged.schema,
       chains: merged.chains,
       choices: this.choices,
+      checked: this.checked,
       readsData: this.readsData,
     };
   }
@@ -804,27 +900,15 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return isSchemaObject<S>(merged) && this.context.customMergeAllOf ? merged : schemaFrom(schema, merged);
   }
 
-  private holds(key: string, condition: S, data: unknown): boolean {
+  private holds(key: string, condition: S, site = key): boolean {
     this.readsData = true;
-    // The memo stores no check of an object, which a caller may mutate in place between builds
-    if (typeof data === 'object' && data !== null) {
-      return this.context.validator.isValid(condition, data, this.graph.rawRoot);
-    }
-    const keys = [this.context.validator, this.graph, key];
-    const memoized = conditionMemo.peekLatest(keys, [data]);
-    if (memoized !== undefined) {
-      return memoized;
-    }
-    // A field with no data is checked as an empty object: `required` constrains only objects, so the missing data
-    // itself would hold every `if` that requires a key
-    const holds = this.context.validator.isValid(condition, data ?? {}, this.graph.rawRoot);
-    conditionMemo.setLatest(keys, [data], holds);
-    return holds;
+    const satisfied = checkCondition(this.context, this.graph, { key, site, condition }, this.depData);
+    this.checked.push({ key, site, condition, satisfied });
+    return satisfied;
   }
 
-  /** Applies the `then` or `else` the `if` chooses on the field's own data, `{}` standing in for none. Inside a
-   * dependency, the `if` is checked against the data the dependency qualified on, and the branch's own `oneOf` is
-   * applied, as the dependency's are.
+  /** Applies the `then` or `else` the `if` chooses on the data the field's dependencies qualify on, `{}` standing in
+   * for none. Inside a dependency, the branch's own `oneOf` is applied, as the dependency's are.
    */
   private applyCondition(
     part: Part<S>,
@@ -845,11 +929,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // function for the schema it reads as
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(
-            `if:${condition}`,
-            targetOf(this.graph, condition),
-            dependencyKey === undefined ? this.data : this.depData,
-          )
+        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), `if:${conditionProvider.node.id}`)
         : conditionNode.kind !== 'boolean' || conditionNode.value;
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);
@@ -970,7 +1050,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       .map(([, option]) => option)
       .filter((option) => {
         const condition = dependencyCondition(this.graph, option, key);
-        return condition !== undefined && this.holds(`dependency:${option}:${key}`, condition, this.depData);
+        return condition !== undefined && this.holds(`dependency:${option}:${key}`, condition);
       });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
@@ -999,6 +1079,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return undefined;
     }
     const options = this.graph.subschemas(provider.node.id, keyword).map(([, option]) => option);
+    const propertyName = getByPath(provider.node.raw, DISCRIMINATOR_PATH);
     const request = {
       keyword,
       provider: provider.node.id,
@@ -1006,17 +1087,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       options,
       list: Reflect.get(provider.node.raw, keyword),
       dependencies,
+      discriminator: typeof propertyName === 'string' ? propertyName : undefined,
     };
     const selectOption = dependencies || !this.policy.dependencyOptionsOnly ? this.policy.selectOption : undefined;
     this.readsData ||= selectOption !== undefined;
-    const propertyName = getByPath(provider.node.raw, DISCRIMINATOR_PATH);
-    const chosen = selectOption?.({
-      ...request,
-      graph: this.graph,
-      data: this.data,
-      depData: this.depData,
-      discriminator: typeof propertyName === 'string' ? propertyName : undefined,
-    });
+    const chosen = selectOption?.({ ...request, graph: this.graph, data: this.data, depData: this.depData });
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
     this.choices.push({ ...request, selected });
     const optionRefPath = this.policy.optionsInheritRefPath ? provider.refPath : [];
@@ -1073,9 +1148,11 @@ function isPlanOf<S extends StrictRJSFSchema>(
 
 /** Builds the merge plan of the field `input.seeds` seed, memoized per seeds, data, policy and context: the same
  * inputs give the same plan object while the data is the last the plan was built for, and a plan whose build read
- * nothing of the data is the same object for any data. A check of an `if` or a dependency condition is memoized per
- * node for the last data it was made on, so a parent's lookahead and the child's own build do not check the same
- * condition twice, unless the data is an object, which is checked again on every build.
+ * nothing of the data is the same object for any data. The `if`s and dependency conditions are checked against the
+ * dependency data, see `checkCondition()`: a check is memoized per condition for the last data it was made on, so a
+ * parent's lookahead and the child's own build do not check the same condition twice. Where that data is an object,
+ * only a copy `ownedDepData()` made is memoized, by its identity, which is why its holder must not mutate it; another
+ * object is checked again on every build.
  *
  * @param input - The graph, seeds, data, policy and context of the field
  * @returns - The field's merge plan
