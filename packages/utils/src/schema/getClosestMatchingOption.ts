@@ -1,4 +1,5 @@
-import { ALL_OF_KEY, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
+import { allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
+import { ALL_OF_KEY, DEPENDENCIES_KEY, IF_KEY, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
@@ -15,7 +16,13 @@ import type { MergePlan, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { readProvenance } from './graph/provenance.ts';
-import { fieldOf, optionMatchKey, optionNode } from './retrieveSchema.ts';
+import {
+  extraKeysOf,
+  fieldOf,
+  optionMatchKey,
+  optionNode,
+  stubExistingAdditionalProperties,
+} from './retrieveSchema.ts';
 
 /** Where a schema scoring reads is declared: the graph and the seeds of the field it is the schema of */
 interface Where<S extends StrictRJSFSchema> {
@@ -83,7 +90,11 @@ function propertyWhere<S extends StrictRJSFSchema>(parent: Scored<S>, rootSchema
     let seeds = byKey.get(key);
     if (seeds === undefined) {
       seeds = seedsAt(plan, PROPERTIES_KEY, key);
-      byKey.set(key, seeds);
+      // A key the plan doesn't declare, such as an extra key stubbed for the data, isn't kept, so that the long-lived
+      // plan doesn't collect every key name the data has held
+      if (seeds.length > 0) {
+        byKey.set(key, seeds);
+      }
     }
     if (seeds.length > 0) {
       return { graph: plan.graph, seeds };
@@ -188,9 +199,12 @@ function propertyScore<
 }
 
 /** Recursive function that calculates the score of a `formData` against the given `schema`. The computation is fairly
- * simple. Initially the total score is 0. When `schema.properties` object exists, then each property's form value,
- * read from `formData` with its `key`, is scored against the property's schema, as `propertyScore()` describes, and
- * the scores are added up. A schema without `properties` scores 1 when its `type` is the guessed-type of `formData`.
+ * simple. Initially the total score is 0. First the keys of `formData` that the schema's own `additionalProperties`
+ * takes are stubbed among its `properties`, as `scoredOption()` describes, so a schema taking extra keys the data holds
+ * scores as one with `properties`, whether or not it declares any, unless it holds an `allOf`, an `if` or
+ * `dependencies`. When `schema.properties` object exists, then each property's form value, read from `formData` with its
+ * `key`, is scored against the property's schema, as `propertyScore()` describes, and the scores are added up. A schema
+ * without `properties` scores 1 when its `type` is the guessed-type of `formData`.
  * The score of each `allOf` entry, read through its `$ref`, is added to the schema's own, so options sharing a base
  * through a `$ref` beside their own keywords or through an `allOf` are told apart by the properties each adds. An
  * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does. Where an
@@ -212,7 +226,13 @@ export function calculateIndexScore<
   if (!schema) {
     return 0;
   }
-  return scopeScore<T, S, F>(context, rootSchema, scoredOption<S, F>(context, schema, rootSchema), formData, new Set());
+  return scopeScore<T, S, F>(
+    context,
+    rootSchema,
+    scoredOption<S, F>(context, schema, rootSchema, formData),
+    formData,
+    new Set(),
+  );
 }
 
 /** Returns the `allOf` entries of a scored schema, each with where it is declared: those of the chains of its plan,
@@ -355,18 +375,37 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
 }
 
 /** Returns an option as scoring reads it: a schema `retrieveSchema()` handed out as it stands, and any other through
- * the plan of the subschema it stands for, where `where` says or else where `retrieveSchema()` would read it
+ * the plan of the subschema it stands for, where `where` says or else where `retrieveSchema()` would read it, with the
+ * extra keys of `formData` that its own `additionalProperties` or `patternProperties` takes stubbed among its
+ * `properties`, as the option handed out for that data, which a field shows, holds them
  */
 function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   option: S,
   rootSchema: S,
+  formData: unknown,
   where?: Where<S>,
 ): Scored<S> {
   if (isHandedOut(option) && typeof option[REF_KEY] !== 'string') {
     return { schema: option };
   }
-  return scoredAt<S, F>(context, where ?? whereOf<S>(option, rootSchema));
+  const plan = planAt<S, F>(context, where ?? whereOf<S>(option, rootSchema));
+  const { schema } = plan;
+  // shortcut: retrieval also stubs the keys an absent keyword under `additionalPropertiesWhenAbsent: 'allow'` takes,
+  // which still score as nothing here, so the context is read as `'forbid'`; an option with an `allOf`, `if` or
+  // `dependencies` is not stubbed at all, since retrieval may declare a key through them that a stub here would score
+  // by its guessed type, and an option handed out above without being retrieved for the data is scored without stubs;
+  // upgrade once the matcher reads its "none of these" rules off the retrieved option (#5886). Data holding no extra
+  // key is left as it is, since the copy would hold an empty `properties`, which scores apart from none
+  if (
+    !allowsAdditionalProperties<S, F>({ ...context, additionalPropertiesWhenAbsent: 'forbid' }, schema) ||
+    // The plan merges `dependencies` away without data, so its chains, not its schema, say which ones it declares
+    plan.chains.some((chain) => [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY].some((keyword) => chain.has(keyword))) ||
+    extraKeysOf<S>(schema, schema, undefined, formData).length === 0
+  ) {
+    return { schema, plan };
+  }
+  return { schema: stubExistingAdditionalProperties<unknown, S, F>(context, schema, rootSchema, formData), plan };
 }
 
 /** The option `bestOption()` picks, with the score it gets, computed once it is asked for */
@@ -565,7 +604,7 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return scopeScore<T, S, F>(
       context,
       rootSchema,
-      scoredOption<S, F>(context, option, rootSchema, declaredAt(index, option)),
+      scoredOption<S, F>(context, option, rootSchema, formData, declaredAt(index, option)),
       formData,
       new Set(),
     );

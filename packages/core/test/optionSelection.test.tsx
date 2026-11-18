@@ -1686,6 +1686,59 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#switch')).toHaveTextContent('0');
     expect(node.querySelector('#root_b__key')).toHaveValue('b');
   });
+
+  const takesExtraKeys: RJSFSchema[] = [
+    { additionalProperties: false },
+    { properties: { q: { default: 'b' } }, additionalProperties: true },
+  ];
+  const besideX = (properties: RJSFSchema['properties']): RJSFSchema => ({
+    type: 'object',
+    properties: { x: { type: 'string' }, ...properties },
+  });
+  describe.each<[string, RJSFSchema, object | undefined, object]>([
+    [
+      'adding the default of the option it shows',
+      besideX({ p: { oneOf: takesExtraKeys } }),
+      { p: { t: 2 } },
+      { p: { q: 'b', t: 2 } },
+    ],
+    [
+      'leaving out the default of an option it does not show',
+      besideX({
+        q: { anyOf: [{ required: ['p'], additionalProperties: {} }, { properties: { p: { type: 'null' } } }] },
+      }),
+      { q: { m: 'b' } },
+      { q: { m: 'b' } },
+    ],
+    [
+      'for the default it holds',
+      besideX({ p: { default: { t: 2 }, oneOf: takesExtraKeys } }),
+      undefined,
+      { p: { q: 'b', t: 2 } },
+    ],
+  ])(
+    'a field whose options declare no type fills its first render from the option it shows, %s (#5832)',
+    (_, schema, initialFormData, filled) => {
+      it('and gives the same data after a reset', () => {
+        const ref = createFormRef();
+        createFormComponent({ ref, schema, initialFormData });
+        expect(handleOf(ref).getFormData()).toEqual(filled);
+
+        act(() => handleOf(ref).reset());
+
+        expect(handleOf(ref).getFormData()).toEqual(filled);
+      });
+
+      it('and after an edit to another field', async () => {
+        const ref = createFormRef();
+        const { node } = createFormComponent({ ref, schema, initialFormData });
+
+        await user.type(elementOf(node, '#root_x'), 'a');
+
+        expect(handleOf(ref).getFormData()).toEqual({ x: 'a', ...filled });
+      });
+    },
+  );
 });
 
 describe('omitting extra data', () => {

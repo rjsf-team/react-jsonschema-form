@@ -100,6 +100,72 @@ describe('matching options through the schema graph', () => {
     const rootSchema: RJSFSchema = { type: 'object', properties: { v: { oneOf } } };
     expect(getFirstMatchingOption({ validator: miniValidator() }, { s_a: 'x' }, oneOf, rootSchema)).toBe(1);
   });
+  // A validator failing every option leaves the pick to the score (#5832)
+  describe('scores the extra keys an additionalProperties or patternProperties takes as the options retrieved for the data do', () => {
+    const validator = { ...miniValidator(), isValid: () => false };
+    const takesExtraKeys: RJSFSchema[] = [
+      { additionalProperties: false },
+      { properties: { q: { default: 'b' } }, additionalProperties: true },
+    ];
+    it.each<[string, RJSFSchema[], object, number]>([
+      ['above an option naming no properties', takesExtraKeys, { t: 2 }, 1],
+      [
+        'that a patternProperties alone takes, above an option naming no properties',
+        [
+          { additionalProperties: false },
+          {
+            properties: { q: { default: 'b' } },
+            patternProperties: { '^t': { type: 'number' } },
+            additionalProperties: false,
+          },
+        ],
+        { t: 2 },
+        1,
+      ],
+      [
+        'tying with a property the data leaves out',
+        [{ required: ['p'], additionalProperties: {} }, { properties: { p: { type: 'null' } } }],
+        { m: 'b' },
+        0,
+      ],
+      [
+        'leaving a key an allOf entry declares to it',
+        [
+          { properties: { a: { type: 'number' }, b: { type: 'number' } } },
+          { allOf: [{ properties: { a: { type: 'number' } } }], additionalProperties: true },
+        ],
+        { a: 1 },
+        0,
+      ],
+      [
+        'leaving a key its dependencies declare to them',
+        [
+          { properties: { a: { type: 'string' } } },
+          {
+            properties: { k: { type: 'string' } },
+            dependencies: { k: { properties: { a: { type: 'number' } } } },
+            additionalProperties: true,
+          },
+        ],
+        { k: 'y', a: 'x' },
+        0,
+      ],
+    ])('%s', (_, options, formData, expected) => {
+      const rootSchema: RJSFSchema = { type: 'object', properties: { v: { anyOf: options } } };
+      const retrieved = options.map((option) => retrieveSchema({ validator }, option, rootSchema, formData));
+      expect(getClosestMatchingOption({ validator }, rootSchema, formData, retrieved)).toBe(expected);
+      expect(getClosestMatchingOption({ validator }, rootSchema, formData, options)).toBe(expected);
+    });
+    it('and fills a field holding no data from the option its default scores best for', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: { v: { default: { t: 2 }, oneOf: takesExtraKeys } },
+      };
+      const filled = getDefaultFormState({ validator }, { schema: rootSchema, rootSchema });
+      expect(filled).toEqual({ v: { q: 'b', t: 2 } });
+      expect(getDefaultFormState({ validator }, { schema: rootSchema, formData: filled, rootSchema })).toEqual(filled);
+    });
+  });
   it('matches past an option holding a patternProperties pattern no flag compiles', () => {
     const options: RJSFSchema[] = [
       { type: 'object', properties: { a: { type: 'string' } }, patternProperties: { '(?<x': { type: 'string' } } },
