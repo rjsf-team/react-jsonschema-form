@@ -9,6 +9,7 @@ import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import createErrorHandler from './createErrorHandler.ts';
 import createRootSchemaGuard from './createRootSchemaGuard.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
+import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import deepEquals, { deepEqualsUndefinedAsMissing } from './deepEquals.ts';
 import describeUnresolvedComponent from './describeUnresolvedComponent.ts';
 import englishStringTranslator from './englishStringTranslator.ts';
@@ -324,6 +325,8 @@ export {
   createRootSchemaGuard,
   createSchemaUtils,
   DateElement,
+  dateElementAriaLabel,
+  dateElementLabel,
   deepEquals,
   deepEqualsUndefinedAsMissing,
   DEFAULT_BOOLEAN_WIDGET,

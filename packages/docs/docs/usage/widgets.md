@@ -86,6 +86,8 @@ The built-in string field also supports the JSON Schema `format` property, and w
 
 ![](https://i.imgur.com/xqu6Lcp.png)
 
+`@rjsf/mantine` draws `date` with Mantine's `DateInput`, and `date-time`, `datetime` and `iso-date-time` with its `DateTimePicker`: a button with the `combobox` role that opens a calendar and a time picker, so a screen reader announces the field's label, the value it shows, and whether it is required or invalid. Down Arrow, or Alt+Down Arrow, opens it as Enter and Space do, moving focus onto its selected day, and the time segments are named by the field's label, such as `When, hour`. Both show a Clear button while they hold a value, unless the field is disabled or read-only or `ui:options.clearable` is `false`.
+
 Please note that, even though they are standardized, `datetime-local`, `date` and `time` input elements are not supported by IE. If you plan on targeting IE, two alternative widgets are available:
 
 - `alt-datetime`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;

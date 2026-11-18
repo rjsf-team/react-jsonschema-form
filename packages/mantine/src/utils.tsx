@@ -359,6 +359,7 @@ const themeComponentNames = {
   ColorInput: [...wrapperThemeNames, 'ColorInput'],
   PasswordInput: [...wrapperThemeNames, 'PasswordInput'],
   DateInput: [...wrapperThemeNames, 'DateInput'],
+  DateTimePicker: [...wrapperThemeNames, 'DateTimePicker'],
 } satisfies Record<string, string[]>;
 
 export type AriaInputComponentName = keyof typeof themeComponentNames;
@@ -370,7 +371,17 @@ export type AriaInputComponentName = keyof typeof themeComponentNames;
  * @returns - The theme's `wrapperProps`, or `undefined` where it gives none
  */
 export function useThemeWrapperProps(component: AriaInputComponentName) {
-  return wrapperPropsOption(useProps<GenericObjectType>(themeComponentNames[component], {}, {}).wrapperProps);
+  return wrapperPropsOption(useThemeDefaultProps(component).wrapperProps);
+}
+
+/** The `defaultProps` the theme gives `component`, for a caller that passes one of them explicitly, which would
+ * otherwise override the theme's
+ *
+ * @param component - The Mantine input whose theme `defaultProps` to resolve
+ * @returns - The theme's `defaultProps`, merged as Mantine merges them
+ */
+export function useThemeDefaultProps(component: AriaInputComponentName) {
+  return useProps<GenericObjectType>(themeComponentNames[component], {}, {});
 }
 
 /** Returns `value` when it is an object, else `undefined`
@@ -415,7 +426,7 @@ function isInputContainer(value: unknown): value is NonNullable<InputWrapperProp
 }
 
 /** The id `ownProps` give an element, or `fallback` where they give none */
-function ownIdOr(ownProps: GenericObjectType | undefined, fallback: string): string {
+export function ownIdOr(ownProps: GenericObjectType | undefined, fallback: string): string {
   const ownId: unknown = ownProps?.id;
   return typeof ownId === 'string' && ownId ? ownId : fallback;
 }
