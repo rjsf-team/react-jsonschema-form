@@ -9,9 +9,10 @@ import {
   isConstant,
   uiBooleanOption,
   UI_OPTIONS_KEY,
+  withoutFieldOptions,
 } from '@rjsf/utils';
 
-import { getSelectSchemaInfo, withoutUiWidget } from './fieldWidgetUtils.ts';
+import { getSelectSchemaInfo, optionsKeywordOf, withoutUiWidget } from './fieldWidgetUtils.ts';
 
 /** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
  * description, which the field's plan already carries to the option's, so the option keeps the title and description
@@ -102,7 +103,8 @@ export default function getOptionFieldUiSchema<
   registry: Registry<T, S, F>,
 ): UiSchema<T, S, F> | undefined {
   if (uiSchema && optionUiSchema === uiSchema) {
-    return withImplementedWidget<T, S, F>(withoutFieldText<T, S, F>(uiSchema), renderedOption, registry);
+    const inherited = withoutFieldOptions<T, S, F>(uiSchema, uiSchema, optionsKeywordOf<S>(schema))!;
+    return withImplementedWidget<T, S, F>(withoutFieldText<T, S, F>(inherited), renderedOption, registry);
   }
   const rendered = option
     ? getRenderedOptionUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema)

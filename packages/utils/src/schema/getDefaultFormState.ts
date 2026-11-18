@@ -26,7 +26,7 @@ import {
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
-import getOptionUiSchema from '../getOptionUiSchema.ts';
+import getOptionUiSchema, { withoutFieldOptions } from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import { renderOption } from '../getRenderedOptionSchema.ts';
 import getRenderedOptionUiSchema from '../getRenderedOptionUiSchema.ts';
@@ -1994,9 +1994,9 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     rendersOwnField && optionUiSchema !== props.uiSchema && retrievedOption
       ? getRenderedOptionUiSchema<T, S, F>(fieldSchema, retrievedOption(), props.uiSchema, optionUiSchema)
       : optionUiSchema;
-  let uiSchema = renderedUiSchema;
-  if (initialValue !== undefined && getUiOptions<T, S, F>(renderedUiSchema).initialValue === undefined) {
-    const carrying: UiSchema<T, S, F> = renderedUiSchema ? { ...renderedUiSchema } : {};
+  let uiSchema = withoutFieldOptions<T, S, F>(renderedUiSchema, props.uiSchema, key);
+  if (initialValue !== undefined && getUiOptions<T, S, F>(uiSchema).initialValue === undefined) {
+    const carrying: UiSchema<T, S, F> = uiSchema ? { ...uiSchema } : {};
     carrying['ui:initialValue'] = initialValue;
     uiSchema = carrying;
   }

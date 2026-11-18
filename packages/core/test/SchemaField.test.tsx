@@ -4038,7 +4038,7 @@ describe('SchemaField', () => {
         );
       });
 
-      describe('an option inside an allOf, which resolveUiSchema() does not reach', () => {
+      describe('an option inside an allOf', () => {
         const allOfSchema: RJSFSchema = {
           $defs: { Foo: { type: 'object', properties: { c: { type: 'string' } } }, Bar: { type: 'number' } },
           allOf: [{ anyOf: [{ $ref: '#/$defs/Foo' }, { $ref: '#/$defs/Bar' }] }],
@@ -4087,6 +4087,28 @@ describe('SchemaField', () => {
             'BarTitle',
           ]);
         });
+      });
+
+      it("titles the selector's options from their definitions, for options a then branch offers", () => {
+        const { node } = createFormComponent({
+          schema: {
+            $defs: { Foo: { type: 'object', properties: { c: { type: 'string' } } }, Bar: { type: 'number' } },
+            if: { type: 'object' },
+            then: { anyOf: [{ $ref: '#/$defs/Foo' }, { $ref: '#/$defs/Bar' }] },
+          },
+          uiSchema: {
+            'ui:definitions': {
+              '#/$defs/Foo': { 'ui:title': 'FooTitle' },
+              '#/$defs/Bar': { 'ui:title': 'BarTitle' },
+            },
+          },
+          initialFormData: {},
+        });
+
+        expect([...node.querySelectorAll('#root__anyof_select option')].map((o) => o.textContent)).toEqual([
+          'FooTitle',
+          'BarTitle',
+        ]);
       });
 
       it('names the definition for a ui:field it holds beside a ui:options.field the field ignores', () => {
