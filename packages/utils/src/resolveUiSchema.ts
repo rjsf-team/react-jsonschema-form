@@ -1,8 +1,12 @@
 import {
+  ALL_OF_KEY,
   ANY_OF_KEY,
+  DEPENDENCIES_KEY,
+  ELSE_KEY,
   ONE_OF_KEY,
   REF_KEY,
   RJSF_REF_KEY,
+  THEN_KEY,
   UI_DEFINITION_ORIGIN_KEY,
   UI_OPTIONS_KEY,
 } from './constants.ts';
@@ -40,12 +44,98 @@ export function definitionRef(schema: unknown): string | undefined {
   return stringKeyword(schema, RJSF_REF_KEY) ?? stringKeyword(schema, REF_KEY);
 }
 
+type OptionsKeyword = typeof ONE_OF_KEY | typeof ANY_OF_KEY;
+
+/** `resolveOwnRef()`, logging a reference it can't resolve and giving `undefined` for it */
+function tryResolveOwnRef<S extends StrictRJSFSchema>(schema: S, rootSchema: S): S | undefined {
+  try {
+    return resolveOwnRef<S>(schema, rootSchema);
+  } catch (e) {
+    logOnce('could not resolve $ref in resolveUiSchema:\n', { error: e });
+    return undefined;
+  }
+}
+
+function listedOptions(schema: StrictRJSFSchema, keyword: OptionsKeyword): unknown[] | undefined {
+  const options = schema[keyword];
+  return Array.isArray(options) && options.length > 0 ? options : undefined;
+}
+
+/** Returns the `oneOf` and `anyOf` lists the field of `schema` offers once `retrieveSchema()` merges its `allOf`: its
+ * own, or the one an `allOf` member offers, which the merge hoists as it is. Two lists are merged into the pairings of
+ * their options, whose positions need not be those of either list, so there is none to return for that keyword then.
+ * Nor is there where a `then`/`else` or `dependencies` entry offers one, which the data merges in or not
+ *
+ * @param schema - The field's schema, with its own `$ref` resolved
+ * @param fieldRef - The `$ref` the field's schema was resolved from, if any, so a member looping back to it isn't
+ *   read twice
+ * @param rootSchema - The root schema an `allOf` member's `$ref` is resolved against
+ * @returns - For each keyword, the one list offered, if exactly one is
+ */
+function offeredOptions<S extends StrictRJSFSchema>(
+  schema: S,
+  fieldRef: string | undefined,
+  rootSchema: S,
+): Record<OptionsKeyword, unknown[] | undefined> {
+  if (([ALL_OF_KEY, THEN_KEY, ELSE_KEY, DEPENDENCIES_KEY] as const).every((key) => schema[key] === undefined)) {
+    return { [ONE_OF_KEY]: listedOptions(schema, ONE_OF_KEY), [ANY_OF_KEY]: listedOptions(schema, ANY_OF_KEY) };
+  }
+  const lists: Record<OptionsKeyword, unknown[][]> = { [ONE_OF_KEY]: [], [ANY_OF_KEY]: [] };
+  const conditional = new Set<OptionsKeyword>();
+  const followed = new Set<string>(fieldRef ? [fieldRef] : []);
+  const collect = (node: unknown, inBranch: boolean) => {
+    if (!isObject(node)) {
+      return;
+    }
+    let resolved: S | undefined = node as S;
+    const ref = stringKeyword(node, REF_KEY);
+    const isFollowed = ref !== undefined && node !== schema;
+    if (isFollowed) {
+      // A member naming a definition already followed is one whose `allOf` loops back to it
+      if (followed.has(ref)) {
+        return;
+      }
+      followed.add(ref);
+      resolved = tryResolveOwnRef<S>(resolved, rootSchema);
+      if (!resolved) {
+        return;
+      }
+    }
+    // A `$ref` reaching a list already read under another name, such as an alias of the field's own definition, reaches
+    // the same list again
+    for (const keyword of [ONE_OF_KEY, ANY_OF_KEY] as const) {
+      const options = listedOptions(resolved, keyword);
+      if (options && inBranch) {
+        conditional.add(keyword);
+      } else if (options && !(isFollowed && lists[keyword].includes(options))) {
+        lists[keyword].push(options);
+      }
+    }
+    const members = resolved[ALL_OF_KEY];
+    if (Array.isArray(members)) {
+      members.forEach((member) => collect(member, inBranch));
+    }
+    const dependencies = resolved[DEPENDENCIES_KEY];
+    const branches = [
+      resolved[THEN_KEY],
+      resolved[ELSE_KEY],
+      ...(isObject(dependencies) ? Object.values(dependencies) : []),
+    ];
+    branches.forEach((branch) => collect(branch, true));
+  };
+  collect(schema, false);
+  const one = (keyword: OptionsKeyword) =>
+    lists[keyword].length === 1 && !conditional.has(keyword) ? lists[keyword][0] : undefined;
+  return { [ONE_OF_KEY]: one(ONE_OF_KEY), [ANY_OF_KEY]: one(ANY_OF_KEY) };
+}
+
 /** Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
  *
  * Called at runtime for each field. When the schema contains a `$ref`, looks up the corresponding
  * uiSchema definition from `registry.uiSchemaDefinitions` and merges it with local overrides.
- * For schemas with `oneOf`/`anyOf` branches, also populates `uiSchema[keyword][i]` for branches
- * whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option titles.
+ * For schemas with `oneOf`/`anyOf` branches, its own or those of an `allOf` member, also populates
+ * `uiSchema[keyword][i]` for branches whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option
+ * titles.
  *
  * Resolution order (later sources override earlier):
  * 1. `ui:definitions[$ref]` - base definition from registry
@@ -96,19 +186,18 @@ export default function resolveUiSchema<
   // Walk oneOf/anyOf branches to populate uiSchema[keyword][i] so MultiSchemaField
   // can read dropdown option titles at the parent level.
   if (definitions) {
-    let resolvedSchema: S = schema;
-    if (ref && stringKeyword(schema, REF_KEY) && !stringKeyword(schema, RJSF_REF_KEY)) {
-      try {
-        resolvedSchema = resolveOwnRef<S>(schema, registry.rootSchema);
-      } catch (e) {
-        logOnce('could not resolve $ref in resolveUiSchema:\n', { error: e });
-        return recorded(result);
-      }
+    const resolvedSchema =
+      ref && stringKeyword(schema, REF_KEY) && !stringKeyword(schema, RJSF_REF_KEY)
+        ? tryResolveOwnRef<S>(schema, registry.rootSchema)
+        : schema;
+    if (!resolvedSchema) {
+      return recorded(result);
     }
 
+    const offered = offeredOptions<S>(resolvedSchema, ref, registry.rootSchema);
     for (const keyword of [ONE_OF_KEY, ANY_OF_KEY] as const) {
-      const schemaOptions = resolvedSchema[keyword];
-      if (Array.isArray(schemaOptions) && schemaOptions.length > 0) {
+      const schemaOptions = offered[keyword];
+      if (schemaOptions) {
         const currentUiSchemaArray = (result as GenericObjectType)[keyword];
         const uiSchemaArray: UiSchema<T, S, F>[] = Array.isArray(currentUiSchemaArray) ? [...currentUiSchemaArray] : [];
 
@@ -140,9 +229,10 @@ export default function resolveUiSchema<
 
 /** Merges the `ui:definitions` entry each `anyOf`/`oneOf` option's ref names under the option's uiSchema entry, where
  * `resolveUiSchema()` didn't merge one, and records its origin, as `resolveUiSchema()` does for an option the field's
- * schema lists itself. `resolveUiSchema()` reads the options of the schema it is given, so it doesn't reach the options
- * of an `allOf` member, which `retrieveSchema()` hoists to the field. The `anyOf`/`oneOf` field and the `ui:required`
- * walk call this, so they agree on the entry such an option has
+ * schema offers. `resolveUiSchema()` reads the schema as it is written, so it doesn't reach the options a `then`/`else`
+ * or a `dependencies` entry offers, which `retrieveSchema()` hoists to the field only where the data selects it, nor
+ * any the field offers beside such a list or beside another list an `allOf` member offers. The `anyOf`/`oneOf` field and
+ * the `ui:required` walk call this, so they agree on the entry such an option has
  *
  * @param refs - The `ui:definitions` key each option's schema is named by, as `resolveUiSchema()` reads it, if any
  * @param optionsUiSchema - The field's `uiSchema.anyOf`/`oneOf` entries, or `[]` where it gives none

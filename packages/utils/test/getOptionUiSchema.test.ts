@@ -1,5 +1,5 @@
 import { ANY_OF_KEY, ONE_OF_KEY } from '../src/constants.ts';
-import getOptionUiSchema, { selectOptionUiSchema } from '../src/getOptionUiSchema.ts';
+import getOptionUiSchema, { selectOptionUiSchema, withoutFieldOptions } from '../src/getOptionUiSchema.ts';
 import type { UiSchema } from '../src/types.ts';
 
 describe('selectOptionUiSchema()', () => {
@@ -13,6 +13,13 @@ describe('selectOptionUiSchema()', () => {
     const optionsUiSchema: UiSchema[] = [{ a: { 'ui:widget': 'textarea' } }];
     const uiSchema: UiSchema = { 'ui:widget': 'fallback' };
     expect(selectOptionUiSchema(optionsUiSchema, uiSchema, 1)).toBe(uiSchema);
+  });
+
+  it('falls back to uiSchema for an option the array holds no entry for, before one it does', () => {
+    const optionsUiSchema: UiSchema[] = [];
+    optionsUiSchema[1] = { b: { 'ui:widget': 'radio' } };
+    const uiSchema: UiSchema = { 'ui:widget': 'fallback' };
+    expect(selectOptionUiSchema(optionsUiSchema, uiSchema, 0)).toBe(uiSchema);
   });
 
   it('falls back to uiSchema when optionsUiSchema is undefined', () => {
@@ -52,5 +59,21 @@ describe('getOptionUiSchema()', () => {
 
   it('returns undefined when uiSchema itself is undefined', () => {
     expect(getOptionUiSchema(undefined, ONE_OF_KEY, 0)).toBeUndefined();
+  });
+});
+
+describe('withoutFieldOptions()', () => {
+  const uiSchema: UiSchema = { 'ui:title': 'Field', [ANY_OF_KEY]: [{ 'ui:title': 'First' }], [ONE_OF_KEY]: [] };
+
+  it("drops the field's list of the keyword from the field's uiSchema an option falls back to", () => {
+    expect(withoutFieldOptions(uiSchema, uiSchema, ANY_OF_KEY)).toEqual({ 'ui:title': 'Field', [ONE_OF_KEY]: [] });
+  });
+
+  it("hands back the option's own entry, or the field's uiSchema with no list to drop, as it is", () => {
+    const entry = uiSchema[ANY_OF_KEY]![0];
+    expect(withoutFieldOptions(entry, uiSchema, ANY_OF_KEY)).toBe(entry);
+    const listless: UiSchema = { 'ui:title': 'Field' };
+    expect(withoutFieldOptions(listless, listless, ANY_OF_KEY)).toBe(listless);
+    expect(withoutFieldOptions(undefined, undefined, ANY_OF_KEY)).toBeUndefined();
   });
 });
