@@ -362,6 +362,19 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(errors[0].property).toBe('.home.zip');
   });
 
+  it('reports a ui:required field declared in the ui:definitions entry of an option inside an allOf', () => {
+    const schema: RJSFSchema = {
+      $defs: {
+        Foo: { type: 'object', properties: { c: { type: 'string' }, d: { type: 'string' } } },
+        Bar: { type: 'number' },
+      },
+      allOf: [{ anyOf: [{ $ref: '#/$defs/Foo' }, { $ref: '#/$defs/Bar' }] }],
+    };
+    const uiSchema: UiSchema = { 'ui:definitions': { '#/$defs/Foo': { c: { 'ui:required': true } } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { d: 'x' });
+    expect(toErrorList(errorSchema).map(({ stack }) => stack)).toEqual([".c must have required property 'c'"]);
+  });
+
   it('finds a ui:definitions-declared field reused at more than one path', () => {
     const schema: RJSFSchema = {
       type: 'object',

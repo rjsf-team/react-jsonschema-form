@@ -9,6 +9,7 @@ import type {
 } from '../src/index.ts';
 import {
   createSchemaUtils,
+  mergeOptionDefinitions,
   mergeThemePresentation,
   noop,
   resolveUiSchema,
@@ -426,5 +427,28 @@ describe('resolveUiSchema() - the definition origin it records', () => {
     expect(first.anyOf).toEqual(second.anyOf);
     // The field merges no definition of its own, so it records none
     expect(Reflect.get(second, UI_DEFINITION_ORIGIN_KEY)).toBeUndefined();
+  });
+});
+
+describe('mergeOptionDefinitions()', () => {
+  const registry = makeRegistry({}, { '#/$defs/Foo': { 'ui:title': 'Foo' }, '#/$defs/Bar': { 'ui:title': 'Bar' } });
+
+  it('merges and records the definition of each option with no record, keeping the entries it is given', () => {
+    const given: UiSchema[] = [{ 'ui:description': 'Mine' }];
+    const merged = mergeOptionDefinitions(['#/$defs/Foo', null, '#/$defs/Bar'], given, registry);
+    expect(merged).toEqual([{ 'ui:title': 'Foo', 'ui:description': 'Mine' }, undefined, { 'ui:title': 'Bar' }]);
+    expect(Reflect.get(merged[0], UI_DEFINITION_ORIGIN_KEY)).toEqual({
+      ref: '#/$defs/Foo',
+      local: given[0],
+      definition: { 'ui:title': 'Foo' },
+    });
+    expect(given).toEqual([{ 'ui:description': 'Mine' }]);
+  });
+
+  it('returns the entries it is given where there is nothing to merge', () => {
+    const recorded = resolveUiSchema({ $ref: '#/$defs/Foo' }, {}, registry);
+    const given: UiSchema[] = [recorded, {}];
+    expect(mergeOptionDefinitions(['#/$defs/Foo', '#/$defs/Missing'], given, registry)).toBe(given);
+    expect(mergeOptionDefinitions(['#/$defs/Foo'], given, makeRegistry({}, undefined))).toBe(given);
   });
 });

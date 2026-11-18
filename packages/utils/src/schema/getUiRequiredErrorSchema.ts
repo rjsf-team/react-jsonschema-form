@@ -13,7 +13,7 @@ import ErrorSchemaBuilder from '../ErrorSchemaBuilder.ts';
 import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
-import getOptionUiSchema from '../getOptionUiSchema.ts';
+import { selectOptionUiSchema } from '../getOptionUiSchema.ts';
 import getRenderedOptionSchema, { renderOption } from '../getRenderedOptionSchema.ts';
 import getRenderedOptionUiSchema from '../getRenderedOptionUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
@@ -29,7 +29,7 @@ import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
 import rendersOwnFieldBesideOption, { hasOwnContentBesideOptions } from '../rendersOwnFieldBesideOption.ts';
-import resolveUiSchema from '../resolveUiSchema.ts';
+import resolveUiSchema, { definitionRef, mergeOptionDefinitions } from '../resolveUiSchema.ts';
 import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
 import type {
   ErrorSchema,
@@ -94,9 +94,19 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   // A `fieldState` is a caller's to implement, so an index naming none of the options is none shown
   const index = shownIndex < shownOptions.length ? shownIndex : -1;
   const option = index >= 0 ? shownOptions[index] : empty;
+  const given: unknown = uiSchema[key];
+  const optionsUiSchema = mergeOptionDefinitions<T, S, F>(
+    options.map(definitionRef),
+    Array.isArray(given) ? given : [],
+    ctx,
+  );
   const optionUiSchema =
-    getRenderedOptionUiSchema<T, S, F>(schema, option, uiSchema, getOptionUiSchema<T, S, F>(uiSchema, key, index)) ??
-    {};
+    getRenderedOptionUiSchema<T, S, F>(
+      schema,
+      option,
+      uiSchema,
+      selectOptionUiSchema(optionsUiSchema, uiSchema, index),
+    ) ?? {};
   if (!rendersOwnFieldBesideOption<S>(schema, option)) {
     return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema };
   }

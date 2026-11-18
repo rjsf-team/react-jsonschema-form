@@ -38,6 +38,18 @@ describe('ui:required enforcement', () => {
       await expectSubmitBlocked(schema, uiSchema, { home: {} });
     });
 
+    it('enforces ui:required declared in the ui:definitions entry of an option inside an allOf', async () => {
+      const schema: RJSFSchema = {
+        $defs: { Foo: { type: 'object', properties: { c: { type: 'string' } } }, Bar: { type: 'number' } },
+        allOf: [{ anyOf: [{ $ref: '#/$defs/Foo' }, { $ref: '#/$defs/Bar' }] }],
+      };
+      const uiSchema: UiSchema = { 'ui:definitions': { '#/$defs/Foo': { c: { 'ui:required': true } } } };
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema });
+      await submitForm(node, user, true);
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(errorListMessages(node)).toEqual([".c must have required property 'c'"]);
+    });
+
     it('enforces ui:required on a field nested inside array items', async () => {
       const schema: RJSFSchema = {
         type: 'object',

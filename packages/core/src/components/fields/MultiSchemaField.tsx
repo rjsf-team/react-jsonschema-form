@@ -13,9 +13,9 @@ import {
   hasWidget,
   isFormDataAvailable,
   logOnce,
+  mergeOptionDefinitions,
   optionSelectorId,
   PATTERN_PROPERTIES_KEY,
-  resolveUiSchema,
   resolveWidget,
   RJSF_REF_KEY,
   selectOptionUiSchema,
@@ -136,9 +136,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const title = titleOption ?? schema.title;
 
   // `resolveUiSchema()` merges an option's `ui:definitions` entry under its `uiSchema.anyOf[i]`/`oneOf[i]` only where the
-  // field's schema lists the options itself, so one it doesn't reach, such as an option inside an `allOf`, is merged
-  // below, the same way. Keyed on the refs, as a string, rather than on the options, which are retrieved afresh as the
-  // data changes
+  // field's schema lists the options itself, so one it doesn't reach, such as an option inside an `allOf`, is merged by
+  // `mergeOptionDefinitions()`, as the `ui:required` walk merges it. Keyed on the refs, as a string, rather than on the
+  // options, which are retrieved afresh as the data changes
   const optionRefs = JSON.stringify(options.map((opt) => optionDefinitionRef(opt, uiSchemaDefinitions) ?? null));
   const { rootSchema } = registry;
   // First we will check to see if there is an anyOf/oneOf override for the UI schema. Computed here, ahead of
@@ -155,18 +155,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         logOnce(`uiSchema.${xxxOfKey} is not an array for ${fieldLabelForLog(id, fieldPath)}`);
       }
     }
-    const refs: (string | null)[] = JSON.parse(optionRefs);
-    const unmerged = refs.flatMap((ref, i) => (ref !== null && !definitionRecordOf(given[i]) ? [{ ref, i }] : []));
-    if (unmerged.length === 0) {
-      return given;
-    }
-    const merged = [...given];
-    for (const { ref, i } of unmerged) {
-      // A schema naming only the definition it came from, which is all `resolveUiSchema()` reads to merge it
-      const refOnly = { [RJSF_REF_KEY]: ref } as unknown as S;
-      merged[i] = resolveUiSchema<T, S, F>(refOnly, given[i], { rootSchema, uiSchemaDefinitions });
-    }
-    return merged;
+    return mergeOptionDefinitions<T, S, F>(JSON.parse(optionRefs), given, { rootSchema, uiSchemaDefinitions });
   }, [xxxOfKey, uiSchema, id, fieldPath, optionRefs, rootSchema, uiSchemaDefinitions]);
 
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema

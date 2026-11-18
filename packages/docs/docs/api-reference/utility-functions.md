@@ -2409,6 +2409,22 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 
 - GenericObjectType: The merged schema object
 
+### mergeOptionDefinitions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Merges the `ui:definitions` entry each `anyOf`/`oneOf` option's ref names under the option's uiSchema entry, where `resolveUiSchema()` didn't merge one, and records its origin under `UI_DEFINITION_ORIGIN_KEY`, as `resolveUiSchema()` does for an option the field's schema lists itself.
+`resolveUiSchema()` reads the options of the schema it is given, so it doesn't reach the options of an `allOf` member, which `retrieveSchema()` hoists to the field.
+The `anyOf`/`oneOf` field and `getUiRequiredErrorSchema()` call this, so they agree on the entry such an option has.
+
+#### Parameters
+
+- refs: readonly (string | null | undefined)[] - The `ui:definitions` key each option's schema is named by, as `resolveUiSchema()` reads it, if any
+- optionsUiSchema: UiSchema&lt;T, S, F>[] - The field's `uiSchema.anyOf`/`oneOf` entries, or `[]` where it gives none
+- registry: Pick&lt;Registry&lt;T, S, F>, 'rootSchema' | 'uiSchemaDefinitions'> - The registry containing `uiSchemaDefinitions`
+
+#### Returns
+
+- UiSchema&lt;T, S, F>[]: `optionsUiSchema`, or a copy with the merged entries where there are any
+
 ### mergeThemePresentation()
 
 Merges the `ThemePresentation`s of a form's layers, the way `@rjsf/core` merges its own components with a theme's and a theme's with the `Form`'s props.
