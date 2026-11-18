@@ -31,8 +31,10 @@
 - [About The Project](#about-the-project)
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+- [Documentation](#documentation)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -51,6 +53,10 @@ Exports `utils` functions for `react-jsonschema-form`.
 <!-- GETTING STARTED -->
 
 ## Getting Started
+
+### Prerequisites
+
+- `react >= 19`
 
 ### Installation
 

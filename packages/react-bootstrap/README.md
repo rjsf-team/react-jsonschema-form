@@ -112,4 +112,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/react-bootstrap
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/react-bootstrap.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/react-bootstrap
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/react-bootstrap/screenshot.png

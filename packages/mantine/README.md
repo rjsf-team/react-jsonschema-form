@@ -153,4 +153,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/mantine
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/mantine.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/mantine
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/mantine/screenshot.png

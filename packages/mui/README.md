@@ -161,4 +161,3 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/mui
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/mui.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/mui
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/e2e1181d1020f18cad0c80c661ddae28edb9794e/packages/mui/screenshot.png

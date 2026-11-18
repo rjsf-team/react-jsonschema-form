@@ -189,4 +189,3 @@ repository: [https://github.com/rjsf-team/react-jsonschema-form](https://github.
 [npm-url]: https://www.npmjs.com/package/@rjsf/shadcn
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/shadcn.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/shadcn
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/shadcn/screenshot.png

@@ -10,12 +10,10 @@ This is an advanced feature that lets you customize even more aspects of the for
 | **Per-Field Example** | `"ui:field": MyCustomField`               | `"ui:ArrayFieldTemplate": MyArrayTemplate`                     | `"ui:widget":MyCustomWidget`                                              |
 | **Documentation**     | [Custom Fields](custom-widgets-fields.md) | See documentation below                                        | [Custom Widgets](custom-widgets-fields.md)                                |
 
-### Mental Model: The House Construction Analogy
-
 To understand how Fields, Templates, and Widgets work together, consider how a room is built and furnished:
 
-- 👷 **Custom Field (General Contractor / Room Architect):** Oversees the entire room. Dictates end-to-end logic, manages state, coordinates sub-fields, and validates rules (e.g. `ObjectField`, `ArrayField`).
-- 📐 **Custom Template (Framing & Layout):** The structural scaffolding. Determines *where* elements sit relative to each other—arranging titles, descriptions, error banners, and the input slot. It doesn't care what the input control looks like.
+- 👷 **Custom Field (General Contractor / Room Architect):** Oversees the entire room. Dictates end-to-end logic, manages state, coordinates sub-fields, and shows the errors the validator reports for it (e.g. `ObjectField`, `ArrayField`).
+- 📐 **Custom Template (Framing & Layout):** The structural scaffolding. Determines _where_ elements sit relative to each other—arranging titles, descriptions, error banners, and the input slot. It doesn't care what the input control looks like.
 - 🎛️ **Custom Widget (Fixture / Appliance):** The interactive leaf control the user actually touches—the light switch, faucet, text input, toggle, or date picker. It only takes a value and fires change events.
 
 In version 5, all existing `templates` were consolidated into a new `TemplatesType` interface that is provided as part of the `Registry`.
@@ -43,7 +41,7 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [FieldHelpTemplate](#fieldhelptemplate)                         | FieldHelpProps                     | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                                  |
 | [FieldTemplate](#fieldtemplate)                                 | FieldTemplateProps                 | ui:FieldTemplate                 | Formerly `Form.FieldTemplate` or `Registry.FieldTemplate`                                                                                                            |
 | [GridTemplate](#gridtemplate)                                   | GridTemplateProps                  | ui:GridTemplate                  | Theme dependent implementations of a Grid element for either rows or columns                                                                                         |
-| [MarkdownTemplate](#markdowntemplate)                           | MarkdownTemplateProps              | ui:MarkdownTemplate              | Template for rendering markdown in descriptions, help text, and translatable strings                                                                                  |
+| [MarkdownTemplate](#markdowntemplate)                           | MarkdownTemplateProps              | ui:MarkdownTemplate              | Added in RJSF v7 to make markdown rendering opt-in                                                                                                                   |
 | [MultiSchemaFieldTemplate](#multischemafieldtemplate)           | MultiSchemaFieldTemplateProps      | ui:MultiSchemaFieldTemplate      | Formerly part of `@rjsf/core `MultiSchemaField`, refactored as a template                                                                                            |
 | [ObjectFieldTemplate](#objectfieldtemplate)                     | ObjectFieldTemplateProps           | ui:ObjectFieldTemplate           | Formerly `Form.ObjectFieldTemplate` or `Registry.ObjectFieldTemplate`                                                                                                |
 | [OptionalDataControlsTemplate](#optionaldatacontrolstemplate)   | OptionalDataControlsTemplateProps  | ui:OptionalDataControlsTemplate  | New feature in V6                                                                                                                                                    |
@@ -51,8 +49,8 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [UnsupportedFieldTemplate](#unsupportedfieldtemplate)           | UnsupportedFieldProps              | ui:UnsupportedFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix.                                                                                  |
 | [WrapIfAdditionalTemplate](#wrapifadditionaltemplate)           | WrapIfAdditionalTemplateProps      | ui:WrapIfAdditionalTemplate      | Formerly an internal component in `@rjsf.core`. Previously implemented in most themes.                                                                               |
 | [ButtonTemplates.AddButton](#addbutton)                         | IconButtonProps                    | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
-| [ButtonTemplates.ClearButton](#clearbutton)                     | IconButtonProps                    | n/a                              | Button used to clear text inputs when enabled                                                                                                                        |
-| [ButtonTemplates.CopyButton](#copybutton)                       | IconButtonProps                    | n/a                              | Button used to copy array items in `ArrayFieldItemTemplate`                                                                                                          |
+| [ButtonTemplates.ClearButton](#clearbutton)                     | IconButtonProps                    | n/a                              | Added in RJSF v6                                                                                                                                                     |
+| [ButtonTemplates.CopyButton](#copybutton)                       | IconButtonProps                    | n/a                              | Added in RJSF v5                                                                                                                                                     |
 | [ButtonTemplates.MoveDownButton](#movedownbutton)               | IconButtonProps                    | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
 | [ButtonTemplates.MoveUpButton](#moveupbutton)                   | IconButtonProps                    | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
 | [ButtonTemplates.RemoveButton](#removebutton)                   | IconButtonProps                    | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
@@ -1441,17 +1439,21 @@ render(
 
 ### ClearButton
 
-The `ClearButton` is used to clear text inputs when `allowClearTextInputs` is enabled or in widgets like `AltDateWidget`.
+The `ClearButton` is rendered by `BaseInputTemplate` to clear a text input's value when the `allowClearTextInputs` option is enabled.
 You can customize the `ClearButton` to render something other than the icon button that is provided by a theme as follows:
 
 ```tsx
 import React from 'react';
-import { IconButtonProps, RJSFSchema } from '@rjsf/utils';
+import { IconButtonProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { FormattedMessage } from 'react-intl';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
   type: 'string',
+};
+
+const uiSchema: UiSchema = {
+  'ui:options': { allowClearTextInputs: true },
 };
 
 function ClearButton(props: IconButtonProps) {
@@ -1464,24 +1466,35 @@ function ClearButton(props: IconButtonProps) {
 }
 
 render(
-  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { ClearButton } }} />,
+  <Form
+    schema={schema}
+    uiSchema={uiSchema}
+    formData='Clear me'
+    validator={validator}
+    templates={{ ButtonTemplates: { ClearButton } }}
+  />,
   document.getElementById('app'),
 );
 ```
 
 ### CopyButton
 
-The `CopyButton` is used to render a copy action on a `Form` for duplicating items in an array within `ArrayFieldItemTemplate`.
+The `CopyButton` is rendered by `ArrayFieldItemButtonsTemplate` to duplicate an array item when the `copyable` option is enabled (it is off by default).
 You can customize the `CopyButton` to render something other than the icon button that is provided by a theme as follows:
 
 ```tsx
 import React from 'react';
-import { IconButtonProps, RJSFSchema } from '@rjsf/utils';
+import { IconButtonProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { FormattedMessage } from 'react-intl';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
-  type: 'string',
+  type: 'array',
+  items: { type: 'string' },
+};
+
+const uiSchema: UiSchema = {
+  'ui:options': { copyable: true },
 };
 
 function CopyButton(props: IconButtonProps) {
@@ -1494,7 +1507,13 @@ function CopyButton(props: IconButtonProps) {
 }
 
 render(
-  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { CopyButton } }} />,
+  <Form
+    schema={schema}
+    uiSchema={uiSchema}
+    formData={['first', 'second']}
+    validator={validator}
+    templates={{ ButtonTemplates: { CopyButton } }}
+  />,
   document.getElementById('app'),
 );
 ```
