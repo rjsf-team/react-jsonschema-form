@@ -554,6 +554,29 @@ describe('DateTimeWidget', () => {
     expect(onBlur).toHaveBeenCalledExactlyOnceWith('root', '2024-01-10T08:00:00');
   });
 
+  test('DateTimeWidget reports its blur before the focus of the field focus moves to', async () => {
+    const events: string[] = [];
+    const { container } = render(
+      <MantineProvider env='test'>
+        <DateTimeWidget
+          {...makeProps({
+            schema: isoDateTime,
+            value: '2024-01-10T08:00:00',
+            onBlur: (id) => events.push(`blur ${id}`),
+            onFocus: (id) => events.push(`focus ${id}`),
+          })}
+        />
+        <input aria-label='Next' onFocus={() => events.push('focus next')} />
+      </MantineProvider>,
+    );
+
+    await user.click(container.querySelector('button#root')!);
+    await user.keyboard('{Escape}');
+    await user.click(screen.getByRole('textbox', { name: 'Next' }));
+
+    expect(events).toEqual(['focus root', 'blur root', 'focus next']);
+  });
+
   test('DateTimeWidget reports a blur when its focused Clear button is removed, and a focus when focus returns', async () => {
     const onBlur = vi.fn();
     const onFocus = vi.fn();

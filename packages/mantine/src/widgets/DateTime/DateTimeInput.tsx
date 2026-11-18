@@ -1,4 +1,4 @@
-import type { KeyboardEvent, MouseEvent } from 'react';
+import type { FocusEvent, KeyboardEvent, MouseEvent } from 'react';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { DateInput, DateTimePicker } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
@@ -152,6 +152,10 @@ export default function DateTimeInput<
   }, []);
 
   // A `DateTimePicker`'s field is its button, its dropdown and its modal, which focus moves between
+  const component = withTime ? 'DateTimePicker' : 'DateInput';
+  const themeDefaults = useThemeDefaultProps(component);
+  const modalProps = { ...asObject(themeDefaults.modalProps), ...asObject(themeProps.modalProps) };
+  const modalId = ownIdOr(modalProps, partId(id, 'modal'));
   const fieldRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [modalOpened, setModalOpened] = useState(false);
@@ -171,10 +175,17 @@ export default function DateTimeInput<
       reportFocus();
     }
   }, [reportFocus]);
-  // A focus inside the field that follows a blur in the same task only moves focus within it
-  const handleFieldBlur = useCallback(() => {
+  const handleFieldBlur = ({ relatedTarget }: FocusEvent<HTMLDivElement>) => {
+    const field = fieldRef.current;
+    const target = relatedTarget as Node | null;
+    // Focus going to an element outside the field and its modal leaves it now, before that element reports its focus
+    if (target && field && !field.contains(target) && !field.ownerDocument.getElementById(modalId)?.contains(target)) {
+      leaveField();
+      return;
+    }
+    // Otherwise a focus inside the field that follows in the same task only moves focus within it
     leaveTimerRef.current = setTimeout(leaveField);
-  }, [leaveField]);
+  };
   // Removing a focused element, such as the Clear button or the dropdown, moves focus to the body without a blur in
   // some browsers
   const leaveFieldIfFocusLost = useCallback(() => {
@@ -189,9 +200,7 @@ export default function DateTimeInput<
   const parsedValue =
     requiresOffset || typeof value !== 'string' ? offsetValueParser(localValue) : dateParser(localValue, valueFormat);
 
-  const component = withTime ? 'DateTimePicker' : 'DateInput';
   const ariaDescribedByProps = useInputAriaProps(component, props);
-  const themeDefaults = useThemeDefaultProps(component);
   const error = getWidgetError<T, S, F>(props);
 
   // The picker closes through the popover's `onClose`, which one in the options would replace
@@ -230,8 +239,6 @@ export default function DateTimeInput<
     const timeLabel = (part: string) =>
       dateElementAriaLabel(dateElementLabel(part, translateString), translateString, label);
     const inModal = (themeProps.dropdownType ?? themeDefaults.dropdownType) === 'modal';
-    const modalProps = { ...asObject(themeDefaults.modalProps), ...asObject(themeProps.modalProps) };
-    const modalId = ownIdOr(modalProps, partId(id, 'modal'));
     // Mantine names the popover's dropdown as the one it controls, which a modal leaves unrendered
     const popoverProps: GenericObjectType =
       inModal && modalOpened ? { ...sharedProps.popoverProps, 'aria-controls': modalId } : sharedProps.popoverProps;
