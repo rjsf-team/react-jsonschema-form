@@ -1,6 +1,6 @@
 import type { FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, schemaRequiresTrueValue, widgetDrawsLabel } from '@rjsf/utils';
+import { getCheckboxRequired, getControlAttributes, widgetDrawsLabelText } from '@rjsf/utils';
 import type { CheckboxProps } from 'antd';
 import { Checkbox, theme } from 'antd';
 
@@ -28,17 +28,11 @@ export default function CheckboxWidget<
     onFocus,
     readonly,
     value,
-    required,
-    schema,
     presentation,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const { token } = theme.useToken();
-  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
-  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
-  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
-  // and `aria-required` tells a screen reader of, as the marker is hidden from it
-  const marksRequired = presentation?.control ? required : trueValueRequired;
+  const { trueValueRequired, marksRequired } = getCheckboxRequired<T, S, F>(props);
   const control = useControlState<T, S, F>({ disabled, readonly, required: trueValueRequired, registry });
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
@@ -50,8 +44,8 @@ export default function CheckboxWidget<
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
   const extraProps = {
-    onBlur: !readonly ? handleBlur : undefined,
-    onFocus: !readonly ? handleFocus : undefined,
+    onBlur: handleBlur,
+    onFocus: handleFocus,
   };
   return (
     <Checkbox
@@ -67,7 +61,7 @@ export default function CheckboxWidget<
       {...extraProps}
       {...getControlAttributes<T, S, F>({ id, presentation })}
     >
-      {!hideLabel && label ? (
+      {!hideLabel ? (
         <>
           {label}
           {marksRequired && (

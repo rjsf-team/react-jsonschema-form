@@ -6,9 +6,8 @@ import {
   getControlAttributes,
   getErrorsToDraw,
   hasWidgetErrors,
-  labelValue,
-  schemaRequiresTrueValue,
-  widgetDrawsLabel,
+  getCheckboxRequired,
+  widgetDrawsLabelText,
   templateMarksRequired,
 } from '@rjsf/utils';
 
@@ -24,27 +23,10 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): ReactElement {
-  const {
-    id,
-    htmlName,
-    value = false,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    label,
-    schema,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const { id, htmlName, value = false, disabled, readonly, autofocus, label, onChange, onBlur, onFocus } = props;
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
 
-  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
-  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
-  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
-  // and `aria-required` tells a screen reader of, as the marker is hidden from it
-  const marksRequired = props.presentation?.control ? required : trueValueRequired;
+  const { trueValueRequired, marksRequired } = getCheckboxRequired<T, S, F>(props);
   const handleCheckboxChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (!disabled && !readonly && onChange) {
@@ -82,14 +64,12 @@ export default function CheckboxWidget<
         id={id}
         name={htmlName || id}
         label={
-          !hideLabel && label ? (
+          !hideLabel ? (
             <>
               {label}
               {marksRequired && templateMarksRequired<T, S, F>(props) && <span className='required'>*</span>}
             </>
-          ) : (
-            labelValue(label || undefined, hideLabel, false)
-          )
+          ) : undefined
         }
         disabled={disabled || readonly}
         required={trueValueRequired}

@@ -12,9 +12,9 @@ export interface UseOptionFocusHandlersResult {
 }
 
 /** Hook which builds the focus and blur handlers of the options of a widget that renders one focusable element per
- * option, such as a `CheckboxesWidget`. Each handler reports its option's value from `enumOptions`, rather than
- * decoding the focused element's DOM `value`, so it holds whether or not a theme's component forwards that attribute.
- * To be used by theme specific `CheckboxesWidget` implementations.
+ * option, such as a `CheckboxesWidget` or `RadioWidget`. Each handler reports its option's value from `enumOptions`,
+ * rather than decoding the focused element's DOM `value`, so it holds whether or not a theme's component forwards that
+ * attribute. To be used by theme specific `CheckboxesWidget` and `RadioWidget` implementations.
  *
  * @param props - The `id`, `options`, `onFocus` and `onBlur` from the `WidgetProps` of the widget
  * @returns - The `UseOptionFocusHandlersResult` to be used within the widget implementation

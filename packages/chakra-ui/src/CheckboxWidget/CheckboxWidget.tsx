@@ -8,7 +8,7 @@ import {
   getUiOptions,
   getWidgetDescription,
   hasWidgetErrors,
-  schemaRequiresTrueValue,
+  getCheckboxRequired,
   widgetDrawsLabelText,
   templateMarksRequired,
 } from '@rjsf/utils';
@@ -38,7 +38,6 @@ export default function CheckboxWidget<
     options,
     uiSchema,
     schema,
-    required,
   } = props;
   const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
@@ -46,11 +45,7 @@ export default function CheckboxWidget<
   // the description itself
   const description =
     presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
-  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
-  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
-  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
-  // and `aria-required` tells a screen reader of, as the marker is hidden from it
-  const marksRequired = presentation?.control ? required : trueValueRequired;
+  const { trueValueRequired, marksRequired } = getCheckboxRequired<T, S, F>(props);
 
   const handleChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
   const handleBlur = ({ target }: FocusEvent<HTMLElement>) =>

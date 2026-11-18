@@ -20,12 +20,14 @@ export default function FieldErrorTemplate<
   // One element carries the id a control is described by, so the id appears once and describes every message
   return (
     <Fieldset.ErrorText mt={0} id={id} display='block'>
-      {errors.map((error, i: number) => (
-        // oxlint-disable-next-line react/no-array-index-key
-        <chakra.span key={i} display='block'>
-          {error}
-        </chakra.span>
-      ))}
+      {errors
+        .filter((error) => error !== '' && error != null)
+        .map((error, i: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <chakra.span key={i} display='block'>
+            {error}
+          </chakra.span>
+        ))}
     </Fieldset.ErrorText>
   );
 }

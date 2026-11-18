@@ -96,10 +96,11 @@ export default function BaseInputTemplate<
 
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
+  const isRange = inputProps.type === 'range';
   let className = classMap.input;
   if (inputProps.type === 'file') {
     className = classMap.fileInput;
-  } else if (inputProps.type === 'range') {
+  } else if (isRange) {
     className = classMap.rangeInput;
   }
   return (
@@ -108,12 +109,14 @@ export default function BaseInputTemplate<
         id={id}
         name={htmlName || id}
         className={className}
-        readOnly={readonly}
+        // Neither `readonly` nor `placeholder` applies to a range input, which `RangeWidget` disables instead
+        readOnly={isRange ? undefined : readonly}
         disabled={disabled}
         autoFocus={autofocus}
         value={inputValue}
         title={title}
         {...inputProps}
+        placeholder={isRange ? undefined : inputProps.placeholder}
         list={hasExamples ? examplesId(id) : undefined}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}

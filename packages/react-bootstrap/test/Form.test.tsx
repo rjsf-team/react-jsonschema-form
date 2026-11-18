@@ -18,9 +18,7 @@ import { ThemeProvider } from 'react-bootstrap';
 
 import { elementOf } from '../../../testing/elementOf.ts';
 import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
-import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
-import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 const user = userEvent.setup();
 
@@ -143,18 +141,6 @@ describe("react-bootstrap widgets carry their field's plan on the element a user
 
     expect(screen.getByRole('slider')).toHaveClass('my-range');
     expect(screen.getByRole('slider')).not.toHaveClass('form-range');
-  });
-
-  test("focuses a radio group's first radio under ui:autofocus", () => {
-    render(
-      <Form
-        schema={{ type: 'object', properties: { color: { type: 'string', title: 'Color', enum: ['red', 'blue'] } } }}
-        uiSchema={{ color: { 'ui:widget': 'radio', 'ui:autofocus': true } }}
-        validator={validator}
-      />,
-    );
-
-    expect(screen.getByRole('radio', { name: 'red' })).toHaveFocus();
   });
 
   const colors: RJSFSchema = { type: 'string', title: 'Color', enum: ['red', 'blue'] };
@@ -491,6 +477,18 @@ describe('react-bootstrap labels and key inputs', () => {
 });
 
 describe('react-bootstrap focuses its groups as core does', () => {
+  test("focuses a radio group's first radio under ui:autofocus", () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color: { type: 'string', title: 'Color', enum: ['red', 'blue'] } } }}
+        uiSchema={{ color: { 'ui:widget': 'radio', 'ui:autofocus': true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radio', { name: 'red' })).toHaveFocus();
+  });
+
   test.each<[string, RJSFSchema, string]>([
     ['radio', { type: 'string', enum: ['red', 'green'] }, 'radio'],
     ['checkboxes', { type: 'array', items: { type: 'string', enum: ['red', 'green'] }, uniqueItems: true }, 'checkbox'],
@@ -553,20 +551,6 @@ describe('react-bootstrap CheckboxWidget required attribute', () => {
     const { container } = render(<Form schema={formSchema({ ...agree, const: true })} validator={validator} />);
 
     expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
-  });
-
-  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
-  // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
-  // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse
-  test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
-    ['a required boolean whose false the schema accepts', agree, true, false],
-    ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
-  ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
-    const { container } = render(
-      <CheckboxWidget {...makeWidgetMockProps({ schema, value, required, readonly: false })} />,
-    );
-
-    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
 

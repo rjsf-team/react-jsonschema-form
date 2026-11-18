@@ -21,7 +21,7 @@ export default function FieldErrorTemplate<
     <div>
       <ul id={id} className={joinClassNames('rjsf-error-detail', classMap.fieldErrors)}>
         {errors
-          .filter((elem) => !!elem)
+          .filter((error) => error !== '' && error != null)
           .map((error, index: number) => (
             // oxlint-disable-next-line react/no-array-index-key
             <li className={joinClassNames('rjsf-error', classMap.fieldError)} key={index}>

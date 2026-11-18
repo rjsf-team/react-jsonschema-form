@@ -67,14 +67,15 @@ export default function DateWidget<
 
   return (
     <DatePicker
+      allowClear={!readonly}
       autoFocus={autofocus}
       disabled={control.disabled}
       getPopupContainer={getPopupContainer}
       id={id}
       name={htmlName || id}
-      onBlur={!readonly ? handleBlur : undefined}
+      onBlur={handleBlur}
       onChange={!readonly ? handleChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
+      onFocus={handleFocus}
       open={readonly ? false : undefined}
       placeholder={placeholder}
       inputReadOnly={readonly}

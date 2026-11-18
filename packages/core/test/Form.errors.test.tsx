@@ -2423,4 +2423,14 @@ describe("a field's own error list", () => {
 
     expect(within(elementOf(node, '#root__error', HTMLElement)).getAllByRole('listitem')).toHaveLength(1);
   });
+
+  it('draws a numeric 0 message, as untyped error data can hold', () => {
+    // `extraErrors` parsed from a server response isn't checked against the `string | ReactElement` type
+    const { node } = createFormComponent({
+      schema: { type: 'string' },
+      extraErrors: JSON.parse('{ "__errors": [0, "Too short"] }'),
+    });
+
+    expect(within(elementOf(node, '#root__error', HTMLElement)).getAllByRole('listitem')).toHaveLength(2);
+  });
 });

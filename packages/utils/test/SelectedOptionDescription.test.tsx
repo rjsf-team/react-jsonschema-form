@@ -2,7 +2,8 @@
 import { render } from '@testing-library/react';
 
 import type { DescriptionFieldProps, Registry, SelectedOptionDescriptionProps } from '../src/index.ts';
-import { resolveFieldPresentation, SelectedOptionDescription, selectedOptionDescriptionId } from '../src/index.ts';
+import { SelectedOptionDescription, selectedOptionDescriptionId } from '../src/index.ts';
+import { planField } from './testUtils/presentation.ts';
 
 function DescriptionFieldTemplate({ id, description, schema }: DescriptionFieldProps) {
   return (
@@ -52,17 +53,7 @@ describe('SelectedOptionDescription', () => {
   });
 
   it("renders under its field's plan when hideLabel only says the template draws the label, under an id of its own", () => {
-    const presentation = resolveFieldPresentation({
-      id: 'root',
-      declaration: {
-        label: 'template',
-        description: 'template',
-        errors: 'template',
-        help: 'template',
-        labelledBy: 'for',
-      },
-      label: 'Choice',
-    });
+    const presentation = planField({ id: 'root', label: 'Choice' });
     const { container } = render(<SelectedOptionDescription {...baseProps} hideLabel presentation={presentation} />);
 
     expect(container.querySelector(`#${selectedOptionDescriptionId('root')}`)?.textContent).toBe('Foo description');
@@ -72,18 +63,7 @@ describe('SelectedOptionDescription', () => {
   it.each(['Choice', ''])(
     "renders nothing under its field's plan where its resolved `ui:label: false` applies, label %j",
     (label) => {
-      const presentation = resolveFieldPresentation({
-        id: 'root',
-        declaration: {
-          label: 'template',
-          description: 'template',
-          errors: 'template',
-          help: 'template',
-          labelledBy: 'for',
-        },
-        label,
-        showLabel: false,
-      });
+      const presentation = planField({ id: 'root', label, showLabel: false });
       const { container } = render(<SelectedOptionDescription {...baseProps} presentation={presentation} />);
 
       expect(container).toBeEmptyDOMElement();

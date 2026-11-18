@@ -1,6 +1,7 @@
 import { Field, Label, Text } from '@fluentui/react-components';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
+  getLabelId,
   getTemplates,
   getUiOptions,
   templateDrawsDescription,
@@ -86,7 +87,7 @@ export default function FieldTemplate<
       <Field validationState={hasError ? 'error' : undefined}>
         {drawsLabel && (
           <Label
-            id={presentation?.label.id}
+            id={getLabelId<T, S, F>(props)}
             htmlFor={templateLabelFor<T, S, F>(props)}
             required={templateMarksRequired<T, S, F>(props)}
             disabled={disabled}

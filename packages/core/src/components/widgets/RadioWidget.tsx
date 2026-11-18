@@ -1,16 +1,14 @@
-import type { FocusEvent } from 'react';
-import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
-  enumOptionValueDecoder,
   enumOptionsDomValues,
   enumOptionsIsSelected,
   getGroupAttributes,
   getOptionValueFormat,
   joinClassNames,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
@@ -39,22 +37,11 @@ function RadioWidget<
   label,
   placeholder,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  const { enumOptions, enumDisabled, inline } = options;
   const { classMap } = registry;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
-
-  const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) =>
-      onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
-    [onBlur, enumOptions, emptyValue, id, optionValueFormat],
-  );
-
-  const handleFocus = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) =>
-      onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
-    [onFocus, enumOptions, emptyValue, id, optionValueFormat],
-  );
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
     { id, presentation, label, placeholder, registry },
@@ -85,8 +72,8 @@ function RadioWidget<
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={i === autofocusIndex}
                 onChange={handleChange}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
+                onBlur={blurHandlers[i]}
+                onFocus={focusHandlers[i]}
                 {...optionAttributes}
               />
               <span>{option.label}</span>

@@ -2001,18 +2001,14 @@ describe('a widget rendering a group of controls', () => {
 });
 
 describe('an alt-date field', () => {
-  it.each(['alt-date', 'alt-datetime'])(
-    "names the %s parts' group by the template label, which draws no for",
-    (widget) => {
-      const { node } = createFormComponent({
-        schema: { type: 'object', properties: { when: { type: 'string', title: 'When' } } },
-        uiSchema: { when: { 'ui:widget': widget } },
-      });
+  it.each(['alt-date', 'alt-datetime'])("names the %s parts' group by the template label", (widget) => {
+    createFormComponent({
+      schema: { type: 'object', properties: { when: { type: 'string', title: 'When' } } },
+      uiSchema: { when: { 'ui:widget': widget } },
+    });
 
-      expect(node.querySelector(`#${fieldLabelId('root_when')}`)?.closest('label')).not.toHaveAttribute('for');
-      expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
-    },
-  );
+    expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+  });
 
   it('keeps its parts the items of a list inside the group, rather than giving the list the role', () => {
     createFormComponent({

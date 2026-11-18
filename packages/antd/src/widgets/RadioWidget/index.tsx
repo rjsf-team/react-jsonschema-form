@@ -68,8 +68,8 @@ export default function RadioWidget<
       id={id}
       name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
-      onBlur={!readonly ? handleBlur : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       // Controlled even with no value, so a click on a read-only group, which `readonlyAsDisabled: false` leaves
       // enabled, checks nothing the form doesn't hold
       value={selectValue ?? null}

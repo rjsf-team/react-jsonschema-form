@@ -21,7 +21,6 @@ import { elementOf } from '../../../testing/elementOf.ts';
 import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import FieldTemplate from '../src/templates/FieldTemplate/index.tsx';
-import CheckboxWidget from '../src/widgets/CheckboxWidget/index.tsx';
 
 const user = userEvent.setup();
 
@@ -421,6 +420,27 @@ describe('antd specific tests', () => {
     expect(labelText).toHaveTextContent(/^Name:$/);
     expect(labelText?.closest('label')).toHaveClass('ant-form-item-no-colon');
   });
+
+  test.each([null, 0, ''])(
+    "strips a heading's trailing colon as a field's label does, where formContext's colon is %j",
+    (colon) => {
+      const { container } = render(
+        <Form
+          schema={{
+            type: 'object',
+            properties: {
+              pet: { type: 'object', title: 'Pet:', properties: { kind: { type: 'string', title: 'Kind:' } } },
+            },
+          }}
+          formContext={{ colon }}
+          validator={validator}
+        />,
+      );
+
+      expect(container.querySelector('#root_pet__title')).toHaveTextContent(/^Pet$/);
+      expect(container.querySelector('#root_pet_kind__label')).toHaveTextContent(/^Kind$/);
+    },
+  );
 
   test("strips the trailing colon from a field's label and from a heading alike, keeping any other last character", () => {
     const { container } = render(
@@ -878,21 +898,17 @@ describe('antd focuses and names its groups as core does', () => {
     expect(screen.getAllByRole('radio')[2]).toHaveFocus();
   });
 
-  test.each(['alt-date', 'alt-datetime'])(
-    "names the %s parts' group by the template's label, which draws no for",
-    (widget) => {
-      const { container } = render(
-        <Form
-          schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
-          uiSchema={{ when: { 'ui:widget': widget } }}
-          validator={validator}
-        />,
-      );
+  test.each(['alt-date', 'alt-datetime'])("names the %s parts' group by the template's label", (widget) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
+        uiSchema={{ when: { 'ui:widget': widget } }}
+        validator={validator}
+      />,
+    );
 
-      expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
-      expect(container.querySelector('label[for="root_when"]')).toBeNull();
-    },
-  );
+    expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+  });
 });
 
 describe('antd read-only fields under readonlyAsDisabled: false', () => {
@@ -950,6 +966,79 @@ describe('antd read-only fields under readonlyAsDisabled: false', () => {
     expect(keyInput).toHaveAttribute('readonly');
     expect(keyInput).not.toBeDisabled();
     expect(keyInput).toHaveValue('first');
+  });
+
+  test.each<[string, RJSFSchema, UiSchema, unknown]>([
+    ['text input', { type: 'string' }, {}, 'a'],
+    ['number input', { type: 'number' }, {}, 1],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'a'],
+    ['date picker', { type: 'string', format: 'date' }, {}, '2020-01-02'],
+    ['checkbox', { type: 'boolean' }, {}, true],
+  ])('report focus and blur on a %s, as core does', async (_, x, uiSchema, value) => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X' } } }}
+        uiSchema={{ x: { ...uiSchema, 'ui:readonly': true } }}
+        initialFormData={{ x: value }}
+        formContext={{ readonlyAsDisabled: false }}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        validator={validator}
+      />,
+    );
+
+    await user.click(container.querySelector('#root_x')!);
+    await user.click(document.body);
+
+    expect(onFocus).toHaveBeenCalledWith('root_x', expect.anything());
+    expect(onBlur).toHaveBeenCalledWith('root_x', expect.anything());
+  });
+
+  test('report focus and blur on a checkboxes option, as core does', async () => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            x: { type: 'array', title: 'X', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+          },
+        }}
+        uiSchema={{ x: { 'ui:widget': 'checkboxes', 'ui:readonly': true } }}
+        formContext={{ readonlyAsDisabled: false }}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        validator={validator}
+      />,
+    );
+
+    await user.click(screen.getByRole('checkbox', { name: 'a' }));
+    await user.click(document.body);
+
+    expect(onFocus).toHaveBeenCalledWith('root_x', 'a');
+    expect(onBlur).toHaveBeenCalledWith('root_x', 'a');
+  });
+
+  test("draw no number input's step arrows or date picker's clear icon", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { n: { type: 'number', title: 'N' }, d: { type: 'string', format: 'date', title: 'D' } },
+        }}
+        uiSchema={{ 'ui:readonly': true }}
+        initialFormData={{ n: 1, d: '2020-01-02' }}
+        formContext={{ readonlyAsDisabled: false }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_n')).toHaveValue('1');
+    expect(screen.queryByRole('button', { name: 'Increase Value' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument();
   });
 });
 
@@ -1079,36 +1168,6 @@ describe('antd CheckboxWidget required attribute', () => {
     const { container } = render(<Form schema={formSchema({ ...agree, const: true })} validator={validator} />);
 
     expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
-  });
-
-  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
-  // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
-  // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse
-  test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
-    ['a required boolean whose false the schema accepts', agree, true, false],
-    ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
-  ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
-    const { container } = render(
-      <CheckboxWidget
-        id='root'
-        name='root'
-        schema={schema}
-        uiSchema={{}}
-        value={value}
-        required={required}
-        disabled={false}
-        readonly={false}
-        autofocus={false}
-        label='Agree'
-        options={{}}
-        onChange={vi.fn()}
-        onBlur={vi.fn()}
-        onFocus={vi.fn()}
-        registry={getTestRegistry(schema)}
-      />,
-    );
-
-    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
 

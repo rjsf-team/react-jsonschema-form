@@ -32,12 +32,14 @@ export default function FieldErrorTemplate<
   // One element carries the id a control is described by, so the id appears once and describes every message
   return (
     <ul className={classes.list} id={id}>
-      {errors.map((error, i: number) => (
-        // oxlint-disable-next-line react/no-array-index-key
-        <li key={i} className={classes.listItem}>
-          <small className={classes.errorLabel}>{error}</small>
-        </li>
-      ))}
+      {errors
+        .filter((error) => error !== '' && error != null)
+        .map((error, i: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <li key={i} className={classes.listItem}>
+            <small className={classes.errorLabel}>{error}</small>
+          </li>
+        ))}
     </ul>
   );
 }

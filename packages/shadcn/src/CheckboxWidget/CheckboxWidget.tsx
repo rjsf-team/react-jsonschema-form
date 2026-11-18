@@ -1,14 +1,14 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   fieldShowsOwnErrors,
+  getCheckboxRequired,
   getControlAttributes,
   getTemplates,
   getUiOptions,
   getWidgetDescription,
   hasWidgetErrors,
   labelValue,
-  schemaRequiresTrueValue,
-  widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
@@ -42,17 +42,9 @@ export default function CheckboxWidget<
     presentation,
     uiSchema,
     className,
-    required,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
-  // Because an unchecked checkbox will cause html5 validation to fail, only add
-  // the "required" attribute if the field value must be "true", due to the
-  // "const" or "enum" keywords
-  const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
-  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
-  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
-  // and `aria-required` tells a screen reader of, as the marker is hidden from it
-  const marksRequired = presentation?.control ? required : trueValueRequired;
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
+  const { trueValueRequired, marksRequired } = getCheckboxRequired<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const hasErrors = fieldShowsOwnErrors<T, S, F>(props);
 
@@ -96,8 +88,8 @@ export default function CheckboxWidget<
           htmlFor={id}
           data-invalid={hasErrors || undefined}
         >
-          {labelValue(label, hideLabel || !label)}
-          {!hideLabel && label && marksRequired && <span className='text-destructive ml-1'>*</span>}
+          {labelValue(label, hideLabel)}
+          {!hideLabel && marksRequired && <span className='text-destructive ml-1'>*</span>}
         </Label>
       </div>
     </div>

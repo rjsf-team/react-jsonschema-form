@@ -42,6 +42,7 @@ import getAdditionalKeyAttributes from './getAdditionalKeyAttributes.ts';
 import getArrayDescription from './getArrayDescription.ts';
 import getBaseInputProps from './getBaseInputProps.ts';
 import getChangedFields from './getChangedFields.ts';
+import getCheckboxRequired from './getCheckboxRequired.ts';
 import getContainerAttributes from './getContainerAttributes.ts';
 import getControlAttributes from './getControlAttributes.ts';
 import getControlDescribedBy from './getControlDescribedBy.ts';
@@ -364,6 +365,7 @@ export {
   getArrayDescription,
   getBaseInputProps,
   getChangedFields,
+  getCheckboxRequired,
   getContainerAttributes,
   getControlAttributes,
   getControlDescribedBy,

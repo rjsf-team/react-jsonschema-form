@@ -12,7 +12,6 @@ import {
   numericWidgetStoresString,
   rangeSpec,
   toNumericValue,
-  widgetDrawsLabel,
   widgetDrawsLabelText,
   templateMarksRequired,
 } from '@rjsf/utils';
@@ -55,7 +54,7 @@ export default function RangeWidget<
     presentation,
     registry,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const rootRef = useRef<HTMLSpanElement>(null);
   const isRangeOfValues = Array.isArray(value);
   const focusOnMount = useRef(autofocus && isRangeOfValues);
@@ -118,7 +117,7 @@ export default function RangeWidget<
   // one element may carry, on the slider's root, which a label's `for` can't name. Its label names a lone thumb through
   // `aria-labelledby` instead, while several thumbs each take that label's text and their number, to be told apart
   const labelId = getLabelId<T, S, F>(props);
-  const labelledByLabel = isRangeOfValues && widgetDrawsLabelText<T, S, F>(props) ? labelId : undefined;
+  const labelledByLabel = isRangeOfValues && !hideLabel ? labelId : undefined;
   const thumbText = plannedLabel || label;
   const namesEachThumb = isRangeOfValues && value.length > 1 && !authorNamesSlider && !!thumbText;
   const plannedName =
@@ -133,7 +132,7 @@ export default function RangeWidget<
     <>
       {labelValue(
         <FormLabel required={templateMarksRequired<T, S, F>(props)} {...labelProps}>
-          {label || undefined}
+          {label}
         </FormLabel>,
         hideLabel,
       )}

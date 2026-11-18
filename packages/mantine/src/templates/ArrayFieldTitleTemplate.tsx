@@ -1,8 +1,7 @@
-import { Grid, Title } from '@mantine/core';
 import type { ArrayFieldTitleProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { titleId } from '@rjsf/utils';
 
-import { RequiredMarker } from '../utils.tsx';
+import { TitleHeading } from '../utils.tsx';
 
 /** The `ArrayFieldTitleTemplate` component renders the array's title, with the `titleId()` of its `id` on the title's
  * text alone, as `TitleField` does. `ArrayField` already leaves `title` empty where `ui:label` turns the heading off,
@@ -21,19 +20,13 @@ export default function ArrayFieldTitleTemplate<
   if (!title) {
     return null;
   }
-  let heading = (
-    <Title order={4} fw='normal'>
-      <span id={titleId(id)}>{title}</span>
-      {required && <RequiredMarker />}
-    </Title>
+  return (
+    <TitleHeading
+      order={4}
+      id={titleId(id)}
+      title={title}
+      required={required}
+      optionalDataControl={optionalDataControl}
+    />
   );
-  if (optionalDataControl) {
-    heading = (
-      <Grid>
-        <Grid.Col span='auto'>{heading}</Grid.Col>
-        <Grid.Col span='content'>{optionalDataControl}</Grid.Col>
-      </Grid>
-    );
-  }
-  return heading;
 }

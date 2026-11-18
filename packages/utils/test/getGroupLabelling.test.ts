@@ -1,22 +1,12 @@
 import type { FieldPresentation, ResolvedPresentationDeclaration } from '../src/index.ts';
-import { getGroupLabelling, resolveFieldPresentation } from '../src/index.ts';
+import { getGroupLabelling } from '../src/index.ts';
+import { ID, TEMPLATE, planField } from './testUtils/presentation.ts';
 
-const ID = 'root_foo';
+const GROUP: ResolvedPresentationDeclaration = { ...TEMPLATE, labelledBy: 'aria-labelledby' };
 const LABEL_ID = `${ID}__label`;
 
 function plan(label: ResolvedPresentationDeclaration['label']): FieldPresentation {
-  return resolveFieldPresentation({
-    id: ID,
-    declaration: {
-      label,
-      description: 'template',
-      errors: 'template',
-      help: 'template',
-      labelledBy: 'aria-labelledby',
-    },
-    label: 'Foo',
-    errors: ['is required'],
-  });
+  return planField({ declaration: { ...GROUP, label }, errors: ['is required'] });
 }
 
 describe('getGroupLabelling()', () => {
@@ -30,12 +20,7 @@ describe('getGroupLabelling()', () => {
   });
 
   it('draws the label under the id its plan gives it, beneath a label a component above draws', () => {
-    const option = resolveFieldPresentation({
-      id: ID,
-      declaration: { label: 'self', description: 'template', errors: 'template', help: 'template', labelledBy: 'for' },
-      label: 'Bar',
-      inherited: plan('self'),
-    });
+    const option = planField({ declaration: { ...TEMPLATE, label: 'self' }, label: 'Bar', inherited: plan('self') });
     const { labelId, group } = getGroupLabelling({ id: ID, label: 'Bar', presentation: option }, 'radiogroup');
     expect(labelId).toBe(`${ID}__optionLabel`);
     expect(group['aria-labelledby']).toBe(`${ID}__optionLabel`);
@@ -51,18 +36,7 @@ describe('getGroupLabelling()', () => {
   });
 
   it('gives the id of the label the template draws, numbered beneath a label a component above draws', () => {
-    const option = resolveFieldPresentation({
-      id: ID,
-      declaration: {
-        label: 'template',
-        description: 'template',
-        errors: 'template',
-        help: 'template',
-        labelledBy: 'aria-labelledby',
-      },
-      label: 'Bar',
-      inherited: plan('self'),
-    });
+    const option = planField({ declaration: GROUP, label: 'Bar', inherited: plan('self') });
     const { drawsLabel, labelId, group } = getGroupLabelling({ id: ID, label: 'Bar', presentation: option }, 'group');
     expect(drawsLabel).toBe(false);
     expect(labelId).toBe(`${ID}__optionLabel`);

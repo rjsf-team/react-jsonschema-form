@@ -52,7 +52,6 @@ import {
   resolveUiSchema,
   isObject,
   TranslatableString,
-  uiBooleanOption,
   templateMarksRequired,
 } from '@rjsf/utils';
 
@@ -67,6 +66,7 @@ import {
   declaresProperty,
   getContainerErrorProps,
   getContainerHeading,
+  showsOwnHeadingWithoutPlan,
   storedValue,
   withGlobalUiOptions,
   withoutOptionalControls,
@@ -1005,9 +1005,8 @@ export default function ObjectField<
 
   // The plan says whether the heading and description are the object's to draw, so an option repeating its field's
   // title draws no second heading
-  const showLabel = uiBooleanOption(uiOptions.label) ?? true;
   const shownTitle = getContainerHeading<T, S, F>(presentation, schema, uiOptions, templateTitle);
-  let shownDescription = showLabel ? description : undefined;
+  let shownDescription = showsOwnHeadingWithoutPlan(uiOptions.label) ? description : undefined;
   if (presentation) {
     shownDescription = presentation.description.by === 'self' ? presentation.description.text : undefined;
   }

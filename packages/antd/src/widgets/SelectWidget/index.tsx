@@ -153,9 +153,9 @@ export default function SelectWidget<
         getPopupContainer={getPopupContainer}
         id={id}
         mode={multiple ? 'multiple' : undefined}
-        onBlur={!readonly ? handleBlur : undefined}
+        onBlur={handleBlur}
         onChange={!readonly ? handleChange : undefined}
-        onFocus={!readonly ? handleFocus : undefined}
+        onFocus={handleFocus}
         placeholder={placeholder}
         style={SELECT_STYLE}
         value={selectValue}

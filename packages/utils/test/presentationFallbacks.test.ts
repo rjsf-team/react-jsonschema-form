@@ -1,6 +1,6 @@
 import getControlAriaLabel from '../src/getControlAriaLabel.ts';
 /* oxlint-disable typescript/no-deprecated -- this file tests the helpers' fallbacks to the deprecated props */
-import type { FieldPresentation, Registry, ResolvedPresentationDeclaration } from '../src/index.ts';
+import type { Registry } from '../src/index.ts';
 import {
   englishStringTranslator,
   fieldShowsOwnErrors,
@@ -9,7 +9,6 @@ import {
   hasWidgetErrors,
   isNamedByTemplateLabel,
   listboxAriaProps,
-  resolveFieldPresentation,
   templateDrawsDescription,
   templateDrawsLabel,
   templateDrawsPlannedLabel,
@@ -19,19 +18,9 @@ import {
   widgetDrawsLabel,
   widgetDrawsLabelText,
 } from '../src/index.ts';
+import { TEMPLATE, planField as plan } from './testUtils/presentation.ts';
 
 const ID = 'root_foo';
-const TEMPLATE: ResolvedPresentationDeclaration = {
-  label: 'template',
-  description: 'template',
-  errors: 'template',
-  help: 'template',
-  labelledBy: 'for',
-};
-
-function plan(inputs: Partial<Parameters<typeof resolveFieldPresentation>[0]> = {}): FieldPresentation {
-  return resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo', ...inputs });
-}
 
 describe('templateDrawsLabel()', () => {
   it('follows the plan, whatever displayLabel says', () => {

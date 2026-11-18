@@ -19,11 +19,15 @@ export default function FieldErrorTemplate<
 
   return (
     <div id={id}>
-      {errors.map((error, index) => (
-        <div key={`field-${id}-error-${isValidElement(error) && error.key !== null ? `k-${error.key}` : `i-${index}`}`}>
-          {error}
-        </div>
-      ))}
+      {errors
+        .filter((error) => error !== '' && error != null)
+        .map((error, index) => (
+          <div
+            key={`field-${id}-error-${isValidElement(error) && error.key !== null ? `k-${error.key}` : `i-${index}`}`}
+          >
+            {error}
+          </div>
+        ))}
     </div>
   );
 }

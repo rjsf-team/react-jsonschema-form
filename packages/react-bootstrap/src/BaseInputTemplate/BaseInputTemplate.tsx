@@ -103,6 +103,9 @@ export default function BaseInputTemplate<
     plaintext: _plaintext,
     isValid: _isValid,
     isInvalid: _isInvalid,
+    // Neither applies to a range input
+    placeholder: _placeholder,
+    readOnly: _readOnly,
     ...rangeProps
   } = controlProps;
   return (

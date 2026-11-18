@@ -1,4 +1,3 @@
-import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Radio, Flex } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
@@ -10,6 +9,7 @@ import {
   enumOptionsDomValues,
   getOptionValueFormat,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 import {
@@ -48,23 +48,7 @@ export default function RadioWidget<
     [onChange, fieldDisabled, enumOptions, emptyValue, optionValueFormat],
   );
 
-  const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => {
-      if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onBlur, id, enumOptions, emptyValue, optionValueFormat],
-  );
-
-  const handleFocus = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => {
-      if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onFocus, id, enumOptions, emptyValue, optionValueFormat],
-  );
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
   const selected: string | undefined = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat);
@@ -97,8 +81,8 @@ export default function RadioWidget<
                   label={option.label}
                   disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled)}
                   autoFocus={i === autofocusIndex}
-                  onBlur={handleBlur}
-                  onFocus={handleFocus}
+                  onBlur={blurHandlers[i]}
+                  onFocus={focusHandlers[i]}
                   {...describedOptionProps}
                 />
               ))

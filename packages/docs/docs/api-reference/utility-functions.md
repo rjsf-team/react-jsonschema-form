@@ -1005,6 +1005,21 @@ console.log(getChangedFields(a, b)); // Output: ['items']
 console.log(getChangedFields(a, b, true)); // Output: ['items.0.qux']
 ```
 
+### getCheckboxRequired&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getcheckboxrequired}
+
+Gets how a checkbox is required.
+The box is natively required only where the schema demands `true`, as [schemaRequiresTrueValue()](#schemarequirestruevalue) decides, since HTML5 constraint validation fails an unchecked required box.
+Where the widget has a plan, its label is marked as its `required` prop says, which `SchemaField` sets from the plan and which takes in a box `ui:required` asks of that holds no value yet; RJSF's own check covers that box, and `aria-required` tells a screen reader of it.
+Without a plan, the label is marked only where the box is natively required.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'schema' | 'required' | 'presentation'> - The widget's `schema`, `required` and `presentation`
+
+#### Returns
+
+- { trueValueRequired: boolean; marksRequired: boolean }: `trueValueRequired`, for the box's native `required`, and `marksRequired`, for its label's marker
+
 ### getDecimalSeparator(languages?: string | string[])
 
 Determines the locale-specific decimal separator.

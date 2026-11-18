@@ -1352,6 +1352,16 @@ describe('uiSchema', () => {
         });
 
         expect(node.querySelector('[type=range]')).toBeDisabled();
+        expect(node.querySelector('[type=range]')).not.toHaveAttribute('readonly');
+      });
+
+      it('should put no placeholder on a range', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': 'range', 'ui:placeholder': 'Pick one' } },
+        });
+
+        expect(node.querySelector('[type=range]')).not.toHaveAttribute('placeholder');
       });
 
       // A range input can't show an empty value, so clearing it would leave the slider at its midpoint
@@ -2298,8 +2308,9 @@ describe('uiSchema', () => {
         );
       });
 
-      it('should mark as readonly a range widget', () => {
-        shouldBeReadonly(
+      // `readonly` doesn't apply to a range input, so a read-only one is disabled instead
+      it('should disable a read-only range widget', () => {
+        shouldBeDisabled(
           'input[type=range]',
           {
             type: 'number',
@@ -2587,8 +2598,9 @@ describe('uiSchema', () => {
         );
       });
 
-      it('should mark as readonly a range widget', () => {
-        shouldBeReadonly(
+      // `readonly` doesn't apply to a range input, so a read-only one is disabled instead
+      it('should disable a read-only range widget', () => {
+        shouldBeDisabled(
           'input[type=range]',
           {
             type: 'number',

@@ -47,9 +47,9 @@ export default function PasswordWidget<
       disabled={control.disabled}
       id={id}
       name={htmlName || id}
-      onBlur={!readonly ? handleBlur : undefined}
+      onBlur={handleBlur}
       onChange={!readonly ? handleChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
+      onFocus={handleFocus}
       placeholder={placeholder}
       readOnly={readonly}
       required={required}

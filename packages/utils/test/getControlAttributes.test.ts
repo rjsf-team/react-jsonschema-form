@@ -1,19 +1,8 @@
 import { ariaDescribedByIds } from '../src/idGenerators.ts';
-import type { FieldPresentation, ResolvedPresentationDeclaration } from '../src/index.ts';
-import { examplesId, getControlAttributes, resolveFieldPresentation } from '../src/index.ts';
+import { examplesId, getControlAttributes } from '../src/index.ts';
+import { TEMPLATE, planField as plan } from './testUtils/presentation.ts';
 
 const ID = 'root_foo';
-const TEMPLATE: ResolvedPresentationDeclaration = {
-  label: 'template',
-  description: 'template',
-  errors: 'template',
-  help: 'template',
-  labelledBy: 'for',
-};
-
-function plan(inputs: Partial<Parameters<typeof resolveFieldPresentation>[0]> = {}): FieldPresentation {
-  return resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo', ...inputs });
-}
 
 describe('getControlAttributes()', () => {
   it('describes a widget rendered without a plan by every part id, then its own', () => {

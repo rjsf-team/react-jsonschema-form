@@ -28,12 +28,22 @@ describe('FieldErrorTemplate', () => {
 
   it('renders errors that are neither a string nor an element, as untyped error data can hold', () => {
     // `extraErrors` parsed from a server response isn't checked against the `string | ReactElement` type
-    const errors: (string | ReactElement)[] = JSON.parse('["a", null, 3]');
+    const errors: (string | ReactElement)[] = JSON.parse('["a", null, 3, 0]');
     const { container } = render(
       <FieldErrorTemplate errors={errors} id='root' schema={{}} registry={getTestRegistry({})} />,
     );
 
-    expect(container.querySelectorAll('#root__error > div')).toHaveLength(errors.length);
+    // `null` is dropped as an empty message is, while a numeric `0` is a message
+    expect(container.querySelectorAll('#root__error > div')).toHaveLength(3);
+    expect(container.querySelector('#root__error')).toHaveTextContent('a30');
+  });
+
+  it('drops an empty message, as core does', () => {
+    const { container } = render(
+      <FieldErrorTemplate errors={['too short', '']} id='root' schema={{}} registry={getTestRegistry({})} />,
+    );
+
+    expect(container.querySelectorAll('#root__error > div')).toHaveLength(1);
   });
 
   // A control is described by the id only while the errors show, so the element must exist then and only then

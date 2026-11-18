@@ -869,6 +869,13 @@ describe('aria-describedby', () => {
     consoleError.mockRestore();
   });
 
+  test('drops an empty message, as core does', () => {
+    const { container } = render(<div>{errorLines(['too short', ''])}</div>);
+
+    expect(container).toHaveTextContent('too short');
+    expect(container.querySelectorAll('br')).toHaveLength(0);
+  });
+
   test('renders errors given as block elements inside its error element, without invalid nesting', () => {
     const consoleError = vi.spyOn(console, 'error');
     const { container } = render(

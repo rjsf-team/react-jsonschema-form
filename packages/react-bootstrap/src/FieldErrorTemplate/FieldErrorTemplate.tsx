@@ -19,12 +19,14 @@ export default function FieldErrorTemplate<
 
   return (
     <ListGroup as='ul' id={id}>
-      {errors.map((error, i) => (
-        // oxlint-disable-next-line react/no-array-index-key
-        <ListGroup.Item as='li' key={i} className='border-0 m-0 p-0'>
-          <small className='m-0 text-danger'>{error}</small>
-        </ListGroup.Item>
-      ))}
+      {errors
+        .filter((error) => error !== '' && error != null)
+        .map((error, i) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <ListGroup.Item as='li' key={i} className='border-0 m-0 p-0'>
+            <small className='m-0 text-danger'>{error}</small>
+          </ListGroup.Item>
+        ))}
     </ListGroup>
   );
 }

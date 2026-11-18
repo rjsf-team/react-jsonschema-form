@@ -81,8 +81,8 @@ export default function CheckboxesWidget<
               disabled={control.disabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
               aria-readonly={control.ariaReadonly}
               value={domValues[i]}
-              onBlur={!readonly ? blurHandlers[i] : undefined}
-              onFocus={!readonly ? focusHandlers[i] : undefined}
+              onBlur={blurHandlers[i]}
+              onFocus={focusHandlers[i]}
               {...optionAttributes}
             >
               {option.label}

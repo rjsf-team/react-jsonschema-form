@@ -44,14 +44,16 @@ export default function FieldErrorTemplate<
   // One element carries the id a control is described by, so the id appears once and describes every message
   return (
     <List id={id} dense disablePadding {...muiSlotProps?.fieldErrorList}>
-      {errors.map((error, i: number) => (
-        // oxlint-disable-next-line react/no-array-index-key
-        <ListItem key={i} disableGutters {...muiSlotProps?.fieldErrorListItem}>
-          <FormHelperText component='div' {...muiSlotProps?.fieldErrorFormHelperText}>
-            {error}
-          </FormHelperText>
-        </ListItem>
-      ))}
+      {errors
+        .filter((error) => error !== '' && error != null)
+        .map((error, i: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <ListItem key={i} disableGutters {...muiSlotProps?.fieldErrorListItem}>
+            <FormHelperText component='div' {...muiSlotProps?.fieldErrorFormHelperText}>
+              {error}
+            </FormHelperText>
+          </ListItem>
+        ))}
     </List>
   );
 }

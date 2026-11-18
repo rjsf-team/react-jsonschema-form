@@ -8,8 +8,8 @@ import {
   getTemplates,
   getWidgetDescription,
   labelValue,
-  schemaRequiresTrueValue,
-  widgetDrawsLabel,
+  getCheckboxRequired,
+  widgetDrawsLabelText,
   templateMarksRequired,
 } from '@rjsf/utils';
 
@@ -53,18 +53,10 @@ export default function CheckboxWidget<
     presentation,
     options,
     uiSchema,
-    required,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
-  // Because an unchecked checkbox will cause html5 validation to fail, only add
-  // the "required" attribute if the field value must be "true", due to the
-  // "const" or "enum" keywords
-  const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
-  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
-  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
-  // and `aria-required` tells a screen reader of, as the marker is hidden from it
-  const marksRequired = presentation?.control ? required : trueValueRequired;
+  const { trueValueRequired, marksRequired } = getCheckboxRequired<T, S, F>(props);
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = (_, checked) => onChange(checked);
   const handleBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
@@ -89,7 +81,7 @@ export default function CheckboxWidget<
         {...muiSlotProps?.formControlLabel}
         // `FormControlLabel` gives its own `disabled` to the control in place of the control's, so the form's goes here
         disabled={disabled || readonly}
-        required={marksRequired && templateMarksRequired<T, S, F>(props)}
+        required={!hideLabel && marksRequired && templateMarksRequired<T, S, F>(props)}
         control={
           <Checkbox
             id={id}

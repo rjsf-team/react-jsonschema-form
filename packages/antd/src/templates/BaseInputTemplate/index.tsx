@@ -97,9 +97,9 @@ export default function BaseInputTemplate<
       disabled={control.disabled}
       id={id}
       name={htmlName || id}
-      onBlur={!readonly ? handleBlur : undefined}
+      onBlur={handleBlur}
       onChange={!readonly ? handleNumberChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
+      onFocus={handleFocus}
       placeholder={placeholder}
       readOnly={readonly}
       required={required}
@@ -120,9 +120,9 @@ export default function BaseInputTemplate<
       disabled={control.disabled}
       id={id}
       name={htmlName || id}
-      onBlur={!readonly ? handleBlur : undefined}
+      onBlur={handleBlur}
       onChange={!readonly ? handleTextChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
+      onFocus={handleFocus}
       placeholder={placeholder}
       readOnly={readonly}
       required={required}

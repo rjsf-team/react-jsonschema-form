@@ -112,6 +112,16 @@ describe('BaseInputTemplate', () => {
       expect(input).not.toHaveAttribute(attribute);
     }
   });
+
+  test("puts no placeholder or readonly on a range's input, which applies neither", () => {
+    const { container } = render(
+      <BaseInputTemplate type='range' {...makeWidgetMockProps({ value: 3, placeholder: 'Pick', readonly: true })} />,
+    );
+
+    const input = container.querySelector('input');
+    expect(input).not.toHaveAttribute('placeholder');
+    expect(input).not.toHaveAttribute('readonly');
+  });
 });
 
 callerInputPropsTests(Form);

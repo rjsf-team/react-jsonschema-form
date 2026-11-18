@@ -1,5 +1,5 @@
 import { getTestRegistry } from '@rjsf/core/testing';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import FieldErrorTemplate from '../src/FieldErrorTemplate/index.ts';
 
@@ -15,5 +15,11 @@ describe('FieldErrorTemplate', () => {
 
     expect(container.querySelectorAll('#root__error')).toHaveLength(count);
     expect(container.querySelectorAll('[id]')).toHaveLength(count);
+  });
+
+  it('drops an empty message, as core does', () => {
+    render(<FieldErrorTemplate errors={['too short', '']} id='root' schema={{}} registry={getTestRegistry({})} />);
+
+    expect(screen.getAllByRole('listitem')).toHaveLength(1);
   });
 });

@@ -151,7 +151,7 @@ export function SelectRoot<T extends CollectionItem>({
   ref,
   hiddenSelectLabelledBy,
   ...props
-}: ChakraSelect.RootProps<T> & {
+}: Omit<ChakraSelect.RootProps<T>, 'asChild'> & {
   ref?: Ref<HTMLDivElement>;
   /** The hidden native select's `aria-labelledby`. Ark points it at the root's label id whether or not that label
    * renders, so a select that draws no label passes an empty one */
@@ -159,14 +159,8 @@ export function SelectRoot<T extends CollectionItem>({
 }) {
   return (
     <ChakraSelect.Root {...props} ref={ref} positioning={{ sameWidth: true, ...props.positioning }}>
-      {props.asChild ? (
-        props.children
-      ) : (
-        <>
-          <ChakraSelect.HiddenSelect aria-labelledby={hiddenSelectLabelledBy} />
-          {props.children}
-        </>
-      )}
+      <ChakraSelect.HiddenSelect aria-labelledby={hiddenSelectLabelledBy} />
+      {props.children}
     </ChakraSelect.Root>
   );
 }

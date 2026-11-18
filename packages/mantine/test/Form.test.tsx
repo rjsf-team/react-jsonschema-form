@@ -1,5 +1,4 @@
-import { MantineProvider, Switch } from '@mantine/core';
-import { getTestRegistry } from '@rjsf/core/testing';
+import { Switch } from '@mantine/core';
 import {
   checkboxLabelTests,
   fallbackDescriptionTests,
@@ -18,7 +17,6 @@ import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
-import CheckboxWidget from '../src/widgets/CheckboxWidget.tsx';
 import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
@@ -1175,38 +1173,6 @@ describe('mantine CheckboxWidget required attribute', () => {
     const { container } = render(<WrappedForm schema={formSchema({ ...agree, const: true })} validator={validator} />);
 
     expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
-  });
-
-  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
-  // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
-  // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse
-  test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
-    ['a required boolean whose false the schema accepts', agree, true, false],
-    ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
-  ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
-    const { container } = render(
-      <MantineProvider>
-        <CheckboxWidget
-          id='root'
-          name='root'
-          schema={schema}
-          uiSchema={{}}
-          value={value}
-          required={required}
-          disabled={false}
-          readonly={false}
-          autofocus={false}
-          label='Agree'
-          options={{}}
-          onChange={vi.fn()}
-          onBlur={vi.fn()}
-          onFocus={vi.fn()}
-          registry={getTestRegistry(schema)}
-        />
-      </MantineProvider>,
-    );
-
-    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
 

@@ -8,6 +8,7 @@ import type {
   FieldTemplateProps,
   FormContextType,
   GlobalUISchemaOptions,
+  PartPresentation,
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
@@ -450,6 +451,16 @@ export function withGlobalUiOptions<T, S extends StrictRJSFSchema, F extends For
     : { [UI_GLOBAL_OPTIONS_KEY]: globalUiOptions };
 }
 
+/** Whether a container rendered without a plan draws its own heading and description: unless `ui:label: false` turns
+ * them off
+ *
+ * @param label - The container's `ui:label`
+ * @returns - True when the container draws them
+ */
+export function showsOwnHeadingWithoutPlan(label: unknown): boolean {
+  return uiBooleanOption(label) ?? true;
+}
+
 /** Gets the heading an object or array draws itself. Under its plan: none where the plan gives its label to someone
  * else, and otherwise the plan's label, except that the key input beside an `additionalProperties` entry already shows
  * its key, which labels the entry, so the entry is headed by the `ui:title` or the schema `title` naming such entries
@@ -469,7 +480,7 @@ export function getContainerHeading<
   F extends FormContextType = FormContextType,
 >(presentation: FieldPresentation | undefined, schema: S, uiOptions: UIOptionsType<T, S, F>, ownTitle: string): string {
   if (!presentation) {
-    return (uiBooleanOption(uiOptions.label) ?? true) ? ownTitle : '';
+    return showsOwnHeadingWithoutPlan(uiOptions.label) ? ownTitle : '';
   }
   if (presentation.label.by !== 'self') {
     return '';
@@ -538,6 +549,30 @@ export default function getFieldWidget<
     return getLayoutSelectorWidget<T, S, F>(schema, uiSchema, registry);
   }
   return undefined;
+}
+
+/** Gets a part of a field's plan with the field's own drawing of it taken away, so nothing draws a part the field was
+ * planned to draw itself
+ *
+ * @param part - The part of the plan
+ * @returns - The part, `none` where the field was to draw it
+ */
+export function withoutOwnDrawing<P extends PartPresentation>(part: P): P {
+  return part.by === 'self' ? { ...part, by: 'none' } : part;
+}
+
+/** Gets a field's label, description, help and errors with the field's own drawing of each taken away
+ *
+ * @param presentation - The field's plan
+ * @returns - The four parts, each `none` where the field was to draw it
+ */
+export function withoutOwnParts({ label, description, help, errors }: FieldPresentation) {
+  return {
+    label: withoutOwnDrawing(label),
+    description: withoutOwnDrawing(description),
+    help: withoutOwnDrawing(help),
+    errors: withoutOwnDrawing(errors),
+  };
 }
 
 /** Gets a plan's `describedBy` without the ids of parts it leaves to the field below, and its control described by the

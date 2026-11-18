@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Activity, useState } from 'react';
 import { ChakraProvider, defaultSystem, EnvironmentProvider } from '@chakra-ui/react';
-import { getTestRegistry } from '@rjsf/core/testing';
 import {
   checkboxLabelTests,
   fallbackDescriptionTests,
@@ -21,7 +20,6 @@ import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
 import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
-import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
 
@@ -111,32 +109,32 @@ describe('chakra-ui SelectWidget', () => {
   });
 
   // The listbox is closed, so it is queried among hidden elements; the trigger isn't, past Ark's hidden native select
-  test.each([
-    ['trigger', 'combobox', false],
-    ['listbox', 'listbox', true],
-  ])('points the %s of a select that draws no label at no label', (_, role, hidden) => {
-    const { container } = render(
+  const selectParts: [string, (container: HTMLElement) => Element | null][] = [
+    ['trigger', () => screen.getByRole('combobox')],
+    ['listbox', () => screen.getByRole('listbox', { hidden: true })],
+    ["Ark's hidden native select", (container) => container.querySelector('select')],
+  ];
+  const renderSelect = (uiSchema?: UiSchema) =>
+    render(
       <WrappedForm
         schema={{ type: 'object', properties: { x: { type: 'string', title: 'X', enum: ['a', 'b'] } } }}
-        uiSchema={{ x: { 'ui:label': false } }}
+        uiSchema={{ x: uiSchema }}
         validator={validator}
       />,
     );
 
-    expect(screen.getByRole(role, { hidden })).toHaveAttribute('aria-labelledby', '');
+  test.each(selectParts)('points the %s of a select that draws no label at no label', (_, part) => {
+    const { container } = renderSelect({ 'ui:label': false });
+
+    expect(part(container)).toHaveAttribute('aria-labelledby', '');
     expect(container.querySelector('#root_x__label')).not.toBeInTheDocument();
   });
 
-  test("points Ark's hidden native select of a select that draws no label at no label", () => {
-    const { container } = render(
-      <WrappedForm
-        schema={{ type: 'object', properties: { x: { type: 'string', title: 'X', enum: ['a', 'b'] } } }}
-        uiSchema={{ x: { 'ui:label': false } }}
-        validator={validator}
-      />,
-    );
+  test.each(selectParts)('points the %s of a select that draws its label at that label', (_, part) => {
+    const { container } = renderSelect();
 
-    expect(container.querySelector('select')).toHaveAttribute('aria-labelledby', '');
+    expect(part(container)).toHaveAttribute('aria-labelledby', 'root_x__label');
+    expect(container.querySelector('#root_x__label')).toHaveTextContent('X');
   });
 
   test.each<[string, RJSFSchema, UiSchema, string]>([
@@ -1087,24 +1085,17 @@ describe('chakra-ui labels the core widgets that draw no label of their own', ()
     expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Score');
   });
 
-  test.each(['alt-date', 'alt-datetime'])(
-    'labels a %s field from the template, naming the group of its parts',
-    (widget) => {
-      const { container } = render(
-        <WrappedForm
-          schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
-          uiSchema={{ when: { 'ui:widget': widget } }}
-          validator={validator}
-        />,
-      );
+  test.each(['alt-date', 'alt-datetime'])("names the %s parts' group by the template's label", (widget) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
+        uiSchema={{ when: { 'ui:widget': widget } }}
+        validator={validator}
+      />,
+    );
 
-      const label = document.getElementById('root_when__label');
-      expect(label).toHaveTextContent('When');
-      expect(label).not.toHaveAttribute('for');
-      expect(screen.getByRole('button', { name: 'Now' }).closest('fieldset')).toHaveAccessibleName('When');
-      expectReferencesResolve(container);
-    },
-  );
+    expect(screen.getByRole('button', { name: 'Now' }).closest('fieldset')).toHaveAccessibleName('When');
+  });
 });
 
 describe('chakra-ui ArrayFieldTemplate', () => {
@@ -1464,38 +1455,6 @@ describe('chakra-ui CheckboxWidget required attribute', () => {
     const { container } = render(<WrappedForm schema={formSchema({ ...agree, const: true })} validator={validator} />);
 
     expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
-  });
-
-  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
-  // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
-  // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse
-  test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
-    ['a required boolean whose false the schema accepts', agree, true, false],
-    ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
-  ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
-    const { container } = render(
-      <ChakraProvider value={defaultSystem}>
-        <CheckboxWidget
-          id='root'
-          name='root'
-          schema={schema}
-          uiSchema={{}}
-          value={value}
-          required={required}
-          disabled={false}
-          readonly={false}
-          autofocus={false}
-          label='Agree'
-          options={{}}
-          onChange={vi.fn()}
-          onBlur={vi.fn()}
-          onFocus={vi.fn()}
-          registry={getTestRegistry(schema)}
-        />
-      </ChakraProvider>,
-    );
-
-    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
 
