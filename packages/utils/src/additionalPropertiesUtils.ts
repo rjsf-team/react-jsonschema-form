@@ -81,14 +81,6 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
   return typedSchema.additionalProperties ?? typedSchema[UNEVALUATED_PROPERTIES_KEY];
 }
 
-/** Returns whether an object's own `additionalProperties` or `unevaluatedProperties` says it takes the keys its
- * `properties` don't name: `true` or a schema, rather than leaving that to the context or to a `patternProperties`
- */
-export function declaresExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
-  const keyword = additionalPropertiesKeyword<S>(schema);
-  return keyword !== undefined && keyword !== false;
-}
-
 /** Returns whether the context's `additionalPropertiesWhenAbsent` reads an absent extra-key keyword as taking any key,
  * the one reading of the setting that the rule below and every memo keyed on the setting share
  *

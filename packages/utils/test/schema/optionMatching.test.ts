@@ -100,9 +100,7 @@ describe('matching options through the schema graph', () => {
     const rootSchema: RJSFSchema = { type: 'object', properties: { v: { oneOf } } };
     expect(getFirstMatchingOption({ validator: miniValidator() }, { s_a: 'x' }, oneOf, rootSchema)).toBe(1);
   });
-  // A field picks among its options retrieved for its data, whose `properties` hold a stub for each extra key an
-  // `additionalProperties` takes, so the options as written score those keys too. A validator failing every option
-  // leaves the pick to the score (#5832)
+  // A validator failing every option leaves the pick to the score (#5832)
   describe('scores the extra keys an additionalProperties takes as the options retrieved for the data do', () => {
     const validator = { ...miniValidator(), isValid: () => false };
     const takesExtraKeys: RJSFSchema[] = [
@@ -115,6 +113,28 @@ describe('matching options through the schema graph', () => {
         'tying with a property the data leaves out',
         [{ required: ['p'], additionalProperties: {} }, { properties: { p: { type: 'null' } } }],
         { m: 'b' },
+        0,
+      ],
+      [
+        'leaving a key an allOf entry declares to it',
+        [
+          { properties: { a: { type: 'number' }, b: { type: 'number' } } },
+          { allOf: [{ properties: { a: { type: 'number' } } }], additionalProperties: true },
+        ],
+        { a: 1 },
+        0,
+      ],
+      [
+        'leaving a key its dependencies declare to them',
+        [
+          { properties: { a: { type: 'string' } } },
+          {
+            properties: { k: { type: 'string' } },
+            dependencies: { k: { properties: { a: { type: 'number' } } } },
+            additionalProperties: true,
+          },
+        ],
+        { k: 'y', a: 'x' },
         0,
       ],
     ])('%s', (_, options, formData, expected) => {

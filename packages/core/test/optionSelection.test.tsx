@@ -1687,55 +1687,32 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#root_b__key')).toHaveValue('b');
   });
 
-  // The field matches its options retrieved for its data, which adds the extra keys an `additionalProperties` takes to
-  // an option's `properties`, and the fill matches them as written with those keys declared alike
+  const takesExtraKeys: RJSFSchema[] = [
+    { additionalProperties: false },
+    { properties: { q: { default: 'b' } }, additionalProperties: true },
+  ];
+  const besideX = (properties: RJSFSchema['properties']): RJSFSchema => ({
+    type: 'object',
+    properties: { x: { type: 'string' }, ...properties },
+  });
   describe.each<[string, RJSFSchema, object | undefined, object]>([
     [
       'adding the default of the option it shows',
-      {
-        type: 'object',
-        properties: {
-          x: { type: 'string' },
-          p: {
-            oneOf: [
-              { additionalProperties: false },
-              { properties: { q: { default: 'b' } }, additionalProperties: true },
-            ],
-          },
-        },
-      },
+      besideX({ p: { oneOf: takesExtraKeys } }),
       { p: { t: 2 } },
       { p: { q: 'b', t: 2 } },
     ],
     [
       'leaving out the default of an option it does not show',
-      {
-        type: 'object',
-        properties: {
-          x: { type: 'string' },
-          q: {
-            anyOf: [{ required: ['p'], additionalProperties: {} }, { properties: { p: { type: 'null' } } }],
-          },
-        },
-      },
+      besideX({
+        q: { anyOf: [{ required: ['p'], additionalProperties: {} }, { properties: { p: { type: 'null' } } }] },
+      }),
       { q: { m: 'b' } },
       { q: { m: 'b' } },
     ],
     [
       'for the default it holds',
-      {
-        type: 'object',
-        properties: {
-          x: { type: 'string' },
-          p: {
-            default: { t: 2 },
-            oneOf: [
-              { additionalProperties: false },
-              { properties: { q: { default: 'b' } }, additionalProperties: true },
-            ],
-          },
-        },
-      },
+      besideX({ p: { default: { t: 2 }, oneOf: takesExtraKeys } }),
       undefined,
       { p: { q: 'b', t: 2 } },
     ],
