@@ -383,7 +383,8 @@ export default function SelectWidget<
       >
         <div className='flex items-center gap-2'>
           {/* Drawn only: the option is what takes focus, keys and clicks, and says it is selected, so the checkbox would
-              be a second tab stop whose own click on Space undoes the option's */}
+              be a second tab stop whose own click on Space undoes the option's, and ARIA forbids a focusable control
+              inside an option whatever its tab index */}
           {isMultiple && (
             <input
               type='checkbox'
@@ -392,6 +393,7 @@ export default function SelectWidget<
               readOnly
               tabIndex={-1}
               aria-hidden
+              inert
             />
           )}
           <span>{option.label}</span>

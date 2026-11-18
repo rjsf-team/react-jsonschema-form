@@ -5,6 +5,7 @@ import type { RegistryWidgetsType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { besideOptionsId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, isInaccessible, render, screen, waitFor } from '@testing-library/react';
+import axe from 'axe-core';
 
 import { WIDGET_FIXTURES } from './widgetFixtures.ts';
 
@@ -67,7 +68,28 @@ function duplicateIds(elements: Element[]) {
   return repeats;
 }
 
-function expectContract(container: HTMLElement, { presentsNothing }: ContractCase, errored: boolean, exempt?: string) {
+/** The WCAG A and AA rules axe-core finds broken in `container`, other than on the elements `exempt` selects, which
+ * are skipped alone, not with what they hold, as the other checks skip them
+ */
+async function axeViolations(container: HTMLElement, exempt?: string) {
+  const { violations } = await axe.run(container, {
+    runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'],
+    resultTypes: ['violations'],
+    elementRef: true,
+    // jsdom draws nothing, so contrast is never decided there and only logs jsdom's missing canvas
+    rules: { 'color-contrast': { enabled: false } },
+  });
+  return violations.flatMap(({ id, nodes }) =>
+    nodes.filter(({ element }) => !exempt || !element?.matches(exempt)).map(({ html }) => `${id}: ${html}`),
+  );
+}
+
+async function expectContract(
+  container: HTMLElement,
+  { presentsNothing }: ContractCase,
+  errored: boolean,
+  exempt?: string,
+) {
   const checked = (selector: string) =>
     [...container.querySelectorAll<HTMLElement>(selector)].filter((element) => !exempt || !element.matches(exempt));
 
@@ -113,12 +135,15 @@ function expectContract(container: HTMLElement, { presentsNothing }: ContractCas
     expect(errorId, 'the id the error is drawn under').toBeDefined();
     expect(checked(`[aria-describedby~="${errorId}"]`), `the elements ${errorId} describes`).not.toEqual([]);
   }
+
+  expect(await axeViolations(container, exempt)).toEqual([]);
 }
 
 /** Pins the presentation contract every theme's fields keep, the same way in core and every theme: an accessible name
  * and at most one label per control, including an option selector's and each date part's, one description, help and
  * error per field, every id a label or an ARIA reference names on the page, `aria-invalid` on each control an error
- * describes, or on its radio group, and nowhere while clean, and no id carried twice (#5592). Each case is drawn once
+ * describes, or on its radio group, and nowhere while clean, no id carried twice (#5592), and no break of the WCAG A
+ * and AA rules axe-core can decide in jsdom. Each case is drawn once
  * clean and once with an error.
  *
  * @param Form - The theme's `Form` component
@@ -206,12 +231,13 @@ export function presentationContractTests(
     ]),
   ];
 
-  describe('every field keeps the presentation contract', () => {
+  // axe-core refuses a run while another is going, so the cases stay sequential under `sequence.concurrent`
+  describe('every field keeps the presentation contract', { concurrent: false }, () => {
     describe.each([
       ['clean', false],
       ['errored', true],
     ])('%s', (_, errored) => {
-      test.each(cases)('%s', (name, contractCase) => {
+      test.each(cases)('%s', async (name, contractCase) => {
         // A widget with no fixture is one this suite would silently skip
         if (name in allWidgets) {
           expect(Object.hasOwn(allFixtures, name)).toBe(true);
@@ -234,7 +260,7 @@ export function presentationContractTests(
           />,
         );
 
-        expectContract(container, contractCase, errored, exempt);
+        await expectContract(container, contractCase, errored, exempt);
       });
     });
   });
