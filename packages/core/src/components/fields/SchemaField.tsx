@@ -5,7 +5,6 @@ import type {
   Field,
   FieldPath,
   FieldPresentation,
-  PartPresentation,
   FieldProps,
   FieldTemplateProps,
   FormContextType,
@@ -87,6 +86,8 @@ import getFieldWidget, {
   getTemplateParts,
   withoutAdditionalFlag,
   withoutDescribers,
+  withoutOwnDrawing,
+  withoutOwnParts,
   withoutUiWidget,
 } from './fieldWidgetUtils.ts';
 import getOptionFieldUiSchema from './getOptionFieldUiSchema.ts';
@@ -1156,30 +1157,6 @@ export function schemaFieldRendersArrayWidget<T, S extends StrictRJSFSchema, F e
     getFieldWidget<T, S, F>(fields.ArrayField, { ...arraySchema, type: 'array' }, widgetUiSchema, registry) !==
       undefined
   );
-}
-
-/** Gets a part of a field's plan with the field's own drawing of it taken away, so nothing draws a part the field was
- * planned to draw itself
- *
- * @param part - The part of the plan
- * @returns - The part, `none` where the field was to draw it
- */
-function withoutOwnDrawing<P extends PartPresentation>(part: P): P {
-  return part.by === 'self' ? { ...part, by: 'none' } : part;
-}
-
-/** Gets a field's label, description, help and errors with the field's own drawing of each taken away
- *
- * @param presentation - The field's plan
- * @returns - The four parts, each `none` where the field was to draw it
- */
-function withoutOwnParts({ label, description, help, errors }: FieldPresentation) {
-  return {
-    label: withoutOwnDrawing(label),
-    description: withoutOwnDrawing(description),
-    help: withoutOwnDrawing(help),
-    errors: withoutOwnDrawing(errors),
-  };
 }
 
 /** Gets the plan a field the form's author supplies hands the field below it rendering the same id: the label,

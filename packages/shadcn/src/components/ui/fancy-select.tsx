@@ -242,7 +242,8 @@ export function FancySelect({
     }
   };
   useEscapeKeptFromDialog(open, comboboxRef);
-  const highlightedItem = items?.find((candidate) => cmdkValue(candidate) === highlighted);
+  const highlightedAt = itemsInOrder?.findIndex((item) => cmdkValue(item) === highlighted) ?? -1;
+  const highlightedItem = itemsInOrder?.[highlightedAt];
   // Choosing the option the select already holds reports no change, as a native select's doesn't
   const choose = (item: FancySelectItem<string> | undefined) => {
     if (item && !item.disabled && item.value !== selected) {
@@ -257,10 +258,9 @@ export function FancySelect({
   // view here
   const highlightFromDisabled = (down: boolean) => {
     const order = itemsInOrder ?? [];
-    const at = order.findIndex((item) => cmdkValue(item) === highlighted);
     const next = down
-      ? order.slice(at + 1).find((item) => !item.disabled)
-      : order.slice(0, at).findLast((item) => !item.disabled);
+      ? order.slice(highlightedAt + 1).find((item) => !item.disabled)
+      : order.slice(0, highlightedAt).findLast((item) => !item.disabled);
     if (next) {
       const value = cmdkValue(next);
       setHighlighted(value);

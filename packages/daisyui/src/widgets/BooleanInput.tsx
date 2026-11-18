@@ -3,13 +3,13 @@ import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   fieldShowsOwnErrors,
+  getCheckboxRequired,
   getControlAttributes,
   getFieldTypeForWidget,
   getTemplates,
   getUiOptions,
   getWidgetDescription,
-  schemaRequiresTrueValue,
-  widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import RequiredMarker from '../RequiredMarker.tsx';
@@ -58,10 +58,10 @@ export default function BooleanInput<
     inputClassName,
     labelClassName,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const description = getWidgetDescription<T, S, F>(props);
-  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  const { trueValueRequired, marksRequired } = getCheckboxRequired<T, S, F>(props);
   // The field's own error state, as core's `CheckboxWidget` marks its label and description
   const hasErrors = fieldShowsOwnErrors<T, S, F>(props);
   // The plan's marker, which `@rjsf/core` works out the same way. Without a plan, a checkbox already answers a boolean
@@ -71,7 +71,7 @@ export default function BooleanInput<
   // rendered, so the marker has nowhere else to come from
   const { widget } = getUiOptions<T, S, F>(uiSchema);
   const isBooleanField = getFieldTypeForWidget<S>(schema, widget, registry.widgets) === 'boolean';
-  const marksRequired = presentation
+  const drawsRequiredMarker = presentation
     ? presentation.label.requiredMarker
     : required && (trueValueRequired || !isBooleanField);
 
@@ -115,7 +115,7 @@ export default function BooleanInput<
       required={trueValueRequired}
       // Where its plan requires a box whose `false` the schema accepts, which `ui:required` asks of while it holds no value,
       // RJSF's own check reports it rather than the browser's, and `aria-required` tells a screen reader of it
-      aria-required={(presentation?.control !== undefined && required && !trueValueRequired) || undefined}
+      aria-required={(marksRequired && !trueValueRequired) || undefined}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       onChange={handleChange}
@@ -138,7 +138,7 @@ export default function BooleanInput<
           registry={registry}
         />
       )}
-      {hideLabel || !label ? (
+      {hideLabel ? (
         input
       ) : (
         // daisyUI's `.label` doesn't wrap, and a label wider than a narrow column would paint over the next one
@@ -149,7 +149,7 @@ export default function BooleanInput<
           {input}
           <span className='label-text'>
             {label}
-            {marksRequired && <RequiredMarker />}
+            {drawsRequiredMarker && <RequiredMarker />}
           </span>
         </label>
       )}

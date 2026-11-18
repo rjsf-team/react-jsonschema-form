@@ -1,4 +1,3 @@
-import type { FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
@@ -10,6 +9,7 @@ import {
   getOptionValueFormat,
   hasWidgetErrors,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 import { Label } from '../components/ui/label.tsx';
@@ -49,10 +49,7 @@ export default function RadioWidget<
   // On each radio rather than the group: Radix's group takes focus itself to pass it on to a radio, as when it is
   // tabbed into or focusOnFirstError focuses the field's id, which it carries, so it would report a focus and blur
   // of no value first
-  const handleBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   const inline = Boolean(options?.inline);
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '');
@@ -89,8 +86,8 @@ export default function RadioWidget<
                   id={optionId(id, index)}
                   disabled={optionDisabled}
                   autoFocus={index === autofocusIndex}
-                  onBlur={handleBlur}
-                  onFocus={handleFocus}
+                  onBlur={blurHandlers[index]}
+                  onFocus={focusHandlers[index]}
                   className={radioClassName}
                   {...optionAttributes}
                 />

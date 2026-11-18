@@ -42,6 +42,7 @@ import getAdditionalKeyAttributes from './getAdditionalKeyAttributes.ts';
 import getArrayDescription from './getArrayDescription.ts';
 import getBaseInputProps from './getBaseInputProps.ts';
 import getChangedFields from './getChangedFields.ts';
+import getCheckboxRequired from './getCheckboxRequired.ts';
 import getContainerAttributes from './getContainerAttributes.ts';
 import getControlAttributes from './getControlAttributes.ts';
 import getControlDescribedBy from './getControlDescribedBy.ts';
@@ -149,6 +150,7 @@ import mergeObjects from './mergeObjects.ts';
 import mergeSchemas from './mergeSchemas.ts';
 import mergeThemePresentation from './mergeThemePresentation.ts';
 import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators.ts';
+import nonEmptyErrorMessages from './nonEmptyErrorMessages.ts';
 import noop from './noop.ts';
 import numericWidgetStoresString from './numericWidgetStoresString.ts';
 import offersClearButton from './offersClearButton.ts';
@@ -364,6 +366,7 @@ export {
   getArrayDescription,
   getBaseInputProps,
   getChangedFields,
+  getCheckboxRequired,
   getContainerAttributes,
   getControlAttributes,
   getControlDescribedBy,
@@ -449,6 +452,7 @@ export {
   mergeOptionDefinitions,
   mergeSchemas,
   mergeThemePresentation,
+  nonEmptyErrorMessages,
   noop,
   offsetTimeToLocalTime,
   omitConsumedStyling,

@@ -41,4 +41,13 @@ describe('FieldErrorTemplate', () => {
     expect(container.querySelectorAll('#root__error > span')).toHaveLength(2);
     expect(container.querySelector('#root__error')).toHaveTextContent('too shortnot a number');
   });
+
+  it('drops an empty message, as core does', () => {
+    const { container } = render(
+      <FieldErrorTemplate errors={['too short', '']} id='root' schema={{}} registry={getTestRegistry({})} />,
+      { wrapper },
+    );
+
+    expect(container.querySelectorAll('#root__error > span')).toHaveLength(1);
+  });
 });

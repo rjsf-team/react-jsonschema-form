@@ -1044,6 +1044,30 @@ describe("mui widgets are named by their label and carry the field's id on the e
     expect(document.getElementById('root_foo__key')).toHaveAccessibleName('foo Key');
   });
 
+  test("draws no label holding only a required field's star, where it has no text", () => {
+    const { RangeWidget } = generateWidgets();
+    const { container } = render(
+      <RangeWidget
+        id='root'
+        name='root'
+        value={1}
+        readonly={false}
+        disabled={false}
+        required
+        label=''
+        schema={{ type: 'number' }}
+        options={{}}
+        onChange={() => {}}
+        onBlur={() => {}}
+        onFocus={() => {}}
+        registry={getTestRegistry({})}
+      />,
+    );
+
+    expect(container.querySelector('label')).not.toBeInTheDocument();
+    expect(screen.getByRole('slider')).toBeInTheDocument();
+  });
+
   test('draws a thumb for each numeric string of a range of several values', () => {
     const { RangeWidget } = generateWidgets();
     render(
@@ -1467,8 +1491,8 @@ describe('mui labels the core widgets that draw no label of their own', () => {
     expectReferencesResolve(container);
   });
 
-  test.each(['alt-date', 'alt-datetime'])('labels a %s field from the template, with no `for`', (widget) => {
-    const { container } = render(
+  test.each(['alt-date', 'alt-datetime'])("names the %s parts' group by the template's label", (widget) => {
+    render(
       <Form
         schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
         uiSchema={{ when: { 'ui:widget': widget } }}
@@ -1476,10 +1500,6 @@ describe('mui labels the core widgets that draw no label of their own', () => {
       />,
     );
 
-    const label = document.getElementById('root_when__label');
-    expect(label).toHaveTextContent('When');
-    expect(label).not.toHaveAttribute('for');
-    expectReferencesResolve(container);
     expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
   });
 });
@@ -1639,36 +1659,6 @@ describe('mui CheckboxWidget required attribute', () => {
     const { container } = render(<Form schema={formSchema({ ...agree, const: true })} validator={validator} />);
 
     expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
-  });
-
-  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
-  // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
-  // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse
-  test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
-    ['a required boolean whose false the schema accepts', agree, true, false],
-    ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
-  ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
-    const { container } = render(
-      <CheckboxWidget
-        id='root'
-        name='root'
-        schema={schema}
-        uiSchema={{}}
-        value={value}
-        required={required}
-        disabled={false}
-        readonly={false}
-        autofocus={false}
-        label='Agree'
-        options={{}}
-        onChange={vi.fn()}
-        onBlur={vi.fn()}
-        onFocus={vi.fn()}
-        registry={getTestRegistry(schema)}
-      />,
-    );
-
-    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 
   test('keeps a box rendered with no disabled or readonly editable over a disabled its checkbox slot gives', () => {

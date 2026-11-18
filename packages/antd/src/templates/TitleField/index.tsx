@@ -16,10 +16,12 @@ export default function TitleField<
   F extends FormContextType = FormContextType,
 >({ id, required, registry, title, optionalDataControl }: TitleFieldProps<T, S, F>) {
   const { formContext } = registry;
-  const { colon = true }: AntdFormContext = formContext;
+  const { colon }: AntdFormContext = formContext;
+  // antd's `Form.Item` draws its colon unless `colon` is `false`, so the heading decides the same way FieldTemplate does
+  const showsColon = colon !== false;
 
   let labelChildren = title;
-  if (colon && typeof title === 'string' && title.trim() !== '') {
+  if (showsColon && typeof title === 'string' && title.trim() !== '') {
     labelChildren = stripTrailingColon(title);
   }
 
@@ -27,7 +29,7 @@ export default function TitleField<
   const prefixCls = getPrefixCls('form');
   const labelClassName = classNames({
     [`${prefixCls}-item-required`]: required,
-    [`${prefixCls}-item-no-colon`]: !colon,
+    [`${prefixCls}-item-no-colon`]: !showsColon,
   });
   // The heading's text carries its `titleId()`, which the control a container's heading names, such as its option
   // selector, points `aria-labelledby` at. It sits inside the label, whose required class draws antd's `*` as generated

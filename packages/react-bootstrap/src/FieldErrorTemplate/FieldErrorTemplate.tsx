@@ -1,5 +1,5 @@
 import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { errorId } from '@rjsf/utils';
+import { errorId, nonEmptyErrorMessages } from '@rjsf/utils';
 import { ListGroup } from 'react-bootstrap';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
@@ -19,7 +19,7 @@ export default function FieldErrorTemplate<
 
   return (
     <ListGroup as='ul' id={id}>
-      {errors.map((error, i) => (
+      {nonEmptyErrorMessages(errors).map((error, i) => (
         // oxlint-disable-next-line react/no-array-index-key
         <ListGroup.Item as='li' key={i} className='border-0 m-0 p-0'>
           <small className='m-0 text-danger'>{error}</small>

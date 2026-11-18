@@ -4,7 +4,6 @@ import type {
   FieldTemplateOrder,
   MergedThemePresentation,
   Registry,
-  ResolvedPresentationDeclaration,
   WidgetAriaPropsInput,
 } from '../src/index.ts';
 import {
@@ -13,20 +12,13 @@ import {
   resolveFieldPresentation,
   widgetAriaProps,
 } from '../src/index.ts';
+import { TEMPLATE } from './testUtils/presentation.ts';
 
 const describedOptions = {
   enumOptions: [
     { label: 'Red', value: 'r', schema: { const: 'r', description: 'Warm' } },
     { label: 'Blue', value: 'b', schema: { const: 'b' } },
   ],
-};
-
-const TEMPLATE: ResolvedPresentationDeclaration = {
-  label: 'template',
-  description: 'template',
-  errors: 'template',
-  help: 'template',
-  labelledBy: 'for',
 };
 
 const colorProps: WidgetAriaPropsInput = {

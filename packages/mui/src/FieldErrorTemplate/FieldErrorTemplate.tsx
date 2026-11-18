@@ -5,7 +5,7 @@ import List from '@mui/material/List';
 import type { ListItemProps } from '@mui/material/ListItem';
 import ListItem from '@mui/material/ListItem';
 import type { FieldErrorProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { errorId, getUiOptions } from '@rjsf/utils';
+import { errorId, getUiOptions, nonEmptyErrorMessages } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -44,7 +44,7 @@ export default function FieldErrorTemplate<
   // One element carries the id a control is described by, so the id appears once and describes every message
   return (
     <List id={id} dense disablePadding {...muiSlotProps?.fieldErrorList}>
-      {errors.map((error, i: number) => (
+      {nonEmptyErrorMessages(errors).map((error, i: number) => (
         // oxlint-disable-next-line react/no-array-index-key
         <ListItem key={i} disableGutters {...muiSlotProps?.fieldErrorListItem}>
           <FormHelperText component='div' {...muiSlotProps?.fieldErrorFormHelperText}>

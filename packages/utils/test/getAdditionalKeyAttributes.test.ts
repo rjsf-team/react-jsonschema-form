@@ -1,18 +1,7 @@
-import { getAdditionalKeyAttributes, resolveFieldPresentation } from '../src/index.ts';
+import { getAdditionalKeyAttributes } from '../src/index.ts';
+import { planField } from './testUtils/presentation.ts';
 
-const planShowing = (errors: string[]) =>
-  resolveFieldPresentation({
-    id: 'root_a',
-    declaration: {
-      label: 'template',
-      description: 'template',
-      errors: 'template',
-      help: 'template',
-      labelledBy: 'for',
-    },
-    label: 'a',
-    errors,
-  });
+const planShowing = (errors: string[]) => planField({ id: 'root_a', label: 'a', errors });
 
 describe('getAdditionalKeyAttributes()', () => {
   it('marks a forbidden key invalid and describes it by the errors its row shows', () => {

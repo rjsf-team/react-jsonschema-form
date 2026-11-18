@@ -103,6 +103,9 @@ export default function BaseInputTemplate<
     plaintext: _plaintext,
     isValid: _isValid,
     isInvalid: _isInvalid,
+    // Neither applies to a range input, so a read-only range is disabled instead
+    placeholder: _placeholder,
+    readOnly: _readOnly,
     ...rangeProps
   } = controlProps;
   return (
@@ -113,6 +116,7 @@ export default function BaseInputTemplate<
         // would add
         <Form.Range
           {...rangeProps}
+          disabled={rangeProps.disabled || readonly}
           className={[inputProps.className, isInvalid && 'is-invalid'].filter(Boolean).join(' ') || undefined}
         />
       ) : (

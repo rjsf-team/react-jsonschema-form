@@ -1,15 +1,6 @@
 import { ariaDescribedByIds } from '../src/idGenerators.ts';
-import type { ResolvedPresentationDeclaration } from '../src/index.ts';
-import { examplesId, getControlDescribedBy, resolveFieldPresentation } from '../src/index.ts';
-
-const ID = 'root_foo';
-const TEMPLATE: ResolvedPresentationDeclaration = {
-  label: 'template',
-  description: 'template',
-  errors: 'template',
-  help: 'template',
-  labelledBy: 'for',
-};
+import { examplesId, getControlDescribedBy } from '../src/index.ts';
+import { ID, planField } from './testUtils/presentation.ts';
 
 describe('getControlDescribedBy()', () => {
   it('describes a widget rendered without a plan by every part id, then its own', () => {
@@ -18,34 +9,23 @@ describe('getControlDescribedBy()', () => {
   });
 
   it("follows the plan's describers with the widget's own, once each", () => {
-    const presentation = resolveFieldPresentation({
-      id: ID,
-      declaration: TEMPLATE,
-      label: 'Foo',
-      description: 'Describes foo',
-    });
+    const presentation = planField({ description: 'Describes foo' });
     expect(getControlDescribedBy({ id: ID, presentation }, [examplesId(ID), `${ID}__description`])).toBe(
       `${ID}__description ${examplesId(ID)}`,
     );
   });
 
   it("keeps a widget's own id once when the plan already lists it among several", () => {
-    const presentation = resolveFieldPresentation({
-      id: ID,
-      declaration: TEMPLATE,
-      label: 'Foo',
-      description: 'Describes foo',
-      errors: ['is required'],
-    });
+    const presentation = planField({ description: 'Describes foo', errors: ['is required'] });
     expect(getControlDescribedBy({ id: ID, presentation }, [`${ID}__description`])).toBe(
       `${ID}__error ${ID}__description`,
     );
   });
 
   it('is undefined for a control nothing describes, or a plan with no control', () => {
-    const presentation = resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo' });
+    const presentation = planField();
     expect(getControlDescribedBy({ id: ID, presentation })).toBeUndefined();
-    const noControl = resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo', hasControl: false });
+    const noControl = planField({ hasControl: false });
     expect(getControlDescribedBy({ id: ID, presentation: noControl })).toBeUndefined();
   });
 });

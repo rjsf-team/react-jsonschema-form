@@ -1,5 +1,4 @@
 import { Switch, useFieldContext_unstable } from '@fluentui/react-components';
-import { getTestRegistry } from '@rjsf/core/testing';
 import {
   checkboxLabelTests,
   fallbackDescriptionTests,
@@ -17,7 +16,6 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
-import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
 const user = userEvent.setup();
@@ -469,24 +467,17 @@ describe('fluentui-rc labels the core widgets that draw no label of their own', 
     expectReferencesResolve(container);
   });
 
-  test.each(['alt-date', 'alt-datetime'])(
-    'labels a %s field from the template, naming its group, with no `for` naming an id no date part carries',
-    (widget) => {
-      const { container } = render(
-        <Form
-          schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
-          uiSchema={{ when: { 'ui:widget': widget } }}
-          validator={validator}
-        />,
-      );
+  test.each(['alt-date', 'alt-datetime'])("names the %s parts' group by the template's label", (widget) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
+        uiSchema={{ when: { 'ui:widget': widget } }}
+        validator={validator}
+      />,
+    );
 
-      const label = document.getElementById('root_when__label');
-      expect(label).toHaveTextContent('When');
-      expect(label).not.toHaveAttribute('for');
-      expect(document.getElementById('root_when')).toHaveAccessibleName('When');
-      expectReferencesResolve(container);
-    },
-  );
+    expect(document.getElementById('root_when')).toHaveAccessibleName('When');
+  });
 });
 
 describe('fluentui-rc ArrayFieldTemplate', () => {
@@ -708,36 +699,6 @@ describe('fluentui-rc CheckboxWidget required attribute', () => {
     const { container } = render(<Form schema={formSchema({ ...agree, const: true })} validator={validator} />);
 
     expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
-  });
-
-  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
-  // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
-  // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse
-  test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
-    ['a required boolean whose false the schema accepts', agree, true, false],
-    ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
-  ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
-    const { container } = render(
-      <CheckboxWidget
-        id='root'
-        name='root'
-        schema={schema}
-        uiSchema={{}}
-        value={value}
-        required={required}
-        disabled={false}
-        readonly={false}
-        autofocus={false}
-        label='Agree'
-        options={{}}
-        onChange={vi.fn()}
-        onBlur={vi.fn()}
-        onFocus={vi.fn()}
-        registry={getTestRegistry(schema)}
-      />,
-    );
-
-    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
 

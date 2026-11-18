@@ -1,6 +1,6 @@
 import { chakra, Fieldset } from '@chakra-ui/react';
 import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { errorId } from '@rjsf/utils';
+import { errorId, nonEmptyErrorMessages } from '@rjsf/utils';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *
@@ -20,7 +20,7 @@ export default function FieldErrorTemplate<
   // One element carries the id a control is described by, so the id appears once and describes every message
   return (
     <Fieldset.ErrorText mt={0} id={id} display='block'>
-      {errors.map((error, i: number) => (
+      {nonEmptyErrorMessages(errors).map((error, i: number) => (
         // oxlint-disable-next-line react/no-array-index-key
         <chakra.span key={i} display='block'>
           {error}

@@ -14,11 +14,11 @@ import {
   englishStringTranslator,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
-  resolveFieldPresentation,
   useAltDateWidgetProps,
   widgetAriaProps,
 } from '../src/index.ts';
 import parseDateString from '../src/parseDateString.ts';
+import { TEMPLATE, planField } from './testUtils/presentation.ts';
 
 function SelectWidget(props: WidgetProps) {
   const { id, options, value, required, disabled, readonly, placeholder, onChange, name } = props;
@@ -537,15 +537,9 @@ describe('useAltDateWidgetProps()', () => {
     });
 
     test("describes each element by its field's parts that render, marked invalid while its errors show", () => {
-      const presentation = resolveFieldPresentation({
+      const presentation = planField({
         id: TIME_PROPS.id,
-        declaration: {
-          label: 'template',
-          description: 'template',
-          errors: 'template',
-          help: 'template',
-          labelledBy: 'aria-labelledby',
-        },
+        declaration: { ...TEMPLATE, labelledBy: 'aria-labelledby' },
         label: 'When',
         description: 'The day',
         errors: ['is required'],
@@ -598,15 +592,9 @@ describe('useAltDateWidgetProps()', () => {
     });
 
     test("describes each element by the attributes its caller gives over its plan's, keeping the rest", () => {
-      const presentation = resolveFieldPresentation({
+      const presentation = planField({
         id: TIME_PROPS.id,
-        declaration: {
-          label: 'template',
-          description: 'template',
-          errors: 'template',
-          help: 'template',
-          labelledBy: 'aria-labelledby',
-        },
+        declaration: { ...TEMPLATE, labelledBy: 'aria-labelledby' },
         label: 'When',
         errors: ['is required'],
       });

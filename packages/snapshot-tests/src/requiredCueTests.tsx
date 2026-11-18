@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
@@ -328,6 +328,54 @@ export function requiredCueTests(
     it('says so in the name a group takes where `ui:label: false` hides its label', () => {
       renderColors(colors({ minItems: 1 }), { 'ui:label': false });
       expect(screen.getByRole('group', { name: 'Colors required' })).toBeInTheDocument();
+    });
+  });
+
+  // Rendered without a plan, as by a custom field, the widget gets its parent's `required` as is, so the attribute has
+  // to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that has to
+  // be true but is left unanswered, each hold data the schema accepts, which the browser would refuse (#5388)
+  describe('a CheckboxWidget rendered without a plan', () => {
+    function renderPlanless(schema: RJSFSchema, required: boolean, value: boolean | undefined, label = 'Agree') {
+      function Planless({ registry }: FieldProps) {
+        const { CheckboxWidget } = registry.widgets;
+        return (
+          <CheckboxWidget
+            id='root'
+            name='root'
+            schema={schema}
+            uiSchema={{}}
+            value={value}
+            required={required}
+            disabled={false}
+            readonly={false}
+            autofocus={false}
+            label={label}
+            options={{}}
+            onChange={() => {}}
+            onBlur={() => {}}
+            onFocus={() => {}}
+            registry={registry}
+          />
+        );
+      }
+      return render(<Form schema={schema} uiSchema={{ 'ui:field': Planless }} validator={validator} />);
+    }
+
+    it.each<[string, RJSFSchema, boolean, boolean | undefined]>([
+      ['a required boolean whose false the schema accepts', { type: 'boolean' }, true, false],
+      ['an optional boolean that has to be true', { type: 'boolean', const: true }, false, undefined],
+    ])('leaves the native required off %s', (_, schema, required, value) => {
+      const { container } = renderPlanless(schema, required, value);
+
+      expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+    });
+
+    // A label holding only the `*` would name the box "star"
+    it('draws no label holding only the required marker for a required box with no label', () => {
+      const { container } = renderPlanless({ type: 'boolean', const: true }, true, undefined, '');
+
+      expect(screen.getByRole('checkbox')).toHaveAccessibleName('');
+      expect(container.querySelector('form')).not.toHaveTextContent('*');
     });
   });
 }

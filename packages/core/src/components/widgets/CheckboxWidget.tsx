@@ -6,11 +6,11 @@ import {
   getControlAttributes,
   getTemplates,
   labelValue,
-  schemaRequiresTrueValue,
+  getCheckboxRequired,
   getUiOptions,
   getWidgetDescription,
   joinClassNames,
-  widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
@@ -38,7 +38,6 @@ function CheckboxWidget<
     onChange,
     registry,
     htmlName,
-    required,
     presentation,
   } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
@@ -46,14 +45,7 @@ function CheckboxWidget<
   // The field's own error state, as its wrapper has it, rather than its control's, which is invalid while a field above
   // shows its errors even where this one hides them
   const hasErrors = fieldShowsOwnErrors<T, S, F>(props);
-  // Because an unchecked checkbox will cause html5 validation to fail, only add
-  // the "required" attribute if the field value must be "true", due to the
-  // "const" or "enum" keywords
-  const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
-  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
-  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
-  // and `aria-required` tells a screen reader of, as the marker is hidden from it
-  const marksRequired = presentation?.control ? required : trueValueRequired;
+  const { trueValueRequired, marksRequired } = getCheckboxRequired<T, S, F>(props);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.checked),
@@ -72,7 +64,7 @@ function CheckboxWidget<
 
   // The plan says whether the label and description are this widget's to draw, so a checkbox under a label above names
   // none of its own; without a plan, a template rendering the `checkbox` alias draws the description itself
-  const showsLabel = widgetDrawsLabel<T, S, F>(props);
+  const showsLabel = widgetDrawsLabelText<T, S, F>(props);
   const description =
     presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (

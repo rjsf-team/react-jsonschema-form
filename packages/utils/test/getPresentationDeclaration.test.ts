@@ -11,14 +11,8 @@ import type {
   WidgetPresentationDeclaration,
 } from '../src/index.ts';
 import { getPresentationDeclaration, mergeThemePresentation, WIDGET_FIELD_PRESENTATION } from '../src/index.ts';
+import { TEMPLATE } from './testUtils/presentation.ts';
 
-const TEMPLATE = {
-  label: 'template',
-  description: 'template',
-  errors: 'template',
-  help: 'template',
-  labelledBy: 'for',
-};
 const FIELD_DEFAULT = { ...TEMPLATE, label: 'self', description: 'self' };
 /** What a field draws itself when nothing declares otherwise, its own declaration settling both parts on it */
 const FIELD_DRAWN = { ...FIELD_DEFAULT, drawnByField: ['label', 'description'] };

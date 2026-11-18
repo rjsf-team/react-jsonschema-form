@@ -1,22 +1,11 @@
-import type { ResolvedPresentationDeclaration } from '../src/index.ts';
-import { getSelectorPresentation, resolveFieldPresentation } from '../src/index.ts';
+import { getSelectorPresentation } from '../src/index.ts';
+import { ID, TEMPLATE, planField } from './testUtils/presentation.ts';
 
-const ID = 'root_foo';
 const SELECTOR = `${ID}__anyof_select`;
-const TEMPLATE: ResolvedPresentationDeclaration = {
-  label: 'template',
-  description: 'template',
-  errors: 'template',
-  help: 'template',
-  labelledBy: 'for',
-};
 
 describe('getSelectorPresentation()', () => {
   it("names the selector by the label its field's template draws, and describes it by the field's parts", () => {
-    const field = resolveFieldPresentation({
-      id: ID,
-      declaration: TEMPLATE,
-      label: 'Foo',
+    const field = planField({
       description: 'Describes foo',
       errors: ['is required'],
       required: true,
@@ -38,10 +27,8 @@ describe('getSelectorPresentation()', () => {
   });
 
   it('draws the parts its field draws itself', () => {
-    const field = resolveFieldPresentation({
-      id: ID,
+    const field = planField({
       declaration: { ...TEMPLATE, label: 'self', description: 'self' },
-      label: 'Foo',
       description: 'Describes foo',
     });
     const selector = getSelectorPresentation(field, SELECTOR);
@@ -53,18 +40,13 @@ describe('getSelectorPresentation()', () => {
   it.each(['template', 'self'] as const)(
     'names the selector by the label text a %s-labelled field hides under ui:label false',
     (label) => {
-      const field = resolveFieldPresentation({
-        id: ID,
-        declaration: { ...TEMPLATE, label },
-        label: 'Foo',
-        showLabel: false,
-      });
+      const field = planField({ declaration: { ...TEMPLATE, label }, showLabel: false });
       expect(getSelectorPresentation(field, SELECTOR).control?.attributes).toEqual({ 'aria-label': 'Foo' });
     },
   );
 
   it('has no control when its field has none on screen', () => {
-    const field = resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo', hasControl: false });
+    const field = planField({ hasControl: false });
     expect(getSelectorPresentation(field, SELECTOR).control).toBeUndefined();
   });
 });

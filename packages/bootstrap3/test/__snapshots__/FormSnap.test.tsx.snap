@@ -7373,7 +7373,6 @@ exports[`single fields > slider field 1`] = `
           max="100"
           min="42"
           name="root"
-          placeholder=""
           type="range"
           value="75"
         />

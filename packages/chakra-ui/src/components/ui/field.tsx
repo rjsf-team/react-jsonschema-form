@@ -1,5 +1,6 @@
 import type { ComponentProps, MouseEventHandler, ReactNode } from 'react';
 import { chakra, Field as ChakraField, useFieldContext, useFieldStyles, useSlotRecipe } from '@chakra-ui/react';
+import { joinClassNames } from '@rjsf/utils';
 
 export interface FieldProps extends Omit<ComponentProps<typeof ChakraField.Root>, 'label'> {
   label?: ReactNode;
@@ -25,8 +26,8 @@ export interface FieldProps extends Omit<ComponentProps<typeof ChakraField.Root>
  *
  * @param props - The label's attributes and children, and `css`, the recipe's label style
  */
-export function RecipeLabel(props: ComponentProps<typeof chakra.label>) {
-  return <chakra.label className='chakra-field__label' {...props} />;
+export function RecipeLabel({ className, ...props }: ComponentProps<typeof chakra.label>) {
+  return <chakra.label {...props} className={joinClassNames('chakra-field__label', className)} />;
 }
 
 /** The `*` marking a required field, styled by the `field` recipe's `requiredIndicator` slot and hidden from a name, as
@@ -34,10 +35,15 @@ export function RecipeLabel(props: ComponentProps<typeof chakra.label>) {
  *
  * @param props - Style props for the marker, such as the spacing a label's own gap gives it inside a `Field`
  */
-export function RequiredMarker(props: ComponentProps<typeof chakra.span>) {
+export function RequiredMarker({ className, ...props }: ComponentProps<typeof chakra.span>) {
   const styles = useSlotRecipe({ key: 'field' })();
   return (
-    <chakra.span className='chakra-field__requiredIndicator' css={styles.requiredIndicator} aria-hidden {...props}>
+    <chakra.span
+      css={styles.requiredIndicator}
+      aria-hidden
+      {...props}
+      className={joinClassNames('chakra-field__requiredIndicator', className)}
+    >
       *
     </chakra.span>
   );

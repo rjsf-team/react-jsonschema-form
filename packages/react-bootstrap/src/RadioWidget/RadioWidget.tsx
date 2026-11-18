@@ -1,4 +1,4 @@
-import type { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionsAutofocusIndex,
@@ -10,6 +10,7 @@ import {
   getOptionValueFormat,
   hasWidgetErrors,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
@@ -25,10 +26,7 @@ export default function RadioWidget<
 
   const handleChange = ({ target: { value: enumValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   const inline = Boolean(options?.inline);
   const invalid = hasWidgetErrors<T, S, F>(props);
@@ -58,8 +56,8 @@ export default function RadioWidget<
               isInvalid={invalid}
               value={domValues[index]}
               onChange={handleChange}
-              onBlur={handleBlur}
-              onFocus={handleFocus}
+              onBlur={blurHandlers[index]}
+              onFocus={focusHandlers[index]}
               {...optionAttributes}
             />
           );

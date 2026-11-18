@@ -1,5 +1,5 @@
 import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { errorId, joinClassNames } from '@rjsf/utils';
+import { errorId, joinClassNames, nonEmptyErrorMessages } from '@rjsf/utils';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *
@@ -20,14 +20,12 @@ export default function FieldErrorTemplate<
   return (
     <div>
       <ul id={id} className={joinClassNames('rjsf-error-detail', classMap.fieldErrors)}>
-        {errors
-          .filter((elem) => !!elem)
-          .map((error, index: number) => (
-            // oxlint-disable-next-line react/no-array-index-key
-            <li className={joinClassNames('rjsf-error', classMap.fieldError)} key={index}>
-              {error}
-            </li>
-          ))}
+        {nonEmptyErrorMessages(errors).map((error, index: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <li className={joinClassNames('rjsf-error', classMap.fieldError)} key={index}>
+            {error}
+          </li>
+        ))}
       </ul>
     </div>
   );

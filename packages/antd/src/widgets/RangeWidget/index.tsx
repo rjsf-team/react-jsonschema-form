@@ -115,8 +115,8 @@ export default function RangeWidget<
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
   const extraProps = {
     placeholder,
-    onBlur: !readonly ? handleBlur : undefined,
-    onFocus: !readonly ? handleFocus : undefined,
+    onBlur: handleBlur,
+    onFocus: handleFocus,
   };
 
   return (

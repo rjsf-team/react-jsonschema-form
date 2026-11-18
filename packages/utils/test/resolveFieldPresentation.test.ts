@@ -1,29 +1,14 @@
 import { createElement } from 'react';
 
-import type {
-  FieldPresentation,
-  FieldPresentationInputs,
-  FieldTemplateOrder,
-  ResolvedPresentationDeclaration,
-} from '../src/index.ts';
+import type { FieldTemplateOrder, ResolvedPresentationDeclaration } from '../src/index.ts';
 import { resolveFieldPresentation } from '../src/index.ts';
+import { TEMPLATE, planField as resolve } from './testUtils/presentation.ts';
 
 const ID = 'root_foo';
 
-const TEMPLATE: ResolvedPresentationDeclaration = {
-  label: 'template',
-  description: 'template',
-  errors: 'template',
-  help: 'template',
-  labelledBy: 'for',
-};
 const WIDGET_LABEL: ResolvedPresentationDeclaration = { ...TEMPLATE, label: 'self' };
 const fieldText = { description: 'Describes the field', help: 'Helps with the field' };
 const optionText = { description: 'Describes the option', help: 'Helps with the option' };
-
-function resolve(inputs: Partial<FieldPresentationInputs> = {}): FieldPresentation {
-  return resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo', ...inputs });
-}
 
 describe('resolveFieldPresentation()', () => {
   it('plans a field whose template draws every part', () => {

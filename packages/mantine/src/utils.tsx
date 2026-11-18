@@ -19,9 +19,11 @@ import {
   Box,
   extractStyleProps,
   filterProps,
+  Grid,
   Input,
   InputWrapperContext,
   STYLE_PROPS_DATA,
+  Title,
   useInputProps,
   useProps,
 } from '@mantine/core';
@@ -48,6 +50,7 @@ import {
   isLabelledByTemplate,
   isObject,
   labelValue,
+  nonEmptyErrorMessages,
   partId,
   RESERVED_UI_OPTION_NAMES,
   titleId,
@@ -121,8 +124,9 @@ const strippedOptionNames = new Set<string>([
  * @returns - The errors to render, or undefined when there are none
  */
 export function errorLines(errors: readonly ReactNode[]): ReactNode {
+  // Kept for messages that are all empty, as the plan describes the control by the error element's id then too
   return errors.length
-    ? errors.map((error, index) => (
+    ? nonEmptyErrorMessages(errors).map((error, index) => (
         // oxlint-disable-next-line react/no-array-index-key
         <Fragment key={index}>
           {index > 0 && ' '}
@@ -150,14 +154,44 @@ export function getRequiredProps<
   return { required, ...(marked !== Boolean(required) && { withAsterisk: marked }) };
 }
 
-/** The `*` a title template marks a required object's or array's heading with, styled as Mantine marks a required
- * label's, outside the element carrying the title's id, so an option selector named by that id isn't named "Pet *"
+/** The heading `TitleField` and `ArrayFieldTitleTemplate` draw, with `id` on the title's text alone, and a required
+ * heading's `*`, styled as Mantine marks a required label's, outside it, so an option selector named by that id isn't
+ * named "Pet *". The optional data control sits beside the heading, or alone where there is no title
+ *
+ * @param props - The heading's level, the id of its text, its title, whether it is required, and the optional data
+ *   control
  */
-export function RequiredMarker() {
+export function TitleHeading({
+  order,
+  id,
+  title,
+  required,
+  optionalDataControl,
+}: {
+  order: 3 | 4;
+  id: string;
+  title: string;
+  required?: boolean;
+  optionalDataControl?: ReactNode;
+}) {
+  const heading = title ? (
+    <Title order={order} fw='normal'>
+      <span id={id}>{title}</span>
+      {required && (
+        <Box component='span' aria-hidden c='var(--input-asterisk-color, var(--mantine-color-error))'>
+          {' *'}
+        </Box>
+      )}
+    </Title>
+  ) : null;
+  if (!optionalDataControl) {
+    return heading;
+  }
   return (
-    <Box component='span' aria-hidden c='var(--input-asterisk-color, var(--mantine-color-error))'>
-      {' *'}
-    </Box>
+    <Grid>
+      <Grid.Col span='auto'>{heading}</Grid.Col>
+      <Grid.Col span='content'>{optionalDataControl}</Grid.Col>
+    </Grid>
   );
 }
 

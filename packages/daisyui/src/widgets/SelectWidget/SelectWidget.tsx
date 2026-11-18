@@ -12,6 +12,7 @@ import {
   enumOptionsDeselectValue,
   enumOptionValueLabel,
   enumOptionsIndexForValue,
+  enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
@@ -170,30 +171,6 @@ export default function SelectWidget<
     [enumOptions, schema.examples],
   );
 
-  const handleOptionClick = useCallback(
-    (event: SyntheticEvent<HTMLLIElement>) => {
-      const index = Number(event.currentTarget.dataset.value);
-      if (Number.isNaN(index)) {
-        return;
-      }
-
-      // `data-value` is the option's index whatever the `optionValueFormat`, so it's resolved as one rather than
-      // decoded as a DOM value
-      const optionValue = enumOptionsValueForIndex<S>(String(index), optionsList, optEmptyVal);
-      if (isMultiple) {
-        const currentValue = Array.isArray(value) ? value : [];
-        // Compared by value, since an object option in form data is rarely the same instance as the option's constant
-        const newValue = enumOptionsIsSelected<S>(optionValue, currentValue, true)
-          ? enumOptionsDeselectValue<S>(index, currentValue, optionsList)
-          : enumOptionsSelectValue<S>(index, currentValue, optionsList);
-        onChange(newValue);
-      } else {
-        onChange(optionValue);
-      }
-    },
-    [value, isMultiple, optionsList, optEmptyVal, onChange],
-  );
-
   const { handleFocus: reportFocus, handleBlur: reportBlur } = useSelectFocusHandlers<T, S, F>({
     id,
     value,
@@ -219,6 +196,68 @@ export default function SelectWidget<
   }, [dismissed]);
   const typeAhead = useRef({ typed: '', at: 0 });
   const spacePressedOn = useRef<EventTarget | null>(null);
+  const chooseOption = useCallback(
+    (event: SyntheticEvent<HTMLLIElement>) => {
+      const index = Number(event.currentTarget.dataset.value);
+      // Disabled by the same rule `renderOption()` draws a disabled option by
+      if (
+        Number.isNaN(index) ||
+        disabled ||
+        readonly ||
+        enumOptionsIsDisabled(optionsList[index]?.value, enumDisabled)
+      ) {
+        return;
+      }
+
+      // `data-value` is the option's index whatever the `optionValueFormat`, so it's resolved as one rather than
+      // decoded as a DOM value
+      const optionValue = enumOptionsValueForIndex<S>(String(index), optionsList, optEmptyVal);
+      if (isMultiple) {
+        const currentValue = Array.isArray(value) ? value : [];
+        // Compared by value, since an object option in form data is rarely the same instance as the option's constant
+        const newValue = enumOptionsIsSelected<S>(optionValue, currentValue, true)
+          ? enumOptionsDeselectValue<S>(index, currentValue, optionsList)
+          : enumOptionsSelectValue<S>(index, currentValue, optionsList);
+        onChange(newValue);
+      } else {
+        onChange(optionValue);
+      }
+      typeAhead.current.typed = '';
+      // A choice in a single select, by key or by a click, which is how VoiceOver activates an option too, closes the
+      // listbox and returns focus to the combobox, which announces it, as Escape does
+      if (!isMultiple) {
+        setDismissed(true);
+        triggerRef.current?.focus();
+      }
+    },
+    [value, isMultiple, optionsList, optEmptyVal, onChange, disabled, readonly, enumDisabled],
+  );
+
+  const handleOptionKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLLIElement>) => {
+      if (event.key !== 'Enter' && event.key !== ' ') {
+        return;
+      }
+      // Space would scroll the listbox too
+      event.preventDefault();
+      if (event.key === 'Enter') {
+        chooseOption(event);
+      }
+    },
+    [chooseOption],
+  );
+
+  // Space chooses on its release, as it presses a button: chosen on its press, the focus it returns to the combobox
+  // would take the release, which Firefox turns into a click that reopens the listbox
+  const handleOptionKeyUp = useCallback(
+    (event: KeyboardEvent<HTMLLIElement>) => {
+      if (event.key === ' ' && spacePressedOn.current === event.currentTarget) {
+        chooseOption(event);
+      }
+    },
+    [chooseOption],
+  );
+
   // Focus moves between the button and the options while the dropdown is in use, so only entering or leaving the
   // dropdown as a whole counts as focusing or blurring the widget, which reports the current selection
   const handleBlur = useCallback(
@@ -339,19 +378,6 @@ export default function SelectWidget<
     const isSelected = selectedIndexes.includes(String(option.index));
     // A disabled or readonly field's options can't be chosen, though they stay reachable, so its value stays readable
     const optionDisabled = disabled || readonly || option.disabled;
-    const choose = (e: SyntheticEvent<HTMLLIElement>) => {
-      if (optionDisabled) {
-        return;
-      }
-      handleOptionClick(e);
-      typeAhead.current.typed = '';
-      // A choice in a single select, by key or by a click, which is how VoiceOver activates an option too, closes the
-      // listbox and returns focus to the combobox, which announces it, as Escape does
-      if (!isMultiple) {
-        setDismissed(true);
-        triggerRef.current?.focus();
-      }
-    };
     return (
       <li
         key={option.index}
@@ -365,20 +391,9 @@ export default function SelectWidget<
         className={`px-4 py-2 ${optionDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-base-200 cursor-pointer'} ${
           isSelected ? 'bg-primary/10' : ''
         }`}
-        onClick={choose}
-        onKeyDown={(e) => {
-          if (e.key !== 'Enter' && e.key !== ' ') {
-            return;
-          }
-          // Space would scroll the listbox too
-          e.preventDefault();
-          if (e.key === 'Enter') {
-            choose(e);
-          }
-        }}
-        // Space chooses on its release, as it presses a button: chosen on its press, the focus it returns to the
-        // combobox would take the release, which Firefox turns into a click that reopens the listbox
-        onKeyUp={(e) => e.key === ' ' && spacePressedOn.current === e.currentTarget && choose(e)}
+        onClick={chooseOption}
+        onKeyDown={handleOptionKeyDown}
+        onKeyUp={handleOptionKeyUp}
         data-value={option.index}
       >
         <div className='flex items-center gap-2'>

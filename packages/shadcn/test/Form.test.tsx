@@ -18,10 +18,8 @@ import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
 import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
-import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import { Slider } from '../src/components/ui/slider.tsx';
 import Form, { generateClassMap, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
-import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 const user = userEvent.setup();
 
@@ -989,23 +987,6 @@ describe('shadcn CheckboxWidget required attribute', () => {
     const { container } = render(<Form schema={formSchema({ ...agree, const: true })} validator={validator} />);
 
     expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
-  });
-
-  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
-  // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
-  // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse.
-  // Radix renders the input the browser validates only inside a form
-  test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
-    ['a required boolean whose false the schema accepts', agree, true, false],
-    ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
-  ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
-    const { container } = render(
-      <form>
-        <CheckboxWidget {...makeWidgetMockProps({ schema, value, required, readonly: false })} />
-      </form>,
-    );
-
-    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
 

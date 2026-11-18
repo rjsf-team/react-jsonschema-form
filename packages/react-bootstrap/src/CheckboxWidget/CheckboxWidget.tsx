@@ -1,12 +1,12 @@
 import type { FocusEvent } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
+  getCheckboxRequired,
   getControlAttributes,
   getTemplates,
   getWidgetDescription,
   hasWidgetErrors,
-  schemaRequiresTrueValue,
-  widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
@@ -31,17 +31,9 @@ export default function CheckboxWidget<
     registry,
     presentation,
     uiSchema,
-    required,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
-  // Because an unchecked checkbox will cause html5 validation to fail, only add
-  // the "required" attribute if the field value must be "true", due to the
-  // "const" or "enum" keywords
-  const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
-  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
-  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
-  // and `aria-required` tells a screen reader of, as the marker is hidden from it
-  const marksRequired = presentation?.control ? required : trueValueRequired;
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
+  const { trueValueRequired, marksRequired } = getCheckboxRequired<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
 
   const handleChange = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onChange(checked);
@@ -64,7 +56,7 @@ export default function CheckboxWidget<
         id={id}
         name={htmlName || id}
         label={
-          !hideLabel && label ? (
+          !hideLabel ? (
             <>
               {label}
               {marksRequired && <span className='required'>*</span>}

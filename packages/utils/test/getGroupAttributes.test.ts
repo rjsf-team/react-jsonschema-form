@@ -1,18 +1,17 @@
 import { ariaDescribedByIds } from '../src/idGenerators.ts';
-import type { FieldPresentation, Registry, ResolvedPresentationDeclaration } from '../src/index.ts';
-import { englishStringTranslator, getGroupAttributes, resolveFieldPresentation } from '../src/index.ts';
+import type {
+  FieldPresentation,
+  FieldPresentationInputs,
+  Registry,
+  ResolvedPresentationDeclaration,
+} from '../src/index.ts';
+import { englishStringTranslator, getGroupAttributes } from '../src/index.ts';
+import { ID, TEMPLATE, planField } from './testUtils/presentation.ts';
 
-const ID = 'root_foo';
-const GROUP: ResolvedPresentationDeclaration = {
-  label: 'template',
-  description: 'template',
-  errors: 'template',
-  help: 'template',
-  labelledBy: 'aria-labelledby',
-};
+const GROUP: ResolvedPresentationDeclaration = { ...TEMPLATE, labelledBy: 'aria-labelledby' };
 
-function plan(inputs: Partial<Parameters<typeof resolveFieldPresentation>[0]> = {}): FieldPresentation {
-  return resolveFieldPresentation({ id: ID, declaration: GROUP, label: 'Foo', ...inputs });
+function plan(inputs: Partial<FieldPresentationInputs> = {}): FieldPresentation {
+  return planField({ declaration: GROUP, ...inputs });
 }
 
 describe('getGroupAttributes()', () => {
