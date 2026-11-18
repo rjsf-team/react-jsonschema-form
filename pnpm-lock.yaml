@@ -637,8 +637,8 @@ importers:
         specifier: ^5.3.2
         version: 5.3.2(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(prop-types@15.8.1)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
       react-resizable-panels:
-        specifier: ^4.21.0
-        version: 4.21.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+        specifier: ^4.23.0
+        version: 4.23.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
     devDependencies:
       '@emotion/cache':
         specifier: ^11.14.0
@@ -9737,8 +9737,8 @@ packages:
       '@types/react':
         optional: true
 
-  react-resizable-panels@4.21.0:
-    resolution: {integrity: sha512-SzNEQNH/xIn3aKKLSdv48h0eu1gF1bkvozIVStow2hRmh/d9jkyoZR7dF8GUx39Wc2TAJTmfSUr4y/wwtvMoRQ==}
+  react-resizable-panels@4.23.0:
+    resolution: {integrity: sha512-Sz0KOymTxzygc2Awsj2v8obODogb0aODeUQiv09FEKCxjtKSz2sZWhdRYRSf6WL/9u1rybFbX/7IWgp5h48f5g==}
     peerDependencies:
       '@types/react': ^18.2.6 || ^19.0.0
       '@types/react-dom': '*'
@@ -22067,7 +22067,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  react-resizable-panels@4.21.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1):
+  react-resizable-panels@4.23.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(@types/react@19.3.0)(react@19.3.1))(react@19.3.1):
     dependencies:
       react: 19.3.1
       react-dom: 19.3.1(@types/react@19.3.0)(react@19.3.1)
