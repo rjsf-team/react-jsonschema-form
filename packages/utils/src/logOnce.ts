@@ -51,7 +51,7 @@ export type WarningId = keyof typeof WARNING_CATEGORIES;
 export interface WarningOptions {
   /** The categories and IDs of the warnings that throw an `RJSFWarningError` rather than log */
   throwOn?: readonly (WarningCategory | WarningId)[];
-  /** The IDs that log, deduped as usual, even where `throwOn` selects them */
+  /** The IDs that log as usual, even where `throwOn` selects them */
   except?: readonly WarningId[];
 }
 
@@ -77,12 +77,16 @@ let throwingIds = new Set<string>();
  * Module-level, since several warnings are raised where no form's options reach, so it is set once from an app's
  * development entry point or a test setup. A warning without an ID never throws, and `resetLogOnce()` leaves this
  * setting as it is. A name it doesn't know, such as a misspelt ID from a setup file in plain JavaScript, is ignored
- * with a warning.
+ * with a warning, and a `throwOn` or `except` that isn't an array throws a `TypeError`.
  *
  * @param [options={}] - The `throwOn` categories and IDs, and the IDs `except` keeps logging; `{}` restores the
  *        default of logging every warning
  */
 export function setWarningOptions({ throwOn = [], except = [] }: WarningOptions = {}) {
+  // A plain-JS caller's string would otherwise be read a character at a time, and match its names as substrings
+  if (!Array.isArray(throwOn) || !Array.isArray(except)) {
+    throw new TypeError('setWarningOptions() takes `throwOn` and `except` as arrays of warning categories or IDs');
+  }
   // Widened, since `Object.entries()` reads the table's IDs as plain strings
   const selected: readonly string[] = throwOn;
   const excepted: readonly string[] = except;

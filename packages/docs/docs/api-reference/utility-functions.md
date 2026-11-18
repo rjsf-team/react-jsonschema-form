@@ -3030,13 +3030,13 @@ setWarningOptions({}); // the default: every warning logs
 | `row-span-ignored`                  | `config`    | a `ui:row` has a `span`, which sizes only a `ui:col` or `ui:columns`                                        |
 | `layout-grid-cell-field-ignored`    | `config`    | a layout grid cell with discriminated `oneOf`/`anyOf` options names a `ui:field`, which it ignores          |
 
-`WarningCategory` and `WarningId` are string-literal unions of the names above, so a typo fails type-checking. In a setup file in plain JavaScript, `setWarningOptions()` ignores a name it doesn't know and warns about it.
+`WarningCategory` and `WarningId` are string-literal unions of the names above, so a typo fails type-checking. In a setup file in plain JavaScript, `setWarningOptions()` ignores a name it doesn't know and warns about it, and throws a `TypeError` for a `throwOn` or `except` that isn't an array.
 
 #### Parameters
 
 - [options=\{}]: WarningOptions - The warnings to throw for; left out, every warning logs
   - [throwOn=[]]: (WarningCategory | WarningId)[] - The categories and IDs of the warnings that throw an `RJSFWarningError`
-  - [except=[]]: WarningId[] - The IDs that log, deduped as usual, even where `throwOn` selects them
+  - [except=[]]: WarningId[] - The IDs that log as usual, even where `throwOn` selects them
 
 ### sharedCopyParts()
 

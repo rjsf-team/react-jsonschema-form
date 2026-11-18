@@ -218,6 +218,19 @@ describe('logOnce()', () => {
       logOnce('a message', { id: 'antd-span-twelfths' });
       expect(consoleWarnSpy).toHaveBeenLastCalledWith('a message [antd-span-twelfths]');
     });
+    it.each([
+      ['throwOn', { throwOn: 'migration' }],
+      ['except', { throwOn: ['migration'], except: 'antd-span-twelfths' }],
+    ])('throws a TypeError when %s is no array, as from an untyped JS caller, and keeps the setting', (_, options) => {
+      setWarningOptions({ throwOn: ['config'] });
+      expect(() => setWarningOptions(options as never)).toThrow(
+        new TypeError('setWarningOptions() takes `throwOn` and `except` as arrays of warning categories or IDs'),
+      );
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+      expect(() => logOnce('a message', { level: 'error', id: 'ui-widget-element' })).toThrow(RJSFWarningError);
+      logOnce('a message', { id: 'form-data-ignored' });
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [form-data-ignored]');
+    });
     it('keeps the setting across resetLogOnce()', () => {
       setWarningOptions({ throwOn: ['config'] });
       resetLogOnce();
