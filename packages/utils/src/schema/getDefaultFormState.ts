@@ -339,6 +339,34 @@ function withDefaultOf<S extends StrictRJSFSchema>(parent: S, renderedOption: S)
     : renderedOption;
 }
 
+/** For each object of the form data, the properties recorded for it. The map is made by the first one recorded: most
+ * schemas hold no `null` type, and every field of a fold starts a record of its own
+ */
+class KeysByObject {
+  private byObject?: Map<object, Set<string>>;
+
+  add(owner: object, key: string) {
+    this.byObject ??= new Map();
+    const keys = this.byObject.get(owner) ?? new Set<string>();
+    keys.add(key);
+    this.byObject.set(owner, keys);
+  }
+
+  keysOf(owner: object): ReadonlySet<string> | undefined {
+    return this.byObject?.get(owner);
+  }
+
+  get isEmpty(): boolean {
+    return this.byObject === undefined;
+  }
+
+  forEach(visit: (owner: object, key: string) => void) {
+    this.byObject?.forEach((keys, owner) => {
+      keys.forEach((key) => visit(owner, key));
+    });
+  }
+}
+
 /** What the `null` fills of one `getDefaultFormState()` call share as they reach every level */
 interface NullFills {
   /** The global UI options of the root uiSchema, which decide where a field renders an object with the Optional Data
@@ -349,7 +377,7 @@ interface NullFills {
    * properties. The data's `undefined` is kept over a default everywhere else, so their `null`s are put in once the
    * defaults are merged into the data: the field of a `null` schema holds `null` whatever it was given
    */
-  overUndefined: Map<object, Set<string>>;
+  overUndefined: KeysByObject;
   /** Set below an optional object the Optional Data Controls render while it has no value: none of its fields render
    * until the user adds it, so none of their `null`s is filled in, and the object stays out of the defaults as one with
    * no `null` schema in it would
@@ -504,22 +532,18 @@ function fillOverUndefined(nullFills: NullFills | undefined, formData: unknown, 
     Object.hasOwn(formData, key) &&
     formData[key] === undefined
   ) {
-    const fills = nullFills.overUndefined.get(formData) ?? new Set<string>();
-    fills.add(key);
-    nullFills.overUndefined.set(formData, fills);
+    nullFills.overUndefined.add(formData, key);
   }
 }
 
 /** The `null` fills of `nullFills` with none recorded yet, for a fold whose fills count only if its value is kept */
 function freshFills(nullFills: NullFills | undefined): NullFills | undefined {
-  return nullFills && { ...nullFills, overUndefined: new Map() };
+  return nullFills && { ...nullFills, overUndefined: new KeysByObject() };
 }
 
 /** Records the `null` fills of `from` in `into` */
 function addFills(into: NullFills | undefined, from: NullFills | undefined) {
-  from?.overUndefined.forEach((keys, formData) => {
-    keys.forEach((key) => fillOverUndefined(into, formData, key, null));
-  });
+  from?.overUndefined.forEach((formData, key) => fillOverUndefined(into, formData, key, null));
 }
 
 /** Puts the `null` of each `null` schema's field the form data holds as `undefined` into `merged`, see
@@ -536,7 +560,7 @@ function addFills(into: NullFills | undefined, from: NullFills | undefined) {
 function withNullFills<V>(merged: V, formData: unknown, nullFills: NullFills | undefined): V {
   if (
     !nullFills ||
-    nullFills.overUndefined.size === 0 ||
+    nullFills.overUndefined.isEmpty ||
     typeof merged !== 'object' ||
     merged === null ||
     typeof formData !== 'object' ||
@@ -544,7 +568,7 @@ function withNullFills<V>(merged: V, formData: unknown, nullFills: NullFills | u
   ) {
     return merged;
   }
-  const fills = nullFills.overUndefined.get(formData);
+  const fills = nullFills.overUndefined.keysOf(formData);
   let filled = merged;
   for (const [key, value] of Object.entries(formData)) {
     const current: unknown = Reflect.get(merged, key);
@@ -743,6 +767,10 @@ interface FieldPasses<S extends StrictRJSFSchema> {
    * and the object's extra keys share one retrieve
    */
   retrievedViewOf(view: DefaultsView<S>): DefaultsView<S>;
+  /** Returns the views `retrievedViewOf()` handed out since the last call, whose conditions and `dependencies` the
+   * pass read as it read those of the field's own plan
+   */
+  takeRetrieved(): readonly DefaultsView<S>[];
 }
 
 /** Returns the `FieldPasses` of a field's fixed point over `data`. Only a field with an object `const` or options uses
@@ -756,6 +784,7 @@ function fieldPasses<S extends StrictRJSFSchema, F extends FormContextType>(
   let lastExtraKeySchema: unknown;
   let retrievals: KeyedMemo<S> | undefined;
   let retrievedViews: KeyedMemo<DefaultsView<S>> | undefined;
+  let retrieved: DefaultsView<S>[] = [];
   return {
     shareExtraKeySchema(extraKeySchema) {
       const shared = replaceEqualDeep(lastExtraKeySchema, extraKeySchema);
@@ -768,9 +797,16 @@ function fieldPasses<S extends StrictRJSFSchema, F extends FormContextType>(
     },
     retrievedViewOf(view) {
       retrievedViews ??= new KeyedMemo<DefaultsView<S>>();
-      return retrievedViews.get([view], () =>
-        settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options),
-      );
+      return retrievedViews.get([view], () => {
+        const settled = settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
+        retrieved.push(settled);
+        return settled;
+      });
+    },
+    takeRetrieved() {
+      const taken = retrieved;
+      retrieved = [];
+      return taken;
     },
   };
 }
@@ -1133,11 +1169,13 @@ function defaultsChild<S extends StrictRJSFSchema>(
   return { graph, seeds: useFallback ? [] : seeds, expanded, edge, fallback: useFallback ? fallback : undefined };
 }
 
-/** Computes the defaults of `field` from the fold's state at it. A field whose plan has `dependencies` or an `if` is
- * planned again while the defaults computed so far, under its data, qualify a set of dependencies or decide a condition
- * otherwise than it was planned with, so a default decides them as the same value in the data does. Conditions can
- * flip each other, so the passes end at the first set and decisions seen before, with the defaults of the pass that
- * reached them. A child computed in an earlier pass from the same inputs is not computed again.
+/** Computes the defaults of `field` from the fold's state at it. A field that read `dependencies` or an `if`, in its
+ * plan or in the field as `SchemaField` retrieves it, is planned again while the defaults computed so far, under its
+ * data, qualify a set of dependencies or decide a condition otherwise than it was planned with, so a default decides
+ * them as the same value in the data does. The passes end once the defaults of a pass decide what it was planned with.
+ * Conditions can flip each other, a branch taking back the default that selects it, and then no pass ends them: once
+ * the decisions of an earlier pass come back, the field is computed as its data alone decides it. A child computed in
+ * an earlier pass from the same inputs is not computed again.
  */
 function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1145,11 +1183,11 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FoldProps<T, S, F>,
 ): unknown {
   const data = props.rawFormData;
-  let view = settle(context, field, data, data);
-  // The options the field selected are planned with it, so the dependencies they bring are qualified too
-  let lastView = view;
+  // The view of a pass with the options the field selected, which are planned with it, so the dependencies they bring
+  // are qualified too
+  const tracked: { view?: DefaultsView<S> } = {};
   const track = (computed: DefaultsView<S>) => {
-    lastView = computed;
+    tracked.view = computed;
   };
   // Only the pass whose value is kept reports its `null` fill, and records the `null`s it puts over the data's
   // `undefined`: a pass whose conditions decided otherwise may have read a property as a `null` schema's field
@@ -1158,52 +1196,64 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const onNullFill = () => {
     holdsNull = true;
   };
-  const passProps = {
-    ...props,
-    memo: new Map<string, MemoEntry>(),
-    passes: fieldPasses<S, F>(context, field.graph.rawRoot, data),
-    track,
-    onNullFill,
-  };
-  const fold = (passView: DefaultsView<S>) => {
+  const passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
+  const passProps = { ...props, memo: new Map<string, MemoEntry>(), passes, track, onNullFill };
+  // Folds the field planned for `depData`, and returns its defaults with the views whose plans read that data
+  const fold = (depData: unknown) => {
     holdsNull = false;
     passFills = freshFills(props.nullFills);
-    return foldView(context, passView, { ...passProps, nullFills: passFills });
+    const view = settle(context, field, data, depData);
+    tracked.view = view;
+    const folded = foldView(context, view, { ...passProps, nullFills: passFills });
+    return { folded, depData, readers: [tracked.view, ...passes.takeRetrieved()] };
   };
-  let value = fold(view);
-  const decided = (conditions: readonly CheckedCondition[]) =>
-    conditions.map(({ node, satisfied }) => `${node}:${satisfied}`).join(',');
-  const seen = new Set([`${qualifiedDependencies(lastView, data)}|${decided(lastView.checked)}`]);
+  const kept = (folded: unknown) => {
+    if (holdsNull) {
+      props.onNullFill?.();
+    }
+    addFills(props.nullFills, passFills);
+    return folded;
+  };
+  // What `readers` qualify and decide for `depData`, each condition as its plan decided it unless `redecides`
+  const decisionsOf = (readers: readonly DefaultsView<S>[], depData: unknown, redecides: boolean) =>
+    readers
+      .map((reader) => {
+        const decided = reader.checked.map(({ node, satisfied }) => {
+          const holds = redecides ? conditionHolds<S, F>(context, reader.field.graph, node, depData) : satisfied;
+          return `${node}:${holds}`;
+        });
+        return `${qualifiedDependencies(reader, depData)}|${decided.join(',')}`;
+      })
+      .join(';');
+  let pass = fold(data);
+  let planned = decisionsOf(pass.readers, data, false);
+  const seen = new Set([planned]);
   for (;;) {
+    const { folded, readers } = pass;
     // Merged into the data, the defaults are the data as the fill leaves it at every level, a nested default beside
     // the data of its object and one replacing data the field doesn't take included, which a fill of that data reads
     // again, with the `null`s it puts over the data's `undefined`; otherwise the data is merged over them, a default
     // standing in for a value it lacks
-    const depData = props.shouldMergeDefaultsIntoFormData
-      ? withNullFills(value, data, passFills)
-      : mergeDefaultsWithFormData(value, data, false, true);
-    const { graph } = lastView.field;
-    // The plan checked its conditions against its own dependency data, `{}` standing in for none, so they decide alike
-    // for data equal to it, as the data of an edit is once it holds the defaults
-    const planned = lastView.depData ?? {};
-    const redecided =
-      lastView.checked.length === 0 || replaceEqualDeep(planned, depData ?? {}) === planned
-        ? lastView.checked
-        : lastView.checked.map(({ node }) => ({
-            node,
-            satisfied: conditionHolds<S, F>(context, graph, node, depData),
-          }));
-    const qualified = `${qualifiedDependencies(lastView, depData)}|${decided(redecided)}`;
-    if (seen.has(qualified)) {
-      if (holdsNull) {
-        props.onNullFill?.();
-      }
-      addFills(props.nullFills, passFills);
-      return value;
+    const filled: unknown = props.shouldMergeDefaultsIntoFormData
+      ? withNullFills(folded, data, passFills)
+      : mergeDefaultsWithFormData(folded, data, false, true);
+    // The plans checked their conditions against their dependency data, `{}` standing in for none, so they decide
+    // alike for data equal to it, as the data of an edit is once it holds the defaults. Data that differs is handed to
+    // the next pass as the copy the comparison built, which shares with this pass's data what the two hold alike
+    const plannedFor: unknown = pass.depData ?? {};
+    const shared = replaceEqualDeep(plannedFor, filled ?? {});
+    const depData = filled === undefined || filled === null ? filled : shared;
+    const redecides = shared !== plannedFor;
+    const decisions = decisionsOf(readers, depData, redecides);
+    if (decisions === planned) {
+      return kept(folded);
     }
-    seen.add(qualified);
-    view = settle(context, field, data, depData);
-    value = fold(view);
+    if (seen.has(decisions)) {
+      return kept(fold(data).folded);
+    }
+    seen.add(decisions);
+    planned = decisions;
+    pass = fold(depData);
   }
 }
 
@@ -2349,24 +2399,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
     mayHoldNullType(view.schema, rootSchema)
   ) {
-    // A default computed for a property decides a branch's `if` as the same value in the data does, so the field is
-    // retrieved again for the data the fill leaves where it left a property otherwise than the data holds it. Merged
-    // into the data, a computed property is the data as the fill leaves it, a nested default beside the data of its
-    // object included; otherwise the data is merged over it, as `foldField()` merges it for the field's own conditions
-    const isDefaulted = Object.keys(computed).some(
-      (key) => !Object.hasOwn(formData, key) || computed[key] !== formData[key],
-    );
-    const filled = { ...(isObject(view.depData) ? view.depData : {}), ...computed };
-    const branchView = isDefaulted
-      ? settle(
-          context,
-          { ...view.field, retrieves: true },
-          view.data,
-          shouldMergeDefaultsIntoFormData ? filled : mergeDefaultsWithFormData(filled, formData, false, true),
-          view.options,
-        )
-      : retrievedView();
-    branchNullFills<T, S, F>(context, branchView, schema, props, foldReporting, foldedBranchKeys).forEach(
+    branchNullFills<T, S, F>(context, retrievedView(), schema, props, foldReporting, foldedBranchKeys).forEach(
       ({ key, value }) => {
         setOwn(computed, key, value);
         fillOverUndefined(nullFills, rawFormData, key, value);
@@ -3808,7 +3841,7 @@ export default function getDefaultFormState<
   // cases we take the value from the defaults because the value from the formData is not valid.
   const nullFills: NullFills = {
     globalUiOptions: getByPath<GlobalUISchemaOptions | undefined>(uiSchema, UI_GLOBAL_OPTIONS_KEY),
-    overUndefined: new Map(),
+    overUndefined: new KeysByObject(),
   };
   const outerSnapshots = callSnapshots;
   const snapshots = new Map<object, object>();

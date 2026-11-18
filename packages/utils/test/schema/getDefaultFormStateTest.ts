@@ -26,7 +26,13 @@ import {
   RECURSIVE_REF,
   RECURSIVE_REF_ALLOF,
 } from '../testUtils/testData.ts';
-import type { TestValidatorType } from './types.ts';
+import { check } from './graph/miniValidator.ts';
+import type { IsValidAnswer, TestValidatorType } from './types.ts';
+
+/** Answers the mock validator's `isValid()` for the schema and data of each call, as the real validators do, for a test
+ * whose outcome an `if` decides: the answers hold whatever order the fill checks its conditions in
+ */
+const asRealValidator: IsValidAnswer = (schema, formData, rootSchema) => check(schema, formData, rootSchema);
 
 const ENUM_WITH_DEFAULT: RJSFSchema = { type: 'string', enum: ['x', 'y'], default: 'x' };
 
@@ -9832,13 +9838,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it('should fill in the then default of the if the defaulted value matches in array items with no data (#5830)', () => {
-          // The mock validator cannot evaluate an `if`, so it returns what the real validators do here: every `if` holds
-          // for no data, and only the Cat one once the default is in, as the field is planned and checked again. The
-          // schema is copied so no check another test made of it is answered from the memo
-          testValidator.setReturnValues({
-            isValid: [true, true, true, false, false, true, false, false, true, false, false, true],
-          });
-          const fishFirstArraySchema: RJSFSchema = { type: 'array', items: structuredClone(fishFirstAnimalInfoSchema) };
+          testValidator.setReturnValues({ isValid: asRealValidator });
+          const fishFirstArraySchema: RJSFSchema = { type: 'array', items: fishFirstAnimalInfoSchema };
           expect(
             getDefaultFormState(
               { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
@@ -9932,10 +9933,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it('should pick the if-then-else branch from the defaults under the form data, so a then default whose if requires a defaulted value is filled in (#5830)', () => {
-          // The mock validator cannot evaluate `required`, so it returns what the real validators do here: the `if`
-          // fails for no data, holds once the default is in, and holds again when the field is planned with it. The
-          // claim itself is only exercised by the ajv8, ata and cfworker runs of this test.
-          testValidator.setReturnValues({ isValid: [false, true, true, true] });
+          testValidator.setReturnValues({ isValid: asRealValidator });
           const requiredAnimalSchema: RJSFSchema = {
             ...animalInfoSchema,
             allOf: [{ ...animalCondition, if: { ...(animalCondition.if as RJSFSchema), required: ['animal'] } }],
@@ -9949,17 +9947,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it('should fill in the then default of the if the defaulted value matches on empty data (#5830)', () => {
-          // The mock validator cannot evaluate an `if`, so it returns what the real validators do here: every `if` holds
-          // for no data, and only the Cat one once the default is in, as the field is planned and checked again. The
-          // schema is copied so no check another test made of it is answered from the memo
-          testValidator.setReturnValues({
-            isValid: [true, true, true, false, false, true, false, false, true, false, false, true],
-          });
-          const fishFirst = structuredClone(fishFirstAnimalInfoSchema);
+          testValidator.setReturnValues({ isValid: asRealValidator });
           expect(
             getDefaultFormState(
               { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' } },
-              { schema: fishFirst, rootSchema: fishFirst },
+              { schema: fishFirstAnimalInfoSchema, rootSchema: fishFirstAnimalInfoSchema },
             ),
           ).toEqual({ animal: 'Cat', food: 'meat' });
         });
@@ -9990,13 +9982,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ),
           ).toEqual({ animal: 'Cat', food: 'meat' });
           expect(consoleWarnSpy).not.toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
-          // The mock validator cannot evaluate an `if`, so it returns what the real validators do here: every `if` holds
-          // for no data, and only the Cat one once the default is in, as the field is planned and checked again. The
-          // schema is copied so no check another test made of it is answered from the memo
-          testValidator.setReturnValues({
-            isValid: [true, true, true, false, false, true, false, false, true, false, false, true],
-          });
-          const fishFirst = structuredClone(fishFirstAnimalInfoSchema);
+          testValidator.setReturnValues({ isValid: asRealValidator });
           expect(
             getDefaultFormState(
               {
@@ -10004,7 +9990,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 defaultFormStateBehavior: { allOf: 'skipDefaults' },
                 customMergeAllOf: mergeAllOfUnlessFoodDefaultsConflict,
               },
-              { schema: fishFirst, rootSchema: fishFirst },
+              { schema: fishFirstAnimalInfoSchema, rootSchema: fishFirstAnimalInfoSchema },
             ),
           ).toEqual({ animal: 'Cat', food: 'meat' });
           expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
@@ -13831,24 +13817,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           { validator: testValidator, defaultFormStateBehavior },
           { schema, rootSchema: schema, formData },
         );
+      // The mock validator cannot evaluate an `if`, so it answers each check as the real validators do
+      beforeEach(() => {
+        testValidator.setReturnValues({ isValid: asRealValidator });
+      });
       afterEach(() => {
         testValidator.reset?.();
       });
-      // Built for each test, so no check another test made of a schema is answered from the memo
-      const thenSchema = (): RJSFSchema => ({
+      const thenSchema: RJSFSchema = {
         type: 'object',
         properties: { k: { type: 'string', default: 'x' } },
         if: { properties: { k: { const: 'x' } }, required: ['k'] },
         then: { properties: { t: { type: 'number', default: 2 } } },
-      });
-      const elseSchema = (): RJSFSchema => ({
+      };
+      const elseSchema: RJSFSchema = {
         type: 'object',
         properties: { k: { type: 'string', default: 'y' } },
         if: { properties: { k: { const: 'x' } } },
         then: { properties: { t: { type: 'number', default: 2 } } },
         else: { properties: { e: { type: 'number', default: 3 } } },
-      });
-      const chainedSchema = (): RJSFSchema => ({
+      };
+      const chainedSchema: RJSFSchema = {
         type: 'object',
         properties: { k: { type: 'string', default: 'x' } },
         allOf: [
@@ -13861,32 +13850,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             then: { properties: { v: { type: 'number', default: 4 } } },
           },
         ],
-      });
-      // The mock validator cannot evaluate an `if`, so where every `if` holding is not what the real validators say, a
-      // test hands it their answers: the `if` of `elseSchema()` holds for no data and fails once `k` is `'y'`
-      const ELSE_ANSWERS = [true, false, false, false];
+      };
 
       it('fills the `then` its default satisfies', () => {
-        expect(fill(thenSchema())).toEqual({ k: 'x', t: 2 });
+        expect(fill(thenSchema)).toEqual({ k: 'x', t: 2 });
       });
 
       it('fills the `else` its default selects, and nothing of the `then`', () => {
-        testValidator.setReturnValues({ isValid: [...ELSE_ANSWERS] });
-        expect(fill(elseSchema())).toEqual({ k: 'y', e: 3 });
+        expect(fill(elseSchema)).toEqual({ k: 'y', e: 3 });
       });
 
       it('fills a condition that reads what another condition defaulted', () => {
-        expect(fill(chainedSchema())).toEqual({ k: 'x', t: 'u', v: 4 });
+        expect(fill(chainedSchema)).toEqual({ k: 'x', t: 'u', v: 4 });
       });
 
       it('fills the same for a property as for the root', () => {
-        const schema: RJSFSchema = { type: 'object', properties: { q: thenSchema() } };
+        const schema: RJSFSchema = { type: 'object', properties: { q: thenSchema } };
         expect(fill(schema)).toEqual({ q: { k: 'x', t: 2 } });
       });
 
       it('fills the `null` of a field the `else` of an unmerged `allOf` entry brings in for a default', () => {
-        // The mock validator cannot evaluate an `if`: this one fails wherever the fill checks it, since `k` is `'y'`
-        testValidator.setReturnValues({ isValid: Array.from({ length: 8 }, () => false) });
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -13903,15 +13886,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
 
       it('keeps the branch the data selects over the one the default would', () => {
-        expect(fill(elseSchema(), { k: 'x' })).toEqual({ k: 'x', t: 2 });
+        expect(fill(elseSchema, { k: 'x' })).toEqual({ k: 'x', t: 2 });
       });
 
       it.each([
-        { name: 'then', schema: thenSchema(), answers: [] },
-        { name: 'else', schema: elseSchema(), answers: [...ELSE_ANSWERS, false, false] },
-        { name: 'chained', schema: chainedSchema(), answers: [] },
-      ])('changes nothing when the filled data of the $name schema is filled again', ({ schema, answers }) => {
-        testValidator.setReturnValues({ isValid: answers });
+        { name: 'then', schema: thenSchema },
+        { name: 'else', schema: elseSchema },
+        { name: 'chained', schema: chainedSchema },
+      ])('changes nothing when the filled data of the $name schema is filled again', ({ schema }) => {
         const filled = fill(schema);
         expect(fill(schema, filled)).toEqual(filled);
       });
@@ -14031,7 +14013,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
       it('puts no `null` over a value the data holds as `undefined` for a branch its default does not select', () => {
         // The `if` holds for the data alone and fails once `k` is `'x'`
-        testValidator.setReturnValues({ isValid: [true, ...Array.from({ length: 20 }, () => false)] });
         const schema: RJSFSchema = {
           type: 'object',
           properties: { k: { type: 'string', default: 'x' }, z: {} },
@@ -14052,6 +14033,71 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         fill(schema, { k: 'Aa' });
         expect(fill(schema)).toEqual({ k: 'BB', t: 2 });
+      });
+
+      it('fills the `null` of the branch an `allOf` entry selects for the defaults that are kept', () => {
+        // The first pass fills the `t` of the `then`, which the `k` it also fills takes back for the `else`
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            r: { ...elseSchema, allOf: [{ if: { required: ['t'] }, else: { properties: { n: { type: 'null' } } } }] },
+          },
+        };
+        const filled = fill(schema);
+        expect(filled).toEqual({ r: { k: 'y', e: 3, n: null } });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      it.each([
+        { branch: 'then', expected: { r: { k: 'x', m: { q: 1, n: null } } } },
+        { branch: 'else', expected: { r: { k: 'x', m: { q: 1 } } } },
+      ])(
+        'reads a key of an object `const` as the property the `$branch` of an unmerged `allOf` entry declares for a default',
+        ({ branch, expected }) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              r: {
+                type: 'object',
+                const: { m: { q: 1 } },
+                properties: { k: { type: 'string', default: 'x' } },
+                allOf: [
+                  {
+                    if: { properties: { k: { const: 'x' } }, required: ['k'] },
+                    [branch]: {
+                      properties: { m: { type: 'object', properties: { q: { type: 'number' }, n: { type: 'null' } } } },
+                    },
+                  },
+                ],
+              },
+            },
+          };
+          const filled = fill(schema);
+          expect(filled).toEqual(expected);
+          expect(fill(schema, filled)).toEqual(filled);
+        },
+      );
+
+      describe('a branch that takes back the default that selects it', () => {
+        // The `else` fills the `'e'` that selects the `then`, whose `'d'` selects the `else` again: no fill is the one
+        // its own defaults select, so the defaults decide nothing here and the data alone does
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          if: { properties: { a: { const: 'e' } }, required: ['a'] },
+          then: { properties: { a: { default: 'd' }, t: { type: 'number', default: 1 } } },
+          else: { properties: { a: { default: 'e' } } },
+        };
+
+        it('fills the branch the data alone selects', () => {
+          expect(fill(schema)).toEqual({ a: 'e' });
+        });
+
+        it('fills the branch the filled data selects once the data holds it, and nothing more after that', () => {
+          const filled = fill(schema, fill(schema));
+          expect(filled).toEqual({ a: 'e', t: 1 });
+          expect(fill(schema, filled)).toEqual(filled);
+        });
       });
     });
   });

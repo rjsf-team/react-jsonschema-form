@@ -1,6 +1,6 @@
 import { noop } from '../../src/index.ts';
 import type { RJSFValidationError, ValidationData } from '../../src/index.ts';
-import type { TestValidatorParams, TestValidatorType } from '../schema/types.ts';
+import type { IsValidAnswer, TestValidatorParams, TestValidatorType } from '../schema/types.ts';
 
 /** A test validator implements the `ValidatorType` interface needed by all the `schema` based tests. Inside the `utils`
  * directory, there is no actual validator implementation, so it can be necessary to mock the expected return values
@@ -19,7 +19,7 @@ export default function getTestValidator<T = unknown>({
 }: TestValidatorParams): TestValidatorType {
   const testValidator: {
     validatorData: ValidationData<T>[];
-    isValidResult: boolean[];
+    isValidResult: boolean[] | IsValidAnswer;
     errorList: RJSFValidationError[][];
     validator: TestValidatorType;
   } = {
@@ -33,8 +33,11 @@ export default function getTestValidator<T = unknown>({
         }
         return { errors: [], errorSchema: {} };
       }),
-      isValid: vi.fn().mockImplementation(() => {
+      isValid: vi.fn().mockImplementation((...args: Parameters<IsValidAnswer>) => {
         // console.warn('isValid',  JSON.stringify(args));
+        if (typeof testValidator.isValidResult === 'function') {
+          return testValidator.isValidResult(...args);
+        }
         if (Array.isArray(testValidator.isValidResult) && testValidator.isValidResult.length > 0) {
           return testValidator.isValidResult.shift();
         }

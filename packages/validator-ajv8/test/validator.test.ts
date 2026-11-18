@@ -3789,10 +3789,12 @@ describe('getDefaultFormState() for an option whose own fill is data it rejects 
     },
   };
 
-  // The option is chosen from the data, as the form renders it, not from the defaults the option then fills: those of
+  // A known limit, not a contract: a default decides an `if` within one fill, but not which option a field shows.
+  // The option is chosen from the data, as the form renders it, not from the defaults the option then fills. Those of
   // the second option hold an `e` its own `additionalProperties` rejects, so no fill of it stays on it, and the next
-  // fill chooses the first option, whose `r` the data then holds beside the `e`
-  it('chooses the option again once, on the next fill, and then fills nothing more', () => {
+  // fill chooses the first option, whose `r` the data then holds beside the `e`. A fill that chose the option from
+  // its own defaults would settle in one call, and this test should then expect that
+  it('known limit: takes a second fill to settle, since the option is chosen from the data alone', () => {
     const schemaUtils = createSchemaUtils({ validator: new AJV8Validator({}) }, rootSchema);
     const first = schemaUtils.getDefaultFormState(rootSchema, { p: { kind: 'o2' } });
     expect(first).toEqual({ p: { kind: 'o2', e: 2 } });

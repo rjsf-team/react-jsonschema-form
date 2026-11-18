@@ -41,7 +41,7 @@ function resolvePointer(root: unknown, ref: string): unknown {
  * `required`, `properties`, `items`, `minItems`, `not`, `allOf`, `anyOf`, `oneOf` and `if`/`then`/`else`. It stands in
  * for a real validator, which `@rjsf/utils` cannot depend on.
  */
-function check(schema: unknown, data: unknown, root: unknown, active: readonly unknown[] = []): boolean {
+export function check(schema: unknown, data: unknown, root: unknown, active: readonly unknown[] = []): boolean {
   if (typeof schema === 'boolean') {
     return schema;
   }
