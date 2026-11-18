@@ -22,7 +22,7 @@
     "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "dependencies": {
-    "axe-core": "^4.14.1"
+    "axe-core": "~4.14.1"
   },
   "peerDependencies": {
     "@rjsf/core": "workspace:^",

@@ -1,5 +1,5 @@
 import type { WidgetProps } from '@rjsf/utils';
-import { toInputValue, widgetDrawsLabelText } from '@rjsf/utils';
+import { getControlAttributes, toInputValue, widgetDrawsLabelText } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
@@ -252,6 +252,7 @@ const widgets: Sample = {
             {widgetDrawsLabelText(props) && <label htmlFor={id}>{label}</label>}
             <input
               id={id}
+              {...getControlAttributes(props)}
               className='form-control'
               onChange={(event) => onChange(event.target.value)}
               style={{ backgroundColor: options.backgroundColor as string }}
@@ -272,6 +273,7 @@ const widgets: Sample = {
             {widgetDrawsLabelText(props) && <label htmlFor={id}>{label}</label>}
             <select
               id={id}
+              {...getControlAttributes(props)}
               className='form-control'
               style={{ backgroundColor: options.backgroundColor as string }}
               value={toInputValue(value)}

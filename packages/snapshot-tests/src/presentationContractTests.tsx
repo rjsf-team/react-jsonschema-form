@@ -5,7 +5,6 @@ import type { RegistryWidgetsType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { besideOptionsId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, isInaccessible, render, screen, waitFor } from '@testing-library/react';
-import axe from 'axe-core';
 
 import { WIDGET_FIXTURES } from './widgetFixtures.ts';
 
@@ -68,10 +67,15 @@ function duplicateIds(elements: Element[]) {
   return repeats;
 }
 
-/** The WCAG A and AA rules axe-core finds broken in `container`, other than on the elements `exempt` selects, which
- * are skipped alone, not with what they hold, as the other checks skip them
+/** The WCAG A and AA rules axe-core finds broken in `container`, each with axe's account of why, other than on the
+ * elements `exempt` selects, which are skipped alone, not with what they hold, as the other checks skip them. A rule
+ * may report an ancestor of the element at fault, as `nested-interactive` reports the option holding a focusable
+ * control, so a node is skipped too when every element axe relates it to is exempt
  */
 async function axeViolations(container: HTMLElement, exempt?: string) {
+  // Loaded on first use, so the test files importing this package only for its other suites don't load axe-core
+  const { default: axe } = await import('axe-core');
+  const isExempt = (element?: Element) => !!exempt && !!element?.matches(exempt);
   const { violations } = await axe.run(container, {
     runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'],
     resultTypes: ['violations'],
@@ -80,7 +84,12 @@ async function axeViolations(container: HTMLElement, exempt?: string) {
     rules: { 'color-contrast': { enabled: false } },
   });
   return violations.flatMap(({ id, nodes }) =>
-    nodes.filter(({ element }) => !exempt || !element?.matches(exempt)).map(({ html }) => `${id}: ${html}`),
+    nodes
+      .filter(({ element, any, all, none }) => {
+        const related = [...any, ...all, ...none].flatMap(({ relatedNodes = [] }) => relatedNodes);
+        return !isExempt(element) && !(related.length > 0 && related.every((node) => isExempt(node.element)));
+      })
+      .map(({ html, failureSummary }) => `${id}: ${html}\n${failureSummary}`),
   );
 }
 
@@ -149,8 +158,9 @@ async function expectContract(
  * @param Form - The theme's `Form` component
  * @param widgets - The widgets the theme registers, merged over core's defaults to decide the widgets that render
  * @param [fixtures] - Schemas for widgets this package does not know, keyed by the name they are registered under
- * @param [exempt] - A selector for the elements a theme knows break the contract, which the checks skip; each part of
- *        it should name the open issue that tracks the break
+ * @param [exempt] - A selector for the elements a theme knows break the contract, which the checks skip, along with an
+ *        element axe faults only for elements it matches, as it faults an option for a focusable control inside; each
+ *        part of it should name the open issue that tracks the break
  */
 export function presentationContractTests(
   Form: ComponentType<FormProps>,
