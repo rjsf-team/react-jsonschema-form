@@ -49,6 +49,14 @@ describe('BaseInputTemplate', () => {
     expect(container.querySelector('#email')).not.toHaveAttribute('multiple');
   });
 
+  test('disables a read-only range, as a browser ignores readonly on one', () => {
+    const { container } = render(
+      <BaseInputTemplate type='range' {...makeWidgetMockProps({ value: 3, readonly: true })} />,
+    );
+
+    expect(container.querySelector('input')).toBeDisabled();
+  });
+
   test('shows nothing for an object value', () => {
     const { container } = render(
       <BaseInputTemplate {...makeWidgetMockProps({ schema: { type: 'string' }, value: { a: 1 } })} />,

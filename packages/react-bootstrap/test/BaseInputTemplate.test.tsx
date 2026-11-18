@@ -113,7 +113,7 @@ describe('BaseInputTemplate', () => {
     }
   });
 
-  test("puts no placeholder or readonly on a range's input, which applies neither", () => {
+  test("puts no placeholder or readonly on a range's input, which applies neither, and disables a read-only one", () => {
     const { container } = render(
       <BaseInputTemplate type='range' {...makeWidgetMockProps({ value: 3, placeholder: 'Pick', readonly: true })} />,
     );
@@ -121,6 +121,7 @@ describe('BaseInputTemplate', () => {
     const input = container.querySelector('input');
     expect(input).not.toHaveAttribute('placeholder');
     expect(input).not.toHaveAttribute('readonly');
+    expect(input).toBeDisabled();
   });
 });
 

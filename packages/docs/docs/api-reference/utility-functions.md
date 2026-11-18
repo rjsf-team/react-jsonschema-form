@@ -2573,6 +2573,19 @@ Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` wid
 
 - string: An id for the option index based on the parent `id`
 
+### nonEmptyErrorMessages()
+
+Gets the error messages a `FieldErrorTemplate` draws: every message but an empty one, which would draw an empty item.
+`''`, `null`, `undefined` and a boolean count as empty, while a numeric `0` is a message, as untyped error data, such as `extraErrors` parsed from a server response, can hold either.
+
+#### Parameters
+
+- errors: readonly E[] - The field's error messages
+
+#### Returns
+
+- E[]: The messages to draw
+
 ### noop()
 
 A function that does nothing and returns `undefined`, useful as a placeholder for an optional callback or as the implementation of a mocked function.

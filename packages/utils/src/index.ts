@@ -150,6 +150,7 @@ import mergeObjects from './mergeObjects.ts';
 import mergeSchemas from './mergeSchemas.ts';
 import mergeThemePresentation from './mergeThemePresentation.ts';
 import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators.ts';
+import nonEmptyErrorMessages from './nonEmptyErrorMessages.ts';
 import noop from './noop.ts';
 import numericWidgetStoresString from './numericWidgetStoresString.ts';
 import offersClearButton from './offersClearButton.ts';
@@ -451,6 +452,7 @@ export {
   mergeOptionDefinitions,
   mergeSchemas,
   mergeThemePresentation,
+  nonEmptyErrorMessages,
   noop,
   offsetTimeToLocalTime,
   omitConsumedStyling,

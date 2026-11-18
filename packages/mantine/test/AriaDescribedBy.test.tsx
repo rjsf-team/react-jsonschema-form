@@ -870,7 +870,7 @@ describe('aria-describedby', () => {
   });
 
   test('drops an empty message, as core does', () => {
-    const { container } = render(<div>{errorLines(['too short', ''])}</div>);
+    const { container } = render(<div>{errorLines([false, 'too short', ''])}</div>);
 
     expect(container).toHaveTextContent('too short');
     expect(container.querySelectorAll('br')).toHaveLength(0);

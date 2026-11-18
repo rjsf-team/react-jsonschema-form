@@ -94,7 +94,8 @@ export default function BaseInputTemplate<
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
-        disabled={disabled}
+        // A browser ignores `readonly` on a range input, so a read-only range is disabled to keep it from being dragged
+        disabled={disabled || (inputProps.type === 'range' && readonly)}
         readOnly={readonly}
         list={hasExamples ? examplesId(id) : undefined}
         title={title}

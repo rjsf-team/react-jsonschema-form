@@ -1345,10 +1345,13 @@ describe('uiSchema', () => {
       });
 
       // A browser ignores `readonly` on a range input, so a read-only range is disabled to keep it from being dragged
-      it('should disable a read-only range', () => {
+      it.each<[string, UiSchema]>([
+        ['RangeWidget', { 'ui:widget': 'range' }],
+        ["a text input's `inputType`", { 'ui:options': { inputType: 'range' } }],
+      ])('should disable a read-only range drawn by %s', (_, fooUiSchema) => {
         const { node } = createFormComponent({
           schema,
-          uiSchema: { foo: { 'ui:widget': 'range', 'ui:readonly': true } },
+          uiSchema: { foo: { ...fooUiSchema, 'ui:readonly': true } },
         });
 
         expect(node.querySelector('[type=range]')).toBeDisabled();

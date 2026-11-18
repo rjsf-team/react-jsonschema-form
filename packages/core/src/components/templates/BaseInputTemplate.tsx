@@ -109,9 +109,9 @@ export default function BaseInputTemplate<
         id={id}
         name={htmlName || id}
         className={className}
-        // Neither `readonly` nor `placeholder` applies to a range input, which `RangeWidget` disables instead
+        // Neither `readonly` nor `placeholder` applies to a range input, so a read-only range is disabled instead
         readOnly={isRange ? undefined : readonly}
-        disabled={disabled}
+        disabled={disabled || (isRange && readonly)}
         autoFocus={autofocus}
         value={inputValue}
         title={title}

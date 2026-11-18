@@ -50,6 +50,7 @@ import {
   isLabelledByTemplate,
   isObject,
   labelValue,
+  nonEmptyErrorMessages,
   partId,
   RESERVED_UI_OPTION_NAMES,
   titleId,
@@ -125,16 +126,14 @@ const strippedOptionNames = new Set<string>([
 export function errorLines(errors: readonly ReactNode[]): ReactNode {
   // Kept for messages that are all empty, as the plan describes the control by the error element's id then too
   return errors.length
-    ? errors
-        .filter((error) => error !== '' && error != null)
-        .map((error, index) => (
-          // oxlint-disable-next-line react/no-array-index-key
-          <Fragment key={index}>
-            {index > 0 && ' '}
-            {index > 0 && <br />}
-            {error}
-          </Fragment>
-        ))
+    ? nonEmptyErrorMessages(errors).map((error, index) => (
+        // oxlint-disable-next-line react/no-array-index-key
+        <Fragment key={index}>
+          {index > 0 && ' '}
+          {index > 0 && <br />}
+          {error}
+        </Fragment>
+      ))
     : undefined;
 }
 
