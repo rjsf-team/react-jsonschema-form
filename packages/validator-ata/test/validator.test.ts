@@ -767,6 +767,34 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
     expect(validator.isValid(rootSchema, { n: 1, child: { n: 'x' } }, rootSchema)).toBe(false);
     expect(validator.isValid(rootSchema.properties!.child as RJSFSchema, { n: 2 }, rootSchema)).toBe(true);
   });
+  it('resolves a $ref to the fragment $id of a root that also has an $anchor of its own', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      $id: '#root',
+      $anchor: 'other',
+      type: 'object',
+      $defs: { int: { type: 'integer' } },
+      properties: { n: { $ref: '#/$defs/int' }, child: { $ref: '#root' }, other: { $ref: '#other' } },
+    };
+    expect(validator.validateFormData({ n: 1, child: { n: 2 } }, rootSchema).errors).toEqual([]);
+    expect(validator.validateFormData({ n: 1, child: { n: 'x' } }, rootSchema).errors.map((e) => e.stack)).toEqual([
+      '.child.n must be integer',
+    ]);
+    expect(validator.isValid(rootSchema, { n: 1, child: { n: 2 }, other: { n: 3 } }, rootSchema)).toBe(true);
+    expect(validator.isValid(rootSchema, { n: 1, child: { n: 'x' } }, rootSchema)).toBe(false);
+    expect(validator.isValid(rootSchema.properties!.child as RJSFSchema, { n: 2 }, rootSchema)).toBe(true);
+  });
+  it.each([undefined, 'root'])('resolves a $ref to the fragment $id of a root whose $anchor is %s', ($anchor) => {
+    const validator = customizeValidator();
+    const rootSchema = {
+      $id: '#root',
+      $anchor,
+      type: 'object',
+      properties: { n: { type: 'integer' }, child: { $ref: '#root' } },
+    } as RJSFSchema;
+    expect(validator.isValid(rootSchema, { n: 1, child: { n: 2 } }, rootSchema)).toBe(true);
+    expect(validator.isValid(rootSchema, { n: 1, child: { n: 'x' } }, rootSchema)).toBe(false);
+  });
   it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold, a # ending it', () => {
     const validator = customizeValidator();
     const property: RJSFSchema = { type: 'string' };
