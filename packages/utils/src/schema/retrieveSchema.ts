@@ -255,6 +255,28 @@ export function retrieveField<S extends StrictRJSFSchema, F extends FormContextT
   return buildView<S, F>(context, parseSchemaGraph<S>(field.graph.rawRoot), field, data, false);
 }
 
+/** `retrieveField()` with its conditions, `dependencies` and the options they bring decided by `depData`, with the plan
+ * that decided them
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param root - The graph of the root the field is retrieved in
+ * @param field - The provenance of the field
+ * @param data - The field's data, whose extra keys are stubbed
+ * @param depData - The data the field's conditions are checked against and its `dependencies` qualify against
+ * @returns - The field's schema and the plan of the field it was merged from
+ */
+export function retrieveFieldFor<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  root: SchemaGraph<S>,
+  field: Provenance<S>,
+  data: unknown,
+  depData: unknown,
+): { schema: S; plan: MergePlan<S> } {
+  const { graph, seeds } = field;
+  const plan = buildPlan<S, F>({ context, graph, seeds, data, depData, policy: renderPolicy<S, F>(context, root) });
+  return { schema: buildView<S, F>(context, root, field, data, false, plan), plan };
+}
+
 /** Returns the field `schema` is the schema of. An unstamped schema, or one stamped for another root, is a call root.
  * A copy of a handed-out schema, such as an option merged with what it inherits or a custom field's spread with a
  * keyword of its own, is planned from its own keywords, with the ref path and chain of the field it copies: restarting
@@ -348,7 +370,7 @@ function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
     const matchContext = optionMatchContext(context);
     return {
       allOf: true,
-      selectOption: (request) => dependencyOption(matchContext, request, request.data),
+      selectOption: (request) => dependencyOption(matchContext, request, request.depData),
       dependencyOptionsOnly: true,
     };
   });

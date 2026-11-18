@@ -2400,13 +2400,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
         describe('an object with deep nested dependencies with formData', () => {
           beforeEach(() => {
-            // Mock isValid so that withExactlyOneSubschema works as expected
-            testValidator.setReturnValues({
-              isValid: [
-                true, // First oneOf... first === first
-                false, // Second oneOf... second !== first
-              ],
-            });
+            // The mock validator cannot evaluate a dependency's `oneOf`, so it answers each check as the real ones do
+            testValidator.setReturnValues({ isValid: asRealValidator });
           });
           afterAll(() => {
             // Reset the testValidator
@@ -3079,10 +3074,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
       describe('an object with non valid formData for enum properties', () => {
         beforeEach(() => {
-          // Mock isValid so that withExactlyOneSubschema works as expected
-          testValidator.setReturnValues({
-            isValid: [false, true],
-          });
+          // The mock validator cannot evaluate a dependency's `oneOf`, so it answers each check as the real ones do
+          testValidator.setReturnValues({ isValid: asRealValidator });
         });
         afterAll(() => {
           // Reset the testValidator
@@ -11224,7 +11217,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         'nested allOf',
         'properties outside allOf',
       ])('should populate dependency defaults when formData is undefined with %s', (variant) => {
-        testValidator.setReturnValues({ isValid: [true, false] });
+        testValidator.setReturnValues({ isValid: asRealValidator });
         const dependencySchema: RJSFSchema = {
           type: 'object',
           required: ['type'],
@@ -11556,7 +11549,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
       it("applies a dependency's oneOf option that declares the property in an allOf entry", () => {
-        testValidator.setReturnValues({ isValid: [false, true] });
+        testValidator.setReturnValues({ isValid: asRealValidator });
         const schema: RJSFSchema = {
           type: 'object',
           properties: { k: { type: 'string', enum: ['a', 'b'] } },
@@ -11580,15 +11573,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ k: 'b', kb: 'B' });
       });
       it('should populate defaults for nested dependencies in arrays when matching enum values in oneOf', () => {
-        // Mock isValid so that withExactlyOneSubschema works as expected
-        testValidator.setReturnValues({
-          isValid: [
-            true, // First oneOf... first === first
-            false, // Second oneOf... second !== first
-            false, // First oneOf... first !== second
-            true, // Second oneOf... second === second
-          ],
-        });
+        // The mock validator cannot evaluate a dependency's `oneOf`, so it answers each check as the real ones do
+        testValidator.setReturnValues({ isValid: asRealValidator });
         const schema: RJSFSchema = {
           type: 'array',
           items: {
@@ -14078,6 +14064,58 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         },
       );
 
+      it.each([
+        { name: 'an unmerged `allOf` entry', behavior: undefined },
+        { name: 'an `if` under `skipEmptyDefaults`', behavior: { emptyObjectFields: 'skipEmptyDefaults' } as const },
+      ])('fills the object `const` the `then` of $name brings in for a default', ({ name, behavior }) => {
+        const condition: RJSFSchema = {
+          if: { properties: { k: { const: 'x' } }, required: ['k'] },
+          then: { const: { k: 'x', c: 1 } },
+        };
+        const r: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string', default: 'x' } },
+          ...(name.startsWith('an unmerged') ? { allOf: [condition] } : condition),
+        };
+        const schema: RJSFSchema = { type: 'object', properties: { r } };
+        const filled = fill(schema, undefined, behavior);
+        expect(filled).toEqual({ r: { k: 'x', c: 1 } });
+        expect(fill(schema, filled, behavior)).toEqual(filled);
+      });
+
+      // `k` holds an object in the data, so its dependency is qualified for the data alone, and only the nested default
+      // of `j` decides which option the dependency's `oneOf` matches
+      const nestedKey: RJSFSchema = { type: 'object', properties: { j: { type: 'string', default: 'x' } } };
+      const optionOf = (value: string, key: string, fill: number): RJSFSchema => ({
+        properties: {
+          k: { properties: { j: { enum: [value] } }, required: ['j'] },
+          [key]: { type: 'number', default: fill },
+        },
+      });
+
+      it('fills the option of a `dependencies` `oneOf` a nested default matches', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: nestedKey },
+          dependencies: { k: { oneOf: [optionOf('y', 'b', 2), optionOf('x', 'a', 1)] } },
+        };
+        const filled = fill(schema, { k: {} });
+        expect(filled).toEqual({ k: { j: 'x' }, a: 1 });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
+      it('fills the option of a `oneOf` beside `dependencies` a nested default matches', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: nestedKey },
+          dependencies: { z: ['k'] },
+          oneOf: [optionOf('y', 'b', 2), optionOf('x', 'a', 1)],
+        };
+        const filled = fill(schema, { k: {} });
+        expect(filled).toEqual({ k: { j: 'x' }, a: 1 });
+        expect(fill(schema, filled)).toEqual(filled);
+      });
+
       describe('a branch that takes back the default that selects it', () => {
         // The `else` fills the `'e'` that selects the `then`, whose `'d'` selects the `else` again: no fill is the one
         // its own defaults select, so the defaults decide nothing here and the data alone does
@@ -14091,6 +14129,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
         it('fills the branch the data alone selects', () => {
           expect(fill(schema)).toEqual({ a: 'e' });
+        });
+
+        it('fills the branch the data alone selects where the branch taken back brings a condition of its own', () => {
+          const nested: RJSFSchema = {
+            ...schema,
+            then: {
+              ...(schema.then as RJSFSchema),
+              if: { required: ['t'] },
+              then: { properties: { u: { type: 'number', default: 2 } } },
+            },
+          };
+          expect(fill(nested)).toEqual({ a: 'e' });
         });
 
         it('fills the branch the filled data selects once the data holds it, and nothing more after that', () => {

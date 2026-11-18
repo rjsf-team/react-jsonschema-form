@@ -75,9 +75,12 @@ export interface PlanEntry {
   readonly refPath: RefPath;
 }
 
-/** An `if` a plan checked, by its node, and whether the data it was checked against satisfied it */
-export interface CheckedCondition {
-  readonly node: NodeId;
+/** A condition a plan checked against its data, an `if` or the `properties[key]` of a dependency's `oneOf` option, by
+ * the key the condition memo knows it by, and whether the data satisfied it
+ */
+export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
+  readonly key: string;
+  readonly condition: S;
   readonly satisfied: boolean;
 }
 
@@ -109,6 +112,8 @@ export interface OptionChoice {
   /** Whether the schema offering the options has `dependencies`, or is a `dependencies` entry offering an `anyOf` or a
    * `oneOf` no option of which declares its key: the cases `retrieveSchema()` merges an option */
   readonly dependencies: boolean;
+  /** The `discriminator.propertyName` of the node holding the options */
+  readonly discriminator?: string;
   readonly selected?: number;
 }
 
@@ -118,8 +123,6 @@ export interface OptionRequest<S extends StrictRJSFSchema = RJSFSchema> extends 
   readonly data: unknown;
   /** The data the plan's `dependencies` qualify against */
   readonly depData: unknown;
-  /** The `discriminator.propertyName` of the node holding the options */
-  readonly discriminator?: string;
 }
 
 /** The policies a view of the plan sets, which are not part of the recursion rule */
@@ -184,8 +187,8 @@ export interface MergePlan<S extends StrictRJSFSchema = RJSFSchema> {
    */
   readonly chains: readonly Keywords<S>[];
   readonly choices: readonly OptionChoice[];
-  /** Each `if` the plan checked, in the order it checked them */
-  readonly checked: readonly CheckedCondition[];
+  /** Each condition the plan checked, in the order it checked them */
+  readonly checked: readonly CheckedCondition<S>[];
   /** Whether the plan was built from the data, which it is only where it checked a condition, qualified a dependency or
    * asked for an option; a plan that was not holds for any data
    */
@@ -235,21 +238,21 @@ function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   return holds;
 }
 
-/** Whether `data` satisfies the `if` at `node`, checked as a plan checks it
+/** Whether `data` satisfies a condition a plan checked, checked as the plan checked it
  *
  * @param context - The `SchemaContext` whose validator checks the condition
- * @param graph - The graph holding the condition
- * @param node - The condition's node
+ * @param graph - The graph of the plan that checked it
+ * @param checked - The condition as the plan checked it
  * @param data - The data to check it against
  * @returns - Whether the condition holds
  */
 export function conditionHolds<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
-  node: NodeId,
+  { key, condition }: CheckedCondition<S>,
   data: unknown,
 ): boolean {
-  return checkCondition(context, graph, `if:${node}`, targetOf(graph, node), data);
+  return checkCondition(context, graph, key, condition, data);
 }
 
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
@@ -652,7 +655,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private readonly entries: PlanEntry[] = [];
   private readonly seen = new Set<NodeId>();
   private readonly choices: OptionChoice[] = [];
-  private readonly checked: CheckedCondition[] = [];
+  private readonly checked: CheckedCondition<S>[] = [];
   private readonly context: SchemaContext<S, F>;
   private readonly graph: SchemaGraph<S>;
   private readonly data: unknown;
@@ -859,9 +862,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return isSchemaObject<S>(merged) && this.context.customMergeAllOf ? merged : schemaFrom(schema, merged);
   }
 
-  private holds(key: string, condition: S, data: unknown): boolean {
+  private holds(key: string, condition: S): boolean {
     this.readsData = true;
-    return checkCondition(this.context, this.graph, key, condition, data);
+    const satisfied = checkCondition(this.context, this.graph, key, condition, this.depData);
+    this.checked.push({ key, condition, satisfied });
+    return satisfied;
   }
 
   /** Applies the `then` or `else` the `if` chooses on the data the field's dependencies qualify on, `{}` standing in
@@ -886,11 +891,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // function for the schema it reads as
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), this.depData)
+        ? this.holds(`if:${condition}`, targetOf(this.graph, condition))
         : conditionNode.kind !== 'boolean' || conditionNode.value;
-    if (conditionNode.kind === 'schema') {
-      this.checked.push({ node: condition, satisfied });
-    }
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);
     const branchNode = branchProvider && this.graph.child(branchProvider.node.id, branchKey);
@@ -1010,7 +1012,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       .map(([, option]) => option)
       .filter((option) => {
         const condition = dependencyCondition(this.graph, option, key);
-        return condition !== undefined && this.holds(`dependency:${option}:${key}`, condition, this.depData);
+        return condition !== undefined && this.holds(`dependency:${option}:${key}`, condition);
       });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
@@ -1039,6 +1041,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return undefined;
     }
     const options = this.graph.subschemas(provider.node.id, keyword).map(([, option]) => option);
+    const propertyName = getByPath(provider.node.raw, DISCRIMINATOR_PATH);
     const request = {
       keyword,
       provider: provider.node.id,
@@ -1046,17 +1049,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       options,
       list: Reflect.get(provider.node.raw, keyword),
       dependencies,
+      discriminator: typeof propertyName === 'string' ? propertyName : undefined,
     };
     const selectOption = dependencies || !this.policy.dependencyOptionsOnly ? this.policy.selectOption : undefined;
     this.readsData ||= selectOption !== undefined;
-    const propertyName = getByPath(provider.node.raw, DISCRIMINATOR_PATH);
-    const chosen = selectOption?.({
-      ...request,
-      graph: this.graph,
-      data: this.data,
-      depData: this.depData,
-      discriminator: typeof propertyName === 'string' ? propertyName : undefined,
-    });
+    const chosen = selectOption?.({ ...request, graph: this.graph, data: this.data, depData: this.depData });
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
     this.choices.push({ ...request, selected });
     const optionRefPath = this.policy.optionsInheritRefPath ? provider.refPath : [];
