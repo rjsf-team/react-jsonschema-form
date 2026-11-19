@@ -1,4 +1,4 @@
-import type { FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+import type { FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 
 import customizeValidator from '../src/customizeValidator.ts';
 import processRawValidationErrors, {
@@ -190,5 +190,85 @@ describe('processRawValidationErrors()', () => {
     const result = processRawValidationErrors({ validator }, { errors: [] }, { value: 'ok' }, schema, customValidate);
     expect(customValidate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), undefined, {});
     expect(result.errorSchema.value?.__errors).toEqual(['custom error']);
+  });
+});
+
+describe('validateFormData() reporting a missing dependency', () => {
+  const schema = (keyword: 'dependentRequired' | 'dependencies', titles = true): RJSFSchema => ({
+    type: 'object',
+    properties: {
+      creditCard: { type: 'number', title: titles ? 'Credit card' : undefined },
+      holderName: { type: 'string' },
+      billingAddress: { type: 'string', title: titles ? 'Billing address' : undefined },
+    },
+    [keyword]: { creditCard: ['holderName', 'billingAddress'] },
+  });
+
+  it('places each error on its missing property and names the properties by their titles', () => {
+    const { errors, errorSchema } = customizeValidator().validateFormData(
+      { creditCard: 1 },
+      schema('dependentRequired'),
+    );
+    expect(errors).toEqual([
+      expect.objectContaining({
+        property: 'holderName',
+        message: `Instance has 'Credit card' but does not have "holderName".`,
+        title: '',
+        params: { missingProperty: 'holderName' },
+      }),
+      expect.objectContaining({
+        property: 'billingAddress',
+        message: `Instance has 'Credit card' but does not have 'Billing address'.`,
+        title: 'Billing address',
+        params: { missingProperty: 'billingAddress' },
+      }),
+    ]);
+    expect(errorSchema).toEqual({
+      holderName: { __errors: [`Instance has 'Credit card' but does not have "holderName".`] },
+      billingAddress: { __errors: [`Instance has 'Credit card' but does not have 'Billing address'.`] },
+    });
+  });
+
+  it('names the properties of a draft-07 `dependencies` by their uiSchema titles', () => {
+    const uiSchema: UiSchema = { creditCard: { 'ui:title': 'UI card' }, billingAddress: { 'ui:title': 'UI address' } };
+    const { errors } = customizeValidator({ draft: '7' }).validateFormData(
+      { creditCard: 1 },
+      schema('dependencies', false),
+      undefined,
+      undefined,
+      uiSchema,
+    );
+    expect(errors.map(({ message }) => message)).toEqual([
+      `Instance has 'UI card' but does not have "holderName".`,
+      `Instance has 'UI card' but does not have 'UI address'.`,
+    ]);
+  });
+
+  it('leaves a failed schema dependency on the object it applies to', () => {
+    const { errors } = customizeValidator({ draft: '7' }).validateFormData(
+      { creditCard: 1 },
+      {
+        type: 'object',
+        properties: { creditCard: { type: 'number', title: 'Credit card' } },
+        dependencies: { creditCard: { required: ['billingAddress'] } },
+      },
+    );
+    expect(errors).toContainEqual(
+      expect.objectContaining({
+        name: 'dependencies',
+        property: '',
+        message: 'Instance has "creditCard" but does not match dependant schema.',
+      }),
+    );
+  });
+
+  it('leaves the message as the engine wrote it when no property has a title', () => {
+    const { errors } = customizeValidator().validateFormData({ creditCard: 1 }, schema('dependentRequired', false));
+    expect(errors[1]).toEqual(
+      expect.objectContaining({
+        property: 'billingAddress',
+        message: 'Instance has "creditCard" but does not have "billingAddress".',
+      }),
+    );
   });
 });

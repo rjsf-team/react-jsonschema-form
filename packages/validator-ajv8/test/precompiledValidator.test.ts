@@ -475,6 +475,26 @@ describe('AJV8PrecompiledValidator with a localizer that names properties', () =
   });
 });
 
+describe('AJV8PrecompiledValidator naming dependencies without a localizer', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      bar: { type: 'string', title: 'Bar title' },
+      'baz, qux': { type: 'string' },
+    },
+    dependencies: { 'baz, qux': ['bar'] },
+  };
+  const validator = new AJV8PrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(schema)), schema);
+
+  it('replaces the titled property names in the message with their titles, as AJV8Validator does', () => {
+    const { errors } = validator.validateFormData({ 'baz, qux': 'x' }, schema);
+    expect(errors.map(({ message }) => message)).toEqual([
+      "must have property 'Bar title' when property baz, qux is present",
+    ]);
+    expect(errors).toEqual(new AJV8Validator({}).validateFormData({ 'baz, qux': 'x' }, schema).errors);
+  });
+});
+
 describe('AJV8PrecompiledValidator localizing errors it reports itself', () => {
   const schema: RJSFSchema = { $id: 'reportedErrors', type: 'object' };
   function validatorReporting(params: ErrorObject['params'][], localizer: Localizer) {

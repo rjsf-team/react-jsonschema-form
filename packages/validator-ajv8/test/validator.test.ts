@@ -17,6 +17,7 @@ import {
   isSchemaObject,
   noop,
   retrieveSchema,
+  ROOT_SCHEMA_PREFIX,
   SHARED_COPY_ID,
 } from '@rjsf/utils';
 import type { Ajv, ErrorObject, SchemaValidateFunction } from 'ajv';
@@ -287,11 +288,196 @@ describe('AJV8Validator', () => {
         expect(removeSchemaSpy).not.toHaveBeenCalled();
 
         localValidator.handleSchemaUpdate(rootSchemaB);
-        expect(removeSchemaSpy).toHaveBeenCalledTimes(1);
+        expect(removeSchemaSpy).not.toHaveBeenCalled();
         expect(addSchemaSpy).toHaveBeenCalledTimes(2);
 
         addSchemaSpy.mockRestore();
         removeSchemaSpy.mockRestore();
+      });
+      describe('holding the last two roots', () => {
+        const rootOf = (type: 'string' | 'number' | 'boolean'): RJSFSchema => ({ definitions: { v: { type } } });
+        const sample = { string: 'a', number: 1, boolean: true };
+        const nested = (type: string): RJSFSchema => ({
+          definitions: { v: { $id: 'https://example.com/v.json', type } as RJSFSchema },
+        });
+        const check = (validator: AJV8Validator, root: RJSFSchema) => {
+          const { type } = root.definitions!.v as RJSFSchema as { type: keyof typeof sample };
+          expect(validator.isValid({ $ref: '#/definitions/v' }, sample[type], root)).toBe(true);
+          expect(validator.isValid({ $ref: '#/definitions/v' }, [], root)).toBe(false);
+        };
+
+        it('compiles a subschema once per root while two roots alternate', () => {
+          const localValidator = new AJV8Validator({});
+          const compileSpy = vi.spyOn(localValidator.ajv, 'compile');
+          const addSchemaSpy = vi.spyOn(localValidator.ajv, 'addSchema');
+          const [a, b] = [rootOf('string'), rootOf('number')];
+          for (let i = 0; i < 3; i++) {
+            check(localValidator, a);
+            check(localValidator, b);
+          }
+          // Each root once, and the `{ $ref }` once under each
+          expect(addSchemaSpy).toHaveBeenCalledTimes(4);
+          expect(compileSpy).not.toHaveBeenCalled();
+        });
+        it('resolves a relative `$ref` in the second root it holds as in the first', () => {
+          const root: RJSFSchema = { type: 'string' };
+          const schema: RJSFSchema = { type: 'object', properties: { a: { $ref: '' } } };
+          const alone = new AJV8Validator({});
+          const beside = new AJV8Validator({});
+          beside.isValid({ type: 'string' }, 'x', { title: 'other form' });
+          // `$ref: ''` names the schema handed over, under either id, as it does on a root without an `$id`
+          expect(alone.isValid(schema, { a: {} }, root)).toBe(true);
+          expect(beside.isValid(schema, { a: {} }, root)).toBe(true);
+        });
+        it('drops the least recently used root once a third arrives', () => {
+          const localValidator = new AJV8Validator({});
+          const [a, b, c] = [rootOf('string'), rootOf('number'), rootOf('boolean')];
+          check(localValidator, a);
+          check(localValidator, b);
+          check(localValidator, a);
+          const addSchemaSpy = vi.spyOn(localValidator.ajv, 'addSchema');
+          check(localValidator, c);
+          check(localValidator, a);
+          // `c` and its `{ $ref }` are added and `a` is kept, so only `b` is gone
+          expect(addSchemaSpy).toHaveBeenCalledTimes(2);
+          check(localValidator, b);
+          expect(addSchemaSpy).toHaveBeenCalledTimes(4);
+          expect(
+            Object.keys(localValidator.ajv.schemas).filter((id) => id.startsWith(ROOT_SCHEMA_PREFIX)),
+          ).toHaveLength(2);
+        });
+        it('checks a subschema with the `$id` of the other root held against itself, not that root', () => {
+          const localValidator = new AJV8Validator({});
+          const withId: RJSFSchema = { $id: 'https://example.com/a.json', ...rootOf('string') };
+          const b = rootOf('number');
+          const own: RJSFSchema = { $id: 'https://example.com/a.json', type: 'number' };
+          for (let i = 0; i < 2; i++) {
+            check(localValidator, withId);
+            expect(localValidator.isValid(own, 1, b)).toBe(true);
+            expect(localValidator.isValid(own, 'a', b)).toBe(false);
+          }
+        });
+        it('checks a subschema with the `$id` of the other root, spelled as Ajv normalizes it or not, against itself', () => {
+          const localValidator = new AJV8Validator({});
+          const b = rootOf('number');
+          for (const [rootId, ownId] of [
+            ['https://example.com/a b.json', 'https://example.com/a b.json'],
+            ['https://example.com/a b.json', 'https://example.com/a%20b.json'],
+            ['https://example.com/a%20b.json', 'https://example.com/a b.json'],
+          ]) {
+            check(localValidator, { $id: rootId, ...rootOf('string') });
+            const own: RJSFSchema = { $id: ownId, type: 'number' };
+            expect(localValidator.isValid(own, 1, b)).toBe(true);
+            expect(localValidator.isValid(own, 'a', b)).toBe(false);
+          }
+        });
+        it('gives a subschema with an `$id` of its own to the root it is checked against', () => {
+          const localValidator = new AJV8Validator({});
+          const [a, b] = [rootOf('string'), rootOf('number')];
+          const own: RJSFSchema = { $id: 'own', $ref: '#/definitions/v' };
+          for (let i = 0; i < 2; i++) {
+            expect(localValidator.isValid(own, 'a', a)).toBe(true);
+            expect(localValidator.isValid(own, 'a', b)).toBe(false);
+            expect(localValidator.isValid(own, 1, b)).toBe(true);
+          }
+        });
+        it('holds alone a root holding an `$id` below its own', () => {
+          const localValidator = new AJV8Validator({});
+          const [a, b] = [nested('string'), nested('number')];
+          for (let i = 0; i < 2; i++) {
+            expect(localValidator.isValid({ $ref: 'https://example.com/v.json' }, 'a', a)).toBe(true);
+            expect(localValidator.isValid({ $ref: 'https://example.com/v.json' }, 1, b)).toBe(true);
+            expect(localValidator.isValid({ $ref: 'https://example.com/v.json' }, 'a', b)).toBe(false);
+          }
+        });
+        it('resolves no `$ref` into a dropped root that held the `$id` it names', () => {
+          const localValidator = new AJV8Validator({});
+          const without: RJSFSchema = { definitions: { w: { $ref: 'https://example.com/v.json' } } };
+          expect(localValidator.isValid({ $ref: 'https://example.com/v.json' }, 'a', nested('string'))).toBe(true);
+          expect(localValidator.isValid({ $ref: 'https://example.com/v.json' }, 1, nested('number'))).toBe(true);
+          expect(localValidator.isValid({ $ref: '#/definitions/w' }, 1, without)).toBe(false);
+        });
+        it('holds a root with a fragment `$id` below its own beside another', () => {
+          const localValidator = new AJV8Validator({});
+          const anchored = (type: 'string' | 'number'): RJSFSchema => ({ definitions: { v: { $id: '#v', type } } });
+          const [a, b] = [anchored('string'), anchored('number')];
+          const addSchemaSpy = vi.spyOn(localValidator.ajv, 'addSchema');
+          for (let i = 0; i < 2; i++) {
+            expect(localValidator.isValid({ $ref: '#v' }, 'x', a)).toBe(true);
+            expect(localValidator.isValid({ $ref: '#v' }, 1, a)).toBe(false);
+            expect(localValidator.isValid({ $ref: '#v' }, 1, b)).toBe(true);
+            expect(localValidator.isValid({ $ref: '#v' }, 'x', b)).toBe(false);
+          }
+          // Each root once, and the `{ $ref }` once under each
+          expect(addSchemaSpy).toHaveBeenCalledTimes(4);
+        });
+        it('replaces a schema added to `ajv` with the `$id` of a root', () => {
+          const localValidator = new AJV8Validator({});
+          const id = 'https://example.com/r.json';
+          localValidator.ajv.addSchema({ type: 'boolean' }, id);
+          const root: RJSFSchema = { $id: id, ...rootOf('string') };
+          check(localValidator, root);
+          expect(localValidator.ajv.getSchema(id)?.schema).toBe(root);
+          const equal = structuredClone(root);
+          const keeping = new AJV8Validator({});
+          keeping.ajv.addSchema(equal, id);
+          check(keeping, root);
+          expect(keeping.ajv.getSchema(id)?.schema).toBe(equal);
+        });
+        it('keeps a root registered under the `$id` of a subschema the root kept beside it added', () => {
+          const localValidator = new AJV8Validator({});
+          const id = 'https://example.com/b.json';
+          const b: RJSFSchema = { $id: id, ...rootOf('number') };
+          expect(localValidator.isValid({ $id: id, type: 'string' }, 'a', rootOf('string'))).toBe(true);
+          check(localValidator, b);
+          check(localValidator, rootOf('boolean'));
+          expect(localValidator.isValid({ properties: { q: { $ref: '#/definitions/v' } } }, { q: 1 }, b)).toBe(true);
+        });
+        it('holds two roots with different `$id`s and replaces one with the same `$id`', () => {
+          const localValidator = new AJV8Validator({});
+          const withId = (id: string, type: 'string' | 'number'): RJSFSchema => ({ $id: id, ...rootOf(type) });
+          const [a, b, a2] = [
+            withId('https://example.com/a.json', 'string'),
+            withId('https://example.com/b.json', 'number'),
+            withId('https://example.com/a.json', 'number'),
+          ];
+          check(localValidator, a);
+          check(localValidator, b);
+          const addSchemaSpy = vi.spyOn(localValidator.ajv, 'addSchema');
+          check(localValidator, a);
+          expect(addSchemaSpy).not.toHaveBeenCalled();
+          check(localValidator, a2);
+          check(localValidator, b);
+          check(localValidator, a);
+        });
+        it('holds two roots whose dialect it rejects', () => {
+          const localValidator = new AJV8Validator({});
+          const rejected = (type: 'string' | 'number'): RJSFSchema => ({
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            $defs: { v: { type } },
+          });
+          const [a, b] = [rejected('string'), rejected('number')];
+          const addSchemaSpy = vi.spyOn(localValidator.ajv, 'addSchema');
+          for (let i = 0; i < 3; i++) {
+            expect(localValidator.isValid({ $ref: '#/$defs/v' }, 'a', a)).toBe(true);
+            expect(localValidator.isValid({ $ref: '#/$defs/v' }, 1, b)).toBe(true);
+            expect(localValidator.isValid({ $ref: '#/$defs/v' }, 'a', b)).toBe(false);
+          }
+          // Each root rejected and then added unvalidated once, and the `{ $ref }` once under each
+          expect(addSchemaSpy).toHaveBeenCalledTimes(6);
+        });
+        it('drops the root kept when a root it rejects clashes with it', () => {
+          const localValidator = new AJV8Validator({});
+          const id = 'https://example.com/v.json';
+          const kept = rootOf('string');
+          expect(localValidator.isValid({ $id: id, type: 'string' }, 'a', kept)).toBe(true);
+          const clashing: RJSFSchema = {
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            $defs: { v: { $id: id, type: 'number' } },
+          };
+          expect(localValidator.isValid({ $ref: id }, 1, clashing)).toBe(true);
+          expect(localValidator.isValid({ $ref: id }, 'a', clashing)).toBe(false);
+        });
       });
       it('resolves a $ref into a root whose dialect it rejects from the first call on, and registers the next root', () => {
         const localValidator = new AJV8Validator({});
@@ -1443,6 +1629,106 @@ describe('AJV8Validator', () => {
             },
           });
         });
+      });
+    });
+    describe('validating dependencies without a localizer', () => {
+      const titles = { creditCard: 'Credit card', billingAddress: 'Billing address' };
+      const titledMessage = "must have property 'Billing address' when property 'Credit card' is present";
+      const creditCardSchema = (
+        { creditCard, billingAddress }: { creditCard?: string; billingAddress?: string } = {},
+        keyword: 'dependentRequired' | 'dependencies' = 'dependentRequired',
+      ): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          creditCard: { type: 'number', title: creditCard },
+          billingAddress: { type: 'string', title: billingAddress },
+        },
+        [keyword]: { creditCard: ['billingAddress'] },
+      });
+      it('should leave the message as Ajv wrote it when no property has a title', () => {
+        const { errors, errorSchema } = validator.validateFormData({ creditCard: 1 }, creditCardSchema());
+        const errMessage = 'must have property billingAddress when property creditCard is present';
+        expect(errors).toHaveLength(1);
+        expect(errors[0].message).toEqual(errMessage);
+        expect(errors[0].stack).toEqual(errMessage);
+        expect(errors[0].title).toEqual('');
+        expect(errorSchema).toEqual({ billingAddress: { __errors: [errMessage] } });
+      });
+      it('should name the properties by their schema titles', () => {
+        const { errors, errorSchema } = validator.validateFormData({ creditCard: 1 }, creditCardSchema(titles));
+        expect(errors[0].message).toEqual(titledMessage);
+        expect(errors[0].stack).toEqual(titledMessage);
+        expect(errors[0].title).toEqual('Billing address');
+        expect(errors[0].params?.deps).toEqual('billingAddress');
+        expect(errorSchema).toEqual({ billingAddress: { __errors: [titledMessage] } });
+      });
+      it('should title the error by the missing property, not the present one', () => {
+        const { errors } = validator.validateFormData(
+          { creditCard: 1 },
+          creditCardSchema({ creditCard: 'Credit card' }),
+        );
+        expect(errors[0].message).toEqual("must have property billingAddress when property 'Credit card' is present");
+        expect(errors[0].title).toEqual('');
+      });
+      it('should name the properties by their uiSchema titles, leaving an untitled one bare', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            creditCard: { type: 'number' },
+            holderName: { type: 'string' },
+            billingAddress: { type: 'string' },
+          },
+          dependentRequired: { creditCard: ['holderName', 'billingAddress'] },
+        };
+        const uiSchema: UiSchema = {
+          creditCard: { 'ui:title': 'uiSchema Credit card' },
+          billingAddress: { 'ui:title': 'uiSchema Billing address' },
+        };
+        const { errors } = validator.validateFormData({ creditCard: 1 }, schema, undefined, undefined, uiSchema);
+        const errMessage =
+          "must have properties holderName, 'uiSchema Billing address' when property 'uiSchema Credit card' is present";
+        expect(errors.map(({ message, title }) => ({ message, title }))).toEqual([
+          { message: errMessage, title: '' },
+          { message: errMessage, title: 'uiSchema Billing address' },
+        ]);
+      });
+      it('should name a dependency whose name contains a comma by its title', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            creditCard: { type: 'number', title: 'Credit card' },
+            'street, city': { type: 'string', title: 'Address' },
+          },
+          dependentRequired: { creditCard: ['street, city'] },
+        };
+        const { errors } = validator.validateFormData({ creditCard: 1 }, schema);
+        expect(errors).toHaveLength(1);
+        expect(errors[0].message).toEqual("must have property 'Address' when property 'Credit card' is present");
+      });
+      it('should name the properties of a draft-07 `dependencies` by their titles', () => {
+        const { errors } = validator.validateFormData({ creditCard: 1 }, creditCardSchema(titles, 'dependencies'));
+        expect(errors[0].name).toEqual('dependencies');
+        expect(errors[0].message).toEqual(titledMessage);
+      });
+      it('should name nested properties by their titles', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { payment: creditCardSchema(titles) } };
+        const { errors, errorSchema } = validator.validateFormData({ payment: { creditCard: 1 } }, schema);
+        expect(errors[0].stack).toEqual(titledMessage);
+        expect(errorSchema).toEqual({ payment: { billingAddress: { __errors: [titledMessage] } } });
+      });
+      it('should not rename a title that matches another property key', () => {
+        const { errors } = validator.validateFormData(
+          { creditCard: 1 },
+          creditCardSchema({ ...titles, creditCard: 'billingAddress' }),
+        );
+        expect(errors[0].message).toEqual(
+          "must have property 'Billing address' when property 'billingAddress' is present",
+        );
+      });
+      it('should name the properties by their titles when Ajv is not verbose', () => {
+        const notVerbose = new AJV8Validator({ AjvClass: Ajv2019, ajvOptionsOverrides: { verbose: false } });
+        const { errors } = notVerbose.validateFormData({ creditCard: 1 }, creditCardSchema(titles));
+        expect(errors[0].message).toEqual(titledMessage);
       });
     });
   });
@@ -3180,6 +3466,18 @@ describe('AJV8Validator', () => {
         });
         expect(errors.errors[0].params?.deps).toEqual('holderName, billingAddress');
       });
+      it('should not rename a title that matches another property key', () => {
+        schema = {
+          type: 'object',
+          properties: {
+            creditCard: { type: 'number', title: 'Credit card' },
+            billingAddress: { type: 'string', title: 'creditCard' },
+          },
+          dependentRequired: { creditCard: ['billingAddress'] },
+        };
+        const { errors } = validator.validateFormData({ creditCard: 1 }, schema);
+        expect(errors[0].message).toEqual("must have property 'creditCard' when property 'Credit card' is present");
+      });
       it('should handle the case when errors are not present', () => {
         schema = {
           type: 'object',
@@ -3695,10 +3993,46 @@ sharedSubschemaValidationTests(() => customizeValidator());
 sharedCopyScoringTests(() => customizeValidator());
 describe('a validator built by ajv-draft-04, which reads only draft-04 identifiers', () => {
   draft04SharedCopyScoringTests(() => customizeValidator({ AjvClass: AjvDraft04.default }));
+  it('holds a root with an `id` and a fragment `id` below it beside another (#5903)', () => {
+    const validator = customizeValidator({ AjvClass: AjvDraft04.default });
+    const a = { id: 'https://example.com/a.json', definitions: { v: { id: '#v', type: 'string' } } } as RJSFSchema;
+    const b = { definitions: { v: { type: 'number' } } } as RJSFSchema;
+    const ref = { $ref: '#/definitions/v' } as RJSFSchema;
+    validator.isValid(ref, 'a', a);
+    validator.isValid(ref, 1, b);
+    const addSchemaSpy = vi.spyOn(validator.ajv, 'addSchema');
+    expect(validator.isValid(ref, 'a', a)).toBe(true);
+    expect(validator.isValid(ref, 1, a)).toBe(false);
+    expect(validator.isValid(ref, 1, b)).toBe(true);
+    expect(addSchemaSpy).not.toHaveBeenCalled();
+  });
+  it('resolves a `$ref` by a dropped root’s `id` into the root registered with that `id` next (#5903)', () => {
+    const validator = customizeValidator({ AjvClass: AjvDraft04.default });
+    const rootOf = (type: string, id?: string) => ({ id, definitions: { v: { type } } }) as RJSFSchema;
+    const local = { $ref: '#/definitions/v' } as RJSFSchema;
+    validator.isValid(local, 'a', rootOf('string', 'https://example.com/a.json'));
+    validator.isValid(local, true, rootOf('boolean'));
+    validator.isValid(local, null, rootOf('null'));
+    const next = rootOf('number', 'https://example.com/a.json');
+    const absolute = { $ref: 'https://example.com/a.json#/definitions/v' } as RJSFSchema;
+    expect(validator.isValid(absolute, 1, next)).toBe(true);
+    expect(validator.isValid(absolute, 'a', next)).toBe(false);
+  });
+  it('gives a subschema with an `id` of its own to the root it is checked against, as one with an `$id` (#5903)', () => {
+    const validator = customizeValidator({ AjvClass: AjvDraft04.default });
+    const rootOf = (type: string): RJSFSchema => ({ definitions: { v: { type } } }) as RJSFSchema;
+    const [a, b] = [rootOf('string'), rootOf('number')];
+    const own = { id: 'own', properties: { x: { $ref: '#/definitions/v' } } } as RJSFSchema;
+    for (let i = 0; i < 2; i++) {
+      expect(validator.isValid(own, { x: 'a' }, a)).toBe(true);
+      expect(validator.isValid(own, { x: 1 }, b)).toBe(true);
+      expect(validator.isValid(own, { x: 1 }, a)).toBe(false);
+    }
+  });
 });
 
 describe('the parts an option scoring copy holds once', () => {
-  it('are removed from Ajv with the copy holding them when the root changes', () => {
+  it('are removed from Ajv with the copy holding them when its root is dropped', () => {
     const validator = customizeValidator();
     const copyRefs = () => Object.keys(validator.ajv.refs).filter((ref) => ref.includes(SHARED_COPY_ID));
     const match = (levels: number) => {
@@ -3710,9 +4044,11 @@ describe('the parts an option scoring copy holds once', () => {
     const first = copyRefs();
     expect(first).not.toEqual([]);
     match(3);
-    const second = copyRefs();
-    expect(second).not.toEqual([]);
-    expect(second.filter((ref) => first.includes(ref))).toEqual([]);
+    // The root before is held beside the next, so its copies go once a third arrives
+    match(4);
+    const third = copyRefs();
+    expect(third).not.toEqual([]);
+    expect(third.filter((ref) => first.includes(ref))).toEqual([]);
   });
   it('are removed from Ajv with a copy holding them that does not compile', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});

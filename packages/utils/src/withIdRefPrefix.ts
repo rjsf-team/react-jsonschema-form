@@ -11,6 +11,8 @@ import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts
 interface RefRewrite {
   /** The id of the root schema the local `$ref`s name, without an empty trailing fragment */
   readonly base: string;
+  /** Whether the root has an `$id`, whose URI a relative `$ref` resolves against, whatever id it is registered under */
+  readonly hasUri: boolean;
   /** Returns the `$ref` a subschema of the root is to hold in place of its own, given the base the validator resolves
    * a `$ref` there against, or undefined where it is to hold its own, prefixed as written
    */
@@ -83,16 +85,16 @@ function nestedRefOf<S extends StrictRJSFSchema>(
  * against that `$id` instead, read against the root's URI as one written in the root would be.
  *
  * @param ref - The `$ref` as written
- * @param base - The id of the root schema, without an empty trailing fragment
+ * @param rewrite - How the `$ref`s are rewritten
  * @param scope - The `$id` the handed schema holds around the `$ref`, resolved as the validator resolves it, or `''`
  *        where it holds none
  * @returns - The `$ref` as the validator is to resolve it
  */
-function rootRef(ref: string, base: string, scope: string): string {
+function rootRef(ref: string, { base, hasUri }: RefRewrite, scope: string): string {
   if (ref.startsWith('#')) {
     return base + ref;
   }
-  if (base === ROOT_SCHEMA_PREFIX) {
+  if (!hasUri) {
     return ref;
   }
   return resolveUri(scope === '' ? base : resolveUri(base, scope), ref);
@@ -142,7 +144,7 @@ function withIdRefPrefixObject(
           // A `$ref` to a part a scoring target holds once names it by the `$id` the target gives it, which
           // resolves inside the target whatever the root is registered under, so it is left as written
           if (!value.startsWith(SHARED_COPY_ID)) {
-            realObj[key] = nestedRef ?? rootRef(value, rewrite.base, scope);
+            realObj[key] = nestedRef ?? rootRef(value, rewrite, scope);
           }
         } else if (value.startsWith('#')) {
           realObj[key] = rewrite.base + value;
@@ -223,6 +225,7 @@ export function withRootIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
   // A root that is no schema object, which an untyped caller may hand a validator, has no subschemas to find
   return prefixRefs<S>(schemaNode, {
     base,
+    hasUri: isObject(rootSchema) && rootSchemaIdOf(rootSchema) !== ROOT_SCHEMA_PREFIX,
     nestedRef: isObject(rootSchema) ? nestedRefOf(parseSchemaGraph<S>(rootSchema), base) : undefined,
   });
 }

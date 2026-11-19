@@ -21,6 +21,9 @@ The package exports `CustomValidatorOptionsType`, `CFWorkerValidationError`, `CF
 ### `customizeValidator<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()`
 
 Creates a `CFWorkerValidator<S, F>`, an implementation of `ValidatorType<S, F>` backed by `@cfworker/json-schema`.
+The validator keeps what it compiled for the last two root schemas it validated against, and drops the older one's when a third arrives.
+Every form that uses the package's default export shares one validator, and so its cache: on a page with three or more such forms, moving between them compiles again.
+A form given its own validator from `customizeValidator()` keeps its own cache.
 
 #### Parameters
 
