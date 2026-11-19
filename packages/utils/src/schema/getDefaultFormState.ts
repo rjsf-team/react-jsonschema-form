@@ -836,16 +836,11 @@ function fieldPasses<S extends StrictRJSFSchema, F extends FormContextType>(
       retrievedViews ??= new KeyedMemo<DefaultsView<S>>();
       return retrievedViews.get([view], () => {
         // An option adopted from a list an unmerged `allOf` offers is merged into the field it renders, as an option of
-        // the field's own list is through its selection, so the keys only that option declares are the field's too
-        const { adopted } = view.options;
+        // the field's own list is through its selection, so the keys only that option declares are the field's too.
+        // Its seeds are the retrieved field's own, so `viewField()` isn't handed them again
+        const { adopted, ...options } = view.options;
         const seeds = adopted ? [...view.field.seeds, ...adopted.values()] : view.field.seeds;
-        const settled = settle(
-          context,
-          { ...view.field, seeds, retrieves: true },
-          view.data,
-          view.depData,
-          view.options,
-        );
+        const settled = settle(context, { ...view.field, seeds, retrieves: true }, view.data, view.depData, options);
         retrieved.push(settled);
         return settled;
       });
@@ -1684,9 +1679,10 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         choice.offersConstants && rawFormData === undefined && defaultFormStateBehavior?.constAsDefaults !== 'always'
           ? ownDefaults()
           : undefined;
+      // A default is no value a user cleared, so a `null` one names a constant only where one of them is `null`
       if (
         fieldDefault !== undefined &&
-        viewFormDataMatching<unknown, S, F>(context, view, fieldDefault) === undefined
+        viewFormDataMatching<unknown, S, F>(context, view, fieldDefault, undefined, false) === undefined
       ) {
         defaults = fieldDefault;
       } else if (choice.wholeOptions === undefined) {
@@ -1768,6 +1764,8 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         // `typeDefaults()`
         // Any constant is reported, since only an object one is left out, and only an object value is folded without it
         props.onObjectConst?.();
+        // The field's own default, by precedence, is the value out-of-list data is replaced by, as an `enum`'s is
+        defaults = ownDefaults();
         const constant = toConstant<S>(choice.wholeOptions[choice.index]);
         if (
           rawFormData === undefined &&
@@ -2072,14 +2070,17 @@ function withOwnPropertyEntries<T, S extends StrictRJSFSchema, F extends FormCon
   optionProperties: S['properties'],
 ): UiSchema<T, S, F> | undefined {
   const keys = Object.keys(ownProperties ?? {}).filter(
-    (name) => Reflect.get(uiSchema, name) !== undefined && !(optionProperties && Object.hasOwn(optionProperties, name)),
+    (name) =>
+      Object.hasOwn(uiSchema, name) &&
+      Reflect.get(uiSchema, name) !== undefined &&
+      !(optionProperties && Object.hasOwn(optionProperties, name)),
   );
   if (keys.length === 0) {
     return optionUiSchema;
   }
   const withEntries: UiSchema<T, S, F> = optionUiSchema ? { ...optionUiSchema } : {};
   for (const name of keys) {
-    Reflect.set(withEntries, name, Reflect.get(uiSchema, name));
+    setOwn(withEntries, name, Reflect.get(uiSchema, name));
   }
   return withEntries;
 }
@@ -2522,13 +2523,28 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // so it is worked out once per call, from the graph first, so the field is merged only for a key its `allOf` declares
   const allOfField = ALL_OF_KEY in view.schema ? fieldOfView<S>(view) : undefined;
   const allOfKeys = new Map<string, boolean>();
+  let unadopted: S | undefined;
+  // A key an option adopted from a list the `allOf` offers declares is left out where the field without that option
+  // forbids it, as the merge leaves out a key the `allOf` itself declares beside `additionalProperties: false`
+  const forbidsAdoptedKey = (key: string) => {
+    if (view.options.adopted === undefined) {
+      return false;
+    }
+    unadopted ??= mergedSchemaOf<S, F>(context, {
+      ...view,
+      options: { ...view.options, adopted: undefined },
+      merged: {},
+    });
+    return getAdditionalPropertySchema<S>(unadopted, key) === false;
+  };
   const declaredInAllOf = (key: string) => {
     let declared = allOfKeys.get(key);
     if (declared === undefined) {
       declared =
         allOfField !== undefined &&
         allOfField.seeds.some(({ node }) => declaresUnconditionally<S>(allOfField.graph, node, key)) &&
-        getByPath(mergedSchemaOf<S, F>(context, view).properties, key) !== undefined;
+        getByPath(mergedSchemaOf<S, F>(context, view).properties, key) !== undefined &&
+        !forbidsAdoptedKey(key);
       allOfKeys.set(key, declared);
     }
     return declared;
@@ -2755,13 +2771,18 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
     mayHoldNullType(view.schema, rootSchema)
   ) {
-    branchNullFills<T, S, F>(context, retrievedView(), schema, props, foldReporting, foldedBranchKeys).forEach(
-      ({ key, value }) => {
-        setOwn(computed, key, value);
-        fillOverUndefined(nullFills, rawFormData, key, value);
-        onNullFill?.();
-      },
-    );
+    branchNullFills<T, S, F>(
+      context,
+      retrievedView(),
+      schema,
+      props,
+      foldReporting,
+      (key) => foldedBranchKeys.has(key) || forbidsAdoptedKey(key),
+    ).forEach(({ key, value }) => {
+      setOwn(computed, key, value);
+      fillOverUndefined(nullFills, rawFormData, key, value);
+      onNullFill?.();
+    });
   }
   // Read from the field that decides whether the object takes extra keys, so the keys seeded are folded as it takes them,
   // seeded where the field as retrieved holds them where that is the field, settled only by a branch that seeds one
@@ -3028,7 +3049,8 @@ function extraKeyKeepsData(data: unknown, value: unknown): boolean {
  * @param schema - The object's schema, its extra keys stubbed where the field stubs them
  * @param props - The props of the object field
  * @param foldReporting - Computes a child's defaults, reporting whether they hold a `null` fill
- * @param folded - The properties the object's own fold already computed from the schema rendered for them
+ * @param skips - Whether the object's own fold already computed a property from the schema rendered for it, or leaves
+ *        it out
  * @returns - The defaults of those properties that hold such a `null`
  */
 function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -3042,7 +3064,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
     child: DefaultsField<S>,
     childFoldProps: FoldProps<T, S, F>,
   ) => { value: unknown; holdsNull: boolean },
-  folded: ReadonlySet<string>,
+  skips: (key: string) => boolean,
 ): { key: string; value: unknown }[] {
   const { rawFormData, uiSchema, uiSchemaDefinitions, nullFills } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
@@ -3054,7 +3076,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
   return Object.keys(rendered.properties ?? {})
     .filter(
       (key) =>
-        !folded.has(key) &&
+        !skips(key) &&
         (!Object.hasOwn(ownProperties, key) ||
           (getSchemaType<S>(getPropertySchema<S>(rendered, key)) === 'null' &&
             getSchemaType<S>(getPropertySchema<S>(schema, key)) !== 'null')),
@@ -3881,7 +3903,7 @@ function adoptableList<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
 ): AdoptableList<S> | undefined {
-  if (view.collapsed || context.defaultFormStateBehavior?.constAsDefaults === 'never') {
+  if (view.collapsed) {
     return undefined;
   }
   const field = optionsMergedField<S, F>(context, view, offersConstOption<S>);
@@ -3941,6 +3963,7 @@ function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormConte
   view: DefaultsView<S>,
   formData: T | undefined,
   defaults?: unknown,
+  held = true,
 ): T | T[] | undefined {
   const matched: MatchedSchema<S> = {
     schema: view.schema,
@@ -3948,7 +3971,14 @@ function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormConte
     chains: () => view.chains,
     retrieve: () => mergedSchemaOf<S, F>(context, view),
   };
-  return heldDataMatching<T, S, F>(context, matched, view.graph.rawRoot, formData, false, () => defaults);
+  return (held ? heldDataMatching : formDataMatching)<T, S, F>(
+    context,
+    matched,
+    view.graph.rawRoot,
+    formData,
+    false,
+    () => defaults,
+  );
 }
 
 /** `formDataMatching()` for the value a field holds in the form data. A `null` is how a cleared field holds its value,
