@@ -249,8 +249,10 @@ export default function resolveUiSchema<
  * `resolveUiSchema()` didn't merge one, and records its origin, as `resolveUiSchema()` does for an option the field's
  * schema offers. `resolveUiSchema()` reads the schema as it is written, so it doesn't reach the options a `then`/`else`
  * or a `dependencies` entry offers, which `retrieveSchema()` hoists to the field only where the data selects it, nor
- * any the field offers beside such a list or beside another list an `allOf` member offers. The `anyOf`/`oneOf` field
- * and the `ui:required` walk call this, so they agree on the entry such an option has
+ * any the field offers beside such a list or beside another list an `allOf` member offers. A `dependencies` entry's
+ * `oneOf` whose options declare the entry's key isn't such a list, since the data picks the option `retrieveSchema()`
+ * merges in, but a list one of those options offers is. The `anyOf`/`oneOf` field and the `ui:required` walk call
+ * this, so they agree on the entry such an option has
  *
  * @param refs - The `ui:definitions` key each option's schema is named by, as `resolveUiSchema()` reads it, if any
  * @param optionsUiSchema - The field's `uiSchema.anyOf`/`oneOf` entries, or `[]` where it gives none

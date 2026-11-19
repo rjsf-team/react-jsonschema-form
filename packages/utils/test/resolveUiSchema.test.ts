@@ -489,6 +489,7 @@ describe('resolveUiSchema() - the options of an allOf member', () => {
     Picks: { oneOf: [pickA, pickB] },
     Shared: { type: 'object' },
   } satisfies RJSFSchema['$defs'];
+  const picksRef = { $ref: '#/$defs/Picks' };
   it.each<[string, RJSFSchema]>([
     ['inline', { oneOf: [pickA, pickB] }],
     ['named by a $ref', { $ref: '#/$defs/Picks' }],
@@ -510,6 +511,7 @@ describe('resolveUiSchema() - the options of an allOf member', () => {
     ["an entry's oneOf no option of which declares its key", { k: { oneOf: [{ properties: { e: {} } }] } }],
     ['an option the oneOf picks', { k: { oneOf: [pickA, { ...pickB, oneOf: [{ type: 'string' }] }] } }],
     ['an entry under a key its shared oneOf declares and one it does not', { k: picks.Picks, other: picks.Picks }],
+    ['a $ref entry under a key its oneOf declares and then one it does not', { k: picksRef, other: picksRef }],
     [
       'the second option of two naming the same $ref',
       {
