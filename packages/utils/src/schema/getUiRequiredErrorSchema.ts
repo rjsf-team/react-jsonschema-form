@@ -179,7 +179,7 @@ function fallbackTypeAt<T, S extends StrictRJSFSchema, F extends FormContextType
   schema: S,
   uiSchema: UiSchema<T, S, F>,
   formData: unknown,
-  depth = 1,
+  depth: number,
 ): string | undefined {
   return Array.isArray(schema.type)
     ? fieldState?.fallbackType?.(fieldPathFromList(path), schema, uiSchema, formData, depth)
@@ -195,9 +195,10 @@ function shownFieldType<T, S extends StrictRJSFSchema, F extends FormContextType
   schema: S,
   uiSchema: UiSchema<T, S, F>,
   formData: unknown,
+  depth: number,
 ): string | undefined {
   return (
-    fallbackTypeAt<T, S, F>(ctx, path, schema, uiSchema, formData) ??
+    fallbackTypeAt<T, S, F>(ctx, path, schema, uiSchema, formData, depth) ??
     getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, ctx.schemaContext.widgets, formData)
   );
 }
@@ -210,12 +211,13 @@ function rendersAnswer<T, S extends StrictRJSFSchema, F extends FormContextType>
   path: (string | number)[],
   schema: S,
   uiSchema: UiSchema<T, S, F>,
+  depth: number,
 ) {
   const type = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, schemaContext.widgets);
   return (
     (type !== undefined && type !== 'null') ||
     UI_FIELD_KEY in uiSchema ||
-    fieldState?.fallbackType?.(fieldPathFromList(path), schema, uiSchema, undefined, 1) !== undefined
+    fieldState?.fallbackType?.(fieldPathFromList(path), schema, uiSchema, undefined, depth) !== undefined
   );
 }
 
@@ -232,10 +234,11 @@ function rendersArrayWidget<T, S extends StrictRJSFSchema, F extends FormContext
   schema: S,
   uiSchema: UiSchema<T, S, F>,
   formData: unknown,
+  depth: number,
 ): boolean {
   const { schemaContext, rootSchema, fieldState } = ctx;
   if (fieldState?.rendersArrayWidget) {
-    const shownType = fallbackTypeAt<T, S, F>(ctx, path, schema, uiSchema, formData);
+    const shownType = fallbackTypeAt<T, S, F>(ctx, path, schema, uiSchema, formData, depth);
     return fieldState.rendersArrayWidget(
       fieldPathFromList(path),
       shownType === undefined ? schema : { ...schema, type: shownType },
@@ -254,10 +257,11 @@ function rendersArrayWidget<T, S extends StrictRJSFSchema, F extends FormContext
 }
 
 /** The field an option walked as a node of its own is shown by, which has reported an empty value already where its own
- * `ui:required` asks for one
+ * `ui:required` asks for one, and numbers the option's type selectors below the ones it renders at the path
  */
 interface ShowingField {
   uiRequired: boolean;
+  typeSelectorsAbove: number;
 }
 
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -293,6 +297,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const fieldUiRequired = uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required);
   // An option's `ui:required` is its field's, unless it sets its own, so the field it is shown by reports the empty value
   const reportsEmpty = showingField ? showingField.uiRequired : fieldUiRequired === true;
+  const typeSelectorsAbove = showingField?.typeSelectorsAbove ?? 0;
   if (!showingField && reportsEmpty && path.length > 0 && formData === undefined && !(required && parentPresent)) {
     // Worded exactly as AJV words its own `required` failures, so a ui:required error is indistinguishable from a
     // schema-required one in the error list and in any `ui:help`/ErrorList rendering built around that text. Skipped
@@ -360,12 +365,30 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ) {
     return;
   }
+  // An object beside its options renders its own properties in its own field and an option's in the option's field,
+  // each on the type its own type selector is on: the option's is numbered below the object's where the object has one
+  const ownFallbackType = option
+    ? fallbackTypeAt<T, S, F>(ctx, path, resolvedSchema, uiSchema, formData, typeSelectorsAbove + 1)
+    : undefined;
+  const optionTypeSelectorsAbove = typeSelectorsAbove + (ownFallbackType === undefined ? 0 : 1);
+  // Below the object's own selector, the option renders from the object with `type` pinned to the type picked, so an
+  // option listing no types of its own has no selector, and is on that type. That parent is a copy made here, which
+  // no later call finds again, so the option is rendered without keeping it
+  let optionField = retrieved;
+  if (option) {
+    optionField =
+      ownFallbackType === undefined
+        ? getRenderedOptionSchema<S>(resolvedSchema, option)
+        : renderOption<S>({ ...resolvedSchema, type: ownFallbackType }, option);
+  }
   // An option offering options of its own renders them as a field of its own at this path, which `MultiSchemaField`
   // hands the option's uiSchema, so it is walked as a node of its own, which reads the option it shows in turn
-  const optionField = option ? getRenderedOptionSchema<S>(resolvedSchema, option) : retrieved;
   const nestsOptions = getXxxOfOptions<S>(optionField) !== undefined;
   if (nestsOptions) {
-    walk(ctx, optionField, branchUiSchema, formData, path, required, parentPresent, { uiRequired: reportsEmpty });
+    walk(ctx, optionField, branchUiSchema, formData, path, required, parentPresent, {
+      uiRequired: reportsEmpty,
+      typeSelectorsAbove: optionTypeSelectorsAbove,
+    });
     // An object renders its own properties beside the option, which are walked below
     if (!option) {
       return;
@@ -379,39 +402,31 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (path.length > 0 && !nestsOptions && uiBooleanOption(branchUiRequired) === true) {
     const isUnanswered =
       formData === undefined
-        ? !reportsEmpty && !(required && parentPresent) && rendersAnswer<T, S, F>(ctx, path, retrieved, branchUiSchema)
+        ? !reportsEmpty &&
+          !(required && parentPresent) &&
+          rendersAnswer<T, S, F>(ctx, path, retrieved, branchUiSchema, typeSelectorsAbove + 1)
         : Array.isArray(formData) &&
           formData.length === 0 &&
           (retrieved.minItems ?? 0) < 1 &&
           // A hidden widget leaves the user nothing to choose with
           branchWidget !== 'hidden' &&
-          rendersArrayWidget<T, S, F>(ctx, path, retrieved, branchUiSchema, formData);
+          rendersArrayWidget<T, S, F>(ctx, path, retrieved, branchUiSchema, formData, typeSelectorsAbove + 1);
     if (isUnanswered) {
       builder.addErrors(`must have required property '${path[path.length - 1]}'`, path);
     }
   }
   // Whatever the value, `ObjectField` renders its properties: a string under a `['null', 'object', 'string']` isn't an
   // object, yet the inputs for them are on screen unless the field for another type is
-  // An object beside its options renders its own properties in its own field and an option's in the option's field,
-  // each on the type its own type selector is on: the option's is numbered below the object's where the object has one
   let shownType: string | undefined;
   let optionShownType: string | undefined;
   if (option) {
     const listedType = getFieldTypeForUiSchema<T, S, F>(retrieved, branchUiSchema, schemaContext.widgets, formData);
-    const ownFallbackType = fallbackTypeAt<T, S, F>(ctx, path, resolvedSchema, uiSchema, formData);
-    const optionDepth = ownFallbackType === undefined ? 1 : 2;
-    // Below the object's own selector, the option renders from the object with `type` pinned to the type picked, so an
-    // option listing no types of its own has no selector, and is on that type. That parent is a copy made here, which
-    // no later call finds again, so the option is rendered without keeping it
-    const renderedOption =
-      ownFallbackType === undefined
-        ? getRenderedOptionSchema<S>(resolvedSchema, option)
-        : renderOption<S>({ ...resolvedSchema, type: ownFallbackType }, option);
     shownType = ownFallbackType ?? listedType;
     optionShownType =
-      fallbackTypeAt<T, S, F>(ctx, path, renderedOption, branchUiSchema, formData, optionDepth) ?? shownType;
+      fallbackTypeAt<T, S, F>(ctx, path, optionField, branchUiSchema, formData, optionTypeSelectorsAbove + 1) ??
+      shownType;
   } else {
-    shownType = shownFieldType<T, S, F>(ctx, path, retrieved, branchUiSchema, formData);
+    shownType = shownFieldType<T, S, F>(ctx, path, retrieved, branchUiSchema, formData, typeSelectorsAbove + 1);
     optionShownType = shownType;
   }
   const ownProperties = resolvedSchema.properties ?? {};

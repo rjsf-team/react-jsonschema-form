@@ -1985,6 +1985,48 @@ describe('getUiRequiredErrorSchema()', () => {
       });
     });
 
+    it("gates a nested option's properties by its own type selector, numbered below the ones above it at the path", () => {
+      const depths: number[] = [];
+      const errors = toErrorList(
+        getUiRequiredErrorSchema<GenericObjectType>(
+          { validator: testValidator },
+          {
+            type: 'object',
+            properties: {
+              p: {
+                type: ['object', 'number'],
+                properties: { a: { type: 'string' } },
+                anyOf: [
+                  {
+                    type: ['object', 'number'],
+                    properties: { q: { type: 'string' } },
+                    anyOf: [{ type: ['object', 'number'], properties: { r: { type: 'string' } } }, { minimum: 2 }],
+                  },
+                  { minimum: 1 },
+                ],
+              },
+            },
+          },
+          { p: { anyOf: [{ q: { 'ui:required': true }, r: { 'ui:required': true } }] } },
+          { p: {} },
+          undefined,
+          undefined,
+          undefined,
+          {
+            selectedOption: () => 0,
+            isExpanded: () => false,
+            fallbackType: (_fieldPath, _schema, _uiSchema, _formData, depth) => {
+              depths.push(depth);
+              return depth === 3 ? 'number' : 'object';
+            },
+          },
+        ),
+      ).map((error) => error.property);
+
+      expect(errors).toEqual(['.p.q']);
+      expect(depths).toContain(3);
+    });
+
     it("14: reports an empty field whose nested option is a select over whole values, from the field's `ui:required`", () => {
       const schema: RJSFSchema = {
         type: 'object',

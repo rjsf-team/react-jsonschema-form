@@ -819,6 +819,48 @@ describe('ui:required enforcement', () => {
       expect(await submitted(node, onSubmit)).toBe(false);
     });
 
+    describe('a type selector numbered below the ones above it at the path', () => {
+      const typed = (inner: RJSFSchema): RJSFSchema =>
+        p({
+          type: ['object', 'number'],
+          properties: { a: { type: 'string' } },
+          anyOf: [
+            {
+              type: ['object', 'number'],
+              properties: { q: { type: 'string' } },
+              anyOf: [
+                { title: 'i1', ...inner },
+                { title: 'i2', minimum: 2 },
+              ],
+            },
+            { minimum: 1 },
+          ],
+        });
+
+      it.each<[string, RJSFSchema, string, string]>([
+        ["the option's", {}, 'q', 'root_p__internalTypeSelector2'],
+        [
+          "the option's own option's, below it",
+          { type: ['object', 'number'], properties: { r: { type: 'string' } } },
+          'r',
+          'root_p__internalTypeSelector3',
+        ],
+      ])('submits once %s type selector is on number', async (_, inner, property, typeSelector) => {
+        const { node, onSubmit } = createFormComponent({
+          schema: typed(inner),
+          uiSchema: { p: { anyOf: [{ [property]: { 'ui:required': true } }] } },
+          initialFormData: { p: {} },
+          useFallbackUiForUnsupportedType: true,
+        });
+        await user.selectOptions(elementOf(node, '#root_p__anyof_select', HTMLSelectElement), 'Option 1');
+        await user.selectOptions(elementOf(node, '#root_p__anyof_select2', HTMLSelectElement), 'i1');
+        expect(markedRequired(node, `root_p_${property}`)).toBe(true);
+        await user.selectOptions(elementOf(node, `#${typeSelector}`, HTMLSelectElement), 'number');
+        expect(markedRequired(node, `root_p_${property}`)).toBeUndefined();
+        expect(await submitted(node, onSubmit)).toBe(true);
+      });
+    });
+
     describe('a multiple select a nested option shows, holding `[]`', () => {
       const field = (inner: RJSFSchema): RJSFSchema => p({ anyOf: [inner, { type: 'number' }] });
       it.each<[string, RJSFSchema, UiSchema]>([
