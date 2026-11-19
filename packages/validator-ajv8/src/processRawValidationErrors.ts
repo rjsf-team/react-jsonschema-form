@@ -95,56 +95,76 @@ export function transformRJSFValidationErrors<
       params.property,
     ].filter((item) => item);
 
+    const findTitle = (currentProperty: string): string | undefined => {
+      const path = property ? `${property}.${currentProperty}` : currentProperty;
+      let uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path))).title;
+      if (uiSchemaTitle === undefined) {
+        // To retrieve a title from UI schema, construct a path to UI schema from `schemaPath` and `currentProperty`.
+        // For example, when `#/properties/A/properties/B/required` and `C` are given, they are converted into `['A', 'B', 'C']`.
+        const uiSchemaPath = schemaPath
+          .replace(/\/properties\//g, '/')
+          .split('/')
+          .slice(1, -1)
+          .concat([currentProperty]);
+        uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
+      }
+      if (uiSchemaTitle === undefined) {
+        // schemaPath may include non-property segments (e.g. allOf/if/then) that do
+        // not exist in the uiSchema; fall back to the instance path, the same way the
+        // root-schema title fallback does below.
+        const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
+        uiSchemaTitle = getByPath<string | undefined>(uiSchema, [...propParts, currentProperty, 'title']);
+      }
+      if (uiSchemaTitle) {
+        return uiSchemaTitle;
+      }
+      const parentSchemaTitle = getByPath<string | undefined>(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
+      if (parentSchemaTitle || !schema) {
+        return parentSchemaTitle;
+      }
+      // parentSchema may be an allOf/anyOf/oneOf entry that lacks `properties`;
+      // fall back to looking up the title from the root schema.
+      const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
+      const aSchemaPath: (string | number)[] = [];
+      for (const part of propParts) {
+        aSchemaPath.push(PROPERTIES_KEY, part);
+      }
+      aSchemaPath.push(PROPERTIES_KEY, currentProperty, 'title');
+      return getByPath<string | undefined>(schema, aSchemaPath);
+    };
+
     if (rawPropertyNames.length > 0) {
       rawPropertyNames.forEach((currentProperty) => {
-        const path = property ? `${property}.${currentProperty}` : currentProperty;
-        let uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path))).title;
-        if (uiSchemaTitle === undefined) {
-          // To retrieve a title from UI schema, construct a path to UI schema from `schemaPath` and `currentProperty`.
-          // For example, when `#/properties/A/properties/B/required` and `C` are given, they are converted into `['A', 'B', 'C']`.
-          const uiSchemaPath = schemaPath
-            .replace(/\/properties\//g, '/')
-            .split('/')
-            .slice(1, -1)
-            .concat([currentProperty]);
-          uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
-        }
-        if (uiSchemaTitle === undefined) {
-          // schemaPath may include non-property segments (e.g. allOf/if/then) that do
-          // not exist in the uiSchema; fall back to the instance path, the same way the
-          // root-schema title fallback does below.
-          const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
-          uiSchemaTitle = getByPath<string | undefined>(uiSchema, [...propParts, currentProperty, 'title']);
-        }
-        if (uiSchemaTitle) {
-          message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
-          uiTitle = uiSchemaTitle;
-        } else {
-          const parentSchemaTitle = getByPath<string | undefined>(parentSchema, [
-            PROPERTIES_KEY,
-            currentProperty,
-            'title',
-          ]);
-          if (parentSchemaTitle) {
-            message = message.replace(`'${currentProperty}'`, `'${parentSchemaTitle}'`);
-            uiTitle = parentSchemaTitle;
-          } else if (schema) {
-            // parentSchema may be an allOf/anyOf/oneOf entry that lacks `properties`;
-            // fall back to looking up the title from the root schema.
-            const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
-            const aSchemaPath: (string | number)[] = [];
-            for (const part of propParts) {
-              aSchemaPath.push(PROPERTIES_KEY, part);
-            }
-            aSchemaPath.push(PROPERTIES_KEY, currentProperty, 'title');
-            const rootSchemaTitle = getByPath<string | undefined>(schema, aSchemaPath);
-            if (rootSchemaTitle) {
-              message = message.replace(`'${currentProperty}'`, `'${rootSchemaTitle}'`);
-              uiTitle = rootSchemaTitle;
-            }
+        const title = findTitle(currentProperty);
+        if (title) {
+          message = message.replace(`'${currentProperty}'`, `'${title}'`);
+          // The error is placed on its missing property, so that is the one its `title` names
+          if (params.missingProperty === undefined || currentProperty === params.missingProperty) {
+            uiTitle = title;
           }
         }
       });
+
+      if (typeof params.property === 'string' && typeof params.deps === 'string') {
+        const { property: presentProperty, deps, depsCount } = params;
+        // Ajv's own message for a property dependency, from `ajv/lib/vocabularies/applicator/dependencies.ts`, leaves the
+        // names bare where its other messages quote them, so it is rebuilt with each titled name quoted. A localized
+        // message already quotes them, so it doesn't match and is titled above like any other. The rebuild runs after
+        // that loop so the loop can't replace a title that matches another property's key
+        const ajvMessage = (names: string[], present: string) =>
+          `must have ${depsCount === 1 ? 'property' : 'properties'} ${names.join(', ')} when property ${present} is present`;
+        if (rest.message === ajvMessage([deps], presentProperty)) {
+          // `deps` joins the names with `, `, which a name may contain, so the schema's own list is used when Ajv's
+          // `verbose` option hands over the `parentSchema`
+          const depsList = getByPath(parentSchema, [keyword, presentProperty]);
+          const names = Array.isArray(depsList) ? (depsList as string[]) : deps.split(', ');
+          const named = (name: string) => {
+            const title = findTitle(name);
+            return title ? `'${title}'` : name;
+          };
+          message = ajvMessage(names.map(named), named(presentProperty));
+        }
+      }
 
       stack = message;
     } else {

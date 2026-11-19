@@ -1445,6 +1445,124 @@ describe('AJV8Validator', () => {
         });
       });
     });
+    describe('validating dependencies without a localizer', () => {
+      const creditCardSchema = (titles: { creditCard?: string; billingAddress?: string } = {}): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          creditCard: { type: 'number', title: titles.creditCard },
+          billingAddress: { type: 'string', title: titles.billingAddress },
+        },
+        dependentRequired: { creditCard: ['billingAddress'] },
+      });
+      it('should leave the message as Ajv wrote it when no property has a title', () => {
+        const { errors, errorSchema } = validator.validateFormData({ creditCard: 1 }, creditCardSchema());
+        const errMessage = 'must have property billingAddress when property creditCard is present';
+        expect(errors).toHaveLength(1);
+        expect(errors[0].message).toEqual(errMessage);
+        expect(errors[0].stack).toEqual(errMessage);
+        expect(errors[0].title).toEqual('');
+        expect(errorSchema).toEqual({ billingAddress: { __errors: [errMessage] } });
+      });
+      it('should name the properties by their schema titles', () => {
+        const { errors, errorSchema } = validator.validateFormData(
+          { creditCard: 1 },
+          creditCardSchema({ creditCard: 'Credit card', billingAddress: 'Billing address' }),
+        );
+        const errMessage = "must have property 'Billing address' when property 'Credit card' is present";
+        expect(errors[0].message).toEqual(errMessage);
+        expect(errors[0].stack).toEqual(errMessage);
+        expect(errors[0].title).toEqual('Billing address');
+        expect(errors[0].params?.deps).toEqual('billingAddress');
+        expect(errorSchema).toEqual({ billingAddress: { __errors: [errMessage] } });
+      });
+      it('should title the error by the missing property, not the present one', () => {
+        const { errors } = validator.validateFormData(
+          { creditCard: 1 },
+          creditCardSchema({ creditCard: 'Credit card' }),
+        );
+        expect(errors[0].message).toEqual("must have property billingAddress when property 'Credit card' is present");
+        expect(errors[0].title).toEqual('');
+      });
+      it('should name the properties by their uiSchema titles, leaving an untitled one bare', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            creditCard: { type: 'number' },
+            holderName: { type: 'string' },
+            billingAddress: { type: 'string' },
+          },
+          dependentRequired: { creditCard: ['holderName', 'billingAddress'] },
+        };
+        const uiSchema: UiSchema = {
+          creditCard: { 'ui:title': 'uiSchema Credit card' },
+          billingAddress: { 'ui:title': 'uiSchema Billing address' },
+        };
+        const { errors } = validator.validateFormData({ creditCard: 1 }, schema, undefined, undefined, uiSchema);
+        const errMessage =
+          "must have properties holderName, 'uiSchema Billing address' when property 'uiSchema Credit card' is present";
+        expect(errors.map(({ message, title }) => ({ message, title }))).toEqual([
+          { message: errMessage, title: '' },
+          { message: errMessage, title: 'uiSchema Billing address' },
+        ]);
+      });
+      it('should name a dependency whose name contains a comma by its title', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            creditCard: { type: 'number', title: 'Credit card' },
+            'street, city': { type: 'string', title: 'Address' },
+          },
+          dependentRequired: { creditCard: ['street, city'] },
+        };
+        const { errors } = validator.validateFormData({ creditCard: 1 }, schema);
+        expect(errors).toHaveLength(1);
+        expect(errors[0].message).toEqual("must have property 'Address' when property 'Credit card' is present");
+      });
+      it('should name the properties of a draft-07 `dependencies` by their titles', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            creditCard: { type: 'number', title: 'Credit card' },
+            billingAddress: { type: 'string', title: 'Billing address' },
+          },
+          dependencies: { creditCard: ['billingAddress'] },
+        };
+        const { errors } = validator.validateFormData({ creditCard: 1 }, schema);
+        expect(errors[0].name).toEqual('dependencies');
+        expect(errors[0].message).toEqual(
+          "must have property 'Billing address' when property 'Credit card' is present",
+        );
+      });
+      it('should name nested properties by their titles', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { payment: creditCardSchema({ creditCard: 'Credit card', billingAddress: 'Billing address' }) },
+        };
+        const { errors, errorSchema } = validator.validateFormData({ payment: { creditCard: 1 } }, schema);
+        const errMessage = "must have property 'Billing address' when property 'Credit card' is present";
+        expect(errors[0].stack).toEqual(errMessage);
+        expect(errorSchema).toEqual({ payment: { billingAddress: { __errors: [errMessage] } } });
+      });
+      it('should not rename a title that matches another property key', () => {
+        const { errors } = validator.validateFormData(
+          { creditCard: 1 },
+          creditCardSchema({ creditCard: 'billingAddress', billingAddress: 'Billing address' }),
+        );
+        expect(errors[0].message).toEqual(
+          "must have property 'Billing address' when property 'billingAddress' is present",
+        );
+      });
+      it('should name the properties by their titles when Ajv is not verbose', () => {
+        const notVerbose = new AJV8Validator({ AjvClass: Ajv2019, ajvOptionsOverrides: { verbose: false } });
+        const { errors } = notVerbose.validateFormData(
+          { creditCard: 1 },
+          creditCardSchema({ creditCard: 'Credit card', billingAddress: 'Billing address' }),
+        );
+        expect(errors[0].message).toEqual(
+          "must have property 'Billing address' when property 'Credit card' is present",
+        );
+      });
+    });
   });
   describe('default options, with Ajv2020', () => {
     let validator: AJV8Validator;
