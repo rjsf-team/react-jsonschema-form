@@ -190,6 +190,41 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(fill(mixed)).toStrictEqual({ a: 1, b: 2 });
       });
+      it("keeps the extra keys a nested object's data and default hold under an ancestor's const, under constAsDefaults: 'always'", () => {
+        const always: DefaultFormStateBehavior = { constAsDefaults: 'always' };
+        const open: RJSFSchema = { type: 'object', additionalProperties: { type: 'number' } };
+        const nested: RJSFSchema = { type: 'object', const: { k: { x: 1 } }, properties: { k: open } };
+        for (const initialDefaultsGenerated of [false, true]) {
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: always },
+              { schema: nested, formData: { k: { x: 1, y: 2 } }, initialDefaultsGenerated },
+            ),
+          ).toStrictEqual({ k: { x: 1, y: 2 } });
+        }
+        const withDefault: RJSFSchema = { ...nested, properties: { k: { ...open, default: { y: 5 } } } };
+        expect(fill(withDefault, always)).toStrictEqual({ k: { x: 1, y: 5 } });
+        // The object's own `const` still drops them
+        expect(
+          fill({ type: 'object', properties: { k: { ...open, const: { x: 1 } } } }, always, {
+            k: { x: 1, y: 2 },
+          }),
+        ).toStrictEqual({ k: { x: 1 } });
+      });
+      it("leaves out a key of an ancestor's const that the user removed where a nested object's allOf takes extra keys", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          const: { k: { x: 1 } },
+          properties: { k: { type: 'object', allOf: [{ additionalProperties: { type: 'number' } }] } },
+        };
+        expect(fill(schema)).toStrictEqual({ k: { x: 1 } });
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema, formData: { k: { y: 2 } }, initialDefaultsGenerated: true },
+          ),
+        ).toStrictEqual({ k: { y: 2 } });
+      });
       it("still takes the defaults beneath where constAsDefaults is 'never'", () => {
         const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
         expect(fill(declaredDefault, never)).toStrictEqual({ a: 2 });

@@ -2236,24 +2236,30 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
   const passes = props.passes ?? fieldPasses<S, F>(context, rootSchema, rawFormData);
+  // The object `const` the field defaults to itself
+  const ownObjectConst = (fieldConst ?? fieldConstOf<S, F>(context, view)).object;
   // An object `const` the field defaults to, its own or the value an ancestor's gives it. Where the fold leaves its value
   // out, it still closes the object to the keys it names, so a default of the object's for those keys is still seeded,
   // as the value it starts with
-  const objectConst =
-    (fieldConst ?? fieldConstOf<S, F>(context, view)).object ?? (isObjectData(givenConst) ? givenConst : undefined);
+  const objectConst = ownObjectConst ?? (isObjectData(givenConst) ? givenConst : undefined);
   // `ObjectField` asks whether the user can add a key of the field as it renders it, retrieved for the data, its `allOf`
   // and `if` merged. An option's `const` is not its parent's: the field that renders the option's extra keys, its
   // parent's or, where the option offers options of its own, the option's, asks it of the parent with the option's
-  // extra-key keywords joined to it. Only a `const` the field defaults to changes what is computed from the answer, so
-  // the retrieve and the join are spared every other field
-  const optionOf = objectConst === undefined ? undefined : props.optionOf;
+  // extra-key keywords joined to it. Only an object `const` changes what is computed from the answer: the field's own,
+  // or an ancestor's that names a key the field declares no property for, as only such a key is filled as an extra key.
+  // The retrieve and the join are spared every other field
+  const readsRenderedField =
+    ownObjectConst !== undefined ||
+    (objectConst !== undefined &&
+      Object.keys(objectConst).some((key) => !Object.hasOwn(view.schema.properties ?? {}, key)));
+  const optionOf = readsRenderedField ? props.optionOf : undefined;
   // The field as `SchemaField` retrieves it, for the data the fold reads, which the branch `null` fill reads as well
   const retrievedView = () => passes.retrievedViewOf(view);
   let extraKeysField = view.schema;
   if (optionOf) {
     extraKeysField = joinOptionExtraKeys<S>(optionOf.parent(), optionOf.option());
   } else if (
-    objectConst !== undefined &&
+    readsRenderedField &&
     !view.field.retrieves &&
     MERGING_KEYWORDS.some((keyword) => Object.hasOwn(view.schema, keyword))
   ) {
@@ -2262,16 +2268,18 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it, and only of an
   // object that stubs them or defaults to an object `const`, the two that need the answer
   const takesExtraKeys =
-    (view.stubs || objectConst !== undefined) && allowsAdditionalProperties<S, F>(context, extraKeysField);
+    (view.stubs || ownObjectConst !== undefined) && allowsAdditionalProperties<S, F>(context, extraKeysField);
   // A field resolved the way `retrieveSchema()` resolves a schema has the extra keys of its data stubbed among its
   // `properties`
   const schema =
     view.stubs && takesExtraKeys
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
-  // Under `constAsDefaults: 'always'` an object `const` takes precedence over the data, so an extra key it doesn't name
-  // is dropped, whether the object stubs it among its properties or computes it from its `additionalProperties`
-  const pinnedKeys = defaultFormStateBehavior?.constAsDefaults === 'always' ? objectConst : undefined;
+  // Under `constAsDefaults: 'always'` the object's own `const` takes precedence over the data, so an extra key it doesn't
+  // name is dropped, whether the object stubs it among its properties or computes it from its `additionalProperties`.
+  // An ancestor's `const` drops none: the field renders the controls that add the keys it doesn't name, so a key the
+  // user adds is theirs, as the keys of an array row under the same `const` are
+  const pinnedKeys = defaultFormStateBehavior?.constAsDefaults === 'always' ? ownObjectConst : undefined;
   const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
   const isDeclared = (key: string) => Object.hasOwn(schema.properties ?? {}, key);
   // A key of the `const` that a property of the field as rendered declares, of the option's as well for an option's
