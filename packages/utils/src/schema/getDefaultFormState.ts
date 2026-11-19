@@ -1718,6 +1718,18 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
                 defaultReplacesUndefined(defaultFormStateBehavior),
               );
         }
+        // A value a list of constants names none of is no value of the field, so its default replaces it, as it does
+        // for an `enum`. What the option gave in place of the data, its `const` under `constAsDefaults: 'always'` or
+        // over a `NaN`, is one the list names
+        if (choice.offersConstants && shouldMergeDefaultsIntoFormData && rawFormData !== undefined) {
+          const fieldDefaults = ownDefaults();
+          if (
+            fieldDefaults !== undefined &&
+            viewFormDataMatching<unknown, S, F>(context, view, optionValue, fieldDefaults) === undefined
+          ) {
+            return fieldDefaults;
+          }
+        }
         return optionValue;
       }
       // Resolved here rather than by recursing into the option as a primitive select is, since the option's constant
@@ -1935,7 +1947,13 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   defaults: unknown,
   preferParentDefaults: boolean,
   props: FoldProps<T, S, F>,
-): { context: SchemaContext<S, F>; index: number; isWholeValue: boolean; wholeOptions: S[] | undefined } {
+): {
+  context: SchemaContext<S, F>;
+  index: number;
+  isWholeValue: boolean;
+  offersConstants: boolean;
+  wholeOptions: S[] | undefined;
+} {
   const { defaultFormStateBehavior } = context;
   const { schema } = view;
   const rootSchema = view.graph.rawRoot;
@@ -1946,7 +1964,8 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const select = resolveDeclaredConstantOptions<S>(schema, () => view);
   const isWholeValue = isWholeValueSelect<S>(select);
   const constants = getXxxOfOptions<S>(select)?.options;
-  const wholeOptions = isWholeValue && isConstantOptionList<S>(constants) ? constants : undefined;
+  const offersConstants = isConstantOptionList<S>(constants);
+  const wholeOptions = isWholeValue && offersConstants ? constants : undefined;
   const picksWholeOption = wholeOptions !== undefined;
   // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips,
   // unless it is empty, which counts as no option list here as it does for the keyword read
@@ -1993,7 +2012,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
           getDiscriminatorFieldFromSchema<S>(schema),
           { seeding: view, keyword: key },
         );
-  return { context: optionContext, index, isWholeValue, wholeOptions };
+  return { context: optionContext, index, isWholeValue, offersConstants, wholeOptions };
 }
 
 /** Computes the defaults of a field from the option at `index` of the options it offers. An object renders its own
@@ -4234,22 +4253,9 @@ function matchProperties<S extends StrictRJSFSchema, F extends FormContextType>(
         // A `null` default is a default like any other, so only a missing one falls through. The property's own
         // default sits in the merge the fold left out, whose defaults are skipped
         const objectDefault = readPropertyDefaults();
-        // A select whose own `anyOf`/`oneOf`, resolved, offers constants keeps a value that is no object it doesn't
-        // offer, as the fold keeps it for a property the object declares under the default `constAsDefaults`, where an
-        // `enum` with no such options takes the object's default
+        // A value that is no object is kept where there is no default to take its place, as the fold keeps it
         const kept = isObjectData(matched[key]) ? undefined : matched[key];
-        const keepsValue =
-          kept !== undefined &&
-          isSchemaObject<S>(readProperty) &&
-          isConstantOptionList<S>(
-            getXxxOfOptions<S>(
-              resolveDeclaredConstantOptions<S>(readProperty, () => ({
-                graph: propertyField().graph,
-                chains: chainsOfProperty(),
-              })),
-            )?.options,
-          );
-        value = keepsValue || objectDefault === undefined ? kept : objectDefault;
+        value = objectDefault === undefined ? kept : objectDefault;
       }
       if (value === undefined) {
         Reflect.deleteProperty(changed(), key);

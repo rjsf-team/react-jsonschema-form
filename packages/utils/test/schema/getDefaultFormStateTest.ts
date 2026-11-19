@@ -3900,6 +3900,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { c: 'red' },
           ],
           [
+            "replaces a value outside the oneOf constants of a property declared inside the allOf with the field's default, as the enum does",
+            {
+              allOf: [{ type: 'object', properties: { c: { oneOf: [{ const: 'red' }, { const: 'green' }] } } }],
+              default: { c: 'red' },
+            },
+            { c: 'purple' },
+            { c: 'red' },
+          ],
+          [
             'keeps a value outside the enum nested in a $ref property declared inside the allOf, whose default skipDefaults skips',
             { allOf: [{ properties: { n: { $ref: '#/definitions/Nested' } } }] },
             { n: { q: 'z' }, d: 1 },
@@ -3985,10 +3994,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             null,
           ],
           [
-            "keeps a value outside a oneOf of constants, as the field's own oneOf does",
+            "replaces a value outside a oneOf of constants with the field's default, as the field's own oneOf does",
             { allOf: [{ oneOf: [{ const: 'red' }, { const: 'green' }] }], default: 'red' },
             'blue',
-            'blue',
+            'red',
           ],
           ['keeps a valid value of an inline object-valued select', { allOf: [SHAPE] }, { k: 'b' }, { k: 'b' }],
           [
@@ -4616,40 +4625,46 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
-        it.each<[string, DefaultFormStateBehavior, string | number | null, string]>([
-          ["the property's own", {}, 'red', 'green'],
-          ["the object's under ancestorWins", { nestedDefaultsPrecedence: 'ancestorWins' }, 'red', 'red'],
-          [
-            "the property's own under ancestorWins where its type can't hold the object's number",
-            { nestedDefaultsPrecedence: 'ancestorWins' },
-            5,
-            'green',
-          ],
-          [
-            "the property's own under ancestorWins where its type can't hold the object's null",
-            { nestedDefaultsPrecedence: 'ancestorWins' },
-            null,
-            'green',
-          ],
-        ])(
-          "replaces a value outside the enum of a key an object's allOf declares with the object's default, where its own property takes %s default",
-          (_name, behavior, objectDefault, expected) => {
-            const c: RJSFSchema = { type: 'string', enum: ['red', 'green'], default: 'green' };
-            const schema: RJSFSchema = {
-              type: 'object',
-              properties: {
-                own: { type: 'object', default: { c: objectDefault }, properties: { c } },
-                wrapped: { type: 'object', default: { c: objectDefault }, allOf: [{ properties: { c } }] },
-              },
-            };
-            expect(
-              getDefaultFormState(
-                { validator: testValidator, defaultFormStateBehavior: behavior },
-                { schema, formData: { own: { c: 'zz' }, wrapped: { c: 'zz' } } },
-              ),
-            ).toStrictEqual({ own: { c: expected }, wrapped: { c: objectDefault } });
-          },
-        );
+        describe.each<[string, RJSFSchema]>([
+          ['the enum', { enum: ['red', 'green'] }],
+          ['the anyOf constants', { anyOf: [{ const: 'red' }, { const: 'green' }] }],
+          ['the oneOf constants', { oneOf: [{ const: 'red' }, { const: 'green' }] }],
+        ])('%s', (list, options) => {
+          it.each<[string, DefaultFormStateBehavior, string | number | null, string]>([
+            ["the property's own", {}, 'red', 'green'],
+            ["the object's under ancestorWins", { nestedDefaultsPrecedence: 'ancestorWins' }, 'red', 'red'],
+            [
+              "the property's own under ancestorWins where its type can't hold the object's number",
+              { nestedDefaultsPrecedence: 'ancestorWins' },
+              5,
+              'green',
+            ],
+            [
+              "the property's own under ancestorWins where its type can't hold the object's null",
+              { nestedDefaultsPrecedence: 'ancestorWins' },
+              null,
+              'green',
+            ],
+          ])(
+            `replaces a value outside ${list} of a key an object's allOf declares with the object's default, where its own property takes %s default`,
+            (_name, behavior, objectDefault, expected) => {
+              const c: RJSFSchema = { type: 'string', ...options, default: 'green' };
+              const schema: RJSFSchema = {
+                type: 'object',
+                properties: {
+                  own: { type: 'object', default: { c: objectDefault }, properties: { c } },
+                  wrapped: { type: 'object', default: { c: objectDefault }, allOf: [{ properties: { c } }] },
+                },
+              };
+              expect(
+                getDefaultFormState(
+                  { validator: testValidator, defaultFormStateBehavior: behavior },
+                  { schema, formData: { own: { c: 'zz' }, wrapped: { c: 'zz' } } },
+                ),
+              ).toStrictEqual({ own: { c: expected }, wrapped: { c: objectDefault } });
+            },
+          );
+        });
 
         it.each<[string, DefaultFormStateBehavior, boolean, RJSFSchema]>([
           ['anyOf', {}, false, {}],
@@ -4659,7 +4674,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ['anyOf', {}, false, { enum: ['red', 'green'] }],
           ['oneOf', {}, true, { enum: ['red', 'green'] }],
         ])(
-          "keeps a value the %s constants of a key an object's allOf declares don't offer, as for its own property, under %j, initialDefaultsGenerated %s, beside %j",
+          "replaces a value the %s constants of a property don't offer with its default, and keeps it for a key an object's allOf declares, whose own default skipDefaults skips, under %j, initialDefaultsGenerated %s, beside %j",
           (keyword, behavior, initialDefaultsGenerated, beside) => {
             const c: RJSFSchema = {
               type: 'string',
@@ -4681,11 +4696,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 { validator: testValidator, defaultFormStateBehavior: behavior },
                 { schema, formData: { own: value, wrapped: value }, initialDefaultsGenerated },
               ),
-            ).toStrictEqual({ own: value, wrapped: value });
+            ).toStrictEqual({ own: { c: 'green', x: { c: 'green' } }, wrapped: value });
           },
         );
 
-        it("keeps a value the $ref'd constants of a key an object's allOf declares don't offer, as for its own property", () => {
+        it("replaces a value the $ref'd constants of a property don't offer with its default, and keeps it for a key an object's allOf declares, whose own default skipDefaults skips", () => {
           const c: RJSFSchema = {
             type: 'string',
             anyOf: [{ $ref: '#/definitions/Red' }, { $ref: '#/definitions/Green' }],
@@ -4704,7 +4719,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { validator: testValidator },
               { schema, formData: { own: { c: 'zz' }, wrapped: { c: 'zz' } } },
             ),
-          ).toStrictEqual({ own: { c: 'zz' }, wrapped: { c: 'zz' } });
+          ).toStrictEqual({ own: { c: 'green' }, wrapped: { c: 'zz' } });
         });
 
         it.each<[string, RJSFSchema]>([
@@ -5687,6 +5702,49 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(
               getObjectDefaults({ validator: testValidator, defaultFormStateBehavior }, schema, { rootSchema: schema }),
             ).toEqual(expected);
+          });
+        });
+      });
+
+      describe('a oneOf or anyOf of scalar constants, as an enum', () => {
+        const list = (keyword: 'oneOf' | 'anyOf'): RJSFSchema => ({
+          [keyword]: [{ const: 'red' }, { const: 'green' }],
+        });
+        const cases: [string, RJSFSchema, DefaultFormStateBehavior][] = [
+          ["the field's own oneOf", { type: 'string', ...list('oneOf') }, {}],
+          ["the field's own anyOf", { type: 'string', ...list('anyOf') }, {}],
+          ["a oneOf the field's allOf brings in, under skipDefaults", { allOf: [list('oneOf')] }, {}],
+          [
+            "a oneOf the field's allOf brings in, under populateDefaults",
+            { allOf: [list('oneOf')] },
+            { allOf: 'populateDefaults' },
+          ],
+          ["an anyOf the field's allOf brings in, under skipDefaults", { allOf: [list('anyOf')] }, {}],
+        ];
+        it.each(cases)("replaces a value outside %s with the field's default", (_name, field, behavior) => {
+          const color: RJSFSchema = { ...field, default: 'red' };
+          const context = { validator: testValidator, defaultFormStateBehavior: behavior };
+          expect(getDefaultFormState(context, { schema: color, formData: 'blue' })).toBe('red');
+          const schema: RJSFSchema = { type: 'object', properties: { color } };
+          expect(getDefaultFormState(context, { schema, formData: { color: 'blue' } })).toStrictEqual({
+            color: 'red',
+          });
+        });
+        it.each(cases)('keeps a value outside %s where the field has no default', (_name, color, behavior) => {
+          const context = { validator: testValidator, defaultFormStateBehavior: behavior };
+          expect(getDefaultFormState(context, { schema: color, formData: 'blue' })).toBe('blue');
+          const schema: RJSFSchema = { type: 'object', properties: { color } };
+          expect(getDefaultFormState(context, { schema, formData: { color: 'blue' } })).toStrictEqual({
+            color: 'blue',
+          });
+        });
+        it.each(cases)('keeps a value %s offers', (_name, field, behavior) => {
+          const color: RJSFSchema = { ...field, default: 'red' };
+          const context = { validator: testValidator, defaultFormStateBehavior: behavior };
+          expect(getDefaultFormState(context, { schema: color, formData: 'green' })).toBe('green');
+          const schema: RJSFSchema = { type: 'object', properties: { color } };
+          expect(getDefaultFormState(context, { schema, formData: { color: 'green' } })).toStrictEqual({
+            color: 'green',
           });
         });
       });
