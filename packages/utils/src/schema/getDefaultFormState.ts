@@ -1591,7 +1591,14 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const ownDefaults = (): unknown => {
     const ownDefault = ownValue(schema.default);
     if (isObject(defaults) && isObject(ownDefault) && !isWholeValueField<S, F>(context, view)) {
-      return preferParentDefaults ? mergeObjects(ownDefault, defaults) : mergeObjects(defaults, ownDefault);
+      if (!preferParentDefaults) {
+        return mergeObjects(defaults, ownDefault);
+      }
+      // A value an ancestor's `const` gives wins as an ancestor's default does under `ancestorWins`, but keeps the order
+      // of keys the inherited defaults have under `descendantWins`, the setting's
+      return defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins'
+        ? mergeObjects(ownDefault, defaults)
+        : mergeObjects(mergeObjects(defaults, ownDefault), defaults);
     }
     return DEFAULT_KEY in schema && !preferParentDefaults ? ownDefault : defaults;
   };

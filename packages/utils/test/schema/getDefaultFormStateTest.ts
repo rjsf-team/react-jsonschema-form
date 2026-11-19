@@ -225,6 +225,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ),
         ).toStrictEqual({ k: { y: 2 } });
       });
+      it("keeps the order of keys the defaults have where an ancestor's const meets a nested default", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          const: { k: { x: 1, n: { a: 1 } } },
+          properties: {
+            k: { type: 'object', additionalProperties: true, default: { y: 5, n: { b: 2, a: 3 }, x: 4 } },
+          },
+        };
+        const filled = fill(schema);
+        expect(filled).toStrictEqual({ k: { x: 1, n: { a: 1, b: 2 }, y: 5 } });
+        expect(isObject(filled) && isObject(filled.k) && Object.keys(filled.k)).toStrictEqual(['x', 'n', 'y']);
+      });
       it.each<[string, RJSFSchema]>([
         [
           "an ancestor's const",
