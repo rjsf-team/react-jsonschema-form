@@ -17,6 +17,7 @@ import {
   RJSF_REF_KEY,
   THEN_KEY,
 } from '../../constants.ts';
+import type { UNEVALUATED_PROPERTIES_KEY } from '../../constants.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
@@ -1272,7 +1273,7 @@ function patternSeeds<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, chain: 
 export function extraKeySeeds<S extends StrictRJSFSchema = RJSFSchema>(
   { graph, chains }: Seeding<S>,
   key: string,
-  keyword: string = ADDITIONAL_PROPERTIES_KEY,
+  keyword: typeof ADDITIONAL_PROPERTIES_KEY | typeof UNEVALUATED_PROPERTIES_KEY = ADDITIONAL_PROPERTIES_KEY,
 ): { seeds: readonly Seed[]; edge: 'patternKey' | 'additionalKey' } {
   let patterned = false;
   const seeds = chains.flatMap((chain) => {

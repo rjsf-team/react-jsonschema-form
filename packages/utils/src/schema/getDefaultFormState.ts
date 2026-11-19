@@ -1591,14 +1591,16 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const ownDefaults = (): unknown => {
     const ownDefault = ownValue(schema.default);
     if (isObject(defaults) && isObject(ownDefault) && !isWholeValueField<S, F>(context, view)) {
-      if (!preferParentDefaults) {
-        return mergeObjects(defaults, ownDefault);
+      if (preferParentDefaults && defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins') {
+        return mergeObjects(ownDefault, defaults);
       }
-      // A value an ancestor's `const` gives wins as an ancestor's default does under `ancestorWins`, but keeps the order
-      // of keys the inherited defaults have under `descendantWins`, the setting's
-      return defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins'
-        ? mergeObjects(ownDefault, defaults)
-        : mergeObjects(mergeObjects(defaults, ownDefault), defaults);
+      // Under `descendantWins` only the value an ancestor's `const` gives wins over the field's own default: the own
+      // default still wins over the inherited defaults beside it, and the order of keys the inherited defaults have is
+      // kept
+      const merged = mergeObjects(defaults, ownDefault);
+      return preferParentDefaults && isObject(inputProps.parentConst)
+        ? mergeObjects(merged, inputProps.parentConst)
+        : merged;
     }
     return DEFAULT_KEY in schema && !preferParentDefaults ? ownDefault : defaults;
   };
@@ -1650,14 +1652,24 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         );
         // Under the object's own `const`, or the value an ancestor's gives it, a key only the option declares, which the
         // `const` doesn't name and the data doesn't hold, is left out: its default would make the object a value the
-        // `const` rejects. A key the `ui:initialValue` names is kept, since that value stands in the `const`'s place
+        // `const` rejects. A key the `ui:initialValue` names is kept, since that value stands in the `const`'s place, and
+        // under an ancestor's `const` so is a key of the defaults the field inherits or declares, as beside no options
         const givenObjectConst =
-          preferParentDefaults && isObjectData(props.parentConst) ? props.parentConst : undefined;
-        const closingValue = foldsOptionUnderConst ? constSchema[CONST_KEY] : givenObjectConst;
+          !foldsOptionUnderConst && preferParentDefaults && isObjectData(props.parentConst)
+            ? props.parentConst
+            : undefined;
+        const keeping = foldsOptionUnderConst
+          ? [constSchema[CONST_KEY], schema.properties, rawFormData, initialValue]
+          : givenObjectConst && [
+              givenObjectConst,
+              schema.properties,
+              rawFormData,
+              getUiOptions<T, S, F>(uiSchema).initialValue,
+              defaults,
+              schema.default,
+            ];
         const optionValue =
-          closingValue !== undefined && isObjectData(foldedOption)
-            ? withoutKeysOutside(foldedOption, [closingValue, schema.properties, rawFormData, initialValue])
-            : foldedOption;
+          keeping && isObjectData(foldedOption) ? withoutKeysOutside(foldedOption, keeping) : foldedOption;
         // Data the field takes is its own even where the option it renders through holds none of it, as an option with
         // no value, or one that is no object or takes no object, holds none of object data. Its defaults are merged
         // beneath the data, as an object field's are
@@ -2631,7 +2643,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const additionalProperties =
     extraKeysField !== view.schema ? passes.shareExtraKeySchema(ownAdditionalProperties) : ownAdditionalProperties;
   // An extra key is folded through the schemas that apply to it, as a validator applies them: in each chain, the
-  // patterns of its own its name matches, else its `additionalProperties`, else its `unevaluatedProperties`.
+  // patterns of its own its name matches, else the keyword the object reads for the rest, its `additionalProperties`,
+  // or its `unevaluatedProperties` where it names none.
   // A key the object rejects, a `false` among them, has no field, nor does one no pattern matches where no keyword
   // describes it and the context reads the absence as forbidding it, which `omitExtraData` prunes, unless the object's
   // `const` names it. The join of an option's keywords to its parent's isn't among the chains the key is seeded from,

@@ -181,6 +181,52 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
         expect(fill({ type: 'object', properties: { o: option } })).toStrictEqual({ o: { q: 'd' } });
       });
+      it("keeps the keys of a ui:initialValue and of the field's own default beside the shown option under an ancestor's const", () => {
+        const option: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'number' } },
+          additionalProperties: { type: 'number' },
+          oneOf: [{ properties: { q: { type: 'string' } } }],
+        };
+        const uiSchema: UiSchema = { o: { 'ui:initialValue': { a: 1, q: 'z' } } };
+        for (const schema of [
+          { type: 'object', const: { o: { a: 1 } }, properties: { o: option } },
+          { type: 'object', properties: { o: { ...option, const: { a: 1 } } } },
+        ] satisfies RJSFSchema[]) {
+          expect(getDefaultFormState({ validator: testValidator }, { schema, uiSchema })).toStrictEqual({
+            o: { a: 1, q: 'z' },
+          });
+        }
+        // As the same field keeps them beside no options
+        const ownDefault: RJSFSchema = { ...option, default: { z: 9 } };
+        expect(fill({ type: 'object', const: { o: { a: 1 } }, properties: { o: ownDefault } })).toStrictEqual({
+          o: { a: 1, z: 9 },
+        });
+        expect(
+          fill({ type: 'object', const: { o: { a: 1 } }, properties: { o: { ...ownDefault, oneOf: undefined } } }),
+        ).toStrictEqual({ o: { a: 1, z: 9 } });
+      });
+      it("keeps a field's own default over the default of an object between it and the const, for a key the const doesn't name", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          const: { p: { q: { a: 1 } } },
+          properties: {
+            p: {
+              type: 'object',
+              default: { q: { b: 2 } },
+              properties: {
+                q: {
+                  type: 'object',
+                  default: { a: 3, b: 4 },
+                  properties: { a: { type: 'number' }, b: { type: 'number' } },
+                },
+              },
+            },
+          },
+        };
+        expect(fill(schema)).toStrictEqual({ p: { q: { a: 1, b: 4 } } });
+        expect(fill(schema, { nestedDefaultsPrecedence: 'ancestorWins' })).toStrictEqual({ p: { q: { a: 1, b: 2 } } });
+      });
       it('gives a declared key and an extra key the const alike', () => {
         const mixed: RJSFSchema = {
           type: 'object',
