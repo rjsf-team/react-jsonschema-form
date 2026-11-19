@@ -1123,6 +1123,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `disabled`: A boolean value stating if the object is disabled.
 - `properties`: An array of object representing the properties in the object. Each of the properties represent a child with properties described below.
 - `onAddProperty: () => void`: Callback to use in order to add an new additionalProperty to the object field (to be used with additionalProperties and patternProperties)
+- `addButtonProps`: Props to spread onto the object's `AddButton`, `{ title }`, which title it after the object's title or name, such as `Add Address`; undefined when the object has neither, or when `translateString` gives an empty `TranslatableString.AddNamedButton`.
 - `readonly`: A boolean value stating if the object is read-only.
 - `required`: A boolean value stating if the object's heading carries the required marker: where the object is required, unless a field above rendering the same id draws the marked label, as an `anyOf`/`oneOf` field does for its option.
 - `hideError`: A boolean value stating if the field is hiding its errors.
@@ -1411,6 +1412,7 @@ Each button template (except for the `SubmitButton`) accepts, as props, the stan
 ### AddButton
 
 The `AddButton` is used to render an add action on a `Form` for both a new `additionalProperties` or `patternProperties` element for an object or a new element in an array.
+An expandable object's `AddButton` is passed a `title` naming the object, such as `Add Address`; an array's is passed none.
 You can customize the `AddButton` to render something other than the icon button that is provided by a theme as follows:
 
 ```tsx

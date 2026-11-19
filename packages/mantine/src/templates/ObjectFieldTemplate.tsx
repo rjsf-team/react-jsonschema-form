@@ -37,6 +37,7 @@ export default function ObjectFieldTemplate<
     disabled,
     properties,
     optionalDataControl,
+    addButtonProps,
     onAddProperty,
     readonly,
     required,
@@ -101,6 +102,7 @@ export default function ObjectFieldTemplate<
             id={buttonId(id, 'add')}
             disabled={disabled || readonly}
             onClick={onAddProperty}
+            {...addButtonProps}
             className='rjsf-object-property-expand'
             uiSchema={uiSchema}
             registry={registry}

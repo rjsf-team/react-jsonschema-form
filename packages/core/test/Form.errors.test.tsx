@@ -458,7 +458,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         // Submitting without clicking the button, which would take focus itself, so focus left in place stays on the body
         await submitForm(node, user, true);
 
-        expect(screen.getByRole('button', { name: 'Add' })).not.toHaveFocus();
+        expect(screen.getByRole('button', { name: 'Add Item' })).not.toHaveFocus();
         expect(document.body).toHaveFocus();
       });
 
@@ -1776,7 +1776,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           initialFormData: { pet: { color: 'g', list: ['x'] } },
         });
 
-        await user.click(node.querySelector<HTMLButtonElement>('button[title="Add"]')!);
+        await user.click(node.querySelector<HTMLButtonElement>('button[title="Add Item"]')!);
 
         expect(getFormData()).toEqual({ pet: { color: 'r', list: ['x', undefined] } });
       });
@@ -1844,7 +1844,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         });
 
         // The array write changes nothing a conditional reads, so no field's constraints change
-        await user.click(node.querySelector<HTMLButtonElement>('button[title="Add"]')!);
+        await user.click(node.querySelector<HTMLButtonElement>('button[title="Add Item"]')!);
         await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
 
         expect(getFormData()).toEqual({ list: [null, null, undefined], name: 'n' });

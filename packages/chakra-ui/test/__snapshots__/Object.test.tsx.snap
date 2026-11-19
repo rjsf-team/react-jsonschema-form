@@ -896,8 +896,12 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
   font-size: 1.2em;
 }
 
+.emotion-24 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-23 {
+  .emotion-25 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -945,19 +949,19 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-23:is(:focus-visible, [data-focus-visible]) {
+  .emotion-25:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-25:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-23 :where(svg) {
+  .emotion-25 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -965,23 +969,19 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-25:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-25:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-24 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1169,8 +1169,10 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 class="emotion-20"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-23"
+                  aria-label="Add Item"
+                  class="chakra-button rjsf-object-property-expand emotion-21"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -1193,7 +1195,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -1205,7 +1206,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
       class="emotion-24"
     >
       <button
-        class="chakra-button emotion-23"
+        class="chakra-button emotion-25"
         type="submit"
       >
         Submit
@@ -1685,8 +1686,12 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
   margin-top: var(--chakra-spacing-2);
 }
 
+.emotion-54 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-53 {
+  .emotion-55 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -1734,19 +1739,19 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-53:is(:focus-visible, [data-focus-visible]) {
+  .emotion-55:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-53:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-55:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-53 :where(svg) {
+  .emotion-55 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -1754,23 +1759,19 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-53:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-55:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-53:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-55:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-54 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -2317,8 +2318,10 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               class="emotion-52"
                             >
                               <button
-                                class="chakra-button rjsf-array-item-add emotion-53"
+                                aria-label="Add Item"
+                                class="chakra-button rjsf-array-item-add emotion-36"
                                 id="root_tags__add"
+                                title="Add Item"
                                 type="button"
                               >
                                 <svg
@@ -2341,7 +2344,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                     d="M12 5v14"
                                   />
                                 </svg>
-                                Add Item
                               </button>
                             </div>
                           </div>
@@ -2360,7 +2362,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
       class="emotion-54"
     >
       <button
-        class="chakra-button emotion-53"
+        class="chakra-button emotion-55"
         type="submit"
       >
         Submit
@@ -3665,8 +3667,12 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
   margin-top: var(--chakra-spacing-2);
 }
 
+.emotion-47 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-46 {
+  .emotion-48 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -3714,19 +3720,19 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-46:is(:focus-visible, [data-focus-visible]) {
+  .emotion-48:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-46:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-48:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-46 :where(svg) {
+  .emotion-48 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -3734,23 +3740,19 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-46:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-48:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-46:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-48:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-47 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -4221,8 +4223,10 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               class="emotion-45"
                             >
                               <button
-                                class="chakra-button rjsf-array-item-add emotion-46"
+                                aria-label="Add Item"
+                                class="chakra-button rjsf-array-item-add emotion-29"
                                 id="root_items__add"
+                                title="Add Item"
                                 type="button"
                               >
                                 <svg
@@ -4245,7 +4249,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                     d="M12 5v14"
                                   />
                                 </svg>
-                                Add Item
                               </button>
                             </div>
                           </div>
@@ -4264,7 +4267,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
       class="emotion-47"
     >
       <button
-        class="chakra-button emotion-46"
+        class="chakra-button emotion-48"
         type="submit"
       >
         Submit
@@ -5016,8 +5019,12 @@ exports[`object fields > additionalProperties 1`] = `
   font-size: 1.2em;
 }
 
+.emotion-19 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-18 {
+  .emotion-20 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -5065,19 +5072,19 @@ exports[`object fields > additionalProperties 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-18 :where(svg) {
+  .emotion-20 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -5085,23 +5092,19 @@ exports[`object fields > additionalProperties 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-19 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -5245,8 +5248,10 @@ exports[`object fields > additionalProperties 1`] = `
                 class="emotion-15"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-18"
+                  aria-label="Add Item"
+                  class="chakra-button rjsf-object-property-expand emotion-16"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -5269,7 +5274,6 @@ exports[`object fields > additionalProperties 1`] = `
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -5281,7 +5285,7 @@ exports[`object fields > additionalProperties 1`] = `
       class="emotion-19"
     >
       <button
-        class="chakra-button emotion-18"
+        class="chakra-button emotion-20"
         type="submit"
       >
         Submit
@@ -5893,8 +5897,12 @@ exports[`object fields > additionalProperties with a description, propertyNames 
   font-size: 1.2em;
 }
 
+.emotion-38 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-37 {
+  .emotion-39 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -5942,19 +5950,19 @@ exports[`object fields > additionalProperties with a description, propertyNames 
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-37:is(:focus-visible, [data-focus-visible]) {
+  .emotion-39:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-37:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-39:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-37 :where(svg) {
+  .emotion-39 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -5962,23 +5970,19 @@ exports[`object fields > additionalProperties with a description, propertyNames 
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-37:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-39:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-37:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-39:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-38 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -6326,8 +6330,10 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 class="emotion-34"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-37"
+                  aria-label="Add Item"
+                  class="chakra-button rjsf-object-property-expand emotion-35"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -6350,7 +6356,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -6362,7 +6367,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
       class="emotion-38"
     >
       <button
-        class="chakra-button emotion-37"
+        class="chakra-button emotion-39"
         type="submit"
       >
         Submit
@@ -6571,6 +6576,11 @@ exports[`object fields > additionalProperties, array type 1`] = `
   margin-top: var(--chakra-spacing-2);
 }
 
+.emotion-18 {
+  padding-inline: 0;
+  padding-block: 0;
+}
+
 @layer recipes {
   .emotion-18 {
     display: -webkit-inline-box;
@@ -6655,13 +6665,16 @@ exports[`object fields > additionalProperties, array type 1`] = `
   }
 }
 
-.emotion-20 {
-  padding-inline: 0;
-  padding-block: 0;
+.emotion-18 :where(svg) {
+  font-size: 1.2em;
+}
+
+.emotion-23 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-20 {
+  .emotion-24 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -6709,19 +6722,19 @@ exports[`object fields > additionalProperties, array type 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-20:is(:focus-visible, [data-focus-visible]) {
+  .emotion-24:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-24:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-20 :where(svg) {
+  .emotion-24 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -6729,27 +6742,19 @@ exports[`object fields > additionalProperties, array type 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-24:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-24:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-20 :where(svg) {
-  font-size: 1.2em;
-}
-
-.emotion-23 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -6855,8 +6860,10 @@ exports[`object fields > additionalProperties, array type 1`] = `
                                 class="emotion-17"
                               >
                                 <button
+                                  aria-label="Add Item"
                                   class="chakra-button rjsf-array-item-add emotion-18"
                                   id="root_foo__add"
+                                  title="Add Item"
                                   type="button"
                                 >
                                   <svg
@@ -6879,7 +6886,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                                       d="M12 5v14"
                                     />
                                   </svg>
-                                  Add Item
                                 </button>
                               </div>
                             </div>
@@ -6894,7 +6900,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   >
                     <button
                       aria-label="Remove"
-                      class="chakra-button rjsf-object-property-remove emotion-20"
+                      class="chakra-button rjsf-object-property-remove emotion-18"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
@@ -6930,8 +6936,10 @@ exports[`object fields > additionalProperties, array type 1`] = `
                 class="emotion-16"
               >
                 <button
+                  aria-label="Add Item"
                   class="chakra-button rjsf-object-property-expand emotion-18"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -6954,7 +6962,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -6966,7 +6973,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
       class="emotion-23"
     >
       <button
-        class="chakra-button emotion-18"
+        class="chakra-button emotion-24"
         type="submit"
       >
         Submit
@@ -7325,8 +7332,12 @@ exports[`object fields > additionalProperties, description 1`] = `
   font-size: 1.2em;
 }
 
+.emotion-21 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-20 {
+  .emotion-22 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -7374,19 +7385,19 @@ exports[`object fields > additionalProperties, description 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-20:is(:focus-visible, [data-focus-visible]) {
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-20 :where(svg) {
+  .emotion-22 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -7394,23 +7405,19 @@ exports[`object fields > additionalProperties, description 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-21 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -7569,8 +7576,10 @@ exports[`object fields > additionalProperties, description 1`] = `
                 class="emotion-17"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-20"
+                  aria-label="Add Item"
+                  class="chakra-button rjsf-object-property-expand emotion-18"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -7593,7 +7602,6 @@ exports[`object fields > additionalProperties, description 1`] = `
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -7605,7 +7613,7 @@ exports[`object fields > additionalProperties, description 1`] = `
       class="emotion-21"
     >
       <button
-        class="chakra-button emotion-20"
+        class="chakra-button emotion-22"
         type="submit"
       >
         Submit
@@ -7943,8 +7951,12 @@ exports[`object fields > additionalProperties, label off 1`] = `
   font-size: 1.2em;
 }
 
+.emotion-19 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-18 {
+  .emotion-20 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -7992,19 +8004,19 @@ exports[`object fields > additionalProperties, label off 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-18 :where(svg) {
+  .emotion-20 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -8012,23 +8024,19 @@ exports[`object fields > additionalProperties, label off 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-19 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -8172,8 +8180,10 @@ exports[`object fields > additionalProperties, label off 1`] = `
                 class="emotion-15"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-18"
+                  aria-label="Add Item"
+                  class="chakra-button rjsf-object-property-expand emotion-16"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -8196,7 +8206,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -8208,7 +8217,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
       class="emotion-19"
     >
       <button
-        class="chakra-button emotion-18"
+        class="chakra-button emotion-20"
         type="submit"
       >
         Submit
@@ -8570,8 +8579,12 @@ exports[`object fields > additionalProperties, object type 1`] = `
   font-size: 1.2em;
 }
 
+.emotion-26 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-25 {
+  .emotion-27 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -8619,19 +8632,19 @@ exports[`object fields > additionalProperties, object type 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-25:is(:focus-visible, [data-focus-visible]) {
+  .emotion-27:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-25:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-27:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-25 :where(svg) {
+  .emotion-27 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -8639,23 +8652,19 @@ exports[`object fields > additionalProperties, object type 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-25:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-27:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-25:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-27:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-26 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -8845,8 +8854,10 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 class="emotion-22"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-25"
+                  aria-label="Add Item"
+                  class="chakra-button rjsf-object-property-expand emotion-23"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -8869,7 +8880,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -8881,7 +8891,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
       class="emotion-26"
     >
       <button
-        class="chakra-button emotion-25"
+        class="chakra-button emotion-27"
         type="submit"
       >
         Submit
@@ -9472,8 +9482,12 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
   font-size: 1.2em;
 }
 
+.emotion-36 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-35 {
+  .emotion-37 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -9521,19 +9535,19 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-35:is(:focus-visible, [data-focus-visible]) {
+  .emotion-37:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-35:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-37:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-35 :where(svg) {
+  .emotion-37 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -9541,23 +9555,19 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-35:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-37:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-35:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-37:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-36 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -9890,8 +9900,10 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                 class="emotion-32"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-35"
+                  aria-label="Add Item"
+                  class="chakra-button rjsf-object-property-expand emotion-33"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -9914,7 +9926,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -9926,7 +9937,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
       class="emotion-36"
     >
       <button
-        class="chakra-button emotion-35"
+        class="chakra-button emotion-37"
         type="submit"
       >
         Submit
@@ -10517,8 +10528,12 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
   font-size: 1.2em;
 }
 
+.emotion-36 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-35 {
+  .emotion-37 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -10566,19 +10581,19 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-35:is(:focus-visible, [data-focus-visible]) {
+  .emotion-37:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-35:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-37:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-35 :where(svg) {
+  .emotion-37 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -10586,23 +10601,19 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-35:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-37:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-35:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-37:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-36 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -10935,8 +10946,10 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                 class="emotion-32"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-35"
+                  aria-label="Add Item"
+                  class="chakra-button rjsf-object-property-expand emotion-33"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -10959,7 +10972,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -10971,7 +10983,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
       class="emotion-36"
     >
       <button
-        class="chakra-button emotion-35"
+        class="chakra-button emotion-37"
         type="submit"
       >
         Submit
@@ -11730,8 +11742,12 @@ exports[`object fields > patternProperties, a key additionalProperties false for
   display: block;
 }
 
+.emotion-34 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-33 {
+  .emotion-35 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -11779,19 +11795,19 @@ exports[`object fields > patternProperties, a key additionalProperties false for
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-33:is(:focus-visible, [data-focus-visible]) {
+  .emotion-35:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-33:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-35:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-33 :where(svg) {
+  .emotion-35 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -11799,23 +11815,19 @@ exports[`object fields > patternProperties, a key additionalProperties false for
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-33:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-35:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-33:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-35:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-34 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -12086,8 +12098,10 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                 class="emotion-15"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-33"
+                  aria-label="Add Item"
+                  class="chakra-button rjsf-object-property-expand emotion-16"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -12110,7 +12124,6 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -12122,7 +12135,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
       class="emotion-34"
     >
       <button
-        class="chakra-button emotion-33"
+        class="chakra-button emotion-35"
         type="submit"
       >
         Submit
@@ -13405,8 +13418,12 @@ exports[`object fields > show add button and fields if additionalProperties is t
   font-size: 1.2em;
 }
 
+.emotion-19 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-18 {
+  .emotion-20 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -13454,19 +13471,19 @@ exports[`object fields > show add button and fields if additionalProperties is t
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-18 :where(svg) {
+  .emotion-20 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -13474,23 +13491,19 @@ exports[`object fields > show add button and fields if additionalProperties is t
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-19 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -13634,8 +13647,10 @@ exports[`object fields > show add button and fields if additionalProperties is t
                 class="emotion-15"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-18"
+                  aria-label="Add Item"
+                  class="chakra-button rjsf-object-property-expand emotion-16"
                   id="root__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -13658,7 +13673,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -13670,7 +13684,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
       class="emotion-19"
     >
       <button
-        class="chakra-button emotion-18"
+        class="chakra-button emotion-20"
         type="submit"
       >
         Submit
@@ -14036,8 +14050,12 @@ exports[`object fields > with title and description > additionalProperties 1`] =
   font-size: 1.2em;
 }
 
+.emotion-23 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-22 {
+  .emotion-24 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -14085,19 +14103,19 @@ exports[`object fields > with title and description > additionalProperties 1`] =
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+  .emotion-24:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-24:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-22 :where(svg) {
+  .emotion-24 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -14105,23 +14123,19 @@ exports[`object fields > with title and description > additionalProperties 1`] =
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-24:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-24:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-23 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -14291,8 +14305,10 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                 class="emotion-19"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-22"
+                  aria-label="Add Test field"
+                  class="chakra-button rjsf-object-property-expand emotion-20"
                   id="root__add"
+                  title="Add Test field"
                   type="button"
                 >
                   <svg
@@ -14315,7 +14331,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -14327,7 +14342,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
       class="emotion-23"
     >
       <button
-        class="chakra-button emotion-22"
+        class="chakra-button emotion-24"
         type="submit"
       >
         Submit
@@ -15162,8 +15177,12 @@ exports[`object fields > with title and description > show add button and fields
   font-size: 1.2em;
 }
 
+.emotion-23 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-22 {
+  .emotion-24 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -15211,19 +15230,19 @@ exports[`object fields > with title and description > show add button and fields
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+  .emotion-24:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-24:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-22 :where(svg) {
+  .emotion-24 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -15231,23 +15250,19 @@ exports[`object fields > with title and description > show add button and fields
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-24:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-24:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-23 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -15417,8 +15432,10 @@ exports[`object fields > with title and description > show add button and fields
                 class="emotion-19"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-22"
+                  aria-label="Add Test field"
+                  class="chakra-button rjsf-object-property-expand emotion-20"
                   id="root__add"
+                  title="Add Test field"
                   type="button"
                 >
                   <svg
@@ -15441,7 +15458,6 @@ exports[`object fields > with title and description > show add button and fields
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -15453,7 +15469,7 @@ exports[`object fields > with title and description > show add button and fields
       class="emotion-23"
     >
       <button
-        class="chakra-button emotion-22"
+        class="chakra-button emotion-24"
         type="submit"
       >
         Submit
@@ -15819,8 +15835,12 @@ exports[`object fields > with title and description from both > additionalProper
   font-size: 1.2em;
 }
 
+.emotion-23 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-22 {
+  .emotion-24 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -15868,19 +15888,19 @@ exports[`object fields > with title and description from both > additionalProper
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+  .emotion-24:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-24:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-22 :where(svg) {
+  .emotion-24 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -15888,23 +15908,19 @@ exports[`object fields > with title and description from both > additionalProper
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-24:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-24:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-23 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -16074,8 +16090,10 @@ exports[`object fields > with title and description from both > additionalProper
                 class="emotion-19"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-22"
+                  aria-label="Add My Field"
+                  class="chakra-button rjsf-object-property-expand emotion-20"
                   id="root__add"
+                  title="Add My Field"
                   type="button"
                 >
                   <svg
@@ -16098,7 +16116,6 @@ exports[`object fields > with title and description from both > additionalProper
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -16110,7 +16127,7 @@ exports[`object fields > with title and description from both > additionalProper
       class="emotion-23"
     >
       <button
-        class="chakra-button emotion-22"
+        class="chakra-button emotion-24"
         type="submit"
       >
         Submit
@@ -16945,8 +16962,12 @@ exports[`object fields > with title and description from uiSchema > additionalPr
   font-size: 1.2em;
 }
 
+.emotion-23 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-22 {
+  .emotion-24 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -16994,19 +17015,19 @@ exports[`object fields > with title and description from uiSchema > additionalPr
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+  .emotion-24:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-24:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-22 :where(svg) {
+  .emotion-24 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -17014,23 +17035,19 @@ exports[`object fields > with title and description from uiSchema > additionalPr
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-24:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-24:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-23 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -17200,8 +17217,10 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                 class="emotion-19"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-22"
+                  aria-label="Add My Field"
+                  class="chakra-button rjsf-object-property-expand emotion-20"
                   id="root__add"
+                  title="Add My Field"
                   type="button"
                 >
                   <svg
@@ -17224,7 +17243,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -17236,7 +17254,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
       class="emotion-23"
     >
       <button
-        class="chakra-button emotion-22"
+        class="chakra-button emotion-24"
         type="submit"
       >
         Submit
@@ -18071,8 +18089,12 @@ exports[`object fields > with title and description from uiSchema > show add but
   font-size: 1.2em;
 }
 
+.emotion-23 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-22 {
+  .emotion-24 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -18120,19 +18142,19 @@ exports[`object fields > with title and description from uiSchema > show add but
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+  .emotion-24:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-24:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-22 :where(svg) {
+  .emotion-24 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -18140,23 +18162,19 @@ exports[`object fields > with title and description from uiSchema > show add but
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-24:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-24:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-23 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -18326,8 +18344,10 @@ exports[`object fields > with title and description from uiSchema > show add but
                 class="emotion-19"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-22"
+                  aria-label="Add My Field"
+                  class="chakra-button rjsf-object-property-expand emotion-20"
                   id="root__add"
+                  title="Add My Field"
                   type="button"
                 >
                   <svg
@@ -18350,7 +18370,6 @@ exports[`object fields > with title and description from uiSchema > show add but
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -18362,7 +18381,7 @@ exports[`object fields > with title and description from uiSchema > show add but
       class="emotion-23"
     >
       <button
-        class="chakra-button emotion-22"
+        class="chakra-button emotion-24"
         type="submit"
       >
         Submit
@@ -18674,8 +18693,12 @@ exports[`object fields > with title and description with global label off > addi
   font-size: 1.2em;
 }
 
+.emotion-17 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-16 {
+  .emotion-18 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -18723,19 +18746,19 @@ exports[`object fields > with title and description with global label off > addi
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-16:is(:focus-visible, [data-focus-visible]) {
+  .emotion-18:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-16 :where(svg) {
+  .emotion-18 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -18743,23 +18766,19 @@ exports[`object fields > with title and description with global label off > addi
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-17 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -18886,8 +18905,10 @@ exports[`object fields > with title and description with global label off > addi
                 class="emotion-13"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-16"
+                  aria-label="Add Test field"
+                  class="chakra-button rjsf-object-property-expand emotion-14"
                   id="root__add"
+                  title="Add Test field"
                   type="button"
                 >
                   <svg
@@ -18910,7 +18931,6 @@ exports[`object fields > with title and description with global label off > addi
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -18922,7 +18942,7 @@ exports[`object fields > with title and description with global label off > addi
       class="emotion-17"
     >
       <button
-        class="chakra-button emotion-16"
+        class="chakra-button emotion-18"
         type="submit"
       >
         Submit
@@ -19562,8 +19582,12 @@ exports[`object fields > with title and description with global label off > show
   font-size: 1.2em;
 }
 
+.emotion-17 {
+  margin-top: var(--chakra-spacing-3);
+}
+
 @layer recipes {
-  .emotion-16 {
+  .emotion-18 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -19611,19 +19635,19 @@ exports[`object fields > with title and description with global label off > show
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-16:is(:focus-visible, [data-focus-visible]) {
+  .emotion-18:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-16 :where(svg) {
+  .emotion-18 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -19631,23 +19655,19 @@ exports[`object fields > with title and description with global label off > show
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
-}
-
-.emotion-17 {
-  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -19774,8 +19794,10 @@ exports[`object fields > with title and description with global label off > show
                 class="emotion-13"
               >
                 <button
-                  class="chakra-button rjsf-object-property-expand emotion-16"
+                  aria-label="Add Test field"
+                  class="chakra-button rjsf-object-property-expand emotion-14"
                   id="root__add"
+                  title="Add Test field"
                   type="button"
                 >
                   <svg
@@ -19798,7 +19820,6 @@ exports[`object fields > with title and description with global label off > show
                       d="M12 5v14"
                     />
                   </svg>
-                  Add Item
                 </button>
               </div>
             </div>
@@ -19810,7 +19831,7 @@ exports[`object fields > with title and description with global label off > show
       class="emotion-17"
     >
       <button
-        class="chakra-button emotion-16"
+        class="chakra-button emotion-18"
         type="submit"
       >
         Submit

@@ -34,7 +34,7 @@ exports[`array fields > array 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -344,7 +344,7 @@ exports[`array fields > array icons 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -1208,7 +1208,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -1472,7 +1472,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -1996,7 +1996,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                           <button
                             class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                             id="root_0__add"
-                            title="Add"
+                            title="Add Item"
                             type="button"
                           >
                             <svg
@@ -2325,7 +2325,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                           <button
                             class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                             id="root_1__add"
-                            title="Add"
+                            title="Add Item"
                             type="button"
                           >
                             <svg
@@ -2436,7 +2436,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -2844,7 +2844,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -3108,7 +3108,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -3488,7 +3488,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -3576,7 +3576,7 @@ exports[`with title and description > array 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -3959,7 +3959,7 @@ exports[`with title and description > array icons 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -4357,7 +4357,7 @@ exports[`with title and description from both > array 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -4740,7 +4740,7 @@ exports[`with title and description from both > array icons 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -5138,7 +5138,7 @@ exports[`with title and description from uiSchema > array 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -5521,7 +5521,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -5902,7 +5902,7 @@ exports[`with title and description with global label off > array 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
@@ -6216,7 +6216,7 @@ exports[`with title and description with global label off > array icons 1`] = `
               <button
                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                 id="root__add"
-                title="Add"
+                title="Add Item"
                 type="button"
               >
                 <svg
