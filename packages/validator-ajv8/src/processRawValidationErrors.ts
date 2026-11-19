@@ -133,23 +133,31 @@ export function transformRJSFValidationErrors<
     };
 
     if (rawPropertyNames.length > 0) {
+      const titles = new Map<string, string>();
       rawPropertyNames.forEach((currentProperty) => {
         const title = findTitle(currentProperty);
         if (title) {
-          message = message.replace(`'${currentProperty}'`, `'${title}'`);
+          titles.set(currentProperty, title);
           // The error is placed on its missing property, so that is the one its `title` names
           if (params.missingProperty === undefined || currentProperty === params.missingProperty) {
             uiTitle = title;
           }
         }
       });
+      if (titles.size > 0) {
+        // Every quoted name is titled in one pass, so a title that matches another property's key isn't titled again
+        const quotedNames = [...titles.keys()].map((name) => `'${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}'`);
+        message = message.replace(
+          new RegExp(quotedNames.join('|'), 'g'),
+          (quoted) => `'${titles.get(quoted.slice(1, -1))}'`,
+        );
+      }
 
       if (typeof params.property === 'string' && typeof params.deps === 'string') {
         const { property: presentProperty, deps, depsCount } = params;
         // Ajv's own message for a property dependency, from `ajv/lib/vocabularies/applicator/dependencies.ts`, leaves the
         // names bare where its other messages quote them, so it is rebuilt with each titled name quoted. A localized
-        // message already quotes them, so it doesn't match and is titled above like any other. The rebuild runs after
-        // that loop so the loop can't replace a title that matches another property's key
+        // message already quotes them, so it doesn't match and is titled above like any other
         const ajvMessage = (names: string[], present: string) =>
           `must have ${depsCount === 1 ? 'property' : 'properties'} ${names.join(', ')} when property ${present} is present`;
         if (rest.message === ajvMessage([deps], presentProperty)) {

@@ -3280,6 +3280,18 @@ describe('AJV8Validator', () => {
         });
         expect(errors.errors[0].params?.deps).toEqual('holderName, billingAddress');
       });
+      it('should not rename a title that matches another property key', () => {
+        schema = {
+          type: 'object',
+          properties: {
+            creditCard: { type: 'number', title: 'Credit card' },
+            billingAddress: { type: 'string', title: 'creditCard' },
+          },
+          dependentRequired: { creditCard: ['billingAddress'] },
+        };
+        const { errors } = validator.validateFormData({ creditCard: 1 }, schema);
+        expect(errors[0].message).toEqual("must have property 'creditCard' when property 'Credit card' is present");
+      });
       it('should handle the case when errors are not present', () => {
         schema = {
           type: 'object',
