@@ -319,6 +319,16 @@ describe('AJV8Validator', () => {
           expect(addSchemaSpy).toHaveBeenCalledTimes(4);
           expect(compileSpy).not.toHaveBeenCalled();
         });
+        it('resolves a relative `$ref` in the second root it holds as in the first', () => {
+          const root: RJSFSchema = { type: 'string' };
+          const schema: RJSFSchema = { type: 'object', properties: { a: { $ref: '' } } };
+          const alone = new AJV8Validator({});
+          const beside = new AJV8Validator({});
+          beside.isValid({ type: 'string' }, 'x', { title: 'other form' });
+          // `$ref: ''` names the schema handed over, under either id, as it does on a root without an `$id`
+          expect(alone.isValid(schema, { a: {} }, root)).toBe(true);
+          expect(beside.isValid(schema, { a: {} }, root)).toBe(true);
+        });
         it('drops the least recently used root once a third arrives', () => {
           const localValidator = new AJV8Validator({});
           const [a, b, c] = [rootOf('string'), rootOf('number'), rootOf('boolean')];
@@ -388,6 +398,15 @@ describe('AJV8Validator', () => {
           keeping.ajv.addSchema(equal, id);
           check(keeping, root);
           expect(keeping.ajv.getSchema(id)?.schema).toBe(equal);
+        });
+        it('keeps a root registered under the `$id` of a subschema the root kept beside it added', () => {
+          const localValidator = new AJV8Validator({});
+          const id = 'https://example.com/b.json';
+          const b: RJSFSchema = { $id: id, ...rootOf('number') };
+          expect(localValidator.isValid({ $id: id, type: 'string' }, 'a', rootOf('string'))).toBe(true);
+          check(localValidator, b);
+          check(localValidator, rootOf('boolean'));
+          expect(localValidator.isValid({ properties: { q: { $ref: '#/definitions/v' } } }, { q: 1 }, b)).toBe(true);
         });
         it('holds two roots with different `$id`s and replaces one with the same `$id`', () => {
           const localValidator = new AJV8Validator({});

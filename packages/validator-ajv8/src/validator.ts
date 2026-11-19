@@ -258,7 +258,8 @@ export default class AJV8Validator<
 
   /** Registers `rootSchema` for `isValid()` to resolve `$ref`s against, beside the root registered before it, and
    * drops the least recently used root and the subschemas compiled against it once a third arrives. A root equal to
-   * one held reuses it, and the deep-equality check is skipped for a `rootSchema` reference seen last time.
+   * one held reuses it, and the deep-equality check is skipped for a `rootSchema` reference either root was last seen
+   * as, so a root mutated in place keeps the subschemas compiled against it.
    *
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
@@ -295,6 +296,9 @@ export default class AJV8Validator<
     this.roots.slice(keeps ? 1 : 0).forEach((root) => this.removeRootSchema(root.id, root.subschemaIds));
     this.roots = keeps ? [current] : [];
     const id = keeps && current.id === ownId ? ALTERNATE_ROOT_SCHEMA_ID : ownId;
+    // A subschema the root kept added under this root's `$id` is replaced or reused as this root, so dropping the
+    // root kept must not remove it
+    this.roots.forEach((root) => root.subschemaIds.delete(id));
     const refsBefore = { ...this.ajv.refs };
     try {
       if (this.ajv.getSchema(id) === undefined) {

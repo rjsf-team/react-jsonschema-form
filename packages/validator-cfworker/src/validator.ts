@@ -89,7 +89,8 @@ export default class CFWorkerValidator<
 
   /** The roots registered last, most recent first, at most two, each with the validators built beside it: `Form`'s
    * sanitize alternates between the old and new root field by field, and each would otherwise drop what the other
-   * built. `schema` is the reference seen last, which skips the deep-equality check when it comes back.
+   * built. `schema` is the reference each was seen as last, which skips the deep-equality check when it comes back,
+   * so a root mutated in place keeps the validators built beside it.
    *
    * @private
    */
