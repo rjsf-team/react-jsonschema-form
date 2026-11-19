@@ -127,8 +127,7 @@ export function transformRJSFValidationErrors<
     if (missingProperty) {
       const findTitle = (name: string): string | undefined => {
         const path = property ? `${property}.${name}` : name;
-        const { title: directTitle } = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path)));
-        let title = directTitle;
+        let { title } = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path)));
         if (title === undefined) {
           const uiSchemaPath = keywordLocation
             .replace(/\/properties\//g, '/')
@@ -139,13 +138,16 @@ export function transformRJSFValidationErrors<
           title = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
         }
         if (title === undefined && schema) {
-          const propertyParts = property.replace(/^\./, '').split('.').filter(Boolean);
-          const schemaPath: (string | number)[] = [];
-          for (const part of propertyParts) {
-            schemaPath.push(PROPERTIES_KEY, part);
-          }
-          schemaPath.push(PROPERTIES_KEY, name, 'title');
-          title = getByPath<string | undefined>(schema, schemaPath);
+          title = getByPath<string | undefined>(schema, [
+            ...property
+              .replace(/^\./, '')
+              .split('.')
+              .filter(Boolean)
+              .flatMap((part) => [PROPERTIES_KEY, part]),
+            PROPERTIES_KEY,
+            name,
+            'title',
+          ]);
         }
         return title;
       };

@@ -1446,13 +1446,18 @@ describe('AJV8Validator', () => {
       });
     });
     describe('validating dependencies without a localizer', () => {
-      const creditCardSchema = (titles: { creditCard?: string; billingAddress?: string } = {}): RJSFSchema => ({
+      const titles = { creditCard: 'Credit card', billingAddress: 'Billing address' };
+      const titledMessage = "must have property 'Billing address' when property 'Credit card' is present";
+      const creditCardSchema = (
+        { creditCard, billingAddress }: { creditCard?: string; billingAddress?: string } = {},
+        keyword: 'dependentRequired' | 'dependencies' = 'dependentRequired',
+      ): RJSFSchema => ({
         type: 'object',
         properties: {
-          creditCard: { type: 'number', title: titles.creditCard },
-          billingAddress: { type: 'string', title: titles.billingAddress },
+          creditCard: { type: 'number', title: creditCard },
+          billingAddress: { type: 'string', title: billingAddress },
         },
-        dependentRequired: { creditCard: ['billingAddress'] },
+        [keyword]: { creditCard: ['billingAddress'] },
       });
       it('should leave the message as Ajv wrote it when no property has a title', () => {
         const { errors, errorSchema } = validator.validateFormData({ creditCard: 1 }, creditCardSchema());
@@ -1464,16 +1469,12 @@ describe('AJV8Validator', () => {
         expect(errorSchema).toEqual({ billingAddress: { __errors: [errMessage] } });
       });
       it('should name the properties by their schema titles', () => {
-        const { errors, errorSchema } = validator.validateFormData(
-          { creditCard: 1 },
-          creditCardSchema({ creditCard: 'Credit card', billingAddress: 'Billing address' }),
-        );
-        const errMessage = "must have property 'Billing address' when property 'Credit card' is present";
-        expect(errors[0].message).toEqual(errMessage);
-        expect(errors[0].stack).toEqual(errMessage);
+        const { errors, errorSchema } = validator.validateFormData({ creditCard: 1 }, creditCardSchema(titles));
+        expect(errors[0].message).toEqual(titledMessage);
+        expect(errors[0].stack).toEqual(titledMessage);
         expect(errors[0].title).toEqual('Billing address');
         expect(errors[0].params?.deps).toEqual('billingAddress');
-        expect(errorSchema).toEqual({ billingAddress: { __errors: [errMessage] } });
+        expect(errorSchema).toEqual({ billingAddress: { __errors: [titledMessage] } });
       });
       it('should title the error by the missing property, not the present one', () => {
         const { errors } = validator.validateFormData(
@@ -1519,34 +1520,20 @@ describe('AJV8Validator', () => {
         expect(errors[0].message).toEqual("must have property 'Address' when property 'Credit card' is present");
       });
       it('should name the properties of a draft-07 `dependencies` by their titles', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            creditCard: { type: 'number', title: 'Credit card' },
-            billingAddress: { type: 'string', title: 'Billing address' },
-          },
-          dependencies: { creditCard: ['billingAddress'] },
-        };
-        const { errors } = validator.validateFormData({ creditCard: 1 }, schema);
+        const { errors } = validator.validateFormData({ creditCard: 1 }, creditCardSchema(titles, 'dependencies'));
         expect(errors[0].name).toEqual('dependencies');
-        expect(errors[0].message).toEqual(
-          "must have property 'Billing address' when property 'Credit card' is present",
-        );
+        expect(errors[0].message).toEqual(titledMessage);
       });
       it('should name nested properties by their titles', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: { payment: creditCardSchema({ creditCard: 'Credit card', billingAddress: 'Billing address' }) },
-        };
+        const schema: RJSFSchema = { type: 'object', properties: { payment: creditCardSchema(titles) } };
         const { errors, errorSchema } = validator.validateFormData({ payment: { creditCard: 1 } }, schema);
-        const errMessage = "must have property 'Billing address' when property 'Credit card' is present";
-        expect(errors[0].stack).toEqual(errMessage);
-        expect(errorSchema).toEqual({ payment: { billingAddress: { __errors: [errMessage] } } });
+        expect(errors[0].stack).toEqual(titledMessage);
+        expect(errorSchema).toEqual({ payment: { billingAddress: { __errors: [titledMessage] } } });
       });
       it('should not rename a title that matches another property key', () => {
         const { errors } = validator.validateFormData(
           { creditCard: 1 },
-          creditCardSchema({ creditCard: 'billingAddress', billingAddress: 'Billing address' }),
+          creditCardSchema({ ...titles, creditCard: 'billingAddress' }),
         );
         expect(errors[0].message).toEqual(
           "must have property 'Billing address' when property 'billingAddress' is present",
@@ -1554,13 +1541,8 @@ describe('AJV8Validator', () => {
       });
       it('should name the properties by their titles when Ajv is not verbose', () => {
         const notVerbose = new AJV8Validator({ AjvClass: Ajv2019, ajvOptionsOverrides: { verbose: false } });
-        const { errors } = notVerbose.validateFormData(
-          { creditCard: 1 },
-          creditCardSchema({ creditCard: 'Credit card', billingAddress: 'Billing address' }),
-        );
-        expect(errors[0].message).toEqual(
-          "must have property 'Billing address' when property 'Credit card' is present",
-        );
+        const { errors } = notVerbose.validateFormData({ creditCard: 1 }, creditCardSchema(titles));
+        expect(errors[0].message).toEqual(titledMessage);
       });
     });
   });

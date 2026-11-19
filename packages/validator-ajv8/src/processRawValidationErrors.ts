@@ -95,6 +95,7 @@ export function transformRJSFValidationErrors<
       params.property,
     ].filter((item) => item);
 
+    const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
     const findTitle = (currentProperty: string): string | undefined => {
       const path = property ? `${property}.${currentProperty}` : currentProperty;
       let uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path))).title;
@@ -108,29 +109,27 @@ export function transformRJSFValidationErrors<
           .concat([currentProperty]);
         uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
       }
-      if (uiSchemaTitle === undefined) {
-        // schemaPath may include non-property segments (e.g. allOf/if/then) that do
-        // not exist in the uiSchema; fall back to the instance path, the same way the
-        // root-schema title fallback does below.
-        const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
-        uiSchemaTitle = getByPath<string | undefined>(uiSchema, [...propParts, currentProperty, 'title']);
-      }
+      // schemaPath may include non-property segments (e.g. allOf/if/then) that do
+      // not exist in the uiSchema; fall back to the instance path, the same way the
+      // root-schema title fallback does below.
+      uiSchemaTitle ??= getByPath<string | undefined>(uiSchema, [...propParts, currentProperty, 'title']);
       if (uiSchemaTitle) {
         return uiSchemaTitle;
       }
       const parentSchemaTitle = getByPath<string | undefined>(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
-      if (parentSchemaTitle || !schema) {
-        return parentSchemaTitle;
-      }
       // parentSchema may be an allOf/anyOf/oneOf entry that lacks `properties`;
       // fall back to looking up the title from the root schema.
-      const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
-      const aSchemaPath: (string | number)[] = [];
-      for (const part of propParts) {
-        aSchemaPath.push(PROPERTIES_KEY, part);
-      }
-      aSchemaPath.push(PROPERTIES_KEY, currentProperty, 'title');
-      return getByPath<string | undefined>(schema, aSchemaPath);
+      return (
+        parentSchemaTitle ||
+        (schema
+          ? getByPath<string | undefined>(schema, [
+              ...propParts.flatMap((part) => [PROPERTIES_KEY, part]),
+              PROPERTIES_KEY,
+              currentProperty,
+              'title',
+            ])
+          : undefined)
+      );
     };
 
     if (rawPropertyNames.length > 0) {
