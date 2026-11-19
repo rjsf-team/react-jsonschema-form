@@ -1660,6 +1660,43 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     expect(counting.calls).toBe(0);
   });
 
+  it('plans no second pass for an option const a then offers, which an empty field never takes (#5895)', () => {
+    const counting = miniValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        x: {
+          type: 'object',
+          properties: { t: { type: 'string', default: 'a' } },
+          allOf: [{ if: { required: ['t'] }, then: { oneOf: [{ const: { a: 1 } }] } }],
+        },
+      },
+    };
+    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { t: 'a' } });
+    // A second pass, planned for the defaults `{ t: 'a' }`, would check the `if`
+    expect(counting.calls).toBe(0);
+  });
+
+  it("reads an option const its allOf offers by the field's data, not by the defaults a pass hands its dependencies (#5895)", () => {
+    const counting = miniValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      required: ['x'],
+      properties: {
+        x: {
+          type: 'object',
+          properties: { a: { type: 'number' } },
+          dependencies: { a: { oneOf: [{ properties: { a: { const: 1 }, b: { type: 'number', default: 5 } } }] } },
+          allOf: [{ oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }],
+        },
+      },
+    };
+    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { a: 1 } });
+    // Read by the defaults the first pass hands the next, the `const` would be dropped on that pass, which then checks
+    // the `dependencies` option once more
+    expect(counting.calls).toBe(1);
+  });
+
   it('retrieves no optional field the Optional Data Controls collapse unless it may reach an object const', () => {
     const counting = miniValidator();
     const schema: RJSFSchema = {

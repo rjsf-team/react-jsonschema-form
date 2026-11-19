@@ -7196,6 +7196,103 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             x: { p: 'q' },
           });
         });
+        it("reads the const of an option written as an allOf, as allOf: 'populateDefaults' reads it", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['n'],
+            properties: { n: { type: 'number', allOf: [{ oneOf: [{ allOf: [{ const: 3 }] }] }] } },
+          };
+          expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ n: 3 });
+        });
+        it("takes none where a customMergeAllOf leaves the list out of the field's merge", () => {
+          const schema = rootOf({ allOf: [{ oneOf: [{ const: C }] }] });
+          const dropping = { ...skipping, customMergeAllOf: (): RJSFSchema => ({ type: 'object' }) };
+          expect(getDefaultFormState(dropping, { schema })).toStrictEqual({ x: {} });
+        });
+        describe('as the option of a list the field offers itself is picked', () => {
+          beforeEach(() => {
+            testValidator.setReturnValues({ isValid: asRealValidator });
+          });
+          afterAll(() => {
+            testValidator.reset?.();
+          });
+          const ownAndNested = (list: RJSFSchema, field: (list: RJSFSchema) => RJSFSchema) => ({
+            own: field(list),
+            nested: field({ allOf: [list] }),
+          });
+          it.each<[string, RJSFSchema, Partial<DefaultFormStateBehavior>]>([
+            ['an ancestor default the option holds no part of', { default: { x: {} } }, {}],
+            ['an ancestor null the field cannot hold', { default: { x: null } }, {}],
+            [
+              'an ancestor default under ancestorWins',
+              { default: { x: {} } },
+              { nestedDefaultsPrecedence: 'ancestorWins' },
+            ],
+          ])('the option const winning over %s', (_, root, behavior) => {
+            const { own, nested } = ownAndNested({ oneOf: [{ const: C }] }, (list) => ({ ...rootOf(list), ...root }));
+            const context = {
+              validator: testValidator,
+              defaultFormStateBehavior: { allOf: 'skipDefaults' as const, ...behavior },
+            };
+            expect(getDefaultFormState(context, { schema: nested })).toStrictEqual(
+              getDefaultFormState(context, { schema: own }),
+            );
+            expect(getDefaultFormState(context, { schema: nested })).toStrictEqual({ x: C });
+          });
+          it('the closest const winning over a parent default naming none', () => {
+            const { own, nested } = ownAndNested({ oneOf: [{ const: 3 }, { const: 4 }] }, (list) => ({
+              type: 'object',
+              required: ['n'],
+              default: { n: 7 },
+              properties: { n: { type: 'number', ...list } },
+            }));
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
+              getDefaultFormState(skipping, { schema: own }),
+            );
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ n: 3 });
+          });
+          it.each(['populateRequiredDefaults', 'skipDefaults'] as const)(
+            "an optional key left out under emptyObjectFields: '%s'",
+            (emptyObjectFields) => {
+              const { own, nested } = ownAndNested({ oneOf: [{ const: 3 }] }, (list) => ({
+                type: 'object',
+                properties: { n: { type: 'number', ...list } },
+              }));
+              const context = {
+                validator: testValidator,
+                defaultFormStateBehavior: { allOf: 'skipDefaults' as const, emptyObjectFields },
+              };
+              expect(getDefaultFormState(context, { schema: nested })).toStrictEqual(
+                getDefaultFormState(context, { schema: own }),
+              );
+              expect(getDefaultFormState(context, { schema: nested })).toStrictEqual({});
+            },
+          );
+          it('the option scored closest to no data, where the field has no default', () => {
+            const { own, nested } = ownAndNested(
+              {
+                oneOf: [
+                  { type: 'string', const: 'a' },
+                  { type: 'null', const: null },
+                ],
+              },
+              (list) => ({ type: 'object', required: ['n'], properties: { n: list } }),
+            );
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
+              getDefaultFormState(skipping, { schema: own }),
+            );
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ n: null });
+          });
+          it("a key only an allOf declares picking by no default, since the fold skips the allOf's", () => {
+            const { own, nested } = ownAndNested({ oneOf: [{ type: 'string' }, { const: 4 }] }, (list) => ({
+              type: 'object',
+              allOf: [{ properties: { n: { default: 4, ...list } } }],
+            }));
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
+              getDefaultFormState(skipping, { schema: own }),
+            );
+          });
+        });
       });
     });
     describe('default form state behavior: arrayMinItems.populate = "never"', () => {
