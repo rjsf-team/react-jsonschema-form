@@ -1,7 +1,7 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 
-import { createFormComponent } from './testUtils.tsx';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -314,5 +314,27 @@ describe('conditional items', () => {
     await user.clear(node.querySelector<HTMLInputElement>('#root_a')!);
 
     expect(node.querySelector('#root_b')).toBeNull();
+  });
+});
+
+describe("an empty field's then/else const (#5895)", () => {
+  it.each<[string, RJSFSchema, unknown]>([
+    [
+      "fills an object field from the then of its allOf member under allOf: 'skipDefaults', and submits it",
+      { type: 'object', allOf: [{ if: { type: 'object' }, then: { const: { a: 1, b: 2 } } }] },
+      { a: 1, b: 2 },
+    ],
+    [
+      'fills a number field from a then whose if takes the const, and submits it',
+      { type: 'number', if: { type: 'number' }, then: { const: 3 } },
+      3,
+    ],
+  ])('%s', async (_name, x, filled) => {
+    const { node, onSubmit, onError } = createFormComponent({
+      schema: { type: 'object', required: ['x'], properties: { x } },
+    });
+    await submitForm(node, user);
+    expect(onError).not.toHaveBeenCalled();
+    expectToHaveBeenCalledWithFormData(onSubmit, { x: filled }, true);
   });
 });

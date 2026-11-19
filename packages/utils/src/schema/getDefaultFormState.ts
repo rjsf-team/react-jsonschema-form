@@ -2483,8 +2483,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const computed: GenericObjectType = {};
   // Whether the property `key`, seeded by `seeds`, takes a `const`: one of its own, the object's `const` for it, or one
   // its `allOf` or unmerged `if`/`then` brings in, read from its schema merged for its data where a merge can reach
-  // one, as the fold takes it. Worked out only where a default is added, as the data holds most keys on an edit, and
-  // then once
+  // one, as the fold takes it. A `then`/`else` of a property the data leaves out is not counted, so the setting still
+  // decides whether such a property is added. Worked out only where a default is added, as the data holds most keys on
+  // an edit, and then once
   const constCheck = (key: string, graph: SchemaGraph<S>, seeds: readonly Seed[], readProperty: S) => {
     let holdsConst: boolean | undefined;
     return () => {
@@ -2500,6 +2501,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
               formData[key],
               () => rootProvenance<S>(graph, seeds),
               (field) => retrieveField<S, F>(context, field, formData[key]),
+              formData[key] !== undefined,
             ) !== undefined));
       return holdsConst;
     };
@@ -3701,6 +3703,7 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
         view.depData,
         () => fieldOfView<S>(view),
         () => mergedSchemaOf<S, F>(context, view),
+        resolvesConditions(context, view.depData),
         () => {
           merged.readers ??= [];
           merged.readers.push({ graph: view.graph, entries: [], checked: [], choices: [], present: false });
@@ -3711,13 +3714,24 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   return merged.constSchema;
 }
 
+/** Whether a merge of a field for its `data` resolves the field's `if`s: it does unless the field is empty and
+ * `emptyObjectFields` is `skipEmptyDefaults`, which leaves an empty field's conditions unresolved wherever they sit, as
+ * the plan of a field holding one itself does
+ */
+function resolvesConditions<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  data: unknown,
+): boolean {
+  return data !== undefined || context.defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults';
+}
+
 /** The schema of a field, `schema` as written, merged for its `data` by `merge`, where that brings in a `const`. A
  * `const` a merging keyword the plan left unmerged brings in is the field's as one of its own is: it fills the field
  * under any `constAsDefaults` but `'never'`, and under `'always'` takes precedence over the data. So it is read from the
  * merged schema, so that a condition on the data picks the `const`, as `formDataMatching()` reads it. A merged schema
- * left with no `const`, as where the branch holding it isn't taken, gives the field none. A field that holds no data
- * gives a condition nothing to test, so no `then`/`else` gives it a `const`, and `onAbsent` is told where one would
- * have
+ * left with no `const`, as where the branch holding it isn't taken, gives the field none. Where the merge resolves no
+ * condition, `withConditions` false, no `then`/`else` gives the field a `const`, and for a field that holds no data
+ * `onAbsent` is told where one would have
  */
 function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -3725,6 +3739,7 @@ function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextTy
   data: unknown,
   field: () => Provenance<S>,
   merge: (field: Provenance<S>) => S,
+  withConditions: boolean,
   onAbsent?: () => void,
 ): S | undefined {
   if (context.defaultFormStateBehavior?.constAsDefaults === 'never' || !holdsAnyOf(schema, MERGING_KEYWORDS)) {
@@ -3732,7 +3747,7 @@ function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextTy
   }
   const provenance = field();
   const { graph, seeds } = provenance;
-  if (!seeds.some(({ node }) => mergeReachesConst<S>(graph, node, false, data !== undefined))) {
+  if (!seeds.some(({ node }) => mergeReachesConst<S>(graph, node, false, withConditions))) {
     if (data === undefined && onAbsent && seeds.some(({ node }) => mergeReachesConst<S>(graph, node, false, true))) {
       onAbsent();
     }
@@ -3875,8 +3890,8 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
 }
 
 /** Whether the field `view` stands for is a select over whole object or array values, see `isWholeValueSelect()`. Options
- * an `allOf` brings in make the field a select as options of its own do, whatever the data, so an `allOf` the plan left
- * unmerged is merged for no data to ask, once for the view, and only where a subschema it merges in offers options
+ * an `allOf` brings in make the field a select as options of its own do, so an `allOf` the plan left unmerged is merged
+ * for the view's data to ask, once for the view, and only where a subschema it merges in offers options
  */
 function isWholeValueField<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -3894,8 +3909,9 @@ function isWholeValueField<S extends StrictRJSFSchema, F extends FormContextType
   return merged.wholeValue;
 }
 
-/** The field of `view` with the `allOf` its plan left unmerged merged for no data, where a subschema that merges in,
- * not one of the field's own seeds, holds what `offers` looks for, and the `anyOf`/`oneOf` lists the merge met that the
+/** The field of `view` with the `allOf` its plan left unmerged merged for its data, its conditions resolved as
+ * `resolvesConditions()` says, where a subschema that merges in, not one of the field's own seeds, holds what `offers`
+ * looks for, and the `anyOf`/`oneOf` lists the merge met that the
  * field may still choose from. A list the field has chosen from already, or chosen an option of where an `allOf`
  * offers it, is closed: the field's seeds bring it back, though `foldView()` doesn't offer it again, so a keyword only
  * such lists hold is left out of the merge, where it would hide the list of the other keyword
@@ -3910,15 +3926,22 @@ function optionsMergedField<S extends StrictRJSFSchema, F extends FormContextTyp
   }
   const field = fieldOfView<S>(view);
   const ownSeeds = new Set(view.field.seeds.map(({ node }) => node));
+  const conditions = resolvesConditions(context, view.depData);
   const mergesOptions = field.seeds.some(({ node }) =>
-    scopeOf<S>(field.graph, node, 'unconditional').some(
+    scopeOf<S>(field.graph, node, conditions ? 'conditional' : 'unconditional').some(
       (merged) => !ownSeeds.has(merged.id) && offers(field.graph, merged),
     ),
   );
   if (!mergesOptions) {
     return undefined;
   }
-  const plan = buildPlan<S, F>({ context, ...field, policy: { allOf: true, conditions: false } });
+  const { data, depData, merged } = view;
+  const plan = buildPlan<S, F>({ context, ...field, data, depData, policy: { allOf: true, conditions } });
+  // The fixed point of the field reads the conditions the merge checked, as it reads those of its own plan
+  if (plan.checked.length > 0) {
+    merged.readers ??= [];
+    merged.readers.push(plan);
+  }
   const { chosen, adopted } = view.options;
   const isClosed = ({ provider, list }: OptionChoice) => chosen.has(list) || adopted?.has(provider) === true;
   const closedKeys = OPTION_KEYWORDS.filter((keyword) => {

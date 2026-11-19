@@ -5,6 +5,7 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   ANY_OF_KEY,
+  CONST_KEY,
   DEPENDENCIES_KEY,
   DISCRIMINATOR_PATH,
   ELSE_KEY,
@@ -87,6 +88,12 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
   readonly site: string;
   readonly condition: S;
   readonly satisfied: boolean;
+  /** What an `if` is checked against where the field holds no data, if not `{}`: the value the field would hold. An
+   * object or array field holds its defaults, which the fill checks it against once it has them. A field of any other
+   * type takes the `const` of the `then`, or else of the `else`, so a `then` gives its `const` where the `if` accepts it
+   * and an `else` where the `if` rejects it, and the value filled takes the branch that gave it
+   */
+  readonly unset?: { readonly value: unknown };
 }
 
 /** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
@@ -268,15 +275,17 @@ export function ownedDepData<S extends StrictRJSFSchema>(
  * @param context - The `SchemaContext` whose validator checks the condition
  * @param graph - The graph the condition is a node of
  * @param checked - The condition, with the keys its check and its decision are known by, see `CheckedCondition`
- * @param data - The data to check it against
+ * @param depData - The data to check it against, standing for `checked.unset` where there is none
  * @returns - Whether the condition holds
  */
 export function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
-  { key, site, condition }: Omit<CheckedCondition<S>, 'satisfied'>,
-  data: unknown,
+  { key, site, condition, unset }: Omit<CheckedCondition<S>, 'satisfied'>,
+  depData: unknown,
 ): boolean {
+  const unsetValue = depData === undefined && unset !== undefined;
+  const data = unsetValue ? unset.value : depData;
   if (typeof data === 'object' && data !== null) {
     const owned = ownedDecisions.get(data);
     const check = () => context.validator.isValid(condition, data, graph.rawRoot);
@@ -287,9 +296,9 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
   if (memoized !== undefined) {
     return memoized;
   }
-  // A field with no data is checked as an empty object: `required` constrains only objects, so the missing data
-  // itself would hold every `if` that requires a key
-  const holds = context.validator.isValid(condition, data ?? {}, graph.rawRoot);
+  // A field with no data, unless `unset` says what it would hold, is checked as the empty object an object field holds:
+  // `required` constrains only objects, so the missing data itself would hold every `if` that requires a key
+  const holds = context.validator.isValid(condition, unsetValue ? data : (data ?? {}), graph.rawRoot);
   conditionMemo.setLatest(keys, [data], holds);
   return holds;
 }
@@ -902,15 +911,32 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return isSchemaObject<S>(merged) && this.context.customMergeAllOf ? merged : schemaFrom(schema, merged);
   }
 
-  private holds(key: string, condition: S, site = key): boolean {
+  private holds(key: string, condition: S, site = key, unset?: CheckedCondition<S>['unset']): boolean {
     this.readsData = true;
-    const satisfied = checkCondition(this.context, this.graph, { key, site, condition }, this.depData);
-    this.checked.push({ key, site, condition, satisfied });
+    const satisfied = checkCondition(this.context, this.graph, { key, site, condition, unset }, this.depData);
+    this.checked.push({ key, site, condition, satisfied, unset });
     return satisfied;
   }
 
-  /** Applies the `then` or `else` the `if` chooses on the data the field's dependencies qualify on, `{}` standing in
-   * for none. Inside a dependency, the branch's own `oneOf` is applied, as the dependency's are.
+  /** What a field with no data holds where the `if` the branches `keywords` hold is checked, see
+   * `CheckedCondition.unset`
+   */
+  private unsetValue(keywords: ReadonlyMap<string | symbol, Provider<S>>): CheckedCondition<S>['unset'] {
+    for (const key of [THEN_KEY, ELSE_KEY]) {
+      const provider = keywords.get(key);
+      const branch = provider && this.graph.child(provider.node.id, key);
+      const node = branch === undefined ? undefined : this.graph.node(branch);
+      const value: unknown = node?.kind === 'schema' ? node.raw[CONST_KEY] : undefined;
+      if (value !== undefined) {
+        return typeof value === 'object' && value !== null ? undefined : { value };
+      }
+    }
+    return undefined;
+  }
+
+  /** Applies the `then` or `else` the `if` chooses on the data the field's dependencies qualify on, the value the field
+   * would hold standing in for none, see `CheckedCondition.unset`. Inside a dependency, the branch's own `oneOf` is
+   * applied, as the dependency's are.
    */
   private applyCondition(
     part: Part<S>,
@@ -931,7 +957,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // function for the schema it reads as
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), `if:${conditionProvider.node.id}`)
+        ? this.holds(
+            `if:${condition}`,
+            targetOf(this.graph, condition),
+            `if:${conditionProvider.node.id}`,
+            this.unsetValue(keywords),
+          )
         : conditionNode.kind !== 'boolean' || conditionNode.value;
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);

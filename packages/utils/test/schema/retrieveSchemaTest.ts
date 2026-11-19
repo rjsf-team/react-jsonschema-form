@@ -41,6 +41,7 @@ import {
   SCHEMA_WITH_SINGLE_CONDITION,
   SUPER_SCHEMA,
 } from '../testUtils/testData.ts';
+import { check } from './graph/miniValidator.ts';
 import type { TestValidatorType } from './types.ts';
 
 /** Reads a subschema handed out by `retrieveSchema()` as the schema it is, or the empty schema for any other value */
@@ -2326,6 +2327,28 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     describe('Conditional schemas (If, Then, Else)', () => {
+      it.each<[string, RJSFSchema, RJSFSchema]>([
+        [
+          'merges the then whose if takes its const',
+          { type: 'number', if: { type: 'number' }, then: { const: 3 } },
+          { type: 'number', const: 3 },
+        ],
+        [
+          'leaves out the then whose if rejects its const',
+          { type: 'number', if: { type: 'object' }, then: { const: 3 } },
+          { type: 'number' },
+        ],
+        [
+          'merges the else whose if rejects its const',
+          { type: 'string', if: { maxLength: 0 }, else: { const: 'z' } },
+          { type: 'string', const: 'z' },
+        ],
+      ])('for a primitive field with no data, %s (#5895)', (_name, schema, expected) => {
+        // The mock validator cannot evaluate an `if`, so it answers each check as the real ones do
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);
+        testValidator.reset?.();
+      });
       it('should resolve if, then', () => {
         // Mock errors so that resolveCondition works as expected
         testValidator.setReturnValues({

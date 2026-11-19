@@ -5459,37 +5459,52 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
-        it.each<[string, RJSFSchema, DefaultFormStateBehavior]>([
-          ['its allOf', { type: 'number', allOf: [{ if: { minimum: 10 }, then: { const: 10 } }] }, {}],
-          [
-            'its allOf under skipEmptyDefaults',
-            { type: 'number', allOf: [{ if: { minimum: 10 }, then: { const: 10 } }] },
-            { emptyObjectFields: 'skipEmptyDefaults' },
-          ],
-          [
-            'itself under skipEmptyDefaults',
-            { type: 'number', if: { minimum: 10 }, then: { const: 10 } },
-            { emptyObjectFields: 'skipEmptyDefaults' },
-          ],
-          [
-            'itself under constAsDefaults always and skipEmptyDefaults',
-            { type: 'number', if: { minimum: 0 }, then: { const: 10 }, else: { const: 10 } },
-            { constAsDefaults: 'always', emptyObjectFields: 'skipEmptyDefaults' },
-          ],
-          [
-            'the else of its allOf',
-            { type: 'number', allOf: [{ if: { maximum: 10 }, then: {}, else: { const: 10 } }] },
-            {},
-          ],
-        ])(
-          'leaves an empty field the const of a then/else in %s, which no data takes, unfilled',
-          (_name, n, defaultFormStateBehavior) => {
+        describe('decides the if of an empty field by the const its branch gives, or leaves it under skipEmptyDefaults', () => {
+          beforeEach(() => {
+            // The mock validator cannot evaluate an `if`, so it answers each check as the real ones do
+            testValidator.setReturnValues({ isValid: asRealValidator });
+          });
+          afterAll(() => {
+            testValidator.reset?.();
+          });
+          it.each<[string, RJSFSchema, DefaultFormStateBehavior, GenericObjectType]>([
+            [
+              'fills the const of a then in its allOf whose if takes it (#5895)',
+              { type: 'number', allOf: [{ if: { minimum: 10 }, then: { const: 10 } }] },
+              {},
+              { n: 10 },
+            ],
+            [
+              'leaves the const of a then in its allOf unfilled under skipEmptyDefaults',
+              { type: 'number', allOf: [{ if: { minimum: 10 }, then: { const: 10 } }] },
+              { emptyObjectFields: 'skipEmptyDefaults' },
+              {},
+            ],
+            [
+              'leaves the const of its own then unfilled under skipEmptyDefaults',
+              { type: 'number', if: { minimum: 10 }, then: { const: 10 } },
+              { emptyObjectFields: 'skipEmptyDefaults' },
+              {},
+            ],
+            [
+              'leaves the const of its own then and else unfilled under constAsDefaults always and skipEmptyDefaults',
+              { type: 'number', if: { minimum: 0 }, then: { const: 10 }, else: { const: 10 } },
+              { constAsDefaults: 'always', emptyObjectFields: 'skipEmptyDefaults' },
+              {},
+            ],
+            [
+              'leaves the const of an else in its allOf whose if takes it unfilled',
+              { type: 'number', allOf: [{ if: { maximum: 10 }, then: {}, else: { const: 10 } }] },
+              {},
+              {},
+            ],
+          ])('%s', (_name, n, defaultFormStateBehavior, expected) => {
             const schema: RJSFSchema = { type: 'object', required: ['n'], properties: { n } };
             expect(
               getDefaultFormState({ validator: testValidator, defaultFormStateBehavior }, { schema, formData: {} }),
-            ).toStrictEqual({});
-          },
-        );
+            ).toStrictEqual(expected);
+          });
+        });
 
         it('fills a field with the const of a then its data takes', () => {
           const schema: RJSFSchema = {
@@ -8250,6 +8265,131 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 x: {},
               });
             });
+          });
+        });
+      });
+      describe('gives a field the const of a then/else in an allOf member as of one of its own (#5895)', () => {
+        beforeEach(() => {
+          // The mock validator cannot evaluate an `if`, so it answers each check as the real ones do
+          testValidator.setReturnValues({ isValid: asRealValidator });
+        });
+        afterAll(() => {
+          testValidator.reset?.();
+        });
+        const C = { a: 1, b: 2 };
+        /** The field `x`, of type `type`, with `conditional` written on it or in a member of its `allOf` */
+        const placed = (type: 'object' | 'number' | 'string' | 'null', conditional: RJSFSchema, inAllOf: boolean) =>
+          inAllOf ? { type, allOf: [conditional] } : { type, ...conditional };
+        const rootOf = (x: RJSFSchema, required = true): RJSFSchema => ({
+          type: 'object',
+          ...(required ? { required: ['x'] } : {}),
+          properties: { x },
+        });
+        const PLACEMENTS = [
+          ['in an allOf member', true],
+          ['on the field', false],
+        ] as const;
+        const OBJECT_CONDITIONALS: [string, RJSFSchema][] = [
+          ['if: true', { if: true, then: { const: C } }],
+          ['if: {}', { if: {}, then: { const: C } }],
+          ["if: { type: 'object' }", { if: { type: 'object' }, then: { const: C } }],
+          [
+            'an if on a property the field leaves out',
+            { if: { properties: { t: { const: 'a' } } }, then: { const: C } },
+          ],
+          ['if: false with an else', { if: false, then: {}, else: { const: C } }],
+        ];
+        describe.each(PLACEMENTS)('%s', (_placement, inAllOf) => {
+          it.each(OBJECT_CONDITIONALS)(
+            'fills an object field with the const of a branch whose %s takes {}, under every setting',
+            (_name, conditional) => {
+              const x = placed('object', conditional, inAllOf);
+              const behaviors: DefaultFormStateBehavior[] = [
+                { allOf: 'skipDefaults' },
+                { allOf: 'populateDefaults' },
+                { allOf: 'skipDefaults', emptyObjectFields: 'populateRequiredDefaults' },
+                { allOf: 'skipDefaults', constAsDefaults: 'always' },
+              ];
+              for (const defaultFormStateBehavior of behaviors) {
+                const context = { validator: testValidator, defaultFormStateBehavior };
+                expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({ x: C });
+              }
+              const skipping = {
+                validator: testValidator,
+                defaultFormStateBehavior: { allOf: 'skipDefaults' as const },
+              };
+              expect(getDefaultFormState(skipping, { schema: rootOf(x, false) })).toStrictEqual({ x: C });
+            },
+          );
+          it.each(OBJECT_CONDITIONALS)(
+            'leaves the branch of an empty object field whose %s unresolved under skipEmptyDefaults',
+            (_name, conditional) => {
+              const context = {
+                validator: testValidator,
+                defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' as const },
+              };
+              const x = placed('object', conditional, inAllOf);
+              expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({});
+              expect(getDefaultFormState(context, { schema: rootOf(x, false) })).toStrictEqual({});
+            },
+          );
+          it('leaves an object field without the const of a then whose if rejects {}, the value the field holds', () => {
+            const x = placed('object', { if: { required: ['a'] }, then: { const: C } }, inAllOf);
+            const skipping = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
+            expect(getDefaultFormState(skipping, { schema: rootOf(x) })).toStrictEqual({ x: {} });
+          });
+          it.each<[string, 'number' | 'string' | 'null', RJSFSchema, GenericObjectType]>([
+            [
+              "fills the null const of a then whose if: { type: 'null' } takes it",
+              'null',
+              { if: { type: 'null' }, then: { const: null } },
+              { x: null },
+            ],
+            ['fills the const of a then under if: true', 'number', { if: true, then: { const: 3 } }, { x: 3 }],
+            ['fills the const of a then under if: {}', 'number', { if: {}, then: { const: 3 } }, { x: 3 }],
+            ['fills the const of an else under if: false', 'number', { if: false, else: { const: 3 } }, { x: 3 }],
+            [
+              "fills the const of a then whose if: { type: 'number' } takes it",
+              'number',
+              { if: { type: 'number' }, then: { const: 3 } },
+              { x: 3 },
+            ],
+            [
+              'fills the const of a then whose if: { minimum: 10 } takes it',
+              'number',
+              { if: { minimum: 10 }, then: { const: 10 } },
+              { x: 10 },
+            ],
+            [
+              'leaves the const of an else whose if: { maximum: 10 } takes it unfilled',
+              'number',
+              { if: { maximum: 10 }, else: { const: 10 } },
+              {},
+            ],
+            [
+              "leaves the const of a then whose if: { type: 'object' } rejects it unfilled",
+              'number',
+              { if: { type: 'object' }, then: { const: 3 } },
+              {},
+            ],
+            [
+              'leaves the const of a then whose if: { maxLength: 0 } rejects it unfilled',
+              'string',
+              { if: { maxLength: 0 }, then: { const: 'z' } },
+              {},
+            ],
+            [
+              'fills the const of an option a then offers under if: true',
+              'number',
+              { if: true, then: { oneOf: [{ const: 3 }] } },
+              { x: 3 },
+            ],
+          ])('%s in an empty primitive field, under either allOf setting', (_name, type, conditional, expected) => {
+            const x = placed(type, conditional, inAllOf);
+            for (const allOf of ['skipDefaults', 'populateDefaults'] as const) {
+              const context = { validator: testValidator, defaultFormStateBehavior: { allOf } };
+              expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual(expected);
+            }
           });
         });
       });
