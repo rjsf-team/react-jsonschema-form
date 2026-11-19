@@ -41,6 +41,9 @@ function withFragmentIdAnchor<T extends object>(schema: T, id: unknown): T {
   return { ...schema, $defs: { ...$defs, __rjsf_fragmentId: { $anchor: name, allOf: [{ $ref: '#' }] } } };
 }
 
+/** Constructed ata `Validator`s by schema id, with the schema each was built from */
+type ValidatorCache = Map<string, { validator: Validator; schema: object }>;
+
 /** `ValidatorType` implementation backed by `ata-validator`.
  *
  * ata is schema-bound (one `Validator` per schema) rather than instance-with-
@@ -72,20 +75,17 @@ export default class ATAValidator<
    */
   readonly suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 
-  /** Per-schema-id cache of constructed ata `Validator` instances. AJV uses a
+  /** Per-schema-id cache of constructed ata `Validator` instances, those of the root registered last. AJV uses a
    * single instance with a schema registry; ata is schema-bound, so we
    * maintain the registry ourselves.
    */
-  private readonly validators = new Map<string, { validator: Validator; schema: object }>();
+  private validators: ValidatorCache = new Map();
 
-  /** Most recent `rootSchema` reference seen by `handleSchemaUpdate`, used as
-   * a fast-path to skip a deep-equality check when the same root is passed
-   * back-to-back.
+  /** The roots registered last, most recent first, at most two, each with the validators built beside it: `Form`'s
+   * sanitize alternates between the old and new root field by field, and each would otherwise drop what the other
+   * built. `schema` is the reference seen last, which skips the deep-equality check when it comes back.
    */
-  private lastSeenRootSchema?: S;
-
-  /** True once a `rootSchema` has been registered in this lifecycle. */
-  private hasRegisteredRootSchema = false;
+  private roots: { schema: S; withId: object; validators: ValidatorCache }[] = [];
 
   constructor(options: CustomValidatorOptionsType, localizer?: Localizer) {
     this.options = options;
@@ -97,11 +97,10 @@ export default class ATAValidator<
    * `AJV8Validator#reset` so RJSF's test harness can flush state between runs.
    */
   reset() {
-    this.validators.clear();
-    this.lastSeenRootSchema = undefined;
+    this.validators = new Map();
+    this.roots = [];
     this.cachedRootSchema = undefined;
     this.extras = undefined;
-    this.hasRegisteredRootSchema = false;
   }
 
   /** The most recently registered rootSchema, kept so we can pass it to ata's
@@ -261,7 +260,13 @@ export default class ATAValidator<
    * `addSchema(rootSchema, rootSchemaId)` flow.
    */
   handleSchemaUpdate(rootSchema: S): void {
-    if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
+    const [current] = this.roots;
+    if (current?.schema === rootSchema) {
+      return;
+    }
+    const seen = this.roots.find((root) => root.schema === rootSchema);
+    if (seen !== undefined) {
+      this.useRoot(seen);
       return;
     }
     const rootSchemaId = rootSchemaIdOf(rootSchema);
@@ -275,17 +280,25 @@ export default class ATAValidator<
       ownId === rootSchemaId
         ? (rootSchema as object)
         : withFragmentIdAnchor({ ...(rootSchema as object), [ID_KEY]: rootSchemaId }, ownId);
-    // Compared with the root registered last rather than with the validator cached under its id, which
+    // Compared with the roots registered rather than with the validator cached under its id, which
     // `rawValidation()` of a root that was not registered builds beside the registered one
-    if (this.cachedRootSchema === undefined || !deepEquals(this.cachedRootSchema, rootWithId)) {
-      // Every validator built so far resolves its `$ref`s against the root it was built beside, so a schema such as
-      // `{ $ref: '#/definitions/x' }`, which means something else under every root, is built again for this one
-      this.validators.clear();
-      this.cachedRootSchema = rootWithId;
-      this.getOrBuild(rootSchemaId, rootWithId);
+    const equal = this.roots.find((root) => deepEquals(root.withId, rootWithId));
+    if (equal !== undefined) {
+      equal.schema = rootSchema;
+      this.useRoot(equal);
+      return;
     }
-    this.lastSeenRootSchema = rootSchema;
-    this.hasRegisteredRootSchema = true;
+    // Every validator resolves its `$ref`s against the root it was built beside, so a schema such as
+    // `{ $ref: '#/definitions/x' }`, which means something else under every root, is built again for this one
+    this.useRoot({ schema: rootSchema, withId: rootWithId, validators: new Map() });
+    this.getOrBuild(rootSchemaId, rootWithId);
+  }
+
+  /** Makes `root` the one validators are built beside, dropping the least recently used beyond two */
+  private useRoot(root: (typeof this.roots)[number]) {
+    this.roots = [root, ...this.roots.filter((other) => other !== root)].slice(0, 2);
+    this.validators = root.validators;
+    this.cachedRootSchema = root.withId;
   }
 
   /** Boolean validation entrypoint. Returns false on validation failure or
