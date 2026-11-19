@@ -5747,6 +5747,38 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             color: 'green',
           });
         });
+        it.each(
+          cases.flatMap(([name, field, behavior]) =>
+            [true, false].map((hasDefault) => [name, hasDefault, field, behavior] as const),
+          ),
+        )(
+          'replaces a value outside %s with its ui:initialValue as an enum does, the field having a default: %s',
+          (_name, hasDefault, field, behavior) => {
+            const context = { validator: testValidator, defaultFormStateBehavior: behavior };
+            const color: RJSFSchema = hasDefault ? { ...field, default: 'red' } : field;
+            const enumColor: RJSFSchema = hasDefault
+              ? { type: 'string', enum: ['red', 'green'], default: 'red' }
+              : { type: 'string', enum: ['red', 'green'] };
+            const uiSchema: UiSchema = { color: { 'ui:initialValue': 'green' } };
+            for (const initialDefaultsGenerated of [false, true]) {
+              const read = (property: RJSFSchema) =>
+                getDefaultFormState(context, {
+                  schema: { type: 'object', properties: { color: property } },
+                  formData: { color: 'blue' },
+                  uiSchema,
+                  initialDefaultsGenerated,
+                });
+              expect(read(color)).toStrictEqual(read(enumColor));
+            }
+            expect(
+              getDefaultFormState(context, {
+                schema: color,
+                formData: 'blue',
+                uiSchema: { 'ui:initialValue': 'green' },
+              }),
+            ).toBe('green');
+          },
+        );
       });
 
       describe('an object with invalid formData const and constAsDefault set to always', () => {
@@ -7794,6 +7826,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             );
             expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ x: { p: 'p', q: 'q' } });
           });
+          it.each<[string, UiSchema]>([
+            ['no entry of its own', { x: { k: { 'ui:initialValue': 5 }, a: { 'ui:initialValue': 7 } } }],
+            ['an entry of its own', { x: { k: { 'ui:initialValue': 5 }, a: { 'ui:initialValue': 7 }, oneOf: [{}] } }],
+            [
+              // `null`, which only untyped code can write, gives the option no uiSchema of its own
+              'a null entry',
+              {
+                x: { k: { 'ui:initialValue': 5 }, a: { 'ui:initialValue': 7 }, oneOf: [null] as unknown as UiSchema[] },
+              },
+            ],
+          ])(
+            'the ui:initialValue of a key the field declares itself, beside the const of the option shown, with %s',
+            (name, uiSchema) => {
+              const { own, nested } = ownAndNested({ oneOf: [{ properties: { a: { const: 3 } } }] }, (list) =>
+                rootOf({ properties: { k: { type: 'number' } }, ...list }),
+              );
+              // An option with an entry of its own renders the keys it declares with that entry, not the field's
+              const a = name === 'no entry of its own' ? 7 : 3;
+              expect(getDefaultFormState(skipping, { schema: nested, uiSchema })).toStrictEqual({ x: { k: 5, a } });
+              expect(getDefaultFormState(skipping, { schema: own, uiSchema })).toStrictEqual({ x: { k: 5, a } });
+            },
+          );
         });
       });
     });

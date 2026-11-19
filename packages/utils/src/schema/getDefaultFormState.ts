@@ -1720,9 +1720,10 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         }
         // A value a list of constants names none of is no value of the field, so its default replaces it, as it does
         // for an `enum`. What the option gave in place of the data, its `const` under `constAsDefaults: 'always'` or
-        // over a `NaN`, is one the list names
+        // over a `NaN`, is one the list names. A `ui:initialValue` takes the default's place, as it does below
         if (choice.offersConstants && shouldMergeDefaultsIntoFormData && rawFormData !== undefined) {
-          const fieldDefaults = ownDefaults();
+          const fieldDefaults =
+            uiInitialValue !== undefined && !initialDefaultsGenerated ? uiInitialValue : ownDefaults();
           if (
             fieldDefaults !== undefined &&
             viewFormDataMatching<unknown, S, F>(context, view, optionValue, fieldDefaults) === undefined
@@ -2015,6 +2016,29 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return { context: optionContext, index, isWholeValue, offersConstants, wholeOptions };
 }
 
+/** Returns the uiSchema `optionUiSchema` an object's option is folded with, where the option has an entry of its own,
+ * with the object's `uiSchema` entry of each key the object declares itself and the option doesn't: `ObjectField`
+ * renders those keys beside the option with the object's uiSchema, and the option's field only the keys it declares
+ */
+function withOwnPropertyEntries<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  optionUiSchema: UiSchema<T, S, F> | undefined,
+  uiSchema: UiSchema<T, S, F>,
+  ownProperties: S['properties'],
+  optionProperties: S['properties'],
+): UiSchema<T, S, F> | undefined {
+  const keys = Object.keys(ownProperties ?? {}).filter(
+    (name) => Reflect.get(uiSchema, name) !== undefined && !(optionProperties && Object.hasOwn(optionProperties, name)),
+  );
+  if (keys.length === 0) {
+    return optionUiSchema;
+  }
+  const withEntries: UiSchema<T, S, F> = optionUiSchema ? { ...optionUiSchema } : {};
+  for (const name of keys) {
+    Reflect.set(withEntries, name, Reflect.get(uiSchema, name));
+  }
+  return withEntries;
+}
+
 /** Computes the defaults of a field from the option at `index` of the options it offers. An object renders its own
  * field beside the option, so the option is merged into the whole field: the field is planned again with the option
  * selected, its seeds joining the plan with the ref path of the node offering it. Any other field renders only the
@@ -2056,6 +2080,14 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ? getRenderedOptionUiSchema<T, S, F>(fieldSchema, retrievedOption(), props.uiSchema, optionUiSchema)
       : optionUiSchema;
   let uiSchema = withoutFieldOptions<T, S, F>(renderedUiSchema, props.uiSchema, key);
+  if (rendersOwnField && props.uiSchema && optionUiSchema !== props.uiSchema) {
+    uiSchema = withOwnPropertyEntries<T, S, F>(
+      uiSchema,
+      props.uiSchema,
+      mergedSchemaOf<S, F>(context, view).properties,
+      retrievedOption?.().properties,
+    );
+  }
   if (initialValue !== undefined && getUiOptions<T, S, F>(uiSchema).initialValue === undefined) {
     const carrying: UiSchema<T, S, F> = uiSchema ? { ...uiSchema } : {};
     carrying['ui:initialValue'] = initialValue;
@@ -3601,29 +3633,69 @@ function offersConstOption<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, { 
   );
 }
 
+/** Returns a walk over a graph whose nodes each reach something or not, as Tarjan's strongly connected components walk
+ * it, which answers whether the node `keys` names reaches what `reach` looks for, worked out once per node. It holds
+ * the answers worked out, or for a node still open its place in `open`, the keys of the nodes walked whose answer is
+ * still open, in the order they were entered, and the lowest place in that list the node being walked leads back to. A
+ * node still open leads back into the cycle being walked, which settles only at its first node, so it reads as reaching
+ * nothing meanwhile, and the answer is the same whichever node of a cycle is asked first
+ */
+function reachWalk(): (keys: readonly unknown[], reach: () => boolean) => boolean {
+  const answers = new KeyedMemo<boolean | number | undefined>();
+  const open: (readonly unknown[])[] = [];
+  let low = Infinity;
+  return (keys, reach) => {
+    const known = answers.peek(keys);
+    if (typeof known === 'boolean') {
+      return known;
+    }
+    if (known !== undefined) {
+      low = Math.min(low, known);
+      return false;
+    }
+    const place = open.length;
+    const outerLow = low;
+    open.push(keys);
+    answers.set(keys, place);
+    low = place;
+    let reaches: boolean | undefined;
+    try {
+      reaches = reach();
+      return reaches;
+    } finally {
+      // Every node entered after this one and still open leads back to a node on the path to this one, so it reaches
+      // what this one reaches: a find settles them all, and a graph that throws leaves them all to be walked again.
+      // None found settles only once nothing below leads back above this node, which makes it the first node of its
+      // cycle; until then it stays open with the rest, and its caller leads back as far as it does
+      const innerLow = low;
+      if (reaches !== false || innerLow === place) {
+        open.splice(place).forEach((waiting) => answers.set(waiting, reaches));
+      }
+      low = reaches === false && innerLow < place ? Math.min(outerLow, innerLow) : outerLow;
+    }
+  };
+}
+
+const optionConstWalk = reachWalk();
+
 /** Whether the option `option` can give the field, or a key of it, a `const`, as the fold reads the option where
  * `adoptableList()` adopts it: one its own `$ref`, `allOf` and options merge in, one a property it declares reaches or
  * its `dependencies` may bring in, as `objectDefaults()` reads the keys only an unmerged `allOf` declares, or one an
- * option of a list it offers gives in turn, which the fold adopts next. Worked out once per graph and option
+ * option of a list it offers gives in turn, which the fold adopts next. Worked out once per graph and option, a list
+ * leading back to an option still being read giving nothing of its own, as for `mergeReachesConst()`
+ *
+ * @testSeam Exported for utils' own tests
  */
-const optionConstReach = new KeyedMemo<boolean>();
-function optionReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, option: NodeId): boolean {
-  const keys = [graph, option];
-  const known = optionConstReach.peek(keys);
-  if (known !== undefined) {
-    return known;
-  }
-  // A list leading back to an option being read counts as reaching one, which ends the walk and at most has the fold
-  // choose from a list that gives it nothing
-  optionConstReach.set(keys, true);
-  const { dependencies, constKeys } = constFillersOf<S>(graph, option);
-  const reaches =
-    mergeReachesConst<S>(graph, option, true, false) ||
-    dependencies ||
-    constKeys.length > 0 ||
-    scopeOf<S>(graph, option, 'unconditional').some((node) => offersConstOption<S>(graph, node));
-  optionConstReach.set(keys, reaches);
-  return reaches;
+export function optionReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, option: NodeId): boolean {
+  return optionConstWalk([graph, option], () => {
+    const { dependencies, constKeys } = constFillersOf<S>(graph, option);
+    return (
+      mergeReachesConst<S>(graph, option, true, false) ||
+      dependencies ||
+      constKeys.length > 0 ||
+      scopeOf<S>(graph, option, 'unconditional').some((node) => offersConstOption<S>(graph, node))
+    );
+  });
 }
 
 /** What in the scope of a node, see `scopeOf()`, can give a key of its object a `const`: whether a declaration in it
@@ -3646,17 +3718,7 @@ function constFillersOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node:
   });
 }
 
-/** Whether a merge from a node, by `mergeReachesConst()`, reaches a `const`, by graph, node, whether it reads the
- * options of the node's scope and whether it reads `then`/`else`; for a node still open in the walk, its place in
- * `constWalk.open`
- */
-const constReach = new KeyedMemo<boolean | number | undefined>();
-
-/** The walk `mergeReachesConst()` is in, as Tarjan's strongly connected components walk it: the keys of the nodes
- * walked whose answer is still open, in the order they were entered, and the lowest place in that list the node being
- * walked leads back to
- */
-const constWalk: { open: (readonly unknown[])[]; low: number } = { open: [], low: Infinity };
+const constWalk = reachWalk();
 
 /** Whether any subschema retrieving the node `from` may merge in declares a `const`: one its `$ref` and `allOf` merge
  * in, see `scopeOf()`, or one its `then`/`else` and `dependencies` subschemas reach in turn, but no `if`, a condition
@@ -3673,25 +3735,7 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
   withOptions = false,
   withConditions = true,
 ): boolean {
-  const keys = [graph, from, withOptions, withConditions];
-  const known = constReach.peek(keys);
-  if (typeof known === 'boolean') {
-    return known;
-  }
-  // A node still open leads back into the cycle being walked, which settles only at its first node, so it reads as
-  // none meanwhile
-  if (known !== undefined) {
-    constWalk.low = Math.min(constWalk.low, known);
-    return false;
-  }
-  const { open } = constWalk;
-  const place = open.length;
-  const outerLow = constWalk.low;
-  open.push(keys);
-  constReach.set(keys, place);
-  constWalk.low = place;
-  let reaches: boolean | undefined;
-  try {
+  return constWalk([graph, from, withOptions, withConditions], () => {
     const group = scopeOf<S>(graph, from, 'unconditional');
     // The `dependencies` entries are always merged in, an option only of a list beside `dependencies`
     const mergedLists =
@@ -3700,7 +3744,7 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
         : [DEPENDENCIES_KEY];
     const reachesAny = (subschemas: (NodeId | undefined)[], options: boolean) =>
       subschemas.some((sub) => sub !== undefined && mergeReachesConst<S>(graph, sub, options, withConditions));
-    reaches = group.some(
+    return group.some(
       (node) =>
         Object.hasOwn(node.raw, CONST_KEY) ||
         (withConditions && reachesAny([graph.child(node.id, THEN_KEY), graph.child(node.id, ELSE_KEY)], withOptions)) ||
@@ -3709,18 +3753,7 @@ export function mergeReachesConst<S extends StrictRJSFSchema>(
           true,
         ),
     );
-    return reaches;
-  } finally {
-    // Every node entered after this one and still open leads back to a node on the path to this one, so it reaches
-    // what this one reaches: a `const` found settles them all, and a graph that throws leaves them all to be walked
-    // again. None found settles only once nothing below leads back above this node, which makes it the first node of
-    // its cycle; until then it stays open with the rest, and its caller leads back as far as it does
-    const { low } = constWalk;
-    if (reaches !== false || low === place) {
-      open.splice(place).forEach((waiting) => constReach.set(waiting, reaches));
-    }
-    constWalk.low = reaches === false && low < place ? Math.min(outerLow, low) : outerLow;
-  }
+  });
 }
 
 /** Whether the field `view` stands for is a select over whole object or array values, see `isWholeValueSelect()`. Options
