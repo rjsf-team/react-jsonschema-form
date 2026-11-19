@@ -2567,6 +2567,18 @@ describe('ArrayField', () => {
       expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
+    it("renders the rows past an option's prefixItems with the parent's items, and offers Add past them", () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: { type: 'number' }, oneOf: [{ prefixItems: [{ minimum: 1 }] }] },
+        initialFormData: [1, 2, 3],
+      });
+
+      ['#root_0', '#root_1', '#root_2'].forEach((id) =>
+        expect(node.querySelector(id)).toHaveAttribute('inputmode', 'decimal'),
+      );
+      expect(node.querySelector('.rjsf-array-item-add')).not.toBeNull();
+    });
+
     it('renders a tuple whose prefixItems hold a boolean position, rather than a list of untyped rows', () => {
       const { node } = createFormComponent({
         schema: { type: 'array', prefixItems: [{ type: 'string' }, true] },

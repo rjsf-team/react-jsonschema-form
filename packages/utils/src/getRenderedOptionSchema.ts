@@ -127,20 +127,16 @@ function meetSchemas(parent: GenericObjectType, option: object): GenericObjectTy
   } else if (isObject(parentItems) && Array.isArray(optionItems) && declared.additionalItems !== undefined) {
     result.additionalItems = meetSubschema(parentItems, declared.additionalItems);
   }
-  // So does a single `items` beside no `prefixItems`, which describes every item, against the other side's `prefixItems`:
-  // it is met into each position, and the items past them are described only where the tuple's side declares `items`
+  // A single `items` beside no `prefixItems` describes every item too, so against the other side's `prefixItems` it is
+  // met into each position and stays the `items` past them, met with the tuple side's own where it declares one. Unlike
+  // a tuple `items` above, it keeps those rows even where the tuple's side declares nothing past it, so an option adding
+  // positions to a list doesn't take away the rows and the Add button the list renders without it
   const parentPrefix: unknown = parent.prefixItems;
   const optionPrefix: unknown = declared.prefixItems;
   if (Array.isArray(optionPrefix) && parentPrefix === undefined && isObject(parentItems)) {
     result.prefixItems = optionPrefix.map((position) => meetSubschema(parentItems, position));
-    if (optionItems === undefined) {
-      delete result[ITEMS_KEY];
-    }
   } else if (Array.isArray(parentPrefix) && optionPrefix === undefined && isObject(optionItems)) {
     result.prefixItems = parentPrefix.map((position) => meetSubschema(position, optionItems));
-    if (parentItems === undefined) {
-      delete result[ITEMS_KEY];
-    }
   }
   if (takesOptionConditional) {
     for (const key of CONDITIONAL_KEYWORDS) {

@@ -244,13 +244,24 @@ describe('getRenderedOptionSchema()', () => {
         items: [{ type: 'boolean' }],
       });
     });
-    test.each<[string, RJSFSchema, RJSFSchema]>([
-      ["the parent's", { type: 'array', prefixItems: [{ type: 'string' }] }, { items: { maxLength: 3 } }],
-      ["the option's", { type: 'array', items: { type: 'string' } }, { prefixItems: [{ maxLength: 3 }] }],
-    ])('keeps %s prefixItems declaring no items at its length, as ArrayField renders it', (_, parent, option) => {
+    test.each<[string, RJSFSchema, RJSFSchema, RJSFSchema]>([
+      [
+        "the option's",
+        { type: 'array', prefixItems: [{ type: 'string' }] },
+        { items: { maxLength: 3 } },
+        { maxLength: 3 },
+      ],
+      [
+        "the parent's",
+        { type: 'array', items: { type: 'string' } },
+        { prefixItems: [{ maxLength: 3 }] },
+        { type: 'string' },
+      ],
+    ])('keeps %s single items as the items past the prefixItems the other declares', (_, parent, option, items) => {
       expect(getRenderedOptionSchema(parent, option)).toEqual({
         type: 'array',
         prefixItems: [{ type: 'string', maxLength: 3 }],
+        items,
       });
     });
     test.each<[string, RJSFSchema, RJSFSchema]>([
