@@ -7314,6 +7314,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const dropping = { ...skipping, customMergeAllOf: (): RJSFSchema => ({ type: 'object' }) };
           expect(getDefaultFormState(dropping, { schema })).toStrictEqual({ x: {} });
         });
+        it("in an option's allOf, not the anyOf of the field's own that the option was chosen from", () => {
+          const objects = rootOf({ anyOf: [{ title: 'A', allOf: [{ oneOf: [{ const: C }] }] }, { const: { a: 9 } }] });
+          expect(getDefaultFormState(skipping, { schema: objects })).toStrictEqual({ x: C });
+          const numbers: RJSFSchema = {
+            type: 'object',
+            required: ['n'],
+            properties: {
+              n: { type: 'number', anyOf: [{ title: 'A', allOf: [{ oneOf: [{ const: 3 }] }] }, { const: 9 }] },
+            },
+          };
+          expect(getDefaultFormState(skipping, { schema: numbers })).toStrictEqual({ n: 3 });
+        });
         describe('as the option of a list the field offers itself is picked', () => {
           beforeEach(() => {
             testValidator.setReturnValues({ isValid: asRealValidator });
