@@ -17,6 +17,7 @@ import {
   RJSF_REF_KEY,
   UI_DEFINITION_ORIGIN_KEY,
 } from '../src/index.ts';
+import { resolveOwnRef } from '../src/schema/retrieveSchema.ts';
 import looseSchema from './schema/graph/looseSchema.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
@@ -478,6 +479,105 @@ describe('resolveUiSchema() - the options of an allOf member', () => {
   ])('merges none where %s offer a list, whose positions the merged list need not keep', (_label, schema) => {
     const rootSchema: RJSFSchema = { $defs, ...schema };
     expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions))).toEqual({});
+  });
+
+  const oneOf = fooOrBar.anyOf;
+  const optionA = { properties: { k: { const: 'a' } } };
+  const optionB = { properties: { k: { const: 'b' }, extra: { type: 'string' as const } } };
+
+  it.each([undefined, 'a', 'b'])("merges the allOf member's options beside a keyed dependency for k=%s", (k) => {
+    const rootSchema: RJSFSchema = {
+      $defs,
+      type: 'object',
+      properties: { k: { type: 'string' } },
+      allOf: [{ oneOf }],
+      dependencies: { k: { oneOf: [optionA, optionB] } },
+    };
+    const validator = getTestValidator({
+      isValid: (schema) => {
+        const condition = schema.properties?.k;
+        return (
+          typeof condition === 'object' &&
+          condition.$ref !== undefined &&
+          resolveOwnRef(condition, rootSchema).const === k
+        );
+      },
+    });
+    const data = k === undefined ? {} : { k };
+    const resolved = retrieveSchema({ validator }, rootSchema, rootSchema, data);
+    expect(resolved.oneOf).toEqual(oneOf);
+    expect(resolved.properties?.extra).toEqual(k === 'b' ? optionB.properties.extra : undefined);
+    expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions)).oneOf).toEqual([
+      { 'ui:title': 'Foo' },
+      { 'ui:title': 'Bar' },
+    ]);
+  });
+
+  it('recognizes a keyed dependency whose options name definitions', () => {
+    const rootSchema: RJSFSchema = {
+      $defs: { ...$defs, OptionA: optionA, OptionB: optionB },
+      allOf: [{ oneOf }],
+      dependencies: { k: { oneOf: [false, { $ref: '#/$defs/OptionA' }, { $ref: '#/$defs/OptionB' }] } },
+    };
+    expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions)).oneOf).toEqual([
+      { 'ui:title': 'Foo' },
+      { 'ui:title': 'Bar' },
+    ]);
+  });
+
+  it.each([
+    ['an unkeyed dependency', { oneOf: [{ properties: { extra: { type: 'string' as const } } }] }],
+    ['the selected dependency payload', { oneOf: [optionA, { ...optionB, oneOf: [{ type: 'string' as const }] }] }],
+  ])('merges none if %s can offer a second oneOf list', (_label, dependency) => {
+    const rootSchema: RJSFSchema = { $defs, allOf: [{ oneOf }], dependencies: { k: dependency } };
+    expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions))).toEqual({});
+  });
+
+  it('merges none when a keyed dependency payload offers a second anyOf list', () => {
+    const rootSchema: RJSFSchema = {
+      $defs,
+      allOf: [fooOrBar],
+      dependencies: { k: { oneOf: [optionA, { ...optionB, anyOf: [{ type: 'string' }] }] } },
+    };
+    expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions))).toEqual({});
+  });
+
+  it('considers a shared dependency definition separately for each property key', () => {
+    const rootSchema: RJSFSchema = {
+      $defs: { ...$defs, Selectors: { oneOf: [optionA, optionB] } },
+      allOf: [{ oneOf }],
+      dependencies: { k: { $ref: '#/$defs/Selectors' }, other: { $ref: '#/$defs/Selectors' } },
+    };
+    expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions))).toEqual({});
+  });
+
+  it('considers the options beside each occurrence of a dependency payload ref', () => {
+    const ref = { $ref: '#/$defs/Shared' };
+    const rootSchema: RJSFSchema = {
+      $defs: { ...$defs, Shared: { type: 'object' } },
+      allOf: [{ oneOf }],
+      dependencies: {
+        k: {
+          oneOf: [
+            { ...ref, ...optionA },
+            { ...ref, ...optionB, oneOf: [{ type: 'string' }, { type: 'number' }] },
+          ],
+        },
+      },
+    };
+    expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions))).toEqual({});
+  });
+
+  it('stops walking a dependency payload that refers back to itself', () => {
+    const rootSchema: RJSFSchema = {
+      $defs,
+      allOf: [{ oneOf }],
+      dependencies: { k: { oneOf: [optionA, { ...optionB, allOf: [{ $ref: '#/$defs/Loop' }] }] } },
+    };
+    expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions)).oneOf).toEqual([
+      { 'ui:title': 'Foo' },
+      { 'ui:title': 'Bar' },
+    ]);
   });
 
   it("merges the field's own options where its allOf loops back to the definition it is", () => {

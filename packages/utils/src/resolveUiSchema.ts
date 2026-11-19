@@ -13,7 +13,9 @@ import {
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
-import { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
+import KeyedMemo from './schema/graph/keyedMemo.ts';
+import parseSchemaGraph, { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
+import { declaredProperties } from './schema/graph/validationTargets.ts';
 import { resolveOwnRef } from './schema/retrieveSchema.ts';
 import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
@@ -64,7 +66,8 @@ function listedOptions(schema: StrictRJSFSchema, keyword: OptionsKeyword): unkno
 /** Returns the `oneOf` and `anyOf` lists the field of `schema` offers once `retrieveSchema()` merges its `allOf`: its
  * own, or the one an `allOf` member offers, which the merge hoists as it is. Two lists are merged into the pairings of
  * their options, whose positions need not be those of either list, so there is none to return for that keyword then.
- * Nor is there where a `then`/`else` or `dependencies` entry offers one, which the data merges in or not
+ * Nor is there where a `then`/`else` or `dependencies` entry offers one, which the data merges in or not. A keyed
+ * dependency's own `oneOf` chooses the dependency branch, so only lists in its payload can affect option positions
  *
  * @param schema - The field's schema, with its own `$ref` resolved
  * @param fieldRef - The `$ref` the field's schema was resolved from, if any, so a member looping back to it isn't
@@ -82,8 +85,11 @@ function offeredOptions<S extends StrictRJSFSchema>(
   }
   const lists: Record<OptionsKeyword, unknown[][]> = { [ONE_OF_KEY]: [], [ANY_OF_KEY]: [] };
   const conditional = new Set<OptionsKeyword>();
-  const followed = new Set<string>(fieldRef ? [`false|${fieldRef}`] : []);
-  const collect = (node: unknown, inBranch: boolean) => {
+  const followed = new KeyedMemo<boolean>();
+  if (fieldRef) {
+    followed.set([fieldRef], true);
+  }
+  const collect = (node: unknown, inBranch: boolean, dependencyKey?: string) => {
     if (!isObject(node)) {
       return;
     }
@@ -91,13 +97,13 @@ function offeredOptions<S extends StrictRJSFSchema>(
     const ref = stringKeyword(node, REF_KEY);
     const isFollowed = ref !== undefined && node !== schema;
     if (isFollowed) {
-      // A member naming a definition already followed is one whose `allOf` loops back to it. A branch is followed
-      // apart, as its list is conditional even where a member offers the same one
-      const visit = `${inBranch}|${ref}`;
-      if (followed.has(visit)) {
+      // Keep distinct branch occurrences and dependency keys because they can add different siblings to a reference
+      // or use the same list differently. Reaching the same occurrence again means the branch loops back to it.
+      const visit = inBranch ? [node, dependencyKey] : [ref];
+      if (followed.peek(visit)) {
         return;
       }
-      followed.add(visit);
+      followed.set(visit, true);
       resolved = tryResolveOwnRef<S>(resolved, rootSchema);
       if (!resolved) {
         return;
@@ -107,10 +113,25 @@ function offeredOptions<S extends StrictRJSFSchema>(
     // the same list again
     for (const keyword of [ONE_OF_KEY, ANY_OF_KEY] as const) {
       const options = listedOptions(resolved, keyword);
-      if (options && inBranch) {
-        conditional.add(keyword);
-      } else if (options && !(isFollowed && lists[keyword].includes(options))) {
-        lists[keyword].push(options);
+      if (options) {
+        const selectsDependency =
+          keyword === ONE_OF_KEY &&
+          dependencyKey !== undefined &&
+          options.some((option) => {
+            if (!isObject(option)) {
+              return false;
+            }
+            const { graph, node: optionId } = parseSchemaGraph(rootSchema).adopt(option as S);
+            return declaredProperties(graph, optionId, dependencyKey).length > 0;
+          });
+        if (selectsDependency) {
+          // The keyed list selects a payload; only the lists the payload offers can change the field's options.
+          options.forEach((option) => collect(option, true));
+        } else if (inBranch) {
+          conditional.add(keyword);
+        } else if (!(isFollowed && lists[keyword].includes(options))) {
+          lists[keyword].push(options);
+        }
       }
     }
     const members = resolved[ALL_OF_KEY];
@@ -118,12 +139,10 @@ function offeredOptions<S extends StrictRJSFSchema>(
       members.forEach((member) => collect(member, inBranch));
     }
     const dependencies = resolved[DEPENDENCIES_KEY];
-    const branches = [
-      resolved[THEN_KEY],
-      resolved[ELSE_KEY],
-      ...(isObject(dependencies) ? Object.values(dependencies) : []),
-    ];
-    branches.forEach((branch) => collect(branch, true));
+    [resolved[THEN_KEY], resolved[ELSE_KEY]].forEach((branch) => collect(branch, true));
+    if (isObject(dependencies)) {
+      Object.entries(dependencies).forEach(([key, branch]) => collect(branch, true, key));
+    }
   };
   collect(schema, false);
   const one = (keyword: OptionsKeyword) =>
