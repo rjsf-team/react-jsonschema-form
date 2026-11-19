@@ -13,7 +13,7 @@ related: [typed-ui-options-rejects-field-keys, get-ui-options-returns-field-opti
 
 - Your uiSchemas, and the `children` entries of a `ui:layoutGrid`, set `field`, `fieldReplacesAnyOrOneOf`, `definitions` or `globalOptions` inside `ui:options`.
 - A custom widget that reads an option by one of those names.
-- The console warns about one of these keys. It names the key but not the field, and logs once per key, so search your uiSchemas rather than waiting on the console.
+- The console warns about one of these keys, ending in `[ui-options-key-ignored]`. It names the key but not the field, and logs once per key, so search your uiSchemas rather than waiting on the console.
 
 ## Change
 
@@ -37,6 +37,6 @@ A layout grid's `children` entry passes its extra properties as the cell's `ui:o
 
 ## Verify
 
-- The console no longer warns about these keys.
+- The console no longer warns about these keys. [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make the `ui-options-key-ignored` warning throw.
 - A custom field named by `ui:options.field` got the template's label and description, and one named by `ui:field` gets neither. To keep them, declare them under the field's registry key, as [A custom field draws its own label and description, and the plan wins over hideLabel](./custom-field-draws-own-label-and-description.md) describes, and register a field given as a component so that it has one.
 - A custom field named by `ui:field` isn't handed the select `SchemaField` now infers for a boolean with labelled `oneOf`/`anyOf` options, so one that renders `BooleanField` shows the checkbox 6.11.0 showed. Set `ui:widget: 'select'` to get the select.

@@ -13,7 +13,7 @@ related: [initial-form-data-replaces-form-data]
 
 - In your code, a `formData` or `initialFormData` that changes after the form mounts: a record that loads later, the next record in a list, or an edit made outside the form.
 - A `useEffect` that copies a prop into the form's data.
-- In development, the console shows a warning the first time the form ignores a new `formData`.
+- In development, the console shows a warning ending in `[form-data-ignored]` the first time the form ignores a new `formData`.
 
 ## Change
 
@@ -41,4 +41,4 @@ For the same record changed from outside, call `setFieldValue()` on the form's r
 
 - Loading or switching records shows the new record's data.
 - An outside edit shows in the form and reaches `onChange`.
-- The development warning about an ignored `formData` no longer appears.
+- The development warning `form-data-ignored` no longer appears. [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make it throw.

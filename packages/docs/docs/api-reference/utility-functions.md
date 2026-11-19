@@ -3142,10 +3142,10 @@ setWarningOptions({ throwOn: ['migration'], except: ['antd-span-twelfths'] }); /
 setWarningOptions({}); // the default: every warning logs
 ```
 
-| Category    | What its warnings flag                                                                                                                           |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `migration` | v6 code that now does something else, each named in the [v7 upgrade guide](../migration-guides/v7.x%20upgrade%20guide.md) entry that explains it |
-| `config`    | a uiSchema or option RJSF ignores, whichever version the form was written for                                                                    |
+| Category    | What its warnings flag                                                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `migration` | v6 code that now does something else, each named in the [v7 upgrade guide](../migration-guides/v7.x%20upgrade%20guide.mdx) entry that explains it |
+| `config`    | a uiSchema or option RJSF ignores, whichever version the form was written for                                                                     |
 
 | ID                                  | Category    | Warns that                                                                                                  |
 | ----------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |

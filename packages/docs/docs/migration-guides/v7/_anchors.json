@@ -676,5 +676,30 @@
     "schema-change-keeps-data-the-new-schema-still-allows",
     "should-render-optional-field-takes-a-field-path"
   ],
-  "the-default-validator-is-a-client-module-breaking-change": ["validator-default-export-is-a-client-module"]
+  "the-default-validator-is-a-client-module-breaking-change": ["validator-default-export-is-a-client-module"],
+  "an-extra-schema-whose-only-id-is-a-fragment-fails-validation-breaking-change": [
+    "validator-ata-fragment-only-id-schema-fails-validation"
+  ],
+  "rjsfmantines-datetimewidget-renders-mantines-datetimepicker-breaking-change": [
+    "mantine-date-time-widget-renders-date-time-picker"
+  ],
+  "rjsfmantines-datewidget-and-datetimewidget-can-be-cleared-breaking-change": ["mantine-date-widgets-can-be-cleared"],
+  "an-object-const-wins-over-the-defaults-beneath-it-breaking-change": ["object-const-wins-over-defaults-beneath-it"],
+  "a-default-decides-an-if-as-the-same-value-in-the-form-data-does-breaking-change": [
+    "default-decides-an-if-as-form-data-does"
+  ],
+  "the-items-of-an-arrays-default-ignore-an-additionalitems-beside-items-breaking-change": [
+    "array-default-items-ignore-additional-items"
+  ],
+  "getclosestmatchingoption-scores-the-extra-keys-an-options-additionalproperties-takes-breaking-change": [
+    "closest-matching-option-scores-extra-keys"
+  ],
+  "an-incomplete-uiorder-renders-the-object-instead-of-an-error-breaking-change": [
+    "incomplete-ui-order-renders-the-object",
+    "translatable-string-invalid-object-field-removed"
+  ],
+  "add-buttons-are-titled-add-item-or-after-their-object-breaking-change": [
+    "add-buttons-titled-add-item-or-after-their-object",
+    "object-field-template-spreads-add-button-props"
+  ]
 }

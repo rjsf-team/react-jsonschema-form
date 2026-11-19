@@ -12,7 +12,7 @@ related: [antd-grid-column-own-width-drops-span, layout-grid-row-without-templat
 ## Detect
 
 - In your uiSchema: a `ui:col` or `ui:columns` with a `span` under `ui:layoutGrid`, rendered by `@rjsf/antd`.
-- In the console: a warning that a column's `span` is more than 12 and should be halved.
+- In the console: a warning that a column's `span` is more than 12 and should be halved, ending in `[antd-span-twelfths]`.
 - On the rendered page: grid columns twice as wide as before, such as a `span: 12` column that fills the whole row.
 
 ## Change
@@ -30,7 +30,7 @@ A layout grid's `span` now counts twelfths of a row in every theme, so `@rjsf/an
  },
 ```
 
-Only a `span` over 12, which only an unmigrated column can have, logs the warning. One of 12 or under looks the same migrated or not, so check those yourself.
+Only a `span` over 12, which only an unmigrated column can have, logs the warning. [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make it throw. One of 12 or under looks the same migrated or not, so check those yourself.
 
 antd's breakpoint props, such as `xs` or `md`, still take antd's 24ths. See [`span` in each theme](../../usage/layout-grid.md#span-in-each-theme).
 

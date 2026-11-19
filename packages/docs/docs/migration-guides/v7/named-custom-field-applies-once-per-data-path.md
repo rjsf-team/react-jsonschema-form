@@ -12,7 +12,7 @@ related: [custom-field-rendering-schemafield-gets-default-field]
 ## Detect
 
 - Your schema names a registered custom field through `$id`, or your uiSchema sets `ui:field` on a field with `anyOf`/`oneOf` options, or on one of those options.
-- The console warns that an option's `ui:field` is ignored because a field is already named for that path.
+- The console warns that an option's `ui:field` is ignored because a field is already named for that path, ending in `[option-field-ignored]`.
 - Tests or snapshots that expect a custom field twice, or not at all, beside an option selector.
 
 ## Change
@@ -36,5 +36,5 @@ To render a different custom field for an option, name it on the option alone an
 ## Verify
 
 - Each named custom field renders once.
-- The console no longer warns about an ignored option `ui:field`.
+- The console no longer warns about an ignored option `ui:field`. [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make the `option-field-ignored` warning throw.
 - Without a `ui:field` on the union, the option's own field renders, as before.

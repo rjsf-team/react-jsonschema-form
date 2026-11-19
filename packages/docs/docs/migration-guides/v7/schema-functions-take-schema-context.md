@@ -12,7 +12,7 @@ related: [get-default-form-state-takes-a-props-object, schema-utils-type-adds-co
 ## Detect
 
 - In your code, a call to an `@rjsf/utils` schema function that passes a `validator` first: `findFieldInSchema()`, `findSelectedOptionInXxxOf()`, `getClosestMatchingOption()`, `getDisplayLabel()`, `getFirstMatchingOption()`, `getFromSchema()`, `isFilesArray()`, `isMultiSelect()`, `isSelect()`, `omitExtraData()`, `retrieveSchema()` or `sanitizeDataForNewSchema()`.
-- A call to `createSchemaUtils()` or `doesSchemaUtilsDiffer()`.
+- A call to `createSchemaUtils()` or `doesSchemaUtilsDiffer()`. In development, a `createSchemaUtils()` call that passes a validator in place of the `SchemaContext` logs a warning ending in `[create-schema-utils-validator-arg]`.
 - A `computeSkipPopulate` callback in `defaultFormStateBehavior.arrayMinItems` that uses its first argument as a validator.
 - The type checker reports `Property 'validator' is missing in type 'ValidatorType<…>' but required in type 'SchemaContext<…>'.` (TS2741) on the first argument of each such call.
 
@@ -62,6 +62,8 @@ Double-check `retrieveSchema()`: a v6 call passing `resolveAnyOfOrOneOfRefs` pas
 -const schemaUtils = createSchemaUtils(validator, rootSchema, defaultFormStateBehavior, customMergeAllOf);
 +const schemaUtils = createSchemaUtils({ validator, defaultFormStateBehavior, customMergeAllOf }, rootSchema);
 ```
+
+[`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make the `create-schema-utils-validator-arg` warning throw.
 
 `SchemaUtilsType`'s own methods supply the context and root schema themselves, so they are unchanged.
 

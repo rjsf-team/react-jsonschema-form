@@ -13,6 +13,7 @@ related: [form-data-changes-after-mount-are-ignored, refuse-or-rewrite-edits-in-
 
 - A `formData=` prop on `Form` or a themed form in your code.
 - Your editor or linter flags `formData` through its `@deprecated` tag.
+- In development, the console shows a warning ending in `[form-data-both-seeds]` for a form passed both `formData` and `initialFormData`.
 
 ## Change
 
@@ -21,7 +22,7 @@ related: [form-data-changes-after-mount-are-ignored, refuse-or-rewrite-edits-in-
 - `initialFormData` is the seed. The form reads it when it mounts and when `reset()` is called, and fills it in with the schema's defaults. On every other render the form ignores it.
 - After mount, the data belongs to the form. Each edit is applied, validated and shown before `onChange` reports it, whatever your handler does with the event.
 - `getFormData()` on the form's ref reads the current value at any time.
-- `formData` is a deprecated name for the seed. It still works, and when you pass both props, `formData` is the seed.
+- `formData` is a deprecated name for the seed. It still works, and when you pass both props, `formData` is the seed. In development, passing both logs the `form-data-both-seeds` warning, which [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make throw.
 
 Rename the prop:
 

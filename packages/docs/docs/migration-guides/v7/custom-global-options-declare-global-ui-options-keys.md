@@ -14,6 +14,7 @@ related: [ui-global-options-hold-only-global-options, theme-global-options-use-t
 - Your own widgets, fields or templates read a key from `registry.globalUiOptions`, their `options`, or a root uiSchema's `ui:globalOptions` that isn't one of RJSF's twelve global options.
 - The type checker reports `Object literal may only specify known properties, and 'density' does not exist in type 'GlobalUISchemaOptions<Record<never, never>>'.` for that key in a typed `ui:globalOptions` literal.
 - On the rendered page: a component no longer sees the global value.
+- In the console: a warning ending in `[global-ui-options-key-not-read]` for a `globalUiOptionsKeys` entry that names an option RJSF reads per field, or `definitions` or `globalOptions`.
 
 ## Change
 
@@ -40,4 +41,4 @@ A custom component hands [`getUiOptions()`](../../api-reference/utility-function
 ## Verify
 
 - The uiSchema compiles, and your components read the declared key from their `options` or `getUiOptions(uiSchema, registry.globalUiOptions)`.
-- A key that is an option name RJSF reads per field, such as `widget`, or `definitions` or `globalOptions`, is not read from `ui:globalOptions`, and the console warns `globalUiOptionsKeys names <key>, an option RJSF reads per field, so it is not read from ui:globalOptions.` Rename such a key.
+- A key that is an option name RJSF reads per field, such as `widget`, or `definitions` or `globalOptions`, is not read from `ui:globalOptions`, and the console warns `globalUiOptionsKeys names <key>, an option RJSF reads per field, so it is not read from ui:globalOptions.` Rename such a key. [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make the `global-ui-options-key-not-read` warning throw.

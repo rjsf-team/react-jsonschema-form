@@ -29,6 +29,8 @@ Each part is named by the field's label and the part, such as `When, year`, in e
 
 The parts' names and placeholders go through `translateString` as `TranslatableString.YearLabel`, `MonthLabel`, `DayLabel`, `HourLabel`, `MinuteLabel` and `SecondLabel`, and the way the label and the part are combined goes through `TranslatableString.DateElementAriaLabel` (`'%1, %2'`), so a locale can reorder them or change the separator ([#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357)). Their English defaults are the lowercase part names the widgets displayed before. A table that maps every key needs them; see [A translateString that maps every key needs the new TranslatableString keys](./translate-string-table-needs-new-keys.md).
 
+A widget of your own that renders date or time parts can name them the same way with the new [`dateElementLabel()`](../../api-reference/utility-functions.md#dateelementlabel) and [`dateElementAriaLabel()`](../../api-reference/utility-functions.md#dateelementarialabel), as `@rjsf/mantine`'s `DateTimeWidget` names its time segments.
+
 Theme `SelectWidget`s changed to carry these names:
 
 - `@rjsf/mui`'s `SelectWidget` describes its combobox instead of the field's root, and an `aria-label` or `aria-describedby` set in an `htmlInput` given through `rjsfSlotProps` still wins over both.

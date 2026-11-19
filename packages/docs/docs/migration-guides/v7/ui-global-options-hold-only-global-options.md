@@ -12,7 +12,7 @@ related: [custom-global-options-declare-global-ui-options-keys, layout-grid-cell
 ## Detect
 
 - Your root uiSchema's `ui:globalOptions` sets a key other than `addable`, `copyable`, `orderable`, `removable`, `label`, `allowClearTextInputs`, `duplicateKeySuffixSeparator`, `enableMarkdownInDescription`, `enableMarkdownInHelp`, `enableOptionalDataFieldForType`, `optionValueFormat` and `deprecatedHandling`.
-- The console warns `ui:globalOptions.<key> is not read: RJSF reads <key> per field only.`, once per key.
+- The console warns `ui:globalOptions.<key> is not read: RJSF reads <key> per field only. [global-option-not-read]`, once per key.
 - The type checker reports `Object literal may only specify known properties, and 'readonly' does not exist in type 'GlobalUISchemaOptions<Record<never, never>>'.` for such a key in a typed `ui:globalOptions` literal.
 
 ## Change
@@ -40,5 +40,5 @@ Keys your own components read need declaring; see [Custom keys in ui:globalOptio
 
 ## Verify
 
-- The console no longer warns about `ui:globalOptions` keys.
+- The console no longer warns about `ui:globalOptions` keys. [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make the `global-option-not-read` warning throw.
 - `StringField`, and `NumberField` through it, now hand their widget the global options beneath the field's own, as `ArrayField` and `BooleanField` already did. A global `allowClearTextInputs` or `optionValueFormat` now reaches every string and number widget; check that this is what you want.

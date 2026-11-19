@@ -14,7 +14,7 @@ related: [layout-grid-discriminated-cell-renders-a-field-wrapper, anyof-oneof-fi
 - In your `fields`: a component registered as `LayoutMultiSchemaField` that renders its own `FieldTemplate`.
 - In a custom `ui:field` inside a `oneOf`/`anyOf` layout grid cell without a discriminator: a read of the `options` or `baseType` prop.
 - On the rendered page: such a cell shows two field wrappers, or a field with no options.
-- In the console: a warning that a discriminated cell names another field.
+- In the console: a warning that a discriminated cell names another field, ending in `[layout-grid-cell-field-ignored]`.
 
 ## Change
 
@@ -34,4 +34,4 @@ Named outside a grid, `LayoutMultiSchemaField` no longer throws. Without `ui:fie
 ## Verify
 
 - Each cell renders one wrapper around one selector, and your field lists the schema's options.
-- The console shows no warning about another field named in a discriminated cell.
+- The console shows no `layout-grid-cell-field-ignored` warning about another field named in a discriminated cell. [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make it throw.

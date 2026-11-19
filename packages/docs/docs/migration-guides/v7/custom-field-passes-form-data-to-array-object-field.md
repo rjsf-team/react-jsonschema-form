@@ -13,7 +13,7 @@ related: []
 
 - A custom field in your code that renders `ArrayField` or `ObjectField` with a sorted, filtered or otherwise copied `formData`.
 - A custom field that hands one part of its data under its own `fieldPath`, such as `<ArrayField {...props} formData={props.formData.items} />`.
-- In development, the console warns: ``ArrayField … was rendered with other `formData` than the form holds at its `fieldPath`.`` (or `ObjectField`).
+- In development, the console warns: ``ArrayField … was rendered with other `formData` than the form holds at its `fieldPath`.`` (or `ObjectField`), ending in `[form-data-not-passed-through]`.
 
 ## Change
 
@@ -28,5 +28,5 @@ The same goes for a field that hands it part of its own data under its own `fiel
 
 ## Verify
 
-- The development warning no longer appears.
+- The development warning `form-data-not-passed-through` no longer appears. [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make it throw.
 - Adding, removing, renaming and reordering through your custom field change the items it shows.

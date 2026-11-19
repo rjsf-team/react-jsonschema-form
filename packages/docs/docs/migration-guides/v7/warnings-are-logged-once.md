@@ -28,6 +28,16 @@ What has been logged is remembered until the page reloads. If your tests assert 
 
 Under Vitest's default `globals: false`, also import `beforeEach` from `vitest`.
 
+To find every problem a migration leaves rather than wait on the console, set `throwOn: ['migration']` with [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) in development or in your test setup. Each warning with a `migration` ID then throws an `RJSFWarningError` whose `id` is named in the upgrade guide entry that explains it. Only the warnings these entries name have an ID, so keep an eye on the console for the rest.
+
+Fix the problems one ID at a time, by listing that ID in `throwOn` alone, or list one in `except` to acknowledge it and keep it logging. A throw while rendering tears the form down unless an error boundary catches it. One raised by an edit, such as adding an array item, throws out of that event handler and leaves the edit undone.
+
+```ts
+import { setWarningOptions } from '@rjsf/utils';
+
+setWarningOptions({ throwOn: ['migration'], except: ['antd-span-twelfths'] });
+```
+
 ## Verify
 
 - Each test that expects an RJSF warning sees it logged, whatever order the tests run in.

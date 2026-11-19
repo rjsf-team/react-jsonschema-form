@@ -11,7 +11,7 @@ related: []
 
 ## Detect
 
-- In the console: a warning naming a `LayoutGridField` with no layout, an empty or unresolved cell, or a condition with no `field`.
+- In the console: a warning naming a `LayoutGridField` with no layout, an empty or unresolved cell, or a condition with no `field`. Each ends in `[layout-grid-renders-nothing]`.
 - In your `uiSchema`: `ui:field: 'LayoutGridField'` with a missing, misspelled or non-object `ui:layoutGrid`.
 - In your `ui:layoutGrid`: a cell such as `{}`, `{ name: '' }` or `{ render: 'Misspelled' }`, or a `ui:condition` with no `field` or a `field` of `''`.
 - On the rendered page: fields, a column of a `ui:columns`, or a condition's children are missing.
@@ -33,4 +33,4 @@ To keep those fields, give the `LayoutGridField` its `ui:layoutGrid`, or drop it
 
 ## Verify
 
-- The console logs no layout grid warnings, and every field you meant to show renders once.
+- The console logs no layout grid warnings, and every field you meant to show renders once. [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make the `layout-grid-renders-nothing` warnings throw.

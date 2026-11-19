@@ -12,7 +12,7 @@ related: [antd-grid-span-counts-twelfths]
 ## Detect
 
 - In your uiSchema: a `ui:col` or `ui:columns` under `ui:layoutGrid` with both a `span` and a `flex` prop, or a `style` with `flex`, `flexBasis` or `width`.
-- In the console: a warning that a layout grid column's `span` is ignored because the column has a width of its own.
+- In the console: a warning that a layout grid column's `span` is ignored because the column has a width of its own, ending in `[antd-span-own-width]`.
 
 ## Change
 
@@ -30,4 +30,4 @@ To size the column by `span` instead, remove the `flex` prop or style, and halve
 
 ## Verify
 
-- The column has the width you kept, and the console logs no warning that its `span` is ignored.
+- The column has the width you kept, and the console logs no warning that its `span` is ignored. [`setWarningOptions()`](../../api-reference/utility-functions.md#setwarningoptions) can make the `antd-span-own-width` warning throw.
