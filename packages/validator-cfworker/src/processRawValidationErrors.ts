@@ -47,16 +47,21 @@ function instanceLocationToProperty(instanceLocation: string): string {
   return instanceLocation.replace(/^#?/, '').split('/').map(decodePointerToken).join('.');
 }
 
-/** Extracts the missing property name from a cfworker `required` error.
+/** Extracts the property names a cfworker `required`, `dependentRequired` or `dependencies` error names.
  *
  * @param error - The cfworker validation error to inspect
- * @returns - The missing property name when the error describes one
+ * @returns - The missing property name when the error describes one, and for a dependency the property that is present
  */
-function extractMissingProperty(error: CFWorkerValidationError): string | undefined {
-  if (error.keyword !== 'required') {
-    return undefined;
+function extractPropertyNames(error: CFWorkerValidationError): [missingProperty?: string, presentProperty?: string] {
+  if (error.keyword === 'required') {
+    return [error.error.match(/required property ["']([^"']+)["']/)?.[1]];
   }
-  return error.error.match(/required property ["']([^"']+)["']/)?.[1];
+  if (error.keyword === 'dependentRequired' || error.keyword === 'dependencies') {
+    const [, presentProperty, missingProperty] =
+      error.error.match(/^Instance has "(.+)" but does not have "(.+)"\.$/) ?? [];
+    return [missingProperty, presentProperty];
+  }
+  return [];
 }
 
 /** Filters duplicate errors from `anyOf`/`oneOf` schema paths according to the `suppressDuplicateFiltering` flag.
@@ -117,33 +122,43 @@ export function transformRJSFValidationErrors<
     let property = instanceLocationToProperty(instanceLocation);
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
-    const missingProperty = extractMissingProperty(error);
+    const [missingProperty, presentProperty] = extractPropertyNames(error);
 
     if (missingProperty) {
-      const path = property ? `${property}.${missingProperty}` : missingProperty;
-      const { title: directTitle } = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path)));
-      let title = directTitle;
-      if (title === undefined) {
-        const uiSchemaPath = keywordLocation
-          .replace(/\/properties\//g, '/')
-          .split('/')
-          .slice(1, -1)
-          .map(decodePointerToken)
-          .concat([missingProperty]);
-        title = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
-      }
-      if (title === undefined && schema) {
-        const propertyParts = property.replace(/^\./, '').split('.').filter(Boolean);
-        const schemaPath: (string | number)[] = [];
-        for (const part of propertyParts) {
-          schemaPath.push(PROPERTIES_KEY, part);
+      const findTitle = (name: string): string | undefined => {
+        const path = property ? `${property}.${name}` : name;
+        let { title } = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path)));
+        if (title === undefined) {
+          const uiSchemaPath = keywordLocation
+            .replace(/\/properties\//g, '/')
+            .split('/')
+            .slice(1, -1)
+            .map(decodePointerToken)
+            .concat([name]);
+          title = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
         }
-        schemaPath.push(PROPERTIES_KEY, missingProperty, 'title');
-        title = getByPath<string | undefined>(schema, schemaPath);
-      }
+        if (title === undefined && schema) {
+          title = getByPath<string | undefined>(schema, [
+            ...property
+              .replace(/^\./, '')
+              .split('.')
+              .filter(Boolean)
+              .flatMap((part) => [PROPERTIES_KEY, part]),
+            PROPERTIES_KEY,
+            name,
+            'title',
+          ]);
+        }
+        return title;
+      };
+      const title = findTitle(missingProperty);
       if (title) {
         message = message.replace(`"${missingProperty}"`, `'${title}'`);
         uiTitle = title;
+      }
+      const presentTitle = presentProperty && findTitle(presentProperty);
+      if (presentTitle) {
+        message = message.replace(`"${presentProperty}"`, `'${presentTitle}'`);
       }
       property = property ? `${property}.${missingProperty}` : missingProperty;
       stack = message;
