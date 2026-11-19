@@ -1,7 +1,7 @@
 import { createRef, useState } from 'react';
 import type { DefaultFormStateBehavior, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { buttonId, createSchemaUtils, getByPath } from '@rjsf/utils';
-import validator from '@rjsf/validator-ajv8';
+import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -1887,6 +1887,43 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       type: 'object',
       definitions: { Color: { type: 'string', enum: colors } },
       properties: { color: { $ref: '#/definitions/Color' }, unrelated: { type: 'string' } },
+    });
+
+    it('validates against only the old and the new root, which the validators keep the compiled schemas of (#5903)', () => {
+      const dependent = (comment: string): RJSFSchema => ({
+        $comment: comment,
+        type: 'object',
+        properties: { owners: { type: 'array', items: { $ref: '#/definitions/person' } } },
+        definitions: {
+          person: {
+            type: 'object',
+            properties: { pets: { type: 'string', enum: ['no', 'yes'] } },
+            dependencies: {
+              pets: {
+                oneOf: [
+                  { properties: { pets: { const: 'no' } } },
+                  { properties: { pets: { const: 'yes' }, age: { type: 'number' } } },
+                ],
+              },
+            },
+          },
+        },
+      });
+      const ownValidator = customizeValidator();
+      const isValid = vi.spyOn(ownValidator, 'isValid');
+      const [before, after] = [dependent('before'), dependent('after')];
+      const props = { validator: ownValidator, initialFormData: { owners: [{ pets: 'yes', age: 6 }, { pets: 'no' }] } };
+      const { rerender } = render(<Form schema={before} {...props} />);
+      isValid.mockClear();
+
+      rerender(<Form schema={after} {...props} />);
+
+      const roots = isValid.mock.calls.map(([, , root]) => root.$comment);
+      const swaps = roots.filter((root, i) => i > 0 && root !== roots[i - 1]).length;
+      // Sanitize retrieves each field through both roots, so the calls go back and forth between them; a third root
+      // would have the two-root caches drop one on every swap
+      expect(new Set(roots)).toEqual(new Set(['before', 'after']));
+      expect(swaps).toBeGreaterThan(1);
     });
 
     it('sanitizes a self-owned form for the new schema as it arrives', () => {

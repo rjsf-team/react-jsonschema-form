@@ -79,32 +79,31 @@ export default class CFWorkerValidator<
    */
   readonly options: CustomValidatorOptionsType;
 
-  /** Per-schema-id cache of constructed `@cfworker/json-schema` validators. AJV uses a
-   * single instance with a schema registry; cfworker is schema-bound, so this
+  /** Per-schema-id cache of constructed `@cfworker/json-schema` validators, those of the root registered last. AJV
+   * uses a single instance with a schema registry; cfworker is schema-bound, so this
    * class maintains the registry itself.
    *
    * @private
    */
-  private readonly validators = new Map<string, CachedValidator>();
+  private validators = new Map<string, CachedValidator>();
+
+  /** The roots registered last, most recent first, at most two, each with the validators built beside it: `Form`'s
+   * sanitize alternates between the old and new root field by field, and each would otherwise drop what the other
+   * built. `schema` is the reference each was seen as last, which skips the deep-equality check when it comes back,
+   * so a root mutated in place keeps the validators built beside it.
+   *
+   * @private
+   */
+  private roots: { schema: S; withId: object; validators: Map<string, CachedValidator> }[] = [];
 
   /** The root schema registered under its `$id`, or `ROOT_SCHEMA_PREFIX` without one, used to resolve prefixed `$ref`
    * values.
    *
    * @private
    */
-  private cachedRootSchema?: object;
-
-  /** Most recent `rootSchema` reference processed by `handleSchemaUpdate`.
-   *
-   * @private
-   */
-  private lastSeenRootSchema?: S;
-
-  /** True once a `rootSchema` has been registered with the engine in this lifecycle.
-   *
-   * @private
-   */
-  private hasRegisteredRootSchema = false;
+  private get cachedRootSchema(): object | undefined {
+    return this.roots[0]?.withId;
+  }
 
   /** Constructs a `CFWorkerValidator` instance using the provided options.
    *
@@ -116,10 +115,8 @@ export default class CFWorkerValidator<
 
   /** Clears all cached schema-bound validators and root-schema state. */
   reset(): void {
-    this.validators.clear();
-    this.cachedRootSchema = undefined;
-    this.lastSeenRootSchema = undefined;
-    this.hasRegisteredRootSchema = false;
+    this.validators = new Map();
+    this.roots = [];
   }
 
   /** Returns a cached schema-bound validator or builds and caches a new one. The root is bound beside the schema unless
@@ -206,7 +203,13 @@ export default class CFWorkerValidator<
    * @param rootSchema - The root schema used to provide `$ref` resolutions
    */
   handleSchemaUpdate(rootSchema: S): void {
-    if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
+    const [current] = this.roots;
+    if (current?.schema === rootSchema) {
+      return;
+    }
+    const seen = this.roots.find((root) => root.schema === rootSchema);
+    if (seen !== undefined) {
+      this.useRoot(seen);
       return;
     }
     // Registered under its own `$id`, a root is what both its own `$ref`s, which resolve against that `$id`, and the
@@ -216,14 +219,35 @@ export default class CFWorkerValidator<
       rootSchema[ID_KEY] === rootSchemaId
         ? (rootSchema as object)
         : { ...(rootSchema as object), [ID_KEY]: rootSchemaId };
-
-    if (this.cachedRootSchema && !deepEquals(this.cachedRootSchema, rootWithId)) {
-      this.validators.clear();
+    const equal = this.roots.find((root) => deepEquals(root.withId, rootWithId));
+    if (equal !== undefined) {
+      equal.schema = rootSchema;
+      this.useRoot(equal);
+      return;
     }
-    this.cachedRootSchema = rootWithId;
+    // Every validator resolves its `$ref`s against the root it was bound beside, so a schema such as
+    // `{ $ref: '#/definitions/x' }`, which means something else under every root, is built again for this one. The
+    // first root keeps those `rawValidation()` built before it, which `getOrBuild()` rebuilds where the root changes them
+    this.useRoot({
+      schema: rootSchema,
+      withId: rootWithId,
+      validators: this.roots.length === 0 ? this.validators : new Map(),
+    });
     this.getOrBuild(rootSchemaId, rootWithId);
-    this.lastSeenRootSchema = rootSchema;
-    this.hasRegisteredRootSchema = true;
+  }
+
+  /** Makes `root` the one validators are bound beside, dropping the least recently used beyond two
+   *
+   * @param root - The root to use
+   */
+  private useRoot(root: (typeof this.roots)[number]) {
+    const [current, previous] = this.roots;
+    if (root === previous) {
+      this.roots.reverse();
+    } else if (root !== current) {
+      this.roots = current === undefined ? [root] : [root, current];
+    }
+    this.validators = root.validators;
   }
 
   /** Validates data against a schema, returning false if the schema is invalid.
