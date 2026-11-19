@@ -120,6 +120,7 @@ import retrieveSchema, {
   isLeafSchema,
   optionMatchContext,
   optionMatchKey,
+  OPTION_KEYWORDS,
   optionNode as offeredOption,
   resolveMergedOwnRef,
   retrieveField,
@@ -132,9 +133,6 @@ const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
 /** The keywords retrieving a schema merges subschemas in through; it leaves the own keywords of a schema holding none */
 const MERGING_KEYWORDS = [REF_KEY, ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY];
-
-/** The keywords offering a field `anyOf`/`oneOf` options */
-const OPTION_LIST_KEYS: readonly XxxOfOptions['key'][] = [ANY_OF_KEY, ONE_OF_KEY];
 
 /** The keywords through which a schema may reject a value that is no object: the options it offers, and those that
  * merge in subschemas that may hold them. Under `constAsDefaults: 'always'` its `const` replaces the value too
@@ -1799,11 +1797,12 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // generated its defaults. Under `constAsDefaults: 'always'` a missing value takes the field's `const`, as the
       // match gives a field its own one, wherever the merge brings it in. The match reads no `const` of the option an
       // unmerged `allOf` offers, so a value of any kind takes one the field takes from such an option, as the option's
-      // own match gives it where the field offers the list itself, except a whole value, which the select keeps
+      // own match gives it where the field offers the list itself, except a whole value: that is only the select's
+      // default, as one the field offers itself makes it, so a `ui:initialValue` stands in its place
       const takesConst =
         defaultFormStateBehavior?.constAsDefaults === 'always' &&
         constDefault &&
-        (rawFormData === undefined || (adoptedConst !== undefined && foldedType !== 'whole'));
+        (adoptedConst === undefined ? rawFormData === undefined : foldedType !== 'whole');
       const matching = takesConst
         ? constSchema[CONST_KEY]
         : viewFormDataMatching<unknown, S, F>(context, view, rawFormData, defaults);
@@ -1868,8 +1867,9 @@ function adoptedOptionConst<T, S extends StrictRJSFSchema, F extends FormContext
   };
   const choice = chooseOption<T, S, F>(context, offering, list, rawFormData, defaults, preferParentDefaults, props);
   const option = list.options[choice.index];
-  // A select over whole values keeps whatever value the field holds, as one the field offers itself does
-  const keepsWholeValue = rawFormData !== undefined && !always && choice.wholeOptions !== undefined;
+  // A select over whole values keeps whatever value the field holds, as one the field offers itself does, even under
+  // `'always'`
+  const keepsWholeValue = rawFormData !== undefined && choice.wholeOptions !== undefined;
   if (!isSchemaObject<S>(option) || keepsWholeValue) {
     return undefined;
   }
@@ -3614,7 +3614,7 @@ function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextTy
 const optionConstReach = new KeyedMemo<boolean>();
 function optionReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, { id }: ObjectNode<S>): boolean {
   return optionConstReach.get([graph, id], () =>
-    OPTION_LIST_KEYS.some((keyword) =>
+    OPTION_KEYWORDS.some((keyword) =>
       graph.subschemas(id, keyword).some(([, option]) => mergeReachesConst<S>(graph, option, false, false)),
     ),
   );
@@ -3760,7 +3760,7 @@ function optionsMergedField<S extends StrictRJSFSchema, F extends FormContextTyp
     return undefined;
   }
   const plan = buildPlan<S, F>({ context, ...field, policy: { allOf: true, conditions: false } });
-  const chosenKeys = OPTION_LIST_KEYS.filter((keyword) => view.options.chosen.has(plan.schema[keyword]));
+  const chosenKeys = OPTION_KEYWORDS.filter((keyword) => view.options.chosen.has(plan.schema[keyword]));
   return {
     schema: chosenKeys.length > 0 ? withoutKeys(plan.schema, ...chosenKeys) : plan.schema,
     seeding: { graph: plan.graph, chains: plan.chains },

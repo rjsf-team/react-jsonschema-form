@@ -179,7 +179,8 @@ function isLeaf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): b
   return stamped === undefined || (isHandedOut(schema) && mergesNothing(stamped.graph, stamped.seeds));
 }
 
-const OPTION_KEYWORDS: readonly ('anyOf' | 'oneOf')[] = [ANY_OF_KEY, ONE_OF_KEY];
+/** The keywords offering a field `anyOf`/`oneOf` options */
+export const OPTION_KEYWORDS: readonly ('anyOf' | 'oneOf')[] = [ANY_OF_KEY, ONE_OF_KEY];
 
 function handOut<S extends StrictRJSFSchema>(schema: S, provenance: Provenance<S>): S {
   const stamped = stamp(schema, provenance);

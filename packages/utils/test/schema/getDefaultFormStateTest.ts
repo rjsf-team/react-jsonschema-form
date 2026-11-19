@@ -7469,6 +7469,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               getDefaultFormState(always, { schema: objects.own, formData: { x: null } }),
             );
           });
+          describe("a select over whole values under constAsDefaults: 'always'", () => {
+            const always = {
+              validator: testValidator,
+              defaultFormStateBehavior: { allOf: 'skipDefaults' as const, constAsDefaults: 'always' as const },
+            };
+            const objects = ownAndNested({ oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }, rootOf);
+            it('keeping no constant for object data none of them is', () => {
+              for (const formData of [{ x: { a: 5 } }, { x: {} }]) {
+                // `toEqual`, since the nested field keeps its key as `undefined` where the field's own select drops
+                // it, as it does under every setting
+                expect(getDefaultFormState(always, { schema: objects.nested, formData })).toEqual(
+                  getDefaultFormState(always, { schema: objects.own, formData }),
+                );
+              }
+            });
+            it('starting as its ui:initialValue', () => {
+              const uiSchema = { x: { 'ui:initialValue': { a: 2 } } };
+              expect(getDefaultFormState(always, { schema: objects.nested, uiSchema })).toStrictEqual(
+                getDefaultFormState(always, { schema: objects.own, uiSchema }),
+              );
+              expect(getDefaultFormState(always, { schema: objects.nested, uiSchema })).toStrictEqual({ x: { a: 2 } });
+            });
+          });
           it.each<[string, unknown, Partial<DefaultFormStateBehavior>]>([
             ['a NaN', Number.NaN, {}],
             [
