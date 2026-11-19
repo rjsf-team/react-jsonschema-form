@@ -480,6 +480,61 @@ describe('resolveUiSchema() - the options of an allOf member', () => {
     expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions))).toEqual({});
   });
 
+  const fooOrBarOneOf = { oneOf: fooOrBar.anyOf };
+  const pickA: RJSFSchema = { properties: { k: { const: 'a' } } };
+  const pickB: RJSFSchema = { properties: { k: { const: 'b' }, e: { type: 'string' } } };
+  const picks = {
+    PickA: pickA,
+    PickB: pickB,
+    Picks: { oneOf: [pickA, pickB] },
+    Shared: { type: 'object' },
+  } satisfies RJSFSchema['$defs'];
+  it.each<[string, RJSFSchema]>([
+    ['inline', { oneOf: [pickA, pickB] }],
+    ['named by a $ref', { $ref: '#/$defs/Picks' }],
+    ['whose options are named by $refs', { oneOf: [false, { $ref: '#/$defs/PickA' }, { $ref: '#/$defs/PickB' }] }],
+    ['whose option loops back to itself', { oneOf: [pickA, { ...pickB, allOf: [{ $ref: '#/$defs/Loop' }] }] }],
+  ])("merges a member's options beside a dependencies entry whose oneOf picks the branch, %s", (_label, entry) => {
+    const rootSchema: RJSFSchema = {
+      $defs: { ...$defs, ...picks },
+      type: 'object',
+      properties: { k: { type: 'string', enum: ['a', 'b'] } },
+      allOf: [fooOrBarOneOf],
+      dependencies: { k: entry },
+    };
+    const result = resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Foo' }, { 'ui:title': 'Bar' }]);
+  });
+
+  it.each<[string, RJSFSchema['dependencies']]>([
+    ["an entry's oneOf no option of which declares its key", { k: { oneOf: [{ properties: { e: {} } }] } }],
+    ['an option the oneOf picks', { k: { oneOf: [pickA, { ...pickB, oneOf: [{ type: 'string' }] }] } }],
+    ['an entry under a key its shared oneOf declares and one it does not', { k: picks.Picks, other: picks.Picks }],
+    [
+      'the second option of two naming the same $ref',
+      {
+        k: {
+          oneOf: [
+            { $ref: '#/$defs/Shared', ...pickA },
+            { $ref: '#/$defs/Shared', ...pickB, oneOf: [{ type: 'string' }, { type: 'number' }] },
+          ],
+        },
+      },
+    ],
+  ])("merges none of a member's oneOf options where %s offers a oneOf list", (_label, dependencies) => {
+    const rootSchema: RJSFSchema = { $defs: { ...$defs, ...picks }, allOf: [fooOrBarOneOf], dependencies };
+    expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions))).toEqual({});
+  });
+
+  it("merges none of a member's anyOf options where an option a dependencies entry's oneOf picks offers an anyOf", () => {
+    const rootSchema: RJSFSchema = {
+      $defs,
+      allOf: [fooOrBar],
+      dependencies: { k: { oneOf: [pickA, { ...pickB, anyOf: [{ type: 'string' }] }] } },
+    };
+    expect(resolveUiSchema(rootSchema, undefined, makeRegistry(rootSchema, definitions))).toEqual({});
+  });
+
   it("merges the field's own options where its allOf loops back to the definition it is", () => {
     const rootSchema: RJSFSchema = { $defs: { ...$defs, Node: { ...fooOrBar, allOf: [{ $ref: '#/$defs/Node' }] } } };
     const result = resolveUiSchema({ $ref: '#/$defs/Node' }, undefined, makeRegistry(rootSchema, definitions));

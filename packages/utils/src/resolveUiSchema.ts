@@ -13,7 +13,9 @@ import {
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
-import { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
+import KeyedMemo from './schema/graph/keyedMemo.ts';
+import parseSchemaGraph, { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
+import { declaresNoKey } from './schema/graph/validationTargets.ts';
 import { resolveOwnRef } from './schema/retrieveSchema.ts';
 import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
@@ -64,7 +66,9 @@ function listedOptions(schema: StrictRJSFSchema, keyword: OptionsKeyword): unkno
 /** Returns the `oneOf` and `anyOf` lists the field of `schema` offers once `retrieveSchema()` merges its `allOf`: its
  * own, or the one an `allOf` member offers, which the merge hoists as it is. Two lists are merged into the pairings of
  * their options, whose positions need not be those of either list, so there is none to return for that keyword then.
- * Nor is there where a `then`/`else` or `dependencies` entry offers one, which the data merges in or not
+ * Nor is there where a `then`/`else` or `dependencies` entry offers one, which the data merges in or not. A
+ * `dependencies` entry's own `oneOf` whose options declare its key offers none: the data picks the option merged in, so
+ * only the lists its options offer are conditional
  *
  * @param schema - The field's schema, with its own `$ref` resolved
  * @param fieldRef - The `$ref` the field's schema was resolved from, if any, so a member looping back to it isn't
@@ -82,8 +86,11 @@ function offeredOptions<S extends StrictRJSFSchema>(
   }
   const lists: Record<OptionsKeyword, unknown[][]> = { [ONE_OF_KEY]: [], [ANY_OF_KEY]: [] };
   const conditional = new Set<OptionsKeyword>();
-  const followed = new Set<string>(fieldRef ? [`false|${fieldRef}`] : []);
-  const collect = (node: unknown, inBranch: boolean) => {
+  const followed = new KeyedMemo<boolean>();
+  if (fieldRef) {
+    followed.set([fieldRef], true);
+  }
+  const collect = (node: unknown, inBranch: boolean, dependencyKey?: string) => {
     if (!isObject(node)) {
       return;
     }
@@ -91,16 +98,24 @@ function offeredOptions<S extends StrictRJSFSchema>(
     const ref = stringKeyword(node, REF_KEY);
     const isFollowed = ref !== undefined && node !== schema;
     if (isFollowed) {
-      // A member naming a definition already followed is one whose `allOf` loops back to it. A branch is followed
-      // apart, as its list is conditional even where a member offers the same one
-      const visit = `${inBranch}|${ref}`;
-      if (followed.has(visit)) {
+      // A member naming a definition already followed is one whose `allOf` loops back to it. A branch is followed per
+      // occurrence and `dependencies` key, as the keywords beside its `$ref` and the key choosing its option can differ
+      const visit = inBranch ? [node, dependencyKey] : [ref];
+      if (followed.peek(visit)) {
         return;
       }
-      followed.add(visit);
+      followed.set(visit, true);
       resolved = tryResolveOwnRef<S>(resolved, rootSchema);
       if (!resolved) {
         return;
+      }
+    }
+    const selector = listedOptions(resolved, ONE_OF_KEY);
+    if (dependencyKey !== undefined && selector) {
+      const { graph, node: id } = parseSchemaGraph(rootSchema).adopt(resolved);
+      if (!declaresNoKey(graph, id, dependencyKey)) {
+        selector.forEach((option) => collect(option, true));
+        resolved = { ...resolved, [ONE_OF_KEY]: undefined };
       }
     }
     // A `$ref` reaching a list already read under another name, such as an alias of the field's own definition, reaches
@@ -118,12 +133,10 @@ function offeredOptions<S extends StrictRJSFSchema>(
       members.forEach((member) => collect(member, inBranch));
     }
     const dependencies = resolved[DEPENDENCIES_KEY];
-    const branches = [
-      resolved[THEN_KEY],
-      resolved[ELSE_KEY],
-      ...(isObject(dependencies) ? Object.values(dependencies) : []),
-    ];
-    branches.forEach((branch) => collect(branch, true));
+    [resolved[THEN_KEY], resolved[ELSE_KEY]].forEach((branch) => collect(branch, true));
+    if (isObject(dependencies)) {
+      Object.entries(dependencies).forEach(([key, entry]) => collect(entry, true, key));
+    }
   };
   collect(schema, false);
   const one = (keyword: OptionsKeyword) =>
@@ -138,7 +151,9 @@ function offeredOptions<S extends StrictRJSFSchema>(
  * For schemas with `oneOf`/`anyOf` branches, its own or those of an `allOf` member, also populates
  * `uiSchema[keyword][i]` for branches whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option
  * titles. It populates none for a keyword that two lists, or a `then`/`else` or `dependencies` entry, offer, since the
- * list the field shows then need not keep the written positions; `mergeOptionDefinitions()` merges those.
+ * list the field shows then need not keep the written positions; `mergeOptionDefinitions()` merges those. A
+ * `dependencies` entry's `oneOf` whose options declare the entry's key doesn't count, as the data picks one of its
+ * options to merge in rather than showing it, though a list one of its options offers does.
  *
  * Resolution order (later sources override earlier):
  * 1. `ui:definitions[$ref]` - base definition from registry

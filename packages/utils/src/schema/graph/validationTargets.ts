@@ -395,6 +395,23 @@ export function declaredProperties<S extends StrictRJSFSchema = RJSFSchema>(
   });
 }
 
+/** Returns whether a `dependencies` entry's `oneOf` is one no option of which declares the entry's `key`, which
+ * `retrieveSchema()` reads as a list beside the field's own rather than as the choice of the branch the data applies
+ *
+ * @param graph - The graph of the root
+ * @param id - The node holding the `oneOf`
+ * @param key - The `dependencies` entry's key
+ * @returns - Whether the `oneOf` has options and none of them declares `key`
+ */
+export function declaresNoKey<S extends StrictRJSFSchema = RJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  key: string,
+): boolean {
+  const options = graph.subschemas(id, ONE_OF_KEY);
+  return options.length > 0 && options.every(([, option]) => declaredProperties(graph, option, key).length === 0);
+}
+
 /** Returns the nodes of the property `key` that the scope `scopeOf()` lists for the node `id` declares, as
  * `declarationsAt()` finds them reached at no place in particular
  */

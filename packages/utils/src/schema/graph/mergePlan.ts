@@ -27,7 +27,7 @@ import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
-import { declaredProperties, dependencyCondition, targetOf } from './validationTargets.ts';
+import { declaredProperties, declaresNoKey, dependencyCondition, targetOf } from './validationTargets.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -830,7 +830,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // Only the entry's own lists are read as the lists beside `dependencies` are; an `allOf` member or a `then`/`else`
     // of the entry offers its `anyOf` and reads its `oneOf` as a dynamic dependency of the entry's key
     const entryKey = edge === 'dependency' ? dependencyKey : undefined;
-    const unkeyedOneOf = entryKey !== undefined && oneOf !== undefined && this.declaresNoKey(oneOf, entryKey);
+    const unkeyedOneOf =
+      entryKey !== undefined && oneOf !== undefined && declaresNoKey(this.graph, oneOf.node.id, entryKey);
     if (dependencyKey === undefined) {
       const dependencies = keywords.has(DEPENDENCIES_KEY);
       part = this.applyOption(part, ANY_OF_KEY, keywords.get(ANY_OF_KEY), dependencies);
@@ -1029,13 +1030,6 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       next = mergeBranch(next, keyed ? withoutProperty(anyOf.option, key) : anyOf.option, 'o', anyOf.id);
     }
     return oneOf === undefined ? next : mergeBranch(next, oneOf.option, 'o', oneOf.id);
-  }
-
-  private declaresNoKey(oneOf: Provider<S>, key: string): boolean {
-    const options = this.graph.subschemas(oneOf.node.id, ONE_OF_KEY);
-    return (
-      options.length > 0 && options.every(([, option]) => declaredProperties(this.graph, option, key).length === 0)
-    );
   }
 
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;
