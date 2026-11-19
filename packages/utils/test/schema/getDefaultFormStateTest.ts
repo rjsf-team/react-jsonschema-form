@@ -7657,16 +7657,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             own: field(list),
             nested: field({ allOf: [list] }),
           });
-          it.each<[string, RJSFSchema, Partial<DefaultFormStateBehavior>]>([
-            ['an ancestor default the option holds no part of', { default: { x: {} } }, {}],
-            ['an ancestor null the field cannot hold', { default: { x: null } }, {}],
-            [
-              'an ancestor default under ancestorWins',
-              { default: { x: {} } },
-              { nestedDefaultsPrecedence: 'ancestorWins' },
-            ],
-          ])('the option const winning over %s', (_, root, behavior) => {
-            const { own, nested } = ownAndNested({ oneOf: [{ const: C }] }, (list) => ({ ...rootOf(list), ...root }));
+          it('the option const winning over an ancestor null the field cannot hold', () => {
+            const { own, nested } = ownAndNested({ oneOf: [{ const: C }] }, (list) => ({
+              ...rootOf(list),
+              default: { x: null },
+            }));
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
+              getDefaultFormState(skipping, { schema: own }),
+            );
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ x: C });
+          });
+          it.each<[string, Partial<DefaultFormStateBehavior>]>([
+            ['descendantWins', {}],
+            ['ancestorWins', { nestedDefaultsPrecedence: 'ancestorWins' }],
+          ])('an ancestor default naming none of the object constants under %s, as an enum takes it', (_, behavior) => {
+            const { own, nested } = ownAndNested({ oneOf: [{ const: C }] }, (list) => ({
+              ...rootOf(list),
+              default: { x: {} },
+            }));
+            const enumField: RJSFSchema = { ...rootOf({ enum: [C] }), default: { x: {} } };
             const context = {
               validator: testValidator,
               defaultFormStateBehavior: { allOf: 'skipDefaults' as const, ...behavior },
@@ -7674,9 +7683,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(context, { schema: nested })).toStrictEqual(
               getDefaultFormState(context, { schema: own }),
             );
-            expect(getDefaultFormState(context, { schema: nested })).toStrictEqual({ x: C });
+            expect(getDefaultFormState(context, { schema: own })).toStrictEqual(
+              getDefaultFormState(context, { schema: enumField }),
+            );
+            expect(getDefaultFormState(context, { schema: nested })).toStrictEqual({ x: {} });
           });
-          it('the closest const winning over a parent default naming none', () => {
+          it('a parent default naming none of the constants, as an enum takes it', () => {
             const { own, nested } = ownAndNested({ oneOf: [{ const: 3 }, { const: 4 }] }, (list) => ({
               type: 'object',
               required: ['n'],
@@ -7686,7 +7698,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
               getDefaultFormState(skipping, { schema: own }),
             );
-            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ n: 3 });
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ n: 7 });
           });
           describe.each<[string, DefaultFormStateBehavior['allOf']]>([
             ['skipDefaults', 'skipDefaults'],
@@ -7724,6 +7736,46 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 }
               },
             );
+            it.each<[string, (field: RJSFSchema, value: string) => RJSFSchema, (value: string) => unknown]>([
+              ['its own at the root', (field, value) => ({ ...field, default: value }), (value) => value],
+              [
+                'its own as a property',
+                (field, value) => ({ type: 'object', properties: { c: { ...field, default: value } } }),
+                (value) => ({ c: value }),
+              ],
+              [
+                'an ancestor at the root',
+                (field, value) => ({ type: 'object', default: { c: value }, properties: { c: field } }),
+                (value) => ({ c: value }),
+              ],
+              [
+                'an ancestor as a property',
+                (field, value) => ({
+                  type: 'object',
+                  properties: { o: { type: 'object', default: { c: value }, properties: { c: field } } },
+                }),
+                (value) => ({ o: { c: value } }),
+              ],
+            ])('a default of %s naming none of the constants, taken as an enum takes it', (_where, withDefault, at) => {
+              const list = { oneOf: [{ const: 'red' }, { const: 'green' }] };
+              const enumField: RJSFSchema = { type: 'string', enum: ['red', 'green'] };
+              const own: RJSFSchema = { type: 'string', ...list };
+              const nested: RJSFSchema = { type: 'string', allOf: [list] };
+              for (const [value, data, expected] of [
+                ['blue', undefined, 'blue'],
+                ['blue', 'purple', 'blue'],
+                ['green', undefined, 'green'],
+              ] as const) {
+                for (const initialDefaultsGenerated of [false, true]) {
+                  const props = { formData: data === undefined ? undefined : at(data), initialDefaultsGenerated };
+                  const defaultsOf = (field: RJSFSchema) =>
+                    getDefaultFormState(context, { schema: withDefault(field, value), ...props });
+                  expect(defaultsOf(own)).toStrictEqual(defaultsOf(enumField));
+                  expect(defaultsOf(nested)).toStrictEqual(defaultsOf(enumField));
+                  expect(defaultsOf(own)).toStrictEqual(at(expected));
+                }
+              }
+            });
             it.each<[string, UiSchema]>([
               ['no entries of their own', { n: { 'ui:initialValue': 4 } }],
               ['entries of their own', { n: { 'ui:initialValue': 4, oneOf: [{}, {}] } }],

@@ -1676,7 +1676,20 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         props,
       );
       isWholeValue = choice.isWholeValue;
-      if (choice.wholeOptions === undefined) {
+      // A list of constants holds one of them whole, as an `enum` does, so a default naming none of them is the field's
+      // value as it stands, as an `enum`'s is, rather than giving way to the constant of the option it picked. It is
+      // the value out-of-list data is replaced by below, unless the constant wins over both under `constAsDefaults:
+      // 'always'`
+      const fieldDefault =
+        choice.offersConstants && rawFormData === undefined && defaultFormStateBehavior?.constAsDefaults !== 'always'
+          ? ownDefaults()
+          : undefined;
+      if (
+        fieldDefault !== undefined &&
+        viewFormDataMatching<unknown, S, F>(context, view, fieldDefault) === undefined
+      ) {
+        defaults = fieldDefault;
+      } else if (choice.wholeOptions === undefined) {
         // The object's `ui:initialValue` stands in its `const`'s place, whichever uiSchema its option has
         const initialValue = foldsOptionUnderConst ? uiInitialValue : undefined;
         // A select renders none of its options, so no uiSchema entry of an option applies: the option is folded with
@@ -1747,22 +1760,23 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           }
         }
         return optionValue;
-      }
-      // Resolved here rather than by recursing into the option as a primitive select is, since the option's constant
-      // is taken as a whole: filling in its properties or items would reduce it to an empty value no option allows.
-      // The constant wins over an inherited default, as it does for a primitive `const`, unless constants are never
-      // defaults. The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by
-      // `typeDefaults()`
-      // Any constant is reported, since only an object one is left out, and only an object value is folded without it
-      props.onObjectConst?.();
-      const constant = toConstant<S>(choice.wholeOptions[choice.index]);
-      if (
-        rawFormData === undefined &&
-        !foldsOptionUnderConst &&
-        !(props.leavesOutObjectConst && isObjectData(constant)) &&
-        choice.context.defaultFormStateBehavior?.constAsDefaults !== 'never'
-      ) {
-        defaults = ownValue(constant);
+      } else {
+        // Resolved here rather than by recursing into the option as a primitive select is, since the option's constant
+        // is taken as a whole: filling in its properties or items would reduce it to an empty value no option allows.
+        // The constant wins over an inherited default, as it does for a primitive `const`, unless constants are never
+        // defaults. The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by
+        // `typeDefaults()`
+        // Any constant is reported, since only an object one is left out, and only an object value is folded without it
+        props.onObjectConst?.();
+        const constant = toConstant<S>(choice.wholeOptions[choice.index]);
+        if (
+          rawFormData === undefined &&
+          !foldsOptionUnderConst &&
+          !(props.leavesOutObjectConst && isObjectData(constant)) &&
+          choice.context.defaultFormStateBehavior?.constAsDefaults !== 'never'
+        ) {
+          defaults = ownValue(constant);
+        }
       }
     }
   }
