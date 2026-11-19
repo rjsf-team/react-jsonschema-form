@@ -181,6 +181,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
         expect(fill({ type: 'object', properties: { o: option } })).toStrictEqual({ o: { q: 'd' } });
       });
+      it("leaves out a key only the shown option declares in an array row the const gives, the array's own or an ancestor's", () => {
+        const option: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'number' } },
+          oneOf: [{ properties: { q: { type: 'string', default: 'd' } } }],
+        };
+        const list: RJSFSchema = { type: 'array', items: { type: 'object', properties: { o: option } } };
+        const rows = [{ o: { a: 1 } }];
+        expect(fill({ type: 'object', const: { l: rows }, properties: { l: list } })).toStrictEqual({ l: rows });
+        expect(fill({ type: 'object', properties: { l: { ...list, const: rows } } })).toStrictEqual({ l: rows });
+        expect(fill({ type: 'object', properties: { l: { ...list, default: rows } } })).toStrictEqual({
+          l: [{ o: { a: 1, q: 'd' } }],
+        });
+      });
       it("keeps the keys of a ui:initialValue and of the field's own default beside the shown option under an ancestor's const", () => {
         const option: RJSFSchema = {
           type: 'object',

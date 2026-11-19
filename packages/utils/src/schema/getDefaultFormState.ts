@@ -1556,9 +1556,10 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     ? resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions })
     : localUiSchema;
   const props = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
+  const uiInitialValue = getUiOptions<T, S, F>(uiSchema).initialValue;
   // A `ui:initialValue` takes the place of an ancestor's `const` on every pass, as it does of the field's own below, so
   // the defaults beneath it aren't taken back by the `const` once the defaults were generated
-  const parentConst = getUiOptions<T, S, F>(uiSchema).initialValue === undefined ? props.parentConst : undefined;
+  const parentConst = uiInitialValue === undefined ? props.parentConst : undefined;
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
   // A value an ancestor's `const` gives the field stands in for inherited defaults that don't reach it, as for a row of
   // an array the data holds once the defaults were generated, whose defaults are read from the row
@@ -1586,8 +1587,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     defaults = ownValue(constSchema[CONST_KEY]);
   }
   // The `const` whose value the field hands its children: its own where it is the field's default, otherwise the one an
-  // ancestor gives it, unless a `ui:initialValue` takes the place of either below
-  let givenConst = constDefault ? constSchema[CONST_KEY] : parentConst;
+  // ancestor gives it, unless a `ui:initialValue` takes the place of either, so the defaults beneath it that the first
+  // pass gave its keys aren't taken back by the `const` once the defaults were generated
+  const givenConst = constDefault && uiInitialValue === undefined ? constSchema[CONST_KEY] : parentConst;
   // The defaults the field's own `default` and the inherited ones give it: its own wins unless they have precedence, and
   // two objects are merged, except for a select over object constants, whose own default and inherited default each
   // name a whole constant, so a blend of them names none
@@ -1642,7 +1644,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       isWholeValue = choice.isWholeValue;
       if (choice.wholeOptions === undefined) {
         // The object's `ui:initialValue` stands in its `const`'s place, whichever uiSchema its option has
-        const initialValue = foldsOptionUnderConst ? getUiOptions<T, S, F>(uiSchema).initialValue : undefined;
+        const initialValue = foldsOptionUnderConst ? uiInitialValue : undefined;
         const foldedOption = foldOption<T, S, F>(
           choice.context,
           view,
@@ -1654,19 +1656,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         // Under the object's own `const`, or the value an ancestor's gives it, a key only the option declares, which the
         // `const` doesn't name and the data doesn't hold, is left out: its default would make the object a value the
         // `const` rejects. A key the `ui:initialValue` names is kept, since that value stands in the `const`'s place, and
-        // under an ancestor's `const` so is a key of the defaults the field inherits or declares, as beside no options
+        // under an ancestor's `const`, which a `ui:initialValue` puts out of reach, so is a key of the defaults the field
+        // inherits or declares, as beside no options
         const givenObjectConst =
           !foldsOptionUnderConst && preferParentDefaults && isObjectData(parentConst) ? parentConst : undefined;
         const keeping = foldsOptionUnderConst
           ? [constSchema[CONST_KEY], schema.properties, rawFormData, initialValue]
-          : givenObjectConst && [
-              givenObjectConst,
-              schema.properties,
-              rawFormData,
-              getUiOptions<T, S, F>(uiSchema).initialValue,
-              defaults,
-              schema.default,
-            ];
+          : givenObjectConst && [givenObjectConst, schema.properties, rawFormData, defaults, schema.default];
         const optionValue =
           keeping && isObjectData(foldedOption) ? withoutKeysOutside(foldedOption, keeping) : foldedOption;
         // Data the field takes is its own even where the option it renders through holds none of it, as an option with
@@ -1727,11 +1723,6 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // nothing else (formData, schema default or `ui:initialValue`) has produced a value for the field.
   if (uiSchema) {
     const { initialValue, emptyValue } = getUiOptions<T, S, F>(uiSchema);
-    // The `ui:initialValue` stands in the place of the `const` on every pass, so the defaults beneath it that the first
-    // pass gave its keys aren't taken back by the `const` once the defaults were generated
-    if (initialValue !== undefined) {
-      givenConst = undefined;
-    }
     if (initialValue !== undefined && !initialDefaultsGenerated) {
       defaults = initialValue;
     } else if (defaults === undefined && emptyValue !== undefined) {
@@ -3089,7 +3080,13 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
         context,
         `defaultRow:${idx}`,
         itemField(view, AdditionalItemsHandling.Ignore),
-        { ...itemProps(idx), rawFormData: stated, parentDefaults: stated, shouldMergeDefaultsIntoFormData: true },
+        {
+          ...itemProps(idx),
+          rawFormData: stated,
+          parentDefaults: stated,
+          parentConst: getByPath(givenConst, idx),
+          shouldMergeDefaultsIntoFormData: true,
+        },
         memo,
       );
       return mergeDefaultsWithFormData(row, stated, mergeExtraDefaults, true);
