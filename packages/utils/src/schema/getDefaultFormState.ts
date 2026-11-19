@@ -1556,7 +1556,8 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     ? resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions })
     : localUiSchema;
   const props = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
-  const uiInitialValue = getUiOptions<T, S, F>(uiSchema).initialValue;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiInitialValue = uiOptions.initialValue;
   // A `ui:initialValue` takes the place of an ancestor's `const` on every pass, as it does of the field's own below, so
   // the defaults beneath it aren't taken back by the `const` once the defaults were generated
   const parentConst = uiInitialValue === undefined ? props.parentConst : undefined;
@@ -1586,10 +1587,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (constDefault) {
     defaults = ownValue(constSchema[CONST_KEY]);
   }
+  // A value an ancestor's `const` gives that the field's type can't hold is no value of the field, so it gives none of
+  // its parts to the field's children
+  const heldParentConst = preferParentDefaults ? parentConst : undefined;
   // The `const` whose value the field hands its children: its own where it is the field's default, otherwise the one an
   // ancestor gives it, unless a `ui:initialValue` takes the place of either, so the defaults beneath it that the first
   // pass gave its keys aren't taken back by the `const` once the defaults were generated
-  const givenConst = constDefault && uiInitialValue === undefined ? constSchema[CONST_KEY] : parentConst;
+  const givenConst = constDefault && uiInitialValue === undefined ? constSchema[CONST_KEY] : heldParentConst;
   // The defaults the field's own `default` and the inherited ones give it: its own wins unless they have precedence, and
   // two objects are merged, except for a select over object constants, whose own default and inherited default each
   // name a whole constant, so a blend of them names none
@@ -1721,13 +1725,10 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
   // `ui:initialValue` takes priority over `schema.default`; `ui:emptyValue` is only used as a last resort, when
   // nothing else (formData, schema default or `ui:initialValue`) has produced a value for the field.
-  if (uiSchema) {
-    const { initialValue, emptyValue } = getUiOptions<T, S, F>(uiSchema);
-    if (initialValue !== undefined && !initialDefaultsGenerated) {
-      defaults = initialValue;
-    } else if (defaults === undefined && emptyValue !== undefined) {
-      defaults = emptyValue;
-    }
+  if (uiInitialValue !== undefined && !initialDefaultsGenerated) {
+    defaults = uiInitialValue;
+  } else if (defaults === undefined && uiOptions.emptyValue !== undefined) {
+    defaults = uiOptions.emptyValue;
   }
 
   const foldedType = foldedTypeOf<T, S, F>(

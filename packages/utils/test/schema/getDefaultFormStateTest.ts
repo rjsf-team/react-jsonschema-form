@@ -394,6 +394,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           testValidator.reset?.();
         }
       });
+      it("hands none of an ancestor's const to the children of a field whose type can't hold the value it gives", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          const: { p: ['a'] },
+          properties: { p: { type: 'object', properties: { '0': { type: 'string', default: 'z' } } } },
+        };
+        expect(fill(schema)).toStrictEqual({ p: { '0': 'z' } });
+      });
       it("still takes the defaults beneath where constAsDefaults is 'never'", () => {
         const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
         expect(fill(declaredDefault, never)).toStrictEqual({ a: 2 });
