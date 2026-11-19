@@ -1,6 +1,6 @@
-// The filtered page's logic that needs neither React nor the browser, so `node --test` runs it as it is.
+// The upgrade guide's page logic that needs neither React nor the browser, so `node --test` runs it as it is.
 
-import { FRONT_MATTER } from '../../../plugins/upgrade-guide/markdown.js';
+import { FRONT_MATTER, andList, codeList, codes } from '../../../plugins/upgrade-guide/markdown.js';
 
 // The shape of the `v<N>.json` plugins/upgrade-guide/index.js writes.
 export interface Package {
@@ -16,12 +16,6 @@ export interface Choice {
   detect: string;
   /** Set on a customization use: its chip's label in the filter bar. */
   chip?: string;
-}
-
-export interface Heading {
-  id: string;
-  heading: string;
-  line: string;
 }
 
 export interface Entry {
@@ -43,8 +37,6 @@ export interface Guide {
   /** Every user renders a form, so an entry with this use shows whatever else is answered; it has no checkbox. */
   everyUserUse: string;
   schema: Choice[];
-  /** The `affects` headings, then Deprecations, whose id is the last. */
-  headings: Heading[];
   packages: Package[];
   entries: Entry[];
   /** An anchor to the ids of the entries it names. */
@@ -59,11 +51,12 @@ export interface Guide {
 export interface Filters {
   theme: string;
   validator: string;
-  /** The Nothing chip: the reader customizes nothing. It counts as answering the uses without naming one. */
+  /** The Nothing chip: the reader customizes nothing. It answers the chips' question without naming a chip. */
   nothing: boolean;
   /** The ticked customization chips and More checkboxes. */
   uses: string[];
   schema: string[];
+  /** The ticked packages for theme authors. */
   other: string[];
   search: string;
 }
@@ -78,18 +71,25 @@ export const NO_FILTERS: Filters = {
   search: '',
 };
 
+/** Copy as Markdown fetches every shown entry's `.md` copy; this many at a time, so a long list can't flood the server. */
+const COPY_CONCURRENCY = 6;
+
 function shortNames(packages: Package[], group: Package['group']) {
   return packages.filter((pkg) => pkg.group === group).map((pkg) => pkg.short);
 }
 
 /** The uses shown as chips in the filter bar. */
 export function customizations(guide: Guide) {
-  return guide.uses.filter((use) => use.chip !== undefined);
+  return guide.uses.filter((use): use is Choice & { chip: string } => use.chip !== undefined);
 }
 
 /** The uses shown as checkboxes under More: every use but the chips and the one every user has. */
-export function otherUses(guide: Guide) {
+export function moreUses(guide: Guide) {
   return guide.uses.filter((use) => use.chip === undefined && use.id !== guide.everyUserUse);
+}
+
+function isChip(guide: Guide, id: string) {
+  return guide.uses.some((use) => use.id === id && use.chip !== undefined);
 }
 
 /** The filters a query string names, dropping any key or value the guide's vocabulary doesn't have. */
@@ -146,12 +146,41 @@ export function isAnswered({ theme, validator, nothing, uses, schema, other, sea
   );
 }
 
+/** Pressing Nothing: the reader customizes nothing, so no chip stays ticked. The More uses are another question. */
+export function toggleNothing(guide: Guide, filters: Filters): Filters {
+  return filters.nothing
+    ? { ...filters, nothing: false }
+    : { ...filters, nothing: true, uses: filters.uses.filter((use) => !isChip(guide, use)) };
+}
+
+/** Ticks or unticks the use `id`. A chip answers the same question as Nothing, so it unticks Nothing. */
+export function toggleUse(guide: Guide, filters: Filters, id: string): Filters {
+  const uses = filters.uses.includes(id) ? filters.uses.filter((use) => use !== id) : [...filters.uses, id];
+  return { ...filters, uses, nothing: filters.nothing && !isChip(guide, id) };
+}
+
+/** Whether More starts open: when it holds an answer, so the reader sees every answer the URL carries. */
+export function opensMore(guide: Guide, filters: Filters) {
+  return (
+    filters.validator !== '' ||
+    filters.schema.length > 0 ||
+    filters.other.length > 0 ||
+    filters.uses.some((use) => !isChip(guide, use))
+  );
+}
+
+/** The one theme or validator an entry is for, when that is all its `packages` lists. */
+export function badgeOf(entry: Entry, packagesById: ReadonlyMap<string, Package>) {
+  const only = entry.packages.length === 1 ? packagesById.get(entry.packages[0]) : undefined;
+  return only?.group === 'theme' || only?.group === 'validator' ? only : undefined;
+}
+
 /**
- * Tests one entry against the answers, applying the rule `APPLIES_RULE` in plugins/upgrade-guide/outputs.js states:
- * an unanswered question keeps every entry; a theme or validator picked is the one of its kind the reader has, and
- * once either is picked the packages for theme authors count only when ticked; and once Nothing or any use is ticked,
- * the ticked uses are all the reader's code does, so an entry stays only when its `uses` has `everyUserUse` or a
- * ticked use.
+ * Tests one entry against the answers, applying the rule `APPLIES_RULE` in plugins/upgrade-guide/outputs.js states,
+ * with each question nobody answered keeping every entry. A theme or validator picked is the one of its kind the
+ * reader has, and once either is picked the packages for theme authors count only when ticked. The chips are one
+ * question, answered by Nothing or a chip, and the More uses another, answered by a More use: an entry's `uses` hold
+ * when they have `everyUserUse`, a ticked use, or a use of a question left unanswered.
  */
 export function matcher(guide: Guide, filters: Filters): (entry: Entry) => boolean {
   const { theme, validator, nothing, uses, schema, other } = filters;
@@ -173,31 +202,17 @@ export function matcher(guide: Guide, filters: Filters): (entry: Entry) => boole
         return false;
     }
   };
-  const usesAnswered = nothing || uses.length > 0;
+  const chipsAnswered = nothing || uses.some((use) => isChip(guide, use));
+  const moreAnswered = uses.some((use) => !isChip(guide, use));
+  const useHolds = (use: string) =>
+    use === guide.everyUserUse || uses.includes(use) || !(isChip(guide, use) ? chipsAnswered : moreAnswered);
   const tokens = filters.search.toLowerCase().split(/\s+/).filter(Boolean);
   return (entry) =>
     entry.packages.some(hasPackage) &&
-    (!usesAnswered || entry.uses.some((use) => use === guide.everyUserUse || uses.includes(use))) &&
+    entry.uses.some(useHolds) &&
     (schema.length === 0 || entry.schema.length === 0 || entry.schema.some((feature) => schema.includes(feature))) &&
     (tokens.length === 0 ||
       tokens.every((token) => `${entry.title}\n${entry.description}\n${entry.id}`.toLowerCase().includes(token)));
-}
-
-/** The id of the heading an entry is listed under: the last heading (Deprecations) or its first `affects` value. */
-function headingOf(entry: Entry, headings: Heading[]) {
-  return entry.deprecated ? headings[headings.length - 1].id : entry.affects[0];
-}
-
-/** The headings that list at least one of `entries`, in order, each with its entries in their order. */
-export function groupByHeading(entries: Entry[], headings: Heading[]) {
-  return headings
-    .map((heading) => ({ heading, entries: entries.filter((entry) => headingOf(entry, headings) === heading.id) }))
-    .filter((group) => group.entries.length > 0);
-}
-
-/** `a`, `a and b`, `a, b and c`, with `or` for `conjunction: 'or'`. */
-function joinList(values: string[], conjunction = 'and') {
-  return values.length > 1 ? `${values.slice(0, -1).join(', ')} ${conjunction} ${values.at(-1)}` : values.join('');
 }
 
 /** The hint under the filter bar: what the list shows, and that answering is optional. Its only Markdown is code. */
@@ -211,21 +226,21 @@ export function describeFilters(filters: Filters, guide: Guide) {
     .filter(
       (pkg) => pkg.short === filters.theme || pkg.short === filters.validator || filters.other.includes(pkg.short),
     )
-    .map((pkg) => `\`${pkg.id}\``);
+    .map((pkg) => pkg.id);
   const custom = label(customizations(guide), filters.uses).map((text) => text.toLowerCase());
-  const code = label(otherUses(guide), filters.uses);
+  const code = label(moreUses(guide), filters.uses);
   const schema = label(guide.schema, filters.schema);
   const search = filters.search.trim();
   const lead = [
-    packages.length > 0 && `for ${joinList(packages)}`,
-    custom.length > 0 ? `with ${joinList(custom)}` : filters.nothing && 'with no customization',
+    packages.length > 0 && `for ${andList(codes(packages))}`,
+    custom.length > 0 ? `with ${andList(custom)}` : filters.nothing && 'with no customization',
   ]
     .filter(Boolean)
     .join(' ');
   const parts = [
     lead,
-    code.length > 0 && `for code using ${joinList(code)}`,
-    schema.length > 0 && `for schemas with ${joinList(schema, 'or')}`,
+    code.length > 0 && `for code using ${andList(code)}`,
+    schema.length > 0 && `for schemas with ${andList(schema, 'or')}`,
     search && `matching "${search}"`,
   ].filter(Boolean);
   return `Showing changes ${parts.join(', ')}. Answer more to narrow the list, or clear to see everything.`;
@@ -270,34 +285,85 @@ export function hashTarget(guide: Guide, hash: string): HashTarget | undefined {
   return entry.id === hash ? { kind: 'entry', entry } : { kind: 'moved', id: entry.id };
 }
 
+/**
+ * The links an entry's own page lists for its `related` ids. Every entry's page is its id beside this one's
+ * (resolveVersions in plugins/upgrade-guide/resolve.js fails the build otherwise), and so is its doc id; `docs` is the
+ * docs plugin's version metadata, keyed by doc id.
+ */
+export function relatedLinks(
+  doc: { id: string; permalink: string },
+  related: string[],
+  docs: Readonly<Record<string, { title: string }>>,
+) {
+  const dir = doc.id.slice(0, doc.id.lastIndexOf('/') + 1);
+  const route = doc.permalink.replace(/[^/]+\/?$/, '');
+  return related.map((id) => ({ id, title: docs[`${dir}${id}`]?.title ?? id, permalink: `${route}${id}` }));
+}
+
 /** The `.md` copy postBuild writes beside the entry's page. */
-export function markdownUrl(entry: Entry, origin: string) {
+function markdownUrl(entry: Entry, origin: string) {
   return new URL(`${entry.permalink.replace(/\/$/, '')}.md`, origin).href;
 }
 
 /**
  * One Markdown document of `rows`, in order, with `texts` their `.md` copies. Each entry keeps its body's `##`
- * sections, so its title is a `#` heading. `page` is the filtered page's location, which the document cites.
+ * sections, so its title is a `#` heading. `page.url` is the filtered page's address with the reader's answers, which
+ * the document cites; `page.origin` is the site's.
  */
 export function toMarkdownDocument(
   rows: Entry[],
   texts: string[],
   version: string,
-  page: { href: string; origin: string },
+  page: { url: string; origin: string },
 ) {
   const count = `${rows.length} ${rows.length === 1 ? 'entry' : 'entries'}`;
   const parts = [
-    `> react-jsonschema-form ${version} upgrade guide: the ${count} that ${rows.length === 1 ? 'matches' : 'match'} ${page.href}, in the order the page lists them.`,
+    `> react-jsonschema-form ${version} upgrade guide: the ${count} that ${rows.length === 1 ? 'matches' : 'match'} ${page.url}, in the order the page lists them.`,
   ];
   rows.forEach((entry, index) => {
-    const codes = (values: string[]) => values.map((value) => `\`${value}\``).join(', ');
     const facts = [
-      `- affects: ${codes(entry.affects)}${entry.deprecated ? '; deprecated' : ''}`,
-      `- packages: ${codes(entry.packages)}`,
+      `- affects: ${codeList(entry.affects)}${entry.deprecated ? '; deprecated' : ''}`,
+      `- packages: ${codeList(entry.packages)}`,
       `- source: ${markdownUrl(entry, page.origin)}`,
     ];
     const body = texts[index].replace(FRONT_MATTER, '').trim();
     parts.push(`# ${entry.title}\n\n${facts.join('\n')}\n\n${entry.description}\n\n${body}`);
   });
   return `${parts.join('\n\n')}\n`;
+}
+
+/** `map` over `items`, at most `limit` calls in flight at once, the results in `items`' order. */
+export async function mapConcurrently<T, R>(items: T[], limit: number, map: (item: T) => Promise<R>): Promise<R[]> {
+  const results: R[] = [];
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const index = next++;
+      results[index] = await map(items[index]);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
+}
+
+/** Copy as Markdown's document: `rows`' `.md` copies, fetched a few at a time, as toMarkdownDocument joins them. */
+export async function fetchMarkdown(
+  rows: Entry[],
+  version: string,
+  page: { url: string; origin: string },
+  fetchUrl: (url: string) => Promise<Response>,
+) {
+  const texts = await mapConcurrently(rows, COPY_CONCURRENCY, async (entry) => {
+    const url = markdownUrl(entry, page.origin);
+    const response = await fetchUrl(url);
+    if (!response.ok) {
+      throw new Error(`${url} answered ${response.status}`);
+    }
+    return response.text();
+  });
+  return toMarkdownDocument(rows, texts, version, page);
+}
+
+export function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : String(error);
 }

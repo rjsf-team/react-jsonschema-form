@@ -4,8 +4,10 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 
+const { createSlugger, parseMarkdownHeadingId } = require('@docusaurus/utils');
+
 const { GUIDES_DIR, VERSION_DIR, filteredPageFile, filteredPageName } = require('./layout.js');
-const { FRONT_MATTER, headingIds, headings, linkDestinations } = require('./markdown.js');
+const { FRONT_MATTER, headings, linkDestinations } = require('./markdown.js');
 const { AFFECTS, SCHEMA, USES, packagesForVersion } = require('./vocabulary.js');
 
 /**
@@ -65,9 +67,10 @@ const RESERVED_IDS = ['index', 'all', 'llms'];
  * @param {string} siteDir
  * @param {string} docsDir
  * @param {ParseFrontMatter} parseFrontMatter
+ * @param {string} changelogDir the directory holding each version's `CHANGELOG-v<N>.md`, if it has one
  * @returns {Promise<Version[]>}
  */
-async function loadVersions(siteDir, docsDir, parseFrontMatter) {
+async function loadVersions(siteDir, docsDir, parseFrontMatter, changelogDir) {
   const guidesDir = path.join(docsDir, GUIDES_DIR);
   const dirs = await fs.readdir(guidesDir, { withFileTypes: true }).catch(() => []);
   const whyUnpublished = cachedWhyUnpublished(docsDir, parseFrontMatter);
@@ -83,8 +86,7 @@ async function loadVersions(siteDir, docsDir, parseFrontMatter) {
             path.join(guidesDir, dir.name),
             dir.name,
             Number(match[1]),
-            parseFrontMatter,
-            whyUnpublished,
+            { parseFrontMatter, whyUnpublished, changelogDir },
             versionErrors,
           )
         : Promise.resolve(undefined);
@@ -126,16 +128,19 @@ async function mapInOrder(items, map, errors) {
 }
 
 /**
+ * @typedef {{ parseFrontMatter: ParseFrontMatter; whyUnpublished: WhyUnpublished; changelogDir: string }} Sources
+ */
+
+/**
  * @param {string} siteDir
  * @param {string} dir
  * @param {string} name
  * @param {number} number
- * @param {ParseFrontMatter} parseFrontMatter
- * @param {WhyUnpublished} whyUnpublished
+ * @param {Sources} sources
  * @param {string[]} errors
  * @returns {Promise<Version>}
  */
-async function loadVersion(siteDir, dir, name, number, parseFrontMatter, whyUnpublished, errors) {
+async function loadVersion(siteDir, dir, name, number, { parseFrontMatter, whyUnpublished, changelogDir }, errors) {
   const packages = packagesForVersion(number);
   const files = (await fs.readdir(dir, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name));
   const relativeDir = path.relative(siteDir, dir);
@@ -179,14 +184,76 @@ async function loadVersion(siteDir, dir, name, number, parseFrontMatter, whyUnpu
     errors,
   );
 
+  const anchors = await loadAnchors(context, relativeDir, errors);
+  await validateChangelogLinks(changelogDir, name, ids, anchors, errors);
+
   return {
     name,
     number,
     sourceDir: toSitePath(siteDir, dir),
     entries,
-    ...(await loadAnchors(context, relativeDir, errors)),
+    ...anchors,
     packages,
   };
+}
+
+/**
+ * Every link `CHANGELOG-<name>.md` makes into the guide must name an entry or an `_anchors.json` key: a link to the
+ * filtered page's `#<anchor>`, which the page opens, or to an entry's own page `<name>/<id>`. A release copies its
+ * changelog into a GitHub Release, where a link that stops working can't be fixed.
+ *
+ * @param {string} changelogDir
+ * @param {string} name
+ * @param {Set<string>} ids
+ * @param {Pick<Version, 'anchors' | 'pageAnchors'>} anchors
+ * @param {string[]} errors
+ */
+async function validateChangelogLinks(changelogDir, name, ids, { anchors, pageAnchors }, errors) {
+  const file = `CHANGELOG-${name}.md`;
+  /** @type {string} */
+  let changelog;
+  try {
+    changelog = await readText(path.join(changelogDir, file));
+  } catch (error) {
+    if (/** @type {NodeJS.ErrnoException} */ (error).code !== 'ENOENT') {
+      errors.push(`${file}: ${errorMessage(error)}`);
+    }
+    return;
+  }
+  const page = escapeRegExp(`${GUIDES_DIR}/${encodeURI(filteredPageName(name))}#`);
+  const entryPage = escapeRegExp(`${GUIDES_DIR}/${name}/`);
+  // An entry's page path stops where its id does; `<name>/llms.txt` and the `.md` copies are files, not entries.
+  const link = new RegExp(`${page}([^\\s()<>"'\\]]+)|${entryPage}([a-z0-9-]+)(?![\\w.-])`, 'g');
+  /** @param {string} anchor */
+  const resolves = (anchor) => ids.has(anchor) || Object.hasOwn(anchors, anchor) || Object.hasOwn(pageAnchors, anchor);
+  changelog.split('\n').forEach((line, index) => {
+    for (const [match, hash, id] of line.matchAll(link)) {
+      if (!resolves(hash === undefined ? id : decodeAnchor(hash))) {
+        errors.push(
+          `${file}:${index + 1}: the link \`${match}\` names neither an entry of ${name} nor an \`${ANCHORS_FILE}\` key.`,
+        );
+      }
+    }
+  });
+}
+
+/** @param {string} anchor */
+function decodeAnchor(anchor) {
+  try {
+    return decodeURIComponent(anchor);
+  } catch {
+    return anchor;
+  }
+}
+
+/** @param {string} text */
+function escapeRegExp(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/** @param {unknown} error */
+function errorMessage(error) {
+  return error instanceof Error ? error.message : String(error);
 }
 
 /**
@@ -234,7 +301,7 @@ async function loadEntry(siteDir, filePath, relativePath, parseFrontMatter, erro
   try {
     ({ frontMatter } = await parseFrontMatter({ filePath, fileContent, defaultParseFrontMatter: parseFrontMatter }));
   } catch (error) {
-    errors.push(`${relativePath}: unreadable frontmatter: ${error instanceof Error ? error.message : String(error)}`);
+    errors.push(`${relativePath}: unreadable frontmatter: ${errorMessage(error)}`);
     return undefined;
   }
   /** @param {unknown} value */
@@ -535,7 +602,7 @@ async function whyUnpublished(target, docsDir, parseFrontMatter) {
     });
     return frontMatter.draft === true ? 'which is a draft' : undefined;
   } catch (error) {
-    return `whose frontmatter is unreadable: ${error instanceof Error ? error.message : String(error)}`;
+    return `whose frontmatter is unreadable: ${errorMessage(error)}`;
   }
 }
 
@@ -623,7 +690,7 @@ async function loadAnchors(version, relativeDir, errors) {
     parsed = JSON.parse(await fs.readFile(path.join(dir, ANCHORS_FILE), 'utf8'));
   } catch (error) {
     if (/** @type {NodeJS.ErrnoException} */ (error).code !== 'ENOENT') {
-      errors.push(`${at}: ${error instanceof Error ? error.message : String(error)}`);
+      errors.push(`${at}: ${errorMessage(error)}`);
     }
     return { anchors, pageAnchors };
   }
@@ -698,4 +765,17 @@ async function whyPageAnchorFails(value, target, hash, { siteDir, dir, name, why
   return (await ids).includes(hash.slice(1)) ? undefined : `whose page has no heading with the anchor \`${hash}\``;
 }
 
-module.exports = { linkKind, loadVersions, localMarkdownFile };
+/**
+ * The anchor Docusaurus gives each heading outside code, from its own `{#id}` parser and slugger. Docusaurus slugs the
+ * text a heading shows, so a link in it counts as its text.
+ *
+ * @param {string} markdown
+ */
+function headingIds(markdown) {
+  const slugger = createSlugger();
+  return headings(markdown.replace(FRONT_MATTER, '')).map(
+    ({ text }) => parseMarkdownHeadingId(text).id ?? slugger.slug(text.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')),
+  );
+}
+
+module.exports = { headingIds, linkKind, loadVersions, localMarkdownFile };

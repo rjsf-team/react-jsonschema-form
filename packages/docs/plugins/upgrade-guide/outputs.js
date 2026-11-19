@@ -6,17 +6,14 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 
 const { linkKind, localMarkdownFile } = require('./entries.js');
-const { demoteHeadings, mapLinks } = require('./markdown.js');
+const { andList, codeList, codes, demoteHeadings, mapLinks } = require('./markdown.js');
 const { appliesToPackage } = require('./resolve.js');
-const { AFFECTS, ALWAYS_PACKAGES, EVERY_USER_USE, HEADINGS, SCHEMA, USES, headingId } = require('./vocabulary.js');
+const { AFFECTS, ALWAYS_PACKAGES, EVERY_USER_USE, SCHEMA, USES, byHeading } = require('./vocabulary.js');
 
-/**
- * How a reader or agent decides whether an entry applies, and how the filtered page applies the same rule to the
- * answers in its filter bar. filters.ts `matcher` implements the page's part.
- */
+/** How a reader or agent decides from its frontmatter whether an entry applies. */
 const APPLIES_RULE = `An entry applies to you when all three hold: your package.json has one of its \`packages\` (\`*\` is every \`@rjsf/*\` package, and every user has ${andList(
   codes(ALWAYS_PACKAGES.filter((id) => id !== '*')),
-)}); its \`uses\` lists \`${EVERY_USER_USE}\` (every user) or something your code does; and its \`schema\` is empty (\`any\`) or names something at least one of your schemas has. When you can't tell whether one holds, keep the entry. The filtered page applies this rule to the answers in its filter bar and counts a question nobody answered as holding, so it shows every entry until something is answered. Picking a theme or validator counts as having that one of its kind, and none of the packages for theme authors unless they are ticked. The uses count as answered once Nothing or any use is ticked, and then the ticked uses are everything your code does: with Nothing alone, only the entries whose \`uses\` lists \`${EVERY_USER_USE}\` stay.`;
+)}); its \`uses\` lists \`${EVERY_USER_USE}\` (every user) or something your code does; and its \`schema\` is empty (\`any\`) or names something at least one of your schemas has. When you can't tell whether one holds, keep the entry. The filtered page applies the same rule to the answers in its filter bar, and a question left unanswered there hides nothing.`;
 
 /** Where the sections come from and the order to work through them. */
 const ORDER_RULE =
@@ -30,30 +27,40 @@ const ORDER_RULE =
  */
 
 /**
+ * Every file the build writes for `versions`, `dir` being its directory relative to the build's output directory.
+ *
+ * @param {ResolvedVersion[]} versions
+ * @param {Site} site
+ * @returns {{ dir: string; name: string; text: string }[]}
+ */
+function renderOutputs(versions, site) {
+  return versions.flatMap((version) => {
+    const dir = decodeURI(version.route.slice(site.baseUrl.length));
+    return [
+      { dir, name: 'llms.txt', text: renderLlmsTxt(version, site) },
+      ...version.entries.map((entry) => ({ dir, name: `${entry.id}.md`, text: renderEntry(entry, version, site) })),
+      ...version.combined.map(({ key, packageId }) => {
+        const entries = packageId
+          ? version.entries.filter((entry) => appliesToPackage(entry, packageId))
+          : version.entries;
+        return { dir, name: `${key}.md`, text: renderCombined(version, packageId, entries, site) };
+      }),
+    ];
+  });
+}
+
+/**
  * @param {ResolvedVersion[]} versions
  * @param {string} outDir
  * @param {Site} site
  */
 async function writeOutputs(versions, outDir, site) {
-  for (const version of versions) {
-    const dir = path.join(outDir, decodeURI(version.route.slice(site.baseUrl.length)));
-    await fs.mkdir(dir, { recursive: true });
-    /** @type {[string, string][]} */
-    const files = [
-      ['llms.txt', renderLlmsTxt(version, site)],
-      ...version.entries.map(
-        (entry) => /** @type {[string, string]} */ ([`${entry.id}.md`, renderEntry(entry, version, site)]),
-      ),
-      ...version.combined.map(({ key, packageId }) => {
-        const entries = packageId
-          ? version.entries.filter((entry) => appliesToPackage(entry, packageId))
-          : version.entries;
-        return /** @type {[string, string]} */ ([`${key}.md`, renderCombined(version, packageId, entries, site)]);
-      }),
-    ];
-    for (const [name, text] of files) {
-      await fs.writeFile(path.join(dir, name), text);
-    }
+  const files = renderOutputs(versions, site);
+  for (const dir of new Set(files.map((file) => file.dir))) {
+    await fs.mkdir(path.join(outDir, dir), { recursive: true });
+  }
+  for (const { dir, name, text } of files) {
+    await fs.writeFile(path.join(outDir, dir, name), text);
   }
 }
 
@@ -92,22 +99,17 @@ function renderLlmsTxt(version, site) {
         }`,
     ),
   ];
-  for (const { heading, line, entries } of byHeading(version.entries)) {
-    lines.push('', `## ${heading}`, '', line, '', ...entries.map((entry) => llmsTxtLine(entry, version, site)));
+  for (const { heading, entries } of byHeading(version.entries)) {
+    lines.push(
+      '',
+      `## ${heading.heading}`,
+      '',
+      heading.line,
+      '',
+      ...entries.map((entry) => llmsTxtLine(entry, version, site)),
+    );
   }
   return `${lines.join('\n')}\n`;
-}
-
-/**
- * The headings that list at least one of `entries`, in order, each with its entries.
- *
- * @param {ResolvedEntry[]} entries
- */
-function byHeading(entries) {
-  return HEADINGS.map((heading) => ({
-    ...heading,
-    entries: entries.filter((entry) => headingId(entry) === heading.id),
-  })).filter((group) => group.entries.length > 0);
 }
 
 /**
@@ -166,8 +168,8 @@ function renderCombined(version, packageId, entries, site) {
     '',
     `${APPLIES_RULE} ${ORDER_RULE} The index of every entry and combined file is ${absolute(site, `${version.route}llms.txt`)}.`,
   );
-  for (const { heading, line, entries: listed } of byHeading(entries)) {
-    lines.push('', `## ${heading}`, '', line);
+  for (const { heading, entries: listed } of byHeading(entries)) {
+    lines.push('', `## ${heading.heading}`, '', heading.line);
     for (const entry of listed) {
       const lists = [
         ...facts(entry).map((fact) => `- ${fact}`),
@@ -246,25 +248,6 @@ function absolute(site, sitePath) {
   return `${site.siteUrl.replace(/\/$/, '')}${encodeURI(sitePath)}`;
 }
 
-/** @param {string[]} values */
-function codes(values) {
-  return values.map((value) => `\`${value}\``);
-}
-
-/** @param {string[]} values */
-function codeList(values) {
-  return codes(values).join(', ');
-}
-
-/**
- * `a`, `a and b`, `a, b and c`.
- *
- * @param {string[]} values
- */
-function andList(values) {
-  return values.length > 1 ? `${values.slice(0, -1).join(', ')} and ${values.at(-1)}` : values.join('');
-}
-
 /**
  * An entry's `schema`, with `any` for an entry that doesn't depend on the schema.
  *
@@ -274,4 +257,4 @@ function schemaList(values) {
   return values.length > 0 ? codeList(values) : '`any`';
 }
 
-module.exports = { writeOutputs };
+module.exports = { renderOutputs, writeOutputs };

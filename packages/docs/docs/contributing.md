@@ -100,11 +100,13 @@ A breaking entry has the same shape:
 
 ## Upgrade guide
 
-A breaking change also gets an entry in the upgrade guide for the next major version N, in the same PR: one Markdown file, `packages/docs/docs/migration-guides/vN/<id>.md`. If the directory doesn't exist yet, also create `packages/docs/docs/migration-guides/vN.x upgrade guide.mdx` beside it, rendering `<UpgradeGuide version="vN" />`: the filtered page where readers pick their theme, validator, code and schemas.
+A breaking change also gets an entry in the upgrade guide for the next major version N, in the same PR: one Markdown file, `packages/docs/docs/migration-guides/vN/<id>.md`. If the directory doesn't exist yet, also create `packages/docs/docs/migration-guides/vN.x upgrade guide.mdx` beside it, rendering `<UpgradeGuide version="vN" />`: the page that lists every entry, which readers can narrow by theme, validator, code and schemas if they choose.
 
-The guide answers one question: "my code broke, what do I change?". An entry is one action a reader takes: one thing to find and one change to make. Consequences of that change a reader should check are bullets under its `## Verify`. Split an entry only when a reader could need one action and not the other, or when the action differs per package (then one entry per theme or validator). A rule that reads the same in several themes is one entry listing them. Fixed crashes, unchanged behavior, rationale and new features are not entries.
+The guide tells a developer with a working app on the previous major version everything about their app that vN changes, and what to do about each change. An entry is one action a reader takes: one thing to find and one change to make. Consequences of that change a reader should check are bullets under its `## Verify`. Split an entry only when a reader could need one action and not the other, or when the action differs per package (then one entry per theme or validator). A rule that reads the same in several themes is one entry listing them. Fixed crashes, unchanged behavior, rationale and new features are not entries.
 
-The id is the file name: lowercase kebab-case, at most 64 characters, naming the change as users meet it. An entry for exactly one theme or validator starts with that package's name without `@rjsf/`, e.g. `mantine-…` or `validator-ata-…`.
+The id is the file name: lowercase kebab-case, at most 64 characters, naming the change as users meet it. An entry for exactly one theme or validator starts with that package's name without `@rjsf/`, e.g. `mantine-…` or `validator-ata-…`. Once a changelog entry links an entry, its id is permanent: a release copies the changelog into a GitHub Release, which keeps the link forever, so never rename or delete a linked entry.
+
+`packages/docs/docs/migration-guides/vN/_anchors.json` maps an anchor of the filtered page that no longer names an entry, such as a heading of an older guide or the id of an entry that was merged into another, to what it names now: an entry id, a list of them, or a relative link to another doc's `.md` or `.mdx` file with an optional `#anchor` of one of its headings. The page opens, lists or goes to what the anchor maps to.
 
 The frontmatter says who the entry is for:
 
@@ -128,7 +130,7 @@ The body has no `#` title (the frontmatter `title` is the page title) and these 
 
 Write plain reference prose in short declarative sentences, as the rest of the docs do: no em or en dashes, no bold labels on list items, no "not X but Y" contrasts, no closing one-liners.
 
-Link another entry as `./<id>.md` and other docs with relative links to their `.md` or `.mdx` file under `packages/docs/docs`, which must be a published page: not a draft, and not a `_` file or in a `_` directory. Never link the `vN.x upgrade guide` page itself. `pnpm --filter ./packages/docs build` checks every entry against these rules and fails listing every problem it finds. It also writes the guide's `llms.txt`, a Markdown copy of each entry, and one combined file per theme and validator for agents.
+Link another entry as `./<id>.md` and other docs with relative links to their `.md` or `.mdx` file under `packages/docs/docs`, which must be a published page: not a draft, and not a `_` file or in a `_` directory. Never link the `vN.x upgrade guide` page itself. `pnpm --filter ./packages/docs build` checks every entry against these rules, and checks that every link the root `CHANGELOG-vN.md` makes to an entry's page or to an anchor of the filtered page names an entry or an `_anchors.json` key. It fails listing every problem it finds. It also writes the guide's `llms.txt`, a Markdown copy of each entry, and one combined file per theme and validator for agents.
 
 New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide; link them from the entry.
 

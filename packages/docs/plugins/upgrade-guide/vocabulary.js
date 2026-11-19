@@ -7,9 +7,9 @@
  * `chip` marks a customization use: the filtered page shows it as a chip with this label in its filter bar, and every
  * other use as a checkbox under "More about your app".
  * @typedef {{ id: string; label: string; detect: string }} SchemaFeature
- * @typedef {{ id: string; heading: string; line: string }} Affects
- * `heading` names the section an entry is listed under when this is its first `affects` value; `line` is the sentence
- * under it.
+ * @typedef {{ id: string; heading: string; line: string }} Heading
+ * A section of the guide: `heading` is its title and `line` the sentence under it. An `affects` value is one, listing
+ * the entries whose first `affects` value it is.
  * @typedef {'always' | 'theme' | 'validator' | 'other'} PackageGroup
  * @typedef {{ id: string; group: PackageGroup; removedIn?: number }} PackageDefinition
  * @typedef {{ id: string; short: string; group: PackageGroup; removed: boolean }} Package
@@ -121,7 +121,7 @@ const SCHEMA = [
 /**
  * What a change touches in the reader's app, in the order the guide lists their headings.
  *
- * @type {Affects[]}
+ * @type {Heading[]}
  */
 const AFFECTS = [
   {
@@ -154,7 +154,7 @@ const AFFECTS = [
 /**
  * The heading a `deprecated: true` entry is listed under instead of its `affects` heading, after all of them.
  *
- * @type {Affects}
+ * @type {Heading}
  */
 const DEPRECATIONS = {
   id: 'deprecated',
@@ -172,6 +172,20 @@ const HEADINGS = [...AFFECTS, DEPRECATIONS];
  */
 function headingId(entry) {
   return entry.deprecated ? DEPRECATIONS.id : entry.affects[0];
+}
+
+/**
+ * The headings that list at least one of `entries`, in order, each with its entries in their order.
+ *
+ * @template {{ affects: string[]; deprecated: boolean }} E
+ * @param {E[]} entries
+ * @returns {{ heading: Heading; entries: E[] }[]}
+ */
+function byHeading(entries) {
+  return HEADINGS.map((heading) => ({
+    heading,
+    entries: entries.filter((entry) => headingId(entry) === heading.id),
+  })).filter((group) => group.entries.length > 0);
 }
 
 /**
@@ -227,8 +241,10 @@ module.exports = {
   SCHEMA,
   AFFECTS,
   HEADINGS,
+  DEPRECATIONS,
   EVERY_USER_USE,
   ALWAYS_PACKAGES,
   headingId,
+  byHeading,
   packagesForVersion,
 };

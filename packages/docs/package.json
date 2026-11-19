@@ -23,7 +23,8 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.2",
     "@docusaurus/plugin-content-docs": "^3.10.2",
-    "@docusaurus/types": "^3.10.2"
+    "@docusaurus/types": "^3.10.2",
+    "@docusaurus/utils": "^3.10.2"
   },
   "browserslist": {
     "production": [

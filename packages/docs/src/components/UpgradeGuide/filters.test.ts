@@ -3,12 +3,18 @@ import { describe, it } from 'node:test';
 
 import {
   NO_FILTERS,
+  badgeOf,
   describeFilters,
-  groupByHeading,
+  fetchMarkdown,
   hashTarget,
+  mapConcurrently,
   matcher,
+  opensMore,
   readFilters,
+  relatedLinks,
   toMarkdownDocument,
+  toggleNothing,
+  toggleUse,
   writeFilters,
   type Entry,
   type Filters,
@@ -27,12 +33,6 @@ const guide: Guide = {
   schema: [
     { id: 'arrays', label: 'Arrays', detect: '' },
     { id: 'refs', label: 'References', detect: '' },
-  ],
-  headings: [
-    { id: 'setup', heading: 'Installation and build', line: '' },
-    { id: 'code', heading: 'Code and APIs', line: '' },
-    { id: 'data', heading: 'Form data', line: '' },
-    { id: 'deprecated', heading: 'Deprecations', line: '' },
   ],
   packages: [
     { id: '*', short: '*', group: 'always', removed: false },
@@ -105,6 +105,16 @@ describe('hashTarget', () => {
     });
   });
 
+  it('goes to the doc a page mapping names even when the anchor is also an entry id', () => {
+    assert.deepEqual(
+      hashTarget({ ...withAnchors, pageAnchors: { 'umd-bundles-removed': '/x' } }, 'umd-bundles-removed'),
+      {
+        kind: 'page',
+        url: '/x',
+      },
+    );
+  });
+
   it('names nothing for an unknown or empty hash', () => {
     assert.equal(hashTarget(withAnchors, 'nowhere'), undefined);
     assert.equal(hashTarget(withAnchors, ''), undefined);
@@ -112,26 +122,108 @@ describe('hashTarget', () => {
 });
 
 describe('toMarkdownDocument', () => {
+  const page = { url: 'https://example.com/guide?theme=mui', origin: 'https://example.com' };
+
   it("leaves out each `.md` copy's frontmatter", () => {
     const markdown = toMarkdownDocument(
       [entry({ title: 'Widgets get ids', description: 'Ids change.' })],
       ['---\ntitle: Widgets get ids\nuses: [form]\n---\n\n## Detect\n\nIds.\n'],
       'v7',
-      { href: 'https://example.com/guide', origin: 'https://example.com' },
+      page,
     );
     assert.doesNotMatch(markdown, /uses: \[form\]/);
     assert.match(markdown, /Ids change\.\n\n## Detect\n\nIds\.\n$/);
+  });
+
+  it("cites the page and lists each entry's affects, deprecation, packages and source", () => {
+    const markdown = toMarkdownDocument(
+      [
+        entry({
+          permalink: '/docs/v7/old-prop',
+          affects: ['data', 'code'],
+          deprecated: true,
+          packages: ['@rjsf/core', '@rjsf/mui'],
+        }),
+      ],
+      ['## Detect\n'],
+      'v7',
+      page,
+    );
+    assert.match(
+      markdown,
+      /^> react-jsonschema-form v7 upgrade guide: the 1 entry that matches https:\/\/example\.com\/guide\?theme=mui,/,
+    );
+    assert.match(
+      markdown,
+      /\n- affects: `data`, `code`; deprecated\n- packages: `@rjsf\/core`, `@rjsf\/mui`\n- source: https:\/\/example\.com\/docs\/v7\/old-prop\.md\n/,
+    );
+  });
+});
+
+describe('fetchMarkdown', () => {
+  const rows = [
+    entry({ id: 'a', title: 'A', permalink: '/v7/a' }),
+    entry({ id: 'b', title: 'B', permalink: '/v7/b/' }),
+  ];
+  const page = { url: 'https://example.com/guide', origin: 'https://example.com' };
+
+  it("joins the rows' `.md` copies in the rows' order", async () => {
+    const fetched: string[] = [];
+    const markdown = await fetchMarkdown(rows, 'v7', page, async (url) => {
+      fetched.push(url);
+      return new Response(`## Detect\n\nFrom ${url}.\n`);
+    });
+    assert.deepEqual(fetched, ['https://example.com/v7/a.md', 'https://example.com/v7/b.md']);
+    assert.ok(
+      markdown.indexOf('From https://example.com/v7/a.md.') < markdown.indexOf('From https://example.com/v7/b.md.'),
+    );
+  });
+
+  it('fails naming the copy that answered with an error', async () => {
+    await assert.rejects(
+      fetchMarkdown(rows, 'v7', page, async () => new Response('', { status: 404 })),
+      /https:\/\/example\.com\/v7\/a\.md answered 404/,
+    );
+  });
+});
+
+describe('mapConcurrently', () => {
+  it('keeps at most `limit` calls in flight and the results in order', async () => {
+    const pending: { item: number; settle: () => Promise<number> }[] = [];
+    let inFlight = 0;
+    let most = 0;
+    const results = mapConcurrently([1, 2, 3, 4, 5], 2, (item) => {
+      inFlight += 1;
+      most = Math.max(most, inFlight);
+      const { promise, resolve } = Promise.withResolvers<number>();
+      pending.push({
+        item,
+        settle: () => {
+          inFlight -= 1;
+          resolve(item * 10);
+          return promise;
+        },
+      });
+      return promise;
+    });
+    // Settling the newest call first finishes the items out of order; a worker starts its next call before the
+    // awaited settle resumes this loop.
+    const settledOrder: number[] = [];
+    while (pending.length > 0) {
+      const next = pending.pop()!;
+      settledOrder.push(next.item);
+      await next.settle();
+    }
+    assert.deepEqual(settledOrder, [2, 3, 4, 5, 1]);
+    assert.equal(most, 2);
+    assert.deepEqual(await results, [10, 20, 30, 40, 50]);
   });
 });
 
 describe('matcher', () => {
   const cases: [string, Partial<Entry>, Partial<Filters>, boolean][] = [
-    [
-      'nothing answered shows a theme, validator and other package entry with any uses and schema',
-      { packages: ['@rjsf/mui', '@rjsf/validator-ata', '@rjsf/snapshot-tests'], uses: ['markup'], schema: ['refs'] },
-      {},
-      true,
-    ],
+    ['nothing answered shows a theme entry', { packages: ['@rjsf/mui'], uses: ['markup'], schema: ['refs'] }, {}, true],
+    ['nothing answered shows a validator entry', { packages: ['@rjsf/validator-ata'] }, {}, true],
     ['nothing answered shows an other package entry', { packages: ['@rjsf/snapshot-tests'] }, {}, true],
     ['`*` shows whatever theme is chosen', { packages: ['*'] }, { theme: 'mui' }, true],
     ['`@rjsf/core` shows whatever theme is chosen', { packages: ['@rjsf/core'] }, { theme: 'mui' }, true],
@@ -163,14 +255,26 @@ describe('matcher', () => {
       false,
     ],
     [
+      'an other package is hidden once a validator is chosen',
+      { packages: ['@rjsf/snapshot-tests'] },
+      { validator: 'validator-ata' },
+      false,
+    ],
+    [
       'an other package shows when ticked',
       { packages: ['@rjsf/snapshot-tests'] },
       { theme: 'mui', other: ['snapshot-tests'] },
       true,
     ],
     ['the Nothing chip hides a customization entry', { uses: ['custom-widgets'] }, { nothing: true }, false],
-    ['the Nothing chip hides an entry of an unticked More use', { uses: ['typescript'] }, { nothing: true }, false],
+    ['the Nothing chip keeps an entry of an unanswered More use', { uses: ['typescript'] }, { nothing: true }, true],
     ['the Nothing chip keeps a `form` entry', { uses: ['form', 'custom-widgets'] }, { nothing: true }, true],
+    [
+      'the Nothing chip and a More use hide an entry of another More use',
+      { uses: ['markup'] },
+      { nothing: true, uses: ['typescript'] },
+      false,
+    ],
     [
       'the Nothing chip keeps an entry of a ticked More use',
       { uses: ['typescript'] },
@@ -179,11 +283,28 @@ describe('matcher', () => {
     ],
     ['a chip shows its entries', { uses: ['custom-widgets'] }, { uses: ['custom-widgets'] }, true],
     ['a chip hides another customization', { uses: ['custom-fields'] }, { uses: ['custom-widgets'] }, false],
-    ['a chip hides an unticked More use', { uses: ['typescript'] }, { uses: ['custom-widgets'] }, false],
+    ['a chip keeps an entry of an unanswered More use', { uses: ['typescript'] }, { uses: ['custom-widgets'] }, true],
     ['a chip keeps a `form` entry', { uses: ['form'] }, { uses: ['custom-widgets'] }, true],
     ['a More checkbox shows its entries', { uses: ['markup'] }, { uses: ['markup'] }, true],
-    ['a More checkbox hides a customization entry', { uses: ['custom-widgets'] }, { uses: ['markup'] }, false],
-    ['chips and More checkboxes are one set', { uses: ['markup'] }, { uses: ['custom-widgets', 'markup'] }, true],
+    ['a More checkbox hides an entry of another More use', { uses: ['typescript'] }, { uses: ['markup'] }, false],
+    [
+      'a More checkbox keeps a customization entry while the chips are unanswered',
+      { uses: ['custom-widgets'] },
+      { uses: ['markup'] },
+      true,
+    ],
+    [
+      'a chip and a More checkbox each hide the other uses of their question',
+      { uses: ['custom-fields', 'typescript'] },
+      { uses: ['custom-widgets', 'markup'] },
+      false,
+    ],
+    [
+      'an entry stays when one of its uses holds',
+      { uses: ['custom-fields', 'markup'] },
+      { uses: ['custom-widgets', 'markup'] },
+      true,
+    ],
     ['an entry with no schema shows whatever schema is ticked', { schema: [] }, { schema: ['refs'] }, true],
     ['a ticked schema shows its entries', { schema: ['arrays', 'refs'] }, { schema: ['refs'] }, true],
     ['an unticked schema is hidden', { schema: ['arrays'] }, { schema: ['refs'] }, false],
@@ -199,9 +320,9 @@ describe('matcher', () => {
     ['a search token that matches nothing hides', { title: 'Slot props win' }, { search: 'slot lose' }, false],
     ['a blank search hides nothing', {}, { search: '   ' }, true],
     [
-      'every clause must hold: matching uses and schema, wrong package',
-      { packages: ['@rjsf/antd'], uses: ['form'], schema: [] },
-      { theme: 'mui' },
+      'every clause must hold: uses and schema answered and matching, package wrong',
+      { packages: ['@rjsf/antd'], uses: ['custom-widgets'], schema: ['arrays'] },
+      { theme: 'mui', uses: ['custom-widgets'], schema: ['arrays'] },
       false,
     ],
   ];
@@ -212,23 +333,74 @@ describe('matcher', () => {
   }
 });
 
-describe('groupByHeading', () => {
-  it('groups by the first `affects` value in heading order, deprecated entries last, skipping empty headings', () => {
-    const entries = [
-      entry({ id: 'old-prop', affects: ['setup'], deprecated: true }),
-      entry({ id: 'defaults', affects: ['data', 'setup'] }),
-      entry({ id: 'esm', affects: ['setup', 'code'] }),
-      entry({ id: 'peer', affects: ['setup'] }),
-    ];
+describe('the filter bar', () => {
+  it('Nothing unticks the chips and keeps the More uses', () => {
+    assert.deepEqual(toggleNothing(guide, { ...NO_FILTERS, uses: ['custom-widgets', 'typescript'] }), {
+      ...NO_FILTERS,
+      nothing: true,
+      uses: ['typescript'],
+    });
+  });
+
+  it('Nothing pressed again unticks itself and nothing else', () => {
+    assert.deepEqual(toggleNothing(guide, { ...NO_FILTERS, nothing: true, uses: ['typescript'] }), {
+      ...NO_FILTERS,
+      uses: ['typescript'],
+    });
+  });
+
+  it('a chip ticked unticks Nothing', () => {
+    assert.deepEqual(toggleUse(guide, { ...NO_FILTERS, nothing: true }, 'custom-widgets'), {
+      ...NO_FILTERS,
+      uses: ['custom-widgets'],
+    });
+  });
+
+  it('a chip unticked leaves the other uses', () => {
+    assert.deepEqual(toggleUse(guide, { ...NO_FILTERS, uses: ['custom-widgets', 'markup'] }, 'custom-widgets'), {
+      ...NO_FILTERS,
+      uses: ['markup'],
+    });
+  });
+
+  it('a More use ticked keeps Nothing', () => {
+    assert.deepEqual(toggleUse(guide, { ...NO_FILTERS, nothing: true }, 'typescript'), {
+      ...NO_FILTERS,
+      nothing: true,
+      uses: ['typescript'],
+    });
+  });
+
+  it('More starts open only when it holds an answer', () => {
+    assert.equal(opensMore(guide, NO_FILTERS), false);
+    assert.equal(opensMore(guide, { ...NO_FILTERS, theme: 'mui', nothing: true, uses: ['custom-widgets'] }), false);
+    assert.equal(opensMore(guide, { ...NO_FILTERS, validator: 'validator-ata' }), true);
+    assert.equal(opensMore(guide, { ...NO_FILTERS, schema: ['refs'] }), true);
+    assert.equal(opensMore(guide, { ...NO_FILTERS, other: ['snapshot-tests'] }), true);
+    assert.equal(opensMore(guide, { ...NO_FILTERS, uses: ['custom-widgets', 'typescript'] }), true);
+  });
+
+  it('badges an entry only for exactly one theme or validator', () => {
+    const packagesById = new Map(guide.packages.map((pkg) => [pkg.id, pkg]));
+    const badge = (packages: string[]) => badgeOf(entry({ packages }), packagesById)?.short;
+    assert.equal(badge(['@rjsf/mui']), 'mui');
+    assert.equal(badge(['@rjsf/validator-ata']), 'validator-ata');
+    assert.equal(badge(['@rjsf/mui', '@rjsf/antd']), undefined);
+    assert.equal(badge(['@rjsf/core']), undefined);
+    assert.equal(badge(['@rjsf/snapshot-tests']), undefined);
+  });
+});
+
+describe('relatedLinks', () => {
+  it("links each related id beside the entry's page, titled from the version's docs", () => {
     assert.deepEqual(
-      groupByHeading(entries, guide.headings).map(({ heading, entries: listed }) => [
-        heading.id,
-        listed.map(({ id }) => id),
-      ]),
+      relatedLinks({ id: 'migration-guides/v7/a', permalink: '/docs/migration-guides/v7/a/' }, ['b', 'c'], {
+        'migration-guides/v7/b': { title: 'B changed' },
+        'migration-guides/v7/c': { title: 'C changed' },
+      }),
       [
-        ['setup', ['esm', 'peer']],
-        ['data', ['defaults']],
-        ['deprecated', ['old-prop']],
+        { id: 'b', title: 'B changed', permalink: '/docs/migration-guides/v7/b' },
+        { id: 'c', title: 'C changed', permalink: '/docs/migration-guides/v7/c' },
       ],
     );
   });
@@ -262,6 +434,23 @@ describe('describeFilters', () => {
     assert.equal(
       describeFilters({ ...NO_FILTERS, nothing: true }, guide),
       'Showing changes with no customization. Answer more to narrow the list, or clear to see everything.',
+    );
+  });
+
+  it('names a validator and a theme author package, and Nothing beside a More use', () => {
+    assert.equal(
+      describeFilters(
+        { ...NO_FILTERS, validator: 'validator-ata', other: ['snapshot-tests'], nothing: true, uses: ['typescript'] },
+        guide,
+      ),
+      'Showing changes for `@rjsf/validator-ata` and `@rjsf/snapshot-tests` with no customization, for code using TypeScript. Answer more to narrow the list, or clear to see everything.',
+    );
+  });
+
+  it('names a search alone', () => {
+    assert.equal(
+      describeFilters({ ...NO_FILTERS, search: 'ids' }, guide),
+      'Showing changes matching "ids". Answer more to narrow the list, or clear to see everything.',
     );
   });
 });

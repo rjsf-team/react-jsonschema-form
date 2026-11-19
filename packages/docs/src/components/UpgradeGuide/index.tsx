@@ -3,19 +3,24 @@ import Link from '@docusaurus/Link';
 import { useHistory, useLocation } from '@docusaurus/router';
 import MDXContent from '@theme/MDXContent';
 
+import { andList } from '../../../plugins/upgrade-guide/markdown.js';
+import { DEPRECATIONS, byHeading } from '../../../plugins/upgrade-guide/vocabulary.js';
 import {
   NO_FILTERS,
+  badgeOf,
   customizations,
   decodeHash,
   describeFilters,
-  groupByHeading,
+  errorMessage,
+  fetchMarkdown,
   hashTarget,
   isAnswered,
-  markdownUrl,
   matcher,
-  otherUses,
+  moreUses,
+  opensMore,
   readFilters,
-  toMarkdownDocument,
+  toggleNothing,
+  toggleUse,
   writeFilters,
   type Choice,
   type Entry,
@@ -23,7 +28,6 @@ import {
   type Guide,
   type Package,
 } from './filters.ts';
-import { loadGuide } from './guide.ts';
 import { ReadWith } from './ReadWith.tsx';
 import styles from './styles.module.css';
 
@@ -41,47 +45,53 @@ const ROW_HEADINGS = {
   h5: ({ children }: HeadingProps) => <h6>{children}</h6>,
   h6: ({ children }: HeadingProps) => <h6>{children}</h6>,
 };
-/** Copy as Markdown fetches every shown entry's `.md` copy; this many at a time, so a long list can't flood the server. */
-const COPY_CONCURRENCY = 6;
 
-const bodies = new Map<string, Promise<Body>>();
+/** `load` once per key; a load that fails is forgotten, so the next call tries again. */
+function memoized<T>(load: (key: string) => Promise<T>): (key: string) => Promise<T> {
+  const cache = new Map<string, Promise<T>>();
+  return (key) => {
+    let value = cache.get(key);
+    if (!value) {
+      value = load(key);
+      value.catch(() => cache.delete(key));
+      cache.set(key, value);
+    }
+    return value;
+  };
+}
+
+/**
+ * The version's entries and vocabulary, which the plugin writes to its generated data directory. A lazy import makes
+ * the file a chunk of its own, loaded only by this page.
+ */
+const loadGuide = memoized((version) =>
+  import(
+    /* webpackInclude: /[\\/]v\d+\.json$/ */
+    `@generated/rjsf-upgrade-guide/default/${version}.json`
+  ).then((module: { default: Guide }) => module.default),
+);
+
 /** The bodies that have loaded, so a row that remounts (a filter hid it, then showed it) renders its body at once. */
 const loadedBodies = new Map<string, Body>();
 
 /**
- * The entry's compiled page, the same module its own route renders. Webpack makes the template a lazy context over the
- * entry files, so each entry is an async chunk that loads on the first call, and the filtered page ships none. The
- * chunk is left unnamed so webpack can merge it with the route's chunk for the same module.
+ * The compiled page of the entry `<version>/<id>`, the same module its own route renders. Webpack makes the template a
+ * lazy context over the entry files, so each entry is an async chunk that loads on the first call, and the filtered
+ * page ships none. The chunk is left unnamed so webpack can merge it with the route's chunk for the same module.
  */
-function loadBody(version: string, id: string): Promise<Body> {
-  const key = `${version}/${id}`;
-  let body = bodies.get(key);
-  if (!body) {
-    body = import(
-      /* webpackInclude: /[\\/]v\d+[\\/][a-z0-9-]+\.md$/ */
-      `@site/docs/migration-guides/${version}/${id}.md`
-    ).then((module: { default: Body }) => {
-      loadedBodies.set(key, module.default);
-      return module.default;
-    });
-    body.catch(() => bodies.delete(key));
-    bodies.set(key, body);
-  }
-  return body;
-}
+const loadBody = memoized((key) =>
+  import(
+    /* webpackInclude: /[\\/]v\d+[\\/][a-z0-9-]+\.md$/ */
+    `@site/docs/migration-guides/${key}.md`
+  ).then((module: { default: Body }) => {
+    loadedBodies.set(key, module.default);
+    return module.default;
+  }),
+);
 
-/** `map` over `items`, at most `limit` calls in flight at once, the results in `items`' order. */
-async function mapConcurrently<T, R>(items: T[], limit: number, map: (item: T) => Promise<R>): Promise<R[]> {
-  const results: R[] = [];
-  let next = 0;
-  const worker = async () => {
-    while (next < items.length) {
-      const index = next++;
-      results[index] = await map(items[index]);
-    }
-  };
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
-  return results;
+/** A vocabulary text as a `title` attribute, which would show its inline code's backticks. */
+function plainText(text: string) {
+  return text.replaceAll('`', '');
 }
 
 /** Renders a frontmatter `description` or a vocabulary text, whose only Markdown is inline code. */
@@ -110,7 +120,7 @@ function Checkboxes({
     <fieldset className={styles.group}>
       <legend>{legend}</legend>
       {choices.map((choice) => (
-        <label key={choice.id} className={styles.check} title={choice.detect.replaceAll('`', '')}>
+        <label key={choice.id} className={styles.check} title={plainText(choice.detect)}>
           <input
             type='checkbox'
             checked={ticked.includes(choice.id)}
@@ -180,7 +190,8 @@ const Row = memo(function Row({
   isOpen: boolean;
   onToggle: (id: string) => void;
 }) {
-  const [body, setBody] = useState<Body | Error | undefined>(() => loadedBodies.get(`${version}/${entry.id}`));
+  const key = `${version}/${entry.id}`;
+  const [body, setBody] = useState<Body | Error | undefined>(() => loadedBodies.get(key));
 
   useEffect(() => {
     if (!isOpen || (body !== undefined && !(body instanceof Error))) {
@@ -189,7 +200,7 @@ const Row = memo(function Row({
     // A body that failed to load tries again when its row next opens, however it opens.
     setBody(undefined);
     let current = true;
-    loadBody(version, entry.id).then(
+    loadBody(key).then(
       (loaded) => current && setBody(() => loaded),
       (error: unknown) => current && setBody(error instanceof Error ? error : new Error(String(error))),
     );
@@ -197,7 +208,7 @@ const Row = memo(function Row({
       current = false;
     };
     // Only opening the row starts a load; the body it sets mustn't start another.
-  }, [isOpen, version, entry.id]);
+  }, [isOpen, key]);
 
   return (
     <li id={entry.id} className={styles.entry}>
@@ -244,11 +255,7 @@ export default function UpgradeGuide({ version }: { version: string }): ReactNod
 
   useEffect(() => {
     loadGuide(version).then(setGuide, (error: unknown) =>
-      setGuide(
-        new Error(
-          `The upgrade guide plugin wrote no data for ${version}: ${error instanceof Error ? error.message : String(error)}`,
-        ),
-      ),
+      setGuide(new Error(`The upgrade guide plugin wrote no data for ${version}: ${errorMessage(error)}`)),
     );
   }, [version]);
 
@@ -274,28 +281,20 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
   const filters = readFilters(location.search, guide);
   const hash = decodeHash(location.hash);
   const byId = useMemo(() => new Map(guide.entries.map((entry) => [entry.id, entry])), [guide]);
+  const packagesById = useMemo(() => new Map(guide.packages.map((pkg) => [pkg.id, pkg])), [guide]);
   const target = hashTarget(guide, hash);
   const hashEntry = target?.kind === 'entry' ? target.entry : undefined;
 
   const rows = guide.entries.filter(matcher(guide, filters));
-  const groups = groupByHeading(rows, guide.headings);
-  const deprecations = guide.headings[guide.headings.length - 1].id;
-  const packagesById = new Map(guide.packages.map((pkg) => [pkg.id, pkg]));
+  const groups = byHeading(rows);
   const themes = guide.packages.filter((pkg) => pkg.group === 'theme');
   const validators = guide.packages.filter((pkg) => pkg.group === 'validator');
   const others = guide.packages.filter((pkg) => pkg.group === 'other');
   const chips = customizations(guide);
-  const moreUses = otherUses(guide);
-  const chipIds = chips.map((use) => use.id);
+  const more = moreUses(guide);
   const allOpen = rows.length > 0 && rows.every((entry) => open.has(entry.id));
   const hashEntryShown = hashEntry !== undefined && rows.includes(hashEntry);
-  const [moreOpen, setMoreOpen] = useState(
-    () =>
-      filters.validator !== '' ||
-      filters.schema.length > 0 ||
-      filters.other.length > 0 ||
-      filters.uses.some((use) => !chipIds.includes(use)),
-  );
+  const [moreOpen, setMoreOpen] = useState(() => opensMore(guide, filters));
 
   // Only a new hash can name another old anchor or entry; a filter change mustn't scroll back to the hash's entry.
   useEffect(() => {
@@ -303,20 +302,16 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
       history.replace({ pathname: location.pathname, search: location.search, hash: `#${target.id}` });
     } else if (target?.kind === 'page') {
       history.replace(target.url);
-    }
-  }, [hash]);
-
-  useEffect(() => {
-    if (hashEntry && hashEntryShown) {
+    } else if (hashEntry && hashEntryShown) {
       setOpen((previous) => new Set(previous).add(hashEntry.id));
       document.getElementById(hashEntry.id)?.scrollIntoView();
     }
   }, [hash]);
 
-  const update = (next: Partial<Filters>) =>
+  const update = (next: Filters) =>
     history.replace({
       pathname: location.pathname,
-      search: writeFilters({ ...filters, ...next }),
+      search: writeFilters(next),
       hash: location.hash,
     });
 
@@ -354,15 +349,10 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
       return;
     }
     setCopyStatus('Copying…');
-    const { href, origin } = window.location;
-    const markdown = mapConcurrently(rows, COPY_CONCURRENCY, async (entry) => {
-      const url = markdownUrl(entry, origin);
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`${url} answered ${response.status}`);
-      }
-      return response.text();
-    }).then((texts) => toMarkdownDocument(rows, texts, version, { href, origin }));
+    const { origin } = window.location;
+    // The document cites the page from what the reader answered, not the address as typed, which could carry any text.
+    const url = `${origin}${location.pathname}${writeFilters(filters)}`;
+    const markdown = fetchMarkdown(rows, version, { url, origin }, (file) => fetch(file));
     // Safari writes to the clipboard only from within the click's handler, and Firefox only for a few seconds after
     // it, so the write starts here, taking the text as a promise the fetches settle later. A browser without
     // ClipboardItem writes the text once it is ready.
@@ -374,7 +364,7 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
           ]);
     Promise.all([markdown, written]).then(
       () => setCopyStatus(`Copied ${rows.length} ${rows.length === 1 ? 'entry' : 'entries'} as Markdown.`),
-      (error: unknown) => setCopyStatus(`Copying failed: ${error instanceof Error ? error.message : String(error)}.`),
+      (error: unknown) => setCopyStatus(`Copying failed: ${errorMessage(error)}.`),
     );
   };
 
@@ -416,7 +406,7 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
             className={styles.select}
             aria-label='Theme'
             value={filters.theme}
-            onChange={(event) => update({ theme: event.target.value })}
+            onChange={(event) => update({ ...filters, theme: event.target.value })}
           >
             <option value=''>All themes</option>
             {themes.map((pkg) => (
@@ -430,36 +420,26 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
             type='button'
             className={styles.chip}
             aria-pressed={filters.nothing}
-            title='Your code passes no custom widgets, templates, fields, theme or validator.'
-            onClick={() =>
-              update({
-                nothing: !filters.nothing,
-                uses: filters.nothing ? filters.uses : filters.uses.filter((use) => !chipIds.includes(use)),
-              })
-            }
+            title={`Your code passes no custom ${andList(
+              chips.map((use) => use.chip.toLowerCase()),
+              'or',
+            )}.`}
+            onClick={() => update(toggleNothing(guide, filters))}
           >
             Nothing
           </button>
-          {chips.map((use) => {
-            const ticked = filters.uses.includes(use.id);
-            return (
-              <button
-                key={use.id}
-                type='button'
-                className={styles.chip}
-                aria-pressed={ticked}
-                title={use.detect.replaceAll('`', '')}
-                onClick={() =>
-                  update({
-                    uses: ticked ? filters.uses.filter((id) => id !== use.id) : [...filters.uses, use.id],
-                    nothing: false,
-                  })
-                }
-              >
-                {use.chip}
-              </button>
-            );
-          })}
+          {chips.map((use) => (
+            <button
+              key={use.id}
+              type='button'
+              className={styles.chip}
+              aria-pressed={filters.uses.includes(use.id)}
+              title={plainText(use.detect)}
+              onClick={() => update(toggleUse(guide, filters, use.id))}
+            >
+              {use.chip}
+            </button>
+          ))}
           <span className={styles.barEnd}>
             <button
               type='button'
@@ -484,7 +464,10 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
           <div id='upgrade-guide-more' className={styles.more}>
             <label className={styles.picker}>
               Validator
-              <select value={filters.validator} onChange={(event) => update({ validator: event.target.value })}>
+              <select
+                value={filters.validator}
+                onChange={(event) => update({ ...filters, validator: event.target.value })}
+              >
                 <option value=''>All validators</option>
                 {validators.map((pkg) => (
                   <option key={pkg.id} value={pkg.short}>
@@ -495,15 +478,15 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
             </label>
             <Checkboxes
               legend='Your code'
-              choices={moreUses}
+              choices={more}
               ticked={filters.uses}
-              onChange={(uses) => update({ uses })}
+              onChange={(uses) => update({ ...filters, uses })}
             />
             <Checkboxes
               legend='Your schemas'
               choices={guide.schema}
               ticked={filters.schema}
-              onChange={(schema) => update({ schema })}
+              onChange={(schema) => update({ ...filters, schema })}
             />
             {others.length > 0 && (
               <Checkboxes
@@ -514,13 +497,13 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
                   detect: 'For authors of themes outside this repository.',
                 }))}
                 ticked={filters.other}
-                onChange={(other) => update({ other })}
+                onChange={(other) => update({ ...filters, other })}
               />
             )}
             <details className={styles.meanings}>
               <summary>What do these mean?</summary>
               <Meanings legend='Customized' choices={chips} />
-              <Meanings legend='Your code' choices={moreUses} />
+              <Meanings legend='Your code' choices={more} />
               <Meanings legend='Your schemas' choices={guide.schema} />
             </details>
           </div>
@@ -531,7 +514,7 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
           aria-label='Search the changes'
           placeholder='Search titles, descriptions and ids'
           value={filters.search}
-          onChange={(event) => update({ search: event.target.value })}
+          onChange={(event) => update({ ...filters, search: event.target.value })}
         />
       </form>
 
@@ -567,31 +550,28 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
 
       {groups.map(({ heading, entries }, index) => (
         <section key={heading.id}>
-          {heading.id === deprecations ? (
-            <h2 id={`area-${heading.id}`} className={styles.deprecations}>
+          {heading.id === DEPRECATIONS.id ? (
+            <h2 id={`heading-${heading.id}`} className={styles.deprecations}>
               {heading.heading}
             </h2>
           ) : (
-            <h2 id={`area-${heading.id}`}>
+            <h2 id={`heading-${heading.id}`}>
               {index + 1}. {heading.heading}
             </h2>
           )}
           <p className={styles.headingLine}>{heading.line}</p>
           <ul className={styles.entries}>
-            {entries.map((entry) => {
-              const only = entry.packages.length === 1 ? packagesById.get(entry.packages[0]) : undefined;
-              return (
-                <Row
-                  key={entry.id}
-                  version={version}
-                  entry={entry}
-                  byId={byId}
-                  badge={only?.group === 'theme' || only?.group === 'validator' ? only : undefined}
-                  isOpen={open.has(entry.id)}
-                  onToggle={toggle}
-                />
-              );
-            })}
+            {entries.map((entry) => (
+              <Row
+                key={entry.id}
+                version={version}
+                entry={entry}
+                byId={byId}
+                badge={badgeOf(entry, packagesById)}
+                isOpen={open.has(entry.id)}
+                onToggle={toggle}
+              />
+            ))}
           </ul>
         </section>
       ))}

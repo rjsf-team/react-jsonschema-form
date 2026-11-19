@@ -50,6 +50,7 @@
   "read-the-event-not-the-dom": ["onchange-runs-before-the-inputs-update"],
   "submit-in-the-same-handler-as-an-edit": ["submit-after-edit-skips-browser-validation"],
   "make-several-edits-as-one": ["live-validation-runs-for-every-edit"],
+  "novalidate-now-turns-off-live-validation-on-blur-breaking-change": ["live-validation-runs-for-every-edit"],
   "a-form-inside-a-hidden-activity": ["form-in-hidden-activity-drops-changes"],
   "custom-fields-that-wrap-arrayfield-or-objectfield": ["custom-field-passes-form-data-to-array-object-field"],
   "handle-callback-errors-in-the-callback": ["callback-errors-no-longer-reach-error-boundary"],
@@ -511,6 +512,9 @@
     "retrieved-schemas-carry-rjsf-provenance-key"
   ],
   "expand-cycle-reveals-one-level-per-click-breaking-change": ["expand-cycle-reveals-one-level-per-click"],
+  "a-ref-cycle-whose-field-renders-hidden-has-no-expand-button-breaking-change": [
+    "expand-cycle-reveals-one-level-per-click"
+  ],
   "markers-on-resolved-schemas-breaking-change": [
     "retrieve-schema-leaves-nested-refs-unresolved",
     "retrieved-schemas-carry-rjsf-provenance-key"

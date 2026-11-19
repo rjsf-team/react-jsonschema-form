@@ -1,13 +1,12 @@
 // @ts-check
-// Line-level Markdown helpers. They skip fenced code blocks and inline code spans, which is all the entries need: they
-// never touch a `#` or a link inside code.
+// Markdown helpers the plugin and the filtered page share. The line-level ones skip fenced code blocks and inline code
+// spans, which is all the entries need: they never touch a `#` or a link inside code.
 
 const FENCE = /^\s*(`{3,}|~{3,})/;
 const INLINE_CODE = /(`+).*?(?<!`)\1(?!`)/g;
 const INLINE_LINK = /\]\(\s*(<[^<>\n]*>|[^\s()<>]+)((?:\s+(?:"[^"]*"|'[^']*'))?\s*)\)/g;
 const LINK_DEFINITION = /^(\s{0,3}\[[^\]]+\]:\s*)(<[^<>\n]*>|\S+)/;
 const HEADING = /^(#{1,6})(?:[ \t]+(.*?))?(?:[ \t]+#+)?[ \t]*$/;
-const EXPLICIT_HEADING_ID = /\{#([^}]+)\}$/;
 /** A Markdown file's frontmatter block, its YAML captured. The filtered page strips it from the `.md` copies too. */
 const FRONT_MATTER = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
 
@@ -115,31 +114,6 @@ function headings(markdown) {
 }
 
 /**
- * The anchor Docusaurus gives each heading outside code: its `{#id}`, or its text slugged as github-slugger does for the
- * letters, digits, spaces, `-` and `_` the docs' headings use, with `-1`, `-2` on a repeat.
- *
- * @param {string} markdown
- */
-function headingIds(markdown) {
-  /** @type {Map<string, number>} */
-  const seen = new Map();
-  return headings(markdown.replace(FRONT_MATTER, '')).map(({ text }) => {
-    const explicit = EXPLICIT_HEADING_ID.exec(text);
-    if (explicit) {
-      return explicit[1];
-    }
-    const slug = text
-      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-      .toLowerCase()
-      .replace(/[^\p{L}\p{M}\p{N}\p{Pc} -]/gu, '')
-      .replace(/ /g, '-');
-    const count = seen.get(slug) ?? 0;
-    seen.set(slug, count + 1);
-    return count === 0 ? slug : `${slug}-${count}`;
-  });
-}
-
-/**
  * Moves every heading outside code `levels` levels deeper, capped at `######`.
  *
  * @param {string} markdown
@@ -151,4 +125,24 @@ function demoteHeadings(markdown, levels) {
   );
 }
 
-module.exports = { FRONT_MATTER, mapLinks, linkDestinations, headings, headingIds, demoteHeadings };
+/** @param {string[]} values */
+function codes(values) {
+  return values.map((value) => `\`${value}\``);
+}
+
+/** @param {string[]} values */
+function codeList(values) {
+  return codes(values).join(', ');
+}
+
+/**
+ * `a`, `a and b`, `a, b and c`, with `or` for `conjunction: 'or'`.
+ *
+ * @param {string[]} values
+ * @param {string} [conjunction]
+ */
+function andList(values, conjunction = 'and') {
+  return values.length > 1 ? `${values.slice(0, -1).join(', ')} ${conjunction} ${values.at(-1)}` : values.join('');
+}
+
+module.exports = { FRONT_MATTER, mapLinks, linkDestinations, headings, demoteHeadings, codes, codeList, andList };
