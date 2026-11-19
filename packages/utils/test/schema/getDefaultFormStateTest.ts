@@ -227,6 +227,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(schema)).toStrictEqual({ p: { q: { a: 1, b: 4 } } });
         expect(fill(schema, { nestedDefaultsPrecedence: 'ancestorWins' })).toStrictEqual({ p: { q: { a: 1, b: 2 } } });
       });
+      it("hands out the arrays an ancestor's const gives a field with a default of its own as copies", () => {
+        const items = [1, 2];
+        const withDefault: RJSFSchema = { type: 'object', default: { b: 1 }, properties: { a: {}, b: {} } };
+        const filled = fill({ type: 'object', const: { p: { a: items } }, properties: { p: withDefault } });
+        expect(filled).toStrictEqual({ p: { a: [1, 2], b: 1 } });
+        expect(isObject(filled) && isObject(filled.p) && filled.p.a).not.toBe(items);
+      });
       it('gives a declared key and an extra key the const alike', () => {
         const mixed: RJSFSchema = {
           type: 'object',
@@ -482,6 +489,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(unevaluatedDefault)).toStrictEqual({ a: 4 });
         expect(fill({ ...unevaluatedDefault, unevaluatedProperties: true })).toStrictEqual({ a: 1 });
         expect(fill(closedBeside)).toStrictEqual({ x1: 1 });
+      });
+      it("folds no key a member's pattern matches through the unevaluatedProperties beside it, which doesn't apply to it", () => {
+        const member: RJSFSchema = {
+          patternProperties: { '^x': { type: 'object', properties: { p: { default: 'p' } } } },
+        };
+        const unevaluated: RJSFSchema = { type: 'object', properties: { u: { default: 'u' } } };
+        for (const schema of [
+          { type: 'object', unevaluatedProperties: unevaluated, allOf: [member], default: { x1: {}, y: {} } },
+          { type: 'object', unevaluatedProperties: unevaluated, oneOf: [member], default: { x1: {}, y: {} } },
+        ] satisfies RJSFSchema[]) {
+          expect(fill(schema)).toStrictEqual({ x1: { p: 'p' }, y: { u: 'u' } });
+        }
+        const closed: RJSFSchema = {
+          type: 'object',
+          unevaluatedProperties: false,
+          allOf: [{ patternProperties: { '^x': { type: 'number' } } }],
+        };
+        expect(fill({ ...closed, const: { x1: 1 } })).toStrictEqual({ x1: 1 });
+        expect(fill({ ...closed, default: { x1: 1, y: 2 } }, undefined, { allOf: 'populateDefaults' })).toStrictEqual({
+          x1: 1,
+        });
       });
       it("folds a key one chain's pattern matches through the additionalProperties of another chain as well", () => {
         const schema: RJSFSchema = {

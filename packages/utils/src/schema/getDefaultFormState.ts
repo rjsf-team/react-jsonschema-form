@@ -1601,7 +1601,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // default still wins over the inherited defaults beside it, and the order of keys the inherited defaults have is
       // kept
       const merged = mergeObjects(defaults, ownDefault);
-      return preferParentDefaults && isObject(parentConst) ? mergeObjects(merged, parentConst) : merged;
+      return preferParentDefaults && isObject(parentConst) ? mergeObjects(merged, ownValue(parentConst)) : merged;
     }
     return DEFAULT_KEY in schema && !preferParentDefaults ? ownDefault : defaults;
   };
