@@ -2310,6 +2310,24 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   );
 }
 
+/** Returns the seeds of a tuple's position at `index`. A chain whose `items` is one schema beside no tuple of its own
+ * describes every item, so it seeds the position too, as `getRenderedOptionSchema()` meets a list's `items` into each
+ * position an option's tuple declares
+ */
+function positionSeeds<S extends StrictRJSFSchema>(view: DefaultsView<S>, index: number): Seed[] {
+  return view.chains.flatMap((chain) => {
+    const own = { graph: view.graph, chains: [chain] };
+    const tuple = tupleSeeds(own, index);
+    const items = chain.get(ITEMS_KEY);
+    const isList =
+      tuple.length === 0 &&
+      !Array.isArray(Reflect.get(chain.get('prefixItems')?.node.raw ?? {}, 'prefixItems')) &&
+      items !== undefined &&
+      isSchemaObject<S>(Reflect.get(items.node.raw, ITEMS_KEY));
+    return isList ? seedsAt(own, ITEMS_KEY) : tuple;
+  });
+}
+
 /** Returns the array item `getInnerSchemaForArrayItem()` picks for `additionalItems` and `idx`: its seeds, the edge it
  * is reached through, and the subschema that function returns for it
  */
@@ -2326,7 +2344,7 @@ function innerItem<S extends StrictRJSFSchema>(
       const item = getItemSchema<S>(schema, idx);
       return typeof item === 'boolean'
         ? { seeds: [], edge: 'item', fallback: emptySchema<S>() }
-        : { seeds: tupleSeeds(view, idx), edge: 'tupleItem', fallback: item };
+        : { seeds: positionSeeds(view, idx), edge: 'tupleItem', fallback: item };
     }
   } else if (idx < 0 && isSchemaObject<S>(schema.items)) {
     return { seeds: seedsAt(view, ITEMS_KEY), edge: 'item', fallback: schema.items };
@@ -3307,11 +3325,15 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     if (neverPopulate) {
       defaults = rawFormData;
     } else {
+      // A row past a `prefixItems` tuple is filled from the `items` beside it, as a list's rows are from its `items`
+      const restOf = Array.isArray(schema.prefixItems) ? getPrefixLength<S>(schema) : Infinity;
       const itemDefaults = rawFormData.map((item: unknown, idx) =>
         foldChild<T, S, F>(
           context,
           `row:${idx}`,
-          itemField(view, AdditionalItemsHandling.Ignore),
+          idx >= restOf
+            ? itemField(view, AdditionalItemsHandling.Fallback, idx)
+            : itemField(view, AdditionalItemsHandling.Ignore),
           // An item the data holds is one a field renders
           {
             ...itemProps(idx),

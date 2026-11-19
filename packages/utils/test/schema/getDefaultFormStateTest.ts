@@ -14785,6 +14785,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ]);
       });
 
+      it('fills the rows past a prefixItems tuple from its items, as a list fills its rows', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          prefixItems: [{ type: 'string' }],
+          items: { type: 'object', properties: { x: { type: 'number', default: 1 } } },
+        };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: ['a', {}] }),
+        ).toEqual(['a', { x: 1 }]);
+      });
+
+      it("fills an option's prefixItems positions and the rows past them from the list items it is met with", () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: { type: 'object', properties: { x: { type: 'number', default: 1 } } },
+          oneOf: [{ prefixItems: [{}] }],
+        };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: [{}, {}] }),
+        ).toEqual([{ x: 1 }, { x: 1 }]);
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual([{ x: 1 }]);
+      });
+
       it('fills no prefixItems position at or past a false one, which allows no item', () => {
         const schema: RJSFSchema = {
           type: 'array',

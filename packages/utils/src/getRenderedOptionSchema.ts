@@ -133,9 +133,11 @@ function meetSchemas(parent: GenericObjectType, option: object): GenericObjectTy
   // positions to a list doesn't take away the rows and the Add button the list renders without it
   const parentPrefix: unknown = parent.prefixItems;
   const optionPrefix: unknown = declared.prefixItems;
-  if (Array.isArray(optionPrefix) && parentPrefix === undefined && isObject(parentItems)) {
+  // A `false` one allows no item, so it closes each position
+  const isSingle = (items: unknown) => isObject(items) || items === false;
+  if (Array.isArray(optionPrefix) && parentPrefix === undefined && isSingle(parentItems)) {
     result.prefixItems = optionPrefix.map((position) => meetSubschema(parentItems, position));
-  } else if (Array.isArray(parentPrefix) && optionPrefix === undefined && isObject(optionItems)) {
+  } else if (Array.isArray(parentPrefix) && optionPrefix === undefined && isSingle(optionItems)) {
     result.prefixItems = parentPrefix.map((position) => meetSubschema(position, optionItems));
   }
   if (takesOptionConditional) {

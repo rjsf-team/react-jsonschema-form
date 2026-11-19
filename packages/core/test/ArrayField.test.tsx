@@ -2579,6 +2579,29 @@ describe('ArrayField', () => {
       expect(node.querySelector('.rjsf-array-item-add')).not.toBeNull();
     });
 
+    it("reads uiSchema.prefixItems for an option's positions, and the list's uiSchema.items only past them", () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string' },
+        oneOf: [{ prefixItems: [{ minLength: 1 }] }],
+      };
+      const listUiSchema = createFormComponent({
+        schema,
+        uiSchema: { items: { 'ui:widget': 'textarea' } },
+        initialFormData: ['a', 'b'],
+      });
+      expect(listUiSchema.node.querySelector('#root_0')?.tagName).toBe('INPUT');
+      expect(listUiSchema.node.querySelector('#root_1')?.tagName).toBe('TEXTAREA');
+
+      const tupleUiSchema = createFormComponent({
+        schema,
+        uiSchema: { prefixItems: [{ 'ui:widget': 'textarea' }], items: { 'ui:widget': 'textarea' } },
+        initialFormData: ['a', 'b'],
+      });
+      expect(tupleUiSchema.node.querySelector('#root_0')?.tagName).toBe('TEXTAREA');
+      expect(tupleUiSchema.node.querySelector('#root_1')?.tagName).toBe('TEXTAREA');
+    });
+
     it('renders a tuple whose prefixItems hold a boolean position, rather than a list of untyped rows', () => {
       const { node } = createFormComponent({
         schema: { type: 'array', prefixItems: [{ type: 'string' }, true] },

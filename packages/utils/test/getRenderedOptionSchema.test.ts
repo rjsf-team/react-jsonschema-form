@@ -180,6 +180,20 @@ describe('getRenderedOptionSchema()', () => {
         items: { type: 'string', maxLength: 5 },
       });
     });
+    test("closes the other side's prefixItems positions with a false items", () => {
+      const list: RJSFSchema = { type: 'array', items: false };
+      expect(getRenderedOptionSchema(list, { prefixItems: [{ type: 'string' }] })).toEqual({
+        type: 'array',
+        prefixItems: [false],
+        items: false,
+      });
+      const tuple: RJSFSchema = { type: 'array', prefixItems: [{ type: 'string' }] };
+      expect(getRenderedOptionSchema(tuple, { items: false })).toEqual({
+        type: 'array',
+        prefixItems: [false],
+        items: false,
+      });
+    });
     test("meets each position of the parent's prefixItems with the option's items, and the items past them", () => {
       const parent: RJSFSchema = { type: 'array', prefixItems: [{ type: 'string' }, true], items: { type: 'string' } };
       expect(getRenderedOptionSchema(parent, { items: { minLength: 1 } })).toEqual({
