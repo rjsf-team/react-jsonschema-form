@@ -2332,7 +2332,7 @@ function innerItem<S extends StrictRJSFSchema>(
     return { seeds: seedsAt(view, ITEMS_KEY), edge: 'item', fallback: schema.items };
   }
   // Beside a list the items past it are `additionalItems`, as `getInnerSchemaForArrayItem()` reads them
-  const restKey = prefixLength > 0 ? getRestItemsKey<S>(schema) : ADDITIONAL_ITEMS_KEY;
+  const restKey = isTupleSchema<S>(schema) ? getRestItemsKey<S>(schema) : ADDITIONAL_ITEMS_KEY;
   const rest: unknown = schema[restKey];
   if (additionalItems !== AdditionalItemsHandling.Ignore && isObject(rest)) {
     return { seeds: seedsAt(view, restKey), edge: 'item', fallback: rest };

@@ -1,6 +1,6 @@
 import isObject, { isSchemaObject } from '../isObject.ts';
 import type { RJSFSchema, StrictRJSFSchema } from '../types.ts';
-import { getItemSchema, getPrefixLength } from './getItemSchema.ts';
+import { getItemSchema, getPrefixLength, isTupleSchema } from './getItemSchema.ts';
 
 /** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
  */
@@ -16,8 +16,8 @@ export type AdditionalItemsHandling = (typeof AdditionalItemsHandling)[keyof typ
  * declares no `prefixItems`, and the items past them are described by the `items` beside `prefixItems`, or the
  * `additionalItems` beside a tuple `items` (see `getItemSchema()`). There are four possible returns:
  * 1. If `idx` is >= 0 and within a tuple, the position at `idx` is returned, or {} for a boolean position.
- * 2. If `schema` is not a tuple and `schema.items` is a schema object, then `schema.items` is returned, otherwise it
- *    falls through to 3.
+ * 2. If `idx` is < 0, `schema` declares no positions and `schema.items` is a schema object, then `schema.items` is
+ *    returned, otherwise it falls through to 3.
  * 3. If `additionalItems` is not `AdditionalItemsHandling.Ignore` and the schema of the items past the tuple, or
  *    `schema.additionalItems` where `schema` is no tuple, is an object, then it is returned since it actually is a
  *    schema, otherwise it falls through to 4.
@@ -42,7 +42,8 @@ export function getInnerSchemaForArrayItem<S extends StrictRJSFSchema = RJSFSche
   } else if (idx < 0 && isSchemaObject<S>(schema.items)) {
     return schema.items;
   }
-  const rest = prefixLength > 0 ? getItemSchema<S>(schema, prefixLength) : schema.additionalItems;
+  // An empty `prefixItems` is still a tuple, whose items past it are its `items`
+  const rest = isTupleSchema<S>(schema) ? getItemSchema<S>(schema, prefixLength) : schema.additionalItems;
   if (additionalItems !== AdditionalItemsHandling.Ignore && isObject(rest)) {
     return rest as S;
   }

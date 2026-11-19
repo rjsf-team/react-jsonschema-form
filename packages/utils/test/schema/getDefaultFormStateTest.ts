@@ -6812,6 +6812,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       ])('returns %s as a tuple items beside additionalItems does', (_, handling, idx, expected) => {
         expect(getInnerSchemaForArrayItem(schema, handling, idx)).toStrictEqual(expected);
       });
+      it('returns its items for an item past an empty prefixItems', () => {
+        const empty: RJSFSchema = { type: 'array', prefixItems: [], items: rest };
+        expect(getInnerSchemaForArrayItem(empty, AdditionalItemsHandling.Fallback, 0)).toStrictEqual(rest);
+      });
       it('returns the empty schema for a boolean position, rather than the items past the tuple', () => {
         const open: RJSFSchema = { type: 'array', prefixItems: [first, true], items: rest };
         expect(getInnerSchemaForArrayItem(open, AdditionalItemsHandling.Fallback, 1)).toStrictEqual({});
@@ -14798,6 +14802,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           items: { type: 'string', default: 'z' },
         };
         expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual(['a']);
+      });
+
+      it('pads minItems with the items default beside an empty prefixItems', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          prefixItems: [],
+          items: { type: 'string', default: 'a' },
+          minItems: 2,
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual(['a', 'a']);
       });
 
       it('pads minItems below a prefixItems tuple with each position default, then the items past it', () => {

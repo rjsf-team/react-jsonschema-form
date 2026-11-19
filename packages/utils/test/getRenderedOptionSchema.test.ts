@@ -188,6 +188,62 @@ describe('getRenderedOptionSchema()', () => {
         items: { type: 'string', minLength: 1 },
       });
     });
+    test("meets the positions past either side's prefixItems with the other side's items", () => {
+      const parent: RJSFSchema = {
+        type: 'array',
+        prefixItems: [{ type: 'string' }],
+        items: { type: 'number', title: 'N' },
+      };
+      expect(getRenderedOptionSchema(parent, { prefixItems: [{}, { minimum: 3 }] })).toEqual({
+        type: 'array',
+        prefixItems: [{ type: 'string' }, { type: 'number', title: 'N', minimum: 3 }],
+        items: { type: 'number', title: 'N' },
+      });
+      const short: RJSFSchema = { type: 'array', prefixItems: [{ type: 'string' }, { type: 'number' }] };
+      expect(getRenderedOptionSchema(short, { prefixItems: [{ minLength: 1 }], items: { minimum: 3 } })).toEqual({
+        type: 'array',
+        prefixItems: [
+          { type: 'string', minLength: 1 },
+          { type: 'number', minimum: 3 },
+        ],
+        items: { minimum: 3 },
+      });
+    });
+    test("meets the positions past either side's tuple items with the other side's additionalItems", () => {
+      const parent: RJSFSchema = { type: 'array', items: [{ type: 'string' }], additionalItems: { type: 'number' } };
+      expect(getRenderedOptionSchema(parent, { items: [{}, { minimum: 3 }] })).toEqual({
+        type: 'array',
+        items: [{ type: 'string' }, { type: 'number', minimum: 3 }],
+        additionalItems: { type: 'number' },
+      });
+    });
+    test.each<[string, RJSFSchema, RJSFSchema]>([
+      [
+        'parent',
+        { type: 'array', items: [{ type: 'string' }], additionalItems: false },
+        { items: [{}, { minimum: 3 }] },
+      ],
+      [
+        'option',
+        { type: 'array', items: [{ type: 'string' }, { minimum: 3 }] },
+        { items: [{}], additionalItems: false },
+      ],
+    ])('ends two tuple items at the length of the %s, which closes its tuple with false', (_, parent, option) => {
+      expect(getRenderedOptionSchema(parent, option)).toEqual({
+        type: 'array',
+        items: [{ type: 'string' }],
+        additionalItems: false,
+      });
+    });
+    test('meets a position past one side with nothing where that side declares an items list beside prefixItems', () => {
+      const parent = { type: 'array', prefixItems: [{ type: 'string' }, { type: 'number' }] };
+      const option = { prefixItems: [{}], items: [{ type: 'boolean' }] };
+      expect(getRenderedOptionSchema(parent as RJSFSchema, option as RJSFSchema)).toEqual({
+        type: 'array',
+        prefixItems: [{ type: 'string' }, { type: 'number' }],
+        items: [{ type: 'boolean' }],
+      });
+    });
     test.each<[string, RJSFSchema, RJSFSchema]>([
       ["the parent's", { type: 'array', prefixItems: [{ type: 'string' }] }, { items: { maxLength: 3 } }],
       ["the option's", { type: 'array', items: { type: 'string' } }, { prefixItems: [{ maxLength: 3 }] }],

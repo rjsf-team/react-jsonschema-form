@@ -2,6 +2,7 @@ import type { JSONSchema7TypeName } from 'json-schema';
 
 import { conjoin, copyJoinedSchemas } from './additionalPropertiesUtils.ts';
 import {
+  ADDITIONAL_ITEMS_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
   ANY_OF_KEY,
@@ -107,7 +108,7 @@ function meetSchemas(parent: GenericObjectType, option: object): GenericObjectTy
         delete result[key];
       }
     } else if (Object.hasOwn(parent, key) && !CONDITIONAL_KEYWORDS.includes(key)) {
-      result[key] = meetKeyword(key, parent[key], optionValue);
+      result[key] = meetKeyword(key, parent[key], optionValue, parent, declared);
     }
   }
   // A single `items` schema applies to every item, so beside a tuple it also describes the items past it, which the
@@ -156,9 +157,17 @@ function meetSchemas(parent: GenericObjectType, option: object): GenericObjectTy
  * @param key - The keyword both declare
  * @param parentValue - The parent's value for it
  * @param optionValue - The option's value for it
+ * @param parentSchema - The parent declaring `parentValue`
+ * @param optionSchema - The option declaring `optionValue`
  * @returns - The value the met schema has for `key`
  */
-function meetKeyword(key: string, parentValue: unknown, optionValue: unknown): unknown {
+function meetKeyword(
+  key: string,
+  parentValue: unknown,
+  optionValue: unknown,
+  parentSchema: GenericObjectType,
+  optionSchema: GenericObjectType,
+): unknown {
   if (typeof parentValue === 'number' && typeof optionValue === 'number') {
     if (LOWER_BOUNDS.has(key)) {
       return Math.max(parentValue, optionValue);
@@ -190,7 +199,9 @@ function meetKeyword(key: string, parentValue: unknown, optionValue: unknown): u
   }
   if (POSITIONAL_KEYWORDS.has(key) && parentValue !== false && optionValue !== true) {
     if (Array.isArray(parentValue) && Array.isArray(optionValue)) {
-      return meetTuples(parentValue, optionValue);
+      // The items past a `prefixItems` tuple are its `items`, and past a tuple `items` its `additionalItems`
+      const restKey = key === ITEMS_KEY ? ADDITIONAL_ITEMS_KEY : ITEMS_KEY;
+      return meetTuples(parentValue, optionValue, parentSchema[restKey], optionSchema[restKey]);
     }
     if (Array.isArray(parentValue)) {
       return parentValue.map((position) => meetSubschema(position, optionValue));
@@ -202,20 +213,31 @@ function meetKeyword(key: string, parentValue: unknown, optionValue: unknown): u
   return meetSubschema(parentValue, optionValue);
 }
 
-/** Meets two tuples position by position. A position only one of them describes is that one's, without what the
- * other declares for the items past its tuple.
+/** Meets two tuples position by position. A position only one of them describes is met with what the other declares
+ * for the items past its tuple, which describes that position there. A list there, such as an `items` list beside
+ * `prefixItems`, describes no item, as `getItemSchema()` reads it. Where the other closes its tuple with `false`, the
+ * met tuple ends at that one's length rather than holding a `false` position, which a tuple `items` can't hold and stay
+ * one `isFixedItems()` reads as a tuple; the `false` the two meet in past it still allows no item there.
  *
  * @param parent - The parent's subschemas, one per position
  * @param option - The option's subschemas, one per position
- * @returns - The subschemas the two meet in, one per position either describes
+ * @param parentRest - What the parent declares for the items past its tuple, if anything
+ * @param optionRest - What the option declares for the items past its tuple, if anything
+ * @returns - The subschemas the two meet in, one per position either describes and the other allows
  */
-function meetTuples(parent: unknown[], option: unknown[]): unknown[] {
-  return Array.from({ length: Math.max(parent.length, option.length) }, (_, index) => {
-    if (index >= option.length) {
-      return parent[index];
-    }
-    return index < parent.length ? meetSubschema(parent[index], option[index]) : option[index];
-  });
+function meetTuples(parent: unknown[], option: unknown[], parentRest: unknown, optionRest: unknown): unknown[] {
+  const [parentPast, optionPast] = [parentRest, optionRest].map((rest) => (Array.isArray(rest) ? undefined : rest));
+  const length = Math.min(
+    Math.max(parent.length, option.length),
+    parentPast === false ? parent.length : Infinity,
+    optionPast === false ? option.length : Infinity,
+  );
+  return Array.from({ length }, (_, index) =>
+    meetSubschema(
+      index < parent.length ? parent[index] : parentPast,
+      index < option.length ? option[index] : optionPast,
+    ),
+  );
 }
 
 /** Returns the subschema that meets both `parent` and `option`. A parent's `false`, which nothing meets, stays in place
