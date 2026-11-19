@@ -1994,7 +1994,8 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       });
 
       it.each([
-        { data: ['b', 'a'], expected: {}, outcome: 'drops the array holding' },
+        // The defaults fill the cleared tuple with a hole at each position
+        { data: ['b', 'a'], expected: { list: [undefined] }, outcome: 'drops the array holding' },
         { data: [undefined, 'a'], expected: { list: [undefined, 'a'] }, outcome: 'keeps an unfilled' },
       ])('$outcome a prefix item the new entry rejects', ({ data, expected }) => {
         const ref = createRef<FormRef>();
@@ -2008,7 +2009,8 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       });
 
       it.each([
-        { data: ['a', 'b'], expected: {}, outcome: 'drops the array where an item' },
+        // The defaults fill the cleared tuple with a hole at each position
+        { data: ['a', 'b'], expected: { list: [undefined] }, outcome: 'drops the array where an item' },
         { data: ['a'], expected: { list: ['a'] }, outcome: 'keeps the array where no item' },
       ])('$outcome reaches the new false, as sanitizeDataForNewSchema() does', ({ data, expected }) => {
         const closed = (rest: RJSFSchema | false): RJSFSchema => ({
@@ -2262,13 +2264,14 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expected: ['a'],
     },
     {
-      // `Form` renders an array declaring no type as unsupported, so it doesn't read the old items without their types
+      // `Form` renders an array declaring no type as unsupported, so it doesn't read the old items without their types,
+      // and the defaults fill the cleared tuple with a hole at each position
       name: 'differs on an old array declaring no type: utils keeps the items, Form removes the array',
       from: { prefixItems: [{ type: 'number', enum: ['a'] }] },
       to: prefix({ type: 'string', enum: ['a'] }),
       data: ['b'],
       expected: ['b'],
-      formExpected: ABSENT,
+      formExpected: [undefined],
     },
     {
       // `Form` judges no field whose constraints didn't change, and utils checks a scalar item as a scalar property is
@@ -2299,6 +2302,8 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       to: prefix({ enum: ['x'] }),
       data: ['y'],
       expected: ABSENT,
+      // The defaults fill the cleared tuple with a hole at each position
+      formExpected: [undefined],
     },
     {
       name: 'keeps a prefix item whose selected option changed, which neither looks inside',
@@ -2341,6 +2346,8 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       to: prefix({ type: 'string', enum: ['a'] }),
       data: ['b', 'c'],
       expected: ABSENT,
+      // The defaults fill the cleared tuple with a hole at each position
+      formExpected: [undefined],
     },
     {
       name: 'clears the array where the new schema rejects a tuple item an old true items held',

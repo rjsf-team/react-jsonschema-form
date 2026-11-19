@@ -104,6 +104,35 @@ const schema: RJSFSchema = {
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
+## Tuples with `prefixItems`
+
+JSON Schema 2020-12 writes a tuple with `prefixItems`, one schema per position, and the items past it with `items`, which takes the place `additionalItems` has beside a tuple `items`.
+The form renders a field for each position, which can't be moved or removed, and offers Add for rows past the positions only where `items` is a schema. A `false` position allows no item, so the fields stop before it and no Add shows; an item the data already holds there still renders, with a Remove button, so it can be removed.
+The uiSchema mirrors the schema: `uiSchema.prefixItems` holds one entry per position, and `uiSchema.items` applies to the rows past them.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import Ajv2020 from 'ajv/dist/2020';
+
+const schema: RJSFSchema = {
+  type: 'array',
+  prefixItems: [{ type: 'string', title: 'Name' }, { type: 'number', title: 'Age' }],
+  items: { type: 'boolean', title: 'Flag' },
+};
+
+const uiSchema: UiSchema = {
+  prefixItems: [{ 'ui:widget': 'textarea' }],
+  items: { 'ui:widget': 'radio' },
+};
+
+const validator = customizeValidator({ AjvClass: Ajv2020 });
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
+The default `@rjsf/validator-ajv8` validator is draft-07 and ignores `prefixItems`, so it checks each item against `items` alone. Pass the 2020-12 Ajv class, as [`AjvClass`](../usage/validation.md#ajvclass) describes, to check each position against its own schema.
+
 ## Array item uiSchema options
 
 The `orderable`, `addable`, `copyable` and `removable` options can be set globally if they are contained within the `ui:globalOptions` block, and `itemLabel` is set per array only.
@@ -135,7 +164,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 ### `addable` option
 
-If either `items` or `additionalItems` contains a schema object, an add button for new items is shown by default. You can turn this off with the `addable` option in `uiSchema`:
+If either `items` or `additionalItems` contains a schema object, an add button for new items is shown by default (beside `prefixItems`, only `items` counts). You can turn this off with the `addable` option in `uiSchema`:
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';

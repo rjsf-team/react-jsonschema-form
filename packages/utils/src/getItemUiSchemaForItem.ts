@@ -1,5 +1,6 @@
+import { ITEMS_KEY } from './constants.ts';
 import { toFieldPath } from './fieldPath.ts';
-import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
+import getStaticItemsUiSchema, { getItemsUiSchemaKey } from './getStaticItemsUiSchema.ts';
 import logOnce from './logOnce.ts';
 import type { FieldPath, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
@@ -18,6 +19,8 @@ import type { FieldPath, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema
  *          logged when the function throws, so that two arrays whose functions fail the same way at the same index
  *          are reported separately. A caller that has no path to give (a custom `ArrayField`, say) can omit it, and
  *          the error names the index alone rather than a path the caller never supplied
+ * @param [schema] - The array schema, which picks the uiSchema key the item reads, as `getStaticItemsUiSchema()` does;
+ *          only an item read from `uiSchema.items` resolves its function form
  * @returns - The uiSchema for the item at `index`, or `undefined`
  */
 export default function getItemUiSchemaForItem<
@@ -30,8 +33,9 @@ export default function getItemUiSchemaForItem<
   index: number,
   formContext?: F,
   arrayFieldPath?: FieldPath,
+  schema?: S,
 ): UiSchema<T, S, F> | undefined {
-  if (typeof uiSchema?.items === 'function') {
+  if (typeof uiSchema?.items === 'function' && (!schema || getItemsUiSchemaKey<S>(schema, index) === ITEMS_KEY)) {
     try {
       return uiSchema.items(item as never, index, formContext) as UiSchema<T, S, F>;
     } catch (e) {
@@ -43,5 +47,5 @@ export default function getItemUiSchemaForItem<
       return undefined;
     }
   }
-  return getStaticItemsUiSchema<T, S, F>(uiSchema, index);
+  return getStaticItemsUiSchema<T, S, F>(uiSchema, index, schema);
 }

@@ -5,6 +5,7 @@ import {
   getAdditionalPropertySchema,
 } from '../additionalPropertiesUtils.ts';
 import {
+  ADDITIONAL_ITEMS_KEY,
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
@@ -15,6 +16,7 @@ import {
   ELSE_KEY,
   ENUM_KEY,
   IF_KEY,
+  ITEMS_KEY,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
@@ -41,7 +43,6 @@ import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isConstantSelect from '../isConstantSelect.ts';
-import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
@@ -75,6 +76,13 @@ import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts'
 import { closestOption } from './getClosestMatchingOption.ts';
 import { typeAllows } from './getFirstMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
+import {
+  getItemSchema,
+  getOpenPrefixLength,
+  getPrefixLength,
+  getRestItemsKey,
+  isTupleSchema,
+} from './getItemSchema.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
   checkCondition,
@@ -1655,11 +1663,12 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (DEFAULT_KEY in schema && !xxxOf) {
       // A field with `anyOf` or `oneOf` merges its defaults with the data through the option it selects, below
       defaults = ownDefaults();
-    } else if (Array.isArray(schema.items) && isFixedItems<S>(schema) && !preferParentDefaults && !xxxOf) {
+    } else if (isTupleSchema<S>(schema) && !preferParentDefaults && !xxxOf) {
       // If the schema contains fixed items and parentDefaults does not have precedence
       // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
       // option, which it is met into below, so its defaults are those of the option as rendered
-      defaults = schema.items.map((_item, idx) =>
+      // A `false` position allows no item, so the positions at and past it are left unfilled
+      defaults = Array.from({ length: getOpenPrefixLength<S>(schema) }, (_item, idx) =>
         foldChild<T, S, F>(
           context,
           `tuple:${idx}`,
@@ -1671,7 +1680,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             required,
             shouldMergeDefaultsIntoFormData,
             initialDefaultsGenerated,
-            uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx),
+            uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx, schema),
             uiSchemaDefinitions,
             nullFills: props.nullFills,
             ...childPathProps<T, S, F>(props, idx),
@@ -2301,6 +2310,22 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   );
 }
 
+/** Returns the seeds of a tuple's position at `index`. Beside a `prefixItems` tuple, a chain whose `items` is one schema
+ * beside no `prefixItems` of its own describes every item, so it seeds the position too, as `getRenderedOptionSchema()`
+ * meets a list's `items` into each position an option's tuple declares. A draft-07 tuple's positions are seeded by its
+ * tuple `items` alone, though `getRenderedOptionSchema()` meets a list's `items` into them too
+ */
+function positionSeeds<S extends StrictRJSFSchema>(view: DefaultsView<S>, index: number): Seed[] {
+  const isPrefixTuple = Array.isArray(view.schema.prefixItems);
+  return view.chains.flatMap((chain) => {
+    const own = { graph: view.graph, chains: [chain] };
+    const declared = (keyword: string): unknown => Reflect.get(chain.get(keyword)?.node.raw ?? {}, keyword);
+    return isPrefixTuple && !Array.isArray(declared('prefixItems')) && isSchemaObject<S>(declared(ITEMS_KEY))
+      ? seedsAt(own, ITEMS_KEY)
+      : tupleSeeds(own, index);
+  });
+}
+
 /** Returns the array item `getInnerSchemaForArrayItem()` picks for `additionalItems` and `idx`: its seeds, the edge it
  * is reached through, and the subschema that function returns for it
  */
@@ -2309,16 +2334,24 @@ function innerItem<S extends StrictRJSFSchema>(
   additionalItems: AdditionalItemsHandling,
   idx: number,
 ): { seeds: readonly Seed[]; edge: ContainmentEdge; fallback: unknown } {
-  const { items, additionalItems: additional } = view.schema;
-  if (idx >= 0) {
-    if (Array.isArray(items) && idx < items.length && typeof items[idx] !== 'boolean') {
-      return { seeds: tupleSeeds(view, idx), edge: 'tupleItem', fallback: items[idx] };
+  const { schema } = view;
+  const prefixLength = getPrefixLength<S>(schema);
+  if (prefixLength > 0) {
+    if (idx >= 0 && idx < prefixLength) {
+      // A boolean position is the position's own, which the items past the tuple don't describe
+      const item = getItemSchema<S>(schema, idx);
+      return typeof item === 'boolean'
+        ? { seeds: [], edge: 'item', fallback: emptySchema<S>() }
+        : { seeds: positionSeeds(view, idx), edge: 'tupleItem', fallback: item };
     }
-  } else if (items && !Array.isArray(items) && typeof items !== 'boolean') {
-    return { seeds: seedsAt(view, 'items'), edge: 'item', fallback: items };
+  } else if (idx < 0 && isSchemaObject<S>(schema.items)) {
+    return { seeds: seedsAt(view, ITEMS_KEY), edge: 'item', fallback: schema.items };
   }
-  if (additionalItems !== AdditionalItemsHandling.Ignore && isObject(additional)) {
-    return { seeds: seedsAt(view, 'additionalItems'), edge: 'item', fallback: additional };
+  // Beside a list the items past it are `additionalItems`, as `getInnerSchemaForArrayItem()` reads them
+  const restKey = isTupleSchema<S>(schema) ? getRestItemsKey<S>(schema) : ADDITIONAL_ITEMS_KEY;
+  const rest: unknown = schema[restKey];
+  if (additionalItems !== AdditionalItemsHandling.Ignore && isObject(rest)) {
+    return { seeds: seedsAt(view, restKey), edge: 'item', fallback: rest };
   }
   return { seeds: [], edge: 'item', fallback: emptySchema<S>() };
 }
@@ -3161,26 +3194,6 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
     });
 }
 
-/** Resolves the `uiSchema` for the array item at `idx`, mirroring `getInnerSchemaForArrayItem()`'s own fallback: for
- * a fixed (tuple) `schema` whose tuple doesn't extend to `idx`, that position's data is really an "additional item"
- * (`schema.additionalItems`), so its uiSchema is `uiSchema.additionalItems` rather than the tuple's `uiSchema.items`.
- *
- * @param schema - The array schema being defaulted
- * @param uiSchema - The parent (array) uiSchema, if any
- * @param idx - The index of the item within the array
- * @returns - The uiSchema to use for the item at `idx`
- */
-function getItemUiSchemaForIndex<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(schema: S, uiSchema: UiSchema<T, S, F> | undefined, idx: number): UiSchema<T, S, F> | undefined {
-  if (Array.isArray(schema.items) && isFixedItems(schema) && idx >= schema.items.length) {
-    return getByPath<UiSchema<T, S, F> | undefined>(uiSchema, 'additionalItems');
-  }
-  return getStaticItemsUiSchema<T, S, F>(uiSchema, idx);
-}
-
 /** Returns the schema of the array field `view` with an `items` written as a `$ref` read as the definition it names,
  * where the declaration holding that `$ref` sits, which is what a `computeSkipPopulate()` reading the items' keywords
  * expects to be handed
@@ -3243,7 +3256,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     required,
     shouldMergeDefaultsIntoFormData,
     initialDefaultsGenerated,
-    uiSchema: getItemUiSchemaForIndex<T, S, F>(schema, uiSchema, idx),
+    uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx, schema),
     uiSchemaDefinitions,
     nullFills,
     ...childPathProps<T, S, F>(props, idx),
@@ -3258,7 +3271,8 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     const rows = Array.isArray(rawFormData) ? rawFormData : undefined;
     // The merge with the data below drops the items of the default past its rows, so they are not computed
     const kept = rows && !mergeExtraDefaults ? defaults.slice(0, rows.length) : defaults;
-    const hasItemsSchema = isSchemaObject<S>(schema.items);
+    // A tuple's `items` describes the items past it, read as the `additionalItems` beside a tuple `items` are
+    const hasItemsSchema = getPrefixLength<S>(schema) === 0 && isSchemaObject<S>(schema.items);
     // Only an `items` schema has defaults to fill an item with, and `populate: 'never'` fills no row the data holds
     // with them: without either the item stays the copy it is
     const fillsItems = !neverPopulate && hasItemsSchema;
@@ -3309,11 +3323,16 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     if (neverPopulate) {
       defaults = rawFormData;
     } else {
+      // A row of a `prefixItems` tuple is filled from its position, or past them from the `items` beside it, as a list's
+      // rows are from its `items`, whether or not the array's own `default` skipped the tuple fill
+      const isPrefixTuple = Array.isArray(schema.prefixItems);
       const itemDefaults = rawFormData.map((item: unknown, idx) =>
         foldChild<T, S, F>(
           context,
           `row:${idx}`,
-          itemField(view, AdditionalItemsHandling.Ignore),
+          isPrefixTuple
+            ? itemField(view, AdditionalItemsHandling.Fallback, idx)
+            : itemField(view, AdditionalItemsHandling.Ignore),
           // An item the data holds is one a field renders
           {
             ...itemProps(idx),
@@ -3361,20 +3380,28 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     arrayDefault = defaults || (!required && !requiredAsRoot) ? defaults : emptyDefault;
   } else {
     const defaultEntries: unknown[] = Array.isArray(defaults) ? defaults : [];
-    const fillerDefault = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert).default;
+    const isTuple = isTupleSchema<S>(schema);
+    // A `false` tuple position allows no item, so no filler goes at or past it
+    const openLength = getOpenPrefixLength<S>(schema);
+    const fillLength =
+      openLength < getPrefixLength<S>(schema) ? Math.min(schema.minItems, openLength) : schema.minItems;
 
     // Calculate filler entries for remaining items (minItems - existing raw data/defaults), each resolving the
-    // uiSchema for its own final position (`defaultsLength + i`) the same way `ArrayField` resolves it once rendered,
-    // rather than sharing a single uiSchema across every filler row regardless of position.
-    const fillerEntries = Array.from({ length: schema.minItems - defaultsLength }, (_unused, i) =>
-      foldChild<T, S, F>(
+    // schema and uiSchema for its own final position (`defaultsLength + i`) the same way `ArrayField` resolves it once
+    // rendered, rather than sharing a single one across every filler row regardless of position.
+    const fillerEntries = Array.from({ length: Math.max(fillLength - defaultsLength, 0) }, (_unused, i) => {
+      const idx = isTuple ? defaultsLength + i : -1;
+      return foldChild<T, S, F>(
         context,
         `filler:${i}`,
-        itemField(view, AdditionalItemsHandling.Invert),
-        { ...itemProps(defaultsLength + i), parentDefaults: fillerDefault },
+        itemField(view, AdditionalItemsHandling.Invert, idx),
+        {
+          ...itemProps(defaultsLength + i),
+          parentDefaults: getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert, idx).default,
+        },
         memo,
-      ),
-    );
+      );
+    });
     // then fill up the rest with either the item default or empty, up to minItems
     arrayDefault = defaultEntries.concat(fillerEntries);
   }

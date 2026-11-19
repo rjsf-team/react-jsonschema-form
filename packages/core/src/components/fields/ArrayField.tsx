@@ -15,16 +15,17 @@ import type {
 import {
   getByPath,
   toPath,
-  allowAdditionalItems,
   deepEquals,
+  getItemSchema,
   getItemUiSchemaForItem,
+  getOpenPrefixLength,
   getStaticItemsUiSchema,
   getTemplates,
   getUiOptions,
-  isFixedItems,
   isFormDataAvailable,
   isObject,
   isSchemaObject,
+  isTupleSchema,
   optionsList,
   resolveWidget,
   shouldRenderOptionalField,
@@ -144,14 +145,17 @@ function isItemRequired<S extends StrictRJSFSchema = RJSFSchema>(itemSchema: S) 
 }
 
 /** Whether the array's options let it add an item at all, whatever its number of items. A tuple can only add an item
- * that its `additionalItems` describes
+ * that a schema describes past its positions: the `items` beside `prefixItems`, or the `additionalItems` beside a tuple
+ * `items`, and none past a `false` position, which ends it
  */
 function isAddable<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schema: S,
   uiOptions: UIOptionsType<T[], S, F>,
   isTuple: boolean,
 ) {
-  return uiOptions.addable !== false && (!isTuple || isObject(schema.additionalItems));
+  return (
+    uiOptions.addable !== false && (!isTuple || isObject(getItemSchema<S>(schema, getOpenPrefixLength<S>(schema))))
+  );
 }
 
 /** Whether `maxItems` leaves room for another item after `itemCount` of them */
@@ -163,12 +167,7 @@ function belowMaxItems<S extends StrictRJSFSchema>(schema: S, itemCount: number)
  * shorter
  */
 function hasRoomForRow<S extends StrictRJSFSchema>(schema: S, rows: readonly unknown[]) {
-  return belowMaxItems(schema, Math.max(rows.length, getFixedItems(schema)?.length ?? 0));
-}
-
-/** The `items` of a tuple, which `isFixedItems()` can't narrow `schema.items` to */
-function getFixedItems<S extends StrictRJSFSchema>(schema: S) {
-  return Array.isArray(schema.items) && isFixedItems(schema) ? schema.items : undefined;
+  return belowMaxItems(schema, Math.max(rows.length, isTupleSchema<S>(schema) ? getOpenPrefixLength<S>(schema) : 0));
 }
 
 /** A handler a template gets, which does what its button can. A refused press still prevents the default, so a
@@ -238,22 +237,13 @@ function getNewFormDataRow<
   F extends FormContextType = FormContextType,
 >(registry: Registry<T[], S, F>, schema: S, index: number, uiSchema?: UiSchema<T[], S, F>): T {
   const { schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
-  // An `items` that isn't one schema object renders its items with an empty schema, so the new item's default comes
-  // from the same one; `{}` is a valid `S`, whose every keyword is optional, but a generic `S` can't be built from it
-  let itemSchema = isSchemaObject<S>(schema.items) ? schema.items : ({} as S);
-  // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T/T[] caused by the
-  // FieldProps<T[], S, F> call on the class
-  let itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema, index);
-  const fixedItems = getFixedItems(schema);
-  const fixedItem: unknown = fixedItems?.[index];
-  if (isSchemaObject<S>(fixedItem)) {
-    itemSchema = fixedItem;
-  } else if (fixedItems && allowAdditionalItems(schema)) {
-    // A new row beyond the fixed tuple's own positions is rendered with `uiSchema.additionalItems` elsewhere in this
-    // field (see the `itemUiSchema` assignment below), so its default must be computed against the same uiSchema.
-    itemSchema = schema.additionalItems as S;
-    itemUiSchema = uiSchema?.additionalItems as UiSchema<T[], S, F> | undefined;
-  }
+  // An item no one schema object describes renders with an empty schema, so the new item's default comes from the same
+  // one; `{}` is a valid `S`, whose every keyword is optional, but a generic `S` can't be built from it
+  const describedItem: unknown = isTupleSchema<S>(schema) ? getItemSchema<S>(schema, index) : schema.items;
+  const itemSchema = isSchemaObject<S>(describedItem) ? describedItem : ({} as S);
+  // Cast this as T[] to work around schema utils being for T/T[] caused by the FieldProps<T[], S, F> call on the class.
+  // It is the uiSchema the row renders with, so that its default is computed against the same one
+  const itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema, index, schema);
   // `uiSchemaDefinitions` comes from the registry (the root uiSchema's `ui:definitions`) since `itemUiSchema` is
   // only the array's own sub-uiSchema and never carries `ui:definitions` itself.
   return schemaUtils.getDefaultFormState(
@@ -595,7 +585,7 @@ function useButtonTitle(
  * item itself for `'.'`. Items are named when their options give them buttons, not when a button shows right now, as a
  * lone item can't move and an array at `maxItems` can't copy, so that reaching those limits doesn't renumber them. A
  * tuple passes its `fixedItemCount`: its fixed items can only show Copy, and only the last of them, so that one is named
- * only when Copy can ever show, which in a tuple also needs `additionalItems`.
+ * only when Copy can ever show, which in a tuple also needs a schema for the items past it.
  */
 function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
   keyedItems: readonly KeyedFormDataType<T>[],
@@ -1065,11 +1055,12 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const { OptionalDataControlsField } = fields;
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T[]>(formData);
-  const schemaItems = useMemo<S[]>(() => (Array.isArray(schema.items) ? (schema.items as S[]) : []), [schema.items]);
+  // A `false` position allows no item, so the fields stop before it
+  const tupleLength = getOpenPrefixLength<S>(schema);
 
-  if (items.length < schemaItems.length) {
+  if (items.length < tupleLength) {
     // to make sure at least all fixed items are generated
-    items = items.concat(new Array(schemaItems.length - items.length));
+    items = items.concat(new Array(tupleLength - items.length));
   }
   const actualFormData = hasFormData ? keyedFormData : [];
   const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
@@ -1085,7 +1076,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     disabled || readonly,
     handleAddItem,
   );
-  const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiOptions, schemaItems.length);
+  const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiOptions, tupleLength);
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
     presentation,
@@ -1097,22 +1088,12 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       const { key, item } = keyedItem;
       // While we are actually dealing with a single item of type T, the types require a T[], so cast
       const itemCast = item as unknown as T[];
-      const additional = index >= schemaItems.length;
-      const rawItemSchema =
-        (additional && isObject(schema.additionalItems) ? (schema.additionalItems as S) : schemaItems[index]) ||
-        ({} as S);
-      // Compute the item UI schema - handle both static and dynamic cases
-      let itemUiSchema: UiSchema<T[], S, F> | undefined;
-      if (additional) {
-        // For additional items, use additionalItems uiSchema
-        itemUiSchema = uiSchema.additionalItems as UiSchema<T[], S, F>;
-      } else if (Array.isArray(uiSchema.items)) {
-        // For fixed items, uiSchema.items can be an array, a function, or a single object
-        itemUiSchema = uiSchema.items[index] as UiSchema<T[], S, F>;
-      } else {
-        // Use the helper method for function or static object cases
-        itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext, fieldPath);
-      }
+      const additional = index >= tupleLength;
+      const describedItem = getItemSchema<S>(schema, index);
+      const rawItemSchema = isSchemaObject<S>(describedItem) ? describedItem : ({} as S);
+      // A position reads its `prefixItems` or `items` entry, and an item past the tuple its `items` or `additionalItems`
+      // uiSchema, mirroring the keyword that describes it
+      const itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext, fieldPath, schema);
       const itemErrorSchema = errorSchema?.[index];
 
       const itemProps = {
@@ -1130,9 +1111,9 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         itemName: itemNames?.[index],
         canAdd,
         addsItem,
-        canAddAfter: index >= schemaItems.length - 1,
+        canAddAfter: index >= tupleLength - 1,
         canRemove: additional,
-        canMoveUp: index >= schemaItems.length + 1,
+        canMoveUp: index >= tupleLength + 1,
         canMoveDown: additional && index < items.length - 1,
         rawItemSchema,
         itemData: itemCast,
