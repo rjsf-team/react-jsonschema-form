@@ -1248,9 +1248,43 @@ export function tupleSeeds<S extends StrictRJSFSchema = RJSFSchema>(seeding: See
   });
 }
 
+/** Returns the seeds of the patterns of `chain`'s `patternProperties` that `key` matches */
+function patternSeeds<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, chain: Keywords<S>, key: string): Seed[] {
+  const provider = chain.get(PATTERN_PROPERTIES_KEY);
+  return provider === undefined
+    ? []
+    : graph
+        .subschemas(provider.node.id, PATTERN_PROPERTIES_KEY)
+        .filter(([pattern]) => patternRegExp(pattern).test(key))
+        .map(([, node]) => seedOf(node, provider));
+}
+
+/** Returns the seeds of the child of an object field at `key`, a key no chain declares a property for, and the
+ * containment edge it is reached through. Each chain applies to the key as a schema does: through the patterns of its
+ * own that the key matches, else through its `keyword`, so the `additionalProperties` of a chain whose patterns don't
+ * match the key applies beside the patterns of another that do
+ *
+ * @param seeding - The object field's graph and chains
+ * @param key - The child's key
+ * @param [keyword=ADDITIONAL_PROPERTIES_KEY] - The keyword describing a key a chain's patterns don't match
+ * @returns - The child's seeds, in merge order, and its edge: `patternKey` where a pattern matches the key
+ */
+export function extraKeySeeds<S extends StrictRJSFSchema = RJSFSchema>(
+  { graph, chains }: Seeding<S>,
+  key: string,
+  keyword: string = ADDITIONAL_PROPERTIES_KEY,
+): { seeds: readonly Seed[]; edge: 'patternKey' | 'additionalKey' } {
+  let patterned = false;
+  const seeds = chains.flatMap((chain) => {
+    const patterns = patternSeeds(graph, chain, key);
+    patterned ||= patterns.length > 0;
+    return patterns.length > 0 ? patterns : seedsAt({ graph, chains: [chain] }, keyword);
+  });
+  return { seeds, edge: patterned ? 'patternKey' : 'additionalKey' };
+}
+
 /** Returns the seeds of the child of an object field at `key`, and the containment edge it is reached through: a
- * declared property, merged with each pattern matching its name; else the patterns its name matches; else the
- * additional properties
+ * declared property, merged with each pattern matching its name; else the seeds `extraKeySeeds()` gives an extra key
  *
  * @param seeding - The object field's graph and chains
  * @param key - The child's key
@@ -1262,20 +1296,10 @@ export function childSeeds<S extends StrictRJSFSchema = RJSFSchema>(
 ):
   | { seeds: readonly Seed[]; edge: 'property'; patterned: boolean }
   | { seeds: readonly Seed[]; edge: 'patternKey' | 'additionalKey' } {
-  const patterns = seeding.chains.flatMap((chain) => {
-    const provider = chain.get(PATTERN_PROPERTIES_KEY);
-    return provider === undefined
-      ? []
-      : seeding.graph
-          .subschemas(provider.node.id, PATTERN_PROPERTIES_KEY)
-          .filter(([pattern]) => patternRegExp(pattern).test(key))
-          .map(([, node]) => seedOf(node, provider));
-  });
   const declared = seedsAt(seeding, PROPERTIES_KEY, key);
-  if (declared.length > 0) {
-    return { seeds: [...declared, ...patterns], edge: 'property', patterned: patterns.length > 0 };
+  if (declared.length === 0) {
+    return extraKeySeeds(seeding, key);
   }
-  return patterns.length > 0
-    ? { seeds: patterns, edge: 'patternKey' }
-    : { seeds: seedsAt(seeding, ADDITIONAL_PROPERTIES_KEY), edge: 'additionalKey' };
+  const patterns = seeding.chains.flatMap((chain) => patternSeeds(seeding.graph, chain, key));
+  return { seeds: [...declared, ...patterns], edge: 'property', patterned: patterns.length > 0 };
 }

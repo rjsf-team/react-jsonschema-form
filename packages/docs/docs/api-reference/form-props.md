@@ -325,9 +325,10 @@ render(
 ### constAsDefaults
 
 Optional enumerated flag controlling how const values are merged into the form data as defaults when dealing with undefined values, defaulting to `always`.
-The defaulting behavior for this flag will always be controlled by the `emptyObjectField` flag value.
-For instance, if `populateRequiredDefaults` is set and the const value is not required, it will not be set.
-Unless the flag is `never`, a `const` wins over a `default` at any depth: an object `const` gives each key it names its value, over the key's own `default` and the `default` of any field between them, whatever `nestedDefaultsPrecedence` says. Form data still wins over a `const`.
+Unless the flag is `never`, a `const` wins over a `default` at any depth: an object `const` gives each key it names its value, over the key's own `default` and the `default` of any field between them, whatever `nestedDefaultsPrecedence` says.
+The one exception is a field whose `type` can't hold the value the `const` gives it, such as `"x"` for a `number`: that field keeps its own `default`. Form data still wins over a `const`.
+A field whose value a `const` gives, its own `const` or an ancestor's object `const` at any depth, is set whether or not it is required, whatever [`emptyObjectFields`](#emptyobjectfields) says.
+That flag still decides whether an object around it with no `const` of its own is added: for instance, if `populateRequiredDefaults` is set, a `const` inside an object that isn't required is not set.
 
 | Flag Value  | Description                                                                                                                                                                                                                     |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -349,7 +350,7 @@ NOTE: If there is a default for a field and the `formData` is unspecified, the d
 ### nestedDefaultsPrecedence
 
 Optional enumerated flag controlling how defaults defined on multiple levels are merged together for overlapping properties, defaulting to `descendantWins`.
-It decides only between two `default`s: a value an ancestor's `const` gives a field wins over the field's own `default` under either flag value (see [`constAsDefaults`](#constasdefaults)).
+It decides only between two `default`s: a value an ancestor's `const` gives a field wins over the field's own `default` under either flag value, unless the field's `type` can't hold that value (see [`constAsDefaults`](#constasdefaults)).
 
 | Flag Value       | Description                                                                                       |
 | ---------------- | ------------------------------------------------------------------------------------------------- |

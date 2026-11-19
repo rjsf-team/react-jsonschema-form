@@ -190,6 +190,90 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(fill(mixed)).toStrictEqual({ a: 1, b: 2 });
       });
+      it("keeps the extra keys a nested object's data and default hold under an ancestor's const, under constAsDefaults: 'always'", () => {
+        const always: DefaultFormStateBehavior = { constAsDefaults: 'always' };
+        const open: RJSFSchema = { type: 'object', additionalProperties: { type: 'number' } };
+        const nested: RJSFSchema = { type: 'object', const: { k: { x: 1 } }, properties: { k: open } };
+        for (const initialDefaultsGenerated of [false, true]) {
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: always },
+              { schema: nested, formData: { k: { x: 1, y: 2 } }, initialDefaultsGenerated },
+            ),
+          ).toStrictEqual({ k: { x: 1, y: 2 } });
+        }
+        const withDefault: RJSFSchema = { ...nested, properties: { k: { ...open, default: { y: 5 } } } };
+        expect(fill(withDefault, always)).toStrictEqual({ k: { x: 1, y: 5 } });
+        // The object's own `const` still drops them
+        expect(
+          fill({ type: 'object', properties: { k: { ...open, const: { x: 1 } } } }, always, {
+            k: { x: 1, y: 2 },
+          }),
+        ).toStrictEqual({ k: { x: 1 } });
+      });
+      it("leaves out a key of an ancestor's const that the user removed where a nested object's allOf takes extra keys", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          const: { k: { x: 1 } },
+          properties: { k: { type: 'object', allOf: [{ additionalProperties: { type: 'number' } }] } },
+        };
+        expect(fill(schema)).toStrictEqual({ k: { x: 1 } });
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema, formData: { k: { y: 2 } }, initialDefaultsGenerated: true },
+          ),
+        ).toStrictEqual({ k: { y: 2 } });
+      });
+      it("keeps the order of keys the defaults have where an ancestor's const meets a nested default", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          const: { k: { x: 1, n: { a: 1 } } },
+          properties: {
+            k: { type: 'object', additionalProperties: true, default: { y: 5, n: { b: 2, a: 3 }, x: 4 } },
+          },
+        };
+        const filled = fill(schema);
+        expect(filled).toStrictEqual({ k: { x: 1, n: { a: 1, b: 2 }, y: 5 } });
+        expect(isObject(filled) && isObject(filled.k) && Object.keys(filled.k)).toStrictEqual(['x', 'n', 'y']);
+      });
+      it.each<[string, RJSFSchema]>([
+        [
+          "an ancestor's const",
+          {
+            type: 'object',
+            const: { p: { a: 1, b: 2 } },
+            properties: {
+              p: {
+                type: 'object',
+                properties: { a: { type: 'number' }, b: { type: 'number', default: 7 } },
+              },
+            },
+          },
+        ],
+        [
+          "the object's own const",
+          {
+            type: 'object',
+            properties: {
+              p: {
+                type: 'object',
+                const: { a: 1, b: 2 },
+                properties: { a: { type: 'number' }, b: { type: 'number', default: 7 } },
+              },
+            },
+          },
+        ],
+      ])(
+        'gives a key beneath a ui:initialValue, which stands in the place of %s, its own default on every pass',
+        (_name, schema) => {
+          const uiSchema: UiSchema = { p: { 'ui:initialValue': { a: 5 } } };
+          const pass = (formData: unknown, initialDefaultsGenerated: boolean) =>
+            getDefaultFormState({ validator: testValidator }, { schema, formData, uiSchema, initialDefaultsGenerated });
+          expect(pass(undefined, false)).toStrictEqual({ p: { a: 5, b: 7 } });
+          expect(pass({ p: { a: 5 } }, true)).toStrictEqual({ p: { a: 5, b: 7 } });
+        },
+      );
       it("still takes the defaults beneath where constAsDefaults is 'never'", () => {
         const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
         expect(fill(declaredDefault, never)).toStrictEqual({ a: 2 });
@@ -299,6 +383,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(unevaluatedDefault)).toStrictEqual({ a: 4 });
         expect(fill({ ...unevaluatedDefault, unevaluatedProperties: true })).toStrictEqual({ a: 1 });
         expect(fill(closedBeside)).toStrictEqual({ x1: 1 });
+      });
+      it("folds a key one chain's pattern matches through the additionalProperties of another chain as well", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^x': { type: 'object', properties: { z: { default: 9 } } } },
+          oneOf: [{ additionalProperties: { type: 'object', properties: { w: { default: 8 } } } }],
+          default: { x1: {}, y: {} },
+        };
+        expect(fill(schema)).toStrictEqual({ x1: { z: 9, w: 8 }, y: { w: 8 } });
+        // As the key the data holds is folded
+        expect(fill(schema, { x1: {} })).toStrictEqual({ x1: { z: 9, w: 8 }, y: { w: 8 } });
+        // A `false` in any chain rejects the key
+        expect(fill({ ...schema, oneOf: [{ additionalProperties: false }] })).toStrictEqual({});
+        expect(
+          fill({
+            type: 'object',
+            patternProperties: { '^x': false },
+            additionalProperties: { default: 3 },
+            default: { x1: 1, y: 2 },
+          }),
+        ).toStrictEqual({ y: 3 });
       });
       it("seeds a default's key no pattern matches only where the context allows it, as omitExtraData keeps it, unless the const names it", () => {
         const schema: RJSFSchema = { ...patterned, default: { x1: 1, y: 2 } };

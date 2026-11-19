@@ -1,4 +1,9 @@
-import { ALL_OF_KEY, EXTRA_KEYS_ELSEWHERE_FLAG, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
+import {
+  ADDITIONAL_PROPERTIES_KEY,
+  ALL_OF_KEY,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
+  UNEVALUATED_PROPERTIES_KEY,
+} from './constants.ts';
 import getSchemaType from './getSchemaType.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
@@ -77,8 +82,22 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
   schema: S,
 ): S | boolean | undefined {
   const typedSchema = schema as S & { additionalProperties?: S | boolean; unevaluatedProperties?: S | boolean };
-  // `??` falls through on an absent keyword alone, so a `false` either of them spells is the answer it gives
-  return typedSchema.additionalProperties ?? typedSchema[UNEVALUATED_PROPERTIES_KEY];
+  const keyword = additionalPropertiesKeywordName<S>(schema);
+  return keyword === undefined ? undefined : typedSchema[keyword];
+}
+
+/** Returns the name of the keyword `additionalPropertiesKeyword()` reads, or undefined where the object names neither
+ *
+ * @param schema - The object schema whose keyword is desired
+ * @returns - `additionalProperties`, `unevaluatedProperties` or undefined
+ */
+export function additionalPropertiesKeywordName<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+): typeof ADDITIONAL_PROPERTIES_KEY | typeof UNEVALUATED_PROPERTIES_KEY | undefined {
+  if (schema.additionalProperties !== undefined) {
+    return ADDITIONAL_PROPERTIES_KEY;
+  }
+  return Reflect.get(schema, UNEVALUATED_PROPERTIES_KEY) === undefined ? undefined : UNEVALUATED_PROPERTIES_KEY;
 }
 
 /** Returns whether the context's `additionalPropertiesWhenAbsent` reads an absent extra-key keyword as taking any key,
