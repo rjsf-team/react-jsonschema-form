@@ -40,7 +40,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 ## @rjsf/validator-ajv8
 
 - Fixed apps that import only `createPrecompiledValidator` bundling all of AJV anyway: the default export's `customizeValidator()` call is now marked pure, so bundlers drop it ([#5559](https://github.com/rjsf-team/react-jsonschema-form/pull/5559))
-- Fix the error for a missing `dependentRequired` or `dependencies` property naming the properties by their keys rather than their `title` or `ui:title` when no localizer is passed, and its `title` naming the property that is present ([#PR](https://github.com/rjsf-team/react-jsonschema-form/pull/PR), [#4402](https://github.com/rjsf-team/react-jsonschema-form/issues/4402))
 
 ## @rjsf/validator-ata
 
@@ -49,10 +48,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fixed apps that import only `createPrecompiledValidator` bundling all of ata-validator anyway: the default export's `customizeValidator()` call is now marked pure, so bundlers drop it ([#5559](https://github.com/rjsf-team/react-jsonschema-form/pull/5559))
 - `compileSchemaValidators()` and `compileSchemaValidatorsCode()` now pass `ataOptionsOverrides` to ata, so options like `assertFormat: false` apply to the precompiled validator; only `verbose` was used before. `additionalMetaSchemas` and `schemas` overrides with an `$id` are now compiled into the module, so a custom meta-schema applies there too; they go in under the `$id` a `$ref` reaches each by (a draft-04 `id` in `schemas` where the entry is read as draft-04) and as the runtime validator ends up with them, a later entry replacing an earlier one with the same `$id` and the form's own schemas winning. A json-schema.org meta-schema passed in is compiled in too, with a warning giving its size, since ata already ships the official draft-04 to 2020-12 ones. `extenderFn` and the `coerceTypes`, `removeAdditional` and `keywords` overrides cannot be carried into the generated module: they were dropped silently and now log a warning, once per process, saying the precompiled and runtime validators may disagree. Extra schemas without an `$id`, which ata requires, log their own warning. Passing `suppressDuplicateFiltering` to the compile step also warns, pointing to `createPrecompiledValidator()` ([#5559](https://github.com/rjsf-team/react-jsonschema-form/pull/5559))
 - Fixed `ataOptionsOverrides.schemas` being dropped by the runtime validator for every schema other than the root once a root schema was registered, a custom meta-schema among them: the root is now added after the caller's `schemas` instead of in their place, so it still wins over an entry with its `$id`, an `additionalMetaSchemas` entry with the root's `$id` no longer replaces it there, and the root's own validator reads `schemas` through the same list, so the root and its sub-schemas apply the same rules; a boolean record entry keeps its meaning ([#5571](https://github.com/rjsf-team/react-jsonschema-form/pull/5571))
-
-## @rjsf/validator-cfworker
-
-- Fix the error for a missing `dependentRequired` or `dependencies` property showing on the object rather than the missing field, and naming the properties by their keys rather than their `title` or `ui:title` ([#PR](https://github.com/rjsf-team/react-jsonschema-form/pull/PR), [#4402](https://github.com/rjsf-team/react-jsonschema-form/issues/4402))
 
 ## Dev / docs / playground
 
