@@ -4700,6 +4700,35 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
+        describe.each<[string, RJSFSchema]>([
+          ['an enum', { type: 'string', enum: ['red', 'green'] }],
+          ['a oneOf of constants', { type: 'string', oneOf: [{ const: 'red' }, { const: 'green' }] }],
+          ['an anyOf of constants', { type: 'string', anyOf: [{ const: 'red' }, { const: 'green' }] }],
+          ['an allOf enum', { allOf: [{ type: 'string', enum: ['red', 'green'] }] }],
+        ])('a value %s offers none of', (_list, list) => {
+          it.each<DefaultFormStateBehavior['allOf']>([undefined, 'populateDefaults', 'skipDefaults'])(
+            'is kept with no default, at the root as for a property, under allOf %s',
+            (allOf) => {
+              const context = { validator: testValidator, defaultFormStateBehavior: { allOf } };
+              const property: RJSFSchema = { type: 'object', properties: { c: list } };
+              expect(getDefaultFormState(context, { schema: list, formData: 'zz' })).toBe('zz');
+              expect(getDefaultFormState(context, { schema: property, formData: { c: 'zz' } })).toStrictEqual({
+                c: 'zz',
+              });
+            },
+          );
+
+          it("is replaced by the field's default, at the root as for a property", () => {
+            const withDefault: RJSFSchema = { ...list, default: 'green' };
+            const property: RJSFSchema = { type: 'object', properties: { c: withDefault } };
+            const context = { validator: testValidator };
+            expect(getDefaultFormState(context, { schema: withDefault, formData: 'zz' })).toBe('green');
+            expect(getDefaultFormState(context, { schema: property, formData: { c: 'zz' } })).toStrictEqual({
+              c: 'green',
+            });
+          });
+        });
+
         it("replaces a value the $ref'd constants of a property don't offer with its default, and keeps it for a key an object's allOf declares, whose own default skipDefaults skips", () => {
           const c: RJSFSchema = {
             type: 'string',

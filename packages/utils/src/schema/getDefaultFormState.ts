@@ -1839,6 +1839,12 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             defaultReplacesUndefined(defaultFormStateBehavior),
           isObject(rawFormData) && mergedAllOf,
         );
+        // A value the field doesn't take, one its list of values doesn't offer, is replaced by the field's defaults.
+        // Where they hold none, a value that is no object is kept as the user left it, as an object keeps it for a
+        // property, so the field keeps it at the root as it does anywhere else
+        if (defaultsWithFormData === undefined && !isObjectData(rawFormData)) {
+          defaultsWithFormData = rawFormData;
+        }
       }
     }
   }
