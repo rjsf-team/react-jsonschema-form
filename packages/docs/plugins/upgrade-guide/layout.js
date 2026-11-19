@@ -1,7 +1,7 @@
 // @ts-check
 // Where upgrade guides live, relative to the docs content directory: a version's entries are
 // `migration-guides/v<N>/<id>.md` and its filtered page is `migration-guides/v<N>.x upgrade guide.mdx` beside that
-// directory, at the URL the single-page guide had.
+// directory.
 
 const GUIDES_DIR = 'migration-guides';
 const VERSION_DIR = /^v(\d+)$/;

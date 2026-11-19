@@ -5,18 +5,18 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 
-const { localMarkdownFile } = require('./entries.js');
+const { linkKind, localMarkdownFile } = require('./entries.js');
 const { demoteHeadings, mapLinks } = require('./markdown.js');
 const { appliesToPackage } = require('./resolve.js');
 const { AFFECTS, ALWAYS_PACKAGES, EVERY_USER_USE, HEADINGS, SCHEMA, USES, headingId } = require('./vocabulary.js');
 
 /**
- * How a reader or agent decides whether an entry applies: the rule the filtered page applies to the answers given in
- * its filter bar, where an unanswered question hides nothing.
+ * How a reader or agent decides whether an entry applies, and how the filtered page applies the same rule to the
+ * answers in its filter bar. filters.ts `matcher` implements the page's part.
  */
 const APPLIES_RULE = `An entry applies to you when all three hold: your package.json has one of its \`packages\` (\`*\` is every \`@rjsf/*\` package, and every user has ${andList(
   codes(ALWAYS_PACKAGES.filter((id) => id !== '*')),
-)}); its \`uses\` lists \`${EVERY_USER_USE}\` (every user) or something your code does; and its \`schema\` is empty (\`any\`) or names something at least one of your schemas has. When you can't tell whether one holds, keep the entry: the filtered page hides an entry only when an answer rules it out, and shows every entry when nothing is answered.`;
+)}); its \`uses\` lists \`${EVERY_USER_USE}\` (every user) or something your code does; and its \`schema\` is empty (\`any\`) or names something at least one of your schemas has. When you can't tell whether one holds, keep the entry. The filtered page applies this rule to the answers in its filter bar and counts a question nobody answered as holding, so it shows every entry until something is answered. Picking a theme or validator counts as having that one of its kind, and none of the packages for theme authors unless they are ticked. The uses count as answered once Nothing or any use is ticked, and then the ticked uses are everything your code does: with Nothing alone, only the entries whose \`uses\` lists \`${EVERY_USER_USE}\` stay.`;
 
 /** Where the sections come from and the order to work through them. */
 const ORDER_RULE =
@@ -201,18 +201,19 @@ function renderCombined(version, packageId, entries, site) {
  */
 function rewriteLinks(entry, version, site) {
   return mapLinks(entry.body, (destination) => {
-    if (/^[a-z][a-z0-9+.-]*:/i.test(destination) || destination.startsWith('#')) {
-      return destination;
-    }
-    if (destination.startsWith('/')) {
-      return absolute(site, `${site.baseUrl}${destination.slice(1)}`);
-    }
     const file = localMarkdownFile(destination);
-    if (file === undefined) {
-      return new URL(destination, absolute(site, entry.permalink)).href;
-    }
     if (file === null) {
       throw new Error(`${entry.source}: the link \`${destination}\` has a malformed \`%\` escape.`);
+    }
+    if (file === undefined) {
+      switch (linkKind(destination)) {
+        case 'site':
+          return absolute(site, `${site.baseUrl}${destination.slice(1)}`);
+        case 'relative':
+          return new URL(destination, absolute(site, entry.permalink)).href;
+        default:
+          return destination;
+      }
     }
     const suffixStart = destination.search(/[?#]/);
     const suffix = suffixStart === -1 ? '' : destination.slice(suffixStart);

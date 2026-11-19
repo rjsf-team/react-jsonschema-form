@@ -7,6 +7,9 @@ const INLINE_CODE = /(`+).*?(?<!`)\1(?!`)/g;
 const INLINE_LINK = /\]\(\s*(<[^<>\n]*>|[^\s()<>]+)((?:\s+(?:"[^"]*"|'[^']*'))?\s*)\)/g;
 const LINK_DEFINITION = /^(\s{0,3}\[[^\]]+\]:\s*)(<[^<>\n]*>|\S+)/;
 const HEADING = /^(#{1,6})(?:[ \t]+(.*?))?(?:[ \t]+#+)?[ \t]*$/;
+const EXPLICIT_HEADING_ID = /\{#([^}]+)\}$/;
+/** A Markdown file's frontmatter block, its YAML captured. The filtered page strips it from the `.md` copies too. */
+const FRONT_MATTER = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
 
 /**
  * Maps every line, telling `mapLine` whether the line is part of a fenced code block (its fences included).
@@ -112,6 +115,31 @@ function headings(markdown) {
 }
 
 /**
+ * The anchor Docusaurus gives each heading outside code: its `{#id}`, or its text slugged as github-slugger does for the
+ * letters, digits, spaces, `-` and `_` the docs' headings use, with `-1`, `-2` on a repeat.
+ *
+ * @param {string} markdown
+ */
+function headingIds(markdown) {
+  /** @type {Map<string, number>} */
+  const seen = new Map();
+  return headings(markdown.replace(FRONT_MATTER, '')).map(({ text }) => {
+    const explicit = EXPLICIT_HEADING_ID.exec(text);
+    if (explicit) {
+      return explicit[1];
+    }
+    const slug = text
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .toLowerCase()
+      .replace(/[^\p{L}\p{M}\p{N}\p{Pc} -]/gu, '')
+      .replace(/ /g, '-');
+    const count = seen.get(slug) ?? 0;
+    seen.set(slug, count + 1);
+    return count === 0 ? slug : `${slug}-${count}`;
+  });
+}
+
+/**
  * Moves every heading outside code `levels` levels deeper, capped at `######`.
  *
  * @param {string} markdown
@@ -123,4 +151,4 @@ function demoteHeadings(markdown, levels) {
   );
 }
 
-module.exports = { mapLinks, linkDestinations, headings, demoteHeadings };
+module.exports = { FRONT_MATTER, mapLinks, linkDestinations, headings, headingIds, demoteHeadings };

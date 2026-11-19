@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState, type ComponentType, type ReactNode } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState, type ComponentType, type ReactNode } from 'react';
 import Link from '@docusaurus/Link';
 import { useHistory, useLocation } from '@docusaurus/router';
 import MDXContent from '@theme/MDXContent';
@@ -9,6 +9,7 @@ import {
   decodeHash,
   describeFilters,
   groupByHeading,
+  hashTarget,
   isAnswered,
   markdownUrl,
   matcher,
@@ -22,6 +23,8 @@ import {
   type Guide,
   type Package,
 } from './filters.ts';
+import { loadGuide } from './guide.ts';
+import { ReadWith } from './ReadWith.tsx';
 import styles from './styles.module.css';
 
 type HeadingProps = { children?: ReactNode };
@@ -41,27 +44,9 @@ const ROW_HEADINGS = {
 /** Copy as Markdown fetches every shown entry's `.md` copy; this many at a time, so a long list can't flood the server. */
 const COPY_CONCURRENCY = 6;
 
-const guides = new Map<string, Promise<Guide>>();
 const bodies = new Map<string, Promise<Body>>();
 /** The bodies that have loaded, so a row that remounts (a filter hid it, then showed it) renders its body at once. */
 const loadedBodies = new Map<string, Body>();
-
-/**
- * The version's entries and vocabulary, which the plugin writes to its generated data directory. A lazy import makes
- * the file a chunk of its own, loaded by this page alone.
- */
-function loadGuide(version: string): Promise<Guide> {
-  let guide = guides.get(version);
-  if (!guide) {
-    guide = import(
-      /* webpackInclude: /[\\/]v\d+\.json$/ */
-      `@generated/rjsf-upgrade-guide/default/${version}.json`
-    ).then((module: { default: Guide }) => module.default);
-    guide.catch(() => guides.delete(version));
-    guides.set(version, guide);
-  }
-  return guide;
-}
 
 /**
  * The entry's compiled page, the same module its own route renders. Webpack makes the template a lazy context over the
@@ -158,7 +143,7 @@ function Meanings({ legend, choices }: { legend: string; choices: Choice[] }) {
   );
 }
 
-function EntryBody({ entry, body }: { entry: Entry; body: Body | Error | undefined }) {
+function EntryBody({ entry, body, related }: { entry: Entry; body: Body | Error | undefined; related: Entry[] }) {
   const Content = body instanceof Error ? undefined : body;
   return (
     <div id={`${entry.id}-body`} className={styles.body}>
@@ -169,6 +154,7 @@ function EntryBody({ entry, body }: { entry: Entry; body: Body | Error | undefin
           <Content components={ROW_HEADINGS} />
         </MDXContent>
       )}
+      <ReadWith entries={related} />
       <p className={styles.pageLink}>
         <Link to={entry.permalink}>Open as page</Link>
       </p>
@@ -180,12 +166,15 @@ function EntryBody({ entry, body }: { entry: Entry; body: Body | Error | undefin
 const Row = memo(function Row({
   version,
   entry,
+  byId,
   badge,
   isOpen,
   onToggle,
 }: {
   version: string;
   entry: Entry;
+  /** Every entry by id, for the ones `related` names. */
+  byId: ReadonlyMap<string, Entry>;
   /** The one theme or validator the entry is for, if that is all it lists. */
   badge: Package | undefined;
   isOpen: boolean;
@@ -236,7 +225,16 @@ const Row = memo(function Row({
       <p className={styles.description}>
         <InlineMarkdown text={entry.description} />
       </p>
-      {isOpen && <EntryBody entry={entry} body={body} />}
+      {isOpen && (
+        <EntryBody
+          entry={entry}
+          body={body}
+          related={entry.related.flatMap((id) => {
+            const related = byId.get(id);
+            return related ? [related] : [];
+          })}
+        />
+      )}
     </li>
   );
 });
@@ -275,9 +273,9 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
   // The guide mounts only once its data has loaded, after hydration, so it reads the query and hash at once.
   const filters = readFilters(location.search, guide);
   const hash = decodeHash(location.hash);
-  const byId = new Map(guide.entries.map((entry) => [entry.id, entry]));
-  const hashEntry = byId.get(hash);
-  const anchorIds = !hashEntry && Object.hasOwn(guide.anchors, hash) ? guide.anchors[hash] : [];
+  const byId = useMemo(() => new Map(guide.entries.map((entry) => [entry.id, entry])), [guide]);
+  const target = hashTarget(guide, hash);
+  const hashEntry = target?.kind === 'entry' ? target.entry : undefined;
 
   const rows = guide.entries.filter(matcher(guide, filters));
   const groups = groupByHeading(rows, guide.headings);
@@ -301,8 +299,10 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
 
   // Only a new hash can name another old anchor or entry; a filter change mustn't scroll back to the hash's entry.
   useEffect(() => {
-    if (anchorIds.length === 1) {
-      history.replace({ pathname: location.pathname, search: location.search, hash: `#${anchorIds[0]}` });
+    if (target?.kind === 'moved') {
+      history.replace({ pathname: location.pathname, search: location.search, hash: `#${target.id}` });
+    } else if (target?.kind === 'page') {
+      history.replace(target.url);
     }
   }, [hash]);
 
@@ -346,7 +346,7 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
       return next;
     });
 
-  const copyMarkdown = async () => {
+  const copyMarkdown = () => {
     if (process.env.NODE_ENV !== 'production') {
       setCopyStatus(
         'The .md copies of the entries are written by the production build, so this works on the published site or under pnpm run build and pnpm run serve, not in the dev server.',
@@ -355,48 +355,50 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
     }
     setCopyStatus('Copying…');
     const { href, origin } = window.location;
-    try {
-      const texts = await mapConcurrently(rows, COPY_CONCURRENCY, async (entry) => {
-        const url = markdownUrl(entry, origin);
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`${url} answered ${response.status}`);
-        }
-        return response.text();
-      });
-      await navigator.clipboard.writeText(toMarkdownDocument(rows, texts, version, { href, origin }));
-      setCopyStatus(`Copied ${rows.length} ${rows.length === 1 ? 'entry' : 'entries'} as Markdown.`);
-    } catch (error) {
-      setCopyStatus(`Copying failed: ${error instanceof Error ? error.message : String(error)}.`);
-    }
+    const markdown = mapConcurrently(rows, COPY_CONCURRENCY, async (entry) => {
+      const url = markdownUrl(entry, origin);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`${url} answered ${response.status}`);
+      }
+      return response.text();
+    }).then((texts) => toMarkdownDocument(rows, texts, version, { href, origin }));
+    // Safari writes to the clipboard only from within the click's handler, and Firefox only for a few seconds after
+    // it, so the write starts here, taking the text as a promise the fetches settle later. A browser without
+    // ClipboardItem writes the text once it is ready.
+    const written =
+      typeof ClipboardItem === 'undefined'
+        ? markdown.then((text) => navigator.clipboard.writeText(text))
+        : navigator.clipboard.write([
+            new ClipboardItem({ 'text/plain': markdown.then((text) => new Blob([text], { type: 'text/plain' })) }),
+          ]);
+    Promise.all([markdown, written]).then(
+      () => setCopyStatus(`Copied ${rows.length} ${rows.length === 1 ? 'entry' : 'entries'} as Markdown.`),
+      (error: unknown) => setCopyStatus(`Copying failed: ${error instanceof Error ? error.message : String(error)}.`),
+    );
   };
 
   return (
     <div className={styles.guide}>
-      {anchorIds.length > 1 && (
+      {target?.kind === 'entries' && (
         <div className='alert alert--info' role='status'>
           <p>
             The old guide&apos;s section <code>#{hash}</code> is now these entries:
           </p>
           <ul>
-            {anchorIds.map((id) => {
-              const entry = byId.get(id);
-              return (
-                entry && (
-                  <li key={id}>
-                    <a
-                      href={`#${id}`}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        history.push({ pathname: location.pathname, search: location.search, hash: `#${id}` });
-                      }}
-                    >
-                      {entry.title}
-                    </a>
-                  </li>
-                )
-              );
-            })}
+            {target.entries.map((entry) => (
+              <li key={entry.id}>
+                <a
+                  href={`#${entry.id}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    history.push({ pathname: location.pathname, search: location.search, hash: `#${entry.id}` });
+                  }}
+                >
+                  {entry.title}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       )}
@@ -583,6 +585,7 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
                   key={entry.id}
                   version={version}
                   entry={entry}
+                  byId={byId}
                   badge={only?.group === 'theme' || only?.group === 'validator' ? only : undefined}
                   isOpen={open.has(entry.id)}
                   onToggle={toggle}

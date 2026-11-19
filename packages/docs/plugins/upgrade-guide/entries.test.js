@@ -13,6 +13,7 @@ const {
 } = require('@docusaurus/core/lib/server/configValidation.js');
 
 const { loadVersions } = require('./entries.js');
+const upgradeGuidePlugin = require('./index.js');
 
 const BODY = '## Detect\n\nSomething.\n\n## Change\n\nSomething.\n\n## Verify\n\nSomething.\n';
 /** @type {Record<string, string>} */
@@ -84,9 +85,16 @@ describe('loadVersions', () => {
           affects: '[data, appearance]',
           deprecated: 'true',
         }),
-        '_anchors.json': JSON.stringify({ 'old-section': 'first-change', both: ['first-change', 'second-change'] }),
+        '_anchors.json': JSON.stringify({
+          'old-section': 'first-change',
+          both: ['first-change', 'second-change'],
+          'first-change': ['first-change', 'second-change'],
+          feature: '../../intro.md#the-feature-option',
+          custom: '../../intro.md#custom-id',
+          intro: '../../intro.md',
+        }),
       },
-      { 'intro.md': '# Intro\n' },
+      { 'intro.md': '# Intro\n\n## The `feature` option\n\n## Another heading {#custom-id}\n' },
     );
     const [version] = await loadVersions(siteDir, docsDir, parseFrontMatter);
     assert.equal(version.name, 'v7');
@@ -119,11 +127,40 @@ describe('loadVersions', () => {
         },
       ],
     );
-    assert.deepEqual(version.anchors, { 'old-section': ['first-change'], both: ['first-change', 'second-change'] });
+    assert.deepEqual(version.anchors, {
+      'old-section': ['first-change'],
+      both: ['first-change', 'second-change'],
+      'first-change': ['first-change', 'second-change'],
+    });
+    assert.deepEqual(version.pageAnchors, {
+      feature: { source: '@site/docs/intro.md', hash: '#the-feature-option' },
+      custom: { source: '@site/docs/intro.md', hash: '#custom-id' },
+      intro: { source: '@site/docs/intro.md', hash: '' },
+    });
+  });
+
+  it('reads an entry with CRLF line endings as it reads one with LF', async () => {
+    const body = `${BODY}\n\`\`\`md\n## Not a section\n\`\`\`\n\n## If you can't preserve it\n\nSomething.\n`;
+    const { siteDir, docsDir } = await site({
+      'crlf-change.md': entry({ related: '[]' }, body).replace(/\n/g, '\r\n'),
+    });
+    const [version] = await loadVersions(siteDir, docsDir, parseFrontMatter);
+    const [loaded] = version.entries;
+    assert.equal(loaded.title, 'A change');
+    assert.equal(loaded.body, `\n${body}`);
+    assert.doesNotMatch(loaded.frontMatter, /\r/);
   });
 
   describe('an invalid guide', () => {
-    // Each fixture breaks one rule and is otherwise valid, so the error lists exactly one problem per rule.
+    // Each fixture breaks one rule and is otherwise valid, so the error lists exactly one problem per rule. The one
+    // `_anchors.json` breaks one rule per mapping.
+    const BAD_ANCHORS = JSON.stringify({
+      'old-section': 'gone',
+      'no-heading': '../../intro.md#nowhere',
+      'to-guide': '../v7.x%20upgrade%20guide.mdx',
+      'to-entry-file': './all.md',
+      'to-draft': '../../draft.md',
+    });
     const problems = {
       'unknown frontmatter key': ['unknown-key.md', entry({ extra: 'yes' }), 'unknown frontmatter field `extra`'],
       'the removed `kind` key': ['old-kind.md', entry({ kind: 'runtime' }), 'unknown frontmatter field `kind`'],
@@ -203,8 +240,28 @@ describe('loadVersions', () => {
       ],
       'a bad `_anchors.json` target': [
         '_anchors.json',
-        JSON.stringify({ 'old-section': 'gone' }),
+        BAD_ANCHORS,
         '`old-section` maps to `gone`, which is not an entry',
+      ],
+      'an `_anchors.json` link to a heading its doc lacks': [
+        '_anchors.json',
+        BAD_ANCHORS,
+        '`no-heading` maps to `../../intro.md#nowhere`, whose page has no heading with the anchor `#nowhere`',
+      ],
+      'an `_anchors.json` link to the filtered page': [
+        '_anchors.json',
+        BAD_ANCHORS,
+        '`to-guide` maps to `../v7.x%20upgrade%20guide.mdx`, the v7 guide page itself',
+      ],
+      'an `_anchors.json` link to an entry file': [
+        '_anchors.json',
+        BAD_ANCHORS,
+        "`to-entry-file` maps to `./all.md`, a file of the entries' directory; map to an entry by its id",
+      ],
+      'an `_anchors.json` link to a draft': [
+        '_anchors.json',
+        BAD_ANCHORS,
+        '`to-draft` maps to `../../draft.md`, `docs/draft.md`, which is a draft',
       ],
     };
     /** @type {string} */
@@ -216,6 +273,7 @@ describe('loadVersions', () => {
         {
           '_partial.md': '# Partial\n',
           'draft.md': '---\ndraft: true\n---\n\n# Draft\n',
+          'intro.md': '# Intro\n\n## Top\n',
         },
       );
       // Beside the docs directory, not in it.
@@ -240,5 +298,67 @@ describe('loadVersions', () => {
         assert.ok(line.includes(name), `the problem names ${name}: ${line}`);
       });
     }
+  });
+});
+
+describe('the page data', () => {
+  it("carries each entry's `related` and resolves the anchors that go to other docs to their pages", async () => {
+    const { siteDir } = await site(
+      {
+        'first-change.md': entry({ related: '[second-change]' }),
+        'second-change.md': entry(),
+        '_anchors.json': JSON.stringify({ 'old-section': 'second-change', feature: '../../intro.md#the-feature' }),
+      },
+      { 'intro.md': '# Intro\n\n## The feature\n' },
+    );
+    const plugin = upgradeGuidePlugin(
+      /** @type {any} */ ({
+        siteDir,
+        baseUrl: '/',
+        siteConfig: { url: 'https://example.com', markdown: { parseFrontMatter } },
+      }),
+    );
+    const content = /** @type {any} */ (await plugin.loadContent?.());
+    const sources = [
+      '@site/docs/intro.md',
+      '@site/docs/migration-guides/v7.x upgrade guide.mdx',
+      ...content[0].entries.map((/** @type {{ source: string }} */ { source }) => source),
+    ];
+    /** @type {Record<string, any>} */
+    const created = {};
+    await plugin.allContentLoaded?.(
+      /** @type {any} */ ({
+        allContent: {
+          'rjsf-upgrade-guide': { default: content },
+          'docusaurus-plugin-content-docs': {
+            default: {
+              loadedVersions: [
+                {
+                  docs: sources.map((source) => ({
+                    source,
+                    permalink: source.replace(/^@site\/docs/, '').replace(/\.mdx?$/, ''),
+                  })),
+                },
+              ],
+            },
+          },
+        },
+        actions: {
+          createData: async (/** @type {string} */ name, /** @type {string} */ data) => {
+            created[name] = JSON.parse(data);
+          },
+        },
+      }),
+    );
+    const guide = created['v7.json'];
+    assert.deepEqual(
+      guide.entries.map((/** @type {{ id: string; related: string[] }} */ { id, related }) => ({ id, related })),
+      [
+        { id: 'first-change', related: ['second-change'] },
+        { id: 'second-change', related: [] },
+      ],
+    );
+    assert.deepEqual(guide.anchors, { 'old-section': ['second-change'] });
+    assert.deepEqual(guide.pageAnchors, { feature: '/intro#the-feature' });
   });
 });

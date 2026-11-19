@@ -1,5 +1,7 @@
 // The filtered page's logic that needs neither React nor the browser, so `node --test` runs it as it is.
 
+import { FRONT_MATTER } from '../../../plugins/upgrade-guide/markdown.js';
+
 // The shape of the `v<N>.json` plugins/upgrade-guide/index.js writes.
 export interface Package {
   id: string;
@@ -31,6 +33,8 @@ export interface Entry {
   schema: string[];
   affects: string[];
   deprecated: boolean;
+  /** The ids of the entries to read with this one. */
+  related: string[];
   permalink: string;
 }
 
@@ -43,7 +47,10 @@ export interface Guide {
   headings: Heading[];
   packages: Package[];
   entries: Entry[];
+  /** An anchor to the ids of the entries it names. */
   anchors: Record<string, string[]>;
+  /** An anchor to the site path, with its hash, of the other doc it names. */
+  pageAnchors: Record<string, string>;
   llmsTxt: string;
   combined: Record<string, string>;
 }
@@ -140,8 +147,11 @@ export function isAnswered({ theme, validator, nothing, uses, schema, other, sea
 }
 
 /**
- * The rule `APPLIES_RULE` in plugins/upgrade-guide/outputs.js states, as a test of one entry. Every unanswered question
- * passes every entry, so with nothing answered every entry shows.
+ * Tests one entry against the answers, applying the rule `APPLIES_RULE` in plugins/upgrade-guide/outputs.js states:
+ * an unanswered question keeps every entry; a theme or validator picked is the one of its kind the reader has, and
+ * once either is picked the packages for theme authors count only when ticked; and once Nothing or any use is ticked,
+ * the ticked uses are all the reader's code does, so an entry stays only when its `uses` has `everyUserUse` or a
+ * ticked use.
  */
 export function matcher(guide: Guide, filters: Filters): (entry: Entry) => boolean {
   const { theme, validator, nothing, uses, schema, other } = filters;
@@ -229,6 +239,37 @@ export function decodeHash(hash: string) {
   }
 }
 
+/** What the page does with its URL's hash. */
+export type HashTarget =
+  /** Open the entry and scroll to it. */
+  | { kind: 'entry'; entry: Entry }
+  /** List the entries an old anchor became. */
+  | { kind: 'entries'; entries: Entry[] }
+  /** Replace the hash with the one entry's id an old anchor became. */
+  | { kind: 'moved'; id: string }
+  /** Go to the other doc an old anchor became, at `url`. */
+  | { kind: 'page'; url: string };
+
+/**
+ * What `hash` (decoded, without its `#`) names. An `_anchors.json` mapping wins over an entry with the same id, so an
+ * anchor that maps to that entry and others lists them all.
+ */
+export function hashTarget(guide: Guide, hash: string): HashTarget | undefined {
+  if (Object.hasOwn(guide.pageAnchors, hash)) {
+    return { kind: 'page', url: guide.pageAnchors[hash] };
+  }
+  const ids = Object.hasOwn(guide.anchors, hash) ? guide.anchors[hash] : [hash];
+  const entries = ids.flatMap((id) => guide.entries.filter((entry) => entry.id === id));
+  if (entries.length > 1) {
+    return { kind: 'entries', entries };
+  }
+  const [entry] = entries;
+  if (entry === undefined) {
+    return undefined;
+  }
+  return entry.id === hash ? { kind: 'entry', entry } : { kind: 'moved', id: entry.id };
+}
+
 /** The `.md` copy postBuild writes beside the entry's page. */
 export function markdownUrl(entry: Entry, origin: string) {
   return new URL(`${entry.permalink.replace(/\/$/, '')}.md`, origin).href;
@@ -255,7 +296,7 @@ export function toMarkdownDocument(
       `- packages: ${codes(entry.packages)}`,
       `- source: ${markdownUrl(entry, page.origin)}`,
     ];
-    const body = texts[index].replace(/^---\r?\n[\s\S]*?\r?\n---[ \t]*\r?\n/, '').trim();
+    const body = texts[index].replace(FRONT_MATTER, '').trim();
     parts.push(`# ${entry.title}\n\n${facts.join('\n')}\n\n${entry.description}\n\n${body}`);
   });
   return `${parts.join('\n\n')}\n`;

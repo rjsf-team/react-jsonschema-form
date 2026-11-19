@@ -5,8 +5,10 @@ import {
   NO_FILTERS,
   describeFilters,
   groupByHeading,
+  hashTarget,
   matcher,
   readFilters,
+  toMarkdownDocument,
   writeFilters,
   type Entry,
   type Filters,
@@ -44,6 +46,7 @@ const guide: Guide = {
   ],
   entries: [],
   anchors: {},
+  pageAnchors: {},
   llmsTxt: '',
   combined: {},
 };
@@ -58,10 +61,68 @@ function entry(fields: Partial<Entry>): Entry {
     schema: [],
     affects: ['code'],
     deprecated: false,
+    related: [],
     permalink: '/an-entry',
     ...fields,
   };
 }
+
+describe('hashTarget', () => {
+  const esm = entry({ id: 'esm-only-packages', title: 'ESM only' });
+  const umd = entry({ id: 'umd-bundles-removed', title: 'No UMD' });
+  const seed = entry({ id: 'reset-goes-back-to-the-seed', title: 'Reset' });
+  const withAnchors: Guide = {
+    ...guide,
+    entries: [esm, umd, seed],
+    anchors: {
+      'esm-only-packages': ['esm-only-packages', 'umd-bundles-removed'],
+      'reset-goes-back-to-the-seed': ['reset-goes-back-to-the-seed'],
+      'old-umd-section': ['umd-bundles-removed'],
+    },
+    pageAnchors: { transformchange: '/docs/migration-guides/whats-new-v7#working-with-form-data' },
+  };
+
+  it('lists every entry a mapping names, even when the anchor is also an entry id', () => {
+    assert.deepEqual(hashTarget(withAnchors, 'esm-only-packages'), { kind: 'entries', entries: [esm, umd] });
+  });
+
+  it('opens the entry an id names when no mapping has it', () => {
+    assert.deepEqual(hashTarget(withAnchors, 'umd-bundles-removed'), { kind: 'entry', entry: umd });
+  });
+
+  it('opens the entry a mapping to its own id names', () => {
+    assert.deepEqual(hashTarget(withAnchors, 'reset-goes-back-to-the-seed'), { kind: 'entry', entry: seed });
+  });
+
+  it('moves a mapping to one other entry to its id', () => {
+    assert.deepEqual(hashTarget(withAnchors, 'old-umd-section'), { kind: 'moved', id: 'umd-bundles-removed' });
+  });
+
+  it('goes to the doc a page mapping names', () => {
+    assert.deepEqual(hashTarget(withAnchors, 'transformchange'), {
+      kind: 'page',
+      url: '/docs/migration-guides/whats-new-v7#working-with-form-data',
+    });
+  });
+
+  it('names nothing for an unknown or empty hash', () => {
+    assert.equal(hashTarget(withAnchors, 'nowhere'), undefined);
+    assert.equal(hashTarget(withAnchors, ''), undefined);
+  });
+});
+
+describe('toMarkdownDocument', () => {
+  it("leaves out each `.md` copy's frontmatter", () => {
+    const markdown = toMarkdownDocument(
+      [entry({ title: 'Widgets get ids', description: 'Ids change.' })],
+      ['---\ntitle: Widgets get ids\nuses: [form]\n---\n\n## Detect\n\nIds.\n'],
+      'v7',
+      { href: 'https://example.com/guide', origin: 'https://example.com' },
+    );
+    assert.doesNotMatch(markdown, /uses: \[form\]/);
+    assert.match(markdown, /Ids change\.\n\n## Detect\n\nIds\.\n$/);
+  });
+});
 
 describe('matcher', () => {
   const cases: [string, Partial<Entry>, Partial<Filters>, boolean][] = [

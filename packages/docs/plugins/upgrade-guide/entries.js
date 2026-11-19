@@ -5,7 +5,7 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 
 const { GUIDES_DIR, VERSION_DIR, filteredPageFile, filteredPageName } = require('./layout.js');
-const { headings, linkDestinations } = require('./markdown.js');
+const { FRONT_MATTER, headingIds, headings, linkDestinations } = require('./markdown.js');
 const { AFFECTS, SCHEMA, USES, packagesForVersion } = require('./vocabulary.js');
 
 /**
@@ -26,17 +26,26 @@ const { AFFECTS, SCHEMA, USES, packagesForVersion } = require('./vocabulary.js')
  * `source` is the file's path with Docusaurus's `@site` alias, the docs plugin's key for it. `frontMatter` is the raw
  * YAML between the `---` lines.
  *
+ * @typedef {{ source: string; hash: string }} PageAnchor
+ * The doc an anchor goes to: `source` is its path with the `@site` alias, `hash` is `''` or `#` and one of its
+ * headings' anchors.
+ *
  * @typedef {{
  *   name: string;
  *   number: number;
  *   sourceDir: string;
  *   entries: Entry[];
  *   anchors: Record<string, string[]>;
+ *   pageAnchors: Record<string, PageAnchor>;
  *   packages: import('./vocabulary.js').Package[];
  * }} Version
- * `sourceDir` is the version's directory with the `@site` alias.
+ * `sourceDir` is the version's directory with the `@site` alias. `anchors` and `pageAnchors` are `_anchors.json`'s
+ * mappings to entries and to other docs (see loadAnchors).
  *
  * @typedef {import('@docusaurus/types').ParseFrontMatter} ParseFrontMatter
+ *
+ * @typedef {(target: string) => Promise<string | undefined>} WhyUnpublished
+ * Why the docs plugin makes no page of the Markdown file `target`, or `undefined` if it makes one.
  */
 
 const ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -48,7 +57,6 @@ const FIELDS = ['title', 'description', 'packages', 'uses', 'schema', 'affects',
 const TITLE_MARKDOWN = /[`*[<]/;
 const SECTIONS = ['Detect', 'Change', 'Verify'];
 const OPTIONAL_LAST_SECTION = "If you can't preserve it";
-const FRONT_MATTER = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
 const ANCHORS_FILE = '_anchors.json';
 /** Ids taken by the files postBuild writes beside the entries, and `index`, which would be the directory's own page. */
 const RESERVED_IDS = ['index', 'all', 'llms'];
@@ -62,26 +70,27 @@ const RESERVED_IDS = ['index', 'all', 'llms'];
 async function loadVersions(siteDir, docsDir, parseFrontMatter) {
   const guidesDir = path.join(docsDir, GUIDES_DIR);
   const dirs = await fs.readdir(guidesDir, { withFileTypes: true }).catch(() => []);
+  const whyUnpublished = cachedWhyUnpublished(docsDir, parseFrontMatter);
   /** @type {string[]} */
   const errors = [];
-  /** @type {Version[]} */
-  const versions = [];
-  for (const dir of dirs) {
-    const match = dir.isDirectory() ? VERSION_DIR.exec(dir.name) : null;
-    if (match) {
-      versions.push(
-        await loadVersion(
-          siteDir,
-          docsDir,
-          path.join(guidesDir, dir.name),
-          dir.name,
-          Number(match[1]),
-          parseFrontMatter,
-          errors,
-        ),
-      );
-    }
-  }
+  const versions = await mapInOrder(
+    dirs,
+    (dir, versionErrors) => {
+      const match = dir.isDirectory() ? VERSION_DIR.exec(dir.name) : null;
+      return match
+        ? loadVersion(
+            siteDir,
+            path.join(guidesDir, dir.name),
+            dir.name,
+            Number(match[1]),
+            parseFrontMatter,
+            whyUnpublished,
+            versionErrors,
+          )
+        : Promise.resolve(undefined);
+    },
+    errors,
+  );
   if (errors.length > 0) {
     throw new Error(
       `The upgrade guide has ${errors.length} ${errors.length === 1 ? 'problem' : 'problems'}:\n${errors
@@ -89,40 +98,63 @@ async function loadVersions(siteDir, docsDir, parseFrontMatter) {
         .join('\n')}`,
     );
   }
-  return versions.sort((a, b) => a.number - b.number);
+  return versions.flatMap((version) => (version ? [version] : [])).sort((a, b) => a.number - b.number);
+}
+
+/**
+ * `map` over every item at once, each call with its own error list, appending the lists to `errors` in `items`' order
+ * so the problems are listed in the same order however the reads finish.
+ *
+ * @template T, R
+ * @param {T[]} items
+ * @param {(item: T, errors: string[]) => Promise<R>} map
+ * @param {string[]} errors
+ * @returns {Promise<R[]>}
+ */
+async function mapInOrder(items, map, errors) {
+  const results = await Promise.all(
+    items.map(async (item) => {
+      /** @type {string[]} */
+      const own = [];
+      return { value: await map(item, own), own };
+    }),
+  );
+  for (const { own } of results) {
+    errors.push(...own);
+  }
+  return results.map(({ value }) => value);
 }
 
 /**
  * @param {string} siteDir
- * @param {string} docsDir
  * @param {string} dir
  * @param {string} name
  * @param {number} number
  * @param {ParseFrontMatter} parseFrontMatter
+ * @param {WhyUnpublished} whyUnpublished
  * @param {string[]} errors
  * @returns {Promise<Version>}
  */
-async function loadVersion(siteDir, docsDir, dir, name, number, parseFrontMatter, errors) {
+async function loadVersion(siteDir, dir, name, number, parseFrontMatter, whyUnpublished, errors) {
   const packages = packagesForVersion(number);
   const files = (await fs.readdir(dir, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name));
   const relativeDir = path.relative(siteDir, dir);
-  /** @type {Entry[]} */
-  const entries = [];
-  for (const file of files) {
-    const filePath = path.join(dir, file.name);
-    const relativePath = path.join(relativeDir, file.name);
-    if (file.name.startsWith('_')) {
-      continue;
-    }
-    if (!file.isFile() || path.extname(file.name) !== '.md') {
-      errors.push(`${relativePath}: an upgrade guide directory holds only \`<id>.md\` entries and \`_\` files.`);
-      continue;
-    }
-    const entry = await loadEntry(siteDir, filePath, relativePath, parseFrontMatter, errors);
-    if (entry) {
-      entries.push(entry);
-    }
-  }
+  const loaded = await mapInOrder(
+    files,
+    (file, fileErrors) => {
+      const relativePath = path.join(relativeDir, file.name);
+      if (file.name.startsWith('_')) {
+        return Promise.resolve(undefined);
+      }
+      if (!file.isFile() || path.extname(file.name) !== '.md') {
+        fileErrors.push(`${relativePath}: an upgrade guide directory holds only \`<id>.md\` entries and \`_\` files.`);
+        return Promise.resolve(undefined);
+      }
+      return loadEntry(siteDir, path.join(dir, file.name), relativePath, parseFrontMatter, fileErrors);
+    },
+    errors,
+  );
+  const entries = loaded.flatMap((entry) => (entry ? [entry] : []));
 
   const filteredPage = path.join(path.dirname(dir), filteredPageFile(name));
   if (!(await isFile(filteredPage))) {
@@ -136,22 +168,23 @@ async function loadVersion(siteDir, docsDir, dir, name, number, parseFrontMatter
     ...RESERVED_IDS,
     ...packages.filter(({ group }) => group === 'theme' || group === 'validator').map(({ short }) => short),
   ]);
-  for (const entry of entries) {
-    validateEntry(entry, packages, ids, reserved, path.join(relativeDir, `${entry.id}.md`), errors);
-    await validateLinks(
-      entry,
-      { siteDir, docsDir, dir, name, ids, parseFrontMatter },
-      path.join(relativeDir, `${entry.id}.md`),
-      errors,
-    );
-  }
+  const context = { siteDir, dir, name, ids, whyUnpublished };
+  await mapInOrder(
+    entries,
+    (entry, entryErrors) => {
+      const at = path.join(relativeDir, `${entry.id}.md`);
+      validateEntry(entry, packages, ids, reserved, at, entryErrors);
+      return validateLinks(entry, context, at, entryErrors);
+    },
+    errors,
+  );
 
   return {
     name,
     number,
     sourceDir: toSitePath(siteDir, dir),
     entries,
-    anchors: await loadAnchors(dir, relativeDir, ids, errors),
+    ...(await loadAnchors(context, relativeDir, errors)),
     packages,
   };
 }
@@ -162,6 +195,15 @@ async function loadVersion(siteDir, docsDir, dir, name, number, parseFrontMatter
  */
 function toSitePath(siteDir, filePath) {
   return `@site/${path.relative(siteDir, filePath).split(path.sep).join('/')}`;
+}
+
+/**
+ * A text file with `\n` line endings, so a checkout with CRLF ones reads the same.
+ *
+ * @param {string} filePath
+ */
+async function readText(filePath) {
+  return (await fs.readFile(filePath, 'utf8')).replace(/\r\n?/g, '\n');
 }
 
 /** @param {string} filePath */
@@ -181,7 +223,7 @@ function isFile(filePath) {
  * @returns {Promise<Entry | undefined>}
  */
 async function loadEntry(siteDir, filePath, relativePath, parseFrontMatter, errors) {
-  const fileContent = await fs.readFile(filePath, 'utf8');
+  const fileContent = await readText(filePath);
   const rawFrontMatter = FRONT_MATTER.exec(fileContent);
   if (!rawFrontMatter) {
     errors.push(`${relativePath}: no frontmatter; an entry starts with a \`---\` block.`);
@@ -394,50 +436,74 @@ function validateSections(body, at, errors) {
 }
 
 /**
- * A link to `<id>.md` in the entry's directory must name an entry; a link to any other `.md`/`.mdx` must name a file
- * under the docs directory that the docs plugin publishes: no `_` file or directory, no draft. Docusaurus only warns
- * about a broken one (`onBrokenMarkdownLinks`), and postBuild needs every one to have a page. No link may go to the
- * version's filtered page, which took over the single-page guide's URL: every section of that guide is an entry now.
- *
- * @param {Entry} entry
- * @param {{
+ * @typedef {{
  *   siteDir: string;
- *   docsDir: string;
  *   dir: string;
  *   name: string;
  *   ids: Set<string>;
- *   parseFrontMatter: ParseFrontMatter;
- * }} version
+ *   whyUnpublished: WhyUnpublished;
+ * }} VersionContext
+ * `dir` is the version's directory and `name` its name, e.g. `v7`; `ids` are its entries' ids.
+ */
+
+/**
+ * A link to `<id>.md` in the entry's directory must name an entry; a link to any other `.md`/`.mdx` must name a file
+ * under the docs directory that the docs plugin publishes: no `_` file or directory, no draft. Docusaurus only warns
+ * about a broken one (`onBrokenMarkdownLinks`), and postBuild needs every one to have a page. No link may go to the
+ * version's filtered page: a link names the entry that covers the change.
+ *
+ * @param {Entry} entry
+ * @param {VersionContext} version
  * @param {string} at
  * @param {string[]} errors
  */
-async function validateLinks(entry, { siteDir, docsDir, dir, name, ids, parseFrontMatter }, at, errors) {
+async function validateLinks(entry, { siteDir, dir, name, ids, whyUnpublished }, at, errors) {
   const guidePage = filteredPageName(name);
-  for (const destination of linkDestinations(entry.body)) {
+  const checks = linkDestinations(entry.body).map(async (destination) => {
     if (namesPage(destination, guidePage)) {
-      errors.push(`${at}: the link \`${destination}\` goes to the ${name} guide page; link the entry that covers it.`);
-      continue;
+      return `the link \`${destination}\` goes to the ${name} guide page; link the entry that covers it`;
     }
     const file = localMarkdownFile(destination);
     if (file === undefined) {
-      continue;
+      return undefined;
     }
     if (file === null) {
-      errors.push(`${at}: the link \`${destination}\` has a malformed \`%\` escape.`);
-      continue;
+      return `the link \`${destination}\` has a malformed \`%\` escape`;
     }
     const target = path.resolve(dir, file);
     if (path.dirname(target) === dir && target.endsWith('.md')) {
-      if (!ids.has(path.basename(target, '.md'))) {
-        errors.push(`${at}: the link \`${destination}\` names no entry of this version.`);
-      }
-      continue;
+      return ids.has(path.basename(target, '.md'))
+        ? undefined
+        : `the link \`${destination}\` names no entry of this version`;
     }
-    const unpublished = await whyUnpublished(target, docsDir, parseFrontMatter);
-    if (unpublished) {
-      errors.push(`${at}: the link \`${destination}\` names \`${path.relative(siteDir, target)}\`, ${unpublished}.`);
+    const unpublished = await whyUnpublished(target);
+    return unpublished && `the link \`${destination}\` names \`${path.relative(siteDir, target)}\`, ${unpublished}`;
+  });
+  for (const problem of await Promise.all(checks)) {
+    if (problem) {
+      errors.push(`${at}: ${problem}.`);
     }
   }
+}
+
+/**
+ * whyUnpublished, reading and parsing each target once however many entries link it.
+ *
+ * @param {string} docsDir
+ * @param {ParseFrontMatter} parseFrontMatter
+ * @returns {WhyUnpublished}
+ */
+function cachedWhyUnpublished(docsDir, parseFrontMatter) {
+  /** @type {Map<string, Promise<string | undefined>>} */
+  const reasons = new Map();
+  return (target) => {
+    let reason = reasons.get(target);
+    if (reason === undefined) {
+      reason = whyUnpublished(target, docsDir, parseFrontMatter);
+      reasons.set(target, reason);
+    }
+    return reason;
+  };
 }
 
 /**
@@ -460,7 +526,7 @@ async function whyUnpublished(target, docsDir, parseFrontMatter) {
   if (!(await isFile(target))) {
     return "which doesn't exist";
   }
-  const fileContent = await fs.readFile(target, 'utf8');
+  const fileContent = await readText(target);
   try {
     const { frontMatter } = await parseFrontMatter({
       filePath: target,
@@ -497,6 +563,23 @@ function namesPage(destination, page) {
 }
 
 /**
+ * What a link destination is relative to: nothing (`external`, with a scheme), the site root (`site`), the page
+ * (`fragment`, a bare `#anchor`) or the linking file (`relative`).
+ *
+ * @param {string} destination
+ * @returns {'external' | 'site' | 'fragment' | 'relative'}
+ */
+function linkKind(destination) {
+  if (/^[a-z][a-z0-9+.-]*:/i.test(destination)) {
+    return 'external';
+  }
+  if (destination.startsWith('#')) {
+    return 'fragment';
+  }
+  return destination.startsWith('/') ? 'site' : 'relative';
+}
+
+/**
  * The file path a relative link to a Markdown file names, `null` for a relative link whose path has a malformed `%`
  * escape, or `undefined` for any other link.
  *
@@ -504,7 +587,7 @@ function namesPage(destination, page) {
  * @returns {string | null | undefined}
  */
 function localMarkdownFile(destination) {
-  if (/^[a-z][a-z0-9+.-]*:/i.test(destination) || destination.startsWith('/') || destination.startsWith('#')) {
+  if (linkKind(destination) !== 'relative') {
     return undefined;
   }
   let file;
@@ -517,37 +600,59 @@ function localMarkdownFile(destination) {
 }
 
 /**
- * `_anchors.json` maps a heading anchor of the version's single-page guide to the entry id (or ids) it became.
+ * `_anchors.json` maps an anchor the filtered page's URL can carry, such as a heading of a guide the page replaced, to
+ * what it names now. The value is an entry id or a list of them, which the page opens or lists, or a relative link to
+ * another published doc's `.md`/`.mdx` file, with an optional `#anchor` that must be one of its headings', which the
+ * page goes to. The page follows a mapping even when the anchor is also an entry's id.
  *
- * @param {string} dir
+ * @param {VersionContext} version
  * @param {string} relativeDir
- * @param {Set<string>} ids
  * @param {string[]} errors
- * @returns {Promise<Record<string, string[]>>}
+ * @returns {Promise<Pick<Version, 'anchors' | 'pageAnchors'>>}
  */
-async function loadAnchors(dir, relativeDir, ids, errors) {
+async function loadAnchors(version, relativeDir, errors) {
+  const { siteDir, dir, ids } = version;
   const at = path.join(relativeDir, ANCHORS_FILE);
+  /** @type {Record<string, string[]>} */
+  const anchors = {};
+  /** @type {Record<string, PageAnchor>} */
+  const pageAnchors = {};
   /** @type {unknown} */
   let parsed;
   try {
     parsed = JSON.parse(await fs.readFile(path.join(dir, ANCHORS_FILE), 'utf8'));
   } catch (error) {
-    if (/** @type {NodeJS.ErrnoException} */ (error).code === 'ENOENT') {
-      return {};
+    if (/** @type {NodeJS.ErrnoException} */ (error).code !== 'ENOENT') {
+      errors.push(`${at}: ${error instanceof Error ? error.message : String(error)}`);
     }
-    errors.push(`${at}: ${error instanceof Error ? error.message : String(error)}`);
-    return {};
+    return { anchors, pageAnchors };
   }
   if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
-    errors.push(`${at}: must be an object mapping an old anchor to an entry id or a list of them.`);
-    return {};
+    errors.push(`${at}: must be an object mapping an anchor to an entry id, a list of them or a link to a doc.`);
+    return { anchors, pageAnchors };
   }
-  /** @type {Record<string, string[]>} */
-  const anchors = {};
+  /** @type {Map<string, Promise<string[]>>} */
+  const headingIdsByFile = new Map();
   for (const [anchor, value] of Object.entries(parsed)) {
+    const file = typeof value === 'string' ? localMarkdownFile(value) : undefined;
+    if (file === null) {
+      errors.push(`${at}: \`${anchor}\` maps to \`${value}\`, which has a malformed \`%\` escape.`);
+      continue;
+    }
+    if (file !== undefined) {
+      const target = path.resolve(dir, file);
+      const hash = value.includes('#') ? value.slice(value.indexOf('#')) : '';
+      const problem = await whyPageAnchorFails(value, target, hash, version, headingIdsByFile);
+      if (problem) {
+        errors.push(`${at}: \`${anchor}\` maps to \`${value}\`, ${problem}.`);
+      } else {
+        pageAnchors[anchor] = { source: toSitePath(siteDir, target), hash };
+      }
+      continue;
+    }
     const targets = typeof value === 'string' ? [value] : value;
     if (!Array.isArray(targets) || targets.length === 0 || targets.some((target) => typeof target !== 'string')) {
-      errors.push(`${at}: \`${anchor}\` must map to an entry id or a non-empty list of them.`);
+      errors.push(`${at}: \`${anchor}\` must map to an entry id, a non-empty list of them or a link to a doc.`);
       continue;
     }
     for (const target of targets) {
@@ -557,7 +662,40 @@ async function loadAnchors(dir, relativeDir, ids, errors) {
     }
     anchors[anchor] = targets;
   }
-  return anchors;
+  return { anchors, pageAnchors };
 }
 
-module.exports = { loadVersions, localMarkdownFile };
+/**
+ * Why `_anchors.json` can't map an anchor to the doc link `value`, which names `target` and `hash`, or `undefined` if
+ * it can.
+ *
+ * @param {string} value
+ * @param {string} target
+ * @param {string} hash
+ * @param {VersionContext} version
+ * @param {Map<string, Promise<string[]>>} headingIdsByFile
+ * @returns {Promise<string | undefined>}
+ */
+async function whyPageAnchorFails(value, target, hash, { siteDir, dir, name, whyUnpublished }, headingIdsByFile) {
+  if (namesPage(value, filteredPageName(name))) {
+    return `the ${name} guide page itself`;
+  }
+  if (path.dirname(target) === dir) {
+    return "a file of the entries' directory; map to an entry by its id";
+  }
+  const unpublished = await whyUnpublished(target);
+  if (unpublished) {
+    return `\`${path.relative(siteDir, target)}\`, ${unpublished}`;
+  }
+  if (hash === '') {
+    return undefined;
+  }
+  let ids = headingIdsByFile.get(target);
+  if (ids === undefined) {
+    ids = readText(target).then(headingIds);
+    headingIdsByFile.set(target, ids);
+  }
+  return (await ids).includes(hash.slice(1)) ? undefined : `whose page has no heading with the anchor \`${hash}\``;
+}
+
+module.exports = { linkKind, loadVersions, localMarkdownFile };

@@ -10,15 +10,17 @@ const { ALWAYS_PACKAGES, HEADINGS, headingId } = require('./vocabulary.js');
 /**
  * @typedef {import('./entries.js').Entry & { permalink: string }} ResolvedEntry
  *
- * @typedef {Omit<import('./entries.js').Version, 'entries'> & {
+ * @typedef {Omit<import('./entries.js').Version, 'entries' | 'pageAnchors'> & {
  *   route: string;
  *   page: string;
  *   entries: ResolvedEntry[];
+ *   pageAnchors: Record<string, string>;
  *   combined: { key: string; label: string; path: string; packageId?: string }[];
  * }} ResolvedVersion
  * `route` is the site path of the version's directory, base URL included, ending in `/`; `page` is the filtered page's
- * permalink. `entries` are in heading order (`HEADINGS`), then by id. `combined` lists the combined Markdown files
- * written beside the entries: `all` and one per theme and validator.
+ * permalink. `entries` are in heading order (`HEADINGS`), then by id. `pageAnchors` maps an anchor to the site path,
+ * with its hash, of the doc it goes to. `combined` lists the combined Markdown files written beside the entries: `all`
+ * and one per theme and validator.
  *
  * @typedef {Map<string, string>} Permalinks
  * Docs plugin permalinks keyed by `@site/…` source path.
@@ -94,6 +96,15 @@ function resolveVersions(versions, permalinks) {
         );
       }
     }
+    const pageAnchors = Object.fromEntries(
+      Object.entries(version.pageAnchors).map(([anchor, { source, hash }]) => {
+        const permalink = permalinks.get(source);
+        if (permalink === undefined) {
+          throw new Error(`The docs plugin made no page of ${source}, which \`_anchors.json\` maps #${anchor} to.`);
+        }
+        return [anchor, `${permalink}${hash}`];
+      }),
+    );
     const combined = [
       { key: 'all', label: 'All entries', path: `${route}all.md` },
       ...version.packages
@@ -105,7 +116,7 @@ function resolveVersions(versions, permalinks) {
           packageId: pkg.id,
         })),
     ];
-    return [{ ...version, route, page, entries, combined }];
+    return [{ ...version, route, page, entries, pageAnchors, combined }];
   });
 }
 

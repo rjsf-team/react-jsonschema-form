@@ -684,5 +684,15 @@
   "add-buttons-are-titled-add-item-or-after-their-object-breaking-change": [
     "add-buttons-titled-add-item-or-after-their-object",
     "object-field-template-spreads-add-button-props"
-  ]
+  ],
+  "new-features": "../whats-new-v7.md",
+  "getformdata-and-the-formref-type": "../whats-new-v7.md#working-with-form-data",
+  "transformchange": "../whats-new-v7.md#working-with-form-data",
+  "uiinitialvalue-and-uirequired": "../whats-new-v7.md#validation-and-required-fields",
+  "uioptionsoptgroups-for-grouped-select-options": "../whats-new-v7.md#schemas-the-form-can-now-render",
+  "additionalpropertieswhenabsent-reads-an-object-naming-no-additionalproperties-as-the-spec-does": "../whats-new-v7.md#schemas-the-form-can-now-render",
+  "new-types": "../whats-new-v7.md#typescript",
+  "type-safe-uischema-opt-in": "../whats-new-v7.md#typescript",
+  "new-utility-react-components": "../whats-new-v7.md",
+  "new-utility-functions": "../whats-new-v7.md"
 }

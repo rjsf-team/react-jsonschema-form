@@ -54,7 +54,7 @@ function upgradeGuidePlugin(context) {
             headings: HEADINGS,
             packages: version.packages,
             entries: version.entries.map(
-              ({ id, title, description, packages, uses, schema, affects, deprecated, permalink }) => ({
+              ({ id, title, description, packages, uses, schema, affects, deprecated, related, permalink }) => ({
                 id,
                 title,
                 description,
@@ -63,10 +63,12 @@ function upgradeGuidePlugin(context) {
                 schema,
                 affects,
                 deprecated,
+                related,
                 permalink,
               }),
             ),
             anchors: version.anchors,
+            pageAnchors: version.pageAnchors,
             llmsTxt: `${version.route}llms.txt`,
             combined: Object.fromEntries(version.combined.map(({ key, path: file }) => [key, file])),
           }),
