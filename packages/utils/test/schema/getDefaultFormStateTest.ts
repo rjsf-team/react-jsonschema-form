@@ -7958,6 +7958,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               expect(getDefaultFormState(skipping, { schema: own, uiSchema })).toStrictEqual({ x: { k: 5, a } });
             },
           );
+          describe.each<[string, DefaultFormStateBehavior | undefined]>([
+            ['no defaultFormStateBehavior', undefined],
+            ['allOf: skipDefaults', { allOf: 'skipDefaults' }],
+            ['allOf: populateDefaults', { allOf: 'populateDefaults' }],
+          ])('under %s', (_, defaultFormStateBehavior) => {
+            it.each<[string, Record<string, unknown> | undefined]>([
+              ['no data', undefined],
+              ['an empty object', { x: {} }],
+            ])('the null of a type: null key beside the option const, with %s', (__, formData) => {
+              const { own, nested } = ownAndNested(
+                { oneOf: [{ properties: { a: { const: 1 }, n: { type: 'null' } } }] },
+                rootOf,
+              );
+              const context = { validator: testValidator, defaultFormStateBehavior };
+              expect(getDefaultFormState(context, { schema: own, formData })).toStrictEqual({ x: { a: 1, n: null } });
+              expect(getDefaultFormState(context, { schema: nested, formData })).toStrictEqual({
+                x: { a: 1, n: null },
+              });
+            });
+          });
         });
       });
     });

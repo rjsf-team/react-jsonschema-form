@@ -835,7 +835,17 @@ function fieldPasses<S extends StrictRJSFSchema, F extends FormContextType>(
     retrievedViewOf(view) {
       retrievedViews ??= new KeyedMemo<DefaultsView<S>>();
       return retrievedViews.get([view], () => {
-        const settled = settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
+        // An option adopted from a list an unmerged `allOf` offers is merged into the field it renders, as an option of
+        // the field's own list is through its selection, so the keys only that option declares are the field's too
+        const { adopted } = view.options;
+        const seeds = adopted ? [...view.field.seeds, ...adopted.values()] : view.field.seeds;
+        const settled = settle(
+          context,
+          { ...view.field, seeds, retrieves: true },
+          view.data,
+          view.depData,
+          view.options,
+        );
         retrieved.push(settled);
         return settled;
       });
