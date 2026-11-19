@@ -2036,5 +2036,27 @@ describe('getUiRequiredErrorSchema()', () => {
       };
       expect(errorsFor(schema, { p: { 'ui:required': true } }, {})).toEqual([".p must have required property 'p'"]);
     });
+
+    it("reports an empty select of constants an option shows from the option's `ui:required`, which no constant's entry overrides", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            anyOf: [
+              {
+                type: 'string',
+                oneOf: [
+                  { const: 'a', title: 'A' },
+                  { const: 'b', title: 'B' },
+                ],
+              },
+              { type: 'number' },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true, oneOf: [{ 'ui:required': false }] }] } };
+      expect(errorsFor(schema, uiSchema, {})).toEqual([".p must have required property 'p'"]);
+    });
   });
 });

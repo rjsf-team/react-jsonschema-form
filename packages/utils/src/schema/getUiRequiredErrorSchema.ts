@@ -21,6 +21,7 @@ import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
+import isConstantSelect from '../isConstantSelect.ts';
 import isCustomWidget from '../isCustomWidget.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
@@ -382,8 +383,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         : renderOption<S>({ ...resolvedSchema, type: ownFallbackType }, option);
   }
   // An option offering options of its own renders them as a field of its own at this path, which `MultiSchemaField`
-  // hands the option's uiSchema, so it is walked as a node of its own, which reads the option it shows in turn
-  const nestsOptions = getXxxOfOptions<S>(optionField) !== undefined;
+  // hands the option's uiSchema, so it is walked as a node of its own, which reads the option it shows in turn. A select
+  // of constants is one control rather than options shown in turn, so its constants' entries don't decide its `ui:required`
+  const nestsOptions = getXxxOfOptions<S>(optionField) !== undefined && !isConstantSelect<S>(optionField, true);
   if (nestsOptions) {
     walk(ctx, optionField, branchUiSchema, formData, path, required, parentPresent, {
       uiRequired: reportsEmpty,

@@ -886,5 +886,28 @@ describe('ui:required enforcement', () => {
         expect(await submitted(node, onSubmit)).toBe(false);
       });
     });
+
+    it("blocks a submit of a cleared select of constants an option shows, from the option's `ui:required`, which no constant's entry overrides", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          anyOf: [
+            {
+              type: 'string',
+              oneOf: [
+                { const: 'a', title: 'A' },
+                { const: 'b', title: 'B' },
+              ],
+            },
+            { type: 'number' },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ 'ui:required': true, oneOf: [{ 'ui:required': false }] }] } },
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      // Cleared rather than left untouched, which the form's defaults would fill on submit
+      await user.selectOptions(elementOf(node, '#root_p'), 'A');
+      await user.selectOptions(elementOf(node, '#root_p'), '');
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
   });
 });
