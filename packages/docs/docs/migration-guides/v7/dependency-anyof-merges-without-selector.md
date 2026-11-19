@@ -6,7 +6,6 @@ uses: [form]
 schema: [any-of-one-of, defaults]
 kind: runtime
 noticed: review
-related: [dependency-oneof-without-key-now-applies]
 ---
 
 ## Detect

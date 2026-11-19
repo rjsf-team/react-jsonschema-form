@@ -2,7 +2,7 @@
 title: A deep uiSchema for a recursive form data type can exhaust the type checker
 description: "Typed uiSchema entries now recurse with the form data, so a deeply nested literal for a self-referential type can fail with `Excessive stack depth comparing types`. Annotate the deep sub-entry as plain `UiSchema`."
 packages: ['@rjsf/utils']
-uses: [typescript, ui-schema]
+uses: [typescript]
 schema: [refs]
 kind: type
 noticed: type-error

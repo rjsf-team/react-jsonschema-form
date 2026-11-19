@@ -2,7 +2,7 @@
 title: An anyOf or oneOf field is labelled once by its own template whichever option is selected
 description: 'An `anyOf`/`oneOf` field''s template now draws its label, description, help, errors and its one `*`, so the selected option draws no second label or marker. Update tests and snapshots, and give an option its own `uiSchema` or `title` to label it.'
 packages: ['@rjsf/core']
-uses: [form, markup]
+uses: [ui-schema, markup]
 schema: [any-of-one-of]
 kind: runtime
 noticed: test

@@ -2,7 +2,7 @@
 title: Add buttons are titled Add Item, or after their object
 description: "Add buttons were titled `Add` in core, bootstrap3 and daisyui; every theme now titles them `Add Item`, and an expandable object's after the object, such as `Add Address`. Update tests and translations that find or name the button by its title or text."
 packages: ['*']
-uses: [form, markup, form-props]
+uses: [markup, form-props]
 schema: [additional-properties, arrays]
 kind: markup
 noticed: test

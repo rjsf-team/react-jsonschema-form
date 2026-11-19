@@ -6,7 +6,6 @@ uses: [custom-fields]
 schema: [refs, defaults, additional-properties]
 kind: runtime
 noticed: review
-related: [extra-keys-stubbed-once-with-the-selected-option]
 ---
 
 ## Detect

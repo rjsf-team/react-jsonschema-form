@@ -6,7 +6,7 @@ uses: [markup]
 schema: [type-lists]
 kind: markup
 noticed: test
-related: [type-list-ui-widget-picks-the-field, typeless-constant-options-render-a-select]
+related: [typeless-constant-options-render-a-select]
 ---
 
 ## Detect

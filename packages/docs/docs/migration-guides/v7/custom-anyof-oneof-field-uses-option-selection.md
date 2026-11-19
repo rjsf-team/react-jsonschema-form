@@ -6,7 +6,7 @@ uses: [custom-fields]
 schema: [any-of-one-of]
 kind: runtime
 noticed: review
-related: [selected-option-stays-while-you-type, extra-keys-stubbed-once-with-the-selected-option, anyof-oneof-field-options-are-already-retrieved]
+related: [selected-option-stays-while-you-type, anyof-oneof-field-options-are-already-retrieved]
 ---
 
 ## Detect

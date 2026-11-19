@@ -2,7 +2,7 @@
 title: An optional object holding an empty object renders open under the Optional Data Controls
 description: With `enableOptionalDataFieldForType` naming `object`, an optional object holding `{}` used to stay behind its Add button and now renders its fields and a Remove button. Leave the object out of the data instead of setting it to `{}` to keep it closed.
 packages: ['@rjsf/core']
-uses: [ui-schema, form]
+uses: [ui-schema]
 schema: [additional-properties, any-of-one-of]
 kind: runtime
 noticed: test

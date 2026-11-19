@@ -6,7 +6,6 @@ uses: [ui-schema, markup, form-props]
 schema: []
 kind: markup
 noticed: test
-related: [ref-cycle-hidden-field-has-no-expand-button]
 ---
 
 ## Detect

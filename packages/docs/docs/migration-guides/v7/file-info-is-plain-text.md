@@ -16,7 +16,7 @@ related: [markdown-needs-markdown-template, translatable-string-invalid-object-f
 
 ## Change
 
-`FileWidget`'s file information used to render through `markdown-to-jsx` unconditionally, which made the file name bold and let raw HTML through. It now goes through `RichDescription` like every other translatable string. The English `UnsupportedField*` and `FilesInfo` strings no longer contain markdown syntax. `InvalidObjectField` is removed, since [an incomplete ui:order renders the object instead of an error](./incomplete-ui-order-renders-the-object.md); see [TranslatableString.InvalidObjectField is removed](./translatable-string-invalid-object-field-removed.md).
+`FileWidget`'s file information used to render through `markdown-to-jsx` unconditionally, which made the file name bold and let raw HTML through. It now goes through `RichDescription` like every other translatable string. The English `UnsupportedField*` and `FilesInfo` strings no longer contain markdown syntax. `InvalidObjectField` is removed, since an incomplete `ui:order` now renders the object instead of an error; see [TranslatableString.InvalidObjectField is removed](./translatable-string-invalid-object-field-removed.md).
 
 Update the tests and CSS to expect plain text. To keep a bold file name, register a `MarkdownTemplate`, set `ui:enableMarkdownInDescription`, and supply a `translateString` that marks the name up, see [Markdown renders only through a registered MarkdownTemplate](./markdown-needs-markdown-template.md). Raw HTML is never parsed.
 

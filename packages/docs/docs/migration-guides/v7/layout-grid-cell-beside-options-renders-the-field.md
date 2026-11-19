@@ -6,7 +6,7 @@ uses: [ui-schema]
 schema: [any-of-one-of]
 kind: runtime
 noticed: review
-related: [layout-grid-cell-of-discriminated-option-renders-nothing, property-beside-options-read-from-beside]
+related: [property-beside-options-read-from-beside]
 ---
 
 ## Detect
@@ -29,5 +29,5 @@ To keep showing `Comp`, name no property:
 ## Verify
 
 - The cell shows `Comp` again, or the field if that is what you want.
-- A `LayoutGridField` on the schema that holds non-discriminated options is the exception. While `MultiSchemaField` renders the options beside the grid, the option renders its own properties, so a cell naming one of them still renders nothing, or its `render`. For `{ properties: { x: { type: 'string' } }, anyOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'number' } } }] }` with `{ a: 'q' }`, a row of `x` and `a` renders `root_x`, then the option selector and the option's `root_a`. To have the grid lay out the option's properties, see [ui:fieldReplacesAnyOrOneOf for discriminated options](./layout-grid-cell-of-discriminated-option-renders-nothing.md), which works the same way here.
+- A `LayoutGridField` on the schema that holds non-discriminated options is the exception. While `MultiSchemaField` renders the options beside the grid, the option renders its own properties, so a cell naming one of them still renders nothing, or its `render`. For `{ properties: { x: { type: 'string' } }, anyOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'number' } } }] }` with `{ a: 'q' }`, a row of `x` and `a` renders `root_x`, then the option selector and the option's `root_a`.
 - A property declared both beside the options and in an option is read from beside them; see [this entry](./property-beside-options-read-from-beside.md).

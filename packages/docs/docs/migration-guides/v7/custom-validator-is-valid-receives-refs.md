@@ -6,7 +6,6 @@ uses: [custom-validator]
 schema: []
 kind: runtime
 noticed: review
-related: [validator-conditions-with-refs-hold-under-an-id-root]
 ---
 
 ## Detect

@@ -44,7 +44,7 @@ Add each to your table, or fall back to the English translator for keys you don'
  }
 ```
 
-A `TranslatableString` key is its English text, so a table keyed by `TranslatableString.X` follows a changed default on its own, and one keyed by literal strings does not. The English `UnsupportedField*` and `FilesInfo` strings no longer use markdown syntax; see [Markdown is an opt-in template](./markdown-needs-markdown-template.md). `InvalidObjectField` is removed, since [an incomplete ui:order renders the object instead of an error](./incomplete-ui-order-renders-the-object.md); see [TranslatableString.InvalidObjectField is removed](./translatable-string-invalid-object-field-removed.md). `TranslatableString` is also an `as const` object now; see [TranslatableString is an as const object instead of an enum](./translatable-string-is-a-const-object.md).
+A `TranslatableString` key is its English text, so a table keyed by `TranslatableString.X` follows a changed default on its own, and one keyed by literal strings does not. The English `UnsupportedField*` and `FilesInfo` strings no longer use markdown syntax; see [Markdown is an opt-in template](./markdown-needs-markdown-template.md). `InvalidObjectField` is removed, since an incomplete `ui:order` now renders the object instead of an error; see [TranslatableString.InvalidObjectField is removed](./translatable-string-invalid-object-field-removed.md). `TranslatableString` is also an `as const` object now; see [TranslatableString is an as const object instead of an enum](./translatable-string-is-a-const-object.md).
 
 ## Verify
 

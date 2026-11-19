@@ -5,7 +5,7 @@ packages: ['@rjsf/utils']
 uses: [typescript, form-props]
 kind: removal
 noticed: type-error
-related: [incomplete-ui-order-renders-the-object, file-info-is-plain-text, translate-string-table-needs-new-keys]
+related: [file-info-is-plain-text, translate-string-table-needs-new-keys]
 ---
 
 ## Detect

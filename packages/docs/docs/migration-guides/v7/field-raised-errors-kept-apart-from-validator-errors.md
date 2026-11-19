@@ -6,7 +6,7 @@ uses: [custom-widgets, custom-fields]
 schema: []
 kind: runtime
 noticed: review
-related: [cleared-custom-error-leaves-the-error-list, onchange-error-schema-is-the-field-own-errors]
+related: [onchange-error-schema-is-the-field-own-errors]
 ---
 
 ## Detect

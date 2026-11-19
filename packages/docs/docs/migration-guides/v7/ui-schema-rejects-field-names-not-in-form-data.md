@@ -2,7 +2,7 @@
 title: A typed UiSchema rejects field names the form data lacks
 description: "`UiSchema<T>` used to accept any string key and now only accepts the fields of `T`, plus typed `additionalProperties`, `additionalItems`, `anyOf`, `oneOf` and `classNames`. Declare missing fields in `T` or fix the misplaced entries."
 packages: ['@rjsf/utils']
-uses: [typescript, ui-schema]
+uses: [typescript]
 schema: []
 kind: type
 noticed: type-error

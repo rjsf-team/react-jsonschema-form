@@ -6,7 +6,7 @@ uses: [utils-api, ui-schema]
 schema: [additional-properties]
 kind: runtime
 noticed: review
-related: [options-list-returns-undefined-for-non-constant-options, incomplete-ui-order-renders-the-object]
+related: [options-list-returns-undefined-for-non-constant-options]
 ---
 
 ## Detect
@@ -22,7 +22,7 @@ These functions now match property names by own key ([#5561](https://github.com/
 
 - `getPropertySchema()` returns `{}` for a property like `toString` that the schema doesn't declare, instead of the inherited function.
 - `optionsList()` reads a selector property by own key, so an option that doesn't declare one named like `toString` is read by its constant.
-- `orderProperties()` places a `__proto__` property, declared or held under `additionalProperties`, at the `ui:order` wildcard, where it used to be left out. An order without a wildcard renders it after the properties it lists, as [An incomplete ui:order renders the object instead of an error](./incomplete-ui-order-renders-the-object.md) describes. A name like `toString` that the order lists and the properties don't is dropped.
+- `orderProperties()` places a `__proto__` property, declared or held under `additionalProperties`, at the `ui:order` wildcard, where it used to be left out. An order without a wildcard renders it after the properties it lists. A name like `toString` that the order lists and the properties don't is dropped.
 - `setByPath()` writes a `__proto__` segment, in any position, as an own key through [`setOwn()`](../../api-reference/utility-functions.md#setown), where the write used to be dropped. The write never reaches the prototype setter, but your own copy of the result can.
 - `toErrorSchema()` and `ErrorSchemaBuilder` write through `setByPath()`, so an error at a path through `__proto__` is filed under that key, and a `transformErrors` that points an error at `.__proto__` reaches that field.
 

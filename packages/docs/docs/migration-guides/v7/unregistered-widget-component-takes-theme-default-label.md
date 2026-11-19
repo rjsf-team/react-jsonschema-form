@@ -6,7 +6,7 @@ uses: [custom-widgets]
 schema: []
 kind: runtime
 noticed: review
-related: [boolean-widget-in-ui-options-gets-its-label, mantine-custom-widgets-draw-errors-by-their-key, widget-reads-the-presentation-plan]
+related: [mantine-custom-widgets-draw-errors-by-their-key, widget-reads-the-presentation-plan]
 ---
 
 ## Detect

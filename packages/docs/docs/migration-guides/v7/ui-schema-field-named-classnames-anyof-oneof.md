@@ -2,7 +2,7 @@
 title: A field named classNames, anyOf or oneOf takes no per-field uiSchema entry
 description: "A typed uiSchema now intersects a field's entry with the declared `classNames`, `anyOf` or `oneOf` key, so a field with one of those names can't take an entry. Rename the field or configure it through `ui:options` on the parent."
 packages: ['@rjsf/utils']
-uses: [typescript, ui-schema]
+uses: [typescript]
 schema: []
 kind: type
 noticed: type-error

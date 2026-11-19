@@ -265,7 +265,6 @@
   "a-custom-gridtemplate-is-handed-a-fieldid-breaking-change": ["custom-grid-template-receives-field-id"],
   "field-identity-is-a-fieldpath-string-instead-of-a-fieldpathid-object-breaking-change": [
     "fieldpathid-prop-is-fieldpath-and-id",
-    "optional-data-controls-beside-options-render-once",
     "change-event-has-no-fieldpathid",
     "tofieldpathid-and-usedeepcomparememo-removed"
   ],
@@ -291,7 +290,6 @@
     "callback-form-data-and-retrieved-schemas-are-shared"
   ],
   "a-type-list-follows-its-uiwidget-to-the-field-and-class-it-renders-breaking-change": [
-    "type-list-ui-widget-picks-the-field",
     "type-list-field-class-names-the-rendered-field"
   ],
   "a-typeless-oneofanyof-of-constants-now-renders-as-a-select-breaking-change": [
@@ -344,7 +342,7 @@
   ],
   "fieldtemplatepropsrawhelp-carries-an-element-uihelp-breaking-change": ["field-template-raw-help-can-be-an-element"],
   "clearing-a-custom-error-now-also-clears-it-from-the-error-list-breaking-change": [
-    "cleared-custom-error-leaves-the-error-list"
+    "field-raised-errors-kept-apart-from-validator-errors"
   ],
   "an-error-a-field-raises-is-kept-apart-from-the-validators-breaking-change": [
     "field-raised-errors-kept-apart-from-validator-errors"
@@ -356,7 +354,6 @@
   "a-custom-arrayschemafield-is-handed-each-items-own-errors-as-rawerrors-breaking-change": [
     "custom-array-schema-field-raw-errors-are-the-item-errors"
   ],
-  "novalidate-now-turns-off-live-validation-on-blur-breaking-change": ["no-validate-turns-off-blur-validation"],
   "formrefvalidate-takes-only-the-data-breaking-change": ["form-ref-validate-takes-only-the-data"],
   "rjsfdaisyui-applies-uiclassnames-and-uistyle-on-the-field-wrapper-breaking-change": [
     "daisyui-ui-class-names-and-style-on-field-wrapper",
@@ -370,7 +367,6 @@
     "mantine-custom-widgets-draw-errors-by-their-key"
   ],
   "getdisplaylabel-reads-a-booleans-widget-from-the-reduced-ui-options-breaking-change": [
-    "boolean-widget-in-ui-options-gets-its-label",
     "unregistered-widget-component-takes-theme-default-label"
   ],
   "rjsfdaisyuis-date-and-label-markup-changed-breaking-change": [
@@ -436,11 +432,10 @@
     "find-selected-option-returns-closest-option"
   ],
   "a-layoutgridfield-cell-naming-a-property-beside-anyofoneof-or-of-options-with-no-discriminator-renders-the-field-breaking-change": [
-    "layout-grid-cell-beside-options-renders-the-field",
-    "layout-grid-cell-of-discriminated-option-renders-nothing"
+    "layout-grid-cell-beside-options-renders-the-field"
   ],
   "a-layoutgridfield-cell-naming-a-property-of-discriminated-options-beside-the-grid-renders-nothing-breaking-change": [
-    "layout-grid-cell-of-discriminated-option-renders-nothing"
+    "layout-grid-cell-beside-options-renders-the-field"
   ],
   "a-property-declared-beside-anyofoneof-and-in-an-option-is-read-from-beside-them-breaking-change": [
     "property-beside-options-read-from-beside"
@@ -495,8 +490,6 @@
     "expand-cycle-reveals-one-level-per-click",
     "retrieve-schema-leaves-nested-refs-unresolved",
     "retrieved-schemas-carry-rjsf-provenance-key",
-    "ui-definitions-reach-anchor-and-extra-key-refs",
-    "validator-conditions-with-refs-hold-under-an-id-root",
     "keywords-beside-a-ref-merge-as-an-allof",
     "recursive-ref-defaults-stop-at-the-cycle",
     "defaults-fill-more-then-dependency-and-ref-option-shapes",
@@ -519,10 +512,8 @@
   ],
   "expand-cycle-reveals-one-level-per-click-breaking-change": ["expand-cycle-reveals-one-level-per-click"],
   "markers-on-resolved-schemas-breaking-change": [
-    "ui-definitions-reach-anchor-and-extra-key-refs",
     "retrieve-schema-leaves-nested-refs-unresolved",
-    "retrieved-schemas-carry-rjsf-provenance-key",
-    "validator-conditions-with-refs-hold-under-an-id-root"
+    "retrieved-schemas-carry-rjsf-provenance-key"
   ],
   "keywords-beside-a-ref-breaking-change": ["keywords-beside-a-ref-merge-as-an-allof"],
   "getdefaultformstate-folds-over-the-schema-graph-breaking-change": [
@@ -545,7 +536,6 @@
   ],
   "validators-are-handed-pointers-into-the-root-schema-breaking-change": [
     "custom-validator-is-valid-receives-refs",
-    "validator-conditions-with-refs-hold-under-an-id-root",
     "option-scoring-reads-options-as-json-schema",
     "dependency-oneof-option-matched-through-allof",
     "precompiled-validator-code-must-be-regenerated",
@@ -555,7 +545,6 @@
   "option-selection-and-cycle-expansion-are-form-state": [
     "selected-option-stays-while-you-type",
     "custom-anyof-oneof-field-uses-option-selection",
-    "extra-keys-stubbed-once-with-the-selected-option",
     "custom-objectfield-schema-must-be-retrieved",
     "get-closest-matching-option-always-returns-an-option",
     "custom-validator-isvalid-must-not-change-data",
@@ -568,7 +557,6 @@
     "custom-anyof-oneof-field-uses-option-selection"
   ],
   "an-objects-extra-keys-are-stubbed-once-with-the-selected-option-breaking-change": [
-    "extra-keys-stubbed-once-with-the-selected-option",
     "custom-objectfield-schema-must-be-retrieved"
   ],
   "getclosestmatchingoption-picks-among-the-candidates-breaking-change": [
@@ -613,7 +601,6 @@
     "custom-templates-forward-key-not-allowed"
   ],
   "a-dependency-anyof-or-a-dependency-oneof-whose-options-dont-declare-the-dependencys-key-now-applies-breaking-change": [
-    "dependency-oneof-without-key-now-applies",
     "dependency-anyof-merges-without-selector"
   ],
   "gridtype-operators-and-translatablestring-are-as-const-objects-breaking-change": [
@@ -634,9 +621,6 @@
   ],
   "rjsfantd-and-rjsfmantine-leave-out-a-property-hidden-by-deprecatedhandling-or-uidefinitions-breaking-change": [
     "hidden-property-left-out-in-antd-and-mantine"
-  ],
-  "a-ref-cycle-whose-field-renders-hidden-has-no-expand-button-breaking-change": [
-    "ref-cycle-hidden-field-has-no-expand-button"
   ],
   "an-array-items-handlers-do-only-what-its-buttons-can-breaking-change": [
     "array-templates-disable-buttons-that-cannot-act",
@@ -695,7 +679,6 @@
     "closest-matching-option-scores-extra-keys"
   ],
   "an-incomplete-uiorder-renders-the-object-instead-of-an-error-breaking-change": [
-    "incomplete-ui-order-renders-the-object",
     "translatable-string-invalid-object-field-removed"
   ],
   "add-buttons-are-titled-add-item-or-after-their-object-breaking-change": [
