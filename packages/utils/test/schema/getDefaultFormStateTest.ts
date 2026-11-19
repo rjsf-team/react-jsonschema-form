@@ -14808,6 +14808,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual([{ x: 1 }]);
       });
 
+      it("fills the rows at a prefixItems tuple's positions where the array declares its own default", () => {
+        const obj: RJSFSchema = { type: 'object', properties: { a: { type: 'number', default: 1 } } };
+        const schema: RJSFSchema = { type: 'array', prefixItems: [obj], items: obj, default: [] };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: [{}, {}] }),
+        ).toEqual([{ a: 1 }, { a: 1 }]);
+      });
+
+      it("keeps a draft-07 tuple's positions off the defaults of a single items its allOf declares", () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: [{ type: 'string' }],
+          additionalItems: { type: 'string', default: 'q' },
+          allOf: [{ items: { type: 'string', default: 'z' } }],
+          minItems: 2,
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual([
+          undefined,
+          'q',
+        ]);
+      });
+
       it('fills no prefixItems position at or past a false one, which allows no item', () => {
         const schema: RJSFSchema = {
           type: 'array',

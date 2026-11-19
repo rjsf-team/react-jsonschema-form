@@ -2310,21 +2310,19 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   );
 }
 
-/** Returns the seeds of a tuple's position at `index`. A chain whose `items` is one schema beside no tuple of its own
- * describes every item, so it seeds the position too, as `getRenderedOptionSchema()` meets a list's `items` into each
- * position an option's tuple declares
+/** Returns the seeds of a tuple's position at `index`. Beside a `prefixItems` tuple, a chain whose `items` is one schema
+ * beside no `prefixItems` of its own describes every item, so it seeds the position too, as `getRenderedOptionSchema()`
+ * meets a list's `items` into each position an option's tuple declares. A draft-07 tuple's positions are seeded by its
+ * tuple `items` alone, though `getRenderedOptionSchema()` meets a list's `items` into them too
  */
 function positionSeeds<S extends StrictRJSFSchema>(view: DefaultsView<S>, index: number): Seed[] {
+  const isPrefixTuple = Array.isArray(view.schema.prefixItems);
   return view.chains.flatMap((chain) => {
     const own = { graph: view.graph, chains: [chain] };
-    const tuple = tupleSeeds(own, index);
-    const items = chain.get(ITEMS_KEY);
-    const isList =
-      tuple.length === 0 &&
-      !Array.isArray(Reflect.get(chain.get('prefixItems')?.node.raw ?? {}, 'prefixItems')) &&
-      items !== undefined &&
-      isSchemaObject<S>(Reflect.get(items.node.raw, ITEMS_KEY));
-    return isList ? seedsAt(own, ITEMS_KEY) : tuple;
+    const declared = (keyword: string): unknown => Reflect.get(chain.get(keyword)?.node.raw ?? {}, keyword);
+    return isPrefixTuple && !Array.isArray(declared('prefixItems')) && isSchemaObject<S>(declared(ITEMS_KEY))
+      ? seedsAt(own, ITEMS_KEY)
+      : tupleSeeds(own, index);
   });
 }
 
@@ -3325,13 +3323,14 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     if (neverPopulate) {
       defaults = rawFormData;
     } else {
-      // A row past a `prefixItems` tuple is filled from the `items` beside it, as a list's rows are from its `items`
-      const restOf = Array.isArray(schema.prefixItems) ? getPrefixLength<S>(schema) : Infinity;
+      // A row of a `prefixItems` tuple is filled from its position, or past them from the `items` beside it, as a list's
+      // rows are from its `items`, whether or not the array's own `default` skipped the tuple fill
+      const isPrefixTuple = Array.isArray(schema.prefixItems);
       const itemDefaults = rawFormData.map((item: unknown, idx) =>
         foldChild<T, S, F>(
           context,
           `row:${idx}`,
-          idx >= restOf
+          isPrefixTuple
             ? itemField(view, AdditionalItemsHandling.Fallback, idx)
             : itemField(view, AdditionalItemsHandling.Ignore),
           // An item the data holds is one a field renders

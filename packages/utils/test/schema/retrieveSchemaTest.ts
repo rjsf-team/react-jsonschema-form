@@ -2134,6 +2134,79 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           type: 'string',
         });
       });
+      it('should meet a single items in an allOf with each prefixItems position, as with a draft-07 tuple', () => {
+        const allOf: RJSFSchema[] = [{ items: { type: 'string', minLength: 2 } }];
+        const prefixed: RJSFSchema = {
+          type: 'array',
+          prefixItems: [{ type: 'string' }],
+          items: { type: 'string' },
+          allOf,
+        };
+        const draft07: RJSFSchema = {
+          type: 'array',
+          items: [{ type: 'string' }],
+          additionalItems: { type: 'string' },
+          allOf,
+        };
+        const met = { type: 'string', minLength: 2 };
+
+        expect(retrieveSchema({ validator: testValidator }, prefixed, prefixed)).toMatchObject({
+          prefixItems: [met],
+          items: met,
+        });
+        expect(retrieveSchema({ validator: testValidator }, draft07, draft07)).toMatchObject({
+          items: [met],
+          additionalItems: met,
+        });
+      });
+      it('should meet the prefixItems of two allOf entries position by position, each past its own with its items', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          allOf: [
+            { prefixItems: [{ type: 'string' }], items: { type: 'number' } },
+            { prefixItems: [true, { minimum: 1 }] },
+            true,
+          ],
+        };
+
+        const retrieved = retrieveSchema({ validator: testValidator }, schema, schema);
+        expect(retrieved).toMatchObject({ prefixItems: [{ type: 'string' }, { type: 'number', minimum: 1 }] });
+        expect(retrieved.items).toMatchObject({ type: 'number' });
+      });
+      it('should leave prefixItems beside a draft-07 tuple in an allOf to the draft-07 merge', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          allOf: [{ prefixItems: [{ type: 'string' }] }, { items: [{ type: 'number' }] }],
+        };
+
+        expect(retrieveSchema({ validator: testValidator }, schema, schema)).toMatchObject({
+          prefixItems: [{ type: 'string' }],
+          items: [{ type: 'number' }],
+        });
+      });
+      it('should meet a single items into each prefixItems position though an additionalItems beside it', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          prefixItems: [{ type: 'string' }],
+          allOf: [{ items: { minLength: 2 }, additionalItems: false }],
+        };
+
+        expect(retrieveSchema({ validator: testValidator }, schema, schema)).toMatchObject({
+          prefixItems: [{ type: 'string', minLength: 2 }],
+          items: { minLength: 2 },
+        });
+      });
+      it('should leave prefixItems with an additionalItems beside them in an allOf to the draft-07 merge', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          allOf: [{ prefixItems: [{ type: 'string' }], additionalItems: false }, { items: { minLength: 2 } }],
+        };
+
+        expect(retrieveSchema({ validator: testValidator }, schema, schema)).toMatchObject({
+          prefixItems: [{ type: 'string' }],
+          items: { minLength: 2 },
+        });
+      });
       it('should not merge `allOf.contains` schemas', () => {
         // https://github.com/rjsf-team/react-jsonschema-form/issues/2923#issuecomment-1946034240
         const schema: RJSFSchema = {
