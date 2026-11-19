@@ -10,13 +10,23 @@ import type {
   GenericObjectType,
   FormValidation,
   FieldTemplateProps,
+  IconButtonProps,
   ObjectFieldTemplateProps,
   ArrayFieldTemplateProps,
   PartPlacement,
   Registry,
   UiSchema,
 } from '@rjsf/utils';
-import { fieldLabelId, isObject, isPlainObject, noop, ROOT_FIELD_PATH, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
+import {
+  englishStringTranslator,
+  fieldLabelId,
+  isObject,
+  isPlainObject,
+  noop,
+  ROOT_FIELD_PATH,
+  TranslatableString,
+  UI_GLOBAL_OPTIONS_KEY,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -3062,7 +3072,7 @@ describe('ObjectField', () => {
           initialFormData: {},
         });
 
-        await user.click(screen.getByRole('button', { name: 'Add' }));
+        await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
         expectToHaveBeenCalledWithFormData(onChange, { num: expected }, 'root');
       },
@@ -3081,7 +3091,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { num: 'New Value' }, 'root');
       expect(node.querySelector('textarea')).not.toBeNull();
@@ -3104,7 +3114,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { num: 'New Value' }, 'root');
       expect(node.querySelector('textarea')).not.toBeNull();
@@ -3130,7 +3140,7 @@ describe('ObjectField', () => {
           initialFormData: {},
         });
 
-        await user.click(screen.getByRole('button', { name: 'Add' }));
+        await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
         expectToHaveBeenCalledWithFormData(onChange, { num: expected }, 'root');
       },
@@ -3736,6 +3746,64 @@ describe('ObjectField', () => {
       expect(node.querySelector('.rjsf-object-property-expand')).toBeNull();
     });
 
+    it.each<[string, RJSFSchema, string]>([
+      ["after the object's title", { ...schema, title: 'Address' }, 'Add Address'],
+      [
+        "after a nested object's name when it has no title",
+        { type: 'object', properties: { tags: schema } },
+        'Add tags',
+      ],
+      [
+        "after a nested object's name when its title is empty",
+        { type: 'object', properties: { tags: { ...schema, title: '' } } },
+        'Add tags',
+      ],
+      ['its default title when the object has no title or name', schema, 'Add Item'],
+    ])('should title the expand button %s', (_, titledSchema, name) => {
+      createFormComponent({ schema: titledSchema });
+
+      expect(screen.getByRole('button', { name })).toHaveClass('rjsf-object-property-expand');
+    });
+
+    it("should title the expand button after the object's title when its heading is hidden", () => {
+      createFormComponent({ schema: { ...schema, title: 'Address' }, uiSchema: { 'ui:label': false } });
+
+      expect(screen.queryByRole('heading', { name: 'Address' })).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Add Address' })).toHaveClass('rjsf-object-property-expand');
+    });
+
+    it("should title the expand button after a nested object's name when its ui:title is empty", () => {
+      createFormComponent({
+        schema: { type: 'object', properties: { tags: schema } },
+        uiSchema: { tags: { 'ui:title': '' } },
+      });
+
+      expect(screen.getByRole('button', { name: 'Add tags' })).toHaveClass('rjsf-object-property-expand');
+    });
+
+    it('should keep the default title when the translator has no named add string', () => {
+      createFormComponent({
+        schema: { ...schema, title: 'Address' },
+        translateString: (str, params) =>
+          str === TranslatableString.AddNamedButton ? '' : englishStringTranslator(str, params),
+      });
+
+      expect(screen.getByRole('button', { name: 'Add Item' })).toHaveClass('rjsf-object-property-expand');
+    });
+
+    it('should pass the title to a custom AddButton', () => {
+      function AddButton({ title, onClick }: IconButtonProps) {
+        return (
+          <button type='button' onClick={onClick}>
+            + {title}
+          </button>
+        );
+      }
+      createFormComponent({ schema: { ...schema, title: 'Address' }, templates: { ButtonTemplates: { AddButton } } });
+
+      expect(screen.getByRole('button', { name: '+ Add Address' })).toBeInTheDocument();
+    });
+
     it('should add a new property when clicking the expand button', async () => {
       const { node, onChange } = createFormComponent({ schema });
 
@@ -3781,7 +3849,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
     });
@@ -3796,7 +3864,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
     });
@@ -3808,7 +3876,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
     });
@@ -3833,7 +3901,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
     });
@@ -3851,7 +3919,7 @@ describe('ObjectField', () => {
           initialFormData: {},
         });
 
-        await user.click(screen.getByRole('button', { name: 'Add' }));
+        await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
         expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
       },
@@ -3866,7 +3934,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'a' }, 'root');
     });
@@ -3877,7 +3945,7 @@ describe('ObjectField', () => {
         initialFormData: 'abc',
       });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
     });
@@ -3894,7 +3962,7 @@ describe('ObjectField', () => {
           initialFormData: {},
         });
 
-        await user.click(screen.getByRole('button', { name: 'Add' }));
+        await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
         expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
       },
@@ -3911,7 +3979,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
     });
@@ -3927,7 +3995,7 @@ describe('ObjectField', () => {
           initialFormData: {},
         });
 
-        await user.click(screen.getByRole('button', { name: 'Add' }));
+        await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
         expectToHaveBeenCalledWithFormData(onChange, { newKey: null }, 'root');
       },
@@ -3998,7 +4066,7 @@ describe('ObjectField', () => {
         };
         const { onChange } = createFormComponent({ schema: customSchema, initialFormData: {} });
 
-        await user.click(screen.getByRole('button', { name: 'Add' }));
+        await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
         expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
         expect(validator.isValid(customSchema, { newKey: expected }, customSchema)).toBe(true);
@@ -4013,7 +4081,7 @@ describe('ObjectField', () => {
       const uiSchema: UiSchema = { additionalProperties: { anyOf: [{ 'ui:enumDisabled': ['a'] }, {}] } };
       const { onChange } = createFormComponent({ schema: customSchema, uiSchema, initialFormData: {} });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'b' }, 'root');
     });

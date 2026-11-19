@@ -529,7 +529,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         <button
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           id="root_tasks__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -865,7 +865,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         <button
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           id="root_tags__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -2158,7 +2158,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         <button
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           id="root_tasks__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -2494,7 +2494,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         <button
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           id="root_tags__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -5659,7 +5659,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <button
                                     class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                     id="root_nestedObjectOptional_deepArrayOptional__add"
-                                    title="Add"
+                                    title="Add Item"
                                     type="button"
                                   >
                                     <svg
@@ -5727,7 +5727,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <button
                                     class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                     id="root_nestedObjectOptional_deepArrayOptional2__add"
-                                    title="Add"
+                                    title="Add Item"
                                     type="button"
                                   >
                                     <svg
@@ -5800,7 +5800,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <button
                                     class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                     id="root_nestedObjectOptional_deepArray__add"
-                                    title="Add"
+                                    title="Add Item"
                                     type="button"
                                   >
                                     <svg
@@ -5873,7 +5873,7 @@ exports[`single fields > optional data controls > does not show optional control
                         <button
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           id="root_nestedArrayOptional__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -6024,7 +6024,7 @@ exports[`single fields > optional data controls > does not show optional control
                         <button
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           id="root_nestedArray__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -6358,7 +6358,7 @@ exports[`single fields > optional data controls > does not show optional control
                               <button
                                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                 id="root_optionalArrayWithAnyofs__add"
-                                title="Add"
+                                title="Add Item"
                                 type="button"
                               >
                                 <svg
@@ -6704,7 +6704,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                     disabled=""
                                     id="root_nestedObjectOptional_deepArrayOptional__add"
-                                    title="Add"
+                                    title="Add Item"
                                     type="button"
                                   >
                                     <svg
@@ -6773,7 +6773,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                     disabled=""
                                     id="root_nestedObjectOptional_deepArrayOptional2__add"
-                                    title="Add"
+                                    title="Add Item"
                                     type="button"
                                   >
                                     <svg
@@ -6847,7 +6847,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                     disabled=""
                                     id="root_nestedObjectOptional_deepArray__add"
-                                    title="Add"
+                                    title="Add Item"
                                     type="button"
                                   >
                                     <svg
@@ -6921,7 +6921,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           disabled=""
                           id="root_nestedArrayOptional__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -7074,7 +7074,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           disabled=""
                           id="root_nestedArray__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -7417,7 +7417,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                 disabled=""
                                 id="root_optionalArrayWithAnyofs__add"
-                                title="Add"
+                                title="Add Item"
                                 type="button"
                               >
                                 <svg
@@ -7794,7 +7794,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   <button
                                     class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                     id="root_nestedObjectOptional_deepArrayOptional__add"
-                                    title="Add"
+                                    title="Add Item"
                                     type="button"
                                   >
                                     <svg
@@ -7933,7 +7933,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   <button
                                     class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                     id="root_nestedObjectOptional_deepArray__add"
-                                    title="Add"
+                                    title="Add Item"
                                     type="button"
                                   >
                                     <svg
@@ -8100,7 +8100,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <button
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           id="root_nestedArrayOptional__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -8251,7 +8251,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <button
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           id="root_nestedArray__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -8727,7 +8727,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                     disabled=""
                                     id="root_nestedObjectOptional_deepArrayOptional__add"
-                                    title="Add"
+                                    title="Add Item"
                                     type="button"
                                   >
                                     <svg
@@ -8841,7 +8841,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                                     disabled=""
                                     id="root_nestedObjectOptional_deepArray__add"
-                                    title="Add"
+                                    title="Add Item"
                                     type="button"
                                   >
                                     <svg
@@ -8980,7 +8980,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           disabled=""
                           id="root_nestedArrayOptional__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -9133,7 +9133,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           disabled=""
                           id="root_nestedArray__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -9583,7 +9583,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         <button
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           id="root_nestedArray__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg
@@ -10041,7 +10041,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
                           disabled=""
                           id="root_nestedArray__add"
-                          title="Add"
+                          title="Add Item"
                           type="button"
                         >
                           <svg

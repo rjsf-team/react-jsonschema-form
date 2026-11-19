@@ -5577,7 +5577,7 @@ describe('ArrayField', () => {
         uiSchema: { 'ui:field': OneItemField },
       });
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
       await user.click(node.querySelectorAll('.rjsf-array-item-remove')[0]);
 
       // The removal starts from the rendered ['a'], not from the refused ['a', undefined]
@@ -5697,7 +5697,7 @@ describe('ArrayField', () => {
       const first = input(node, 'root_0_a');
       const second = input(node, 'root_1_a');
 
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expect(getFormData()).toEqual([{ a: 'x' }, { a: 'y' }, {}]);
       expect(input(node, 'root_0_a')).toBe(first);
@@ -5758,8 +5758,8 @@ describe('ArrayField', () => {
         uiSchema: { 'ui:field': ThrowingOnceField },
       });
 
-      const reported = await reportedBy(() => user.click(screen.getByRole('button', { name: 'Add' })));
-      await user.click(screen.getByRole('button', { name: 'Add' }));
+      const reported = await reportedBy(() => user.click(screen.getByRole('button', { name: 'Add Item' })));
+      await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
       expect(reported).toHaveLength(1);
       // The second add starts from the rendered ['a'], not from the ['a', undefined] that went nowhere

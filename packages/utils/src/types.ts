@@ -1745,6 +1745,10 @@ export type ObjectFieldTemplateProps<
    * additionalProperties and patternProperties)
    */
   onAddProperty: () => void;
+  /** Props to spread onto the object's `AddButton`, which title it after the object, such as `Add Address`. Undefined
+   * when the object has no title or name, or when `translateString` gives an empty `AddNamedButton`
+   */
+  addButtonProps?: { title: string };
   /** A boolean value stating if the object is read-only */
   readonly?: boolean;
   /** A boolean value stating if the object's heading carries the required marker: where the object is required, unless
