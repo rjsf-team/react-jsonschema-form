@@ -1669,12 +1669,17 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (choice.wholeOptions === undefined) {
         // The object's `ui:initialValue` stands in its `const`'s place, whichever uiSchema its option has
         const initialValue = foldsOptionUnderConst ? uiInitialValue : undefined;
+        // A select renders none of its options, so no uiSchema entry of an option applies: the option is folded with
+        // the field's own uiSchema, its `ui:initialValue` and `ui:emptyValue` included, as the select renders with it
+        const optionsUiSchema = choice.rendersAsSelect
+          ? withoutFieldOptions<T, S, F>(uiSchema, uiSchema, xxxOf.key)
+          : uiSchema;
         const foldedOption = foldOption<T, S, F>(
           choice.context,
           view,
           xxxOf,
           choice.index,
-          { ...props, parentDefaults: defaults, parentConst },
+          { ...props, uiSchema: optionsUiSchema, parentDefaults: defaults, parentConst },
           initialValue,
           adopted?.choice,
         );
@@ -1959,6 +1964,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   index: number;
   isWholeValue: boolean;
   offersConstants: boolean;
+  rendersAsSelect: boolean;
   wholeOptions: S[] | undefined;
 } {
   const { defaultFormStateBehavior } = context;
@@ -1988,9 +1994,11 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     : context;
   // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick. An
   // ancestor default that wins picks the option too, so the option it is checked against is one that can hold it; one
-  // no option holds gives way, so the field's own default picks the option, as it does with no ancestor default
+  // no option holds gives way, so the field's own default picks the option, as it does with no ancestor default. A list
+  // of constants is a select holding one of them whole, as an `enum` is, so where the field has no `default` of its own
+  // the inherited one picks among them whatever the precedence, rather than the first constant replacing it
   const ancestorPicks =
-    preferParentDefaults &&
+    (preferParentDefaults || (offersConstants && schema.default === undefined && defaults !== undefined)) &&
     options.some((option, index) => optionTakesValueOf<S, F>(context, view, key, index, option, defaults));
   // A `default: null` of its own is a default, which wins over the inherited one as it does for any other field
   const inheritedDefault = ancestorPicks || schema.default === undefined ? defaults : schema.default;
@@ -2019,7 +2027,14 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
           getDiscriminatorFieldFromSchema<S>(schema),
           { seeding: view, keyword: key },
         );
-  return { context: optionContext, index, isWholeValue, offersConstants, wholeOptions };
+  return {
+    context: optionContext,
+    index,
+    isWholeValue,
+    offersConstants,
+    rendersAsSelect: rendersOptionsAsSelect<S>(select, constants),
+    wholeOptions,
+  };
 }
 
 /** Returns the uiSchema `optionUiSchema` an object's option is folded with, where the option has an entry of its own,

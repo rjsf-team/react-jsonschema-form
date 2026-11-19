@@ -4729,6 +4729,37 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        it.each<[string, RJSFSchema]>([
+          ['a number', { type: 'number' }],
+          ['an integer', { type: 'integer' }],
+          ['an untyped', {}],
+        ])(
+          'keeps a NaN %s field with no default holds, at the root as for a property and an array item',
+          (_, field) => {
+            const context = { validator: testValidator };
+            for (const initialDefaultsGenerated of [false, true]) {
+              expect(
+                getDefaultFormState(context, { schema: field, formData: NaN, initialDefaultsGenerated }),
+              ).toBeNaN();
+              expect(
+                getDefaultFormState(context, {
+                  schema: { type: 'object', properties: { n: field } },
+                  formData: { n: NaN },
+                  initialDefaultsGenerated,
+                }),
+              ).toStrictEqual({ n: NaN });
+              expect(
+                getDefaultFormState(context, {
+                  schema: { type: 'array', items: field },
+                  formData: [NaN],
+                  initialDefaultsGenerated,
+                }),
+              ).toStrictEqual([NaN]);
+            }
+            expect(getDefaultFormState(context, { schema: { ...field, default: 2 }, formData: NaN })).toBe(2);
+          },
+        );
+
         it("replaces a value the $ref'd constants of a property don't offer with its default, and keeps it for a key an object's allOf declares, whose own default skipDefaults skips", () => {
           const c: RJSFSchema = {
             type: 'string',
@@ -7656,6 +7687,56 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               getDefaultFormState(skipping, { schema: own }),
             );
             expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ n: 3 });
+          });
+          describe.each<[string, DefaultFormStateBehavior['allOf']]>([
+            ['skipDefaults', 'skipDefaults'],
+            ['populateDefaults', 'populateDefaults'],
+          ])('under allOf: %s', (_, allOf) => {
+            const context = { validator: testValidator, defaultFormStateBehavior: { allOf } };
+            it.each<[string, RJSFSchema]>([
+              ['oneOf', { oneOf: [{ const: 3 }, { const: 4 }] }],
+              ['anyOf', { anyOf: [{ const: 3 }, { const: 4 }] }],
+            ])(
+              'the const of a %s an ancestor default names, where the field has no default of its own, as an enum keeps it',
+              (_keyword, list) => {
+                const { own, nested } = ownAndNested(list, (field) => ({
+                  type: 'object',
+                  default: { n: 4 },
+                  properties: { n: { type: 'number', ...field } },
+                }));
+                const enumField: RJSFSchema = {
+                  type: 'object',
+                  default: { n: 4 },
+                  properties: { n: { type: 'number', allOf: [{ enum: [3, 4] }] } },
+                };
+                for (const [formData, initialDefaultsGenerated] of [
+                  [undefined, false],
+                  [{}, true],
+                ] as const) {
+                  const props = { formData, initialDefaultsGenerated };
+                  expect(getDefaultFormState(context, { schema: nested, ...props })).toStrictEqual(
+                    getDefaultFormState(context, { schema: own, ...props }),
+                  );
+                  expect(getDefaultFormState(context, { schema: own, ...props })).toStrictEqual(
+                    getDefaultFormState(context, { schema: enumField, ...props }),
+                  );
+                  expect(getDefaultFormState(context, { schema: nested, ...props })).toStrictEqual({ n: 4 });
+                }
+              },
+            );
+            it.each<[string, UiSchema]>([
+              ['no entries of their own', { n: { 'ui:initialValue': 4 } }],
+              ['entries of their own', { n: { 'ui:initialValue': 4, oneOf: [{}, {}] } }],
+            ])("the field's ui:initialValue, its options having %s, which a select renders none of", (_e, uiSchema) => {
+              const { own, nested } = ownAndNested({ oneOf: [{ const: 3 }, { const: 4 }] }, (field) => ({
+                type: 'object',
+                properties: { n: { type: 'number', ...field } },
+              }));
+              expect(getDefaultFormState(context, { schema: nested, uiSchema })).toStrictEqual(
+                getDefaultFormState(context, { schema: own, uiSchema }),
+              );
+              expect(getDefaultFormState(context, { schema: nested, uiSchema })).toStrictEqual({ n: 4 });
+            });
           });
           it.each(['populateRequiredDefaults', 'skipDefaults'] as const)(
             "an optional key left out under emptyObjectFields: '%s'",
