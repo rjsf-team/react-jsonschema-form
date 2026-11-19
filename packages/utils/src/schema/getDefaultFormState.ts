@@ -1709,9 +1709,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // nothing else (formData, schema default or `ui:initialValue`) has produced a value for the field.
   if (uiSchema) {
     const { initialValue, emptyValue } = getUiOptions<T, S, F>(uiSchema);
+    // The `ui:initialValue` stands in the place of the `const` on every pass, so the defaults beneath it that the first
+    // pass gave its keys aren't taken back by the `const` once the defaults were generated
+    if (initialValue !== undefined) {
+      givenConst = undefined;
+    }
     if (initialValue !== undefined && !initialDefaultsGenerated) {
       defaults = initialValue;
-      givenConst = undefined;
     } else if (defaults === undefined && emptyValue !== undefined) {
       defaults = emptyValue;
     }
