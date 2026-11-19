@@ -677,6 +677,10 @@ interface MergedSchema<S extends StrictRJSFSchema> {
 interface OptionState {
   readonly selections: ReadonlyMap<NodeId, number>;
   readonly chosen: ReadonlySet<unknown>;
+  /** The option chosen from each list an `allOf` the field's plan left unmerged offers, by the node holding the list,
+   * which seeds the field where that `allOf` sits, see `adoptableList()`
+   */
+  readonly adopted?: ReadonlyMap<NodeId, Seed>;
 }
 
 const NO_OPTIONS: OptionState = { selections: new Map(), chosen: new Set() };
@@ -1086,16 +1090,8 @@ function fieldConstOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
 ): FieldConst<S> {
-  return fieldConstFrom<S>(constSchemaOf<S, F>(context, view), context.defaultFormStateBehavior);
-}
-
-/** The `const` a field reads from `schema`, whose `const` is the field's own or one that a merge or the option it shows
- * gives it
- */
-function fieldConstFrom<S extends StrictRJSFSchema>(
-  schema: S,
-  defaultFormStateBehavior: DefaultFormStateBehavior | undefined,
-): FieldConst<S> {
+  const { defaultFormStateBehavior } = context;
+  const schema = constSchemaOf<S, F>(context, view);
   const isDefault = constIsDefault<S>(schema, defaultFormStateBehavior);
   const value = schema[CONST_KEY];
   return { schema, isDefault, object: isDefault && isObjectData(value) ? value : undefined };
@@ -1585,13 +1581,15 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // A collapsed field keeps its own keywords, but selecting an option would plan it again past the collapse. A list the
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
-  const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
-  const ownConst = fieldConstOf<S, F>(context, view);
-  const adoptedConst =
-    offered === undefined && constValueOf<S>(ownConst.schema) === undefined
-      ? adoptedOptionConst<T, S, F>(context, view, props, defaults, preferParentDefaults)
+  const fieldConst = fieldConstOf<S, F>(context, view);
+  // A list an `allOf` the plan left unmerged offers is the field's as one of its own is, where it has none and no
+  // `const` of its own that would win over the option's
+  const adopted =
+    offered === undefined && constValueOf<S>(fieldConst.schema) === undefined
+      ? adoptableList<S, F>(context, view)
       : undefined;
-  const fieldConst = adoptedConst ?? ownConst;
+  const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : adopted?.list;
+  const offering = adopted?.offering ?? view;
   const { schema: constSchema } = fieldConst;
   if (fieldConst.object !== undefined) {
     props.onObjectConst?.();
@@ -1658,7 +1656,15 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         ),
       );
     } else if (xxxOf) {
-      const choice = chooseOption<T, S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults, props);
+      const choice = chooseOption<T, S, F>(
+        context,
+        offering,
+        xxxOf,
+        rawFormData,
+        defaults,
+        preferParentDefaults,
+        props,
+      );
       isWholeValue = choice.isWholeValue;
       if (choice.wholeOptions === undefined) {
         // The object's `ui:initialValue` stands in its `const`'s place, whichever uiSchema its option has
@@ -1670,6 +1676,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           choice.index,
           { ...props, parentDefaults: defaults, parentConst },
           initialValue,
+          adopted?.choice,
         );
         // Under the object's own `const`, or the value an ancestor's gives it, a key only the option declares, which the
         // `const` doesn't name and the data doesn't hold, is left out: its default would make the object a value the
@@ -1692,7 +1699,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             (!isObjectData(optionValue) ||
               !optionTakesValueOf<S, F>(
                 context,
-                view,
+                offering,
                 xxxOf.key,
                 choice.index,
                 xxxOf.options[choice.index],
@@ -1798,17 +1805,11 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // its properties were computed as from that wins, as an `if`/`then` `const` does. Object data the untyped field
       // can't take is no value of it, so its defaults stand, as a typed field's do above, before and after the form has
       // generated its defaults. Under `constAsDefaults: 'always'` a missing value takes the field's `const`, as the
-      // match gives a field its own one, wherever the merge brings it in. The match reads no `const` of the option an
-      // unmerged `allOf` offers, so a value of any kind takes one the field takes from such an option, as the option's
-      // own match gives it where the field offers the list itself, except a whole value: that is only the select's
-      // default, as one the field offers itself makes it, so a `ui:initialValue` stands in its place
-      const takesConst =
-        defaultFormStateBehavior?.constAsDefaults === 'always' &&
-        constDefault &&
-        (adoptedConst === undefined ? rawFormData === undefined : foldedType !== 'whole');
-      const matching = takesConst
-        ? constSchema[CONST_KEY]
-        : viewFormDataMatching<unknown, S, F>(context, view, rawFormData, defaults);
+      // match gives a field its own one, wherever the merge brings it in
+      const matching =
+        rawFormData === undefined && defaultFormStateBehavior?.constAsDefaults === 'always' && constDefault
+          ? constSchema[CONST_KEY]
+          : viewFormDataMatching<unknown, S, F>(context, view, rawFormData, defaults);
       if (isObject(rawFormData) && matching !== undefined && initialDefaultsGenerated && !mergedAllOf) {
         // Once the form has generated its defaults, the object data of an untyped field is the user's as it stands, as
         // the extra keys of an object field are (#3759), so a nested object they cleared isn't filled in again
@@ -1830,66 +1831,6 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
 
   return defaultsWithFormData;
-}
-
-/** The `const` of the option a field shows of an `anyOf`/`oneOf` list its unmerged `allOf` brings in, where the field
- * offers no list of its own, as `allOf: 'populateDefaults'` fills it. The option is chosen by `chooseOption()`, as one
- * of a list the field offers itself is, from the field with its `allOf` merged, which says where each option is
- * declared, and with only the field's own `default`. Only the option's `const` is taken, read with the option's own
- * `$ref` and `allOf` merged: its `default`s stay skipped, as `skipDefaults` skips the `allOf`'s. A field holding data
- * keeps it unless `constAsDefaults: 'always'` says a `const` replaces it, as for a list the field offers itself, so
- * only then is the list merged on an edit. A `NaN` or a `null` is a value the defaults may replace, as they replace a
- * missing one, so the field holding one takes the `const` for the merge with its data to decide on
- */
-function adoptedOptionConst<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  view: DefaultsView<S>,
-  props: FoldProps<T, S, F>,
-  defaults: unknown,
-  preferParentDefaults: boolean,
-): FieldConst<S> | undefined {
-  const { defaultFormStateBehavior } = context;
-  const { rawFormData } = props;
-  const always = defaultFormStateBehavior?.constAsDefaults === 'always';
-  const keepsData = rawFormData !== undefined && rawFormData !== null && !Number.isNaN(rawFormData);
-  // `'never'` is checked here too, though the `const` read below checks it, so the merge and the option scoring, which
-  // can ask the validator, are spared where no `const` can be taken
-  if ((keepsData && !always) || view.collapsed || defaultFormStateBehavior?.constAsDefaults === 'never') {
-    return undefined;
-  }
-  const field = optionsMergedField<S, F>(context, view, optionReachesConst<S>);
-  const list = field && getXxxOfOptions<S>(field.schema);
-  if (field === undefined || list === undefined) {
-    return undefined;
-  }
-  const { schema } = view;
-  const offering = {
-    ...field.seeding,
-    schema:
-      DEFAULT_KEY in schema ? { ...field.schema, [DEFAULT_KEY]: schema[DEFAULT_KEY] } : withoutDefault(field.schema),
-  };
-  const choice = chooseOption<T, S, F>(context, offering, list, rawFormData, defaults, preferParentDefaults, props);
-  const option = list.options[choice.index];
-  // A select over whole values keeps whatever value the field holds, as one the field offers itself does, even under
-  // `'always'`
-  const keepsWholeValue = rawFormData !== undefined && choice.wholeOptions !== undefined;
-  if (!isSchemaObject<S>(option) || keepsWholeValue) {
-    return undefined;
-  }
-  const { graph, node } = offeredOption<S>(offering, list.key, choice.index, option);
-  const read = buildPlan<S, F>({
-    context,
-    graph,
-    seeds: [{ node, refPath: [] }],
-    policy: { allOf: true, conditions: false },
-  }).schema;
-  const value = constValueOf<S>(read);
-  // `skipOneOf` takes no `const` of a `oneOf` option, through the context `chooseOption()` gives the option
-  const fieldConst =
-    value === undefined
-      ? undefined
-      : fieldConstFrom<S>({ ...schema, [CONST_KEY]: value }, choice.context.defaultFormStateBehavior);
-  return fieldConst?.isDefault ? fieldConst : undefined;
 }
 
 /** Whether the field of `view` holds the `null` a `null` schema allows as its one value, so a missing value is that
@@ -2060,7 +2001,8 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * selected, its seeds joining the plan with the ref path of the node offering it. Any other field renders only the
  * option, as `getRenderedOptionSchema()` renders it, so its defaults are those of the option as rendered, the option's
  * children still seeded beside the field's own. The option's `uiSchema` entry is the one its fields see, with the
- * object's `initialValue` where it has none of its own.
+ * object's `initialValue` where it has none of its own. An option of a list an unmerged `allOf` offers, `allOfList`,
+ * seeds the field where that `allOf` sits instead, see `adoptableList()`.
  */
 function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2069,6 +2011,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   index: number,
   props: ViewProps<T, S, F>,
   initialValue?: unknown,
+  allOfList?: OptionChoice,
 ): unknown {
   const { schema, field } = view;
   const { graph } = field;
@@ -2113,6 +2056,19 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
           }
         : undefined,
   };
+  if (allOfList) {
+    const seed: Seed = {
+      node: allOfList.options[index],
+      refPath: allOfList.refPath,
+      scope: [`o${allOfList.options[index]}`],
+    };
+    const selected: OptionState = {
+      ...view.options,
+      chosen,
+      adopted: new Map(view.options.adopted).set(allOfList.provider, seed),
+    };
+    return foldView<T, S, F>(context, { ...view, options: selected, merged: {} }, branchProps);
+  }
   const choice = view.choices.find(
     (offered) => offered.keyword === key && offered.options.length === options.length && offered.list === options,
   );
@@ -3617,16 +3573,38 @@ function mergedConstSchemaOf<S extends StrictRJSFSchema, F extends FormContextTy
   return constValueOf<S>(mergedSchema) === undefined ? undefined : mergedSchema;
 }
 
-/** Whether an `anyOf`/`oneOf` option the node `id` offers reaches a `const` through its own `$ref` and `allOf`, as
- * `adoptedOptionConst()` reads it, worked out once per graph and node
+/** Whether an `anyOf`/`oneOf` list the node `id` holds has an option that can give the field, or a key of it, a
+ * `const`, see `optionReachesConst()`
+ */
+function offersConstOption<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, { id }: ObjectNode<S>): boolean {
+  return OPTION_KEYWORDS.some((keyword) =>
+    graph.subschemas(id, keyword).some(([, option]) => optionReachesConst<S>(graph, option)),
+  );
+}
+
+/** Whether the option `option` can give the field, or a key of it, a `const`, as the fold reads the option where
+ * `adoptableList()` adopts it: one its own `$ref`, `allOf` and options merge in, one a property it declares reaches or
+ * its `dependencies` may bring in, as `objectDefaults()` reads the keys only an unmerged `allOf` declares, or one an
+ * option of a list it offers gives in turn, which the fold adopts next. Worked out once per graph and option
  */
 const optionConstReach = new KeyedMemo<boolean>();
-function optionReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, { id }: ObjectNode<S>): boolean {
-  return optionConstReach.get([graph, id], () =>
-    OPTION_KEYWORDS.some((keyword) =>
-      graph.subschemas(id, keyword).some(([, option]) => mergeReachesConst<S>(graph, option, false, false)),
-    ),
-  );
+function optionReachesConst<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, option: NodeId): boolean {
+  const keys = [graph, option];
+  const known = optionConstReach.peek(keys);
+  if (known !== undefined) {
+    return known;
+  }
+  // A list leading back to an option being read counts as reaching one, which ends the walk and at most has the fold
+  // choose from a list that gives it nothing
+  optionConstReach.set(keys, true);
+  const { dependencies, constKeys } = constFillersOf<S>(graph, option);
+  const reaches =
+    mergeReachesConst<S>(graph, option, true, false) ||
+    dependencies ||
+    constKeys.length > 0 ||
+    scopeOf<S>(graph, option, 'unconditional').some((node) => offersConstOption<S>(graph, node));
+  optionConstReach.set(keys, reaches);
+  return reaches;
 }
 
 /** What in the scope of a node, see `scopeOf()`, can give a key of its object a `const`: whether a declaration in it
@@ -3747,33 +3725,88 @@ function isWholeValueField<S extends StrictRJSFSchema, F extends FormContextType
 }
 
 /** The field of `view` with the `allOf` its plan left unmerged merged for no data, where a subschema that merges in,
- * not a seed of the field, holds what `offers` looks for: the options it may offer the field. A field that retrieves is
- * left as it is: an `allOf` it still holds is that of the option it shows, which stays unmerged under `skipDefaults`. A
- * list the field has chosen from already is left out: the field's seeds bring it back, though `planView()` dropped it
- * and `foldView()` doesn't offer it again, and an `anyOf` would win over the `oneOf` an `allOf` of the chosen option
- * offers
+ * not one of the field's own seeds, holds what `offers` looks for, and the `anyOf`/`oneOf` lists the merge met that the
+ * field may still choose from. A list the field has chosen from already, or chosen an option of where an `allOf`
+ * offers it, is closed: the field's seeds bring it back, though `foldView()` doesn't offer it again, so a keyword only
+ * such lists hold is left out of the merge, where it would hide the list of the other keyword. A field that retrieves
+ * is left as it is: an `allOf` it still holds is that of the option it shows, which stays unmerged under `skipDefaults`
  */
 function optionsMergedField<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   offers: (graph: SchemaGraph<S>, node: ObjectNode<S>) => boolean,
-): { schema: S; seeding: Seeding<S> } | undefined {
+): { schema: S; seeding: Seeding<S>; open: readonly OptionChoice[] } | undefined {
   if (view.field.retrieves || !(ALL_OF_KEY in view.schema)) {
     return undefined;
   }
   const field = fieldOfView<S>(view);
+  const ownSeeds = new Set(view.field.seeds.map(({ node }) => node));
   const mergesOptions = field.seeds.some(({ node }) =>
-    scopeOf<S>(field.graph, node, 'unconditional').some((merged) => merged.id !== node && offers(field.graph, merged)),
+    scopeOf<S>(field.graph, node, 'unconditional').some(
+      (merged) => !ownSeeds.has(merged.id) && offers(field.graph, merged),
+    ),
   );
   if (!mergesOptions) {
     return undefined;
   }
   const plan = buildPlan<S, F>({ context, ...field, policy: { allOf: true, conditions: false } });
-  const chosenKeys = OPTION_KEYWORDS.filter((keyword) => view.options.chosen.has(plan.schema[keyword]));
+  const { chosen, adopted } = view.options;
+  const isClosed = ({ provider, list }: OptionChoice) => chosen.has(list) || adopted?.has(provider) === true;
+  const closedKeys = OPTION_KEYWORDS.filter((keyword) => {
+    const lists = plan.choices.filter((choice) => choice.keyword === keyword);
+    return lists.length > 0 && lists.every(isClosed);
+  });
   return {
-    schema: chosenKeys.length > 0 ? withoutKeys(plan.schema, ...chosenKeys) : plan.schema,
+    schema: closedKeys.length > 0 ? withoutKeys(plan.schema, ...closedKeys) : plan.schema,
     seeding: { graph: plan.graph, chains: plan.chains },
+    open: plan.choices.filter((choice) => !isClosed(choice)),
   };
+}
+
+/** A list of `anyOf`/`oneOf` options an `allOf` the field's plan left unmerged offers, see `adoptableList()`: the
+ * options, the field's schema offering them with the field's own `default`, and the list as the merge met it
+ */
+interface AdoptableList<S extends StrictRJSFSchema> {
+  readonly list: XxxOfOptions<S>;
+  readonly offering: OfferingSchema<S>;
+  readonly choice: OptionChoice;
+}
+
+/** The list of `anyOf`/`oneOf` options an `allOf` the field's plan left unmerged offers the field, as `allOf:
+ * 'populateDefaults'` offers it: the field offers it as one of its own, choosing the option it shows by its own
+ * `default` and its data, and `foldOption()` seeds the field with that option where the `allOf` sits. So the fold reads
+ * the option as it reads the rest of that `allOf`: its `const`, and that of a key only it declares, is the field's, as
+ * one the `allOf` holds itself is, while its `default`s, its `required` and its recursion stay skipped. Only a list an
+ * option of which can give the field or a key of it a `const` is offered, as nothing else of it reaches the defaults,
+ * an `anyOf` before a `oneOf`, as the field renders them; one a `dependencies` entry offers is chosen by the plan.
+ * Each list is offered by itself, so of two the `allOf` merges under one keyword each is chosen from in turn
+ */
+function adoptableList<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+): AdoptableList<S> | undefined {
+  if (view.collapsed || context.defaultFormStateBehavior?.constAsDefaults === 'never') {
+    return undefined;
+  }
+  const field = optionsMergedField<S, F>(context, view, offersConstOption<S>);
+  // A list the merge leaves out, as a `customMergeAllOf` may, is not offered, as the merged field doesn't render it
+  const offered = field?.open.filter(
+    ({ dependencies, keyword, options }) =>
+      !dependencies &&
+      field.schema[keyword] !== undefined &&
+      options.some((option) => optionReachesConst<S>(field.seeding.graph, option)),
+  );
+  const choice = offered?.find(({ keyword }) => keyword === ANY_OF_KEY) ?? offered?.[0];
+  if (field === undefined || choice === undefined) {
+    return undefined;
+  }
+  // The option is chosen by the field's own `default`, not one the `allOf` holds, and an `anyOf` beside would be read
+  // in place of the `oneOf`, while a `oneOf` beside an `anyOf` still skips its constants under `skipOneOf`
+  const hidden = choice.keyword === ONE_OF_KEY ? [DEFAULT_KEY, ANY_OF_KEY] : [DEFAULT_KEY];
+  const withList: S = { ...withoutKeys(field.schema, ...hidden), [choice.keyword]: choice.list };
+  const schema = DEFAULT_KEY in view.schema ? { ...withList, [DEFAULT_KEY]: view.schema[DEFAULT_KEY] } : withList;
+  const list = getXxxOfOptions<S>(schema);
+  return list && { list, offering: { ...field.seeding, schema }, choice };
 }
 
 /** The field `view` stands for, see `viewField()`, built once for the view */
@@ -3800,6 +3833,7 @@ function viewField<S extends StrictRJSFSchema>(view: DefaultsView<S>): Provenanc
       const index = view.options.selections.get(provider);
       return index === undefined ? [] : [{ node: options[index], refPath, scope: [`o${options[index]}`] }];
     }),
+    ...(view.options.adopted?.values() ?? []),
   ]);
 }
 

@@ -3985,10 +3985,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             null,
           ],
           [
-            'replaces a value outside a oneOf of constants with the default',
+            "keeps a value outside a oneOf of constants, as the field's own oneOf does",
             { allOf: [{ oneOf: [{ const: 'red' }, { const: 'green' }] }], default: 'red' },
             'blue',
-            'red',
+            'blue',
           ],
           ['keeps a valid value of an inline object-valued select', { allOf: [SHAPE] }, { k: 'b' }, { k: 'b' }],
           [
@@ -7667,6 +7667,62 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(context, { schema: objects.nested, formData: { x: n } })).toStrictEqual(
               getDefaultFormState(context, { schema: objects.own, formData: { x: n } }),
             );
+          });
+          it('the const of a key the option declares, as of one the allOf declares itself, its default and required skipped', () => {
+            const option: RJSFSchema = {
+              properties: { a: { const: 1 }, b: { type: 'number', default: 2 } },
+              required: ['b'],
+            };
+            const nested = rootOf({ allOf: [{ oneOf: [option] }] });
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
+              getDefaultFormState(skipping, { schema: rootOf({ allOf: [option] }) }),
+            );
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ x: { a: 1 } });
+          });
+          it.each<[string, RJSFSchema['type'], RJSFSchema, unknown]>([
+            ['a oneOf of the option', 'number', { oneOf: [{ oneOf: [{ const: 3 }, { const: 4 }] }] }, 3],
+            ["a oneOf in the option's allOf", 'number', { oneOf: [{ allOf: [{ oneOf: [{ const: 3 }] }] }] }, 3],
+            [
+              'a oneOf of the option over objects',
+              'object',
+              { oneOf: [{ oneOf: [{ properties: { q: { const: 'q' } } }] }] },
+              { q: 'q' },
+            ],
+          ])('the const of the option shown from %s', (_, type, list, expected) => {
+            const { own, nested } = ownAndNested(list, (field) => ({
+              type: 'object',
+              required: ['n'],
+              properties: { n: { type, ...field } },
+            }));
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
+              getDefaultFormState(skipping, { schema: own }),
+            );
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ n: expected });
+          });
+          it("the const of an anyOf an allOf offers beside the field's own oneOf", () => {
+            const oneOf = [{ properties: { p: { const: 'p' } } }];
+            const anyOf = [{ properties: { q: { const: 'q' } } }];
+            const nested = rootOf({ oneOf, allOf: [{ anyOf }] });
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
+              getDefaultFormState(skipping, { schema: rootOf({ oneOf, anyOf }) }),
+            );
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ x: { p: 'p', q: 'q' } });
+          });
+          it("the const of each of two oneOfs the field's allOf merges, as allOf: 'populateDefaults' takes them", () => {
+            const schema = rootOf({
+              allOf: [
+                { oneOf: [{ properties: { p: { const: 'p' } } }] },
+                { oneOf: [{ properties: { q: { const: 'q' } } }] },
+              ],
+            });
+            const populating = {
+              validator: testValidator,
+              defaultFormStateBehavior: { allOf: 'populateDefaults' as const },
+            };
+            expect(getDefaultFormState(skipping, { schema })).toStrictEqual(
+              getDefaultFormState(populating, { schema }),
+            );
+            expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ x: { p: 'p', q: 'q' } });
           });
         });
       });
