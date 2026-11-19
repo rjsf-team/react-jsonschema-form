@@ -2347,7 +2347,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         // The mock validator cannot evaluate an `if`, so it answers each check as the real ones do
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);
-        testValidator.reset?.();
       });
       it('should resolve if, then', () => {
         // Mock errors so that resolveCondition works as expected

@@ -1375,7 +1375,8 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       const filled: unknown = props.shouldMergeDefaultsIntoFormData
         ? withNullFills(pass.folded, data, pass.fills)
         : mergeDefaultsWithFormData(pass.folded, data, false, true);
-      // The plans checked their conditions against their dependency data, `{}` standing in for none, so they decide
+      // The plans checked their conditions against their dependency data, `{}` standing in for none, or the value
+      // `CheckedCondition.unset` names, which a fill that leaves the field empty is checked against again, so they decide
       // alike for data equal to it, as the data of an edit is once it holds the defaults. Data that differs is handed
       // to the next pass as a copy of the one the comparison built, which shares with this pass's data what the two
       // hold alike, and which the fill owns, so the next pass's plans reuse the checks made against it here
