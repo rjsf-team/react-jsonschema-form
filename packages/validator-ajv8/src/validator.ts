@@ -121,16 +121,17 @@ export default class AJV8Validator<
   }
 
   /** Removes the root registered under `id`, the `$id`s it holds and the subschemas compiled against it. Ajv also
-   * registers a root under its own `$id`, less an empty fragment, which is not `id` where the `uriResolver` normalizes
-   * it, so that registration is dropped too: left in place, it answers a lookup by that `$id` with the root it
-   * registered. An `$id` it holds left in place would resolve into whatever root is registered under `id` next.
+   * registers a root under its own identifier, `$id` or an `ajv-draft-04` `id`, less an empty fragment, which is not
+   * `id` where the `uriResolver` normalizes it, so that registration is dropped too: left in place, it answers a lookup
+   * by that identifier with the root it registered. An `$id` it holds left in place would resolve into whatever root
+   * is registered under `id` next.
    *
    * @param id - The id the root is registered under
    * @param [subschemaIds] - The keys of the subschemas `isValid()` added under that root
    */
   private removeRootSchema(id: string, subschemaIds: ReadonlySet<string> = new Set()) {
     const registered = this.ajv.schemas[id]?.schema;
-    const ownId = isObject(registered) ? registered[ID_KEY] : undefined;
+    const ownId = isObject(registered) ? registered[this.ajv.opts.schemaId] : undefined;
     if (typeof ownId === 'string') {
       this.ajv.removeSchema(ownId.replace(/#$/, ''));
     }
@@ -327,9 +328,17 @@ export default class AJV8Validator<
     }
     // Ajv registers an `$id` a root holds below its own by the pointer to it in the root registered last, so a root
     // holding one, or kept beside one, would resolve a `$ref` to it into the other root. An anchor or fragment `$id`
-    // is registered under the root's own id, so it names only this root
+    // is registered under the root's own identifier, so it names only this root: an `ajv-draft-04` root's `id` is not
+    // the id it is registered under
+    const { schemaId, uriResolver } = this.ajv.opts;
+    const identifier: unknown = isObject(rootSchema) ? rootSchema[schemaId] : undefined;
+    const ownBase = typeof identifier === 'string' ? uriResolver.resolve(identifier, '#').split('#', 1)[0] : id;
     const alone = Object.entries(this.ajv.refs).some(
-      ([ref, target]) => typeof target === 'string' && refsBefore[ref] !== target && !ref.startsWith(`${id}#`),
+      ([ref, target]) =>
+        typeof target === 'string' &&
+        refsBefore[ref] !== target &&
+        !ref.startsWith(`${id}#`) &&
+        !ref.startsWith(`${ownBase}#`),
     );
     if (alone) {
       this.removeRoots();
@@ -366,7 +375,9 @@ export default class AJV8Validator<
       // One with an identifier of its own is keyed by it whatever root it names, so the other root gives it up
       if (hasOwnId && other !== undefined) {
         const key = schemaId.replace(/#$/, '');
-        if (key === other.id) {
+        const { uriResolver } = this.ajv.opts;
+        // `other.id` is normalized as `ajvRootSchemaId()` normalizes it, and Ajv finds the root by either spelling
+        if (uriResolver.serialize(uriResolver.parse(uriResolver.resolve('', key))) === other.id) {
           // Ajv takes an `$id` once, so the other root registered under it is dropped rather than checked in its place
           this.removeRootSchema(other.id, other.subschemaIds);
           this.roots = [root];

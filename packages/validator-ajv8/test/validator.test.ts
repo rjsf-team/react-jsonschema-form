@@ -357,6 +357,20 @@ describe('AJV8Validator', () => {
             expect(localValidator.isValid(own, 'a', b)).toBe(false);
           }
         });
+        it('checks a subschema with the `$id` of the other root, spelled as Ajv normalizes it or not, against itself', () => {
+          const localValidator = new AJV8Validator({});
+          const b = rootOf('number');
+          for (const [rootId, ownId] of [
+            ['https://example.com/a b.json', 'https://example.com/a b.json'],
+            ['https://example.com/a b.json', 'https://example.com/a%20b.json'],
+            ['https://example.com/a%20b.json', 'https://example.com/a b.json'],
+          ]) {
+            check(localValidator, { $id: rootId, ...rootOf('string') });
+            const own: RJSFSchema = { $id: ownId, type: 'number' };
+            expect(localValidator.isValid(own, 1, b)).toBe(true);
+            expect(localValidator.isValid(own, 'a', b)).toBe(false);
+          }
+        });
         it('gives a subschema with an `$id` of its own to the root it is checked against', () => {
           const localValidator = new AJV8Validator({});
           const [a, b] = [rootOf('string'), rootOf('number')];
@@ -3979,6 +3993,31 @@ sharedSubschemaValidationTests(() => customizeValidator());
 sharedCopyScoringTests(() => customizeValidator());
 describe('a validator built by ajv-draft-04, which reads only draft-04 identifiers', () => {
   draft04SharedCopyScoringTests(() => customizeValidator({ AjvClass: AjvDraft04.default }));
+  it('holds a root with an `id` and a fragment `id` below it beside another (#5903)', () => {
+    const validator = customizeValidator({ AjvClass: AjvDraft04.default });
+    const a = { id: 'https://example.com/a.json', definitions: { v: { id: '#v', type: 'string' } } } as RJSFSchema;
+    const b = { definitions: { v: { type: 'number' } } } as RJSFSchema;
+    const ref = { $ref: '#/definitions/v' } as RJSFSchema;
+    validator.isValid(ref, 'a', a);
+    validator.isValid(ref, 1, b);
+    const addSchemaSpy = vi.spyOn(validator.ajv, 'addSchema');
+    expect(validator.isValid(ref, 'a', a)).toBe(true);
+    expect(validator.isValid(ref, 1, a)).toBe(false);
+    expect(validator.isValid(ref, 1, b)).toBe(true);
+    expect(addSchemaSpy).not.toHaveBeenCalled();
+  });
+  it('resolves a `$ref` by a dropped root’s `id` into the root registered with that `id` next (#5903)', () => {
+    const validator = customizeValidator({ AjvClass: AjvDraft04.default });
+    const rootOf = (type: string, id?: string) => ({ id, definitions: { v: { type } } }) as RJSFSchema;
+    const local = { $ref: '#/definitions/v' } as RJSFSchema;
+    validator.isValid(local, 'a', rootOf('string', 'https://example.com/a.json'));
+    validator.isValid(local, true, rootOf('boolean'));
+    validator.isValid(local, null, rootOf('null'));
+    const next = rootOf('number', 'https://example.com/a.json');
+    const absolute = { $ref: 'https://example.com/a.json#/definitions/v' } as RJSFSchema;
+    expect(validator.isValid(absolute, 1, next)).toBe(true);
+    expect(validator.isValid(absolute, 'a', next)).toBe(false);
+  });
   it('gives a subschema with an `id` of its own to the root it is checked against, as one with an `$id` (#5903)', () => {
     const validator = customizeValidator({ AjvClass: AjvDraft04.default });
     const rootOf = (type: string): RJSFSchema => ({ definitions: { v: { type } } }) as RJSFSchema;
