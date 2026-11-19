@@ -1,6 +1,6 @@
 import {
   absentKeywordAllows,
-  additionalPropertiesKeyword,
+  additionalPropertiesKeywordName,
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
 } from '../additionalPropertiesUtils.ts';
@@ -21,7 +21,6 @@ import {
   THEN_KEY,
   UI_DEFINITIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
-  UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
@@ -84,6 +83,7 @@ import buildPlan, {
   childSeeds,
   declaresKeyword,
   emptySchema,
+  extraKeySeeds,
   ownChains,
   ownedDepData,
   seedsAt,
@@ -2630,33 +2630,29 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     absentKeywordAllows<S, F>(context, extraKeysField) || extraKeysField.additionalProperties;
   const additionalProperties =
     extraKeysField !== view.schema ? passes.shareExtraKeySchema(ownAdditionalProperties) : ownAdditionalProperties;
-  // An extra key is folded through the schema the field renders it with, as `getAdditionalPropertySchema()` picks it:
-  // the patterns its name matches, else `additionalProperties`, else `unevaluatedProperties`. A key the object rejects
-  // has no field, nor does one no pattern matches where no keyword describes it and the context reads the absence as
-  // forbidding it, which `omitExtraData` prunes, unless the object's `const` names it
-  const describesUnmatched =
-    additionalPropertiesKeyword<S>(extraKeysField) !== undefined || absentKeywordAllows<S, F>(context, extraKeysField);
+  // An extra key is folded through the schemas that apply to it, as a validator applies them: in each chain, the
+  // patterns of its own its name matches, else its `additionalProperties`, else its `unevaluatedProperties`.
+  // A key the object rejects, a `false` among them, has no field, nor does one no pattern matches where no keyword
+  // describes it and the context reads the absence as forbidding it, which `omitExtraData` prunes, unless the object's
+  // `const` names it. The join of an option's keywords to its parent's isn't among the chains the key is seeded from,
+  // so it is asked of the join
+  const extraKeyword = additionalPropertiesKeywordName<S>(extraKeysField);
+  const describesUnmatched = extraKeyword !== undefined || absentKeywordAllows<S, F>(context, extraKeysField);
   const extraKeyChild = (seeding: DefaultsView<S>, key: string) => {
-    if (getAdditionalPropertySchema<S>(extraKeysField, key) === false) {
+    const { seeds, edge } = extraKeySeeds(seeding, key, extraKeyword);
+    const rejected = optionOf
+      ? getAdditionalPropertySchema<S>(extraKeysField, key) === false
+      : seeds.some(({ node }) => {
+          const seed = seeding.graph.node(node);
+          return seed.kind === 'boolean' && !seed.value;
+        });
+    if (rejected || (edge !== 'patternKey' && !describesUnmatched && !Object.hasOwn(objectConst ?? {}, key))) {
       return undefined;
     }
-    const patterned = childSeeds(seeding, key);
-    if (patterned.edge !== 'patternKey' && !describesUnmatched && !Object.hasOwn(objectConst ?? {}, key)) {
-      return undefined;
-    }
-    const keyword =
-      extraKeysField.additionalProperties === undefined && UNEVALUATED_PROPERTIES_KEY in extraKeysField
-        ? UNEVALUATED_PROPERTIES_KEY
-        : ADDITIONAL_PROPERTIES_KEY;
     // as per spec additionalProperties may be either schema or boolean
-    return patterned.edge === 'patternKey'
-      ? defaultsChild(seeding, patterned.seeds, patterned.edge, emptySchema<S>())
-      : defaultsChild(
-          seeding,
-          seedsAt(seeding, keyword),
-          'additionalKey',
-          isObject(additionalProperties) ? additionalProperties : emptySchema<S>(),
-        );
+    const fallback =
+      edge === 'additionalKey' && isObject(additionalProperties) ? additionalProperties : emptySchema<S>();
+    return defaultsChild(seeding, seeds, edge, fallback);
   };
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
   // extra keys are. Where the object takes no other extra key, ObjectField renders no control that adds, removes or

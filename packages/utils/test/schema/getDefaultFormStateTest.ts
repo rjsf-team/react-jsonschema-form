@@ -384,6 +384,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill({ ...unevaluatedDefault, unevaluatedProperties: true })).toStrictEqual({ a: 1 });
         expect(fill(closedBeside)).toStrictEqual({ x1: 1 });
       });
+      it("folds a key one chain's pattern matches through the additionalProperties of another chain as well", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^x': { type: 'object', properties: { z: { default: 9 } } } },
+          oneOf: [{ additionalProperties: { type: 'object', properties: { w: { default: 8 } } } }],
+          default: { x1: {}, y: {} },
+        };
+        expect(fill(schema)).toStrictEqual({ x1: { z: 9, w: 8 }, y: { w: 8 } });
+        // As the key the data holds is folded
+        expect(fill(schema, { x1: {} })).toStrictEqual({ x1: { z: 9, w: 8 }, y: { w: 8 } });
+        // A `false` in any chain rejects the key
+        expect(fill({ ...schema, oneOf: [{ additionalProperties: false }] })).toStrictEqual({});
+        expect(
+          fill({
+            type: 'object',
+            patternProperties: { '^x': false },
+            additionalProperties: { default: 3 },
+            default: { x1: 1, y: 2 },
+          }),
+        ).toStrictEqual({ y: 3 });
+      });
       it("seeds a default's key no pattern matches only where the context allows it, as omitExtraData keeps it, unless the const names it", () => {
         const schema: RJSFSchema = { ...patterned, default: { x1: 1, y: 2 } };
         expect(fill(schema)).toStrictEqual({ x1: 1 });
