@@ -3979,6 +3979,17 @@ sharedSubschemaValidationTests(() => customizeValidator());
 sharedCopyScoringTests(() => customizeValidator());
 describe('a validator built by ajv-draft-04, which reads only draft-04 identifiers', () => {
   draft04SharedCopyScoringTests(() => customizeValidator({ AjvClass: AjvDraft04.default }));
+  it('gives a subschema with an `id` of its own to the root it is checked against, as one with an `$id` (#5903)', () => {
+    const validator = customizeValidator({ AjvClass: AjvDraft04.default });
+    const rootOf = (type: string): RJSFSchema => ({ definitions: { v: { type } } }) as RJSFSchema;
+    const [a, b] = [rootOf('string'), rootOf('number')];
+    const own = { id: 'own', properties: { x: { $ref: '#/definitions/v' } } } as RJSFSchema;
+    for (let i = 0; i < 2; i++) {
+      expect(validator.isValid(own, { x: 'a' }, a)).toBe(true);
+      expect(validator.isValid(own, { x: 1 }, b)).toBe(true);
+      expect(validator.isValid(own, { x: 1 }, a)).toBe(false);
+    }
+  });
 });
 
 describe('the parts an option scoring copy holds once', () => {

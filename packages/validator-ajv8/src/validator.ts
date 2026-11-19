@@ -2,6 +2,7 @@ import type {
   CustomValidator,
   ErrorTransformer,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -358,9 +359,12 @@ export default class AJV8Validator<
       // A `$ref` local to the root, such as the `{ $ref: '#/properties/a/if' }` a form validates a condition with,
       // names the root by the id it is registered under, whatever the schema holding it is registered as
       const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema, rootSchemaId);
-      schemaId = schemaKey(schemaWithIdRefPrefix);
-      // One with an `$id` of its own is keyed by that `$id` whatever root it names, so the other root gives it up
-      if (schemaWithIdRefPrefix[ID_KEY] && other !== undefined) {
+      // Ajv keys one with an identifier of its own by it, in the keyword this instance reads: `id` under `ajv-draft-04`
+      const ownId: unknown = (schemaWithIdRefPrefix as GenericObjectType)[this.ajv.opts.schemaId];
+      const hasOwnId = typeof ownId === 'string' && ownId !== '';
+      schemaId = hasOwnId ? ownId : schemaKey(schemaWithIdRefPrefix);
+      // One with an identifier of its own is keyed by it whatever root it names, so the other root gives it up
+      if (hasOwnId && other !== undefined) {
         const key = schemaId.replace(/#$/, '');
         if (key === other.id) {
           // Ajv takes an `$id` once, so the other root registered under it is dropped rather than checked in its place

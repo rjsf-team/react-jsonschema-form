@@ -1651,6 +1651,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix a localized error for a missing `dependentRequired` or `dependencies` property naming a property by the wrong `title` when another property's `title` is its key ([#5901](https://github.com/rjsf-team/react-jsonschema-form/pull/5901), [#4402](https://github.com/rjsf-team/react-jsonschema-form/issues/4402))
 - Change `isValid()` to keep what it compiled for the last two root schemas instead of one, so changing the schema of a form with conditional or option fields no longer compiles their schemas again for each field it checks ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
 - Fix `isValid()` checking a schema whose `$id` is that of a root schema it was called with before against that root rather than the schema itself ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
+- Fix `isValid()` on an `ajv-draft-04` validator failing to compile a schema with an `id` of its own once called with another root schema, as a schema with an `$id` does on any other ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
 
 ## @rjsf/validator-ata
 
