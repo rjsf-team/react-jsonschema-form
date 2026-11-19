@@ -2,8 +2,10 @@ import type { DefaultFormStateBehavior, RJSFMarkedSchema, SchemaUtilsType, RJSFS
 import {
   createSchemaUtils,
   getItemSchema,
+  getOpenPrefixLength,
   getPrefixLength,
   GUESSED_TYPE_FLAG,
+  isTupleSchema,
   sanitizeDataForNewSchema,
   setByPath,
 } from '../../src/index.ts';
@@ -1063,6 +1065,23 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       ])('reads the item schemas of %s by position', (_, schema, length, expected) => {
         expect(getPrefixLength(schema)).toBe(length);
         expect([getItemSchema(schema, 0), getItemSchema(schema, 1)]).toStrictEqual(expected);
+      });
+      it.each<[string, RJSFSchema, boolean]>([
+        ['prefixItems of schemas', { prefixItems: [first], items: rest }, true],
+        ['prefixItems holding a boolean', { prefixItems: [true, first] }, true],
+        ['a tuple items', { items: [first], additionalItems: rest }, true],
+        ['a tuple items holding a boolean', { items: [true, first] }, false],
+        ['a single items', { items: rest }, false],
+      ])('isTupleSchema() reads %s', (_, schema, expected) => {
+        expect(isTupleSchema(schema)).toBe(expected);
+      });
+      it.each<[string, RJSFSchema, number]>([
+        ['prefixItems without a false position', { prefixItems: [first, true], items: rest }, 2],
+        ['prefixItems cut at their first false position', { prefixItems: [first, false, rest, false] }, 1],
+        ['a tuple items', { items: [first], additionalItems: false }, 1],
+        ['a single items', { items: rest }, 0],
+      ])('getOpenPrefixLength() reads %s', (_, schema, expected) => {
+        expect(getOpenPrefixLength(schema)).toBe(expected);
       });
     });
     describe('an array whose items are described by position', () => {

@@ -18,6 +18,14 @@ export default function isMultiSelectTest(testValidator: TestValidatorType) {
         const schema: RJSFSchema = {};
         expect(isMultiSelect({ validator: testValidator }, schema)).toBe(false);
       });
+      it('should be false for a prefixItems tuple, whose items describe only the items past it', () => {
+        const schema: RJSFSchema = {
+          prefixItems: [{ type: 'string' }],
+          items: { enum: ['foo', 'bar'] },
+          uniqueItems: true,
+        };
+        expect(isMultiSelect({ validator: testValidator }, schema)).toBe(false);
+      });
       describe('schema items enum is not an array', () => {
         it('should be false if oneOf/anyOf is not in items schema', () => {
           const schema: RJSFSchema = { items: {}, uniqueItems: true };

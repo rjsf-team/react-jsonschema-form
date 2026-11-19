@@ -34,8 +34,8 @@ import {
   isConstantOptionList,
   isConstantSelect,
   isCustomWidget,
-  isFixedItems,
   isObject,
+  isTupleSchema,
   ITEMS_KEY,
   ONE_OF_KEY,
   resolveDefaultWidget,
@@ -59,7 +59,7 @@ export function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema
 }
 
 /** How `ArrayField` renders an array: as one widget (`multiSelect`, `customWidget`, `files`), as a list of items
- * (`fixed`, `normal`), or as the unsupported-field template when the schema declares no `items`
+ * (`fixed`, `normal`), or as the unsupported-field template when the schema declares neither `items` nor `prefixItems`
  */
 export type ArrayFieldMode = 'unsupported' | 'multiSelect' | 'customWidget' | 'fixed' | 'files' | 'normal';
 
@@ -77,7 +77,7 @@ export function getArrayFieldMode<
   F extends FormContextType = FormContextType,
 >(schema: S, uiSchema: UiSchema<T, S, F> | undefined, registry: Registry<T, S, F>): ArrayFieldMode {
   const { schemaUtils, globalFormOptions } = registry;
-  if (!(ITEMS_KEY in schema) && !globalFormOptions.useFallbackUiForUnsupportedType) {
+  if (!declaresItems<S>(schema) && !globalFormOptions.useFallbackUiForUnsupportedType) {
     return 'unsupported';
   }
   const arraySchema = withFallbackItems<S>(schema);
@@ -87,7 +87,7 @@ export function getArrayFieldMode<
   if (isCustomWidget<T, S, F>(uiSchema)) {
     return 'customWidget';
   }
-  if (isFixedItems(arraySchema)) {
+  if (isTupleSchema<S>(arraySchema)) {
     return 'fixed';
   }
   if (schemaUtils.isFilesArray(arraySchema, uiSchema)) {
@@ -96,14 +96,20 @@ export function getArrayFieldMode<
   return 'normal';
 }
 
+/** Whether the array `schema` declares its items, through `items` or `prefixItems` */
+export function declaresItems<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
+  return ITEMS_KEY in schema || 'prefixItems' in schema;
+}
+
 /** Gets the schema `ArrayField` renders an array with: one that declares no `items` takes an items schema with no type,
- * which the fallback UI renders through `FallbackField`
+ * which the fallback UI renders through `FallbackField`. A `prefixItems` tuple without `items` keeps none, so that, as
+ * a tuple `items` without `additionalItems`, it renders no item past its positions
  *
  * @param schema - The schema of the array
- * @returns - The schema, with an untyped `items` where it declares none
+ * @returns - The schema, with an untyped `items` where it declares its items through neither keyword
  */
 export function withFallbackItems<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
-  return ITEMS_KEY in schema ? schema : { ...schema, [ITEMS_KEY]: { type: undefined } };
+  return declaresItems<S>(schema) ? schema : { ...schema, [ITEMS_KEY]: { type: undefined } };
 }
 
 /** The widget each widget-rendering mode of `ArrayField` falls back to when the `uiSchema` names none, which

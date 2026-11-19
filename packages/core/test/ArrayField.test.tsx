@@ -2552,6 +2552,103 @@ describe('ArrayField', () => {
     });
   });
 
+  describe('prefixItems tuples (#5797)', () => {
+    const prefixItems: RJSFSchema[] = [
+      { type: 'string', title: 'Some text' },
+      { type: 'number', title: 'A number' },
+    ];
+
+    it('renders each position, rather than the unsupported-field template, with no Add past them', () => {
+      const { node } = createFormComponent({ schema: { type: 'array', prefixItems } });
+
+      expect(node.querySelector('#root_0')).toHaveAttribute('type', 'text');
+      expect(node.querySelector('#root_1')).toHaveAttribute('inputmode', 'decimal');
+      expect(screen.queryByText('Missing items definition')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
+    });
+
+    it('renders a tuple whose prefixItems hold a boolean position, rather than a list of untyped rows', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', prefixItems: [{ type: 'string' }, true] },
+        initialFormData: ['a', 1],
+      });
+
+      expect(node.querySelector('#root_0')).toHaveValue('a');
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
+      expect(node.querySelector('#root_1__remove')).toBeNull();
+    });
+
+    it('renders no field at or past a false position, and offers no Add past it', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'array',
+          prefixItems: [{ type: 'string' }, false, { type: 'string' }],
+          items: { type: 'string' },
+        },
+      });
+
+      expect(node.querySelectorAll('input')).toHaveLength(1);
+      expect(node.querySelector('#root_0')).toHaveAttribute('type', 'text');
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
+    });
+
+    it('renders the items past the positions with the items beside them, which only those rows can remove', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', prefixItems, items: { type: 'boolean' } },
+        initialFormData: ['a', 1, true],
+      });
+
+      expect(node.querySelector('#root_0')).toHaveValue('a');
+      expect(node.querySelector('#root_1')).toHaveValue('1');
+      expect(node.querySelector('#root_2')).toBeChecked();
+      expect(node.querySelector('#root_1__remove')).toBeNull();
+      expect(node.querySelector('#root_2__remove')).not.toBeNull();
+    });
+
+    it('adds a row past the positions, rendered with the items beside them and uiSchema.items', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'array', prefixItems, items: { type: 'string' } },
+        uiSchema: { items: { 'ui:widget': 'textarea' } },
+      });
+      expect(node.querySelector('textarea')).toBeNull();
+
+      await user.click(node.querySelector('#root__add')!);
+
+      expect(node.querySelector('textarea')).toHaveAttribute('id', 'root_2');
+      expectToHaveBeenCalledWithFormData(onChange, [undefined, undefined, undefined], 'root');
+    });
+
+    it('applies uiSchema.prefixItems to the positions and uiSchema.items to the rows past them', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', prefixItems: [{ type: 'string' }, { type: 'string' }], items: { type: 'string' } },
+        uiSchema: { prefixItems: [{ 'ui:widget': 'textarea' }], items: { 'ui:title': 'Extra' } },
+        initialFormData: ['a', 'b', 'c'],
+      });
+
+      expect(node.querySelector('#root_0')?.tagName).toBe('TEXTAREA');
+      expect(node.querySelector('#root_1')?.tagName).toBe('INPUT');
+      expect(node.querySelector('label[for="root_2"]')).toHaveTextContent('Extra');
+    });
+
+    it('offers no Add where the items beside them are false, or maxItems counts the positions', () => {
+      const closed = createFormComponent({ schema: { type: 'array', prefixItems, items: false } });
+      expect(closed.node.querySelector('.rjsf-array-item-add')).toBeNull();
+      const full = createFormComponent({
+        schema: { type: 'array', prefixItems, items: { type: 'string' }, maxItems: 2 },
+      });
+      expect(full.node.querySelector('.rjsf-array-item-add')).toBeNull();
+    });
+
+    it('renders a tuple rather than a multi-select where the items beside it list unique choices', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', prefixItems, items: { type: 'string', enum: ['x', 'y'] }, uniqueItems: true },
+      });
+
+      expect(node.querySelector('#root_0')).toHaveAttribute('type', 'text');
+      expect(node.querySelector('select[multiple]')).toBeNull();
+    });
+  });
+
   describe('Multiple number choices list', () => {
     const schema: RJSFSchema = {
       type: 'array',

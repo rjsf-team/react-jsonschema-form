@@ -13,7 +13,8 @@ export default function isMultiSelect<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S, rootSchema?: S) {
-  if (!schema.uniqueItems || !schema.items || typeof schema.items === 'boolean') {
+  // A `prefixItems` tuple's `items` describes only the items past it
+  if (!schema.uniqueItems || !schema.items || typeof schema.items === 'boolean' || Array.isArray(schema.prefixItems)) {
     return false;
   }
   return isSelect<T, S, F>(context, schema.items as S, rootSchema);

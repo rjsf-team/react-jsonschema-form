@@ -1391,6 +1391,20 @@ A position it declares nothing at, or something other than a schema at, constrai
 
 - S | boolean: The item's schema, as written: a schema, `true` where nothing constrains it, or `false` where no item is allowed there
 
+### getItemsUiSchemaKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the uiSchema key the array item at `index` reads its uiSchema from, mirroring the schema keyword that describes it, as `ArrayField` renders the item: `prefixItems` for a position of a `prefixItems` tuple, `items` past it, and for a tuple `items`, `items` at its positions and `additionalItems` past them.
+An array that is no tuple, as [`isTupleSchema()`](#istupleschemas-extends-strictrjsfschema--rjsfschema) reads it, reads `items` for every item.
+
+#### Parameters
+
+- schema: S - The array schema
+- index: number - The index of the item
+
+#### Returns
+
+- `'items'` | `'prefixItems'` | `'additionalItems'`: The uiSchema key holding the item's uiSchema
+
 ### getItemUiSchemaForItem&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the `uiSchema` that applies to the array item at `index`, given that item's own form data.
@@ -1404,6 +1418,7 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 - index: number - The tuple position `uiSchema.items` should apply to, when it is given as an array or a function
 - [formContext]: F - The formContext to pass to the function form of `uiSchema.items`
 - [arrayFieldPath]: FieldPath - The `FieldPath` of the array the item belongs to, used to name the item in the error logged when the function throws, so two arrays whose functions fail the same way at the same index are reported separately. A caller with no path to give, such as a custom `ArrayField`, can omit it, and the error names the index alone rather than a path the caller never supplied
+- [schema]: S - The array schema, which picks the uiSchema key the item reads, as [`getItemsUiSchemaKey()`](#getitemsuischemakeys-extends-strictrjsfschema--rjsfschema) names it. Only an item read from `uiSchema.items` resolves its function form; without a schema, every item reads `uiSchema.items`
 
 #### Returns
 
@@ -1495,6 +1510,19 @@ Widgets should call this helper once and pass the result to `enumOptionsDomValue
 #### Returns
 
 - OptionValueFormat: The resolved `OptionValueFormat`, defaulting to `'indexed'` when not set
+
+### getOpenPrefixLength&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the number of positions of an array schema's tuple an item can be held at: its [`getPrefixLength()`](#getprefixlengths-extends-strictrjsfschema--rjsfschema), cut short at its first `false` position, at and past which no item is allowed.
+`ArrayField` renders a field for each of these positions, and offers Add for no item past a `false` one.
+
+#### Parameters
+
+- schema: S - The array schema
+
+#### Returns
+
+- number: The number of positions before the first `false` one, or the length of the tuple where it has none
 
 ### getPrefixLength&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1670,11 +1698,13 @@ Returns the plain-object form of `uiSchema.items` that applies at tuple position
 `uiSchema.items` takes three forms: one object applying uniformly to every item, an array of per-tuple-position objects, or a `(itemData, index, formContext) => UiSchema` function.
 The function form needs an item's data, index and form context, none of which is available where this is used — there is no item yet for a `minItems` filler or a newly added row — so it always resolves to `undefined`; use `getItemUiSchemaForItem()` instead once the item's data is in hand.
 The array (tuple) form resolves to the entry at `index`, or to `undefined` when no `index` is given, there being no single position to take a uniform value from in that case.
+Given the array's `schema` and an `index`, an item the schema describes outside its `items` reads the uiSchema key mirroring that keyword instead, as [`getItemsUiSchemaKey()`](#getitemsuischemakeys-extends-strictrjsfschema--rjsfschema) names it: the `uiSchema.prefixItems` entry at a `prefixItems` position, and `uiSchema.additionalItems` past a tuple `items`.
 
 #### Parameters
 
 - [uiSchema]: UiSchema&lt;T, S, F> - The parent (array) uiSchema, if any
 - [index]: number - The tuple position `uiSchema.items` should apply to, when it is given as an array
+- [schema]: S - The array schema, which picks the uiSchema key an item at `index` reads
 
 #### Returns
 
@@ -2237,6 +2267,19 @@ A boolean or missing subschema describes no value of its own, so it has nothing 
 #### Returns
 
 - boolean: True when the definition is a schema object rather than a boolean shorthand or absent, narrowing it to `S`
+
+### isTupleSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Detects whether the array `schema` is a tuple, which `ArrayField` renders position by position: it declares a `prefixItems` list, whose positions may be `true` or `false` as any subschema may, or without one its `items` is a list of schema objects.
+For a schema declaring no `prefixItems` this is [`isFixedItems()`](#isfixeditemss-extends-strictrjsfschema--rjsfschema).
+
+#### Parameters
+
+- schema: S - The array schema
+
+#### Returns
+
+- boolean: True where `schema` declares a tuple
 
 ### isWholeValueSelect&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -3775,6 +3818,7 @@ The schema handed to the validator is left untouched, so this behaves identicall
 ### isFilesArray&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks to see if the `schema` and `uiSchema` combination represents an array of files, either because the uiSchema asks for the `files` widget by name or because the schema's `items` resolve to a string of `data-url` format.
+The `items` beside `prefixItems` describe only the items past the tuple, so a `prefixItems` tuple is an array of files only where the uiSchema asks for the `files` widget.
 
 #### Parameters
 
@@ -3789,7 +3833,8 @@ Checks to see if the `schema` and `uiSchema` combination represents an array of 
 
 ### isMultiSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Checks to see if the `schema` combination represents a multi-select
+Checks to see if the `schema` combination represents a multi-select.
+A `prefixItems` tuple never does, since the `items` beside it describe only the items past the tuple.
 
 #### Parameters
 

@@ -6799,6 +6799,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     it('getInnerSchemaForArrayItem() item of type boolean returns empty schema', () => {
       expect(getInnerSchemaForArrayItem({ items: [true] }, AdditionalItemsHandling.Ignore, 0)).toEqual({});
     });
+    describe('getInnerSchemaForArrayItem() of a prefixItems tuple', () => {
+      const first: RJSFSchema = { type: 'string' };
+      const rest: RJSFSchema = { type: 'number' };
+      const schema: RJSFSchema = { type: 'array', prefixItems: [first], items: rest };
+      it.each<[string, AdditionalItemsHandling, number, RJSFSchema]>([
+        ['a position', AdditionalItemsHandling.Ignore, 0, first],
+        ['an item past it, falling back to its items', AdditionalItemsHandling.Fallback, 1, rest],
+        ['an item past it, ignoring its items', AdditionalItemsHandling.Ignore, 1, {}],
+        ['the list items, which its items are not', AdditionalItemsHandling.Ignore, -1, {}],
+        ['the items past it, inverted', AdditionalItemsHandling.Invert, -1, rest],
+      ])('returns %s as a tuple items beside additionalItems does', (_, handling, idx, expected) => {
+        expect(getInnerSchemaForArrayItem(schema, handling, idx)).toStrictEqual(expected);
+      });
+      it('returns the empty schema for a boolean position, rather than the items past the tuple', () => {
+        const open: RJSFSchema = { type: 'array', prefixItems: [first, true], items: rest };
+        expect(getInnerSchemaForArrayItem(open, AdditionalItemsHandling.Fallback, 1)).toStrictEqual({});
+      });
+    });
     describe('computeDefaultBasedOnSchemaTypeAndDefaults()', () => {
       let schema: RJSFSchema;
       describe('Object', () => {
@@ -14730,6 +14748,87 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { schema, formData, rootSchema: schema, includeUndefinedValues: false, uiSchema },
           ),
         ).toEqual(['tuple', 'extra']);
+      });
+
+      it('applies uiSchema.prefixItems to a prefixItems position and uiSchema.items to the items past it', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          prefixItems: [{ type: 'object', properties: { name: { type: 'string' } } }],
+          items: { type: 'object', properties: { name: { type: 'string' } } },
+        };
+        const uiSchema = {
+          prefixItems: [{ name: { 'ui:initialValue': 'tuple position' } }],
+          items: { name: { 'ui:initialValue': 'beyond the tuple' } },
+        };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema, rootSchema: schema, includeUndefinedValues: false, uiSchema },
+          ),
+        ).toEqual([{ name: 'tuple position' }, { name: 'beyond the tuple' }]);
+      });
+
+      it('fills a boolean prefixItems position with no default, rather than that of the items past the tuple', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          prefixItems: [{ type: 'string', default: 'a' }, true],
+          items: { type: 'string', default: 'z' },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual([
+          'a',
+          undefined,
+        ]);
+      });
+
+      it('fills no prefixItems position at or past a false one, which allows no item', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          prefixItems: [{ type: 'string', default: 'a' }, false, { type: 'string', default: 'b' }],
+          items: { type: 'string' },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual(['a']);
+      });
+
+      it('pads minItems with no filler at or past a false prefixItems position', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 3,
+          prefixItems: [{ type: 'string', default: 'a' }, false],
+          items: { type: 'string', default: 'z' },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual(['a']);
+      });
+
+      it('pads minItems below a prefixItems tuple with each position default, then the items past it', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          default: [],
+          minItems: 3,
+          prefixItems: [
+            { type: 'string', default: 'a' },
+            { type: 'string', default: 'b' },
+          ],
+          items: { type: 'string', default: 'z' },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual([
+          'a',
+          'b',
+          'z',
+        ]);
+      });
+
+      it('merges the defaults of the items past a prefixItems tuple into the default, as additionalItems ones', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          default: [{ item: 'property-default-1' }, {}],
+          prefixItems: [{ type: 'object', properties: { item: { type: 'string' } } }],
+          items: { type: 'object', properties: { item: { type: 'string', default: 'additional-default' } } },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual([
+          { item: 'property-default-1' },
+          { item: 'additional-default' },
+        ]);
       });
 
       it('does not resurrect ui:initialValue on a cleared tuple position after the initial pass', () => {

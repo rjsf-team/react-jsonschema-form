@@ -72,8 +72,9 @@ function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextT
   return (
     rendersItemFields<S>(oldRendered) &&
     rendersItemFields<S>(newRendered) &&
-    oldRendered.items !== undefined &&
+    (oldRendered.items !== undefined || oldRendered.prefixItems !== undefined) &&
     deepEquals(oldRendered.items, newRendered.items) &&
+    deepEquals(oldRendered.prefixItems, newRendered.prefixItems) &&
     deepEquals(oldRendered.additionalItems, newRendered.additionalItems) &&
     oldRendered.uniqueItems === newRendered.uniqueItems
   );

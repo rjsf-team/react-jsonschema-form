@@ -172,6 +172,31 @@ describe('getRenderedOptionSchema()', () => {
         },
       );
     });
+    test("meets each position of the option's prefixItems with the parent's items, and the items past them", () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string', maxLength: 5 } };
+      expect(getRenderedOptionSchema(parent, { prefixItems: [{ title: 'First' }], items: { maxLength: 9 } })).toEqual({
+        type: 'array',
+        prefixItems: [{ type: 'string', maxLength: 5, title: 'First' }],
+        items: { type: 'string', maxLength: 5 },
+      });
+    });
+    test("meets each position of the parent's prefixItems with the option's items, and the items past them", () => {
+      const parent: RJSFSchema = { type: 'array', prefixItems: [{ type: 'string' }, true], items: { type: 'string' } };
+      expect(getRenderedOptionSchema(parent, { items: { minLength: 1 } })).toEqual({
+        type: 'array',
+        prefixItems: [{ type: 'string', minLength: 1 }, { minLength: 1 }],
+        items: { type: 'string', minLength: 1 },
+      });
+    });
+    test.each<[string, RJSFSchema, RJSFSchema]>([
+      ["the parent's", { type: 'array', prefixItems: [{ type: 'string' }] }, { items: { maxLength: 3 } }],
+      ["the option's", { type: 'array', items: { type: 'string' } }, { prefixItems: [{ maxLength: 3 }] }],
+    ])('keeps %s prefixItems declaring no items at its length, as ArrayField renders it', (_, parent, option) => {
+      expect(getRenderedOptionSchema(parent, option)).toEqual({
+        type: 'array',
+        prefixItems: [{ type: 'string', maxLength: 3 }],
+      });
+    });
     test.each<[string, RJSFSchema, RJSFSchema]>([
       ["the parent's", { type: 'array', items: [{ type: 'string' }, { type: 'string' }] }, { items: { maxLength: 3 } }],
       ["the option's", { type: 'array', items: { type: 'string' } }, { items: [{ maxLength: 3 }, { maxLength: 3 }] }],
