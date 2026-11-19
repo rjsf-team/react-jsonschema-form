@@ -8338,6 +8338,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             const skipping = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
             expect(getDefaultFormState(skipping, { schema: rootOf(x) })).toStrictEqual({ x: {} });
           });
+          it('decides the if of an object field by {}, not by the primitive const of a branch', () => {
+            const conditional: RJSFSchema = { if: { type: 'null' }, then: { const: null }, else: { const: C } };
+            const skipping = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
+            const x = placed('object', conditional, inAllOf);
+            expect(getDefaultFormState(skipping, { schema: rootOf(x) })).toStrictEqual({ x: C });
+          });
           it.each<[string, 'number' | 'string' | 'null', RJSFSchema, GenericObjectType]>([
             [
               "fills the null const of a then whose if: { type: 'null' } takes it",
@@ -8391,6 +8397,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual(expected);
             }
           });
+        });
+        it('decides the if of an empty field with no type by {}, which it may hold', () => {
+          const x: RJSFSchema = {
+            if: { required: ['a'] },
+            then: { properties: { b: { const: 'T' } } },
+            else: { const: null },
+          };
+          const context = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
+          expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({ x: null });
         });
       });
     });

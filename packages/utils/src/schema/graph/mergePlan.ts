@@ -88,10 +88,11 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
   readonly site: string;
   readonly condition: S;
   readonly satisfied: boolean;
-  /** What an `if` is checked against where the field holds no data, if not `{}`: the value the field would hold. An
-   * object or array field holds its defaults, which the fill checks it against once it has them. A field of any other
-   * type takes the `const` of the `then`, or else of the `else`, so a `then` gives its `const` where the `if` accepts it
-   * and an `else` where the `if` rejects it, and the value filled takes the branch that gave it
+  /** What an `if` is checked against where the field holds no data, if not `{}`: the value the field would hold. A
+   * field that may hold an object or an array, or names no `type`, holds its defaults, which the fill checks it against
+   * once it has them. A field of any other type takes the `const` of the `then`, or else of the `else`, so a `then`
+   * gives its `const` where the `if` accepts it and an `else` where the `if` rejects it, and the value filled takes the
+   * branch that gave it
    */
   readonly unset?: { readonly value: unknown };
 }
@@ -714,6 +715,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   /** Whether the keywords of a seed hold an `if`, which `allOf: 'if'` merges the `allOf`s for */
   private seedHasCondition = false;
   private readsData = false;
+  /** Whether a seed declares a `type` that holds neither objects nor arrays, the field `CheckedCondition.unset` is for */
+  private valueField = false;
   /** How many `then`, `else` and `dependencies` branches are being expanded: a branch has its `allOf` merged whatever
    * the policy, as `retrieveSchema()` retrieves a branch whole before merging it
    */
@@ -829,6 +832,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return { schema: booleanSchema(node, this.graph.rawRoot), chains: [] };
     }
     const keywords = this.flatten(asTarget(this.graph, node), refPath);
+    const type = keywords.get('type')?.node.raw.type;
+    if (edge === 'seed' && type) {
+      this.valueField ||= !/object|array/.test(String(type));
+    }
     const schema = keywordSchema(node.raw, keywords);
     const ref: unknown = Reflect.get(node.raw, REF_KEY);
     if (typeof ref === 'string') {
@@ -922,13 +929,16 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
    * `CheckedCondition.unset`
    */
   private unsetValue(keywords: ReadonlyMap<string | symbol, Provider<S>>): CheckedCondition<S>['unset'] {
+    if (!this.valueField) {
+      return undefined;
+    }
     for (const key of [THEN_KEY, ELSE_KEY]) {
       const provider = keywords.get(key);
       const branch = provider && this.graph.child(provider.node.id, key);
       const node = branch === undefined ? undefined : this.graph.node(branch);
       const value: unknown = node?.kind === 'schema' ? node.raw[CONST_KEY] : undefined;
       if (value !== undefined) {
-        return typeof value === 'object' && value !== null ? undefined : { value };
+        return { value };
       }
     }
     return undefined;
