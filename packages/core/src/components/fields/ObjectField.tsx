@@ -1014,9 +1014,11 @@ export default function ObjectField<
   if (presentation) {
     shownDescription = presentation.description.by === 'self' ? presentation.description.text : undefined;
   }
-  // Named after the object whether or not its heading shows. An empty title, as from a translator without this string, is
-  // left out, since it would replace the button's default one
-  const addButtonTitle = templateTitle && translateString(TranslatableString.AddNamedButton, [templateTitle]);
+  // Named after the object whether or not its heading shows, passing over an empty title as the heading's label does, so
+  // the two name the same thing. An empty translation, as from a translator without this string, is left out, since it
+  // would replace the button's default title
+  const addButtonName = uiOptions.title || schema.title || title || name;
+  const addButtonTitle = addButtonName && translateString(TranslatableString.AddNamedButton, [addButtonName]);
   const templateProps = {
     title: shownTitle,
     description: shownDescription,

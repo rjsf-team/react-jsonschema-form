@@ -3753,6 +3753,11 @@ describe('ObjectField', () => {
         { type: 'object', properties: { tags: schema } },
         'Add tags',
       ],
+      [
+        "after a nested object's name when its title is empty",
+        { type: 'object', properties: { tags: { ...schema, title: '' } } },
+        'Add tags',
+      ],
       ['its default title when the object has no title or name', schema, 'Add Item'],
     ])('should title the expand button %s', (_, titledSchema, name) => {
       createFormComponent({ schema: titledSchema });
@@ -3765,6 +3770,15 @@ describe('ObjectField', () => {
 
       expect(screen.queryByRole('heading', { name: 'Address' })).not.toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Add Address' })).toHaveClass('rjsf-object-property-expand');
+    });
+
+    it("should title the expand button after a nested object's name when its ui:title is empty", () => {
+      createFormComponent({
+        schema: { type: 'object', properties: { tags: schema } },
+        uiSchema: { tags: { 'ui:title': '' } },
+      });
+
+      expect(screen.getByRole('button', { name: 'Add tags' })).toHaveClass('rjsf-object-property-expand');
     });
 
     it('should keep the default title when the translator has no named add string', () => {
