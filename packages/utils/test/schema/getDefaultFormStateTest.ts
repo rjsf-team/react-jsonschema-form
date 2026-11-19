@@ -7325,6 +7325,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           };
           expect(getDefaultFormState(skipping, { schema: numbers })).toStrictEqual({ n: 3 });
+          const only = (n: RJSFSchema): RJSFSchema => ({ type: 'object', required: ['n'], properties: { n } });
+          expect(
+            getDefaultFormState(skipping, {
+              schema: only({ type: 'number', anyOf: [{ allOf: [{ oneOf: [{ const: 3 }] }] }] }),
+            }),
+          ).toStrictEqual({ n: 3 });
+          expect(
+            getDefaultFormState(skipping, { schema: rootOf({ anyOf: [{ allOf: [{ oneOf: [{ const: C }] }] }] }) }),
+          ).toStrictEqual({ x: C });
         });
         describe('as the option of a list the field offers itself is picked', () => {
           beforeEach(() => {
@@ -7408,6 +7417,52 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
               getDefaultFormState(skipping, { schema: own }),
             );
+          });
+          it("the object constant taken whole in an option's allOf, not the anyOf of the field's own it was chosen from", () => {
+            const field = (option: RJSFSchema) =>
+              rootOf({
+                properties: { d: { type: 'number', default: 7 } },
+                anyOf: [{ title: 'A', ...option }, { const: { a: 9 } }],
+              });
+            const own = field({ oneOf: [{ const: C }] });
+            const nested = field({ allOf: [{ oneOf: [{ const: C }] }] });
+            for (const formData of [undefined, { x: C }]) {
+              expect(getDefaultFormState(skipping, { schema: nested, formData })).toStrictEqual(
+                getDefaultFormState(skipping, { schema: own, formData }),
+              );
+              expect(getDefaultFormState(skipping, { schema: nested, formData })).toStrictEqual({ x: C });
+            }
+          });
+          it('no const where the option shown is a boolean schema', () => {
+            const { own, nested } = ownAndNested({ oneOf: [true, { const: 3 }] }, (list) => ({
+              type: 'object',
+              required: ['n'],
+              properties: { n: { type: 'number', ...list } },
+            }));
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
+              getDefaultFormState(skipping, { schema: own }),
+            );
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({});
+          });
+          it("the const replacing the field's data under constAsDefaults: 'always'", () => {
+            const always = {
+              validator: testValidator,
+              defaultFormStateBehavior: { allOf: 'skipDefaults' as const, constAsDefaults: 'always' as const },
+            };
+            const numbers = ownAndNested({ oneOf: [{ const: 3 }, { const: 4 }] }, (list) => ({
+              type: 'object',
+              required: ['n'],
+              properties: { n: { type: 'number', ...list } },
+            }));
+            for (const [formData, expected] of [
+              [{ n: 7 }, { n: 3 }],
+              [{ n: 4 }, { n: 4 }],
+            ]) {
+              expect(getDefaultFormState(always, { schema: numbers.nested, formData })).toStrictEqual(
+                getDefaultFormState(always, { schema: numbers.own, formData }),
+              );
+              expect(getDefaultFormState(always, { schema: numbers.nested, formData })).toStrictEqual(expected);
+            }
           });
         });
       });

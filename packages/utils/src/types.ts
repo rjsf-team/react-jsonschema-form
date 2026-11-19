@@ -142,7 +142,8 @@ export interface DefaultFormStateBehavior {
    * `formData` does: when the `if` lists in `required` a property that only a default provides, the `then` default is
    * filled in, and a default that does not match an `if` without `required` picks the `else`. A value `formData` holds
    * wins over the default, and where a branch takes back the default that selects it, the branch is picked from
-   * `formData` alone. A nested `allOf` is skipped as a whole, plain property defaults included, while an
+   * `formData` alone. A nested `allOf` is skipped as a whole, plain property defaults included, except for the `const`
+   * it gives the field, directly or through the `oneOf`/`anyOf` option the field shows, while an
    * `if-then-else` placed directly in a nested object schema is resolved, along with any `allOf` next to it, unless
    * `emptyObjectFields` is `skipEmptyDefaults`. With one `allOf` entry per `enum` value and no `formData`, the `then`
    * default of the entry the defaulted value matches is filled in, and a `customMergeAllOf` that throws on the
