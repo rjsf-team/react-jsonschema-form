@@ -12,10 +12,10 @@ import {
 import ErrorSchemaBuilder from '../ErrorSchemaBuilder.ts';
 import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getInheritedOptionUiSchema from '../getInheritedOptionUiSchema.ts';
 import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import { selectOptionUiSchema } from '../getOptionUiSchema.ts';
 import getRenderedOptionSchema, { renderOption } from '../getRenderedOptionSchema.ts';
-import getRenderedOptionUiSchema from '../getRenderedOptionUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
 import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
@@ -68,9 +68,10 @@ interface SelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextTyp
  * the field shows, or without one the option `computeDefaults()` picks, so the walk descends into the branch's schema.
  * Also resolves the uiSchema that `MultiSchemaField` would pass down to that branch's children:
  * `uiSchema[ONE_OF_KEY][index]` / `uiSchema[ANY_OF_KEY][index]` when the matching keyword's uiSchema is an array
- * reaching that index, falling back to `uiSchema` itself otherwise (`AnyOfField`'s own `optionsUiSchema`/
- * `optionUiSchema`) — a plain per-key entry on `uiSchema` (e.g. `uiSchema.thing.b`) is never consulted for a branch's
- * own fields, matching what actually renders.
+ * reaching that index, falling back to `uiSchema` itself, without that list, otherwise (`AnyOfField`'s own
+ * `optionsUiSchema`/`optionUiSchema`), with the field's `ui:required` where the option leaves its own unset — a plain
+ * per-key entry on `uiSchema` (e.g. `uiSchema.thing.b`) is never consulted for a branch's own fields, matching what
+ * actually renders.
  */
 function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: WalkContext<T, S, F>,
@@ -101,11 +102,12 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
     ctx,
   );
   const optionUiSchema =
-    getRenderedOptionUiSchema<T, S, F>(
+    getInheritedOptionUiSchema<T, S, F>(
       schema,
       option,
       uiSchema,
       selectOptionUiSchema(optionsUiSchema, uiSchema, index),
+      key,
     ) ?? {};
   if (!rendersOwnFieldBesideOption<S>(schema, option)) {
     return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema };
@@ -251,6 +253,13 @@ function rendersArrayWidget<T, S extends StrictRJSFSchema, F extends FormContext
   );
 }
 
+/** The field an option walked as a node of its own is shown by, which has reported an empty value already where its own
+ * `ui:required` asks for one
+ */
+interface ShowingField {
+  uiRequired: boolean;
+}
+
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: WalkContext<T, S, F>,
   schema: S,
@@ -259,6 +268,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   path: (string | number)[],
   required: boolean,
   parentPresent: boolean,
+  showingField?: ShowingField,
 ) {
   const { schemaContext, rootSchema, uiSchemaDefinitions, globalUiOptions, formContext, fieldState, builder } = ctx;
   // A recursive $ref that `retrieveSchema()` flagged as a cycle is not rendered until the user expands it (see
@@ -267,12 +277,23 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (!fieldState?.isExpanded(fieldPathFromList(path))) {
       return;
     }
-    walk(ctx, expandRefCycle<S>(schema, rootSchema), localUiSchema, formData, path, required, parentPresent);
+    walk(
+      ctx,
+      expandRefCycle<S>(schema, rootSchema),
+      localUiSchema,
+      formData,
+      path,
+      required,
+      parentPresent,
+      showingField,
+    );
     return;
   }
   const uiSchema = resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions });
   const fieldUiRequired = uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required);
-  if (path.length > 0 && fieldUiRequired === true && formData === undefined && !(required && parentPresent)) {
+  // An option's `ui:required` is its field's, unless it sets its own, so the field it is shown by reports the empty value
+  const reportsEmpty = showingField ? showingField.uiRequired : fieldUiRequired === true;
+  if (!showingField && reportsEmpty && path.length > 0 && formData === undefined && !(required && parentPresent)) {
     // Worded exactly as AJV words its own `required` failures, so a ui:required error is indistinguishable from a
     // schema-required one in the error list and in any `ui:help`/ErrorList rendering built around that text. Skipped
     // only when AJV will raise this exact message itself: the field is in its parent's schema `required` list AND
@@ -339,19 +360,26 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ) {
     return;
   }
-  // The option's `ui:required` is read here and not above, which reads the field's, since an option is never walked as a
-  // node of its own; an option leaving it unset takes the field's, unless it renders options of its own, which
-  // `@rjsf/core` hands nothing on to. An array `ArrayField` renders as one widget, as it picks its mode, holds `[]` with
-  // nothing chosen, whether seeded or left by clearing the last choice, which the validator accepts unless a `minItems`
-  // has it report this itself. The field says it is required, so `[]` can't pass
-  const optionUiRequired =
-    uiBooleanOption(branchUiRequired) ?? (getXxxOfOptions<S>(retrieved) ? undefined : fieldUiRequired);
-  if (path.length > 0 && optionUiRequired === true) {
+  // An option offering options of its own renders them as a field of its own at this path, which `MultiSchemaField`
+  // hands the option's uiSchema, so it is walked as a node of its own, which reads the option it shows in turn
+  const optionField = option ? getRenderedOptionSchema<S>(resolvedSchema, option) : retrieved;
+  const nestsOptions = getXxxOfOptions<S>(optionField) !== undefined;
+  if (nestsOptions) {
+    walk(ctx, optionField, branchUiSchema, formData, path, required, parentPresent, { uiRequired: reportsEmpty });
+    // An object renders its own properties beside the option, which are walked below
+    if (!option) {
+      return;
+    }
+  }
+  // The option's `ui:required` is read here and not above, which reads the field's, since `resolveSelectedBranch()`
+  // hands the field's on to an option leaving it unset, and an option offering options of its own has it read by the
+  // option shown there. An array `ArrayField` renders as one widget, as it picks its mode, holds `[]` with nothing
+  // chosen, whether seeded or left by clearing the last choice, which the validator accepts unless a `minItems` has it
+  // report this itself. The field says it is required, so `[]` can't pass
+  if (path.length > 0 && !nestsOptions && uiBooleanOption(branchUiRequired) === true) {
     const isUnanswered =
       formData === undefined
-        ? fieldUiRequired !== true &&
-          !(required && parentPresent) &&
-          rendersAnswer<T, S, F>(ctx, path, retrieved, branchUiSchema)
+        ? !reportsEmpty && !(required && parentPresent) && rendersAnswer<T, S, F>(ctx, path, retrieved, branchUiSchema)
         : Array.isArray(formData) &&
           formData.length === 0 &&
           (retrieved.minItems ?? 0) < 1 &&
@@ -388,8 +416,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const ownProperties = resolvedSchema.properties ?? {};
   const optionProperties = option?.properties ?? {};
+  // A property only the option declares is the option's field's, which an option offering options of its own walks
   const isKeyShown = (key: string) =>
-    (key in optionProperties && !(key in ownProperties) ? optionShownType : shownType) === 'object';
+    key in optionProperties && !(key in ownProperties)
+      ? !nestsOptions && optionShownType === 'object'
+      : shownType === 'object';
   if (shownType === 'object' || optionShownType === 'object') {
     // Matches computeDefaults()'s own `isObject(rawFormData)` handling: when the schema resolves to an object here
     // but `formData` still holds a primitive (e.g. a leftover string from a previous oneOf/anyOf branch, or mismatched
