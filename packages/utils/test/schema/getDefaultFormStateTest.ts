@@ -320,6 +320,59 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(pass({ p: { a: 5 } }, true)).toStrictEqual({ p: { a: 5, b: 7 } });
         },
       );
+      it("gives the shown option and the field beneath a ui:initialValue their own default over an ancestor's const once the defaults were generated", () => {
+        const uiSchema: UiSchema = { f: { 'ui:initialValue': { a: 1 } } };
+        const pass = (f: RJSFSchema, formData: unknown, initialDefaultsGenerated: boolean) =>
+          getDefaultFormState(
+            { validator: testValidator },
+            {
+              schema: { type: 'object', const: { f: { a: 1, b: 9 } }, properties: { f } },
+              formData,
+              uiSchema,
+              initialDefaultsGenerated,
+            },
+          );
+        const optionDefault: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'number' } },
+          oneOf: [{ default: { b: 2 }, properties: { b: { type: 'number' } } }],
+        };
+        const fieldDefault: RJSFSchema = {
+          type: 'object',
+          default: { b: 2 },
+          properties: { a: { type: 'number' }, b: { type: 'number' } },
+        };
+        expect(pass(optionDefault, { f: { a: 1 } }, true)).toStrictEqual({ f: { a: 1, b: 2 } });
+        expect(pass(fieldDefault, undefined, false)).toStrictEqual({ f: { a: 1 } });
+        expect(pass(fieldDefault, { f: { a: 1 } }, true)).toStrictEqual({ f: { a: 1, b: 2 } });
+      });
+      it("gives a tuple the items of an ancestor's const over its own item defaults, as its own const does", () => {
+        const tuple: RJSFSchema = { type: 'array', items: [{ type: 'number' }, { type: 'number', default: 5 }] };
+        expect(fill({ type: 'object', const: { t: [1] }, properties: { t: tuple } })).toStrictEqual({ t: [1] });
+        expect(fill({ type: 'object', properties: { t: { ...tuple, const: [1] } } })).toStrictEqual({ t: [1] });
+        expect(fill({ type: 'object', default: { t: [1] }, properties: { t: tuple } })).toStrictEqual({ t: [1, 5] });
+      });
+      it("selects the option an ancestor's const matches, and seeds none of the keys only that option declares", () => {
+        const kinds: RJSFSchema = {
+          type: 'object',
+          oneOf: [
+            { properties: { kind: { const: 'x' }, p: { type: 'number', default: 1 } } },
+            { properties: { kind: { const: 'y' }, q: { type: 'number', default: 2 } } },
+          ],
+        };
+        // The mock validator can't tell the options apart, so it answers each check as the real ones do
+        testValidator.setReturnValues({ isValid: asRealValidator });
+        try {
+          expect(fill({ type: 'object', const: { o: { kind: 'y' } }, properties: { o: kinds } })).toStrictEqual({
+            o: { kind: 'y' },
+          });
+          expect(fill({ type: 'object', default: { o: { kind: 'y' } }, properties: { o: kinds } })).toStrictEqual({
+            o: { kind: 'x', p: 1 },
+          });
+        } finally {
+          testValidator.reset?.();
+        }
+      });
       it("still takes the defaults beneath where constAsDefaults is 'never'", () => {
         const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
         expect(fill(declaredDefault, never)).toStrictEqual({ a: 2 });

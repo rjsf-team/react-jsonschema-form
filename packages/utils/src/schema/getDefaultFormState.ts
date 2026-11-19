@@ -1556,15 +1556,18 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     ? resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions })
     : localUiSchema;
   const props = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
+  // A `ui:initialValue` takes the place of an ancestor's `const` on every pass, as it does of the field's own below, so
+  // the defaults beneath it aren't taken back by the `const` once the defaults were generated
+  const parentConst = getUiOptions<T, S, F>(uiSchema).initialValue === undefined ? props.parentConst : undefined;
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
   // A value an ancestor's `const` gives the field stands in for inherited defaults that don't reach it, as for a row of
   // an array the data holds once the defaults were generated, whose defaults are read from the row
-  let defaults: unknown = parentDefaults === undefined ? inputProps.parentConst : parentDefaults;
+  let defaults: unknown = parentDefaults === undefined ? ownValue(parentConst) : parentDefaults;
   // An ancestor default wins only where the field's type can hold it, so a `null` or `false` one gives way to the own
   // default of a field whose type allows neither. A value an ancestor's `const` gives wins whatever the setting says
   const preferParentDefaults =
     defaults !== undefined &&
-    (defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' || inputProps.parentConst !== undefined) &&
+    (defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' || parentConst !== undefined) &&
     takesValueOf<S>(schema, defaults);
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
@@ -1584,7 +1587,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // The `const` whose value the field hands its children: its own where it is the field's default, otherwise the one an
   // ancestor gives it, unless a `ui:initialValue` takes the place of either below
-  let givenConst = constDefault ? constSchema[CONST_KEY] : props.parentConst;
+  let givenConst = constDefault ? constSchema[CONST_KEY] : parentConst;
   // The defaults the field's own `default` and the inherited ones give it: its own wins unless they have precedence, and
   // two objects are merged, except for a select over object constants, whose own default and inherited default each
   // name a whole constant, so a blend of them names none
@@ -1598,9 +1601,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // default still wins over the inherited defaults beside it, and the order of keys the inherited defaults have is
       // kept
       const merged = mergeObjects(defaults, ownDefault);
-      return preferParentDefaults && isObject(inputProps.parentConst)
-        ? mergeObjects(merged, inputProps.parentConst)
-        : merged;
+      return preferParentDefaults && isObject(parentConst) ? mergeObjects(merged, parentConst) : merged;
     }
     return DEFAULT_KEY in schema && !preferParentDefaults ? ownDefault : defaults;
   };
@@ -1647,7 +1648,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           view,
           xxxOf,
           choice.index,
-          { ...props, parentDefaults: defaults },
+          { ...props, parentDefaults: defaults, parentConst },
           initialValue,
         );
         // Under the object's own `const`, or the value an ancestor's gives it, a key only the option declares, which the
@@ -1655,9 +1656,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         // `const` rejects. A key the `ui:initialValue` names is kept, since that value stands in the `const`'s place, and
         // under an ancestor's `const` so is a key of the defaults the field inherits or declares, as beside no options
         const givenObjectConst =
-          !foldsOptionUnderConst && preferParentDefaults && isObjectData(props.parentConst)
-            ? props.parentConst
-            : undefined;
+          !foldsOptionUnderConst && preferParentDefaults && isObjectData(parentConst) ? parentConst : undefined;
         const keeping = foldsOptionUnderConst
           ? [constSchema[CONST_KEY], schema.properties, rawFormData, initialValue]
           : givenObjectConst && [
@@ -2288,10 +2287,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   ) {
     extraKeysField = retrievedView().schema;
   }
-  // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it, and only of an
-  // object that stubs them or defaults to an object `const`, the two that need the answer
-  const takesExtraKeys =
-    (view.stubs || ownObjectConst !== undefined) && allowsAdditionalProperties<S, F>(context, extraKeysField);
+  // Stubbing only adds properties, so whether the object takes extra keys is asked once, before it, of the field that
+  // decides it, as is whether that field's absent keyword takes them
+  const takesExtraKeys = allowsAdditionalProperties<S, F>(context, extraKeysField);
+  const absentAllows = absentKeywordAllows<S, F>(context, extraKeysField);
   // A field resolved the way `retrieveSchema()` resolves a schema has the extra keys of its data stubbed among its
   // `properties`
   const schema =
@@ -2638,8 +2637,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // Read from the field that decides whether the object takes extra keys, so the keys seeded are folded as it takes them,
   // seeded where the field as retrieved holds them where that is the field, settled only by a branch that seeds one
   const extraKeySeeding = () => (extraKeysField === view.schema ? view : retrievedView());
-  const ownAdditionalProperties =
-    absentKeywordAllows<S, F>(context, extraKeysField) || extraKeysField.additionalProperties;
+  const ownAdditionalProperties = absentAllows || extraKeysField.additionalProperties;
   const additionalProperties =
     extraKeysField !== view.schema ? passes.shareExtraKeySchema(ownAdditionalProperties) : ownAdditionalProperties;
   // An extra key is folded through the schemas that apply to it, as a validator applies them: in each chain, the
@@ -2650,7 +2648,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // `const` names it. The join of an option's keywords to its parent's isn't among the chains the key is seeded from,
   // so it is asked of the join
   const extraKeyword = additionalPropertiesKeywordName<S>(extraKeysField);
-  const describesUnmatched = extraKeyword !== undefined || absentKeywordAllows<S, F>(context, extraKeysField);
+  const describesUnmatched = extraKeyword !== undefined || absentAllows;
   const extraKeyChild = (seeding: DefaultsView<S>, key: string) => {
     const { seeds, edge } = extraKeySeeds(seeding, key, extraKeyword);
     const rejected = optionOf
@@ -2675,7 +2673,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // over the `const` as the object's default, so beside one only the keys of the `const` it gives are seeded, read from
   // it on the first pass, the one it is the default of, as a declared key is. Only a key the defaults hold has a value
   // to seed
-  const closingConst = objectConst && closingConstOf<S, F>(context, extraKeysField, objectConst);
+  const closingConst = takesExtraKeys ? undefined : objectConst;
   const readsInitialValue = closingConst && getUiOptions<T, S, F>(uiSchema).initialValue !== undefined;
   const constDefaults =
     closingConst && isObject(defaults) && !(readsInitialValue && initialDefaultsGenerated) ? defaults : undefined;
@@ -2707,7 +2705,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         value !== undefined,
       );
     }
-  } else if (!initialDefaultsGenerated && allowsAdditionalProperties<S, F>(context, extraKeysField)) {
+  } else if (!initialDefaultsGenerated && takesExtraKeys) {
     const formDataRequired = Object.keys(formData).filter((key) => !isComputed(key));
     // Only seed keys from schema defaults when formData has no additionalProperties of its own.
     // If the user already has data (e.g. after a key rename), injecting default keys would
