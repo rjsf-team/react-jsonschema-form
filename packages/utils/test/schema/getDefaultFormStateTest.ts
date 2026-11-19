@@ -8147,6 +8147,53 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               );
             },
           );
+          describe.each<[string, DefaultFormStateBehavior]>([
+            ['allOf: skipDefaults', { allOf: 'skipDefaults' }],
+            ['allOf: populateDefaults', { allOf: 'populateDefaults' }],
+          ])('under %s', (_b, behavior) => {
+            const context = { validator: testValidator, defaultFormStateBehavior: behavior };
+            const bothPasses = (schema: RJSFSchema, formData?: unknown) => {
+              const first = getDefaultFormState(context, { schema, formData });
+              return [first, getDefaultFormState(context, { schema, formData: first, initialDefaultsGenerated: true })];
+            };
+            it.each<[string, { a: number }]>([
+              ['naming another constant', { a: 1 }],
+              ['naming none of the constants', { a: 3 }],
+            ])("the field's own object const over its default %s, as an enum takes it", (_d, fieldDefault) => {
+              const field = (values: RJSFSchema): RJSFSchema =>
+                rootOf({ const: { a: 2 }, default: fieldDefault, ...values });
+              const list = { oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] };
+              const enumDefaults = bothPasses(field({ enum: [{ a: 1 }, { a: 2 }] }));
+              expect(bothPasses(field(list))).toStrictEqual(enumDefaults);
+              expect(bothPasses(field({ allOf: [list] }))).toStrictEqual(enumDefaults);
+              expect(enumDefaults).toStrictEqual([{ x: { a: 2 } }, { x: { a: 2 } }]);
+            });
+            it.each<[string, (field: RJSFSchema) => RJSFSchema, unknown, unknown]>([
+              ['its own at the root', (field) => ({ ...field, default: 4 }), NaN, 4],
+              [
+                'its own as a property',
+                (field) => ({ type: 'object', properties: { n: { ...field, default: 4 } } }),
+                { n: NaN },
+                { n: 4 },
+              ],
+              [
+                'an ancestor as a property',
+                (field) => ({ type: 'object', default: { n: 4 }, properties: { n: field } }),
+                { n: NaN },
+                { n: 4 },
+              ],
+            ])(
+              'the constant a default of %s names over a NaN the defaults replace, as an enum takes it',
+              (_where, withDefault, data, expected) => {
+                const list = { oneOf: [{ const: 3 }, { const: 4 }] };
+                const defaultsOf = (values: RJSFSchema) => bothPasses(withDefault({ type: 'number', ...values }), data);
+                const enumDefaults = defaultsOf({ enum: [3, 4] });
+                expect(defaultsOf(list)).toStrictEqual(enumDefaults);
+                expect(defaultsOf({ allOf: [list] })).toStrictEqual(enumDefaults);
+                expect(enumDefaults).toStrictEqual([expected, expected]);
+              },
+            );
+          });
           it("the keys of an option before those of the option its allOf offers, as the field's own list and allOf: 'populateDefaults' order them", () => {
             const inner: RJSFSchema = {
               properties: { p: { const: 1 } },

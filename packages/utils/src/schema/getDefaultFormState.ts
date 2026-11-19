@@ -1694,8 +1694,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // value as it stands, as an `enum`'s is, rather than giving way to the constant of the option it picked. It is
       // the value out-of-list data is replaced by below, unless the constant wins over both under `constAsDefaults:
       // 'always'`. Data the defaults replace, as they replace it below, is no data here either, so the default stands
-      // on each pass, as an `enum`'s does
+      // on each pass, as an `enum`'s does. The field's own `const`, where it is the field's defaults, wins over both
       const fieldDefault =
+        !constDefault &&
         choice.offersConstants &&
         defaultsReplace(rawFormData, props.requiredAsRoot === true, defaultFormStateBehavior) &&
         defaultFormStateBehavior?.constAsDefaults !== 'always'
@@ -1786,8 +1787,11 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         // `typeDefaults()`
         // Any constant is reported, since only an object one is left out, and only an object value is folded without it
         props.onObjectConst?.();
-        // The field's own default, by precedence, is the value out-of-list data is replaced by, as an `enum`'s is
-        defaults = ownDefaults();
+        // The field's own default, by precedence, is the value out-of-list data is replaced by, as an `enum`'s is,
+        // unless its own `const` is its defaults, which wins over that default as it does without the options
+        if (!constDefault) {
+          defaults = ownDefaults();
+        }
         const constant = toConstant<S>(choice.wholeOptions[choice.index]);
         if (
           rawFormData === undefined &&
@@ -2046,7 +2050,11 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     options.some((option, index) => optionTakesValueOf<S, F>(context, view, key, index, option, defaults));
   // A `default: null` of its own is a default, which wins over the inherited one as it does for any other field
   const inheritedDefault = ancestorPicks || schema.default === undefined ? defaults : schema.default;
-  const valueToMatch = rawFormData ?? (picksWholeOption || ancestorPicks ? inheritedDefault : schema.default);
+  // Data the defaults replace, as a `NaN`, is matched as no data, by the default that replaces it
+  const heldData = defaultsReplace(rawFormData, props.requiredAsRoot === true, defaultFormStateBehavior)
+    ? undefined
+    : rawFormData;
+  const valueToMatch = heldData ?? (picksWholeOption || ancestorPicks ? inheritedDefault : schema.default);
   // A constant option equal to the value is the one it picked, whatever the validator makes of the others
   const equalOptionIndex = picksWholeOption
     ? wholeOptions.findIndex((option) => deepEquals(toConstant<S>(option), valueToMatch))
