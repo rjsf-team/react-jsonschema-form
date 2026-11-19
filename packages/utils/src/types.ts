@@ -142,15 +142,17 @@ export interface DefaultFormStateBehavior {
    * `formData` does: when the `if` lists in `required` a property that only a default provides, the `then` default is
    * filled in, and a default that does not match an `if` without `required` picks the `else`. A value `formData` holds
    * wins over the default, and where a branch takes back the default that selects it, the branch is picked from
-   * `formData` alone. A nested `allOf` is skipped as a whole, plain property defaults included, while an
-   * `if-then-else` placed directly in a nested object schema is resolved, along with any `allOf` next to it, unless
-   * `emptyObjectFields` is `skipEmptyDefaults`. With one `allOf` entry per `enum` value and no `formData`, the `then`
-   * default of the entry the defaulted value matches is filled in, and a `customMergeAllOf` that throws on the
-   * conflicting `default`s the entries bring together still warns about them. Each property's defaults are computed
-   * from the property as the schema declares it, so a `customMergeAllOf` built on a deep merger leaves a property's
-   * `allOf` skipped too. The `allOf` and `if-then-else` of a `dependencies` entry are resolved once its property has a
-   * value, even when `emptyObjectFields` is `skipEmptyDefaults`, and a default counts as that value, so the entry's
-   * `if` is checked against it.
+   * `formData` alone. A nested `allOf` is skipped as a whole, plain property defaults included, except for the `const`
+   * it gives the field, or a key of a field whose own `type` is `object` that the field doesn't declare in its own
+   * `properties`, directly or through the `oneOf`/`anyOf` option the field shows, while an `if-then-else` placed
+   * directly in a nested object schema is resolved, along with any `allOf` next to it, unless `emptyObjectFields` is
+   * `skipEmptyDefaults`. With one `allOf` entry per `enum` value and no `formData`, the `then` default of the entry the
+   * defaulted value matches is filled in, and a `customMergeAllOf` that throws on the conflicting `default`s the
+   * entries bring together still warns about them. Each property's defaults are computed from the property as the
+   * schema declares it, so a `customMergeAllOf` built on a deep merger leaves a property's `allOf` skipped too. The
+   * `allOf` and `if-then-else` of a `dependencies` entry are resolved once its property has a value, even when
+   * `emptyObjectFields` is `skipEmptyDefaults`, and a default counts as that value, so the entry's `if` is checked
+   * against it.
    * See the `allOf` section of `defaultFormStateBehavior` in the form props docs for examples of each case.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
@@ -173,6 +175,8 @@ export interface DefaultFormStateBehavior {
    * - `skipOneOf`: If const is in a `oneOf` it will NOT pick the first value as a default
    * - `never`: A const value will never be used as a default
    *
+   * Left unset, a const value is used as a default as under `always`, but only an explicit `always` lets it take the
+   * place of a value the `formData` holds, or of a `default` that names none of the constants of a `oneOf`/`anyOf`.
    */
   constAsDefaults?: 'always' | 'skipOneOf' | 'never';
   /** Optional enumerated flag controlling how defaults defined on multiple levels are merged together for overlapping

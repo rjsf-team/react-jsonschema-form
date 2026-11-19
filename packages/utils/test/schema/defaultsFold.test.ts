@@ -14,6 +14,7 @@ import {
   getDefaultBasedOnSchemaType,
   getObjectDefaults,
   mergeReachesConst,
+  optionReachesConst,
 } from '../../src/schema/getDefaultFormState.ts';
 import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
 import type { Provenance } from '../../src/schema/graph/provenance.ts';
@@ -1660,6 +1661,43 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     expect(counting.calls).toBe(0);
   });
 
+  it('plans no second pass for an option const a then offers, which an empty field never takes (#5895)', () => {
+    const counting = miniValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        x: {
+          type: 'object',
+          properties: { t: { type: 'string', default: 'a' } },
+          allOf: [{ if: { required: ['t'] }, then: { oneOf: [{ const: { a: 1 } }] } }],
+        },
+      },
+    };
+    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { t: 'a' } });
+    // A second pass, planned for the defaults `{ t: 'a' }`, would check the `if`
+    expect(counting.calls).toBe(0);
+  });
+
+  it("reads an option const its allOf offers by the field's data, not by the defaults a pass hands its dependencies (#5895)", () => {
+    const counting = miniValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      required: ['x'],
+      properties: {
+        x: {
+          type: 'object',
+          properties: { a: { type: 'number' } },
+          dependencies: { a: { oneOf: [{ properties: { a: { const: 1 }, b: { type: 'number', default: 5 } } }] } },
+          allOf: [{ oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }],
+        },
+      },
+    };
+    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { a: 1 } });
+    // Read by the defaults the first pass hands the next, the `const` would be dropped on that pass, which then checks
+    // the `dependencies` option once more
+    expect(counting.calls).toBe(1);
+  });
+
   it('retrieves no optional field the Optional Data Controls collapse unless it may reach an object const', () => {
     const counting = miniValidator();
     const schema: RJSFSchema = {
@@ -1927,5 +1965,47 @@ describe('mergeReachesConst()', () => {
     expect(() => mergeReachesConst(graph, unknown, true)).toThrow(RangeError);
     const known = graph.byPointer('/definitions/c');
     expect(known !== undefined && mergeReachesConst(graph, known, true)).toBe(true);
+  });
+});
+
+describe('optionReachesConst()', () => {
+  const graphOf = (definitions: Record<string, RJSFSchema>) => {
+    const graph = parseSchemaGraph({ definitions });
+    const node = (pointer: string) => graph.byPointer(pointer) ?? -1;
+    return { graph, node };
+  };
+
+  it.each([
+    ['A', 'B'],
+    ['B', 'A'],
+  ])('answers the options of a cycle that reaches no const false, %s asked before %s', (first, second) => {
+    // Each option offers a list whose one option is the other
+    const { graph, node } = graphOf({
+      A: { oneOf: [{ $ref: '#/definitions/B' }] },
+      B: { oneOf: [{ $ref: '#/definitions/A' }] },
+    });
+    expect(optionReachesConst(graph, node(`/definitions/${first}/oneOf/0`))).toBe(false);
+    expect(optionReachesConst(graph, node(`/definitions/${second}/oneOf/0`))).toBe(false);
+  });
+
+  it.each([
+    ['A', 'B'],
+    ['B', 'A'],
+  ])('settles every option of a cycle with the const one of them reaches, %s asked before %s', (first, second) => {
+    const { graph, node } = graphOf({
+      A: { oneOf: [{ $ref: '#/definitions/B' }] },
+      B: { oneOf: [{ $ref: '#/definitions/A' }, { properties: { c: { const: 'x' } } }] },
+    });
+    expect(optionReachesConst(graph, node(`/definitions/${first}/oneOf/0`))).toBe(true);
+    expect(optionReachesConst(graph, node(`/definitions/${second}/oneOf/0`))).toBe(true);
+  });
+
+  it('leaves no option open where the graph throws', () => {
+    const { graph, node } = graphOf({ c: { const: 'x' } });
+    const unknown = 1_000_000;
+    expect(() => optionReachesConst(graph, unknown)).toThrow(RangeError);
+    // An option left open would answer now instead of throwing again
+    expect(() => optionReachesConst(graph, unknown)).toThrow(RangeError);
+    expect(optionReachesConst(graph, node('/definitions/c'))).toBe(true);
   });
 });
