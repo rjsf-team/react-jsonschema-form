@@ -7457,12 +7457,44 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             for (const [formData, expected] of [
               [{ n: 7 }, { n: 3 }],
               [{ n: 4 }, { n: 4 }],
+              [{ n: null }, { n: 3 }],
             ]) {
               expect(getDefaultFormState(always, { schema: numbers.nested, formData })).toStrictEqual(
                 getDefaultFormState(always, { schema: numbers.own, formData }),
               );
               expect(getDefaultFormState(always, { schema: numbers.nested, formData })).toStrictEqual(expected);
             }
+            const objects = ownAndNested({ oneOf: [{ const: C }] }, rootOf);
+            expect(getDefaultFormState(always, { schema: objects.nested, formData: { x: null } })).toStrictEqual(
+              getDefaultFormState(always, { schema: objects.own, formData: { x: null } }),
+            );
+          });
+          it.each<[string, unknown, Partial<DefaultFormStateBehavior>]>([
+            ['a NaN', Number.NaN, {}],
+            [
+              "a null under mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'",
+              null,
+              { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+            ],
+          ])('the const replacing %s the field holds, as the defaults do', (_, n, behavior) => {
+            const { own, nested } = ownAndNested({ oneOf: [{ const: 3 }, { const: 4 }] }, (list) => ({
+              type: 'object',
+              required: ['n'],
+              properties: { n: { type: 'number', ...list } },
+            }));
+            const context = {
+              validator: testValidator,
+              defaultFormStateBehavior: { allOf: 'skipDefaults' as const, ...behavior },
+            };
+            expect(getDefaultFormState(context, { schema: nested, formData: { n } })).toStrictEqual(
+              getDefaultFormState(context, { schema: own, formData: { n } }),
+            );
+            expect(getDefaultFormState(context, { schema: nested, formData: { n } })).toStrictEqual({ n: 3 });
+            // A select over whole values keeps the value as it holds it
+            const objects = ownAndNested({ oneOf: [{ const: C }] }, rootOf);
+            expect(getDefaultFormState(context, { schema: objects.nested, formData: { x: n } })).toStrictEqual(
+              getDefaultFormState(context, { schema: objects.own, formData: { x: n } }),
+            );
           });
         });
       });

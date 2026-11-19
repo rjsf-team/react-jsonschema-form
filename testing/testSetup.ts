@@ -34,6 +34,9 @@ expect.addEqualityTesters([
   function equalsWithoutProvenance(a, b, customTesters) {
     const unstampedA = withoutProvenance(a);
     const unstampedB = withoutProvenance(b);
-    return unstampedA === a && unstampedB === b ? undefined : this.equals(unstampedA, unstampedB, customTesters);
+    // `Object.is`, since a `NaN` is never `===` itself, so comparing it here would call this tester again for good
+    return Object.is(unstampedA, a) && Object.is(unstampedB, b)
+      ? undefined
+      : this.equals(unstampedA, unstampedB, customTesters);
   },
 ]);

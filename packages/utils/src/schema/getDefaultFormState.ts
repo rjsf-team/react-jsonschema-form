@@ -1584,10 +1584,11 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
   const xxxOf = offered && !view.options.chosen.has(offered.options) ? offered : undefined;
   const ownConst = fieldConstOf<S, F>(context, view);
-  const fieldConst =
+  const adoptedConst =
     offered === undefined && constValueOf<S>(ownConst.schema) === undefined
-      ? (adoptedOptionConst<T, S, F>(context, view, props, defaults, preferParentDefaults) ?? ownConst)
-      : ownConst;
+      ? adoptedOptionConst<T, S, F>(context, view, props, defaults, preferParentDefaults)
+      : undefined;
+  const fieldConst = adoptedConst ?? ownConst;
   const { schema: constSchema } = fieldConst;
   if (fieldConst.object !== undefined) {
     props.onObjectConst?.();
@@ -1796,11 +1797,16 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // its properties were computed as from that wins, as an `if`/`then` `const` does. Object data the untyped field
       // can't take is no value of it, so its defaults stand, as a typed field's do above, before and after the form has
       // generated its defaults. Under `constAsDefaults: 'always'` a missing value takes the field's `const`, as the
-      // match gives a field its own one, wherever the merge brings it in
-      const matching =
-        rawFormData === undefined && defaultFormStateBehavior?.constAsDefaults === 'always' && constDefault
-          ? constSchema[CONST_KEY]
-          : viewFormDataMatching<unknown, S, F>(context, view, rawFormData, defaults);
+      // match gives a field its own one, wherever the merge brings it in. The match reads no `const` of the option an
+      // unmerged `allOf` offers, so a value of any kind takes one the field takes from such an option, as the option's
+      // own match gives it where the field offers the list itself, except a whole value, which the select keeps
+      const takesConst =
+        defaultFormStateBehavior?.constAsDefaults === 'always' &&
+        constDefault &&
+        (rawFormData === undefined || (adoptedConst !== undefined && foldedType !== 'whole'));
+      const matching = takesConst
+        ? constSchema[CONST_KEY]
+        : viewFormDataMatching<unknown, S, F>(context, view, rawFormData, defaults);
       if (isObject(rawFormData) && matching !== undefined && initialDefaultsGenerated && !mergedAllOf) {
         // Once the form has generated its defaults, the object data of an untyped field is the user's as it stands, as
         // the extra keys of an object field are (#3759), so a nested object they cleared isn't filled in again
@@ -1830,7 +1836,8 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * declared, and with only the field's own `default`. Only the option's `const` is taken, read with the option's own
  * `$ref` and `allOf` merged: its `default`s stay skipped, as `skipDefaults` skips the `allOf`'s. A field holding data
  * keeps it unless `constAsDefaults: 'always'` says a `const` replaces it, as for a list the field offers itself, so
- * only then is the list merged on an edit
+ * only then is the list merged on an edit. A `NaN` or a `null` is a value the defaults may replace, as they replace a
+ * missing one, so the field holding one takes the `const` for the merge with its data to decide on
  */
 function adoptedOptionConst<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1841,13 +1848,11 @@ function adoptedOptionConst<T, S extends StrictRJSFSchema, F extends FormContext
 ): FieldConst<S> | undefined {
   const { defaultFormStateBehavior } = context;
   const { rawFormData } = props;
+  const always = defaultFormStateBehavior?.constAsDefaults === 'always';
+  const keepsData = rawFormData !== undefined && rawFormData !== null && !Number.isNaN(rawFormData);
   // `'never'` is checked here too, though the `const` read below checks it, so the merge and the option scoring, which
   // can ask the validator, are spared where no `const` can be taken
-  if (
-    (rawFormData !== undefined && defaultFormStateBehavior?.constAsDefaults !== 'always') ||
-    view.collapsed ||
-    defaultFormStateBehavior?.constAsDefaults === 'never'
-  ) {
+  if ((keepsData && !always) || view.collapsed || defaultFormStateBehavior?.constAsDefaults === 'never') {
     return undefined;
   }
   const field = optionsMergedField<S, F>(context, view, optionReachesConst<S>);
@@ -1863,7 +1868,9 @@ function adoptedOptionConst<T, S extends StrictRJSFSchema, F extends FormContext
   };
   const choice = chooseOption<T, S, F>(context, offering, list, rawFormData, defaults, preferParentDefaults, props);
   const option = list.options[choice.index];
-  if (!isSchemaObject<S>(option)) {
+  // A select over whole values keeps whatever value the field holds, as one the field offers itself does
+  const keepsWholeValue = rawFormData !== undefined && !always && choice.wholeOptions !== undefined;
+  if (!isSchemaObject<S>(option) || keepsWholeValue) {
     return undefined;
   }
   const { graph, node } = offeredOption<S>(offering, list.key, choice.index, option);
