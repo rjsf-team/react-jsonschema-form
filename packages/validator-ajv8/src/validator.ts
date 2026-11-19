@@ -362,7 +362,11 @@ export default class AJV8Validator<
       // One with an `$id` of its own is keyed by that `$id` whatever root it names, so the other root gives it up
       if (schemaWithIdRefPrefix[ID_KEY] && other !== undefined) {
         const key = schemaId.replace(/#$/, '');
-        if (other.subschemaIds.delete(key)) {
+        if (key === other.id) {
+          // Ajv takes an `$id` once, so the other root registered under it is dropped rather than checked in its place
+          this.removeRootSchema(other.id, other.subschemaIds);
+          this.roots = [root];
+        } else if (other.subschemaIds.delete(key)) {
           this.removeSchemas(new Set([key]));
         }
       }

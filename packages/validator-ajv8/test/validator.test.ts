@@ -346,6 +346,17 @@ describe('AJV8Validator', () => {
             Object.keys(localValidator.ajv.schemas).filter((id) => id.startsWith(ROOT_SCHEMA_PREFIX)),
           ).toHaveLength(2);
         });
+        it('checks a subschema with the `$id` of the other root held against itself, not that root', () => {
+          const localValidator = new AJV8Validator({});
+          const withId: RJSFSchema = { $id: 'https://example.com/a.json', ...rootOf('string') };
+          const b = rootOf('number');
+          const own: RJSFSchema = { $id: 'https://example.com/a.json', type: 'number' };
+          for (let i = 0; i < 2; i++) {
+            check(localValidator, withId);
+            expect(localValidator.isValid(own, 1, b)).toBe(true);
+            expect(localValidator.isValid(own, 'a', b)).toBe(false);
+          }
+        });
         it('gives a subschema with an `$id` of its own to the root it is checked against', () => {
           const localValidator = new AJV8Validator({});
           const [a, b] = [rootOf('string'), rootOf('number')];
