@@ -4,8 +4,7 @@ description: '`submit()` now submits an edit made in the same handler, but the b
 packages: ['@rjsf/core']
 uses: [form-ref]
 schema: []
-kind: runtime
-noticed: review
+affects: [data, experience]
 related: []
 ---
 

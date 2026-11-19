@@ -4,8 +4,7 @@ description: 'A non-numeric value in a `number`/`integer` field, such as legacy 
 packages: ['@rjsf/core', '@rjsf/bootstrap3', '@rjsf/chakra-ui', '@rjsf/daisyui', '@rjsf/fluentui-rc', '@rjsf/mui', '@rjsf/react-bootstrap', '@rjsf/shadcn']
 uses: [form]
 schema: [numbers]
-kind: runtime
-noticed: review
+affects: [experience, data]
 related: [number-fields-render-text-input]
 ---
 

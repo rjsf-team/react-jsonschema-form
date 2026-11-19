@@ -4,8 +4,7 @@ description: '`displayLabel` is now true only where the template draws the label
 packages: ['@rjsf/core']
 uses: [custom-templates]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related:
   [
     display-label-raw-errors-hide-label-deprecated,

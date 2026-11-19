@@ -4,8 +4,7 @@ description: Each package's `exports` now lists only its public entry points, so
 packages: ['*']
 uses: [tooling, utils-api]
 schema: []
-kind: removal
-noticed: build
+affects: [setup, code]
 related: [label-is-exported-as-fieldlabel, compile-schema-validators-is-a-subpath, theme-components-have-no-import-path, utils-default-state-internals-not-exported, esm-only-packages]
 ---
 

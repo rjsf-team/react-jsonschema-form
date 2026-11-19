@@ -4,8 +4,7 @@ description: "`disabled`, `onChange`, `onBlur`, `onFocus`, `value` and `checked`
 packages: ['@rjsf/mui']
 uses: [ui-schema]
 schema: []
-kind: removal
-noticed: review
+affects: [code, data]
 related: [shadcn-range-ignores-form-controlled-props, mantine-ignores-form-controlled-ui-options]
 ---
 

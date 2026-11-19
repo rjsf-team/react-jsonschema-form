@@ -4,8 +4,7 @@ description: 'A field chosen by `ui:field` or a `$id` now draws its own label an
 packages: ['@rjsf/core']
 uses: [custom-fields]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related:
   [
     display-label-raw-errors-hide-label-deprecated,

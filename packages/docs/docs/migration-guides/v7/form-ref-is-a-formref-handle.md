@@ -4,8 +4,7 @@ description: 'Form is a function component, so its ref exposes `FormRef<T>` and 
 packages: ['@rjsf/core']
 uses: [form-ref, typescript]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [reset-goes-back-to-the-seed, form-ref-validate-takes-only-the-data, form-ref-needs-form-data-type]
 ---
 

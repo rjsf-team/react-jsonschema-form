@@ -4,8 +4,7 @@ description: '`Form` now sanitizes its data by comparing the field tree before a
 packages: ['@rjsf/core']
 uses: [form]
 schema: [defaults, any-of-one-of, additional-properties, arrays, refs]
-kind: runtime
-noticed: test
+affects: [data]
 related: [option-switch-keeps-keys-the-new-option-takes, sanitize-data-for-new-schema-removes-discarded-keys, selected-option-stays-while-you-type, ui-required-and-omit-extra-data-read-option-on-screen]
 ---
 

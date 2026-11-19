@@ -4,8 +4,7 @@ description: Every `@rjsf/*` package now ships only per-file ESM in `lib/`, and 
 packages: ['*']
 uses: [tooling]
 schema: []
-kind: install
-noticed: build
+affects: [setup]
 related: [umd-bundles-removed, deep-imports-removed]
 ---
 

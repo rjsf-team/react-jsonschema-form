@@ -4,8 +4,7 @@ description: An array item locked on its own, through its schema's `readOnly` or
 packages: ['@rjsf/core']
 uses: [ui-schema, custom-templates]
 schema: [arrays]
-kind: runtime
-noticed: review
+affects: [experience, code]
 related: [array-templates-disable-buttons-that-cannot-act]
 ---
 

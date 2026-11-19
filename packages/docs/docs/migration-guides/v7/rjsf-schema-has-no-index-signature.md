@@ -4,8 +4,7 @@ description: '`RJSFSchema` no longer carries a `Record<string, any>` index signa
 packages: ['@rjsf/utils']
 uses: [typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [rjsf-schema-custom-keywords-need-augmentation, generic-object-type-values-are-unknown]
 ---
 

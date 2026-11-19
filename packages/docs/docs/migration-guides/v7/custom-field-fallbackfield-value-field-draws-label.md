@@ -4,8 +4,7 @@ description: A custom field that renders `FallbackField` without its `presentati
 packages: ['@rjsf/core']
 uses: [custom-fields, markup]
 schema: [type-lists]
-kind: markup
-noticed: test
+affects: [appearance, code, experience]
 related: [custom-field-rendering-schemafield-gets-default-field, named-custom-field-applies-once-per-data-path]
 ---
 

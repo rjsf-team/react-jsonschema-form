@@ -4,8 +4,7 @@ description: "A `@rjsf/mantine` month, day, hour, minute or second part now show
 packages: ['@rjsf/mantine']
 uses: [markup]
 schema: [dates]
-kind: markup
-noticed: test
+affects: [experience, appearance]
 related: [mantine-alt-date-parts-render-through-select-widget]
 ---
 

@@ -4,8 +4,7 @@ description: '`onChange` now runs before React updates the inputs, so the DOM st
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: []
-kind: runtime
-noticed: review
+affects: [code]
 related: [form-ref-needs-form-data-type]
 ---
 

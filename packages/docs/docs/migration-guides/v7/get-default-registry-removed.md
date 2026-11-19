@@ -4,8 +4,7 @@ description: The `getDefaultRegistry()` export of `@rjsf/core` is removed. Use `
 packages: ['@rjsf/core']
 uses: [custom-fields, custom-widgets, custom-templates]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [form-get-registry-is-build-registry]
 ---
 

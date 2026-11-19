@@ -4,8 +4,7 @@ description: '`@rjsf/validator-ata` now precompiles each schema as a document th
 packages: ['@rjsf/validator-ata']
 uses: [custom-validator]
 schema: [refs]
-kind: runtime
-noticed: runtime-error
+affects: [code, setup, data]
 related: [precompiled-validator-code-must-be-regenerated]
 ---
 

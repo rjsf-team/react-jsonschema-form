@@ -4,8 +4,7 @@ description: '`getDefaultFormState()` used to keep object data under a field who
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, utils-api]
 schema: [defaults, enums]
-kind: runtime
-noticed: review
+affects: [data]
 related: []
 ---
 

@@ -4,8 +4,7 @@ description: The static `Form.getRegistry()` is removed and its logic is now the
 packages: ['@rjsf/core']
 uses: [custom-fields, custom-widgets, custom-templates]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [get-test-registry-moved-to-core-testing, get-default-registry-removed]
 ---
 

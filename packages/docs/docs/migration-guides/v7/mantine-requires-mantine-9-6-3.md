@@ -4,8 +4,7 @@ description: '`@rjsf/mantine` no longer supports Mantine 8. Upgrade Mantine to 9
 packages: ['@rjsf/mantine']
 uses: [form]
 schema: []
-kind: install
-noticed: build
+affects: [setup]
 related: [mantine-grid-gutter-is-gap]
 ---
 

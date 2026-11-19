@@ -4,8 +4,7 @@ description: "`withTheme()` now returns `ThemedForm<T, S, F>`, a generic functio
 packages: ['@rjsf/core']
 uses: [custom-theme, typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [with-theme-returns-a-function-component]
 ---
 

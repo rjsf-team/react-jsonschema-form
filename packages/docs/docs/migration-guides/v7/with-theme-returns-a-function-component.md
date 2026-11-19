@@ -4,8 +4,7 @@ description: "`withTheme()` now returns a plain function component instead of a 
 packages: ['@rjsf/core']
 uses: [custom-theme]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [code]
 related: [with-theme-returns-a-themed-form]
 ---
 

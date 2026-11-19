@@ -4,8 +4,7 @@ description: '`getDefaultFormState()` now fills a recursive `$ref` once past whe
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, utils-api]
 schema: [refs, defaults]
-kind: runtime
-noticed: review
+affects: [data]
 related: [expand-cycle-reveals-one-level-per-click, defaults-fill-more-then-dependency-and-ref-option-shapes]
 ---
 

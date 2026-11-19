@@ -4,8 +4,7 @@ description: "`@rjsf/mantine`'s `ColorWidget` used to read `ui:options.format` f
 packages: ['@rjsf/mantine']
 uses: [ui-schema]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code, appearance]
 related: []
 ---
 

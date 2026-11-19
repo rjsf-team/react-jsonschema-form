@@ -4,8 +4,7 @@ description: The `templates` prop of `Form`, and a theme's `templates` passed to
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [typescript, custom-templates, custom-theme]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related:
   [
     custom-template-entries-have-never-props,

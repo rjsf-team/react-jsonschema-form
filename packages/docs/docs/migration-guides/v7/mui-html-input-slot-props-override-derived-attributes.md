@@ -4,8 +4,7 @@ description: '`@rjsf/mui` used to overwrite a `step`, `min`, `max` or `accept` p
 packages: ['@rjsf/mui']
 uses: [ui-schema, custom-widgets]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [custom-base-input-template-forwards-input-mode-and-pattern]
 ---
 

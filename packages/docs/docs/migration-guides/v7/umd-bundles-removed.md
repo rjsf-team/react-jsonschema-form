@@ -4,8 +4,7 @@ description: The `dist/<name>.umd.js` bundles are no longer published, so a `<sc
 packages: ['*']
 uses: [tooling]
 schema: []
-kind: install
-noticed: runtime-error
+affects: [setup]
 related: [esm-only-packages]
 ---
 

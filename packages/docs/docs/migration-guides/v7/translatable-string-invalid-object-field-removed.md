@@ -3,8 +3,7 @@ title: TranslatableString.InvalidObjectField is removed
 description: "`TranslatableString.InvalidObjectField` named the error an incomplete `ui:order` used to render, and is removed since the object now renders. Drop that case from a custom `translateString`, which no longer compiles with it."
 packages: ['@rjsf/utils']
 uses: [typescript, form-props]
-kind: removal
-noticed: type-error
+affects: [code]
 related: [file-info-is-plain-text, translate-string-table-needs-new-keys]
 ---
 

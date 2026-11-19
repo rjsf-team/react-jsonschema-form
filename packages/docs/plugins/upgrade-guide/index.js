@@ -12,7 +12,7 @@ const { loadVersions } = require('./entries.js');
 const { GUIDES_DIR } = require('./layout.js');
 const { writeOutputs } = require('./outputs.js');
 const { permalinksFromAllContent, permalinksFromPlugins, resolveVersions } = require('./resolve.js');
-const { EVERY_USER_USE, KINDS, NOTICED, SCHEMA, USES } = require('./vocabulary.js');
+const { EVERY_USER_USE, HEADINGS, SCHEMA, USES } = require('./vocabulary.js');
 
 /** @typedef {import('./entries.js').Version[]} Content */
 
@@ -51,19 +51,18 @@ function upgradeGuidePlugin(context) {
             uses: USES,
             everyUserUse: EVERY_USER_USE,
             schema: SCHEMA,
-            kinds: KINDS,
-            noticed: NOTICED,
+            headings: HEADINGS,
             packages: version.packages,
             entries: version.entries.map(
-              ({ id, title, description, packages, uses, schema, kind, noticed, permalink }) => ({
+              ({ id, title, description, packages, uses, schema, affects, deprecated, permalink }) => ({
                 id,
                 title,
                 description,
                 packages,
                 uses,
                 schema,
-                kind,
-                noticed,
+                affects,
+                deprecated,
                 permalink,
               }),
             ),

@@ -4,8 +4,7 @@ description: An `Omit` of `TemplatesType` with literal keys collapses to its ind
 packages: ['@rjsf/utils']
 uses: [typescript, custom-templates, custom-theme]
 schema: []
-kind: type
-noticed: review
+affects: [code]
 related: [templates-prop-checks-template-props]
 ---
 

@@ -4,8 +4,7 @@ description: The `getDefaultFormState()` internals and `calculateIndexScore()` u
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: []
-kind: removal
-noticed: build
+affects: [setup, code]
 related: [deep-imports-removed]
 ---
 

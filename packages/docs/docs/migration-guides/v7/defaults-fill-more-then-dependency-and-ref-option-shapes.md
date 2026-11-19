@@ -4,8 +4,7 @@ description: 'Defaults now come from a `then` branch on an untyped property, fro
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form]
 schema: [defaults, any-of-one-of, refs]
-kind: runtime
-noticed: review
+affects: [data]
 related: [recursive-ref-defaults-stop-at-the-cycle, all-of-defaults-behavior-reaches-more-shapes, dependency-oneof-option-matched-through-allof]
 ---
 

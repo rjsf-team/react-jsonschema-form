@@ -4,8 +4,7 @@ description: The selected option now lives in the form, and `SchemaField` stubs 
 packages: ['@rjsf/core']
 uses: [custom-fields]
 schema: [any-of-one-of]
-kind: runtime
-noticed: review
+affects: [code]
 related: [selected-option-stays-while-you-type, anyof-oneof-field-options-are-already-retrieved]
 ---
 

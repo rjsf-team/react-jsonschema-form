@@ -4,8 +4,7 @@ description: "`RJSFMarkedSchema` lost its index signature, and its marker values
 packages: ['@rjsf/utils']
 uses: [typescript, utils-api]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [additional-property-flag-counts-only-when-truthy, rjsf-schema-custom-keywords-need-augmentation]
 ---
 

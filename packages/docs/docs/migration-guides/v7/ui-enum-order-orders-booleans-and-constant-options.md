@@ -4,8 +4,7 @@ description: '`ui:enumOrder` used to be ignored on a boolean without `ui:enumNam
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: [enums, any-of-one-of]
-kind: runtime
-noticed: review
+affects: [experience, data]
 related: [boolean-enum-values-labelled-yes-no]
 ---
 

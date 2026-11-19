@@ -4,8 +4,7 @@ description: 'An `anyOf`/`oneOf` field''s template now draws its label, descript
 packages: ['@rjsf/core']
 uses: [ui-schema, markup]
 schema: [any-of-one-of]
-kind: runtime
-noticed: test
+affects: [appearance, experience]
 related:
   [
     field-template-reads-the-presentation-plan,

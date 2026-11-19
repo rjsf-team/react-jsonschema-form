@@ -4,8 +4,7 @@ description: '`@rjsf/react-bootstrap` now names radio and checkbox groups throug
 packages: ['@rjsf/react-bootstrap']
 uses: [markup, custom-fields]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: [label-and-title-ids-move-to-spans]
 ---
 

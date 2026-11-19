@@ -4,8 +4,7 @@ description: 'An enum option `value`, the enum helpers and `UIOptionsType.emptyV
 packages: ['@rjsf/utils']
 uses: [typescript, custom-widgets, utils-api]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [enum-value-type-includes-null-objects-and-arrays, enum-option-value-encoder-removed, form-data-type-defaults-to-unknown]
 ---
 

@@ -4,8 +4,7 @@ description: A control's `name` is its id, so every control whose id changed in 
 packages: ['@rjsf/core', '@rjsf/antd', '@rjsf/chakra-ui', '@rjsf/mantine', '@rjsf/mui']
 uses: [form-props]
 schema: []
-kind: runtime
-noticed: review
+affects: [data]
 related: [ids-cant-collide-or-split-an-id-list]
 ---
 

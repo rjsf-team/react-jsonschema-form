@@ -4,8 +4,7 @@ description: Without live validation, an edit now clears the validator's errors 
 packages: ['@rjsf/core']
 uses: [form]
 schema: []
-kind: runtime
-noticed: test
+affects: [experience]
 related: []
 ---
 

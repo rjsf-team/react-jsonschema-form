@@ -4,8 +4,7 @@ description: 'A widget of yours registered as `RadioWidget`, `CheckboxesWidget`,
 packages: ['@rjsf/core', '@rjsf/antd', '@rjsf/chakra-ui', '@rjsf/fluentui-rc', '@rjsf/mantine', '@rjsf/mui']
 uses: [custom-widgets]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, experience, appearance]
 related: [label-and-title-ids-move-to-spans, widget-reads-the-presentation-plan]
 ---
 

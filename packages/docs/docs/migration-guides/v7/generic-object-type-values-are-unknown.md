@@ -4,8 +4,7 @@ description: '`GenericObjectType` was `Record<string, any>` and is now `Record<s
 packages: ['@rjsf/utils']
 uses: [typescript, utils-api]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [rjsf-schema-has-no-index-signature, generic-symbol-object-type-removed, merge-objects-requires-object-first-argument]
 ---
 

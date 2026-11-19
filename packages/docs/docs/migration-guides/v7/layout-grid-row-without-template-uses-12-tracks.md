@@ -4,8 +4,7 @@ description: "In chakra-ui, fluentui-rc and shadcn, a `ui:row` with no column te
 packages: ['@rjsf/chakra-ui', '@rjsf/fluentui-rc', '@rjsf/shadcn']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance]
 related: [antd-grid-span-counts-twelfths]
 ---
 

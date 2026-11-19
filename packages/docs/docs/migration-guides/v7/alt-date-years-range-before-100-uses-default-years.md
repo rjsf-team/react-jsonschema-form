@@ -4,8 +4,7 @@ description: "An `AltDateWidget` given a `yearsRange` reaching before 100 or aft
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [ui-schema]
 schema: [dates]
-kind: runtime
-noticed: review
+affects: [data, experience]
 related: []
 ---
 

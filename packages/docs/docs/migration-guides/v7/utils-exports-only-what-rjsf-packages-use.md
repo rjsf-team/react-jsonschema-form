@@ -4,8 +4,7 @@ description: '`@rjsf/utils` used to export helpers such as `canExpand`, `getTemp
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [schema-functions-take-schema-context]
 ---
 

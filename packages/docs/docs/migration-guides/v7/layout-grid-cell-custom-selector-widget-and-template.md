@@ -4,8 +4,7 @@ description: 'A discriminated grid cell now renders through `SchemaField`, so it
 packages: ['@rjsf/core']
 uses: [custom-widgets, custom-templates]
 schema: [any-of-one-of]
-kind: runtime
-noticed: review
+affects: [code]
 related: [layout-grid-discriminated-cell-renders-a-field-wrapper]
 ---
 

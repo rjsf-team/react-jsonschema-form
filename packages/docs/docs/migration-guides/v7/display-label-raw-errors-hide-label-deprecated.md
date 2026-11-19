@@ -4,8 +4,8 @@ description: 'Each field now gets a `presentation` plan, so `displayLabel`, `raw
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-templates, custom-widgets, custom-fields, utils-api]
 schema: []
-kind: deprecation
-noticed: review
+affects: [code]
+deprecated: true
 related:
   [
     field-template-reads-the-presentation-plan,

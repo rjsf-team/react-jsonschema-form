@@ -4,8 +4,7 @@ description: Array item handlers such as `onAddItem` and `onRemoveItem` used to 
 packages: ['@rjsf/core']
 uses: [custom-templates]
 schema: [arrays]
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [array-drag-and-drop-keeps-orderable-on, disabled-array-item-disables-its-buttons, tuple-copy-shows-from-last-fixed-item]
 ---
 

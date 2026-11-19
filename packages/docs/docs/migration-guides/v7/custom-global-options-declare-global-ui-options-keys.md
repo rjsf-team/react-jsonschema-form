@@ -4,8 +4,7 @@ description: A key of your own in `ui:globalOptions` used to reach every compone
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-widgets, custom-templates, typescript]
 schema: []
-kind: runtime
-noticed: type-error
+affects: [code]
 related: [ui-global-options-hold-only-global-options, theme-global-options-use-theme-types]
 ---
 

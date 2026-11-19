@@ -4,8 +4,7 @@ description: "`LayoutGridField` now passes every `GridTemplate` a `fieldId`, and
 packages: ['@rjsf/core']
 uses: [custom-templates]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [code]
 related: []
 ---
 

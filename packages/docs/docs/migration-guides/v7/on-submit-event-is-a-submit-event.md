@@ -4,8 +4,7 @@ description: "The `event` parameter of `onSubmit` is now typed `SubmitEvent<HTML
 packages: ['@rjsf/core']
 uses: [typescript]
 schema: []
-kind: type
-noticed: review
+affects: [code]
 related: [types-react-19-2-18-required]
 ---
 

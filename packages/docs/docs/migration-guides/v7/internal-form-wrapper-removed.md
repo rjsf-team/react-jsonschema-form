@@ -4,8 +4,7 @@ description: The private `_internalFormWrapper` prop of `Form` and its `ThemePro
 packages: ['@rjsf/core']
 uses: [custom-theme, form-props]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: []
 ---
 

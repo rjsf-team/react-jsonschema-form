@@ -4,8 +4,7 @@ description: "`@rjsf/mantine` inputs used Mantine's own ids, and errors rendered
 packages: ['@rjsf/mantine']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [experience, appearance]
 related: [mantine-group-labels-take-the-title-id, mantine-custom-widgets-draw-errors-by-their-key, mantine-wrapper-options-reach-every-widget, alt-date-parts-named-by-field-label]
 ---
 

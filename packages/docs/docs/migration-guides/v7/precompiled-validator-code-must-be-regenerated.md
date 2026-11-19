@@ -4,8 +4,7 @@ description: 'Precompiled validators are now compiled for `$ref`s into the root 
 packages: ['@rjsf/validator-ajv8', '@rjsf/validator-ata']
 uses: [custom-validator, tooling]
 schema: []
-kind: removal
-noticed: runtime-error
+affects: [setup, code]
 related: [validator-ata-precompiled-documents-inline-their-refs, custom-validator-is-valid-receives-refs, compile-schema-validators-is-a-subpath, utils-exports-only-what-rjsf-packages-use]
 ---
 

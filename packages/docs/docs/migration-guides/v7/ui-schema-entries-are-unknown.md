@@ -4,8 +4,7 @@ description: An entry read from an untyped `UiSchema`, from a field typed `any` 
 packages: ['@rjsf/utils']
 uses: [typescript, ui-schema, custom-fields, custom-widgets]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [bare-ui-schema-rejects-record-data, undeclared-ui-options-are-unknown]
 ---
 

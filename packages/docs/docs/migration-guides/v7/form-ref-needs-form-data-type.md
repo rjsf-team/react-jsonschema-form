@@ -4,8 +4,7 @@ description: A `FormRef` with no type argument now means `FormRef<unknown>` and 
 packages: ['@rjsf/core']
 uses: [typescript, form-ref]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [form-data-type-defaults-to-unknown, form-ref-is-a-formref-handle]
 ---
 

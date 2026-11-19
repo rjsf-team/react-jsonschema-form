@@ -4,8 +4,7 @@ description: '`@rjsf/daisyui` used to give the time input in the date-time picke
 packages: ['@rjsf/daisyui']
 uses: [markup]
 schema: [dates]
-kind: markup
-noticed: test
+affects: [appearance]
 related: [ids-cant-collide-or-split-an-id-list]
 ---
 

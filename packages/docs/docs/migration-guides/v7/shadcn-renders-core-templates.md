@@ -4,8 +4,7 @@ description: "@rjsf/shadcn now renders core's plain-HTML templates through a `cl
 packages: ['@rjsf/shadcn']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: [themes-from-generators-need-generate-class-map, theme-copies-of-core-templates-removed]
 ---
 

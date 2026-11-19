@@ -113,15 +113,15 @@ The frontmatter says who the entry is for:
 - `packages`: the packages it affects. A change every user meets lists `@rjsf/core`; `*` means every `@rjsf/*` package.
 - `uses`: how the reader's code meets it. `form` means every user of those packages, whatever their schema.
 - `schema`: optionally, the schema features it depends on. An entry with any applies only to readers whose schemas use one of them; leave it out when the schema doesn't matter.
-- `kind`: one of, in the order to apply them, `install`, `removal`, `type`, `runtime`, `markup`, `deprecation`. When several fit, pick the earliest.
-- `noticed`: how a TypeScript reader with tests first meets the change, one of `build` (installing, building or bundling fails), `type-error` (the type checker reports it; give the exact error text in `## Detect`), `runtime-error` (it throws or logs a console warning), `test` (only a test or snapshot fails) or `review` (nothing reports it, so the reader has to check). The filtered page counts the matching entries by this value.
+- `affects`: what the change touches in the reader's app, most important first, from `setup` (dependencies, peer versions, Node and React, CSS or subpath imports), `code` (imports, props, options and signatures, custom widgets, templates and fields), `data` (defaults, the `anyOf`/`oneOf` option picked, the data and errors a form submits and validates), `appearance` (class names, elements and nesting that CSS rules, selectors and DOM snapshots rely on) and `experience` (label and button text, accessible names, focus, keyboard use and when errors appear). The first value decides the heading the entry is listed under on the filtered page and in the agent files.
+- `deprecated`: optionally `true`, only for something that still works in this version and goes in a later major. The entry is listed under a final Deprecations heading instead of its `affects` heading.
 - `related`: optionally, ids of entries that must be read with this one.
 
-`packages/docs/plugins/upgrade-guide/vocabulary.js` is the single list of allowed `packages`, `uses`, `schema`, `kind` and `noticed` values, with what each one means; add a value there rather than inventing one in an entry.
+`packages/docs/plugins/upgrade-guide/vocabulary.js` is the single list of allowed `packages`, `uses`, `schema` and `affects` values, with what each one means; add a value there rather than inventing one in an entry.
 
 The body has no `#` title (the frontmatter `title` is the page title) and these `##` sections, in this order:
 
-- `## Detect`: concrete things to search for or observe (export, type or prop names, `ui:` keys, schema keywords, import paths, CSS classes, exact type-error text, a visible symptom) and where each one shows.
+- `## Detect`: concrete things to search for or observe (export, type or prop names, `ui:` keys, schema keywords, import paths, CSS classes, a visible symptom) and where each one shows. When the type checker reports the change, quote its exact error text.
 - `## Change`: what to do, with a before/after `diff` when code has to change. Never "as above": each entry stands alone.
 - `## Verify`: what passing looks like, and the consequences of the change to check.
 - `## If you can't preserve it`: optional, only when the old behavior can't be kept.

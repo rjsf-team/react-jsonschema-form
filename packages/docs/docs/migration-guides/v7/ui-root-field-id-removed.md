@@ -4,8 +4,7 @@ description: "The deprecated `ui:rootFieldId` uiSchema key has been removed. Pas
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [ui-schema]
 schema: []
-kind: removal
-noticed: review
+affects: [code, experience]
 related: []
 ---
 

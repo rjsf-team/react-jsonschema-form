@@ -4,8 +4,7 @@ description: '`Form` and `SchemaField` now compare props shallowly, so `experime
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form-props, utils-api, typescript]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [form-props-need-stable-references]
 ---
 

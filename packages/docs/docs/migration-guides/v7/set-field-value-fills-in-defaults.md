@@ -4,8 +4,7 @@ description: 'Under `useDefaultIfFormDataUndefined`, `setFieldValue(path, undefi
 packages: ['@rjsf/core']
 uses: [form-ref, form-props]
 schema: [defaults]
-kind: runtime
-noticed: review
+affects: [data]
 related: [cleared-field-takes-a-changed-fields-default]
 ---
 

@@ -4,8 +4,7 @@ description: Core's marker classes now carry the `rjsf-` prefix, field state is 
 packages: ['@rjsf/core']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance]
 related: [bootstrap-3-markup-moved-to-bootstrap3, daisyui-renders-core-components, shadcn-renders-core-templates]
 ---
 

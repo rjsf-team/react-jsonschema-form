@@ -4,8 +4,7 @@ description: "The deprecated `Form.omitExtraData()` instance method has been rem
 packages: ['@rjsf/core']
 uses: [form-ref]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [omit-extra-data-submit-keeps-the-omitted-data]
 ---
 

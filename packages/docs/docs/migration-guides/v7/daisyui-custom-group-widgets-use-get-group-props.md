@@ -4,8 +4,7 @@ description: "`@rjsf/daisyui`'s group widgets now carry a role, the field id and
 packages: ['@rjsf/daisyui']
 uses: [custom-widgets, custom-templates]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [daisyui-field-label-and-widget-markup-changed, widget-reads-the-presentation-plan]
 ---
 

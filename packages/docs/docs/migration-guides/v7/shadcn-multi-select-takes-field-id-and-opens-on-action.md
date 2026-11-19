@@ -4,8 +4,7 @@ description: "`@rjsf/shadcn`'s multiple select input had a cmdk-generated id and
 packages: ['@rjsf/shadcn']
 uses: [markup]
 schema: [arrays]
-kind: markup
-noticed: test
+affects: [experience, appearance]
 related: [shadcn-select-names-its-combobox-and-fills-placeholders, select-open-list-named-by-field-label]
 ---
 

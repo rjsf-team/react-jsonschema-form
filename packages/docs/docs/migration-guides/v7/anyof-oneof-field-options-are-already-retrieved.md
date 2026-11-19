@@ -4,8 +4,7 @@ description: '`AnyOfField` and `OneOfField` used to retrieve their `options` sch
 packages: ['@rjsf/core']
 uses: [custom-fields]
 schema: [any-of-one-of]
-kind: runtime
-noticed: review
+affects: [code]
 related: [custom-layout-multi-schema-field-renders-only-the-selector]
 ---
 

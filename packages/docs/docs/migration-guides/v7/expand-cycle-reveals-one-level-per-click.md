@@ -4,8 +4,7 @@ description: 'Each Expand Cycle click now reveals one level of a recursive `$ref
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, markup]
 schema: [refs]
-kind: runtime
-noticed: test
+affects: [experience, data]
 related: [recursive-ref-defaults-stop-at-the-cycle, ref-cycle-expansion-uses-expand-ref-cycle]
 ---
 

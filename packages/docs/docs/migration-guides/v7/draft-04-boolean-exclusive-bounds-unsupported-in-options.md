@@ -4,8 +4,7 @@ description: 'Bounds merged from a field and its `anyOf`/`oneOf` option are read
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form]
 schema: [numbers, any-of-one-of]
-kind: runtime
-noticed: review
+affects: [data]
 related: [non-object-option-inherits-field-keywords]
 ---
 

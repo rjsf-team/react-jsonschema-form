@@ -4,8 +4,7 @@ description: "The deprecated boolean values for the `liveValidate` and `liveOmit
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: []
 ---
 

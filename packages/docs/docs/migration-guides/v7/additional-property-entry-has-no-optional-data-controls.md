@@ -4,8 +4,7 @@ description: '`enableOptionalDataFieldForType` used to give `additionalPropertie
 packages: ['@rjsf/core']
 uses: [ui-schema, markup]
 schema: [additional-properties]
-kind: runtime
-noticed: test
+affects: [appearance, experience]
 related: [root-field-has-no-optional-data-controls]
 ---
 

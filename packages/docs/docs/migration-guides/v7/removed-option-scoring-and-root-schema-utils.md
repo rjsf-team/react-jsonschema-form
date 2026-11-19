@@ -4,8 +4,7 @@ description: Four `@rjsf/utils` functions are removed. Match options with `getFi
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [should-render-optional-field-takes-a-field-path, utils-exports-only-what-rjsf-packages-use, sanitize-keeps-or-drops-values-by-field-tree]
 ---
 

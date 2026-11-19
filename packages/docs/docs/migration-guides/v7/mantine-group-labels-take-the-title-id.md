@@ -4,8 +4,7 @@ description: "`RadioWidget`'s label id was `root-label`, and `CheckboxesWidget`'
 packages: ['@rjsf/mantine']
 uses: [markup, ui-schema]
 schema: [enums]
-kind: markup
-noticed: test
+affects: [experience, appearance]
 related: [mantine-wrapper-options-reach-every-widget, mantine-markup-uses-rjsf-ids]
 ---
 

@@ -4,8 +4,7 @@ description: "`getChakra()` now takes the merged ui options and returns `JsxStyl
 packages: ['@rjsf/chakra-ui']
 uses: [custom-widgets, custom-templates, typescript]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [chakra-ui-applies-chakra-option, chakra-ui-chakra-option-takes-style-props-only]
 ---
 

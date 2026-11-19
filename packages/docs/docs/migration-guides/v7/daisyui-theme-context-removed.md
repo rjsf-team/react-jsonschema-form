@@ -4,8 +4,7 @@ description: "`ThemeContext`, reachable only through `@rjsf/daisyui/lib/theme/`,
 packages: ['@rjsf/daisyui']
 uses: [custom-theme]
 schema: []
-kind: removal
-noticed: build
+affects: [code, setup]
 related: [daisyui-use-theme-reads-the-stored-theme, deep-imports-removed]
 ---
 

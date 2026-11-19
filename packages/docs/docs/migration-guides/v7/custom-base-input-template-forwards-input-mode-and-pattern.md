@@ -4,8 +4,7 @@ description: '`InputPropsType` gained `inputMode` and `pattern`, which turn a nu
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-templates, custom-theme]
 schema: [numbers]
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [number-fields-render-text-input, number-input-title-tooltip-and-name]
 ---
 

@@ -4,8 +4,7 @@ description: 'Under `@rjsf/antd`, `ui:label: false` now hides the description wi
 packages: ['@rjsf/core', '@rjsf/antd']
 uses: [ui-schema]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance]
 related: []
 ---
 

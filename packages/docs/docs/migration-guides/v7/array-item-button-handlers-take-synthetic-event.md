@@ -4,8 +4,7 @@ description: 'The array add, copy, move and remove handlers used to take `(event
 packages: ['@rjsf/utils']
 uses: [typescript, custom-templates]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: []
 ---
 

@@ -4,8 +4,7 @@ description: A `text`, `updown` or `range` `ui:widget` on a field with `anyOf`/`
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: [any-of-one-of]
-kind: runtime
-noticed: test
+affects: [appearance, experience]
 related: []
 ---
 

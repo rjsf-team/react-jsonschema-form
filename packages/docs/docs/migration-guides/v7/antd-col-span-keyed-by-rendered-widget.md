@@ -4,8 +4,7 @@ description: 'A `formContext.colSpan` record used to key a property by widget on
 packages: ['@rjsf/antd']
 uses: [form-props]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance]
 related: [antd-custom-object-properties-set-rendered-as]
 ---
 

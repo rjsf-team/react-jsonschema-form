@@ -4,8 +4,7 @@ description: '`shouldRenderOptionalField()` now takes a required `fieldPath` fif
 packages: ['@rjsf/utils']
 uses: [custom-fields, utils-api]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [removed-option-scoring-and-root-schema-utils, root-field-has-no-optional-data-controls]
 ---
 

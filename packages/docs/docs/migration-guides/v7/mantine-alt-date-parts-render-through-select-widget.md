@@ -4,8 +4,7 @@ description: "Each date part of `@rjsf/mantine`'s `AltDateWidget` and `AltDateTi
 packages: ['@rjsf/mantine']
 uses: [custom-widgets]
 schema: [dates]
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related: [mantine-alt-date-parts-submit-the-option-index, mantine-alt-date-parts-show-two-digits, alt-date-parts-named-by-field-label, custom-select-widget-applies-aria-props]
 ---
 

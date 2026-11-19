@@ -4,8 +4,7 @@ description: "`createPrecompiledValidator()` now returns `AJV8PrecompiledValidat
 packages: ['@rjsf/validator-ajv8', '@rjsf/validator-ata']
 uses: [custom-validator, typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [precompiled-validator-takes-an-options-object, raw-validation-returns-validator-error-type]
 ---
 

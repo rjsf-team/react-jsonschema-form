@@ -4,8 +4,7 @@ description: "`RatingWidget` used to read `maximum` as a star count and ignore `
 packages: ['@rjsf/core', '@rjsf/daisyui']
 uses: [ui-schema]
 schema: [numbers]
-kind: runtime
-noticed: review
+affects: [appearance, data]
 related: []
 ---
 

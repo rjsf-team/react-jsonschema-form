@@ -4,8 +4,7 @@ description: "`@rjsf/core` now declares `react-dom` `>=19.2` as a peer dependenc
 packages: ['@rjsf/core']
 uses: [tooling]
 schema: []
-kind: install
-noticed: build
+affects: [setup]
 related: [react-19-2-required]
 ---
 

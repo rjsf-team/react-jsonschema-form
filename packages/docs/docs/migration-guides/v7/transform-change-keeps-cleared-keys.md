@@ -4,8 +4,7 @@ description: 'Under `useDefaultIfFormDataUndefined`, a clear now holds only whil
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: [defaults]
-kind: runtime
-noticed: review
+affects: [data, code]
 related: [refuse-or-rewrite-edits-in-transform-change, cleared-field-takes-a-changed-fields-default]
 ---
 

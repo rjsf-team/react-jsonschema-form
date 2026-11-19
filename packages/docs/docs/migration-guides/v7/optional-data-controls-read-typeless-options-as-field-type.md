@@ -4,8 +4,7 @@ description: The Optional Data Controls used to read a field's type from its `an
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: [any-of-one-of, arrays]
-kind: runtime
-noticed: test
+affects: [appearance, data]
 related: [optional-object-holding-empty-object-renders-open]
 ---
 

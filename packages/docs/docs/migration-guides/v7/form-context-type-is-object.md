@@ -4,8 +4,7 @@ description: '`FormContextType`, the constraint and default of every `F`, was `R
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [typescript, custom-fields, custom-widgets, custom-templates, ui-schema]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [form-data-type-defaults-to-unknown]
 ---
 

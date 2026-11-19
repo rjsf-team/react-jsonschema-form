@@ -4,8 +4,7 @@ description: '`@rjsf/fluentui-rc`''s `FieldTemplate` no longer hands `required` 
 packages: ['@rjsf/fluentui-rc']
 uses: [markup, custom-widgets]
 schema: []
-kind: markup
-noticed: test
+affects: [experience, code]
 related: [label-and-title-ids-move-to-spans, widget-under-built-in-key-takes-its-declaration]
 ---
 

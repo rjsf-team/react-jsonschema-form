@@ -4,8 +4,7 @@ description: The form-data generic `T` now defaults to `unknown` and the form-co
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related:
   [
     form-context-type-is-object,

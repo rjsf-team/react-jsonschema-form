@@ -4,8 +4,7 @@ description: 'Under `nestedDefaultsPrecedence: ''ancestorWins''`, a falsy ancest
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form-props]
 schema: [defaults]
-kind: runtime
-noticed: review
+affects: [data]
 related: [sanitize-keeps-or-drops-values-by-field-tree]
 ---
 

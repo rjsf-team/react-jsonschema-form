@@ -4,8 +4,7 @@ description: "Add buttons were titled `Add` in core, bootstrap3 and daisyui; eve
 packages: ['*']
 uses: [markup, form-props]
 schema: [additional-properties, arrays]
-kind: markup
-noticed: test
+affects: [experience, code]
 related: [object-field-template-spreads-add-button-props]
 ---
 

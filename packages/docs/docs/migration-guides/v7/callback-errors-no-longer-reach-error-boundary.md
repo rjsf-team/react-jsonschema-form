@@ -4,8 +4,7 @@ description: An error thrown by your `onChange`, `onBlur` or `onFocus` used to u
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [code]
 related: []
 ---
 

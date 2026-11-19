@@ -4,8 +4,7 @@ description: 'A `type: boolean` whose `oneOf`/`anyOf` has several constant optio
 packages: ['@rjsf/core']
 uses: [form, markup]
 schema: [enums, any-of-one-of]
-kind: runtime
-noticed: test
+affects: [appearance, experience]
 related: [typeless-constant-options-render-a-select, boolean-enum-values-labelled-yes-no]
 ---
 

@@ -4,8 +4,7 @@ description: Switching from a `null` option to an object option used to give onl
 packages: ['@rjsf/core']
 uses: [form]
 schema: [any-of-one-of, defaults]
-kind: runtime
-noticed: test
+affects: [data]
 related: [selected-option-stays-while-you-type, sanitize-keeps-or-drops-values-by-field-tree]
 ---
 

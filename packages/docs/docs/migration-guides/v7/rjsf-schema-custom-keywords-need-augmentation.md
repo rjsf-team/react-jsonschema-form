@@ -4,8 +4,7 @@ description: '`RJSFSchema` was `JSONSchema7 & Record<string, any>` and is now `J
 packages: ['@rjsf/utils']
 uses: [typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [rjsf-schema-has-no-index-signature, rjsf-marked-schema-has-no-index-signature]
 ---
 

@@ -4,8 +4,7 @@ description: 'A field with no `type` and an object `default` used to merge that 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form]
 schema: [defaults, type-lists]
-kind: runtime
-noticed: review
+affects: [data]
 related: []
 ---
 

@@ -4,8 +4,7 @@ description: "The no-op `removeEmptyOptionalObjects` Form prop and the `removeOp
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form-props, utils-api]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code, data]
 related: []
 ---
 

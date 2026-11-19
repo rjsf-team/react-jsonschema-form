@@ -4,8 +4,7 @@ description: "`ui:classNames` used to land on both the field wrapper and its inn
 packages: ['@rjsf/daisyui']
 uses: [ui-schema, markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance]
 related: [daisyui-wrap-if-additional-template-applies-style]
 ---
 

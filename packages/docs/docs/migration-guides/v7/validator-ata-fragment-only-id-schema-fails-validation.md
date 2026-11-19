@@ -4,8 +4,7 @@ description: "With `ata-validator` 1.64.0, an extra schema whose only `$id` is a
 packages: ['@rjsf/validator-ata']
 uses: [custom-validator]
 schema: [refs]
-kind: runtime
-noticed: runtime-error
+affects: [data, code]
 ---
 
 ## Detect

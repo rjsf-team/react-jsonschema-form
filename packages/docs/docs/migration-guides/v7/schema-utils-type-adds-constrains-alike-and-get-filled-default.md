@@ -4,8 +4,7 @@ description: "`SchemaUtilsType` has two new required methods and `doesSchemaUtil
 packages: ['@rjsf/utils']
 uses: [typescript, utils-api]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [schema-functions-take-schema-context]
 ---
 

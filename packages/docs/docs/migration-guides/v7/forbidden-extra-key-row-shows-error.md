@@ -4,8 +4,7 @@ description: An extra key the object's schema forbids used to render a row with 
 packages: ['@rjsf/core']
 uses: [markup, form-props]
 schema: [additional-properties]
-kind: markup
-noticed: test
+affects: [experience]
 related: [custom-templates-forward-key-not-allowed, translate-string-table-needs-new-keys]
 ---
 

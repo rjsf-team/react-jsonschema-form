@@ -4,8 +4,7 @@ description: 'The `allOf` defaults behavior now reaches an extra key''s `$ref`, 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form-props]
 schema: [defaults, refs, any-of-one-of]
-kind: runtime
-noticed: review
+affects: [data]
 related: [defaults-fill-more-then-dependency-and-ref-option-shapes]
 ---
 

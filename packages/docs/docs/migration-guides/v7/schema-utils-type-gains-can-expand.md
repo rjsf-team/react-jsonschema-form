@@ -4,8 +4,7 @@ description: '`SchemaUtilsType` has two new methods, `canExpand(schema, uiSchema
 packages: ['@rjsf/utils']
 uses: [typescript, utils-api]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [object-field-template-calls-schema-utils-can-expand]
 ---
 

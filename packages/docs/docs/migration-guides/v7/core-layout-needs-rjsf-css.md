@@ -4,8 +4,7 @@ description: Core no longer lays out array items, additional properties, the add
 packages: ['@rjsf/core']
 uses: [form, tooling]
 schema: []
-kind: markup
-noticed: review
+affects: [setup, appearance]
 related: [bootstrap-3-markup-moved-to-bootstrap3, field-template-keeps-core-layout-classes]
 ---
 

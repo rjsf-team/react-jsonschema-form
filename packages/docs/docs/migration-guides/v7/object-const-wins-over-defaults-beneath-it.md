@@ -4,8 +4,7 @@ description: "A key's own `default` used to win over an object `const` above it,
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, form-props]
 schema: [defaults, enums]
-kind: runtime
-noticed: review
+affects: [data]
 related: [optional-object-filled-only-by-const-starts-behind-add, all-of-const-takes-precedence-under-const-as-defaults-always]
 ---
 

@@ -4,8 +4,7 @@ description: '`ArrayField` used to hand each item''s field the array''s errors a
 packages: ['@rjsf/core']
 uses: [custom-fields]
 schema: [arrays]
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [array-field-no-longer-passes-error-schema-on-item-moves]
 ---
 

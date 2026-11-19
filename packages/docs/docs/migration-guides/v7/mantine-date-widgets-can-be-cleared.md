@@ -4,8 +4,7 @@ description: "`@rjsf/mantine`'s `DateWidget` and `DateTimeWidget` now show a Cle
 packages: ['@rjsf/mantine']
 uses: [form, ui-schema, markup]
 schema: [dates]
-kind: runtime
-noticed: test
+affects: [data, experience]
 related: [mantine-date-time-widget-renders-date-time-picker]
 ---
 

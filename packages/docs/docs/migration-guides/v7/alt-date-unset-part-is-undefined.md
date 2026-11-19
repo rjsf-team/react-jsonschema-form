@@ -4,8 +4,7 @@ description: An unpicked `AltDateWidget` part reached `SelectWidget`, `onFocus` 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-widgets, form-props]
 schema: [dates]
-kind: runtime
-noticed: review
+affects: [code]
 related: [use-alt-date-widget-props-returns-buttons-disabled, custom-select-widget-applies-aria-props]
 ---
 

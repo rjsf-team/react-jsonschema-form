@@ -4,8 +4,7 @@ description: '`retrieveSchema()` now returns a `$ref` under `properties`, `items
 packages: ['@rjsf/utils']
 uses: [utils-api, custom-fields]
 schema: [refs]
-kind: runtime
-noticed: review
+affects: [code]
 related: [retrieved-schemas-carry-rjsf-provenance-key]
 ---
 

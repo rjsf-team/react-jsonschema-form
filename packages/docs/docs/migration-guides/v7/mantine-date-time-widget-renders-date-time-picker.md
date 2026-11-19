@@ -4,8 +4,7 @@ description: "`@rjsf/mantine`'s `DateTimeWidget` rendered a typeable `DateInput`
 packages: ['@rjsf/mantine']
 uses: [form, ui-schema, markup]
 schema: [dates]
-kind: runtime
-noticed: test
+affects: [experience, appearance]
 related: [mantine-date-widgets-can-be-cleared, alt-date-parts-named-by-field-label]
 ---
 

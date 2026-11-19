@@ -4,8 +4,7 @@ description: "@rjsf/daisyui now renders core's file input, so `ui:options.multip
 packages: ['@rjsf/daisyui']
 uses: [ui-schema]
 schema: [arrays]
-kind: runtime
-noticed: review
+affects: [data, experience]
 related: [daisyui-renders-core-components]
 ---
 

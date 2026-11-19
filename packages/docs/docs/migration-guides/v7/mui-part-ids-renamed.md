@@ -4,8 +4,7 @@ description: '`@rjsf/mui` used to give an input''s label and helper text ids end
 packages: ['@rjsf/mui']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance]
 related: [ids-cant-collide-or-split-an-id-list]
 ---
 

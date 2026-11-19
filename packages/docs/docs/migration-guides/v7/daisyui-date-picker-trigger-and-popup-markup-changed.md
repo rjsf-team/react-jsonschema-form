@@ -4,8 +4,7 @@ description: "`@rjsf/daisyui`'s date triggers were a `div role='button'` and the
 packages: ['@rjsf/daisyui']
 uses: [markup]
 schema: [dates]
-kind: markup
-noticed: test
+affects: [experience, appearance]
 related: [daisyui-date-widgets-commit-the-field-format, daisyui-field-label-and-widget-markup-changed, translate-string-table-needs-new-keys]
 ---
 

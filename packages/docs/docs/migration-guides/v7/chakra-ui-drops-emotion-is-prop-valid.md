@@ -4,8 +4,7 @@ description: "`@rjsf/chakra-ui` no longer has `@emotion/is-prop-valid` as a depe
 packages: ['@rjsf/chakra-ui']
 uses: [tooling]
 schema: []
-kind: install
-noticed: build
+affects: [setup]
 related: []
 ---
 

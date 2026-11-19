@@ -4,8 +4,7 @@ description: A bare `UiSchema` or `UiSchema<GenericObjectType>` no longer fits a
 packages: ['@rjsf/utils']
 uses: [typescript, ui-schema]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [ui-schema-entries-are-unknown, form-data-type-defaults-to-unknown]
 ---
 

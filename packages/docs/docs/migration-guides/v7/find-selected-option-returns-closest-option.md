@@ -4,8 +4,7 @@ description: For options with no discriminator, `findSelectedOptionInXxxOf()` us
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: [any-of-one-of]
-kind: runtime
-noticed: review
+affects: [code]
 related: [schema-functions-take-schema-context]
 ---
 

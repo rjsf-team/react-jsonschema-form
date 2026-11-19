@@ -4,8 +4,7 @@ description: 'The `Registry` type in `@rjsf/utils` has two new required members,
 packages: ['@rjsf/utils']
 uses: [typescript, custom-fields, custom-widgets, custom-templates]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [form-get-registry-is-build-registry, get-test-registry-moved-to-core-testing]
 ---
 

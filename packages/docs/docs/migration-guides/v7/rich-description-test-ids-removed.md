@@ -4,8 +4,7 @@ description: '`RichDescription.TEST_IDS` and `RichHelp.TEST_IDS` are removed bec
 packages: ['@rjsf/core']
 uses: [markup]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [markdown-needs-markdown-template]
 ---
 

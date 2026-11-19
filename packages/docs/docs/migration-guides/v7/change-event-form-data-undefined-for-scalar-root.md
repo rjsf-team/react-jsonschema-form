@@ -4,8 +4,7 @@ description: '`IChangeEvent.formData` and `FormRef.getFormData()` are now `Event
 packages: ['@rjsf/core']
 uses: [typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [form-data-type-defaults-to-unknown, change-event-members-are-readonly]
 ---
 

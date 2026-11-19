@@ -4,8 +4,7 @@ description: A precompiled validator checked its root schema with the default `a
 packages: ['@rjsf/validator-ajv8', '@rjsf/validator-ata']
 uses: [custom-validator, form-props]
 schema: [defaults]
-kind: runtime
-noticed: runtime-error
+affects: [code, data]
 related: [custom-merge-all-of-applies-in-every-schema-function, precompiled-validator-takes-an-options-object, precompiled-validator-code-must-be-regenerated]
 ---
 

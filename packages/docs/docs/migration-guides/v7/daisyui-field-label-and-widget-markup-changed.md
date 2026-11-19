@@ -4,8 +4,7 @@ description: "`@rjsf/daisyui` labelled fields by schema type and rendered empty 
 packages: ['@rjsf/daisyui']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: [daisyui-date-picker-trigger-and-popup-markup-changed, daisyui-custom-group-widgets-use-get-group-props, object-and-array-groups-have-role-group]
 ---
 

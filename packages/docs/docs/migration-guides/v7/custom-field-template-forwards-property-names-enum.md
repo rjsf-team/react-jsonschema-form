@@ -4,8 +4,7 @@ description: The allowed key names of a `propertyNames.enum` now reach `WrapIfAd
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-templates]
 schema: [additional-properties]
-kind: runtime
-noticed: review
+affects: [code]
 related:
   [
     property-names-enum-key-renders-as-a-dropdown,

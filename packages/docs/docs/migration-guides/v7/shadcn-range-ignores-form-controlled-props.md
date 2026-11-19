@@ -4,8 +4,7 @@ description: "`ui:options.props` could override a shadcn range's `name`, `disabl
 packages: ['@rjsf/shadcn']
 uses: [ui-schema]
 schema: [numbers]
-kind: removal
-noticed: review
+affects: [data, experience]
 related: [mantine-ignores-form-controlled-ui-options, mui-ignores-form-controlled-props-in-ui-options-mui]
 ---
 

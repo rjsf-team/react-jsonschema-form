@@ -4,8 +4,7 @@ description: "Under `constAsDefaults: 'always'`, an object `const` or `anyOf`/`o
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form-props]
 schema: [defaults, enums]
-kind: runtime
-noticed: review
+affects: [data]
 related: [all-of-one-value-options-keep-the-data]
 ---
 

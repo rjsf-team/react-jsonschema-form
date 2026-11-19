@@ -4,8 +4,7 @@ description: '`mergeObjects()` and `mergeSchemas()` used to treat an `undefined`
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [code]
 related: []
 ---
 

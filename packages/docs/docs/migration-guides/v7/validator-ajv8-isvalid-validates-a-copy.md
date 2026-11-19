@@ -4,8 +4,7 @@ description: With Ajv's `useDefaults`, `coerceTypes`, `removeAdditional` or a `m
 packages: ['@rjsf/validator-ajv8']
 uses: [custom-validator]
 schema: []
-kind: runtime
-noticed: review
+affects: [data, code]
 related: [custom-validator-isvalid-must-not-change-data]
 ---
 

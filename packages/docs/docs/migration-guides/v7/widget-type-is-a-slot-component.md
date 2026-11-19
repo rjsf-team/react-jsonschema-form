@@ -4,8 +4,7 @@ description: "The `Widget` type is now `SlotComponent<WidgetProps>` and no longe
 packages: ['@rjsf/utils']
 uses: [typescript, custom-widgets]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [widget-default-props-options-not-merged, templates-read-from-props-are-slot-components]
 ---
 

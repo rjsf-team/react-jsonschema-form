@@ -4,8 +4,7 @@ description: 'A discriminated `oneOf`/`anyOf` cell of a `LayoutGridField` used t
 packages: ['@rjsf/core']
 uses: [ui-schema, markup]
 schema: [any-of-one-of]
-kind: runtime
-noticed: review
+affects: [appearance, experience]
 related: [layout-grid-cell-custom-selector-widget-and-template, custom-layout-multi-schema-field-renders-only-the-selector, layout-grid-cell-labelled-by-property-name, deep-imports-removed]
 ---
 

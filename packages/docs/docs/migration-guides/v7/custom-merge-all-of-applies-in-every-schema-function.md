@@ -4,8 +4,7 @@ description: "Four places ignored a form's `customMergeAllOf` or `defaultFormSta
 packages: ['@rjsf/core', '@rjsf/utils', '@rjsf/validator-ajv8', '@rjsf/validator-ata']
 uses: [form-props, custom-validator]
 schema: [defaults]
-kind: runtime
-noticed: review
+affects: [data, code]
 related: [precompiled-validator-takes-custom-merge-all-of, schema-functions-take-schema-context]
 ---
 

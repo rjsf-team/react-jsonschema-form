@@ -4,8 +4,7 @@ description: "`@rjsf/daisyui` removed its undocumented `src/styles.css` and its 
 packages: ['@rjsf/daisyui']
 uses: [tooling]
 schema: []
-kind: install
-noticed: build
+affects: [setup, appearance]
 related: []
 ---
 

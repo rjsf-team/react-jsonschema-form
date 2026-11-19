@@ -4,8 +4,7 @@ description: 'Under `useFallbackUiForUnsupportedType`, a `type` list and each `a
 packages: ['@rjsf/core']
 uses: [form-props, markup]
 schema: [type-lists, additional-properties]
-kind: runtime
-noticed: test
+affects: [experience, appearance]
 related: [type-list-starting-with-null-renders-its-first-other-type, untyped-additional-property-renders-its-constraints]
 ---
 

@@ -4,8 +4,7 @@ description: "An `if-then-else` or `dependencies` `oneOf` branch was picked from
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, utils-api]
 schema: [defaults, any-of-one-of]
-kind: runtime
-noticed: review
+affects: [data]
 related: [defaults-fill-more-then-dependency-and-ref-option-shapes]
 ---
 

@@ -4,8 +4,7 @@ description: "The theme's `UiSchema` types the `chakra` option as `JsxStyleProps
 packages: ['@rjsf/chakra-ui']
 uses: [ui-schema, typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [chakra-ui-applies-chakra-option, chakra-ui-get-chakra-takes-options]
 ---
 

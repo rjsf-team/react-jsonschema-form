@@ -4,8 +4,7 @@ description: Date parts and unlabelled selects and radio groups now get their na
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-widgets, custom-fields]
 schema: [dates, enums]
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [alt-date-parts-named-by-field-label, presentation-declares-description-order, alt-date-unset-part-is-undefined, widget-reads-the-presentation-plan]
 ---
 

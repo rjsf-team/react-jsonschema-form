@@ -4,8 +4,7 @@ description: 'A layout grid cell naming a nested field such as `person.address.c
 packages: ['@rjsf/core']
 uses: [ui-schema, markup]
 schema: []
-kind: runtime
-noticed: test
+affects: [experience]
 related: [layout-grid-cell-name-prop-is-the-property-name, layout-grid-discriminated-cell-renders-a-field-wrapper]
 ---
 

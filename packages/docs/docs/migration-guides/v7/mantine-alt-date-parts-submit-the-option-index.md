@@ -4,8 +4,7 @@ description: "Each `@rjsf/mantine` `AltDateWidget` part's hidden input used to h
 packages: ['@rjsf/mantine']
 uses: [form-props]
 schema: [dates]
-kind: runtime
-noticed: review
+affects: [data]
 related: [mantine-alt-date-parts-render-through-select-widget]
 ---
 

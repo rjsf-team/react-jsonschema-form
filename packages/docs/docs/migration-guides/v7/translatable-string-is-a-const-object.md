@@ -4,8 +4,7 @@ description: '`TranslatableString` used to be an `enum`, and is now an `as const
 packages: ['@rjsf/utils']
 uses: [typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [translate-string-table-needs-new-keys]
 ---
 

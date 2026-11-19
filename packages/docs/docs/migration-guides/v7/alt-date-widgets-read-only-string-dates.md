@@ -4,8 +4,7 @@ description: '`useAltDateWidgetProps()` reads only a string now, so the alt-date
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: [dates]
-kind: runtime
-noticed: review
+affects: [data]
 related: [widget-value-is-unknown]
 ---
 

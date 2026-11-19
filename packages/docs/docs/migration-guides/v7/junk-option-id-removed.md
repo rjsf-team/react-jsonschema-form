@@ -4,8 +4,7 @@ description: '`JUNK_OPTION_ID` is no longer exported from `@rjsf/utils`, since n
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: []
 ---
 

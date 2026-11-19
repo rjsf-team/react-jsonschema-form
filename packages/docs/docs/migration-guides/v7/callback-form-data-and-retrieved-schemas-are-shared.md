@@ -4,8 +4,7 @@ description: 'The `formData` a `Form` callback hands you now shares unchanged su
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form-props, utils-api]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, data]
 related: [form-data-is-frozen-in-development, root-schema-changed-in-place-is-not-reread, change-event-members-are-readonly]
 ---
 

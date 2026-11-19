@@ -4,8 +4,7 @@ description: '`@rjsf/mantine` used to give an input''s success message, label an
 packages: ['@rjsf/mantine']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance]
 related: [ids-cant-collide-or-split-an-id-list, mantine-markup-uses-rjsf-ids]
 ---
 

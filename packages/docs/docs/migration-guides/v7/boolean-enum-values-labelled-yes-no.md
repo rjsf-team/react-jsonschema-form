@@ -4,8 +4,7 @@ description: 'A boolean `enum` other than an unnamed `[true, false]` used to lab
 packages: ['@rjsf/core']
 uses: [form, markup]
 schema: [enums]
-kind: runtime
-noticed: test
+affects: [experience]
 related: [ui-enum-order-orders-booleans-and-constant-options, labelled-boolean-constant-options-default-to-a-select]
 ---
 

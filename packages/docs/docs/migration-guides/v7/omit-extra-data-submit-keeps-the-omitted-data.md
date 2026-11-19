@@ -4,8 +4,7 @@ description: With `omitExtraData`, a submit now passes the data with its extra f
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: [additional-properties]
-kind: runtime
-noticed: test
+affects: [data]
 related: []
 ---
 

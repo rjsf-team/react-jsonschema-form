@@ -4,8 +4,7 @@ description: "`createPrecompiledValidator()` used to take `localizer` and `suppr
 packages: ['@rjsf/validator-ajv8', '@rjsf/validator-ata']
 uses: [custom-validator]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [precompiled-validator-returns-its-class, localizer-gets-quoted-property-names, schema-functions-take-schema-context, validator-type-takes-schema-type-first]
 ---
 

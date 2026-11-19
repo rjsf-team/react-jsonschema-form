@@ -4,8 +4,7 @@ description: '`makeAllReferencesAbsolute()`, which only a deep import of `@rjsf/
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: [refs]
-kind: removal
-noticed: type-error
+affects: [code]
 related: [get-root-schema-returns-the-schema-as-passed, deep-imports-removed, ui-definitions-keyed-by-ref-as-written]
 ---
 

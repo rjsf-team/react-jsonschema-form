@@ -8,12 +8,19 @@ const path = require('node:path');
 const { localMarkdownFile } = require('./entries.js');
 const { demoteHeadings, mapLinks } = require('./markdown.js');
 const { appliesToPackage } = require('./resolve.js');
-const { ALWAYS_PACKAGES, EVERY_USER_USE, KINDS, NOTICED, SCHEMA, USES } = require('./vocabulary.js');
+const { AFFECTS, ALWAYS_PACKAGES, EVERY_USER_USE, HEADINGS, SCHEMA, USES, headingId } = require('./vocabulary.js');
 
-/** How a reader or agent decides whether an entry applies: the rule the filtered page applies to its checkboxes. */
+/**
+ * How a reader or agent decides whether an entry applies: the rule the filtered page applies to the answers given in
+ * its filter bar, where an unanswered question hides nothing.
+ */
 const APPLIES_RULE = `An entry applies to you when all three hold: your package.json has one of its \`packages\` (\`*\` is every \`@rjsf/*\` package, and every user has ${andList(
   codes(ALWAYS_PACKAGES.filter((id) => id !== '*')),
-)}); its \`uses\` lists \`${EVERY_USER_USE}\` (every user) or something your code does; and its \`schema\` is empty (\`any\`) or names something at least one of your schemas has.`;
+)}); its \`uses\` lists \`${EVERY_USER_USE}\` (every user) or something your code does; and its \`schema\` is empty (\`any\`) or names something at least one of your schemas has. When you can't tell whether one holds, keep the entry: the filtered page hides an entry only when an answer rules it out, and shows every entry when nothing is answered.`;
+
+/** Where the sections come from and the order to work through them. */
+const ORDER_RULE =
+  'Work through the sections in order. Each entry is listed under the heading of its first `affects` value, or under Deprecations when it has `deprecated: true`.';
 
 /**
  * @typedef {import('./resolve.js').ResolvedVersion} ResolvedVersion
@@ -58,9 +65,9 @@ function renderLlmsTxt(version, site) {
   const lines = [
     `# react-jsonschema-form ${version.name} upgrade guide`,
     '',
-    `> Every breaking change in react-jsonschema-form ${version.name}, one Markdown entry per action to take. ${APPLIES_RULE} Apply the entries in the order of the sections below.`,
+    `> Every breaking change in react-jsonschema-form ${version.name}, one Markdown entry per action to take. ${APPLIES_RULE} ${ORDER_RULE}`,
     '',
-    `Each entry's frontmatter has \`packages\`, \`uses\`, \`schema\` (left out or empty, shown as \`any\` below, when the change doesn't depend on your schema), \`kind\` and \`noticed\`, which says how you first meet the change: a failing build, a type error, a runtime error or warning, a failing test, or nothing at all, so a \`review\` entry needs a read even when everything passes. Its body has a \`## Detect\` section (what to search your code for), \`## Change\` (what to do) and \`## Verify\` (what passing looks like). People filter the same entries at ${absolute(site, version.page)}.`,
+    `Each entry's frontmatter has \`packages\`, \`uses\`, \`schema\` (left out or empty, shown as \`any\` below, when the change doesn't depend on your schema), \`affects\` (what the change touches in your app, most important first) and, for something that still works in ${version.name} and goes in a later major version, \`deprecated: true\`. Its body has a \`## Detect\` section (what to search your code for), \`## Change\` (what to do) and \`## Verify\` (what passing looks like). People filter the same entries at ${absolute(site, version.page)}.`,
     '',
     'The `uses` values:',
     '',
@@ -70,9 +77,9 @@ function renderLlmsTxt(version, site) {
     '',
     ...SCHEMA.map(({ id, detect }) => `- \`${id}\`: ${detect}`),
     '',
-    'The `noticed` values:',
+    'The `affects` values, in the order of their sections:',
     '',
-    ...NOTICED.map(({ id, label, hint }) => `- \`${id}\`: ${label}. ${hint}`),
+    ...AFFECTS.map(({ id, heading, line }) => `- \`${id}\`: ${heading}. ${line}`),
     '',
     '## Combined files',
     '',
@@ -80,18 +87,42 @@ function renderLlmsTxt(version, site) {
       ({ label, path: file, packageId }) =>
         `- [${label}](${absolute(site, file)}): ${
           packageId
-            ? `every entry for a user of \`${packageId}\`, in apply order`
-            : 'every entry of every package, in apply order'
+            ? `every entry for a user of \`${packageId}\`, under the same headings`
+            : 'every entry of every package, under the same headings'
         }`,
     ),
   ];
-  for (const kind of KINDS) {
-    const entries = version.entries.filter((entry) => entry.kind === kind.id);
-    if (entries.length > 0) {
-      lines.push('', `## ${kind.label}`, '', ...entries.map((entry) => llmsTxtLine(entry, version, site)));
-    }
+  for (const { heading, line, entries } of byHeading(version.entries)) {
+    lines.push('', `## ${heading}`, '', line, '', ...entries.map((entry) => llmsTxtLine(entry, version, site)));
   }
   return `${lines.join('\n')}\n`;
+}
+
+/**
+ * The headings that list at least one of `entries`, in order, each with its entries.
+ *
+ * @param {ResolvedEntry[]} entries
+ */
+function byHeading(entries) {
+  return HEADINGS.map((heading) => ({
+    ...heading,
+    entries: entries.filter((entry) => headingId(entry) === heading.id),
+  })).filter((group) => group.entries.length > 0);
+}
+
+/**
+ * The frontmatter facts that decide whether an entry applies and where it is listed.
+ *
+ * @param {ResolvedEntry} entry
+ */
+function facts(entry) {
+  return [
+    `packages: ${codeList(entry.packages)}`,
+    `uses: ${codeList(entry.uses)}`,
+    `schema: ${schemaList(entry.schema)}`,
+    `affects: ${codeList(entry.affects)}`,
+    ...(entry.deprecated ? ['deprecated: `true`'] : []),
+  ];
 }
 
 /**
@@ -100,14 +131,7 @@ function renderLlmsTxt(version, site) {
  * @param {Site} site
  */
 function llmsTxtLine(entry, version, site) {
-  const facts = [
-    `packages: ${codeList(entry.packages)}`,
-    `uses: ${codeList(entry.uses)}`,
-    `schema: ${schemaList(entry.schema)}`,
-    `kind: \`${entry.kind}\``,
-    `noticed: \`${entry.noticed}\``,
-  ];
-  return `- [${entry.title}](${entryMarkdownUrl(entry.id, version, site)}): ${facts.join('; ')}. ${entry.description}`;
+  return `- [${entry.title}](${entryMarkdownUrl(entry.id, version, site)}): ${facts(entry).join('; ')}. ${entry.description}`;
 }
 
 /**
@@ -131,30 +155,22 @@ function renderCombined(version, packageId, entries, site) {
     ? [
         `# react-jsonschema-form ${version.name} upgrade guide for ${packageId}`,
         '',
-        `> Every ${version.name} breaking change that applies to a user of \`${packageId}\`: the entries for \`${packageId}\` and for ${andList(codes(ALWAYS_PACKAGES))}, in apply order. ${count}. ${noticedSummary(entries)}`,
+        `> Every ${version.name} breaking change that applies to a user of \`${packageId}\`: the entries for \`${packageId}\` and for ${andList(codes(ALWAYS_PACKAGES))}. ${count}.`,
       ]
     : [
         `# react-jsonschema-form ${version.name} upgrade guide, every entry`,
         '',
-        `> Every ${version.name} breaking change of every package, in apply order. ${count}. ${noticedSummary(entries)}`,
+        `> Every ${version.name} breaking change of every package. ${count}.`,
       ];
   lines.push(
     '',
-    `${APPLIES_RULE} The index of every entry and combined file is ${absolute(site, `${version.route}llms.txt`)}.`,
+    `${APPLIES_RULE} ${ORDER_RULE} The index of every entry and combined file is ${absolute(site, `${version.route}llms.txt`)}.`,
   );
-  for (const kind of KINDS) {
-    const ofKind = entries.filter((entry) => entry.kind === kind.id);
-    if (ofKind.length === 0) {
-      continue;
-    }
-    lines.push('', `## ${kind.label}`, '', kind.description);
-    for (const entry of ofKind) {
-      const facts = [
-        `- packages: ${codeList(entry.packages)}`,
-        `- uses: ${codeList(entry.uses)}`,
-        `- schema: ${schemaList(entry.schema)}`,
-        `- kind: \`${entry.kind}\``,
-        `- noticed: \`${entry.noticed}\``,
+  for (const { heading, line, entries: listed } of byHeading(entries)) {
+    lines.push('', `## ${heading}`, '', line);
+    for (const entry of listed) {
+      const lists = [
+        ...facts(entry).map((fact) => `- ${fact}`),
         ...(entry.related.length > 0
           ? [`- related: ${entry.related.map((id) => `[${id}](${entryMarkdownUrl(id, version, site)})`).join(', ')}`]
           : []),
@@ -164,7 +180,7 @@ function renderCombined(version, packageId, entries, site) {
         '',
         `### ${entry.title}`,
         '',
-        ...facts,
+        ...lists,
         '',
         entry.description,
         '',
@@ -173,18 +189,6 @@ function renderCombined(version, packageId, entries, site) {
     }
   }
   return `${lines.join('\n')}\n`;
-}
-
-/**
- * How many of `entries` a reader first meets each way, per the `noticed` vocabulary.
- *
- * @param {ResolvedEntry[]} entries
- */
-function noticedSummary(entries) {
-  const counts = NOTICED.map(({ id }) => [id, entries.filter((entry) => entry.noticed === id).length])
-    .filter(([, count]) => count > 0)
-    .map(([id, count]) => `${count} \`${id}\``);
-  return `By how you first meet them (\`noticed\`): ${counts.join(', ')}. A \`review\` entry needs a read even when everything passes.`;
 }
 
 /**

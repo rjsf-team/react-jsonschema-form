@@ -4,8 +4,7 @@ description: An `object` or `array` field with an `enum` or `anyOf`/`oneOf` of c
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [markup]
 schema: [enums, arrays]
-kind: markup
-noticed: test
+affects: [appearance]
 related: [typeless-constant-options-render-a-select]
 ---
 

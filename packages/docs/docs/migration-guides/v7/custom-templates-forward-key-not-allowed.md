@@ -4,8 +4,7 @@ description: Every theme's `FieldTemplate` now hands `WrapIfAdditionalTemplate` 
 packages: ['@rjsf/core']
 uses: [custom-templates]
 schema: [additional-properties]
-kind: markup
-noticed: runtime-error
+affects: [code]
 related: [forbidden-extra-key-row-shows-error, custom-templates-take-error-state-from-has-errors]
 ---
 

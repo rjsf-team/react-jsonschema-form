@@ -4,8 +4,7 @@ description: '`@rjsf/mui` no longer supports `@mui/material` and `@mui/icons-mat
 packages: ['@rjsf/mui']
 uses: [form]
 schema: []
-kind: install
-noticed: build
+affects: [setup]
 related: []
 ---
 

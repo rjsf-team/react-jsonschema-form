@@ -4,8 +4,7 @@ description: '`sanitizeDataForNewSchema()` used to drop some values on a schema 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, utils-api]
 schema: [any-of-one-of, enums, arrays, defaults]
-kind: runtime
-noticed: review
+affects: [data]
 related: [sanitize-data-for-new-schema-removes-discarded-keys, sanitize-keeps-or-drops-values-by-field-tree]
 ---
 

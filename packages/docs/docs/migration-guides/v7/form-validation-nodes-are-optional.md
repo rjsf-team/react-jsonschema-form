@@ -4,8 +4,7 @@ description: 'Every node of a typed `FormValidation<T>` or `ErrorSchema<T>` is n
 packages: ['@rjsf/utils']
 uses: [typescript, form-props]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [typed-error-schema-matches-the-error-tree]
 ---
 

@@ -4,8 +4,7 @@ description: '`ui:emptyValue` used to apply only when a user cleared a field; it
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: review
+affects: [data]
 related: [defaults-are-filled-in-without-onchange]
 ---
 

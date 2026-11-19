@@ -4,8 +4,7 @@ description: A typed `ui:options` used to accept `field`, `fieldReplacesAnyOrOne
 packages: ['@rjsf/utils']
 uses: [typescript, ui-schema]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [ui-options-field-and-reserved-keys-move-out]
 ---
 

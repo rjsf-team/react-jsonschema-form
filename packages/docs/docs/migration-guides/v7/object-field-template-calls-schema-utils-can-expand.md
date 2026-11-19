@@ -4,8 +4,7 @@ description: '`@rjsf/utils` no longer exports `canExpand()`, since whether an ob
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-templates, utils-api]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [schema-utils-type-gains-can-expand, utils-exports-only-what-rjsf-packages-use]
 ---
 

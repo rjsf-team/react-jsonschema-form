@@ -6,7 +6,7 @@ const path = require('node:path');
 
 const { GUIDES_DIR, VERSION_DIR, filteredPageFile, filteredPageName } = require('./layout.js');
 const { headings, linkDestinations } = require('./markdown.js');
-const { KINDS, NOTICED, SCHEMA, USES, packagesForVersion } = require('./vocabulary.js');
+const { AFFECTS, SCHEMA, USES, packagesForVersion } = require('./vocabulary.js');
 
 /**
  * @typedef {{
@@ -17,8 +17,8 @@ const { KINDS, NOTICED, SCHEMA, USES, packagesForVersion } = require('./vocabula
  *   packages: string[];
  *   uses: string[];
  *   schema: string[];
- *   kind: string;
- *   noticed: string;
+ *   affects: string[];
+ *   deprecated: boolean;
  *   related: string[];
  *   frontMatter: string;
  *   body: string;
@@ -42,7 +42,7 @@ const { KINDS, NOTICED, SCHEMA, USES, packagesForVersion } = require('./vocabula
 const ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const MAX_ID_LENGTH = 64;
 const MAX_DESCRIPTION_LENGTH = 260;
-const FIELDS = ['title', 'description', 'packages', 'uses', 'schema', 'kind', 'noticed', 'related'];
+const FIELDS = ['title', 'description', 'packages', 'uses', 'schema', 'affects', 'deprecated', 'related'];
 /** Docusaurus shows a frontmatter `title` as written, so Markdown in it would show literally. `_` is let through for
  * identifiers such as `ADDITIONAL_PROPERTY_FLAG`. */
 const TITLE_MARKDOWN = /[`*[<]/;
@@ -205,8 +205,8 @@ async function loadEntry(siteDir, filePath, relativePath, parseFrontMatter, erro
     packages: strings(frontMatter.packages),
     uses: strings(frontMatter.uses),
     schema: strings(frontMatter.schema),
-    kind: typeof frontMatter.kind === 'string' ? frontMatter.kind : '',
-    noticed: typeof frontMatter.noticed === 'string' ? frontMatter.noticed : '',
+    affects: strings(frontMatter.affects),
+    deprecated: frontMatter.deprecated === true,
     related: strings(frontMatter.related),
     frontMatter: rawFrontMatter[1],
     body: fileContent.slice(rawFrontMatter[0].length),
@@ -231,7 +231,7 @@ function validateFrontMatterTypes(frontMatter, at, errors) {
       );
     }
   }
-  for (const key of ['title', 'description', 'kind', 'noticed']) {
+  for (const key of ['title', 'description']) {
     const value = frontMatter[key];
     if (Array.isArray(value)) {
       errors.push(`${at}: \`${key}\` is a list; it takes one value.`);
@@ -239,9 +239,9 @@ function validateFrontMatterTypes(frontMatter, at, errors) {
       errors.push(`${at}: \`${key}\` is required and must be a non-empty string.`);
     }
   }
-  for (const key of ['packages', 'uses', 'schema', 'related']) {
+  for (const key of ['packages', 'uses', 'schema', 'affects', 'related']) {
     const value = frontMatter[key];
-    const required = key === 'packages' || key === 'uses';
+    const required = key === 'packages' || key === 'uses' || key === 'affects';
     if (value === undefined && !required) {
       continue;
     }
@@ -250,6 +250,9 @@ function validateFrontMatterTypes(frontMatter, at, errors) {
     } else if (required && value.length === 0) {
       errors.push(`${at}: \`${key}\` needs at least one value.`);
     }
+  }
+  if (frontMatter.deprecated !== undefined && frontMatter.deprecated !== true) {
+    errors.push(`${at}: \`deprecated\` is \`true\` or left out.`);
   }
 }
 
@@ -321,14 +324,13 @@ function validateEntry(entry, packages, ids, reserved, at, errors) {
     at,
     errors,
   );
-  if (entry.kind !== '' && !KINDS.some((kind) => kind.id === entry.kind)) {
-    errors.push(`${at}: \`kind\` \`${entry.kind}\` is not one of ${KINDS.map((kind) => `\`${kind.id}\``).join(', ')}.`);
-  }
-  if (entry.noticed !== '' && !NOTICED.some((noticed) => noticed.id === entry.noticed)) {
-    errors.push(
-      `${at}: \`noticed\` \`${entry.noticed}\` is not one of ${NOTICED.map((noticed) => `\`${noticed.id}\``).join(', ')}.`,
-    );
-  }
+  validateList(
+    entry.affects,
+    'affects',
+    AFFECTS.map((affects) => affects.id),
+    at,
+    errors,
+  );
   for (const related of entry.related) {
     if (related === id) {
       errors.push(`${at}: \`related\` lists the entry itself.`);

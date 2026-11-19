@@ -4,8 +4,7 @@ description: "While a promise from `onSubmit` is pending, the submit button gets
 packages: ['@rjsf/core']
 uses: [custom-templates, markup]
 schema: []
-kind: runtime
-noticed: test
+affects: [experience, appearance, code]
 related: [async-on-submit-ignores-submits-until-settled]
 ---
 

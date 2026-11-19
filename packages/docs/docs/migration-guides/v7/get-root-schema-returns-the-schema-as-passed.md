@@ -4,8 +4,7 @@ description: '`createSchemaUtils()` used to rewrite every `$ref` of a 2020-12 ro
 packages: ['@rjsf/utils']
 uses: [utils-api, custom-fields, custom-templates]
 schema: [refs]
-kind: runtime
-noticed: review
+affects: [code]
 related: [ui-definitions-keyed-by-ref-as-written, make-all-references-absolute-removed]
 ---
 

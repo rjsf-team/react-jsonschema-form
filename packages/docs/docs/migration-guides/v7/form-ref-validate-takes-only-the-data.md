@@ -4,8 +4,7 @@ description: "`validate()` on a `Form` ref lost its `schema`, `altSchemaUtils` a
 packages: ['@rjsf/core']
 uses: [form-ref]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [form-ref-is-a-formref-handle, schema-functions-take-schema-context]
 ---
 

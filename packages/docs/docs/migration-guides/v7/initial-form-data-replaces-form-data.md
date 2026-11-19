@@ -4,8 +4,8 @@ description: '`Form` is now uncontrolled: `initialFormData` is the seed it reads
 packages: ['@rjsf/core']
 uses: [form]
 schema: []
-kind: deprecation
-noticed: review
+affects: [code]
+deprecated: true
 related: [form-data-changes-after-mount-are-ignored, refuse-or-rewrite-edits-in-transform-change, defaults-are-filled-in-without-onchange, reset-goes-back-to-the-seed]
 ---
 

@@ -4,8 +4,7 @@ description: '`ArrayField` used to pass a remapped `errorSchema` to `onChange` w
 packages: ['@rjsf/core']
 uses: [custom-fields]
 schema: [arrays]
-kind: runtime
-noticed: review
+affects: [code, data]
 related: [onchange-error-schema-is-the-field-own-errors, custom-array-schema-field-raw-errors-are-the-item-errors, custom-field-passes-form-data-to-array-object-field]
 ---
 

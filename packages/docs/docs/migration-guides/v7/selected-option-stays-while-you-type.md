@@ -4,8 +4,7 @@ description: The option an `anyOf`/`oneOf` field shows used to follow the data a
 packages: ['@rjsf/core']
 uses: [form]
 schema: [any-of-one-of]
-kind: runtime
-noticed: test
+affects: [experience, data]
 related: [custom-anyof-oneof-field-uses-option-selection, ui-required-and-omit-extra-data-read-option-on-screen, sanitize-keeps-or-drops-values-by-field-tree, get-closest-matching-option-always-returns-an-option]
 ---
 

@@ -4,8 +4,7 @@ description: 'The `experimental_defaultFormStateBehavior` and `experimental_cust
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form-props, typescript, utils-api]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [schema-functions-take-schema-context]
 ---
 

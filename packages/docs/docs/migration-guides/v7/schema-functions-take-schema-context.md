@@ -4,8 +4,7 @@ description: "Schema functions such as `retrieveSchema()` and `createSchemaUtils
 packages: ['@rjsf/utils', '@rjsf/core']
 uses: [utils-api, form-props]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [get-default-form-state-takes-a-props-object, schema-utils-type-adds-constrains-alike-and-get-filled-default, custom-merge-all-of-applies-in-every-schema-function, utils-default-state-internals-not-exported]
 ---
 

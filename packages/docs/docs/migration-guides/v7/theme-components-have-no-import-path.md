@@ -4,8 +4,7 @@ description: A theme's single components under `lib/`, such as `@rjsf/mui/lib/Se
 packages: ['@rjsf/antd', '@rjsf/chakra-ui', '@rjsf/daisyui', '@rjsf/fluentui-rc', '@rjsf/mantine', '@rjsf/mui', '@rjsf/react-bootstrap', '@rjsf/shadcn']
 uses: [custom-widgets, custom-templates]
 schema: []
-kind: removal
-noticed: build
+affects: [setup, code]
 related: [deep-imports-removed]
 ---
 

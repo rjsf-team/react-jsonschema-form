@@ -4,8 +4,7 @@ description: 'The form now applies an edit before `onChange` reports it, so not 
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, data]
 related: [initial-form-data-replaces-form-data, transform-change-keeps-cleared-keys]
 ---
 

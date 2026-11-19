@@ -4,8 +4,7 @@ description: 'A native number input reported an unparseable value as empty; the 
 packages: ['@rjsf/core', '@rjsf/bootstrap3', '@rjsf/chakra-ui', '@rjsf/daisyui', '@rjsf/fluentui-rc', '@rjsf/mui', '@rjsf/react-bootstrap', '@rjsf/shadcn']
 uses: [form-props, form-ref]
 schema: [numbers]
-kind: runtime
-noticed: review
+affects: [data, code]
 related: [number-fields-render-text-input]
 ---
 

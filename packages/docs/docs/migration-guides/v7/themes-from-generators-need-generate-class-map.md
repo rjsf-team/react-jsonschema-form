@@ -4,8 +4,7 @@ description: "@rjsf/daisyui and @rjsf/shadcn now style core's components through
 packages: ['@rjsf/daisyui', '@rjsf/shadcn']
 uses: [custom-theme]
 schema: []
-kind: markup
-noticed: review
+affects: [code, appearance]
 related: [daisyui-renders-core-components, shadcn-renders-core-templates]
 ---
 

@@ -4,8 +4,7 @@ description: "`useTheme()` used to read a per-provider context and returned `nig
 packages: ['@rjsf/daisyui']
 uses: [custom-theme]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance, code]
 related: [daisyui-theme-context-removed]
 ---
 

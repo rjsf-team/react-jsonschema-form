@@ -4,8 +4,7 @@ description: 'A property hidden by `deprecatedHandling: ''hide''` or a `ui:defin
 packages: ['@rjsf/core', '@rjsf/antd', '@rjsf/mantine']
 uses: [ui-schema, markup, form-props]
 schema: []
-kind: markup
-noticed: test
+affects: [data, appearance]
 ---
 
 ## Detect

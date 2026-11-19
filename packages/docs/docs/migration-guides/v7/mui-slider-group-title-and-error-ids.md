@@ -4,8 +4,7 @@ description: '`@rjsf/mui`''s `RangeWidget` now puts the field''s id on the slide
 packages: ['@rjsf/mui']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: [label-and-title-ids-move-to-spans, widget-under-built-in-key-takes-its-declaration]
 ---
 

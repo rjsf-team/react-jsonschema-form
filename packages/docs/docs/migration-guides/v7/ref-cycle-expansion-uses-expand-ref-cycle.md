@@ -4,8 +4,7 @@ description: 'Which `$ref` cycles are expanded is now form state, and `retrieveS
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-fields, markup]
 schema: [refs]
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [sanitize-keeps-or-drops-values-by-field-tree, ui-required-and-omit-extra-data-read-option-on-screen]
 ---
 

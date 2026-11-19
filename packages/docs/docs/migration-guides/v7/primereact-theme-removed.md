@@ -4,8 +4,7 @@ description: '`@rjsf/primereact` has no v7 release because PrimeReact 11 require
 packages: ['@rjsf/primereact']
 uses: [form]
 schema: []
-kind: install
-noticed: build
+affects: [setup]
 related: []
 ---
 

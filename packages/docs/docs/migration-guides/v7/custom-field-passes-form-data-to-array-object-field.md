@@ -4,8 +4,7 @@ description: '`ArrayField` and `ObjectField` now add, remove, rename and reorder
 packages: ['@rjsf/core']
 uses: [custom-fields]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [code]
 related: []
 ---
 

@@ -4,8 +4,7 @@ description: A custom field named by `$id` used to be skipped beside `anyOf`/`on
 packages: ['@rjsf/core']
 uses: [custom-fields]
 schema: [any-of-one-of]
-kind: runtime
-noticed: runtime-error
+affects: [code, appearance]
 related: [custom-field-rendering-schemafield-gets-default-field]
 ---
 

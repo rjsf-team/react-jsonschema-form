@@ -4,8 +4,7 @@ description: The `@rjsf/utils` path and property helpers used to read inherited 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [utils-api, ui-schema]
 schema: [additional-properties]
-kind: runtime
-noticed: review
+affects: [data, code]
 related: [options-list-returns-undefined-for-non-constant-options]
 ---
 

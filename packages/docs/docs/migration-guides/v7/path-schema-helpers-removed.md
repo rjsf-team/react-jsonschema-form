@@ -4,8 +4,7 @@ description: "The deprecated `getUsedFormData`, `getFieldNames`, `toPathSchema` 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form-ref, utils-api, typescript]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: []
 ---
 

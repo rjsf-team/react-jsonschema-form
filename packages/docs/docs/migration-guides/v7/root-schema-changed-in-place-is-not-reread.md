@@ -4,8 +4,7 @@ description: 'Each root schema object is now parsed once and cached, so a change
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, custom-fields, utils-api]
 schema: []
-kind: runtime
-noticed: review
+affects: [code]
 related: []
 ---
 

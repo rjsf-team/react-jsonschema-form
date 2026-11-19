@@ -4,8 +4,7 @@ description: "`getClosestMatchingOption()` scored keys an option takes only thro
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, utils-api]
 schema: [any-of-one-of, additional-properties]
-kind: runtime
-noticed: review
+affects: [data]
 related: [get-closest-matching-option-always-returns-an-option]
 ---
 

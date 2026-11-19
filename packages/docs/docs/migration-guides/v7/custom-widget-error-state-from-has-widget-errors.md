@@ -4,8 +4,7 @@ description: 'Built-in widgets no longer style themselves invalid just because `
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-widgets, custom-theme]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related: [ui-hide-error-suppresses-theme-error-styling, custom-templates-take-error-state-from-has-errors, display-label-raw-errors-hide-label-deprecated]
 ---
 

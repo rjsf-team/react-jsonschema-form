@@ -4,8 +4,7 @@ description: "@rjsf/daisyui now uses core's radio and checkboxes widgets, which 
 packages: ['@rjsf/daisyui']
 uses: [custom-fields]
 schema: [enums]
-kind: markup
-noticed: review
+affects: [code, experience]
 related: [daisyui-renders-core-components]
 ---
 

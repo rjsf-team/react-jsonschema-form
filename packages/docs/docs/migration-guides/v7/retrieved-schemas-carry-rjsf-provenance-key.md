@@ -4,8 +4,7 @@ description: 'Every subschema `retrieveSchema()` hands out now carries the enume
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: []
-kind: runtime
-noticed: test
+affects: [code]
 related: [retrieve-schema-leaves-nested-refs-unresolved, ref-cycle-expansion-uses-expand-ref-cycle]
 ---
 

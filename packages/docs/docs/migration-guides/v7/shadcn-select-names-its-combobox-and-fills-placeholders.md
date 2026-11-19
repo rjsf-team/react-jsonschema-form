@@ -4,8 +4,7 @@ description: "`@rjsf/shadcn`'s selects had an unnamed combobox, a blank single t
 packages: ['@rjsf/shadcn']
 uses: [markup]
 schema: [enums]
-kind: markup
-noticed: test
+affects: [experience, appearance]
 related: [shadcn-multi-select-takes-field-id-and-opens-on-action, select-open-list-named-by-field-label, translate-string-table-needs-new-keys]
 ---
 

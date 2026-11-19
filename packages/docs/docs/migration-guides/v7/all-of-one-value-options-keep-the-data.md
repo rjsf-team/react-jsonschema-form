@@ -4,8 +4,7 @@ description: "A property whose `allOf` narrows its options to one value now keep
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, form-props]
 schema: [defaults, enums]
-kind: runtime
-noticed: review
+affects: [data]
 related: [all-of-defaults-behavior-reaches-more-shapes, all-of-const-takes-precedence-under-const-as-defaults-always]
 ---
 

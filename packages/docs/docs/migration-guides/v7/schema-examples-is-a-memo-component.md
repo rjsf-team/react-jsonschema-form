@@ -4,8 +4,7 @@ description: '`@rjsf/core` exports `SchemaExamples` wrapped in `memo()`, so call
 packages: ['@rjsf/core']
 uses: [custom-templates]
 schema: []
-kind: removal
-noticed: runtime-error
+affects: [code]
 related: []
 ---
 

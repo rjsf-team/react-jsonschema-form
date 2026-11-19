@@ -4,8 +4,7 @@ description: Focus-on-error now falls back to the first input or button whose id
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-widgets, custom-templates]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [ids-cant-collide-or-split-an-id-list]
 ---
 

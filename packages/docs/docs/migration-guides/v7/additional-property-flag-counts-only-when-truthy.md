@@ -4,8 +4,7 @@ description: "A schema with `ADDITIONAL_PROPERTY_FLAG` set to `false` or `undefi
 packages: ['@rjsf/core']
 uses: [custom-fields, custom-templates, utils-api]
 schema: [additional-properties]
-kind: runtime
-noticed: review
+affects: [appearance, code, experience]
 related: [rjsf-marked-schema-has-no-index-signature]
 ---
 

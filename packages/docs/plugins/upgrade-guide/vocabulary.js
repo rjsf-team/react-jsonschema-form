@@ -3,11 +3,13 @@
 // writes it to the filtered page's data, so adding a value here is the whole change.
 
 /**
- * @typedef {{ id: string; label: string; detect: string }} Use
+ * @typedef {{ id: string; label: string; detect: string; chip?: string }} Use
+ * `chip` marks a customization use: the filtered page shows it as a chip with this label in its filter bar, and every
+ * other use as a checkbox under "More about your app".
  * @typedef {{ id: string; label: string; detect: string }} SchemaFeature
- * @typedef {{ id: string; label: string; description: string }} Kind
- * @typedef {{ id: string; label: string; short: string; hint: string; badge: string }} Noticed
- * `label` heads a summary tile, `short` is a row's badge, `badge` is the Infima class that colours both.
+ * @typedef {{ id: string; heading: string; line: string }} Affects
+ * `heading` names the section an entry is listed under when this is its first `affects` value; `line` is the sentence
+ * under it.
  * @typedef {'always' | 'theme' | 'validator' | 'other'} PackageGroup
  * @typedef {{ id: string; group: PackageGroup; removedIn?: number }} PackageDefinition
  * @typedef {{ id: string; short: string; group: PackageGroup; removed: boolean }} Package
@@ -31,18 +33,31 @@ const USES = [
   {
     id: 'custom-widgets',
     label: 'Custom widgets',
+    chip: 'Widgets',
     detect: 'Your code passes `widgets=` or sets `ui:widget` to a component.',
   },
   {
     id: 'custom-templates',
     label: 'Custom templates',
+    chip: 'Templates',
     detect: 'Your code passes `templates=` or sets a `ui:*Template`.',
   },
-  { id: 'custom-fields', label: 'Custom fields', detect: 'Your code passes `fields=` or sets `ui:field`.' },
-  { id: 'custom-theme', label: 'Custom theme', detect: 'Your code calls `withTheme` or builds a `ThemeProps`.' },
+  {
+    id: 'custom-fields',
+    label: 'Custom fields',
+    chip: 'Fields',
+    detect: 'Your code passes `fields=` or sets `ui:field`.',
+  },
+  {
+    id: 'custom-theme',
+    label: 'Custom theme',
+    chip: 'Theme',
+    detect: 'Your code calls `withTheme` or builds a `ThemeProps`.',
+  },
   {
     id: 'custom-validator',
     label: 'Custom validator',
+    chip: 'Validator',
     detect: 'Your code calls `customizeValidator`, uses a precompiled validator, or implements `ValidatorType`.',
   },
   {
@@ -104,69 +119,60 @@ const SCHEMA = [
 ];
 
 /**
- * In apply order: an entry whose change fits several kinds takes the earliest.
+ * What a change touches in the reader's app, in the order the guide lists their headings.
  *
- * @type {Kind[]}
+ * @type {Affects[]}
  */
-const KINDS = [
+const AFFECTS = [
   {
-    id: 'install',
-    label: 'Install',
-    description: 'Changes in package.json: dependencies, peers, Node or React versions, a removed package, ESM.',
+    id: 'setup',
+    heading: 'Installation and build',
+    line: 'Update dependencies, peer versions, Node and React, and any CSS or subpath imports.',
   },
   {
-    id: 'removal',
-    label: 'Removals',
-    description: 'An export, prop, option or parameter is gone or renamed, or a function signature changed.',
+    id: 'code',
+    heading: 'Code and APIs',
+    line: 'Fix the imports, props, options and signatures your code uses, and update custom widgets, templates and fields.',
   },
-  { id: 'type', label: 'Types', description: 'A compile error only, with no runtime change.' },
-  { id: 'runtime', label: 'Behaviour', description: 'Behaviour changes.' },
-  { id: 'markup', label: 'Markup', description: 'DOM, classes, aria, ids, snapshots.' },
-  { id: 'deprecation', label: 'Deprecations', description: 'Still works, and will go in a later major version.' },
+  {
+    id: 'data',
+    heading: 'Form data',
+    line: 'Check the defaults, the anyOf/oneOf option picked, and the data and errors your form now submits and validates.',
+  },
+  {
+    id: 'appearance',
+    heading: 'Markup and styles',
+    line: 'Update CSS rules, selectors and DOM snapshots that rely on class names, elements or nesting.',
+  },
+  {
+    id: 'experience',
+    heading: 'Wording and interaction',
+    line: 'Recheck label and button text, accessible names, focus, keyboard use and when errors appear.',
+  },
 ];
 
 /**
- * How a TypeScript reader with tests first meets a change, in the order the filtered page's summary shows them.
+ * The heading a `deprecated: true` entry is listed under instead of its `affects` heading, after all of them.
  *
- * @type {Noticed[]}
+ * @type {Affects}
  */
-const NOTICED = [
-  {
-    id: 'build',
-    label: 'Build or install fails',
-    short: 'build fails',
-    hint: 'Installing, bundling or loading RJSF under Node fails.',
-    badge: 'badge--warning',
-  },
-  {
-    id: 'type-error',
-    label: 'The type checker reports it',
-    short: 'type error',
-    hint: 'Detect gives the exact error text.',
-    badge: 'badge--danger',
-  },
-  {
-    id: 'runtime-error',
-    label: 'It throws or warns at runtime',
-    short: 'runtime error',
-    hint: 'The form throws or logs a console warning.',
-    badge: 'badge--primary',
-  },
-  {
-    id: 'test',
-    label: 'A test or snapshot fails',
-    short: 'test fails',
-    hint: 'The type checker and the console stay quiet.',
-    badge: 'badge--info',
-  },
-  {
-    id: 'review',
-    label: 'Nothing reports it',
-    short: 'review',
-    hint: 'Read the entry and check your form yourself.',
-    badge: 'badge--secondary',
-  },
-];
+const DEPRECATIONS = {
+  id: 'deprecated',
+  heading: 'Deprecations',
+  line: 'Still works in this version; goes in a later major version.',
+};
+
+/** Every heading in list order: the `affects` headings, then Deprecations. */
+const HEADINGS = [...AFFECTS, DEPRECATIONS];
+
+/**
+ * The id of the heading an entry is listed under: Deprecations for a deprecated entry, else its first `affects` value.
+ *
+ * @param {{ affects: string[]; deprecated: boolean }} entry
+ */
+function headingId(entry) {
+  return entry.deprecated ? DEPRECATIONS.id : entry.affects[0];
+}
 
 /**
  * `*` stands for every `@rjsf/*` package. Every user has `@rjsf/core` and `@rjsf/utils`, so an entry every user meets
@@ -216,4 +222,13 @@ function packagesForVersion(version) {
   );
 }
 
-module.exports = { USES, SCHEMA, KINDS, NOTICED, EVERY_USER_USE, ALWAYS_PACKAGES, packagesForVersion };
+module.exports = {
+  USES,
+  SCHEMA,
+  AFFECTS,
+  HEADINGS,
+  EVERY_USER_USE,
+  ALWAYS_PACKAGES,
+  headingId,
+  packagesForVersion,
+};

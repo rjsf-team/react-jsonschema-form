@@ -4,8 +4,7 @@ description: Object and array containers in six themes rendered no element or on
 packages: ['@rjsf/chakra-ui', '@rjsf/daisyui', '@rjsf/fluentui-rc', '@rjsf/mantine', '@rjsf/mui', '@rjsf/react-bootstrap']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [experience, appearance]
 related: [daisyui-field-label-and-widget-markup-changed]
 ---
 

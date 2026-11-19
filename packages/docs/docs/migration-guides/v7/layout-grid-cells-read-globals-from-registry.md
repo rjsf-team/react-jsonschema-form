@@ -4,8 +4,7 @@ description: '`LayoutGridField` used to copy the global options into each cell''
 packages: ['@rjsf/core']
 uses: [ui-schema, custom-widgets, custom-templates]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related: [ui-global-options-hold-only-global-options, get-ui-options-returns-field-options-alone]
 ---
 

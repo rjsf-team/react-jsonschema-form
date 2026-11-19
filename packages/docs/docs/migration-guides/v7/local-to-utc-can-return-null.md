@@ -4,8 +4,7 @@ description: '`localToUTC()` now takes `unknown` and is typed to return `string 
 packages: ['@rjsf/utils']
 uses: [utils-api, typescript]
 schema: [dates]
-kind: type
-noticed: type-error
+affects: [code]
 related: []
 ---
 

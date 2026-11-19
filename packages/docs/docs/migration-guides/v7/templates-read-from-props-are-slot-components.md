@@ -4,8 +4,7 @@ description: A declared template read from `props.templates` used to be a `Compo
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [typescript, custom-templates]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [templates-prop-checks-template-props, custom-template-entries-have-never-props]
 ---
 

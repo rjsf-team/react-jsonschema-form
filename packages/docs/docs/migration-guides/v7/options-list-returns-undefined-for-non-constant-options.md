@@ -4,8 +4,7 @@ description: '`optionsList()` used to throw on an `anyOf`/`oneOf` that isn''t ma
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: [any-of-one-of]
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [property-names-like-proto-are-read-as-own-keys]
 ---
 

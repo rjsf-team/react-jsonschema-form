@@ -4,8 +4,7 @@ description: '`hideLabel` now only says the template or a field above draws the 
 packages: ['@rjsf/core']
 uses: [custom-widgets]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, appearance, experience]
 related:
   [
     display-label-raw-errors-hide-label-deprecated,

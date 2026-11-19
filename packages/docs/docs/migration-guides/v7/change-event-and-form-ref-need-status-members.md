@@ -4,8 +4,7 @@ description: '`IChangeEvent` has five new required members (`dirty`, `dirtyField
 packages: ['@rjsf/core']
 uses: [typescript, form-ref]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [change-event-members-are-readonly]
 ---
 

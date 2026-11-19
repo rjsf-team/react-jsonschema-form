@@ -4,8 +4,7 @@ description: With `enableOptionalDataFieldForType`, a root `anyOf`/`oneOf` used 
 packages: ['@rjsf/core']
 uses: [ui-schema, markup]
 schema: [any-of-one-of, refs]
-kind: runtime
-noticed: test
+affects: [appearance, experience]
 related: [additional-property-entry-has-no-optional-data-controls]
 ---
 

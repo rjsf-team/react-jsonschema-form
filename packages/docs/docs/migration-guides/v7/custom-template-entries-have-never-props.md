@@ -4,8 +4,7 @@ description: A custom entry in `TemplatesType` used to be a `ComponentType<any>`
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [typescript, custom-templates]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [templates-prop-checks-template-props, templates-read-from-props-are-slot-components]
 ---
 

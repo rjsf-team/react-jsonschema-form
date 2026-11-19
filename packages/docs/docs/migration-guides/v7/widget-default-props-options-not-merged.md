@@ -4,8 +4,7 @@ description: "A widget no longer gets its component's `defaultProps.options` mer
 packages: ['@rjsf/core']
 uses: [custom-widgets]
 schema: []
-kind: runtime
-noticed: review
+affects: [code]
 related: [widget-type-is-a-slot-component]
 ---
 

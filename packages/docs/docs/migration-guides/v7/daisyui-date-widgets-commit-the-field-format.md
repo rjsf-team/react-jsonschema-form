@@ -4,8 +4,7 @@ description: "`@rjsf/daisyui`'s date pickers committed a UTC date-time for `form
 packages: ['@rjsf/daisyui']
 uses: [form]
 schema: [dates]
-kind: runtime
-noticed: test
+affects: [data]
 related: [daisyui-date-picker-trigger-and-popup-markup-changed]
 ---
 

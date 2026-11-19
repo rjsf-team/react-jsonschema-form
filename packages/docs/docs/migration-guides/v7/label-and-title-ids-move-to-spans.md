@@ -4,8 +4,7 @@ description: '`@rjsf/core` now puts title and label ids on a `<span>` around the
 packages: ['@rjsf/core', '@rjsf/antd', '@rjsf/bootstrap3']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [experience, appearance]
 related:
   [
     field-template-reads-the-presentation-plan,

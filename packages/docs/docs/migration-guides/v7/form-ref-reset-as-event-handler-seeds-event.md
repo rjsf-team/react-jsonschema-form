@@ -4,8 +4,7 @@ description: "`FormRef.reset(seed?)` now makes its argument the form's seed, so 
 packages: ['@rjsf/core']
 uses: [form-ref]
 schema: []
-kind: runtime
-noticed: review
+affects: [data, code]
 related: [reset-goes-back-to-the-seed]
 ---
 

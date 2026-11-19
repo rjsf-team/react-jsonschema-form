@@ -4,8 +4,7 @@ description: "When `onSubmit` returns a promise, the form now ignores every othe
 packages: ['@rjsf/core']
 uses: [form-props, form-ref]
 schema: []
-kind: runtime
-noticed: review
+affects: [experience, code]
 related: [async-on-submit-rejection-from-form-copy, submit-button-aria-disabled-while-pending]
 ---
 

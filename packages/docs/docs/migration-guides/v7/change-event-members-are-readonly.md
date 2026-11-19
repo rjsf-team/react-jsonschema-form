@@ -4,8 +4,7 @@ description: 'Every member of the `IChangeEvent` that `onChange` and `onSubmit` 
 packages: ['@rjsf/core']
 uses: [typescript, form-props]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [change-event-edit-removed, form-data-is-frozen-in-development]
 ---
 

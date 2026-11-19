@@ -4,8 +4,7 @@ description: A theme's global option, such as `mui`, `chakra`, `daisy`, `block` 
 packages: ['@rjsf/antd', '@rjsf/chakra-ui', '@rjsf/daisyui', '@rjsf/mantine', '@rjsf/mui', '@rjsf/shadcn']
 uses: [ui-schema, typescript, custom-theme]
 schema: []
-kind: runtime
-noticed: type-error
+affects: [code, appearance]
 related: [custom-global-options-declare-global-ui-options-keys, mantine-global-options-no-longer-reach-mantine-props, ui-global-options-hold-only-global-options]
 ---
 

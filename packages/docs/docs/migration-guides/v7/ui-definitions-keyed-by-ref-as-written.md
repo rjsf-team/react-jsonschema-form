@@ -4,8 +4,7 @@ description: 'A `ui:definitions` entry used to match only the absolute `$ref` bu
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [ui-schema]
 schema: [refs]
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related: [get-root-schema-returns-the-schema-as-passed]
 ---
 

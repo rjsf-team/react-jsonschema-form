@@ -4,8 +4,7 @@ description: '`rawValidation()` no longer takes a type argument: each validator 
 packages: ['@rjsf/utils', '@rjsf/validator-ajv8', '@rjsf/validator-ata', '@rjsf/validator-cfworker']
 uses: [typescript, custom-validator]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: []
 ---
 

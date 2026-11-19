@@ -4,8 +4,7 @@ description: Fields and templates used to get a `fieldPathId` object, and a fiel
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-fields, custom-templates, typescript]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [tofieldpathid-and-usedeepcomparememo-removed, change-event-has-no-fieldpathid, ids-cant-collide-or-split-an-id-list, onchange-error-schema-is-the-field-own-errors]
 ---
 

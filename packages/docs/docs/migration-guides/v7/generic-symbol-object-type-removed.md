@@ -4,8 +4,7 @@ description: '`@rjsf/utils` no longer exports `GenericSymbolObjectType`, which w
 packages: ['@rjsf/utils']
 uses: [typescript]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [generic-object-type-values-are-unknown]
 ---
 

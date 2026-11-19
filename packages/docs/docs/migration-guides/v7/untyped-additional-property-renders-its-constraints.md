@@ -4,8 +4,7 @@ description: A key under an `additionalProperties` or `patternProperties` subsch
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form]
 schema: [additional-properties]
-kind: runtime
-noticed: review
+affects: [appearance, data]
 related: [fallback-ui-renders-type-lists-with-a-type-selector, schema-change-keeps-data-the-new-schema-still-allows]
 ---
 

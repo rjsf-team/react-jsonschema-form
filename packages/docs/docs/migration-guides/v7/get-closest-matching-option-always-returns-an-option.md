@@ -4,8 +4,7 @@ description: '`getClosestMatchingOption()` used to return `-1` or an out-of-rang
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: [any-of-one-of]
-kind: runtime
-noticed: test
+affects: [code, data]
 related: [selected-option-stays-while-you-type, custom-validator-isvalid-must-not-change-data]
 ---
 

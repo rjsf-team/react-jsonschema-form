@@ -4,8 +4,7 @@ description: "Typed uiSchema entries now recurse with the form data, so a deeply
 packages: ['@rjsf/utils']
 uses: [typescript]
 schema: [refs]
-kind: type
-noticed: type-error
+affects: [code]
 related: [ui-schema-rejects-field-names-not-in-form-data]
 ---
 

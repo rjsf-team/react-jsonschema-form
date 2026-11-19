@@ -4,8 +4,7 @@ description: 'A `Form` hidden by `<Activity>` or a `<Suspense>` fallback now act
 packages: ['@rjsf/core']
 uses: [form, form-ref]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [data, code]
 related: []
 ---
 

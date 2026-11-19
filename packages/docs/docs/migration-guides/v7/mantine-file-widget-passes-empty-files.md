@@ -4,8 +4,7 @@ description: '`@rjsf/mantine`''s `FileWidget` used to hand `FileInput` the store
 packages: ['@rjsf/mantine']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related: []
 ---
 

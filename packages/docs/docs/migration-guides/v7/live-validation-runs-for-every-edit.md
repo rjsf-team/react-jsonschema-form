@@ -4,8 +4,7 @@ description: 'Live validation and `liveOmit` now run for every edit, where v6 va
 packages: ['@rjsf/core']
 uses: [form-ref, form-props]
 schema: []
-kind: runtime
-noticed: review
+affects: [data, experience]
 related: []
 ---
 

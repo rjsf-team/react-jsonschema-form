@@ -4,8 +4,7 @@ description: 'An error a field raised through `onChange` used to replace the val
 packages: ['@rjsf/core']
 uses: [custom-widgets, custom-fields]
 schema: []
-kind: runtime
-noticed: review
+affects: [experience, code]
 related: [onchange-error-schema-is-the-field-own-errors]
 ---
 

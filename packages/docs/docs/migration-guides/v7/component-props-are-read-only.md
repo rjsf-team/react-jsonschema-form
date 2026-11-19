@@ -4,8 +4,7 @@ description: '`schema`, `uiSchema` and `registry` are now `readonly` on every fi
 packages: ['@rjsf/utils']
 uses: [typescript, custom-fields, custom-widgets, custom-templates]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [registry-members-are-read-only]
 ---
 

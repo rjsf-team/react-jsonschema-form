@@ -4,8 +4,7 @@ description: "`UiSchemaDefinitions` no longer takes the form data type and types
 packages: ['@rjsf/utils']
 uses: [typescript, ui-schema]
 schema: [refs]
-kind: type
-noticed: type-error
+affects: [code]
 related: []
 ---
 

@@ -4,8 +4,7 @@ description: 'A `WrapIfAdditionalTemplate` that fills its key input from `label`
 packages: ['@rjsf/core']
 uses: [custom-templates]
 schema: [additional-properties]
-kind: runtime
-noticed: review
+affects: [code]
 related: [field-template-props-requires-key-name]
 ---
 

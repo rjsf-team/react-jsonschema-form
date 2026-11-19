@@ -4,8 +4,7 @@ description: "A typed uiSchema now intersects a field's entry with the declared 
 packages: ['@rjsf/utils']
 uses: [typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [ui-schema-rejects-field-names-not-in-form-data]
 ---
 

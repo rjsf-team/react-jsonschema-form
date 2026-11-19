@@ -4,8 +4,7 @@ description: '`@rjsf/core` exports its `Label` as `FieldLabel`, which takes a `c
 packages: ['@rjsf/core']
 uses: [custom-templates]
 schema: []
-kind: removal
-noticed: build
+affects: [code, appearance]
 related: [deep-imports-removed, field-template-keeps-core-layout-classes]
 ---
 

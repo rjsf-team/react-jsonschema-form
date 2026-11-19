@@ -4,8 +4,7 @@ description: 'A template `rawErrors` is deprecated in favor of a `hasErrors` pro
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-templates]
 schema: []
-kind: runtime
-noticed: type-error
+affects: [code]
 related: [custom-widget-error-state-from-has-widget-errors, field-template-props-requires-key-name, custom-field-rendering-field-template-passes-has-errors, layout-grid-discriminated-cell-renders-a-field-wrapper, field-template-reads-the-presentation-plan]
 ---
 

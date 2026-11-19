@@ -4,8 +4,7 @@ description: 6.11.1 changed how Form applies and validates a change, and v7 reve
 packages: ['@rjsf/core']
 uses: [form-props, form-ref]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, data]
 related: []
 ---
 

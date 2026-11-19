@@ -21,16 +21,18 @@ const DEFAULTS = {
   description: 'What changed.',
   packages: "['@rjsf/core']",
   uses: '[form]',
-  kind: 'runtime',
-  noticed: 'review',
+  affects: '[code]',
 };
 
 /**
- * @param {Record<string, string>} [fields] frontmatter values as YAML, over the defaults
+ * @param {Record<string, string | undefined>} [fields] frontmatter values as YAML, over the defaults; `undefined` drops
+ * the key
  * @param {string} [body]
  */
 function entry(fields = {}, body = BODY) {
-  const lines = Object.entries({ ...DEFAULTS, ...fields }).map(([key, value]) => `${key}: ${value}`);
+  const lines = Object.entries({ ...DEFAULTS, ...fields })
+    .filter(([, value]) => value !== undefined)
+    .map(([key, value]) => `${key}: ${value}`);
   return `---\n${lines.join('\n')}\n---\n\n${body}`;
 }
 
@@ -76,7 +78,12 @@ describe('loadVersions', () => {
             '## Verify\n\nSee [the next](second-change.md) and [intro](../../intro.md#top).',
           ),
         ),
-        'second-change.md': entry({ packages: "['*']", schema: '[arrays]' }),
+        'second-change.md': entry({
+          packages: "['*']",
+          schema: '[arrays]',
+          affects: '[data, appearance]',
+          deprecated: 'true',
+        }),
         '_anchors.json': JSON.stringify({ 'old-section': 'first-change', both: ['first-change', 'second-change'] }),
       },
       { 'intro.md': '# Intro\n' },
@@ -85,10 +92,31 @@ describe('loadVersions', () => {
     assert.equal(version.name, 'v7');
     assert.equal(version.number, 7);
     assert.deepEqual(
-      version.entries.map(({ id, packages, schema, related }) => ({ id, packages, schema, related })),
+      version.entries.map(({ id, packages, schema, affects, deprecated, related }) => ({
+        id,
+        packages,
+        schema,
+        affects,
+        deprecated,
+        related,
+      })),
       [
-        { id: 'first-change', packages: ['@rjsf/core'], schema: [], related: ['second-change'] },
-        { id: 'second-change', packages: ['*'], schema: ['arrays'], related: [] },
+        {
+          id: 'first-change',
+          packages: ['@rjsf/core'],
+          schema: [],
+          affects: ['code'],
+          deprecated: false,
+          related: ['second-change'],
+        },
+        {
+          id: 'second-change',
+          packages: ['*'],
+          schema: ['arrays'],
+          affects: ['data', 'appearance'],
+          deprecated: true,
+          related: [],
+        },
       ],
     );
     assert.deepEqual(version.anchors, { 'old-section': ['first-change'], both: ['first-change', 'second-change'] });
@@ -98,6 +126,33 @@ describe('loadVersions', () => {
     // Each fixture breaks one rule and is otherwise valid, so the error lists exactly one problem per rule.
     const problems = {
       'unknown frontmatter key': ['unknown-key.md', entry({ extra: 'yes' }), 'unknown frontmatter field `extra`'],
+      'the removed `kind` key': ['old-kind.md', entry({ kind: 'runtime' }), 'unknown frontmatter field `kind`'],
+      'the removed `noticed` key': [
+        'old-noticed.md',
+        entry({ noticed: 'review' }),
+        'unknown frontmatter field `noticed`',
+      ],
+      'no `affects`': [
+        'affects-missing.md',
+        entry({ affects: undefined }),
+        '`affects` is required and must be a list of strings',
+      ],
+      'an empty `affects`': ['affects-empty.md', entry({ affects: '[]' }), '`affects` needs at least one value'],
+      'an unknown `affects` value': [
+        'affects-unknown.md',
+        entry({ affects: '[runtime]' }),
+        '`affects` value `runtime` is not in the vocabulary',
+      ],
+      'an `affects` value twice': [
+        'affects-twice.md',
+        entry({ affects: '[code, code]' }),
+        '`affects` lists a value twice',
+      ],
+      'a `deprecated` other than `true`': [
+        'deprecated-false.md',
+        entry({ deprecated: 'false' }),
+        '`deprecated` is `true` or left out',
+      ],
       'reserved id': ['all.md', entry(), '`all` is a reserved id'],
       '`related` to an unknown id': [
         'related-unknown.md',

@@ -4,8 +4,7 @@ description: The option of a non-object field used to inherit only `type` and `r
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form]
 schema: [any-of-one-of, arrays, type-lists]
-kind: runtime
-noticed: review
+affects: [data, appearance]
 related: [any-of-one-of-field-labelled-once-by-its-template, draft-04-boolean-exclusive-bounds-unsupported-in-options]
 ---
 

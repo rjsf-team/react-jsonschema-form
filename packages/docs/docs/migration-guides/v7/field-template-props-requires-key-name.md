@@ -4,8 +4,7 @@ description: '`FieldTemplateProps` and `WrapIfAdditionalTemplateProps` have a ne
 packages: ['@rjsf/core']
 uses: [typescript, custom-fields, custom-templates]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [custom-wrap-if-additional-template-reads-key-name, custom-templates-take-error-state-from-has-errors, custom-field-template-forwards-property-names-enum]
 ---
 

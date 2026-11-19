@@ -4,8 +4,7 @@ description: '`reset(saved)` now makes `saved` the seed for that and every later
 packages: ['@rjsf/core']
 uses: [form-ref]
 schema: []
-kind: runtime
-noticed: review
+affects: [data]
 related: [form-ref-reset-as-event-handler-seeds-event, initial-form-data-replaces-form-data, form-ref-is-a-formref-handle]
 ---
 

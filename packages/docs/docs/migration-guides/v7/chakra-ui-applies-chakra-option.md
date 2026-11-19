@@ -4,8 +4,7 @@ description: "The `chakra` option in a uiSchema used to reach no widget and now 
 packages: ['@rjsf/chakra-ui']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance]
 related: [chakra-ui-get-chakra-takes-options, chakra-ui-chakra-option-takes-style-props-only]
 ---
 

@@ -4,8 +4,7 @@ description: "`@rjsf/antd` never called an `onChangeOverride` on a number or int
 packages: ['@rjsf/antd']
 uses: [custom-widgets]
 schema: [numbers]
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related: []
 ---
 

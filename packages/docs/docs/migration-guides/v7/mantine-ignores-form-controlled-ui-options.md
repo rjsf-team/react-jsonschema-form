@@ -4,8 +4,7 @@ description: "`@rjsf/mantine` passed every `ui:options` key to its components, s
 packages: ['@rjsf/mantine']
 uses: [ui-schema]
 schema: []
-kind: removal
-noticed: review
+affects: [code, data]
 related: [shadcn-range-ignores-form-controlled-props, mui-ignores-form-controlled-props-in-ui-options-mui]
 ---
 

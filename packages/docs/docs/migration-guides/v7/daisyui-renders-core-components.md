@@ -4,8 +4,7 @@ description: "@rjsf/daisyui now renders most of core's templates and widgets thr
 packages: ['@rjsf/daisyui']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: [daisyui-custom-buttons-add-btn-class, daisyui-file-widget-ignores-multiple-option, daisyui-checkboxes-need-presentation, themes-from-generators-need-generate-class-map, theme-copies-of-core-templates-removed]
 ---
 

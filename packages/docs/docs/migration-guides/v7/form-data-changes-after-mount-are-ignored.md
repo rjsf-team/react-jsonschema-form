@@ -4,8 +4,7 @@ description: 'A `formData` or `initialFormData` passed after mount is now ignore
 packages: ['@rjsf/core']
 uses: [form, form-ref]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [data, code]
 related: [initial-form-data-replaces-form-data]
 ---
 

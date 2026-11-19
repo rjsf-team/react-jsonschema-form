@@ -4,8 +4,7 @@ description: "`@rjsf/snapshot-tests` no longer lists `@testing-library/jest-dom`
 packages: ['@rjsf/snapshot-tests']
 uses: [tooling]
 schema: []
-kind: install
-noticed: test
+affects: [setup]
 related: []
 ---
 

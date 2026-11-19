@@ -4,10 +4,15 @@ import { useHistory, useLocation } from '@docusaurus/router';
 import MDXContent from '@theme/MDXContent';
 
 import {
-  chosenPackages,
+  NO_FILTERS,
+  customizations,
   decodeHash,
+  describeFilters,
+  groupByHeading,
+  isAnswered,
   markdownUrl,
-  matches,
+  matcher,
+  otherUses,
   readFilters,
   toMarkdownDocument,
   writeFilters,
@@ -15,7 +20,7 @@ import {
   type Entry,
   type Filters,
   type Guide,
-  type Noticed,
+  type Package,
 } from './filters.ts';
 import styles from './styles.module.css';
 
@@ -175,13 +180,14 @@ function EntryBody({ entry, body }: { entry: Entry; body: Body | Error | undefin
 const Row = memo(function Row({
   version,
   entry,
-  noticed,
+  badge,
   isOpen,
   onToggle,
 }: {
   version: string;
   entry: Entry;
-  noticed: Noticed | undefined;
+  /** The one theme or validator the entry is for, if that is all it lists. */
+  badge: Package | undefined;
   isOpen: boolean;
   onToggle: (id: string) => void;
 }) {
@@ -204,7 +210,6 @@ const Row = memo(function Row({
     // Only opening the row starts a load; the body it sets mustn't start another.
   }, [isOpen, version, entry.id]);
 
-  const badge = noticed?.badge ?? 'badge--secondary';
   return (
     <li id={entry.id} className={styles.entry}>
       <div className={styles.header}>
@@ -222,16 +227,11 @@ const Row = memo(function Row({
             {entry.title}
           </button>
         </h3>
-        <span className={styles.badges}>
-          <span className={`badge ${badge}`} title={noticed?.hint}>
-            {noticed?.short ?? entry.noticed}
+        {badge && (
+          <span className='badge badge--secondary' title={badge.id}>
+            {badge.short}
           </span>
-          {entry.packages.map((pkg) => (
-            <span key={pkg} className='badge badge--secondary' title={pkg === '*' ? undefined : pkg}>
-              {pkg === '*' ? 'every package' : pkg.replace(/^@rjsf\//, '')}
-            </span>
-          ))}
-        </span>
+        )}
       </div>
       <p className={styles.description}>
         <InlineMarkdown text={entry.description} />
@@ -279,19 +279,25 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
   const hashEntry = byId.get(hash);
   const anchorIds = !hashEntry && Object.hasOwn(guide.anchors, hash) ? guide.anchors[hash] : [];
 
-  const chosen = chosenPackages(guide, filters);
-  const shown = guide.entries.filter((entry) => matches(entry, chosen, filters, guide.everyUserUse));
-  const rows = filters.noticed ? shown.filter((entry) => entry.noticed === filters.noticed) : shown;
-  const groups = guide.kinds
-    .map((kind) => ({ kind, entries: rows.filter((entry) => entry.kind === kind.id) }))
-    .filter((group) => group.entries.length > 0);
-  const noticedById = new Map(guide.noticed.map((noticed) => [noticed.id, noticed]));
+  const rows = guide.entries.filter(matcher(guide, filters));
+  const groups = groupByHeading(rows, guide.headings);
+  const deprecations = guide.headings[guide.headings.length - 1].id;
+  const packagesById = new Map(guide.packages.map((pkg) => [pkg.id, pkg]));
   const themes = guide.packages.filter((pkg) => pkg.group === 'theme');
   const validators = guide.packages.filter((pkg) => pkg.group === 'validator');
   const others = guide.packages.filter((pkg) => pkg.group === 'other');
-  const codeChoices = guide.uses.filter((use) => use.id !== guide.everyUserUse);
+  const chips = customizations(guide);
+  const moreUses = otherUses(guide);
+  const chipIds = chips.map((use) => use.id);
   const allOpen = rows.length > 0 && rows.every((entry) => open.has(entry.id));
   const hashEntryShown = hashEntry !== undefined && rows.includes(hashEntry);
+  const [moreOpen, setMoreOpen] = useState(
+    () =>
+      filters.validator !== '' ||
+      filters.schema.length > 0 ||
+      filters.other.length > 0 ||
+      filters.uses.some((use) => !chipIds.includes(use)),
+  );
 
   // Only a new hash can name another old anchor or entry; a filter change mustn't scroll back to the hash's entry.
   useEffect(() => {
@@ -358,7 +364,7 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
         }
         return response.text();
       });
-      await navigator.clipboard.writeText(toMarkdownDocument(rows, texts, version, guide.kinds, { href, origin }));
+      await navigator.clipboard.writeText(toMarkdownDocument(rows, texts, version, { href, origin }));
       setCopyStatus(`Copied ${rows.length} ${rows.length === 1 ? 'entry' : 'entries'} as Markdown.`);
     } catch (error) {
       setCopyStatus(`Copying failed: ${error instanceof Error ? error.message : String(error)}.`);
@@ -397,106 +403,135 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
       {hashEntry && !hashEntryShown && (
         <div className='alert alert--info' role='status'>
           <p>
-            Your filters hide <Link to={hashEntry.permalink}>{hashEntry.title}</Link>.
+            Your answers hide <Link to={hashEntry.permalink}>{hashEntry.title}</Link>.
           </p>
         </div>
       )}
 
       <form className={styles.filters} onSubmit={(event) => event.preventDefault()}>
-        <div className={styles.pickers}>
-          <label className={styles.picker}>
-            Theme
-            <select value={filters.theme} onChange={(event) => update({ theme: event.target.value })}>
-              <option value=''>None (core only)</option>
-              {themes.map((pkg) => (
-                <option key={pkg.id} value={pkg.short}>
-                  {pkg.removed ? `${pkg.id} (removed in ${version})` : pkg.id}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className={styles.picker}>
-            Validator
-            <select value={filters.validator} onChange={(event) => update({ validator: event.target.value })}>
-              <option value=''>None</option>
-              {validators.map((pkg) => (
-                <option key={pkg.id} value={pkg.short}>
-                  {pkg.removed ? `${pkg.id} (removed in ${version})` : pkg.id}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        <Checkboxes
-          legend='Your code'
-          choices={codeChoices}
-          ticked={filters.uses}
-          onChange={(uses) => update({ uses })}
-        />
-        <Checkboxes
-          legend='Your schemas'
-          choices={guide.schema}
-          ticked={filters.schema}
-          onChange={(schema) => update({ schema })}
-        />
-        {others.length > 0 && (
-          <div className={styles.pickers}>
-            {others.map((pkg) => (
-              <label key={pkg.id} className={styles.check} title='For authors of themes outside this repository'>
-                <input
-                  type='checkbox'
-                  checked={filters.other.includes(pkg.short)}
-                  onChange={(event) =>
-                    update({
-                      other: event.target.checked
-                        ? [...filters.other, pkg.short]
-                        : filters.other.filter((short) => short !== pkg.short),
-                    })
-                  }
-                />
-                {pkg.id} (theme authors)
-              </label>
+        <div className={styles.bar} role='group' aria-label='Narrow the list (optional)'>
+          <select
+            className={styles.select}
+            aria-label='Theme'
+            value={filters.theme}
+            onChange={(event) => update({ theme: event.target.value })}
+          >
+            <option value=''>All themes</option>
+            {themes.map((pkg) => (
+              <option key={pkg.id} value={pkg.short}>
+                {`Theme: ${pkg.removed ? `${pkg.short} (removed)` : pkg.short}`}
+              </option>
             ))}
+          </select>
+          <span className={styles.barLabel}>Customized:</span>
+          <button
+            type='button'
+            className={styles.chip}
+            aria-pressed={filters.nothing}
+            title='Your code passes no custom widgets, templates, fields, theme or validator.'
+            onClick={() =>
+              update({
+                nothing: !filters.nothing,
+                uses: filters.nothing ? filters.uses : filters.uses.filter((use) => !chipIds.includes(use)),
+              })
+            }
+          >
+            Nothing
+          </button>
+          {chips.map((use) => {
+            const ticked = filters.uses.includes(use.id);
+            return (
+              <button
+                key={use.id}
+                type='button'
+                className={styles.chip}
+                aria-pressed={ticked}
+                title={use.detect.replaceAll('`', '')}
+                onClick={() =>
+                  update({
+                    uses: ticked ? filters.uses.filter((id) => id !== use.id) : [...filters.uses, use.id],
+                    nothing: false,
+                  })
+                }
+              >
+                {use.chip}
+              </button>
+            );
+          })}
+          <span className={styles.barEnd}>
+            <button
+              type='button'
+              className={styles.linkButton}
+              aria-expanded={moreOpen}
+              aria-controls='upgrade-guide-more'
+              onClick={() => setMoreOpen(!moreOpen)}
+            >
+              More about your app
+            </button>
+            {isAnswered(filters) && (
+              <button type='button' className={styles.linkButton} onClick={() => update(NO_FILTERS)}>
+                Clear
+              </button>
+            )}
+          </span>
+        </div>
+        <p className={styles.barHint} role='status'>
+          <InlineMarkdown text={describeFilters(filters, guide)} />
+        </p>
+        {moreOpen && (
+          <div id='upgrade-guide-more' className={styles.more}>
+            <label className={styles.picker}>
+              Validator
+              <select value={filters.validator} onChange={(event) => update({ validator: event.target.value })}>
+                <option value=''>All validators</option>
+                {validators.map((pkg) => (
+                  <option key={pkg.id} value={pkg.short}>
+                    {pkg.removed ? `${pkg.id} (removed in ${version})` : pkg.id}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Checkboxes
+              legend='Your code'
+              choices={moreUses}
+              ticked={filters.uses}
+              onChange={(uses) => update({ uses })}
+            />
+            <Checkboxes
+              legend='Your schemas'
+              choices={guide.schema}
+              ticked={filters.schema}
+              onChange={(schema) => update({ schema })}
+            />
+            {others.length > 0 && (
+              <Checkboxes
+                legend='Theme authors'
+                choices={others.map((pkg) => ({
+                  id: pkg.short,
+                  label: pkg.id,
+                  detect: 'For authors of themes outside this repository.',
+                }))}
+                ticked={filters.other}
+                onChange={(other) => update({ other })}
+              />
+            )}
+            <details className={styles.meanings}>
+              <summary>What do these mean?</summary>
+              <Meanings legend='Customized' choices={chips} />
+              <Meanings legend='Your code' choices={moreUses} />
+              <Meanings legend='Your schemas' choices={guide.schema} />
+            </details>
           </div>
         )}
+        <input
+          type='search'
+          className={styles.search}
+          aria-label='Search the changes'
+          placeholder='Search titles, descriptions and ids'
+          value={filters.search}
+          onChange={(event) => update({ search: event.target.value })}
+        />
       </form>
-      <p className={styles.rule}>
-        With nothing ticked, every entry for your packages shows; entries that affect every form or don&apos;t depend on
-        the schema always show.
-      </p>
-      <details className={styles.meanings}>
-        <summary>What do these mean?</summary>
-        <Meanings legend='Your code' choices={codeChoices} />
-        <Meanings legend='Your schemas' choices={guide.schema} />
-      </details>
-
-      <div className={styles.summary} role='group' aria-label='How you will notice the changes'>
-        <button
-          type='button'
-          className={styles.tile}
-          aria-pressed={filters.noticed === ''}
-          onClick={() => update({ noticed: '' })}
-        >
-          <span className={styles.count}>{shown.length}</span>
-          <span className={styles.tileText}>
-            {shown.length === 1 ? 'change applies' : 'changes apply'} to you, of {guide.entries.length}
-          </span>
-        </button>
-        {guide.noticed.map((noticed) => (
-          <button
-            key={noticed.id}
-            type='button'
-            className={styles.tile}
-            aria-pressed={filters.noticed === noticed.id}
-            title={noticed.hint}
-            onClick={() => update({ noticed: filters.noticed === noticed.id ? '' : noticed.id })}
-          >
-            <span className={styles.count}>{shown.filter((entry) => entry.noticed === noticed.id).length}</span>
-            <span className={`badge ${noticed.badge}`}>{noticed.label}</span>
-          </button>
-        ))}
-      </div>
 
       <div className={styles.tools}>
         <span>
@@ -513,10 +548,10 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
           <a href={guide.combined.all}>all.md</a>
         </span>
         <span className={styles.actions}>
-          <button type='button' className='button button--link' onClick={toggleAll} disabled={rows.length === 0}>
+          <button type='button' className={styles.linkButton} onClick={toggleAll} disabled={rows.length === 0}>
             {allOpen ? 'Collapse all' : 'Expand all'}
           </button>
-          <button type='button' className='button button--link' onClick={copyMarkdown} disabled={rows.length === 0}>
+          <button type='button' className={styles.linkButton} onClick={copyMarkdown} disabled={rows.length === 0}>
             Copy as Markdown
           </button>
         </span>
@@ -526,24 +561,34 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
           {copyStatus}
         </p>
       )}
+      {rows.length === 0 && <p className={styles.hint}>No change matches your answers and search.</p>}
 
-      {groups.map(({ kind, entries }, index) => (
-        <section key={kind.id}>
-          <h2 id={`kind-${kind.id}`}>
-            {index + 1}. {kind.label} ({entries.length})
-          </h2>
-          <p className={styles.kindDescription}>{kind.description}</p>
+      {groups.map(({ heading, entries }, index) => (
+        <section key={heading.id}>
+          {heading.id === deprecations ? (
+            <h2 id={`area-${heading.id}`} className={styles.deprecations}>
+              {heading.heading}
+            </h2>
+          ) : (
+            <h2 id={`area-${heading.id}`}>
+              {index + 1}. {heading.heading}
+            </h2>
+          )}
+          <p className={styles.headingLine}>{heading.line}</p>
           <ul className={styles.entries}>
-            {entries.map((entry) => (
-              <Row
-                key={entry.id}
-                version={version}
-                entry={entry}
-                noticed={noticedById.get(entry.noticed)}
-                isOpen={open.has(entry.id)}
-                onToggle={toggle}
-              />
-            ))}
+            {entries.map((entry) => {
+              const only = entry.packages.length === 1 ? packagesById.get(entry.packages[0]) : undefined;
+              return (
+                <Row
+                  key={entry.id}
+                  version={version}
+                  entry={entry}
+                  badge={only?.group === 'theme' || only?.group === 'validator' ? only : undefined}
+                  isOpen={open.has(entry.id)}
+                  onToggle={toggle}
+                />
+              );
+            })}
           </ul>
         </section>
       ))}

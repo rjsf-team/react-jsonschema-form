@@ -4,8 +4,7 @@ description: '`@rjsf/core` no longer installs `markdown-to-jsx` and its default 
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: []
-kind: install
-noticed: review
+affects: [setup, appearance]
 related: [rich-description-test-ids-removed, file-info-is-plain-text]
 ---
 

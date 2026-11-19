@@ -4,8 +4,7 @@ description: '`ui:globalOptions` used to pass any option, such as `readonly`, `w
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: type-error
+affects: [code, appearance, experience]
 related: [custom-global-options-declare-global-ui-options-keys, layout-grid-cells-read-globals-from-registry, theme-global-options-use-theme-types, get-ui-options-returns-field-options-alone]
 ---
 

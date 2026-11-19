@@ -4,8 +4,7 @@ description: The `@rjsf/utils` enum helpers used to compare values with `String(
 packages: ['@rjsf/utils']
 uses: [custom-widgets, utils-api]
 schema: [enums]
-kind: runtime
-noticed: review
+affects: [code, data]
 related: [enum-option-value-encoder-removed, enum-option-value-is-unknown, enum-option-dom-values-use-index-prefix]
 ---
 

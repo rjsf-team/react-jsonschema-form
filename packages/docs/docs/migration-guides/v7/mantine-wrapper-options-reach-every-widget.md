@@ -4,8 +4,7 @@ description: "`CheckboxesWidget`, `RangeWidget`, `AltDateWidget` and most descri
 packages: ['@rjsf/mantine']
 uses: [ui-schema, markup]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance]
 related: [mantine-group-labels-take-the-title-id, mantine-markup-uses-rjsf-ids]
 ---
 

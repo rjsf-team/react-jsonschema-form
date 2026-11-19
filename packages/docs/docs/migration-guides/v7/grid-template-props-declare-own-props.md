@@ -4,8 +4,7 @@ description: '`GridTemplateProps`'' other props were `any` and are now an open o
 packages: ['@rjsf/utils']
 uses: [typescript, custom-templates]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [style-option-is-css-properties, custom-grid-template-receives-field-id]
 ---
 

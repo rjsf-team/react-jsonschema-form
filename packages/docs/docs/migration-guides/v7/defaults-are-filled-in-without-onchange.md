@@ -4,8 +4,7 @@ description: 'The form now fills in schema defaults and `type: ''null''` values 
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: [defaults]
-kind: runtime
-noticed: review
+affects: [data, code]
 related: [get-default-form-state-fills-null-fields, initial-form-data-replaces-form-data]
 ---
 

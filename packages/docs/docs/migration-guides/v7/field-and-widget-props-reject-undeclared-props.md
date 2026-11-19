@@ -4,8 +4,7 @@ description: '`FieldProps` and `WidgetProps` used to accept any extra prop as `a
 packages: ['@rjsf/utils']
 uses: [typescript, custom-fields, custom-widgets]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [base-input-template-props-reject-extra-attributes]
 ---
 

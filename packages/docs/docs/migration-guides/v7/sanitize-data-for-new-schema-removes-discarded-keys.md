@@ -4,8 +4,7 @@ description: '`sanitizeDataForNewSchema()` used to keep discarded keys as `undef
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: []
-kind: runtime
-noticed: test
+affects: [code, data]
 related: [sanitize-keeps-or-drops-values-by-field-tree]
 ---
 

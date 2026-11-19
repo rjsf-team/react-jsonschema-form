@@ -4,8 +4,7 @@ description: 'Every member of the `Registry` type in `@rjsf/utils` is now `reado
 packages: ['@rjsf/utils']
 uses: [typescript, custom-fields, custom-widgets, custom-templates]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [component-props-are-read-only, test-registry-is-frozen]
 ---
 

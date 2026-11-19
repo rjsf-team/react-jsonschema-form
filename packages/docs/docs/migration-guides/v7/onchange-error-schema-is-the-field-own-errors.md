@@ -4,8 +4,7 @@ description: 'The `errorSchema` passed to `onChange` used to be compared against
 packages: ['@rjsf/core']
 uses: [custom-fields, custom-widgets, custom-templates]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [field-raised-errors-kept-apart-from-validator-errors, array-field-no-longer-passes-error-schema-on-item-moves]
 ---
 

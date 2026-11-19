@@ -4,8 +4,7 @@ description: Several `@rjsf/mantine` widgets named their input by the bare prope
 packages: ['@rjsf/mantine']
 uses: [form-props, markup]
 schema: []
-kind: runtime
-noticed: test
+affects: [data, appearance]
 related: []
 ---
 

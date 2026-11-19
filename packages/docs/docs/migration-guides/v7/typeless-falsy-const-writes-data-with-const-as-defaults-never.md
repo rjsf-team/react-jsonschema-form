@@ -4,8 +4,7 @@ description: 'A typeless `{ "const": null }` used to render as unsupported and n
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form-props]
 schema: [enums, defaults, type-lists]
-kind: runtime
-noticed: review
+affects: [data, appearance]
 related: [typeless-constant-options-render-a-select]
 ---
 

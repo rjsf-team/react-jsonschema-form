@@ -4,8 +4,7 @@ description: A `SchemaField` a custom field renders for its own data path now re
 packages: ['@rjsf/core']
 uses: [custom-fields]
 schema: []
-kind: runtime
-noticed: review
+affects: [code]
 related: [named-custom-field-applies-once-per-data-path, custom-field-fallbackfield-value-field-draws-label, custom-field-draws-own-label-and-description]
 ---
 

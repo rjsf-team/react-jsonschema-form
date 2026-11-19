@@ -4,8 +4,7 @@ description: "A date element's `range` and `options.yearsRange` are now `readonl
 packages: ['@rjsf/utils']
 uses: [custom-widgets, typescript]
 schema: [dates]
-kind: type
-noticed: type-error
+affects: [code]
 related: [ui-options-types-the-options-widgets-read]
 ---
 

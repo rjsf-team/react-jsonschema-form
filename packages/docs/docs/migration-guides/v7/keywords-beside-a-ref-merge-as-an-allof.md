@@ -4,8 +4,7 @@ description: 'Keywords beside a `$ref` used to override its target keyword by ke
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form]
 schema: [refs, defaults]
-kind: runtime
-noticed: review
+affects: [data, appearance]
 related: [recursive-ref-defaults-stop-at-the-cycle, option-scoring-reads-options-as-json-schema]
 ---
 

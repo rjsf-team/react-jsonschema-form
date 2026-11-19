@@ -4,8 +4,7 @@ description: '`getDefaultFormState()` now fills in a missing `type: ''null''` va
 packages: ['@rjsf/utils']
 uses: [utils-api, typescript]
 schema: [defaults]
-kind: runtime
-noticed: review
+affects: [data, code]
 related: [defaults-are-filled-in-without-onchange]
 ---
 

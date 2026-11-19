@@ -4,8 +4,7 @@ description: "`@rjsf/antd`'s object and array headings used to end their column 
 packages: ['@rjsf/antd']
 uses: [form, markup]
 schema: []
-kind: runtime
-noticed: test
+affects: [appearance]
 related: [antd-label-align-aligns-field-labels, antd-requires-antd-6-7]
 ---
 

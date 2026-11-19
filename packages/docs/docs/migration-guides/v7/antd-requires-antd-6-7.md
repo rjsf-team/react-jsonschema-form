@@ -4,8 +4,7 @@ description: '`@rjsf/antd` no longer supports `antd` 5, and earlier 6.x releases
 packages: ['@rjsf/antd']
 uses: [form]
 schema: []
-kind: install
-noticed: build
+affects: [setup]
 related: []
 ---
 

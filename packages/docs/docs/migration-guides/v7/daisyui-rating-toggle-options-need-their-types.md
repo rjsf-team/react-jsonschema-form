@@ -4,8 +4,7 @@ description: "daisyUI's `RatingWidget` and `ToggleWidget` now read `size` and `c
 packages: ['@rjsf/daisyui']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance]
 related: []
 ---
 

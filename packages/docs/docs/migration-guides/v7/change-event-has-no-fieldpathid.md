@@ -4,8 +4,7 @@ description: The event your `onChange`, `onSubmit` or `onError` handler gets, an
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [fieldpathid-prop-is-fieldpath-and-id]
 ---
 

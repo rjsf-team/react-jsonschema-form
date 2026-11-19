@@ -4,8 +4,7 @@ description: 'A dependency''s `oneOf` option used to match only on its own `prop
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form]
 schema: [defaults, any-of-one-of]
-kind: runtime
-noticed: runtime-error
+affects: [data, appearance]
 related: [option-scoring-reads-options-as-json-schema, defaults-fill-more-then-dependency-and-ref-option-shapes]
 ---
 

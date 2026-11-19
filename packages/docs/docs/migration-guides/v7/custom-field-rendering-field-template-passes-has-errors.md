@@ -4,8 +4,7 @@ description: 'The built-in templates now take their error state only from a requ
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-fields]
 schema: []
-kind: runtime
-noticed: type-error
+affects: [code, appearance]
 related: [custom-templates-take-error-state-from-has-errors, layout-grid-discriminated-cell-renders-a-field-wrapper]
 ---
 

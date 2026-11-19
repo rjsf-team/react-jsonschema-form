@@ -4,8 +4,7 @@ description: "An object's Add button is now titled after the object through the 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-templates]
 schema: [additional-properties]
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [add-buttons-titled-add-item-or-after-their-object, object-field-template-calls-schema-utils-can-expand]
 ---
 

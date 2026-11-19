@@ -4,8 +4,7 @@ description: "`useAltDateWidgetProps()` now returns `buttonsDisabled`, a require
 packages: ['@rjsf/utils']
 uses: [typescript, utils-api]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [alt-date-unset-part-is-undefined]
 ---
 

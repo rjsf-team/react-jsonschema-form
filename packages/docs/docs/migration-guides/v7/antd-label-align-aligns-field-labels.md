@@ -4,8 +4,7 @@ description: "`@rjsf/antd`'s `formContext.labelAlign` used to move only object a
 packages: ['@rjsf/antd']
 uses: [form-props]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance]
 related: [antd-object-and-array-headings-start, antd-requires-antd-6-7]
 ---
 

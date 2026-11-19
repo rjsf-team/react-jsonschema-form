@@ -4,8 +4,7 @@ description: '`isValid()` used to receive a copy of each condition or option, an
 packages: ['@rjsf/utils']
 uses: [custom-validator]
 schema: []
-kind: runtime
-noticed: review
+affects: [code]
 ---
 
 ## Detect

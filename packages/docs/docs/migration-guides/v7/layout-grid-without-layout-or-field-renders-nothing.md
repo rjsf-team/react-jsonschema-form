@@ -4,8 +4,7 @@ description: 'A `LayoutGridField` without a valid `ui:layoutGrid`, a cell naming
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [appearance, code]
 related: []
 ---
 

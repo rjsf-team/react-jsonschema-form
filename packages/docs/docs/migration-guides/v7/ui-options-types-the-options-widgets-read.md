@@ -4,8 +4,7 @@ description: "Eight options RJSF's widgets read, such as `format` and `yearsRang
 packages: ['@rjsf/utils']
 uses: [custom-widgets, typescript, ui-schema]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [ui-schema-variable-needs-annotation-for-typed-options, alt-date-range-is-a-readonly-tuple]
 ---
 

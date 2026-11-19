@@ -4,8 +4,7 @@ description: '`@rjsf/validator-ajv8` now uses `ajv-formats` 3, which fails a `fo
 packages: ['@rjsf/validator-ajv8']
 uses: [form]
 schema: [dates]
-kind: runtime
-noticed: test
+affects: [data, experience, setup]
 related: [time-widget-appends-utc-offset]
 ---
 

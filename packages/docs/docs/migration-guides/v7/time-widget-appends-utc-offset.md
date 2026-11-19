@@ -4,8 +4,7 @@ description: 'The `TimeWidget` of core, daisyui and mantine now appends the brow
 packages: ['@rjsf/core', '@rjsf/daisyui', '@rjsf/mantine']
 uses: [form]
 schema: [dates]
-kind: runtime
-noticed: test
+affects: [data]
 related: [validator-ajv8-time-format-requires-timezone-offset]
 ---
 

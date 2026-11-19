@@ -4,8 +4,7 @@ description: A bare `FormProps` now means `FormProps<unknown>`, so handlers or v
 packages: ['@rjsf/core']
 uses: [typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [form-data-type-defaults-to-unknown]
 ---
 

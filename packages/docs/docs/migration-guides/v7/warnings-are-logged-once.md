@@ -4,8 +4,7 @@ description: "RJSF's warnings now go through `logOnce()` and log only the first 
 packages: ['@rjsf/core', '@rjsf/utils', '@rjsf/validator-ajv8', '@rjsf/validator-ata', '@rjsf/validator-cfworker']
 uses: [tooling]
 schema: []
-kind: runtime
-noticed: test
+affects: [experience]
 related: []
 ---
 

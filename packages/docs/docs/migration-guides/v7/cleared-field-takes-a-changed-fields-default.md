@@ -4,8 +4,7 @@ description: 'A field the user cleared now takes the new default when its schema
 packages: ['@rjsf/core']
 uses: [form]
 schema: [defaults, any-of-one-of, enums]
-kind: runtime
-noticed: review
+affects: [data]
 related: [refuse-or-rewrite-edits-in-transform-change, transform-change-keeps-cleared-keys, set-field-value-fills-in-defaults]
 ---
 

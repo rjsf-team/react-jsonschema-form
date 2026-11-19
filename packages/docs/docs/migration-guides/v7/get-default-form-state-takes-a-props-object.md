@@ -4,8 +4,7 @@ description: "`getDefaultFormState()` took a validator and a long list of positi
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [schema-functions-take-schema-context]
 ---
 

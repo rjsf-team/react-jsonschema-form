@@ -4,8 +4,7 @@ description: '`@rjsf/core` no longer renders any Bootstrap 3 class, and its defa
 packages: ['@rjsf/core', '@rjsf/bootstrap3']
 uses: [form]
 schema: []
-kind: install
-noticed: review
+affects: [setup, appearance]
 related: [core-layout-needs-rjsf-css, core-marker-classes-carry-rjsf-prefix, layout-grid-column-width-is-span]
 ---
 

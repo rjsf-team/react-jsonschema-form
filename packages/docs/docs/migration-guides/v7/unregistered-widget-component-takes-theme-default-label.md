@@ -4,8 +4,7 @@ description: An unregistered component passed to `ui:widget` now takes its label
 packages: ['@rjsf/core']
 uses: [custom-widgets]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance, experience, code]
 related: [mantine-custom-widgets-draw-errors-by-their-key, widget-reads-the-presentation-plan]
 ---
 

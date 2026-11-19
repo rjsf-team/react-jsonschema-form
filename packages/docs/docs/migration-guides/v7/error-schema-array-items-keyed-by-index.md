@@ -4,8 +4,7 @@ description: 'An array of item errors in `extraErrors`, a field raise or `custom
 packages: ['@rjsf/core']
 uses: [form-props, custom-templates, custom-fields]
 schema: [arrays]
-kind: runtime
-noticed: review
+affects: [code, data]
 related: [typed-error-schema-matches-the-error-tree]
 ---
 

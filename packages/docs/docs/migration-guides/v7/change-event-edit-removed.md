@@ -4,8 +4,7 @@ description: 'The `edit` member of the event `onChange` and `onSubmit` receive i
 packages: ['@rjsf/core']
 uses: [form-props, typescript]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [change-event-members-are-readonly, form-data-type-defaults-to-unknown]
 ---
 

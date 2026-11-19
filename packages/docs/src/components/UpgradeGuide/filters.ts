@@ -1,7 +1,7 @@
 // The filtered page's logic that needs neither React nor the browser, so `node --test` runs it as it is.
 
 // The shape of the `v<N>.json` plugins/upgrade-guide/index.js writes.
-interface Package {
+export interface Package {
   id: string;
   short: string;
   group: 'always' | 'theme' | 'validator' | 'other';
@@ -12,20 +12,14 @@ export interface Choice {
   id: string;
   label: string;
   detect: string;
+  /** Set on a customization use: its chip's label in the filter bar. */
+  chip?: string;
 }
 
-export interface Kind {
+export interface Heading {
   id: string;
-  label: string;
-  description: string;
-}
-
-export interface Noticed {
-  id: string;
-  label: string;
-  short: string;
-  hint: string;
-  badge: string;
+  heading: string;
+  line: string;
 }
 
 export interface Entry {
@@ -35,18 +29,18 @@ export interface Entry {
   packages: string[];
   uses: string[];
   schema: string[];
-  kind: string;
-  noticed: string;
+  affects: string[];
+  deprecated: boolean;
   permalink: string;
 }
 
 export interface Guide {
   uses: Choice[];
-  /** Every user renders a form, so an entry with this use shows whatever else is ticked; it has no checkbox. */
+  /** Every user renders a form, so an entry with this use shows whatever else is answered; it has no checkbox. */
   everyUserUse: string;
   schema: Choice[];
-  kinds: Kind[];
-  noticed: Noticed[];
+  /** The `affects` headings, then Deprecations, whose id is the last. */
+  headings: Heading[];
   packages: Package[];
   entries: Entry[];
   anchors: Record<string, string[]>;
@@ -54,20 +48,44 @@ export interface Guide {
   combined: Record<string, string>;
 }
 
+/** The reader's answers. An empty value is an unanswered question, which hides nothing. */
 export interface Filters {
   theme: string;
   validator: string;
+  /** The Nothing chip: the reader customizes nothing. It counts as answering the uses without naming one. */
+  nothing: boolean;
+  /** The ticked customization chips and More checkboxes. */
   uses: string[];
   schema: string[];
   other: string[];
-  noticed: string;
+  search: string;
 }
+
+export const NO_FILTERS: Filters = {
+  theme: '',
+  validator: '',
+  nothing: false,
+  uses: [],
+  schema: [],
+  other: [],
+  search: '',
+};
 
 function shortNames(packages: Package[], group: Package['group']) {
   return packages.filter((pkg) => pkg.group === group).map((pkg) => pkg.short);
 }
 
-/** The filters a query string names, dropping any value the guide's vocabulary doesn't have. */
+/** The uses shown as chips in the filter bar. */
+export function customizations(guide: Guide) {
+  return guide.uses.filter((use) => use.chip !== undefined);
+}
+
+/** The uses shown as checkboxes under More: every use but the chips and the one every user has. */
+export function otherUses(guide: Guide) {
+  return guide.uses.filter((use) => use.chip === undefined && use.id !== guide.everyUserUse);
+}
+
+/** The filters a query string names, dropping any key or value the guide's vocabulary doesn't have. */
 export function readFilters(search: string, guide: Guide): Filters {
   const { packages } = guide;
   const params = new URLSearchParams(search);
@@ -80,51 +98,127 @@ export function readFilters(search: string, guide: Guide): Filters {
   return {
     theme: one('theme', shortNames(packages, 'theme')),
     validator: one('validator', shortNames(packages, 'validator')),
+    nothing: params.get('customized') === 'none',
     uses: many(
       'uses',
-      guide.uses.map((use) => use.id),
+      guide.uses.filter((use) => use.id !== guide.everyUserUse).map((use) => use.id),
     ),
     schema: many(
       'schema',
       guide.schema.map((feature) => feature.id),
     ),
     other: many('other', shortNames(packages, 'other')),
-    noticed: one(
-      'noticed',
-      guide.noticed.map((noticed) => noticed.id),
-    ),
+    search: params.get('q') ?? '',
   };
 }
 
-/** Every value is `[a-z0-9-]`, so the query is built by hand to keep the commas readable in a shared link. */
-export function writeFilters({ theme, validator, uses, schema, other, noticed }: Filters) {
+/** Every value but the search is `[a-z0-9-]`, so the query is built by hand to keep the commas readable in a link. */
+export function writeFilters({ theme, validator, nothing, uses, schema, other, search }: Filters) {
   const params = [
     theme && `theme=${theme}`,
     validator && `validator=${validator}`,
+    nothing && 'customized=none',
     uses.length > 0 && `uses=${uses.join(',')}`,
     schema.length > 0 && `schema=${schema.join(',')}`,
     other.length > 0 && `other=${other.join(',')}`,
-    noticed && `noticed=${noticed}`,
+    search && `q=${encodeURIComponent(search)}`,
   ].filter(Boolean);
   return params.length > 0 ? `?${params.join('&')}` : '';
 }
 
-/** The ids of the packages the reader has: the `always` group and the chosen theme, validator and others. */
-export function chosenPackages(guide: Guide, filters: Filters): Set<string> {
-  const chosen = [filters.theme, filters.validator, ...filters.other];
-  return new Set(
-    guide.packages.filter((pkg) => pkg.group === 'always' || chosen.includes(pkg.short)).map((pkg) => pkg.id),
+/** Whether the reader answered anything or searched, which is when the page offers to clear it all. */
+export function isAnswered({ theme, validator, nothing, uses, schema, other, search }: Filters) {
+  return (
+    theme !== '' ||
+    validator !== '' ||
+    nothing ||
+    uses.length > 0 ||
+    schema.length > 0 ||
+    other.length > 0 ||
+    search.trim() !== ''
   );
 }
 
-/** The rule `APPLIES_RULE` in plugins/upgrade-guide/outputs.js states. */
-export function matches(entry: Entry, packages: ReadonlySet<string>, filters: Filters, everyUserUse: string) {
-  const { uses, schema } = filters;
-  return (
-    entry.packages.some((pkg) => packages.has(pkg)) &&
-    (uses.length === 0 || entry.uses.some((use) => use === everyUserUse || uses.includes(use))) &&
-    (schema.length === 0 || entry.schema.length === 0 || entry.schema.some((feature) => schema.includes(feature)))
-  );
+/**
+ * The rule `APPLIES_RULE` in plugins/upgrade-guide/outputs.js states, as a test of one entry. Every unanswered question
+ * passes every entry, so with nothing answered every entry shows.
+ */
+export function matcher(guide: Guide, filters: Filters): (entry: Entry) => boolean {
+  const { theme, validator, nothing, uses, schema, other } = filters;
+  const packages = new Map(guide.packages.map((pkg) => [pkg.id, pkg]));
+  // A theme author's package such as snapshot-tests is for readers who tick it, once they say which packages they have.
+  const anyOther = theme === '' && validator === '';
+  const hasPackage = (id: string) => {
+    const pkg = packages.get(id);
+    switch (pkg?.group) {
+      case 'always':
+        return true;
+      case 'theme':
+        return theme === '' || theme === pkg.short;
+      case 'validator':
+        return validator === '' || validator === pkg.short;
+      case 'other':
+        return anyOther || other.includes(pkg.short);
+      default:
+        return false;
+    }
+  };
+  const usesAnswered = nothing || uses.length > 0;
+  const tokens = filters.search.toLowerCase().split(/\s+/).filter(Boolean);
+  return (entry) =>
+    entry.packages.some(hasPackage) &&
+    (!usesAnswered || entry.uses.some((use) => use === guide.everyUserUse || uses.includes(use))) &&
+    (schema.length === 0 || entry.schema.length === 0 || entry.schema.some((feature) => schema.includes(feature))) &&
+    (tokens.length === 0 ||
+      tokens.every((token) => `${entry.title}\n${entry.description}\n${entry.id}`.toLowerCase().includes(token)));
+}
+
+/** The id of the heading an entry is listed under: the last heading (Deprecations) or its first `affects` value. */
+function headingOf(entry: Entry, headings: Heading[]) {
+  return entry.deprecated ? headings[headings.length - 1].id : entry.affects[0];
+}
+
+/** The headings that list at least one of `entries`, in order, each with its entries in their order. */
+export function groupByHeading(entries: Entry[], headings: Heading[]) {
+  return headings
+    .map((heading) => ({ heading, entries: entries.filter((entry) => headingOf(entry, headings) === heading.id) }))
+    .filter((group) => group.entries.length > 0);
+}
+
+/** `a`, `a and b`, `a, b and c`, with `or` for `conjunction: 'or'`. */
+function joinList(values: string[], conjunction = 'and') {
+  return values.length > 1 ? `${values.slice(0, -1).join(', ')} ${conjunction} ${values.at(-1)}` : values.join('');
+}
+
+/** The hint under the filter bar: what the list shows, and that answering is optional. Its only Markdown is code. */
+export function describeFilters(filters: Filters, guide: Guide) {
+  if (!isAnswered(filters)) {
+    return "Showing every change. Answer any of these to hide what doesn't apply to you.";
+  }
+  const label = (choices: Choice[], ids: string[]) =>
+    choices.filter((choice) => ids.includes(choice.id)).map((choice) => choice.label);
+  const packages = guide.packages
+    .filter(
+      (pkg) => pkg.short === filters.theme || pkg.short === filters.validator || filters.other.includes(pkg.short),
+    )
+    .map((pkg) => `\`${pkg.id}\``);
+  const custom = label(customizations(guide), filters.uses).map((text) => text.toLowerCase());
+  const code = label(otherUses(guide), filters.uses);
+  const schema = label(guide.schema, filters.schema);
+  const search = filters.search.trim();
+  const lead = [
+    packages.length > 0 && `for ${joinList(packages)}`,
+    custom.length > 0 ? `with ${joinList(custom)}` : filters.nothing && 'with no customization',
+  ]
+    .filter(Boolean)
+    .join(' ');
+  const parts = [
+    lead,
+    code.length > 0 && `for code using ${joinList(code)}`,
+    schema.length > 0 && `for schemas with ${joinList(schema, 'or')}`,
+    search && `matching "${search}"`,
+  ].filter(Boolean);
+  return `Showing changes ${parts.join(', ')}. Answer more to narrow the list, or clear to see everything.`;
 }
 
 export function decodeHash(hash: string) {
@@ -148,18 +242,17 @@ export function toMarkdownDocument(
   rows: Entry[],
   texts: string[],
   version: string,
-  kinds: Kind[],
   page: { href: string; origin: string },
 ) {
   const count = `${rows.length} ${rows.length === 1 ? 'entry' : 'entries'}`;
   const parts = [
-    `> react-jsonschema-form ${version} upgrade guide: the ${count} that ${rows.length === 1 ? 'matches' : 'match'} ${page.href}, in the order to apply them.`,
+    `> react-jsonschema-form ${version} upgrade guide: the ${count} that ${rows.length === 1 ? 'matches' : 'match'} ${page.href}, in the order the page lists them.`,
   ];
   rows.forEach((entry, index) => {
-    const kind = kinds.find(({ id }) => id === entry.kind)?.label ?? entry.kind;
+    const codes = (values: string[]) => values.map((value) => `\`${value}\``).join(', ');
     const facts = [
-      `- kind: ${kind}; noticed: \`${entry.noticed}\``,
-      `- packages: ${entry.packages.map((pkg) => `\`${pkg}\``).join(', ')}`,
+      `- affects: ${codes(entry.affects)}${entry.deprecated ? '; deprecated' : ''}`,
+      `- packages: ${codes(entry.packages)}`,
       `- source: ${markdownUrl(entry, page.origin)}`,
     ];
     const body = texts[index].replace(/^---\r?\n[\s\S]*?\r?\n---[ \t]*\r?\n/, '').trim();

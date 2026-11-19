@@ -4,8 +4,7 @@ description: "In the `realValue` format, options that stringify alike shared a D
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [ui-schema, markup]
 schema: [enums]
-kind: markup
-noticed: test
+affects: [code, data]
 related: [enum-option-value-encoder-removed]
 ---
 

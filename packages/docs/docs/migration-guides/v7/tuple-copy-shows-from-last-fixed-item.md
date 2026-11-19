@@ -4,8 +4,7 @@ description: In an array with fixed `items` and `additionalItems`, Copy used to 
 packages: ['@rjsf/core']
 uses: [markup, ui-schema]
 schema: [arrays]
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: [array-templates-disable-buttons-that-cannot-act]
 ---
 

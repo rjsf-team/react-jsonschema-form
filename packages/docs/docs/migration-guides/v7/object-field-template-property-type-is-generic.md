@@ -4,8 +4,7 @@ description: "`ObjectFieldTemplatePropertyType` is now generic over `<T, S, F>` 
 packages: ['@rjsf/utils']
 uses: [typescript, custom-templates]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: []
 ---
 

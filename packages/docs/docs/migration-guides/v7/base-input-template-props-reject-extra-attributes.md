@@ -4,8 +4,7 @@ description: '`BaseInputTemplateProps` used to accept any attribute and now decl
 packages: ['@rjsf/core', '@rjsf/utils', '@rjsf/daisyui', '@rjsf/mui', '@rjsf/react-bootstrap', '@rjsf/shadcn']
 uses: [typescript, custom-widgets]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [field-and-widget-props-reject-undeclared-props]
 ---
 

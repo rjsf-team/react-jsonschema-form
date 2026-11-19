@@ -4,8 +4,7 @@ description: '`RJSFValidationError.params` used to be `any` and is now an option
 packages: ['@rjsf/utils']
 uses: [typescript, form-props, custom-validator]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: []
 ---
 

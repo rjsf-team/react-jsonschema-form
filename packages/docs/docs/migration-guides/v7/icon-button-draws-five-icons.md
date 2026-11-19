@@ -4,8 +4,7 @@ description: Core's `IconButton` now draws an inline SVG only for `plus`, `copy`
 packages: ['@rjsf/core']
 uses: [custom-templates]
 schema: []
-kind: markup
-noticed: review
+affects: [appearance, code]
 related: []
 ---
 

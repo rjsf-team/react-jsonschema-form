@@ -4,8 +4,7 @@ description: "A `localizer` for a precompiled or ata validator now gets property
 packages: ['@rjsf/validator-ajv8', '@rjsf/validator-ata']
 uses: [custom-validator, markup]
 schema: []
-kind: runtime
-noticed: test
+affects: [code, experience]
 related: [precompiled-validator-takes-an-options-object]
 ---
 

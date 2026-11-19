@@ -4,8 +4,7 @@ description: '`isFormDataAvailable()` used to return `false` for `{}` and now re
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: []
-kind: runtime
-noticed: review
+affects: [code]
 related: [optional-object-holding-empty-object-renders-open]
 ---
 

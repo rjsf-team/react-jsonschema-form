@@ -4,8 +4,7 @@ description: 'An option `UIOptionsType` doesn''t declare, read from `ui:options`
 packages: ['@rjsf/utils']
 uses: [typescript, custom-widgets, custom-templates, custom-fields]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [ui-options-types-the-options-widgets-read, ui-schema-entries-are-unknown]
 ---
 

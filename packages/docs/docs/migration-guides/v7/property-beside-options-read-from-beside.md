@@ -4,8 +4,7 @@ description: '`findFieldInSchema()` and layout grid cells used to read a propert
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [utils-api, ui-schema]
 schema: [any-of-one-of]
-kind: runtime
-noticed: review
+affects: [data, code]
 related: [layout-grid-cell-beside-options-renders-the-field]
 ---
 

@@ -4,8 +4,7 @@ description: '`@rjsf/mantine` now shows errors its widgets don''t draw through `
 packages: ['@rjsf/mantine']
 uses: [custom-widgets, custom-fields, markup]
 schema: []
-kind: runtime
-noticed: test
+affects: [appearance, code]
 related:
   [
     custom-field-draws-own-label-and-description,

@@ -4,8 +4,7 @@ description: '`@rjsf/semantic-ui` has no v7 release because Semantic UI React do
 packages: ['@rjsf/semantic-ui']
 uses: [form]
 schema: []
-kind: install
-noticed: build
+affects: [setup, code]
 related: []
 ---
 

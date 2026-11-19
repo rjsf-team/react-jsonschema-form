@@ -4,8 +4,7 @@ description: "`@rjsf/mui`'s `DescriptionField` rendered each description as an `
 packages: ['@rjsf/mui']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: []
 ---
 

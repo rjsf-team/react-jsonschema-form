@@ -4,8 +4,7 @@ description: 'A `number`/`integer` input now has a `title` ("Enter a number" or 
 packages: ['@rjsf/core', '@rjsf/bootstrap3', '@rjsf/chakra-ui', '@rjsf/daisyui', '@rjsf/fluentui-rc', '@rjsf/mui', '@rjsf/react-bootstrap', '@rjsf/shadcn']
 uses: [markup, ui-schema, custom-templates]
 schema: [numbers]
-kind: markup
-noticed: test
+affects: [experience, code]
 related: [number-fields-render-text-input, custom-base-input-template-forwards-input-mode-and-pattern, translate-string-table-needs-new-keys]
 ---
 

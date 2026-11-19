@@ -4,8 +4,7 @@ description: '`ui:orderable: false` used to hide only core''s arrows, and now al
 packages: ['@rjsf/core']
 uses: [custom-templates, ui-schema]
 schema: [arrays]
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [array-templates-disable-buttons-that-cannot-act]
 ---
 

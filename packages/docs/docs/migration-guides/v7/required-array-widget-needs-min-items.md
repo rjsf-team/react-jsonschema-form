@@ -4,8 +4,7 @@ description: 'A required array rendered as one widget now shows a `*` and is `re
 packages: ['@rjsf/core']
 uses: [form, markup, custom-widgets]
 schema: [arrays]
-kind: runtime
-noticed: test
+affects: [data, experience]
 related:
   [
     field-template-reads-the-presentation-plan,

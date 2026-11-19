@@ -4,8 +4,7 @@ description: "An array whose `items` is one schema filled its `default`'s items 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form]
 schema: [arrays, defaults]
-kind: runtime
-noticed: review
+affects: [data]
 ---
 
 ## Detect

@@ -4,8 +4,7 @@ description: Core's `rjsf.css` now lines up array item buttons and additional-pr
 packages: ['@rjsf/core', '@rjsf/shadcn']
 uses: [custom-templates]
 schema: []
-kind: markup
-noticed: review
+affects: [appearance, code]
 related: [core-layout-needs-rjsf-css, label-is-exported-as-fieldlabel]
 ---
 

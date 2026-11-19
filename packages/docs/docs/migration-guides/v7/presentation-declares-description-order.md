@@ -4,8 +4,7 @@ description: Screen readers now announce a field's description ids in the order 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [custom-templates, custom-theme, custom-widgets]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [custom-select-widget-applies-aria-props, field-template-reads-the-presentation-plan]
 ---
 

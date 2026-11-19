@@ -4,8 +4,7 @@ description: An `anyOf` directly under a `dependencies` entry used to stay on th
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form]
 schema: [any-of-one-of, defaults]
-kind: runtime
-noticed: review
+affects: [data, appearance]
 ---
 
 ## Detect

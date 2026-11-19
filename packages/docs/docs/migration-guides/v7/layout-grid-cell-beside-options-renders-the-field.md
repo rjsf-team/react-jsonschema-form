@@ -4,8 +4,7 @@ description: A `{ name, render }` grid cell naming a property beside `anyOf`/`on
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: [any-of-one-of]
-kind: runtime
-noticed: review
+affects: [appearance]
 related: [property-beside-options-read-from-beside]
 ---
 

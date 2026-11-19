@@ -4,8 +4,7 @@ description: "An open `SelectWidget` list was unnamed in daisyUI and named \"Sug
 packages: ['@rjsf/daisyui', '@rjsf/shadcn']
 uses: [markup]
 schema: [enums]
-kind: markup
-noticed: test
+affects: [experience]
 related: [shadcn-select-names-its-combobox-and-fills-placeholders, shadcn-multi-select-takes-field-id-and-opens-on-action]
 ---
 

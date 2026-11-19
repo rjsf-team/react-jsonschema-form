@@ -4,8 +4,7 @@ description: A `type` list such as `['null', 'string', 'number']` used to render
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, utils-api]
 schema: [type-lists]
-kind: runtime
-noticed: review
+affects: [appearance, data, code]
 related: [fallback-ui-renders-type-lists-with-a-type-selector, typeless-constant-options-render-a-select]
 ---
 

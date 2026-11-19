@@ -4,8 +4,7 @@ description: An `additionalProperties` key used to be a free-text input; when `p
 packages: ['@rjsf/core']
 uses: [markup]
 schema: [additional-properties]
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: [custom-field-template-forwards-property-names-enum, object-field-template-calls-schema-utils-can-expand]
 ---
 

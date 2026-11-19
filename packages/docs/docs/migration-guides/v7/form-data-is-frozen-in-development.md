@@ -4,8 +4,7 @@ description: In development, the `formData` passed to `onChange` and the object 
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [code]
 related: [callback-form-data-and-retrieved-schemas-are-shared]
 ---
 

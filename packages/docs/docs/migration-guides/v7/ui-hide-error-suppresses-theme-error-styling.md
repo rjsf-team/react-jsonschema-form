@@ -4,8 +4,7 @@ description: 'Under `ui:hideError` the themes used to keep their red outline or 
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance, experience]
 related: [custom-widget-error-state-from-has-widget-errors, chakra-ui-checkboxes-invalid-only-with-visible-errors, mantine-field-error-template-shows-unshown-errors]
 ---
 

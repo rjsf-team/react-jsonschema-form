@@ -4,8 +4,7 @@ description: 'A widget''s `value`, the values `onChange`, `onBlur` and `onFocus`
 packages: ['@rjsf/utils']
 uses: [typescript, custom-widgets, custom-fields]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [alt-date-widgets-read-only-string-dates]
 ---
 

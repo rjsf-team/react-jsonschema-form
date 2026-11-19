@@ -4,8 +4,7 @@ description: "daisyUI's field wrapper now applies both `ui:classNames` and `ui:s
 packages: ['@rjsf/daisyui']
 uses: [custom-templates]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related: [daisyui-ui-class-names-and-style-on-field-wrapper]
 ---
 

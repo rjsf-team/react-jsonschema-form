@@ -4,8 +4,7 @@ description: "`enumOptionValueEncoder()` encoded one option at a time and is gon
 packages: ['@rjsf/utils']
 uses: [custom-widgets, utils-api]
 schema: [enums]
-kind: removal
-noticed: type-error
+affects: [code]
 related: [enum-option-dom-values-use-index-prefix, enum-option-value-is-unknown]
 ---
 

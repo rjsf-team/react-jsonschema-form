@@ -4,8 +4,7 @@ description: '`getDefaultFormState()` now returns `{}` where it returned `undefi
 packages: ['@rjsf/utils']
 uses: [utils-api]
 schema: [refs, defaults]
-kind: runtime
-noticed: test
+affects: [data]
 related: []
 ---
 

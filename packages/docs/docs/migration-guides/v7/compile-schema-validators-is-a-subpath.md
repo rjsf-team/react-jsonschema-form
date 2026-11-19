@@ -4,8 +4,7 @@ description: The `lib/compileSchemaValidators` paths of the AJV and ata validato
 packages: ['@rjsf/validator-ajv8', '@rjsf/validator-ata']
 uses: [custom-validator]
 schema: []
-kind: removal
-noticed: build
+affects: [setup]
 related: [deep-imports-removed]
 ---
 

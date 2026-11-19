@@ -4,8 +4,7 @@ description: The `getTestRegistry()` helper moved from `@rjsf/core` to the `@rjs
 packages: ['@rjsf/core']
 uses: [custom-fields, custom-widgets, custom-templates]
 schema: []
-kind: install
-noticed: type-error
+affects: [setup, code]
 related: [form-get-registry-is-build-registry, test-registry-is-frozen]
 ---
 

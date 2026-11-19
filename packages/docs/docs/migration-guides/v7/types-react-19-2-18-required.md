@@ -4,8 +4,7 @@ description: "`@rjsf/core`'s published types import `SubmitEvent`, which `@types
 packages: ['@rjsf/core']
 uses: [typescript]
 schema: []
-kind: install
-noticed: type-error
+affects: [setup]
 related: [on-submit-event-is-a-submit-event]
 ---
 

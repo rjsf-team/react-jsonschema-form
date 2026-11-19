@@ -4,8 +4,7 @@ description: An optional object with `anyOf`/`oneOf` options used to draw a seco
 packages: ['@rjsf/core']
 uses: [markup, custom-templates]
 schema: [any-of-one-of]
-kind: markup
-noticed: test
+affects: [appearance, code]
 related: [optional-object-holding-empty-object-renders-open]
 ---
 

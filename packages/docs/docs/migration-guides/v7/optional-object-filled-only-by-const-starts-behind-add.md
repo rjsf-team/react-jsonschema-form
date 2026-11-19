@@ -4,8 +4,7 @@ description: Under the Optional Data Controls, an optional object whose only val
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: [enums, defaults]
-kind: runtime
-noticed: test
+affects: [data, appearance]
 related: [optional-data-controls-read-typeless-options-as-field-type]
 ---
 

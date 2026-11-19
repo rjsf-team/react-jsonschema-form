@@ -4,8 +4,7 @@ description: v7 adds 20 `TranslatableString` keys for date parts, pickers, selec
 packages: ['@rjsf/core', '@rjsf/utils', '@rjsf/daisyui', '@rjsf/mui', '@rjsf/shadcn']
 uses: [form-props]
 schema: []
-kind: runtime
-noticed: review
+affects: [experience, code]
 related: [alt-date-parts-named-by-field-label, daisyui-date-picker-trigger-and-popup-markup-changed, shadcn-select-names-its-combobox-and-fills-placeholders, translatable-string-is-a-const-object, number-input-title-tooltip-and-name, forbidden-extra-key-row-shows-error, custom-select-widget-applies-aria-props, required-array-widget-needs-min-items, markdown-needs-markdown-template]
 ---
 

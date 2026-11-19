@@ -4,8 +4,7 @@ description: "@rjsf/daisyui's `btn btn-sm` now comes from the class map's `iconB
 packages: ['@rjsf/daisyui']
 uses: [custom-templates]
 schema: []
-kind: markup
-noticed: review
+affects: [code, appearance]
 related: [daisyui-renders-core-components]
 ---
 

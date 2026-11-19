@@ -4,8 +4,7 @@ description: 'A field registered as `LayoutMultiSchemaField` now renders inside 
 packages: ['@rjsf/core']
 uses: [custom-fields]
 schema: [any-of-one-of]
-kind: removal
-noticed: review
+affects: [code]
 related: [layout-grid-discriminated-cell-renders-a-field-wrapper, anyof-oneof-field-options-are-already-retrieved]
 ---
 

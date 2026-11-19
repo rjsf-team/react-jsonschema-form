@@ -4,8 +4,7 @@ description: '`@rjsf/utils` no longer exports `toFieldPathId`, the `FieldPathId`
 packages: ['@rjsf/utils']
 uses: [utils-api, typescript]
 schema: []
-kind: removal
-noticed: type-error
+affects: [code]
 related: [fieldpathid-prop-is-fieldpath-and-id]
 ---
 

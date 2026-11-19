@@ -4,8 +4,7 @@ description: 'A `number`/`integer` field used to render `<input type="number">` 
 packages: ['@rjsf/core', '@rjsf/bootstrap3', '@rjsf/chakra-ui', '@rjsf/daisyui', '@rjsf/fluentui-rc', '@rjsf/mui', '@rjsf/react-bootstrap', '@rjsf/shadcn']
 uses: [form, markup]
 schema: [numbers, type-lists]
-kind: runtime
-noticed: test
+affects: [appearance, experience]
 related: [number-pattern-blocks-submit-of-non-numeric-data, number-input-title-tooltip-and-name, number-field-form-data-can-hold-a-string, custom-base-input-template-forwards-input-mode-and-pattern]
 ---
 

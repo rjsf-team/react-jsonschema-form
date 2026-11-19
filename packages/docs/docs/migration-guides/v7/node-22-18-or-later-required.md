@@ -4,8 +4,7 @@ description: "Version 7 supports only Node `^22.18.0 || ^24.11.0 || >=26.0.0`, d
 packages: ['*']
 uses: [tooling]
 schema: []
-kind: install
-noticed: build
+affects: [setup]
 related: []
 ---
 

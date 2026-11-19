@@ -4,8 +4,7 @@ description: "A single `@rjsf/mantine` `SelectWidget` whose schema has a `defaul
 packages: ['@rjsf/mantine']
 uses: [form]
 schema: [defaults, enums, any-of-one-of]
-kind: runtime
-noticed: review
+affects: [experience]
 related: []
 ---
 

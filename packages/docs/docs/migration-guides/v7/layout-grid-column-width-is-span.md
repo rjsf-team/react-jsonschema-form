@@ -4,8 +4,7 @@ description: "Core's `GridTemplate` now takes a column's width as `span` and add
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: []
-kind: markup
-noticed: review
+affects: [appearance]
 related: [bootstrap-3-markup-moved-to-bootstrap3]
 ---
 

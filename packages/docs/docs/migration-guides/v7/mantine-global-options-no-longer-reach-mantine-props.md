@@ -4,8 +4,7 @@ description: A Mantine prop such as `radius` or `variant` in `ui:globalOptions` 
 packages: ['@rjsf/mantine']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance]
 related: [theme-global-options-use-theme-types, ui-global-options-hold-only-global-options]
 ---
 

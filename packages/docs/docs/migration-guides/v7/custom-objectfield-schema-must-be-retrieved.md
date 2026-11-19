@@ -4,8 +4,7 @@ description: '`ObjectField` used to retrieve its schema again for the data, and 
 packages: ['@rjsf/core']
 uses: [custom-fields]
 schema: [refs, defaults, additional-properties]
-kind: runtime
-noticed: review
+affects: [code]
 ---
 
 ## Detect

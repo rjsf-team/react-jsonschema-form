@@ -4,8 +4,7 @@ description: '`ArrayFieldItemTemplateProps.displayLabel` now comes from the item
 packages: ['@rjsf/core']
 uses: [custom-templates]
 schema: [arrays]
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related: [field-template-reads-the-presentation-plan]
 ---
 

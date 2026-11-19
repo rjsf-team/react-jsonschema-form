@@ -4,8 +4,7 @@ description: 'The registry `getTestRegistry()` returns is frozen at runtime, wit
 packages: ['@rjsf/core']
 uses: [custom-fields, custom-widgets, custom-templates]
 schema: []
-kind: runtime
-noticed: test
+affects: [code]
 related: [get-test-registry-moved-to-core-testing, registry-members-are-read-only]
 ---
 

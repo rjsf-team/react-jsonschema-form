@@ -5,7 +5,7 @@
 const path = require('node:path');
 
 const { filteredPageFile } = require('./layout.js');
-const { ALWAYS_PACKAGES, KINDS } = require('./vocabulary.js');
+const { ALWAYS_PACKAGES, HEADINGS, headingId } = require('./vocabulary.js');
 
 /**
  * @typedef {import('./entries.js').Entry & { permalink: string }} ResolvedEntry
@@ -17,15 +17,15 @@ const { ALWAYS_PACKAGES, KINDS } = require('./vocabulary.js');
  *   combined: { key: string; label: string; path: string; packageId?: string }[];
  * }} ResolvedVersion
  * `route` is the site path of the version's directory, base URL included, ending in `/`; `page` is the filtered page's
- * permalink. `entries` are in apply order. `combined` lists the combined Markdown files written beside the entries:
- * `all` and one per theme and validator.
+ * permalink. `entries` are in heading order (`HEADINGS`), then by id. `combined` lists the combined Markdown files
+ * written beside the entries: `all` and one per theme and validator.
  *
  * @typedef {Map<string, string>} Permalinks
  * Docs plugin permalinks keyed by `@site/…` source path.
  */
 
 const DOCS_PLUGIN = 'docusaurus-plugin-content-docs';
-const KIND_ORDER = KINDS.map(({ id }) => id);
+const HEADING_ORDER = HEADINGS.map(({ id }) => id);
 
 /**
  * @param {Record<string, Record<string, unknown>>} allContent
@@ -72,7 +72,9 @@ function resolveVersions(versions, permalinks) {
         }
         return { ...entry, permalink };
       })
-      .sort((a, b) => KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind) || a.id.localeCompare(b.id));
+      .sort(
+        (a, b) => HEADING_ORDER.indexOf(headingId(a)) - HEADING_ORDER.indexOf(headingId(b)) || a.id.localeCompare(b.id),
+      );
     // The `.md` copies, llms.txt and the combined files sit in the entries' directory, so a version needs one entry.
     const first = entries[0]?.permalink.replace(/\/$/, '');
     if (first === undefined) {

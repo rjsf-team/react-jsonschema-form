@@ -4,8 +4,7 @@ description: '`null`, untitled and fallback UI fields, titled array items, depre
 packages: ['@rjsf/core']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [experience, appearance]
 related: [label-and-title-ids-move-to-spans]
 ---
 

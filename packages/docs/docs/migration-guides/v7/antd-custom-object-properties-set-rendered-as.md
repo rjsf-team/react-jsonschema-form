@@ -4,8 +4,7 @@ description: antd's `ObjectFieldTemplate` now keys a property's `colSpan` by its
 packages: ['@rjsf/antd']
 uses: [custom-fields]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, appearance]
 related: [antd-col-span-keyed-by-rendered-widget]
 ---
 

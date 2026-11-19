@@ -4,8 +4,7 @@ description: The `ui:required` check and `omitExtraData` used to read the option
 packages: ['@rjsf/core']
 uses: [ui-schema, form-props]
 schema: [any-of-one-of, refs]
-kind: runtime
-noticed: test
+affects: [data, experience]
 related: [selected-option-stays-while-you-type, sanitize-keeps-or-drops-values-by-field-tree]
 ---
 

@@ -4,8 +4,7 @@ description: '`rawHelp` used to be a `string` and `undefined` for an element `ui
 packages: ['@rjsf/core']
 uses: [custom-templates, typescript]
 schema: []
-kind: runtime
-noticed: type-error
+affects: [code]
 related: []
 ---
 

@@ -4,8 +4,7 @@ description: '`getClosestMatchingOption()` now reuses a pick within one call wit
 packages: ['@rjsf/utils']
 uses: [custom-validator]
 schema: []
-kind: runtime
-noticed: review
+affects: [code]
 related: [validator-ajv8-isvalid-validates-a-copy, get-closest-matching-option-always-returns-an-option]
 ---
 

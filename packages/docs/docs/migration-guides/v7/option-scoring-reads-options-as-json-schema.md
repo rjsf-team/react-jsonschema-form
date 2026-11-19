@@ -4,8 +4,7 @@ description: 'Option matching now reads an option''s `$ref`, `allOf`, `then`/`el
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, utils-api]
 schema: [any-of-one-of, refs]
-kind: runtime
-noticed: review
+affects: [data, code]
 related: [keywords-beside-a-ref-merge-as-an-allof, dependency-oneof-option-matched-through-allof, removed-option-scoring-and-root-schema-utils]
 ---
 

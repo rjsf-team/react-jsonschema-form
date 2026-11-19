@@ -4,8 +4,7 @@ description: "A rejection from the promise `onSubmit` returns is now reported fr
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [code]
 related: [async-on-submit-ignores-submits-until-settled]
 ---
 

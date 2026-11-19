@@ -4,8 +4,7 @@ description: "Every theme's `BaseInputTemplate` now puts `multiple` on a `file` 
 packages: ['@rjsf/core', '@rjsf/bootstrap3', '@rjsf/daisyui', '@rjsf/react-bootstrap', '@rjsf/shadcn']
 uses: [custom-widgets]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: []
 ---
 

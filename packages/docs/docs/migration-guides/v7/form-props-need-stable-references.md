@@ -4,8 +4,7 @@ description: '`Form` now compares props shallowly, so a function, component or r
 packages: ['@rjsf/core']
 uses: [form-props, custom-widgets, custom-fields, custom-templates]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, data]
 related: [experimental-component-update-strategy-removed]
 ---
 

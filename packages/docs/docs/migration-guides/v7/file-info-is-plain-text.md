@@ -4,8 +4,7 @@ description: '`FileWidget` file information and the English `UnsupportedField*` 
 packages: ['@rjsf/core']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance]
 related: [markdown-needs-markdown-template, translatable-string-invalid-object-field-removed]
 ---
 

@@ -4,8 +4,7 @@ description: "Each `AltDateWidget` select was named by its part alone, such as `
 packages: ['@rjsf/core']
 uses: [markup]
 schema: [dates, enums]
-kind: markup
-noticed: test
+affects: [experience, code]
 related: [custom-select-widget-applies-aria-props, translate-string-table-needs-new-keys, mantine-markup-uses-rjsf-ids]
 ---
 

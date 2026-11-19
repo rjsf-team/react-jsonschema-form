@@ -4,8 +4,7 @@ description: '`getUiOptions()` used to return a global `required` and the root''
 packages: ['@rjsf/utils']
 uses: [custom-widgets, custom-templates, utils-api]
 schema: []
-kind: runtime
-noticed: review
+affects: [code]
 related: [ui-options-field-and-reserved-keys-move-out, ui-global-options-hold-only-global-options]
 ---
 

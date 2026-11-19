@@ -4,8 +4,7 @@ description: "A uiSchema for data typed `Record<string, V>`, where `V` can't hol
 packages: ['@rjsf/utils']
 uses: [typescript, ui-schema]
 schema: [additional-properties]
-kind: type
-noticed: type-error
+affects: [code]
 related: [ui-schema-rejects-field-names-not-in-form-data]
 ---
 

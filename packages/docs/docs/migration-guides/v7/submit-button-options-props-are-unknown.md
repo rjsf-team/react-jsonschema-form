@@ -4,8 +4,7 @@ description: 'The undeclared keys of `ui:submitButtonOptions.props` were `any` a
 packages: ['@rjsf/utils']
 uses: [typescript, custom-templates, ui-schema]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: []
 ---
 

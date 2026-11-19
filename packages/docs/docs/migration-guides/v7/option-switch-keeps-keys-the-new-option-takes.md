@@ -4,8 +4,7 @@ description: Switching an `anyOf`/`oneOf` option now keeps or drops each key by 
 packages: ['@rjsf/core']
 uses: [form]
 schema: [any-of-one-of, additional-properties]
-kind: runtime
-noticed: review
+affects: [data]
 related: [sanitize-keeps-or-drops-values-by-field-tree, selected-option-stays-while-you-type]
 ---
 

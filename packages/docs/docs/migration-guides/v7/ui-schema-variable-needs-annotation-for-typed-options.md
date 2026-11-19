@@ -4,8 +4,7 @@ description: "`yearsRange` and `shape` now have narrow types, so a uiSchema in a
 packages: ['@rjsf/utils']
 uses: [typescript, ui-schema]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [ui-options-types-the-options-widgets-read]
 ---
 

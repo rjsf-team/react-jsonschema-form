@@ -4,8 +4,7 @@ description: "`@rjsf/mantine`'s `BaseInputTemplate` used to call `onChangeOverri
 packages: ['@rjsf/mantine']
 uses: [custom-widgets]
 schema: []
-kind: runtime
-noticed: review
+affects: [code]
 related: [number-fields-render-text-input]
 ---
 

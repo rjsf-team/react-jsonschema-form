@@ -4,8 +4,7 @@ description: 'The `rjsf-field-<type>` class on a field whose `type` is a list us
 packages: ['@rjsf/core']
 uses: [markup]
 schema: [type-lists]
-kind: markup
-noticed: test
+affects: [appearance]
 related: [typeless-constant-options-render-a-select]
 ---
 

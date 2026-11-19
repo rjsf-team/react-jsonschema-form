@@ -4,8 +4,7 @@ description: "@rjsf/daisyui and @rjsf/shadcn dropped their copies of core's temp
 packages: ['@rjsf/daisyui', '@rjsf/shadcn']
 uses: [custom-templates, custom-widgets]
 schema: []
-kind: removal
-noticed: review
+affects: [code, setup]
 related: [daisyui-renders-core-components, shadcn-renders-core-templates]
 ---
 

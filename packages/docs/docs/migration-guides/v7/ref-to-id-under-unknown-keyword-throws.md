@@ -4,8 +4,7 @@ description: An `$id` under a container RJSF doesn't walk, such as `components` 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form]
 schema: [refs]
-kind: runtime
-noticed: runtime-error
+affects: [data, setup]
 related: []
 ---
 

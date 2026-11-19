@@ -4,8 +4,7 @@ description: With `enableOptionalDataFieldForType` naming `object`, an optional 
 packages: ['@rjsf/core']
 uses: [ui-schema]
 schema: [additional-properties, any-of-one-of]
-kind: runtime
-noticed: test
+affects: [appearance, data]
 related: [is-form-data-available-true-for-empty-object, optional-object-with-options-draws-one-add-control, optional-data-controls-read-typeless-options-as-field-type]
 ---
 

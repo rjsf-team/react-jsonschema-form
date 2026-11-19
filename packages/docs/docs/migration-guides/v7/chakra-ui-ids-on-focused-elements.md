@@ -4,8 +4,7 @@ description: '`@rjsf/chakra-ui` now puts the field''s id on the element a user f
 packages: ['@rjsf/chakra-ui']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: [label-and-title-ids-move-to-spans, widget-under-built-in-key-takes-its-declaration]
 ---
 

@@ -4,8 +4,7 @@ description: 'In a layout grid cell, the `name` of the field and widget and the 
 packages: ['@rjsf/core']
 uses: [custom-fields, custom-widgets, custom-templates]
 schema: []
-kind: runtime
-noticed: review
+affects: [code]
 related: [layout-grid-cell-labelled-by-property-name]
 ---
 

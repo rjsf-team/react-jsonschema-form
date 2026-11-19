@@ -4,8 +4,7 @@ description: 'Parts of RJSF read `oneOf` before `anyOf` on a schema with both, s
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [form, markup]
 schema: [any-of-one-of]
-kind: runtime
-noticed: test
+affects: [data, appearance, experience]
 related: [typeless-constant-options-render-a-select]
 ---
 

@@ -4,8 +4,7 @@ description: '`style` on `FieldTemplateProps`, in `ui:options` and as `ui:style`
 packages: ['@rjsf/utils']
 uses: [typescript, ui-schema, custom-templates]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [grid-template-props-declare-own-props]
 ---
 

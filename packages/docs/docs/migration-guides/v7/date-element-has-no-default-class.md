@@ -4,8 +4,7 @@ description: '`DateElement` in `@rjsf/utils` no longer defaults its `className` 
 packages: ['@rjsf/utils', '@rjsf/shadcn', '@rjsf/fluentui-rc']
 uses: [custom-theme, custom-widgets, markup]
 schema: [dates]
-kind: markup
-noticed: test
+affects: [appearance]
 related: []
 ---
 

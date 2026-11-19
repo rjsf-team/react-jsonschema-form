@@ -4,8 +4,7 @@ description: '`EnumValue`, the entry type of `ui:enumOrder`, `ui:enumDisabled` a
 packages: ['@rjsf/utils']
 uses: [typescript, custom-widgets]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [enum-option-value-is-unknown]
 ---
 

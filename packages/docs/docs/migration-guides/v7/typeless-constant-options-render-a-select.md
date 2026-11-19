@@ -4,8 +4,7 @@ description: 'A `oneOf`/`anyOf` made only of constants used to render as an unsu
 packages: ['@rjsf/core']
 uses: [form]
 schema: [any-of-one-of, enums, type-lists]
-kind: runtime
-noticed: review
+affects: [appearance, data]
 related: [schema-with-anyof-and-oneof-reads-anyof-first, labelled-boolean-constant-options-default-to-a-select, typeless-falsy-const-writes-data-with-const-as-defaults-never, type-list-field-class-names-the-rendered-field]
 ---
 

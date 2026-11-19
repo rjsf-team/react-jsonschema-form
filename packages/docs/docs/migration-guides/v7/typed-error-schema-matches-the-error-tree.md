@@ -4,8 +4,7 @@ description: '`ErrorSchema<T>` and `FormValidation<T>` used to resolve to the wr
 packages: ['@rjsf/utils']
 uses: [typescript, form-props]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [form-validation-nodes-are-optional, error-schema-array-items-keyed-by-index]
 ---
 

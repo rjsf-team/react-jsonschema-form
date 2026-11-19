@@ -4,8 +4,8 @@ description: 'Mantine 9 renamed `Grid`''s `gutter` prop to `gap`, and `GridTempl
 packages: ['@rjsf/mantine']
 uses: [ui-schema]
 schema: []
-kind: deprecation
-noticed: review
+affects: [code]
+deprecated: true
 related: [mantine-requires-mantine-9-6-3]
 ---
 

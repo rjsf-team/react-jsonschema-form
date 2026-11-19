@@ -4,8 +4,7 @@ description: "`@rjsf/core` now declares `react` `>=19.2` as its peer dependency,
 packages: ['*']
 uses: [form]
 schema: []
-kind: install
-noticed: build
+affects: [setup]
 related: [react-dom-peer-of-core, form-in-hidden-activity-drops-changes]
 ---
 

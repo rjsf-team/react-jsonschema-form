@@ -4,8 +4,7 @@ description: "`@rjsf/chakra-ui` no longer lists `chakra-react-select` as a peer 
 packages: ['@rjsf/chakra-ui']
 uses: [tooling]
 schema: []
-kind: install
-noticed: review
+affects: [setup]
 related: []
 ---
 

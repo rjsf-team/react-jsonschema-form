@@ -4,8 +4,7 @@ description: '`extraErrorsBlockSubmit` is replaced by `extraErrorsAreWarnings`, 
 packages: ['@rjsf/core']
 uses: [form-props]
 schema: []
-kind: removal
-noticed: review
+affects: [data, code]
 related: []
 ---
 

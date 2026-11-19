@@ -4,8 +4,7 @@ description: '`@rjsf/shadcn`''s `RangeWidget` now puts the field''s id on the sl
 packages: ['@rjsf/shadcn']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: [label-and-title-ids-move-to-spans]
 ---
 

@@ -4,8 +4,7 @@ description: "`UiSchema<T>` used to accept any string key and now only accepts t
 packages: ['@rjsf/utils']
 uses: [typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: [ui-schema-record-data-rejects-ui-keys, ui-schema-field-named-classnames-anyof-oneof, ui-schema-recursive-type-exceeds-stack-depth, ui-schema-entries-are-unknown]
 ---
 

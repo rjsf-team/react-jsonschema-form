@@ -4,8 +4,7 @@ description: The prebuilt `dist/<theme>.css` stylesheets of `@rjsf/shadcn` are g
 packages: ['@rjsf/shadcn']
 uses: [tooling, markup]
 schema: []
-kind: removal
-noticed: build
+affects: [setup, appearance]
 related: []
 ---
 

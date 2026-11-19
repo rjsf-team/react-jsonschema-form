@@ -4,8 +4,7 @@ description: "`ValidatorType` and `customizeValidator()` used to take the form d
 packages: ['@rjsf/utils', '@rjsf/validator-ajv8', '@rjsf/validator-ata', '@rjsf/validator-cfworker']
 uses: [custom-validator, typescript]
 schema: []
-kind: type
-noticed: type-error
+affects: [code]
 related: []
 ---
 

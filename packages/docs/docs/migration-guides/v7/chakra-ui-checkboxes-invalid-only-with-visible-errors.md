@@ -4,8 +4,7 @@ description: 'A required, empty chakra-ui `CheckboxesWidget` used to be flagged 
 packages: ['@rjsf/chakra-ui']
 uses: [markup]
 schema: [arrays, enums]
-kind: markup
-noticed: test
+affects: [experience, appearance]
 related: [ui-hide-error-suppresses-theme-error-styling]
 ---
 

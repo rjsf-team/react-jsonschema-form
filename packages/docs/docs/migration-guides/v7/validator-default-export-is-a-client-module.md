@@ -4,8 +4,7 @@ description: "The default export of each validator package now comes from a `'us
 packages: ['@rjsf/validator-ajv8', '@rjsf/validator-ata', '@rjsf/validator-cfworker']
 uses: [utils-api, tooling]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [code, setup]
 related: []
 ---
 

@@ -4,8 +4,7 @@ description: "`@rjsf/mantine` used to render a hidden copy of every field's erro
 packages: ['@rjsf/mantine']
 uses: [custom-widgets, custom-templates]
 schema: []
-kind: runtime
-noticed: review
+affects: [code, experience]
 related: [mantine-markup-uses-rjsf-ids, unregistered-widget-component-takes-theme-default-label, widget-reads-the-presentation-plan]
 ---
 

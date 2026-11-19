@@ -4,8 +4,7 @@ description: "`@rjsf/antd`'s `GridTemplate` used to pass a layout grid column's 
 packages: ['@rjsf/antd']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: review
+affects: [appearance]
 related: [antd-grid-column-own-width-drops-span, layout-grid-row-without-template-uses-12-tracks]
 ---
 

@@ -4,8 +4,7 @@ description: Ids are now escaped CSS identifiers and an element's part ids join 
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [markup]
 schema: []
-kind: markup
-noticed: test
+affects: [appearance, experience]
 related: [ids-change-native-form-field-names, custom-part-ids-use-part-id, mantine-part-ids-renamed, mui-part-ids-renamed, daisyui-time-input-id-renamed, mantine-markup-uses-rjsf-ids]
 ---
 

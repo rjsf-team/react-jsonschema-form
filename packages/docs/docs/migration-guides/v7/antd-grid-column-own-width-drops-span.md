@@ -4,8 +4,7 @@ description: "An `@rjsf/antd` layout grid column with a `flex` prop or a `flex`,
 packages: ['@rjsf/antd']
 uses: [ui-schema]
 schema: []
-kind: runtime
-noticed: runtime-error
+affects: [appearance]
 related: [antd-grid-span-counts-twelfths]
 ---
 

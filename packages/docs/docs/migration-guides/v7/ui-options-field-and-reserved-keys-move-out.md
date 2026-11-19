@@ -4,8 +4,7 @@ description: '`field`, `fieldReplacesAnyOrOneOf`, `definitions` and `globalOptio
 packages: ['@rjsf/core', '@rjsf/utils']
 uses: [ui-schema]
 schema: []
-kind: removal
-noticed: runtime-error
+affects: [code, appearance]
 related: [typed-ui-options-rejects-field-keys, get-ui-options-returns-field-options-alone, custom-field-draws-own-label-and-description]
 ---
 
