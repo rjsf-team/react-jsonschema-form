@@ -174,6 +174,8 @@ export interface DefaultFormStateBehavior {
    * - `skipOneOf`: If const is in a `oneOf` it will NOT pick the first value as a default
    * - `never`: A const value will never be used as a default
    *
+   * Left unset, a const value is used as a default as under `always`, but only an explicit `always` lets it take the
+   * place of a value the `formData` holds, or of a `default` that names none of the constants of a `oneOf`/`anyOf`.
    */
   constAsDefaults?: 'always' | 'skipOneOf' | 'never';
   /** Optional enumerated flag controlling how defaults defined on multiple levels are merged together for overlapping

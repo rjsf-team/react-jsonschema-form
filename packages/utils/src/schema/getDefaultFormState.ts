@@ -50,7 +50,7 @@ import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData.ts';
 import mergeObjects from '../mergeObjects.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
-import { getByPath } from '../pathUtils.ts';
+import { getByPath, hasByPath } from '../pathUtils.ts';
 import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
 import replaceEqualDeep from '../replaceEqualDeep.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
@@ -78,6 +78,7 @@ import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerS
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
   checkCondition,
+  mergeAllOf,
   asTarget,
   cachedPolicy,
   childSeeds,
@@ -164,6 +165,22 @@ function shouldPopulateAllOfDefaults<S extends StrictRJSFSchema = RJSFSchema>(
  */
 function defaultReplacesUndefined(defaultFormStateBehavior?: DefaultFormStateBehavior): boolean {
   return defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
+}
+
+/** Whether a field's defaults replace the value `data` it holds that is no object, as `foldView()` merges them: a
+ * missing value or a `NaN` always, and a `null` where it is the whole form data or `mergeDefaultsIntoFormData` says so
+ *
+ * @param data - The value the field holds
+ * @param isRoot - Whether the field is the root, whose value is the whole form data
+ * @param defaultFormStateBehavior - The DefaultFormStateBehavior to check
+ * @returns - True if the field's defaults replace `data`
+ */
+function defaultsReplace(data: unknown, isRoot: boolean, defaultFormStateBehavior?: DefaultFormStateBehavior): boolean {
+  return (
+    data === undefined ||
+    (typeof data === 'number' && Number.isNaN(data)) ||
+    (data === null && (isRoot || defaultReplacesUndefined(defaultFormStateBehavior)))
+  );
 }
 
 /** Determines whether `value` holds anything: a non-empty string or array, or an object with at least one own key.
@@ -678,7 +695,9 @@ interface OptionState {
   readonly selections: ReadonlyMap<NodeId, number>;
   readonly chosen: ReadonlySet<unknown>;
   /** The option chosen from each list an `allOf` the field's plan left unmerged offers, by the node holding the list,
-   * which seeds the field where that `allOf` sits, see `adoptableList()`
+   * which seeds the field where that `allOf` sits, see `adoptableList()`. The last one chosen comes first: the plan
+   * merges the options a field is seeded with last to first, so each is merged over the one whose list offered it, as
+   * `allOf: 'populateDefaults'` merges it, and its keys follow that option's
    */
   readonly adopted?: ReadonlyMap<NodeId, Seed>;
 }
@@ -1674,9 +1693,12 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // A list of constants holds one of them whole, as an `enum` does, so a default naming none of them is the field's
       // value as it stands, as an `enum`'s is, rather than giving way to the constant of the option it picked. It is
       // the value out-of-list data is replaced by below, unless the constant wins over both under `constAsDefaults:
-      // 'always'`
+      // 'always'`. Data the defaults replace, as they replace it below, is no data here either, so the default stands
+      // on each pass, as an `enum`'s does
       const fieldDefault =
-        choice.offersConstants && rawFormData === undefined && defaultFormStateBehavior?.constAsDefaults !== 'always'
+        choice.offersConstants &&
+        defaultsReplace(rawFormData, props.requiredAsRoot === true, defaultFormStateBehavior) &&
+        defaultFormStateBehavior?.constAsDefaults !== 'always'
           ? ownDefaults()
           : undefined;
       // A default is no value a user cleared, so a `null` one names a constant only where one of them is `null`
@@ -2162,7 +2184,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const selected: OptionState = {
       ...view.options,
       chosen,
-      adopted: new Map(view.options.adopted).set(allOfList.provider, seed),
+      adopted: new Map([[allOfList.provider, seed], ...(view.options.adopted ?? [])]),
     };
     return foldView<T, S, F>(context, { ...view, options: selected, merged: {} }, branchProps);
   }
@@ -2523,19 +2545,36 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // so it is worked out once per call, from the graph first, so the field is merged only for a key its `allOf` declares
   const allOfField = ALL_OF_KEY in view.schema ? fieldOfView<S>(view) : undefined;
   const allOfKeys = new Map<string, boolean>();
-  let unadopted: S | undefined;
-  // A key an option adopted from a list the `allOf` offers declares is left out where the field without that option
-  // forbids it, as the merge leaves out a key the `allOf` itself declares beside `additionalProperties: false`
+  let leftOutAdoptedKeys: ReadonlySet<string> | undefined;
+  // A key only an option adopted from a list the `allOf` offers declares is left out where merging the field with the
+  // keys only that option declares, as a member of its `allOf`, leaves it out, as the merge leaves out a key the `allOf`
+  // declares itself. The seeds the option joins merge its keys as the field's own, which the field's extra-key keywords
+  // say nothing about, so they are asked of that merge instead
   const forbidsAdoptedKey = (key: string) => {
     if (view.options.adopted === undefined) {
       return false;
     }
-    unadopted ??= mergedSchemaOf<S, F>(context, {
-      ...view,
-      options: { ...view.options, adopted: undefined },
-      merged: {},
-    });
-    return getAdditionalPropertySchema<S>(unadopted, key) === false;
+    if (leftOutAdoptedKeys === undefined) {
+      const unadopted = mergedSchemaOf<S, F>(context, {
+        ...view,
+        options: { ...view.options, adopted: undefined },
+        merged: {},
+      });
+      const unadoptedProperties = { ...unadopted.properties };
+      const adoptedProperties = Object.fromEntries(
+        Object.entries({ ...mergedSchemaOf<S, F>(context, view).properties }).filter(
+          ([name]) => !Object.hasOwn(unadoptedProperties, name),
+        ),
+      );
+      const withAdopted = mergeAllOf<S, F>(context, {
+        ...withoutKeys(unadopted, ALL_OF_KEY),
+        allOf: [{ properties: adoptedProperties }],
+      });
+      leftOutAdoptedKeys = new Set(
+        Object.keys(adoptedProperties).filter((name) => !hasByPath(withAdopted, [PROPERTIES_KEY, name])),
+      );
+    }
+    return leftOutAdoptedKeys.has(key);
   };
   const declaredInAllOf = (key: string) => {
     let declared = allOfKeys.get(key);
@@ -3897,7 +3936,10 @@ interface AdoptableList<S extends StrictRJSFSchema> {
  * one the `allOf` holds itself is, while its `default`s, its `required` and its recursion stay skipped. Only a list an
  * option of which can give the field or a key of it a `const` is offered, as nothing else of it reaches the defaults,
  * an `anyOf` before a `oneOf`, as the field renders them; one a `dependencies` entry offers is chosen by the plan.
- * Each list is offered by itself, so of two the `allOf` merges under one keyword each is chosen from in turn
+ * Each list is offered by itself, so of two the `allOf` merges under one keyword each is chosen from in turn. That is
+ * where it parts from `populateDefaults`: a `oneOf` the merge brings beside an `anyOf` of the field's own is chosen from
+ * once the field has chosen its option, where `populateDefaults` reads only the `anyOf`, as for a field offering both
+ * lists itself
  */
 function adoptableList<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,

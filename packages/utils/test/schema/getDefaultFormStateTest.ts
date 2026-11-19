@@ -7774,16 +7774,49 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 [null, undefined, null],
                 [null, 'purple', null],
               ] as const) {
-                for (const initialDefaultsGenerated of [false, true]) {
-                  const props = { formData: data === undefined ? undefined : at(data), initialDefaultsGenerated };
-                  const defaultsOf = (field: RJSFSchema) =>
-                    getDefaultFormState(context, { schema: withDefault(field, value), ...props });
-                  expect(defaultsOf(own)).toStrictEqual(defaultsOf(enumField));
-                  expect(defaultsOf(nested)).toStrictEqual(defaultsOf(enumField));
-                  expect(defaultsOf(own)).toStrictEqual(at(expected));
-                }
+                const formData = data === undefined ? undefined : at(data);
+                // The first pass, the second on the same data, and the second on what the first pass gave
+                const defaultsOf = (field: RJSFSchema) => {
+                  const schema = withDefault(field, value);
+                  const first = getDefaultFormState(context, { schema, formData });
+                  return [
+                    first,
+                    getDefaultFormState(context, { schema, formData, initialDefaultsGenerated: true }),
+                    getDefaultFormState(context, { schema, formData: first, initialDefaultsGenerated: true }),
+                  ];
+                };
+                expect(defaultsOf(own)).toStrictEqual(defaultsOf(enumField));
+                expect(defaultsOf(nested)).toStrictEqual(defaultsOf(enumField));
+                expect(defaultsOf(own)).toStrictEqual([at(expected), at(expected), at(expected)]);
               }
             });
+            it.each<[string, RJSFSchema, unknown, unknown, DefaultFormStateBehavior]>([
+              ['a NaN', { type: 'number', default: 5 }, NaN, 5, {}],
+              [
+                "a null under mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'",
+                { type: 'string', default: 'blue' },
+                null,
+                'blue',
+                { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+              ],
+            ])(
+              'a default naming none of the constants over data the defaults replace, %s, as an enum takes it',
+              (_data, field, data, expected, behavior) => {
+                const replacing = { validator: testValidator, defaultFormStateBehavior: { allOf, ...behavior } };
+                const constants = field.type === 'number' ? [3, 4] : ['red', 'green'];
+                const list = { oneOf: constants.map((value) => ({ const: value })) };
+                const defaultsOf = (values: RJSFSchema) => {
+                  const schema: RJSFSchema = { type: 'object', properties: { c: { ...field, ...values } } };
+                  return [false, true].map((initialDefaultsGenerated) =>
+                    getDefaultFormState(replacing, { schema, formData: { c: data }, initialDefaultsGenerated }),
+                  );
+                };
+                const enumDefaults = defaultsOf({ enum: constants });
+                expect(defaultsOf(list)).toStrictEqual(enumDefaults);
+                expect(defaultsOf({ allOf: [list] })).toStrictEqual(enumDefaults);
+                expect(enumDefaults).toStrictEqual([{ c: expected }, { c: expected }]);
+              },
+            );
             it.each<[string, Record<string, unknown> | undefined]>([
               ['no data', undefined],
               ['data naming none of the constants', { c: { k: 5 } }],
@@ -8114,6 +8147,63 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               );
             },
           );
+          it("the keys of an option before those of the option its allOf offers, as the field's own list and allOf: 'populateDefaults' order them", () => {
+            const inner: RJSFSchema = {
+              properties: { p: { const: 1 } },
+              allOf: [{ oneOf: [{ properties: { q: { const: 2 } } }] }],
+            };
+            const { own, nested } = ownAndNested({ oneOf: [inner] }, rootOf);
+            const populating = {
+              validator: testValidator,
+              defaultFormStateBehavior: { allOf: 'populateDefaults' as const },
+            };
+            const keysOf = (defaults: unknown) =>
+              isObject(defaults) && isObject(defaults.x) ? Object.keys(defaults.x) : [];
+            expect(keysOf(getDefaultFormState(skipping, { schema: nested }))).toStrictEqual(['p', 'q']);
+            expect(keysOf(getDefaultFormState(skipping, { schema: own }))).toStrictEqual(['p', 'q']);
+            expect(keysOf(getDefaultFormState(populating, { schema: nested }))).toStrictEqual(['p', 'q']);
+          });
+          describe.each<[string, DefaultFormStateBehavior]>([
+            ['allOf: skipDefaults', { allOf: 'skipDefaults' }],
+            ["constAsDefaults: 'never'", { allOf: 'skipDefaults', constAsDefaults: 'never' }],
+          ])('under %s, the keys the field merged with the option as an allOf member keeps', (_b, behavior) => {
+            const context = { validator: testValidator, defaultFormStateBehavior: behavior };
+            const list: RJSFSchema = { oneOf: [{ properties: { z: { const: 9 } } }] };
+            it('the null of a type: null key the field declares itself beside additionalProperties: false, as without the option', () => {
+              const field = (allOf: RJSFSchema[]) =>
+                rootOf({
+                  additionalProperties: false,
+                  properties: { a: {} },
+                  allOf: [{ properties: { a: { type: 'null' } } }, ...allOf],
+                });
+              expect(getDefaultFormState(context, { schema: field([list]) })).toStrictEqual(
+                getDefaultFormState(context, { schema: field([]) }),
+              );
+              expect(getDefaultFormState(context, { schema: field([list]) })).toStrictEqual({ x: { a: null } });
+            });
+            it('the keys beside unevaluatedProperties: false, which the option evaluates, as a direct allOf', () => {
+              const declared: RJSFSchema = { properties: { q: { const: 4 }, m: { type: 'null' } } };
+              const field = (allOf: RJSFSchema[]) =>
+                rootOf({ unevaluatedProperties: false, allOf: [declared, ...allOf] });
+              const expected =
+                behavior.constAsDefaults === 'never' ? { x: { m: null } } : { x: { q: 4, z: 9, m: null } };
+              expect(getDefaultFormState(context, { schema: field([list]) })).toStrictEqual(
+                getDefaultFormState(context, { schema: field([{ properties: { z: { const: 9 } } }]) }),
+              );
+              expect(getDefaultFormState(context, { schema: field([list]) })).toStrictEqual(expected);
+            });
+            it('no key a merge with the additionalProperties schema drops, as a direct allOf', () => {
+              const properties = { z: { const: 9 }, n: { type: 'null' as const } };
+              const field = (member: RJSFSchema) =>
+                rootOf({ additionalProperties: { type: 'string' }, allOf: [member] });
+              expect(getDefaultFormState(context, { schema: field({ oneOf: [{ properties }] }) })).toStrictEqual(
+                getDefaultFormState(context, { schema: field({ properties }) }),
+              );
+              expect(getDefaultFormState(context, { schema: field({ oneOf: [{ properties }] }) })).toStrictEqual({
+                x: {},
+              });
+            });
+          });
         });
       });
     });
