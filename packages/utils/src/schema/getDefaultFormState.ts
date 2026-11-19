@@ -3747,15 +3747,14 @@ function isWholeValueField<S extends StrictRJSFSchema, F extends FormContextType
  * not one of the field's own seeds, holds what `offers` looks for, and the `anyOf`/`oneOf` lists the merge met that the
  * field may still choose from. A list the field has chosen from already, or chosen an option of where an `allOf`
  * offers it, is closed: the field's seeds bring it back, though `foldView()` doesn't offer it again, so a keyword only
- * such lists hold is left out of the merge, where it would hide the list of the other keyword. A field that retrieves
- * is left as it is: an `allOf` it still holds is that of the option it shows, which stays unmerged under `skipDefaults`
+ * such lists hold is left out of the merge, where it would hide the list of the other keyword
  */
 function optionsMergedField<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   offers: (graph: SchemaGraph<S>, node: ObjectNode<S>) => boolean,
 ): { schema: S; seeding: Seeding<S>; open: readonly OptionChoice[] } | undefined {
-  if (view.field.retrieves || !(ALL_OF_KEY in view.schema)) {
+  if (!(ALL_OF_KEY in view.schema)) {
     return undefined;
   }
   const field = fieldOfView<S>(view);

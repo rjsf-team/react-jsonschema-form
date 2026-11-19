@@ -7542,6 +7542,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             getDefaultFormState(skipping, { schema: rootOf({ anyOf: [{ allOf: [{ oneOf: [{ const: C }] }] }] }) }),
           ).toStrictEqual({ x: C });
         });
+        it("in an option's allOf at the root, as in the same field as a property and under allOf: 'populateDefaults'", () => {
+          const field: RJSFSchema = { type: 'number', anyOf: [{ allOf: [{ oneOf: [{ const: 3 }] }] }] };
+          const populating = {
+            validator: testValidator,
+            defaultFormStateBehavior: { allOf: 'populateDefaults' as const },
+          };
+          const property: RJSFSchema = { type: 'object', properties: { n: field } };
+          expect(getDefaultFormState(skipping, { schema: field })).toBe(3);
+          expect(getDefaultFormState(skipping, { schema: property })).toStrictEqual({ n: 3 });
+          expect(getDefaultFormState(populating, { schema: field })).toBe(3);
+          expect(getDefaultFormState(populating, { schema: property })).toStrictEqual({ n: 3 });
+        });
         describe('as the option of a list the field offers itself is picked', () => {
           beforeEach(() => {
             testValidator.setReturnValues({ isValid: asRealValidator });
