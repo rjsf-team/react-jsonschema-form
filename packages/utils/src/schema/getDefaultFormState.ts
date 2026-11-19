@@ -2574,6 +2574,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
           ([name]) => !Object.hasOwn(unadoptedProperties, name),
         ),
       );
+      // A merge that fails leaves out every adopted key, as a failed merge of the `allOf` leaves out the keys it
+      // declares itself: `mergeAllOf()` then drops the `allOf`. The built-in merger fails on a `type: 'null'` key beside
+      // an `additionalProperties` schema of another type, which is how such a key is left out, as it is for a direct
+      // `allOf`
       const withAdopted = mergeAllOf<S, F>(context, {
         ...withoutKeys(unadopted, ALL_OF_KEY),
         allOf: [{ properties: adoptedProperties }],
