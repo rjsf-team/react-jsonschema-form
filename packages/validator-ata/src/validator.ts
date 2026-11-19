@@ -99,7 +99,6 @@ export default class ATAValidator<
   reset() {
     this.validators = new Map();
     this.roots = [];
-    this.cachedRootSchema = undefined;
     this.extras = undefined;
   }
 
@@ -108,7 +107,9 @@ export default class ATAValidator<
    * This is how `$ref` to root-level definitions resolves under ata's
    * per-schema model (vs AJV's single-instance registry).
    */
-  private cachedRootSchema?: object;
+  private get cachedRootSchema(): object | undefined {
+    return this.roots[0]?.withId;
+  }
 
   /** The extra schemas given to the validators of one root (see `extrasFor`). */
   private extras?: { base: object; own: object[]; withRoot: object[]; metas?: object[] };
@@ -296,9 +297,13 @@ export default class ATAValidator<
 
   /** Makes `root` the one validators are built beside, dropping the least recently used beyond two */
   private useRoot(root: (typeof this.roots)[number]) {
-    this.roots = [root, ...this.roots.filter((other) => other !== root)].slice(0, 2);
+    const [current, previous] = this.roots;
+    if (root === previous) {
+      this.roots.reverse();
+    } else if (root !== current) {
+      this.roots = current === undefined ? [root] : [root, current];
+    }
     this.validators = root.validators;
-    this.cachedRootSchema = root.withId;
   }
 
   /** Boolean validation entrypoint. Returns false on validation failure or

@@ -297,6 +297,9 @@ describe('AJV8Validator', () => {
       describe('holding the last two roots', () => {
         const rootOf = (type: 'string' | 'number' | 'boolean'): RJSFSchema => ({ definitions: { v: { type } } });
         const sample = { string: 'a', number: 1, boolean: true };
+        const nested = (type: string): RJSFSchema => ({
+          definitions: { v: { $id: 'https://example.com/v.json', type } as RJSFSchema },
+        });
         const check = (validator: AJV8Validator, root: RJSFSchema) => {
           const { type } = root.definitions!.v as RJSFSchema as { type: keyof typeof sample };
           expect(validator.isValid({ $ref: '#/definitions/v' }, sample[type], root)).toBe(true);
@@ -345,9 +348,6 @@ describe('AJV8Validator', () => {
         });
         it('holds alone a root holding an `$id` below its own', () => {
           const localValidator = new AJV8Validator({});
-          const nested = (type: string): RJSFSchema => ({
-            definitions: { v: { $id: 'https://example.com/v.json', type } as RJSFSchema },
-          });
           const [a, b] = [nested('string'), nested('number')];
           for (let i = 0; i < 2; i++) {
             expect(localValidator.isValid({ $ref: 'https://example.com/v.json' }, 'a', a)).toBe(true);
@@ -357,9 +357,6 @@ describe('AJV8Validator', () => {
         });
         it('resolves no `$ref` into a dropped root that held the `$id` it names', () => {
           const localValidator = new AJV8Validator({});
-          const nested = (type: string): RJSFSchema => ({
-            definitions: { v: { $id: 'https://example.com/v.json', type } as RJSFSchema },
-          });
           const without: RJSFSchema = { definitions: { w: { $ref: 'https://example.com/v.json' } } };
           expect(localValidator.isValid({ $ref: 'https://example.com/v.json' }, 'a', nested('string'))).toBe(true);
           expect(localValidator.isValid({ $ref: 'https://example.com/v.json' }, 1, nested('number'))).toBe(true);
@@ -408,6 +405,34 @@ describe('AJV8Validator', () => {
           check(localValidator, a2);
           check(localValidator, b);
           check(localValidator, a);
+        });
+        it('holds two roots whose dialect it rejects', () => {
+          const localValidator = new AJV8Validator({});
+          const rejected = (type: 'string' | 'number'): RJSFSchema => ({
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            $defs: { v: { type } },
+          });
+          const [a, b] = [rejected('string'), rejected('number')];
+          const addSchemaSpy = vi.spyOn(localValidator.ajv, 'addSchema');
+          for (let i = 0; i < 3; i++) {
+            expect(localValidator.isValid({ $ref: '#/$defs/v' }, 'a', a)).toBe(true);
+            expect(localValidator.isValid({ $ref: '#/$defs/v' }, 1, b)).toBe(true);
+            expect(localValidator.isValid({ $ref: '#/$defs/v' }, 'a', b)).toBe(false);
+          }
+          // Each root rejected and then added unvalidated once, and the `{ $ref }` once under each
+          expect(addSchemaSpy).toHaveBeenCalledTimes(6);
+        });
+        it('drops the root kept when a root it rejects clashes with it', () => {
+          const localValidator = new AJV8Validator({});
+          const id = 'https://example.com/v.json';
+          const kept = rootOf('string');
+          expect(localValidator.isValid({ $id: id, type: 'string' }, 'a', kept)).toBe(true);
+          const clashing: RJSFSchema = {
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            $defs: { v: { $id: id, type: 'number' } },
+          };
+          expect(localValidator.isValid({ $ref: id }, 1, clashing)).toBe(true);
+          expect(localValidator.isValid({ $ref: id }, 'a', clashing)).toBe(false);
         });
       });
       it('resolves a $ref into a root whose dialect it rejects from the first call on, and registers the next root', () => {

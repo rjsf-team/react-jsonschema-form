@@ -283,7 +283,9 @@ export default class AJV8Validator<
       this.roots.find((root) => deepEquals(rootSchema, root.schema));
     if (held !== undefined) {
       held.schema = rootSchema;
-      this.roots = [held, ...this.roots.filter((root) => root !== held)];
+      if (held !== current) {
+        this.roots.reverse();
+      }
       return held.id;
     }
     const ownId = ajvRootSchemaId(rootSchema, this.ajv.opts.uriResolver);
@@ -305,12 +307,17 @@ export default class AJV8Validator<
     } catch {
       // A root this instance's dialect rejects, such as a 2020-12 root under the default draft-07 Ajv, is still
       // registered, unvalidated, so a `$ref` into its definitions resolves from the first call on. What was registered
-      // under its id is dropped first because comparing against it compiles it, which throws for a rejected root, and
-      // the root kept too, in case the rejection was a clash with it
-      this.removeRoots();
+      // under its id is dropped first because comparing against it compiles it, which throws for a rejected root. The
+      // root kept is dropped too only when the unvalidated root still throws, a clash with it, such as an `$id` both hold
       this.removeRootSchema(id);
       if (isObject(rootSchema)) {
-        this.ajv.addSchema(rootSchema, id, undefined, false);
+        try {
+          this.ajv.addSchema(rootSchema, id, undefined, false);
+        } catch {
+          this.removeRoots();
+          this.removeRootSchema(id);
+          this.ajv.addSchema(rootSchema, id, undefined, false);
+        }
       }
     }
     // Ajv registers an `$id` a root holds below its own by the pointer to it in the root registered last, so a root
@@ -348,10 +355,12 @@ export default class AJV8Validator<
       // names the root by the id it is registered under, whatever the schema holding it is registered as
       const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema, rootSchemaId);
       schemaId = schemaKey(schemaWithIdRefPrefix);
-      const key = schemaId.replace(/#$/, '');
       // One with an `$id` of its own is keyed by that `$id` whatever root it names, so the other root gives it up
-      if (schemaWithIdRefPrefix[ID_KEY] && other?.subschemaIds.delete(key)) {
-        this.removeSchemas(new Set([key]));
+      if (schemaWithIdRefPrefix[ID_KEY] && other !== undefined) {
+        const key = schemaId.replace(/#$/, '');
+        if (other.subschemaIds.delete(key)) {
+          this.removeSchemas(new Set([key]));
+        }
       }
       // Add schema by an explicit ID so it can be fetched later
       // Fall back to using compile if necessary

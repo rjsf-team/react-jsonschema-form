@@ -100,7 +100,9 @@ export default class CFWorkerValidator<
    *
    * @private
    */
-  private cachedRootSchema?: object;
+  private get cachedRootSchema(): object | undefined {
+    return this.roots[0]?.withId;
+  }
 
   /** Constructs a `CFWorkerValidator` instance using the provided options.
    *
@@ -114,7 +116,6 @@ export default class CFWorkerValidator<
   reset(): void {
     this.validators = new Map();
     this.roots = [];
-    this.cachedRootSchema = undefined;
   }
 
   /** Returns a cached schema-bound validator or builds and caches a new one. The root is bound beside the schema unless
@@ -239,9 +240,13 @@ export default class CFWorkerValidator<
    * @param root - The root to use
    */
   private useRoot(root: (typeof this.roots)[number]) {
-    this.roots = [root, ...this.roots.filter((other) => other !== root)].slice(0, 2);
+    const [current, previous] = this.roots;
+    if (root === previous) {
+      this.roots.reverse();
+    } else if (root !== current) {
+      this.roots = current === undefined ? [root] : [root, current];
+    }
     this.validators = root.validators;
-    this.cachedRootSchema = root.withId;
   }
 
   /** Validates data against a schema, returning false if the schema is invalid.
