@@ -16,6 +16,7 @@ import {
   REF_KEY,
   RJSF_REF_KEY,
   THEN_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
@@ -1262,7 +1263,8 @@ function patternSeeds<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, chain: 
 /** Returns the seeds of the child of an object field at `key`, a key no chain declares a property for, and the
  * containment edge it is reached through. Each chain applies to the key as a schema does: through the patterns of its
  * own that the key matches, else through its `keyword`, so the `additionalProperties` of a chain whose patterns don't
- * match the key applies beside the patterns of another that do
+ * match the key applies beside the patterns of another that do. An `unevaluatedProperties` applies to none that a
+ * pattern of any chain matches, since that pattern evaluates it
  *
  * @param seeding - The object field's graph and chains
  * @param key - The child's key
@@ -1272,14 +1274,16 @@ function patternSeeds<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, chain: 
 export function extraKeySeeds<S extends StrictRJSFSchema = RJSFSchema>(
   { graph, chains }: Seeding<S>,
   key: string,
-  keyword: string = ADDITIONAL_PROPERTIES_KEY,
+  keyword: typeof ADDITIONAL_PROPERTIES_KEY | typeof UNEVALUATED_PROPERTIES_KEY = ADDITIONAL_PROPERTIES_KEY,
 ): { seeds: readonly Seed[]; edge: 'patternKey' | 'additionalKey' } {
-  let patterned = false;
-  const seeds = chains.flatMap((chain) => {
-    const patterns = patternSeeds(graph, chain, key);
-    patterned ||= patterns.length > 0;
-    return patterns.length > 0 ? patterns : seedsAt({ graph, chains: [chain] }, keyword);
-  });
+  const patterns = chains.map((chain) => patternSeeds(graph, chain, key));
+  const patterned = patterns.some((matched) => matched.length > 0);
+  // A key a pattern of any chain evaluates is one no `unevaluatedProperties` applies to
+  const seeds = chains.flatMap((chain, index) =>
+    patterns[index].length > 0 || (patterned && keyword === UNEVALUATED_PROPERTIES_KEY)
+      ? patterns[index]
+      : seedsAt({ graph, chains: [chain] }, keyword),
+  );
   return { seeds, edge: patterned ? 'patternKey' : 'additionalKey' };
 }
 

@@ -328,7 +328,7 @@ Optional enumerated flag controlling how const values are merged into the form d
 Unless the flag is `never`, a `const` wins over a `default` at any depth: an object `const` gives each key it names its value, over the key's own `default` and the `default` of any field between them, whatever `nestedDefaultsPrecedence` says.
 The one exception is a field whose `type` can't hold the value the `const` gives it, such as `"x"` for a `number`: that field keeps its own `default`. Form data still wins over a `const`.
 A field whose value a `const` gives, its own `const` or an ancestor's object `const` at any depth, is set whether or not it is required, whatever [`emptyObjectFields`](#emptyobjectfields) says.
-That flag still decides whether an object around it with no `const` of its own is added: for instance, if `populateRequiredDefaults` is set, a `const` inside an object that isn't required is not set.
+That flag still decides whether an object around it whose value no `const` gives is added: for instance, if `populateRequiredDefaults` is set, a `const` inside an object that isn't required is not set.
 
 | Flag Value  | Description                                                                                                                                                                                                                     |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

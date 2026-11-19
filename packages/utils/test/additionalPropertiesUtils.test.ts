@@ -51,6 +51,13 @@ describe('additionalPropertiesKeyword()', () => {
     const spreadSchema: RJSFSchema = { additionalProperties: undefined, unevaluatedProperties: undefined };
     expect(additionalPropertiesKeyword(spreadSchema)).toBeUndefined();
   });
+  it('reads an additionalProperties spelled null as absent, so the unevaluatedProperties beside it answers', () => {
+    const nullSpelled: RJSFSchema = { unevaluatedProperties: false };
+    Reflect.set(nullSpelled, 'additionalProperties', null);
+    expect(additionalPropertiesKeyword(nullSpelled)).toBe(false);
+    Reflect.deleteProperty(nullSpelled, 'unevaluatedProperties');
+    expect(additionalPropertiesKeyword(nullSpelled)).toBeUndefined();
+  });
 });
 describe('allowsAdditionalProperties()', () => {
   it('returns true for a patternProperties naming a pattern, whatever an additionalProperties beside it forbids', () => {

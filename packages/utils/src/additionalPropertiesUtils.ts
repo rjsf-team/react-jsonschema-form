@@ -86,7 +86,8 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
   return keyword === undefined ? undefined : typedSchema[keyword];
 }
 
-/** Returns the name of the keyword `additionalPropertiesKeyword()` reads, or undefined where the object names neither
+/** Returns the name of the keyword `additionalPropertiesKeyword()` reads, or undefined where the object names neither.
+ * An `additionalProperties` spelled `null` gives way to the `unevaluatedProperties` as an absent one does
  *
  * @param schema - The object schema whose keyword is desired
  * @returns - `additionalProperties`, `unevaluatedProperties` or undefined
@@ -94,7 +95,7 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
 export function additionalPropertiesKeywordName<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
 ): typeof ADDITIONAL_PROPERTIES_KEY | typeof UNEVALUATED_PROPERTIES_KEY | undefined {
-  if (schema.additionalProperties !== undefined) {
+  if (schema.additionalProperties != null) {
     return ADDITIONAL_PROPERTIES_KEY;
   }
   return Reflect.get(schema, UNEVALUATED_PROPERTIES_KEY) === undefined ? undefined : UNEVALUATED_PROPERTIES_KEY;

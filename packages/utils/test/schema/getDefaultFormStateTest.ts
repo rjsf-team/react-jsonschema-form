@@ -181,6 +181,73 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
         expect(fill({ type: 'object', properties: { o: option } })).toStrictEqual({ o: { q: 'd' } });
       });
+      it("leaves out a key only the shown option declares in an array row the const gives, the array's own or an ancestor's", () => {
+        const option: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'number' } },
+          oneOf: [{ properties: { q: { type: 'string', default: 'd' } } }],
+        };
+        const list: RJSFSchema = { type: 'array', items: { type: 'object', properties: { o: option } } };
+        const rows = [{ o: { a: 1 } }];
+        expect(fill({ type: 'object', const: { l: rows }, properties: { l: list } })).toStrictEqual({ l: rows });
+        expect(fill({ type: 'object', properties: { l: { ...list, const: rows } } })).toStrictEqual({ l: rows });
+        expect(fill({ type: 'object', properties: { l: { ...list, default: rows } } })).toStrictEqual({
+          l: [{ o: { a: 1, q: 'd' } }],
+        });
+      });
+      it("keeps the keys of a ui:initialValue and of the field's own default beside the shown option under an ancestor's const", () => {
+        const option: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'number' } },
+          additionalProperties: { type: 'number' },
+          oneOf: [{ properties: { q: { type: 'string' } } }],
+        };
+        const uiSchema: UiSchema = { o: { 'ui:initialValue': { a: 1, q: 'z' } } };
+        for (const schema of [
+          { type: 'object', const: { o: { a: 1 } }, properties: { o: option } },
+          { type: 'object', properties: { o: { ...option, const: { a: 1 } } } },
+        ] satisfies RJSFSchema[]) {
+          expect(getDefaultFormState({ validator: testValidator }, { schema, uiSchema })).toStrictEqual({
+            o: { a: 1, q: 'z' },
+          });
+        }
+        // As the same field keeps them beside no options
+        const ownDefault: RJSFSchema = { ...option, default: { z: 9 } };
+        expect(fill({ type: 'object', const: { o: { a: 1 } }, properties: { o: ownDefault } })).toStrictEqual({
+          o: { a: 1, z: 9 },
+        });
+        expect(
+          fill({ type: 'object', const: { o: { a: 1 } }, properties: { o: { ...ownDefault, oneOf: undefined } } }),
+        ).toStrictEqual({ o: { a: 1, z: 9 } });
+      });
+      it("keeps a field's own default over the default of an object between it and the const, for a key the const doesn't name", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          const: { p: { q: { a: 1 } } },
+          properties: {
+            p: {
+              type: 'object',
+              default: { q: { b: 2 } },
+              properties: {
+                q: {
+                  type: 'object',
+                  default: { a: 3, b: 4 },
+                  properties: { a: { type: 'number' }, b: { type: 'number' } },
+                },
+              },
+            },
+          },
+        };
+        expect(fill(schema)).toStrictEqual({ p: { q: { a: 1, b: 4 } } });
+        expect(fill(schema, { nestedDefaultsPrecedence: 'ancestorWins' })).toStrictEqual({ p: { q: { a: 1, b: 2 } } });
+      });
+      it("hands out the arrays an ancestor's const gives a field with a default of its own as copies", () => {
+        const items = [1, 2];
+        const withDefault: RJSFSchema = { type: 'object', default: { b: 1 }, properties: { a: {}, b: {} } };
+        const filled = fill({ type: 'object', const: { p: { a: items } }, properties: { p: withDefault } });
+        expect(filled).toStrictEqual({ p: { a: [1, 2], b: 1 } });
+        expect(isObject(filled) && isObject(filled.p) && filled.p.a).not.toBe(items);
+      });
       it('gives a declared key and an extra key the const alike', () => {
         const mixed: RJSFSchema = {
           type: 'object',
@@ -274,6 +341,67 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(pass({ p: { a: 5 } }, true)).toStrictEqual({ p: { a: 5, b: 7 } });
         },
       );
+      it("gives the shown option and the field beneath a ui:initialValue their own default over an ancestor's const once the defaults were generated", () => {
+        const uiSchema: UiSchema = { f: { 'ui:initialValue': { a: 1 } } };
+        const pass = (f: RJSFSchema, formData: unknown, initialDefaultsGenerated: boolean) =>
+          getDefaultFormState(
+            { validator: testValidator },
+            {
+              schema: { type: 'object', const: { f: { a: 1, b: 9 } }, properties: { f } },
+              formData,
+              uiSchema,
+              initialDefaultsGenerated,
+            },
+          );
+        const optionDefault: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'number' } },
+          oneOf: [{ default: { b: 2 }, properties: { b: { type: 'number' } } }],
+        };
+        const fieldDefault: RJSFSchema = {
+          type: 'object',
+          default: { b: 2 },
+          properties: { a: { type: 'number' }, b: { type: 'number' } },
+        };
+        expect(pass(optionDefault, { f: { a: 1 } }, true)).toStrictEqual({ f: { a: 1, b: 2 } });
+        expect(pass(fieldDefault, undefined, false)).toStrictEqual({ f: { a: 1 } });
+        expect(pass(fieldDefault, { f: { a: 1 } }, true)).toStrictEqual({ f: { a: 1, b: 2 } });
+      });
+      it("gives a tuple the items of an ancestor's const over its own item defaults, as its own const does", () => {
+        const tuple: RJSFSchema = { type: 'array', items: [{ type: 'number' }, { type: 'number', default: 5 }] };
+        expect(fill({ type: 'object', const: { t: [1] }, properties: { t: tuple } })).toStrictEqual({ t: [1] });
+        expect(fill({ type: 'object', properties: { t: { ...tuple, const: [1] } } })).toStrictEqual({ t: [1] });
+        expect(fill({ type: 'object', default: { t: [1] }, properties: { t: tuple } })).toStrictEqual({ t: [1, 5] });
+      });
+      it("selects the option an ancestor's const matches, and seeds none of the keys only that option declares", () => {
+        const kinds: RJSFSchema = {
+          type: 'object',
+          oneOf: [
+            { properties: { kind: { const: 'x' }, p: { type: 'number', default: 1 } } },
+            { properties: { kind: { const: 'y' }, q: { type: 'number', default: 2 } } },
+          ],
+        };
+        // The mock validator can't tell the options apart, so it answers each check as the real ones do
+        testValidator.setReturnValues({ isValid: asRealValidator });
+        try {
+          expect(fill({ type: 'object', const: { o: { kind: 'y' } }, properties: { o: kinds } })).toStrictEqual({
+            o: { kind: 'y' },
+          });
+          expect(fill({ type: 'object', default: { o: { kind: 'y' } }, properties: { o: kinds } })).toStrictEqual({
+            o: { kind: 'x', p: 1 },
+          });
+        } finally {
+          testValidator.reset?.();
+        }
+      });
+      it("hands none of an ancestor's const to the children of a field whose type can't hold the value it gives", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          const: { p: ['a'] },
+          properties: { p: { type: 'object', properties: { '0': { type: 'string', default: 'z' } } } },
+        };
+        expect(fill(schema)).toStrictEqual({ p: { '0': 'z' } });
+      });
       it("still takes the defaults beneath where constAsDefaults is 'never'", () => {
         const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
         expect(fill(declaredDefault, never)).toStrictEqual({ a: 2 });
@@ -383,6 +511,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(unevaluatedDefault)).toStrictEqual({ a: 4 });
         expect(fill({ ...unevaluatedDefault, unevaluatedProperties: true })).toStrictEqual({ a: 1 });
         expect(fill(closedBeside)).toStrictEqual({ x1: 1 });
+      });
+      it("folds no key a member's pattern matches through the unevaluatedProperties beside it, which doesn't apply to it", () => {
+        const member: RJSFSchema = {
+          patternProperties: { '^x': { type: 'object', properties: { p: { default: 'p' } } } },
+        };
+        const unevaluated: RJSFSchema = { type: 'object', properties: { u: { default: 'u' } } };
+        for (const schema of [
+          { type: 'object', unevaluatedProperties: unevaluated, allOf: [member], default: { x1: {}, y: {} } },
+          { type: 'object', unevaluatedProperties: unevaluated, oneOf: [member], default: { x1: {}, y: {} } },
+        ] satisfies RJSFSchema[]) {
+          expect(fill(schema)).toStrictEqual({ x1: { p: 'p' }, y: { u: 'u' } });
+        }
+        const closed: RJSFSchema = {
+          type: 'object',
+          unevaluatedProperties: false,
+          allOf: [{ patternProperties: { '^x': { type: 'number' } } }],
+        };
+        expect(fill({ ...closed, const: { x1: 1 } })).toStrictEqual({ x1: 1 });
+        expect(fill({ ...closed, default: { x1: 1, y: 2 } }, undefined, { allOf: 'populateDefaults' })).toStrictEqual({
+          x1: 1,
+        });
       });
       it("folds a key one chain's pattern matches through the additionalProperties of another chain as well", () => {
         const schema: RJSFSchema = {
