@@ -92,7 +92,7 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
    * field that may hold an object or an array, or names no `type`, holds its defaults, which the fill checks it against
    * once it has them. A field of any other type takes the `const` of the `then`, or else of the `else`, so a `then`
    * gives its `const` where the `if` accepts it and an `else` where the `if` rejects it, and the value filled takes the
-   * branch that gave it
+   * branch that gave it. A field with a `default` holds that instead, which the defaults hand the plan as its data
    */
   readonly unset?: { readonly value: unknown };
 }

@@ -8398,6 +8398,63 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             }
           });
         });
+        describe.each(PLACEMENTS)(
+          'decides the if of a primitive field by the default it holds, %s',
+          (_placement, inAllOf) => {
+            const thenTen: RJSFSchema = { if: { maximum: 7 }, then: { const: 10 } };
+            const thenThree: RJSFSchema = { if: { maximum: 3 }, then: { const: 3 } };
+            const elseTen: RJSFSchema = { if: { minimum: 7 }, else: { const: 10 } };
+            const BEHAVIORS: DefaultFormStateBehavior[] = [
+              {},
+              { constAsDefaults: 'always' },
+              { allOf: 'populateDefaults' },
+              { emptyObjectFields: 'skipEmptyDefaults' },
+            ];
+            const withDefault = (conditional: RJSFSchema, value: number) => ({
+              ...placed('number', conditional, inAllOf),
+              default: value,
+            });
+            it.each<[string, RJSFSchema, number]>([
+              ['fills the const of a then whose if takes its own default', thenTen, 10],
+              ['keeps its own default where the if rejects it', thenThree, 5],
+              ['fills the const of an else whose if rejects its own default', elseTen, 10],
+            ])('%s', (_name, conditional, expected) => {
+              for (const defaultFormStateBehavior of BEHAVIORS) {
+                const context = { validator: testValidator, defaultFormStateBehavior };
+                const schema = rootOf(withDefault(conditional, 5));
+                expect(getDefaultFormState(context, { schema })).toStrictEqual({ x: expected });
+                expect(getDefaultFormState(context, { schema, formData: { x: Number.NaN } })).toStrictEqual({
+                  x: expected,
+                });
+              }
+            });
+            it.each<[string, RJSFSchema, number]>([
+              ['fills the const of a then whose if takes an inherited default', thenTen, 10],
+              ['keeps an inherited default where the if rejects it', thenThree, 5],
+            ])('%s', (_name, conditional, expected) => {
+              const schema: RJSFSchema = { ...rootOf(placed('number', conditional, inAllOf)), default: { x: 5 } };
+              for (const defaultFormStateBehavior of BEHAVIORS) {
+                const context = { validator: testValidator, defaultFormStateBehavior };
+                expect(getDefaultFormState(context, { schema })).toStrictEqual({ x: expected });
+              }
+            });
+            it('checks the default that wins of its own and an inherited one', () => {
+              const schema: RJSFSchema = { ...rootOf(withDefault(thenThree, 1)), default: { x: 5 } };
+              const descendant = { validator: testValidator };
+              expect(getDefaultFormState(descendant, { schema })).toStrictEqual({ x: 3 });
+              const ancestor = {
+                validator: testValidator,
+                defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' as const },
+              };
+              expect(getDefaultFormState(ancestor, { schema })).toStrictEqual({ x: 5 });
+            });
+            it('checks the default of the root field', () => {
+              const context = { validator: testValidator };
+              expect(getDefaultFormState(context, { schema: withDefault(thenTen, 5) })).toBe(10);
+              expect(getDefaultFormState(context, { schema: withDefault(thenThree, 5) })).toBe(5);
+            });
+          },
+        );
         it('decides the if of an empty field with no type by {}, which it may hold', () => {
           const x: RJSFSchema = {
             if: { required: ['a'] },

@@ -1265,6 +1265,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
 ): unknown {
   const data = props.rawFormData;
   const passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
+  const held = heldValue<T, S, F>(context, field, props);
   const memo = new Map<string, MemoEntry>();
   const fold = (depData: unknown): FieldPass<S> => {
     // The views the pass computed the field from, the last one with the options the field selected, which are planned
@@ -1398,8 +1399,9 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       pass = fold(depData);
     }
   };
-  const first = fold(data);
-  // The conditions decided by the data alone, as the first pass decided them, whatever the defaults, by decision
+  const first = fold(held);
+  // The conditions decided by the data alone, as the first pass decided them, whatever the defaults, by decision. The
+  // data of a field that holds no object is the value `heldValue()` says it holds, its default in place of none
   const fixed = new Map<string, FixedCondition<S>>();
   let end = passesFrom(first, []);
   // The passes since the one a pass would repeat decide alike but for what flips from pass to pass. Each condition
@@ -1422,7 +1424,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
         return kept(first);
       }
       const { graph, checked } = condition;
-      fixed.set(key, { graph, site: checked.site, satisfied: checkCondition(context, graph, checked, data) });
+      fixed.set(key, { graph, site: checked.site, satisfied: checkCondition(context, graph, checked, held) });
     }
     const all = [...fixed.values()];
     end = passesFrom(fold(ownedDepData(depData, all)), all);
@@ -1443,6 +1445,38 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
   }
   return kept(settled);
+}
+
+/** The value a field holds before the defaults its conditions pick are filled in, which they are checked against: its
+ * data, unless the defaults replace it, then the default that would, its own or an inherited one by the precedence
+ * `foldView()` gives them, where that is no object or array, since an object field holds its defaults filled in and is
+ * checked against them on the next pass
+ */
+function heldValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  { graph, seeds }: DefaultsField<S>,
+  { rawFormData, requiredAsRoot, parentDefaults, parentConst }: FoldProps<T, S, F>,
+): unknown {
+  if (!defaultsReplace(rawFormData, requiredAsRoot === true, context.defaultFormStateBehavior)) {
+    return rawFormData;
+  }
+  const ownDefault = (id: NodeId | undefined): unknown => {
+    const node = id === undefined ? undefined : graph.node(id);
+    if (node?.kind !== 'schema') {
+      return undefined;
+    }
+    return DEFAULT_KEY in node.raw ? node.raw[DEFAULT_KEY] : ownDefault(node.ref);
+  };
+  const own =
+    SKIPS_DEFAULTS in context ? undefined : seeds.map(({ node }) => ownDefault(node)).find((v) => v !== undefined);
+  const inherited = parentDefaults === undefined ? parentConst : parentDefaults;
+  const value =
+    own === undefined ||
+    (inherited !== undefined &&
+      (context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' || parentConst !== undefined))
+      ? inherited
+      : own;
+  return value !== undefined && (value === null || typeof value !== 'object') ? value : rawFormData;
 }
 
 /** How the passes of a field's fixed point end: on the pass whose defaults decide what it was planned with, or in a
