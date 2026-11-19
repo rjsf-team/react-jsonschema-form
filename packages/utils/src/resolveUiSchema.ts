@@ -67,8 +67,8 @@ function listedOptions(schema: StrictRJSFSchema, keyword: OptionsKeyword): unkno
  * own, or the one an `allOf` member offers, which the merge hoists as it is. Two lists are merged into the pairings of
  * their options, whose positions need not be those of either list, so there is none to return for that keyword then.
  * Nor is there where a `then`/`else` or `dependencies` entry offers one, which the data merges in or not. A
- * `dependencies` entry's own `oneOf` whose options declare its key offers none: the data picks the option merged in, so
- * only the lists its options offer are conditional
+ * `dependencies` entry's own `oneOf` one of whose options declares its key offers none: the data picks the option
+ * merged in, so only the lists its options offer are conditional
  *
  * @param schema - The field's schema, with its own `$ref` resolved
  * @param fieldRef - The `$ref` the field's schema was resolved from, if any, so a member looping back to it isn't
@@ -152,8 +152,8 @@ function offeredOptions<S extends StrictRJSFSchema>(
  * `uiSchema[keyword][i]` for branches whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option
  * titles. It populates none for a keyword that two lists, or a `then`/`else` or `dependencies` entry, offer, since the
  * list the field shows then need not keep the written positions; `mergeOptionDefinitions()` merges those. A
- * `dependencies` entry's `oneOf` whose options declare the entry's key doesn't count, as the data picks one of its
- * options to merge in rather than showing it, though a list one of its options offers does.
+ * `dependencies` entry's `oneOf` one of whose options declares the entry's key doesn't count, as the data picks one of
+ * its options to merge in rather than showing it, though a list one of its options offers does.
  *
  * Resolution order (later sources override earlier):
  * 1. `ui:definitions[$ref]` - base definition from registry
@@ -250,9 +250,9 @@ export default function resolveUiSchema<
  * schema offers. `resolveUiSchema()` reads the schema as it is written, so it doesn't reach the options a `then`/`else`
  * or a `dependencies` entry offers, which `retrieveSchema()` hoists to the field only where the data selects it, nor
  * any the field offers beside such a list or beside another list an `allOf` member offers. A `dependencies` entry's
- * `oneOf` whose options declare the entry's key isn't such a list, since the data picks the option `retrieveSchema()`
- * merges in, but a list one of those options offers is. The `anyOf`/`oneOf` field and the `ui:required` walk call
- * this, so they agree on the entry such an option has
+ * `oneOf` one of whose options declares the entry's key isn't such a list, since the data picks the option
+ * `retrieveSchema()` merges in, but a list one of those options offers is. The `anyOf`/`oneOf` field and the
+ * `ui:required` walk call this, so they agree on the entry such an option has
  *
  * @param refs - The `ui:definitions` key each option's schema is named by, as `resolveUiSchema()` reads it, if any
  * @param optionsUiSchema - The field's `uiSchema.anyOf`/`oneOf` entries, or `[]` where it gives none
