@@ -16,7 +16,7 @@ const SHADCN_CLASS_MAP: ClassMap = {
   multiSchemaSelector: 'mb-4',
   // The fieldsets place the add button core renders straight into them at their end, so the button carries no margin
   // of its own into a custom template
-  arrayFieldset: 'min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto',
+  arrayFieldset: 'min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto',
   arrayItemList: 'mb-2',
   // One column unless there is a toolbox, as the gap before an empty one would narrow the field. Top-aligned, so errors
   // or help under the input don't move the toolbox. Core's `FieldTemplate` lays its parts out on the item's rows, one

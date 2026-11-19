@@ -115,6 +115,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 ```
 
 In this way, an add button for new properties is shown by default.
+It is titled after the object's title, or its name where it has no title, such as `Add Address`, through the translatable string `AddNamedButton`, in which `%1` is that title or name. An empty `ui:title` or `title` counts as none, so it falls through to the next one, as the object's heading does; an object with neither keeps the theme's default title, `Add Item`. If you translate RJSF's strings with a custom [`translateString`](../api-reference/form-props.md#translatestring), translate it as well. A title it returns empty is left off, so the button keeps its default title.
 
 You can also define `uiSchema` options for `additionalProperties` by setting the `additionalProperties` attribute in the `uiSchema`.
 

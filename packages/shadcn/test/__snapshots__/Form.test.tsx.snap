@@ -87,7 +87,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
         >
           <fieldset
             aria-labelledby="root_tasks__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_tasks"
           >
             <legend
@@ -518,22 +518,23 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               id="root_tasks__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -548,7 +549,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -584,7 +584,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
         >
           <fieldset
             aria-labelledby="root_tags__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_tags"
           >
             <legend
@@ -871,22 +871,23 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               id="root_tags__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -901,7 +902,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -1654,7 +1654,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
         >
           <fieldset
             aria-labelledby="root_tasks__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_tasks"
           >
             <legend
@@ -2085,22 +2085,23 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               id="root_tasks__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -2115,7 +2116,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -2151,7 +2151,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
         >
           <fieldset
             aria-labelledby="root_tags__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_tags"
           >
             <legend
@@ -2438,22 +2438,23 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               id="root_tags__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -2468,7 +2469,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -5412,7 +5412,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -5438,22 +5438,23 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArrayOptional__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -5468,7 +5469,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -5477,7 +5477,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -5503,22 +5503,23 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArrayOptional2__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -5533,7 +5534,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -5542,7 +5542,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArray__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -5569,22 +5569,23 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArray__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -5599,7 +5600,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -5610,7 +5610,7 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -5636,22 +5636,23 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArrayOptional__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -5666,7 +5667,6 @@ exports[`single fields > optional data controls > does not show optional control
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -5732,7 +5732,7 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -5759,22 +5759,23 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -5789,7 +5790,6 @@ exports[`single fields > optional data controls > does not show optional control
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -5982,29 +5982,30 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <div
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   id="root_optionalArrayWithAnyofs__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -6019,7 +6020,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -6247,7 +6247,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -6273,23 +6273,24 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -6304,7 +6305,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -6313,7 +6313,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -6339,23 +6339,24 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional2__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -6370,7 +6371,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -6379,7 +6379,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArray__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -6406,23 +6406,24 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArray__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -6437,7 +6438,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -6448,7 +6448,7 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -6474,23 +6474,24 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               disabled=""
               id="root_nestedArrayOptional__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -6505,7 +6506,6 @@ exports[`single fields > optional data controls > does not show optional control
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -6572,7 +6572,7 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -6599,23 +6599,24 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               disabled=""
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -6630,7 +6631,6 @@ exports[`single fields > optional data controls > does not show optional control
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -6825,30 +6825,31 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <div
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_optionalArrayWithAnyofs__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -6863,7 +6864,6 @@ exports[`single fields > optional data controls > does not show optional control
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -7131,7 +7131,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -7157,22 +7157,23 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArrayOptional__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -7187,7 +7188,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -7196,7 +7196,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -7261,7 +7261,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArray__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -7288,22 +7288,23 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArray__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -7318,7 +7319,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -7329,7 +7329,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -7472,22 +7472,23 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArrayOptional__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -7502,7 +7503,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -7568,7 +7568,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -7595,22 +7595,23 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -7625,7 +7626,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -7710,7 +7710,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_optionalArrayWithAnyofs__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend
@@ -7971,7 +7971,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -7997,23 +7997,24 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -8028,7 +8029,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -8037,7 +8037,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -8074,7 +8074,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_nestedObjectOptional_deepArray__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -8101,23 +8101,24 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArray__add"
+                  title="Add Item"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="lucide lucide-circle-plus lucide-plus-circle"
+                    class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                     fill="none"
-                    height="16"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="16"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -8132,7 +8133,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       d="M12 8v8"
                     />
                   </svg>
-                   Add Item
                 </button>
               </fieldset>
             </div>
@@ -8143,7 +8143,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -8251,23 +8251,24 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               disabled=""
               id="root_nestedArrayOptional__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -8282,7 +8283,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -8349,7 +8349,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -8376,23 +8376,24 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               disabled=""
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -8407,7 +8408,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -8464,7 +8464,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <fieldset
                 aria-labelledby="root_optionalArrayWithAnyofs__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend
@@ -8612,7 +8612,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -8734,7 +8734,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -8761,22 +8761,23 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -8791,7 +8792,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -8876,7 +8876,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
             >
               <fieldset
                 aria-labelledby="root_optionalArrayWithAnyofs__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend
@@ -9024,7 +9024,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <fieldset
             aria-labelledby="root_nestedArrayOptional__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -9119,7 +9119,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <fieldset
             aria-labelledby="root_nestedArray__title"
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -9146,23 +9146,24 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
+              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-add"
               data-slot="button"
               disabled=""
               id="root_nestedArray__add"
+              title="Add Item"
               type="button"
             >
               <svg
                 aria-hidden="true"
-                class="lucide lucide-circle-plus lucide-plus-circle"
+                class="lucide lucide-circle-plus lucide-plus-circle h-4 w-4"
                 fill="none"
-                height="16"
+                height="24"
                 stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
@@ -9177,7 +9178,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   d="M12 8v8"
                 />
               </svg>
-               Add Item
             </button>
           </fieldset>
         </div>
@@ -9234,7 +9234,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
             >
               <fieldset
                 aria-labelledby="root_optionalArrayWithAnyofs__title"
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:flex [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend

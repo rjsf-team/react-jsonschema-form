@@ -22,10 +22,15 @@ export const TranslatableString = {
   ErrorsLabel: 'Errors',
   /** New additionalProperties string default value, used by ObjectField */
   NewStringDefault: 'New Value',
-  /** Add button title, used by AddButton */
+  /** Add button title, which no template uses since every `AddButton` falls back to `AddItemButton`
+   * @deprecated Kept through v7 for a custom template that reads it: use `AddItemButton`, or `AddNamedButton` for an
+   *   object's button, instead
+   */
   AddButton: 'Add',
   /** Add button title, used by AddButton */
   AddItemButton: 'Add Item',
+  /** Add button title for an expandable object, where %1 is its title or name; used by ObjectField */
+  AddNamedButton: 'Add %1',
   /** Copy button title, used by IconButton */
   CopyButton: 'Copy',
   /** Expand cycle button title */

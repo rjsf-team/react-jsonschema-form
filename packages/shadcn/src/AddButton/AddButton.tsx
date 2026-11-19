@@ -2,25 +2,25 @@ import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } f
 import { TranslatableString } from '@rjsf/utils';
 import { PlusCircle } from 'lucide-react';
 
-import { Button } from '../components/ui/button.tsx';
-import { cn } from '../lib/utils.ts';
+import IconButton from '../IconButton/IconButton.tsx';
 
 /**
  * A button component for adding new items in a form
- * @param uiSchema - The UI schema for the form, which can include custom properties
- * @param registry - The registry object containing the form's configuration and utilities
- * @param className - Allow custom class names to be passed for Tailwind CSS styling
  * @param props - The component properties
  */
 export default function AddButton<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ uiSchema, registry, className, ...props }: IconButtonProps<T, S, F>) {
-  const { translateString } = registry;
+>(props: IconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
-    <Button {...props} className={cn('flex w-fit gap-2', className)} variant='outline' type='button'>
-      <PlusCircle size={16} /> {translateString(TranslatableString.AddItemButton)}
-    </Button>
+    <IconButton
+      title={translateString(TranslatableString.AddItemButton)}
+      {...props}
+      icon={<PlusCircle className='h-4 w-4' />}
+    />
   );
 }

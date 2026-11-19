@@ -338,7 +338,7 @@ describe('a discriminated cell of a layout grid', () => {
       { additionalProperties: gridUiSchema() },
       { type: 'object', additionalProperties: schema },
     );
-    await user.click(screen.getByRole('button', { name: 'Add' }));
+    await user.click(screen.getByRole('button', { name: 'Add Item' }));
 
     const keyInput = screen.getByDisplayValue('newKey');
     await user.clear(keyInput);
