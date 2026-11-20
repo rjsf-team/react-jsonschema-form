@@ -159,7 +159,9 @@ describe('the cost of an edit to a wide object', () => {
     };
     const root: RJSFSchema = { type: 'object', properties: { r } };
     expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root })).toEqual({ r: { k: 'x', c: 1 } });
-    expect(validator.calls).toBe(2);
+    // Once for each data the passes plan the field for: the `{}` the empty field holds, as a `then` of the field's own
+    // is checked (#5895), `k`'s default, and that with the `const` it brings
+    expect(validator.calls).toBe(3);
   });
   it('parses no schema anew to find the option a selector picks among options that lack the selector', () => {
     const context = { validator: miniValidator() };

@@ -1651,32 +1651,77 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { t: 'a' } });
     // Retrieving `x` would check its `if`
     expect(counting.calls).toBe(0);
-    // Where the unmerged `allOf` reaches one itself in a `then`, an empty field gives the `if` nothing to test, so
-    // nothing is retrieved
+    // Where the unmerged `allOf` reaches one itself in a `then`, the field is retrieved to test the `if` against the
+    // `{}` an empty object field holds, once, as a `then` of the field's own is (#5895)
     const branch: RJSFSchema = {
       type: 'object',
       properties: { x: { type: 'object', allOf: [{ if: { required: ['t'] }, then: { const: { a: 1 } } }] } },
     };
     expect(defaultsOf(branch, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({});
-    expect(counting.calls).toBe(0);
+    expect(counting.calls).toBe(1);
   });
 
-  it('plans no second pass for an option const a then offers, which an empty field never takes (#5895)', () => {
-    const counting = miniValidator();
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        x: {
-          type: 'object',
-          properties: { t: { type: 'string', default: 'a' } },
-          allOf: [{ if: { required: ['t'] }, then: { oneOf: [{ const: { a: 1 } }] } }],
-        },
-      },
-    };
-    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { t: 'a' } });
-    // A second pass, planned for the defaults `{ t: 'a' }`, would check the `if`
-    expect(counting.calls).toBe(0);
+  it("decides the then offering an option const in an allOf member as a then of the field's own, at the same cost (#5895)", () => {
+    const conditional = { if: { required: ['t'] }, then: { oneOf: [{ const: { a: 1 } }] } };
+    const fieldWith = (x: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { x } });
+    const t = { t: { type: 'string' as const, default: 'a' } };
+    const inAllOf = miniValidator();
+    const own = miniValidator();
+    const nested = fieldWith({ type: 'object', properties: t, allOf: [conditional] });
+    expect(defaultsOf(nested, undefined, { allOf: 'skipDefaults' }, inAllOf)).toEqual({ x: { t: 'a' } });
+    expect(
+      defaultsOf(
+        fieldWith({ type: 'object', properties: t, ...conditional }),
+        undefined,
+        { allOf: 'skipDefaults' },
+        own,
+      ),
+    ).toEqual({ x: { t: 'a' } });
+    expect(inAllOf.calls).toBe(own.calls);
+    expect(inAllOf.calls).toBe(3);
   });
+
+  it.each<[string, RJSFSchema, RJSFSchema, unknown, number]>([
+    [
+      'an empty primitive field, decided with no value and checked against the const it took',
+      { type: 'number' },
+      { if: { type: 'number' }, then: { const: 10 } },
+      10,
+      1,
+    ],
+    [
+      'an empty primitive field, which takes the else with no value',
+      { type: 'number' },
+      { if: { minimum: 10 }, then: { const: 10 } },
+      undefined,
+      0,
+    ],
+    [
+      'an empty object field, against {} and then the const it took',
+      { type: 'object' },
+      { if: { type: 'object' }, then: { const: { a: 1 } } },
+      { a: 1 },
+      2,
+    ],
+  ])(
+    'checks the if of %s in an allOf member as often as one of its own (#5895)',
+    (_name, field, conditional, x, calls) => {
+      const rootOf = (schema: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        required: ['x'],
+        properties: { x: schema },
+      });
+      const inAllOf = miniValidator();
+      const own = miniValidator();
+      expect(
+        defaultsOf(rootOf({ ...field, allOf: [conditional] }), undefined, { allOf: 'skipDefaults' }, inAllOf),
+      ).toEqual({ x });
+      expect(defaultsOf(rootOf({ ...field, ...conditional }), undefined, { allOf: 'skipDefaults' }, own)).toEqual({
+        x,
+      });
+      expect([inAllOf.calls, own.calls]).toEqual([calls, calls]);
+    },
+  );
 
   it("reads an option const its allOf offers by the field's data, not by the defaults a pass hands its dependencies (#5895)", () => {
     const counting = miniValidator();

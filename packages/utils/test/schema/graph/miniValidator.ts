@@ -38,8 +38,8 @@ function resolvePointer(root: unknown, ref: string): unknown {
 }
 
 /** Checks `data` against `schema` for the keywords the graph tests use: `$ref` into the root, `type`, `const`, `enum`,
- * `required`, `properties`, `items`, `minItems`, `not`, `allOf`, `anyOf`, `oneOf` and `if`/`then`/`else`. It stands in
- * for a real validator, which `@rjsf/utils` cannot depend on.
+ * `required`, `properties`, `items`, `minItems`, `minimum`, `maximum`, `maxLength`, `not`, `allOf`, `anyOf`, `oneOf` and
+ * `if`/`then`/`else`. It stands in for a real validator, which `@rjsf/utils` cannot depend on.
  */
 export function check(schema: unknown, data: unknown, root: unknown, active: readonly unknown[] = []): boolean {
   if (typeof schema === 'boolean') {
@@ -66,6 +66,9 @@ export function check(schema: unknown, data: unknown, root: unknown, active: rea
       Object.entries(schema.properties).every(([key, value]) => !(key in data) || sub(value, data[key])),
     !Array.isArray(data) || !isObject(schema.items) || data.every((row) => sub(schema.items, row)),
     !Array.isArray(data) || typeof schema.minItems !== 'number' || data.length >= schema.minItems,
+    typeof data !== 'number' || typeof schema.minimum !== 'number' || data >= schema.minimum,
+    typeof data !== 'number' || typeof schema.maximum !== 'number' || data <= schema.maximum,
+    typeof data !== 'string' || typeof schema.maxLength !== 'number' || data.length <= schema.maxLength,
     !('not' in schema) || !sub(schema.not, data),
     all(schema.allOf).every(Boolean),
     !Array.isArray(schema.anyOf) || all(schema.anyOf).some(Boolean),
