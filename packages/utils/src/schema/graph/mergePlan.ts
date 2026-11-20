@@ -514,9 +514,9 @@ export function conjunctionOf<S extends StrictRJSFSchema>(
   return conjunction === node ? undefined : conjunction;
 }
 
-/** Whether the first `type` the node `id` declares, itself or through its `$ref`s and `allOf` members, the order
- * `retrieveSchema()` merges them in aside, holds neither objects nor arrays, which an `if` beside it may be checked
- * before, see `CheckedCondition.unset`
+/** Whether the node `id` declares a `type` holding neither objects nor arrays: its own `type` where it has one, else any
+ * its `$ref`s and `allOf` members declare, whatever order `retrieveSchema()` merges them in, since one such member
+ * narrows the merged `type` to it. An `if` beside it may be checked before the merge, see `CheckedCondition.unset`
  */
 function declaresValueType<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId, seen: Set<NodeId>): boolean {
   const node = graph.node(id);
