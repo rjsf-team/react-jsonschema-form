@@ -271,6 +271,44 @@ describe('ATAValidator', () => {
       expect(errors[0].stack).toBe("must have required property 'My animal'");
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal'"]);
     });
+
+    it('names a missing property by the ui:title its schema path leads to, past an array index, under a key ata escapes', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'a/b %~é': {
+            type: 'array',
+            items: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] },
+          },
+        },
+      };
+      const uiSchema: UiSchema = { 'a/b %~é': { items: { name: { 'ui:title': 'Full name' } } } };
+      const { errors } = customizeValidator().validateFormData(
+        { 'a/b %~é': [{}] },
+        schema,
+        undefined,
+        undefined,
+        uiSchema,
+      );
+      expect(errors[0].message).toBe("must have required property 'Full name'");
+    });
+
+    it('files and titles the error for a missing property under a key holding `/` or `~` at that key', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'a/b~': {
+            type: 'object',
+            properties: { name: { type: 'string', title: 'Name' } },
+            allOf: [{ required: ['name'] }],
+          },
+        },
+      };
+      const { errors, errorSchema } = customizeValidator().validateFormData({ 'a/b~': {} }, schema);
+      expect(errors[0].property).toBe('.a/b~.name');
+      expect(errors[0].message).toBe("must have required property 'Name'");
+      expect(errorSchema).toEqual({ 'a/b~': { name: { __errors: ["must have required property 'Name'"] } } });
+    });
   });
 
   describe('customFormats option', () => {

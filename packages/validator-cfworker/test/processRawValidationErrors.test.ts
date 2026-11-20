@@ -110,6 +110,33 @@ describe('transformRJSFValidationErrors()', () => {
     );
   });
 
+  it('reads a required-property name holding quotes whole', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { "it's": { type: 'string', title: 'Its' }, 'say "hi"': { type: 'string' } },
+      required: ["it's", 'say "hi"'],
+    };
+    const { errors } = customizeValidator().validateFormData({}, schema);
+    expect(errors.map(({ property, title, message }) => ({ property, title, message }))).toEqual([
+      { property: "it's", title: 'Its', message: "Instance does not have required property 'Its'." },
+      { property: 'say "hi"', title: '', message: 'Instance does not have required property "say "hi"".' },
+    ]);
+  });
+
+  it('reads a required or dependency property name holding a line break whole', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { 'a\nb': { type: 'string', title: 'AB' }, c: { type: 'string', title: 'C' } },
+      required: ['a\nb'],
+      dependentRequired: { c: ['a\nb'] },
+    };
+    const { errors } = customizeValidator().validateFormData({ c: 'x' }, schema);
+    expect(errors.map(({ property, message }) => ({ property, message }))).toEqual([
+      { property: 'a\nb', message: "Instance does not have required property 'AB'." },
+      { property: 'a\nb', message: "Instance has 'C' but does not have 'AB'." },
+    ]);
+  });
+
   it('uses uiSchema and schema titles for non-required errors', () => {
     const uiErrors = transformRJSFValidationErrors([rawError()], { value: { 'ui:title': 'UI value' } });
     expect(uiErrors[0].stack).toBe("'UI value' Instance type is invalid.");
@@ -260,6 +287,21 @@ describe('validateFormData() reporting a missing dependency', () => {
         message: 'Instance has "creditCard" but does not match dependant schema.',
       }),
     );
+  });
+
+  it('names the properties by titles holding `$` replacement patterns as written', () => {
+    const uiSchema: UiSchema = {
+      creditCard: { 'ui:title': 'Card ($`)' },
+      billingAddress: { 'ui:title': "Price ($&$')" },
+    };
+    const { errors } = customizeValidator().validateFormData(
+      { creditCard: 1 },
+      schema('dependentRequired'),
+      undefined,
+      undefined,
+      uiSchema,
+    );
+    expect(errors[1].message).toEqual(`Instance has 'Card ($\`)' but does not have 'Price ($&$')'.`);
   });
 
   it('leaves the message as the engine wrote it when no property has a title', () => {

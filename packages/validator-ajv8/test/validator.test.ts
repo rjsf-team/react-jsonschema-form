@@ -1631,6 +1631,36 @@ describe('AJV8Validator', () => {
         });
       });
     });
+    it('should name a missing property by the ui:title its schema path leads to, past an array index, under a key Ajv escapes', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'a/b %~é': {
+            type: 'array',
+            items: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] },
+          },
+        },
+      };
+      const uiSchema: UiSchema = { 'a/b %~é': { items: { name: { 'ui:title': 'Full name' } } } };
+      const { errors } = validator.validateFormData({ 'a/b %~é': [{}] }, schema, undefined, undefined, uiSchema);
+      expect(errors[0].message).toEqual("must have required property 'Full name'");
+    });
+    it('should file and title the error for a missing property under a key holding `/` or `~` at that key', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'a/b~': {
+            type: 'object',
+            properties: { name: { type: 'string', title: 'Name' } },
+            allOf: [{ required: ['name'] }],
+          },
+        },
+      };
+      const { errors, errorSchema } = validator.validateFormData({ 'a/b~': {} }, schema);
+      expect(errors[0].property).toEqual('.a/b~.name');
+      expect(errors[0].message).toEqual("must have required property 'Name'");
+      expect(errorSchema).toEqual({ 'a/b~': { name: { __errors: ["must have required property 'Name'"] } } });
+    });
     describe('validating dependencies without a localizer', () => {
       const titles = { creditCard: 'Credit card', billingAddress: 'Billing address' };
       const titledMessage = "must have property 'Billing address' when property 'Credit card' is present";
@@ -3505,6 +3535,32 @@ describe('AJV8Validator', () => {
           schema,
         );
         expect(errors.errors).toHaveLength(0);
+      });
+      describe('with a dependency whose name contains a comma', () => {
+        const schema = (keyword: 'dependentRequired' | 'dependencies'): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            creditCard: { type: 'number', title: 'Credit card' },
+            'street, city': { type: 'string', title: 'Address' },
+            street: { type: 'string', title: 'Street' },
+          },
+          [keyword]: { creditCard: ['street, city'] },
+        });
+        const message = "must have property 'Address' when property 'Credit card' is present";
+        it('should name it by its title', () => {
+          const { errors, errorSchema } = validator.validateFormData({ creditCard: 1 }, schema('dependentRequired'));
+          expect(errors).toHaveLength(1);
+          expect(errors[0].message).toEqual(message);
+          expect(errors[0].title).toEqual('Address');
+          expect(errorSchema).toEqual({ 'street, city': { __errors: [message] } });
+        });
+        it('should name it by its title in a draft-07 `dependencies`', () => {
+          const { errors } = new AJV8Validator({}, ajvI18n.en).validateFormData(
+            { creditCard: 1 },
+            schema('dependencies'),
+          );
+          expect(errors[0].message).toEqual(message);
+        });
       });
     });
   });
