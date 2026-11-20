@@ -2348,6 +2348,26 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);
       });
+      it('decides the if of a field with no data by its then const, and of null data as of {}, in either order', () => {
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        const context = { validator: testValidator };
+        const unset: RJSFSchema = { type: ['string', 'null'], const: null };
+        const nullData: RJSFSchema = { type: ['string', 'null'], const: 'a' };
+        for (const order of [
+          [undefined, null],
+          [null, undefined],
+        ]) {
+          const schema: RJSFSchema = {
+            type: ['string', 'null'],
+            if: { type: 'null' },
+            then: { const: null },
+            else: { const: 'a' },
+          };
+          for (const data of order) {
+            expect(retrieveSchema(context, schema, schema, data)).toEqual(data === null ? nullData : unset);
+          }
+        }
+      });
       it('should resolve if, then', () => {
         // Mock errors so that resolveCondition works as expected
         testValidator.setReturnValues({

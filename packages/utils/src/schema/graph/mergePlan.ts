@@ -293,14 +293,17 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
     return owned ? (owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], check)) : check();
   }
   const keys = [context.validator, graph, key];
-  const memoized = conditionMemo.peekLatest(keys, [data]);
+  // A `null` that `unset` names is checked as itself, where `null` data is checked as `{}`. Any other value is checked
+  // as itself either way, so the check of a `const` is reused once a pass fills it in
+  const memoKey = [data, data === null && unsetValue];
+  const memoized = conditionMemo.peekLatest(keys, memoKey);
   if (memoized !== undefined) {
     return memoized;
   }
   // A field with no data, unless `unset` says what it would hold, is checked as the empty object an object field holds:
   // `required` constrains only objects, so the missing data itself would hold every `if` that requires a key
   const holds = context.validator.isValid(condition, unsetValue ? data : (data ?? {}), graph.rawRoot);
-  conditionMemo.setLatest(keys, [data], holds);
+  conditionMemo.setLatest(keys, memoKey, holds);
   return holds;
 }
 

@@ -3986,7 +3986,9 @@ function isWholeValueField<S extends StrictRJSFSchema, F extends FormContextType
  * looks for, and the `anyOf`/`oneOf` lists the merge met that the
  * field may still choose from. A list the field has chosen from already, or chosen an option of where an `allOf`
  * offers it, is closed: the field's seeds bring it back, though `foldView()` doesn't offer it again, so a keyword only
- * such lists hold is left out of the merge, where it would hide the list of the other keyword
+ * such lists hold is left out of the merge, where it would hide the list of the other keyword. So is a list a
+ * `dependencies` entry offers, or one beside `dependencies`, which the merge, given no `selectOption`, leaves unchosen
+ * where the plan of a field holding it itself chooses its option by the data
  */
 function optionsMergedField<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -4009,13 +4011,15 @@ function optionsMergedField<S extends StrictRJSFSchema, F extends FormContextTyp
   }
   const { data, depData, merged } = view;
   const plan = buildPlan<S, F>({ context, ...field, data, depData, policy: { allOf: true, conditions } });
-  // The fixed point of the field reads the conditions the merge checked, as it reads those of its own plan
-  if (plan.checked.length > 0) {
+  // The fixed point of the field reads the conditions the merge checked and the dependencies it qualified, as it reads
+  // those of its own plan
+  if (plan.readsData) {
     merged.readers ??= [];
     merged.readers.push(plan);
   }
   const { chosen, adopted } = view.options;
-  const isClosed = ({ provider, list }: OptionChoice) => chosen.has(list) || adopted?.has(provider) === true;
+  const isClosed = ({ provider, list, dependencies }: OptionChoice) =>
+    dependencies || chosen.has(list) || adopted?.has(provider) === true;
   const closedKeys = OPTION_KEYWORDS.filter((keyword) => {
     const lists = plan.choices.filter((choice) => choice.keyword === keyword);
     return lists.length > 0 && lists.every(isClosed);

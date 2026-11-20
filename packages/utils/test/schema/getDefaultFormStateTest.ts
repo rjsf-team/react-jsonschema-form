@@ -8416,6 +8416,30 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               }
             },
           );
+          it('fills an object field with the const of the option a dependencies entry offers, whatever data it holds', () => {
+            const dependencies = { k: { oneOf: [{ const: { k: 'a', z: 1 } }] } };
+            const x = {
+              type: 'object' as const,
+              properties: { k: { type: 'string' as const, default: 'a' } },
+              ...(inAllOf ? { allOf: [{ dependencies }] } : { dependencies }),
+            };
+            const skipping = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
+            for (const formData of [undefined, { x: {} }, { x: { k: 'a' } }]) {
+              expect(getDefaultFormState(skipping, { schema: rootOf(x), formData })).toStrictEqual({
+                x: { k: 'a', z: 1 },
+              });
+            }
+          });
+          it('keeps an object field whose default qualifies a dependencies entry offering an enum as the same entry on the field does', () => {
+            const dependencies = { k: { enum: [{ k: 'a', z: 1 }] } };
+            const x = {
+              type: 'object' as const,
+              properties: { k: { type: 'string' as const, default: 'a' } },
+              ...(inAllOf ? { allOf: [{ dependencies }] } : { dependencies }),
+            };
+            const skipping = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
+            expect(getDefaultFormState(skipping, { schema: rootOf(x) })).toStrictEqual({ x: { k: 'a' } });
+          });
         });
         describe.each(PLACEMENTS)(
           'decides the if of a primitive field by the default it holds, %s',
