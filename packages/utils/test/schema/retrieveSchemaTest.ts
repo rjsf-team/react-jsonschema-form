@@ -2402,19 +2402,41 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     describe('Conditional schemas (If, Then, Else)', () => {
       it.each<[string, RJSFSchema, RJSFSchema]>([
         [
-          'merges the then whose if takes its const',
+          'merges the then whose if takes every value it holds',
           { type: 'number', if: { type: 'number' }, then: { const: 3 } },
           { type: 'number', const: 3 },
         ],
         [
-          'leaves out the then whose if rejects its const',
+          'leaves out the then whose if rejects every value it holds',
           { type: 'number', if: { type: 'object' }, then: { const: 3 } },
           { type: 'number' },
         ],
         [
-          'merges the else whose if rejects its const',
-          { type: 'string', if: { maxLength: 0 }, else: { const: 'z' } },
+          'merges the else of an if: { not: {} }',
+          { type: 'string', if: { not: {} }, else: { const: 'z' } },
           { type: 'string', const: 'z' },
+        ],
+        [
+          'merges neither branch of an if a value would decide',
+          { type: 'string', if: { maxLength: 0 }, then: { title: 'empty' }, else: { const: 'z' } },
+          { type: 'string' },
+        ],
+        [
+          'merges no then of the allOf members whose ifs test the value their then pins',
+          {
+            type: 'string',
+            enum: ['a', 'b'],
+            allOf: [
+              { if: { const: 'a' }, then: { const: 'a', title: 'A' } },
+              { if: { const: 'b' }, then: { const: 'b', title: 'B' } },
+            ],
+          },
+          { type: 'string', enum: ['a', 'b'] },
+        ],
+        [
+          'merges neither branch of an if testing the value its then pins',
+          { type: 'string', enum: ['a', 'b'], if: { const: 'a' }, then: { const: 'a' }, else: { title: 'other' } },
+          { type: 'string', enum: ['a', 'b'] },
         ],
       ])('for a primitive field with no data, %s (#5895)', (_name, schema, expected) => {
         // The mock validator cannot evaluate an `if`, so it answers each check as the real ones do
@@ -2425,7 +2447,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ['a $ref', { $ref: '#/$defs/Three' }],
         ['an allOf', { allOf: [{ const: 3 }] }],
       ])(
-        'for a primitive field with no data, decides the if by the const its branch reaches through %s',
+        'for a primitive field with no data, merges the const a branch reaches through %s where no value could change the if',
         (_name, branch) => {
           testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
           const context = { validator: testValidator };
@@ -2436,10 +2458,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect(retrieveSchema(context, rejects, rejects).const).toBeUndefined();
         },
       );
-      it('decides the if of a field with no data by its then const, and of null data as of {}, in either order', () => {
+      it('leaves the if of a field with no data undecided where a value would decide it, and decides null data as {}, in either order', () => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         const context = { validator: testValidator };
-        const unset: RJSFSchema = { type: ['string', 'null'], const: null };
+        const unset: RJSFSchema = { type: ['string', 'null'] };
         const nullData: RJSFSchema = { type: ['string', 'null'], const: 'a' };
         for (const order of [
           [undefined, null],

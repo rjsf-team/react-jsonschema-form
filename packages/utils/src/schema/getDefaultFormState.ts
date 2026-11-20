@@ -86,7 +86,9 @@ import {
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
   HOLDS_NULL_DEFAULT,
+  RESOLVES_NO_CONDITIONS,
   checkCondition,
+  decidedWithoutValue,
   mergeAllOf,
   asTarget,
   cachedPolicy,
@@ -467,11 +469,6 @@ function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>
  * and calls whose memos compare the context first
  */
 const skippingContexts = new KeyedMemo<object>();
-
-/** Marks a context under which no `if` is resolved, which the value a field starts from is folded under, see
- * `foldField()`. A context spread from one keeps the mark
- */
-const RESOLVES_NO_CONDITIONS = Symbol('resolvesNoConditions');
 
 /** `context` marked with `RESOLVES_NO_CONDITIONS`, per context it is built from, so it keeps its identity across the
  * passes and calls whose memos compare the context first
@@ -1079,10 +1076,9 @@ interface PlanRequest<S extends StrictRJSFSchema> {
 function planWith<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   { graph, seeds, data, depData, selections, cutRecursion }: PlanRequest<S>,
-  { allOf, conditions: asked }: OptionPolicy,
+  { allOf, conditions }: OptionPolicy,
   optionPolicy?: OptionPolicy,
 ): PlannedField<S> {
-  const conditions = asked && !(RESOLVES_NO_CONDITIONS in context);
   const policy = policyFor(context, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
   return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions, optionPolicy };
 }
@@ -1442,11 +1438,13 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // the data of its object and one replacing data the field doesn't take included, which a fill of that data
       // reads again, with the `null`s it puts over the data's `undefined`; otherwise the data is merged over them, a
       // default standing in for a value it lacks
-      const filled: unknown = props.shouldMergeDefaultsIntoFormData
+      const merged: unknown = props.shouldMergeDefaultsIntoFormData
         ? withNullFills(pass.folded, data, pass.fills)
         : mergeDefaultsWithFormData(pass.folded, data, false, true);
-      // The plans checked their conditions against their dependency data, `{}` standing in for none, or the value
-      // `CheckedCondition.unset` names, which a fill that leaves the field empty is checked against again, so they decide
+      // A `NaN` left in the field holds no value, as where the field is planned for it
+      const filled = Number.isNaN(merged) ? undefined : merged;
+      // The plans checked their conditions against their dependency data, `{}` standing in for none unless the field
+      // holds no value, see `NoValue`, which a fill that leaves the field empty is checked as again, so they decide
       // alike for data equal to it, as the data of an edit is once it holds the defaults. Data that differs is handed
       // to the next pass as a copy of the one the comparison built, which shares with this pass's data what the two
       // hold alike, and which the fill owns, so the next pass's plans reuse the checks made against it here
@@ -1471,12 +1469,25 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   let first = fold(held);
   // The field starts from the value its defaults give it before any of its conditions is resolved, as the fold gives it
   // one: its own `default`, a merged `allOf` member's, the one of the option it shows, an inherited one or its
-  // `ui:initialValue`, by the precedence the fold gives them. Only a field that holds no object, whose pass decided
-  // something from its dependency data, is checked against it
-  const ownHeld =
-    (first.folded === null || typeof first.folded !== 'object') && decisionsOf(first.readers, held, false).size > 0
-      ? heldValue<T, S, F>(unmarked, props, () => startValue<T, S, F>(unresolvedContext<S, F>(unmarked), field, props))
-      : { value: held, nullDefault };
+  // `ui:initialValue`, by the precedence the fold gives them. It is read only where the first pass checked a condition
+  // whose answer depends on that value, against the `default` its seeds declare or, for a field that holds no value
+  // without one, against none, or left one unresolved for an empty field that a value would resolve. With every
+  // condition left undecided, no branch was merged, so the first pass folded the field as the start value does
+  const readsValue = first.readers.some(
+    ({ checked, present }) =>
+      present === false ||
+      checked.some(
+        ({ condition, noValue, holdsPrimitive, written = condition }) =>
+          (held !== undefined || holdsPrimitive) && decidedWithoutValue(written, noValue?.types) === undefined,
+      ),
+  );
+  const ownHeld = readsValue
+    ? heldValue<T, S, F>(unmarked, props, () =>
+        held === undefined && first.readers.every(({ checked }) => checked.every((one) => one.satisfied === undefined))
+          ? first.folded
+          : startValue<T, S, F>(unresolvedContext<S, F>(unmarked), field, props),
+      )
+    : { value: held, nullDefault };
   if (!Object.is(ownHeld.value, held) || ownHeld.nullDefault !== nullDefault) {
     ({ value: held, nullDefault } = ownHeld);
     const marked = heldNullContext<S, F>(unmarked, nullDefault);
@@ -1549,10 +1560,10 @@ function heldValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return { value: rawFormData, nullDefault: false };
   }
   const start = startOf();
-  if (start !== undefined && (start === null || typeof start !== 'object')) {
+  if (start !== undefined && !Number.isNaN(start) && (start === null || typeof start !== 'object')) {
     return { value: start, nullDefault: start === null };
   }
-  // A replaced `NaN` holds no value, so its conditions are checked as an empty field's, see `CheckedCondition.unset`. A
+  // A replaced `NaN` holds no value, so its conditions are checked as an empty field's, see `NoValue`. A
   // replaced `null` is a value an `if` may test, which it keeps
   return { value: Number.isNaN(rawFormData) ? undefined : rawFormData, nullDefault: false };
 }

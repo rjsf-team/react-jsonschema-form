@@ -12,6 +12,7 @@ import type { RJSFMarkedSchema, RJSFSchema, SchemaContext } from '../../../src/i
 import buildPlan, {
   childSeeds,
   conjunctionOf,
+  decidedWithoutValue,
   ownChains,
   refDefinition,
   seedsAt,
@@ -998,5 +999,28 @@ describe('refDefinition()', () => {
     });
     expect(warn).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', expect.any(Error));
     warn.mockRestore();
+  });
+});
+
+describe('decidedWithoutValue()', () => {
+  it.each<[string, unknown, readonly string[] | undefined, boolean | undefined]>([
+    ['a boolean if', false, ['number'], false],
+    ['a not of a boolean if', { not: true }, ['number'], false],
+    ['a not of an if a value would decide', { not: { minimum: 1 } }, ['number'], undefined],
+    ['a not beside another keyword', { not: {}, minimum: 1 }, ['number'], undefined],
+    ['an if that is no schema', 1, ['number'], undefined],
+    ['a $ref', { $ref: '#/$defs/A' }, ['number'], undefined],
+    ['a type that is no name', { type: 1 }, ['number'], undefined],
+    ['an integer if for a number field', { type: 'integer' }, ['number'], undefined],
+    ['a number if for an integer field', { type: 'number' }, ['integer'], true],
+    ['a string if for an integer field', { type: 'string' }, ['integer'], false],
+    [
+      'a type of every JSON type for a field naming none',
+      { type: ['array', 'boolean', 'null', 'number', 'object', 'string'] },
+      undefined,
+      true,
+    ],
+  ])('decides %s', (_name, condition, types, expected) => {
+    expect(decidedWithoutValue(condition, types)).toBe(expected);
   });
 });
