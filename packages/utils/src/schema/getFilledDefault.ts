@@ -1,33 +1,10 @@
-import {
-  ADDITIONAL_PROPERTIES_KEY,
-  ALL_OF_KEY,
-  ANY_OF_KEY,
-  CONST_KEY,
-  DEFAULT_KEY,
-  DEPENDENCIES_KEY,
-  ELSE_KEY,
-  IF_KEY,
-  ITEMS_KEY,
-  ONE_OF_KEY,
-  PATTERN_PROPERTIES_KEY,
-  PREFIX_ITEMS_KEY,
-  PROPERTIES_KEY,
-  REF_KEY,
-  THEN_KEY,
-} from '../constants.ts';
+import { ALL_OF_KEY, ANY_OF_KEY, DEPENDENCIES_KEY, IF_KEY, ONE_OF_KEY, REF_KEY } from '../constants.ts';
 import isObject from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import { getByPath } from '../pathUtils.ts';
-import type {
-  FieldFill,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  SchemaContext,
-  StrictRJSFSchema,
-} from '../types.ts';
+import type { FieldFill, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import type { FilledField } from './getDefaultFormState.ts';
-import { fieldFillOf, writesPropertyDefault } from './getDefaultFormState.ts';
+import { fieldFillOf, reachedDefaultAt, writesPropertyDefault } from './getDefaultFormState.ts';
 import { getItemSchema } from './getItemSchema.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
 import { refDefinition } from './graph/mergePlan.ts';
@@ -42,9 +19,10 @@ import nodeOfSchema from './graph/nodeOfSchema.ts';
  * `FieldFill.isProperty`, is filled only where `emptyObjectFields` lets the defaults write it there.
  *
  * What the fill only computes for a field no `default` reaches, such as the `false` of a required boolean, an empty
- * object or array, or a `minItems` fill with nothing to fill it with, is no default, so `undefined` is returned for it:
- * a value is the field's default only where a `default` its own subschema declares, at any depth, or a `default` or
- * `const` an ancestor hands it gives it one.
+ * object or array, or a `minItems` fill, is no default, so `undefined` is returned for it: a value is the field's
+ * default only where the fill reports that a `default` reached it, one the field declares, one an ancestor declared
+ * and hands it, the value an ancestor's `const` gives it, or one of these reaching a value below it, see
+ * `FoldProps.onReachedDefault`. A `default` in an option or branch the fill didn't take reaches nothing.
  *
  * A field `childFillOf()` handed its fill is read off its parent's fill wherever the parent's fill read the field as
  * the schema it was handed: where its subschema decides nothing from data, with no `if`, `dependencies` or
@@ -62,16 +40,25 @@ export default function getFilledDefault<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S, rootSchema: S, fill: FieldFill = {}): unknown {
-  const isDeclared = holdsDefault(schema, rootSchema);
-  // A fill `childFillOf()` made reads what it inherits off its parent's fill, so the schemas above are asked first
-  if (!isDeclared && origins.has(fill) && !ancestorsDeclare(fill)) {
-    return undefined;
+  const written = writtenOf(fill);
+  if (written !== UNREAD) {
+    if (written.value === undefined) {
+      return undefined;
+    }
+    if (written.reachedDefault !== undefined) {
+      return written.reachedDefault ? written.value : undefined;
+    }
   }
-  const written = writtenValueOf(fill);
-  const value = written === UNREAD ? filledValueOf<S, F>(context, schema, rootSchema, fill) : written;
-  return value !== undefined && (isDeclared || fill.inheritedDefault !== undefined || fill.inheritedConst !== undefined)
-    ? value
-    : undefined;
+  const { value, reachedDefault } = filledFieldOf<S, F>(context, schema, rootSchema, fill);
+  const isWritten =
+    !fill.isProperty ||
+    writesPropertyDefault(
+      value,
+      fill.isRequired ?? false,
+      fill.isParentRequired,
+      context.defaultFormStateBehavior?.emptyObjectFields,
+    );
+  return reachedDefault && isWritten ? value : undefined;
 }
 
 /** Returns the default the field `schema` describes takes before the defaults fill it out: its own `default`, the one
@@ -92,26 +79,6 @@ export function getFieldDefault<S extends StrictRJSFSchema = RJSFSchema, F exten
   fill: FieldFill = {},
 ): unknown {
   return filledFieldOf<S, F>(context, schema, rootSchema, fill).defaults;
-}
-
-/** The value the field `schema` describes is filled with by a fill of its own, given `fill`, cut down to what the
- * defaults write for a property */
-function filledValueOf<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  schema: S,
-  rootSchema: S,
-  fill: FieldFill,
-): unknown {
-  const { value } = filledFieldOf<S, F>(context, schema, rootSchema, fill);
-  return fill.isProperty &&
-    !writesPropertyDefault(
-      value,
-      fill.isRequired ?? false,
-      fill.isParentRequired,
-      context.defaultFormStateBehavior?.emptyObjectFields,
-    )
-    ? undefined
-    : value;
 }
 
 /** Where `childFillOf()` made a fill, so the child's own value can be read off its parent's fill. Kept untyped by
@@ -192,18 +159,24 @@ function filledFieldOf<S extends StrictRJSFSchema, F extends FormContextType>(
   return filledFields.get([fill, schema], () => fieldFillOf<S, F>(context, schema, rootSchema, fill));
 }
 
-/** What `writtenValueOf()` returns for a field its parent's fill can't answer for */
+/** What `writtenOf()` returns for a field its parent's fill can't answer for */
 const UNREAD = Symbol('unread');
 
-/** The value the parent's fill wrote for each fill, see `writtenValueOf()` */
-const writtenValues = new KeyedMemo<unknown>();
+/** What the parent's fill wrote for a field, and whether a declared default reached it, where the fill recorded that */
+interface Written {
+  readonly value: unknown;
+  readonly reachedDefault: boolean | undefined;
+}
 
-/** The value the parent's fill wrote for the field `fill` was made for, where the parent's fill read it as the schema
- * it was handed, `undefined` for a declared property the parent's fill left out. `UNREAD` where `fill` is no child's,
- * the field's subschema decides anything from data, or the parent wrote nothing the field's value could be read from,
- * as for an item past its array's default or an extra key
+/** What the parent's fill wrote for each fill, see `writtenOf()` */
+const writtenValues = new KeyedMemo<Written | typeof UNREAD>();
+
+/** What the parent's fill wrote for the field `fill` was made for, where the parent's fill read it as the schema it was
+ * handed, `undefined` for a declared property the parent's fill left out. `UNREAD` where `fill` is no child's, the
+ * field's subschema decides anything from data, or the parent wrote nothing the field's value could be read from, as
+ * for an item past its array's default or an extra key
  */
-function writtenValueOf(fill: FieldFill): unknown {
+function writtenOf(fill: FieldFill): Written | typeof UNREAD {
   const origin = origins.get(fill);
   if (origin === undefined) {
     return UNREAD;
@@ -213,11 +186,11 @@ function writtenValueOf(fill: FieldFill): unknown {
     if (readsData(childSchema, rootSchema)) {
       return UNREAD;
     }
-    const parentWritten = writtenValueOf(parentFill);
+    const parentWritten = writtenOf(parentFill);
     const parentValue =
-      parentWritten === UNREAD || parentWritten === undefined
+      parentWritten === UNREAD || parentWritten.value === undefined
         ? filledFieldOf(context, parentSchema, rootSchema, parentFill).value
-        : parentWritten;
+        : parentWritten.value;
     const value: unknown = getByPath(parentValue, [key]);
     // A property the parent's fill left out is one it wrote nothing for, unless the schema handed in reads otherwise
     // than the fill does: `retrieveSchema()` merges an `allOf`, its own or its `$ref`'s, the fill only under
@@ -228,99 +201,42 @@ function writtenValueOf(fill: FieldFill): unknown {
       !(ALL_OF_KEY in childSchema) &&
       !(REF_KEY in childSchema) &&
       isPlainObject(parentValue);
-    return value === undefined && !isLeftOut ? UNREAD : value;
+    return value === undefined && !isLeftOut ? UNREAD : { value, reachedDefault: reachedDefaultAt(parentValue, key) };
   });
 }
 
-/** Whether each fill's ancestors declare a value it could take, see `ancestorsDeclare()` */
-const ancestorDeclarations = new KeyedMemo<boolean>();
-
-/** Whether an ancestor of the field `fill` was made for declares a `default` or a `const` that could hand it a value,
- * read off the schemas only, so no fill is made for a field no ancestor's could give one. A fill `childFillOf()` didn't
- * make, at the top of the chain, hands down what it holds
- */
-function ancestorsDeclare(fill: FieldFill): boolean {
-  const origin = origins.get(fill);
-  if (origin === undefined) {
-    return fill.inheritedDefault !== undefined || fill.inheritedConst !== undefined;
-  }
-  return ancestorDeclarations.get(
-    [fill],
-    () => handsValue(origin.parentSchema, origin.rootSchema) || ancestorsDeclare(origin.parentFill),
-  );
-}
-
-/** Returns a test of a schema that holds where `holds` does for it, or for a subschema `subschemasOf` names in it or
- * its `$ref` does, at any depth, cached per root schema and schema. Anything that is no schema fails it
- */
-function schemaTest(
-  holds: (schema: GenericObjectType) => boolean,
-  subschemasOf: (schema: GenericObjectType) => unknown[],
-): (schema: unknown, rootSchema: RJSFSchema) => boolean {
-  const answers = new KeyedMemo<boolean>();
-  const test = (schema: unknown, rootSchema: RJSFSchema, seen: Set<object>): boolean => {
-    if (!isObject(schema) || seen.has(schema)) {
-      return false;
-    }
-    const known = answers.peek([rootSchema, schema]);
-    if (known !== undefined) {
-      return known;
-    }
-    // Only the answer for the schema asked about is kept: one reached on the way may have been cut short by a cycle
-    const isAsked = seen.size === 0;
-    seen.add(schema);
-    const answer =
-      holds(schema) ||
-      subschemasOf(schema).some((subschema) => test(subschema, rootSchema, seen)) ||
-      (REF_KEY in schema && test(refTargetOf(schema, rootSchema), rootSchema, seen));
-    if (isAsked) {
-      answers.set([rootSchema, schema], answer);
-    }
-    return answer;
-  };
-  return (schema, rootSchema) => test(schema, rootSchema, new Set());
-}
-
-/** The subschemas `schema` holds under each of `keywords`, one or a list of them */
-const subschemasUnder = (schema: GenericObjectType, keywords: readonly string[]): unknown[] =>
-  keywords.flatMap((keyword): unknown[] => {
-    const held: unknown = schema[keyword];
-    return Array.isArray(held) ? held : [held];
-  });
-
-/** Whether `schema` declares a `default` or a `const` itself, or in a subschema the fill merges into it: an
- * `anyOf`/`oneOf` option, an `allOf` member, a `then`/`else` or the one its `$ref` names
- */
-const handsValue = schemaTest(
-  (schema) => DEFAULT_KEY in schema || CONST_KEY in schema,
-  (schema) => subschemasUnder(schema, [ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, THEN_KEY, ELSE_KEY]),
-);
+/** Whether each subschema, by root schema, decides anything from data, see `readsData()` */
+const readsDataAnswers = new KeyedMemo<boolean>();
 
 /** Whether the field `schema` describes decides anything from its data, so its schema retrieved for data may differ
  * from the one the fill reads with none: whether it, or a subschema it reaches through its `$ref`s and `allOf`, holds
- * an `if`, a `dependencies` or `anyOf`/`oneOf` options, which the fill chooses from even when an `allOf` offers them
+ * an `if`, a `dependencies` or `anyOf`/`oneOf` options, which the fill chooses from even when an `allOf` offers them.
+ * Anything that is no schema decides nothing
  */
-const readsData = schemaTest(
-  (schema) => IF_KEY in schema || DEPENDENCIES_KEY in schema || ANY_OF_KEY in schema || ONE_OF_KEY in schema,
-  (schema) => subschemasUnder(schema, [ALL_OF_KEY]),
-);
-
-/** Whether `schema` declares a `default` itself or in a subschema it holds or names through a `$ref`, at any depth, so
- * a value the fill gives the field can come from one. A schema-valued `items` is left out: it fills the array only out
- * to `minItems`, which counts as its default only where the array declares one itself. A tuple's `prefixItems`, or an
- * `items` list, fills each position whatever `minItems` says
- */
-const holdsDefault = schemaTest(
-  (schema) => DEFAULT_KEY in schema,
-  (schema) => [
-    ...[PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, DEPENDENCIES_KEY].flatMap((keyword): unknown[] =>
-      isObject(schema[keyword]) ? Object.values(schema[keyword]) : [],
-    ),
-    ...subschemasUnder(schema, [ADDITIONAL_PROPERTIES_KEY, ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, THEN_KEY, ELSE_KEY]),
-    ...subschemasUnder(schema, [PREFIX_ITEMS_KEY]),
-    ...(Array.isArray(schema[ITEMS_KEY]) ? schema[ITEMS_KEY] : []),
-  ],
-);
+function readsData(schema: unknown, rootSchema: RJSFSchema, seen = new Set<object>()): boolean {
+  if (!isObject(schema) || seen.has(schema)) {
+    return false;
+  }
+  const known = readsDataAnswers.peek([rootSchema, schema]);
+  if (known !== undefined) {
+    return known;
+  }
+  // Only the answer for the schema asked about is kept: one reached on the way may have been cut short by a cycle
+  const isAsked = seen.size === 0;
+  seen.add(schema);
+  const allOf: unknown = schema[ALL_OF_KEY];
+  const reads =
+    IF_KEY in schema ||
+    DEPENDENCIES_KEY in schema ||
+    ANY_OF_KEY in schema ||
+    ONE_OF_KEY in schema ||
+    (Array.isArray(allOf) && allOf.some((member) => readsData(member, rootSchema, seen))) ||
+    (REF_KEY in schema && readsData(refTargetOf(schema, rootSchema), rootSchema, seen));
+  if (isAsked) {
+    readsDataAnswers.set([rootSchema, schema], reads);
+  }
+  return reads;
+}
 
 /** The subschema `schema`'s `$ref` names */
 function refTargetOf(schema: RJSFSchema, rootSchema: RJSFSchema): unknown {

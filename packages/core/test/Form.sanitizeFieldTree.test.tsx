@@ -4565,6 +4565,19 @@ describe('judging a field by the value the fill writes for it (#5825)', () => {
     expect(sanitizedBoth(item(-5), item(-6), { l: [-5] }).form).toEqual({ l: [-6] });
   });
 
+  it("keeps a required array's computed [] where a default sits only in an option the fill didn't pick", () => {
+    const wrap = (arr: RJSFSchema): RJSFSchema => ({ type: 'object', required: ['arr'], properties: { arr } });
+    const arrWith = (extra: RJSFSchema): RJSFSchema => ({
+      type: 'array',
+      items: { type: 'string' },
+      oneOf: [{}, { default: ['q'] }],
+      ...extra,
+    });
+    const { form, utils } = sanitizedBoth(wrap(arrWith({})), wrap(arrWith({ default: ['n'] })), { arr: [] });
+    expect(form).toEqual({ arr: [] });
+    expect(utils).toEqual({ arr: [] });
+  });
+
   it("keeps a clear where only the default changes beneath an ancestor's const, which the fill writes (#5819)", () => {
     const schemaWith = (d: string): RJSFSchema => ({
       type: 'object',

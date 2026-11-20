@@ -722,6 +722,8 @@ interface MemoEntry {
   holdsNull?: boolean;
   /** Whether the fold of `value` took an object `const`, which a hit reports as its fold did */
   objectConst?: boolean;
+  /** Whether a declared default reached `value`, which a hit reports as its fold did, see `FoldProps.onReachedDefault` */
+  reachedDefault?: boolean;
   /** The `null` fills the fold of `value` recorded, which a hit records as its fold did */
   fills?: NullFills;
 }
@@ -756,6 +758,14 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * doesn't call it
    */
   onHandDown?: (defaults: unknown, givenConst: unknown) => void;
+  /** Whether `parentDefaults` come from a `default` an ancestor declares, its `const` or one they inherit, rather than
+   * from values the ancestor computed, as a tuple's items are
+   */
+  inheritsDeclared?: boolean;
+  /** Called where a `default` the field declares or inherits, or the value an ancestor's `const` gives it, reached its
+   * value or one below it, other than a `minItems` filler, see `fieldFillOf()`
+   */
+  onReachedDefault?: () => void;
   /** The option each field shows, which a field offering `anyOf`/`oneOf` options computes its defaults from */
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
@@ -1247,6 +1257,7 @@ interface FieldPass<S extends StrictRJSFSchema> {
   readonly objectConst: boolean;
   /** What the field handed its children in the pass, see `FoldProps.onHandDown` */
   readonly handedDown?: HandedDown;
+  readonly reachedDefault: boolean;
 }
 
 /** The defaults and the `const` a field hands its children, which each child reads at its key */
@@ -1279,9 +1290,10 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // The views the pass computed the field from, the last one with the options the field selected, which are planned
     // with it, so the dependencies and conditions they bring are read too
     const views: DefaultsView<S>[] = [];
-    const reports: { holdsNull: boolean; objectConst: boolean; handedDown?: HandedDown } = {
+    const reports: { holdsNull: boolean; objectConst: boolean; reachedDefault: boolean; handedDown?: HandedDown } = {
       holdsNull: false,
       objectConst: false,
+      reachedDefault: false,
     };
     const fills = freshFills(props.nullFills);
     let last = settle(context, field, data, depData);
@@ -1299,6 +1311,9 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       },
       onObjectConst: () => {
         reports.objectConst = true;
+      },
+      onReachedDefault: () => {
+        reports.reachedDefault = true;
       },
       onHandDown:
         props.onHandDown &&
@@ -1318,6 +1333,9 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
     if (pass.handedDown) {
       props.onHandDown?.(pass.handedDown.defaults, pass.handedDown.givenConst);
+    }
+    if (pass.reachedDefault) {
+      props.onReachedDefault?.();
     }
     addFills(props.nullFills, pass.fills);
     return pass.folded;
@@ -1537,6 +1555,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     props.isRenderedOption,
     props.nullFills?.isCollapsed,
     props.leavesOutObjectConst,
+    props.inheritsDeclared,
   ];
   const leaf = leafOf(child);
   let entry = [memo?.get(memoKey), leaf && leafDefaults.get(leaf)].find((held) =>
@@ -1554,6 +1573,9 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
       onObjectConst: () => {
         computed.objectConst = true;
       },
+      onReachedDefault: () => {
+        computed.reachedDefault = true;
+      },
     });
     memo?.set(memoKey, computed);
     if (leaf !== undefined && (typeof computed.value !== 'object' || computed.value === null)) {
@@ -1567,6 +1589,9 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   addFills(props.nullFills, entry.fills);
   if (entry.objectConst) {
     props.onObjectConst?.();
+  }
+  if (entry.reachedDefault) {
+    props.onReachedDefault?.();
   }
   return entry.value;
 }
@@ -1651,6 +1676,15 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // ancestor gives it, unless a `ui:initialValue` takes the place of either, so the defaults beneath it that the first
   // pass gave its keys aren't taken back by the `const` once the defaults were generated
   const givenConst = constDefault && uiInitialValue === undefined ? constSchema[CONST_KEY] : heldParentConst;
+  // A declared default reaches the field where it declares one, inherits one an ancestor declared, or takes the value
+  // an ancestor's `const` gives it. Its own `const` is a constraint rather than a default
+  const reachesDefault =
+    DEFAULT_KEY in schema ||
+    (parentDefaults !== undefined && props.inheritsDeclared === true) ||
+    parentConst !== undefined;
+  if (reachesDefault) {
+    props.onReachedDefault?.();
+  }
   // The defaults the field's own `default` and the inherited ones give it: its own wins unless they have precedence, and
   // two objects are merged, except for a select over object constants, whose own default and inherited default each
   // name a whole constant, so a blend of them names none
@@ -1749,7 +1783,14 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           view,
           xxxOf,
           choice.index,
-          { ...props, uiSchema: optionsUiSchema, parentDefaults: defaults, parentConst, onHandDown: optionHandDown },
+          {
+            ...props,
+            uiSchema: optionsUiSchema,
+            parentDefaults: defaults,
+            parentConst,
+            inheritsDeclared: reachesDefault,
+            onHandDown: optionHandDown,
+          },
           initialValue,
           adopted?.choice,
         );
@@ -1865,6 +1906,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     foldedType,
     fieldConst,
     givenConst,
+    reachesDefault,
   );
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
@@ -2447,6 +2489,8 @@ function itemField<S extends StrictRJSFSchema>(
  * @param props - The props of the field
  * @param defaults - The defaults computed for the object so far
  * @param [fieldConst] - The object's `const`, as `foldView()` worked it out, read here for a call of its own
+ * @param [givenConst] - The `const` whose value the object hands its properties, see `FoldProps.parentConst`
+ * @param [reachesDefault=false] - Whether a declared default reaches `defaults`, which its properties inherit
  * @returns - The defaults of the object's properties
  */
 function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -2456,6 +2500,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   defaults: unknown,
   fieldConst?: FieldConst<S>,
   givenConst?: unknown,
+  reachesDefault = false,
 ): unknown {
   const { defaultFormStateBehavior } = context;
   const {
@@ -2562,6 +2607,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const childProps = (key: string, uiSchemaKey: string, requiredKeys = schema.required) => ({
     includeUndefinedValues: includeUndefinedValues === true,
     parentDefaults: getByPath(defaults, key),
+    inheritsDeclared: reachesDefault,
     parentConst: getByPath(givenConst, key),
     rawFormData: getByPath(formData, key),
     required: requiredKeys?.includes(key),
@@ -2572,15 +2618,20 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     nullFills,
     ...childPathProps<T, S, F>(props, key),
   });
-  // Computes a child's defaults, reporting whether they hold a `null` fill
+  // Whether a declared default reached each key the object folded, see `reachedDefaultAt()`
+  const reachedKeys = new Map<string, boolean>();
+  // Computes the defaults of the child at `key`, reporting whether they hold a `null` fill and whether a declared
+  // default reached them, which reaches the object too
   const foldReporting = (
     childContext: SchemaContext<S, F>,
     memoKey: string,
     child: DefaultsField<S>,
     childFoldProps: FoldProps<T, S, F>,
+    key: string,
   ) => {
     let holdsNull = false;
     let takesObjectConst = false;
+    let reachedDefault = false;
     const value = foldChild<T, S, F>(
       childContext,
       memoKey,
@@ -2593,9 +2644,16 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         onObjectConst: () => {
           takesObjectConst = true;
         },
+        onReachedDefault: () => {
+          reachedDefault = true;
+        },
       },
       memo,
     );
+    reachedKeys.set(key, reachedDefault || reachedKeys.get(key) === true);
+    if (reachedDefault) {
+      props.onReachedDefault?.();
+    }
     return { value, holdsNull, takesObjectConst };
   };
   const propertyKeys = Object.keys(schema.properties ?? {}).filter(
@@ -2772,7 +2830,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // gives. The fills are those of the field holding that value, its `dependencies` and `if` read from it
     const foldProperty = (memoKey: string, foldProps: FoldProps<T, S, F>) => {
       if (!skipsBranchDefaults) {
-        return foldReporting(foldContext, memoKey, child, foldProps);
+        return foldReporting(foldContext, memoKey, child, foldProps, key);
       }
       const parentDefaults = ownValue(foldProps.parentDefaults);
       const over = (value: unknown) => {
@@ -2781,10 +2839,13 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         }
         return isObject(parentDefaults) && isObject(value) ? mergeObjects(parentDefaults, value) : value;
       };
-      const folded = foldReporting(skippingBranchDefaults(context), memoKey, child, {
-        ...foldProps,
-        rawFormData: over(foldProps.rawFormData),
-      });
+      const folded = foldReporting(
+        skippingBranchDefaults(context),
+        memoKey,
+        child,
+        { ...foldProps, rawFormData: over(foldProps.rawFormData) },
+        key,
+      );
       return { ...folded, value: parentDefaults === undefined && !folded.holdsNull ? undefined : over(folded.value) };
     };
     // Compute the defaults for this node, with the parent defaults we might have from a previous run: defaults[key].
@@ -2985,6 +3046,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
         // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
         childProps(key, ADDITIONAL_PROPERTIES_KEY),
+        key,
       );
       // Added whatever the form's settings say, below, so its `null` only has to reach the objects above
       if (holdsNull) {
@@ -3024,14 +3086,20 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     Object.keys(formData)
       .filter((key) => !isComputed(key) && isPinned(key))
       .forEach((key) => {
-        const { value, holdsNull } = foldReporting(nullsOnly, `additionalNull:${key}`, child, {
-          rawFormData: getByPath(formData, key),
-          initialDefaultsGenerated,
-          uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
-          uiSchemaDefinitions,
-          nullFills,
-          ...childPathProps<T, S, F>(props, key),
-        });
+        const { value, holdsNull } = foldReporting(
+          nullsOnly,
+          `additionalNull:${key}`,
+          child,
+          {
+            rawFormData: getByPath(formData, key),
+            initialDefaultsGenerated,
+            uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
+            uiSchemaDefinitions,
+            nullFills,
+            ...childPathProps<T, S, F>(props, key),
+          },
+          key,
+        );
         if (holdsNull) {
           setOwn(computed, key, value);
           fillOverUndefined(nullFills, rawFormData, key, value);
@@ -3060,11 +3128,29 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // A key a branch the plan left unmerged declares is computed among the properties, but the object it renders in
   // lists it after them in the data's order, as it lists an extra key, so the value keeps that order too
   const ordered = foldedBranchKeys.size > 0 ? inDataOrder(computed, formData, isDeclared) : computed;
+  reachedDefaults.set(ordered, reachedKeys);
   // Object data is the user's, an empty one too, so a `null` default only stands in for an object they left none of
   if (shouldMergeDefaultsIntoFormData && isObjectData(rawFormData)) {
     return ordered;
   }
   return computeDefaultBasedOnSchemaTypeAndDefaults<unknown, S>(view.schema, ordered);
+}
+
+/** Whether a declared default reached each key of an object, or each index of an array, the fold built, by the value
+ * it built
+ */
+const reachedDefaults = new WeakMap<object, ReadonlyMap<string | number, boolean>>();
+
+/** Returns whether a declared default reached the value the fold built at `key` of `container`, a value it returned, see
+ * `FoldProps.onReachedDefault`, or `undefined` where it didn't build `container` or didn't fold `key` into it
+ *
+ * @param container - An object or array the fold returned, or a value it wrote below one
+ * @param key - The key or index
+ * @returns - Whether a declared default reached the value there, where the fold knows
+ */
+export function reachedDefaultAt(container: unknown, key: string | number): boolean | undefined {
+  // A value no fold built, a primitive included, has no record
+  return reachedDefaults.get(container as object)?.get(key);
 }
 
 /** Returns `computed` with the keys `isDeclared` says the object declares first, as computed, then the keys `formData`
@@ -3169,6 +3255,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
     memoKey: string,
     child: DefaultsField<S>,
     childFoldProps: FoldProps<T, S, F>,
+    key: string,
   ) => { value: unknown; holdsNull: boolean },
   skips: (key: string) => boolean,
 ): { key: string; value: unknown }[] {
@@ -3197,21 +3284,27 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
         uiSchema,
         hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG) ? ADDITIONAL_PROPERTIES_KEY : key,
       );
-      const { value, holdsNull } = foldReporting(nullsOnly, `branch:${key}`, child, {
-        rawFormData: propertyFormData,
-        uiSchema: propertyUiSchema,
-        uiSchemaDefinitions,
-        // An optional object the Optional Data Controls render while it has no value is left out with its `null`s, as
-        // one the object names is: under these settings nothing else could add it
-        nullFills: nullFillsForProperty<T, S, F>(context, child, propertySchema, {
+      const { value, holdsNull } = foldReporting(
+        nullsOnly,
+        `branch:${key}`,
+        child,
+        {
+          rawFormData: propertyFormData,
           uiSchema: propertyUiSchema,
           uiSchemaDefinitions,
-          nullFills,
-          isRequired: rendered.required?.includes(key),
-          formData: propertyFormData,
-        }),
-        ...childPathProps<T, S, F>(props, key),
-      });
+          // An optional object the Optional Data Controls render while it has no value is left out with its `null`s, as
+          // one the object names is: under these settings nothing else could add it
+          nullFills: nullFillsForProperty<T, S, F>(context, child, propertySchema, {
+            uiSchema: propertyUiSchema,
+            uiSchemaDefinitions,
+            nullFills,
+            isRequired: rendered.required?.includes(key),
+            formData: propertyFormData,
+          }),
+          ...childPathProps<T, S, F>(props, key),
+        },
+        key,
+      );
       return holdsNull ? [{ key, value }] : [];
     });
 }
@@ -3238,6 +3331,8 @@ function withItemsResolved<S extends StrictRJSFSchema>(
  * @param view - The array field's view
  * @param props - The props of the field
  * @param initialDefaults - The defaults computed for the array so far
+ * @param [givenConst] - The `const` whose value the array hands its items, see `FoldProps.parentConst`
+ * @param [reachesDefault=false] - Whether a declared default reaches `initialDefaults`, which its items inherit
  * @returns - The defaults of the array's items
  */
 function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -3246,6 +3341,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
   props: FoldProps<T, S, F>,
   initialDefaults: unknown,
   givenConst?: unknown,
+  reachesDefault = false,
 ): unknown {
   const { defaultFormStateBehavior } = context;
   const {
@@ -3274,6 +3370,20 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
   const isSkipEmptyDefaults = defaultFormStateBehavior?.emptyObjectFields === 'skipEmptyDefaults';
 
   const emptyDefault: unknown[] | undefined = isSkipEmptyDefaults ? undefined : [];
+  // Whether a declared default reached each item, which reaches the array too, see `reachedDefaultAt()`. A `minItems`
+  // filler is recorded but doesn't reach the array: padding is no default of the array's
+  const reachedItems = new Map<number, boolean>();
+  const reportingFor = (idx: number, reachesArray = true) => {
+    if (!reachedItems.has(idx)) {
+      reachedItems.set(idx, false);
+    }
+    return () => {
+      reachedItems.set(idx, true);
+      if (reachesArray) {
+        props.onReachedDefault?.();
+      }
+    };
+  };
   const itemProps = (idx: number) => ({
     required,
     shouldMergeDefaultsIntoFormData,
@@ -3281,6 +3391,8 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx, schema),
     uiSchemaDefinitions,
     nullFills,
+    inheritsDeclared: reachesDefault,
+    onReachedDefault: reportingFor(idx),
     ...childPathProps<T, S, F>(props, idx),
   });
 
@@ -3372,6 +3484,10 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
   }
 
   const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
+  // The items the fold folded so far, which every array it returns is read by
+  if (Array.isArray(defaults)) {
+    reachedDefaults.set(defaults, reachedItems);
+  }
 
   if (neverPopulate) {
     if (shouldMergeDefaultsIntoFormData && !required) {
@@ -3420,6 +3536,8 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
         {
           ...itemProps(defaultsLength + i),
           parentDefaults: getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert, idx).default,
+          inheritsDeclared: false,
+          onReachedDefault: reportingFor(defaultsLength + i, false),
         },
         memo,
       );
@@ -3427,7 +3545,9 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     // then fill up the rest with either the item default or empty, up to minItems
     arrayDefault = defaultEntries.concat(fillerEntries);
   }
-
+  if (Array.isArray(arrayDefault)) {
+    reachedDefaults.set(arrayDefault, reachedItems);
+  }
   return computeDefaultBasedOnSchemaTypeAndDefaults<unknown, S>(schema, arrayDefault);
 }
 
@@ -3495,6 +3615,7 @@ function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param type - The type the field's defaults are folded as, from `foldedTypeOf()`
  * @param [fieldConst] - The field's `const`, as `foldView()` worked it out
  * @param [givenConst] - The `const` whose value the field hands its children, see `FoldProps.parentConst`
+ * @param [reachesDefault=false] - Whether a declared default reaches `defaults`, see `FoldProps.inheritsDeclared`
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
 function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -3505,6 +3626,7 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
   type: FoldedType,
   fieldConst?: FieldConst<S>,
   givenConst?: unknown,
+  reachesDefault = false,
 ): unknown {
   switch (type) {
     // A value already picked is kept as it is, since the form data is merged over the defaults key by key, which would
@@ -3515,10 +3637,10 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
     // We need to recurse for object schema inner default values.
     case 'object': {
-      return objectDefaults<T, S, F>(context, view, props, defaults, fieldConst, givenConst);
+      return objectDefaults<T, S, F>(context, view, props, defaults, fieldConst, givenConst, reachesDefault);
     }
     case 'array': {
-      return arrayDefaults<T, S, F>(context, view, props, defaults, givenConst);
+      return arrayDefaults<T, S, F>(context, view, props, defaults, givenConst, reachesDefault);
     }
     case 'boolean': {
       // A required boolean with no explicit default gets false — it must be
@@ -3594,6 +3716,8 @@ export function computeDefaults<
 export interface FilledField extends HandedDown {
   /** The value the field is filled with */
   readonly value: unknown;
+  /** Whether a declared default reached the value, see `FoldProps.onReachedDefault` */
+  readonly reachedDefault: boolean;
 }
 
 /** Returns what the defaults fill the field `schema` describes with when it holds no data, given `fill`, what they
@@ -3614,18 +3738,25 @@ export function fieldFillOf<S extends StrictRJSFSchema = RJSFSchema, F extends F
   fill: FieldFill,
 ): FilledField {
   let handedDown: HandedDown = { defaults: undefined, givenConst: undefined };
+  let reachedDefault = false;
   // A handed-out schema stands for the field it was retrieved from, which the fold would plan again with no data. A copy
   // is planned from its own keywords, in the field's place, so its `$ref`s resolve where they were written
   const read = isHandedOut(schema) ? { ...schema } : schema;
+  const parentDefaults = fill.inheritedDefault;
   const value = foldField<unknown, S, F>(context, callRoot<S>(rootSchema, read), {
-    parentDefaults: fill.inheritedDefault,
+    parentDefaults,
+    // What a fill hands down is what its field's own defaults gave it, see `FieldFill.inheritedDefault`
+    inheritsDeclared: parentDefaults !== undefined,
     parentConst: fill.inheritedConst,
     required: fill.isRequired,
     onHandDown: (defaults, givenConst) => {
       handedDown = { defaults, givenConst };
     },
+    onReachedDefault: () => {
+      reachedDefault = true;
+    },
   });
-  return { value: asDeclared(value), ...handedDown };
+  return { value: asDeclared(value), ...handedDown, reachedDefault };
 }
 
 /** Computes the default value for objects, reading the properties `rawSchema` declares as it stands, unless it holds

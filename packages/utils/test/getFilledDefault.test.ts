@@ -643,6 +643,51 @@ describe('getFilledDefault() reads what the fill writes', () => {
     expect(readAt(descendantWins, root, ['l'])).toBeUndefined();
   });
 
+  it.each<{ name: string; root: RJSFSchema; path: (string | number)[] }>([
+    {
+      name: 'an object whose only default sits in a oneOf option the fill did not pick',
+      root: {
+        type: 'object',
+        required: ['o'],
+        properties: { o: { type: 'object', oneOf: [{}, { properties: { b: { type: 'string', default: 'z' } } }] } },
+      },
+      path: ['o'],
+    },
+    {
+      name: 'an object whose only default sits in an else while its then applies',
+      root: {
+        type: 'object',
+        required: ['o'],
+        properties: {
+          o: { type: 'object', if: true, then: {}, else: { properties: { b: { type: 'string', default: 'z' } } } },
+        },
+      },
+      path: ['o'],
+    },
+    {
+      name: 'a required array beside a dependencies entry declaring a default',
+      root: {
+        type: 'object',
+        required: ['arr'],
+        properties: { arr: { type: 'array', items: { type: 'string' } }, k: { type: 'string' } },
+        dependencies: { k: { properties: { m: { type: 'string', default: 'z' } } } },
+      },
+      path: ['arr'],
+    },
+    {
+      name: 'a required boolean beside a property declaring a default',
+      root: {
+        type: 'object',
+        required: ['b'],
+        properties: { a: { type: 'number', default: 1 }, b: { type: 'boolean' } },
+      },
+      path: ['b'],
+    },
+  ])('reads nothing for $name, which no default reaches', ({ root, path }) => {
+    expect(filledAt(descendantWins, root, path)).not.toBeUndefined();
+    expect(readAt(descendantWins, root, path)).toBeUndefined();
+  });
+
   it('hands the children of an object const beside options the const, not the option fold', () => {
     const root: RJSFSchema = {
       type: 'object',
