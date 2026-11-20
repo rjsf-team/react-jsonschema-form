@@ -32,6 +32,7 @@ import type {
 import { ownValue } from './getDefaultFormState.ts';
 import getFilledDefault, { childFillOf, getFieldDefault } from './getFilledDefault.ts';
 import { getItemSchema, getPrefixLength } from './getItemSchema.ts';
+import isMultiSelect from './isMultiSelect.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, { ownRefResolves } from './retrieveSchema.ts';
 
@@ -44,6 +45,9 @@ const ITEMS_KEYWORDS = ['items', 'prefixItems'] as const;
 /** The schema of an item no items keyword constrains, as a missing or `true` one doesn't. Shared, so that two positions
  * both declaring none are resolved once */
 const ANY_ITEM = {};
+
+/** What a multi-select hands each of its values: nothing, since a value's position in the choice means nothing */
+const UNHANDED: FieldFill = {};
 
 /** The raw schema `schema` declares for its item at `index`, one constraining nothing being `ANY_ITEM` */
 function itemSchemaAt<S extends StrictRJSFSchema = RJSFSchema>(schema: S, index: number): S | false {
@@ -297,10 +301,12 @@ function holdsObject(value: unknown): boolean {
 /** Whether `value`, the data of the field `oldSchema` describes, is an array holding an object judged item by item
  * rather than as a whole: the old filled default it equals as a whole can hold what the fill only computed below it,
  * such as a required boolean's `false`, which no `default` reached. Only where it holds the very `default` its old schema
- * declares, before the fill fills it out, is it filled out anew whole, as `Form` fills it
+ * declares, before the fill fills it out, is it filled out anew whole, as `Form` fills it, and so is a multi-select's
+ * choice on either side, which is one value
  *
  * @param context - The `SchemaContext` the defaults are computed under
  * @param oldSchema - The field's schema before the change
+ * @param newSchema - The field's schema after the change
  * @param rootSchema - The root schema, which `oldSchema` is resolved against
  * @param oldFill - What the defaults handed the field before the change
  * @param value - The field's data
@@ -309,11 +315,17 @@ function holdsObject(value: unknown): boolean {
 function isJudgedByItem<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   oldSchema: S,
+  newSchema: S,
   rootSchema: S,
   oldFill: FieldFill,
   value: unknown,
 ): boolean {
-  return holdsObject(value) && !deepEquals(value, getFieldDefault<S, F>(context, oldSchema, rootSchema, oldFill));
+  return (
+    holdsObject(value) &&
+    !isMultiSelect<unknown, S, F>(context, oldSchema, rootSchema) &&
+    !isMultiSelect<unknown, S, F>(context, newSchema, rootSchema) &&
+    !deepEquals(value, getFieldDefault<S, F>(context, oldSchema, rootSchema, oldFill))
+  );
 }
 
 /** Whether `schema` renders an object the defaults fill key by key: an `object` one, or an untyped one declaring
@@ -613,7 +625,8 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
           const defaultValue =
             formValue === undefined ||
             (isObjectValue && getSchemaType<S>(newKeyedSchema) === 'object' && isPlainObject(newWrittenDefault())) ||
-            (isArrayValue && isJudgedByItem<S, F>(context, oldKeyedSchema, rootSchema, oldKeyFill, formValue))
+            (isArrayValue &&
+              isJudgedByItem<S, F>(context, oldKeyedSchema, newKeyedSchema, rootSchema, oldKeyFill, formValue))
               ? NO_VALUE
               : replacementFor(false, false);
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. Data holding no object
@@ -746,6 +759,10 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
         oldRaw === newRaw ? newItemSchema : retrieveSchema<unknown, S, F>(context, oldRaw, rootSchema, aValue),
       );
     const newPrefixLength = getPrefixLength<S>(newSchema);
+    // A multi-select's values are one choice, so no value takes its array's `default` at its position
+    const isChoice =
+      isMultiSelect<unknown, S, F>(context, oldSchema, rootSchema) ||
+      isMultiSelect<unknown, S, F>(context, newSchema, rootSchema);
     // The position past the longer prefix stands for every item after both
     const positionCount = Math.max(getPrefixLength<S>(oldSchema), newPrefixLength) + 1;
     // A type guessed from the data describes what the data was rather than a schema, so an array holding it is cleared
@@ -855,8 +872,8 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
       // filled so only by an object `default`, through their `properties` or an option's, see `rendersProperties()`.
       // `Form` clears no item for a `readOnly` new `default`
       // Its default is read as the fill reads it, an `anyOf`/`oneOf` option's included, as a property's is
-      const oldItemFill = childFillOf<S, F>(context, oldSchema, rootSchema, oldFill, index);
-      const newItemFill = childFillOf<S, F>(context, newSchema, rootSchema, newFill, index);
+      const oldItemFill = isChoice ? UNHANDED : childFillOf<S, F>(context, oldSchema, rootSchema, oldFill, index);
+      const newItemFill = isChoice ? UNHANDED : childFillOf<S, F>(context, newSchema, rootSchema, newFill, index);
       const newItemDefault = getFilledDefault<S, F>(context, newItemSchema, rootSchema, newItemFill);
       const isFilledByKey =
         isPlainObject(newItemDefault) &&
@@ -867,7 +884,7 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
         (isWholeSelect ||
           !(isPlainObject(aValue)
             ? isFilledByKey
-            : isJudgedByItem<S, F>(context, oldItemSchema, rootSchema, oldItemFill, aValue)))
+            : isJudgedByItem<S, F>(context, oldItemSchema, newItemSchema, rootSchema, oldItemFill, aValue)))
       ) {
         const defaultValue = defaultReplacement<S>(
           newItemSchema,
@@ -948,15 +965,19 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
     const limit = newSchema.maxItems ?? Infinity;
     const bound = oldSchema.maxItems === newSchema.maxItems ? Infinity : limit;
     const sanitizedItems: unknown[] = [];
-    // A row past the new default's length that still holds the old default's entry at its index leaves with it, as it
-    // would with the whole array holding the old default, which an array judged item by item doesn't take whole
-    let leavesWithOldDefault = (_index: number) => false;
-    if (isJudgedByItem<S, F>(context, oldSchema, rootSchema, oldFill, data)) {
+    // An array judged item by item that still holds its old filled default whole follows the new default's rows, as it
+    // would taken whole: a row past the length the new schema declares takes the new filled entry at its index, the
+    // padding to `minItems`, or leaves past it, and a row the new items reject takes that entry. Once the user changed a
+    // row, every row is theirs
+    let newRows: unknown[] | undefined;
+    let declaredLength = 0;
+    if (isJudgedByItem<S, F>(context, oldSchema, newSchema, rootSchema, oldFill, data)) {
       const oldDefault = getFilledDefault<S, F>(context, oldSchema, rootSchema, oldFill);
       const newDefault = getFilledDefault<S, F>(context, newSchema, rootSchema, newFill);
-      if (Array.isArray(oldDefault) && Array.isArray(newDefault)) {
-        leavesWithOldDefault = (index) =>
-          index >= newDefault.length && index < oldDefault.length && deepEquals(data[index], oldDefault[index]);
+      if (Array.isArray(newDefault) && deepEquals(data, oldDefault)) {
+        newRows = newDefault;
+        const declared = getFieldDefault<S, F>(context, newSchema, rootSchema, newFill);
+        declaredLength = Array.isArray(declared) ? declared.length : 0;
       }
     }
     // The position at `positionCount - 1` stands for every item after both prefixes, so it is read once
@@ -973,7 +994,11 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
         sanitizedItems.push(undefined);
       } else if (data[index] === null && isClearedRow(at)) {
         sanitizedItems.push(undefined);
-      } else if (isPrefix || !leavesWithOldDefault(index)) {
+      } else if (newRows && !isPrefix && index >= declaredLength) {
+        if (index < newRows.length) {
+          sanitizedItems.push(structuredClone(newRows[index]));
+        }
+      } else {
         if (at !== positionIndex) {
           position = positionAt(at);
           positionIndex = at;
@@ -984,6 +1009,8 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
         const clears = isPrefix || (position === undefined && itemSchemaAt<S>(newSchema, at) === false);
         if (itemValue !== NO_VALUE) {
           sanitizedItems.push(itemValue);
+        } else if (newRows && !isPrefix && index < newRows.length) {
+          sanitizedItems.push(structuredClone(newRows[index]));
         } else if (clears && index >= limit) {
           sanitizedItems.push(data[index]);
         } else {

@@ -2816,6 +2816,54 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         expect(sanitize(listOf(B, [{ a: 'y' }]), listOf(B, xw), typed)).toEqual({
           list: [{ a: 'y', f: false }, typed.list[1]],
         });
+        // Once the user added or changed a row, every row is theirs
+        const added = { list: [...data.list, { a: 'u', f: false }] };
+        expect(sanitize(listOf(B, [{ a: 'y' }]), listOf(B, xw), added)).toEqual({
+          list: [{ a: 'y', f: false }, ...added.list.slice(1)],
+        });
+      });
+      it("pads a row past the new default's length to minItems, as the new default fills it", () => {
+        const paddedOf = (d: RJSFSchema['default']): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', minItems: 2, default: d, items: rowOf(B) } },
+        });
+        const data = {
+          list: [
+            { a: 'x', f: false },
+            { a: 'w', f: false },
+          ],
+        };
+        expect(sanitize(paddedOf([{ a: 'y' }]), paddedOf([{ a: 'x' }, { a: 'w' }]), data)).toEqual({
+          list: [{ a: 'y', f: false }, { f: false }],
+        });
+        // A tuple declaring no default of its own still has one, from its prefix items, past which no row is left
+        const tupleOf: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', prefixItems: [{ ...rowOf(B), default: { a: 'y' } }], items: rowOf(B) } },
+        };
+        expect(sanitize(tupleOf, listOf(B, [{ a: 'x' }, { a: 'w' }]), data)).toEqual({ list: [{ a: 'y', f: false }] });
+      });
+      it('gives a row the new items reject the new default at its index', () => {
+        const strings: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', default: ['s'], items: { type: 'string' } } },
+        };
+        expect(sanitize(strings, listOf(B), { list: [{ a: 'x', f: false }] })).toEqual({ list: ['s'] });
+      });
+      it('keeps a multi-select holding more than its old default, whose values take nothing at their positions', () => {
+        const choiceOf = (d: RJSFSchema['default']): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              uniqueItems: true,
+              default: d,
+              items: { type: 'object', enum: [{ k: 1 }, { k: 2 }, { k: 3 }] },
+            },
+          },
+        });
+        const data = { list: [{ k: 1 }, { k: 2 }, { k: 3 }] };
+        expect(sanitize(choiceOf([{ k: 3 }]), choiceOf([{ k: 1 }, { k: 2 }]), data)).toEqual(data);
       });
       it('takes the new default whole where it holds the very default its old schema declares', () => {
         const plainOf = (d: RJSFSchema['default']): RJSFSchema => ({

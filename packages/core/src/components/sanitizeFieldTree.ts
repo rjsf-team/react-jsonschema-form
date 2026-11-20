@@ -346,9 +346,10 @@ function holdsObject(value: unknown): boolean {
 /** Whether `value`, an array holding an object, is judged item by item rather than as a whole, as
  * `sanitizeDataForNewSchema()` judges it: the old filled default it equals as a whole can hold a value no `default`
  * reached, such as a required boolean's computed `false`. Only one holding the very `default` its old schema declares,
- * `oldFieldDefault`, is filled out anew whole, as a fresh mount fills it */
-function judgesByItem(value: unknown, oldFieldDefault: () => unknown): boolean {
-  return holdsObject(value) && !deepEquals(value, oldFieldDefault());
+ * `oldFieldDefault`, is filled out anew whole, as a fresh mount fills it, and so is a multi-select's choice on either
+ * side, which is one value */
+function judgesByItem(value: unknown, oldFieldDefault: () => unknown, isMultiSelect: () => boolean): boolean {
+  return holdsObject(value) && !isMultiSelect() && !deepEquals(value, oldFieldDefault());
 }
 
 /** Whether the defaults fill a field's object key by key, as `sanitizeDataForNewSchema()` reads it: the field's own
@@ -544,6 +545,9 @@ function propertiesOf<S extends StrictRJSFSchema>(layers: readonly S[]): Map<str
 /** The schema of a field that constrains nothing: an item at a position the old schema declared `true` or `false` at,
  * or a property either tree declares `true` */
 const UNCONSTRAINED = {};
+
+/** What a multi-select hands each of its values: nothing, since a value's position in the choice means nothing */
+const UNHANDED: FieldFill = {};
 
 /** The keywords that describe an array's items */
 const ITEMS_KEYWORDS = ['items', 'prefixItems', 'additionalItems'];
@@ -940,8 +944,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       (oldFillSchema === newFillSchema || deepEquals(oldFillSchema, newFillSchema));
     return isAlikeBelow;
   };
-  // Whether the item at an index, an array judged item by item, leaves with its old default, see below
-  let leavesWithOldDefault: ((index: number, item: unknown) => boolean) | undefined;
+  // The new default's rows an array still holding its old filled default whole follows, see below
+  let newRows: { filled: unknown[]; declaredLength: number } | undefined;
+  // A multi-select's values are one choice, so no value takes its array's `default` at its position
+  let multiSelect: boolean | undefined;
+  const isMultiSelect = () => {
+    multiSelect ??= ctx.oldSchemaUtils.isMultiSelect(oldFillSchema) || ctx.schemaUtils.isMultiSelect(newFillSchema);
+    return multiSelect;
+  };
   // The edited value and the values holding it are the user's
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
     // A value is judged by the default of the option it shows. A clear is judged as the fill fills a field holding no
@@ -992,16 +1002,20 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           oldUiSchema,
           value,
         ) ?? (isOwnFill(ctx.oldSchemaUtils, oldLayers, oldFieldDefault(), value) ? DROP : undefined),
-      () => judgesByItem(newValue, oldFieldDefault),
+      () => judgesByItem(newValue, oldFieldDefault, isMultiSelect),
     );
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
     }
-    // A row past the new default's length that still holds the old default's entry at its index leaves with it, as it
-    // would with the whole array holding the old default
-    if (Array.isArray(oldDefault) && Array.isArray(newDefault) && judgesByItem(newValue, oldFieldDefault)) {
-      leavesWithOldDefault = (index, item) =>
-        index >= newDefault.length && index < oldDefault.length && deepEquals(item, oldDefault[index]);
+    // An array judged item by item that still holds its old filled default whole follows the new default's rows, as it
+    // would taken whole, see its items below. Once the user changed a row, every row is theirs
+    if (
+      Array.isArray(newDefault) &&
+      deepEquals(newValue, oldDefault) &&
+      judgesByItem(newValue, oldFieldDefault, isMultiSelect)
+    ) {
+      const declared = newFieldDefault();
+      newRows = { filled: newDefault, declaredLength: Array.isArray(declared) ? declared.length : 0 };
     }
   }
   if (newLayers.some((layer) => isWholeValueSelect<S>(layer))) {
@@ -1198,9 +1212,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       const hasPrevious =
         Array.isArray(oldValue) && previousIndex !== undefined && Number(previousIndex) < oldValue.length;
       const fillIndex = hasPrevious ? Number(previousIndex) : index;
-      // Whatever its position declares, as `sanitizeDataForNewSchema()` drops it
-      if (index >= prefixLength && leavesWithOldDefault?.(fillIndex, item)) {
-        return DROP;
+      // A row past the new declared default takes the new filled entry at its index, the padding to `minItems`, or leaves
+      // past it, whatever its position declares, as `sanitizeDataForNewSchema()` reads it
+      if (newRows && index >= prefixLength && fillIndex >= newRows.declaredLength) {
+        return fillIndex < newRows.filled.length ? structuredClone(newRows.filled[fillIndex]) : DROP;
       }
       const newItem = itemOf(newItemsLayer, index);
       const oldItem = itemOf(oldItemsLayer, index);
@@ -1228,8 +1243,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           newValue: item,
           // An item inherits its array's default at its index. One a remove or move pairs with the index it held
           // before reads the default there on both sides, so a move by itself changes no item's default
-          oldFill: ctx.oldSchemaUtils.childFillOf(oldFillSchema, oldFill, fillIndex),
-          newFill: ctx.schemaUtils.childFillOf(newFillSchema, newFill, fillIndex),
+          oldFill: isMultiSelect() ? UNHANDED : ctx.oldSchemaUtils.childFillOf(oldFillSchema, oldFill, fillIndex),
+          newFill: isMultiSelect() ? UNHANDED : ctx.schemaUtils.childFillOf(newFillSchema, newFill, fillIndex),
           fillsAlike: fillsAlikeBelow,
           isItem: true,
           hasOld: Array.isArray(oldValue),
@@ -1248,6 +1263,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         },
         [...path, index],
       );
+      // A row the new items reject takes the new filled entry at its index, as the array taken whole would
+      if (judged === DROP && newRows && index >= prefixLength && fillIndex < newRows.filled.length) {
+        ctx.itemMoves.splice(itemMovesBefore);
+        return structuredClone(newRows.filled[fillIndex]);
+      }
       if (judged !== DROP || index >= prefixLength) {
         return judged;
       }
