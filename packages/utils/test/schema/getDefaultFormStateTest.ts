@@ -8537,6 +8537,40 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               expect(getDefaultFormState(context, { schema: withDefault(thenTen, 5) })).toBe(10);
               expect(getDefaultFormState(context, { schema: withDefault(thenThree, 5) })).toBe(5);
             });
+            it('checks a null default as null, own or inherited, where null data is checked as {}', () => {
+              const nullOrOne: RJSFSchema = { if: { type: 'null' }, then: { const: null }, else: { const: 1 } };
+              const ownNull = (type: RJSFSchema['type']): RJSFSchema => ({
+                type,
+                default: null,
+                ...(inAllOf ? { allOf: [nullOrOne] } : nullOrOne),
+              });
+              const inheritedNull: RJSFSchema = {
+                ...rootOf({ type: ['number', 'null'], ...(inAllOf ? { allOf: [nullOrOne] } : nullOrOne) }),
+                default: { x: null },
+              };
+              for (const defaultFormStateBehavior of BEHAVIORS) {
+                const context = { validator: testValidator, defaultFormStateBehavior };
+                const optional: RJSFSchema = { type: 'object', properties: { x: ownNull('null') } };
+                expect(getDefaultFormState(context, { schema: optional })).toStrictEqual({ x: null });
+                expect(getDefaultFormState(context, { schema: rootOf(ownNull(['number', 'null'])) })).toStrictEqual({
+                  x: null,
+                });
+                expect(getDefaultFormState(context, { schema: ownNull(['number', 'null']) })).toBeNull();
+                expect(getDefaultFormState(context, { schema: inheritedNull })).toStrictEqual({ x: null });
+              }
+            });
+            it("checks its own default where an ancestor's default wins but its type can't hold it", () => {
+              const ancestor = {
+                validator: testValidator,
+                defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' as const },
+              };
+              for (const inherited of [null, 'a']) {
+                const schema: RJSFSchema = { ...rootOf(withDefault(thenThree, 5)), default: { x: inherited } };
+                expect(getDefaultFormState(ancestor, { schema })).toStrictEqual({ x: 5 });
+              }
+              const rejected: RJSFSchema = { ...rootOf(withDefault(elseTen, 5)), default: { x: false } };
+              expect(getDefaultFormState(ancestor, { schema: rejected })).toStrictEqual({ x: 10 });
+            });
             it.each<[string, RJSFSchema, number]>([
               ['fills the const of a then whose if takes the default of the option it shows', thenTen, 10],
               ['keeps the default of the option it shows where the if rejects it', thenThree, 5],
@@ -8565,6 +8599,33 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(context, { schema: via(typeObject) })).toStrictEqual({});
           }
         });
+        describe.each(PLACEMENTS)(
+          'decides the if of an empty field by the const its branch reaches through a $ref or an allOf, %s',
+          (_placement, inAllOf) => {
+            const $defs = {
+              Three: { const: 3 },
+              ThreeInAllOf: { allOf: [{ const: 3 }] },
+              ToThree: { $ref: '#/$defs/Three' },
+            };
+            it.each<[string, RJSFSchema]>([
+              ['a $ref', { $ref: '#/$defs/Three' }],
+              ['an allOf', { allOf: [{ const: 3 }] }],
+              ['a $ref to an allOf', { $ref: '#/$defs/ThreeInAllOf' }],
+              ['a chain of $refs', { $ref: '#/$defs/ToThree' }],
+            ])('%s', (_name, branch) => {
+              for (const allOf of ['skipDefaults', 'populateDefaults'] as const) {
+                const context = { validator: testValidator, defaultFormStateBehavior: { allOf } };
+                const fill = (conditional: RJSFSchema) =>
+                  getDefaultFormState(context, {
+                    schema: { ...rootOf(placed('number', conditional, inAllOf)), $defs },
+                  });
+                expect(fill({ if: { type: 'number' }, then: branch })).toStrictEqual({ x: 3 });
+                expect(fill({ if: { type: 'object' }, then: branch })).toStrictEqual({});
+                expect(fill({ if: { maximum: 2 }, else: branch })).toStrictEqual({ x: 3 });
+              }
+            });
+          },
+        );
         it('decides the if of an empty field by the const its branch gives where another seed of the field gives its type', () => {
           const context = { validator: testValidator };
           const withPattern = (conditional: RJSFSchema): RJSFSchema => ({

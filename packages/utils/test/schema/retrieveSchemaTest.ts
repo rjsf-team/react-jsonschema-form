@@ -2421,6 +2421,21 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);
       });
+      it.each<[string, RJSFSchema]>([
+        ['a $ref', { $ref: '#/$defs/Three' }],
+        ['an allOf', { allOf: [{ const: 3 }] }],
+      ])(
+        'for a primitive field with no data, decides the if by the const its branch reaches through %s',
+        (_name, branch) => {
+          testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+          const context = { validator: testValidator };
+          const $defs = { Three: { const: 3 } };
+          const takes: RJSFSchema = { type: 'number', if: { type: 'number' }, then: branch, $defs };
+          const rejects: RJSFSchema = { type: 'number', if: { type: 'object' }, then: branch, $defs };
+          expect(retrieveSchema(context, takes, takes).const).toBe(3);
+          expect(retrieveSchema(context, rejects, rejects).const).toBeUndefined();
+        },
+      );
       it('decides the if of a field with no data by its then const, and of null data as of {}, in either order', () => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         const context = { validator: testValidator };

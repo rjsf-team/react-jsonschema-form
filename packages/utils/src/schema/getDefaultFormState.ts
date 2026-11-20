@@ -85,6 +85,7 @@ import {
 } from './getItemSchema.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
+  HOLDS_NULL_DEFAULT,
   checkCondition,
   mergeAllOf,
   asTarget,
@@ -466,6 +467,23 @@ function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>
  * and calls whose memos compare the context first
  */
 const skippingContexts = new KeyedMemo<object>();
+
+/** `context` marked with `HOLDS_NULL_DEFAULT` as `holds` says, per context it is built from, so it keeps its identity
+ * across the passes and calls whose memos compare the context first
+ */
+function heldNullContext<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  holds: boolean,
+): SchemaContext<S, F> {
+  if ((Reflect.get(context, HOLDS_NULL_DEFAULT) === true) === holds) {
+    return context;
+  }
+  const marked = heldNullContexts.get([context, holds], () => ({ ...context, [HOLDS_NULL_DEFAULT]: holds }));
+  // Only `context` spread with the mark is kept under `context` and `holds`, but the memo can't carry its type
+  // parameters
+  return marked as SchemaContext<S, F>;
+}
+const heldNullContexts = new KeyedMemo<object>();
 
 /** The schema `foldView()` reads under `skippingDefaults()`, per schema it is read from, so it keeps its identity across
  * the passes and calls that read it, as the caches keyed on a schema need
@@ -1250,6 +1268,8 @@ interface FieldPass<S extends StrictRJSFSchema> {
    * property as a `null` schema's field
    */
   readonly fills: NullFills | undefined;
+  /** The view the pass planned the field as, before its options were selected */
+  readonly view: DefaultsView<S>;
   /** The `default` the field the pass computed holds before a branch is merged in, see `unconditionalDefault()` */
   readonly ownDefault: unknown;
   readonly holdsNull: boolean;
@@ -1269,19 +1289,22 @@ interface FieldPass<S extends StrictRJSFSchema> {
  * A child computed in an earlier pass from the same inputs is not computed again.
  */
 function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
+  outerContext: SchemaContext<S, F>,
   field: DefaultsField<S>,
   props: FoldProps<T, S, F>,
 ): unknown {
   const data = props.rawFormData;
   // A `NaN` the defaults replace leaves the field as empty as no data does, so the field is planned for none
   const plannedData = Number.isNaN(data) ? undefined : data;
-  const passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
-  let held = heldValue<T, S, F>(
-    context,
+  // Whether a `null` the field holds is its default is the field's own: its children hold no data of it
+  const unmarked = heldNullContext<S, F>(outerContext, false);
+  let { value: held, nullDefault } = heldValue<T, S, F>(
+    unmarked,
     props,
     field.seeds.map(({ node }) => declaredDefault(field.graph, node)).find((value) => value !== undefined),
   );
+  let context = heldNullContext<S, F>(unmarked, nullDefault);
+  let passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
   const memo = new Map<string, MemoEntry>();
   const fold = (depData: unknown): FieldPass<S> => {
     // The views the pass computed the field from, the last one with the options the field selected, which are planned
@@ -1289,7 +1312,8 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const views: DefaultsView<S>[] = [];
     const reports = { holdsNull: false, objectConst: false };
     const fills = freshFills(props.nullFills);
-    let last = settle(context, field, plannedData, depData);
+    const settled = settle(context, field, plannedData, depData);
+    let last = settled;
     const folded = foldView(context, last, {
       ...props,
       memo,
@@ -1307,7 +1331,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       },
     });
     const readers = [last, ...views.flatMap(({ merged }) => merged.readers ?? []), ...passes.takeReaders()];
-    return { folded, depData, readers, fills, ownDefault: unconditionalDefault(last), ...reports };
+    return { folded, depData, readers, fills, view: settled, ownDefault: unconditionalDefault(last), ...reports };
   };
   const kept = (pass: FieldPass<S>) => {
     if (pass.holdsNull) {
@@ -1333,6 +1357,9 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const conditions = new Map<string, { graph: SchemaGraph<S>; checked: CheckedCondition<S> }>();
   // What `readers` qualify, decide and choose for `depData`, each as its plan did unless `redecides`, by decision: a
   // condition, set of `dependencies` or option list several readers met is decided once
+  // Checked under the context of the value the field holds now, which the first pass may change
+  const recheck = (graph: SchemaGraph<S>, checked: CheckedCondition<S>, depData: unknown) =>
+    checkCondition<S, F>(context, graph, checked, depData);
   const decisionsOf = (readers: readonly Reader<S>[], depData: unknown, redecides: boolean): Decisions => {
     const decisions: Decisions = new Map();
     const decide = (graph: SchemaGraph<S>, id: string, decision: () => Decision) => {
@@ -1349,7 +1376,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
       for (const checked of reader.checked) {
         const key = decide(reader.graph, `c${checked.site}`, () =>
-          redecides ? checkCondition<S, F>(context, reader.graph, checked, depData) : checked.satisfied,
+          redecides ? recheck(reader.graph, checked, depData) : checked.satisfied,
         );
         conditions.set(key, { graph: reader.graph, checked });
       }
@@ -1418,9 +1445,15 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   let first = fold(held);
   // The schema the field was merged into brings the `default` the field starts from, where an `allOf` member or the
   // option it shows declares it
-  const ownHeld = heldValue<T, S, F>(context, props, first.ownDefault);
-  if (!Object.is(ownHeld, held)) {
-    held = ownHeld;
+  const ownHeld = heldValue<T, S, F>(unmarked, props, first.ownDefault, first.view);
+  if (!Object.is(ownHeld.value, held) || ownHeld.nullDefault !== nullDefault) {
+    ({ value: held, nullDefault } = ownHeld);
+    const marked = heldNullContext<S, F>(unmarked, nullDefault);
+    if (marked !== context) {
+      context = marked;
+      passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
+      matchContext = undefined;
+    }
     first = fold(held);
   }
   // The conditions decided by the data alone, as the first pass decided them, whatever the defaults, by decision. The
@@ -1472,31 +1505,71 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** The value a field holds before the defaults its conditions pick are filled in, which they are checked against: its
  * data, unless the defaults replace it, then the default that would, `ownDefault` or an inherited one by the precedence
- * `foldView()` gives them, where that is no object or array, since an object field holds its defaults filled in and is
- * checked against them on the next pass
+ * `foldView()` gives them for the schema `view` planned, where that is no object or array, since an object field holds
+ * its defaults filled in and is checked against them on the next pass. Before a pass planned the field, its type isn't
+ * known, so an inherited default wins where the precedence says, and the pass that plans it checks that its type takes
+ * it. `nullDefault` says the value is a `null` default, which its conditions are checked against as itself, where
+ * `null` data is checked as `{}`, see `HOLDS_NULL_DEFAULT`
  */
 function heldValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  { rawFormData, requiredAsRoot, parentDefaults, parentConst }: FoldProps<T, S, F>,
+  props: FoldProps<T, S, F>,
   ownDefault: unknown,
-): unknown {
+  view?: DefaultsView<S>,
+): { readonly value: unknown; readonly nullDefault: boolean } {
+  const { rawFormData, requiredAsRoot } = props;
   if (!defaultsReplace(rawFormData, requiredAsRoot === true, context.defaultFormStateBehavior)) {
-    return rawFormData;
+    return { value: rawFormData, nullDefault: false };
   }
   const own = SKIPS_DEFAULTS in context ? undefined : ownDefault;
-  const inherited = parentDefaults === undefined ? parentConst : parentDefaults;
-  const value =
-    own === undefined ||
-    (inherited !== undefined &&
-      (context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' || parentConst !== undefined))
-      ? inherited
-      : own;
+  const { defaults: inherited, preferParentDefaults } = inheritedDefaults<T, S, F>(
+    context,
+    view?.schema,
+    view ? { ...props, uiSchema: fieldUiSchema<T, S, F>(view.schema, view.field.graph.rawRoot, props) } : props,
+  );
+  const value = own === undefined || preferParentDefaults ? inherited : own;
   if (value !== undefined && (value === null || typeof value !== 'object')) {
-    return value;
+    return { value, nullDefault: value === null };
   }
   // A replaced `NaN` holds no value, so its conditions are checked as an empty field's, see `CheckedCondition.unset`. A
   // replaced `null` is a value an `if` may test, which it keeps
-  return Number.isNaN(rawFormData) ? undefined : rawFormData;
+  return { value: Number.isNaN(rawFormData) ? undefined : rawFormData, nullDefault: false };
+}
+
+/** The uiSchema a field of `schema` renders with: `props.uiSchema`, with the `ui:definitions` entry for the `$ref` the
+ * field's plan was resolved from applied, so defaults see the same uiSchema `SchemaField` renders with
+ */
+function fieldUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  rootSchema: S,
+  { uiSchema, uiSchemaDefinitions }: FoldProps<T, S, F>,
+): UiSchema<T, S, F> | undefined {
+  return uiSchemaDefinitions
+    ? resolveUiSchema<T, S, F>(schema, uiSchema, { rootSchema, uiSchemaDefinitions })
+    : uiSchema;
+}
+
+/** The defaults the ancestors of a field of `schema` give it, the ancestor `const` it reads, and whether they win over
+ * its own `default`, as `foldView()` fills it and `heldValue()` checks it, the type unchecked where `schema` isn't
+ * known. A value an ancestor's `const` gives the field stands in for inherited defaults that don't reach it, as for a
+ * row of an array the data holds once the defaults were generated, whose defaults are read from the row. A
+ * `ui:initialValue` takes the place of an ancestor's `const` on every pass, as it does of the field's own, so the
+ * defaults beneath it aren't taken back by the `const` once the defaults were generated. An ancestor default wins only
+ * where the field's type can hold it, so a `null` or `false` one gives way to the own default of a field whose type
+ * allows neither. A value an ancestor's `const` gives wins whatever the setting says
+ */
+function inheritedDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  { defaultFormStateBehavior }: SchemaContext<S, F>,
+  schema: S | undefined,
+  props: FoldProps<T, S, F>,
+): { readonly defaults: unknown; readonly parentConst: unknown; readonly preferParentDefaults: boolean } {
+  const parentConst = getUiOptions<T, S, F>(props.uiSchema).initialValue === undefined ? props.parentConst : undefined;
+  const defaults = props.parentDefaults === undefined ? parentConst : props.parentDefaults;
+  const preferParentDefaults =
+    defaults !== undefined &&
+    (defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' || parentConst !== undefined) &&
+    (schema === undefined || takesValueOf<S>(schema, defaults));
+  return { defaults, parentConst, preferParentDefaults };
 }
 
 /** The `default` a node declares, or the node its `$ref` names */
@@ -1661,25 +1734,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const rootSchema = view.field.graph.rawRoot;
   // Apply `ui:definitions` at every field, keyed by the `$ref` its plan was resolved from, so defaults see the same
   // uiSchema `SchemaField` renders with
-  const uiSchema = uiSchemaDefinitions
-    ? resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions })
-    : localUiSchema;
+  const uiSchema = fieldUiSchema<T, S, F>(schema, rootSchema, inputProps);
   const props = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const uiInitialValue = uiOptions.initialValue;
-  // A `ui:initialValue` takes the place of an ancestor's `const` on every pass, as it does of the field's own below, so
-  // the defaults beneath it aren't taken back by the `const` once the defaults were generated
-  const parentConst = uiInitialValue === undefined ? props.parentConst : undefined;
-  // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
-  // A value an ancestor's `const` gives the field stands in for inherited defaults that don't reach it, as for a row of
-  // an array the data holds once the defaults were generated, whose defaults are read from the row
+  const { parentConst, preferParentDefaults } = inheritedDefaults<T, S, F>(context, schema, props);
+  // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins
   let defaults: unknown = parentDefaults === undefined ? ownValue(parentConst) : parentDefaults;
-  // An ancestor default wins only where the field's type can hold it, so a `null` or `false` one gives way to the own
-  // default of a field whose type allows neither. A value an ancestor's `const` gives wins whatever the setting says
-  const preferParentDefaults =
-    defaults !== undefined &&
-    (defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' || parentConst !== undefined) &&
-    takesValueOf<S>(schema, defaults);
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
   // A collapsed field keeps its own keywords, but selecting an option would plan it again past the collapse. A list the

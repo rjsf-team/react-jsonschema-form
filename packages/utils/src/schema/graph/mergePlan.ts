@@ -90,9 +90,10 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
   readonly satisfied: boolean;
   /** What an `if` is checked against where the field holds no data, if not `{}`: the value the field would hold. A
    * field that may hold an object or an array, or names no `type`, holds its defaults, which the fill checks it against
-   * once it has them. A field of any other type takes the `const` of the `then`, or else of the `else`, so a `then`
-   * gives its `const` where the `if` accepts it and an `else` where the `if` rejects it, and the value filled takes the
-   * branch that gave it. A field with a `default` holds that instead, which the defaults hand the plan as its data
+   * once it has them. A field of any other type takes the `const` of the `then`, or else of the `else`, the branch's own
+   * or one its `$ref`s and `allOf` members give, see `declaredConst()`, so a `then` gives its `const` where the `if`
+   * accepts it and an `else` where the `if` rejects it, and the value filled takes the branch that gave it. A field with
+   * a `default` holds that instead, which the defaults hand the plan as its data
    */
   readonly unset?: { readonly value: unknown };
 }
@@ -225,6 +226,11 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
 const conditionMemo = new KeyedMemo<boolean>();
 
+/** Marks, as `true`, a context under which `null` dependency data is the `default` the field holds rather than its
+ * data, so its `if`s are checked against `null` itself, see `checkCondition()`. A context spread from one keeps the mark
+ */
+export const HOLDS_NULL_DEFAULT = Symbol('holdsNullDefault');
+
 /** How the conditions checked against dependency data a fill of the defaults copied for itself are decided, by the
  * copy: each the fill fixed, under its graph and site, as fixed, and each other, under the validator too, as the
  * validator first checked it
@@ -287,22 +293,23 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
 ): boolean {
   const unsetValue = depData === undefined && unset !== undefined;
   const data = unsetValue ? unset.value : depData;
+  const asItself = unsetValue || (data === null && Reflect.get(context, HOLDS_NULL_DEFAULT) === true);
   if (typeof data === 'object' && data !== null) {
     const owned = ownedDecisions.get(data);
     const check = () => context.validator.isValid(condition, data, graph.rawRoot);
     return owned ? (owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], check)) : check();
   }
   const keys = [context.validator, graph, key];
-  // A `null` that `unset` names is checked as itself, where `null` data is checked as `{}`. Any other value is checked
-  // as itself either way, so the check of a `const` is reused once a pass fills it in
-  const memoKey = [data, data === null && unsetValue];
+  // A `null` that `unset` names, or a `null` default the field holds, is checked as itself, where `null` data is checked
+  // as `{}`. Any other value is checked as itself either way, so the check of a `const` is reused once a pass fills it in
+  const memoKey = [data, data === null && asItself];
   const memoized = conditionMemo.peekLatest(keys, memoKey);
   if (memoized !== undefined) {
     return memoized;
   }
   // A field with no data, unless `unset` says what it would hold, is checked as the empty object an object field holds:
   // `required` constrains only objects, so the missing data itself would hold every `if` that requires a key
-  const holds = context.validator.isValid(condition, unsetValue ? data : (data ?? {}), graph.rawRoot);
+  const holds = context.validator.isValid(condition, asItself ? data : (data ?? {}), graph.rawRoot);
   conditionMemo.setLatest(keys, memoKey, holds);
   return holds;
 }
@@ -535,6 +542,32 @@ function declaresValueType<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id
   return [target.ref, ...graph.subschemas(target.id, ALL_OF_KEY).map(([, member]) => member)].some(
     (member) => member !== undefined && declaresValueType(graph, member, seen),
   );
+}
+
+/** The `const` the node `id` declares, where it declares one: its own, else the first its `$ref`s and `allOf` members
+ * declare, read as `declaresValueType()` reads a `type`, see `CheckedCondition.unset`
+ */
+function declaredConst<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  seen: Set<NodeId>,
+): { readonly value: unknown } | undefined {
+  const node = graph.node(id);
+  if (seen.has(id) || node.kind !== 'schema') {
+    return undefined;
+  }
+  seen.add(id);
+  const target = asTarget(graph, node);
+  if (target.raw[CONST_KEY] !== undefined) {
+    return { value: target.raw[CONST_KEY] };
+  }
+  for (const member of [target.ref, ...graph.subschemas(target.id, ALL_OF_KEY).map(([, child]) => child)]) {
+    const declared = member === undefined ? undefined : declaredConst(graph, member, seen);
+    if (declared !== undefined) {
+      return declared;
+    }
+  }
+  return undefined;
 }
 
 /** Returns the schema holding each of `keywords` as the node providing it holds it */
@@ -962,10 +995,9 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     for (const key of [THEN_KEY, ELSE_KEY]) {
       const provider = keywords.get(key);
       const branch = provider && this.graph.child(provider.node.id, key);
-      const node = branch === undefined ? undefined : this.graph.node(branch);
-      const value: unknown = node?.kind === 'schema' ? node.raw[CONST_KEY] : undefined;
-      if (value !== undefined) {
-        return { value };
+      const declared = branch === undefined ? undefined : declaredConst(this.graph, branch, new Set());
+      if (declared !== undefined) {
+        return declared;
       }
     }
     return undefined;
@@ -1247,13 +1279,14 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     resolved.optionPolicy?.allOf,
     resolved.optionPolicy?.conditions,
   ];
-  const memoized = plans.peekAny(keys, [data, depData]);
+  const dataKeys = [data, depData, depData === null && Reflect.get(context, HOLDS_NULL_DEFAULT) === true];
+  const memoized = plans.peekAny(keys, dataKeys);
   if (isPlanOf(memoized, graph)) {
     return memoized;
   }
   const plan = new PlanBuilder(context, graph, data, depData, resolved).build(seeds);
   if (plan.readsData) {
-    plans.setLatest(keys, [data, depData], plan);
+    plans.setLatest(keys, dataKeys, plan);
   } else {
     plans.set(keys, plan);
   }
