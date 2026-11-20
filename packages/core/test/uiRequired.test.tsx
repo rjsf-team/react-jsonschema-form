@@ -1110,4 +1110,56 @@ describe('ui:required enforcement', () => {
       expect(await submitted(node, onSubmit)).toBe(true);
     });
   });
+
+  describe("an object's own properties beside its options", () => {
+    const zBesideOption = (option: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { z: { type: 'string' } },
+      anyOf: [option],
+    });
+    const qOption: RJSFSchema = { properties: { q: { type: 'string' } } };
+    const zLabels = (node: Element) =>
+      [...node.querySelectorAll('label[for="root_z"]')].map(({ textContent }) => textContent);
+
+    it("blocks a submit with an own property empty that the object's uiSchema marks, beside an option with an entry of its own", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: zBesideOption(qOption),
+        uiSchema: { z: { 'ui:required': true }, anyOf: [{ q: {} }] },
+        initialFormData: {},
+      });
+      expect(zLabels(node)).toEqual(['z*']);
+      await submitForm(node, user, true);
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(errorListMessages(node)).toEqual([".z must have required property 'z'"]);
+    });
+
+    it("submits with an own property empty that only the option's entry marks, as the object renders it with its own uiSchema", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: zBesideOption(qOption),
+        uiSchema: { anyOf: [{ z: { 'ui:required': true } }] },
+        initialFormData: {},
+      });
+      expect(zLabels(node)).toEqual(['z']);
+      await submitForm(node, user, true);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+
+    it.each<[string, UiSchema, string[]]>([
+      ["the object's uiSchema", { z: { 'ui:required': true }, anyOf: [{ q: {} }] }, ['z*', 'z']],
+      ["the option's entry", { anyOf: [{ z: { 'ui:required': true } }] }, ['z', 'z*']],
+    ])(
+      'blocks a submit with a property the object and its option both declare empty, as %s marks it',
+      async (_label, uiSchema, labels) => {
+        const { node, onSubmit } = createFormComponent({
+          schema: zBesideOption({ properties: { z: { type: 'string' }, q: { type: 'string' } } }),
+          uiSchema,
+          initialFormData: {},
+        });
+        expect(zLabels(node)).toEqual(labels);
+        await submitForm(node, user, true);
+        expect(onSubmit).not.toHaveBeenCalled();
+        expect(errorListMessages(node)).toEqual([".z must have required property 'z'"]);
+      },
+    );
+  });
 });

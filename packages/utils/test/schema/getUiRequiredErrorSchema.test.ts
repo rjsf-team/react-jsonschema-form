@@ -1367,7 +1367,7 @@ describe('getUiRequiredErrorSchema()', () => {
         properties: { thing: { ...objectOption, anyOf: [{ type: 'object', properties: { b: { type: 'string' } } }] } },
       };
       const uiSchema: UiSchema = {
-        thing: { 'ui:required': true, anyOf: [{ 'ui:required': false, a: { 'ui:required': true } }] },
+        thing: { 'ui:required': true, a: { 'ui:required': true }, anyOf: [{ 'ui:required': false }] },
       };
       const errors = toErrorList(
         getUiRequiredErrorSchema(
@@ -2312,6 +2312,36 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(
         errorsFor(schema, { p: { anyOf: [{ ...replaced, 'ui:fieldReplacesAnyOrOneOf': false }] } }, { p: { x: 'a' } }),
       ).toEqual([".p.w must have required property 'w'"]);
+    });
+  });
+
+  describe("an object's own properties beside its options", () => {
+    const zBesideOption = (option: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { z: { type: 'string' } },
+      anyOf: [option],
+    });
+    const qOption: RJSFSchema = { properties: { q: { type: 'string' } } };
+    const zAndQOption: RJSFSchema = { properties: { z: { type: 'string' }, q: { type: 'string' } } };
+    const missingZ = [".z must have required property 'z'"];
+    const errorsFor = (schema: RJSFSchema, uiSchema: UiSchema) =>
+      toErrorList(getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {})).map(
+        ({ stack }) => stack,
+      );
+
+    it("reports an own property from the object's uiSchema, which its ObjectField renders it with, beside an option with an entry of its own", () => {
+      expect(errorsFor(zBesideOption(qOption), { z: { 'ui:required': true }, anyOf: [{ q: {} }] })).toEqual(missingZ);
+    });
+
+    it("doesn't report an own property only the option's entry marks", () => {
+      expect(errorsFor(zBesideOption(qOption), { anyOf: [{ z: { 'ui:required': true } }] })).toEqual([]);
+    });
+
+    it('reports a property the object and its option both declare from either entry, as each field renders it', () => {
+      expect(errorsFor(zBesideOption(zAndQOption), { z: { 'ui:required': true }, anyOf: [{ q: {} }] })).toEqual(
+        missingZ,
+      );
+      expect(errorsFor(zBesideOption(zAndQOption), { anyOf: [{ z: { 'ui:required': true } }] })).toEqual(missingZ);
     });
   });
 });

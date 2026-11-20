@@ -54,17 +54,18 @@ import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import retrieveSchema, { expandRefCycle, getValidationTarget, withOptionExtraKeys } from './retrieveSchema.ts';
 
-/** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node, and, for an object node, the option
- * itself. An object node's branch merges the whole node into the option, since the walk visits the properties the
- * node's own `ObjectField` renders as well as the option's; whether the option's own field is an Optional Data Control
- * is read from the option as `MultiSchemaField` renders it, which carries only what that field is rendered with. Any
- * other node renders nothing beside its option, so its branch is that rendered option and is gated on as it is.
+/** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node, the option shown, and, for an object
+ * node, the option itself. An object node's branch merges the whole node into the option, since the walk visits the
+ * properties the node's own `ObjectField` renders as well as the option's; whether the option's own field is an
+ * Optional Data Control is read from the option as `MultiSchemaField` renders it, which carries only what that field is
+ * rendered with. Any other node renders nothing beside its option, so its branch is that rendered option and is gated
+ * on as it is.
  */
 interface SelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextType> {
   schema: S;
   option?: S;
   uiSchema: UiSchema<T, S, F>;
-  place?: string;
+  shown?: S;
 }
 
 /** Resolves the `anyOf`/`oneOf` branch that currently applies to `formData`, the option the form's `fieldState` says
@@ -98,7 +99,6 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   // A `fieldState` is a caller's to implement, so an index naming none of the options is none shown
   const index = shownIndex < shownOptions.length ? shownIndex : -1;
   const option = index >= 0 ? shownOptions[index] : empty;
-  const place = getValidationTarget<S>(option, rootSchema).$ref;
   const given: unknown = uiSchema[key];
   const optionsUiSchema = mergeOptionDefinitions<T, S, F>(
     options.map(definitionRef),
@@ -114,9 +114,9 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
       key,
     ) ?? {};
   if (!rendersOwnFieldBesideOption<S>(schema, option)) {
-    return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema, place };
+    return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema, shown: option };
   }
-  return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema, place };
+  return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema, shown: option };
 }
 
 interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
@@ -338,14 +338,17 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     schema: retrieved,
     option,
     uiSchema: branchUiSchema,
-    place,
+    shown,
   }: SelectedBranch<T, S, F> = xxxOf
     ? resolveSelectedBranch<T, S, F>(ctx, resolvedSchema, xxxOf, uiSchema, formData, path)
     : { schema: resolvedSchema, uiSchema };
   // The form keeps one pick per option list at a path, so an option shown again below itself at the path offers the
   // same list again and shows itself in turn, a `$ref` loop the form never finishes rendering. Two lists can share
-  // their first option, so it is the option shown, not the list, that tells a loop apart
+  // their first option, so it is the option shown, not the list, that tells a loop apart. Where it is in the root is
+  // worked out only for an option walked below another at the path, or one walked in turn as a node of its own
+  const placeOfShown = () => shown && getValidationTarget<S>(shown, rootSchema).$ref;
   const shownAbove = showingField?.shownAbove ?? [];
+  const place = showingField && placeOfShown();
   if (place && shownAbove.includes(place)) {
     return;
   }
@@ -448,7 +451,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       uiRequired: reportsEmpty || isUnanswered,
       asksAnswer,
       typeSelectorsAbove: optionTypeSelectorsAbove,
-      shownAbove: [...shownAbove, place],
+      shownAbove: [...shownAbove, showingField ? place : placeOfShown()],
       isEntry,
     });
     // An object renders its own properties beside the option, which are walked below
@@ -472,10 +475,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const ownProperties = resolvedSchema.properties ?? {};
   const optionProperties = option?.properties ?? {};
-  // An option walked as a node of its own is rendered by the option field of the field showing it, whose `ObjectField`
-  // renders the option's own properties with the uiSchema that field hands it, and the options it offers beside them
-  // with their own entries, so a property both declare is rendered twice, once with each
-  const ownPropertiesUiSchema = showingField && option ? uiSchema : branchUiSchema;
+  // An object's `ObjectField` renders its own properties with its own uiSchema, whether the object is a field or an
+  // option walked as a node of its own, and the option beside them with the option's entry, so a property both declare
+  // is rendered twice, once with each
+  const ownPropertiesUiSchema = option ? uiSchema : branchUiSchema;
   if (shownType === 'object' || optionShownType === 'object') {
     // Matches computeDefaults()'s own `isObject(rawFormData)` handling: when the schema resolves to an object here
     // but `formData` still holds a primitive (e.g. a leftover string from a previous oneOf/anyOf branch, or mismatched
@@ -483,6 +486,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // missing required child look present.
     const data = isObject(formData) ? formData : ({} as GenericObjectType);
     const childParentPresent = isObject(formData);
+    // The option's field hides the properties it declares where it is an Optional Data Control of its own
+    const optionFieldHidden = hidesControlled && isOptionControl();
     Object.entries(retrieved.properties ?? {}).forEach(([key, propertySchema]) => {
       if (typeof propertySchema === 'boolean') {
         return;
@@ -494,9 +499,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if ((!inOption || key in ownProperties) && shownType === 'object') {
         childUiSchemas.add(getByPath(ownPropertiesUiSchema, uiKey));
       }
-      // A property the option declares is the option's field's too, which an option offering options of its own walks,
-      // and which hides it where it is an Optional Data Control of its own
-      if (inOption && !nestsOptions && optionShownType === 'object' && !(hidesControlled && isOptionControl())) {
+      // A property the option declares is the option's field's too, which an option offering options of its own walks
+      if (inOption && !nestsOptions && optionShownType === 'object' && !optionFieldHidden) {
         childUiSchemas.add(getByPath(branchUiSchema, uiKey));
       }
       const childRequired = Boolean(retrieved.required?.includes(key));
