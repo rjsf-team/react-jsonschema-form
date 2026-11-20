@@ -1,15 +1,12 @@
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
-  getRenderedOptionUiSchema,
+  getInheritedOptionUiSchema,
   getSchemaType,
   getUiOptions,
   getUnionTypes,
-  getXxxOfOptions,
   hasWidget,
   isConstant,
-  uiBooleanOption,
   UI_OPTIONS_KEY,
-  withoutFieldOptions,
 } from '@rjsf/utils';
 
 import { getSelectSchemaInfo, optionsKeywordOf, withoutUiWidget } from './fieldWidgetUtils.ts';
@@ -78,9 +75,9 @@ function withImplementedWidget<T, S extends StrictRJSFSchema, F extends FormCont
 }
 
 /** Returns the uiSchema the `SchemaField` of an `anyOf`/`oneOf` option renders with, which `AnyOfField` renders it with
- * and `SchemaField` plans the field's label by: the field's own, without its title and description or a `ui:widget` the
- * option has no implementation of, for an option declaring none of its own, or else the option's, with the field's say over the extra keys the option takes
- * and over a `ui:required` the option leaves unset
+ * and `SchemaField` plans the field's label by: the one `getInheritedOptionUiSchema()` gives, which the `ui:required` walk
+ * reads too, and for an option declaring none of its own, without the field's title and description or a `ui:widget`
+ * the option has no implementation of
  *
  * @param schema - The schema of the field rendering the options
  * @param option - The option shown, with its own `$ref` resolved, if one is
@@ -102,24 +99,15 @@ export default function getOptionFieldUiSchema<
   renderedOption: S | null,
   registry: Registry<T, S, F>,
 ): UiSchema<T, S, F> | undefined {
-  if (uiSchema && optionUiSchema === uiSchema) {
-    const inherited = withoutFieldOptions<T, S, F>(uiSchema, uiSchema, optionsKeywordOf<S>(schema))!;
-    return withImplementedWidget<T, S, F>(withoutFieldText<T, S, F>(inherited), renderedOption, registry);
+  const inherited = getInheritedOptionUiSchema<T, S, F>(
+    schema,
+    option,
+    uiSchema,
+    optionUiSchema,
+    optionsKeywordOf<S>(schema),
+  );
+  if (!inherited || optionUiSchema !== uiSchema) {
+    return inherited;
   }
-  const rendered = option
-    ? getRenderedOptionUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema)
-    : optionUiSchema;
-  // An option leaving `ui:required` unset is required as its field asks, as the `ui:required` walk reads it, so the group
-  // of checkboxes it shows says so and turns down `[]` alike. The walk reads only the option shown, not the options
-  // that option renders in turn, so one rendering options of its own is handed nothing to pass further down
-  const fieldUiRequired = uiSchema ? uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) : undefined;
-  if (
-    fieldUiRequired === undefined ||
-    (rendered && getUiOptions<T, S, F>(rendered).required !== undefined) ||
-    (renderedOption && getXxxOfOptions<S>(renderedOption))
-  ) {
-    return rendered;
-  }
-  // A generic `UiSchema<T, S, F>` spread is a type the checker can't relate back to it
-  return { ...(rendered as UiSchema<T, S, F>), 'ui:required': fieldUiRequired };
+  return withImplementedWidget<T, S, F>(withoutFieldText<T, S, F>(inherited), renderedOption, registry);
 }

@@ -1045,6 +1045,18 @@ describe('getUiRequiredErrorSchema()', () => {
         ).toEqual(['.extra.a']);
       });
 
+      it('fires for a field of an option the option it shows offers in turn', () => {
+        expect(
+          errorsFor(
+            { anyOf: [{ anyOf: [object] }] },
+            { anyOf: [{ anyOf: [{ a: { 'ui:required': true } }] }] },
+            {
+              extra: null,
+            },
+          ),
+        ).toEqual(['.extra.a']);
+      });
+
       it('does not fire below an object declared inside it, which keeps its control', () => {
         expect(
           errorsFor(
@@ -1355,7 +1367,7 @@ describe('getUiRequiredErrorSchema()', () => {
         properties: { thing: { ...objectOption, anyOf: [{ type: 'object', properties: { b: { type: 'string' } } }] } },
       };
       const uiSchema: UiSchema = {
-        thing: { 'ui:required': true, anyOf: [{ 'ui:required': false, a: { 'ui:required': true } }] },
+        thing: { 'ui:required': true, a: { 'ui:required': true }, anyOf: [{ 'ui:required': false }] },
       };
       const errors = toErrorList(
         getUiRequiredErrorSchema(
@@ -1560,13 +1572,22 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(errorsFor(schema, field, { c: [] })).toEqual(missing);
     });
 
-    it("lets `[]` through on an option rendering options of its own, which the field's `ui:required` doesn't reach", () => {
+    it("reports `[]` on a multiple select an option renders, from the field's own `ui:required`", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { c: { oneOf: [colors, { type: 'string' }] } } };
+      expect(errorsFor(schema, { 'ui:required': true }, { c: [] })).toEqual(missing);
+    });
+
+    // #5894
+    it.each<[string, UiSchema]>([
+      ['the outer option falling back to the field', { 'ui:required': true }],
+      ['the outer option with an entry of its own', { 'ui:required': true, oneOf: [{}] }],
+      ['the outer option naming the widget', { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] }],
+    ])("reports `[]` on a group an option's own option renders, from the field's `ui:required`, %s", (_, field) => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: { c: { oneOf: [{ oneOf: [colors, { type: 'string' }] }, { type: 'number' }] } },
       };
-      const field: UiSchema = { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] };
-      expect(errorsFor(schema, field, { c: [] })).toEqual([]);
+      expect(errorsFor(schema, field, { c: [] })).toEqual(missing);
     });
 
     it('leaves `[]` to the validator where the option shown has a `minItems`', () => {
@@ -1774,6 +1795,553 @@ describe('getUiRequiredErrorSchema()', () => {
         fieldState,
       );
       expect(toErrorList(errorSchema).map(({ stack }) => stack)).toEqual([".c must have required property 'c'"]);
+    });
+  });
+
+  describe('the options an option offers in turn (#5894)', () => {
+    const shown: RJSFSchema = { type: 'object', properties: { x: { type: 'string' }, w: { type: 'string' } } };
+    const other: RJSFSchema = { type: 'object', properties: { y: { type: 'string' } } };
+    const nested: RJSFSchema = { anyOf: [{ type: 'number' }, { anyOf: [shown, other] }] };
+    const wReq: UiSchema = { w: { 'ui:required': true } };
+    const missingW = [".w must have required property 'w'"];
+    // The test validator finds every option valid, so the closest match is the first; the form's fieldState shows the one
+    // that mentions the property named
+    const showing = (name: string): FormFieldState => ({
+      selectedOption: (_fieldPath, options) =>
+        options.findIndex((option) => JSON.stringify(option).includes(JSON.stringify(name))),
+      isExpanded: () => false,
+    });
+    const errorsFor = (
+      schema: RJSFSchema,
+      uiSchema: UiSchema,
+      formData: unknown,
+      globalUiOptions?: GlobalUISchemaOptions,
+      fieldState?: FormFieldState,
+    ) =>
+      toErrorList(
+        getUiRequiredErrorSchema(
+          { validator: testValidator },
+          schema,
+          uiSchema,
+          formData,
+          undefined,
+          globalUiOptions,
+          undefined,
+          fieldState,
+        ),
+      ).map(({ stack }) => stack);
+
+    it.each<[string, RJSFSchema, UiSchema, unknown, string?]>([
+      ['1: a single level', { anyOf: [shown, other] }, { anyOf: [wReq] }, { x: 'a' }, 'w'],
+      ["2: the nested option's own entry", nested, { anyOf: [{}, { anyOf: [wReq] }] }, { x: 'a' }, 'w'],
+      ["3: the field's uiSchema both levels fall back to", nested, wReq, { x: 'a' }, 'w'],
+      [
+        "3b: the field's uiSchema beside an outer list with no entry for the option",
+        nested,
+        { anyOf: [{}], ...wReq },
+        { x: 'a' },
+        'w',
+      ],
+      [
+        '5: a `oneOf` in a `oneOf`',
+        {
+          oneOf: [
+            { type: 'number' },
+            {
+              oneOf: [
+                { ...shown, required: ['x'] },
+                { ...other, required: ['y'] },
+              ],
+            },
+          ],
+        },
+        { oneOf: [{}, { oneOf: [wReq] }] },
+        { x: 'a' },
+        'w',
+      ],
+      [
+        '6: an `anyOf` in a `oneOf`',
+        { oneOf: [{ type: 'number' }, { anyOf: [shown, other] }] },
+        { oneOf: [{}, { anyOf: [wReq] }] },
+        { x: 'a' },
+        'w',
+      ],
+      [
+        '7: an inner `oneOf` picked by its discriminator, with no fieldState',
+        {
+          anyOf: [
+            {
+              type: 'object',
+              discriminator: { propertyName: 'kind' },
+              oneOf: [
+                { properties: { kind: { const: 'o' }, y: { type: 'string' } } },
+                { properties: { kind: { const: 's' }, w: { type: 'string' } } },
+              ],
+            },
+            { type: 'number' },
+          ],
+        },
+        { anyOf: [{ oneOf: [{}, wReq] }] },
+        { kind: 's' },
+        undefined,
+      ],
+      [
+        '8: three levels, each with an entry of its own',
+        { anyOf: [{ type: 'number' }, { anyOf: [{ type: 'boolean' }, nested] }] },
+        { anyOf: [{}, { anyOf: [{}, { anyOf: [{}, { anyOf: [wReq] }] }] }] },
+        { x: 'a' },
+        'w',
+      ],
+      [
+        '8b: three levels, falling back to the field',
+        { anyOf: [{ type: 'number' }, { anyOf: [{ type: 'boolean' }, nested] }] },
+        wReq,
+        { x: 'a' },
+        'w',
+      ],
+      [
+        '9b: an object option with a property of its own beside its options',
+        {
+          anyOf: [{ type: 'number' }, { type: 'object', properties: { z: { type: 'string' } }, anyOf: [shown, other] }],
+        },
+        { anyOf: [{}, { anyOf: [wReq] }] },
+        { x: 'a' },
+        'w',
+      ],
+      [
+        '9c: an object field with a property of its own, whose option offers options',
+        {
+          type: 'object',
+          properties: { z: { type: 'string' } },
+          anyOf: [{ anyOf: [shown, other] }, { properties: { q: { type: 'number' } }, required: ['q'] }],
+        },
+        { anyOf: [{ anyOf: [wReq] }] },
+        { x: 'a' },
+        'w',
+      ],
+      [
+        '9d: an object field with a property of its own, whose object option has one too',
+        {
+          type: 'object',
+          properties: { z: { type: 'string' } },
+          anyOf: [
+            { type: 'object', properties: { z2: { type: 'string' } }, anyOf: [shown, other] },
+            { properties: { q: { type: 'number' } }, required: ['q'] },
+          ],
+        },
+        { anyOf: [{ anyOf: [wReq] }] },
+        { x: 'a' },
+        'w',
+      ],
+      [
+        "10: an option whose own `ui:required: false` leaves its field's fields as they are",
+        nested,
+        { anyOf: [{}, { 'ui:required': false, anyOf: [wReq] }] },
+        { x: 'a' },
+        'w',
+      ],
+      [
+        '12a: the nested option listed first, with no data',
+        { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] },
+        { anyOf: [{ anyOf: [wReq] }] },
+        undefined,
+      ],
+      [
+        '12b: the nested option listed first, with `{}`',
+        { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] },
+        { anyOf: [{ anyOf: [wReq] }] },
+        {},
+      ],
+    ])('reports an empty field %s', (_, schema, uiSchema, formData, show) => {
+      expect(errorsFor(schema, uiSchema, formData, undefined, show === undefined ? undefined : showing(show))).toEqual(
+        missingW,
+      );
+    });
+
+    it.each<[string, RJSFSchema, UiSchema, unknown, string]>([
+      [
+        "4: an outer list entry for another option, which the shown option's fallback leaves behind",
+        nested,
+        { anyOf: [wReq] },
+        { x: 'a' },
+        'w',
+      ],
+      ['11: the other inner option shown', nested, { anyOf: [{}, { anyOf: [wReq] }] }, { y: 'b' }, 'y'],
+      ['11b: the outer number option shown', nested, { anyOf: [{}, { anyOf: [wReq] }] }, 3, 'number'],
+    ])('lets the field through with %s', (_, schema, uiSchema, formData, show) => {
+      expect(errorsFor(schema, uiSchema, formData, undefined, showing(show))).toEqual([]);
+    });
+
+    it("11d: follows the form's fieldState through each level, keyed by its option list", () => {
+      const asked: [string, number][] = [];
+      const fieldState: FormFieldState = {
+        selectedOption: (fieldPath, options) => {
+          asked.push([fieldPath, options.length]);
+          // The outer list's first option is the number, the inner list's is `shown`
+          return options[0].type === 'number' ? 1 : 0;
+        },
+        isExpanded: () => false,
+      };
+      expect(errorsFor(nested, { anyOf: [{}, { anyOf: [wReq] }] }, { y: 'b' }, undefined, fieldState)).toEqual(
+        missingW,
+      );
+      expect(asked).toEqual([
+        ['', 2],
+        ['', 2],
+      ]);
+    });
+
+    describe('under Optional Data Controls', () => {
+      const p = (field: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { p: field } });
+      const nestedFirst: RJSFSchema = { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] };
+      const odc: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+      const missingPW = [".p.w must have required property 'w'"];
+
+      it('13b: reports an empty field once the user has added the object', () => {
+        expect(errorsFor(p(nestedFirst), { p: { anyOf: [{ anyOf: [wReq] }] } }, { p: { x: 'a' } }, odc)).toEqual(
+          missingPW,
+        );
+      });
+
+      it('13c: lets an object the user has not added through', () => {
+        expect(errorsFor(p(nestedFirst), { p: { anyOf: [{ anyOf: [wReq] }] } }, {}, odc)).toEqual([]);
+      });
+
+      it('13d: reports an empty field with the controls off', () => {
+        expect(errorsFor(p(nestedFirst), { p: { anyOf: [{ anyOf: [wReq] }] } }, {})).toEqual(missingPW);
+      });
+
+      it('13e: reports an empty field under an option whose `ui:required` keeps its fields on screen', () => {
+        expect(errorsFor(p(nestedFirst), { p: { anyOf: [{ 'ui:required': true, anyOf: [wReq] }] } }, {}, odc)).toEqual([
+          ".p must have required property 'p'",
+          ...missingPW,
+        ]);
+      });
+
+      it("lets through the properties of an option an object shows beside its own as an Optional Data Control, by the option's own `ui:required: false`", () => {
+        const wHidden: UiSchema = { 'ui:required': false, ...wReq };
+        const beside: RJSFSchema = { type: 'object', properties: { n: { type: 'string' } }, anyOf: [shown, other] };
+        expect(errorsFor(p(beside), { p: { 'ui:required': true, anyOf: [wHidden] } }, {}, odc)).toEqual([
+          ".p must have required property 'p'",
+        ]);
+        const typed: RJSFSchema = { anyOf: [{ type: 'object', anyOf: [shown, other] }, { type: 'number' }] };
+        expect(errorsFor(p(typed), { p: { anyOf: [{ 'ui:required': true, anyOf: [wHidden] }] } }, {}, odc)).toEqual([
+          ".p must have required property 'p'",
+        ]);
+        expect(errorsFor(p(typed), { p: { anyOf: [{ 'ui:required': true, anyOf: [wHidden] }] } }, {})).toEqual([
+          ".p must have required property 'p'",
+          ...missingPW,
+        ]);
+      });
+    });
+
+    it("gates a nested option's properties by its own type selector, numbered below the ones above it at the path", () => {
+      const depths: number[] = [];
+      const errors = toErrorList(
+        getUiRequiredErrorSchema<GenericObjectType>(
+          { validator: testValidator },
+          {
+            type: 'object',
+            properties: {
+              p: {
+                type: ['object', 'number'],
+                properties: { a: { type: 'string' } },
+                anyOf: [
+                  {
+                    type: ['object', 'number'],
+                    properties: { q: { type: 'string' } },
+                    anyOf: [{ type: ['object', 'number'], properties: { r: { type: 'string' } } }, { minimum: 2 }],
+                  },
+                  { minimum: 1 },
+                ],
+              },
+            },
+          },
+          { p: { anyOf: [{ q: { 'ui:required': true }, r: { 'ui:required': true } }] } },
+          { p: {} },
+          undefined,
+          undefined,
+          undefined,
+          {
+            selectedOption: () => 0,
+            isExpanded: () => false,
+            fallbackType: (_fieldPath, _schema, _uiSchema, _formData, depth) => {
+              depths.push(depth);
+              return depth === 3 ? 'number' : 'object';
+            },
+          },
+        ),
+      ).map((error) => error.property);
+
+      expect(errors).toEqual(['.p.q']);
+      expect(depths).toContain(3);
+    });
+
+    it("14: reports an empty field whose nested option is a select over whole values, from the field's `ui:required`", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: { anyOf: [{ anyOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }, { type: 'number' }] },
+        },
+      };
+      expect(errorsFor(schema, { p: { 'ui:required': true } }, {})).toEqual([".p must have required property 'p'"]);
+    });
+
+    it("reports an empty select of constants an option shows from the option's `ui:required`, which no constant's entry overrides", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            anyOf: [
+              {
+                type: 'string',
+                oneOf: [
+                  { const: 'a', title: 'A' },
+                  { const: 'b', title: 'B' },
+                ],
+              },
+              { type: 'number' },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true, oneOf: [{ 'ui:required': false }] }] } };
+      expect(errorsFor(schema, uiSchema, {})).toEqual([".p must have required property 'p'"]);
+    });
+
+    it('reports an empty select of constants with no `type` an option shows, which `SchemaField` infers the type of', () => {
+      const select: RJSFSchema = { oneOf: [{ const: 'a' }, { const: 'b' }] };
+      const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true }] } };
+      const shown = (option: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        properties: { p: { anyOf: [option, { type: 'number' }] } },
+      });
+      expect(errorsFor(shown(select), uiSchema, {})).toEqual([".p must have required property 'p'"]);
+      expect(errorsFor(shown({ anyOf: [select, { type: 'boolean' }] }), uiSchema, {})).toEqual([
+        ".p must have required property 'p'",
+      ]);
+      expect(errorsFor(shown({ type: 'null', oneOf: [{ const: null }] }), uiSchema, {})).toEqual([]);
+    });
+
+    it("reports an empty property an option declares beside options of its own from the option's entry, whatever the entry of the option shown there", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            anyOf: [
+              {
+                type: 'object',
+                properties: { z: { type: 'string' } },
+                anyOf: [
+                  { type: 'object', properties: { w: { type: 'string' } } },
+                  { type: 'object', properties: { y: { type: 'string' } } },
+                ],
+              },
+              { type: 'number' },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { p: { anyOf: [{ z: { 'ui:required': true }, anyOf: [{ 'ui:title': 'W' }] }] } };
+      expect(errorsFor(schema, uiSchema, { p: {} }, undefined, showing('w'))).toEqual([
+        ".p.z must have required property 'z'",
+      ]);
+    });
+
+    it('reports an empty property an option declares beside options of its own from the entry of the option shown there where that option declares it too', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            anyOf: [
+              {
+                type: 'object',
+                properties: { z: { type: 'string' } },
+                anyOf: [
+                  { type: 'object', properties: { z: { type: 'string' }, w: { type: 'string' } } },
+                  { type: 'object', properties: { y: { type: 'string' } } },
+                ],
+              },
+              { type: 'number' },
+            ],
+          },
+        },
+      };
+      const missing = [".p.z must have required property 'z'"];
+      const byShown: UiSchema = { p: { anyOf: [{ anyOf: [{ z: { 'ui:required': true } }] }] } };
+      expect(errorsFor(schema, byShown, { p: {} }, undefined, showing('w'))).toEqual(missing);
+      const byOwn: UiSchema = { p: { anyOf: [{ z: { 'ui:required': true }, anyOf: [{ 'ui:title': 'W' }] }] } };
+      expect(errorsFor(schema, byOwn, { p: {} }, undefined, showing('w'))).toEqual(missing);
+      expect(errorsFor(schema, byShown, { p: {} }, undefined, showing('y'))).toEqual([]);
+    });
+
+    it("reports an empty property both an option offering options of its own and the option shown there declare, from the shown option's entry, while the option's own type selector is on another type", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            type: ['object', 'number'],
+            anyOf: [
+              {
+                type: ['object', 'number'],
+                properties: { q: { type: 'string' } },
+                anyOf: [{ type: ['object', 'number'], properties: { q: { type: 'string' } } }, { minimum: 2 }],
+              },
+              { minimum: 1 },
+            ],
+          },
+        },
+      };
+      const onTypes = (...types: string[]): FormFieldState => ({
+        selectedOption: () => 0,
+        isExpanded: () => false,
+        fallbackType: (_fieldPath, _schema, _uiSchema, _formData, depth) => types[depth - 1],
+      });
+      const uiSchema: UiSchema = { p: { anyOf: [{ anyOf: [{ q: { 'ui:required': true } }] }] } };
+      const missing = [".p.q must have required property 'q'"];
+      expect(errorsFor(schema, uiSchema, { p: {} }, undefined, onTypes('object', 'number', 'object'))).toEqual(missing);
+      expect(errorsFor(schema, uiSchema, { p: {} }, undefined, onTypes('object', 'object', 'number'))).toEqual([]);
+    });
+
+    it("reports an empty field from the `ui:required` of an option offering options of its own, which the option shown there doesn't override", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: { anyOf: [{ type: 'string', anyOf: [{ minLength: 1 }, { maxLength: 3 }] }, { type: 'number' }] },
+        },
+      };
+      const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } };
+      expect(errorsFor(schema, uiSchema, {})).toEqual([".p must have required property 'p'"]);
+    });
+
+    it('reports an empty field from the `ui:required` of an option with no `type` offering options of its own, by the option shown there', () => {
+      const typeless: RJSFSchema = {
+        anyOf: [
+          { type: 'string', minLength: 1 },
+          { type: 'string', maxLength: 3 },
+        ],
+      };
+      const schema: RJSFSchema = { type: 'object', properties: { p: { anyOf: [typeless, { type: 'number' }] } } };
+      const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } };
+      expect(errorsFor(schema, uiSchema, {})).toEqual([".p must have required property 'p'"]);
+      const inner: UiSchema = {
+        p: { anyOf: [{ anyOf: [{ anyOf: [{ 'ui:required': false }], 'ui:required': true }] }] },
+      };
+      const deeper: RJSFSchema = {
+        type: 'object',
+        properties: { p: { anyOf: [{ anyOf: [typeless, { type: 'null' }] }, { type: 'number' }] } },
+      };
+      // Only the option the field shows marks its label, so one nested deeper asks nothing of a field shown unmarked
+      expect(errorsFor(deeper, inner, {})).toEqual([]);
+    });
+
+    it('reports an empty field marked required beneath Optional Data Controls an option offering options of its own leaves to the option shown there', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] } },
+      };
+      const odc: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+      const required: UiSchema = { p: { anyOf: [{ anyOf: [{ 'ui:required': true, ...wReq }] }] } };
+      expect(errorsFor(schema, required, {}, odc)).toEqual(missingW.map((error) => `.p${error}`));
+      expect(errorsFor(schema, { p: { anyOf: [{ anyOf: [wReq] }] } }, {}, odc)).toEqual([]);
+    });
+
+    it("reports no empty field from the `ui:required` of an option shown below the one that marks the field's label", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] } },
+      };
+      expect(errorsFor(schema, { p: { anyOf: [{ anyOf: [{ 'ui:required': true }] }] } }, {})).toEqual([]);
+      expect(
+        errorsFor(schema, { p: { anyOf: [{ 'ui:required': false, anyOf: [{ 'ui:required': true }] }] } }, {}),
+      ).toEqual([]);
+      expect(
+        errorsFor(schema, { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } }, {}),
+      ).toEqual([".p must have required property 'p'"]);
+    });
+
+    it('reports an empty field whose label an option offering options of its own marks, where the option shown there is an Optional Data Control', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] } },
+      };
+      const odc: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+      const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } };
+      expect(errorsFor(schema, uiSchema, {}, odc)).toEqual([".p must have required property 'p'"]);
+      // The validator reports a property its parent's schema requires itself, and a `null` is a value
+      expect(errorsFor({ ...schema, required: ['p'] }, uiSchema, {}, odc)).toEqual([]);
+      expect(errorsFor(schema, uiSchema, { p: null }, odc)).toEqual([]);
+    });
+
+    it('walks an option list offered again below itself at the same path once, as the form shows the same option there', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          X: { anyOf: [{ $ref: '#/definitions/Y' }, { type: 'number' }] },
+          Y: { anyOf: [{ $ref: '#/definitions/X' }, { type: 'string' }] },
+          Z: { anyOf: [{ anyOf: [{ $ref: '#/definitions/Z' }, { type: 'string' }] }, { type: 'number' }] },
+        },
+        type: 'object',
+        properties: { p: { $ref: '#/definitions/X' }, q: { $ref: '#/definitions/Z' } },
+      };
+      const uiSchema: UiSchema = { p: { 'ui:required': true }, q: { 'ui:required': true } };
+      expect(errorsFor(schema, uiSchema, {})).toEqual([
+        ".p must have required property 'p'",
+        ".q must have required property 'q'",
+      ]);
+    });
+
+    it('walks a nested option list whose first option is the same schema object as the list above it', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { q: { anyOf: [shown, { anyOf: [shown, other] }] } },
+      };
+      const second: FormFieldState = { selectedOption: () => 1, isExpanded: () => false };
+      const uiSchema: UiSchema = { q: { anyOf: [{}, { anyOf: [{}, { y: { 'ui:required': true } }] }] } };
+      expect(errorsFor(schema, uiSchema, { q: {} }, undefined, second)).toEqual([
+        ".q.y must have required property 'y'",
+      ]);
+    });
+
+    it('reports nothing beneath the options of an option a `ui:field` renders in their place', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] } },
+      };
+      const replaced: UiSchema = { 'ui:field': 'MyField', 'ui:fieldReplacesAnyOrOneOf': true, anyOf: [wReq] };
+      expect(errorsFor(schema, { p: { anyOf: [replaced] } }, { p: { x: 'a' } })).toEqual([]);
+      expect(
+        errorsFor(schema, { p: { anyOf: [{ ...replaced, 'ui:fieldReplacesAnyOrOneOf': false }] } }, { p: { x: 'a' } }),
+      ).toEqual([".p.w must have required property 'w'"]);
+    });
+  });
+
+  describe("an object's own properties beside its options", () => {
+    const zBesideOption = (option: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { z: { type: 'string' } },
+      anyOf: [option],
+    });
+    const qOption: RJSFSchema = { properties: { q: { type: 'string' } } };
+    const zAndQOption: RJSFSchema = { properties: { z: { type: 'string' }, q: { type: 'string' } } };
+    const missingZ = [".z must have required property 'z'"];
+    const errorsFor = (schema: RJSFSchema, uiSchema: UiSchema) =>
+      toErrorList(getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {})).map(
+        ({ stack }) => stack,
+      );
+
+    it("reports an own property from the object's uiSchema, which its ObjectField renders it with, beside an option with an entry of its own", () => {
+      expect(errorsFor(zBesideOption(qOption), { z: { 'ui:required': true }, anyOf: [{ q: {} }] })).toEqual(missingZ);
+    });
+
+    it("doesn't report an own property only the option's entry marks", () => {
+      expect(errorsFor(zBesideOption(qOption), { anyOf: [{ z: { 'ui:required': true } }] })).toEqual([]);
+    });
+
+    it('reports a property the object and its option both declare from either entry, as each field renders it', () => {
+      expect(errorsFor(zBesideOption(zAndQOption), { z: { 'ui:required': true }, anyOf: [{ q: {} }] })).toEqual(
+        missingZ,
+      );
+      expect(errorsFor(zBesideOption(zAndQOption), { anyOf: [{ z: { 'ui:required': true } }] })).toEqual(missingZ);
     });
   });
 });

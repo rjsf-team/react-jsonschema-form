@@ -295,8 +295,8 @@ export function requiredCueTests(
         expect(countMarkers(container)).toBe(1);
       });
 
-      // The `ui:required` check reads the option shown, not the options it renders in turn, so `[]` passes there
-      it("says nothing on a group a nested option shows under the field's own `ui:required`", () => {
+      // The field's `ui:required` reaches the options an option renders in turn, which turn `[]` down too (#5894)
+      it("says so on a group a nested option shows under the field's own `ui:required`", () => {
         render(
           <Form
             schema={{
@@ -321,7 +321,7 @@ export function requiredCueTests(
             validator={validator}
           />,
         );
-        expect(screen.getByRole('group', { name: 'Colors' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Colors required' })).toBeInTheDocument();
       });
     });
 
