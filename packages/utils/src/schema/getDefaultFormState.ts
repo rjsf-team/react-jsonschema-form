@@ -89,6 +89,7 @@ import buildPlan, {
   RESOLVES_NO_CONDITIONS,
   checkCondition,
   decidedWithoutValue,
+  isMarked,
   mergeAllOf,
   asTarget,
   cachedPolicy,
@@ -491,7 +492,7 @@ function heldNullContext<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   holds: boolean,
 ): SchemaContext<S, F> {
-  if ((Reflect.get(context, HOLDS_NULL_DEFAULT) === true) === holds) {
+  if (isMarked(context, HOLDS_NULL_DEFAULT) === holds) {
     return context;
   }
   const marked =
@@ -1481,14 +1482,14 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
           (held !== undefined || holdsPrimitive) && decidedWithoutValue(written, noValue?.types) === undefined,
       ),
   );
-  const ownHeld = readsValue
-    ? heldValue<T, S, F>(unmarked, props, () =>
-        held === undefined && first.readers.every(({ checked }) => checked.every((one) => one.satisfied === undefined))
-          ? first.folded
-          : startValue<T, S, F>(unresolvedContext<S, F>(unmarked), field, props),
-      )
-    : { value: held, nullDefault };
-  if (!Object.is(ownHeld.value, held) || ownHeld.nullDefault !== nullDefault) {
+  const ownHeld =
+    readsValue &&
+    heldValue<T, S, F>(unmarked, props, () =>
+      held === undefined && first.readers.every(({ checked }) => checked.every((one) => one.satisfied === undefined))
+        ? first.folded
+        : startValue<T, S, F>(unresolvedContext<S, F>(unmarked), field, props),
+    );
+  if (ownHeld && (!Object.is(ownHeld.value, held) || ownHeld.nullDefault !== nullDefault)) {
     ({ value: held, nullDefault } = ownHeld);
     const marked = heldNullContext<S, F>(unmarked, nullDefault);
     if (marked !== context) {
@@ -3893,7 +3894,7 @@ function resolvesConditions<S extends StrictRJSFSchema, F extends FormContextTyp
   data: unknown,
 ): boolean {
   return (
-    !(RESOLVES_NO_CONDITIONS in context) &&
+    !isMarked(context, RESOLVES_NO_CONDITIONS) &&
     (data !== undefined || context.defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults')
   );
 }

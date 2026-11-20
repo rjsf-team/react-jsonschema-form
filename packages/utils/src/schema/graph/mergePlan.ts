@@ -253,6 +253,11 @@ export const HOLDS_NULL_DEFAULT = Symbol('holdsNullDefault');
  */
 export const RESOLVES_NO_CONDITIONS = Symbol('resolvesNoConditions');
 
+/** Whether `context` carries `mark`, see `HOLDS_NULL_DEFAULT` and `RESOLVES_NO_CONDITIONS` */
+export function isMarked(context: object, mark: symbol): boolean {
+  return Reflect.get(context, mark) === true;
+}
+
 /** How the conditions checked against dependency data a fill of the defaults copied for itself are decided, by the
  * copy: each the fill fixed, under its graph and site, as fixed, and each other, under the validator too, as the
  * validator first checked it
@@ -313,7 +318,7 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
   { key, site, condition, noValue, written = condition }: Omit<CheckedCondition<S>, 'satisfied'>,
   depData: unknown,
 ): Satisfied {
-  if (Reflect.get(context, RESOLVES_NO_CONDITIONS) === true) {
+  if (isMarked(context, RESOLVES_NO_CONDITIONS)) {
     return undefined;
   }
   // An `if` no value can change the answer of needs no validator, whatever the data
@@ -332,7 +337,7 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
   const keys = [context.validator, graph, key];
   // A `null` default the field holds is checked as itself, where `null` data is checked as `{}`. Any other value is
   // checked as itself either way
-  const asItself = depData === null && Reflect.get(context, HOLDS_NULL_DEFAULT) === true;
+  const asItself = depData === null && isMarked(context, HOLDS_NULL_DEFAULT);
   const memoKey = [depData, asItself];
   const memoized = conditionMemo.peekLatest(keys, memoKey);
   if (memoized !== undefined) {
@@ -347,6 +352,11 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
 
 /** The JSON Schema `type`s, which a field naming none allows */
 const ALL_TYPES = ['array', 'boolean', 'null', 'number', 'object', 'string'];
+
+/** Whether `types` allow `type`: an `integer` is a `number` */
+function allowsType(types: readonly unknown[], type: string): boolean {
+  return types.includes(type) || (type === 'integer' && types.includes('number'));
+}
 
 /** How `condition` decides for a field holding no value whose `type`s are `types` (any for `undefined`): only where
  * every value the field may hold gets the same answer. An `if` of nothing but annotations (`true` and `{}` among them)
@@ -381,8 +391,8 @@ export function decidedWithoutValue(condition: unknown, types: readonly string[]
     return undefined;
   }
   const ifTypes: unknown[] = Array.isArray(ifType) ? ifType : [ifType];
-  // An `integer` is a `number`, and a `number` field may hold integers
-  const accepts = (type: string) => ifTypes.includes(type) || (type === 'integer' && ifTypes.includes('number'));
+  // A `number` field may hold integers
+  const accepts = (type: string) => allowsType(ifTypes, type);
   const overlaps = (type: string) => accepts(type) || (type === 'number' && ifTypes.includes('integer'));
   const allowed = types ?? ALL_TYPES;
   if (allowed.every(accepts)) {
@@ -616,7 +626,7 @@ function declaredTypes<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   ids: readonly (NodeId | undefined)[],
   declared: DeclaredTypes,
-  seen: Set<NodeId>,
+  seen = new Set<NodeId>(),
 ): DeclaredTypes {
   return ids.reduce<DeclaredTypes>((soFar, id) => {
     const node = id === undefined || seen.has(id) ? undefined : graph.node(id);
@@ -629,16 +639,14 @@ function declaredTypes<S extends StrictRJSFSchema>(
     let own: DeclaredTypes;
     if (typeof type === 'string' || Array.isArray(type)) {
       const named: readonly string[] = Array.isArray(type) ? type : [type];
-      // An `integer` is a `number`, so either narrows the other to `integer`
-      const allows = (types: readonly string[], entry: string) =>
-        types.includes(entry) || (entry === 'integer' && types.includes('number'));
+      // Either of `integer` and `number` narrows the other to `integer`
       const prior = soFar.types;
       const types =
         prior === undefined
           ? named
           : [
-              ...prior.filter((entry) => allows(named, entry)),
-              ...named.filter((entry) => !prior.includes(entry) && allows(prior, entry)),
+              ...prior.filter((entry) => allowsType(named, entry)),
+              ...named.filter((entry) => !prior.includes(entry) && allowsType(prior, entry)),
             ];
       own = { ...soFar, types };
     } else {
@@ -650,21 +658,19 @@ function declaredTypes<S extends StrictRJSFSchema>(
   }, declared);
 }
 
-/** See `CheckedCondition.holdsPrimitive` */
-function holdsPrimitive(declared: DeclaredTypes): boolean {
-  return declared.types === undefined
-    ? !declared.inferred
-    : declared.types.some((type) => type !== 'object' && type !== 'array');
-}
+/** What a field's `type`s say of the value it holds, which each `if` it checks is told, see `CheckedCondition` */
+type ValueTypes = Pick<CheckedCondition, 'noValue' | 'holdsPrimitive'>;
 
-/** The field `NoValue` describes, of the `type`s `declared`, or `undefined` for one the fill reads as an object or an
- * array, as `getSchemaType()` reads a field naming no `type`
+/** For a field of the `type`s `declared`: `noValue`, the field `NoValue` describes, or `undefined` for one the fill
+ * reads as an object or an array, as `getSchemaType()` reads a field naming no `type`, and `holdsPrimitive`, see
+ * `CheckedCondition.holdsPrimitive`
  */
-function noValueOf({ types, inferred }: DeclaredTypes): NoValue | undefined {
-  if (types === undefined) {
-    return inferred ? undefined : { types };
-  }
-  return types.some((type) => type === 'object' || type === 'array') ? undefined : { types };
+function noValueOf({ types, inferred }: DeclaredTypes): ValueTypes {
+  const container = (type: string) => type === 'object' || type === 'array';
+  return {
+    noValue: (types ? types.some(container) : inferred) ? undefined : { types },
+    holdsPrimitive: types ? !types.every(container) : !inferred,
+  };
 }
 
 /** Returns the schema holding each of `keywords` as the node providing it holds it */
@@ -870,13 +876,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private readsData = false;
   /** What the seeds declare of the field's `type`, see `DeclaredTypes` */
   private seedTypes: DeclaredTypes = { types: undefined, inferred: false };
-  /** Whether the field holds no value while it has no data, see `NoValue`, with the selected option being expanded
+  /** What the field's `type`s say of the value it holds, see `ValueTypes`, with the selected option being expanded
    * read as part of it: an option's `type` counts only for the `if`s the option brings, since the field's own are
    * checked whichever option it shows
    */
-  private noValue: NoValue | undefined;
-  /** See `CheckedCondition.holdsPrimitive` */
-  private holdsPrimitive = false;
+  private valueTypes: ValueTypes = { holdsPrimitive: false };
   /** How many `then`, `else` and `dependencies` branches are being expanded: a branch has its `allOf` merged whatever
    * the policy, as `retrieveSchema()` retrieves a branch whole before merging it
    */
@@ -912,10 +916,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       this.graph,
       seeds.map(({ node }) => node),
       { types: undefined, inferred: false },
-      new Set(),
     );
-    this.noValue = noValueOf(this.seedTypes);
-    this.holdsPrimitive = holdsPrimitive(this.seedTypes);
+    this.valueTypes = noValueOf(this.seedTypes);
     const expanded = seeds.flatMap((seed) => {
       const part = this.expand(seed.node, seed.refPath, 'seed');
       if (part === undefined) {
@@ -1002,9 +1004,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     const keywords = this.flatten(asTarget(this.graph, node), refPath);
     if (edge === 'option') {
-      const types = declaredTypes(this.graph, [id], this.seedTypes, new Set());
-      this.noValue = noValueOf(types);
-      this.holdsPrimitive = holdsPrimitive(types);
+      this.valueTypes = noValueOf(declaredTypes(this.graph, [id], this.seedTypes));
     }
     const schema = keywordSchema(node.raw, keywords);
     const ref: unknown = Reflect.get(node.raw, REF_KEY);
@@ -1090,7 +1090,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   private holds(key: string, condition: S, site = key, written?: unknown): Satisfied {
     this.readsData = true;
-    const checked = { key, site, condition, noValue: this.noValue, holdsPrimitive: this.holdsPrimitive, written };
+    const checked = { key, site, condition, ...this.valueTypes, written };
     const satisfied = checkCondition(this.context, this.graph, checked, this.depData);
     this.checked.push({ ...checked, satisfied });
     return satisfied;
@@ -1291,12 +1291,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   private expandOption(id: NodeId, refPath: RefPath): Part<S> | undefined {
     const { optionPolicy } = this.policy;
-    const outer = {
-      mergeAllOf: this.mergeAllOf,
-      conditions: this.conditions,
-      noValue: this.noValue,
-      holdsPrimitive: this.holdsPrimitive,
-    };
+    const outer = { mergeAllOf: this.mergeAllOf, conditions: this.conditions, valueTypes: this.valueTypes };
     if (optionPolicy !== undefined) {
       // The option is merged into the field, so an `if` of its own counts as the field's
       this.mergeAllOf =
@@ -1378,9 +1373,9 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     resolved.dependencyOptionsOnly,
     resolved.optionPolicy?.allOf,
     resolved.optionPolicy?.conditions,
-    Reflect.get(context, RESOLVES_NO_CONDITIONS) === true,
+    isMarked(context, RESOLVES_NO_CONDITIONS),
   ];
-  const dataKeys = [data, depData, depData === null && Reflect.get(context, HOLDS_NULL_DEFAULT) === true];
+  const dataKeys = [data, depData, depData === null && isMarked(context, HOLDS_NULL_DEFAULT)];
   const memoized = plans.peekAny(keys, dataKeys);
   if (isPlanOf(memoized, graph)) {
     return memoized;
