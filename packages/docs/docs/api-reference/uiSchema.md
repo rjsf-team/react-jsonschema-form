@@ -1079,7 +1079,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-## `ui:duplicateKeySuffixSeparator` option
+## `duplicateKeySuffixSeparator` option
 
 When using `additionalProperties`, key collision is prevented by appending a unique integer suffix to the duplicate key.
 For example, when you add a key named `myKey` to a form where `myKey` is already defined, then your new key will become `myKey-1`.
