@@ -52,7 +52,7 @@ import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerS
 import { emptySchema } from './graph/mergePlan.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
-import retrieveSchema, { expandRefCycle, withOptionExtraKeys } from './retrieveSchema.ts';
+import retrieveSchema, { expandRefCycle, getValidationTarget, withOptionExtraKeys } from './retrieveSchema.ts';
 
 /** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node, and, for an object node, the option
  * itself. An object node's branch merges the whole node into the option, since the walk visits the properties the
@@ -261,13 +261,15 @@ function rendersArrayWidget<T, S extends StrictRJSFSchema, F extends FormContext
 }
 
 /** The field an option walked as a node of its own is shown by, which has reported an empty value already where its own
- * `ui:required` asks for one, asks for an answer where the option it shows marks its label required, and numbers the
- * option's type selectors below the ones it renders at the path
+ * `ui:required` asks for one, asks for an answer where the option it shows marks its label required, numbers the
+ * option's type selectors below the ones it renders at the path, and lists the places of the option lists offered above
+ * the option at the path
  */
 interface ShowingField {
   uiRequired: boolean;
   asksAnswer: boolean;
   typeSelectorsAbove: number;
+  listsAbove: (string | undefined)[];
 }
 
 /** Whether the field for `schema` renders the options it offers in turn as a field of its own: not a select of
@@ -319,13 +321,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // An option's `ui:required` is its field's, unless it sets its own, so the field it is shown by reports the empty value
   const reportsEmpty = showingField ? showingField.uiRequired : fieldUiRequired === true;
   const typeSelectorsAbove = showingField?.typeSelectorsAbove ?? 0;
+  const reportMissing = () => builder.addErrors(`must have required property '${path[path.length - 1]}'`, path);
   if (!showingField && reportsEmpty && path.length > 0 && formData === undefined && !(required && parentPresent)) {
     // Worded exactly as AJV words its own `required` failures, so a ui:required error is indistinguishable from a
     // schema-required one in the error list and in any `ui:help`/ErrorList rendering built around that text. Skipped
     // only when AJV will raise this exact message itself: the field is in its parent's schema `required` list AND
     // that parent is actually present in formData — AJV never applies a subschema's `required` to a property that
     // isn't there, so `parentPresent` being false means the schema-required error would never fire either.
-    builder.addErrors(`must have required property '${path[path.length - 1]}'`, path);
+    reportMissing();
   }
   // Children can only carry ui:required through their own uiSchema entry or a ui:definitions fragment
   if (!uiSchemaDefinitions && Object.keys(uiSchema).length === 0) {
@@ -348,6 +351,15 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field is gated. An `additionalProperties` entry and the option it shows have no control, whatever the uiSchema
   // says.
   const xxxOf = getXxxOfOptions<S>(resolvedSchema);
+  // The form keeps one pick per option list at a path, by the list's place (core's `optionListKey()`), so a list offered
+  // again below itself at the path shows the same option again, a `$ref` loop the form never finishes rendering
+  const listPlace = xxxOf?.options
+    .map((offered) => (isObject(offered) ? getValidationTarget<S>(offered, rootSchema).$ref : undefined))
+    .find(Boolean);
+  const listsAbove = showingField?.listsAbove ?? [];
+  if (listPlace && listsAbove.includes(listPlace)) {
+    return;
+  }
   const {
     schema: retrieved,
     option,
@@ -367,10 +379,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       globalUiOptions,
       rootSchema,
     );
+  const hidesControlled =
+    path.length > 0 && !isFormDataAvailable(formData) && !hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
   if (
-    path.length > 0 &&
-    !isFormDataAvailable(formData) &&
-    !hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) &&
+    hidesControlled &&
     // An object node also renders its own ObjectField beside the option (see `getFieldComponent()` in `SchemaField`),
     // showing the properties it shares with the option unless the node is a control that hides them as well, and only
     // such a node's branch carries the option
@@ -387,6 +399,15 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         (!rendersOptions<T, S, F>(retrieved, branchUiSchema) ||
           drawsControlsBesideOptions(ctx, path, retrieved, branchUiSchema, formData)))
   ) {
+    // Such a control is what the field whose label asks for an answer is answered with
+    if (
+      showingField?.asksAnswer &&
+      !showingField.uiRequired &&
+      formData === undefined &&
+      !(required && parentPresent)
+    ) {
+      reportMissing();
+    }
     return;
   }
   // An object beside its options renders its own properties in its own field and an option's in the option's field,
@@ -437,7 +458,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           branchWidget !== 'hidden' &&
           rendersArrayWidget<T, S, F>(ctx, path, retrieved, branchUiSchema, formData, typeSelectorsAbove + 1);
     if (isUnanswered) {
-      builder.addErrors(`must have required property '${path[path.length - 1]}'`, path);
+      reportMissing();
     }
   }
   if (nestsOptions) {
@@ -445,6 +466,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       uiRequired: reportsEmpty || isUnanswered,
       asksAnswer,
       typeSelectorsAbove: optionTypeSelectorsAbove,
+      listsAbove: [...listsAbove, listPlace],
     });
     // An object renders its own properties beside the option, which are walked below
     if (!option) {
@@ -467,10 +489,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const ownProperties = resolvedSchema.properties ?? {};
   const optionProperties = option?.properties ?? {};
-  // A property only the option declares is the option's field's, which an option offering options of its own walks
+  // A property only the option declares is the option's field's, which an option offering options of its own walks, and
+  // which hides it where it is an Optional Data Control of its own
   const isKeyShown = (key: string) =>
     key in optionProperties && !(key in ownProperties)
-      ? !nestsOptions && optionShownType === 'object'
+      ? !nestsOptions && optionShownType === 'object' && !(hidesControlled && isOptionControl())
       : shownType === 'object';
   // An option walked as a node of its own is rendered by the option field of the field showing it, whose `ObjectField`
   // renders the option's own properties with the uiSchema that field hands it, and the options it offers beside them

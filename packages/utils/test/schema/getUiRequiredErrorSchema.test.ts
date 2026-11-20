@@ -1983,6 +1983,22 @@ describe('getUiRequiredErrorSchema()', () => {
           ...missingPW,
         ]);
       });
+
+      it("lets through the properties of an option an object shows beside its own as an Optional Data Control, by the option's own `ui:required: false`", () => {
+        const wHidden: UiSchema = { 'ui:required': false, ...wReq };
+        const beside: RJSFSchema = { type: 'object', properties: { n: { type: 'string' } }, anyOf: [shown, other] };
+        expect(errorsFor(p(beside), { p: { 'ui:required': true, anyOf: [wHidden] } }, {}, odc)).toEqual([
+          ".p must have required property 'p'",
+        ]);
+        const typed: RJSFSchema = { anyOf: [{ type: 'object', anyOf: [shown, other] }, { type: 'number' }] };
+        expect(errorsFor(p(typed), { p: { anyOf: [{ 'ui:required': true, anyOf: [wHidden] }] } }, {}, odc)).toEqual([
+          ".p must have required property 'p'",
+        ]);
+        expect(errorsFor(p(typed), { p: { anyOf: [{ 'ui:required': true, anyOf: [wHidden] }] } }, {})).toEqual([
+          ".p must have required property 'p'",
+          ...missingPW,
+        ]);
+      });
     });
 
     it("gates a nested option's properties by its own type selector, numbered below the ones above it at the path", () => {
@@ -2153,6 +2169,36 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(
         errorsFor(schema, { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } }, {}),
       ).toEqual([".p must have required property 'p'"]);
+    });
+
+    it('reports an empty field whose label an option offering options of its own marks, where the option shown there is an Optional Data Control', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] } },
+      };
+      const odc: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+      const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } };
+      expect(errorsFor(schema, uiSchema, {}, odc)).toEqual([".p must have required property 'p'"]);
+      // The validator reports a property its parent's schema requires itself, and a `null` is a value
+      expect(errorsFor({ ...schema, required: ['p'] }, uiSchema, {}, odc)).toEqual([]);
+      expect(errorsFor(schema, uiSchema, { p: null }, odc)).toEqual([]);
+    });
+
+    it('walks an option list offered again below itself at the same path once, as the form shows the same option there', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          X: { anyOf: [{ $ref: '#/definitions/Y' }, { type: 'number' }] },
+          Y: { anyOf: [{ $ref: '#/definitions/X' }, { type: 'string' }] },
+          Z: { anyOf: [{ anyOf: [{ $ref: '#/definitions/Z' }, { type: 'string' }] }, { type: 'number' }] },
+        },
+        type: 'object',
+        properties: { p: { $ref: '#/definitions/X' }, q: { $ref: '#/definitions/Z' } },
+      };
+      const uiSchema: UiSchema = { p: { 'ui:required': true }, q: { 'ui:required': true } };
+      expect(errorsFor(schema, uiSchema, {})).toEqual([
+        ".p must have required property 'p'",
+        ".q must have required property 'q'",
+      ]);
     });
 
     it('reports nothing beneath the options of an option a `ui:field` renders in their place', () => {

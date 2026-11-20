@@ -991,6 +991,26 @@ describe('ui:required enforcement', () => {
       expect(await submitted(node, onSubmit)).toBe(false);
     });
 
+    it('blocks a submit with the field empty where an option offering options of its own marks it required and the option shown there is an Optional Data Control', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p(nestedFirst),
+        uiSchema: { ...odc, p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } },
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      expect(node.querySelector('#root_p_w')).toBeNull();
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it('reports no field of an option shown as an Optional Data Control below an option offering options of its own', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({ anyOf: [{ type: 'object', anyOf: [shown, other] }, { type: 'number' }] }),
+        uiSchema: { ...odc, p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false, ...wReq }] }] } },
+      });
+      expect(node.querySelector('#root_p_w')).toBeNull();
+      expect(await submitted(node, onSubmit)).toBe(false);
+      expect(errorListMessages(node)).toEqual([".p must have required property 'p'"]);
+    });
+
     it("submits with the field empty where only an option shown below the one marking the field's label sets `ui:required`", async () => {
       const { node, onSubmit } = createFormComponent({
         schema: p(nestedFirst),
