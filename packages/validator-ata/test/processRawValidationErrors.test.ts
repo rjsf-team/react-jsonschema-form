@@ -269,6 +269,95 @@ describe('transformRJSFValidationErrors()', () => {
     const out = transformRJSFValidationErrors(errors);
     expect(out[0].name).toBe('dependencies');
   });
+
+  describe('names a property under a $ref by its title', () => {
+    const name = { type: 'string', title: 'Full name' } as const;
+    const item: RJSFSchema = { type: 'object', properties: { name }, required: ['name'] };
+
+    it.each<[string, RJSFSchema, unknown, string]>([
+      [
+        'a missing property',
+        { $defs: { I: item }, type: 'object', properties: { a: { $ref: '#/$defs/I' } } },
+        { a: {} },
+        '.a.name',
+      ],
+      [
+        'a missing property inside an array item',
+        { $defs: { I: item }, type: 'object', properties: { arr: { type: 'array', items: { $ref: '#/$defs/I' } } } },
+        { arr: [{}] },
+        '.arr.0.name',
+      ],
+    ])('for %s', (_, schema, formData, property) => {
+      const { errors } = customizeValidator().validateFormData(formData, schema);
+      expect(errors.find((error) => error.property === property)).toEqual(
+        expect.objectContaining({ title: 'Full name', message: "must have required property 'Full name'" }),
+      );
+    });
+
+    it.each<[string, RJSFSchema, unknown, string]>([
+      [
+        'an error other than required',
+        { $defs: { N: name }, type: 'object', properties: { a: { $ref: '#/$defs/N' } } },
+        { a: 1 },
+        '.a',
+      ],
+      [
+        'an error under a chain of $refs',
+        {
+          $defs: { N: name, P: { type: 'object', properties: { n: { $ref: '#/$defs/N' } } } },
+          type: 'object',
+          properties: { a: { $ref: '#/$defs/P' } },
+        },
+        { a: { n: 1 } },
+        '.a.n',
+      ],
+      [
+        'an error under a $ref beside properties of its own',
+        {
+          $defs: { P: { type: 'object', properties: { n: name } } },
+          type: 'object',
+          properties: { a: { $ref: '#/$defs/P', properties: { extra: {} } } },
+        },
+        { a: { n: 1 } },
+        '.a.n',
+      ],
+    ])('for %s', (_, schema, formData, property) => {
+      const { errors } = customizeValidator().validateFormData(formData, schema);
+      expect(errors.find((error) => error.property === property)).toEqual(
+        expect.objectContaining({ title: 'Full name', stack: "'Full name' must be string" }),
+      );
+    });
+
+    it('keeps the title the $ref schema gives itself', () => {
+      const schema: RJSFSchema = {
+        $defs: { N: name },
+        type: 'object',
+        properties: { a: { title: 'Wrapper', $ref: '#/$defs/N' } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: 1 }, schema);
+      expect(errors[0]).toEqual(expect.objectContaining({ title: 'Wrapper', stack: "'Wrapper' must be string" }));
+    });
+
+    it('keeps the raw name of a missing property under a $ref to an $anchor', () => {
+      const schema: RJSFSchema = {
+        $defs: { I: { ...item, $anchor: 'i' } },
+        type: 'object',
+        properties: { a: { $ref: '#i' } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
+      expect(errors[0]).toEqual(
+        expect.objectContaining({ property: '.a.name', title: '', message: "must have required property 'name'" }),
+      );
+    });
+  });
+
+  it('gives no title to an error under a false property beside a property named title', () => {
+    const schema: RJSFSchema = { title: 'Root', type: 'object', properties: { x: false, title: { type: 'string' } } };
+    const { errors } = customizeValidator().validateFormData({ x: 1 }, schema);
+    expect(errors).toEqual([
+      expect.objectContaining({ property: '.x', title: '', stack: expect.stringMatching(/^\.x /) }),
+    ]);
+  });
 });
 
 describe('processRawValidationErrors()', () => {

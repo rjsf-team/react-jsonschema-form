@@ -15,6 +15,7 @@ import {
   createErrorHandler,
   getByPath,
   getDefaultFormState,
+  getKeywordParentSchema,
   getUiOptions,
   ONE_OF_KEY,
   PROPERTIES_KEY,
@@ -124,6 +125,11 @@ export function transformRJSFValidationErrors<
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
     const [missingProperty, presentProperty] = extractPropertyNames(error);
+    // cfworker reports a `false` schema at the location of the instance it rejects, which names no schema
+    const parentSchema =
+      schema && keyword !== 'false'
+        ? getKeywordParentSchema<S>(schema, keywordLocation, decodePointerToken)
+        : undefined;
 
     if (missingProperty) {
       const applied = applyValidatorErrorTitles<T, S, F>({
@@ -134,6 +140,7 @@ export function transformRJSFValidationErrors<
         schemaPath: keywordLocation,
         decodeSchemaPathKey: decodePointerToken,
         uiSchema,
+        parentSchema,
         schema,
       });
       message = applied.message;
@@ -155,7 +162,17 @@ export function transformRJSFValidationErrors<
               .concat(['title']),
           )
         : undefined;
-      const title = uiSchemaTitle ?? schemaTitle;
+      // A branch's own title names that branch, not the field it applies to, so it is read from the schema holding the branch
+      const fieldLocation = keywordLocation.replace(
+        /(?:(?<!\/(?:properties|patternProperties))\/(?:(?:allOf|anyOf|oneOf)\/\d+|then|else|(?:dependentSchemas|dependencies)\/[^/]+)(?:\/\$ref)*)+(\/[^/]+)$/,
+        '$1',
+      );
+      const parentTitle = (
+        schema && fieldLocation !== keywordLocation
+          ? getKeywordParentSchema<S>(schema, fieldLocation, decodePointerToken)
+          : parentSchema
+      )?.title;
+      const title = uiSchemaTitle ?? (schemaTitle || (typeof parentTitle === 'string' ? parentTitle : undefined));
       if (title) {
         stack = `'${title}' ${message}`.trim();
         uiTitle = title;
