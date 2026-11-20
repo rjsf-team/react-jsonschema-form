@@ -6271,7 +6271,7 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       if: { properties: { kind: { const: 'A' } } },
       then: { properties: { n: { default: 1 } } },
     };
-    it.each<{ held: string; schema: RJSFSchema; a: Record<string, unknown> }>([
+    it.each<{ held: string; schema: RJSFSchema; a: unknown }>([
       {
         held: "an `if` the object's `$ref` reaches",
         schema: unionOf({ definitions: { a: conditionalA } }, { $ref: '#/definitions/a' }),
@@ -6315,6 +6315,44 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
           },
         ),
         a: { m: 'x', n: 1 },
+      },
+      // The fill merges every declaration of `a`, where the field is judged by the option's alone
+      {
+        held: 'an `if` on the object the shown option declares again without one',
+        schema: unionOf(
+          { properties: { a: { type: 'object', if: conditionalA.if, then: conditionalA.then } } },
+          { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } },
+        ),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        held: 'an `if` on the object declaring a sibling, the shown option adding the key',
+        schema: unionOf(
+          {
+            properties: {
+              a: {
+                type: 'object',
+                properties: { kind: { type: 'string' } },
+                if: conditionalA.if,
+                then: conditionalA.then,
+              },
+            },
+          },
+          { type: 'object', properties: { n: { type: 'number' } } },
+        ),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        held: 'an `if` on the items the shown option declares again without one',
+        schema: unionOf(
+          {
+            properties: {
+              a: { type: 'array', items: { type: 'object', if: conditionalA.if, then: conditionalA.then } },
+            },
+          },
+          { type: 'array', items: { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } } },
+        ),
+        a: [{ kind: 'B', n: 1 }],
       },
     ])(
       'judges a nested value by the fill made with its siblings in place, read through $held',

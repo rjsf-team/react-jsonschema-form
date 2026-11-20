@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import type { FieldFill, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '@rjsf/utils';
+import type { FieldFill, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -131,6 +131,33 @@ describe('the fills the sanitize of a deep form makes', () => {
     // Each key the switch leaves stays as an extra key, judged by one fill of the form without the object's keys, as
     // no condition reads them, rather than by one fill per key
     expect(handleOf(ref).getFormData()).toMatchObject({ ...initialFormData, kind: 't' });
+    expect(formFills.count).toBeLessThanOrEqual(3);
+  });
+
+  // The shared fill fills each key as it holds, and the keys the old option declares need no fill of their own
+  it('fills the form a fixed number of times for a switch leaving many keys the old fill wrote', async () => {
+    const left: Record<string, RJSFSchema> = {};
+    const uiSchema: UiSchema<Record<string, string>> = {};
+    const initialFormData: Record<string, string> = { kind: 's' };
+    for (let index = 0; index < 50; index += 1) {
+      left[`a${index}`] = { type: 'string' };
+      uiSchema[`a${index}`] = { 'ui:initialValue': 'iv' };
+      initialFormData[`a${index}`] = 'iv';
+    }
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: true,
+      oneOf: [
+        { title: 'S', properties: { kind: { const: 's' }, ...left } },
+        { title: 'T', properties: { kind: { const: 't' } } },
+      ],
+    };
+    const { container } = render(
+      <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={initialFormData} />,
+    );
+    formFills.count = 0;
+    await user.selectOptions(container.querySelector('select')!, 'T');
+
     expect(formFills.count).toBeLessThanOrEqual(3);
   });
 });
