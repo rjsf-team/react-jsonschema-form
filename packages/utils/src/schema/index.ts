@@ -6,6 +6,7 @@ import getDisplayLabel from './getDisplayLabel.ts';
 import getFilledDefault from './getFilledDefault.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import getFromSchema from './getFromSchema.ts';
+import { getItemSchema, getOpenPrefixLength, getPrefixLength, isTupleSchema } from './getItemSchema.ts';
 import getUiRequiredErrorSchema from './getUiRequiredErrorSchema.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
@@ -15,8 +16,6 @@ import retrieveSchema, { expandRefCycle, getAdditionalPropertyType, getValidatio
 import sanitizeDataForNewSchema, {
   constrainsAlike,
   constrainsAlikeAsideDefault,
-  getItemSchema,
-  getPrefixLength,
   namesEveryType,
 } from './sanitizeDataForNewSchema.ts';
 import { constrainsValue } from './schemaKeywords.ts';
@@ -37,12 +36,14 @@ export {
   getFirstMatchingOption,
   getFromSchema,
   getItemSchema,
+  getOpenPrefixLength,
   getPrefixLength,
   getUiRequiredErrorSchema,
   getValidationTarget,
   isFilesArray,
   isMultiSelect,
   isSelect,
+  isTupleSchema,
   namesEveryType,
   omitExtraData,
   retrieveSchema,

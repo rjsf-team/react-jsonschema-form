@@ -935,6 +935,40 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual([{ val: '' }]);
       });
 
+      it('filters prefixItems by their per-index schema, and the items past them by the items beside them', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          prefixItems: [{ type: 'object', properties: { val: { type: 'string' } } }],
+          items: { type: 'object', properties: { extra: { type: 'string' } } },
+        };
+        const formData = [
+          { val: '', extra: '' },
+          { val: '', extra: '' },
+        ];
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual([
+          { val: '' },
+          { extra: '' },
+        ]);
+      });
+
+      it('drops the elements at and past a false prefixItems position, which allows no item', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          prefixItems: [{ type: 'string' }, false, { type: 'string' }],
+          items: { type: 'string' },
+        };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, ['a', 'b', 'c', 'd'])).toEqual(['a']);
+      });
+
+      it('drops the elements past prefixItems when no items are beside them', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          prefixItems: [{ type: 'object', properties: { val: { type: 'string' } } }],
+        };
+        const formData = [{ val: '' }, { unknown: '' }];
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual([{ val: '' }]);
+      });
+
       it('should return array as-is if no changes are made', () => {
         const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
         const formData = ['a', 'b'];

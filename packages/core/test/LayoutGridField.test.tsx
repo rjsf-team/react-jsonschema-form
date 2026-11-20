@@ -1008,6 +1008,21 @@ describe('LayoutGridField', () => {
         expect(computeArraySchemasIfPresent(open, '3')).toEqual({ rawSchema: undefined, index: 3 });
       });
     });
+    describe('a prefixItems tuple', () => {
+      const first: RJSFSchema = { type: 'string' };
+      const rest: RJSFSchema = { type: 'boolean' };
+
+      test('returns the prefixItems schema at a position, and the items beside them past it', () => {
+        const tuple: RJSFSchema = { type: 'array', prefixItems: [first], items: rest };
+        expect(computeArraySchemasIfPresent(tuple, '0')).toEqual({ rawSchema: first, index: 0 });
+        expect(computeArraySchemasIfPresent(tuple, '2')).toEqual({ rawSchema: rest, index: 2, isAdditionalItem: true });
+      });
+      test('returns no schema past prefixItems with no items beside them', () => {
+        const closed: RJSFSchema = { type: 'array', prefixItems: [first] };
+        expect(computeArraySchemasIfPresent(closed, '0')).toEqual({ rawSchema: first, index: 0 });
+        expect(computeArraySchemasIfPresent(closed, '1')).toEqual({ rawSchema: undefined, index: 1 });
+      });
+    });
   });
   describe('getSchemaDetailsForField(), array items written as a $ref', () => {
     test('reads the options of an array item through the $ref of its items', () => {

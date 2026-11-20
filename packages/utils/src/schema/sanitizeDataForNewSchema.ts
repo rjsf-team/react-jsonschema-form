@@ -31,6 +31,7 @@ import type {
 } from '../types.ts';
 import { ownValue } from './getDefaultFormState.ts';
 import getFilledDefault from './getFilledDefault.ts';
+import { getItemSchema, getPrefixLength } from './getItemSchema.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, { ownRefResolves } from './retrieveSchema.ts';
 
@@ -43,41 +44,6 @@ const ITEMS_KEYWORDS = ['items', 'prefixItems'] as const;
 /** The schema of an item no items keyword constrains, as a missing or `true` one doesn't. Shared, so that two positions
  * both declaring none are resolved once */
 const ANY_ITEM = {};
-
-/** The items `schema` describes by position: its `prefixItems`, which take the place of a tuple `items`, or its tuple
- * `items` */
-function prefixOf(schema: GenericObjectType): unknown[] | undefined {
-  const prefix: unknown = Array.isArray(schema.prefixItems) ? schema.prefixItems : schema.items;
-  return Array.isArray(prefix) ? prefix : undefined;
-}
-
-/** Returns the number of items `schema` describes by position, through `prefixItems` or a tuple `items`
- *
- * @param schema - The array schema
- * @returns - The length of its `prefixItems` or tuple `items`, or 0 where it declares neither
- */
-export function getPrefixLength<S extends StrictRJSFSchema = RJSFSchema>(schema: S): number {
-  return prefixOf(schema as GenericObjectType)?.length ?? 0;
-}
-
-/** Returns the schema `schema` declares for its item at `index`: the `prefixItems` or tuple `items` entry there, and
- * past them its `items`, or the `additionalItems` beside a tuple. A position it declares nothing at, or something
- * other than a schema at, such as an array `items` beside `prefixItems`, which mixes the two ways of writing a tuple,
- * constrains nothing and is `true`
- *
- * @param schema - The array schema
- * @param index - The index of the item
- * @returns - The item's schema, as written: a schema, `true` where nothing constrains it, or `false` where no item is
- *      allowed there
- */
-export function getItemSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S, index: number): S | boolean {
-  const { items, prefixItems, additionalItems } = schema as GenericObjectType;
-  const prefix = prefixOf(schema as GenericObjectType);
-  // Past `prefixItems` the items are `items`, and past a tuple `items` they are `additionalItems`
-  const rest: unknown = prefix === undefined || prefix === prefixItems ? items : additionalItems;
-  const raw: unknown = prefix && index < prefix.length ? prefix[index] : rest;
-  return typeof raw === 'boolean' || isSchemaObject<S>(raw) ? raw : true;
-}
 
 /** The raw schema `schema` declares for its item at `index`, one constraining nothing being `ANY_ITEM` */
 function itemSchemaAt<S extends StrictRJSFSchema = RJSFSchema>(schema: S, index: number): S | false {

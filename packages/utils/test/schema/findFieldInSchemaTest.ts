@@ -336,6 +336,15 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
         expect(schemaUtils.findFieldInSchema(schema, '0').field).toEqual({ type: 'string' });
         expect(schemaUtils.findFieldInSchema(schema, '1').field).toEqual({ type: 'number' });
       });
+      it('finds the item of a prefixItems tuple at its index, then the items past it', () => {
+        const schema: RJSFSchema = { type: 'array', prefixItems: [{ type: 'string' }], items: { type: 'number' } };
+        expect(schemaUtils.findFieldInSchema(schema, '0').field).toEqual({ type: 'string' });
+        expect(schemaUtils.findFieldInSchema(schema, '1').field).toEqual({ type: 'number' });
+      });
+      it('finds the item of a prefixItems tuple with no items beside it', () => {
+        const schema: RJSFSchema = { type: 'array', prefixItems: [{ type: 'string' }] };
+        expect(schemaUtils.findFieldInSchema(schema, '0').field).toEqual({ type: 'string' });
+      });
       it('follows an item that is a $ref', () => {
         const utils = createSchemaUtils({ validator: testValidator }, { definitions: { item: simpleSchema } });
         expect(utils.findFieldInSchema({ type: 'array', items: { $ref: '#/definitions/item' } }, '0.name')).toEqual({

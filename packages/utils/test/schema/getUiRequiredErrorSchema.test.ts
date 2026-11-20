@@ -536,6 +536,23 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(errors[0].property).toBe('.1.extra');
   });
 
+  it('reads uiSchema.prefixItems at a prefixItems position and uiSchema.items past it', () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      prefixItems: [{ type: 'object', properties: { first: { type: 'string' } } }],
+      items: { type: 'object', properties: { extra: { type: 'string' } } },
+    };
+    const uiSchema: UiSchema = {
+      prefixItems: [{ first: { 'ui:required': true } }],
+      items: { extra: { 'ui:required': true } },
+    };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, [{}, {}]);
+    const errors = toErrorList(errorSchema)
+      .map((e) => e.property ?? '')
+      .sort();
+    expect(errors).toEqual(['.0.first', '.1.extra']);
+  });
+
   it('reports a ui:required field on a dynamically-added additionalProperties entry', () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -1509,6 +1526,11 @@ describe('getUiRequiredErrorSchema()', () => {
       [
         'a custom widget',
         { type: 'array', items: { type: 'string' } },
+        { 'ui:widget': 'TagsWidget', 'ui:required': true },
+      ],
+      [
+        'a custom widget over a prefixItems tuple',
+        { type: 'array', prefixItems: [{ type: 'string' }] },
         { 'ui:widget': 'TagsWidget', 'ui:required': true },
       ],
       ['a file input', { type: 'array', items: { type: 'string', format: 'data-url' } }, { 'ui:required': true }],
