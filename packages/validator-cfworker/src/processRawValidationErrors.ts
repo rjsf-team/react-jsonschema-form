@@ -153,12 +153,12 @@ export function transformRJSFValidationErrors<
       };
       const title = findTitle(missingProperty);
       if (title) {
-        message = message.replace(`"${missingProperty}"`, `'${title}'`);
+        message = message.replace(`"${missingProperty}"`, () => `'${title}'`);
         uiTitle = title;
       }
       const presentTitle = presentProperty && findTitle(presentProperty);
       if (presentTitle) {
-        message = message.replace(`"${presentProperty}"`, `'${presentTitle}'`);
+        message = message.replace(`"${presentProperty}"`, () => `'${presentTitle}'`);
       }
       property = property ? `${property}.${missingProperty}` : missingProperty;
       stack = message;

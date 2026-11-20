@@ -1667,6 +1667,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `isValid()` to keep what it compiled for the last two root schemas instead of one, so changing the schema of a form with conditional or option fields no longer compiles their schemas again for each field it checks ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
 - Fix `isValid()` checking a schema whose `$id` is that of a root schema it was called with before against that root rather than the schema itself ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
 - Fix `isValid()` on an `ajv-draft-04` validator failing to compile a schema with an `id` of its own once called with another root schema, as a schema with an `$id` does on any other, and resolving a `$ref` by a root schema's `id` into a root it was called with before that held the same `id` ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
+- Fix a localized error for a missing `dependentRequired` or `dependencies` property splitting a property whose key contains `, ` into two names and leaving it untitled ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 
 ## @rjsf/validator-ata
 
@@ -1700,6 +1701,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change an `additionalMetaSchemas` or `ataOptionsOverrides.schemas` list entry whose only `$id` is a fragment, such as `#frag`, to fail every validation, where it was ignored. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#an-extra-schema-whose-only-id-is-a-fragment-fails-validation-breaking-change) ([#5880](https://github.com/rjsf-team/react-jsonschema-form/pull/5880))
 - Fix `isValid()` rejecting valid data for a form whose root `$id` is only a fragment, such as `#root`, and which names the root by it in a `$ref`, where `validateFormData()` and a precompiled validator accept it ([#5880](https://github.com/rjsf-team/react-jsonschema-form/pull/5880))
 - Change `isValid()` to keep what it compiled for the last two root schemas instead of one, so changing the schema of a form with conditional or option fields no longer compiles their schemas again for each field it checks ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
+- Fix the error for a missing required property garbling a `title` or `ui:title` that contains `$&`, `$'` or `` $` `` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 
 ## @rjsf/validator-cfworker
 
@@ -1722,6 +1724,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change the default `validator` export to a client module, so a React Server Component can pass it to `Form`; server code can no longer call it, so validate there with a validator from `customizeValidator()`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#the-default-validator-is-a-client-module-breaking-change) ([#5863](https://github.com/rjsf-team/react-jsonschema-form/pull/5863), [#5761](https://github.com/rjsf-team/react-jsonschema-form/issues/5761))
 - Fix the error for a missing `dependentRequired` or `dependencies` property showing on the object rather than the missing field, and naming the properties by their keys rather than their `title` or `ui:title` ([#5901](https://github.com/rjsf-team/react-jsonschema-form/pull/5901), [#4402](https://github.com/rjsf-team/react-jsonschema-form/issues/4402))
 - Change `isValid()` to keep what it compiled for the last two root schemas instead of one, so changing the schema of a form with conditional or option fields no longer compiles their schemas again for each field it checks ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
+- Fix the error for a missing `required`, `dependentRequired` or `dependencies` property garbling a `title` or `ui:title` that contains `$&`, `$'` or `` $` `` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 
 ## All packages
 

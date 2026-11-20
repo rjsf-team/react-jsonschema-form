@@ -262,6 +262,21 @@ describe('validateFormData() reporting a missing dependency', () => {
     );
   });
 
+  it('names the properties by titles holding `$` replacement patterns as written', () => {
+    const uiSchema: UiSchema = {
+      creditCard: { 'ui:title': 'Card ($`)' },
+      billingAddress: { 'ui:title': "Price ($&$')" },
+    };
+    const { errors } = customizeValidator().validateFormData(
+      { creditCard: 1 },
+      schema('dependentRequired'),
+      undefined,
+      undefined,
+      uiSchema,
+    );
+    expect(errors[1].message).toEqual(`Instance has 'Card ($\`)' but does not have 'Price ($&$')'.`);
+  });
+
   it('leaves the message as the engine wrote it when no property has a title', () => {
     const { errors } = customizeValidator().validateFormData({ creditCard: 1 }, schema('dependentRequired', false));
     expect(errors[1]).toEqual(

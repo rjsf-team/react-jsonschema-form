@@ -108,7 +108,7 @@ export function transformRJSFValidationErrors<
           uiSchemaTitle = getByPath<string | undefined>(uiSchema, [...propParts, currentProperty, 'title']);
         }
         if (uiSchemaTitle) {
-          message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
+          message = message.replace(`'${currentProperty}'`, () => `'${uiSchemaTitle}'`);
           uiTitle = uiSchemaTitle;
         } else {
           const parentSchemaTitle = getByPath<string | undefined>(parentSchema, [
@@ -117,7 +117,7 @@ export function transformRJSFValidationErrors<
             'title',
           ]);
           if (parentSchemaTitle) {
-            message = message.replace(`'${currentProperty}'`, `'${parentSchemaTitle}'`);
+            message = message.replace(`'${currentProperty}'`, () => `'${parentSchemaTitle}'`);
             uiTitle = parentSchemaTitle;
           } else if (schema) {
             // parentSchema may be an allOf/anyOf/oneOf entry that lacks `properties`;
@@ -130,7 +130,7 @@ export function transformRJSFValidationErrors<
             aSchemaPath.push(PROPERTIES_KEY, currentProperty, 'title');
             const rootSchemaTitle = getByPath<string | undefined>(schema, aSchemaPath);
             if (rootSchemaTitle) {
-              message = message.replace(`'${currentProperty}'`, `'${rootSchemaTitle}'`);
+              message = message.replace(`'${currentProperty}'`, () => `'${rootSchemaTitle}'`);
               uiTitle = rootSchemaTitle;
             }
           }

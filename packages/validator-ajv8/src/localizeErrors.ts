@@ -1,13 +1,16 @@
 import type { ErrorObject } from 'ajv';
 
+import { dependencyNames } from './processRawValidationErrors.ts';
 import type { Localizer } from './types.ts';
 
-/** Returns a copy of the `params` with the property names they hold quoted, as Ajv quotes them in its own messages
+/** Returns a copy of the error's `params` with the property names they hold quoted, as Ajv quotes them in its own
+ * messages
  *
- * @param params - The params of an error
+ * @param error - The error whose params to quote
  * @returns - The copy of the `params` with `missingProperty`, `property` and each of the `deps` quoted
  */
-function quoteProperties(params: ErrorObject['params']): ErrorObject['params'] {
+function quoteProperties(error: ErrorObject): ErrorObject['params'] {
+  const { params } = error;
   const quoted = { ...params };
   for (const key of ['missingProperty', 'property']) {
     const value: unknown = params[key];
@@ -15,11 +18,9 @@ function quoteProperties(params: ErrorObject['params']): ErrorObject['params'] {
       quoted[key] = `'${value}'`;
     }
   }
-  const deps: unknown = params.deps;
-  if (typeof deps === 'string') {
-    // `deps` is the comma+space separated list of missing dependencies, so each is quoted: `A, B` becomes `'A', 'B'`
-    quoted.deps = deps
-      .split(', ')
+  if (typeof params.deps === 'string') {
+    // Each dependency is quoted: `A, B` becomes `'A', 'B'`
+    quoted.deps = dependencyNames(error)
       .map((v) => `'${v}'`)
       .join(', ');
   }
@@ -37,7 +38,7 @@ function quoteProperties(params: ErrorObject['params']): ErrorObject['params'] {
 export default function localizeErrors(localizer: Localizer, errors?: null | ErrorObject[]) {
   const localized = (errors ?? []).map((error) => ({
     error,
-    copy: { ...error, params: quoteProperties(error.params) },
+    copy: { ...error, params: quoteProperties(error) },
   }));
   localizer(errors && localized.map(({ copy }) => copy));
   for (const { error, copy } of localized) {

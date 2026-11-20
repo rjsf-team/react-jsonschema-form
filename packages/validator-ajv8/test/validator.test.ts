@@ -3506,6 +3506,32 @@ describe('AJV8Validator', () => {
         );
         expect(errors.errors).toHaveLength(0);
       });
+      describe('with a dependency whose name contains a comma', () => {
+        const schema = (keyword: 'dependentRequired' | 'dependencies'): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            creditCard: { type: 'number', title: 'Credit card' },
+            'street, city': { type: 'string', title: 'Address' },
+            street: { type: 'string', title: 'Street' },
+          },
+          [keyword]: { creditCard: ['street, city'] },
+        });
+        const message = "must have property 'Address' when property 'Credit card' is present";
+        it('should name it by its title', () => {
+          const { errors, errorSchema } = validator.validateFormData({ creditCard: 1 }, schema('dependentRequired'));
+          expect(errors).toHaveLength(1);
+          expect(errors[0].message).toEqual(message);
+          expect(errors[0].title).toEqual('Address');
+          expect(errorSchema).toEqual({ 'street, city': { __errors: [message] } });
+        });
+        it('should name it by its title in a draft-07 `dependencies`', () => {
+          const { errors } = new AJV8Validator({}, ajvI18n.en).validateFormData(
+            { creditCard: 1 },
+            schema('dependencies'),
+          );
+          expect(errors[0].message).toEqual(message);
+        });
+      });
     });
   });
   describe('validator.validateFormData(), custom options, localizer and Ajv2020', () => {

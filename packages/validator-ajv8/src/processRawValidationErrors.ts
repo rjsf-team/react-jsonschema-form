@@ -26,6 +26,20 @@ import type { ErrorObject } from 'ajv';
 
 import type { SuppressDuplicateFilteringType } from './types.ts';
 
+/** Returns the names a dependency error's `deps` lists. `deps` joins them with `, `, which a name may contain, so the
+ * schema's own list is used when Ajv's `verbose` option hands over the `parentSchema`
+ *
+ * @param error - The error to read the names of
+ * @returns - The names of the error's dependencies, or an empty list when it has none
+ */
+export function dependencyNames({ keyword, params, parentSchema }: ErrorObject): string[] {
+  if (typeof params.deps !== 'string') {
+    return [];
+  }
+  const depsList = getByPath(parentSchema, [keyword, params.property]);
+  return Array.isArray(depsList) ? (depsList as string[]) : params.deps.split(', ');
+}
+
 /** Filters duplicate errors from `anyOf`/`oneOf` schema paths according to the `suppressDuplicateFiltering` flag.
  *
  * @param errorList - The list of `RJSFValidationError`s to filter
@@ -89,11 +103,9 @@ export function transformRJSFValidationErrors<
     let property = instancePath.replace(/\//g, '.');
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
-    const rawPropertyNames: string[] = [
-      ...(typeof params.deps === 'string' ? params.deps.split(', ') : []),
-      params.missingProperty,
-      params.property,
-    ].filter((item) => item);
+    const rawPropertyNames: string[] = [...dependencyNames(e), params.missingProperty, params.property].filter(
+      (item) => item,
+    );
 
     const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
     const findTitle = (currentProperty: string): string | undefined => {
@@ -161,10 +173,7 @@ export function transformRJSFValidationErrors<
         const ajvMessage = (names: string[], present: string) =>
           `must have ${depsCount === 1 ? 'property' : 'properties'} ${names.join(', ')} when property ${present} is present`;
         if (rest.message === ajvMessage([deps], presentProperty)) {
-          // `deps` joins the names with `, `, which a name may contain, so the schema's own list is used when Ajv's
-          // `verbose` option hands over the `parentSchema`
-          const depsList = getByPath(parentSchema, [keyword, presentProperty]);
-          const names = Array.isArray(depsList) ? (depsList as string[]) : deps.split(', ');
+          const names = dependencyNames(e);
           const named = (name: string) => {
             const title = findTitle(name);
             return title ? `'${title}'` : name;
