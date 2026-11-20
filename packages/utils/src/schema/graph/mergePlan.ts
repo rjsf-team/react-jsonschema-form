@@ -735,8 +735,9 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   /** Whether the keywords of a seed hold an `if`, which `allOf: 'if'` merges the `allOf`s for */
   private seedHasCondition = false;
   private readsData = false;
-  /** Whether a seed or a selected option declares a `type` that holds neither objects nor arrays, see
-   * `declaresValueType()`, the field `CheckedCondition.unset` is for
+  /** Whether a seed, or the selected option being expanded, declares a `type` that holds neither objects nor arrays,
+   * see `declaresValueType()`, the field `CheckedCondition.unset` is for. An option's `type` counts only for the `if`s
+   * the option brings, since the field's own are checked whichever option it shows
    */
   private valueField = false;
   /** How many `then`, `else` and `dependencies` branches are being expanded: a branch has its `allOf` merged whatever
@@ -769,6 +770,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       this.seedHasCondition = true;
       this.mergeAllOf ||= this.policy.allOf === 'if';
     }
+    // Decided before any seed is expanded, so the `if` of one seed sees the `type` another declares
+    this.valueField = seeds.some((seed) => declaresValueType(this.graph, seed.node, new Set()));
     const expanded = seeds.flatMap((seed) => {
       const part = this.expand(seed.node, seed.refPath, 'seed');
       if (part === undefined) {
@@ -854,7 +857,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return { schema: booleanSchema(node, this.graph.rawRoot), chains: [] };
     }
     const keywords = this.flatten(asTarget(this.graph, node), refPath);
-    if (edge === 'seed' || edge === 'option') {
+    if (edge === 'option') {
       this.valueField ||= declaresValueType(this.graph, id, new Set());
     }
     const schema = keywordSchema(node.raw, keywords);
@@ -1158,20 +1161,18 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   private expandOption(id: NodeId, refPath: RefPath): Part<S> | undefined {
     const { optionPolicy } = this.policy;
-    if (optionPolicy === undefined) {
-      return this.expand(id, refPath, 'option');
+    const outer = { mergeAllOf: this.mergeAllOf, conditions: this.conditions, valueField: this.valueField };
+    if (optionPolicy !== undefined) {
+      // The option is merged into the field, so an `if` of its own counts as the field's
+      this.mergeAllOf =
+        optionPolicy.allOf === true ||
+        (optionPolicy.allOf === 'if' && (this.seedHasCondition || declaresKeyword(this.graph, id, IF_KEY)));
+      this.conditions = optionPolicy.conditions;
     }
-    const outer = { mergeAllOf: this.mergeAllOf, conditions: this.conditions };
-    // The option is merged into the field, so an `if` of its own counts as the field's
-    this.mergeAllOf =
-      optionPolicy.allOf === true ||
-      (optionPolicy.allOf === 'if' && (this.seedHasCondition || declaresKeyword(this.graph, id, IF_KEY)));
-    this.conditions = optionPolicy.conditions;
     try {
       return this.expand(id, refPath, 'option');
     } finally {
-      this.mergeAllOf = outer.mergeAllOf;
-      this.conditions = outer.conditions;
+      Object.assign(this, outer);
     }
   }
 }

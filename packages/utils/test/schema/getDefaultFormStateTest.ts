@@ -8481,6 +8481,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(context, { schema: via(typeObject) })).toStrictEqual({});
           }
         });
+        it('decides the if of an empty field by the const its branch gives where another seed of the field gives its type', () => {
+          const context = { validator: testValidator };
+          const withPattern = (conditional: RJSFSchema): RJSFSchema => ({
+            type: 'object',
+            required: ['x'],
+            properties: { x: conditional },
+            patternProperties: { '^x$': { type: 'number' } },
+          });
+          expect(
+            getDefaultFormState(context, { schema: withPattern({ if: { type: 'number' }, then: { const: 3 } }) }),
+          ).toStrictEqual({ x: 3 });
+          expect(
+            getDefaultFormState(context, { schema: withPattern({ if: { type: 'object' }, then: { const: 3 } }) }),
+          ).toStrictEqual({});
+        });
+        it("decides the if of a field with no type by {} beside the options it shows, whose types count for their own if's only", () => {
+          const context = { validator: testValidator };
+          const options: RJSFSchema[] = [{ type: 'number' }, { type: 'string' }];
+          const besideOptions: RJSFSchema = { oneOf: options, if: { type: 'object' }, then: { const: 3 } };
+          expect(getDefaultFormState(context, { schema: rootOf(besideOptions) })).toStrictEqual({ x: 3 });
+        });
         it('decides the if of an empty field with no type by {}, which it may hold', () => {
           const x: RJSFSchema = {
             if: { required: ['a'] },
@@ -8489,6 +8510,40 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           const context = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
           expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({ x: null });
+        });
+        it.each<[string, RJSFSchema, number]>([
+          ['fills the const of a then whose if takes it', { if: { maximum: 7 }, then: { const: 10 } }, 10],
+          ['keeps it where the if rejects it', { if: { maximum: 3 }, then: { const: 3 } }, 5],
+        ])(
+          'decides the if of a primitive field by the default a merged allOf member gives it: %s',
+          (_n, conditional, expected) => {
+            const context = {
+              validator: testValidator,
+              defaultFormStateBehavior: { allOf: 'populateDefaults' as const },
+            };
+            const inMember: RJSFSchema = { type: 'number', allOf: [{ default: 5 }, conditional] };
+            const onField: RJSFSchema = { type: 'number', allOf: [{ default: 5 }], ...conditional };
+            for (const x of [inMember, onField]) {
+              expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({ x: expected });
+              expect(getDefaultFormState(context, { schema: x })).toBe(expected);
+            }
+          },
+        );
+        it("decides the if of a primitive field by the default of the option it shows, which wins over the field's own", () => {
+          const context = { validator: testValidator };
+          const conditional: RJSFSchema = { if: { maximum: 3 }, then: { const: 3 } };
+          const optionFive: RJSFSchema = {
+            type: 'number',
+            default: 1,
+            oneOf: [{ default: 5, ...conditional }, { minimum: 100 }],
+          };
+          expect(getDefaultFormState(context, { schema: rootOf(optionFive) })).toStrictEqual({ x: 5 });
+          const optionOne: RJSFSchema = {
+            type: 'number',
+            default: 5,
+            oneOf: [{ default: 1, ...conditional }, { minimum: 100 }],
+          };
+          expect(getDefaultFormState(context, { schema: rootOf(optionOne) })).toStrictEqual({ x: 3 });
         });
         describe.each(PLACEMENTS)(
           'decides the if of a field with no type, or one allowing an object, by the primitive default it holds, %s',
