@@ -65,7 +65,7 @@ Core logic and the unstyled default theme for `react-jsonschema-form`: toolkit-i
 - `@rjsf/validator-ajv8 >= 7`, or another validator to pass to `Form`
 
 ```sh
-npm install @rjsf/utils @rjsf/validator-ajv8
+npm install @rjsf/utils@next @rjsf/validator-ajv8@next
 ```
 
 No UI library is needed: the form renders the browser's own controls. To style them without a CSS framework, import the optional stylesheets, the layout and, on top of it, the default look:
@@ -82,7 +82,7 @@ The Bootstrap 3 markup `@rjsf/core` rendered through v6 is the deprecated [`@rjs
 ### Installation
 
 ```sh
-npm install @rjsf/core
+npm install @rjsf/core@next
 ```
 
 ## Usage

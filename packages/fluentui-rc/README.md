@@ -69,13 +69,13 @@ Fluent UI React Components (v9) theme, fields and widgets for `react-jsonschema-
 - `@rjsf/validator-ajv8 >= 7`
 
 ```bash
-yarn add @fluentui/react-components @fluentui/react-icons @fluentui/react-migration-v0-v9 @rjsf/core @rjsf/utils @rjsf/validator-ajv8
+yarn add @fluentui/react-components @fluentui/react-icons @fluentui/react-migration-v0-v9 @rjsf/core@next @rjsf/utils@next @rjsf/validator-ajv8@next
 ```
 
 ### Installation
 
 ```bash
-yarn add @rjsf/fluentui-rc
+yarn add @rjsf/fluentui-rc@next
 ```
 
 <!-- USAGE EXAMPLES -->

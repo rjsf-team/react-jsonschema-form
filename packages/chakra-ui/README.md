@@ -76,13 +76,13 @@ Refer to the [rjsf installation guide](https://rjsf-team.github.io/react-jsonsch
 ### Installation
 
 ```bash
-yarn add @chakra-ui/react @rjsf/core @rjsf/utils @rjsf/validator-ajv8
+yarn add @chakra-ui/react @rjsf/core@next @rjsf/utils@next @rjsf/validator-ajv8@next
 ```
 
 ## Usage
 
 ```bash
-yarn add @rjsf/chakra-ui
+yarn add @rjsf/chakra-ui@next
 ```
 
 <!-- USAGE EXAMPLES -->
