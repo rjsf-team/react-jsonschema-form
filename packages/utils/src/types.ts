@@ -2443,13 +2443,16 @@ export type UiSchema<
     classNames?: string;
     /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items, an array of
      * per-tuple-position uiSchemas for a fixed (tuple) `items` schema, or a function that returns a dynamic uiSchema
-     * based on the item's data and index.
+     * based on the item's data and index. Beside a `prefixItems` schema it applies to the items past the tuple, as the
+     * schema's `items` does.
      * When using a function, it receives the item data, index, and optionally the form context as parameters.
      */
     items?:
       | UiSchema<ArrayElement<T>, S, F>
       | UiSchema<ArrayElement<T>, S, F>[]
       | Bivariant<[itemData: ArrayElement<T>, index: number, formContext?: F], UiSchema<ArrayElement<T>, S, F>>;
+    /** The uiSchema for each position of a `prefixItems` tuple, positionally */
+    prefixItems?: UiSchema<ArrayElement<T>, S, F>[];
     /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
      * properties hold: the index signature's value type when `T` declares one, otherwise `unknown`
      */
@@ -2503,6 +2506,8 @@ export type StrictUiSchema<
           [itemData: ArrayElement<T>, index: number, formContext?: F],
           StrictUiSchema<Checks, ArrayElement<T>, S, F>
         >;
+    /** As `UiSchema`'s `prefixItems` */
+    prefixItems?: StrictUiSchema<Checks, ArrayElement<T>, S, F>[];
     /** As `UiSchema`'s `additionalProperties` */
     additionalProperties?: StrictUiSchema<Checks, AdditionalPropertyData<T>, S, F>;
     /** As `UiSchema`'s `additionalItems` */

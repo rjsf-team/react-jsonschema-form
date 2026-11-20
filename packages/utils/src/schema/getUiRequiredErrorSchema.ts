@@ -5,6 +5,7 @@ import {
   ANY_OF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
+  PREFIX_ITEMS_KEY,
   RJSF_REF_CYCLE_KEY,
   UI_DEFINITIONS_KEY,
   UI_FIELD_KEY,
@@ -24,7 +25,6 @@ import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isConstantSelect from '../isConstantSelect.ts';
 import isCustomWidget from '../isCustomWidget.ts';
-import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
@@ -35,7 +35,6 @@ import resolveUiSchema, { definitionRef, mergeOptionDefinitions } from '../resol
 import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
 import type {
   ErrorSchema,
-  FieldPath,
   FormContextType,
   FormFieldState,
   GenericObjectType,
@@ -49,6 +48,7 @@ import type {
 import uiBooleanOption from '../uiBooleanOption.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
+import { getPrefixLength } from './getItemSchema.ts';
 import { emptySchema } from './graph/mergePlan.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
@@ -117,27 +117,6 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
     return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema, place };
   }
   return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema, place };
-}
-
-/** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution. A fixed (tuple) schema's
- * row past its own positions is checked first, exactly as `ArrayField`'s fixed-items render checks
- * `index >= schemaItems.length` before anything else: that row always uses `uiSchema.additionalItems`, never the
- * function form of `uiSchema.items` (`ArrayField` never even resolves the dynamic/static form for it). Only a genuine
- * tuple position or a non-fixed array reaches `getItemUiSchemaForItem()`, which — unlike `getItemUiSchemaForIndex()`,
- * used for defaults, where an item's data isn't available yet — has `item` to pass to the function form.
- */
-function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  retrieved: S,
-  uiSchema: UiSchema<T, S, F>,
-  item: unknown,
-  idx: number,
-  formContext: F | undefined,
-  arrayFieldPath: FieldPath | undefined,
-): UiSchema<T, S, F> | undefined {
-  if (isFixedItems<S>(retrieved) && idx >= (retrieved.items as S[]).length) {
-    return uiSchema.additionalItems as UiSchema<T, S, F> | undefined;
-  }
-  return getItemUiSchemaForItem<T, S, F>(uiSchema, item as never, idx, formContext, arrayFieldPath);
 }
 
 interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
@@ -255,7 +234,7 @@ function rendersArrayWidget<T, S extends StrictRJSFSchema, F extends FormContext
   const { field } = getUiOptions<T, S, F>(uiSchema);
   return (
     (field === undefined || field === 'ArrayField' || field === 'SchemaField') &&
-    ITEMS_KEY in schema &&
+    (ITEMS_KEY in schema || PREFIX_ITEMS_KEY in schema) &&
     (isMultiSelect<T, S, F>(schemaContext, schema, rootSchema) ||
       isCustomWidget<T, S, F>(uiSchema) ||
       isFilesArray<T, S, F>(schemaContext, schema, uiSchema, rootSchema))
@@ -535,9 +514,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         getInnerSchemaForArrayItem<S>(
           retrieved,
           AdditionalItemsHandling.Fallback,
-          Array.isArray(retrieved.items) ? idx : -1,
+          getPrefixLength<S>(retrieved) > 0 ? idx : -1,
         ),
-        resolveArrayItemUiSchema<T, S, F>(retrieved, branchUiSchema, item, idx, formContext, arrayFieldPath),
+        getItemUiSchemaForItem<T, S, F>(branchUiSchema, item as never, idx, formContext, arrayFieldPath, retrieved),
         item,
         [...path, idx],
         false,

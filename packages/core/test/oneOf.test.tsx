@@ -5141,6 +5141,33 @@ describe('oneOf', () => {
       },
     );
 
+    it('should keep the errors a prefixItems position raised across a switch between options rendering it as before', async () => {
+      function RaisingField({ fieldPath, onChange }: FieldProps) {
+        return (
+          <button type='button' onClick={() => onChange('bad', fieldPath, { __errors: ['Custom error'] })}>
+            Raise
+          </button>
+        );
+      }
+      const schema = wrap({
+        type: 'array',
+        prefixItems: [{ type: 'string' }],
+        anyOf: [{ minItems: 1 }, { maxItems: 3 }],
+      });
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: { opt: { prefixItems: [{ 'ui:field': RaisingField }] } },
+        initialFormData: { opt: ['x'] },
+      });
+      await user.click(screen.getByRole('button', { name: 'Raise' }));
+      expect(onChange.mock.lastCall![0].errorSchema).toEqual({ opt: { 0: { __errors: ['Custom error'] } } });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Option 2');
+
+      expect(onChange.mock.lastCall![0].formData).toEqual({ opt: ['bad'] });
+      expect(onChange.mock.lastCall![0].errorSchema).toEqual({ opt: { 0: { __errors: ['Custom error'] } } });
+    });
+
     it.each<[string, RJSFSchema, UiSchema, string]>([
       [
         'the uiSchema of the option switched to renders the item with another field',
@@ -5159,6 +5186,18 @@ describe('oneOf', () => {
         { type: 'array', items: { type: 'string' }, anyOf: [{ minItems: 1 }, { enum: [['a'], ['b']] }] },
         { items: { 'ui:field': 'raising' } },
         'a',
+      ],
+      [
+        'the option switched to describes a prefixItems position with another schema',
+        {
+          type: 'array',
+          anyOf: [
+            { prefixItems: [{ type: 'string' }], items: { type: 'string' } },
+            { prefixItems: [{ type: 'string', maxLength: 5 }], items: { type: 'string' } },
+          ],
+        },
+        { prefixItems: [{ 'ui:field': 'raising' }] },
+        'bad',
       ],
       [
         'the option switched to holds options of its own, which render its items anew',

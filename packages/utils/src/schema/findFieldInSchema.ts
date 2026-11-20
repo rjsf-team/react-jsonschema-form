@@ -1,5 +1,5 @@
 import { getAdditionalPropertySchema } from '../additionalPropertiesUtils.ts';
-import { ADDITIONAL_PROPERTY_FLAG, ITEMS_KEY, PROPERTIES_KEY } from '../constants.ts';
+import { ADDITIONAL_PROPERTY_FLAG, ITEMS_KEY, PREFIX_ITEMS_KEY, PROPERTIES_KEY } from '../constants.ts';
 import { renderOption } from '../getRenderedOptionSchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
@@ -16,6 +16,7 @@ import type {
 import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.ts';
 import getFromSchema from './getFromSchema.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
+import { getPrefixLength } from './getItemSchema.ts';
 import retrieveSchema, { joinOptionExtraKeys } from './retrieveSchema.ts';
 
 const NOT_FOUND = { field: undefined, isRequired: undefined };
@@ -79,11 +80,11 @@ function findKey<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The item the array renders at the index, as the `ui:required` check walks it, its options' `items` met in; an item
   // is never required. Object data holds an extra key there, as a type list naming both `object` and `array` can
   const array = /^\d+$/.test(key) && !isObject(data) && (option ? renderOption<S>(parent, option) : parent);
-  if (array && ITEMS_KEY in array) {
+  if (array && (ITEMS_KEY in array || PREFIX_ITEMS_KEY in array)) {
     const item = getInnerSchemaForArrayItem<S>(
       array,
       AdditionalItemsHandling.Fallback,
-      Array.isArray(array.items) ? Number(key) : -1,
+      getPrefixLength<S>(array) > 0 ? Number(key) : -1,
     );
     return { field: getFromSchema<T, S, F>(context, rootSchema, item, [], item), isRequired: false };
   }

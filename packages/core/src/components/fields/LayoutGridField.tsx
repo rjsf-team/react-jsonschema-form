@@ -18,6 +18,8 @@ import {
   toPath,
   deepEquals,
   getDiscriminatorFieldFromSchema,
+  getItemSchema,
+  getPrefixLength,
   getTemplates,
   getTestIds,
   getPropertySchema,
@@ -51,7 +53,13 @@ import useUiState from '../../hooks/useUiState.ts';
 import type { UiState, UiStateReader } from '../uiState.ts';
 import { optionListKey, optionsMayDisagreeAbout, retrievedOptionsOf, shownOption } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
-import { declaresProperty, storedValue, withoutAdditionalFlag, withoutOptionalControls } from './fieldWidgetUtils.ts';
+import {
+  declaresItems,
+  declaresProperty,
+  storedValue,
+  withoutAdditionalFlag,
+  withoutOptionalControls,
+} from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';
 import type { ShownOption } from './ShownOptionContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
@@ -316,11 +324,12 @@ export function findChildrenAndProps<
 }
 
 /** Computes the `rawSchema` and array `index` for a `schema` and a `potentialIndex`. If the `schema` is of type
- * array, has an `ITEMS_KEY` element and `potentialIndex` represents a numeric value, the element at `ITEMS_KEY` is
- * checked to see if it is an array. If it is AND the `potentialIndex`th element is available, it is used as the
- * `rawSchema`, otherwise the `additionalItems` schema is, as `ArrayField` renders the items past a tuple, flagged by
+ * array, has an `ITEMS_KEY` or `prefixItems` element and `potentialIndex` represents a numeric value, the schema is
+ * checked to see if it is a tuple, through `prefixItems` or an array `ITEMS_KEY`. If it is AND the `potentialIndex`th
+ * position is available, it is used as the `rawSchema`, otherwise the schema of the items past the tuple is (the `items`
+ * beside `prefixItems`, or the `additionalItems` beside a tuple `items`), as `ArrayField` renders them, flagged by
  * `isAdditionalItem` so the caller can treat one that resolves to the empty schema as no schema, or no `rawSchema`
- * where `additionalItems` isn't a schema. If the element is not an array, it is used as the `rawSchema`. In either
+ * where that isn't a schema. If the schema is no tuple, its `ITEMS_KEY` element is used as the `rawSchema`. In either
  * case, the numeric `index` is returned so the caller can record the path segment as a number, addressing an array
  * element rather than an object key. If the `schema` does not represent an array or the `potentialIndex` is not a
  * numeric value, then all are returned as undefined.
@@ -328,7 +337,7 @@ export function findChildrenAndProps<
  * @param schema - The schema to check for an array item schema
  * @param potentialIndex - A string containing a potential index
  * @returns - An object containing the numeric `index` of an array item, its `rawSchema` where one describes it and
- *            whether that is the `additionalItems` schema, otherwise all undefined
+ *            whether that is the schema of the items past a tuple, otherwise all undefined
  */
 export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S | undefined,
@@ -341,14 +350,15 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
   let rawSchema: S | undefined;
   let index: number | undefined;
   let isAdditionalItem: boolean | undefined;
-  if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && ITEMS_KEY in schema) {
+  if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && declaresItems<S>(schema)) {
     index = Number(potentialIndex);
     const items = schema[ITEMS_KEY];
-    if (Array.isArray(items)) {
-      if (index < items.length) {
-        rawSchema = items[index] as S;
-      } else if (isSchemaObject<S>(schema.additionalItems)) {
-        rawSchema = schema.additionalItems;
+    if (Array.isArray(schema.prefixItems) || Array.isArray(items)) {
+      const itemSchema = getItemSchema<S>(schema, index);
+      if (index < getPrefixLength<S>(schema)) {
+        rawSchema = itemSchema as S;
+      } else if (isSchemaObject<S>(itemSchema)) {
+        rawSchema = itemSchema;
         isAdditionalItem = true;
       }
     } else {

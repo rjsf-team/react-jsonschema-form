@@ -20,5 +20,9 @@ export default function isFilesArrayTest(testValidator: TestValidatorType) {
       const schema: RJSFSchema = {};
       expect(isFilesArray({ validator: testValidator }, schema)).toBe(false);
     });
+    it('should be false for a prefixItems tuple, whose items describe only the items past it', () => {
+      const schema: RJSFSchema = { prefixItems: [{ type: 'string' }], items: { type: 'string', format: 'data-url' } };
+      expect(isFilesArray({ validator: testValidator }, schema)).toBe(false);
+    });
   });
 }

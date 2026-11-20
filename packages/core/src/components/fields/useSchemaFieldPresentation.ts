@@ -19,13 +19,13 @@ import {
   getPresentationDeclaration,
   getUiOptions,
   guessType,
-  ITEMS_KEY,
   resolveFieldPresentation,
   schemaRequiresTrueValue,
   uiBooleanOption,
 } from '@rjsf/utils';
 
 import getFieldWidget, {
+  declaresItems,
   displaysLabel,
   fallbackValueKeepsWidget,
   fallbackValueUiSchema,
@@ -358,7 +358,7 @@ export default function useSchemaFieldPresentation<
   );
   const fallbackDrawsNoControl = plannedField === fields.FallbackField && !hidden && !hasControl;
   const usesFallbackUi = Boolean(globalFormOptions.useFallbackUiForUnsupportedType);
-  const arrayMissesItems = plannedField === fields.ArrayField && !hidden && !(ITEMS_KEY in schema);
+  const arrayMissesItems = plannedField === fields.ArrayField && !hidden && !declaresItems<S>(schema);
   const rendersUnsupportedTemplate = (fallbackDrawsNoControl || arrayMissesItems) && !usesFallbackUi;
   const fieldRendersArrayWidget = useMemo(
     () => rendersOneArrayWidget<T, S, F>(plannedField, widget, registry, schema, uiSchema, headingType),

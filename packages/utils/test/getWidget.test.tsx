@@ -143,6 +143,10 @@ describe('getWidget()', () => {
     ['options that need not be unique', { type: ['array', 'string'], items: { enum: ['a', 'b'] } }],
     ['boolean items', { type: ['array', 'string'], items: true, uniqueItems: true }],
     ['tuple items', { type: ['array', 'string'], items: [{ enum: ['a'] }], uniqueItems: true }],
+    [
+      'options past a prefixItems tuple',
+      { type: ['array', 'string'], prefixItems: [{ type: 'string' }], items: { enum: ['a'] }, uniqueItems: true },
+    ],
   ])('should find a scalar widget on a list resolving to array with %s', (_, union) => {
     expect(getWidget(union, 'textarea', { TextareaWidget: TestWidget })).toBe(TestWidget);
   });

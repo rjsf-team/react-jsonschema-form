@@ -18,7 +18,8 @@ export default function isFilesArray<
   if (uiSchema[UI_WIDGET_KEY] === 'files') {
     return true;
   }
-  if (schema.items) {
+  // A `prefixItems` tuple's `items` describes only the items past it
+  if (schema.items && !Array.isArray(schema.prefixItems)) {
     const itemsSchema = retrieveSchema<T, S, F>(context, schema.items as S, rootSchema);
     return itemsSchema.type === 'string' && itemsSchema.format === 'data-url';
   }

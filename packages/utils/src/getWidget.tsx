@@ -260,6 +260,7 @@ function getTypeListSelectType<S extends StrictRJSFSchema = RJSFSchema>(
   const isMultiSelect =
     type === 'array' &&
     schema.uniqueItems === true &&
+    !Array.isArray(schema.prefixItems) &&
     isSchemaObject<S>(schema.items) &&
     isConstantSelect<S>(schema.items, true);
   return isMultiSelect ? type : undefined;

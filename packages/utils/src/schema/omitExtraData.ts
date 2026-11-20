@@ -29,6 +29,7 @@ import type {
 } from '../types.ts';
 import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
+import { getOpenPrefixLength, getRestItemsKey } from './getItemSchema.ts';
 import { mergeAllOf } from './graph/mergePlan.ts';
 import { schemaFrom, schemaOfBoolean } from './graph/schemaFrom.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
@@ -298,31 +299,36 @@ export default function omitExtraData<
   }
 
   /** Filters array elements from `source` into `target` according to `schema.items` and
-   * `schema.additionalItems`. Only called when `items` is defined (guarded in `omit`). Uses index
-   * assignment (not push) so a pre-populated `target` from a prior branch is overwritten rather than
-   * appended to, preventing item duplication. For tuple schemas (`items` is an array) elements up to
-   * `min(items.length, source.length)` are filtered by their per-index schema; elements beyond the
-   * tuple are covered by `additionalItems` when present, or the target is truncated when absent.
-   * For list schemas (`items` is a single schema) every source element is filtered and `target.length`
-   * is set to `source.length`.
+   * `schema.additionalItems`, or `schema.prefixItems` and the `schema.items` beside them. Only called
+   * when `items` or `prefixItems` is defined (guarded in `omit`). Uses index assignment (not push) so a
+   * pre-populated `target` from a prior branch is overwritten rather than appended to, preventing item
+   * duplication. For tuple schemas (`prefixItems`, or else `items`, is an array) elements up to
+   * `min(tuple.length, source.length)` are filtered by their per-index schema; elements beyond the
+   * tuple are covered by the `items` beside `prefixItems`, or the `additionalItems` beside a tuple
+   * `items`, when present, or the target is truncated when absent. A `false` position allows no item,
+   * so the target is truncated before it. For list schemas (`items` is a
+   * single schema) every source element is filtered and `target.length` is set to `source.length`.
    *
-   * @param childSchema - The array schema describing `items` and optionally `additionalItems`
+   * @param childSchema - The array schema describing `items`, `prefixItems` and `additionalItems`
    * @param source - The source array to read elements from
    * @param target - The accumulator array to write filtered elements into
    * @param path - The path of the array
    * @returns - `target` after all applicable source elements have been written
    */
   function handleArray(childSchema: S, source: unknown[], target: unknown[], path: FieldPathList): unknown[] {
-    const { items, additionalItems } = childSchema;
-    if (Array.isArray(items)) {
-      const tupleLength = Math.min(items.length, source.length);
+    const { items, prefixItems } = childSchema;
+    const tuple = Array.isArray(prefixItems) ? prefixItems : items;
+    const additionalItems = childSchema[getRestItemsKey<S>(childSchema)];
+    if (Array.isArray(tuple)) {
+      const openLength = getOpenPrefixLength<S>(childSchema);
+      const tupleLength = Math.min(openLength, source.length);
       let i = 0;
       for (; i < tupleLength; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(items[i], source[i], childPath(path, i));
+        target[i] = omit(tuple[i], source[i], childPath(path, i));
       }
-      // Without additionalItems, truncate at the tuple boundary to drop any pre-existing items.
-      if (!additionalItems) {
+      // Without additionalItems, or at a `false` position, truncate at the tuple boundary to drop any pre-existing items.
+      if (!additionalItems || openLength < tuple.length) {
         // oxlint-disable-next-line no-param-reassign
         target.length = tupleLength;
         return target;
@@ -633,7 +639,7 @@ export default function omitExtraData<
       if (!Array.isArray(source)) {
         return undefined;
       }
-      if (localSchema.items !== undefined) {
+      if (localSchema.items !== undefined || Array.isArray(localSchema.prefixItems)) {
         filtered = handleArray(localSchema, source, Array.isArray(filtered) ? filtered : [], path);
       }
     }

@@ -7,7 +7,6 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isConstantSelect from '../isConstantSelect.ts';
-import isFixedItems from '../isFixedItems.ts';
 import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeObjects from '../mergeObjects.ts';
@@ -22,6 +21,7 @@ import type {
 } from '../types.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
 import { closingConstOf, computeDefaults, takesValueOf, writesPropertyDefault } from './getDefaultFormState.ts';
+import { isTupleSchema } from './getItemSchema.ts';
 import { refDefinition, withoutKeys } from './graph/mergePlan.ts';
 import nodeOfSchema from './graph/nodeOfSchema.ts';
 import retrieveSchema from './retrieveSchema.ts';
@@ -231,7 +231,7 @@ function ownDefaultSchemaOf<S extends StrictRJSFSchema>(schema: S, rootSchema: S
   return IF_KEY in own ||
     ALL_OF_KEY in own ||
     CONST_KEY in own ||
-    isFixedItems<S>(own) ||
+    isTupleSchema<S>(own) ||
     type === 'object' ||
     type === 'array' ||
     (getXxxOfOptions<S>(own) !== undefined && !isConstantSelect<S>(own))

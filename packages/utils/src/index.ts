@@ -78,7 +78,7 @@ import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getSelectFieldType from './getSelectFieldType.ts';
 import getSelectorPresentation from './getSelectorPresentation.ts';
-import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
+import getStaticItemsUiSchema, { getItemsUiSchemaKey } from './getStaticItemsUiSchema.ts';
 import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplates from './getTemplates.ts';
 import getTestIds from './getTestIds.ts';
@@ -264,8 +264,10 @@ export {
   getAdditionalPropertyType,
   getDefaultFormState,
   getItemSchema,
+  getOpenPrefixLength,
   getPrefixLength,
   getValidationTarget,
+  isTupleSchema,
   namesEveryType,
 } from './schema/index.ts';
 /** @public The validator-based API that `createSchemaUtils()` binds, which consumers call directly with a validator */
@@ -324,7 +326,6 @@ export {
   additionalKeyId,
   AdditionalPropertyKeySelect,
   acceptAttribute,
-  allowAdditionalItems,
   asNumber,
   besideOptionsId,
   buttonId,
@@ -388,6 +389,7 @@ export {
   getGroupLabelling,
   getInheritedOptionUiSchema,
   getItemUiSchemaForItem,
+  getItemsUiSchemaKey,
   getLabelId,
   getMatchingPatternProperties,
   getOptionalDataControlsType,
@@ -433,7 +435,6 @@ export {
   isConstantSelect,
   isCustomWidget,
   isEnumOptionsGroup,
-  isFixedItems,
   isFormDataAvailable,
   isLabelledByTemplate,
   isNamedByTemplateLabel,
@@ -531,6 +532,10 @@ export {
   dotNotationNameGenerator,
 };
 
+/** @public Checks of a tuple `items` and its `additionalItems`, which `isTupleSchema()` and `getItemSchema()` make for RJSF's
+ * own packages, `prefixItems` included
+ */
+export { allowAdditionalItems, isFixedItems };
 /** @public Set from an app's development entry point or a test setup to make chosen warnings throw, which no other RJSF
  * package's source does
  */

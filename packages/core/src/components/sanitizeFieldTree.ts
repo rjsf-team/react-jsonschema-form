@@ -22,6 +22,7 @@ import {
   getByPath,
   getDiscriminatorFieldFromSchema,
   getItemSchema,
+  getItemsUiSchemaKey,
   getOptionUiSchema,
   getPrefixLength,
   getRenderedOptionSchema,
@@ -35,6 +36,7 @@ import {
   isPlainObject,
   isSchemaObject,
   isWholeValueSelect,
+  ITEMS_KEY,
   mergeSchemas,
   namesEveryType,
   ONE_OF_KEY,
@@ -535,10 +537,9 @@ function itemsLayerOf<S extends StrictRJSFSchema>(layers: readonly S[]): S | und
 }
 
 /** The subschema the item at `index` is judged by, as `getItemSchema()` reads it: `true` where nothing constrains it,
- * and `false` where no item is allowed. `ArrayField` renders a `prefixItems` array's items with `items`, and the default
- * draft-07 validator ignores `prefixItems`, but a schema declaring it is written for a validator that reads it by
- * position, as the Ajv 2019 and 2020 classes do, so its items are judged that way, as `sanitizeDataForNewSchema()`
- * sanitizes them
+ * and `false` where no item is allowed. The default draft-07 validator ignores `prefixItems`, but a schema declaring it
+ * is written for a validator that reads it by position, as the Ajv 2020 class does, and as `ArrayField`
+ * renders it, so its items are judged that way, as `sanitizeDataForNewSchema()` sanitizes them
  */
 function itemOf<S extends StrictRJSFSchema>(itemsLayer: S | undefined, index: number): S | boolean {
   return itemsLayer ? getItemSchema<S>(itemsLayer, index) : true;
@@ -1134,7 +1135,6 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const newItemsLayer = itemsLayerOf(newLayers);
     const oldItemsLayer = itemsLayerOf(oldLayers);
     const prefixLength = newItemsLayer ? getPrefixLength<S>(newItemsLayer) : 0;
-    const oldTupleLength = Array.isArray(oldItemsLayer?.items) ? oldItemsLayer.items.length : Infinity;
     const maxItems = keywordOf(newLayers, 'maxItems');
     const isNewBound = !edited && !keepsShape && !deepEquals(keywordOf(oldLayers, 'maxItems'), maxItems);
     // No prefix item is dropped, so one at or past `maxItems` is past the items the array may hold. A new `maxItems`
@@ -1188,15 +1188,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           hasOld: Array.isArray(oldValue),
           oldPath: oldPath && hasPrevious ? [...oldPath, Number(previousIndex)] : undefined,
           shownAbove: shownHere,
-          // Past a tuple an item renders with the `additionalItems` uiSchema, as `ArrayField` reads it, and a function
-          // `items` is no entry to read
+          // An item renders with the uiSchema key mirroring the keyword describing it, as `ArrayField` reads it, and a
+          // function `items` is no entry to read
           oldUiSchema: hasPrevious
             ? soleUiSchemaOf(ctx, oldUiSchema, oldItem, (uiSchema) => {
                 const at = Number(previousIndex);
-                if (at >= oldTupleLength) {
-                  return uiSchema.additionalItems;
-                }
-                return Array.isArray(uiSchema.items) ? uiSchema.items[at] : uiSchema.items;
+                const key = oldItemsLayer ? getItemsUiSchemaKey<S>(oldItemsLayer, at) : ITEMS_KEY;
+                const entry: unknown = uiSchema[key];
+                return key !== 'additionalItems' && Array.isArray(entry) ? entry[at] : entry;
               })
             : undefined,
         },
@@ -1272,10 +1271,16 @@ function uiSchemasBelow(uiSchemas: GenericObjectType[], path: FieldPathList, isO
 }
 
 /** The uiSchemas the fill can render the value at `key` of a field rendered with `uiSchema` with, or with `isOwn` only
- * the one a declared `key` names. An item keeps its `additionalItems` one, which is its own past a tuple */
+ * the one a declared `key` names. An item keeps its `prefixItems` and `additionalItems` ones, which are its own at a
+ * position of a `prefixItems` tuple and past a tuple `items` */
 function uiSchemasAt(uiSchema: GenericObjectType, key: string | number, isOwn = false): unknown[] {
   if (typeof key === 'number') {
-    return [getStaticItemsUiSchema(uiSchema, key), uiSchema.additionalItems];
+    const prefixItems: unknown = uiSchema.prefixItems;
+    return [
+      getStaticItemsUiSchema(uiSchema, key),
+      Array.isArray(prefixItems) ? prefixItems[key] : undefined,
+      uiSchema.additionalItems,
+    ];
   }
   return isOwn ? [uiSchema[key]] : [uiSchema[key], uiSchema.additionalProperties];
 }
