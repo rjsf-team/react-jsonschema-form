@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CustomValidator, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { CustomValidator, DefaultFormStateBehavior, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { isPlainObject, ROOT_FIELD_PATH } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -1737,6 +1737,203 @@ describe('option selection as form state', () => {
 
         expect(handleOf(ref).getFormData()).toEqual({ x: 'a', ...filled });
       });
+    },
+  );
+
+  /** Renders a form from `props` and checks the option the select `selectId` shows and the form's data on the first
+   * render, after typing `x` into the input `editId` and after a reset
+   */
+  async function expectShownOnEveryPass(
+    props: Parameters<typeof createFormComponent>[0],
+    selectId: string,
+    editId: string,
+    shown: string,
+    filled: object,
+    edited: object,
+  ) {
+    const ref = createFormRef();
+    const { node } = createFormComponent({ ref, ...props });
+    const expectPass = (data: object) => {
+      expect(getSelectedOptionValue(selectOf(node, selectId))).toBe(shown);
+      expect(handleOf(ref).getFormData()).toEqual(data);
+    };
+
+    expectPass(filled);
+
+    await user.type(elementOf(node, `#${editId}`), 'x');
+
+    expectPass(edited);
+
+    act(() => handleOf(ref).reset());
+
+    expectPass(filled);
+  }
+
+  // The root renders its own field beside the option, so the data's extra key is the root's, not an option's
+  it.each(['forbid', 'allow'] as const)(
+    'fills a typed-object root from the option it shows on every pass, extra keys %s (#5886)',
+    async (additionalPropertiesWhenAbsent) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        oneOf: [
+          {
+            title: 'B',
+            const: { b: 1 },
+            properties: { b: { type: 'number' } },
+            additionalProperties: { type: 'null' },
+          },
+          { title: 'C', properties: { c: { type: 'string' } } },
+        ],
+      };
+      await expectShownOnEveryPass(
+        { schema, initialFormData: { e: 5 }, additionalPropertiesWhenAbsent },
+        'root__oneof_select',
+        'root_a',
+        'B',
+        { b: 1, e: 5 },
+        { a: 'x', b: 1, e: 5 },
+      );
+    },
+  );
+
+  const optionA: RJSFSchema = { title: 'A', type: 'object', properties: { a: { type: 'number' } } };
+
+  // The `allOf`'s list merges into each option, so the field offers each option merged with each of the `allOf`'s, and
+  // each B it offers keeps its `additionalProperties: true`. A pair that can't merge, as an object with a string, is left
+  // out
+  const allOfOptions: [string, RJSFSchema[]][] = [
+    ['one', [{ title: 'C', properties: { c: { type: 'string' } } }]],
+    [
+      'two',
+      [
+        { title: 'C', properties: { c: { type: 'string' } } },
+        { title: 'D', properties: { d: { type: 'string' } } },
+      ],
+    ],
+    ['one and one no option merges with', [{ title: 'C', properties: { c: { type: 'string' } } }, { type: 'string' }]],
+  ];
+  it.each(
+    allOfOptions.flatMap(([name, list]) => (['forbid', 'allow'] as const).map((absent) => ({ name, list, absent }))),
+  )(
+    'fills a typed object whose options an allOf holding $name of its own rebuilds from the option it shows on every pass, extra keys $absent (#5886)',
+    async ({ list, absent }) => {
+      const schema = besideX({
+        p: {
+          type: 'object',
+          oneOf: [
+            optionA,
+            {
+              title: 'B',
+              type: 'object',
+              properties: { b: { type: 'number', default: 5 } },
+              additionalProperties: true,
+            },
+          ],
+          allOf: [{ oneOf: list }],
+        },
+      });
+      await expectShownOnEveryPass(
+        { schema, initialFormData: { p: { t: 2 } }, additionalPropertiesWhenAbsent: absent },
+        'root_p__oneof_select',
+        'root_x',
+        'B',
+        { p: { b: 5, t: 2 } },
+        { x: 'x', p: { b: 5, t: 2 } },
+      );
+    },
+  );
+
+  // B's `then` declares `t` only for data holding `z`, so for this data `t` is an extra key B's own
+  // `additionalProperties` takes
+  it.each<{ name: string; field: RJSFSchema; absent: 'forbid' | 'allow'; shown: string; filled: object }>([
+    { name: 'with no type', field: {}, absent: 'forbid', shown: 'B', filled: { a: 1, db: 'B', t: 2 } },
+    { name: 'with no type', field: {}, absent: 'allow', shown: 'A', filled: { a: 1, da: 'A', t: 2 } },
+    { name: 'typed object', field: { type: 'object' }, absent: 'forbid', shown: 'B', filled: { a: 1, db: 'B', t: 2 } },
+    { name: 'typed object', field: { type: 'object' }, absent: 'allow', shown: 'B', filled: { a: 1, db: 'B', t: 2 } },
+  ])(
+    "fills a property $name from the option it shows on every pass where a then that doesn't apply declares the extra key, extra keys $absent (#5886)",
+    async ({ field, absent, shown, filled }) => {
+      const schema = besideX({
+        p: {
+          ...field,
+          oneOf: [
+            { title: 'A', type: 'object', properties: { a: { type: 'number' }, da: { type: 'string', default: 'A' } } },
+            {
+              title: 'B',
+              type: 'object',
+              properties: { a: { type: 'number' }, db: { type: 'string', default: 'B' } },
+              additionalProperties: true,
+              if: { required: ['z'] },
+              then: { properties: { t: { type: 'string' } } },
+            },
+          ],
+        },
+      });
+      await expectShownOnEveryPass(
+        { schema, initialFormData: { p: { a: 1, t: 2 } }, additionalPropertiesWhenAbsent: absent },
+        'root_p__oneof_select',
+        'root_x',
+        shown,
+        { p: filled },
+        { x: 'x', p: filled },
+      );
+    },
+  );
+
+  // An option takes the extra keys its own `additionalProperties` takes wherever it sits, and those an absent keyword
+  // takes only where no object renders its own field beside it, however the option declares its properties. The fill
+  // takes the defaults an `allOf` declares only under `allOf: 'populateDefaults'`
+  const declaringB: { declares: string; b: RJSFSchema; defaultFormStateBehavior?: DefaultFormStateBehavior }[] = [
+    { declares: 'by its own properties', b: { properties: { b: { type: 'number', default: 5 } } } },
+    {
+      declares: 'through an allOf',
+      b: { allOf: [{ properties: { b: { type: 'number', default: 5 } } }] },
+      defaultFormStateBehavior: { allOf: 'populateDefaults' },
+    },
+    {
+      declares: 'beside an if',
+      b: { properties: { b: { type: 'number', default: 5 } }, if: { required: ['z'] }, then: {} },
+    },
+    {
+      declares: 'beside dependencies',
+      b: { properties: { b: { type: 'number', default: 5 } }, dependencies: { z: {} } },
+    },
+  ];
+  const fields: { name: string; field: RJSFSchema; absent: 'forbid' | 'allow'; shown: string; filled: object }[] = [
+    { name: 'with no type', field: {}, absent: 'forbid', shown: 'B', filled: { b: 5, t: 2 } },
+    { name: 'with no type', field: {}, absent: 'allow', shown: 'A', filled: { t: 2 } },
+    { name: 'typed object', field: { type: 'object' }, absent: 'forbid', shown: 'B', filled: { b: 5, t: 2 } },
+    { name: 'typed object', field: { type: 'object' }, absent: 'allow', shown: 'B', filled: { b: 5, t: 2 } },
+    {
+      name: 'with properties',
+      field: { properties: { k: { type: 'string' } } },
+      absent: 'forbid',
+      shown: 'B',
+      filled: { b: 5, t: 2 },
+    },
+    {
+      name: 'with properties',
+      field: { properties: { k: { type: 'string' } } },
+      absent: 'allow',
+      shown: 'B',
+      filled: { b: 5, t: 2 },
+    },
+  ];
+  it.each(fields.flatMap((field) => declaringB.map((declaring) => ({ ...field, ...declaring }))))(
+    'fills a property $name offering options from the option it shows on every pass, extra keys $absent, B declaring b $declares (#5886)',
+    async ({ field, absent, b, defaultFormStateBehavior, shown, filled }) => {
+      const schema = besideX({
+        p: { ...field, oneOf: [optionA, { title: 'B', type: 'object', ...b, additionalProperties: true }] },
+      });
+      await expectShownOnEveryPass(
+        { schema, initialFormData: { p: { t: 2 } }, additionalPropertiesWhenAbsent: absent, defaultFormStateBehavior },
+        'root_p__oneof_select',
+        'root_x',
+        shown,
+        { p: filled },
+        { x: 'x', p: filled },
+      );
     },
   );
 });

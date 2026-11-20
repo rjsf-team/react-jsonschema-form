@@ -1,24 +1,28 @@
-import { allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
-import { ALL_OF_KEY, DEPENDENCIES_KEY, IF_KEY, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
+import { allowsAdditionalProperties, readsAbsentAsAllowed } from '../additionalPropertiesUtils.ts';
+import { ADDITIONAL_PROPERTY_FLAG, ALL_OF_KEY, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import { getByPath } from '../pathUtils.ts';
+import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { optionMatches, optionNodeOf, simpleDiscriminatorMatch } from './getFirstMatchingOption.ts';
 import type { OptionNode } from './getFirstMatchingOption.ts';
 import { isHandedOut } from './graph/handedOut.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
-import buildPlan, { seedsAt } from './graph/mergePlan.ts';
+import buildPlan, { seedsAt, withoutKeys } from './graph/mergePlan.ts';
 import type { MergePlan, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { readProvenance } from './graph/provenance.ts';
-import {
+import { declaredProperties, declaresUnconditionally } from './graph/validationTargets.ts';
+import retrieveSchema, {
   extraKeysOf,
   fieldOf,
+  fieldTypeSchema,
   optionMatchKey,
   optionNode,
   stubExistingAdditionalProperties,
@@ -109,6 +113,56 @@ function propertyWhere<S extends StrictRJSFSchema>(parent: Scored<S>, rootSchema
 interface Listing<S extends StrictRJSFSchema> {
   readonly seeding: Seeding<S>;
   readonly keyword: string;
+  /** The schema offering the options, which decides whether an option stubs the extra keys an absent keyword takes */
+  readonly offeredBy: S;
+}
+
+/** The end of a pointer to an `allOf` entry, `then`, `else` or `dependencies` schema, which merges into the schema
+ * holding it
+ */
+const MERGING_TAIL = /\/(?:allOf\/\d+|then|else|dependencies\/[^/]+)$/;
+
+/** Returns the pointer of the field the schema at `pointer` is, or merges into */
+function fieldPointerOf(pointer: string): string {
+  let field = pointer;
+  while (MERGING_TAIL.test(field)) {
+    field = field.replace(MERGING_TAIL, '');
+  }
+  return field;
+}
+
+/** Returns the field the root declares `options` as the `anyOf`/`oneOf` list of, found from where the first option is
+ * declared, with the keyword holding them: the schema holding the list, or the one it merges into where an `allOf`
+ * entry, `then`, `else` or `dependencies` schema holds it. Undefined for a list the root holds nowhere, as one built in
+ * code, a copy or the options `retrieveSchema()` handed out are
+ *
+ * @param options - The options
+ * @param rootSchema - The root schema
+ * @returns - The field offering them and the keyword, if the root declares them
+ */
+function declaredListing<S extends StrictRJSFSchema>(
+  options: readonly unknown[],
+  rootSchema: S,
+): { readonly offeredBy: S; readonly keyword: string } | undefined {
+  const graph = parseSchemaGraph<S>(rootSchema);
+  const schemaAt = (pointer: string | undefined) => {
+    const id = pointer === undefined ? undefined : graph.byPointer(pointer);
+    const node = id === undefined ? undefined : graph.node(id);
+    return node?.kind === 'schema' ? node.raw : undefined;
+  };
+  const declared = isObject(options[0]) ? graph.byObject(options[0]) : undefined;
+  const at = declared === undefined ? null : /^(.*)\/(anyOf|oneOf)\/0$/.exec(graph.node(declared).pointer);
+  const holder = schemaAt(at?.[1]);
+  const field = schemaAt(at === null ? undefined : fieldPointerOf(at[1]));
+  if (at === null || holder === undefined || field === undefined) {
+    return undefined;
+  }
+  const list: unknown = Reflect.get(holder, at[2]);
+  return Array.isArray(list) &&
+    list.length === options.length &&
+    list.every((option, index) => option === options[index])
+    ? { offeredBy: field, keyword: at[2] }
+    : undefined;
 }
 
 /** Returns where the option `option`, at `index` of the list `listing` names, is declared: where a declaration of the
@@ -168,7 +222,7 @@ function propertyScore<
       -1,
       false,
       getDiscriminatorFieldFromSchema<S>(value),
-      { seeding: scored.plan ?? planAt<S, F>(context, where()), keyword: xxxOfKey },
+      { seeding: scored.plan ?? planAt<S, F>(context, where()), keyword: xxxOfKey, offeredBy: value },
     ).score();
   }
   if (value.type === 'object') {
@@ -201,10 +255,10 @@ function propertyScore<
 /** Recursive function that calculates the score of a `formData` against the given `schema`. The computation is fairly
  * simple. Initially the total score is 0. First the keys of `formData` that the schema's own `additionalProperties`
  * takes are stubbed among its `properties`, as `scoredOption()` describes, so a schema taking extra keys the data holds
- * scores as one with `properties`, whether or not it declares any, unless it holds an `allOf`, an `if` or
- * `dependencies`. When `schema.properties` object exists, then each property's form value, read from `formData` with its
- * `key`, is scored against the property's schema, as `propertyScore()` describes, and the scores are added up. A schema
- * without `properties` scores 1 when its `type` is the guessed-type of `formData`.
+ * scores as one with `properties`, whether or not it declares any. When `schema.properties` object exists, then each
+ * property's form value, read from `formData` with its `key`, is scored against the property's schema, as
+ * `propertyScore()` describes, and the scores are added up. A schema without `properties` scores 1 when its `type` is
+ * the guessed-type of `formData`.
  * The score of each `allOf` entry, read through its `$ref`, is added to the schema's own, so options sharing a base
  * through a `$ref` beside their own keywords or through an `allOf` are told apart by the properties each adds. An
  * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does. Where an
@@ -376,8 +430,13 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Returns an option as scoring reads it: a schema `retrieveSchema()` handed out as it stands, and any other through
  * the plan of the subschema it stands for, where `where` says or else where `retrieveSchema()` would read it, with the
- * extra keys of `formData` that its own `additionalProperties` or `patternProperties` takes stubbed among its
- * `properties`, as the option handed out for that data, which a field shows, holds them
+ * extra keys of `formData` it takes stubbed among its `properties`, as the option a field shows for that data holds
+ * them. An option takes the keys its own `additionalProperties` or `patternProperties` takes, even handed out beside an
+ * object rendering its own field, which renders the extra keys of the option it shows. Where `readsAbsent`, it also
+ * takes those an absent keyword takes, as `additionalPropertiesWhenAbsent` says. A key a declaration in its scope
+ * names whatever the data, as its `allOf` entries can, is not stubbed, since scoring reads the `allOf` entries' own; nor,
+ * for an option as written, is one a `then`, `else` or `dependencies` schema names that applies to the data, which
+ * retrieval declares through it. An option `retrieveSchema()` handed out was retrieved for its data, which applied those.
  */
 function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -385,27 +444,43 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
   rootSchema: S,
   formData: unknown,
   where?: Where<S>,
+  readsAbsent = false,
 ): Scored<S> {
-  if (isHandedOut(option) && typeof option[REF_KEY] !== 'string') {
-    return { schema: option };
-  }
-  const plan = planAt<S, F>(context, where ?? whereOf<S>(option, rootSchema));
-  const { schema } = plan;
-  // shortcut: retrieval also stubs the keys an absent keyword under `additionalPropertiesWhenAbsent: 'allow'` takes,
-  // which still score as nothing here, so the context is read as `'forbid'`; an option with an `allOf`, `if` or
-  // `dependencies` is not stubbed at all, since retrieval may declare a key through them that a stub here would score
-  // by its guessed type, and an option handed out above without being retrieved for the data is scored without stubs;
-  // upgrade once the matcher reads its "none of these" rules off the retrieved option (#5886). Data holding no extra
-  // key is left as it is, since the copy would hold an empty `properties`, which scores apart from none
-  if (
-    !allowsAdditionalProperties<S, F>({ ...context, additionalPropertiesWhenAbsent: 'forbid' }, schema) ||
-    // The plan merges `dependencies` away without data, so its chains, not its schema, say which ones it declares
-    plan.chains.some((chain) => [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY].some((keyword) => chain.has(keyword))) ||
-    extraKeysOf<S>(schema, schema, undefined, formData).length === 0
-  ) {
+  const { graph, seeds } = where ?? whereOf<S>(option, rootSchema);
+  // A handed-out option is read as retrieval left it, which stubbed the keys an absent keyword takes where its field
+  // leaves them to it
+  const plan =
+    isHandedOut(option) && typeof option[REF_KEY] !== 'string' ? undefined : planAt<S, F>(context, { graph, seeds });
+  let retrieved: S | undefined;
+  const declaresForData = (key: string) => {
+    retrieved ??= retrieveSchema<unknown, S, F>(context, option, rootSchema, formData);
+    const declared: unknown = getByPath(retrieved, [PROPERTIES_KEY, key]);
+    return isObject(declared) && !hasSchemaMarker(declared, ADDITIONAL_PROPERTY_FLAG);
+  };
+  const declares = (key: string) =>
+    seeds.some(({ node }) => declaresUnconditionally<S>(graph, node, key)) ||
+    (plan !== undefined &&
+      seeds.some(({ node }) => declaredProperties<S>(graph, node, key).length > 0) &&
+      declaresForData(key));
+  const schema = plan?.schema ?? option;
+  // shortcut: an option of a list the root declares nowhere, as one a direct `getClosestMatchingOption()` call builds
+  // in code, reads an absent keyword as `'forbid'`, since only the field offering it says whether it stubs those keys
+  // itself; upgrade if such callers need the form's pick
+  const stubContext: SchemaContext<S, F> =
+    (readsAbsent && plan !== undefined) || !readsAbsentAsAllowed<S, F>(context)
+      ? context
+      : { ...context, additionalPropertiesWhenAbsent: 'forbid' };
+  if (!isObject(formData) || !allowsAdditionalProperties<S, F>(stubContext, schema)) {
     return { schema, plan };
   }
-  return { schema: stubExistingAdditionalProperties<unknown, S, F>(context, schema, rootSchema, formData), plan };
+  const keys = extraKeysOf<S>(schema, schema, undefined, formData).filter((key) => !declares(key));
+  // Data holding no extra key is left as it is, since the copy would hold an empty `properties`, which scores apart
+  // from none
+  if (keys.length === 0) {
+    return { schema, plan };
+  }
+  const extraData = Object.fromEntries(keys.map((key) => [key, formData[key]]));
+  return { schema: stubExistingAdditionalProperties<unknown, S, F>(stubContext, schema, rootSchema, extraData), plan };
 }
 
 /** The option `bestOption()` picks, with the score it gets, computed once it is asked for */
@@ -468,6 +543,17 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const optionNodes = options.map((option) => optionNodeOf<S>(option, rootSchema));
   const declaredAt = (index: number, option: S) =>
     listing === undefined ? undefined : listedAt<S>(listing, index, option);
+  // An object rendering its own field beside an option stubs the extra keys an absent keyword takes itself; with no
+  // absent keyword taking any, there are none to stub. A list no field names is read where the root declares it
+  const offering =
+    isObject(formData) && readsAbsentAsAllowed<S, F>(context)
+      ? (listing ?? declaredListing<S>(options, rootSchema))
+      : undefined;
+  const field =
+    offering === undefined
+      ? undefined
+      : fieldTypeSchema<S, F>(context, withoutKeys<S>(offering.offeredBy, offering.keyword), rootSchema, formData);
+  const readsAbsent = options.map((option) => field !== undefined && !rendersOwnFieldBesideOption<S>(field, option));
   const compute = (whereDeclared: (index: number, option: S) => Where<S> | undefined) =>
     scoreOptions<T, S, F>(
       context,
@@ -479,6 +565,7 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       relax,
       discriminatorField,
       whereDeclared,
+      readsAbsent,
     );
   if (typeof formData !== 'object' || formData === null) {
     return compute(declaredAt);
@@ -495,6 +582,7 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     relax,
     discriminatorField,
     selectedOption,
+    ...readsAbsent,
     ...declared.flatMap((where) =>
       where === undefined ? [undefined] : [where.graph, ...where.seeds.map((seed) => seed.node)],
     ),
@@ -595,6 +683,7 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
   relax: boolean,
   discriminatorField: string | undefined,
   declaredAt: (index: number, option: S) => Where<S> | undefined,
+  readsAbsent: readonly boolean[],
 ): BestOption {
   const optionScore = (index: number) => {
     const option = options[index];
@@ -604,7 +693,7 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return scopeScore<T, S, F>(
       context,
       rootSchema,
-      scoredOption<S, F>(context, option, rootSchema, formData, declaredAt(index, option)),
+      scoredOption<S, F>(context, option, rootSchema, formData, declaredAt(index, option), readsAbsent[index]),
       formData,
       new Set(),
     );
