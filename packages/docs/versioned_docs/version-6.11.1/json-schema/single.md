@@ -1,0 +1,207 @@
+# Single fields
+
+The simplest example of a JSON Schema contains only a single field. The field type is determined by the `type` parameter.
+
+## Field types
+
+The base field types in JSON Schema include:
+
+- `string`
+- `number`
+- `integer`
+- `boolean`
+- `null`
+
+Here is an example of a string field:
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+## Titles and descriptions
+
+Fields can have titles and descriptions specified by the `title` keyword in the schema and the `description` keyword in the schema, respectively. These two can also be overridden by the `ui:title` and `ui:description` keywords in the uiSchema.
+
+Description can render markdown. This feature is disabled by default. It needs to be enabled by the `ui:enableMarkdownInDescription` keyword and setting to `true`. Read more about markdown options in the `markdown-to-jsx` official [docs](https://markdown-to-jsx.quantizor.dev/).
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  title: 'My form',
+  description: 'My description',
+  type: 'string',
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+## Deprecated fields
+
+The JSON Schema `deprecated` keyword can be used to indicate that a field is no longer supported.
+
+The `deprecated` keyword is a JSON Schema Draft 2019-09 feature. You may need to configure your schema validator to properly recognize it. See the [Validation](../usage/validation.md#ajvclass) documentation for more details.
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  deprecated: true,
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+By default, RJSF will append ` (deprecated)` to the field label. You can customize this behavior using the `deprecatedHandling` option in the uiSchema. See [deprecatedHandling](../api-reference/uiSchema.md#deprecatedhandling) for more details.
+
+## Enumerated values
+
+All base schema types support the `enum` attribute, which restricts the user to select among a list of options. For example:
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  enum: ['one', 'two', 'three'],
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+### Custom labels for `enum` fields
+
+JSON Schema supports the following approaches to enumerations using `oneOf`/`anyOf`; react-jsonschema-form supports it as well.
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'number',
+  anyOf: [
+    {
+      type: 'number',
+      title: 'one',
+      enum: [1],
+    },
+    {
+      type: 'number',
+      title: 'two',
+      enum: [2],
+    },
+    {
+      type: 'number',
+      title: 'three',
+      enum: [3],
+    },
+  ],
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'number',
+  oneOf: [
+    { const: 1, title: 'one' },
+    { const: 2, title: 'two' },
+    { const: 3, title: 'three' },
+  ],
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+If you use `enum` in your JSON Schema, you may instead specify `ui:enumNames` in your `uiSchema`, which RJSF can use to label an enumeration. `ui:enumNames` can be an array (matched by index) or a map (matched by value):
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'number',
+  enum: [1, 2, 3],
+};
+
+// Array form (matched by index)
+const uiSchema: UiSchema = {
+  'ui:enumNames': ['one', 'two', 'three'],
+};
+
+// Map form (matched by value)
+const uiSchema: UiSchema = {
+  'ui:enumNames': { 1: 'one', 2: 'two', 3: 'three' },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
+### Ordering `enum` fields
+
+To control the display order of enum options, use `ui:enumOrder`. Use `'*'` to represent all remaining values in their original schema order. Unlisted values not covered by `'*'` are dropped.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  enum: ['apple', 'banana', 'cherry', 'date'],
+};
+
+const uiSchema: UiSchema = {
+  'ui:enumOrder': ['cherry', '*', 'apple'],
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
+### Disabled attribute for `enum` fields
+
+To disable an option, use the `ui:enumDisabled` property in the uiSchema.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'boolean',
+  enum: [true, false],
+};
+
+const uiSchema: UiSchema = {
+  'ui:enumDisabled': [true],
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
+## Nullable types
+
+JSON Schema supports specifying multiple types in an array; however, react-jsonschema-form only supports a restricted subset of this -- nullable types, in which an element is either a given type or equal to null.
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: ['string', 'null'],
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```

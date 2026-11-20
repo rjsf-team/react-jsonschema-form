@@ -286,21 +286,21 @@ render((
 A field component will always be passed the following props:
 
  - `schema`: The JSON schema for this field;
- - `uiSchema`: The [uiSchema](#the-uischema-object) for this field;
+ - `uiSchema`: The [uiSchema](../api-reference/uiSchema.md) for this field;
  - `idSchema`: The tree of unique ids for every child field;
  - `formData`: The data for this field;
  - `errorSchema`: The tree of errors for this field and its children;
  - `registry`: A [registry](#the-registry-object) object (read next).
- - `formContext`: A [formContext](#the-formcontext-object) object (read next).
+ - `formContext`: A [formContext](../api-reference/form-props.md#formcontext) object (read next).
 
 ## The `registry` object
 
 The `registry` is an object containing the registered custom fields and widgets as well as the root schema definitions.
 
  - `fields`: All fields, including [custom registered fields](#custom-field-components), if any;
- - `widgets`: All widgets, including, [custom registered widgets](#custom-widget-components), if any;
- - `rootSchema`: The root schema, which can contain referenced [definitions](#schema-definitions-and-references);
- - `formContext`: The [formContext](#the-formcontext-object) object;
+ - `widgets`: All widgets, including, [custom registered widgets](#adding-your-own-custom-widgets), if any;
+ - `rootSchema`: The root schema, which can contain referenced [definitions](../usage/definitions.md);
+ - `formContext`: The [formContext](../api-reference/form-props.md#formcontext) object;
  - `definitions` (deprecated since v2): Equal to `rootSchema.definitions`.
 
 The registry is passed down the component tree, so you can access it from your custom field, custom widget, and `SchemaField` components.
