@@ -2153,6 +2153,34 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(errorsFor(schema, byShown, { p: {} }, undefined, showing('y'))).toEqual([]);
     });
 
+    it("reports an empty property both an option offering options of its own and the option shown there declare, from the shown option's entry, while the option's own type selector is on another type", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            type: ['object', 'number'],
+            anyOf: [
+              {
+                type: ['object', 'number'],
+                properties: { q: { type: 'string' } },
+                anyOf: [{ type: ['object', 'number'], properties: { q: { type: 'string' } } }, { minimum: 2 }],
+              },
+              { minimum: 1 },
+            ],
+          },
+        },
+      };
+      const onTypes = (...types: string[]): FormFieldState => ({
+        selectedOption: () => 0,
+        isExpanded: () => false,
+        fallbackType: (_fieldPath, _schema, _uiSchema, _formData, depth) => types[depth - 1],
+      });
+      const uiSchema: UiSchema = { p: { anyOf: [{ anyOf: [{ q: { 'ui:required': true } }] }] } };
+      const missing = [".p.q must have required property 'q'"];
+      expect(errorsFor(schema, uiSchema, { p: {} }, undefined, onTypes('object', 'number', 'object'))).toEqual(missing);
+      expect(errorsFor(schema, uiSchema, { p: {} }, undefined, onTypes('object', 'object', 'number'))).toEqual([]);
+    });
+
     it("reports an empty field from the `ui:required` of an option offering options of its own, which the option shown there doesn't override", () => {
       const schema: RJSFSchema = {
         type: 'object',

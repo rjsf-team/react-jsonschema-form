@@ -493,12 +493,6 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const ownProperties = resolvedSchema.properties ?? {};
   const optionProperties = option?.properties ?? {};
-  // A property only the option declares is the option's field's, which an option offering options of its own walks, and
-  // which hides it where it is an Optional Data Control of its own
-  const optionFieldShown = () =>
-    !nestsOptions && optionShownType === 'object' && !(hidesControlled && isOptionControl());
-  const isKeyShown = (key: string) =>
-    key in optionProperties && !(key in ownProperties) ? optionFieldShown() : shownType === 'object';
   // An option walked as a node of its own is rendered by the option field of the field showing it, whose `ObjectField`
   // renders the option's own properties with the uiSchema that field hands it, and the options it offers beside them
   // with their own entries, so a property both declare is rendered twice, once with each
@@ -511,19 +505,24 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const data = isObject(formData) ? formData : ({} as GenericObjectType);
     const childParentPresent = isObject(formData);
     Object.entries(retrieved.properties ?? {}).forEach(([key, propertySchema]) => {
-      if (typeof propertySchema === 'boolean' || !isKeyShown(key)) {
+      if (typeof propertySchema === 'boolean') {
         return;
       }
-      const isOwn = key in ownProperties;
-      const keyUiSchemas = isOwn ? [ownPropertiesUiSchema] : [];
-      if (!isOwn || (key in optionProperties && optionFieldShown())) {
-        keyUiSchemas.push(branchUiSchema);
-      }
       const uiKey = hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG) ? ADDITIONAL_PROPERTIES_KEY : key;
+      // Each field renders the property on the type its own type selector is on, and an entry both read is walked once
+      const childUiSchemas = new Set<UiSchema<T, S, F> | undefined>();
+      const inOption = key in optionProperties;
+      if ((!inOption || key in ownProperties) && shownType === 'object') {
+        childUiSchemas.add(getByPath(ownPropertiesUiSchema, uiKey));
+      }
+      // A property the option declares is the option's field's too, which an option offering options of its own walks,
+      // and which hides it where it is an Optional Data Control of its own
+      if (inOption && !nestsOptions && optionShownType === 'object' && !(hidesControlled && isOptionControl())) {
+        childUiSchemas.add(getByPath(branchUiSchema, uiKey));
+      }
       const childRequired = Boolean(retrieved.required?.includes(key));
-      new Set(keyUiSchemas.map((keyUiSchema) => getByPath<UiSchema<T, S, F> | undefined>(keyUiSchema, uiKey))).forEach(
-        (childUiSchema) =>
-          walk(ctx, propertySchema as S, childUiSchema, data[key], [...path, key], childRequired, childParentPresent),
+      childUiSchemas.forEach((childUiSchema) =>
+        walk(ctx, propertySchema as S, childUiSchema, data[key], [...path, key], childRequired, childParentPresent),
       );
     });
   } else if (Array.isArray(formData) && (!Array.isArray(retrieved.type) || shownType === 'array')) {

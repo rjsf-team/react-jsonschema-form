@@ -978,6 +978,35 @@ describe('ui:required enforcement', () => {
       expect(await submitted(node, onSubmit)).toBe(false);
     });
 
+    it("blocks a submit with a property both an option offering options of its own and the option shown there declare empty, as the shown option's entry marks it, while the option's own type selector is on number", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          type: ['object', 'number'],
+          anyOf: [
+            {
+              type: ['object', 'number'],
+              properties: { q: { type: 'string' } },
+              anyOf: [
+                { title: 'i1', type: ['object', 'number'], properties: { q: { type: 'string' } } },
+                { minimum: 2 },
+              ],
+            },
+            { minimum: 1 },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ anyOf: [{ q: { 'ui:required': true } }] }] } },
+        initialFormData: { p: {} },
+        useFallbackUiForUnsupportedType: true,
+      });
+      await user.selectOptions(elementOf(node, '#root_p__anyof_select', HTMLSelectElement), 'Option 1');
+      await user.selectOptions(elementOf(node, '#root_p__anyof_select2', HTMLSelectElement), 'i1');
+      await user.selectOptions(elementOf(node, '#root_p__internalTypeSelector2', HTMLSelectElement), 'number');
+      // Only the shown option's field renders q, on the object its own type selector is on
+      const qLabels = [...node.querySelectorAll('label[for="root_p_q"]')].map((label) => label.textContent);
+      expect(qLabels).toEqual(['q*']);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
     it("blocks a submit with the field empty where an option offering options of its own marks it required and the option shown there doesn't", async () => {
       const { node, onSubmit } = createFormComponent({
         schema: p({ anyOf: [{ type: 'string', anyOf: [{ minLength: 1 }, { maxLength: 3 }] }, { type: 'number' }] }),
