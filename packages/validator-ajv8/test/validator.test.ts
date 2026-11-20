@@ -1631,6 +1631,17 @@ describe('AJV8Validator', () => {
         });
       });
     });
+    it('should name a missing property by the ui:title its schema path leads to under a key Ajv escapes', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'a/b %': { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] },
+        },
+      };
+      const uiSchema: UiSchema = { 'a/b %': { name: { 'ui:title': 'Full name' } } };
+      const { errors } = validator.validateFormData({ 'a/b %': {} }, schema, undefined, undefined, uiSchema);
+      expect(errors[0].message).toEqual("must have required property 'Full name'");
+    });
     describe('validating dependencies without a localizer', () => {
       const titles = { creditCard: 'Credit card', billingAddress: 'Billing address' };
       const titledMessage = "must have property 'Billing address' when property 'Credit card' is present";

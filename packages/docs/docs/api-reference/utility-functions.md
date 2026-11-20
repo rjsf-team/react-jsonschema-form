@@ -43,6 +43,8 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`ThemePresentation`**, **`PresentationDeclaration`** and **`FieldPresentation`** — A theme's record of which parts of a field (the label, description, errors and help) each of its components draws itself, rather than leaving them to the `FieldTemplate`. A `PresentationDeclaration` names the owner of each part, `'template'`, `'self'` or, for a field that renders a single widget, `'widget'`, `labelledBy`, whether a label the template draws reaches the control through its `for` or through the control's `aria-labelledby`, and `labelPlacement`, whether a label the component draws itself sits `'above'` or `'beside'` its control; a widget's is a `WidgetPresentationDeclaration`, which has no `'widget'` owner. A `ThemePresentation` holds them by registry key under `widgets` and `fields`, plus `default`, what every widget draws for a part the layer's own entry for it doesn't declare, custom and unregistered widgets included, which [mergeThemePresentation()](#mergethemepresentation) layers beneath the layer's own entry for every key, so it overrides the parts it declares in the layers beneath, even under a key one of them declares, and `fieldDefault`, what every field draws for a part its merged entry doesn't declare, custom fields included, and what a part a field leaves to its widget falls back to when it renders none; unlike `default`, it sits beneath the merged entries rather than each layer's own, so it can't override a part a lower layer declares under a key. The merged result is a `MergedThemePresentation`. Nothing is declared on a component itself: one given directly, as a `ui:field` or `ui:widget`, takes the declaration for the first key it is registered under that declares it, so a wrapper such as `memo()` can't lose it. [getPresentationDeclaration()](#getpresentationdeclaration) resolves a field's declaration and [resolveFieldPresentation()](#resolvefieldpresentation) builds its `FieldPresentation`, the plan of where each part is drawn, under which id, and the attributes its control carries, linked as `inherited` to the plan of the field above it that renders the same id.
 
+**`ValidatorErrorTitleSource`** — What [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) reads of an error a validator package reports: its `message`, the `names` it quotes, the `quote` around them, and the `property`, `schemaPath`, `uiSchema`, `parentSchema` and `schema` their titles are looked up in.
+
 ## Enums
 
 There are enumerations in `@rjsf/utils` that are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
@@ -174,7 +176,7 @@ Each name with a title is replaced, in one pass so a title that matches another 
 
 #### Parameters
 
-- source: object - The error's message and what its names' titles are looked up in:
+- source: ValidatorErrorTitleSource&lt;T, S, F> - The error's message and what its names' titles are looked up in:
   - message: string - The engine's message, which names each of the `names` between a pair of `quote`s
   - names: string[] - The names of the properties the message names
   - quote: "'" | '"' - The quote the engine puts around a property name, `'` or `"`

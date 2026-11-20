@@ -4,7 +4,7 @@ import { getByPath, toPath } from './pathUtils.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** What `applyValidatorErrorTitles()` reads of an error a validator package reports */
-interface ValidatorErrorTitleSource<
+export interface ValidatorErrorTitleSource<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,

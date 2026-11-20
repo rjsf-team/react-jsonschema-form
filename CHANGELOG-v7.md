@@ -1630,7 +1630,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `isTupleSchema()`, `getOpenPrefixLength()` and `getItemsUiSchemaKey()`, and an optional `schema` argument to `getStaticItemsUiSchema()` and `getItemUiSchemaForItem()`, which read the uiSchema an item's position declares, `uiSchema.prefixItems` included ([#5900](https://github.com/rjsf-team/react-jsonschema-form/pull/5900), [#5797](https://github.com/rjsf-team/react-jsonschema-form/issues/5797))
 - Fix `getDefaultFormState()` padding a tuple to `minItems` with the defaults of the items past it at its own positions, rather than each position's ([#5900](https://github.com/rjsf-team/react-jsonschema-form/pull/5900), [#5797](https://github.com/rjsf-team/react-jsonschema-form/issues/5797))
 - Add [`getInheritedOptionUiSchema()`](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/utility-functions#getinheritedoptionuischemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype), the uiSchema an `anyOf`/`oneOf` option's field renders with, which takes the field's `ui:required` where the option leaves its own unset ([#5918](https://github.com/rjsf-team/react-jsonschema-form/pull/5918), [#5894](https://github.com/rjsf-team/react-jsonschema-form/issues/5894))
-- Add `applyValidatorErrorTitles()`, which the validator packages use to name the properties an error's message names by their `ui:title` or `title` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
+- Add `applyValidatorErrorTitles()` and its `ValidatorErrorTitleSource` type, which the validator packages use to name the properties an error's message names by their `ui:title` or `title` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 
 ## @rjsf/validator-ajv8
 
@@ -1669,6 +1669,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `isValid()` checking a schema whose `$id` is that of a root schema it was called with before against that root rather than the schema itself ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
 - Fix `isValid()` on an `ajv-draft-04` validator failing to compile a schema with an `id` of its own once called with another root schema, as a schema with an `$id` does on any other, and resolving a `$ref` by a root schema's `id` into a root it was called with before that held the same `id` ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
 - Fix a localized error for a missing `dependentRequired` or `dependencies` property splitting a property whose key contains `, ` into two names and leaving it untitled ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
+- Fix the error for a missing property ignoring a `ui:title` that only its schema path leads to when a key on that path holds `/`, `~`, `%`, a space or another character a URI escapes ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 
 ## @rjsf/validator-ata
 

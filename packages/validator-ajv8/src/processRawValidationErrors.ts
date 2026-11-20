@@ -26,6 +26,16 @@ import type { ErrorObject } from 'ajv';
 
 import type { SuppressDuplicateFilteringType } from './types.ts';
 
+/** Returns the key a token of Ajv's `schemaPath` names. Ajv writes each key as a JSON Pointer token in a URI fragment
+ * (`a/b` as `a~1b`, `a b` as `a%20b`), where the uiSchema keys it plainly
+ *
+ * @param token - The token of the schema path
+ * @returns - The key it names
+ */
+function decodeSchemaPathToken(token: string): string {
+  return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
+}
+
 /** Returns the names a dependency error's `deps` lists. `deps` joins them with `, `, which a name may contain, so the
  * schema's own list is used when Ajv's `verbose` option hands over the `parentSchema`
  *
@@ -113,6 +123,7 @@ export function transformRJSFValidationErrors<
         quote: "'",
         property,
         schemaPath,
+        decodeSchemaPathKey: decodeSchemaPathToken,
         uiSchema,
         parentSchema,
         schema,
