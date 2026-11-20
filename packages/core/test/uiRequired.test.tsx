@@ -963,6 +963,43 @@ describe('ui:required enforcement', () => {
       expect(await submitted(node, onSubmit)).toBe(false);
     });
 
+    it("blocks a submit with the field empty where an option with no `type` offering options of its own marks it required and the option shown there doesn't", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          anyOf: [
+            {
+              anyOf: [
+                { type: 'string', minLength: 1 },
+                { type: 'string', maxLength: 3 },
+              ],
+            },
+            { type: 'number' },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } },
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it('blocks a submit with an empty field marked required, under Optional Data Controls, below an option whose own option keeps its fields on screen', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p(nestedFirst),
+        uiSchema: { ...odc, p: { anyOf: [{ anyOf: [{ 'ui:required': true, ...wReq }] }] } },
+      });
+      expect(markedRequired(node, 'root_p_w')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it("submits with the field empty where only an option shown below the one marking the field's label sets `ui:required`", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p(nestedFirst),
+        uiSchema: { p: { anyOf: [{ anyOf: [{ 'ui:required': true }] }] } },
+      });
+      expect([...node.querySelectorAll('legend, label')].map(({ textContent }) => textContent)).not.toContain('p*');
+      expect(await submitted(node, onSubmit)).toBe(true);
+    });
+
     it('submits past the options of an option that a `ui:field` renders in their place', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: p({ anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] }),

@@ -261,11 +261,28 @@ function rendersArrayWidget<T, S extends StrictRJSFSchema, F extends FormContext
 }
 
 /** The field an option walked as a node of its own is shown by, which has reported an empty value already where its own
- * `ui:required` asks for one, and numbers the option's type selectors below the ones it renders at the path
+ * `ui:required` asks for one, asks for an answer where the option it shows marks its label required, and numbers the
+ * option's type selectors below the ones it renders at the path
  */
 interface ShowingField {
   uiRequired: boolean;
+  asksAnswer: boolean;
   typeSelectorsAbove: number;
+}
+
+/** Whether the field for `schema` renders the options it offers in turn as a field of its own: not a select of
+ * constants, which is one control, nor options a `ui:field` renders in place of
+ */
+function rendersOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+) {
+  const { field, fieldReplacesAnyOrOneOf } = getUiOptions<T, S, F>(uiSchema);
+  return (
+    getXxxOfOptions<S>(schema) !== undefined &&
+    !isConstantSelect<S>(schema, true) &&
+    !(field !== undefined && fieldReplacesAnyOrOneOf === true)
+  );
 }
 
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -365,7 +382,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         // asked only once the cheaper check of the option's own controls fails
         (isOptionControl() ||
           drawsControlsBesideOptions(ctx, path, withOptionExtraKeys<S>(resolvedSchema, option), uiSchema, formData))
-      : isOptionControl())
+      : // An option offering options of its own leaves its controls to the option it shows, unless drawn beside them
+        isOptionControl() &&
+        (!rendersOptions<T, S, F>(retrieved, branchUiSchema) ||
+          drawsControlsBesideOptions(ctx, path, retrieved, branchUiSchema, formData)))
   ) {
     return;
   }
@@ -387,24 +407,27 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // An option offering options of its own renders them as a field of its own at this path, which `MultiSchemaField`
   // hands the option's uiSchema, so it is walked as a node of its own, which reads the option it shows in turn. A select
-  // of constants is one control rather than options shown in turn, so its constants' entries don't decide its `ui:required`,
-  // and a `ui:field` the options give way to renders in their place
-  const { field: optionNamedField, fieldReplacesAnyOrOneOf } = getUiOptions<T, S, F>(branchUiSchema);
-  const nestsOptions =
-    getXxxOfOptions<S>(optionField) !== undefined &&
-    !isConstantSelect<S>(optionField, true) &&
-    !(optionNamedField !== undefined && fieldReplacesAnyOrOneOf === true);
+  // of constants is one control rather than options shown in turn, so its constants' entries don't decide its `ui:required`
+  const nestsOptions = rendersOptions<T, S, F>(optionField, branchUiSchema);
   // The option's `ui:required` is read here and not above, which reads the field's, since `resolveSelectedBranch()`
-  // hands the field's on to an option leaving it unset. An option offering options of its own marks the field's label
-  // from its own, whatever the option shown there says, and has the `[]` it may hold read by that option. An array
+  // hands the field's on to an option leaving it unset. The option a field shows marks the field's label from its own,
+  // whatever an option it offers in turn says, which answers for it where it renders no answer itself, and has the `[]`
+  // it may hold read by that option. An option shown deeper marks only its own control. An array
   // `ArrayField` renders as one widget, as it picks its mode, holds `[]` with nothing chosen, whether seeded or left by
   // clearing the last choice, which the validator accepts unless a `minItems` has it report this itself. The field says
   // it is required, so `[]` can't pass
   let isUnanswered = false;
-  if (path.length > 0 && uiBooleanOption(branchUiRequired) === true && (formData === undefined || !nestsOptions)) {
+  const optionRequired = uiBooleanOption(branchUiRequired) === true;
+  const asksAnswer = showingField ? showingField.asksAnswer : optionRequired;
+  if (
+    path.length > 0 &&
+    (asksAnswer || optionRequired) &&
+    !(nestsOptions && (formData !== undefined || showingField))
+  ) {
     isUnanswered =
       formData === undefined
-        ? !reportsEmpty &&
+        ? asksAnswer &&
+          !reportsEmpty &&
           !(required && parentPresent) &&
           rendersAnswer<T, S, F>(ctx, path, retrieved, branchUiSchema, typeSelectorsAbove + 1)
         : Array.isArray(formData) &&
@@ -420,6 +443,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (nestsOptions) {
     walk(ctx, optionField, branchUiSchema, formData, path, required, parentPresent, {
       uiRequired: reportsEmpty || isUnanswered,
+      asksAnswer,
       typeSelectorsAbove: optionTypeSelectorsAbove,
     });
     // An object renders its own properties beside the option, which are walked below

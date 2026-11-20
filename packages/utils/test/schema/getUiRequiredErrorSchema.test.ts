@@ -2109,6 +2109,52 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(errorsFor(schema, uiSchema, {})).toEqual([".p must have required property 'p'"]);
     });
 
+    it('reports an empty field from the `ui:required` of an option with no `type` offering options of its own, by the option shown there', () => {
+      const typeless: RJSFSchema = {
+        anyOf: [
+          { type: 'string', minLength: 1 },
+          { type: 'string', maxLength: 3 },
+        ],
+      };
+      const schema: RJSFSchema = { type: 'object', properties: { p: { anyOf: [typeless, { type: 'number' }] } } };
+      const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } };
+      expect(errorsFor(schema, uiSchema, {})).toEqual([".p must have required property 'p'"]);
+      const inner: UiSchema = {
+        p: { anyOf: [{ anyOf: [{ anyOf: [{ 'ui:required': false }], 'ui:required': true }] }] },
+      };
+      const deeper: RJSFSchema = {
+        type: 'object',
+        properties: { p: { anyOf: [{ anyOf: [typeless, { type: 'null' }] }, { type: 'number' }] } },
+      };
+      // Only the option the field shows marks its label, so one nested deeper asks nothing of a field shown unmarked
+      expect(errorsFor(deeper, inner, {})).toEqual([]);
+    });
+
+    it('reports an empty field marked required beneath Optional Data Controls an option offering options of its own leaves to the option shown there', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] } },
+      };
+      const odc: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+      const required: UiSchema = { p: { anyOf: [{ anyOf: [{ 'ui:required': true, ...wReq }] }] } };
+      expect(errorsFor(schema, required, {}, odc)).toEqual(missingW.map((error) => `.p${error}`));
+      expect(errorsFor(schema, { p: { anyOf: [{ anyOf: [wReq] }] } }, {}, odc)).toEqual([]);
+    });
+
+    it("reports no empty field from the `ui:required` of an option shown below the one that marks the field's label", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] } },
+      };
+      expect(errorsFor(schema, { p: { anyOf: [{ anyOf: [{ 'ui:required': true }] }] } }, {})).toEqual([]);
+      expect(
+        errorsFor(schema, { p: { anyOf: [{ 'ui:required': false, anyOf: [{ 'ui:required': true }] }] } }, {}),
+      ).toEqual([]);
+      expect(
+        errorsFor(schema, { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } }, {}),
+      ).toEqual([".p must have required property 'p'"]);
+    });
+
     it('reports nothing beneath the options of an option a `ui:field` renders in their place', () => {
       const schema: RJSFSchema = {
         type: 'object',
