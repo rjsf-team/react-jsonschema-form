@@ -8397,6 +8397,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual(expected);
             }
           });
+          it.each<[string, RJSFSchema, GenericObjectType]>([
+            ['fills the const of a then whose if takes it', { if: { minimum: 10 }, then: { const: 10 } }, { x: 10 }],
+            [
+              'keeps the NaN where only an else whose if rejects the const gives one',
+              { if: { maximum: 10 }, else: { const: 10 } },
+              { x: Number.NaN },
+            ],
+          ])(
+            'decides a number field holding a NaN the defaults replace as an empty one: %s',
+            (_name, conditional, expected) => {
+              const x = placed('number', conditional, inAllOf);
+              for (const allOf of ['skipDefaults', 'populateDefaults'] as const) {
+                const context = { validator: testValidator, defaultFormStateBehavior: { allOf } };
+                expect(getDefaultFormState(context, { schema: rootOf(x), formData: { x: Number.NaN } })).toStrictEqual(
+                  expected,
+                );
+              }
+            },
+          );
         });
         describe.each(PLACEMENTS)(
           'decides the if of a primitive field by the default it holds, %s',

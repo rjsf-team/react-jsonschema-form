@@ -1266,6 +1266,8 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FoldProps<T, S, F>,
 ): unknown {
   const data = props.rawFormData;
+  // A `NaN` the defaults replace leaves the field as empty as no data does, so the field is planned for none
+  const plannedData = Number.isNaN(data) ? undefined : data;
   const passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
   let held = heldValue<T, S, F>(
     context,
@@ -1279,7 +1281,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const views: DefaultsView<S>[] = [];
     const reports = { holdsNull: false, objectConst: false };
     const fills = freshFills(props.nullFills);
-    let last = settle(context, field, data, depData);
+    let last = settle(context, field, plannedData, depData);
     const folded = foldView(context, last, {
       ...props,
       memo,
@@ -1481,7 +1483,12 @@ function heldValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
       (context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' || parentConst !== undefined))
       ? inherited
       : own;
-  return value !== undefined && (value === null || typeof value !== 'object') ? value : rawFormData;
+  if (value !== undefined && (value === null || typeof value !== 'object')) {
+    return value;
+  }
+  // A replaced `NaN` holds no value, so its conditions are checked as an empty field's, see `CheckedCondition.unset`. A
+  // replaced `null` is a value an `if` may test, which it keeps
+  return Number.isNaN(rawFormData) ? undefined : rawFormData;
 }
 
 /** The `default` a node declares, or the node its `$ref` names */
