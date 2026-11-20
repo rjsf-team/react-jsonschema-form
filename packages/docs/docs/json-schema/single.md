@@ -144,7 +144,7 @@ const uiSchema: UiSchema = {
 };
 
 // Map form (matched by value)
-const uiSchema: UiSchema = {
+const uiSchemaByValue: UiSchema = {
   'ui:enumNames': { 1: 'one', 2: 'two', 3: 'three' },
 };
 

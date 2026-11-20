@@ -115,11 +115,12 @@ While these errors are retained during validation, it is still preferred for you
 :::
 
 ```tsx
+import { ChangeEvent } from 'react';
 import { ErrorSchema, RegistryWidgetsType, RJSFSchema, toInputValue, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
-  type: 'text',
+  type: 'string',
   default: 'hello',
 };
 
@@ -168,7 +169,7 @@ You can provide your own custom widgets to a uiSchema for the following json dat
 import { RJSFSchema, toInputValue, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-const schema: Schema = {
+const schema: RJSFSchema = {
   type: 'string',
 };
 
@@ -589,15 +590,15 @@ Here is an example of wrapping the `ObjectField` to tweak the `onChange` handler
 
 ```tsx
 import { useCallback } from 'react';
-import { FieldProps } from '@rjsf/utils';
+import { ErrorSchema, FieldPath, FieldProps } from '@rjsf/utils';
 import { ObjectField } from '@rjsf/core';
 
 import checkBadData from './checkBadData';
 
-function MyObjectField(props: FieldProps) {
+function MyObjectField<T = unknown>(props: FieldProps<T>) {
   const { onChange } = props;
   const onChangeHandler = useCallback(
-    (newFormData: T | undefined, path: (number | string)[], es?: ErrorSchema<T>, id?: string) => {
+    (newFormData: T | undefined, path: FieldPath, es?: ErrorSchema<T>, id?: string) => {
       let data = newFormData;
       let error = es;
       if (checkBadData(newFormData)) {
