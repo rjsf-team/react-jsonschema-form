@@ -243,7 +243,15 @@ is stored as the `NPM_TOKEN` secret on GitHub Actions.
 
 Docs are automatically published to GitHub Pages when the `main` branch is updated.
 
-We are currently in the process of automatically configuring versionable documentation on our new docs site.
+`packages/docs/docs` holds the docs for the major on `main`; each earlier major keeps a frozen copy under `packages/docs/versioned_docs/`.
+Once a new major lands on `main`, freeze the outgoing major's docs:
+
+1. Check out the outgoing major's last release commit (e.g. `Releasing 6.11.1`), run `pnpm install`, then `pnpm --filter ./packages/docs docusaurus docs:version <x.y.z>` with that release's version.
+   It writes `versioned_docs/version-<x.y.z>/`, `versioned_sidebars/version-<x.y.z>-sidebars.json` and the `versions.json` entry; copy those onto a branch from `main`.
+2. Add the version to `versions` in `packages/docs/docusaurus.config.js` with `label: 'v<major>'` and `path: 'version-<x.y.z>'`, and change the `current` label to the new major (e.g. `Current (v7)`).
+3. Check that `pnpm --filter ./packages/docs build` passes and that the version dropdown links the frozen pages.
+
+After that, fix the outgoing major's docs in its `versioned_docs/version-<x.y.z>/` copy, not in `packages/docs/docs`.
 
 ### Releasing the playground
 
