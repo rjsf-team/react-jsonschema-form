@@ -909,5 +909,71 @@ describe('ui:required enforcement', () => {
       await user.selectOptions(elementOf(node, '#root_p'), '');
       expect(await submitted(node, onSubmit)).toBe(false);
     });
+
+    it("blocks a submit of a cleared select of constants with no `type` an option shows, from the option's `ui:required`", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          anyOf: [
+            {
+              oneOf: [
+                { const: 'a', title: 'A' },
+                { const: 'b', title: 'B' },
+              ],
+            },
+            { type: 'number' },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ 'ui:required': true }] } },
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      // Cleared rather than left untouched, which the form's defaults would fill on submit
+      await user.selectOptions(elementOf(node, '#root_p'), 'A');
+      await user.selectOptions(elementOf(node, '#root_p'), '');
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it("blocks a submit with a property an option declares beside options of its own empty, as the option's entry marks it", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          anyOf: [
+            {
+              type: 'object',
+              properties: { z: { type: 'string' } },
+              anyOf: [
+                { type: 'object', properties: { w: { type: 'string' } } },
+                { type: 'object', properties: { y: { type: 'string' } } },
+              ],
+            },
+            { type: 'number' },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ z: { 'ui:required': true }, anyOf: [{ 'ui:title': 'W' }] }] } },
+        initialFormData: { p: {} },
+      });
+      expect(markedRequired(node, 'root_p_z')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it("blocks a submit with the field empty where an option offering options of its own marks it required and the option shown there doesn't", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({ anyOf: [{ type: 'string', anyOf: [{ minLength: 1 }, { maxLength: 3 }] }, { type: 'number' }] }),
+        uiSchema: { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } },
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it('submits past the options of an option that a `ui:field` renders in their place', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({ anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] }),
+        uiSchema: {
+          p: { anyOf: [{ 'ui:field': 'MyField', 'ui:fieldReplacesAnyOrOneOf': true, anyOf: [wReq] }] },
+        },
+        initialFormData: { p: { x: 'a' } },
+        fields: { MyField: () => <div /> },
+      });
+      expect(node.querySelector('#root_p_w')).toBeNull();
+      expect(await submitted(node, onSubmit)).toBe(true);
+    });
   });
 });

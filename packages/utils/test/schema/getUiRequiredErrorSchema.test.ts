@@ -2058,5 +2058,67 @@ describe('getUiRequiredErrorSchema()', () => {
       const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true, oneOf: [{ 'ui:required': false }] }] } };
       expect(errorsFor(schema, uiSchema, {})).toEqual([".p must have required property 'p'"]);
     });
+
+    it('reports an empty select of constants with no `type` an option shows, which `SchemaField` infers the type of', () => {
+      const select: RJSFSchema = { oneOf: [{ const: 'a' }, { const: 'b' }] };
+      const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true }] } };
+      const shown = (option: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        properties: { p: { anyOf: [option, { type: 'number' }] } },
+      });
+      expect(errorsFor(shown(select), uiSchema, {})).toEqual([".p must have required property 'p'"]);
+      expect(errorsFor(shown({ anyOf: [select, { type: 'boolean' }] }), uiSchema, {})).toEqual([
+        ".p must have required property 'p'",
+      ]);
+      expect(errorsFor(shown({ type: 'null', oneOf: [{ const: null }] }), uiSchema, {})).toEqual([]);
+    });
+
+    it("reports an empty property an option declares beside options of its own from the option's entry, whatever the entry of the option shown there", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            anyOf: [
+              {
+                type: 'object',
+                properties: { z: { type: 'string' } },
+                anyOf: [
+                  { type: 'object', properties: { w: { type: 'string' } } },
+                  { type: 'object', properties: { y: { type: 'string' } } },
+                ],
+              },
+              { type: 'number' },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { p: { anyOf: [{ z: { 'ui:required': true }, anyOf: [{ 'ui:title': 'W' }] }] } };
+      expect(errorsFor(schema, uiSchema, { p: {} }, undefined, showing('w'))).toEqual([
+        ".p.z must have required property 'z'",
+      ]);
+    });
+
+    it("reports an empty field from the `ui:required` of an option offering options of its own, which the option shown there doesn't override", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: { anyOf: [{ type: 'string', anyOf: [{ minLength: 1 }, { maxLength: 3 }] }, { type: 'number' }] },
+        },
+      };
+      const uiSchema: UiSchema = { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } };
+      expect(errorsFor(schema, uiSchema, {})).toEqual([".p must have required property 'p'"]);
+    });
+
+    it('reports nothing beneath the options of an option a `ui:field` renders in their place', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] } },
+      };
+      const replaced: UiSchema = { 'ui:field': 'MyField', 'ui:fieldReplacesAnyOrOneOf': true, anyOf: [wReq] };
+      expect(errorsFor(schema, { p: { anyOf: [replaced] } }, { p: { x: 'a' } })).toEqual([]);
+      expect(
+        errorsFor(schema, { p: { anyOf: [{ ...replaced, 'ui:fieldReplacesAnyOrOneOf': false }] } }, { p: { x: 'a' } }),
+      ).toEqual([".p.w must have required property 'w'"]);
+    });
   });
 });

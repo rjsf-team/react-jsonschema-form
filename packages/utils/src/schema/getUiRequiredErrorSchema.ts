@@ -21,6 +21,7 @@ import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
+import isConstantOptionList from '../isConstantOptionList.ts';
 import isConstantSelect from '../isConstantSelect.ts';
 import isCustomWidget from '../isCustomWidget.ts';
 import isFixedItems from '../isFixedItems.ts';
@@ -205,7 +206,8 @@ function shownFieldType<T, S extends StrictRJSFSchema, F extends FormContextType
 }
 
 /** Whether the field renders something the user can answer it with: not a `null`, which has no control, nor a schema with
- * no type, which renders the unsupported-field template unless a `ui:field` or the fallback UI renders it
+ * no type, which renders the unsupported-field template unless a `ui:field` or the fallback UI renders it. An
+ * `anyOf`/`oneOf` of constants with no type is a select, whose type `SchemaField` infers from the constants
  */
 function rendersAnswer<T, S extends StrictRJSFSchema, F extends FormContextType>(
   { schemaContext, fieldState }: WalkContext<T, S, F>,
@@ -217,6 +219,7 @@ function rendersAnswer<T, S extends StrictRJSFSchema, F extends FormContextType>
   const type = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, schemaContext.widgets);
   return (
     (type !== undefined && type !== 'null') ||
+    (type === undefined && isConstantOptionList<S>(getXxxOfOptions<S>(schema)?.options)) ||
     UI_FIELD_KEY in uiSchema ||
     fieldState?.fallbackType?.(fieldPathFromList(path), schema, uiSchema, undefined, depth) !== undefined
   );
@@ -384,25 +387,22 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // An option offering options of its own renders them as a field of its own at this path, which `MultiSchemaField`
   // hands the option's uiSchema, so it is walked as a node of its own, which reads the option it shows in turn. A select
-  // of constants is one control rather than options shown in turn, so its constants' entries don't decide its `ui:required`
-  const nestsOptions = getXxxOfOptions<S>(optionField) !== undefined && !isConstantSelect<S>(optionField, true);
-  if (nestsOptions) {
-    walk(ctx, optionField, branchUiSchema, formData, path, required, parentPresent, {
-      uiRequired: reportsEmpty,
-      typeSelectorsAbove: optionTypeSelectorsAbove,
-    });
-    // An object renders its own properties beside the option, which are walked below
-    if (!option) {
-      return;
-    }
-  }
+  // of constants is one control rather than options shown in turn, so its constants' entries don't decide its `ui:required`,
+  // and a `ui:field` the options give way to renders in their place
+  const { field: optionNamedField, fieldReplacesAnyOrOneOf } = getUiOptions<T, S, F>(branchUiSchema);
+  const nestsOptions =
+    getXxxOfOptions<S>(optionField) !== undefined &&
+    !isConstantSelect<S>(optionField, true) &&
+    !(optionNamedField !== undefined && fieldReplacesAnyOrOneOf === true);
   // The option's `ui:required` is read here and not above, which reads the field's, since `resolveSelectedBranch()`
-  // hands the field's on to an option leaving it unset, and an option offering options of its own has it read by the
-  // option shown there. An array `ArrayField` renders as one widget, as it picks its mode, holds `[]` with nothing
-  // chosen, whether seeded or left by clearing the last choice, which the validator accepts unless a `minItems` has it
-  // report this itself. The field says it is required, so `[]` can't pass
-  if (path.length > 0 && !nestsOptions && uiBooleanOption(branchUiRequired) === true) {
-    const isUnanswered =
+  // hands the field's on to an option leaving it unset. An option offering options of its own marks the field's label
+  // from its own, whatever the option shown there says, and has the `[]` it may hold read by that option. An array
+  // `ArrayField` renders as one widget, as it picks its mode, holds `[]` with nothing chosen, whether seeded or left by
+  // clearing the last choice, which the validator accepts unless a `minItems` has it report this itself. The field says
+  // it is required, so `[]` can't pass
+  let isUnanswered = false;
+  if (path.length > 0 && uiBooleanOption(branchUiRequired) === true && (formData === undefined || !nestsOptions)) {
+    isUnanswered =
       formData === undefined
         ? !reportsEmpty &&
           !(required && parentPresent) &&
@@ -415,6 +415,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           rendersArrayWidget<T, S, F>(ctx, path, retrieved, branchUiSchema, formData, typeSelectorsAbove + 1);
     if (isUnanswered) {
       builder.addErrors(`must have required property '${path[path.length - 1]}'`, path);
+    }
+  }
+  if (nestsOptions) {
+    walk(ctx, optionField, branchUiSchema, formData, path, required, parentPresent, {
+      uiRequired: reportsEmpty || isUnanswered,
+      typeSelectorsAbove: optionTypeSelectorsAbove,
+    });
+    // An object renders its own properties beside the option, which are walked below
+    if (!option) {
+      return;
     }
   }
   // Whatever the value, `ObjectField` renders its properties: a string under a `['null', 'object', 'string']` isn't an
@@ -438,6 +448,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     key in optionProperties && !(key in ownProperties)
       ? !nestsOptions && optionShownType === 'object'
       : shownType === 'object';
+  // An option walked as a node of its own is rendered by the option field of the field showing it, whose `ObjectField`
+  // renders the option's own properties with the uiSchema that field hands it, and the options it offers beside them
+  // with their own entries
+  const ownPropertiesUiSchema = showingField && option ? uiSchema : branchUiSchema;
   if (shownType === 'object' || optionShownType === 'object') {
     // Matches computeDefaults()'s own `isObject(rawFormData)` handling: when the schema resolves to an object here
     // but `formData` still holds a primitive (e.g. a leftover string from a previous oneOf/anyOf branch, or mismatched
@@ -450,7 +464,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         return;
       }
       const childUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
-        branchUiSchema,
+        key in ownProperties ? ownPropertiesUiSchema : branchUiSchema,
         hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG) ? ADDITIONAL_PROPERTIES_KEY : key,
       );
       const childRequired = Boolean(retrieved.required?.includes(key));
