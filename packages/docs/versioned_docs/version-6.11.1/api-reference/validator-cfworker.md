@@ -2,7 +2,7 @@
 
 `@rjsf/validator-cfworker` is an additional, eval-free validator option for CSP-constrained applications. It is backed by [`@cfworker/json-schema`](https://github.com/cfworker/cfworker/tree/main/packages/json-schema), interprets schemas without `eval` or `new Function`, and defaults to JSON Schema draft 2020-12.
 
-It is not an AJV replacement. See the package [README](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/validator-cfworker) for the unsupported-keyword matrix and current upstream-state notes.
+It is not an AJV replacement. See the package [README](https://github.com/rjsf-team/react-jsonschema-form/tree/v6.11.1/packages/validator-cfworker) for the unsupported-keyword matrix and current upstream-state notes.
 
 ## Differences from `@rjsf/validator-ajv8`
 
@@ -14,7 +14,7 @@ It is not an AJV replacement. See the package [README](https://github.com/rjsf-t
 
 ## Types
 
-The package exports `CustomValidatorOptionsType`, `CFWorkerValidationError`, `CFWorkerFormatChecker`, and `SuppressDuplicateFilteringType` from [`src/types.ts`](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/validator-cfworker/src/types.ts).
+The package exports `CustomValidatorOptionsType`, `CFWorkerValidationError`, `CFWorkerFormatChecker`, and `SuppressDuplicateFilteringType` from [`src/types.ts`](https://github.com/rjsf-team/react-jsonschema-form/blob/v6.11.1/packages/validator-cfworker/src/types.ts).
 
 ## APIs
 

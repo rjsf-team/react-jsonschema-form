@@ -30,7 +30,7 @@ import Form from '@rjsf/mui';
 Each theme renders against its own UI framework, so the framework's stylesheet has to be loaded for the form to look
 right. `@rjsf/shadcn` in particular carries no styling of its own: it expects your application to build Tailwind and
 scan the package for class names, or to import one of its prebuilt stylesheets. See the
-[`@rjsf/shadcn` README](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/shadcn/README.md#theming)
+[`@rjsf/shadcn` README](https://github.com/rjsf-team/react-jsonschema-form/blob/v6.11.1/packages/shadcn/README.md#theming)
 for both routes.
 
 If you would like to contribute a theme with a new UI framework, please develop the theme using the `withTheme` component described in [Theme Customization](../advanced-customization/custom-themes.md) and make a PR!

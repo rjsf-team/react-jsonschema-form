@@ -23,6 +23,7 @@ const config = {
   projectName: 'react-jsonschema-form', // Usually your repo name.
 
   onBrokenLinks: 'throw',
+  onBrokenAnchors: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -51,6 +52,7 @@ const config = {
             '6.11.1': {
               label: 'v6',
               path: 'version-6.11.1',
+              banner: 'none',
             },
             '5.24.10': {
               label: 'v5',

@@ -14,7 +14,7 @@ See the [Validation documentation](../usage/validation.md) for examples of using
 
 ## Types
 
-There are a few TypeScript types that are exported by `@rjsf/validator-ata` in support of the APIs. These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/validator-ata/src/types.ts).
+There are a few TypeScript types that are exported by `@rjsf/validator-ata` in support of the APIs. These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/v6.11.1/packages/validator-ata/src/types.ts).
 
 ## APIs
 

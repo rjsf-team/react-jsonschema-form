@@ -9,7 +9,7 @@ See the [Validation documentation](../usage/validation.md) for examples of using
 
 There are a few Typescript types that are exported by `@rjsf/validator-ajv8` in support of the APIs.
 
-These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/validator-ajv8/src/types.ts).
+These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/v6.11.1/packages/validator-ajv8/src/types.ts).
 
 ## APIs
 

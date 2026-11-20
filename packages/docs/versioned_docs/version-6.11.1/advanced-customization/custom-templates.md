@@ -24,7 +24,7 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [ArrayFieldTemplate](#arrayfieldtemplate)                           | ArrayFieldTemplateProps            | ui:ArrayFieldTemplate            | Formerly `Form.ArrayFieldTemplate` or `Registry.ArrayFieldTemplate`                                                                                                  |
 | [ArrayFieldDescriptionTemplate](#arrayfielddescriptiontemplate)     | ArrayFieldDescriptionProps         | ui:ArrayFieldDescriptionTemplate | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations                                                 |
 | [ArrayFieldItemTemplate](#arrayfielditemtemplate)                   | ArrayFieldItemTemplateProps        | ui:ArrayFieldItemTemplate        | Formerly an internal class for `ArrayFieldTemplate`s in all themes, refactored as a template in each theme, used in all `ArrayFieldTemplate` implementations         |
-| [ArrayFieldItemButtonsTemplate](#arrayfielditembuttontemplate)     | ArrayFieldItemButtonsTemplateProps | ui:ArrayFieldItemButonsTemplate  | Formerly an internal class for `ArrayFieldItemTemplate`s in all themes, refactored as a template in the `core`, used in all `ArrayFieldItemTemplate` implementations |
+| [ArrayFieldItemButtonsTemplate](#arrayfielditembuttonstemplate)     | ArrayFieldItemButtonsTemplateProps | ui:ArrayFieldItemButtonsTemplate | Formerly an internal class for `ArrayFieldItemTemplate`s in all themes, refactored as a template in the `core`, used in all `ArrayFieldItemTemplate` implementations |
 | [ArrayFieldTitleTemplate](#arrayfieldtitletemplate)                 | ArrayFieldTitleProps               | ui:ArrayFieldTitleTemplate       | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations.                                                |
 | [BaseInputTemplate](#baseinputtemplate)                             | WidgetProps                        | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                                 |
 | [CyclicSchemaExpandTemplate](#cyclicschemaexpandtemplate)           | CyclicSchemaExpandProps            | ui:CyclicSchemaExpandTemplate    | Added in RJSF v6 to support circular `$ref` cycle detection                                                                                                          |
@@ -101,7 +101,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-Please see the [customArray.tsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customArray.tsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for another example.
+Please see the [customArray.tsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/v6.11.1/packages/playground/src/samples/customArray.tsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for another example.
 
 The following props are passed to each `ArrayFieldTemplate`:
 
@@ -219,7 +219,7 @@ render(
 The following props are passed to each `ArrayFieldItemTemplate`:
 
 - `children`: The html for the item's content.
-- `buttonsProps`: The props to pass to the `ArrayFieldItemButtonTemplate`.
+- `buttonsProps`: The props to pass to the `ArrayFieldItemButtonsTemplate`.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array item is disabled.
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
@@ -232,9 +232,9 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `registry`: The `registry` object.
 - `parentUiSchema`: The UI schema of the array item's parent array field, used for customization in some themes
 
-## ArrayFieldItemButtonTemplate
+## ArrayFieldItemButtonsTemplate
 
-The `ArrayFieldItemButtonTemplate` is used to render the representation of the buttons used for copying, moving and deleting an item in an array.
+The `ArrayFieldItemButtonsTemplate` is used to render the representation of the buttons used for copying, moving and deleting an item in an array.
 All of the `ArrayFieldItemTemplate` implementations in all themes get this template from the `registry` in order to render array fields items' buttons.
 Currently, only the `core` them has an implementation of this template as the button rendering is identical across all themes.
 If you want to change how an array field item's buttons are rendered you can customize this template (for instance to remove the move up/down and remove buttons).
@@ -997,7 +997,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-Please see the [customObject.tsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customObject.tsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for a better example.
+Please see the [customObject.tsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/v6.11.1/packages/playground/src/samples/customObject.tsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for a better example.
 
 The following props are passed to each `ObjectFieldTemplate` as defined by the `ObjectFieldTemplateProps` in `@rjsf/utils`:
 

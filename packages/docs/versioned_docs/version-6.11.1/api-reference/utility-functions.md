@@ -11,14 +11,14 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 The `@rjsf/utils` package exports a set of constants that represent all the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
 In addition to those keys, there is the special `ADDITIONAL_PROPERTY_FLAG` flag that is added to a schema under certain conditions by the `retrieveSchema()` utility.
 
-These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
+These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/v6.11.1/packages/utils/src/constants.ts).
 
 ## Types
 
 Additionally, the Typescript types used by the utility functions represent nearly all the types used by RJSF.
 Those types are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
 
-These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/types.ts).
+These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/v6.11.1/packages/utils/src/types.ts).
 
 **`ObjectPath`** — Used by the path utilities (`getByPath`, `setByPath`, `hasByPath`, `unsetByPath`) to address a value inside a plain object. It is `string | number | FieldPathList`. A bare **string is always a single literal key**: `'a.b'` means the key `'a.b'`, never the nested path `a` → `b`. To walk a dotted path string, split it explicitly with [toPath()](#topath) first, or pass a `FieldPathList` (`(string | number)[]`) of segments. Reads and existence checks resolve **own** properties only, so inherited members never appear as form data.
 
@@ -28,7 +28,7 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 There are enumerations in `@rjsf/utils` that are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
 
-These enums can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts).
+These enums can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/v6.11.1/packages/utils/src/enums.ts).
 
 ## Non-Validator utility functions
 

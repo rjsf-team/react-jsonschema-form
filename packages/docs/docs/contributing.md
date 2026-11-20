@@ -232,6 +232,7 @@ the original commit where the tag was based on is still present in the main bran
 
 Then, create a release in the GitHub "Releases" tab, select the new tag that you have added,
 and copy the release's changelog section into its description.
+If this is a new major's first stable release (e.g. `7.0.0`), also update the previous major's docs banner as [Releasing docs](#releasing-docs) describes.
 
 This will trigger a GitHub Actions pipeline that will build and publish all packages to npm.
 
@@ -248,8 +249,12 @@ Once a new major lands on `main`, freeze the outgoing major's docs:
 
 1. Check out the outgoing major's last release commit (e.g. `Releasing 6.11.1`), run `pnpm install`, then `pnpm --filter ./packages/docs docusaurus docs:version <x.y.z>` with that release's version.
    It writes `versioned_docs/version-<x.y.z>/`, `versioned_sidebars/version-<x.y.z>-sidebars.json` and the `versions.json` entry; copy those onto a branch from `main`.
+   In the copy, point the `blob/main` and `tree/main` GitHub links at the release's tag (e.g. `blob/v6.11.1`), so they keep showing that release's code.
 2. Add the version to `versions` in `packages/docs/docusaurus.config.js` with `label: 'v<major>'` and `path: 'version-<x.y.z>'`, and change the `current` label to the new major (e.g. `Current (v7)`).
+   Until the new major's first stable release (e.g. `7.0.0`) is published, also give the frozen version `banner: 'none'`: until then, npm's `latest` tag still installs the frozen major, so its docs are the ones that match.
 3. Check that `pnpm --filter ./packages/docs build` passes and that the version dropdown links the frozen pages.
+
+When the new major's first stable release is published, remove that `banner: 'none'`, so the frozen docs show Docusaurus's "no longer actively maintained" banner.
 
 After that, fix the outgoing major's docs in its `versioned_docs/version-<x.y.z>/` copy, not in `packages/docs/docs`.
 
