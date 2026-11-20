@@ -4,7 +4,7 @@ import { useHistory, useLocation } from '@docusaurus/router';
 import MDXContent from '@theme/MDXContent';
 
 import { andList } from '../../../plugins/upgrade-guide/markdown.js';
-import { DEPRECATIONS, byHeading } from '../../../plugins/upgrade-guide/vocabulary.js';
+import { DEPRECATIONS, HEADINGS, byHeading } from '../../../plugins/upgrade-guide/vocabulary.js';
 import {
   NO_FILTERS,
   badgeOf,
@@ -348,6 +348,11 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
       );
       return;
     }
+    // Browsers leave navigator.clipboard undefined outside a secure context, such as a site served over plain http.
+    if (!navigator.clipboard) {
+      setCopyStatus('Copying failed: the browser offers no clipboard on a page not served over HTTPS.');
+      return;
+    }
     setCopyStatus('Copying…');
     const { origin } = window.location;
     // The document cites the page from what the reader answered, not the address as typed, which could carry any text.
@@ -548,7 +553,7 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
       )}
       {rows.length === 0 && <p className={styles.hint}>No change matches your answers and search.</p>}
 
-      {groups.map(({ heading, entries }, index) => (
+      {groups.map(({ heading, entries }) => (
         <section key={heading.id}>
           {heading.id === DEPRECATIONS.id ? (
             <h2 id={`heading-${heading.id}`} className={styles.deprecations}>
@@ -556,7 +561,7 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
             </h2>
           ) : (
             <h2 id={`heading-${heading.id}`}>
-              {index + 1}. {heading.heading}
+              {HEADINGS.indexOf(heading) + 1}. {heading.heading}
             </h2>
           )}
           <p className={styles.headingLine}>{heading.line}</p>

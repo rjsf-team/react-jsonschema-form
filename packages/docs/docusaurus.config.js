@@ -6,6 +6,7 @@ const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
 const { sidebarItemsGenerator } = require('./plugins/upgrade-guide/sidebar.js');
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'react-jsonschema-form',

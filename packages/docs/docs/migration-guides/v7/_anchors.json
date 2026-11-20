@@ -662,7 +662,8 @@
     "type-list-starting-with-null-renders-its-first-other-type",
     "untyped-additional-property-renders-its-constraints",
     "schema-change-keeps-data-the-new-schema-still-allows",
-    "should-render-optional-field-takes-a-field-path"
+    "should-render-optional-field-takes-a-field-path",
+    "prefix-items-array-renders-as-a-tuple"
   ],
   "the-default-validator-is-a-client-module-breaking-change": ["validator-default-export-is-a-client-module"],
   "an-extra-schema-whose-only-id-is-a-fragment-fails-validation-breaking-change": [
@@ -689,6 +690,17 @@
     "add-buttons-titled-add-item-or-after-their-object",
     "object-field-template-spreads-add-button-props"
   ],
+  "a-prefixitems-array-renders-as-a-tuple-breaking-change": ["prefix-items-array-renders-as-a-tuple"],
+  "a-value-outside-a-constant-oneof-or-anyof-takes-the-fields-default-breaking-change": [
+    "constant-options-replace-a-value-outside-them-with-the-default"
+  ],
+  "a-constant-oneof-or-anyof-starts-from-the-constant-its-objects-default-names-breaking-change": [
+    "constant-options-start-from-an-ancestor-default-constant"
+  ],
+  "a-constant-oneof-or-anyof-starts-from-a-default-outside-its-constants-breaking-change": [
+    "constant-options-start-from-a-default-outside-them"
+  ],
+  "the-root-keeps-a-value-outside-its-enum-and-a-nan-breaking-change": ["root-keeps-a-value-outside-its-enum-and-nan"],
   "new-features": "../whats-new-v7.md",
   "getformdata-and-the-formref-type": "../whats-new-v7.md#working-with-form-data",
   "transformchange": "../whats-new-v7.md#working-with-form-data",

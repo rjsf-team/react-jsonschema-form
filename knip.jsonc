@@ -48,9 +48,7 @@
     "packages/docs": {
       // Docusaurus loads a swizzled component from src/theme by its path, which knip's Docusaurus plugin doesn't list.
       "entry": ["src/theme/**/*.tsx"],
-      // Docusaurus scaffold kept for the homepage. It is also the only
-      // TypeScript under packages/docs/src, so removing it leaves that
-      // package's cs-check glob with no files to match.
+      // Docusaurus scaffold kept for the homepage, which nothing imports.
       "ignore": ["src/components/HomepageFeatures/**"],
     },
   },

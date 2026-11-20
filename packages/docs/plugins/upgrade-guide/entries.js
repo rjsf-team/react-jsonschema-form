@@ -60,8 +60,15 @@ const TITLE_MARKDOWN = /[`*[<]/;
 const SECTIONS = ['Detect', 'Change', 'Verify'];
 const OPTIONAL_LAST_SECTION = "If you can't preserve it";
 const ANCHORS_FILE = '_anchors.json';
-/** Ids taken by the files postBuild writes beside the entries, and `index`, which would be the directory's own page. */
-const RESERVED_IDS = ['index', 'all', 'llms'];
+/** Ids an entry can't take, each with why: the files postBuild writes beside the entries, and the names Docusaurus
+ * reads as the directory's own page (`index`, `readme`, and the directory's name, added per version). */
+/** @type {Map<string, string>} */
+const RESERVED_IDS = new Map([
+  ['index', "Docusaurus makes `index.md` the directory's own page"],
+  ['readme', "Docusaurus makes `readme.md` the directory's own page"],
+  ['all', 'the build writes `all.md` beside the entries'],
+  ['llms', 'the build writes `llms.txt` beside the entries'],
+]);
 
 /**
  * @param {string} siteDir
@@ -169,9 +176,14 @@ async function loadVersion(siteDir, dir, name, number, { parseFrontMatter, whyUn
   }
 
   const ids = new Set(entries.map(({ id }) => id));
-  const reserved = new Set([
+  const reserved = new Map([
     ...RESERVED_IDS,
-    ...packages.filter(({ group }) => group === 'theme' || group === 'validator').map(({ short }) => short),
+    [name, `Docusaurus makes \`${name}.md\` in \`${name}/\` the directory's own page`],
+    ...packages
+      .filter(({ group }) => group === 'theme' || group === 'validator')
+      .map(
+        ({ short }) => /** @type {[string, string]} */ ([short, `the build writes \`${short}.md\` beside the entries`]),
+      ),
   ]);
   const context = { siteDir, dir, name, ids, whyUnpublished };
   await mapInOrder(
@@ -369,7 +381,7 @@ function validateFrontMatterTypes(frontMatter, at, errors) {
  * @param {Entry} entry
  * @param {import('./vocabulary.js').Package[]} packages
  * @param {Set<string>} ids
- * @param {Set<string>} reserved
+ * @param {Map<string, string>} reserved why each reserved id is taken
  * @param {string} at
  * @param {string[]} errors
  */
@@ -384,8 +396,9 @@ function validateEntry(entry, packages, ids, reserved, at, errors) {
     // Docusaurus's number prefix parser would strip the digits from the page's URL.
     errors.push(`${at}: the id must not start with digits followed by \`-\`.`);
   }
-  if (reserved.has(id)) {
-    errors.push(`${at}: \`${id}\` is a reserved id (\`index\` or a file the build writes beside the entries).`);
+  const reservedBecause = reserved.get(id);
+  if (reservedBecause) {
+    errors.push(`${at}: \`${id}\` is a reserved id: ${reservedBecause}.`);
   }
 
   const single = entry.packages.length === 1 ? packages.find(({ id: pkg }) => pkg === entry.packages[0]) : undefined;

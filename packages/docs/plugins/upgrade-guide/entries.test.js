@@ -238,7 +238,17 @@ describe('loadVersions', () => {
         entry({ deprecated: 'false' }),
         '`deprecated` is `true` or left out',
       ],
-      'reserved id': ['all.md', entry(), '`all` is a reserved id'],
+      'reserved id': ['all.md', entry(), '`all` is a reserved id: the build writes `all.md` beside the entries'],
+      'the reserved id `readme`': [
+        'readme.md',
+        entry(),
+        "`readme` is a reserved id: Docusaurus makes `readme.md` the directory's own page",
+      ],
+      "the version directory's name": [
+        'v7.md',
+        entry(),
+        "`v7` is a reserved id: Docusaurus makes `v7.md` in `v7/` the directory's own page",
+      ],
       '`related` to an unknown id': [
         'related-unknown.md',
         entry({ related: '[nowhere]' }),

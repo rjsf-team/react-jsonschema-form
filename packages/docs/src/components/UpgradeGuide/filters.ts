@@ -217,14 +217,20 @@ export function matcher(guide: Guide, filters: Filters): (entry: Entry) => boole
 
 /** The hint under the filter bar: what the list shows, and that answering is optional. Its only Markdown is code. */
 export function describeFilters(filters: Filters, guide: Guide) {
+  const everyChange = "Showing every change. Answer any of these to hide what doesn't apply to you.";
   if (!isAnswered(filters)) {
-    return "Showing every change. Answer any of these to hide what doesn't apply to you.";
+    return everyChange;
   }
   const label = (choices: Choice[], ids: string[]) =>
     choices.filter((choice) => ids.includes(choice.id)).map((choice) => choice.label);
+  // The packages for theme authors narrow the list only once a theme or validator is picked (see matcher).
+  const otherNarrows = filters.theme !== '' || filters.validator !== '';
   const packages = guide.packages
     .filter(
-      (pkg) => pkg.short === filters.theme || pkg.short === filters.validator || filters.other.includes(pkg.short),
+      (pkg) =>
+        pkg.short === filters.theme ||
+        pkg.short === filters.validator ||
+        (otherNarrows && filters.other.includes(pkg.short)),
     )
     .map((pkg) => pkg.id);
   const custom = label(customizations(guide), filters.uses).map((text) => text.toLowerCase());
@@ -243,6 +249,9 @@ export function describeFilters(filters: Filters, guide: Guide) {
     schema.length > 0 && `for schemas with ${andList(schema, 'or')}`,
     search && `matching "${search}"`,
   ].filter(Boolean);
+  if (parts.length === 0) {
+    return everyChange;
+  }
   return `Showing changes ${parts.join(', ')}. Answer more to narrow the list, or clear to see everything.`;
 }
 

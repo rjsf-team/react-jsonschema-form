@@ -447,6 +447,17 @@ describe('describeFilters', () => {
     );
   });
 
+  it('leaves out a theme author package while no theme or validator is picked, since it narrows nothing', () => {
+    assert.equal(
+      describeFilters({ ...NO_FILTERS, other: ['snapshot-tests'] }, guide),
+      "Showing every change. Answer any of these to hide what doesn't apply to you.",
+    );
+    assert.equal(
+      describeFilters({ ...NO_FILTERS, other: ['snapshot-tests'], uses: ['typescript'] }, guide),
+      'Showing changes for code using TypeScript. Answer more to narrow the list, or clear to see everything.',
+    );
+  });
+
   it('names a search alone', () => {
     assert.equal(
       describeFilters({ ...NO_FILTERS, search: 'ids' }, guide),
