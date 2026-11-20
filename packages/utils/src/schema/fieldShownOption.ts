@@ -10,6 +10,7 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
 } from '../types.ts';
+import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { emptySchema, sourcesOfOption } from './graph/mergePlan.ts';
 import nodeOfSchema from './graph/nodeOfSchema.ts';
 import retrieveSchema, { OPTION_KEYWORDS } from './retrieveSchema.ts';
@@ -28,24 +29,124 @@ export function rendersOptionsAsSelect<S extends StrictRJSFSchema = RJSFSchema>(
 /** Returns the options a schema is read as built from: those a plan's merge of lists rebuilt it from, see
  * `sourcesOfOption()`, or else the schema itself
  */
-function sourcesOf(schema: object): readonly unknown[] {
-  return sourcesOfOption(schema) ?? [schema];
+function sourcesOf(schema: unknown): readonly unknown[] {
+  return (isObject(schema) && sourcesOfOption(schema)) || [schema];
 }
 
-/** Whether `entry`, an option `retrieveSchema()` handed out, stands for `option`: it is the option, or one a merge of
- * lists built from it, or from all the options `option` was built from where a merge rebuilt `option` too
+/** Returns the options `entry`, an option `retrieveSchema()` handed out, was built from, one from each list a merge of
+ * lists rebuilt it from, in the order they were merged, or else `entry` itself
  */
-function standsFor<S extends StrictRJSFSchema>(entry: unknown, option: unknown, rootSchema: S): boolean {
+function builtFrom<S extends StrictRJSFSchema>(entry: unknown, rootSchema: S): readonly unknown[] {
   if (!isSchemaObject<S>(entry)) {
-    return entry === option;
+    return sourcesOf(entry);
   }
   const { graph, node } = nodeOfSchema<S>(entry, rootSchema);
   const declared = graph.node(node);
-  if (declared.kind !== 'schema' || !isObject(option)) {
-    return false;
+  /* v8 ignore next -- an object the root holds, or adopts beside it, is an object node, as is a field handed out */
+  return declared.kind === 'schema' ? sourcesOf(declared.raw) : [];
+}
+
+/** Returns the index in `options` of the option each option `retrieveSchema()` handed out stands for, given the
+ * options each was `built` from: the option, or the one of `options` a merge of lists built it from, read at the same
+ * position of each entry's sources, the position of the list `options` is. The position is what tells the field's own
+ * list apart, since an option object can sit in more than one of the lists merged. Undefined where no position traces
+ * every entry to an option
+ */
+function writtenIndices(built: readonly (readonly unknown[])[], options: readonly unknown[]): number[] | undefined {
+  const positions = Math.max(1, ...built.map((sources) => sources.length));
+  for (let at = 0; at < positions; at += 1) {
+    const indices = built.map((sources) =>
+      options.findIndex((option) => sourcesOf(option).every((source, i) => sources[at + i] === source)),
+    );
+    if (indices.every((index) => index >= 0)) {
+      return indices;
+    }
   }
-  const built = sourcesOf(declared.raw);
-  return sourcesOf(option).every((source) => built.includes(source));
+  return undefined;
+}
+
+/** The options a field offering `options` renders, each retrieved for its data once asked for, since a pick over a
+ * list no merge rebuilt needs none of them; where they are those `schema` retrieved for the data hands out, the index
+ * in `options` of the option each stands for; and whether a merge of lists rebuilt them
+ */
+interface RenderedOptions<S extends StrictRJSFSchema> {
+  readonly views: () => S[];
+  readonly written: number[] | undefined;
+  readonly rebuilt: boolean;
+}
+
+/** Returns the options a field offering `options` renders: those the field retrieved for `data` hands out,
+ * `retrieved`, where each stands for one of `options`, see `writtenIndices()`, and else `options` as written. `rebuilt`
+ * says a merge of lists built them. shortcut: a `customMergeAllOf`'s rebuilt options keep no record of what they were
+ * built from, so its lists are read as written; upgrade if such a merge's fields need the form's pick
+ */
+function renderedOptions<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  retrieved: readonly unknown[] | undefined,
+  options: readonly unknown[],
+  rootSchema: S,
+  data: unknown,
+): RenderedOptions<S> {
+  const built = retrieved?.map((entry) => builtFrom<S>(entry, rootSchema));
+  const written = built && writtenIndices(built, options);
+  const offered = written && retrieved ? retrieved : options;
+  return {
+    views: () =>
+      offered.map((option) =>
+        retrieveSchema<unknown, S, F>(context, isSchemaObject<S>(option) ? option : emptySchema<S>(), rootSchema, data),
+      ),
+    written,
+    rebuilt: built?.some((sources) => sources.length > 1) === true && written !== undefined,
+  };
+}
+
+/** Returns the index in `options` of the option at `index` of the options `rendered` the field renders, or -1 for an
+ * index naming none of them
+ */
+function writtenIndex<S extends StrictRJSFSchema>(
+  { written }: RenderedOptions<S>,
+  options: readonly unknown[],
+  index: number,
+): number {
+  const shown = written ? (written[index] ?? -1) : index;
+  return shown >= 0 && shown < options.length ? shown : -1;
+}
+
+/** Returns the index of the option a field offering `options` picks for `data` with no option stored, where a merge
+ * of lists rebuilt the options it renders, `retrieved`, as an `allOf` holding options of its own does: the field scores
+ * the rebuilt options, as core's `SchemaField` does, and the pick names the option of `options` it was built from.
+ * Undefined where the field renders `options` as written, or as retrieval hands each out alone, which scoring
+ * `options` reads alike
+ *
+ * @param context - The `SchemaContext` the options are retrieved in
+ * @param retrieved - The list the field retrieved for its data offers in place of `options`
+ * @param options - The field's `anyOf` or `oneOf` list
+ * @param rootSchema - The root schema, to resolve `$ref`s with
+ * @param data - The field's data, or the value it is matched by
+ * @param [discriminatorField] - The property the options are told apart by, if any
+ * @returns - The index of the option picked, -1 for none, or undefined where no merge rebuilt the options
+ */
+export function rebuiltOptionPick<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
+  retrieved: readonly unknown[] | undefined,
+  options: readonly unknown[],
+  rootSchema: S,
+  data: unknown,
+  discriminatorField?: string,
+): number | undefined {
+  const rendered = renderedOptions<S, F>(context, retrieved, options, rootSchema, data);
+  if (!rendered.rebuilt) {
+    return undefined;
+  }
+  const index = getClosestMatchingOption<unknown, S, F>(
+    context,
+    rootSchema,
+    data,
+    rendered.views(),
+    -1,
+    discriminatorField,
+  );
+  return writtenIndex<S>(rendered, options, index);
 }
 
 /** Returns the index of the option the field at `path` offering `options` shows, as `fieldState` says. The field picks
@@ -81,23 +182,12 @@ export default function fieldShownOption<
   const keyword = OPTION_KEYWORDS.find((key) => schema[key] === options);
   const retrieved: unknown[] | undefined =
     keyword && retrieveSchema<unknown, S, F>(context, schema, rootSchema, data)[keyword];
-  // The index names one of `options`, so the retrieved list stands in only where each of its options stands for one of
-  // them. shortcut: a `customMergeAllOf`'s rebuilt options keep no record of what they were built from, so its lists
-  // are read as written; upgrade if such a merge's fields need the form's pick
-  const written = (retrieved ?? []).map((entry) =>
-    options.findIndex((option) => standsFor<S>(entry, option, rootSchema)),
-  );
-  const traced = retrieved !== undefined && written.every((index) => index >= 0);
-  const offered: readonly unknown[] = traced ? retrieved : options;
-  const views = offered.map((option) =>
-    retrieveSchema<unknown, S, F>(context, isSchemaObject<S>(option) ? option : emptySchema<S>(), rootSchema, data),
-  );
+  const rendered = renderedOptions<S, F>(context, retrieved, options, rootSchema, data);
   const index = fieldState.selectedOption(
     fieldPathFromList(path),
-    views,
+    rendered.views(),
     data,
     getDiscriminatorFieldFromSchema<S>(schema),
   );
-  const shown = traced ? (written[index] ?? -1) : index;
-  return shown >= 0 && shown < options.length ? shown : -1;
+  return writtenIndex<S>(rendered, options, index);
 }

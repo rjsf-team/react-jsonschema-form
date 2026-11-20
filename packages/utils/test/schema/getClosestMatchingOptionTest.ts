@@ -780,14 +780,64 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           ['an else', (list) => ({ if: false, else: { oneOf: list } })],
           ['a dependencies schema', (list) => ({ dependencies: { t: { oneOf: list } } })],
         ];
+        // Retrieval merges the option a `dependencies` schema's list matches into the field, which types it as that
+        // option's object
         it.each(
           holders.flatMap(([holder, holding]) => [
             { holder, holding, field: 'a typed object', type: { type: 'object' as const }, expected: 1 },
-            { holder, holding, field: 'a field with no type', type: {}, expected: 0 },
+            {
+              holder,
+              holding,
+              field: 'a field with no type',
+              type: {},
+              expected: holder === 'a dependencies schema' ? 1 : 0,
+            },
           ]),
         )('reads a list $holder holds as $field it merges into reads it', ({ holding, type, expected }) => {
           const declaring: RJSFSchema = { type: 'object', properties: { p: { ...type, ...holding(options) } } };
           expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(expected);
+        });
+        // The field is an object rendering its own field once its `then` or `dependencies` schema applies to the data
+        it.each<[string, (list: RJSFSchema[]) => RJSFSchema]>([
+          ['a then beside the list', (list) => ({ if: true, then: { type: 'object' }, oneOf: list })],
+          ['a then holding the list', (list) => ({ if: true, then: { type: 'object', oneOf: list } })],
+          ['a dependencies schema', (list) => ({ dependencies: { t: { type: 'object' } }, oneOf: list })],
+        ])('reads a list beside a field typed through %s as that field reads it', (_, typed) => {
+          const declaring: RJSFSchema = { type: 'object', properties: { p: typed(options) } };
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(1);
+        });
+        // A definition is read with its own type, which a `$ref` naming it with no type of its own keeps
+        it('reads a list a definition offers, named through a $ref, as the field naming it reads it', () => {
+          const declaring: RJSFSchema = {
+            type: 'object',
+            definitions: { list: { oneOf: options } },
+            properties: { p: { $ref: '#/definitions/list' } },
+          };
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(0);
+        });
+        // A property of a definition has the one type it declares, however many fields name the definition
+        it('reads a list a property of a definition offers as that property reads it', () => {
+          const declaring: RJSFSchema = {
+            $ref: '#/definitions/root',
+            definitions: { root: { type: 'object', properties: { p: { oneOf: options } } } },
+          };
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(0);
+        });
+        // The graph names one place for an option object, which can be another list holding the same object
+        it.each<[string, (shared: RJSFSchema[]) => RJSFSchema['properties']]>([
+          [
+            "an allOf entry's list beside it",
+            (list) => ({ p: { allOf: [{ oneOf: [list[0], { properties: { d: {} } }] }], oneOf: list } }),
+          ],
+          ["another field's list declared first", (list) => ({ q: { oneOf: [list[0]] }, p: { oneOf: list } })],
+        ])('reads a list whose first option %s holds too as the field offering it reads it', (_, properties) => {
+          const declaring: RJSFSchema = { type: 'object', properties: properties(options) };
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(0);
+        });
+        // Only a `then` or `else` keyword merges into the schema holding it, not a property of that name
+        it.each(['then', 'else'])('reads a list a property named %s offers as that field reads it', (name) => {
+          const declaring: RJSFSchema = { type: 'object', properties: { [name]: { oneOf: options } } };
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(0);
         });
       });
       it('scores an option as it stands where the data holds no extra key', () => {

@@ -1,5 +1,13 @@
 import { allowsAdditionalProperties, readsAbsentAsAllowed } from '../additionalPropertiesUtils.ts';
-import { ADDITIONAL_PROPERTY_FLAG, ALL_OF_KEY, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  ALL_OF_KEY,
+  DEPENDENCIES_KEY,
+  ELSE_KEY,
+  PROPERTIES_KEY,
+  REF_KEY,
+  THEN_KEY,
+} from '../constants.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
@@ -117,24 +125,60 @@ interface Listing<S extends StrictRJSFSchema> {
   readonly offeredBy: S;
 }
 
-/** The end of a pointer to an `allOf` entry, `then`, `else` or `dependencies` schema, which merges into the schema
- * holding it
+/** Returns the schema node the schema node `id` merges into, as an `allOf` entry, `then`, `else` or `dependencies`
+ * schema merges into the schema holding it, or undefined for one that merges into none. The pointer only names the
+ * candidates, since a property or definition can be named `then` or `else`; the graph's edges decide
  */
-const MERGING_TAIL = /\/(?:allOf\/\d+|then|else|dependencies\/[^/]+)$/;
-
-/** Returns the pointer of the field the schema at `pointer` is, or merges into */
-function fieldPointerOf(pointer: string): string {
-  let field = pointer;
-  while (MERGING_TAIL.test(field)) {
-    field = field.replace(MERGING_TAIL, '');
+function mergedInto<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): NodeId | undefined {
+  const tokens = graph.node(id).pointer.split('/');
+  const holderAt = (depth: number) => {
+    const holder = tokens.length > depth ? graph.byPointer(tokens.slice(0, -depth).join('/')) : undefined;
+    return holder !== undefined && graph.node(holder).kind === 'schema' ? holder : undefined;
+  };
+  const holder = holderAt(1);
+  if (holder !== undefined && [THEN_KEY, ELSE_KEY].some((keyword) => graph.child(holder, keyword) === id)) {
+    return holder;
   }
-  return field;
+  const listHolder = holderAt(2);
+  return listHolder !== undefined &&
+    [ALL_OF_KEY, DEPENDENCIES_KEY].some((keyword) =>
+      graph.subschemas(listHolder, keyword).some(([, child]) => child === id),
+    )
+    ? listHolder
+    : undefined;
 }
 
-/** Returns the field the root declares `options` as the `anyOf`/`oneOf` list of, found from where the first option is
- * declared, with the keyword holding them: the schema holding the list, or the one it merges into where an `allOf`
- * entry, `then`, `else` or `dependencies` schema holds it. Undefined for a list the root holds nowhere, as one built in
- * code, a copy or the options `retrieveSchema()` handed out are
+/** Returns the schema node holding `options` as its `anyOf`/`oneOf` list, with the keyword, found from where one of its
+ * options is declared: an option object can sit in other lists too, and the graph names one place for it
+ */
+function listHolderOf<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  options: readonly unknown[],
+): { readonly id: NodeId; readonly keyword: string } | undefined {
+  for (const [index, option] of options.entries()) {
+    const declared = isObject(option) ? graph.byObject(option) : undefined;
+    const at = declared === undefined ? null : /^(.*)\/(anyOf|oneOf)\/(\d+)$/.exec(graph.node(declared).pointer);
+    const id = at === null || Number(at[3]) !== index ? undefined : graph.byPointer(at[1]);
+    const holder = id === undefined ? undefined : graph.node(id);
+    const list: unknown = holder?.kind === 'schema' && at !== null ? Reflect.get(holder.raw, at[2]) : undefined;
+    if (
+      id !== undefined &&
+      at !== null &&
+      Array.isArray(list) &&
+      list.length === options.length &&
+      list.every((entry, i) => entry === options[i])
+    ) {
+      return { id, keyword: at[2] };
+    }
+  }
+  return undefined;
+}
+
+/** Returns the field the root declares `options` as the `anyOf`/`oneOf` list of, with the keyword holding them: the
+ * schema holding the list, or the one it merges into where an `allOf` entry, `then`, `else` or `dependencies` schema
+ * holds it. Undefined for a list the root holds nowhere, as one built in code, a copy or the options `retrieveSchema()`
+ * handed out are. shortcut: a list a `definitions` or `$defs` entry offers is read with the entry's own type, not one a
+ * `$ref` naming it adds, since several fields can name it; upgrade if typed `$ref` sites need the field's pick
  *
  * @param options - The options
  * @param rootSchema - The root schema
@@ -145,24 +189,17 @@ function declaredListing<S extends StrictRJSFSchema>(
   rootSchema: S,
 ): { readonly offeredBy: S; readonly keyword: string } | undefined {
   const graph = parseSchemaGraph<S>(rootSchema);
-  const schemaAt = (pointer: string | undefined) => {
-    const id = pointer === undefined ? undefined : graph.byPointer(pointer);
-    const node = id === undefined ? undefined : graph.node(id);
-    return node?.kind === 'schema' ? node.raw : undefined;
-  };
-  const declared = isObject(options[0]) ? graph.byObject(options[0]) : undefined;
-  const at = declared === undefined ? null : /^(.*)\/(anyOf|oneOf)\/0$/.exec(graph.node(declared).pointer);
-  const holder = schemaAt(at?.[1]);
-  const field = schemaAt(at === null ? undefined : fieldPointerOf(at[1]));
-  if (at === null || holder === undefined || field === undefined) {
+  const holder = listHolderOf<S>(graph, options);
+  if (holder === undefined) {
     return undefined;
   }
-  const list: unknown = Reflect.get(holder, at[2]);
-  return Array.isArray(list) &&
-    list.length === options.length &&
-    list.every((option, index) => option === options[index])
-    ? { offeredBy: field, keyword: at[2] }
-    : undefined;
+  let fieldId = holder.id;
+  for (let up = mergedInto<S>(graph, fieldId); up !== undefined; up = mergedInto<S>(graph, fieldId)) {
+    fieldId = up;
+  }
+  const field = graph.node(fieldId);
+  /* v8 ignore next -- the holder and each node it merges into are object nodes */
+  return field.kind === 'schema' ? { offeredBy: field.raw, keyword: holder.keyword } : undefined;
 }
 
 /** Returns where the option `option`, at `index` of the list `listing` names, is declared: where a declaration of the

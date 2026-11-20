@@ -15480,6 +15480,79 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(declared).toEqual([['a'], ['a', 'd'], ['b'], ['b', 'd']]);
           });
 
+          // C sits in both lists, so only its position among each rebuilt option's sources says which list it came from
+          it('reads a rebuilt option as built from the option of the field’s own list where both lists hold one option object', () => {
+            const c: RJSFSchema = { properties: { c: { type: 'string' } } };
+            const shared: RJSFSchema = {
+              type: 'object',
+              oneOf: [c, { properties: { b: { type: 'number' } } }],
+              allOf: [{ oneOf: [c, { properties: { d: { type: 'string' } } }] }],
+            };
+            const { fieldState, declared } = showing(2);
+            expect(
+              fieldShownOption({ validator: testValidator }, fieldState, [], shared, shared.oneOf ?? [], shared, {}),
+            ).toBe(1);
+            expect(declared).toEqual([['c'], ['c', 'd'], ['b', 'c'], ['b', 'd']]);
+          });
+
+          // No option of the field's own list holds both keys, so only scoring the rebuilt list finds B×C, which an
+          // edit then shows
+          it('first fills the field from the rebuilt option its data matches, where the data splits its keys across both lists', () => {
+            const split: RJSFSchema = {
+              type: 'object',
+              properties: {
+                p: {
+                  type: 'object',
+                  oneOf: [
+                    { properties: { a: { type: 'string' }, c: { type: 'string' } } },
+                    { properties: { b: { type: 'number', default: 5 }, bb: { type: 'string' } } },
+                  ],
+                  allOf: [
+                    { oneOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }] },
+                  ],
+                },
+              },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema: split, rootSchema: split, formData: { p: { bb: 'y', c: 'z' } } },
+              ),
+            ).toEqual({ p: { b: 5, bb: 'y', c: 'z' } });
+          });
+
+          // The `then` holding the second list applies to the default, not to no data, so the list is rebuilt only for
+          // the default the field renders with, and an edit then fills B's default
+          it('first fills the field from the rebuilt option its default matches, where only the default selects the list', () => {
+            const conditional: RJSFSchema = {
+              type: 'object',
+              properties: {
+                p: {
+                  type: 'object',
+                  default: { k: 2, bb: 'y', c: 'z' },
+                  oneOf: [
+                    { properties: { a: { type: 'string' }, c: { type: 'string' } } },
+                    { properties: { b: { type: 'number', default: 5 }, bb: { type: 'string' } } },
+                  ],
+                  allOf: [
+                    {
+                      if: { type: 'object', required: ['k'] },
+                      then: {
+                        oneOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }],
+                      },
+                    },
+                  ],
+                },
+              },
+            };
+            const context = { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' as const };
+            const filled = { p: { b: 5, bb: 'y', c: 'z', k: 2 } };
+            expect(getDefaultFormState(context, { schema: conditional, rootSchema: conditional })).toEqual(filled);
+            expect(
+              getDefaultFormState(context, { schema: conditional, rootSchema: conditional, formData: filled }),
+            ).toEqual(filled);
+          });
+
           it("keeps each $ref of an option's own allOf where it merges the option with an allOf entry's", () => {
             const refs: RJSFSchema = {
               definitions: {
