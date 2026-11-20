@@ -6263,6 +6263,68 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(node.querySelector('#root_a_n__key')).not.toBeNull();
     });
 
+    // The keys of an object no condition reads share one fill without them all, so each place a condition can be
+    // read from has to keep the fill per key
+    const conditionalA: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string' }, n: { type: 'number' } },
+      if: { properties: { kind: { const: 'A' } } },
+      then: { properties: { n: { default: 1 } } },
+    };
+    it.each<{ held: string; schema: RJSFSchema; a: Record<string, unknown> }>([
+      {
+        held: "an `if` the object's `$ref` reaches",
+        schema: unionOf({ definitions: { a: conditionalA } }, { $ref: '#/definitions/a' }),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        // The root's definition of the same name holds no `if`
+        held: "an `if` the object's `$ref` reaches in the resource an `$id` above it names",
+        schema: unionOf(
+          { definitions: { a: { type: 'object' } } },
+          { $ref: '#/definitions/a' },
+          { $id: 'https://example.com/s', definitions: { a: conditionalA } },
+        ),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        held: 'an `if` above the object',
+        schema: unionOf(
+          {
+            if: { properties: { a: { properties: { kind: { const: 'A' } } } } },
+            then: { properties: { a: { properties: { n: { default: 1 } } } } },
+          },
+          { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } },
+        ),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        held: 'an `if` in the option the object shows',
+        schema: unionOf({}, { anyOf: [conditionalA] }),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        // With `m` beside it the dependency fills `n` with 2, and without it `n` takes its own 1
+        held: "the object's `dependencies`",
+        schema: unionOf(
+          {},
+          {
+            type: 'object',
+            properties: { m: { type: 'string' }, n: { type: 'number', default: 1 } },
+            dependencies: { m: { properties: { n: { default: 2 } } } },
+          },
+        ),
+        a: { m: 'x', n: 1 },
+      },
+    ])(
+      'judges a nested value by the fill made with its siblings in place, read through $held',
+      async ({ schema, a }) => {
+        const { formData } = await selectT(schema, { whenAbsent: 'allow', initialFormData: { kind: 's', a } });
+
+        expect(formData).toEqual({ kind: 't', a });
+      },
+    );
+
     it('keeps an object whose keys its extra key renders, as extra keys of their own', async () => {
       const schema = unionOf({}, { type: 'object', properties: { b: { type: 'string' } } });
       const { node, formData } = await selectT(schema, {
