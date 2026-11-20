@@ -437,7 +437,7 @@ This function iterates over each field of object `a`, using `_.isEqual` to compa
 If the values are different, the field name will be included in the returned array.
 
 When `deep` is true, a field holding a nested object or a same-length array is descended into and the dotted path of the deepest field that changed is returned instead of the name of the top-level field holding it.
-A key that contains a `.` or a `[` is descended into like any other: the path it produces cannot be told apart from a path through nested keys, and neither can the entry an `ErrorSchema` keeps for it, since [toErrorSchema()](#toerrorschema) spells such a name out as a path in the same way.
+A key that contains a `.` or a `[` is descended into like any other: the path it produces cannot be told apart from a path through nested keys, and neither can the entry an `ErrorSchema` keeps for it, since [toErrorSchema()](#toerrorschemat--any) spells such a name out as a path in the same way.
 
 #### Parameters
 
@@ -677,7 +677,7 @@ on the schema type and `widget` name. If no widget component can be found an `Er
 
 Determines whether `obj` has an **own** property at `path`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
-Every segment is checked with `Object.hasOwn()`, so inherited properties report `false` — `hasByPath({}, 'toString')` is `false`. [getByPath()](#getbypath) applies the same own-property rule, so the two can be used as a guard/read pair.
+Every segment is checked with `Object.hasOwn()`, so inherited properties report `false` — `hasByPath({}, 'toString')` is `false`. [getByPath()](#getbypathr--unknown) applies the same own-property rule, so the two can be used as a guard/read pair.
 
 #### Parameters
 
@@ -1551,7 +1551,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 - [formData]: T | undefined - The current formData, if any, onto which to provide any missing defaults
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
-- [experimental_defaultFormStateBehavior]: Experimental_DefaultFormStateBehavior - See `Form` documentation for the [experimental_defaultFormStateBehavior](./form-props.md#experimental_defaultFormStateBehavior) prop
+- [experimental_defaultFormStateBehavior]: Experimental_DefaultFormStateBehavior - See `Form` documentation for the [experimental_defaultFormStateBehavior](./form-props.md#experimental_defaultformstatebehavior) prop
 - [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 - [initialDefaultsGenerated]: boolean - Optional flag, indicates whether or not initial defaults have been generated
 

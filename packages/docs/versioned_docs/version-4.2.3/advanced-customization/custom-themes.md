@@ -21,7 +21,7 @@ const Demo = () => (
 The Theme object consists of the same properties as the rjsf `Form` component (such as **widgets** and **fields**). The themed-Form component merges together any theme-specific **widgets** and **fields** with the default **widgets** and **fields**. For instance, providing a single widget in **widgets** will merge this widget with all the default widgets of the rjsf `Form` component, but overrides the default if the theme's widget's name matches the default widget's name. Thus, for each default widget or field not specified/overridden, the themed-form will rely on the defaults from the rjsf `Form`. Note that you are not required to pass in either custom **widgets** or **fields** when using the custom-themed HOC component; you can make the essentially redefine the default Form by simply doing `const Form = withTheme({});`.
 
 ### Widgets and fields 
-**widgets** and **fields** should be in the same format as shown [here](/advanced-customization/#custom-widgets-and-fields).
+**widgets** and **fields** should be in the same format as shown [here](custom-widgets-fields.md).
 
 Example theme with custom widget:
 ```jsx
@@ -46,7 +46,7 @@ export default ThemeObject;
 The above can be similarly done for **fields**.
 
 ### Templates
-Each template should be passed directly into the theme object just as you would into the rjsf Form component. Here is an example of how to use a custom [ArrayFieldTemplate](/advanced-customization/#array-field-template) and [ErrorListTemplate](/advanced-customization/#error-list-template) in the theme object:
+Each template should be passed directly into the theme object just as you would into the rjsf Form component. Here is an example of how to use a custom [ArrayFieldTemplate](custom-templates.md#arrayfieldtemplate) and [ErrorListTemplate](../api-reference/form-props.md#errorlist) in the theme object:
 ```jsx
 function MyArrayFieldTemplate(props) {
   return (

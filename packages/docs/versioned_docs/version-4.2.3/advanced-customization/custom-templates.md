@@ -8,7 +8,7 @@ _ | Custom Field  | Custom Template | Custom Widget
 **Usage** | Global or per-field | Global or per-field | Global or per-field
 **Global Example** | `<Form fields={MyCustomField} />` |  `<Form ArrayFieldTemplate={MyArrayTemplate} />` | `<Form widgets={MyCustomWidget} />`
 **Per-Field Example** | `"ui:field": MyCustomField` |  `"ui:ArrayFieldTemplate": MyArrayTemplate` | `"ui:widget":MyCustomWidget`
-**Documentation** | [Custom Fields](custom-widgets-fields.md) | [FieldTemplate](#FieldTemplate) / [ArrayFieldTemplate](#ArrayFieldTemplate) / [ObjectFieldTemplate](#ObjectFieldTemplate) | [Custom Widgets](custom-widgets-fields.md)
+**Documentation** | [Custom Fields](custom-widgets-fields.md) | [FieldTemplate](#fieldtemplate) / [ArrayFieldTemplate](#arrayfieldtemplate) / [ObjectFieldTemplate](#objectfieldtemplate) | [Custom Widgets](custom-widgets-fields.md)
 
 ## ArrayFieldTemplate
 
@@ -129,9 +129,9 @@ If you want to handle the rendering of each element yourself, you can use the pr
 The following props are passed to a custom field template component:
 
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
-- `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
+- `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `label`: The computed label for this field, as a string.
-- `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionField`](#custom-descriptions) defined).
+- `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionField`](custom-widgets-fields.md#customizing-the-default-fields-and-widgets) defined).
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
 - `errors`: A component instance listing any encountered errors for this field.
@@ -144,7 +144,7 @@ The following props are passed to a custom field template component:
 - `hideError`: A boolean value stating if the field is hiding its errors
 - `disabled`: A boolean value stating if the field is disabled.
 - `displayLabel`: A boolean value stating if the label should be rendered or not. This is useful for nested fields in arrays where you don't want to clutter the UI.
-- `fields`: An array containing all Form's fields including your [custom fields](#custom-field-components) and the built-in fields.
+- `fields`: An array containing all Form's fields including your [custom fields](custom-widgets-fields.md#custom-field-components) and the built-in fields.
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
 - `onChange`: The value change event handler; Can be called with a new value to change the value for this field.
