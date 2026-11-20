@@ -8448,6 +8448,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               };
               expect(getDefaultFormState(ancestor, { schema })).toStrictEqual({ x: 5 });
             });
+            it('checks its own default where a then or a dependencies entry of its object declares it', () => {
+              const context = { validator: testValidator };
+              const declaring: RJSFSchema = { required: ['x'], properties: { x: withDefault(thenThree, 5) } };
+              const kind = { kind: { type: 'string', default: 'a' } } as const;
+              const viaDependencies: RJSFSchema = {
+                type: 'object',
+                properties: kind,
+                dependencies: { kind: declaring },
+              };
+              const viaThen: RJSFSchema = {
+                type: 'object',
+                properties: kind,
+                if: { properties: { kind: { const: 'a' } } },
+                then: declaring,
+              };
+              for (const schema of [viaDependencies, viaThen]) {
+                expect(getDefaultFormState(context, { schema })).toStrictEqual({ kind: 'a', x: 5 });
+              }
+            });
             it('checks the default of the root field', () => {
               const context = { validator: testValidator };
               expect(getDefaultFormState(context, { schema: withDefault(thenTen, 5) })).toBe(10);

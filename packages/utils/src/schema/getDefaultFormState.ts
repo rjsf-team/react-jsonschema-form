@@ -1497,10 +1497,12 @@ function declaredDefault<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: 
  * chain provides, which wins the merge as the option the field shows wins over its own keywords and those over its
  * `allOf` members
  */
-function unconditionalDefault<S extends StrictRJSFSchema>({ chains }: DefaultsView<S>): unknown {
+function unconditionalDefault<S extends StrictRJSFSchema>({ chains, field }: DefaultsView<S>): unknown {
+  // The branches the field's seeds sit in are its parent's, which declare the field rather than condition it
+  const declaring = new Set(field.seeds.flatMap(({ scope }) => scope ?? []));
   for (const chain of chains) {
     const provider = chain.get(DEFAULT_KEY);
-    if (provider && !provider.scope?.some((step) => step.startsWith('b'))) {
+    if (provider && !provider.scope?.some((step) => step.startsWith('b') && !declaring.has(step))) {
       return provider.node.raw[DEFAULT_KEY];
     }
   }
