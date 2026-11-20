@@ -1055,6 +1055,9 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
         }
       }
     }
+    // Rows the new default holds past the array's end are added, as the array taken whole would hold them
+    const addedRows = newRows?.slice(data.length, data.length + bound - sanitizedItems.length) ?? [];
+    sanitizedItems.push(...addedRows.map((row) => structuredClone(row)));
     if (!isCleared) {
       newFormData =
         sanitizedItems.length === data.length && sanitizedItems.every((item, index) => item === data[index])

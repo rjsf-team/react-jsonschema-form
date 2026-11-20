@@ -4701,6 +4701,61 @@ describe('judging a field by the value the fill writes for it (#5825)', () => {
     expect(utils).toEqual({ list: expected });
   });
 
+  // Still holding its old filled default whole, the array takes the rows a longer new default holds past its end
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; list: unknown[]; expected: unknown[] }>([
+    {
+      name: 'rows holding a computed key',
+      from: listOf(B, [{ a: 'y' }]),
+      to: listOf(B, xw),
+      list: [{ a: 'y', f: false }],
+      expected: [
+        { a: 'x', f: false },
+        { a: 'w', f: false },
+      ],
+    },
+    {
+      name: 'rows up to a changed maxItems',
+      from: listOf(B, [{ a: 'y' }]),
+      to: {
+        type: 'object',
+        properties: { list: { type: 'array', maxItems: 2, default: [...xw, { a: 'v' }], items: rowOf(B) } },
+      },
+      list: [{ a: 'y', f: false }],
+      expected: [
+        { a: 'x', f: false },
+        { a: 'w', f: false },
+      ],
+    },
+  ])("adds $name past the array's end from a longer array default", ({ from, to, list, expected }) => {
+    const { form, utils } = sanitizedBoth(from, to, { list });
+    expect(form).toEqual({ list: expected });
+    expect(utils).toEqual({ list: expected });
+  });
+
+  it('gives back the rows of an array default an `if` toggles back, rows holding a computed key included', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', enum: ['a', 'b'], default: 'a' }, list: { type: 'array', items: rowOf(B) } },
+      if: { properties: { k: { const: 'a' } } },
+      then: { properties: { list: { default: xw } } },
+      else: { properties: { list: { default: [{ a: 'y' }] } } },
+    };
+    const ref = createRef<FormRef>();
+    const { container } = render(<Form ref={ref} schema={schema} validator={validator} />);
+    const select = elementOf(container, 'select#root_k');
+    await user.selectOptions(select, 'b');
+    expect(handleOf(ref).getFormData()).toEqual({ k: 'b', list: [{ a: 'y', f: false }] });
+    await user.selectOptions(select, 'a');
+
+    expect(handleOf(ref).getFormData()).toEqual({
+      k: 'a',
+      list: [
+        { a: 'x', f: false },
+        { a: 'w', f: false },
+      ],
+    });
+  });
+
   // Once the user changed a row, the array no longer holds the old default, so every row is theirs
   it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; list: unknown[]; expected: unknown[] }>([
     {

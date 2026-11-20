@@ -2822,6 +2822,20 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           list: [{ a: 'y', f: false }, ...added.list.slice(1)],
         });
       });
+      it("adds the rows a longer new default holds past the array's end, up to a changed maxItems", () => {
+        const xw = [{ a: 'x' }, { a: 'w' }];
+        const data = { list: [{ a: 'y', f: false }] };
+        const grown = [
+          { a: 'x', f: false },
+          { a: 'w', f: false },
+        ];
+        expect(sanitize(listOf(B, xw), listOf(B, [{ a: 'y' }]), data)).toEqual({ list: grown });
+        const boundedOf: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', maxItems: 2, default: [...xw, { a: 'v' }], items: rowOf(B) } },
+        };
+        expect(sanitize(boundedOf, listOf(B, [{ a: 'y' }]), data)).toEqual({ list: grown });
+      });
       it("pads a row past the new default's length to minItems, as the new default fills it", () => {
         const paddedOf = (d: RJSFSchema['default']): RJSFSchema => ({
           type: 'object',

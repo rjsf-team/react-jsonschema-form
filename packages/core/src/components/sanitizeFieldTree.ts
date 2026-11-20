@@ -1294,7 +1294,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ctx.itemMoves.splice(movesBefore);
       return isItem ? newValue : DROP;
     }
-    const kept = items.filter((item) => item !== DROP);
+    // Rows the new default holds past the array's end are added, as the array taken whole would hold them
+    const kept = [
+      ...items.filter((item) => item !== DROP),
+      ...(newRows?.filled.slice(newValue.length).map((row) => structuredClone(row)) ?? []),
+    ];
     const bounded = kept.length > bound ? kept.slice(0, bound) : kept;
     if (kept.length < items.length) {
       // The items after a dropped one move down, and what the form keeps by path of them moves with them
