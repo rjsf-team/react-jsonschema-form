@@ -90,4 +90,8 @@ describe('getKeywordParentSchema()', () => {
     expect(getKeywordParentSchema(schema, '#/properties/x/type')).toBeUndefined();
     expect(getKeywordParentSchema(schema, '#/properties/x/y/type')).toBeUndefined();
   });
+  it('returns undefined for a path into another resource, which Ajv starts with that resource’s `$id`', () => {
+    const schema: RJSFSchema = { type: 'object', required: ['a'], $defs: { F: { $id: 'f', required: ['b'] } } };
+    expect(getKeywordParentSchema(schema, 'f/required')).toBeUndefined();
+  });
 });

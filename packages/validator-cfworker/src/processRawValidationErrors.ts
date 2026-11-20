@@ -15,6 +15,7 @@ import {
   createErrorHandler,
   getByPath,
   getDefaultFormState,
+  getFieldSchemaPath,
   getKeywordParentSchema,
   getUiOptions,
   ONE_OF_KEY,
@@ -163,12 +164,9 @@ export function transformRJSFValidationErrors<
           )
         : undefined;
       // A branch's own title names that branch, not the field it applies to, so it is read from the schema holding the branch
-      const fieldLocation = keywordLocation.replace(
-        /(?:(?<!\/(?:properties|patternProperties))\/(?:(?:allOf|anyOf|oneOf)\/\d+|then|else|(?:dependentSchemas|dependencies)\/[^/]+)(?:\/\$ref)*)+(\/[^/]+)$/,
-        '$1',
-      );
+      const fieldLocation = getFieldSchemaPath(keywordLocation);
       const parentTitle = (
-        schema && fieldLocation !== keywordLocation
+        schema && keyword !== 'false' && fieldLocation !== keywordLocation
           ? getKeywordParentSchema<S>(schema, fieldLocation, decodePointerToken)
           : parentSchema
       )?.title;
