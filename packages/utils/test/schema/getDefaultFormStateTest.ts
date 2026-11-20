@@ -8490,6 +8490,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const context = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
           expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({ x: null });
         });
+        describe.each(PLACEMENTS)(
+          'decides the if of a field with no type, or one allowing an object, by the primitive default it holds, %s',
+          (_placement, inAllOf) => {
+            it.each<[string, RJSFSchema, number]>([
+              ['keeps its default where the if rejects it', { if: { maximum: 3 }, then: { const: 3 } }, 5],
+              [
+                'fills the const of an else whose if rejects its default',
+                { if: { minimum: 7 }, else: { const: 10 } },
+                10,
+              ],
+            ])('%s', (_name, conditional, expected) => {
+              const TYPES: RJSFSchema[] = [{}, { type: ['number', 'object'] }];
+              for (const typed of TYPES) {
+                const x: RJSFSchema = { ...typed, default: 5, ...(inAllOf ? { allOf: [conditional] } : conditional) };
+                const BEHAVIORS: DefaultFormStateBehavior[] = [
+                  { allOf: 'skipDefaults' },
+                  { allOf: 'populateDefaults' },
+                  { emptyObjectFields: 'skipEmptyDefaults' },
+                ];
+                for (const defaultFormStateBehavior of BEHAVIORS) {
+                  const context = { validator: testValidator, defaultFormStateBehavior };
+                  expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({ x: expected });
+                  expect(getDefaultFormState(context, { schema: x })).toBe(expected);
+                }
+              }
+            });
+          },
+        );
       });
     });
     describe('default form state behavior: arrayMinItems.populate = "never"', () => {
