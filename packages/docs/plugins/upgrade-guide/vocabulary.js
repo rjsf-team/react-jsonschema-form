@@ -5,7 +5,7 @@
 /**
  * @typedef {{ id: string; label: string; detect: string; chip?: string }} Use
  * `chip` marks a customization use: the filtered page shows it as a chip with this label in its filter bar, and every
- * other use as a checkbox under "More about your app".
+ * other use as a checkbox under "More filters". Every chip and checkbox starts selected.
  * @typedef {{ id: string; label: string; detect: string }} SchemaFeature
  * @typedef {{ id: string; heading: string; line: string }} Heading
  * A section of the guide: `heading` is its title and `line` the sentence under it. An `affects` value is one, listing

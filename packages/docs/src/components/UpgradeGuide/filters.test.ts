@@ -2,19 +2,20 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import {
+  CORE_ONLY,
   NO_FILTERS,
   badgeOf,
   describeFilters,
   fetchMarkdown,
   hashTarget,
   mapConcurrently,
+  isNarrowed,
   matcher,
   opensMore,
   readFilters,
   relatedLinks,
   toMarkdownDocument,
-  toggleNothing,
-  toggleUse,
+  toggled,
   writeFilters,
   type Entry,
   type Filters,
@@ -221,10 +222,17 @@ describe('mapConcurrently', () => {
 });
 
 describe('matcher', () => {
+  it('shows every entry while everything is selected', () => {
+    const entries = [
+      entry({ packages: ['@rjsf/mui'], uses: ['markup'], schema: ['refs'] }),
+      entry({ packages: ['@rjsf/validator-ata'], uses: ['custom-fields'] }),
+      entry({ packages: ['@rjsf/snapshot-tests'], uses: ['custom-widgets'], schema: ['arrays'] }),
+      entry({ uses: ['form'] }),
+    ];
+    assert.deepEqual(entries.filter(matcher(guide, NO_FILTERS)), entries);
+  });
+
   const cases: [string, Partial<Entry>, Partial<Filters>, boolean][] = [
-    ['nothing answered shows a theme entry', { packages: ['@rjsf/mui'], uses: ['markup'], schema: ['refs'] }, {}, true],
-    ['nothing answered shows a validator entry', { packages: ['@rjsf/validator-ata'] }, {}, true],
-    ['nothing answered shows an other package entry', { packages: ['@rjsf/snapshot-tests'] }, {}, true],
     ['`*` shows whatever theme is chosen', { packages: ['*'] }, { theme: 'mui' }, true],
     ['`@rjsf/core` shows whatever theme is chosen', { packages: ['@rjsf/core'] }, { theme: 'mui' }, true],
     [
@@ -266,48 +274,88 @@ describe('matcher', () => {
       { theme: 'mui', other: ['snapshot-tests'] },
       true,
     ],
-    ['the Nothing chip hides a customization entry', { uses: ['custom-widgets'] }, { nothing: true }, false],
-    ['the Nothing chip keeps an entry of an unanswered More use', { uses: ['typescript'] }, { nothing: true }, true],
-    ['the Nothing chip keeps a `form` entry', { uses: ['form', 'custom-widgets'] }, { nothing: true }, true],
+    ['Core only hides an entry for one theme', { packages: ['@rjsf/mui'] }, { theme: CORE_ONLY }, false],
     [
-      'the Nothing chip and a More use hide an entry of another More use',
-      { uses: ['markup'] },
-      { nothing: true, uses: ['typescript'] },
+      'Core only hides an entry for themes alone',
+      { packages: ['@rjsf/mui', '@rjsf/antd'] },
+      { theme: CORE_ONLY },
       false,
     ],
     [
-      'the Nothing chip keeps an entry of a ticked More use',
-      { uses: ['typescript'] },
-      { nothing: true, uses: ['typescript'] },
+      'Core only keeps an entry for core and a theme',
+      { packages: ['@rjsf/core', '@rjsf/mui'] },
+      { theme: CORE_ONLY },
       true,
     ],
-    ['a chip shows its entries', { uses: ['custom-widgets'] }, { uses: ['custom-widgets'] }, true],
-    ['a chip hides another customization', { uses: ['custom-fields'] }, { uses: ['custom-widgets'] }, false],
-    ['a chip keeps an entry of an unanswered More use', { uses: ['typescript'] }, { uses: ['custom-widgets'] }, true],
-    ['a chip keeps a `form` entry', { uses: ['form'] }, { uses: ['custom-widgets'] }, true],
-    ['a More checkbox shows its entries', { uses: ['markup'] }, { uses: ['markup'] }, true],
-    ['a More checkbox hides an entry of another More use', { uses: ['typescript'] }, { uses: ['markup'] }, false],
+    ['Core only keeps a validator entry', { packages: ['@rjsf/validator-ata'] }, { theme: CORE_ONLY }, true],
+    ['Core only keeps an other package entry', { packages: ['@rjsf/snapshot-tests'] }, { theme: CORE_ONLY }, true],
     [
-      'a More checkbox keeps a customization entry while the chips are unanswered',
+      'Core only beside a validator still hides another validator',
+      { packages: ['@rjsf/validator-ajv8'] },
+      { theme: CORE_ONLY, validator: 'validator-ata' },
+      false,
+    ],
+    [
+      'deselecting a chip hides an entry whose only use it is',
       { uses: ['custom-widgets'] },
-      { uses: ['markup'] },
-      true,
-    ],
-    [
-      'a chip and a More checkbox each hide the other uses of their question',
-      { uses: ['custom-fields', 'typescript'] },
-      { uses: ['custom-widgets', 'markup'] },
+      { without: ['custom-widgets'] },
       false,
     ],
     [
-      'an entry stays when one of its uses holds',
-      { uses: ['custom-fields', 'markup'] },
-      { uses: ['custom-widgets', 'markup'] },
+      'deselecting a chip keeps an entry with another use still selected',
+      { uses: ['custom-widgets', 'custom-fields'] },
+      { without: ['custom-widgets'] },
       true,
     ],
-    ['an entry with no schema shows whatever schema is ticked', { schema: [] }, { schema: ['refs'] }, true],
-    ['a ticked schema shows its entries', { schema: ['arrays', 'refs'] }, { schema: ['refs'] }, true],
-    ['an unticked schema is hidden', { schema: ['arrays'] }, { schema: ['refs'] }, false],
+    [
+      'deselecting every use of an entry hides it',
+      { uses: ['custom-widgets', 'typescript'] },
+      { without: ['custom-widgets', 'typescript'] },
+      false,
+    ],
+    ['deselecting a chip keeps other entries', { uses: ['custom-fields'] }, { without: ['custom-widgets'] }, true],
+    [
+      'a `form` entry stays whatever is deselected',
+      { uses: ['form', 'custom-widgets'] },
+      { without: ['custom-widgets', 'custom-fields', 'typescript', 'markup'] },
+      true,
+    ],
+    [
+      'deselecting a More use hides an entry whose only use it is',
+      { uses: ['typescript'] },
+      { without: ['typescript'] },
+      false,
+    ],
+    [
+      'deselecting a More use keeps an entry with a chip still selected',
+      { uses: ['typescript', 'custom-fields'] },
+      { without: ['typescript'] },
+      true,
+    ],
+    [
+      'an entry with no schema shows whatever schema is deselected',
+      { schema: [] },
+      { noSchema: ['arrays', 'refs'] },
+      true,
+    ],
+    [
+      'deselecting a schema feature hides an entry listing only it',
+      { schema: ['arrays'] },
+      { noSchema: ['arrays'] },
+      false,
+    ],
+    [
+      'deselecting a schema feature keeps an entry listing another',
+      { schema: ['arrays', 'refs'] },
+      { noSchema: ['arrays'] },
+      true,
+    ],
+    [
+      'deselecting every schema feature an entry lists hides it, even a `form` entry',
+      { uses: ['form'], schema: ['arrays', 'refs'] },
+      { noSchema: ['arrays', 'refs'] },
+      false,
+    ],
     ['a search token matches the title, ignoring case', { title: 'Widgets get ids' }, { search: 'WIDGETS' }, true],
     ['a search token matches the description', { description: 'Use `idPrefix`.' }, { search: 'idprefix' }, true],
     ['a search token matches the id', { id: 'mui-slot-props' }, { search: 'slot-props' }, true],
@@ -320,9 +368,9 @@ describe('matcher', () => {
     ['a search token that matches nothing hides', { title: 'Slot props win' }, { search: 'slot lose' }, false],
     ['a blank search hides nothing', {}, { search: '   ' }, true],
     [
-      'every clause must hold: uses and schema answered and matching, package wrong',
+      'every clause must hold: uses and schema still selected, package wrong',
       { packages: ['@rjsf/antd'], uses: ['custom-widgets'], schema: ['arrays'] },
-      { theme: 'mui', uses: ['custom-widgets'], schema: ['arrays'] },
+      { theme: 'mui', without: ['custom-fields'], noSchema: ['refs'] },
       false,
     ],
   ];
@@ -334,50 +382,26 @@ describe('matcher', () => {
 });
 
 describe('the filter bar', () => {
-  it('Nothing unticks the chips and keeps the More uses', () => {
-    assert.deepEqual(toggleNothing(guide, { ...NO_FILTERS, uses: ['custom-widgets', 'typescript'] }), {
-      ...NO_FILTERS,
-      nothing: true,
-      uses: ['typescript'],
-    });
+  it('toggled deselects a selected value and selects it again', () => {
+    assert.deepEqual(toggled(['typescript'], 'custom-widgets'), ['typescript', 'custom-widgets']);
+    assert.deepEqual(toggled(['typescript', 'custom-widgets'], 'typescript'), ['custom-widgets']);
   });
 
-  it('Nothing pressed again unticks itself and nothing else', () => {
-    assert.deepEqual(toggleNothing(guide, { ...NO_FILTERS, nothing: true, uses: ['typescript'] }), {
-      ...NO_FILTERS,
-      uses: ['typescript'],
-    });
+  it('offers Clear once anything differs from everything selected and all themes', () => {
+    assert.equal(isNarrowed(NO_FILTERS), false);
+    assert.equal(isNarrowed({ ...NO_FILTERS, search: '  ' }), false);
+    assert.equal(isNarrowed({ ...NO_FILTERS, theme: CORE_ONLY }), true);
+    assert.equal(isNarrowed({ ...NO_FILTERS, without: ['custom-widgets'] }), true);
+    assert.equal(isNarrowed({ ...NO_FILTERS, noSchema: ['refs'] }), true);
   });
 
-  it('a chip ticked unticks Nothing', () => {
-    assert.deepEqual(toggleUse(guide, { ...NO_FILTERS, nothing: true }, 'custom-widgets'), {
-      ...NO_FILTERS,
-      uses: ['custom-widgets'],
-    });
-  });
-
-  it('a chip unticked leaves the other uses', () => {
-    assert.deepEqual(toggleUse(guide, { ...NO_FILTERS, uses: ['custom-widgets', 'markup'] }, 'custom-widgets'), {
-      ...NO_FILTERS,
-      uses: ['markup'],
-    });
-  });
-
-  it('a More use ticked keeps Nothing', () => {
-    assert.deepEqual(toggleUse(guide, { ...NO_FILTERS, nothing: true }, 'typescript'), {
-      ...NO_FILTERS,
-      nothing: true,
-      uses: ['typescript'],
-    });
-  });
-
-  it('More starts open only when it holds an answer', () => {
+  it('More filters starts open only when something inside it is changed', () => {
     assert.equal(opensMore(guide, NO_FILTERS), false);
-    assert.equal(opensMore(guide, { ...NO_FILTERS, theme: 'mui', nothing: true, uses: ['custom-widgets'] }), false);
+    assert.equal(opensMore(guide, { ...NO_FILTERS, theme: 'mui', without: ['custom-widgets'] }), false);
     assert.equal(opensMore(guide, { ...NO_FILTERS, validator: 'validator-ata' }), true);
-    assert.equal(opensMore(guide, { ...NO_FILTERS, schema: ['refs'] }), true);
+    assert.equal(opensMore(guide, { ...NO_FILTERS, noSchema: ['refs'] }), true);
     assert.equal(opensMore(guide, { ...NO_FILTERS, other: ['snapshot-tests'] }), true);
-    assert.equal(opensMore(guide, { ...NO_FILTERS, uses: ['custom-widgets', 'typescript'] }), true);
+    assert.equal(opensMore(guide, { ...NO_FILTERS, without: ['custom-widgets', 'typescript'] }), true);
   });
 
   it('badges an entry only for exactly one theme or validator', () => {
@@ -407,100 +431,102 @@ describe('relatedLinks', () => {
 });
 
 describe('describeFilters', () => {
-  it('says every change shows when nothing is answered', () => {
+  it('says every change shows while everything is selected', () => {
     assert.equal(
       describeFilters(NO_FILTERS, guide),
-      "Showing every change. Answer any of these to hide what doesn't apply to you.",
+      "Showing every change. Deselect what your app doesn't do to hide its changes.",
     );
   });
 
-  it('names the packages, customizations, More answers, schema and search', () => {
+  it('names the deselected uses and schema features, and how to bring them back', () => {
+    assert.equal(
+      describeFilters({ ...NO_FILTERS, without: ['custom-fields', 'typescript'], noSchema: ['refs'] }, guide),
+      'Hiding changes for TypeScript, custom fields and References. Select them again, or Clear, to bring them back.',
+    );
+  });
+
+  it('names three hidden things and counts the rest', () => {
     assert.equal(
       describeFilters(
         {
           ...NO_FILTERS,
-          theme: 'mui',
-          uses: ['custom-widgets', 'typescript'],
-          schema: ['arrays', 'refs'],
-          search: ' slot ',
+          without: ['typescript', 'markup', 'custom-widgets', 'custom-fields'],
+          noSchema: ['arrays', 'refs'],
         },
         guide,
       ),
-      'Showing changes for `@rjsf/mui` with custom widgets, for code using TypeScript, for schemas with Arrays or References, matching "slot". Answer more to narrow the list, or clear to see everything.',
+      'Hiding changes for TypeScript, Markup, custom widgets and 3 more. Select them again, or Clear, to bring them back.',
     );
   });
 
-  it('names the Nothing chip', () => {
+  it('names the theme picked, the search and what is hidden, but no unticked theme author package', () => {
     assert.equal(
-      describeFilters({ ...NO_FILTERS, nothing: true }, guide),
-      'Showing changes with no customization. Answer more to narrow the list, or clear to see everything.',
+      describeFilters({ ...NO_FILTERS, theme: 'mui', noSchema: ['arrays'], search: ' slot ' }, guide),
+      'Showing changes for `@rjsf/mui` matching "slot", hiding changes for Arrays. Select them again, or Clear, to bring them back.',
     );
   });
 
-  it('names a validator and a theme author package, and Nothing beside a More use', () => {
+  it('names Core only', () => {
     assert.equal(
-      describeFilters(
-        { ...NO_FILTERS, validator: 'validator-ata', other: ['snapshot-tests'], nothing: true, uses: ['typescript'] },
-        guide,
-      ),
-      'Showing changes for `@rjsf/validator-ata` and `@rjsf/snapshot-tests` with no customization, for code using TypeScript. Answer more to narrow the list, or clear to see everything.',
+      describeFilters({ ...NO_FILTERS, theme: CORE_ONLY }, guide),
+      'Showing changes for core only. Clear shows every change.',
     );
   });
 
-  it('leaves out a theme author package while no theme or validator is picked, since it narrows nothing', () => {
+  it('names a validator and a ticked theme author package once they change the list', () => {
+    assert.equal(
+      describeFilters({ ...NO_FILTERS, validator: 'validator-ata', other: ['snapshot-tests'] }, guide),
+      'Showing changes for `@rjsf/validator-ata` and `@rjsf/snapshot-tests`. Clear shows every change.',
+    );
     assert.equal(
       describeFilters({ ...NO_FILTERS, other: ['snapshot-tests'] }, guide),
-      "Showing every change. Answer any of these to hide what doesn't apply to you.",
-    );
-    assert.equal(
-      describeFilters({ ...NO_FILTERS, other: ['snapshot-tests'], uses: ['typescript'] }, guide),
-      'Showing changes for code using TypeScript. Answer more to narrow the list, or clear to see everything.',
+      "Showing every change. Deselect what your app doesn't do to hide its changes.",
     );
   });
 
   it('names a search alone', () => {
     assert.equal(
       describeFilters({ ...NO_FILTERS, search: 'ids' }, guide),
-      'Showing changes matching "ids". Answer more to narrow the list, or clear to see everything.',
+      'Showing changes matching "ids". Clear shows every change.',
     );
   });
 });
 
 describe('readFilters and writeFilters', () => {
-  it('round-trip every answer and the search', () => {
+  it('round-trip every deselection, the packages and the search', () => {
     const filters: Filters = {
       theme: 'mui',
       validator: 'validator-ajv8',
-      nothing: true,
-      uses: ['typescript', 'markup'],
-      schema: ['refs'],
+      without: ['custom-fields', 'typescript'],
+      noSchema: ['refs'],
       other: ['snapshot-tests'],
       search: 'slot props & ids',
     };
     const search = writeFilters(filters);
     assert.equal(
       search,
-      '?theme=mui&validator=validator-ajv8&customized=none&uses=typescript,markup&schema=refs&other=snapshot-tests&q=slot%20props%20%26%20ids',
+      '?theme=mui&validator=validator-ajv8&without=custom-fields,typescript&no-schema=refs&other=snapshot-tests&q=slot%20props%20%26%20ids',
     );
     assert.deepEqual(readFilters(search, guide), filters);
   });
 
-  it('round-trip a chip alongside a More checkbox', () => {
-    const filters: Filters = { ...NO_FILTERS, uses: ['custom-widgets', 'typescript'] };
-    assert.deepEqual(readFilters(writeFilters(filters), guide), filters);
+  it('round-trip Core only', () => {
+    const filters: Filters = { ...NO_FILTERS, theme: CORE_ONLY };
+    assert.equal(writeFilters(filters), '?theme=core');
+    assert.deepEqual(readFilters('?theme=core', guide), filters);
   });
 
   it('ignore unknown and old params and values the vocabulary does not have', () => {
     assert.deepEqual(
       readFilters(
-        '?theme=bulma&uses=typescript,unknown,form&schema=nope&noticed=review&kind=runtime&customized=yes',
+        '?theme=bulma&without=typescript,unknown,form&no-schema=nope&uses=markup&customized=none&schema=refs&noticed=review',
         guide,
       ),
-      { ...NO_FILTERS, uses: ['typescript'] },
+      { ...NO_FILTERS, without: ['typescript'] },
     );
   });
 
-  it('write no query for no answers', () => {
+  it('write no query while everything is selected', () => {
     assert.equal(writeFilters(NO_FILTERS), '');
     assert.deepEqual(readFilters('', guide), NO_FILTERS);
   });

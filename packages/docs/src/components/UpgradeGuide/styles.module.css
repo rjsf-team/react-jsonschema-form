@@ -52,6 +52,11 @@
   content: '✓ ';
 }
 
+.chip[aria-pressed='false'] {
+  color: var(--ifm-color-emphasis-600);
+  text-decoration: line-through;
+}
+
 .barEnd {
   display: flex;
   gap: 0.6rem;

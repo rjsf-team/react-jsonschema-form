@@ -34,7 +34,7 @@ export interface Entry {
 
 export interface Guide {
   uses: Choice[];
-  /** Every user renders a form, so an entry with this use shows whatever else is answered; it has no checkbox. */
+  /** Every user renders a form, so an entry with this use shows whatever the reader deselects; it has no checkbox. */
   everyUserUse: string;
   schema: Choice[];
   packages: Package[];
@@ -47,15 +47,18 @@ export interface Guide {
   combined: Record<string, string>;
 }
 
-/** The reader's answers. An empty value is an unanswered question, which hides nothing. */
+/**
+ * The filter bar's state. Every use and schema feature starts selected, meaning the reader's app has it, so the state
+ * holds what the reader deselected, and the default state shows every entry.
+ */
 export interface Filters {
+  /** A theme's short name, `CORE_ONLY`, or empty for every theme. */
   theme: string;
   validator: string;
-  /** The Nothing chip: the reader customizes nothing. It answers the chips' question without naming a chip. */
-  nothing: boolean;
-  /** The ticked customization chips and More checkboxes. */
-  uses: string[];
-  schema: string[];
+  /** The deselected uses: the chips and More checkboxes for what the reader's app doesn't do. */
+  without: string[];
+  /** The deselected schema features: what none of the reader's schemas has. */
+  noSchema: string[];
   /** The ticked packages for theme authors. */
   other: string[];
   search: string;
@@ -64,12 +67,14 @@ export interface Filters {
 export const NO_FILTERS: Filters = {
   theme: '',
   validator: '',
-  nothing: false,
-  uses: [],
-  schema: [],
+  without: [],
+  noSchema: [],
   other: [],
   search: '',
 };
+
+/** The theme select's value for a reader who uses no theme package; no theme's short name is `core`. */
+export const CORE_ONLY = 'core';
 
 /** Copy as Markdown fetches every shown entry's `.md` copy; this many at a time, so a long list can't flood the server. */
 const COPY_CONCURRENCY = 6;
@@ -83,7 +88,7 @@ export function customizations(guide: Guide) {
   return guide.uses.filter((use): use is Choice & { chip: string } => use.chip !== undefined);
 }
 
-/** The uses shown as checkboxes under More: every use but the chips and the one every user has. */
+/** The uses shown as checkboxes under More filters: every use but the chips and the one every user has. */
 export function moreUses(guide: Guide) {
   return guide.uses.filter((use) => use.chip === undefined && use.id !== guide.everyUserUse);
 }
@@ -103,15 +108,14 @@ export function readFilters(search: string, guide: Guide): Filters {
   const many = (key: string, allowed: string[]) =>
     (params.get(key) ?? '').split(',').filter((value) => allowed.includes(value));
   return {
-    theme: one('theme', shortNames(packages, 'theme')),
+    theme: one('theme', [CORE_ONLY, ...shortNames(packages, 'theme')]),
     validator: one('validator', shortNames(packages, 'validator')),
-    nothing: params.get('customized') === 'none',
-    uses: many(
-      'uses',
+    without: many(
+      'without',
       guide.uses.filter((use) => use.id !== guide.everyUserUse).map((use) => use.id),
     ),
-    schema: many(
-      'schema',
+    noSchema: many(
+      'no-schema',
       guide.schema.map((feature) => feature.id),
     ),
     other: many('other', shortNames(packages, 'other')),
@@ -120,52 +124,42 @@ export function readFilters(search: string, guide: Guide): Filters {
 }
 
 /** Every value but the search is `[a-z0-9-]`, so the query is built by hand to keep the commas readable in a link. */
-export function writeFilters({ theme, validator, nothing, uses, schema, other, search }: Filters) {
+export function writeFilters({ theme, validator, without, noSchema, other, search }: Filters) {
   const params = [
     theme && `theme=${theme}`,
     validator && `validator=${validator}`,
-    nothing && 'customized=none',
-    uses.length > 0 && `uses=${uses.join(',')}`,
-    schema.length > 0 && `schema=${schema.join(',')}`,
+    without.length > 0 && `without=${without.join(',')}`,
+    noSchema.length > 0 && `no-schema=${noSchema.join(',')}`,
     other.length > 0 && `other=${other.join(',')}`,
     search && `q=${encodeURIComponent(search)}`,
   ].filter(Boolean);
   return params.length > 0 ? `?${params.join('&')}` : '';
 }
 
-/** Whether the reader answered anything or searched, which is when the page offers to clear it all. */
-export function isAnswered({ theme, validator, nothing, uses, schema, other, search }: Filters) {
+/** Whether anything differs from the default state, which is when the page offers to clear it all. */
+export function isNarrowed({ theme, validator, without, noSchema, other, search }: Filters) {
   return (
     theme !== '' ||
     validator !== '' ||
-    nothing ||
-    uses.length > 0 ||
-    schema.length > 0 ||
+    without.length > 0 ||
+    noSchema.length > 0 ||
     other.length > 0 ||
     search.trim() !== ''
   );
 }
 
-/** Pressing Nothing: the reader customizes nothing, so no chip stays ticked. The More uses are another question. */
-export function toggleNothing(guide: Guide, filters: Filters): Filters {
-  return filters.nothing
-    ? { ...filters, nothing: false }
-    : { ...filters, nothing: true, uses: filters.uses.filter((use) => !isChip(guide, use)) };
+/** `ids` with `id` added, or removed if it was there. */
+export function toggled(ids: string[], id: string) {
+  return ids.includes(id) ? ids.filter((value) => value !== id) : [...ids, id];
 }
 
-/** Ticks or unticks the use `id`. A chip answers the same question as Nothing, so it unticks Nothing. */
-export function toggleUse(guide: Guide, filters: Filters, id: string): Filters {
-  const uses = filters.uses.includes(id) ? filters.uses.filter((use) => use !== id) : [...filters.uses, id];
-  return { ...filters, uses, nothing: filters.nothing && !isChip(guide, id) };
-}
-
-/** Whether More starts open: when it holds an answer, so the reader sees every answer the URL carries. */
+/** Whether More filters starts open: when it holds a change, so the reader sees every change the URL carries. */
 export function opensMore(guide: Guide, filters: Filters) {
   return (
     filters.validator !== '' ||
-    filters.schema.length > 0 ||
+    filters.noSchema.length > 0 ||
     filters.other.length > 0 ||
-    filters.uses.some((use) => !isChip(guide, use))
+    filters.without.some((use) => !isChip(guide, use))
   );
 }
 
@@ -176,17 +170,15 @@ export function badgeOf(entry: Entry, packagesById: ReadonlyMap<string, Package>
 }
 
 /**
- * Tests one entry against the answers, applying the rule `APPLIES_RULE` in plugins/upgrade-guide/outputs.js states,
- * with each question nobody answered keeping every entry. A theme or validator picked is the one of its kind the
- * reader has, and once either is picked the packages for theme authors count only when ticked. The chips are one
- * question, answered by Nothing or a chip, and the More uses another, answered by a More use: an entry's `uses` hold
- * when they have `everyUserUse`, a ticked use, or a use of a question left unanswered.
+ * Tests one entry against the filters, applying the rule `APPLIES_RULE` in plugins/upgrade-guide/outputs.js states.
+ * A theme or validator picked is the one of its kind the reader has, and once either is picked the packages for theme
+ * authors count only when ticked; Core only drops the theme packages. An entry's `uses` hold when they have
+ * `everyUserUse` or a use still selected, and its `schema` holds when it is empty or has a feature still selected.
  */
 export function matcher(guide: Guide, filters: Filters): (entry: Entry) => boolean {
-  const { theme, validator, nothing, uses, schema, other } = filters;
+  const { theme, validator, without, noSchema, other } = filters;
   const packages = new Map(guide.packages.map((pkg) => [pkg.id, pkg]));
-  // A theme author's package such as snapshot-tests is for readers who tick it, once they say which packages they have.
-  const anyOther = theme === '' && validator === '';
+  const anyOther = otherPackagesCount(filters);
   const hasPackage = (id: string) => {
     const pkg = packages.get(id);
     switch (pkg?.group) {
@@ -202,57 +194,62 @@ export function matcher(guide: Guide, filters: Filters): (entry: Entry) => boole
         return false;
     }
   };
-  const chipsAnswered = nothing || uses.some((use) => isChip(guide, use));
-  const moreAnswered = uses.some((use) => !isChip(guide, use));
-  const useHolds = (use: string) =>
-    use === guide.everyUserUse || uses.includes(use) || !(isChip(guide, use) ? chipsAnswered : moreAnswered);
   const tokens = filters.search.toLowerCase().split(/\s+/).filter(Boolean);
   return (entry) =>
     entry.packages.some(hasPackage) &&
-    entry.uses.some(useHolds) &&
-    (schema.length === 0 || entry.schema.length === 0 || entry.schema.some((feature) => schema.includes(feature))) &&
+    entry.uses.some((use) => use === guide.everyUserUse || !without.includes(use)) &&
+    (entry.schema.length === 0 || entry.schema.some((feature) => !noSchema.includes(feature))) &&
     (tokens.length === 0 ||
       tokens.every((token) => `${entry.title}\n${entry.description}\n${entry.id}`.toLowerCase().includes(token)));
 }
 
-/** The hint under the filter bar: what the list shows, and that answering is optional. Its only Markdown is code. */
+/**
+ * Whether the packages for theme authors, such as snapshot-tests, show unticked: only until the reader picks the theme
+ * or validator they have, since a theme author is the one reader who has them.
+ */
+function otherPackagesCount({ theme, validator }: Filters) {
+  return (theme === '' || theme === CORE_ONLY) && validator === '';
+}
+
+/** The most deselected uses and schema features the hint names before it counts the rest. */
+const HINT_NAMES = 3;
+
+/**
+ * The hint under the filter bar: what the reader changed, and how to undo it. It names the packages picked and the
+ * first few deselected uses and schema features, and counts the rest. Its only Markdown is code.
+ */
 export function describeFilters(filters: Filters, guide: Guide) {
-  const everyChange = "Showing every change. Answer any of these to hide what doesn't apply to you.";
-  if (!isAnswered(filters)) {
-    return everyChange;
-  }
-  const label = (choices: Choice[], ids: string[]) =>
-    choices.filter((choice) => ids.includes(choice.id)).map((choice) => choice.label);
-  // The packages for theme authors narrow the list only once a theme or validator is picked (see matcher).
-  const otherNarrows = filters.theme !== '' || filters.validator !== '';
-  const packages = guide.packages
-    .filter(
-      (pkg) =>
-        pkg.short === filters.theme ||
-        pkg.short === filters.validator ||
-        (otherNarrows && filters.other.includes(pkg.short)),
-    )
-    .map((pkg) => pkg.id);
-  const custom = label(customizations(guide), filters.uses).map((text) => text.toLowerCase());
-  const code = label(moreUses(guide), filters.uses);
-  const schema = label(guide.schema, filters.schema);
+  const idOf = (short: string) => guide.packages.find((pkg) => pkg.short === short)?.id ?? short;
+  const picked = [
+    filters.theme !== CORE_ONLY && filters.theme,
+    filters.validator,
+    // A ticked theme author package changes the list only once a theme or validator is picked (see matcher).
+    ...(otherPackagesCount(filters) ? [] : filters.other),
+  ].filter((short): short is string => typeof short === 'string' && short !== '');
+  const packages = [...(filters.theme === CORE_ONLY ? ['core only'] : []), ...codes(picked.map(idOf))];
+  // A chip's label reads as a noun inside the sentence; the More filters labels are names such as TypeScript.
+  const hidden = [
+    ...guide.uses
+      .filter((use) => filters.without.includes(use.id))
+      .map((use) => (use.chip === undefined ? use.label : use.label.toLowerCase())),
+    ...guide.schema.filter((feature) => filters.noSchema.includes(feature.id)).map((feature) => feature.label),
+  ];
   const search = filters.search.trim();
-  const lead = [
-    packages.length > 0 && `for ${andList(codes(packages))}`,
-    custom.length > 0 ? `with ${andList(custom)}` : filters.nothing && 'with no customization',
-  ]
-    .filter(Boolean)
-    .join(' ');
-  const parts = [
-    lead,
-    code.length > 0 && `for code using ${andList(code)}`,
-    schema.length > 0 && `for schemas with ${andList(schema, 'or')}`,
-    search && `matching "${search}"`,
-  ].filter(Boolean);
-  if (parts.length === 0) {
-    return everyChange;
+  const showing = [packages.length > 0 && `for ${andList(packages)}`, search && `matching "${search}"`].filter(
+    (clause): clause is string => typeof clause === 'string' && clause !== '',
+  );
+  if (showing.length === 0 && hidden.length === 0) {
+    return "Showing every change. Deselect what your app doesn't do to hide its changes.";
   }
-  return `Showing changes ${parts.join(', ')}. Answer more to narrow the list, or clear to see everything.`;
+  const named =
+    hidden.length > HINT_NAMES
+      ? `${hidden.slice(0, HINT_NAMES).join(', ')} and ${hidden.length - HINT_NAMES} more`
+      : andList(hidden);
+  const clauses = [
+    showing.length > 0 && `Showing changes ${showing.join(' ')}`,
+    hidden.length > 0 && `${showing.length > 0 ? 'hiding' : 'Hiding'} changes for ${named}`,
+  ].filter(Boolean);
+  return `${clauses.join(', ')}. ${hidden.length > 0 ? 'Select them again, or Clear, to bring them back.' : 'Clear shows every change.'}`;
 }
 
 export function decodeHash(hash: string) {

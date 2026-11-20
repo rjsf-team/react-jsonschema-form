@@ -11,9 +11,9 @@ const { appliesToPackage } = require('./resolve.js');
 const { AFFECTS, ALWAYS_PACKAGES, EVERY_USER_USE, SCHEMA, USES, byHeading } = require('./vocabulary.js');
 
 /** How a reader or agent decides from its frontmatter whether an entry applies. */
-const APPLIES_RULE = `An entry applies to you when all three hold: your package.json has one of its \`packages\` (\`*\` is every \`@rjsf/*\` package, and every user has ${andList(
+const APPLIES_RULE = `First list the \`uses\` and \`schema\` values your project doesn't have, leaving out any you can't rule out. An entry applies to you unless one of these holds: your package.json has none of its \`packages\` (\`*\` is every \`@rjsf/*\` package, and every user has ${andList(
   codes(ALWAYS_PACKAGES.filter((id) => id !== '*')),
-)}); its \`uses\` lists \`${EVERY_USER_USE}\` (every user) or something your code does; and its \`schema\` is empty (\`any\`) or names something at least one of your schemas has. When you can't tell whether one holds, keep the entry. The filtered page applies the same rule to the answers in its filter bar, and a question left unanswered there hides nothing.`;
+)}); it doesn't list \`${EVERY_USER_USE}\` (every user) and every one of its \`uses\` is on your list; or it lists \`schema\` values and every one of them is on your list (an empty \`schema\`, shown as \`any\`, never rules an entry out). The filtered page applies the same rule: everything in its filter bar starts selected, and deselecting a use or schema feature puts it on that list.`;
 
 /** Where the sections come from and the order to work through them. */
 const ORDER_RULE =

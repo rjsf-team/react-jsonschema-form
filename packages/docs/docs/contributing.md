@@ -100,7 +100,7 @@ A breaking entry has the same shape:
 
 ## Upgrade guide
 
-A breaking change also gets an entry in the upgrade guide for the next major version N, in the same PR: one Markdown file, `packages/docs/docs/migration-guides/vN/<id>.md`. If the directory doesn't exist yet, also create `packages/docs/docs/migration-guides/vN.x upgrade guide.mdx` beside it, rendering `<UpgradeGuide version="vN" />`: the page that lists every entry, which readers can narrow by theme, validator, code and schemas if they choose.
+A breaking change also gets an entry in the upgrade guide for the next major version N, in the same PR: one Markdown file, `packages/docs/docs/migration-guides/vN/<id>.md`. If the directory doesn't exist yet, also create `packages/docs/docs/migration-guides/vN.x upgrade guide.mdx` beside it, rendering `<UpgradeGuide version="vN" />`: the page that lists every entry. Readers narrow it by picking their theme or validator, or Core only, and by deselecting the customizations, uses and schema features (under More filters) their app doesn't have; everything starts selected, so every entry shows until they do.
 
 The guide tells a developer with a working app on the previous major version everything about their app that vN changes, and what to do about each change. An entry is one action a reader takes: one thing to find and one change to make. Consequences of that change a reader should check are bullets under its `## Verify`. Split an entry only when a reader could need one action and not the other, or when the action differs per package (then one entry per theme or validator). A rule that reads the same in several themes is one entry listing them. Fixed crashes, unchanged behavior, rationale and new features are not entries.
 

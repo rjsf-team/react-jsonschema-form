@@ -141,6 +141,14 @@ describe('renderOutputs', () => {
     );
   });
 
+  it('tells agents in llms.txt and the combined files to rule entries out by what the project lacks', () => {
+    for (const name of ['llms.txt', 'all.md', 'mui.md']) {
+      const text = /** @type {string} */ (files.get(`docs/migration-guides/v7/${name}`));
+      assert.match(text, /First list the `uses` and `schema` values your project doesn't have/, name);
+      assert.match(text, /it doesn't list `form` \(every user\) and every one of its `uses` is on your list/, name);
+    }
+  });
+
   it("leaves a theme's entries out of another package's file but keeps every user's", () => {
     const mui = /** @type {string} */ (files.get('docs/migration-guides/v7/mui.md'));
     const antd = /** @type {string} */ (files.get('docs/migration-guides/v7/antd.md'));

@@ -3,9 +3,9 @@ import Link from '@docusaurus/Link';
 import { useHistory, useLocation } from '@docusaurus/router';
 import MDXContent from '@theme/MDXContent';
 
-import { andList } from '../../../plugins/upgrade-guide/markdown.js';
 import { DEPRECATIONS, HEADINGS, byHeading } from '../../../plugins/upgrade-guide/vocabulary.js';
 import {
+  CORE_ONLY,
   NO_FILTERS,
   badgeOf,
   customizations,
@@ -14,13 +14,12 @@ import {
   errorMessage,
   fetchMarkdown,
   hashTarget,
-  isAnswered,
+  isNarrowed,
   matcher,
   moreUses,
   opensMore,
   readFilters,
-  toggleNothing,
-  toggleUse,
+  toggled,
   writeFilters,
   type Choice,
   type Entry,
@@ -108,26 +107,20 @@ function InlineMarkdown({ text }: { text: string }) {
 function Checkboxes({
   legend,
   choices,
-  ticked,
-  onChange,
+  isChecked,
+  onToggle,
 }: {
   legend: string;
   choices: Choice[];
-  ticked: string[];
-  onChange: (ticked: string[]) => void;
+  isChecked: (id: string) => boolean;
+  onToggle: (id: string) => void;
 }) {
   return (
     <fieldset className={styles.group}>
       <legend>{legend}</legend>
       {choices.map((choice) => (
         <label key={choice.id} className={styles.check} title={plainText(choice.detect)}>
-          <input
-            type='checkbox'
-            checked={ticked.includes(choice.id)}
-            onChange={(event) =>
-              onChange(event.target.checked ? [...ticked, choice.id] : ticked.filter((id) => id !== choice.id))
-            }
-          />
+          <input type='checkbox' checked={isChecked(choice.id)} onChange={() => onToggle(choice.id)} />
           {choice.label}
         </label>
       ))}
@@ -355,7 +348,7 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
     }
     setCopyStatus('Copying…');
     const { origin } = window.location;
-    // The document cites the page from what the reader answered, not the address as typed, which could carry any text.
+    // The document cites the page from the reader's filters, not the address as typed, which could carry any text.
     const url = `${origin}${location.pathname}${writeFilters(filters)}`;
     const markdown = fetchMarkdown(rows, version, { url, origin }, (file) => fetch(file));
     // Safari writes to the clipboard only from within the click's handler, and Firefox only for a few seconds after
@@ -400,13 +393,13 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
       {hashEntry && !hashEntryShown && (
         <div className='alert alert--info' role='status'>
           <p>
-            Your answers hide <Link to={hashEntry.permalink}>{hashEntry.title}</Link>.
+            Your filters hide <Link to={hashEntry.permalink}>{hashEntry.title}</Link>.
           </p>
         </div>
       )}
 
       <form className={styles.filters} onSubmit={(event) => event.preventDefault()}>
-        <div className={styles.bar} role='group' aria-label='Narrow the list (optional)'>
+        <div className={styles.bar} role='group' aria-label='Filter the list'>
           <select
             className={styles.select}
             aria-label='Theme'
@@ -414,6 +407,7 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
             onChange={(event) => update({ ...filters, theme: event.target.value })}
           >
             <option value=''>All themes</option>
+            <option value={CORE_ONLY}>Core only</option>
             {themes.map((pkg) => (
               <option key={pkg.id} value={pkg.short}>
                 {`Theme: ${pkg.removed ? `${pkg.short} (removed)` : pkg.short}`}
@@ -421,26 +415,14 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
             ))}
           </select>
           <span className={styles.barLabel}>Customized:</span>
-          <button
-            type='button'
-            className={styles.chip}
-            aria-pressed={filters.nothing}
-            title={`Your code passes no custom ${andList(
-              chips.map((use) => use.chip.toLowerCase()),
-              'or',
-            )}.`}
-            onClick={() => update(toggleNothing(guide, filters))}
-          >
-            Nothing
-          </button>
           {chips.map((use) => (
             <button
               key={use.id}
               type='button'
               className={styles.chip}
-              aria-pressed={filters.uses.includes(use.id)}
+              aria-pressed={!filters.without.includes(use.id)}
               title={plainText(use.detect)}
-              onClick={() => update(toggleUse(guide, filters, use.id))}
+              onClick={() => update({ ...filters, without: toggled(filters.without, use.id) })}
             >
               {use.chip}
             </button>
@@ -453,9 +435,9 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
               aria-controls='upgrade-guide-more'
               onClick={() => setMoreOpen(!moreOpen)}
             >
-              More about your app
+              More filters
             </button>
-            {isAnswered(filters) && (
+            {isNarrowed(filters) && (
               <button type='button' className={styles.linkButton} onClick={() => update(NO_FILTERS)}>
                 Clear
               </button>
@@ -482,16 +464,16 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
               </select>
             </label>
             <Checkboxes
-              legend='Your code'
+              legend='Code'
               choices={more}
-              ticked={filters.uses}
-              onChange={(uses) => update({ ...filters, uses })}
+              isChecked={(id) => !filters.without.includes(id)}
+              onToggle={(id) => update({ ...filters, without: toggled(filters.without, id) })}
             />
             <Checkboxes
-              legend='Your schemas'
+              legend='Schemas'
               choices={guide.schema}
-              ticked={filters.schema}
-              onChange={(schema) => update({ ...filters, schema })}
+              isChecked={(id) => !filters.noSchema.includes(id)}
+              onToggle={(id) => update({ ...filters, noSchema: toggled(filters.noSchema, id) })}
             />
             {others.length > 0 && (
               <Checkboxes
@@ -501,15 +483,15 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
                   label: pkg.id,
                   detect: 'For authors of themes outside this repository.',
                 }))}
-                ticked={filters.other}
-                onChange={(other) => update({ ...filters, other })}
+                isChecked={(id) => filters.other.includes(id)}
+                onToggle={(id) => update({ ...filters, other: toggled(filters.other, id) })}
               />
             )}
             <details className={styles.meanings}>
               <summary>What do these mean?</summary>
               <Meanings legend='Customized' choices={chips} />
-              <Meanings legend='Your code' choices={more} />
-              <Meanings legend='Your schemas' choices={guide.schema} />
+              <Meanings legend='Code' choices={more} />
+              <Meanings legend='Schemas' choices={guide.schema} />
             </details>
           </div>
         )}
