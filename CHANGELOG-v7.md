@@ -1670,6 +1670,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `isValid()` on an `ajv-draft-04` validator failing to compile a schema with an `id` of its own once called with another root schema, as a schema with an `$id` does on any other, and resolving a `$ref` by a root schema's `id` into a root it was called with before that held the same `id` ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
 - Fix a localized error for a missing `dependentRequired` or `dependencies` property splitting a property whose key contains `, ` into two names and leaving it untitled ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 - Fix the error for a missing property ignoring a `ui:title` that only its schema path leads to when a key on that path holds `/`, `~`, `%`, a space or another character a URI escapes ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
+- Fix the error for a missing property whose key holds `.`, `[` or `]` taking another field's `ui:title`, such as the `ui:title` of `b` inside `a` for a key `a.b` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 
 ## @rjsf/validator-ata
 
@@ -1704,6 +1705,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `isValid()` rejecting valid data for a form whose root `$id` is only a fragment, such as `#root`, and which names the root by it in a `$ref`, where `validateFormData()` and a precompiled validator accept it ([#5880](https://github.com/rjsf-team/react-jsonschema-form/pull/5880))
 - Change `isValid()` to keep what it compiled for the last two root schemas instead of one, so changing the schema of a form with conditional or option fields no longer compiles their schemas again for each field it checks ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
 - Fix the error for a missing required property garbling a `title` or `ui:title` that contains `$&`, `$'` or `` $` `` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
+- Fix the error for a missing property whose key holds `.`, `[` or `]` taking another field's `ui:title`, such as the `ui:title` of `b` inside `a` for a key `a.b` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 
 ## @rjsf/validator-cfworker
 
@@ -1728,6 +1730,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `isValid()` to keep what it compiled for the last two root schemas instead of one, so changing the schema of a form with conditional or option fields no longer compiles their schemas again for each field it checks ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
 - Fix the error for a missing `required` property garbling a `title` or `ui:title` that contains `$&`, `$'` or `` $` `` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 - Change the error for a missing `required` property to find a property's title as `@rjsf/validator-ajv8` does, also reading a `title` the uiSchema holds for it and reading the schema's `title` past an empty `ui:title` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
+- Fix the error for a missing property whose key holds `.`, `[` or `]` taking another field's `ui:title`, such as the `ui:title` of `b` inside `a` for a key `a.b` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 
 ## All packages
 
