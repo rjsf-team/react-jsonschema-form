@@ -81,9 +81,9 @@ Write the entry for someone deciding whether to upgrade, who won't open the PR:
 - Say what users notice, not how the code does it, and leave out internal helpers, hooks and concepts users never meet. A fix names what went wrong for them: "Fix `ArrayField` dropping the last item's errors when an item is removed".
 - Leave the reasoning, the alternatives, the edge cases and related issues to the PR description.
 - End the entry with its PR and then each issue it fixes, as in `([#5305](https://github.com/rjsf-team/react-jsonschema-form/pull/5305), [#4666](https://github.com/rjsf-team/react-jsonschema-form/issues/4666))`: a PR's link has `pull`, an issue's has `issues`.
-- Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and end the text with `See [the upgrade guide](…)`, linking the [upgrade guide](#upgrade-guide) section that says what to change.
-  Link it on the docs site, as in `https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/vN.x%20upgrade%20guide#<section>`, since the entry is also copied into a GitHub Release, where relative paths don't resolve.
-- A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower or reshaped type, such as an `enum` becoming a union type. A type-only break gets an upgrade guide section too.
+- Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and end the text with `See [the upgrade guide](…)`, linking the [upgrade guide](#upgrade-guide) entry that says what to change.
+  Link the entry's page on the docs site, `https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/vN/<id>`, since the changelog entry is also copied into a GitHub Release, where relative paths don't resolve.
+- A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower or reshaped type, such as an `enum` becoming a union type. A type-only break gets an upgrade guide entry too.
 - Aim for a sentence or two, about 200 characters of text, not counting link URLs. If it can't be both short and clear, keep it clear.
 
 For example, instead of an entry that explains the implementation:
@@ -96,13 +96,43 @@ write what users see:
 
 A breaking entry has the same shape:
 
-> **BREAKING CHANGE:** Change an additional property's key input id from `root_foo-key` to `root_foo__key`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#ids-cant-collide-or-split-an-id-list-breaking-change) ([#5626](https://github.com/rjsf-team/react-jsonschema-form/pull/5626))
+> **BREAKING CHANGE:** Change an additional property's key input id from `root_foo-key` to `root_foo__key`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7/ids-cant-collide-or-split-an-id-list) ([#5626](https://github.com/rjsf-team/react-jsonschema-form/pull/5626))
 
 ## Upgrade guide
 
-A breaking change also gets a section in the upgrade guide for the next major version N, `packages/docs/docs/migration-guides/vN.x upgrade guide.md`, in the same PR. Create the file if it doesn't exist yet.
-The guide answers one question: "my code broke, what do I change?". Each section has a heading that names the change as users meet it, then says who it affects, what happened before and what happens now, and what to do instead, with a before/after `diff` when code has to change. Link the reference docs for anything more.
-New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide.
+A breaking change also gets an entry in the upgrade guide for the next major version N, in the same PR: one Markdown file, `packages/docs/docs/migration-guides/vN/<id>.md`. If the directory doesn't exist yet, also create `packages/docs/docs/migration-guides/vN.x upgrade guide.mdx` beside it, rendering `<UpgradeGuide version="vN" />`: the page that lists every entry. Readers narrow it by picking their theme or validator, or Core only, and by deselecting the customizations, uses and schema features (under More filters) their app doesn't have; everything starts selected, so every entry shows until they do.
+
+The guide tells a developer with a working app on the previous major version everything about their app that vN changes, and what to do about each change. An entry is one action a reader takes: one thing to find and one change to make. Consequences of that change a reader should check are bullets under its `## Verify`. Split an entry only when a reader could need one action and not the other, or when the action differs per package (then one entry per theme or validator). A rule that reads the same in several themes is one entry listing them. Fixed crashes, unchanged behavior, rationale and new features are not entries.
+
+The id is the file name: lowercase kebab-case, at most 64 characters, naming the change as users meet it. An entry for exactly one theme or validator starts with that package's name without `@rjsf/`, e.g. `mantine-…` or `validator-ata-…`. Once a changelog entry links an entry, its id is permanent: a release copies the changelog into a GitHub Release, which keeps the link forever, so never rename or delete a linked entry.
+
+`packages/docs/docs/migration-guides/vN/_anchors.json` maps an anchor of the filtered page that no longer names an entry, such as a heading of an older guide or the id of an entry that was merged into another, to what it names now: an entry id, a list of them, or a relative link to another doc's `.md` or `.mdx` file with an optional `#anchor` of one of its headings. The page opens, lists or goes to what the anchor maps to.
+
+The frontmatter says who the entry is for:
+
+- `title`: the change as users meet it, in sentence case. Plain text only: Docusaurus shows it as written, so no backticks, `*`, `[` or `<`. An `_` inside an identifier such as `ADDITIONAL_PROPERTY_FLAG` is fine.
+- `description`: one line of at most 260 characters in two sentences: what changed (the old behavior, then the new), then what to do about it. It has to make sense without the title or the body. Inline code is fine here. It is also the page's meta description and the text under the row's title on the filtered page.
+- `packages`: the packages it affects. A change every user meets lists `@rjsf/core`; `*` means every `@rjsf/*` package.
+- `uses`: how the reader's code meets it. `form` means every user of those packages, whatever their schema.
+- `schema`: optionally, the schema features it depends on. An entry with any applies only to readers whose schemas use one of them; leave it out when the schema doesn't matter.
+- `affects`: what the change touches in the reader's app, most important first, from `setup` (dependencies, peer versions, Node and React, CSS or subpath imports), `code` (imports, props, options and signatures, custom widgets, templates and fields), `data` (defaults, the `anyOf`/`oneOf` option picked, the data and errors a form submits and validates), `appearance` (class names, elements and nesting that CSS rules, selectors and DOM snapshots rely on) and `experience` (label and button text, accessible names, focus, keyboard use and when errors appear). The first value decides the heading the entry is listed under on the filtered page and in the agent files.
+- `deprecated`: optionally `true`, only for something that still works in this version and goes in a later major. The entry is listed under the Deprecations heading, right after Installation and build, instead of its `affects` heading.
+- `related`: optionally, ids of entries that must be read with this one. The entry's row on the filtered page and its own page link them under "Also read".
+
+`packages/docs/plugins/upgrade-guide/vocabulary.js` is the single list of allowed `packages`, `uses`, `schema` and `affects` values, with what each one means; add a value there rather than inventing one in an entry.
+
+The body has no `#` title (the frontmatter `title` is the page title) and these `##` sections, in this order:
+
+- `## Detect`: concrete things to search for or observe (export, type or prop names, `ui:` keys, schema keywords, import paths, CSS classes, a visible symptom) and where each one shows. When the type checker reports the change, quote its exact error text.
+- `## Change`: what to do, with a before/after `diff` when code has to change. Never "as above": each entry stands alone.
+- `## Verify`: what passing looks like, and the consequences of the change to check.
+- `## If you can't preserve it`: optional, only when the old behavior can't be kept.
+
+Write plain reference prose in short declarative sentences, as the rest of the docs do: no em or en dashes, no bold labels on list items, no "not X but Y" contrasts, no closing one-liners.
+
+Link another entry as `./<id>.md` and other docs with relative links to their `.md` or `.mdx` file under `packages/docs/docs`, which must be a published page: not a draft, and not a `_` file or in a `_` directory. Never link the `vN.x upgrade guide` page itself. `pnpm --filter ./packages/docs build` checks every entry against these rules, and checks that every link the root `CHANGELOG-vN.md` makes to an entry's page or to an anchor of the filtered page names an entry or an `_anchors.json` key. It fails listing every problem it finds. It also writes the guide's `llms.txt`, a Markdown copy of each entry, and one combined file per theme and validator for agents.
+
+New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide; link them from the entry.
 
 ## Documentation
 

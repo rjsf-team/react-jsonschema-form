@@ -756,7 +756,7 @@ In the case of adding/removing of new fields in arrays or objects with `addition
 
 `onChange` runs as the edit is processed. React may update the inputs afterward, so read `event.formData` rather than reading values from the DOM inside the callback.
 
-Each event carries the complete value, earlier edits of the same event included. A `setFieldValue()` call from inside `onChange` builds on the edit being handled. See the [migration examples](../migration-guides/v7.x%20upgrade%20guide.md#form-owns-its-data-breaking-change).
+Each event carries the complete value, earlier edits of the same event included. A `setFieldValue()` call from inside `onChange` builds on the edit being handled. See the [migration examples](../migration-guides/v7/live-validation-runs-for-every-edit.md).
 
 ## onError
 
@@ -949,7 +949,7 @@ Before you write a stored record with `setFieldValue('', record)`, drop its `mod
 | `setFieldValue('', { country: 'US', mode: 'auto', rate: 5 })` | `{ country: 'US', mode: 'manual' }`: changing the stored `mode` is an edit to `mode`, which drops `rate` |
 | The third row's write, made right after the second row's      | `{ country: 'US', mode: 'manual', rate: 5 }`: the write changes nothing, so the hidden `rate` stays      |
 
-The form fills `initialFormData` in with the schema's defaults and any [`ui:initialValue`](uiSchema.md#initialvalue) without calling `transformChange`, so compute the field into `initialFormData` yourself, from an `initialData` that already holds any `default` or `ui:initialValue` of `country`; otherwise `mode` is computed before `country` has its value. The defaults the form fills in again when the `schema`, a `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent` changes skip `transformChange` too, so when such a change can give `country` a value, such as a new `schema` with a `default` for it, [remount the form under a new `key`](../migration-guides/v7.x%20upgrade%20guide.md#show-other-data-after-mount) as it arrives, with `initialFormData` computed from data that holds that default. The remount starts the form over from `initialFormData`, so read the form's current data with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically) in the event handler that swaps the `schema`, and keep the seed in state with the new `key`. Continuing the example above:
+The form fills `initialFormData` in with the schema's defaults and any [`ui:initialValue`](uiSchema.md#initialvalue) without calling `transformChange`, so compute the field into `initialFormData` yourself, from an `initialData` that already holds any `default` or `ui:initialValue` of `country`; otherwise `mode` is computed before `country` has its value. The defaults the form fills in again when the `schema`, a `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent` changes skip `transformChange` too, so when such a change can give `country` a value, such as a new `schema` with a `default` for it, [remount the form under a new `key`](../migration-guides/v7/form-data-changes-after-mount-are-ignored.md) as it arrives, with `initialFormData` computed from data that holds that default. The remount starts the form over from `initialFormData`, so read the form's current data with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically) in the event handler that swaps the `schema`, and keep the seed in state with the new `key`. Continuing the example above:
 
 ```tsx
 import { useRef, useState } from 'react';

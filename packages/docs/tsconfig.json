@@ -4,6 +4,7 @@
   // options are inlined here without it.
   "compilerOptions": {
     "allowJs": true,
+    "allowImportingTsExtensions": true,
     "jsx": "preserve",
     "target": "ES2022",
     "lib": ["ES2022", "DOM"],
