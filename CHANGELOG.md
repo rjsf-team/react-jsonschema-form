@@ -9,7 +9,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 ## @rjsf/core
 
-- Fix `Form` lagging on an `anyOf`/`oneOf` switch that leaves many keys in an object taking extra keys, which ran a fill of the whole form for each key ([#5836](https://github.com/rjsf-team/react-jsonschema-form/issues/5836))
+- Fix `Form` lagging on an `anyOf`/`oneOf` switch that leaves many keys in an object taking extra keys, which ran a fill of the whole form for each key ([#5924](https://github.com/rjsf-team/react-jsonschema-form/pull/5924), [#5836](https://github.com/rjsf-team/react-jsonschema-form/issues/5836))
 
 # 7.0.0-beta.1 (2026-11-20)
 
