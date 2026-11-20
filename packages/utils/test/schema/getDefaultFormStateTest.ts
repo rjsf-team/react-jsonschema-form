@@ -10,6 +10,7 @@ import type {
   UiSchema,
 } from '../../src/index.ts';
 import { createSchemaUtils, fieldPathFromList, getDefaultFormState, isObject, noop } from '../../src/index.ts';
+import fieldShownOption from '../../src/schema/fieldShownOption.ts';
 import {
   computeDefaultBasedOnSchemaTypeAndDefaults,
   computeDefaults,
@@ -15334,6 +15335,199 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: {}, fieldState }),
         ).toEqual({ b: 'y' });
+      });
+
+      describe("the options a typed object renders beside its own field, which leave the data's extra keys to it (#5886)", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          oneOf: [
+            { const: { b: 1 }, properties: { b: { type: 'number' } }, additionalProperties: { type: 'null' } },
+            { properties: { c: { type: 'string' } } },
+          ],
+        };
+        const context = { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' as const };
+        /** A `fieldState` showing the first option, recording the names each option it is handed declares */
+        const recording = () => {
+          const declared: string[][] = [];
+          const fieldState: FormFieldState = {
+            selectedOption: (_fieldPath, options) => {
+              declared.push(...options.map((option) => Object.keys(isObject(option) ? (option.properties ?? {}) : {})));
+              return 0;
+            },
+            isExpanded: () => false,
+          };
+          return { fieldState, declared };
+        };
+
+        it('are what the fill hands the fieldState', () => {
+          const { fieldState, declared } = recording();
+          getDefaultFormState(context, { schema, rootSchema: schema, formData: { e: 5 }, fieldState });
+          expect(declared).toEqual([['b'], ['c']]);
+        });
+
+        it.each<[string, RJSFSchema, unknown]>([
+          ['an option of a field rendering none of its own', {}, { t: 2 }],
+          ["an option beside an object's own field", { type: 'object' }, { b: 5, t: 2 }],
+        ])(
+          'stub the extra keys an absent keyword takes for %s alone, first rendering what the field shows',
+          (_, field, expected) => {
+            const options: RJSFSchema[] = [
+              { type: 'object', properties: { a: { type: 'number' } } },
+              { type: 'object', properties: { b: { type: 'number', default: 5 } }, additionalProperties: true },
+            ];
+            const offering: RJSFSchema = { ...field, oneOf: options };
+            expect(
+              getDefaultFormState(context, { schema: offering, rootSchema: offering, formData: { t: 2 } }),
+            ).toEqual(expected);
+          },
+        );
+
+        it('are retrieved as written where the list is not the one the schema holds', () => {
+          const { fieldState, declared } = recording();
+          fieldShownOption(context, fieldState, [], schema, [...(schema.oneOf ?? [])], schema, { e: 5 });
+          expect(declared).toEqual([
+            ['b', 'e'],
+            ['c', 'e'],
+          ]);
+        });
+
+        describe("where the retrieval rebuilds the list, merging each option with each of an allOf entry's", () => {
+          const rebuilt: RJSFSchema = {
+            type: 'object',
+            oneOf: [{ properties: { a: { type: 'number' } } }, { properties: { b: { type: 'number' } } }],
+            allOf: [{ oneOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }] }],
+          };
+          /** A `fieldState` showing the option at `shown` of the list it is handed, recording what each declares */
+          const showing = (shown: number) => {
+            const declared: string[][] = [];
+            const fieldState: FormFieldState = {
+              selectedOption: (_fieldPath, options) => {
+                declared.push(
+                  ...options.map((option) => Object.keys(isObject(option) ? (option.properties ?? {}) : {})),
+                );
+                return shown;
+              },
+              isExpanded: () => false,
+            };
+            return { fieldState, declared };
+          };
+
+          it.each([
+            [0, 0],
+            [1, 0],
+            [2, 1],
+            [3, 1],
+          ])(
+            'hands the fieldState the rebuilt options, and reads the one at %i as the option it was built from, %i',
+            (shown, expected) => {
+              const { fieldState, declared } = showing(shown);
+              expect(
+                fieldShownOption(
+                  { validator: testValidator },
+                  fieldState,
+                  [],
+                  rebuilt,
+                  rebuilt.oneOf ?? [],
+                  rebuilt,
+                  {},
+                ),
+              ).toBe(expected);
+              expect(declared).toEqual([
+                ['a', 'c'],
+                ['a', 'd'],
+                ['b', 'c'],
+                ['b', 'd'],
+              ]);
+            },
+          );
+
+          it('reads an index past the rebuilt options as none shown', () => {
+            const { fieldState } = showing(4);
+            expect(
+              fieldShownOption({ validator: testValidator }, fieldState, [], rebuilt, rebuilt.oneOf ?? [], rebuilt, {}),
+            ).toBe(-1);
+          });
+
+          it("hands it the options as written under a customMergeAllOf, whose rebuilt options keep no record of what they're built from", () => {
+            const { fieldState, declared } = showing(0);
+            const context = {
+              validator: testValidator,
+              customMergeAllOf: createDeepAllOfMerge(shallowAllOfMerge) as CustomMergeAllOf,
+            };
+            fieldShownOption(context, fieldState, [], rebuilt, rebuilt.oneOf ?? [], rebuilt, {});
+            expect(declared).toEqual([['a'], ['b']]);
+          });
+
+          // Merged with an empty option, an option merges to itself, which must not then read as built from that pair
+          it("reads each rebuilt option as the option it was built from where the allOf entry's list holds an empty option", () => {
+            const withEmpty: RJSFSchema = {
+              ...rebuilt,
+              allOf: [{ oneOf: [{}, { properties: { d: { type: 'string' } } }] }],
+            };
+            const { fieldState, declared } = showing(1);
+            expect(
+              fieldShownOption(
+                { validator: testValidator },
+                fieldState,
+                [],
+                withEmpty,
+                withEmpty.oneOf ?? [],
+                withEmpty,
+                {},
+              ),
+            ).toBe(0);
+            expect(declared).toEqual([['a'], ['a', 'd'], ['b'], ['b', 'd']]);
+          });
+
+          it("keeps each $ref of an option's own allOf where it merges the option with an allOf entry's", () => {
+            const refs: RJSFSchema = {
+              definitions: {
+                x: { properties: { x: { type: 'string' } } },
+                y: { properties: { y: { type: 'string' } } },
+              },
+              type: 'object',
+              oneOf: [{ allOf: [{ $ref: '#/definitions/x' }, { $ref: '#/definitions/y' }] }],
+              allOf: [{ oneOf: [{ properties: { c: { type: 'string' } } }] }],
+            };
+            const { fieldState, declared } = showing(0);
+            fieldShownOption({ validator: testValidator }, fieldState, [], refs, refs.oneOf ?? [], refs, {});
+            expect(declared).toEqual([['c', 'x', 'y']]);
+          });
+        });
+
+        it("stub no extra key an absent keyword takes for an option beside an object's own field typed through an allOf", () => {
+          const typedThroughAllOf: RJSFSchema = {
+            type: 'object',
+            properties: {
+              p: {
+                allOf: [{ type: 'object', properties: { k: { type: 'string' } } }],
+                oneOf: [
+                  { type: 'object', properties: { a: { type: 'number' } } },
+                  { type: 'object', properties: { b: { type: 'number', default: 5 } }, additionalProperties: true },
+                ],
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(context, {
+              schema: typedThroughAllOf,
+              rootSchema: typedThroughAllOf,
+              formData: { p: { t: 2 } },
+            }),
+          ).toEqual({ p: { b: 5, t: 2 } });
+        });
+
+        // The first option's `additionalProperties` rejects the string `d`, so that pair is left out
+        it('are the rebuilt options, traced to the ones written, where the retrieval rebuilds the list into another number of options', () => {
+          const { fieldState, declared } = recording();
+          const rebuilt: RJSFSchema = {
+            ...schema,
+            allOf: [{ oneOf: [{ properties: { d: { type: 'string' } } }, {}] }],
+          };
+          expect(fieldShownOption(context, fieldState, [], rebuilt, rebuilt.oneOf ?? [], rebuilt, { e: 5 })).toBe(0);
+          expect(declared).toEqual([['b'], ['c', 'd'], ['c']]);
+        });
       });
 
       it('falls back to the option the data matches where the fieldState shows none', () => {

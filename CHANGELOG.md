@@ -7,6 +7,16 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 # 7.0.0-beta.2
 
+## @rjsf/core
+
+- Fix `Form` filling an `anyOf`/`oneOf` field on its first render or `reset()` from another option than the one it shows, where under `additionalPropertiesWhenAbsent: 'allow'` an option naming neither `additionalProperties` nor `patternProperties` takes the data's extra keys, so its defaults were added or dropped ([#5886](https://github.com/rjsf-team/react-jsonschema-form/issues/5886))
+- Fix `Form` hiding the add button and the extra keys of an object, or of an `anyOf`/`oneOf` option an `allOf` holding options of its own merges with, whose `additionalProperties`, or an `allOf` entry's, is `true` or `{}` ([#5886](https://github.com/rjsf-team/react-jsonschema-form/issues/5886))
+
+## @rjsf/utils
+
+- **BREAKING CHANGE:** Change `getClosestMatchingOption()` to score the data's keys an option's `additionalProperties` or `patternProperties` takes for an option `retrieveSchema()` handed out or one holding an `allOf`, `if` or `dependencies` too, so `getDefaultFormState()`, `findSelectedOptionInXxxOf()` and a call over options the root declares pick the option the field shows, under `additionalPropertiesWhenAbsent: 'allow'` too. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#getclosestmatchingoption-scores-the-extra-keys-an-options-additionalproperties-takes-breaking-change) ([#5886](https://github.com/rjsf-team/react-jsonschema-form/issues/5886))
+- Fix `retrieveSchema()` dropping an `additionalProperties` of `true` or `{}`, the object's own, an `allOf` entry's or an option's, when it merges the object's `allOf`, including the options it merges with those of an `allOf` entry ([#5886](https://github.com/rjsf-team/react-jsonschema-form/issues/5886))
+
 # 7.0.0-beta.1 (2026-11-20)
 
 ## @rjsf/antd

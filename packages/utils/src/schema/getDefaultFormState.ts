@@ -125,9 +125,10 @@ import { schemaFrom } from './graph/schemaFrom.ts';
 import { declaresUnconditionally, scopeOf } from './graph/validationTargets.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import { resolveDeclaredConstantOptions } from './resolveConstantOptions.ts';
-import retrieveSchema, {
+import {
   dependencyOption,
   fieldOf,
+  fieldTypeSchema,
   isLeafSchema,
   optionMatchContext,
   optionMatchKey,
@@ -2150,7 +2151,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
           0,
           false,
           getDiscriminatorFieldFromSchema<S>(schema),
-          { seeding: view, keyword: key },
+          { seeding: view, keyword: key, offeredBy: view.schema },
         );
   return {
     context: optionContext,
@@ -2210,12 +2211,8 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const rootSchema = graph.rawRoot;
   const remaining = withoutKeys(schema, key);
   const chosen = new Set(view.options.chosen).add(options);
-  // Which of the two the field is gets asked of it with its `allOf` merged, as the fields ask it, since its `type` can
-  // come through one. A field naming one type already has it, which an `allOf` can't change, so it is spared the merge
-  const fieldSchema =
-    ALL_OF_KEY in remaining && typeof getSchemaType<S>(remaining) !== 'string'
-      ? retrieveSchema<unknown, S, F>(context, remaining, rootSchema, props.rawFormData)
-      : remaining;
+  // Which of the two the field is gets asked of it as the fields ask it
+  const fieldSchema = fieldTypeSchema<S, F>(context, remaining, rootSchema, props.rawFormData);
   const listedOption: unknown = options[index];
   const rendersOwnField = rendersOwnFieldBesideOption<S>(fieldSchema, listedOption);
   const optionUiSchema = getOptionUiSchema<T, S, F>(props.uiSchema, key, index);

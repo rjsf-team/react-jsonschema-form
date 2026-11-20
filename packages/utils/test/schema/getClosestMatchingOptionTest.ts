@@ -1,4 +1,4 @@
-import type { RJSFSchema, SchemaUtilsType } from '../../src/index.ts';
+import type { RJSFSchema, SchemaContext, SchemaUtilsType } from '../../src/index.ts';
 import { createSchemaUtils, getByPath, getClosestMatchingOption, isSchemaObject } from '../../src/index.ts';
 import { calculateIndexScore } from '../../src/schema/getClosestMatchingOption.ts';
 import { DECLARED_ABOVE_KEY } from '../../src/schemaMarkers.ts';
@@ -665,6 +665,148 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         for (const rootSchema of [rootOf(false), rootOf(true)]) {
           expect(getClosestMatchingOption(context, rootSchema, formData, optionsOf(rootSchema))).toBe(0);
         }
+      });
+    });
+    describe("the options an object rendering its own field hands out, by the extra keys each one's own keyword takes (#5886)", () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: { k: { type: 'string' } },
+        oneOf: [
+          { type: 'object', properties: { a: { type: 'number' } } },
+          { type: 'object', properties: { b: { type: 'number' } }, additionalProperties: true },
+        ],
+      };
+      const handedOut = (context: SchemaContext, formData: unknown) => {
+        const utils = createSchemaUtils(context, rootSchema);
+        const { oneOf = [] } = utils.retrieveSchema(rootSchema, formData);
+        return oneOf.filter(isSchemaObject).map((option) => utils.retrieveSchema(option, formData));
+      };
+      it.each(['forbid', 'allow'] as const)(
+        "picks the option whose additionalProperties takes the data's extra key, extra keys %s",
+        (additionalPropertiesWhenAbsent) => {
+          const context = { validator: testValidator, additionalPropertiesWhenAbsent };
+          const formData = { t: 2 };
+          const options = handedOut(context, formData);
+          expect(calculateIndexScore(context, rootSchema, options[1], formData)).toBe(1);
+          expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(1);
+        },
+      );
+      it.each<[string, RJSFSchema]>([
+        ['through an allOf', { allOf: [{ properties: { b: { type: 'number' } } }] }],
+        ['beside an if', { properties: { b: { type: 'number' } }, if: { required: ['z'] }, then: {} }],
+        ['beside dependencies', { properties: { b: { type: 'number' } }, dependencies: { z: {} } }],
+      ])("scores the data's extra key an option declaring its properties %s takes", (_, declaring) => {
+        const options: RJSFSchema[] = [
+          { type: 'object', properties: { a: { type: 'number' } } },
+          { type: 'object', ...declaring, additionalProperties: true },
+        ];
+        expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { t: 2 }, options)).toBe(1);
+      });
+      it("stubs a key only a dependencies schema that doesn't apply to the data declares, as the option retrieved for it holds", () => {
+        const options: RJSFSchema[] = [
+          { type: 'object', properties: { a: { type: 'number' } } },
+          {
+            type: 'object',
+            properties: { a: { type: 'number' } },
+            additionalProperties: true,
+            dependencies: { z: { properties: { t: { type: 'string' } } } },
+          },
+        ];
+        expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { a: 1, t: 2 }, options)).toBe(1);
+      });
+      it('scores no stub for a key a then declares, which retrieval declares through it', () => {
+        // A stub would score `t` by the type its value guesses, where the `then` gives it its own
+        const option: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string' } },
+          additionalProperties: true,
+          if: { required: ['t'] },
+          then: { properties: { t: { type: 'number' } } },
+        };
+        expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, { t: 'x' })).toBe(0);
+      });
+      it("matches the options retrieved for the data by the keys each declares, not those stubbed for the data's extra keys", () => {
+        const options: RJSFSchema[] = [
+          { type: 'object', properties: { a: { type: 'number' } }, additionalProperties: true },
+          { type: 'object', properties: { b: { type: 'number' } } },
+        ];
+        const formData = { b: 1, z: 2 };
+        const context = { validator: testValidator };
+        const utils = createSchemaUtils(context, rootSchema);
+        const retrieved = options.map((option) => utils.retrieveSchema(option, formData));
+        expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(1);
+        expect(getClosestMatchingOption(context, rootSchema, formData, retrieved)).toBe(1);
+      });
+      describe("options a direct call lists as the root declares them, read as the field offering them reads them under 'allow'", () => {
+        const options: RJSFSchema[] = [
+          { type: 'object', properties: { a: { type: 'number' } } },
+          { type: 'object', properties: { b: { type: 'number' } }, additionalProperties: true },
+        ];
+        const context = { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' as const };
+        // Both take `t` beside a field with no type of its own, and only the second beside an object's own field
+        it.each<[string, RJSFSchema, number]>([
+          ['with no type', {}, 0],
+          ['typed object', { type: 'object' }, 1],
+        ])('a field %s', (_, field, expected) => {
+          const declaring: RJSFSchema = { type: 'object', properties: { p: { ...field, oneOf: options } } };
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(expected);
+        });
+        it.each<[string, (declaring: RJSFSchema) => RJSFSchema[]]>([
+          ['part of a list', () => options.slice(0, 1).concat({ ...options[1] })],
+          [
+            'options the root declares elsewhere',
+            (declaring) => [getByPath(declaring, ['definitions', 'a']), options[1]],
+          ],
+          // A boolean option, which the options' type leaves out, declares nothing to read the field from
+          ['a list opening with a boolean option', () => [false, options[1]] as unknown as RJSFSchema[]],
+        ])('reads %s as forbidding extra keys an absent keyword takes', (_, listed) => {
+          const declaring: RJSFSchema = {
+            type: 'object',
+            definitions: { a: { type: 'object', properties: { a: { type: 'number' } } } },
+            properties: { p: { oneOf: options } },
+          };
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, listed(declaring))).toBe(1);
+        });
+        it('reads a copy of the list, which the root declares nowhere, as forbidding extra keys an absent keyword takes', () => {
+          const declaring: RJSFSchema = { type: 'object', properties: { p: { oneOf: options } } };
+          const copies = options.map((option) => ({ ...option }));
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, copies)).toBe(1);
+        });
+        // The schema holding the list there merges into the field, which the options sit beside
+        const holders: [string, (list: RJSFSchema[]) => RJSFSchema][] = [
+          ['an allOf entry', (list) => ({ allOf: [{ oneOf: list }] })],
+          ['an allOf entry of an allOf entry', (list) => ({ allOf: [{ allOf: [{ oneOf: list }] }] })],
+          ['a then', (list) => ({ if: true, then: { oneOf: list } })],
+          ['an else', (list) => ({ if: false, else: { oneOf: list } })],
+          ['a dependencies schema', (list) => ({ dependencies: { t: { oneOf: list } } })],
+        ];
+        it.each(
+          holders.flatMap(([holder, holding]) => [
+            { holder, holding, field: 'a typed object', type: { type: 'object' as const }, expected: 1 },
+            { holder, holding, field: 'a field with no type', type: {}, expected: 0 },
+          ]),
+        )('reads a list $holder holds as $field it merges into reads it', ({ holding, type, expected }) => {
+          const declaring: RJSFSchema = { type: 'object', properties: { p: { ...type, ...holding(options) } } };
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(expected);
+        });
+      });
+      it('scores an option as it stands where the data holds no extra key', () => {
+        const context = { validator: testValidator };
+        const formData = { b: 1 };
+        expect(calculateIndexScore(context, rootSchema, handedOut(context, formData)[1], formData)).toBe(1);
+      });
+      it('scores an option holding an allOf as it stands, as written', () => {
+        const context = { validator: testValidator };
+        const withAllOf: RJSFSchema = {
+          type: 'object',
+          oneOf: [
+            { properties: { t: { type: 'string', default: 'y' } } },
+            { allOf: [{ properties: { t: { type: 'string', default: 'y' } } }], additionalProperties: true },
+          ],
+        };
+        const formData = { t: 'x' };
+        const { oneOf = [] } = createSchemaUtils(context, withAllOf).retrieveSchema(withAllOf, formData);
+        expect(getClosestMatchingOption(context, withAllOf, formData, oneOf.filter(isSchemaObject))).toBe(0);
       });
     });
   });
