@@ -272,16 +272,19 @@ describe('ATAValidator', () => {
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal'"]);
     });
 
-    it('names a missing property by the ui:title its schema path leads to under a key ata escapes', () => {
+    it('names a missing property by the ui:title its schema path leads to, past an array index, under a key ata escapes', () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
-          'a/b %~': { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] },
+          'a/b %~é': {
+            type: 'array',
+            items: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] },
+          },
         },
       };
-      const uiSchema: UiSchema = { 'a/b %~': { name: { 'ui:title': 'Full name' } } };
+      const uiSchema: UiSchema = { 'a/b %~é': { items: { name: { 'ui:title': 'Full name' } } } };
       const { errors } = customizeValidator().validateFormData(
-        { 'a/b %~': {} },
+        { 'a/b %~é': [{}] },
         schema,
         undefined,
         undefined,

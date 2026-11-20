@@ -123,9 +123,9 @@ describe('applyValidatorErrorTitles()', () => {
       quote: "'",
       property: '',
       schemaPath: '#/dependentRequired',
-      schema: { type: 'object', properties: { 'a.b': { title: "Price ($&$')" } } },
+      schema: { type: 'object', properties: { 'a.b': { title: "Price ($$$&$')" } } },
     });
-    expect(titled).toEqual("must have properties 'Price ($&$')', 'a+b' when property 'c' is present");
+    expect(titled).toEqual("must have properties 'Price ($$$&$')', 'a+b' when property 'c' is present");
   });
 
   it('replaces a name that another name starts with, followed by the quote, as its own name', () => {
@@ -138,5 +138,17 @@ describe('applyValidatorErrorTitles()', () => {
       schema: { type: 'object', properties: { it: { title: 'It' }, "it's": { title: 'Its' } } },
     });
     expect(titled).toEqual("must have property 'Its' when property 'It' is present");
+  });
+
+  it('leaves an untitled name that a titled name, followed by the quote, starts', () => {
+    const { message: titled } = applyValidatorErrorTitles({
+      message: "must have property 'it's' when property 'it' is present",
+      names: ['it', "it's"],
+      quote: "'",
+      property: '',
+      schemaPath: '#/dependentRequired',
+      schema: { type: 'object', properties: { it: { title: 'It' } } },
+    });
+    expect(titled).toEqual("must have property 'it's' when property 'It' is present");
   });
 });

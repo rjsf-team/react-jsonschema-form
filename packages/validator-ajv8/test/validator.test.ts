@@ -1631,15 +1631,18 @@ describe('AJV8Validator', () => {
         });
       });
     });
-    it('should name a missing property by the ui:title its schema path leads to under a key Ajv escapes', () => {
+    it('should name a missing property by the ui:title its schema path leads to, past an array index, under a key Ajv escapes', () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
-          'a/b %': { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] },
+          'a/b %~é': {
+            type: 'array',
+            items: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] },
+          },
         },
       };
-      const uiSchema: UiSchema = { 'a/b %': { name: { 'ui:title': 'Full name' } } };
-      const { errors } = validator.validateFormData({ 'a/b %': {} }, schema, undefined, undefined, uiSchema);
+      const uiSchema: UiSchema = { 'a/b %~é': { items: { name: { 'ui:title': 'Full name' } } } };
+      const { errors } = validator.validateFormData({ 'a/b %~é': [{}] }, schema, undefined, undefined, uiSchema);
       expect(errors[0].message).toEqual("must have required property 'Full name'");
     });
     it('should file and title the error for a missing property under a key holding `/` or `~` at that key', () => {

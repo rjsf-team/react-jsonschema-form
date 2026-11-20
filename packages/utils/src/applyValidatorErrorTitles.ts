@@ -82,13 +82,13 @@ export default function applyValidatorErrorTitles<
   if (titles.size === 0) {
     return { message, titles };
   }
-  // Longest first, so `'it'` doesn't match the start of `'it's'`
-  const quotedNames = [...titles.keys()]
+  // Every name, untitled ones too, longest first, so a titled `'it'` doesn't match the start of an untitled `'it's'`
+  const quotedNames = [...names]
     .sort((a, b) => b.length - a.length)
     .map((name) => `${quote}${name}${quote}`.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-  const titled = message.replace(
-    new RegExp(quotedNames.join('|'), 'g'),
-    (quoted) => `'${titles.get(quoted.slice(quote.length, -quote.length))}'`,
-  );
+  const titled = message.replace(new RegExp(quotedNames.join('|'), 'g'), (quoted) => {
+    const title = titles.get(quoted.slice(quote.length, -quote.length));
+    return title ? `'${title}'` : quoted;
+  });
   return { message: titled, titles };
 }
