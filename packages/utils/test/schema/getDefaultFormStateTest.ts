@@ -8453,8 +8453,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               expect(getDefaultFormState(context, { schema: withDefault(thenTen, 5) })).toBe(10);
               expect(getDefaultFormState(context, { schema: withDefault(thenThree, 5) })).toBe(5);
             });
+            it.each<[string, RJSFSchema, number]>([
+              ['fills the const of a then whose if takes the default of the option it shows', thenTen, 10],
+              ['keeps the default of the option it shows where the if rejects it', thenThree, 5],
+              ['fills the const of an else whose if rejects the default of the option it shows', elseTen, 10],
+            ])('%s', (_name, conditional, expected) => {
+              const context = { validator: testValidator };
+              for (const keyword of ['oneOf', 'anyOf']) {
+                const options = { [keyword]: [withDefault(conditional, 5), { type: 'string' }] };
+                expect(getDefaultFormState(context, { schema: rootOf(options) })).toStrictEqual({ x: expected });
+                expect(getDefaultFormState(context, { schema: options })).toBe(expected);
+                const list: RJSFSchema = { type: 'array', minItems: 1, items: options };
+                expect(getDefaultFormState(context, { schema: rootOf(list) })).toStrictEqual({ x: [expected] });
+              }
+            });
           },
         );
+        it('decides the if of an empty field by the const its branch gives where its type comes through a $ref or an allOf', () => {
+          const context = { validator: testValidator };
+          const $defs = { Num: { type: 'number' as const } };
+          const typeNumber: RJSFSchema = { if: { type: 'number' }, then: { const: 3 } };
+          const typeObject: RJSFSchema = { if: { type: 'object' }, then: { const: 3 } };
+          const viaRef = (conditional: RJSFSchema) => ({ ...rootOf({ $ref: '#/$defs/Num', ...conditional }), $defs });
+          const viaAllOf = (conditional: RJSFSchema) => rootOf({ allOf: [conditional, { type: 'number' }] });
+          for (const via of [viaRef, viaAllOf]) {
+            expect(getDefaultFormState(context, { schema: via(typeNumber) })).toStrictEqual({ x: 3 });
+            expect(getDefaultFormState(context, { schema: via(typeObject) })).toStrictEqual({});
+          }
+        });
         it('decides the if of an empty field with no type by {}, which it may hold', () => {
           const x: RJSFSchema = {
             if: { required: ['a'] },

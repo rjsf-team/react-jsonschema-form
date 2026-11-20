@@ -514,6 +514,26 @@ export function conjunctionOf<S extends StrictRJSFSchema>(
   return conjunction === node ? undefined : conjunction;
 }
 
+/** Whether the first `type` the node `id` declares, itself or through its `$ref`s and `allOf` members, the order
+ * `retrieveSchema()` merges them in aside, holds neither objects nor arrays, which an `if` beside it may be checked
+ * before, see `CheckedCondition.unset`
+ */
+function declaresValueType<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId, seen: Set<NodeId>): boolean {
+  const node = graph.node(id);
+  if (seen.has(id) || node.kind !== 'schema') {
+    return false;
+  }
+  seen.add(id);
+  const target = asTarget(graph, node);
+  const { type } = target.raw;
+  if (type !== undefined) {
+    return !/object|array/.test(String(type));
+  }
+  return [target.ref, ...graph.subschemas(target.id, ALL_OF_KEY).map(([, member]) => member)].some(
+    (member) => member !== undefined && declaresValueType(graph, member, seen),
+  );
+}
+
 /** Returns the schema holding each of `keywords` as the node providing it holds it */
 function keywordSchema<S extends StrictRJSFSchema>(template: S, keywords: Keywords<S>): S {
   return schemaFrom(
@@ -715,7 +735,9 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   /** Whether the keywords of a seed hold an `if`, which `allOf: 'if'` merges the `allOf`s for */
   private seedHasCondition = false;
   private readsData = false;
-  /** Whether a seed declares a `type` that holds neither objects nor arrays, the field `CheckedCondition.unset` is for */
+  /** Whether a seed or a selected option declares a `type` that holds neither objects nor arrays, see
+   * `declaresValueType()`, the field `CheckedCondition.unset` is for
+   */
   private valueField = false;
   /** How many `then`, `else` and `dependencies` branches are being expanded: a branch has its `allOf` merged whatever
    * the policy, as `retrieveSchema()` retrieves a branch whole before merging it
@@ -832,9 +854,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return { schema: booleanSchema(node, this.graph.rawRoot), chains: [] };
     }
     const keywords = this.flatten(asTarget(this.graph, node), refPath);
-    const type = keywords.get('type')?.node.raw.type;
-    if (edge === 'seed' && type) {
-      this.valueField ||= !/object|array/.test(String(type));
+    if (edge === 'seed' || edge === 'option') {
+      this.valueField ||= declaresValueType(this.graph, id, new Set());
     }
     const schema = keywordSchema(node.raw, keywords);
     const ref: unknown = Reflect.get(node.raw, REF_KEY);
