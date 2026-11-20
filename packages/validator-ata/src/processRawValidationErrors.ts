@@ -11,12 +11,12 @@ import type {
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
+  applyValidatorErrorTitles,
   createErrorHandler,
   getByPath,
   getDefaultFormState,
   getUiOptions,
   ONE_OF_KEY,
-  PROPERTIES_KEY,
   toErrorSchema,
   toPath,
   unwrapErrorHandler,
@@ -59,6 +59,16 @@ export function filterDuplicateErrors(
   }, []);
 }
 
+/** Returns the key a token of ata's `instancePath` or `schemaPath` names. ata writes it as a JSON Pointer token
+ * (`a/b` as `a~1b`) but, unlike Ajv, doesn't percent-encode it
+ *
+ * @param token - The token of the path
+ * @returns - The key it names
+ */
+function unescapePointerToken(token: string): string {
+  return token.replaceAll('~1', '/').replaceAll('~0', '~');
+}
+
 /** Transforms ata-validator errors into the RJSF-internal `RJSFValidationError`
  * shape. ata's error objects already use the same field names AJV does
  * (`instancePath`, `keyword`, `params`, `schemaPath`, `parentSchema`,
@@ -78,7 +88,7 @@ export function transformRJSFValidationErrors<
     const { instancePath, keyword, params, schemaPath, parentSchema } = e;
     // oxlint-disable-next-line typescript/no-useless-default-assignment -- ata's types say `message` is always set, but it can be missing at runtime
     let { message = '' } = e;
-    let property = instancePath.replace(/\//g, '.');
+    let property = instancePath.split('/').map(unescapePointerToken).join('.');
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
 
@@ -89,53 +99,19 @@ export function transformRJSFValidationErrors<
     ].filter((item): item is string => typeof item === 'string' && item !== '');
 
     if (rawPropertyNames.length > 0) {
-      rawPropertyNames.forEach((currentProperty) => {
-        const path = property ? `${property}.${currentProperty}` : currentProperty;
-        let uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path))).title;
-        if (uiSchemaTitle === undefined) {
-          const uiSchemaPath = schemaPath
-            .replace(/\/properties\//g, '/')
-            .split('/')
-            .slice(1, -1)
-            .concat([currentProperty]);
-          uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
-        }
-        if (uiSchemaTitle === undefined) {
-          // schemaPath may include non-property segments (e.g. allOf/if/then) that do
-          // not exist in the uiSchema; fall back to the instance path, the same way the
-          // root-schema title fallback does below.
-          const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
-          uiSchemaTitle = getByPath<string | undefined>(uiSchema, [...propParts, currentProperty, 'title']);
-        }
-        if (uiSchemaTitle) {
-          message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
-          uiTitle = uiSchemaTitle;
-        } else {
-          const parentSchemaTitle = getByPath<string | undefined>(parentSchema, [
-            PROPERTIES_KEY,
-            currentProperty,
-            'title',
-          ]);
-          if (parentSchemaTitle) {
-            message = message.replace(`'${currentProperty}'`, `'${parentSchemaTitle}'`);
-            uiTitle = parentSchemaTitle;
-          } else if (schema) {
-            // parentSchema may be an allOf/anyOf/oneOf entry that lacks `properties`;
-            // fall back to looking up the title from the root schema.
-            const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
-            const aSchemaPath: (string | number)[] = [];
-            for (const part of propParts) {
-              aSchemaPath.push(PROPERTIES_KEY, part);
-            }
-            aSchemaPath.push(PROPERTIES_KEY, currentProperty, 'title');
-            const rootSchemaTitle = getByPath<string | undefined>(schema, aSchemaPath);
-            if (rootSchemaTitle) {
-              message = message.replace(`'${currentProperty}'`, `'${rootSchemaTitle}'`);
-              uiTitle = rootSchemaTitle;
-            }
-          }
-        }
+      const applied = applyValidatorErrorTitles<T, S, F>({
+        message,
+        names: rawPropertyNames,
+        quote: "'",
+        property,
+        schemaPath,
+        decodeSchemaPathKey: unescapePointerToken,
+        uiSchema,
+        parentSchema,
+        schema,
       });
+      message = applied.message;
+      uiTitle = [...applied.titles.values()].at(-1) ?? '';
 
       stack = message;
     } else {

@@ -11,12 +11,12 @@ import type {
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
+  applyValidatorErrorTitles,
   createErrorHandler,
   getByPath,
   getDefaultFormState,
   getUiOptions,
   ONE_OF_KEY,
-  PROPERTIES_KEY,
   toErrorSchema,
   toPath,
   unwrapErrorHandler,
@@ -25,6 +25,45 @@ import {
 import type { ErrorObject } from 'ajv';
 
 import type { SuppressDuplicateFilteringType } from './types.ts';
+
+/** Returns the key a token of Ajv's `schemaPath` names. Ajv writes each key as a JSON Pointer token in a URI fragment
+ * (`a/b` as `a~1b`, `a b` as `a%20b`), where the uiSchema keys it plainly
+ *
+ * @param token - The token of the schema path
+ * @returns - The key it names
+ */
+function decodeSchemaPathToken(token: string): string {
+  let decoded = token;
+  try {
+    decoded = decodeURIComponent(token);
+  } catch {
+    // An inlined `$ref` puts its own URI in the path as written, which may escape a byte that isn't UTF-8, as `%E9`
+  }
+  return unescapePointerToken(decoded);
+}
+
+/** Returns the key a JSON Pointer token names, such as a token of Ajv's `instancePath`, which isn't percent-encoded
+ *
+ * @param token - The token
+ * @returns - The key it names
+ */
+function unescapePointerToken(token: string): string {
+  return token.replaceAll('~1', '/').replaceAll('~0', '~');
+}
+
+/** Returns the names a dependency error's `deps` lists. `deps` joins them with `, `, which a name may contain, so the
+ * schema's own list is used when Ajv's `verbose` option hands over the `parentSchema`
+ *
+ * @param error - The error to read the names of
+ * @returns - The names of the error's dependencies, or an empty list when it has none
+ */
+export function dependencyNames({ keyword, params, parentSchema }: ErrorObject): string[] {
+  if (typeof params.deps !== 'string') {
+    return [];
+  }
+  const depsList = getByPath(parentSchema, [keyword, params.property]);
+  return Array.isArray(depsList) ? (depsList as string[]) : params.deps.split(', ');
+}
 
 /** Filters duplicate errors from `anyOf`/`oneOf` schema paths according to the `suppressDuplicateFiltering` flag.
  *
@@ -86,72 +125,31 @@ export function transformRJSFValidationErrors<
   const errorList = errors.map((e: ErrorObject) => {
     const { instancePath, keyword, params, schemaPath, parentSchema, ...rest } = e;
     let { message = '' } = rest;
-    let property = instancePath.replace(/\//g, '.');
+    let property = instancePath.split('/').map(unescapePointerToken).join('.');
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
-    const rawPropertyNames: string[] = [
-      ...(typeof params.deps === 'string' ? params.deps.split(', ') : []),
-      params.missingProperty,
-      params.property,
-    ].filter((item) => item);
-
-    const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
-    const findTitle = (currentProperty: string): string | undefined => {
-      const path = property ? `${property}.${currentProperty}` : currentProperty;
-      let uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path))).title;
-      if (uiSchemaTitle === undefined) {
-        // To retrieve a title from UI schema, construct a path to UI schema from `schemaPath` and `currentProperty`.
-        // For example, when `#/properties/A/properties/B/required` and `C` are given, they are converted into `['A', 'B', 'C']`.
-        const uiSchemaPath = schemaPath
-          .replace(/\/properties\//g, '/')
-          .split('/')
-          .slice(1, -1)
-          .concat([currentProperty]);
-        uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
-      }
-      // schemaPath may include non-property segments (e.g. allOf/if/then) that do
-      // not exist in the uiSchema; fall back to the instance path, the same way the
-      // root-schema title fallback does below.
-      uiSchemaTitle ??= getByPath<string | undefined>(uiSchema, [...propParts, currentProperty, 'title']);
-      if (uiSchemaTitle) {
-        return uiSchemaTitle;
-      }
-      const parentSchemaTitle = getByPath<string | undefined>(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
-      // parentSchema may be an allOf/anyOf/oneOf entry that lacks `properties`;
-      // fall back to looking up the title from the root schema.
-      return (
-        parentSchemaTitle ||
-        (schema
-          ? getByPath<string | undefined>(schema, [
-              ...propParts.flatMap((part) => [PROPERTIES_KEY, part]),
-              PROPERTIES_KEY,
-              currentProperty,
-              'title',
-            ])
-          : undefined)
-      );
-    };
+    const depNames = dependencyNames(e);
+    const rawPropertyNames = [...depNames, params.missingProperty, params.property].filter(
+      (item): item is string => typeof item === 'string' && item !== '',
+    );
 
     if (rawPropertyNames.length > 0) {
-      const titles = new Map<string, string>();
-      rawPropertyNames.forEach((currentProperty) => {
-        const title = findTitle(currentProperty);
-        if (title) {
-          titles.set(currentProperty, title);
-          // The error is placed on its missing property, so that is the one its `title` names
-          if (params.missingProperty === undefined || currentProperty === params.missingProperty) {
-            uiTitle = title;
-          }
-        }
+      const applied = applyValidatorErrorTitles<T, S, F>({
+        message,
+        names: rawPropertyNames,
+        quote: "'",
+        property,
+        schemaPath,
+        decodeSchemaPathKey: decodeSchemaPathToken,
+        uiSchema,
+        parentSchema,
+        schema,
       });
-      if (titles.size > 0) {
-        // Every quoted name is titled in one pass, so a title that matches another property's key isn't titled again
-        const quotedNames = [...titles.keys()].map((name) => `'${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}'`);
-        message = message.replace(
-          new RegExp(quotedNames.join('|'), 'g'),
-          (quoted) => `'${titles.get(quoted.slice(1, -1))}'`,
-        );
-      }
+      const { titles } = applied;
+      message = applied.message;
+      // The error is placed on its missing property, so that is the one its `title` names
+      uiTitle =
+        (params.missingProperty === undefined ? [...titles.values()].at(-1) : titles.get(params.missingProperty)) ?? '';
 
       if (typeof params.property === 'string' && typeof params.deps === 'string') {
         const { property: presentProperty, deps, depsCount } = params;
@@ -161,15 +159,8 @@ export function transformRJSFValidationErrors<
         const ajvMessage = (names: string[], present: string) =>
           `must have ${depsCount === 1 ? 'property' : 'properties'} ${names.join(', ')} when property ${present} is present`;
         if (rest.message === ajvMessage([deps], presentProperty)) {
-          // `deps` joins the names with `, `, which a name may contain, so the schema's own list is used when Ajv's
-          // `verbose` option hands over the `parentSchema`
-          const depsList = getByPath(parentSchema, [keyword, presentProperty]);
-          const names = Array.isArray(depsList) ? (depsList as string[]) : deps.split(', ');
-          const named = (name: string) => {
-            const title = findTitle(name);
-            return title ? `'${title}'` : name;
-          };
-          message = ajvMessage(names.map(named), named(presentProperty));
+          const named = (name: string) => (titles.has(name) ? `'${titles.get(name)}'` : name);
+          message = ajvMessage(depNames.map(named), named(presentProperty));
         }
       }
 

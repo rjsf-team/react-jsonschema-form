@@ -236,6 +236,26 @@ describe('transformRJSFValidationErrors()', () => {
     expect(out[0].property).toBe('top');
   });
 
+  it('names missing properties by titles holding `$` replacement patterns as written', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        fromUiSchema: { type: 'string' },
+        fromParent: { type: 'string', title: "Parent ($')" },
+        fromRoot: { type: 'string', title: 'Root ($`)' },
+      },
+      required: ['fromUiSchema', 'fromParent'],
+      allOf: [{ required: ['fromRoot'] }],
+    };
+    const uiSchema: UiSchema = { fromUiSchema: { 'ui:title': 'UI ($&)' } };
+    const { errors } = customizeValidator().validateFormData({}, schema, undefined, undefined, uiSchema);
+    expect(errors.map(({ message }) => message)).toEqual([
+      "must have required property 'UI ($&)'",
+      "must have required property 'Parent ($')'",
+      "must have required property 'Root ($`)'",
+    ]);
+  });
+
   it('handles params.deps as a comma-separated dependency list', () => {
     const errors: ValidationError[] = [
       {

@@ -11,6 +11,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
+  applyValidatorErrorTitles,
   createErrorHandler,
   getByPath,
   getDefaultFormState,
@@ -54,11 +55,11 @@ function instanceLocationToProperty(instanceLocation: string): string {
  */
 function extractPropertyNames(error: CFWorkerValidationError): [missingProperty?: string, presentProperty?: string] {
   if (error.keyword === 'required') {
-    return [error.error.match(/required property ["']([^"']+)["']/)?.[1]];
+    return [error.error.match(/^Instance does not have required property "(.+)"\.$/s)?.[1]];
   }
   if (error.keyword === 'dependentRequired' || error.keyword === 'dependencies') {
     const [, presentProperty, missingProperty] =
-      error.error.match(/^Instance has "(.+)" but does not have "(.+)"\.$/) ?? [];
+      error.error.match(/^Instance has "(.+)" but does not have "(.+)"\.$/s) ?? [];
     return [missingProperty, presentProperty];
   }
   return [];
@@ -125,41 +126,18 @@ export function transformRJSFValidationErrors<
     const [missingProperty, presentProperty] = extractPropertyNames(error);
 
     if (missingProperty) {
-      const findTitle = (name: string): string | undefined => {
-        const path = property ? `${property}.${name}` : name;
-        let { title } = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path)));
-        if (title === undefined) {
-          const uiSchemaPath = keywordLocation
-            .replace(/\/properties\//g, '/')
-            .split('/')
-            .slice(1, -1)
-            .map(decodePointerToken)
-            .concat([name]);
-          title = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
-        }
-        if (title === undefined && schema) {
-          title = getByPath<string | undefined>(schema, [
-            ...property
-              .replace(/^\./, '')
-              .split('.')
-              .filter(Boolean)
-              .flatMap((part) => [PROPERTIES_KEY, part]),
-            PROPERTIES_KEY,
-            name,
-            'title',
-          ]);
-        }
-        return title;
-      };
-      const title = findTitle(missingProperty);
-      if (title) {
-        message = message.replace(`"${missingProperty}"`, `'${title}'`);
-        uiTitle = title;
-      }
-      const presentTitle = presentProperty && findTitle(presentProperty);
-      if (presentTitle) {
-        message = message.replace(`"${presentProperty}"`, `'${presentTitle}'`);
-      }
+      const applied = applyValidatorErrorTitles<T, S, F>({
+        message,
+        names: presentProperty ? [missingProperty, presentProperty] : [missingProperty],
+        quote: '"',
+        property,
+        schemaPath: keywordLocation,
+        decodeSchemaPathKey: decodePointerToken,
+        uiSchema,
+        schema,
+      });
+      message = applied.message;
+      uiTitle = applied.titles.get(missingProperty) ?? '';
       property = property ? `${property}.${missingProperty}` : missingProperty;
       stack = message;
     } else {

@@ -43,6 +43,8 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`ThemePresentation`**, **`PresentationDeclaration`** and **`FieldPresentation`** — A theme's record of which parts of a field (the label, description, errors and help) each of its components draws itself, rather than leaving them to the `FieldTemplate`. A `PresentationDeclaration` names the owner of each part, `'template'`, `'self'` or, for a field that renders a single widget, `'widget'`, `labelledBy`, whether a label the template draws reaches the control through its `for` or through the control's `aria-labelledby`, and `labelPlacement`, whether a label the component draws itself sits `'above'` or `'beside'` its control; a widget's is a `WidgetPresentationDeclaration`, which has no `'widget'` owner. A `ThemePresentation` holds them by registry key under `widgets` and `fields`, plus `default`, what every widget draws for a part the layer's own entry for it doesn't declare, custom and unregistered widgets included, which [mergeThemePresentation()](#mergethemepresentation) layers beneath the layer's own entry for every key, so it overrides the parts it declares in the layers beneath, even under a key one of them declares, and `fieldDefault`, what every field draws for a part its merged entry doesn't declare, custom fields included, and what a part a field leaves to its widget falls back to when it renders none; unlike `default`, it sits beneath the merged entries rather than each layer's own, so it can't override a part a lower layer declares under a key. The merged result is a `MergedThemePresentation`. Nothing is declared on a component itself: one given directly, as a `ui:field` or `ui:widget`, takes the declaration for the first key it is registered under that declares it, so a wrapper such as `memo()` can't lose it. [getPresentationDeclaration()](#getpresentationdeclaration) resolves a field's declaration and [resolveFieldPresentation()](#resolvefieldpresentation) builds its `FieldPresentation`, the plan of where each part is drawn, under which id, and the attributes its control carries, linked as `inherited` to the plan of the field above it that renders the same id.
 
+**`ValidatorErrorTitleSource`** — What [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) reads of an error a validator package reports: its `message`, the `names` it quotes, the `quote` around them, and the `property`, `schemaPath`, `uiSchema`, `parentSchema` and `schema` their titles are looked up in.
+
 ## Enums
 
 There are enumerations in `@rjsf/utils` that are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
@@ -165,6 +167,29 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 #### Returns
 
 - boolean: True if additional items is allowed, otherwise false
+
+### applyValidatorErrorTitles&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#applyvalidatorerrortitles}
+
+Used by the validator packages to name the properties an error's message names by their `ui:title` or `title`.
+A name's title is its `ui:title` at the error's `property`, then at the `schemaPath`, then the `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the root `schema`.
+Each name with a title is replaced, in one pass so a title that matches another name isn't replaced again, by its title in single quotes, written as it is, `$` patterns included.
+
+#### Parameters
+
+- source: ValidatorErrorTitleSource&lt;T, S, F> - The error's message and what its names' titles are looked up in:
+  - message: string - The engine's message, which names each of the `names` between a pair of `quote`s
+  - names: string[] - The names of the properties the message names
+  - quote: "'" | '"' - The quote the engine puts around a property name, `'` or `"`
+  - property: string - The error's property path, dot-separated as RJSF writes it, `''` for the root
+  - schemaPath: string - The URI fragment of the JSON Pointer to the schema keyword that failed, such as `#/properties/a/required`
+  - [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
+  - [uiSchema]: UiSchema&lt;T, S, F> - The form's uiSchema
+  - [parentSchema]: unknown - The schema object that holds the keyword that failed, when the engine hands it over
+  - [schema]: S - The form's root schema
+
+#### Returns
+
+- \{ message: string, titles: Map&lt;string, string> }: The `message` with each name that has a title replaced by it, and the title of each such name
 
 ### asNumber()
 
