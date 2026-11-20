@@ -64,6 +64,7 @@ interface SelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextTyp
   schema: S;
   option?: S;
   uiSchema: UiSchema<T, S, F>;
+  place?: string;
 }
 
 /** Resolves the `anyOf`/`oneOf` branch that currently applies to `formData`, the option the form's `fieldState` says
@@ -97,6 +98,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   // A `fieldState` is a caller's to implement, so an index naming none of the options is none shown
   const index = shownIndex < shownOptions.length ? shownIndex : -1;
   const option = index >= 0 ? shownOptions[index] : empty;
+  const place = getValidationTarget<S>(option, rootSchema).$ref;
   const given: unknown = uiSchema[key];
   const optionsUiSchema = mergeOptionDefinitions<T, S, F>(
     options.map(definitionRef),
@@ -112,9 +114,9 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
       key,
     ) ?? {};
   if (!rendersOwnFieldBesideOption<S>(schema, option)) {
-    return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema };
+    return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema, place };
   }
-  return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema };
+  return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema, place };
 }
 
 /** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution. A fixed (tuple) schema's
@@ -262,15 +264,15 @@ function rendersArrayWidget<T, S extends StrictRJSFSchema, F extends FormContext
 
 /** The field an option walked as a node of its own is shown by, which has reported an empty value already where its own
  * `ui:required` asks for one, asks for an answer where the option it shows marks its label required, numbers the
- * option's type selectors below the ones it renders at the path, lists the places of the option lists offered above
- * the option at the path, and is an `additionalProperties` entry, which turns off the Optional Data Controls of every
+ * option's type selectors below the ones it renders at the path, lists the places of the options shown above the
+ * option at the path, and is an `additionalProperties` entry, which turns off the Optional Data Controls of every
  * option it shows at its path
  */
 interface ShowingField {
   uiRequired: boolean;
   asksAnswer: boolean;
   typeSelectorsAbove: number;
-  listsAbove: (string | undefined)[];
+  shownAbove: (string | undefined)[];
   isEntry: boolean;
 }
 
@@ -353,23 +355,21 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field is gated. An `additionalProperties` entry and the options it shows at its path have no control, whatever the
   // uiSchema says.
   const xxxOf = getXxxOfOptions<S>(resolvedSchema);
-  // The form keeps one pick per option list at a path, by the list's place (core's `optionListKey()`), so a list offered
-  // again below itself at the path shows the same option again, a `$ref` loop the form never finishes rendering. The
-  // place of the list's first option with one stands in for the list's, which it lies within
-  const listPlace = xxxOf?.options
-    .map((offered) => (isObject(offered) ? getValidationTarget<S>(offered, rootSchema).$ref : undefined))
-    .find(Boolean);
-  const listsAbove = showingField?.listsAbove ?? [];
-  if (listPlace && listsAbove.includes(listPlace)) {
-    return;
-  }
   const {
     schema: retrieved,
     option,
     uiSchema: branchUiSchema,
+    place,
   }: SelectedBranch<T, S, F> = xxxOf
     ? resolveSelectedBranch<T, S, F>(ctx, resolvedSchema, xxxOf, uiSchema, formData, path)
     : { schema: resolvedSchema, uiSchema };
+  // The form keeps one pick per option list at a path, so an option shown again below itself at the path offers the
+  // same list again and shows itself in turn, a `$ref` loop the form never finishes rendering. Two lists can share
+  // their first option, so it is the option shown, not the list, that tells a loop apart
+  const shownAbove = showingField?.shownAbove ?? [];
+  if (place && shownAbove.includes(place)) {
+    return;
+  }
   // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
   // fields rather than an Add button
   const { required: branchUiRequired, widget: branchWidget } = getUiOptions<T, S, F>(branchUiSchema);
@@ -469,7 +469,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       uiRequired: reportsEmpty || isUnanswered,
       asksAnswer,
       typeSelectorsAbove: optionTypeSelectorsAbove,
-      listsAbove: [...listsAbove, listPlace],
+      shownAbove: [...shownAbove, place],
       isEntry,
     });
     // An object renders its own properties beside the option, which are walked below

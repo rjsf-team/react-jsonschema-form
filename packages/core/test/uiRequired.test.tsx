@@ -978,6 +978,18 @@ describe('ui:required enforcement', () => {
       expect(await submitted(node, onSubmit)).toBe(false);
     });
 
+    it('blocks a submit with a field empty in a nested option list whose first option is the same schema object as the list above it', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({ anyOf: [shown, { anyOf: [shown, other] }] }),
+        uiSchema: { p: { anyOf: [{}, { anyOf: [{}, { y: { 'ui:required': true } }] }] } },
+        initialFormData: { p: {} },
+      });
+      await user.selectOptions(elementOf(node, '#root_p__anyof_select', HTMLSelectElement), 'Option 2');
+      await user.selectOptions(elementOf(node, '#root_p__anyof_select2', HTMLSelectElement), 'Option 2');
+      expect(markedRequired(node, 'root_p_y')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
     it("blocks a submit with a property both an option offering options of its own and the option shown there declare empty, as the shown option's entry marks it, while the option's own type selector is on number", async () => {
       const { node, onSubmit } = createFormComponent({
         schema: p({

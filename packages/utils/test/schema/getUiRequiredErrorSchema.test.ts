@@ -2268,6 +2268,18 @@ describe('getUiRequiredErrorSchema()', () => {
       ]);
     });
 
+    it('walks a nested option list whose first option is the same schema object as the list above it', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { q: { anyOf: [shown, { anyOf: [shown, other] }] } },
+      };
+      const second: FormFieldState = { selectedOption: () => 1, isExpanded: () => false };
+      const uiSchema: UiSchema = { q: { anyOf: [{}, { anyOf: [{}, { y: { 'ui:required': true } }] }] } };
+      expect(errorsFor(schema, uiSchema, { q: {} }, undefined, second)).toEqual([
+        ".q.y must have required property 'y'",
+      ]);
+    });
+
     it('reports nothing beneath the options of an option a `ui:field` renders in their place', () => {
       const schema: RJSFSchema = {
         type: 'object',
