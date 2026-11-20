@@ -76,6 +76,18 @@ describe('applyValidatorErrorTitles()', () => {
     expect(titled).toEqual("must have required property 'Full name'");
   });
 
+  it('reads a name holding a dot as one key at the property', () => {
+    const { titles } = applyValidatorErrorTitles({
+      message: "must have required property 'a.b'",
+      names: ['a.b'],
+      quote: "'",
+      property: '',
+      schemaPath: '#/allOf/0/required',
+      uiSchema: { a: { b: { 'ui:title': 'Inner b' } }, 'a.b': { 'ui:title': 'Dotted' } },
+    });
+    expect(titles).toEqual(new Map([['a.b', 'Dotted']]));
+  });
+
   it('decodes the keys of the schema path with decodeSchemaPathKey', () => {
     const { titles } = applyValidatorErrorTitles({
       message: 'Instance does not have required property "name".',

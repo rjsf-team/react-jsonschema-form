@@ -33,7 +33,13 @@ import type { SuppressDuplicateFilteringType } from './types.ts';
  * @returns - The key it names
  */
 function decodeSchemaPathToken(token: string): string {
-  return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
+  let decoded = token;
+  try {
+    decoded = decodeURIComponent(token);
+  } catch {
+    // An inlined `$ref` puts its own URI in the path as written, which may escape a byte that isn't UTF-8, as `%E9`
+  }
+  return decoded.replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
 /** Returns the names a dependency error's `deps` lists. `deps` joins them with `, `, which a name may contain, so the
@@ -114,7 +120,9 @@ export function transformRJSFValidationErrors<
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
     const depNames = dependencyNames(e);
-    const rawPropertyNames: string[] = [...depNames, params.missingProperty, params.property].filter((item) => item);
+    const rawPropertyNames = [...depNames, params.missingProperty, params.property].filter(
+      (item): item is string => typeof item === 'string' && item !== '',
+    );
 
     if (rawPropertyNames.length > 0) {
       const applied = applyValidatorErrorTitles<T, S, F>({

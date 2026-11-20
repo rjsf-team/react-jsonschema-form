@@ -1,6 +1,6 @@
 import { PROPERTIES_KEY } from './constants.ts';
 import getUiOptions from './getUiOptions.ts';
-import { getByPath, toPath } from './pathUtils.ts';
+import { getByPath } from './pathUtils.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** What `applyValidatorErrorTitles()` reads of an error a validator package reports */
@@ -63,7 +63,7 @@ export default function applyValidatorErrorTitles<
   const titles = new Map<string, string>();
   for (const name of names) {
     const title =
-      (getUiOptions<T, S, F>(getByPath(uiSchema, toPath(property ? `${property}.${name}` : name))).title ??
+      (getUiOptions<T, S, F>(getByPath(uiSchema, [...propParts, name])).title ??
         getUiOptions<T, S, F>(getByPath(uiSchema, [...schemaPathParts, name])).title ??
         getByPath<string | undefined>(uiSchema, [...propParts, name, 'title'])) ||
       getByPath<string | undefined>(parentSchema, [PROPERTIES_KEY, name, 'title']) ||

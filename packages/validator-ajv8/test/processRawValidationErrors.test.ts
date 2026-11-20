@@ -75,6 +75,38 @@ describe('transformRJSFValidationErrors', () => {
 
     expect(errors).toHaveLength(1);
   });
+  it("should title a missing property under a schema path holding an escape that isn't UTF-8", () => {
+    const error = {
+      instancePath: '/x',
+      // Ajv writes an inlined `$ref`'s URI into the path as written
+      schemaPath: 'https://example.com/caf%E9.json/required',
+      keyword: 'required',
+      params: { missingProperty: 'name' },
+      message: "must have required property 'name'",
+    };
+    const schema = {
+      type: 'object' as const,
+      properties: { x: { type: 'object' as const, properties: { name: { type: 'string' as const, title: 'Name' } } } },
+    };
+
+    const [transformed] = transformRJSFValidationErrors([error], undefined, undefined, schema);
+
+    expect(transformed.message).toEqual("must have required property 'Name'");
+  });
+  it('should leave a non-string property param untitled', () => {
+    const error = {
+      instancePath: '',
+      schemaPath: '#/custom',
+      keyword: 'custom',
+      params: { property: 5 },
+      message: "must not have property '5'",
+    };
+    const schema = { type: 'object' as const, properties: { 5: { type: 'string' as const, title: 'Five' } } };
+
+    const [transformed] = transformRJSFValidationErrors([error], undefined, undefined, schema);
+
+    expect(transformed.message).toEqual("must not have property '5'");
+  });
   it('should take the title of the last titled property an error without a missing property names', () => {
     const error = {
       instancePath: '',
