@@ -30,7 +30,7 @@ import type {
   StrictRJSFSchema,
 } from '../types.ts';
 import { ownValue } from './getDefaultFormState.ts';
-import getFilledDefault, { childFillOf } from './getFilledDefault.ts';
+import getFilledDefault, { childFillOf, getFieldDefault } from './getFilledDefault.ts';
 import { getItemSchema, getPrefixLength } from './getItemSchema.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, { ownRefResolves } from './retrieveSchema.ts';
@@ -287,6 +287,33 @@ function asArraySchema<S extends StrictRJSFSchema>(schema: S): S {
   return namesArray && (schema[PROPERTIES_KEY] || getSchemaType<S>(schema) !== 'array')
     ? { ...schema, type: 'array', [PROPERTIES_KEY]: undefined }
     : schema;
+}
+
+/** Whether `value` is an array holding an object, at any depth of arrays */
+function holdsObject(value: unknown): boolean {
+  return Array.isArray(value) && value.some((item) => isPlainObject(item) || holdsObject(item));
+}
+
+/** Whether `value`, the data of the field `oldSchema` describes, is an array holding an object judged item by item
+ * rather than as a whole: the old filled default it equals as a whole can hold what the fill only computed below it,
+ * such as a required boolean's `false`, which no `default` reached. Only where it holds the very `default` its old schema
+ * declares, before the fill fills it out, is it filled out anew whole, as `Form` fills it
+ *
+ * @param context - The `SchemaContext` the defaults are computed under
+ * @param oldSchema - The field's schema before the change
+ * @param rootSchema - The root schema, which `oldSchema` is resolved against
+ * @param oldFill - What the defaults handed the field before the change
+ * @param value - The field's data
+ * @returns - Whether the value is judged item by item
+ */
+function isJudgedByItem<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  oldSchema: S,
+  rootSchema: S,
+  oldFill: FieldFill,
+  value: unknown,
+): boolean {
+  return holdsObject(value) && !deepEquals(value, getFieldDefault<S, F>(context, oldSchema, rootSchema, oldFill));
 }
 
 /** Whether `schema` renders an object the defaults fill key by key: an `object` one, or an untyped one declaring
@@ -581,10 +608,12 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
           }
         } else if (isContainer) {
           // A container holding the old `default` takes the new one whole, as a scalar does, rather than being
-          // sanitized into neither, unless it is an object, whose object `default` the defaults fill in key by key
+          // sanitized into neither, unless it is an object, whose object `default` the defaults fill in key by key, or an
+          // array holding one, judged item by item, see `isJudgedByItem()`
           const defaultValue =
             formValue === undefined ||
-            (isObjectValue && getSchemaType<S>(newKeyedSchema) === 'object' && isPlainObject(newWrittenDefault()))
+            (isObjectValue && getSchemaType<S>(newKeyedSchema) === 'object' && isPlainObject(newWrittenDefault())) ||
+            (isArrayValue && isJudgedByItem<S, F>(context, oldKeyedSchema, rootSchema, oldKeyFill, formValue))
               ? NO_VALUE
               : replacementFor(false, false);
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. Data holding no object
@@ -832,8 +861,14 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
       const isFilledByKey =
         isPlainObject(newItemDefault) &&
         (schemaType === undefined ? rendersProperties<S>(newItemSchema) : schemaType === 'object');
-      if (newItemDefault !== undefined && !(isPlainObject(aValue) && !isWholeSelect && isFilledByKey)) {
-        oldItemSchema = oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
+      oldItemSchema = newItemDefault === undefined ? undefined : oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
+      if (
+        oldItemSchema &&
+        (isWholeSelect ||
+          !(isPlainObject(aValue)
+            ? isFilledByKey
+            : isJudgedByItem<S, F>(context, oldItemSchema, rootSchema, oldItemFill, aValue)))
+      ) {
         const defaultValue = defaultReplacement<S>(
           newItemSchema,
           newItemDefault,
@@ -913,6 +948,17 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
     const limit = newSchema.maxItems ?? Infinity;
     const bound = oldSchema.maxItems === newSchema.maxItems ? Infinity : limit;
     const sanitizedItems: unknown[] = [];
+    // A row past the new default's length that still holds the old default's entry at its index leaves with it, as it
+    // would with the whole array holding the old default, which an array judged item by item doesn't take whole
+    let leavesWithOldDefault = (_index: number) => false;
+    if (isJudgedByItem<S, F>(context, oldSchema, rootSchema, oldFill, data)) {
+      const oldDefault = getFilledDefault<S, F>(context, oldSchema, rootSchema, oldFill);
+      const newDefault = getFilledDefault<S, F>(context, newSchema, rootSchema, newFill);
+      if (Array.isArray(oldDefault) && Array.isArray(newDefault)) {
+        leavesWithOldDefault = (index) =>
+          index >= newDefault.length && index < oldDefault.length && deepEquals(data[index], oldDefault[index]);
+      }
+    }
     // The position at `positionCount - 1` stands for every item after both prefixes, so it is read once
     let position: ItemPosition<S> | undefined = false;
     let positionIndex = -1;
@@ -927,7 +973,7 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
         sanitizedItems.push(undefined);
       } else if (data[index] === null && isClearedRow(at)) {
         sanitizedItems.push(undefined);
-      } else {
+      } else if (isPrefix || !leavesWithOldDefault(index)) {
         if (at !== positionIndex) {
           position = positionAt(at);
           positionIndex = at;

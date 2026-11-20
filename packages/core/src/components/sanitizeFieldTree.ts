@@ -338,6 +338,19 @@ function typeOf<S extends StrictRJSFSchema>(layers: readonly S[]): unknown {
   return Array.isArray(type) ? [...new Set(type.map(String))].sort() : type;
 }
 
+/** Whether `value` is an array holding an object, at any depth of arrays */
+function holdsObject(value: unknown): boolean {
+  return Array.isArray(value) && value.some((item) => isPlainObject(item) || holdsObject(item));
+}
+
+/** Whether `value`, an array holding an object, is judged item by item rather than as a whole, as
+ * `sanitizeDataForNewSchema()` judges it: the old filled default it equals as a whole can hold a value no `default`
+ * reached, such as a required boolean's computed `false`. Only one holding the very `default` its old schema declares,
+ * `oldFieldDefault`, is filled out anew whole, as a fresh mount fills it */
+function judgesByItem(value: unknown, oldFieldDefault: () => unknown): boolean {
+  return holdsObject(value) && !deepEquals(value, oldFieldDefault());
+}
+
 /** Whether the defaults fill a field's object key by key, as `sanitizeDataForNewSchema()` reads it: the field's own
  * `type` read as `getSchemaType()` reads it, so a type list renders as the type it names first, or, for an untyped item
  * alone, whether it or its option declares `properties` other than the stubs `retrieveSchema()` adds for the data's
@@ -405,6 +418,7 @@ function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: 
  *   that turns into a guessed extra key
  * @param oldFillOut - What becomes of a value the new default differs from where the old defaults filled it out from
  *   the old one, see `oldFillOutOf()`: `DROP` to leave it for the fill, a value to write in place, or `undefined`
+ * @param isJudgedByItem - Whether the value is an array judged item by item, see `judgesByItem()`
  * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
  *   judge what it holds
  */
@@ -418,6 +432,7 @@ function judge<S extends StrictRJSFSchema>(
   acceptsNull: () => boolean,
   isFilledByOldDefaults: (value: unknown) => boolean,
   oldFillOut: (value: unknown) => unknown,
+  isJudgedByItem: () => boolean,
 ): unknown {
   const before = constraintsOf(oldLayers, oldDefault);
   const now = constraintsOf(newLayers, newDefault);
@@ -446,11 +461,10 @@ function judge<S extends StrictRJSFSchema>(
   }
   // An object the defaults fill key by key holds its old default only as far as each key does, since the fill can leave
   // some of the default's keys out, so its properties are judged one by one, as `sanitizeDataForNewSchema()` does
+  // So is an array holding an object, item by item, see `judgesByItem()`
   const isFilledByKey = () =>
-    isPlainObject(value) &&
-    isPlainObject(newDefault) &&
     !newLayers.some((layer) => isWholeValueSelect<S>(layer)) &&
-    fillsKeyByKey(newLayers, isItem);
+    (isPlainObject(value) ? isPlainObject(newDefault) && fillsKeyByKey(newLayers, isItem) : isJudgedByItem());
   // A value equal to the new default is still judged by the rest, since a new `const` or `enum` can reject it. What the
   // old field's defaults filled out from the `default` it declared, to `minItems` or below it through a
   // `ui:initialValue`, is theirs too, though not what they compute for a field declaring none, as a required boolean's
@@ -926,6 +940,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       (oldFillSchema === newFillSchema || deepEquals(oldFillSchema, newFillSchema));
     return isAlikeBelow;
   };
+  // Whether the item at an index, an array judged item by item, leaves with its old default, see below
+  let leavesWithOldDefault: ((index: number, item: unknown) => boolean) | undefined;
   // The edited value and the values holding it are the user's
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
     // A value is judged by the default of the option it shows. A clear is judged as the fill fills a field holding no
@@ -976,9 +992,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           oldUiSchema,
           value,
         ) ?? (isOwnFill(ctx.oldSchemaUtils, oldLayers, oldFieldDefault(), value) ? DROP : undefined),
+      () => judgesByItem(newValue, oldFieldDefault),
     );
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
+    }
+    // A row past the new default's length that still holds the old default's entry at its index leaves with it, as it
+    // would with the whole array holding the old default
+    if (Array.isArray(oldDefault) && Array.isArray(newDefault) && judgesByItem(newValue, oldFieldDefault)) {
+      leavesWithOldDefault = (index, item) =>
+        index >= newDefault.length && index < oldDefault.length && deepEquals(item, oldDefault[index]);
     }
   }
   if (newLayers.some((layer) => isWholeValueSelect<S>(layer))) {
@@ -1171,6 +1194,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (rejectsArray) {
         return item;
       }
+      const previousIndex = previousKeyOf(String(index));
+      const hasPrevious =
+        Array.isArray(oldValue) && previousIndex !== undefined && Number(previousIndex) < oldValue.length;
+      const fillIndex = hasPrevious ? Number(previousIndex) : index;
+      // Whatever its position declares, as `sanitizeDataForNewSchema()` drops it
+      if (index >= prefixLength && leavesWithOldDefault?.(fillIndex, item)) {
+        return DROP;
+      }
       const newItem = itemOf(newItemsLayer, index);
       const oldItem = itemOf(oldItemsLayer, index);
       if (newItem === false) {
@@ -1183,10 +1214,6 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (newItem === true) {
         return item;
       }
-      const previousIndex = previousKeyOf(String(index));
-      const hasPrevious =
-        Array.isArray(oldValue) && previousIndex !== undefined && Number(previousIndex) < oldValue.length;
-      const fillIndex = hasPrevious ? Number(previousIndex) : index;
       // An item no previous one moved to, such as a copy or a new row, is judged as holding what it holds now under
       // the old tree's item at its index, so a change that flips the constraints of the rows judges it as it judges them
       const itemMovesBefore = ctx.itemMoves.length;

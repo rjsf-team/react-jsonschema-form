@@ -4525,6 +4525,117 @@ describe('judging a field by the value the fill writes for it (#5825)', () => {
     expect(utils).toEqual({ list: ['y', 'w', 'k'] });
   });
 
+  // The array still equals its old filled default as a whole, but no default reached the key the fill computed
+  const B: RJSFSchema = { type: 'boolean' };
+  const T: RJSFSchema = { type: 'array', items: { type: 'string' } };
+  const rowOf = (f: RJSFSchema): RJSFSchema => ({
+    type: 'object',
+    required: ['f'],
+    properties: { a: { type: 'string' }, f },
+  });
+  const listOf = (f: RJSFSchema, d: RJSFSchema['default'] = [{ a: 'x' }]): RJSFSchema => ({
+    type: 'object',
+    properties: { list: { type: 'array', default: d, items: rowOf(f) } },
+  });
+  const nestedOf = (f: RJSFSchema): RJSFSchema => ({
+    type: 'object',
+    properties: { list: { type: 'array', default: [[{ a: 'x' }]], items: { type: 'array', items: rowOf(f) } } },
+  });
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; list: unknown[]; expected: unknown[] }>([
+    {
+      name: "a required boolean's false",
+      from: listOf(B),
+      to: listOf({ ...B, default: true }),
+      list: [{ a: 'x', f: false }],
+      expected: [{ a: 'x', f: false }],
+    },
+    {
+      name: "a required array's []",
+      from: listOf(T),
+      to: listOf({ ...T, default: ['n'] }),
+      list: [{ a: 'x', f: [] }],
+      expected: [{ a: 'x', f: [] }],
+    },
+    {
+      name: "a required boolean's false, as the array's own default changes",
+      from: listOf(B),
+      to: listOf({ ...B, default: true }, [{ a: 'y' }]),
+      list: [{ a: 'x', f: false }],
+      expected: [{ a: 'y', f: false }],
+    },
+    {
+      name: "a required boolean's false, in an array item",
+      from: nestedOf(B),
+      to: nestedOf({ ...B, default: true }),
+      list: [[{ a: 'x', f: false }]],
+      expected: [[{ a: 'x', f: false }]],
+    },
+  ])('keeps $name below an array default where its key gains a default', ({ from, to, list, expected }) => {
+    const { form, utils } = sanitizedBoth(from, to, { list });
+    expect(form).toEqual({ list: expected });
+    expect(utils).toEqual({ list: expected });
+  });
+
+  // Judged item by item, a row the new default no longer reaches leaves where it still holds the old default's entry
+  const G: RJSFSchema = { type: 'object', properties: { a: { type: 'string' }, g: { type: 'string', default: 'G' } } };
+  const xw = [{ a: 'x' }, { a: 'w' }];
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; list: unknown[]; expected: unknown[] }>([
+    {
+      name: 'a row holding a computed key',
+      from: listOf(B, xw),
+      to: listOf(B, [{ a: 'y' }]),
+      list: [
+        { a: 'x', f: false },
+        { a: 'w', f: false },
+      ],
+      expected: [{ a: 'y', f: false }],
+    },
+    {
+      name: 'every row, for an empty new default',
+      from: listOf(B, xw),
+      to: listOf(B, []),
+      list: [
+        { a: 'x', f: false },
+        { a: 'w', f: false },
+      ],
+      expected: [],
+    },
+    {
+      name: "a row its items' own default filled",
+      from: { type: 'object', properties: { list: { type: 'array', default: xw, items: G } } },
+      to: { type: 'object', properties: { list: { type: 'array', default: [{ a: 'y' }], items: G } } },
+      list: [
+        { a: 'x', g: 'G' },
+        { a: 'w', g: 'G' },
+      ],
+      expected: [{ a: 'y', g: 'G' }],
+    },
+    {
+      name: 'a row of an array declaring no items',
+      from: { type: 'object', properties: { list: { type: 'array', default: xw } } },
+      to: { type: 'object', properties: { list: { type: 'array', default: [{ a: 'y' }] } } },
+      list: [{ a: 'q' }, { a: 'w' }],
+      expected: [{ a: 'q' }],
+    },
+    {
+      name: 'no row the user changed',
+      from: listOf(B, xw),
+      to: listOf(B, [{ a: 'y' }]),
+      list: [
+        { a: 'x', f: false },
+        { a: 'k', f: false },
+      ],
+      expected: [
+        { a: 'y', f: false },
+        { a: 'k', f: false },
+      ],
+    },
+  ])("drops $name past a shrunk array default's length", ({ from, to, list, expected }) => {
+    const { form, utils } = sanitizedBoth(from, to, { list });
+    expect(form).toEqual({ list: expected });
+    expect(utils).toEqual({ list: expected });
+  });
+
   it.each<{ name: string; o: (v: number) => RJSFSchema }>([
     {
       name: "a key its object's default doesn't name",

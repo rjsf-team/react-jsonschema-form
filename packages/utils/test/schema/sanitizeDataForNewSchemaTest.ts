@@ -2777,6 +2777,58 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         list: [{ k: 'a' }],
       });
     });
+    describe('an array of objects holding its old default', () => {
+      const rowOf = (f: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        required: ['f'],
+        properties: { a: { type: 'string' }, f },
+      });
+      const listOf = (f: RJSFSchema, d: RJSFSchema['default'] = [{ a: 'x' }]): RJSFSchema => ({
+        type: 'object',
+        properties: { list: { type: 'array', default: d, items: rowOf(f) } },
+      });
+      const sanitize = (newSchema: RJSFSchema, oldSchema: RJSFSchema, data: unknown) =>
+        sanitizeDataForNewSchema({ validator: testValidator }, newSchema, newSchema, oldSchema, data);
+      const B: RJSFSchema = { type: 'boolean' };
+      it('keeps a key the fill computed below it, which no default reached, item by item', () => {
+        const nestedOf = (f: RJSFSchema): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', default: [[{ a: 'x' }]], items: { type: 'array', items: rowOf(f) } } },
+        });
+        expect(sanitize(listOf({ ...B, default: true }), listOf(B), { list: [{ a: 'x', f: false }] })).toEqual({
+          list: [{ a: 'x', f: false }],
+        });
+        expect(sanitize(nestedOf({ ...B, default: true }), nestedOf(B), { list: [[{ a: 'x', f: false }]] })).toEqual({
+          list: [[{ a: 'x', f: false }]],
+        });
+      });
+      it("drops a row past the new default's length that still holds the old default's entry there", () => {
+        const xw = [{ a: 'x' }, { a: 'w' }];
+        const data = {
+          list: [
+            { a: 'x', f: false },
+            { a: 'w', f: false },
+          ],
+        };
+        expect(sanitize(listOf(B, [{ a: 'y' }]), listOf(B, xw), data)).toEqual({ list: [{ a: 'y', f: false }] });
+        expect(sanitize(listOf(B, []), listOf(B, xw), data)).toEqual({ list: [] });
+        const typed = { list: [data.list[0], { a: 'k', f: false }] };
+        expect(sanitize(listOf(B, [{ a: 'y' }]), listOf(B, xw), typed)).toEqual({
+          list: [{ a: 'y', f: false }, typed.list[1]],
+        });
+      });
+      it('takes the new default whole where it holds the very default its old schema declares', () => {
+        const plainOf = (d: RJSFSchema['default']): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: { type: 'array', default: d, items: { type: 'object', properties: { a: { type: 'string' } } } },
+          },
+        });
+        expect(sanitize(plainOf([{ a: 'y' }, { a: 'z' }]), plainOf([{ a: 'x' }]), { list: [{ a: 'x' }] })).toEqual({
+          list: [{ a: 'y' }, { a: 'z' }],
+        });
+      });
+    });
     describe('a select over whole arrays', () => {
       const definitions: RJSFSchema['definitions'] = { a: { const: [1, 2] }, b: { const: [3] } };
       const sanitize = (newSchema: RJSFSchema, oldSchema: RJSFSchema, data: unknown) =>
