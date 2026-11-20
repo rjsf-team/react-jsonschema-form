@@ -11,12 +11,12 @@ import type {
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
+  applyValidatorErrorTitles,
   createErrorHandler,
   getByPath,
   getDefaultFormState,
   getUiOptions,
   ONE_OF_KEY,
-  PROPERTIES_KEY,
   toErrorSchema,
   toPath,
   unwrapErrorHandler,
@@ -89,53 +89,18 @@ export function transformRJSFValidationErrors<
     ].filter((item): item is string => typeof item === 'string' && item !== '');
 
     if (rawPropertyNames.length > 0) {
-      rawPropertyNames.forEach((currentProperty) => {
-        const path = property ? `${property}.${currentProperty}` : currentProperty;
-        let uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path))).title;
-        if (uiSchemaTitle === undefined) {
-          const uiSchemaPath = schemaPath
-            .replace(/\/properties\//g, '/')
-            .split('/')
-            .slice(1, -1)
-            .concat([currentProperty]);
-          uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
-        }
-        if (uiSchemaTitle === undefined) {
-          // schemaPath may include non-property segments (e.g. allOf/if/then) that do
-          // not exist in the uiSchema; fall back to the instance path, the same way the
-          // root-schema title fallback does below.
-          const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
-          uiSchemaTitle = getByPath<string | undefined>(uiSchema, [...propParts, currentProperty, 'title']);
-        }
-        if (uiSchemaTitle) {
-          message = message.replace(`'${currentProperty}'`, () => `'${uiSchemaTitle}'`);
-          uiTitle = uiSchemaTitle;
-        } else {
-          const parentSchemaTitle = getByPath<string | undefined>(parentSchema, [
-            PROPERTIES_KEY,
-            currentProperty,
-            'title',
-          ]);
-          if (parentSchemaTitle) {
-            message = message.replace(`'${currentProperty}'`, () => `'${parentSchemaTitle}'`);
-            uiTitle = parentSchemaTitle;
-          } else if (schema) {
-            // parentSchema may be an allOf/anyOf/oneOf entry that lacks `properties`;
-            // fall back to looking up the title from the root schema.
-            const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
-            const aSchemaPath: (string | number)[] = [];
-            for (const part of propParts) {
-              aSchemaPath.push(PROPERTIES_KEY, part);
-            }
-            aSchemaPath.push(PROPERTIES_KEY, currentProperty, 'title');
-            const rootSchemaTitle = getByPath<string | undefined>(schema, aSchemaPath);
-            if (rootSchemaTitle) {
-              message = message.replace(`'${currentProperty}'`, () => `'${rootSchemaTitle}'`);
-              uiTitle = rootSchemaTitle;
-            }
-          }
-        }
+      const applied = applyValidatorErrorTitles<T, S, F>({
+        message,
+        names: rawPropertyNames,
+        quote: "'",
+        property,
+        schemaPath,
+        uiSchema,
+        parentSchema,
+        schema,
       });
+      message = applied.message;
+      uiTitle = [...applied.titles.values()].at(-1) ?? '';
 
       stack = message;
     } else {

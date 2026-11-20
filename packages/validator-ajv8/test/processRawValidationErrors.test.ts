@@ -75,6 +75,21 @@ describe('transformRJSFValidationErrors', () => {
 
     expect(errors).toHaveLength(1);
   });
+  it('should take the title of the last titled property an error without a missing property names', () => {
+    const error = {
+      instancePath: '',
+      schemaPath: '#/custom',
+      keyword: 'custom',
+      params: { property: 'a' },
+      message: "must not have property 'a'",
+    };
+    const schema = { type: 'object' as const, properties: { a: { type: 'string' as const, title: 'A' } } };
+
+    const [transformed] = transformRJSFValidationErrors([error], undefined, undefined, schema);
+
+    expect(transformed.title).toEqual('A');
+    expect(transformed.message).toEqual("must not have property 'A'");
+  });
   it('should filter out duplicate anyOf messages', () => {
     const errors = [
       {

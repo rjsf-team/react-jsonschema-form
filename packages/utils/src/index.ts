@@ -3,6 +3,7 @@ import { getAdditionalPropertySchema, getMatchingPatternProperties } from './add
 import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
+import applyValidatorErrorTitles from './applyValidatorErrorTitles.ts';
 import asNumber from './asNumber.ts';
 import callerInputProps from './callerInputProps.ts';
 import callWithDeferredThrow from './callWithDeferredThrow.ts';
@@ -326,6 +327,7 @@ export {
   additionalKeyId,
   AdditionalPropertyKeySelect,
   acceptAttribute,
+  applyValidatorErrorTitles,
   asNumber,
   besideOptionsId,
   buttonId,

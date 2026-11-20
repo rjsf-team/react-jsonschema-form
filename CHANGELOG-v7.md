@@ -1630,6 +1630,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `isTupleSchema()`, `getOpenPrefixLength()` and `getItemsUiSchemaKey()`, and an optional `schema` argument to `getStaticItemsUiSchema()` and `getItemUiSchemaForItem()`, which read the uiSchema an item's position declares, `uiSchema.prefixItems` included ([#5900](https://github.com/rjsf-team/react-jsonschema-form/pull/5900), [#5797](https://github.com/rjsf-team/react-jsonschema-form/issues/5797))
 - Fix `getDefaultFormState()` padding a tuple to `minItems` with the defaults of the items past it at its own positions, rather than each position's ([#5900](https://github.com/rjsf-team/react-jsonschema-form/pull/5900), [#5797](https://github.com/rjsf-team/react-jsonschema-form/issues/5797))
 - Add [`getInheritedOptionUiSchema()`](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/utility-functions#getinheritedoptionuischemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype), the uiSchema an `anyOf`/`oneOf` option's field renders with, which takes the field's `ui:required` where the option leaves its own unset ([#5918](https://github.com/rjsf-team/react-jsonschema-form/pull/5918), [#5894](https://github.com/rjsf-team/react-jsonschema-form/issues/5894))
+- Add `applyValidatorErrorTitles()`, which the validator packages use to name the properties an error's message names by their `ui:title` or `title` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 
 ## @rjsf/validator-ajv8
 
@@ -1725,6 +1726,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix the error for a missing `dependentRequired` or `dependencies` property showing on the object rather than the missing field, and naming the properties by their keys rather than their `title` or `ui:title` ([#5901](https://github.com/rjsf-team/react-jsonschema-form/pull/5901), [#4402](https://github.com/rjsf-team/react-jsonschema-form/issues/4402))
 - Change `isValid()` to keep what it compiled for the last two root schemas instead of one, so changing the schema of a form with conditional or option fields no longer compiles their schemas again for each field it checks ([#5904](https://github.com/rjsf-team/react-jsonschema-form/pull/5904), [#5903](https://github.com/rjsf-team/react-jsonschema-form/issues/5903))
 - Fix the error for a missing `required`, `dependentRequired` or `dependencies` property garbling a `title` or `ui:title` that contains `$&`, `$'` or `` $` `` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
+- Change the error for a missing `required`, `dependentRequired` or `dependencies` property to find a property's title as `@rjsf/validator-ajv8` does, also reading a `title` the uiSchema holds for it and reading the schema's `title` past an empty `ui:title` ([#5902](https://github.com/rjsf-team/react-jsonschema-form/issues/5902))
 
 ## All packages
 
