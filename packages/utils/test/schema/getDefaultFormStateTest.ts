@@ -8626,6 +8626,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
           },
         );
+        it('leaves a required primitive field empty where its own if rejects its then const, on the field or in the option it shows', () => {
+          const context = { validator: testValidator };
+          const rejected: RJSFSchema = { if: { maximum: 7 }, then: { const: 10 } };
+          for (const inAllOf of [false, true]) {
+            expect(getDefaultFormState(context, { schema: rootOf(placed('number', rejected, inAllOf)) })).toStrictEqual(
+              {},
+            );
+          }
+          for (const other of [{ type: 'string' }, { type: 'string', default: 'a' }] as const) {
+            const options = rootOf({ oneOf: [{ type: 'number', ...rejected }, other] });
+            expect(getDefaultFormState(context, { schema: options })).toStrictEqual({});
+          }
+        });
         it('decides the if of an empty field by the const its branch gives where another seed of the field gives its type', () => {
           const context = { validator: testValidator };
           const withPattern = (conditional: RJSFSchema): RJSFSchema => ({
