@@ -6,9 +6,9 @@ import UpgradeGuide from '@site/src/components/UpgradeGuide';
 
 This guide lists every breaking change in v7. Work through it from top to bottom to upgrade your app. New features are in [What's new in v7](./whats-new-v7.md), and the full list of changes is in the [changelog](https://github.com/rjsf-team/react-jsonschema-form/blob/main/CHANGELOG-v7.md).
 
-The biggest changes: `Form` is now [uncontrolled](./v7/initial-form-data-replaces-form-data.md), each field gets a [presentation plan](./v7/display-label-raw-errors-hide-label-deprecated.md) that decides which component draws its label, description, help and errors, and every package ships as [ESM only](./v7/esm-only-packages.md). The first two fix many bugs with lost edits and with labels and errors drawn twice or not at all.
+The biggest changes: `Form` is now [uncontrolled](./v7/initial-form-data-replaces-form-data.md), so `initialFormData` replaces `formData`; each field gets a [presentation plan](./v7/display-label-raw-errors-hide-label-deprecated.md) that decides which component draws its label, description, help and errors; and every package ships as [ESM only](./v7/esm-only-packages.md). The first two fix many bugs with lost edits and with labels and errors drawn twice or not at all. Validation was also reworked, which fixes many validation bugs.
 
-The breaking changes are categorized as follows: Installation and build, Code and APIs, Form data, Markup and styles, and Wording and interaction, with deprecations last. Each item says what changed and what to do; open it for its Detect, Change and Verify steps. Narrow the list with the filters below by picking your theme or Core only and deselecting features you don't use.
+The breaking changes are categorized as follows: Installation and build, Deprecations, Code and APIs, Form data, Markup and styles, and Localization and accessibility. Each item says what changed and what to do; open it for its Detect, Change and Verify steps. Narrow the list with the filters below by picking your theme or Core only and deselecting features you don't use.
 
 Agents can start from [llms.txt](pathname:///migration-guides/v7/llms.txt), which lists every entry with a link to its Markdown.
 

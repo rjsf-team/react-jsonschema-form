@@ -32,7 +32,7 @@ function entry(fields) {
 }
 
 describe('byHeading', () => {
-  it('groups by the first `affects` value in heading order, deprecated entries last, skipping empty headings', () => {
+  it('groups by the first `affects` value in heading order, deprecated entries second, skipping empty headings', () => {
     const entries = [
       { id: 'old-prop', affects: ['setup'], deprecated: true },
       { id: 'defaults', affects: ['data', 'setup'], deprecated: false },
@@ -43,8 +43,8 @@ describe('byHeading', () => {
       byHeading(entries).map(({ heading, entries: listed }) => [heading.id, listed.map(({ id }) => id)]),
       [
         ['setup', ['esm', 'peer']],
-        ['data', ['defaults']],
         ['deprecated', ['old-prop']],
+        ['data', ['defaults']],
       ],
     );
   });
@@ -98,18 +98,18 @@ describe('renderOutputs', () => {
     }
   });
 
-  it("lists every entry under its first `affects` value's heading, deprecated ones under Deprecations last", () => {
+  it("lists every entry under its first `affects` value's heading, deprecated ones under Deprecations after Installation and build", () => {
     const all = /** @type {string} */ (files.get('docs/migration-guides/v7/all.md'));
     assert.deepEqual(
       [...all.matchAll(/^##{1,2} (.+)$/gm)].map(([, heading]) => heading),
       [
         'Installation and build',
         'A change',
+        'Deprecations',
+        'A change',
         'Form data',
         'A change',
         'Markup and styles',
-        'A change',
-        'Deprecations',
         'A change',
       ],
     );

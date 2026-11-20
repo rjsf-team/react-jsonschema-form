@@ -146,13 +146,13 @@ const AFFECTS = [
   },
   {
     id: 'experience',
-    heading: 'Wording and interaction',
+    heading: 'Localization and accessibility',
     line: 'Recheck label and button text, accessible names, focus, keyboard use and when errors appear.',
   },
 ];
 
 /**
- * The heading a `deprecated: true` entry is listed under instead of its `affects` heading, after all of them.
+ * The heading a `deprecated: true` entry is listed under instead of its `affects` heading, right after the first.
  *
  * @type {Heading}
  */
@@ -162,8 +162,8 @@ const DEPRECATIONS = {
   line: 'Still works in this version; goes in a later major version.',
 };
 
-/** Every heading in list order: the `affects` headings, then Deprecations. */
-const HEADINGS = [...AFFECTS, DEPRECATIONS];
+/** Every heading in list order: Installation and build, then Deprecations, then the other `affects` headings. */
+const HEADINGS = [AFFECTS[0], DEPRECATIONS, ...AFFECTS.slice(1)];
 
 /**
  * The id of the heading an entry is listed under: Deprecations for a deprecated entry, else its first `affects` value.

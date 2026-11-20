@@ -475,8 +475,8 @@ describe('the page data', () => {
       ),
       [
         ['second-change', ['setup'], false, []],
-        ['first-change', ['data', 'setup'], false, ['second-change']],
         ['third-change', ['setup'], true, []],
+        ['first-change', ['data', 'setup'], false, ['second-change']],
       ],
     );
     assert.deepEqual(guide.anchors, { 'old-section': ['second-change'] });

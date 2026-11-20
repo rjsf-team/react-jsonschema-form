@@ -215,7 +215,7 @@ const Row = memo(function Row({
             onClick={() => onToggle(entry.id)}
           >
             <span className={styles.marker} aria-hidden='true'>
-              {isOpen ? '▾' : '▸'}
+              ▸
             </span>
             {entry.title}
           </button>
@@ -399,110 +399,114 @@ function FilteredGuide({ version, guide }: { version: string; guide: Guide }): R
       )}
 
       <form className={styles.filters} onSubmit={(event) => event.preventDefault()}>
-        <div className={styles.bar} role='group' aria-label='Filter the list'>
-          <select
-            className={styles.select}
-            aria-label='Theme'
-            value={filters.theme}
-            onChange={(event) => update({ ...filters, theme: event.target.value })}
-          >
-            <option value=''>All themes</option>
-            <option value={CORE_ONLY}>Core only</option>
-            {themes.map((pkg) => (
-              <option key={pkg.id} value={pkg.short}>
-                {`Theme: ${pkg.removed ? `${pkg.short} (removed)` : pkg.short}`}
-              </option>
-            ))}
-          </select>
-          <span className={styles.barLabel}>Customized:</span>
-          {chips.map((use) => (
-            <button
-              key={use.id}
-              type='button'
-              className={styles.chip}
-              aria-pressed={!filters.without.includes(use.id)}
-              title={plainText(use.detect)}
-              onClick={() => update({ ...filters, without: toggled(filters.without, use.id) })}
+        <div className={styles.panel}>
+          <div className={styles.bar} role='group' aria-label='Filter the list'>
+            <select
+              className={styles.select}
+              aria-label='Theme'
+              value={filters.theme}
+              onChange={(event) => update({ ...filters, theme: event.target.value })}
             >
-              {use.chip}
-            </button>
-          ))}
-          <span className={styles.barEnd}>
-            <button
-              type='button'
-              className={styles.linkButton}
-              aria-expanded={moreOpen}
-              aria-controls='upgrade-guide-more'
-              onClick={() => setMoreOpen(!moreOpen)}
-            >
-              More filters
-            </button>
-            {isNarrowed(filters) && (
-              <button type='button' className={styles.linkButton} onClick={() => update(NO_FILTERS)}>
-                Clear
+              <option value=''>All themes</option>
+              <option value={CORE_ONLY}>Core only</option>
+              {themes.map((pkg) => (
+                <option key={pkg.id} value={pkg.short}>
+                  {`Theme: ${pkg.removed ? `${pkg.short} (removed)` : pkg.short}`}
+                </option>
+              ))}
+            </select>
+            <span className={styles.barLabel}>Customized:</span>
+            {chips.map((use) => (
+              <button
+                key={use.id}
+                type='button'
+                className={styles.chip}
+                aria-pressed={!filters.without.includes(use.id)}
+                title={plainText(use.detect)}
+                onClick={() => update({ ...filters, without: toggled(filters.without, use.id) })}
+              >
+                {use.chip}
               </button>
-            )}
-          </span>
+            ))}
+            <span className={styles.barEnd}>
+              <button
+                type='button'
+                className={styles.linkButton}
+                aria-expanded={moreOpen}
+                aria-controls='upgrade-guide-more'
+                onClick={() => setMoreOpen(!moreOpen)}
+              >
+                {moreOpen ? 'Less filters' : 'More filters'}
+              </button>
+              {isNarrowed(filters) && (
+                <button type='button' className={styles.linkButton} onClick={() => update(NO_FILTERS)}>
+                  Clear
+                </button>
+              )}
+            </span>
+          </div>
+          {moreOpen && (
+            <div id='upgrade-guide-more' className={styles.more}>
+              <label className={styles.picker}>
+                Validator
+                <select
+                  value={filters.validator}
+                  onChange={(event) => update({ ...filters, validator: event.target.value })}
+                >
+                  <option value=''>All validators</option>
+                  {validators.map((pkg) => (
+                    <option key={pkg.id} value={pkg.short}>
+                      {pkg.removed ? `${pkg.id} (removed in ${version})` : pkg.id}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <Checkboxes
+                legend='Code'
+                choices={more}
+                isChecked={(id) => !filters.without.includes(id)}
+                onToggle={(id) => update({ ...filters, without: toggled(filters.without, id) })}
+              />
+              <Checkboxes
+                legend='Schemas'
+                choices={guide.schema}
+                isChecked={(id) => !filters.noSchema.includes(id)}
+                onToggle={(id) => update({ ...filters, noSchema: toggled(filters.noSchema, id) })}
+              />
+              {others.length > 0 && (
+                <Checkboxes
+                  legend='Theme authors'
+                  choices={others.map((pkg) => ({
+                    id: pkg.short,
+                    label: pkg.id,
+                    detect: 'For authors of themes outside this repository.',
+                  }))}
+                  isChecked={(id) => filters.other.includes(id)}
+                  onToggle={(id) => update({ ...filters, other: toggled(filters.other, id) })}
+                />
+              )}
+              <details className={styles.meanings}>
+                <summary>What do these mean?</summary>
+                <Meanings legend='Customized' choices={chips} />
+                <Meanings legend='Code' choices={more} />
+                <Meanings legend='Schemas' choices={guide.schema} />
+              </details>
+            </div>
+          )}
         </div>
+        <label className={styles.searchLabel}>
+          Filter by keyword
+          <input
+            type='search'
+            className={styles.search}
+            placeholder='Title, description or id'
+            value={filters.search}
+            onChange={(event) => update({ ...filters, search: event.target.value })}
+          />
+        </label>
         <p className={styles.barHint} role='status'>
           <InlineMarkdown text={describeFilters(filters, guide)} />
         </p>
-        {moreOpen && (
-          <div id='upgrade-guide-more' className={styles.more}>
-            <label className={styles.picker}>
-              Validator
-              <select
-                value={filters.validator}
-                onChange={(event) => update({ ...filters, validator: event.target.value })}
-              >
-                <option value=''>All validators</option>
-                {validators.map((pkg) => (
-                  <option key={pkg.id} value={pkg.short}>
-                    {pkg.removed ? `${pkg.id} (removed in ${version})` : pkg.id}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <Checkboxes
-              legend='Code'
-              choices={more}
-              isChecked={(id) => !filters.without.includes(id)}
-              onToggle={(id) => update({ ...filters, without: toggled(filters.without, id) })}
-            />
-            <Checkboxes
-              legend='Schemas'
-              choices={guide.schema}
-              isChecked={(id) => !filters.noSchema.includes(id)}
-              onToggle={(id) => update({ ...filters, noSchema: toggled(filters.noSchema, id) })}
-            />
-            {others.length > 0 && (
-              <Checkboxes
-                legend='Theme authors'
-                choices={others.map((pkg) => ({
-                  id: pkg.short,
-                  label: pkg.id,
-                  detect: 'For authors of themes outside this repository.',
-                }))}
-                isChecked={(id) => filters.other.includes(id)}
-                onToggle={(id) => update({ ...filters, other: toggled(filters.other, id) })}
-              />
-            )}
-            <details className={styles.meanings}>
-              <summary>What do these mean?</summary>
-              <Meanings legend='Customized' choices={chips} />
-              <Meanings legend='Code' choices={more} />
-              <Meanings legend='Schemas' choices={guide.schema} />
-            </details>
-          </div>
-        )}
-        <input
-          type='search'
-          className={styles.search}
-          aria-label='Search the changes'
-          placeholder='Search titles, descriptions and ids'
-          value={filters.search}
-          onChange={(event) => update({ ...filters, search: event.target.value })}
-        />
       </form>
 
       <div className={styles.tools}>

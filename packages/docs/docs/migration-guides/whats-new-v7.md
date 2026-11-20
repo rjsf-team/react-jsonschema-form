@@ -6,6 +6,22 @@ description: The main features react-jsonschema-form v7 adds, with links to thei
 
 This page lists the main features v7 adds for a v6 user, each with a link to its documentation. The breaking changes and the steps to upgrade are in the [7.x upgrade guide](./v7.x%20upgrade%20guide.mdx).
 
+## A different `@rjsf/core`
+
+`@rjsf/core` in v7 is very different from v6's.
+
+- It no longer renders Bootstrap 3 markup. `@rjsf/bootstrap3` keeps that markup for apps that still style it; it is deprecated and will be removed in v8. See [Supported themes](../usage/themes.md#supported-themes) and [Bootstrap 3 markup moved from core to @rjsf/bootstrap3](./v7/bootstrap-3-markup-moved-to-bootstrap3.md).
+- Its markup is plain and framework-neutral. Two optional stylesheets style it: `rjsf.css` lays the form out and `rjsf-theme.css` gives it a default look. The `classMap` prop sets or extends the class of each element core renders, so core's markup can be styled with Tailwind. See [Customizing with other frameworks](../usage/themes.md#customizing-with-other-frameworks) and [classMap](../api-reference/form-props.md#classmap).
+- `Form` is a function component and is uncontrolled: `initialFormData` seeds it, and it keeps its own data from then on. See [The formData prop is deprecated in favor of initialFormData](./v7/initial-form-data-replaces-form-data.md).
+
+## Presentation for theme builders
+
+Before rendering a field, the form now computes its presentation plan: whether the `FieldTemplate` or the widget or field draws each of the label, description, help and errors, and which ids and ARIA attributes tie them to the control. A theme reads the plan instead of working out these parts itself. See [Presentation](../advanced-customization/custom-themes.md#presentation).
+
+- A theme declares a `ThemePresentation`: which parts its fields and widgets draw themselves, how a label the template draws reaches the control (`labelledBy`), and the order its `FieldTemplate` draws the description and help in (`fieldTemplateOrder`), so a screen reader announces them in the order they appear. [`mergeThemePresentation()`](../api-reference/utility-functions.md#mergethemepresentation) layers it over core's, and the `Form`'s [`presentation`](../api-reference/form-props.md#presentation) prop over the theme's, so a custom widget or field can declare the parts it draws.
+- `@rjsf/utils` adds helpers that read the plan, among them [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation), [`widgetAriaProps()`](../api-reference/utility-functions.md#widgetariaprops), [`getControlAttributes()`](../api-reference/utility-functions.md#getcontrolattributes) and `getGroupAttributes()`, which give a control or a group of radios or checkboxes its `aria-labelledby`, `aria-describedby` and `aria-invalid`, and `templateDrawsLabel()`, `templateLabelFor()`, `templateMarksRequired()` and `hasWidgetErrors()`, which tell a template what to draw.
+- `@rjsf/snapshot-tests` adds contract tests a theme can run, such as `presentationContractTests()`, `checkboxLabelTests()`, `controlNameTests()` and `requiredCueTests()`, which check that each control is named and described once and each part is drawn exactly once.
+
 ## Working with form data
 
 - A React Server Component, such as a Next.js App Router page, can import and render `Form` directly, without a `'use client'` module of your own. See [Server components](../01-quickstart.md#server-components).
@@ -25,12 +41,6 @@ This page lists the main features v7 adds for a v6 user, each with a link to its
 - When `propertyNames` lists the allowed key names, each additional property's key is a dropdown of the names still free. See [Constraining key names with `propertyNames`](../json-schema/objects.md#constraining-key-names-with-propertynames).
 - `additionalPropertiesWhenAbsent="allow"` reads an object that names no `additionalProperties` as taking extra keys, as JSON Schema does, and gives it an add button. See [Objects naming no `additionalProperties`](../json-schema/objects.md#objects-naming-no-additionalproperties).
 - `ui:options.optgroups` groups a select's options under headings, in `@rjsf/core` and every theme. See [optgroups](../api-reference/uiSchema.md#optgroups).
-
-## Styling and themes
-
-- `@rjsf/core` ships two optional stylesheets: `rjsf.css` lays the form out and `rjsf-theme.css` gives it a default look. The `classMap` prop sets or extends the class of each element core renders, so core's markup can be styled with Tailwind. See [Customizing with other frameworks](../usage/themes.md#customizing-with-other-frameworks) and [classMap](../api-reference/form-props.md#classmap).
-- The `presentation` prop, and a theme's `presentation`, declare which of a field's label, description, errors and help a custom widget or field draws itself, and the form's templates leave those parts to it. See [Presentation](../advanced-customization/custom-themes.md#presentation).
-- `@rjsf/bootstrap3` keeps the Bootstrap 3 markup `@rjsf/core` rendered through v6, for apps that still style it. It is deprecated and will be removed in v8. See [Supported themes](../usage/themes.md#supported-themes).
 
 ## TypeScript
 

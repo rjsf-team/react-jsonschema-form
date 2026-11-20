@@ -6,15 +6,18 @@
   margin: 0;
 }
 
+.panel {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-color-emphasis-100);
+}
+
 .bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.25rem;
   padding: 0.45rem 0.5rem;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: var(--ifm-global-radius);
-  background: var(--ifm-color-emphasis-100);
   font-size: 0.84rem;
 }
 
@@ -80,7 +83,7 @@
 }
 
 .barHint {
-  margin: 0.35rem 0 0.25rem;
+  margin: 0.35rem 0 0.75rem;
   color: var(--ifm-color-emphasis-700);
   font-size: 0.9em;
 }
@@ -89,11 +92,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-top: 0.5rem;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: var(--ifm-global-radius);
-  background: var(--ifm-color-emphasis-100);
+  border-top: 1px solid var(--ifm-color-emphasis-300);
   font-size: 0.9rem;
 }
 
@@ -143,9 +143,17 @@
   cursor: pointer;
 }
 
+.searchLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 1rem 0 0;
+  font-weight: var(--ifm-font-weight-semibold);
+}
+
 .search {
   width: 100%;
-  margin: 1rem 0 0.5rem;
+  font-weight: normal;
   padding: 0.45rem 0.75rem;
   border: 1px solid var(--ifm-color-emphasis-400);
   border-radius: var(--ifm-global-radius);
@@ -243,7 +251,7 @@
 .toggle {
   display: flex;
   gap: 0.5rem;
-  align-items: baseline;
+  align-items: center;
   padding: 0;
   border: 0;
   background: none;
@@ -255,7 +263,17 @@
 }
 
 .marker {
-  font-size: 0.8em;
+  flex: none;
+  width: 1.25rem;
+  color: var(--ifm-color-primary);
+  font-size: 1.5rem;
+  line-height: 1;
+  text-align: center;
+  transition: transform 0.15s ease;
+}
+
+.toggle[aria-expanded='true'] .marker {
+  transform: rotate(90deg);
 }
 
 .description {
