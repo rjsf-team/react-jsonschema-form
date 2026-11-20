@@ -1001,6 +1001,18 @@ describe('ui:required enforcement', () => {
       expect(await submitted(node, onSubmit)).toBe(false);
     });
 
+    it('blocks a submit with a field empty that an option of an option shows in an `additionalProperties` entry holding `null`, which renders its fields with no control', async () => {
+      const entry: RJSFSchema = { type: ['object', 'null'], properties: { a: { type: 'string' } } };
+      const { node, onSubmit } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { anyOf: [{ anyOf: [entry] }] } },
+        uiSchema: { ...odc, additionalProperties: { anyOf: [{ anyOf: [{ a: { 'ui:required': true } }] }] } },
+        initialFormData: { extra: null },
+      });
+      expect(markedRequired(node, 'root_extra_a')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+      expect(errorListMessages(node)).toEqual([".extra.a must have required property 'a'"]);
+    });
+
     it('reports no field of an option shown as an Optional Data Control below an option offering options of its own', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: p({ anyOf: [{ type: 'object', anyOf: [shown, other] }, { type: 'number' }] }),

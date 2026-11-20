@@ -262,14 +262,16 @@ function rendersArrayWidget<T, S extends StrictRJSFSchema, F extends FormContext
 
 /** The field an option walked as a node of its own is shown by, which has reported an empty value already where its own
  * `ui:required` asks for one, asks for an answer where the option it shows marks its label required, numbers the
- * option's type selectors below the ones it renders at the path, and lists the places of the option lists offered above
- * the option at the path
+ * option's type selectors below the ones it renders at the path, lists the places of the option lists offered above
+ * the option at the path, and is an `additionalProperties` entry, which turns off the Optional Data Controls of every
+ * option it shows at its path
  */
 interface ShowingField {
   uiRequired: boolean;
   asksAnswer: boolean;
   typeSelectorsAbove: number;
   listsAbove: (string | undefined)[];
+  isEntry: boolean;
 }
 
 /** Whether the field for `schema` renders the options it offers in turn as a field of its own: not a select of
@@ -348,8 +350,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // visible for the user to fill in or correct either. ObjectField and ArrayField render the control, and hide their
   // fields whenever `!isFormDataAvailable(formData)`, which is also true for `null`. MultiSchemaField renders
   // no control of its own: it renders the selected option as a field of its own, with the option's uiSchema, so that
-  // field is gated. An `additionalProperties` entry and the option it shows have no control, whatever the uiSchema
-  // says.
+  // field is gated. An `additionalProperties` entry and the options it shows at its path have no control, whatever the
+  // uiSchema says.
   const xxxOf = getXxxOfOptions<S>(resolvedSchema);
   // The form keeps one pick per option list at a path, by the list's place (core's `optionListKey()`), so a list offered
   // again below itself at the path shows the same option again, a `$ref` loop the form never finishes rendering
@@ -379,8 +381,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       globalUiOptions,
       rootSchema,
     );
-  const hidesControlled =
-    path.length > 0 && !isFormDataAvailable(formData) && !hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
+  const isEntry = showingField?.isEntry ?? hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
+  const hidesControlled = path.length > 0 && !isFormDataAvailable(formData) && !isEntry;
   if (
     hidesControlled &&
     // An object node also renders its own ObjectField beside the option (see `getFieldComponent()` in `SchemaField`),
@@ -467,6 +469,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       asksAnswer,
       typeSelectorsAbove: optionTypeSelectorsAbove,
       listsAbove: [...listsAbove, listPlace],
+      isEntry,
     });
     // An object renders its own properties beside the option, which are walked below
     if (!option) {

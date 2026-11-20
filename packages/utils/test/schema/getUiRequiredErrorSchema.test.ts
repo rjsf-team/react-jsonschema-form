@@ -1028,6 +1028,18 @@ describe('getUiRequiredErrorSchema()', () => {
         ).toEqual(['.extra.a']);
       });
 
+      it('fires for a field of an option the option it shows offers in turn', () => {
+        expect(
+          errorsFor(
+            { anyOf: [{ anyOf: [object] }] },
+            { anyOf: [{ anyOf: [{ a: { 'ui:required': true } }] }] },
+            {
+              extra: null,
+            },
+          ),
+        ).toEqual(['.extra.a']);
+      });
+
       it('does not fire below an object declared inside it, which keeps its control', () => {
         expect(
           errorsFor(
