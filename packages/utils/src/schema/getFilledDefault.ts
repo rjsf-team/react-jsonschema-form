@@ -236,16 +236,17 @@ function writtenValueOf(fill: FieldFill): unknown {
 const ancestorDeclarations = new KeyedMemo<boolean>();
 
 /** Whether an ancestor of the field `fill` was made for declares a `default` or a `const` that could hand it a value,
- * read off the schemas only, so no fill is made for a field no ancestor's could give one
+ * read off the schemas only, so no fill is made for a field no ancestor's could give one. A fill `childFillOf()` didn't
+ * make, at the top of the chain, hands down what it holds
  */
 function ancestorsDeclare(fill: FieldFill): boolean {
   const origin = origins.get(fill);
-  return (
-    origin !== undefined &&
-    ancestorDeclarations.get(
-      [fill],
-      () => handsValue(origin.parentSchema, origin.rootSchema) || ancestorsDeclare(origin.parentFill),
-    )
+  if (origin === undefined) {
+    return fill.inheritedDefault !== undefined || fill.inheritedConst !== undefined;
+  }
+  return ancestorDeclarations.get(
+    [fill],
+    () => handsValue(origin.parentSchema, origin.rootSchema) || ancestorsDeclare(origin.parentFill),
   );
 }
 

@@ -28,8 +28,10 @@ import {
   getRenderedOptionSchema,
   getSchemaType,
   getStaticItemsUiSchema,
+  getSchemaOwnTypes,
   getUiOptions,
   getXxxOfOptions,
+  guessType,
   GUESSED_TYPE_FLAG,
   hasSchemaMarker,
   isConstantOptionList,
@@ -786,6 +788,16 @@ function fillSchemaOf<S extends StrictRJSFSchema>(layers: readonly S[]): S {
   return { ...fieldSchemaOf(layers), ...ownDefault };
 }
 
+/** Whether `schema` can hold `value` by its type: one of the types it declares is the value's, or it declares none */
+function holdsValueOfType<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
+  const types = getSchemaOwnTypes<S>(schema);
+  if (value === undefined || types === undefined) {
+    return true;
+  }
+  const type = guessType(value);
+  return types.includes(type) || (type === 'number' && types.includes('integer'));
+}
+
 /** Whether a field rendered with `layers` declares a `default` the defaults fill an empty row of it with: one a layer
  * declares, or one of the options the innermost layer offers, as `sanitizeDataForNewSchema()` reads a cleared row
  */
@@ -916,12 +928,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   };
   // The edited value and the values holding it are the user's
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
-    // The fill picks the option of a field holding no data by the field's own `default`, not by the one `Form` shows,
-    // and writes that option's `default`, so the field's default is read from its own layer, options and all, for the
-    // fill to pick as it does. A property's value is judged by the default the defaults write into it, see
-    // `FieldFill.isProperty`
-    const [oldJudged] = oldLayers;
-    const [newJudged] = newLayers;
+    // A value is judged by the default of the option it shows. A clear is judged as the fill fills a field holding no
+    // data, which picks its option by the field's own `default` and writes that option's, so it is read from the
+    // field's own layer, options and all, for the fill to pick as it does, and so is a value whose shown option can't
+    // hold the field's own `default`, which the fill would pick no option for. A property's value is judged by the
+    // default the defaults write into it, see `FieldFill.isProperty`. A collapsed `$ref` cycle has no layers, so it is
+    // read as the empty schema its fill schema is
+    const judgedOf = (layers: readonly S[], fillSchema: S) =>
+      layers.length > 0 && (isClear || !holdsValueOfType(fillSchema, layers[0].default)) ? layers[0] : fillSchema;
+    const oldJudged = judgedOf(oldLayers, oldFillSchema);
+    const newJudged = judgedOf(newLayers, newFillSchema);
     // The form's first fill writes a field's `ui:initialValue` in place of the default it inherits, so an item the
     // uiSchema gives one holds none of its array's default on either side, see `oldFillOutOf()` for the value it filled
     const isInitialItem =

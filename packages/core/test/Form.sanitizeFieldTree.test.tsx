@@ -4551,6 +4551,20 @@ describe('judging a field by the value the fill writes for it (#5825)', () => {
     expect(utils).toEqual({ w: 'k' });
   });
 
+  it("swaps a value holding the default of the option it shows for that option's new one", () => {
+    const pWith = (d: number): RJSFSchema => ({
+      type: 'number',
+      anyOf: [
+        { minimum: 0, default: 1 },
+        { maximum: -1, default: d },
+      ],
+    });
+    const property = (d: number): RJSFSchema => ({ type: 'object', properties: { p: pWith(d) } });
+    const item = (d: number): RJSFSchema => ({ type: 'object', properties: { l: { type: 'array', items: pWith(d) } } });
+    expect(sanitizedBoth(property(-5), property(-6), { p: -5 }).form).toEqual({ p: -6 });
+    expect(sanitizedBoth(item(-5), item(-6), { l: [-5] }).form).toEqual({ l: [-6] });
+  });
+
   it("keeps a clear where only the default changes beneath an ancestor's const, which the fill writes (#5819)", () => {
     const schemaWith = (d: string): RJSFSchema => ({
       type: 'object',

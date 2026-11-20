@@ -714,4 +714,30 @@ describe('getFilledDefault() reads what the fill writes', () => {
     const fill = childFillOf(descendantWins, root, root, {}, 'c');
     expect(getFilledDefault(descendantWins, { type: 'string', default: 'resolved' }, root, fill)).toBe('object');
   });
+
+  it('reads a child of a fill the caller made by what that fill hands down', () => {
+    const root: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+    const fill = childFillOf(descendantWins, root, root, { inheritedDefault: { a: 'x' } }, 'a');
+    expect(getFilledDefault(descendantWins, { type: 'string' }, root, fill)).toBe('x');
+    const constFill = childFillOf(descendantWins, root, root, { inheritedConst: { a: 'c' } }, 'a');
+    expect(getFilledDefault(descendantWins, { type: 'string' }, root, constFill)).toBe('c');
+  });
+
+  it('reads no default for a tuple item no default reaches, though an ancestor declares one', () => {
+    const tuple: RJSFSchema = {
+      type: 'array',
+      prefixItems: [{ type: 'object', properties: { a: { type: 'string' } } }, { type: 'boolean' }],
+    };
+    const root: RJSFSchema = { type: 'object', default: {}, required: ['t'], properties: { t: tuple } };
+    const tupleFill = childFillOf(descendantWins, root, root, {}, 't');
+    expect(childFillOf(descendantWins, tuple, root, tupleFill, 0).inheritedDefault).toBeUndefined();
+    expect(
+      getFilledDefault(
+        descendantWins,
+        { type: 'boolean' },
+        root,
+        childFillOf(descendantWins, tuple, root, tupleFill, 1),
+      ),
+    ).toBeUndefined();
+  });
 });

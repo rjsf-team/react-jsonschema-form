@@ -1622,6 +1622,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     takesValueOf<S>(schema, defaults);
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
+  let isTupleBuilt = false;
   // A collapsed field keeps its own keywords, but selecting an option would plan it again past the collapse. A list the
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
@@ -1680,6 +1681,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
       // option, which it is met into below, so its defaults are those of the option as rendered
       // A `false` position allows no item, so the positions at and past it are left unfilled
+      isTupleBuilt = true;
       defaults = Array.from({ length: getOpenPrefixLength<S>(schema) }, (_item, idx) =>
         foldChild<T, S, F>(
           context,
@@ -1852,7 +1854,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     isWholeValue,
     preferParentDefaults && defaults === null,
   );
-  props.onHandDown?.(defaults, givenConst);
+  // A tuple built from its items' own defaults hands them only what it inherited, as it folded them with, so what they
+  // compute for themselves isn't read as a default an ancestor gave them
+  props.onHandDown?.(isTupleBuilt ? parentDefaults : defaults, givenConst);
   const defaultBasedOnSchemaType = typeDefaults<T, S, F>(
     context,
     view,
