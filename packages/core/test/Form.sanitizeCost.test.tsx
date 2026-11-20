@@ -10,12 +10,19 @@ import { handleOf } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
-// Counted, so a test can count the fills the sanitize makes to judge a field by its default
+// Counted, so a test can count the fills the sanitize makes to judge a field by its default, and those of the whole form
 const fieldFills = vi.hoisted(() => ({ count: 0 }));
+const formFills = vi.hoisted(() => ({ count: 0 }));
 vi.mock(import('../../utils/src/schema/getDefaultFormState.ts'), async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
+    default: ((...args: Parameters<typeof actual.default>) => {
+      if (args[1].schema === args[1].rootSchema) {
+        formFills.count += 1;
+      }
+      return actual.default(...args);
+    }) as typeof actual.default,
     fieldFillOf: <S extends StrictRJSFSchema, F extends FormContextType>(
       context: SchemaContext<S, F>,
       schema: S,
@@ -83,5 +90,47 @@ describe('the fills the sanitize of a deep form makes', () => {
 
     // The options decide from data, so each is filled by itself on each side, as many times whatever their depth
     expect(fieldFills.count).toBeLessThanOrEqual(10);
+  });
+
+  it.each<{ held: string; schema: (form: RJSFSchema) => RJSFSchema }>([
+    { held: 'the form', schema: (form) => form },
+    {
+      held: 'a definition the form refers to',
+      schema: (form) => ({ $ref: '#/definitions/form', definitions: { form } }),
+    },
+    {
+      // An `id` in data a schema holds names no resource that could rebase the `$ref`
+      held: 'a definition the form refers to, beside examples holding an `id`',
+      schema: (form) => ({ $ref: '#/definitions/form', definitions: { form }, examples: [{ id: 'x' }] }),
+    },
+  ])('fills the form a fixed number of times for a switch leaving many keys in $held', async ({ schema }) => {
+    const properties: Record<string, RJSFSchema> = {};
+    const left: Record<string, RJSFSchema> = {};
+    const initialFormData: Record<string, string> = { kind: 's' };
+    for (let index = 0; index < 50; index += 1) {
+      properties[`s${index}`] = { type: 'string', default: 'd' };
+      left[`a${index}`] = { type: 'string' };
+      initialFormData[`a${index}`] = `v${index}`;
+    }
+    const form: RJSFSchema = {
+      type: 'object',
+      properties,
+      additionalProperties: true,
+      oneOf: [
+        { title: 'S', properties: { kind: { const: 's' }, ...left } },
+        { title: 'T', properties: { kind: { const: 't' } } },
+      ],
+    };
+    const ref = createRef<FormRef>();
+    const { container } = render(
+      <Form ref={ref} schema={schema(form)} validator={validator} initialFormData={initialFormData} />,
+    );
+    formFills.count = 0;
+    await user.selectOptions(container.querySelector('select')!, 'T');
+
+    // Each key the switch leaves stays as an extra key, judged by one fill of the form without the object's keys, as
+    // no condition reads them, rather than by one fill per key
+    expect(handleOf(ref).getFormData()).toMatchObject({ ...initialFormData, kind: 't' });
+    expect(formFills.count).toBeLessThanOrEqual(3);
   });
 });
