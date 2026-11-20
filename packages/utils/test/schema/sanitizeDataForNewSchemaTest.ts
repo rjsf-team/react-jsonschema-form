@@ -10,6 +10,7 @@ import {
   setByPath,
 } from '../../src/index.ts';
 import { FIRST_ONE_OF, oneOfData, oneOfSchema, SECOND_ONE_OF } from '../testUtils/testData.ts';
+import { check } from './graph/miniValidator.ts';
 import type { TestValidatorType } from './types.ts';
 
 export default function sanitizeDataForNewSchemaTest(testValidator: TestValidatorType) {
@@ -40,11 +41,16 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, oldSchema, { p: 'a' }),
       ).toBeUndefined();
     });
-    it('returns input formData when the old schema is not an object', () => {
+    // A key the data lacks takes what the fill writes into it, the defaults an option's properties declare included
+    const oneOfDataSeeded = {
+      ...oneOfData,
+      inner_spec: { ...oneOfData.inner_spec, inner_one_of: { name: 'inner_first_choice' } },
+    };
+    it('returns input formData, a key it lacks seeded, when the old schema is not an object', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
       expect(
         sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, undefined, oneOfData),
-      ).toEqual(oneOfData);
+      ).toEqual(oneOfDataSeeded);
     });
     it('returns an array it leaves unchanged as it is', () => {
       const arraySchema: RJSFSchema = { type: 'array', items: { type: 'string' } };
@@ -78,10 +84,10 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         foo: 'x',
       });
     });
-    it('returns input formData when the old schema does not contain a "property" object', () => {
+    it('returns input formData, a key it lacks seeded, when the old schema does not contain a "property" object', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
       expect(sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, {}, oneOfData)).toEqual(
-        oneOfData,
+        oneOfDataSeeded,
       );
     });
     it('restores the default for an undefined property that is newly defined by the new schema', () => {
@@ -679,13 +685,11 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           },
         },
       };
-      expect(
-        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
-          enumField: 'oldData',
-        }),
-      ).toEqual({
-        enumField: 'otherData',
-      });
+      // The fill picks the option the default matches, which the stub validator answers as a real one does
+      testValidator.setReturnValues({ isValid: (schema, data, root) => check(schema, data, root) });
+      const sanitized = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { enumField: 'oldData' });
+      testValidator.setReturnValues({ isValid: [] });
+      expect(sanitized).toEqual({ enumField: 'otherData' });
     });
     it('keeps a value an option that is not a constant accepts', () => {
       const oldSchema: RJSFSchema = { type: 'object', properties: { k: { const: 'a' }, email: { type: 'string' } } };
@@ -1381,6 +1385,13 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         [null],
       ],
       [
+        'empties a null item whose new position declares a default through one of its options',
+        { type: 'array', items: { type: 'number' } },
+        { type: 'array', items: { type: 'string', oneOf: [{ default: 'x' }] } },
+        [undefined],
+        false,
+      ],
+      [
         'drops a null item whose new position declares no default',
         { type: 'array', items: { type: 'number' } },
         { type: 'array', items: { type: 'string' } },
@@ -1882,6 +1893,15 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         }),
       ).toStrictEqual({ value: { x: 1 } });
     });
+    it("swaps a value an object's anyOf/oneOf option default filled in for the option's new default", () => {
+      const holder = (b: string): RJSFSchema => ({
+        type: 'object',
+        properties: { a: { type: 'object', properties: { b: { type: 'string' } }, oneOf: [{ default: { b } }] } },
+      });
+      expect(schemaUtils.sanitizeDataForNewSchema(holder('y'), holder('x'), { a: { b: 'x' } })).toStrictEqual({
+        a: { b: 'y' },
+      });
+    });
     it('swaps the old default of a scalar, prefix or array item for the new one, and keeps a readOnly or object one', () => {
       const items = (extra: RJSFSchema): RJSFSchema => ({ type: 'array', items: { type: 'string', ...extra } });
       expect(
@@ -2314,7 +2334,6 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       it.each<[string, RJSFSchema, RJSFSchema]>([
         ['a type', { const: 'x' }, { type: 'string', const: 'x' }],
         ['a const', { type: 'string' }, { type: 'string', const: 'x' }],
-        ['a default', { type: 'string', const: 'x', default: 'o' }, { type: 'string', const: 'x', default: 'n' }],
         ['an enum', { type: 'string', enum: ['a', 'b'] }, { type: 'string', enum: ['c', 'd'] }],
         ['a default nothing rejects it by', { type: 'string', default: 'a' }, { type: 'string', default: 'b' }],
         [
@@ -2331,6 +2350,14 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         expect(
           schemaUtils.sanitizeDataForNewSchema(objectWith(newK), objectWith(oldK), { k: undefined }),
         ).toStrictEqual({});
+      });
+      it('is kept where the data holds it as undefined and the new schema changes only a default its const wins over', () => {
+        // The fill writes the `const` on both sides, so the clear's constraints are alike (#5819)
+        const oldK: RJSFSchema = { type: 'string', const: 'x', default: 'o' };
+        const newK: RJSFSchema = { type: 'string', const: 'x', default: 'n' };
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(objectWith(newK), objectWith(oldK), { k: undefined }),
+        ).toStrictEqual({ k: undefined });
       });
       it.each<[string, RJSFSchema, RJSFSchema]>([
         ['const', { type: 'string', const: 'x' }, { type: 'string', const: 'x' }],

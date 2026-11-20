@@ -3701,9 +3701,10 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
   // An item is filled out by its array's `required`, and written whatever `emptyObjectFields` says of a property
   it.each<{ name: string; behavior: DefaultFormStateBehavior; expected: unknown }>([
     {
+      // The item holding its array's old default at its index takes the new one, as an item does in any array (#5826)
       name: 'keeps the padding an optional array never filled',
       behavior: { arrayMinItems: { populate: 'requiredOnly' } },
-      expected: ['x', 'd'],
+      expected: ['y', 'd'],
     },
     {
       name: 'drops the padding its old default was filled out to',
@@ -4500,4 +4501,89 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       expect(handleOf(ref).getFormData()).toEqual({ x: 'c' });
     },
   );
+});
+
+describe('judging a field by the value the fill writes for it (#5825)', () => {
+  /** What `Form` and `sanitizeDataForNewSchema()` each make of `data` once the schema changes from `from` to `to` */
+  const sanitizedBoth = (from: RJSFSchema, to: RJSFSchema, data: Record<string, unknown>) => {
+    const ref = createRef<FormRef<Record<string, unknown>>>();
+    const { rerender } = render(<Form ref={ref} schema={from} validator={validator} initialFormData={data} />);
+    rerender(<Form ref={ref} schema={to} validator={validator} initialFormData={data} />);
+    return {
+      form: handleOf(ref).getFormData(),
+      utils: createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, from, data),
+    };
+  };
+
+  it("swaps an array item holding its array's old default at its index for the new one (#5826)", () => {
+    const listWith = (d: string[]): RJSFSchema => ({
+      type: 'object',
+      properties: { list: { type: 'array', items: { type: 'string' }, default: d } },
+    });
+    const { form, utils } = sanitizedBoth(listWith(['x', 'w']), listWith(['y', 'w']), { list: ['x', 'w', 'k'] });
+    expect(form).toEqual({ list: ['y', 'w', 'k'] });
+    expect(utils).toEqual({ list: ['y', 'w', 'k'] });
+  });
+
+  it.each<{ name: string; o: (v: number) => RJSFSchema }>([
+    {
+      name: "a key its object's default doesn't name",
+      o: (v) => ({
+        type: 'object',
+        default: { x: 1 },
+        properties: {
+          x: { type: 'number' },
+          c: { type: 'object', default: { a: v }, properties: { a: { type: 'number' } } },
+        },
+      }),
+    },
+    {
+      name: 'a property of an object declaring no default',
+      o: (v) => ({ type: 'object', properties: { a: { type: 'number', default: v } } }),
+    },
+  ])('lets a clear give way where the default of $name changes (#5839)', ({ o }) => {
+    const schemaWith = (v: number): RJSFSchema => ({
+      type: 'object',
+      properties: { o: o(v), w: { type: 'string' } },
+    });
+    const { form, utils } = sanitizedBoth(schemaWith(1), schemaWith(2), { o: undefined, w: 'k' });
+    expect(form.o).toBeDefined();
+    expect(utils).toEqual({ w: 'k' });
+  });
+
+  it("keeps a clear where only the default changes beneath an ancestor's const, which the fill writes (#5819)", () => {
+    const schemaWith = (d: string): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        o: { type: 'object', const: { a: 'c' }, default: { a: d }, properties: { a: { type: 'string' } } },
+      },
+    });
+    const { utils } = sanitizedBoth(schemaWith('d'), schemaWith('e'), { o: { a: undefined } });
+    expect(utils).toStrictEqual({ o: { a: undefined } });
+  });
+
+  it('swaps an array holding its old default padded to minItems for the new one, padded (#5825)', () => {
+    const schemaWith = (v: string): RJSFSchema => ({
+      type: 'object',
+      required: ['v'],
+      properties: { v: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: [v] } },
+    });
+    const { form, utils } = sanitizedBoth(schemaWith('x'), schemaWith('y'), { v: ['x', 'z'] });
+    expect(form).toEqual({ v: ['y', 'z'] });
+    expect(utils).toEqual({ v: ['y', 'z'] });
+  });
+
+  it('lets a clear give way where the default of the pattern describing a key its default names changes (#5819)', () => {
+    const schemaWith = (d: number): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        o: { type: 'object', patternProperties: { '^x': { type: 'number', default: d } }, default: { x1: 1 } },
+        w: { type: 'string' },
+      },
+    });
+    // `Form` shows no clear, and its fill seeds no extra key once the defaults were generated (#3759), so only the
+    // sanitize tells the clear giving way from it staying
+    const { utils } = sanitizedBoth(schemaWith(7), schemaWith(8), { o: undefined, w: 'k' });
+    expect(utils).toStrictEqual({ w: 'k' });
+  });
 });

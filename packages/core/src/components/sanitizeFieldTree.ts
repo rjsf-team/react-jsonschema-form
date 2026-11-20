@@ -1,10 +1,10 @@
 import type {
+  FieldFill,
   FieldPath,
   FieldPathList,
   FormContextType,
   FormFieldState,
   GenericObjectType,
-  PropertyPlacement,
   SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
@@ -28,6 +28,7 @@ import {
   getRenderedOptionSchema,
   getSchemaType,
   getStaticItemsUiSchema,
+  getUiOptions,
   getXxxOfOptions,
   GUESSED_TYPE_FLAG,
   hasSchemaMarker,
@@ -430,8 +431,9 @@ function judge<S extends StrictRJSFSchema>(
   if (value === undefined && !isItem) {
     return DROP;
   }
-  // A cleared item is `null`, whose row stays for the new default to fill. A `null` the item holds is a value, not a clear
-  if (value === null && isItem && newDefault !== undefined && !acceptsNull()) {
+  // A cleared item is `null`, whose row stays for the new default to fill. A `null` the item holds is a value, not a clear.
+  // Only a `default` the row declares fills it, its own or an option's, not what the fill builds for one declaring none
+  if (value === null && isItem && declaresDefault(newLayers) && !acceptsNull()) {
     return UNSET;
   }
   const isOldDefault = oldDefault !== undefined && deepEquals(oldDefault, value);
@@ -566,22 +568,19 @@ function constrainsItemAlike<T, S extends StrictRJSFSchema, F extends FormContex
   return constrainsAlikeAsideDefault<S>(oldSchema, newSchema);
 }
 
-/** One field of both trees: its subschema and value on each side, and the default its parent is filled with for it */
+/** One field of both trees: its subschema and value on each side, and what the defaults hand it on each side */
 interface FieldPair<S> {
   oldRaw: S | undefined;
   newRaw: S;
   oldValue: unknown;
   newValue: unknown;
-  oldInherited: unknown;
-  newInherited: unknown;
-  /** Whether the defaults read the field as required on each side, as they hand it `required`: a property its object
-   * lists in `required`, or an item whose array is required. Undefined for the root
+  /** What the defaults hand the field on each side, see `FieldFill`, which they fill it and its children by */
+  oldFill: FieldFill;
+  newFill: FieldFill;
+  /** Whether the two fills are known to hand the field the same without filling anything: the root's, and those of
+   * the children of a field whose own fills match and whose fills read it alike, see `fillsMatch()`
    */
-  oldRequired?: boolean;
-  newRequired?: boolean;
-  /** For a property, whether the defaults read the object holding it as required on each side */
-  oldParentRequired?: boolean;
-  newParentRequired?: boolean;
+  fillsAlike: () => boolean;
   /** Whether the field is an array item, whose `null` or `undefined` is a placeholder the item's schema judges */
   isItem: boolean;
   /** Whether the field was in the data before: a property holding a value, or an item of an array the data held */
@@ -772,30 +771,45 @@ function oldFillOutOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return fillOf(ctx.schemaUtils, newRaw, newDefault, isRequired, renderedWith as UiSchema<T, S, F>) ?? DROP;
 }
 
-/** The default the defaults fill a field rendered with `layers` with, given the one it inherits, see
- * `getFilledDefault()`. The layers are one field, which the fill renders with an option's `default` merged over the
- * field's own, so only `inherited` is an ancestor's, even under `nestedDefaultsPrecedence: 'ancestorWins'`
+/** The schema the fill reads a field rendered with `layers` through, see `getFilledDefault()`: one layer as it is, and
+ * several as one field, which the fill renders with an option's `default` merged over the field's own
  */
-function filledDefaultOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  layers: readonly S[],
-  inherited: unknown,
-  placement?: PropertyPlacement,
-): unknown {
-  // Only an option `getFilledDefault()` picks can bring a default the layers don't declare
-  if (
-    inherited === undefined &&
-    !layers.some((layer) => Object.hasOwn(layer, DEFAULT_KEY)) &&
-    !getXxxOfOptions<S>(layers[layers.length - 1])
-  ) {
-    return undefined;
+function fillSchemaOf<S extends StrictRJSFSchema>(layers: readonly S[]): S {
+  if (layers.length === 1) {
+    return layers[0];
   }
   const ownDefault = layers.reduce<object>(
     (merged, layer) =>
       Object.hasOwn(layer, DEFAULT_KEY) ? mergeSchemas(merged, { [DEFAULT_KEY]: layer[DEFAULT_KEY] }) : merged,
     {},
   );
-  return schemaUtils.getFilledDefault({ ...fieldSchemaOf(layers), ...ownDefault }, inherited, placement);
+  return { ...fieldSchemaOf(layers), ...ownDefault };
+}
+
+/** Whether a field rendered with `layers` declares a `default` the defaults fill an empty row of it with: one a layer
+ * declares, or one of the options the innermost layer offers, as `sanitizeDataForNewSchema()` reads a cleared row
+ */
+function declaresDefault<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
+  return (
+    layers.some((layer) => Object.hasOwn(layer, DEFAULT_KEY)) ||
+    (getXxxOfOptions<S>(layers[layers.length - 1])?.options.some(
+      (option) => isObject(option) && Object.hasOwn(option, DEFAULT_KEY),
+    ) ??
+      false)
+  );
+}
+
+/** Whether the defaults hand the field of `pair` the same on both sides, filling what `FieldPair.fillsAlike` can't
+ * tell
+ */
+function fillsMatch<S>({ oldFill, newFill, fillsAlike }: FieldPair<S>): boolean {
+  return (
+    fillsAlike() ||
+    (oldFill.isRequired === newFill.isRequired &&
+      oldFill.isParentRequired === newFill.isParentRequired &&
+      deepEquals(oldFill.inheritedDefault, newFill.inheritedDefault) &&
+      deepEquals(oldFill.inheritedConst, newFill.inheritedConst))
+  );
 }
 
 /** The innermost of `layers` with the keywords its default is cut down by read from them all, as the fill reads the
@@ -846,12 +860,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     newRaw,
     oldValue,
     newValue,
-    oldInherited,
-    newInherited,
-    oldRequired,
-    newRequired,
-    oldParentRequired,
-    newParentRequired,
+    oldFill,
+    newFill,
     isItem,
     hasOld,
     oldRetrieved,
@@ -873,15 +883,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return newValue;
   }
   // Nothing a field's subtree is built from differs, so neither does the subtree
-  if (
-    !edited &&
-    !ctx.isDefaultsChanged &&
-    oldRaw === newRaw &&
-    oldValue === newValue &&
-    oldRequired === newRequired &&
-    oldParentRequired === newParentRequired &&
-    deepEquals(oldInherited, newInherited)
-  ) {
+  if (!edited && !ctx.isDefaultsChanged && oldRaw === newRaw && oldValue === newValue && fillsMatch(pair)) {
     return newValue;
   }
   // The old side shows the options the new side shows from the same lists: which option the data is shown under is
@@ -899,32 +901,41 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { switchedFrom } = ctx;
   const isSwitched =
     switchedFrom !== undefined && path.length === switchedFrom.path.length && isPathPrefix(path, switchedFrom.path);
-  // A property's value is judged by the default the defaults write into it, while what it hands its own properties is
-  // the default it computes, which they fill from whether or not it is written itself
-  const isProperty = !isItem && path.length > 0;
-  // Read only by the judge of an item or the root, and by the properties of an object, so a property holding no
-  // object, whose value is judged by its written default, runs no option pick for it
-  const isComputedRead = !isProperty || isPlainObject(newValue);
-  const oldComputed = isComputedRead ? filledDefaultOf(ctx.oldSchemaUtils, oldLayers, oldInherited) : undefined;
-  const newComputed = isComputedRead ? filledDefaultOf(ctx.schemaUtils, newLayers, newInherited) : undefined;
+  // The schemas each side's fill reads the field through, which also hand its children what they inherit
+  const oldFillSchema = fillSchemaOf(oldLayers);
+  const newFillSchema = fillSchemaOf(newLayers);
+  // The children's fills match where this field's do and its fills read it alike, which is only asked once a child's
+  // own subschema and value match on both sides, and asked once for all of them
+  let isAlikeBelow: boolean | undefined;
+  const fillsAlikeBelow = () => {
+    isAlikeBelow ??=
+      !ctx.isDefaultsChanged &&
+      fillsMatch(pair) &&
+      (oldFillSchema === newFillSchema || deepEquals(oldFillSchema, newFillSchema));
+    return isAlikeBelow;
+  };
   // The edited value and the values holding it are the user's
   if (!edited && judgesAt(ctx, path, newValue, isItem)) {
     // The fill picks the option of a field holding no data by the field's own `default`, not by the one `Form` shows,
-    // and writes that option's `default`, so a clear hands `getFilledDefault()` the field's own layer, options and all,
-    // for it to pick as the fill does
-    const filledLayers = (layers: S[]) => (isClear ? layers.slice(0, 1) : layers);
-    const oldDefault = isProperty
-      ? filledDefaultOf(ctx.oldSchemaUtils, filledLayers(oldLayers), oldInherited, {
-          isRequired: oldRequired,
-          isParentRequired: oldParentRequired,
-        })
-      : oldComputed;
-    const newDefault = isProperty
-      ? filledDefaultOf(ctx.schemaUtils, filledLayers(newLayers), newInherited, {
-          isRequired: newRequired,
-          isParentRequired: newParentRequired,
-        })
-      : newComputed;
+    // and writes that option's `default`, so the field's default is read from its own layer, options and all, for the
+    // fill to pick as it does. A property's value is judged by the default the defaults write into it, see
+    // `FieldFill.isProperty`
+    const [oldJudged] = oldLayers;
+    const [newJudged] = newLayers;
+    // The form's first fill writes a field's `ui:initialValue` in place of the default it inherits, so an item the
+    // uiSchema gives one holds none of its array's default on either side, see `oldFillOutOf()` for the value it filled
+    const isInitialItem =
+      isItem &&
+      oldUiSchema !== undefined &&
+      getUiOptions<T, S, F>(oldUiSchema as UiSchema<T, S, F>).initialValue !== undefined;
+    const ownItemFill = (fill: FieldFill): FieldFill =>
+      isInitialItem ? { isRequired: fill.isRequired, isItem: true } : fill;
+    const oldDefault = ctx.oldSchemaUtils.getFilledDefault(oldJudged, ownItemFill(oldFill));
+    const newDefault = ctx.schemaUtils.getFilledDefault(newJudged, ownItemFill(newFill));
+    // The default each side takes before the fill fills it out, which the old fills below fill out again as the form
+    // fills it, under its uiSchema and through the option it shows
+    const oldFieldDefault = () => ctx.oldSchemaUtils.getFieldDefault(oldFillSchema, oldFill);
+    const newFieldDefault = () => ctx.schemaUtils.getFieldDefault(newFillSchema, newFill);
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
     const judged = judge(
       oldLayers,
@@ -934,22 +945,22 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       newDefault,
       isItem,
       acceptsNull,
-      (value) => isOldFill(ctx, oldLayers, oldDefault, oldPath, shownHere, value),
+      (value) => isOldFill(ctx, oldLayers, oldFieldDefault(), oldPath, shownHere, value),
       // The field filled alone reads the uiSchema, which its own fill, through the option it showed, doesn't
       (value) =>
         oldFillOutOf(
           ctx,
           oldRaw,
           newRaw,
-          oldDefault,
-          newDefault,
+          oldFieldDefault(),
+          newFieldDefault(),
           isItem,
-          oldRequired === true,
-          newRequired === true,
+          oldFill.isRequired === true,
+          newFill.isRequired === true,
           oldPath,
           oldUiSchema,
           value,
-        ) ?? (isOwnFill(ctx.oldSchemaUtils, oldLayers, oldDefault, value) ? DROP : undefined),
+        ) ?? (isOwnFill(ctx.oldSchemaUtils, oldLayers, oldFieldDefault(), value) ? DROP : undefined),
     );
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
@@ -962,15 +973,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const oldProperties = propertiesOf(oldLayers);
     const newProperties = propertiesOf(newLayers);
     const previousKeyOf = previousKeys(ctx, path, oldValue);
-    const oldRequiredKeys = requiredOf(oldLayers);
-    const newRequiredKeys = requiredOf(newLayers);
     // The keys a switch put back are judged under the option switched away from
     let heldSide:
       | {
           keys: ReadonlySet<string>;
           properties: Map<string, S | true>;
-          required: Set<string> | undefined;
-          computedDefault: unknown;
+          fillSchema: S;
           shownHere?: ShownAbove;
           ctx: TreeContext<T, S, F>;
           optionUiSchema?: GenericObjectType;
@@ -1021,8 +1029,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       heldSide = {
         keys: switchedFrom.heldKeys,
         properties: propertiesOf(heldLayers),
-        required: requiredOf(heldLayers),
-        computedDefault: filledDefaultOf(ctx.oldSchemaUtils, heldLayers, oldInherited),
+        fillSchema: fillSchemaOf(heldLayers),
         shownHere: oldPath === undefined ? shownAbove : { oldPath, shown: heldShown, above: shownAbove },
         ctx: heldCtx,
         optionUiSchema: shownOptionUiSchemaOf<T, S, F>(
@@ -1071,7 +1078,6 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (newSchema !== undefined) {
         const previousKey = from ? key : previousKeyOf(key);
         const previousValue = valueAt(oldValue, previousKey);
-        const oldParentDefault = from ? from.computedDefault : oldComputed;
         next = walk(
           from?.ctx ?? ctx,
           {
@@ -1079,12 +1085,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
             newRaw: newSchema,
             oldValue: previousValue,
             newValue: newValue[key],
-            oldInherited: isPlainObject(oldParentDefault) ? getByPath(oldParentDefault, key) : undefined,
-            newInherited: isPlainObject(newComputed) ? getByPath(newComputed, key) : undefined,
-            oldRequired: (from ? from.required : oldRequiredKeys)?.has(key),
-            newRequired: newRequiredKeys?.has(key),
-            oldParentRequired: oldRequired,
-            newParentRequired: newRequired,
+            oldFill: ctx.oldSchemaUtils.childFillOf(from ? from.fillSchema : oldFillSchema, oldFill, key),
+            newFill: ctx.schemaUtils.childFillOf(newFillSchema, newFill, key),
+            fillsAlike: from ? () => false : fillsAlikeBelow,
             isItem: false,
             hasOld: previousValue !== undefined,
             oldPath: oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined,
@@ -1180,10 +1183,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           newRaw: newItem,
           oldValue: hasPrevious ? valueAt(oldValue, previousIndex) : item,
           newValue: item,
-          oldInherited: undefined,
-          newInherited: undefined,
-          oldRequired,
-          newRequired,
+          // An item inherits its array's default at its index, the old one at the index it held before
+          oldFill: ctx.oldSchemaUtils.childFillOf(oldFillSchema, oldFill, hasPrevious ? Number(previousIndex) : index),
+          newFill: ctx.schemaUtils.childFillOf(newFillSchema, newFill, index),
+          fillsAlike: () => hasPrevious && Number(previousIndex) === index && fillsAlikeBelow(),
           isItem: true,
           hasOld: Array.isArray(oldValue),
           oldPath: oldPath && hasPrevious ? [...oldPath, Number(previousIndex)] : undefined,
@@ -1417,8 +1420,9 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       newRaw: next.schemaUtils.getRootSchema(),
       oldValue: previous.formData,
       newValue: next.formData,
-      oldInherited: undefined,
-      newInherited: undefined,
+      oldFill: {},
+      newFill: {},
+      fillsAlike: () => true,
       isItem: false,
       hasOld: true,
       oldPath: [],

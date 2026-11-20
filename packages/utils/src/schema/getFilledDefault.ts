@@ -1,262 +1,348 @@
-import { absentKeywordAllows } from '../additionalPropertiesUtils.ts';
-import { ADDITIONAL_PROPERTY_FLAG, ALL_OF_KEY, CONST_KEY, IF_KEY, REF_KEY } from '../constants.ts';
-import deepEquals from '../deepEquals.ts';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
-import getSchemaType from '../getSchemaType.ts';
-import getXxxOfOptions from '../getXxxOfOptions.ts';
-import type { XxxOfOptions } from '../getXxxOfOptions.ts';
-import hasSchemaMarker from '../hasSchemaMarker.ts';
-import isConstantSelect from '../isConstantSelect.ts';
+import {
+  ADDITIONAL_PROPERTIES_KEY,
+  ALL_OF_KEY,
+  ANY_OF_KEY,
+  CONST_KEY,
+  DEFAULT_KEY,
+  DEPENDENCIES_KEY,
+  ELSE_KEY,
+  IF_KEY,
+  ITEMS_KEY,
+  ONE_OF_KEY,
+  PATTERN_PROPERTIES_KEY,
+  PREFIX_ITEMS_KEY,
+  PROPERTIES_KEY,
+  REF_KEY,
+  THEN_KEY,
+} from '../constants.ts';
 import isObject from '../isObject.ts';
-import isWholeValueSelect from '../isWholeValueSelect.ts';
-import mergeObjects from '../mergeObjects.ts';
-import mergeSchemas from '../mergeSchemas.ts';
-import type {
-  FormContextType,
-  GenericObjectType,
-  PropertyPlacement,
-  RJSFSchema,
-  SchemaContext,
-  StrictRJSFSchema,
-} from '../types.ts';
-import { closestOption } from './getClosestMatchingOption.ts';
-import { closingConstOf, computeDefaults, takesValueOf, writesPropertyDefault } from './getDefaultFormState.ts';
-import { isTupleSchema } from './getItemSchema.ts';
-import { refDefinition, withoutKeys } from './graph/mergePlan.ts';
+import { getByPath } from '../pathUtils.ts';
+import type { FieldFill, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+import type { FilledField } from './getDefaultFormState.ts';
+import { fieldFillOf, writesPropertyDefault } from './getDefaultFormState.ts';
+import { getItemSchema } from './getItemSchema.ts';
+import { refDefinition } from './graph/mergePlan.ts';
 import nodeOfSchema from './graph/nodeOfSchema.ts';
-import retrieveSchema from './retrieveSchema.ts';
 
-/** Returns the `default` the defaults fill the field `schema` describes with, given the one the field holding it was
- * filled with for it, as `getDefaultFormState()` reads the two. The field's own `default`, a `null` one included, wins
- * over the inherited one, unless the `context`'s `nestedDefaultsPrecedence` is `ancestorWins` and the field's type can
- * hold the inherited one. Two object defaults are merged instead, the winner's keys over the other's, except for a
- * select over object or array constants, which holds one of them whole. A field offering `anyOf`/`oneOf` options is
- * filled through the one its own `default` matches, as a field holding no data is, that option's `default` merged over
- * the field's own, and so on through the options that option offers.
+/** Returns the value `getDefaultFormState()` fills the field `schema` describes with when the field holds no data,
+ * given `fill`, what the defaults hand it: the default its ancestors hand it, the value an ancestor's `const` gives it,
+ * and whether it is required where it sits. It is the fill's own value, so it follows every rule of the fill: an
+ * ancestor's `const` over the field's own `default`, `nestedDefaultsPrecedence` between two `default`s, the `anyOf`/
+ * `oneOf` option the field shows when it holds no data, the defaults its own properties and items declare, a `minItems`
+ * fill, and what `allOf`, `if` and `dependencies` give it under the context's settings. A property, see
+ * `FieldFill.isProperty`, is filled only where `emptyObjectFields` lets the defaults write it there.
  *
- * A property is filled with it only where `emptyObjectFields` lets the defaults write it there, as `placement` decides:
- * none is under `skipDefaults`, and under `populateRequiredDefaults` only one whose object is required, or that is
- * required itself where its object is the root, and a value other than an object only where it is required as well.
- * An object field's object default is first cut down key by key, as the fill builds it, with the `anyOf`/`oneOf` option
- * its own `default` matches merged into the field as the fill merges one into a field holding no data: each key its
- * `properties` declare keeps only what the defaults write into that property, read as the fill reads it: one holding an
- * object with its `$ref`s and `allOf` resolved and its conditions and `dependencies` applied as for a property holding
- * no data, and any other through the fill itself wherever the fill may compute more for it than its own `default`,
- * which merges an `allOf` only under `allOf: 'populateDefaults'`, so it can take a value the object's `default` never
- * named, such as a `const`, a `minItems` fill, a tuple's item defaults or an object built over a `null`. A key they
- * don't declare is kept only where `additionalProperties` seeds it, or an object `const` that closes the object names
- * it, see `closingConstOf()`, so an empty object is left where they write none of its keys. Without a `placement` it
- * is returned as computed: the root and an array item are always filled, and a field hands its properties the default
- * it computes whether or not it is written itself.
+ * What the fill only computes for a field no `default` reaches, such as the `false` of a required boolean, an empty
+ * object or array, or a `minItems` fill with nothing to fill it with, is no default, so `undefined` is returned for it:
+ * a value is the field's default only where a `default` its own subschema declares, at any depth, or a `default` or
+ * `const` an ancestor hands it gives it one.
  *
- * @param context - The `SchemaContext` whose `defaultFormStateBehavior` says which of the two defaults wins, and
- *        whether a property is filled at all
+ * A field `childFillOf()` handed its fill is read off its parent's fill wherever the parent's fill read the field as
+ * the schema it was handed: where its subschema decides nothing from data, with no `if`, `dependencies` or
+ * `anyOf`/`oneOf` it reaches through its `$ref`s and `allOf`, and the parent's fill wrote it. So one fill of the root
+ * serves every field below it that decides nothing from data, and a field that does is filled by itself, with what its
+ * parent's fill hands it.
+ *
+ * @param context - The `SchemaContext` whose `defaultFormStateBehavior` the defaults are computed under
  * @param schema - The field's schema, already retrieved
- * @param rootSchema - The root schema, which the properties an object default is cut down by are resolved against
- * @param inheritedDefault - The default the field holding this one was filled with for it, if any
- * @param [placement] - Where the field sits as a property, left out for the root or an array item
- * @returns - The default the field is filled with, or `undefined` where there is none
+ * @param rootSchema - The root schema, which `schema` is resolved against
+ * @param [fill={}] - What the defaults hand the field, see `FieldFill`
+ * @returns - The value the field is filled with, or `undefined` where there is none
  */
 export default function getFilledDefault<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
+>(context: SchemaContext<S, F>, schema: S, rootSchema: S, fill: FieldFill = {}): unknown {
+  const value = writtenValueOf(fill) ?? filledValueOf<S, F>(context, schema, rootSchema, fill);
+  if (value === undefined || holdsDefault(schema, rootSchema)) {
+    return value;
+  }
+  // A fill `childFillOf()` made reads what it inherits off its parent's fill, so the schemas above are asked first
+  const inheritsOne =
+    (!origins.has(fill) || ancestorsDeclare(fill)) &&
+    (fill.inheritedDefault !== undefined || fill.inheritedConst !== undefined);
+  return inheritsOne ? value : undefined;
+}
+
+/** Returns the default the field `schema` describes takes before the defaults fill it out: its own `default`, the one
+ * its ancestors hand it and the `const` it takes, combined as `getDefaultFormState()` combines them, the option it shows
+ * when it holds no data merged in, but not yet padded to `minItems` or filled in below, which is what the fill hands the
+ * field's children, see `childFillOf()`
+ *
+ * @param context - The `SchemaContext` whose `defaultFormStateBehavior` the defaults are computed under
+ * @param schema - The field's schema, already retrieved
+ * @param rootSchema - The root schema, which `schema` is resolved against
+ * @param [fill={}] - What the defaults hand the field, see `FieldFill`
+ * @returns - The field's default, or `undefined` where it has none
+ */
+export function getFieldDefault<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S,
-  inheritedDefault: unknown,
-  placement?: PropertyPlacement,
+  fill: FieldFill = {},
 ): unknown {
-  // The fill merges the option it picks into the field, its `default` over the field's own, so only the inherited one
-  // is an ancestor's, even under `ancestorWins`
-  const field = withFilledOptions<S, F>(context, rootSchema, schema, inheritedDefault);
-  const computed = computedDefault<S, F>(context, field, inheritedDefault);
-  return placement ? writtenDefault<S, F>(context, rootSchema, field, computed, placement) : computed;
+  return filledFieldOf<S, F>(context, schema, rootSchema, fill).defaults;
 }
 
-/** `schema` with the `anyOf`/`oneOf` options the fill renders for a field holding no data merged in, as it folds into
- * the option it picks and picks again among that option's own. A select over constants is left as it is, sparing every
- * enum-like select a validation pass. shortcut: the fill still folds into a primitive select's option, so a `default`
- * one of its constant options declares is missed; upgrade once constant options need their own defaults read
- */
-function withFilledOptions<S extends StrictRJSFSchema, F extends FormContextType>(
+/** The value the field `schema` describes is filled with by a fill of its own, given `fill`, cut down to what the
+ * defaults write for a property */
+function filledValueOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  rootSchema: S,
   schema: S,
-  inheritedDefault: unknown,
-  chosen: S[][] = [],
-): S {
-  const xxxOf = getXxxOfOptions<S>(schema);
-  // A list chosen from already is reached again only through an option leading back to it, which ends the choice, as
-  // it does in the fill. Compared by value, since each option is resolved into a copy
-  if (!xxxOf || isConstantSelect<S>(schema) || chosen.some((options) => deepEquals(options, xxxOf.options))) {
-    return schema;
-  }
-  chosen.push(xxxOf.options);
-  const field = withFilledOption<S, F>(context, rootSchema, schema, xxxOf, inheritedDefault);
-  return field ? withFilledOptions<S, F>(context, rootSchema, field, inheritedDefault, chosen) : schema;
-}
-
-/** The part of `computed` the defaults write into the property `schema` describes at `placement`, or `undefined` where
- * they write none of it
- */
-function writtenDefault<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
   rootSchema: S,
-  schema: S,
-  computed: unknown,
-  placement: PropertyPlacement,
+  fill: FieldFill,
 ): unknown {
-  const written =
-    isObject(computed) && !isWholeValueSelect<S>(schema) && getSchemaType<S>(schema) === 'object'
-      ? writtenKeys<S, F>(context, rootSchema, schema, computed, placement.isRequired)
-      : computed;
-  // shortcut: an extra key counts as a property, though the fill seeds extra keys whatever `emptyObjectFields` says;
-  // upgrade once a form's extra keys need their defaults judged under a setting that leaves properties unfilled
-  return writesPropertyDefault(
-    written,
-    placement.isRequired ?? false,
-    placement.isParentRequired,
-    context.defaultFormStateBehavior?.emptyObjectFields,
-  )
-    ? written
-    : undefined;
-}
-
-/** `schema` with the one of its `xxxOf` options the fill renders for a field holding no data merged in, as it merges
- * one into an object field: the one its own `default` matches. Undefined where that option is no schema
- */
-function withFilledOption<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  rootSchema: S,
-  schema: S,
-  { key, options }: XxxOfOptions<S>,
-  inheritedDefault: unknown,
-): S | undefined {
-  // The fill matches a field holding no data by its own `default`, not the inherited one merged in. shortcut: under
-  // `ancestorWins` the merged default stands in for the inherited one it matches; upgrade once the two pick apart
-  const toMatch =
-    context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins'
-      ? computedDefault<S, F>(context, schema, inheritedDefault)
-      : schema.default;
-  const option: unknown =
-    options[
-      closestOption<S, F>(context, rootSchema, toMatch, options, 0, false, getDiscriminatorFieldFromSchema<S>(schema))
-    ];
-  return isObject(option)
-    ? (mergeSchemas(withoutKeys(schema, key), retrieveSchema<unknown, S, F>(context, option as S, rootSchema)) as S)
-    : undefined;
-}
-
-/** The keys of an object field's default the defaults write, each declared property's cut down as its own placement
- * decides
- */
-function writtenKeys<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  rootSchema: S,
-  schema: S,
-  computed: GenericObjectType,
-  isRequired: boolean | undefined,
-): GenericObjectType {
-  const properties = schema.properties ?? {};
-  const seedsExtraKeys = absentKeywordAllows<S, F>(context, schema) || Boolean(schema.additionalProperties);
-  const closingConst = closingConstOf<S, F>(context, schema);
-  const written: GenericObjectType = {};
-  for (const [key, value] of Object.entries(computed)) {
-    // An extra key `retrieveSchema()` stubbed among the properties is seeded below, as the fill seeds one
-    if (Object.hasOwn(properties, key) && !hasSchemaMarker(properties[key], ADDITIONAL_PROPERTY_FLAG)) {
-      const property = (isObject(properties[key]) ? properties[key] : {}) as S;
-      // An object default is cut down by its schema, resolved with the options the fill renders for it merged in, and
-      // read with its conditions applied as for no data, not against its default
-      const propertySchema = isObject(value)
-        ? withFilledOptions<S, F>(
-            context,
-            rootSchema,
-            retrieveSchema<unknown, S, F>(context, property, rootSchema, undefined),
-            value,
-          )
-        : property;
-      // A value other than an object the fill may compute beyond the property's own `default` for, through a `$ref`, an
-      // option, an `allOf`, an `if`, a `const`, a tuple's items or an object or array type, is read through the fill
-      // itself, which merges each of them, at every level, only as its own settings say. Otherwise the fill writes the
-      // property's own `default` over the one its object hands it, as `computedDefault()` reads it
-      const isRequiredKey = schema.required?.includes(key);
-      const ownDefaultSchema = isObject(value) ? propertySchema : ownDefaultSchemaOf<S>(property, rootSchema);
-      const propertyDefault = ownDefaultSchema
-        ? computedDefault<S, F>(context, ownDefaultSchema, value)
-        : computeDefaults<unknown, S, F>(context, property, {
-            rootSchema,
-            parentDefaults: value,
-            required: isRequiredKey,
-          });
-      const propertyValue = writtenDefault<S, F>(context, rootSchema, propertySchema, propertyDefault, {
-        isRequired: isRequiredKey,
-        isParentRequired: isRequired,
-      });
-      if (propertyValue !== undefined) {
-        written[key] = propertyValue;
-      }
-    } else if (
-      closingConst
-        ? Object.hasOwn(closingConst, key) && value !== undefined
-        : seedsExtraKeys && writesPropertyDefault(value, false, isRequired)
-    ) {
-      // The fill seeds an extra key, and a key of an object `const` that closes the object, whatever
-      // `emptyObjectFields` says. shortcut: an extra key's object default is judged whole rather than key by key
-      // against `additionalProperties`; upgrade once an extra key's nested defaults need judging
-      written[key] = value;
-    }
-  }
-  return written;
-}
-
-/** The schema whose own `default` the fill writes into the property `schema` describes over its object's, or
- * `undefined` where the fill may compute another value for it. That is the property itself, or for a `$ref` to a select
- * over constants the definition it names with the property's own keywords over it, as the fill resolves it, sparing
- * every enum-like select a fill of its own. shortcut: a select a definition reaches only through an `allOf` or an
- * option still gets one; upgrade once such selects are common in object defaults
- */
-function ownDefaultSchemaOf<S extends StrictRJSFSchema>(schema: S, rootSchema: S): S | undefined {
-  let own = schema;
-  if (REF_KEY in schema) {
-    const { graph, node } = nodeOfSchema<S>(schema, rootSchema);
-    own = { ...refDefinition<S>(graph, node), ...withoutKeys(schema, REF_KEY) };
-    if (!isConstantSelect<S>(own)) {
-      return undefined;
-    }
-  }
-  // The fill builds an object or fills an array up to its `minItems` whatever value the object hands it, and reads a
-  // tuple's defaults from its items whatever its `type`
-  const type = getSchemaType<S>(own);
-  return IF_KEY in own ||
-    ALL_OF_KEY in own ||
-    CONST_KEY in own ||
-    isTupleSchema<S>(own) ||
-    type === 'object' ||
-    type === 'array' ||
-    (getXxxOfOptions<S>(own) !== undefined && !isConstantSelect<S>(own))
+  const { value } = filledFieldOf<S, F>(context, schema, rootSchema, fill);
+  return fill.isProperty &&
+    !writesPropertyDefault(
+      value,
+      fill.isRequired ?? false,
+      fill.isParentRequired,
+      context.defaultFormStateBehavior?.emptyObjectFields,
+    )
     ? undefined
-    : own;
+    : value;
 }
 
-/** The default the defaults compute for the field `schema` describes, from its own and the inherited one */
-function computedDefault<S extends StrictRJSFSchema, F extends FormContextType>(
+/** Whether an ancestor of the field `fill` was made for declares a `default` or a `const` that could hand it a value,
+ * read off the schemas only, so no fill is made for a field no ancestor's could give one
+ */
+function ancestorsDeclare(fill: FieldFill): boolean {
+  for (let origin = origins.get(fill); origin; origin = origins.get(origin.parentFill)) {
+    if (handsValue(origin.parentSchema, origin.rootSchema)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/** The keywords whose subschemas the fill merges into the field itself, so a `default` or `const` one declares is the
+ * field's to hand down
+ */
+const MERGED_KEYWORDS = [ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, THEN_KEY, ELSE_KEY];
+
+/** Whether `schema` declares a `default` or a `const` itself, or in a subschema the fill merges into it: an
+ * `anyOf`/`oneOf` option, an `allOf` member, a `then`/`else` or the one its `$ref` names
+ */
+function handsValue(schema: unknown, rootSchema: RJSFSchema, seen = new Set<object>()): boolean {
+  if (!isObject(schema) || seen.has(schema)) {
+    return false;
+  }
+  seen.add(schema);
+  return (
+    DEFAULT_KEY in schema ||
+    CONST_KEY in schema ||
+    MERGED_KEYWORDS.some((keyword) =>
+      (Array.isArray(schema[keyword]) ? schema[keyword] : [schema[keyword]]).some((subschema: unknown) =>
+        handsValue(subschema, rootSchema, seen),
+      ),
+    ) ||
+    (REF_KEY in schema && handsValue(refTargetOf(schema, rootSchema), rootSchema, seen))
+  );
+}
+
+/** Where `childFillOf()` made a fill, so the child's own value can be read off its parent's fill. Kept untyped by
+ * schema, since one map holds the fills of every schema type, and read back by the call that made it
+ */
+interface FillOrigin {
+  readonly context: SchemaContext;
+  readonly rootSchema: RJSFSchema;
+  /** The parent's schema, as `childFillOf()` was handed it */
+  readonly parentSchema: RJSFSchema;
+  readonly parentFill: FieldFill;
+  readonly key: string | number;
+  /** The child's subschema, as the parent's schema declares it */
+  readonly childSchema: unknown;
+}
+
+/** The origin of each fill `childFillOf()` made */
+const origins = new WeakMap<FieldFill, FillOrigin>();
+
+/** Each fill's children, by the parent's schema and the child's key, so a child asked for twice is the same fill */
+const children = new WeakMap<FieldFill, WeakMap<object, Map<string | number, FieldFill>>>();
+
+/** What each field was filled with, by fill and by the schema it was filled through */
+const filledFields = new WeakMap<FieldFill, WeakMap<object, FilledField>>();
+
+/** Returns what the defaults hand the child at `key`, a property name or an item index, of the field `schema`
+ * describes, given `fill`, what they hand that field. The child inherits what the field's own fill hands it there:
+ * its default at `key` and the value its `const` gives there, read only once something reads them. A property is
+ * required where `schema` lists it in `required`, and an item where its array is
+ *
+ * @param context - The `SchemaContext` the defaults are computed under
+ * @param schema - The field's schema, already retrieved
+ * @param rootSchema - The root schema, which `schema` is resolved against
+ * @param fill - What the defaults hand the field
+ * @param key - The property name or the item index of the child
+ * @returns - What the defaults hand the child
+ */
+export function childFillOf<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   context: SchemaContext<S, F>,
   schema: S,
-  inheritedDefault: unknown,
-): unknown {
-  const ownDefault: unknown = schema.default;
-  if (inheritedDefault === undefined) {
-    return ownDefault;
+  rootSchema: S,
+  fill: FieldFill,
+  key: string | number,
+): FieldFill {
+  let bySchema = children.get(fill);
+  if (bySchema === undefined) {
+    bySchema = new WeakMap();
+    children.set(fill, bySchema);
   }
-  if (ownDefault === undefined) {
-    return inheritedDefault;
+  let byKey = bySchema.get(schema);
+  if (byKey === undefined) {
+    byKey = new Map();
+    bySchema.set(schema, byKey);
   }
-  const ancestorWins =
-    context.defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' &&
-    takesValueOf<S>(schema, inheritedDefault);
-  if (isObject(ownDefault) && isObject(inheritedDefault) && !isWholeValueSelect<S>(schema)) {
-    return ancestorWins ? mergeObjects(ownDefault, inheritedDefault) : mergeObjects(inheritedDefault, ownDefault);
+  const known = byKey.get(key);
+  if (known !== undefined) {
+    return known;
   }
-  return ancestorWins ? inheritedDefault : ownDefault;
+  const isItem = typeof key === 'number';
+  const handedDown = () => filledFieldOf<S, F>(context, schema, rootSchema, fill);
+  const child: FieldFill = isItem
+    ? { isRequired: fill.isRequired, isItem: true }
+    : { isRequired: schema.required?.includes(key), isParentRequired: fill.isRequired, isProperty: true };
+  Object.defineProperties(child, {
+    inheritedDefault: { enumerable: true, get: (): unknown => getByPath(handedDown().defaults, [key]) },
+    inheritedConst: { enumerable: true, get: (): unknown => getByPath(handedDown().givenConst, [key]) },
+  });
+  origins.set(child, {
+    context: context as SchemaContext,
+    rootSchema,
+    parentSchema: schema,
+    parentFill: fill,
+    key,
+    childSchema: isItem ? getItemSchema<S>(schema, key) : getByPath(schema.properties, [key]),
+  });
+  byKey.set(key, child);
+  return child;
+}
+
+/** What the field `schema` describes is filled with given `fill`, filled once per fill and schema */
+function filledFieldOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  rootSchema: S,
+  fill: FieldFill,
+): FilledField {
+  let bySchema = filledFields.get(fill);
+  if (bySchema === undefined) {
+    bySchema = new WeakMap();
+    filledFields.set(fill, bySchema);
+  }
+  let filled = bySchema.get(schema);
+  if (filled === undefined) {
+    filled = fieldFillOf<S, F>(context, schema, rootSchema, fill);
+    bySchema.set(schema, filled);
+  }
+  return filled;
+}
+
+/** The value the parent's fill wrote for the field `fill` was made for, where the parent's fill read it as the schema
+ * it was handed: undefined where `fill` is no child's, the field's subschema decides anything from data, or the parent
+ * wrote nothing there
+ */
+function writtenValueOf(fill: FieldFill): unknown {
+  const origin = origins.get(fill);
+  if (origin === undefined || readsData(origin.childSchema, origin.rootSchema)) {
+    return undefined;
+  }
+  return getByPath(ownValueOf(origin.parentFill, origin), [origin.key]);
+}
+
+/** The value the field `fill` was made for is filled with, read off its parent's fill where that wrote it */
+function ownValueOf(fill: FieldFill, { context, parentSchema, rootSchema }: FillOrigin): unknown {
+  return writtenValueOf(fill) ?? filledFieldOf(context, parentSchema, rootSchema, fill).value;
+}
+
+/** Whether each subschema, by root schema, decides anything from data, see `readsData()` */
+const readsDataOf = new WeakMap<RJSFSchema, WeakMap<object, boolean>>();
+
+/** Whether the field `schema` describes decides anything from its data, so its schema retrieved for data may differ
+ * from the one the fill reads with none: whether it, or a subschema it reaches through its `$ref`s and `allOf`, holds
+ * an `if`, a `dependencies` or `anyOf`/`oneOf` options, which the fill chooses from even when an `allOf` offers them.
+ * Anything that is no schema decides nothing
+ */
+function readsData(schema: unknown, rootSchema: RJSFSchema, seen = new Set<object>()): boolean {
+  if (!isObject(schema) || seen.has(schema)) {
+    return false;
+  }
+  let byRoot = readsDataOf.get(rootSchema);
+  if (byRoot === undefined) {
+    byRoot = new WeakMap();
+    readsDataOf.set(rootSchema, byRoot);
+  }
+  const known = byRoot.get(schema);
+  if (known !== undefined) {
+    return known;
+  }
+  // Only the answer for the schema asked about is kept: one reached on the way may have been cut short by a cycle
+  const isAsked = seen.size === 0;
+  seen.add(schema);
+  const allOf: unknown = schema[ALL_OF_KEY];
+  const reads =
+    IF_KEY in schema ||
+    DEPENDENCIES_KEY in schema ||
+    ANY_OF_KEY in schema ||
+    ONE_OF_KEY in schema ||
+    (Array.isArray(allOf) && allOf.some((member) => readsData(member, rootSchema, seen))) ||
+    (REF_KEY in schema && readsData(refTargetOf(schema, rootSchema), rootSchema, seen));
+  if (isAsked) {
+    byRoot.set(schema, reads);
+  }
+  return reads;
+}
+
+/** Whether each subschema, by root schema, declares a `default` at any depth, see `holdsDefault()` */
+const holdsDefaultOf = new WeakMap<RJSFSchema, WeakMap<object, boolean>>();
+
+/** The keywords holding a record of subschemas, by name */
+const RECORD_KEYWORDS = [PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, DEPENDENCIES_KEY];
+
+/** The keywords holding a subschema or a list of them. A schema-valued `items` is left out: it fills the array only out
+ * to `minItems`, which counts as its default only where the array declares one itself. A tuple's `prefixItems`, or an
+ * `items` list, fills each position whatever `minItems` says
+ */
+const SCHEMA_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, THEN_KEY, ELSE_KEY];
+
+/** Whether `schema` declares a `default` itself or in a subschema it holds or names through a `$ref`, at any depth, so
+ * a value the fill gives the field can come from one. Anything that is no schema declares none
+ */
+function holdsDefault(schema: unknown, rootSchema: RJSFSchema, seen = new Set<object>()): boolean {
+  if (!isObject(schema) || seen.has(schema)) {
+    return false;
+  }
+  let byRoot = holdsDefaultOf.get(rootSchema);
+  if (byRoot === undefined) {
+    byRoot = new WeakMap();
+    holdsDefaultOf.set(rootSchema, byRoot);
+  }
+  const known = byRoot.get(schema);
+  if (known !== undefined) {
+    return known;
+  }
+  // Only the answer for the schema asked about is kept: one reached on the way may have been cut short by a cycle
+  const isAsked = seen.size === 0;
+  seen.add(schema);
+  const holdsIn = (subschemas: unknown) =>
+    (Array.isArray(subschemas) ? subschemas : [subschemas]).some((subschema) =>
+      holdsDefault(subschema, rootSchema, seen),
+    );
+  const holds =
+    DEFAULT_KEY in schema ||
+    RECORD_KEYWORDS.some((keyword) => isObject(schema[keyword]) && holdsIn(Object.values(schema[keyword]))) ||
+    SCHEMA_KEYWORDS.some((keyword) => holdsIn(schema[keyword])) ||
+    holdsIn(schema[PREFIX_ITEMS_KEY]) ||
+    (Array.isArray(schema[ITEMS_KEY]) && holdsIn(schema[ITEMS_KEY])) ||
+    (REF_KEY in schema && holdsDefault(refTargetOf(schema, rootSchema), rootSchema, seen));
+  if (isAsked) {
+    byRoot.set(schema, holds);
+  }
+  return holds;
+}
+
+/** The subschema `schema`'s `$ref` names */
+function refTargetOf(schema: RJSFSchema, rootSchema: RJSFSchema): unknown {
+  const { graph, node } = nodeOfSchema(schema, rootSchema);
+  return refDefinition(graph, node);
 }

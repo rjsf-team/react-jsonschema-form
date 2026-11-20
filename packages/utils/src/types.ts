@@ -223,18 +223,28 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
   readonly widgets?: Readonly<Record<string, unknown>>;
 }
 
-/** Where a property sits, which decides whether the defaults write its default under `emptyObjectFields`, see
- * `getFilledDefault()`
+/** What the defaults hand a field, which they fill it by, see `getFilledDefault()`. `{}` is the root's. A field's
+ * children get theirs from `childFillOf()`, which reads what the field's own fill hands each of them only once one of
+ * them asks, so a fill belongs to the one `SchemaContext` it was made under
  */
-export interface PropertyPlacement {
-  /** Whether the object holding the property lists it in its `required`, undefined where that object lists no
-   * `required`, so its own properties read their requiredness as the root's do
+export interface FieldFill {
+  /** The defaults the field holding this one hands it */
+  inheritedDefault?: unknown;
+  /** The value an ancestor's `const` gives the field, which wins over the field's own `default` */
+  inheritedConst?: unknown;
+  /** Whether the field is required where it sits: a property its object lists in `required`, undefined where that
+   * object lists none, so its own properties read their requiredness as the root's do, or an item whose array is
+   * required. Undefined for the root
    */
   isRequired?: boolean;
-  /** Whether that object is required itself, undefined for the root or an object the defaults reach with no
-   * `required` of its own
+  /** For a property, whether the object holding it is required itself, undefined for the root or an object the
+   * defaults reach with no `required` of its own
    */
   isParentRequired?: boolean;
+  /** Whether the field is a property, whose default is written only where `emptyObjectFields` lets it be */
+  isProperty?: boolean;
+  /** Whether the field is an array item */
+  isItem?: boolean;
 }
 
 /** The props for the `getDefaultFormState()` schema function */
@@ -2685,20 +2695,20 @@ export interface SchemaUtilsType<
    *
    * @param oldSchema - The field's schema before the change
    * @param newSchema - The field's schema after the change
-   * @param oldInheritedDefault - The default the field holding `oldSchema` was filled with for it
-   * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
-   * @param [oldPlacement] - Where the field sat as a property before the change, if it is one
-   * @param [newPlacement] - Where the field sits as a property after the change, if it is one
+   * @param [oldFill={}] - What the defaults handed the field before the change, see `FieldFill`
+   * @param [newFill={}] - What the defaults hand the field after the change
    * @returns - Whether both schemas constrain the field alike
    */
-  constrainsAlike(
-    oldSchema: S,
-    newSchema: S,
-    oldInheritedDefault: unknown,
-    newInheritedDefault: unknown,
-    oldPlacement?: PropertyPlacement,
-    newPlacement?: PropertyPlacement,
-  ): boolean;
+  constrainsAlike(oldSchema: S, newSchema: S, oldFill?: FieldFill, newFill?: FieldFill): boolean;
+  /** Returns what the defaults hand the child of the field `schema` describes at `key`, a property name or an item's
+   * index, given `fill`, what they hand that field, see `childFillOf()`
+   *
+   * @param schema - The field's schema, already retrieved
+   * @param fill - What the defaults hand the field
+   * @param key - The property name or item index of the child
+   * @returns - What the defaults hand the child
+   */
+  childFillOf(schema: S, fill: FieldFill, key: string | number): FieldFill;
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
    * field is in the `required` list for its parent and if so, it is marked as required on return. At each key of the
@@ -2762,15 +2772,23 @@ export interface SchemaUtilsType<
    * @deprecated Kept through v7 for a field rendered without a plan, which says what draws its label
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions): boolean;
-  /** Returns the `default` the defaults fill the field `schema` describes with, given the one the field holding it was
-   * filled with for it, under the `SchemaContext`'s `defaultFormStateBehavior`, see `getFilledDefault()`
+  /** Returns the value the defaults fill the field `schema` describes with when it holds no data, given `fill`, what
+   * they hand it, under the `SchemaContext`'s `defaultFormStateBehavior`, see `getFilledDefault()`
    *
    * @param schema - The field's schema, already retrieved
-   * @param inheritedDefault - The default the field holding this one was filled with for it, if any
-   * @param [placement] - Where the field sits as a property, left out for the root or an array item
-   * @returns - The default the field is filled with, or `undefined` where there is none
+   * @param [fill={}] - What the defaults hand the field, see `FieldFill`
+   * @returns - The value the field is filled with, or `undefined` where there is none
    */
-  getFilledDefault(schema: S, inheritedDefault: unknown, placement?: PropertyPlacement): unknown;
+  getFilledDefault(schema: S, fill?: FieldFill): unknown;
+  /** Returns the default the field `schema` describes takes before the defaults fill it out, given `fill`, what they
+   * hand it: its own `default`, the one its ancestors hand it and the `const` it takes, combined as the fill combines
+   * them, see `getFieldDefault()`
+   *
+   * @param schema - The field's schema, already retrieved
+   * @param [fill={}] - What the defaults hand the field, see `FieldFill`
+   * @returns - The field's default, or `undefined` where it has none
+   */
+  getFieldDefault(schema: S, fill?: FieldFill): unknown;
   /** Determines which of the given `options` provided most closely matches the `formData`.
    * Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
    *

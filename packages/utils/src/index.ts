@@ -274,12 +274,14 @@ export {
 } from './schema/index.ts';
 /** @public The validator-based API that `createSchemaUtils()` binds, which consumers call directly with a validator */
 export {
+  childFillOf,
   constrainsAlike,
   findFieldInSchema,
   findSelectedOptionInXxxOf,
   getClosestMatchingOption,
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   getDisplayLabel,
+  getFieldDefault,
   getFilledDefault,
   getFirstMatchingOption,
   getFromSchema,

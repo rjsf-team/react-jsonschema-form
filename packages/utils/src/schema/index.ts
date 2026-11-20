@@ -3,7 +3,7 @@ import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import getDefaultFormState from './getDefaultFormState.ts';
 import getDisplayLabel from './getDisplayLabel.ts';
-import getFilledDefault from './getFilledDefault.ts';
+import getFilledDefault, { childFillOf, getFieldDefault } from './getFilledDefault.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import getFromSchema from './getFromSchema.ts';
 import { getItemSchema, getOpenPrefixLength, getPrefixLength, isTupleSchema } from './getItemSchema.ts';
@@ -21,6 +21,7 @@ import sanitizeDataForNewSchema, {
 import { constrainsValue } from './schemaKeywords.ts';
 
 export {
+  childFillOf,
   constrainsAlike,
   constrainsAlikeAsideDefault,
   constrainsValue,
@@ -32,6 +33,7 @@ export {
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   getDisplayLabel,
   getClosestMatchingOption,
+  getFieldDefault,
   getFilledDefault,
   getFirstMatchingOption,
   getFromSchema,

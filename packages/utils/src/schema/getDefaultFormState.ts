@@ -61,6 +61,7 @@ import toConstant from '../toConstant.ts';
 import type {
   CustomMergeAllOf,
   DefaultFormStateBehavior,
+  FieldFill,
   FieldPathList,
   FormContextType,
   FormFieldState,
@@ -83,6 +84,7 @@ import {
   getRestItemsKey,
   isTupleSchema,
 } from './getItemSchema.ts';
+import { isHandedOut } from './graph/handedOut.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
   checkCondition,
@@ -750,6 +752,10 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * calls it computes what one leaving it out would. A child's own fold doesn't call it
    */
   onObjectConst?: () => void;
+  /** Called with the defaults and the `const` the field hands its children, see `fieldFillOf()`. A child's own fold
+   * doesn't call it
+   */
+  onHandDown?: (defaults: unknown, givenConst: unknown) => void;
   /** The option each field shows, which a field offering `anyOf`/`oneOf` options computes its defaults from */
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
@@ -1194,19 +1200,6 @@ function leadsToObjectConst<S extends StrictRJSFSchema>(
   return reaches;
 }
 
-/** The object `const` the object field `schema` takes as its default where it closes the object to the keys it names:
- * the field takes no extra key, so the defaults seed a key it names that no property declares from it alone, whatever
- * `emptyObjectFields` says. `objectConst` is the one the field defaults to, read off `schema` where not given, as
- * `getFilledDefault()` reads it
- */
-export function closingConstOf<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  schema: S,
-  objectConst: unknown = constIsDefault<S>(schema, context.defaultFormStateBehavior) ? schema[CONST_KEY] : undefined,
-): GenericObjectType | undefined {
-  return isObjectData(objectConst) && !allowsAdditionalProperties<S, F>(context, schema) ? objectConst : undefined;
-}
-
 /** Whether the field of `schema` takes a `const` as its default: its own `const`, or one `hasConst` says it has where
  * `schema.const` doesn't show it, a `const` an ancestor gives it or its own spelled out as `undefined`; unless
  * `constAsDefaults` is `'never'` or the field's `const` is an Ajv `$data` reference
@@ -1252,6 +1245,14 @@ interface FieldPass<S extends StrictRJSFSchema> {
   readonly fills: NullFills | undefined;
   readonly holdsNull: boolean;
   readonly objectConst: boolean;
+  /** What the field handed its children in the pass, see `FoldProps.onHandDown` */
+  readonly handedDown?: HandedDown;
+}
+
+/** The defaults and the `const` a field hands its children, which each child reads at its key */
+interface HandedDown {
+  readonly defaults: unknown;
+  readonly givenConst: unknown;
 }
 
 /** Computes the defaults of `field` from the fold's state at it. A field that read `dependencies` or a condition, in
@@ -1278,7 +1279,10 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // The views the pass computed the field from, the last one with the options the field selected, which are planned
     // with it, so the dependencies and conditions they bring are read too
     const views: DefaultsView<S>[] = [];
-    const reports = { holdsNull: false, objectConst: false };
+    const reports: { holdsNull: boolean; objectConst: boolean; handedDown?: HandedDown } = {
+      holdsNull: false,
+      objectConst: false,
+    };
     const fills = freshFills(props.nullFills);
     let last = settle(context, field, data, depData);
     const folded = foldView(context, last, {
@@ -1296,6 +1300,11 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       onObjectConst: () => {
         reports.objectConst = true;
       },
+      onHandDown:
+        props.onHandDown &&
+        ((defaults, givenConst) => {
+          reports.handedDown = { defaults, givenConst };
+        }),
     });
     const readers = [last, ...views.flatMap(({ merged }) => merged.readers ?? []), ...passes.takeReaders()];
     return { folded, depData, readers, fills, ...reports };
@@ -1306,6 +1315,9 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
     if (pass.objectConst) {
       props.onObjectConst?.();
+    }
+    if (pass.handedDown) {
+      props.onHandDown?.(pass.handedDown.defaults, pass.handedDown.givenConst);
     }
     addFills(props.nullFills, pass.fills);
     return pass.folded;
@@ -1725,12 +1737,17 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         const optionsUiSchema = choice.rendersAsSelect
           ? withoutFieldOptions<T, S, F>(uiSchema, uiSchema, xxxOf.key)
           : uiSchema;
+        // The option's fold hands the field's children what it computes, but the field's own `const`, where it is the
+        // field's defaults, is the one they take
+        const { onHandDown } = props;
+        const optionHandDown =
+          onHandDown && constDefault ? (optionDefaults: unknown) => onHandDown(optionDefaults, givenConst) : onHandDown;
         const foldedOption = foldOption<T, S, F>(
           choice.context,
           view,
           xxxOf,
           choice.index,
-          { ...props, uiSchema: optionsUiSchema, parentDefaults: defaults, parentConst },
+          { ...props, uiSchema: optionsUiSchema, parentDefaults: defaults, parentConst, onHandDown: optionHandDown },
           initialValue,
           adopted?.choice,
         );
@@ -1835,6 +1852,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     isWholeValue,
     preferParentDefaults && defaults === null,
   );
+  props.onHandDown?.(defaults, givenConst);
   const defaultBasedOnSchemaType = typeDefaults<T, S, F>(
     context,
     view,
@@ -3553,6 +3571,7 @@ function helperView<S extends StrictRJSFSchema, F extends FormContextType>(
  * @param rawSchema - The schema for which the default state is desired
  * @param computeDefaultsProps - Optional props for this function
  * @returns - The resulting `formData` with all the defaults provided
+ * @testSeam Exported for utils' own tests
  */
 export function computeDefaults<
   T = unknown,
@@ -3565,6 +3584,44 @@ export function computeDefaults<
 ): T | T[] | null | undefined {
   const field = callRoot<S>(inputProps.rootSchema, rawSchema);
   return asDeclared<T | T[] | null | undefined>(foldField<T, S, F>(context, field, inputProps));
+}
+
+/** What the defaults fill a field holding no data with, and what the field hands its children, see `fieldFillOf()` */
+export interface FilledField extends HandedDown {
+  /** The value the field is filled with */
+  readonly value: unknown;
+}
+
+/** Returns what the defaults fill the field `schema` describes with when it holds no data, given `fill`, what they
+ * hand it, and what it hands its children for them to fill theirs by, as `computeDefaults()` computes them. A schema
+ * `retrieveSchema()` handed out is filled as it reads, with the conditions, `dependencies` and options it merged for
+ * the data it was retrieved for: the field holds no data, but the fields around it do
+ *
+ * @param context - The `SchemaContext` the defaults are computed under
+ * @param schema - The field's schema, as it is or as retrieved
+ * @param rootSchema - The root schema `schema` is resolved against
+ * @param fill - What the defaults hand the field
+ * @returns - The field's value and what it hands its children
+ */
+export function fieldFillOf<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  rootSchema: S,
+  fill: FieldFill,
+): FilledField {
+  let handedDown: HandedDown = { defaults: undefined, givenConst: undefined };
+  // A handed-out schema stands for the field it was retrieved from, which the fold would plan again with no data. A copy
+  // is planned from its own keywords, in the field's place, so its `$ref`s resolve where they were written
+  const read = isHandedOut(schema) ? { ...schema } : schema;
+  const value = foldField<unknown, S, F>(context, callRoot<S>(rootSchema, read), {
+    parentDefaults: fill.inheritedDefault,
+    parentConst: fill.inheritedConst,
+    required: fill.isRequired,
+    onHandDown: (defaults, givenConst) => {
+      handedDown = { defaults, givenConst };
+    },
+  });
+  return { value: asDeclared(value), ...handedDown };
 }
 
 /** Computes the default value for objects, reading the properties `rawSchema` declares as it stands, unless it holds
@@ -4125,7 +4182,7 @@ function optionTakesValueOf<S extends StrictRJSFSchema, F extends FormContextTyp
  * whether an ancestor's default can win under `nestedDefaultsPrecedence: 'ancestorWins'`, here and in
  * `getFilledDefault()`
  */
-export function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
+function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
   return typeAllows(getSchemaOwnTypes<S>(schema), value);
 }
 

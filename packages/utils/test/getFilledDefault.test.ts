@@ -1,53 +1,70 @@
-import type { PropertyPlacement, RJSFSchema, SchemaContext } from '../src/index.ts';
-import { getDefaultFormState, getFilledDefault } from '../src/index.ts';
+import type { FieldFill, RJSFSchema, SchemaContext } from '../src/index.ts';
+import { childFillOf, getDefaultFormState, getFieldDefault, getFilledDefault, retrieveSchema } from '../src/index.ts';
+import { check } from './schema/graph/miniValidator.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
-const descendantWins: SchemaContext = { validator: getTestValidator({}) };
+/** A validator answering as a real one does, which the fill asks to pick the option a default matches */
+const answering = () => getTestValidator({ isValid: (schema, data, root) => check(schema, data, root) });
+
+const descendantWins: SchemaContext = { validator: answering() };
 const ancestorWins: SchemaContext = {
   ...descendantWins,
   defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' },
 };
 
+/** Where a field sits as a property of an object: whether the object lists it in `required`, and is required itself */
+interface Placement {
+  isRequired?: boolean;
+  isParentRequired?: boolean;
+}
+
+/** The fill of a field handed `inheritedDefault`, as a property at `placement` where one is given */
+const fillOf = (inheritedDefault: unknown, placement?: Placement): FieldFill =>
+  placement ? { inheritedDefault, isProperty: true, ...placement } : { inheritedDefault };
+
 describe('getFilledDefault()', () => {
   it('reads whichever of the two defaults is declared', () => {
-    expect(getFilledDefault(descendantWins, { type: 'string', default: 'own' }, {}, undefined)).toBe('own');
-    expect(getFilledDefault(ancestorWins, { type: 'string' }, {}, 'inherited')).toBe('inherited');
-    expect(getFilledDefault(descendantWins, { type: 'string' }, {}, undefined)).toBeUndefined();
+    expect(getFilledDefault(descendantWins, { type: 'string', default: 'own' }, {}, fillOf(undefined))).toBe('own');
+    expect(getFilledDefault(ancestorWins, { type: 'string' }, {}, fillOf('inherited'))).toBe('inherited');
+    expect(getFilledDefault(descendantWins, { type: 'string' }, {}, fillOf(undefined))).toBeUndefined();
   });
 
   it.each([
     { context: descendantWins, expected: null },
     { context: ancestorWins, expected: 'inherited' },
   ])('reads a null default of its own by nestedDefaultsPrecedence', ({ context, expected }) => {
-    expect(getFilledDefault(context, { type: ['string', 'null'], default: null }, {}, 'inherited')).toBe(expected);
+    expect(getFilledDefault(context, { type: ['string', 'null'], default: null }, {}, fillOf('inherited'))).toBe(
+      expected,
+    );
   });
 
   it('reads its own default under ancestorWins where its type cannot hold the inherited one', () => {
-    expect(getFilledDefault(ancestorWins, { type: 'string', default: 'own' }, {}, null)).toBe('own');
+    expect(getFilledDefault(ancestorWins, { type: 'string', default: 'own' }, {}, fillOf(null))).toBe('own');
   });
 
   it.each([
     { context: descendantWins, expected: { a: 'own', b: 'inherited', c: 'own' } },
     { context: ancestorWins, expected: { a: 'inherited', b: 'inherited', c: 'own' } },
   ])('merges two object defaults, the winner over the other', ({ context, expected }) => {
-    const schema: RJSFSchema = { type: 'object', default: { a: 'own', c: 'own' } };
+    const properties = { a: { type: 'string' }, b: { type: 'string' }, c: { type: 'string' } } as const;
+    const schema: RJSFSchema = { type: 'object', properties, default: { a: 'own', c: 'own' } };
 
-    expect(getFilledDefault(context, schema, {}, { a: 'inherited', b: 'inherited' })).toEqual(expected);
+    expect(getFilledDefault(context, schema, {}, fillOf({ a: 'inherited', b: 'inherited' }))).toEqual(expected);
   });
 
   it('takes one object default whole for a select over object constants', () => {
     const schema: RJSFSchema = { type: 'object', enum: [{ a: 1 }, { b: 2 }], default: { a: 1 } };
 
-    expect(getFilledDefault(descendantWins, schema, {}, { b: 2 })).toEqual({ a: 1 });
-    expect(getFilledDefault(ancestorWins, schema, {}, { b: 2 })).toEqual({ b: 2 });
+    expect(getFilledDefault(descendantWins, schema, {}, fillOf({ b: 2 }))).toEqual({ a: 1 });
+    expect(getFilledDefault(ancestorWins, schema, {}, fillOf({ b: 2 }))).toEqual({ b: 2 });
   });
 
   it('merges in the default of the option its own default picks, not the first option', () => {
-    // Both options validate the default under the test validator, so only the discriminator picks the second
+    // The discriminator picks the second option
     const schema: RJSFSchema = {
       type: 'object',
       discriminator: { propertyName: 'k' },
-      properties: { k: { type: 'string' } },
+      properties: { k: { type: 'string' }, a: { type: 'number' }, b: { type: 'number' } },
       default: { k: 'B' },
       oneOf: [
         { properties: { k: { const: 'A' } }, default: { a: 1 } },
@@ -55,7 +72,7 @@ describe('getFilledDefault()', () => {
       ],
     };
 
-    expect(getFilledDefault(descendantWins, schema, {}, undefined)).toEqual({ k: 'B', b: 2 });
+    expect(getFilledDefault(descendantWins, schema, {}, fillOf(undefined))).toEqual({ k: 'B', b: 2 });
   });
 
   it.each([
@@ -66,25 +83,24 @@ describe('getFilledDefault()', () => {
     ({ context, expected }) => {
       const schema: RJSFSchema = {
         type: 'object',
+        properties: { a: { type: 'string' }, b: { type: 'string' } },
         default: { a: 'own' },
         oneOf: [{ default: { a: 'option' } }],
       };
 
-      expect(getFilledDefault(context, schema, {}, { a: 'inherited', b: 'inherited' })).toEqual(expected);
-      expect(getFilledDefault(context, schema, {}, undefined)).toEqual({ a: 'option' });
+      expect(getFilledDefault(context, schema, {}, fillOf({ a: 'inherited', b: 'inherited' }))).toEqual(expected);
+      expect(getFilledDefault(context, schema, {}, fillOf(undefined))).toEqual({ a: 'option' });
     },
   );
 
-  it('picks no option of a select over constants, whose options are values', () => {
-    const context: SchemaContext = { validator: getTestValidator({}) };
+  it('reads a select over constants as the constant its default names', () => {
     const schema: RJSFSchema = { type: 'string', default: 'b', oneOf: [{ const: 'a' }, { const: 'b' }] };
 
-    expect(getFilledDefault(context, schema, {}, undefined, { isRequired: true })).toBe('b');
-    expect(context.validator.isValid).not.toHaveBeenCalled();
+    expect(getFilledDefault(descendantWins, schema, {}, fillOf(undefined, { isRequired: true }))).toBe('b');
   });
 
-  it('reads a key that is a select over constants, or a $ref to one, by its own default, sparing it a fill', () => {
-    const context: SchemaContext = { validator: getTestValidator({}) };
+  it("reads a key that is a select over constants, or a $ref to one, by its own default over its object's", () => {
+    const context = descendantWins;
     const schema: RJSFSchema = {
       type: 'object',
       definitions: { color: { type: 'string', default: 'x', oneOf: [{ const: 'x' }, { const: 'y' }] } },
@@ -95,8 +111,10 @@ describe('getFilledDefault()', () => {
       default: { d: 'y', e: 'y' },
     };
 
-    expect(getFilledDefault(context, schema, schema, undefined, { isRequired: true })).toEqual({ d: 'y', e: 'x' });
-    expect(context.validator.isValid).not.toHaveBeenCalled();
+    expect(getFilledDefault(context, schema, schema, fillOf(undefined, { isRequired: true }))).toEqual({
+      d: 'y',
+      e: 'x',
+    });
   });
 
   it('stops picking at an option list it has picked from, as an option leads back to it', () => {
@@ -107,9 +125,9 @@ describe('getFilledDefault()', () => {
       },
     };
 
-    expect(getFilledDefault(descendantWins, rootSchema.definitions!.v as RJSFSchema, rootSchema, undefined)).toBe(
-      undefined,
-    );
+    expect(
+      getFilledDefault(descendantWins, rootSchema.definitions!.v as RJSFSchema, rootSchema, fillOf(undefined)),
+    ).toBe(undefined);
   });
 
   it("reads no default for a property under emptyObjectFields: 'skipDefaults', and its own for the root or an item", () => {
@@ -119,8 +137,8 @@ describe('getFilledDefault()', () => {
     };
     const schema: RJSFSchema = { type: 'string', default: 'own' };
 
-    expect(getFilledDefault(skipDefaults, schema, {}, 'inherited', { isRequired: true })).toBeUndefined();
-    expect(getFilledDefault(skipDefaults, schema, {}, undefined)).toBe('own');
+    expect(getFilledDefault(skipDefaults, schema, {}, fillOf('inherited', { isRequired: true }))).toBeUndefined();
+    expect(getFilledDefault(skipDefaults, schema, {}, fillOf(undefined))).toBe('own');
   });
 
   it.each([
@@ -136,14 +154,14 @@ describe('getFilledDefault()', () => {
         defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
       };
 
-      expect(getFilledDefault(populateRequired, { type: 'string', default: 'own' }, {}, undefined, placement)).toBe(
-        expected,
-      );
+      expect(
+        getFilledDefault(populateRequired, { type: 'string', default: 'own' }, {}, fillOf(undefined, placement)),
+      ).toBe(expected);
     },
   );
 });
 
-describe('getFilledDefault() cuts an object default down key by key, as the fill builds it', () => {
+describe('getFilledDefault() writes an object default key by key, as the fill builds it', () => {
   const populateRequired: SchemaContext = {
     ...descendantWins,
     defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
@@ -155,7 +173,7 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
     name: string;
     context: SchemaContext;
     schema: RJSFSchema;
-    placement: PropertyPlacement;
+    placement: Placement;
     expected: unknown;
   }>([
     {
@@ -346,8 +364,8 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
       expected: { c: { a: 1 } },
     },
     {
-      // Both options validate the default under the test validator, so only the discriminator picks the second
-      name: 'a key the option its default discriminates requires is written',
+      // The discriminator picks the second option, whose `const` is written whatever `emptyObjectFields` says
+      name: 'a key the option its default discriminates requires is written, beside its const',
       context: populateRequired,
       schema: {
         type: 'object',
@@ -357,7 +375,7 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
         default: { k: 'B', a: 1 },
       },
       placement: required,
-      expected: { a: 1 },
+      expected: { k: 'B', a: 1 },
     },
     {
       name: 'a property typed by its option is cut by that option',
@@ -417,11 +435,13 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
       placement: required,
       expected: { c: { x: 'e' } },
     },
+    // The fill merges a nested `allOf` only under `allOf: 'populateDefaults'`, so a property declared through one keeps
+    // its object default whole, as the fill writes it
     ...[
-      { name: 'a $ref', c: { $ref: '#/definitions/C' } },
-      { name: 'an allOf', c: { allOf: [{ $ref: '#/definitions/C' }] } },
-    ].map(({ name, c }) => ({
-      name: `an object property declared through ${name} is cut down as one declared inline`,
+      { name: 'a $ref', c: { $ref: '#/definitions/C' }, expected: {} },
+      { name: 'an allOf', c: { allOf: [{ $ref: '#/definitions/C' }] }, expected: { c: { a: 1 } } },
+    ].map(({ name, c, expected }) => ({
+      name: `an object property declared through ${name} is cut down as the fill reads it`,
       context: populateRequired,
       schema: {
         type: 'object',
@@ -430,7 +450,7 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
         default: { c: { a: 1 } },
       } satisfies RJSFSchema,
       placement: required,
-      expected: {},
+      expected,
     })),
     {
       name: 'an empty optional object below leaves an optional object nothing to write',
@@ -466,7 +486,7 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
       expected: { a: 1 },
     },
   ])('$name', ({ context, schema, placement, expected }) => {
-    expect(getFilledDefault(context, schema, schema, undefined, placement)).toEqual(expected);
+    expect(getFilledDefault(context, schema, schema, fillOf(undefined, placement))).toEqual(expected);
   });
 
   // The fill seeds the keys an object `const` that closes the object names, whatever `emptyObjectFields` says, as on
@@ -479,14 +499,15 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
     const root: RJSFSchema = { type: 'object', default: { x: inherited }, properties: { x } };
 
     expect(getDefaultFormState(descendantWins, { schema: root, rootSchema: root })).toEqual({ x: expected });
-    expect(getFilledDefault(descendantWins, x, root, inherited, optional)).toEqual(expected);
-    expect(getFilledDefault(populateRequired, x, root, inherited, required)).toEqual(expected);
+    expect(getFilledDefault(descendantWins, x, root, fillOf(inherited, optional))).toEqual(expected);
+    expect(getFilledDefault(populateRequired, x, root, fillOf(inherited, required))).toEqual(expected);
   });
 
-  it('leaves the object default whole without a placement', () => {
+  it('fills the root as the fill fills it, its optional keys left out under populateRequiredDefaults', () => {
     const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'number' } }, default: { a: 1 } };
 
-    expect(getFilledDefault(populateRequired, schema, {}, undefined)).toEqual({ a: 1 });
+    expect(getFilledDefault(populateRequired, schema, {}, fillOf(undefined))).toEqual({});
+    expect(getFilledDefault(descendantWins, schema, {}, fillOf(undefined))).toEqual({ a: 1 });
   });
 
   // The fill matches a field holding no data by its own default, so an inherited one picks no option
@@ -502,7 +523,195 @@ describe('getFilledDefault() cuts an object default down key by key, as the fill
         oneOf: [{ properties: { x: { type: 'number' } } }, { properties: { y: { type: 'number' } } }],
       };
 
-      expect(getFilledDefault(context, schema, schema, { y: 1 }, optional)).toEqual(expected);
+      expect(getFilledDefault(context, schema, schema, fillOf({ y: 1 }, optional))).toEqual(expected);
     },
   );
+});
+
+describe('getFilledDefault() reads what the fill writes', () => {
+  /** The value `getDefaultFormState()` writes at `path` of `root` holding no data */
+  const filledAt = (context: SchemaContext, root: RJSFSchema, path: (string | number)[]): unknown =>
+    path.reduce<unknown>(
+      (value, key) =>
+        value === null || typeof value !== 'object' ? undefined : (value as Record<string, unknown>)[key],
+      getDefaultFormState(context, { schema: root, rootSchema: root }),
+    );
+  /** What `getFilledDefault()` reads at `path` of `root`, through the fills `childFillOf()` hands each field */
+  const readAt = (context: SchemaContext, root: RJSFSchema, path: (string | number)[]): unknown => {
+    let schema = root;
+    let fill: FieldFill = {};
+    for (const key of path) {
+      fill = childFillOf(context, schema, root, fill, key);
+      const raw = typeof key === 'number' ? (schema.items as RJSFSchema) : (schema.properties![key] as RJSFSchema);
+      schema = retrieveSchema(context, raw, root);
+    }
+    return getFilledDefault(context, schema, root, fill);
+  };
+
+  it.each<{ name: string; context?: SchemaContext; root: RJSFSchema; path: (string | number)[] }>([
+    {
+      name: "an ancestor's const over a key's own default (#5819)",
+      root: {
+        type: 'object',
+        properties: {
+          o: {
+            type: 'object',
+            const: { a: 'c' },
+            default: { a: 'd' },
+            properties: { a: { type: 'string', default: 'e' } },
+          },
+        },
+      },
+      path: ['o', 'a'],
+    },
+    {
+      name: 'a default its own properties declare, for an object declaring none (#5839)',
+      root: {
+        type: 'object',
+        properties: { o: { type: 'object', properties: { a: { type: 'number', default: 1 } } } },
+      },
+      path: ['o'],
+    },
+    {
+      name: "a key the object's default doesn't name, beside one it does (#5839)",
+      root: {
+        type: 'object',
+        properties: {
+          o: {
+            type: 'object',
+            default: { x: 1 },
+            properties: {
+              x: { type: 'number' },
+              c: { type: 'object', default: { a: 1 }, properties: { a: { type: 'number' } } },
+            },
+          },
+        },
+      },
+      path: ['o'],
+    },
+    {
+      name: 'an array default padded to minItems (#5825)',
+      root: {
+        type: 'object',
+        required: ['v'],
+        properties: { v: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: ['x'] } },
+      },
+      path: ['v'],
+    },
+    {
+      name: "an item at its index of its array's default (#5826)",
+      root: { type: 'object', properties: { list: { type: 'array', items: { type: 'string' }, default: ['x', 'w'] } } },
+      path: ['list', 0],
+    },
+    {
+      name: "an extra key a pattern describes, by the pattern's own default (#5819)",
+      context: { ...descendantWins, additionalPropertiesWhenAbsent: 'allow' },
+      root: {
+        type: 'object',
+        properties: {
+          o: { type: 'object', patternProperties: { '^x': { type: 'number', default: 7 } }, default: { x1: 1 } },
+        },
+      },
+      path: ['o'],
+    },
+    {
+      name: 'a oneOf of constants whose default names none of them, which the fill takes as it stands (#5898)',
+      root: {
+        type: 'object',
+        properties: { s: { type: 'string', default: 'z', oneOf: [{ const: 'a' }, { const: 'b' }] } },
+      },
+      path: ['s'],
+    },
+  ])('reads $name as the fill writes it', ({ context = descendantWins, root, path }) => {
+    const filled = filledAt(context, root, path);
+    expect(filled).not.toBeUndefined();
+    expect(readAt(context, root, path)).toEqual(filled);
+  });
+
+  it('reads nothing for a value the fill only computes for a field no default reaches', () => {
+    const root: RJSFSchema = {
+      type: 'object',
+      required: ['b', 'l'],
+      properties: {
+        b: { type: 'boolean' },
+        l: { type: 'array', minItems: 2, items: { type: 'string', default: 'z' } },
+      },
+    };
+    expect(filledAt(descendantWins, root, ['b'])).toBe(false);
+    expect(readAt(descendantWins, root, ['b'])).toBeUndefined();
+    expect(filledAt(descendantWins, root, ['l'])).toEqual(['z', 'z']);
+    expect(readAt(descendantWins, root, ['l'])).toBeUndefined();
+  });
+
+  it('hands the children of an object const beside options the const, not the option fold', () => {
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      const: { a: 'c' },
+      oneOf: [{ properties: { b: { type: 'string', default: 'b' } } }],
+    };
+    expect(childFillOf(descendantWins, root, root, {}, 'a').inheritedConst).toBe('c');
+  });
+
+  it("hands a field's children the default its own fill combines, before it is filled out", () => {
+    const array: RJSFSchema = { type: 'array', minItems: 2, items: { type: 'string', default: 'z' }, default: ['x'] };
+    expect(getFieldDefault(descendantWins, array, array, { isRequired: true })).toEqual(['x']);
+    expect(getFilledDefault(descendantWins, array, array, { isRequired: true })).toEqual(['x', 'z']);
+  });
+
+  it('hands the same fill for the same child, so its parent is filled once', () => {
+    const root: RJSFSchema = { type: 'object', properties: { a: { type: 'string', default: 'x' } } };
+    const fill: FieldFill = {};
+    expect(childFillOf(descendantWins, root, root, fill, 'a')).toBe(childFillOf(descendantWins, root, root, fill, 'a'));
+  });
+
+  it.each<{ name: string; child: RJSFSchema }>([
+    {
+      name: 'an if',
+      child: { type: 'string', if: { minLength: 1 }, then: { default: 'then' }, else: { default: 'else' } },
+    },
+    { name: 'an option list', child: { type: 'string', oneOf: [{ default: 'one' }, { default: 'two' }] } },
+    { name: 'an option list an allOf offers', child: { type: 'string', allOf: [{ oneOf: [{ default: 'one' }] }] } },
+  ])("fills a child reading $name by itself, not off its parent's fill", ({ child }) => {
+    const root: RJSFSchema = { type: 'object', properties: { c: child }, default: { c: 'object' } };
+    const context: SchemaContext = { validator: answering() };
+    const fill = childFillOf(context, root, root, {}, 'c');
+    // A schema the caller resolved otherwise than the parent's fill read it, which a child reading data may be
+    const resolved: RJSFSchema = { type: 'string', default: 'resolved' };
+    expect(getFilledDefault(context, resolved, root, fill)).toBe('resolved');
+  });
+
+  it("reads a child an ancestor's const or option default gives a value off its parent's fill", () => {
+    const constRoot: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } }, const: { a: 'c' } };
+    const constFill = childFillOf(descendantWins, constRoot, constRoot, {}, 'a');
+    expect(getFilledDefault(descendantWins, { type: 'string' }, constRoot, constFill)).toBe('c');
+    const optionRoot: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      oneOf: [{ default: { a: 'o' } }],
+    };
+    const optionFill = childFillOf(descendantWins, optionRoot, optionRoot, {}, 'a');
+    expect(getFilledDefault(descendantWins, { type: 'string' }, optionRoot, optionFill)).toBe('o');
+    const refRoot: RJSFSchema = {
+      type: 'object',
+      definitions: { option: { default: { a: 'r' } } },
+      properties: { a: { type: 'string' } },
+      oneOf: [{ $ref: '#/definitions/option' }],
+    };
+    const refFill = childFillOf(descendantWins, refRoot, refRoot, {}, 'a');
+    expect(getFilledDefault(descendantWins, { type: 'string' }, refRoot, refFill)).toBe('r');
+  });
+
+  it.each<{ name: string; tuple: RJSFSchema }>([
+    { name: 'prefixItems', tuple: { type: 'array', prefixItems: [{ type: 'string', default: 'a' }] } },
+    { name: 'an items list', tuple: { type: 'array', items: [{ type: 'string', default: 'a' }] } },
+  ])('reads the item defaults a tuple declares through $name as its default, as the fill writes them', ({ tuple }) => {
+    expect(getFilledDefault(descendantWins, tuple, tuple)).toEqual(['a']);
+  });
+
+  it("reads a child deciding nothing from data off its parent's fill", () => {
+    const root: RJSFSchema = { type: 'object', properties: { c: { type: 'string' } }, default: { c: 'object' } };
+    const fill = childFillOf(descendantWins, root, root, {}, 'c');
+    expect(getFilledDefault(descendantWins, { type: 'string', default: 'resolved' }, root, fill)).toBe('object');
+  });
 });
