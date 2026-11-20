@@ -133,10 +133,17 @@ export default function retrieveSchema<
   return view;
 }
 
+/** Whether `schema` merges subschemas of its own into itself for the data, as an `allOf`, an `if`'s `then` or `else`, or
+ * a `dependencies` schema does
+ */
+export function mergesOwnSubschemas(schema: object): boolean {
+  return [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY].some((keyword) => Object.hasOwn(schema, keyword));
+}
+
 /** Returns the schema a field offering options is asked whether it renders a field of its own beside them with (see
- * `rendersOwnFieldBesideOption()`): `field`, its options left out, with its `allOf` merged for `formData`, since its
- * `type` can come through one. A field naming one type already has it, which an `allOf` can't change, so it is spared
- * the merge and returned as it stands
+ * `rendersOwnFieldBesideOption()`): `field`, its options left out, with its `allOf`, `then`, `else` and `dependencies`
+ * schemas merged for `formData`, since its `type` can come through any of them. A field naming one type already has
+ * it, which none of them can change, so it is spared the merge and returned as it stands
  *
  * @param context - The `SchemaContext` to merge in
  * @param field - The field's schema without its `anyOf`/`oneOf`
@@ -150,7 +157,7 @@ export function fieldTypeSchema<S extends StrictRJSFSchema, F extends FormContex
   rootSchema: S,
   formData: unknown,
 ): S {
-  return ALL_OF_KEY in field && typeof getSchemaType<S>(field) !== 'string'
+  return mergesOwnSubschemas(field) && typeof getSchemaType<S>(field) !== 'string'
     ? retrieveSchema<unknown, S, F>(context, field, rootSchema, formData)
     : field;
 }

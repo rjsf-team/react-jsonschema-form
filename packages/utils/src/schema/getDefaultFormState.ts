@@ -73,7 +73,7 @@ import type {
   StrictRJSFSchema,
   UiSchema,
 } from '../types.ts';
-import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts';
+import fieldShownOption, { rebuiltOptionPick, rendersOptionsAsSelect } from './fieldShownOption.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
 import { typeAllows } from './getFirstMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
@@ -130,6 +130,7 @@ import {
   fieldOf,
   fieldTypeSchema,
   isLeafSchema,
+  mergesOwnSubschemas,
   optionMatchContext,
   optionMatchKey,
   OPTION_KEYWORDS,
@@ -1746,6 +1747,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         defaults,
         preferParentDefaults,
         props,
+        adopted
+          ? undefined
+          : (data) => retrieveField<S, F>(context, rootProvenance<S>(view.field.graph, view.field.seeds), data),
       );
       isWholeValue = choice.isWholeValue;
       // A list of constants holds one of them whole, as an `enum` does, so a default naming none of them is the field's
@@ -2070,8 +2074,10 @@ interface OfferingSchema<S extends StrictRJSFSchema> extends Seeding<S> {
 
 /** Picks the option of a field offering `anyOf`/`oneOf` options that it shows, or else the one its data, or its
  * default, matches, and the context the option's defaults are computed in. The option a `fieldState` says the field
- * shows is matched as the field on screen matches it, over its options retrieved for its data; otherwise each option
- * is scored where it is declared, or where the merge that rebuilt its list adopted it.
+ * shows is matched as the field on screen matches it, over its options retrieved for its data. Otherwise a list the
+ * field's `allOf` rebuilds where `rendered`, the field as `SchemaField` retrieves it for the value matched, renders it
+ * is scored as rendered, and each option of any other list is scored where it is declared, or where the merge that
+ * rebuilt its list adopted it.
  */
 function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2081,6 +2087,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   defaults: unknown,
   preferParentDefaults: boolean,
   props: FoldProps<T, S, F>,
+  rendered: ((data: unknown) => S) | undefined,
 ): {
   context: SchemaContext<S, F>;
   index: number;
@@ -2139,7 +2146,20 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     picksWholeOption || rawFormData === undefined
       ? -1
       : shownOptionIndex<T, S, F>(context, view, options, rawFormData, props);
-  const pickedIndex = picksWholeOption ? equalOptionIndex : shownIndex;
+  // With no option stored, a list an `allOf` rebuilt is scored as the field renders it, so the first render picks the
+  // option an edit or a reset goes on to show
+  const renderedIndex =
+    picksWholeOption || shownIndex !== -1 || valueToMatch === undefined || !rendered || !mergesOwnSubschemas(schema)
+      ? shownIndex
+      : (rebuiltOptionPick<S, F>(
+          context,
+          Reflect.get(rendered(valueToMatch), key),
+          options,
+          rootSchema,
+          valueToMatch,
+          getDiscriminatorFieldFromSchema<S>(schema),
+        ) ?? -1);
+  const pickedIndex = picksWholeOption ? equalOptionIndex : renderedIndex;
   const index =
     pickedIndex !== -1
       ? pickedIndex

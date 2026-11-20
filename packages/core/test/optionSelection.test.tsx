@@ -1844,6 +1844,43 @@ describe('option selection as form state', () => {
     },
   );
 
+  // The data's keys are split across the two lists: no written option of the field's holds both, so only B×C, the
+  // option the field shows, matches both. The same C in both lists stands for the `allOf`'s C, not the field's
+  const optionC: RJSFSchema = { title: 'C', properties: { c: { type: 'string' } } };
+  const splitKeysB: RJSFSchema = {
+    title: 'B',
+    properties: { b: { type: 'number', default: 5 }, bb: { type: 'string' } },
+  };
+  it.each(
+    [
+      {
+        name: 'distinct options',
+        oneOf: [{ title: 'A', properties: { a: { type: 'string' }, c: { type: 'string' } } }, splitKeysB],
+        allOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }],
+      },
+      {
+        name: 'one option object in both lists',
+        oneOf: [optionC, splitKeysB],
+        allOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }],
+      },
+    ].flatMap((lists) => (['forbid', 'allow'] as const).map((absent) => ({ ...lists, absent }))),
+  )(
+    'fills a typed object whose rebuilt options split the data keys, $name, from the option it shows on every pass, extra keys $absent (#5886)',
+    async ({ oneOf, allOf, absent }) => {
+      const schema = besideX({
+        p: { type: 'object', oneOf: oneOf as RJSFSchema[], allOf: [{ oneOf: allOf as RJSFSchema[] }] },
+      });
+      await expectShownOnEveryPass(
+        { schema, initialFormData: { p: { bb: 'y', c: 'z' } }, additionalPropertiesWhenAbsent: absent },
+        'root_p__oneof_select',
+        'root_x',
+        'B',
+        { p: { b: 5, bb: 'y', c: 'z' } },
+        { x: 'x', p: { b: 5, bb: 'y', c: 'z' } },
+      );
+    },
+  );
+
   // B's `then` declares `t` only for data holding `z`, so for this data `t` is an extra key B's own
   // `additionalProperties` takes
   it.each<{ name: string; field: RJSFSchema; absent: 'forbid' | 'allow'; shown: string; filled: object }>([
