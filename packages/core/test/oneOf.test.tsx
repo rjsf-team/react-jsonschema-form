@@ -6123,11 +6123,35 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
     );
 
     // The keys an option's object `const` fills are a default, whether or not the option declares them, so switching
-    // back clears them rather than leaving a key no field renders
-    it.each<{ declares: string; option: RJSFSchema }>([
-      { declares: 'beside properties', option: { properties: { b: {} }, const: { b: 1 } } },
-      { declares: 'alone', option: { const: { b: 1 } } },
-    ])('clears the keys a const $declares filled on switching back', async ({ option }) => {
+    // back clears them rather than leaving a key no field renders. A key neither option declares is judged against one
+    // fill without all such keys (`undeclaredFillOf`), where the keys the switch leaves elsewhere share one fill without
+    // every key of the object (`fillWithoutKeys`, #5836). A probe of every shape below found the two agree, but they are
+    // kept apart, as an `if` or `dependencies` reading the object's keys turns the second off and not the first, so
+    // these pin what that judgement gives, should the two ever be merged
+    it.each<{ declares: string; option: RJSFSchema; filled: Record<string, unknown> }>([
+      { declares: 'beside properties', option: { properties: { b: {} }, const: { b: 1 } }, filled: { b: 1 } },
+      { declares: 'alone', option: { const: { b: 1 } }, filled: { b: 1 } },
+      {
+        declares: 'beside a declared key it fills',
+        option: { properties: { c: { type: 'string' } }, const: { b: 1, c: 'k' } },
+        filled: { b: 1, c: 'k' },
+      },
+      {
+        declares: "beside a declared key's own default",
+        option: { properties: { c: { type: 'string', default: 'd' } }, const: { b: 1, c: 'd' } },
+        filled: { b: 1, c: 'd' },
+      },
+      {
+        declares: 'beside a required boolean it leaves',
+        option: { properties: { c: { type: 'boolean' } }, required: ['c'], const: { b: 1 } },
+        filled: { b: 1, c: false },
+      },
+      {
+        declares: 'closing the object',
+        option: { properties: { c: { type: 'string' } }, additionalProperties: false, const: { b: 1, c: 'k' } },
+        filled: { b: 1, c: 'k' },
+      },
+    ])('clears the keys a const $declares filled on switching back', async ({ option, filled }) => {
       const schema: RJSFSchema = {
         type: 'object',
         [keyword]: [
@@ -6138,10 +6162,44 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x' } });
 
       await user.selectOptions(elementOf(node, selectorId), 'T');
-      expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 1 });
+      expect(onChange.mock.lastCall?.[0].formData).toEqual(filled);
       await user.selectOptions(elementOf(node, selectorId), 'S');
 
       expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+    });
+
+    // As above, for an object switched below the root, beside a sibling the switch doesn't reach
+    it.each<{ declares: string; option: RJSFSchema }>([
+      { declares: 'alone', option: { const: { b: 1 } } },
+      {
+        declares: 'beside a declared key it fills',
+        option: { properties: { c: { type: 'string' } }, const: { b: 1, c: 'k' } },
+      },
+      {
+        declares: 'closing the object',
+        option: { properties: { c: { type: 'string' } }, additionalProperties: false, const: { b: 1, c: 'k' } },
+      },
+    ])('clears the keys a const $declares filled in a nested object on switching back', async ({ option }) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          z: { type: 'string' },
+          o: {
+            type: 'object',
+            [keyword]: [
+              { title: 'S', properties: { a: { type: 'string' } }, required: ['a'] },
+              { title: 'T', ...option },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { z: 'zz', o: { a: 'x' } } });
+      const nestedSelectorId = `#root_o__${keyword.toLowerCase()}_select`;
+
+      await user.selectOptions(elementOf(node, nestedSelectorId), 'T');
+      await user.selectOptions(elementOf(node, nestedSelectorId), 'S');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ z: 'zz', o: {} });
     });
 
     it('fills the old data as many times on switching back for five keys a const filled as for one', async () => {
@@ -6353,6 +6411,21 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
           { type: 'array', items: { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } } },
         ),
         a: [{ kind: 'B', n: 1 }],
+      },
+      {
+        // The option `a` shows is matched by its data, and an inline list's isn't pinned to the one the old tree showed
+        held: "an inline option list the object's data matches",
+        schema: unionOf(
+          {},
+          {
+            type: 'object',
+            oneOf: [
+              { properties: { m: { type: 'number' }, n: { type: 'number', default: 1 } } },
+              { properties: { m: { type: 'string' }, n: { type: 'number' } } },
+            ],
+          },
+        ),
+        a: { m: 's', n: 1 },
       },
     ])(
       'judges a nested value by the fill made with its siblings in place, read through $held',
