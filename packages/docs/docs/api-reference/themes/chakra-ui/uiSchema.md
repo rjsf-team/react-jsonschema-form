@@ -5,7 +5,7 @@ When using `@rjsf/chakra-ui` there are a couple of ways to customize the feel of
 ## Styling
 
 You can use `ChakraProvider`, where you can customize the field components at a theme level.
-And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize the styling of the form widgets.
+And, `uiSchema` allows for the use of a `"chakra"` `"ui:options"` to customize the styling of the form widgets.
 
 ```json
 {
