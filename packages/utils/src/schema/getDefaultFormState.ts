@@ -1472,23 +1472,18 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // one: its own `default`, a merged `allOf` member's, the one of the option it shows, an inherited one or its
   // `ui:initialValue`, by the precedence the fold gives them. It is read only where the first pass checked a condition
   // whose answer depends on that value, against the `default` its seeds declare or, for a field that holds no value
-  // without one, against none, or left one unresolved for an empty field that a value would resolve. With every
-  // condition left undecided, no branch was merged, so the first pass folded the field as the start value does
+  // without one, against none, or left one unresolved for an empty field that a value would resolve
   const readsValue = first.readers.some(
-    ({ checked, present }) =>
+    ({ graph, checked, present }) =>
       present === false ||
       checked.some(
-        ({ condition, noValue, holdsPrimitive, written = condition }) =>
-          (held !== undefined || holdsPrimitive) && decidedWithoutValue(written, noValue?.types) === undefined,
+        ({ noValue, holdsPrimitive, ifNode }) =>
+          (held !== undefined || holdsPrimitive) && decidedWithoutValue(graph, ifNode, noValue?.types) === undefined,
       ),
   );
   const ownHeld =
     readsValue &&
-    heldValue<T, S, F>(unmarked, props, () =>
-      held === undefined && first.readers.every(({ checked }) => checked.every((one) => one.satisfied === undefined))
-        ? first.folded
-        : startValue<T, S, F>(unresolvedContext<S, F>(unmarked), field, props),
-    );
+    heldValue<T, S, F>(unmarked, props, () => startValue<T, S, F>(unresolvedContext<S, F>(unmarked), field, props));
   if (ownHeld && (!Object.is(ownHeld.value, held) || ownHeld.nullDefault !== nullDefault)) {
     ({ value: held, nullDefault } = ownHeld);
     const marked = heldNullContext<S, F>(unmarked, nullDefault);

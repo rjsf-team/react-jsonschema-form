@@ -1690,7 +1690,7 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
       1,
     ],
     [
-      'an empty primitive field, which it leaves undecided with no value',
+      'an empty primitive field, which takes the else with no value',
       { type: 'number' },
       { if: { minimum: 10 }, then: { const: 10 } },
       undefined,

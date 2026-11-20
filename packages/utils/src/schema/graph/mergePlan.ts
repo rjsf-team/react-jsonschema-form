@@ -89,26 +89,23 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
    */
   readonly site: string;
   readonly condition: S;
-  /** Undefined where the field holds no value and the answer depends on the one it would hold, see `NoValue` */
-  readonly satisfied: Satisfied;
+  readonly satisfied: boolean;
   /** Set where the field is one that holds no value while it has no data, see `NoValue` */
   readonly noValue?: NoValue;
   /** Whether the field may hold a value that is neither an object nor an array, such as a `default` it inherits:
    * one that holds no value while it has no data, or one whose `type` allows one
    */
   readonly holdsPrimitive: boolean;
-  /** The condition as written, which `decidedWithoutValue()` reads, where `condition` is what the validator checks */
-  readonly written?: unknown;
+  /** For an `if`, its node, which `decidedWithoutValue()` reads, where `condition` is what the validator checks */
+  readonly ifNode?: NodeId;
 }
-
-/** Whether a condition holds, `undefined` where it is undecided: neither its `then` nor its `else` applies */
-export type Satisfied = boolean | undefined;
 
 /** A field whose fill holds no value while it has no data, so an `if` is checked against no value, not `{}`: one whose
  * `type` allows neither an object nor an array, or that names no `type` and holds nothing the fill reads one from, see
  * `noValueOf()`. A field the fill reads as an object or an array holds `{}`, its defaults filled in, and one with a
- * `default` holds that, which the defaults hand the plan as its data. With no value, an `if` is decided only where the
- * value can't change its answer, see `decidedWithoutValue()`
+ * `default` holds that, which the defaults hand the plan as its data. With no value, the `then` applies where the `if`
+ * accepts every value the field may hold, and a `not` where the `if` it negates doesn't apply, see
+ * `decidedWithoutValue()`; the `else` otherwise
  */
 export interface NoValue {
   /** The `type`s the field allows, `undefined` for any */
@@ -248,8 +245,8 @@ const conditionMemo = new KeyedMemo<boolean>();
  */
 export const HOLDS_NULL_DEFAULT = Symbol('holdsNullDefault');
 
-/** Marks, as `true`, a context under which no `if` is decided, so no plan made under it merges a `then` or an `else`:
- * the value a field starts from is folded under it. A context spread from one keeps the mark
+/** Marks, as `true`, a context under which no plan merges a `then` or an `else`, nor checks an `if`: the value a field
+ * starts from is folded under it. A context spread from one keeps the mark
  */
 export const RESOLVES_NO_CONDITIONS = Symbol('resolvesNoConditions');
 
@@ -262,14 +259,14 @@ export function isMarked(context: object, mark: symbol): boolean {
  * copy: each the fill fixed, under its graph and site, as fixed, and each other, under the validator too, as the
  * validator first checked it
  */
-const ownedDecisions = new WeakMap<object, KeyedMemo<{ readonly satisfied: Satisfied }>>();
+const ownedDecisions = new WeakMap<object, KeyedMemo<boolean>>();
 
 /** A condition a fill decides as `satisfied`, whatever the data */
 export interface FixedCondition<S extends StrictRJSFSchema = RJSFSchema> {
   readonly graph: SchemaGraph<S>;
   /** See `CheckedCondition.site` */
   readonly site: string;
-  readonly satisfied: Satisfied;
+  readonly satisfied: boolean;
 }
 
 /** Returns a shallow copy of the object or array `depData`, against which each condition is checked once, and each of
@@ -293,9 +290,9 @@ export function ownedDepData<S extends StrictRJSFSchema>(
   } else {
     return depData;
   }
-  const decisions = new KeyedMemo<{ readonly satisfied: Satisfied }>();
+  const decisions = new KeyedMemo<boolean>();
   for (const { graph, site, satisfied } of fixed) {
-    decisions.set([graph, site], { satisfied });
+    decisions.set([graph, site], satisfied);
   }
   ownedDecisions.set(copy, decisions);
   return copy;
@@ -310,29 +307,25 @@ export function ownedDepData<S extends StrictRJSFSchema>(
  * @param graph - The graph the condition is a node of
  * @param checked - The condition, with the keys its check and its decision are known by, see `CheckedCondition`
  * @param depData - The data to check it against; where there is none, see `CheckedCondition.noValue`
- * @returns - Whether the condition holds, `undefined` where it is undecided
+ * @returns - Whether the condition holds
  */
 export function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
-  { key, site, condition, noValue, written = condition }: Omit<CheckedCondition<S>, 'satisfied'>,
+  { key, site, condition, noValue, ifNode }: Omit<CheckedCondition<S>, 'satisfied'>,
   depData: unknown,
-): Satisfied {
-  if (isMarked(context, RESOLVES_NO_CONDITIONS)) {
-    return undefined;
-  }
-  // An `if` no value can change the answer of needs no validator, whatever the data
-  const anyValue = decidedWithoutValue(written, undefined);
-  if (anyValue !== undefined || (depData === undefined && noValue !== undefined)) {
-    return anyValue ?? decidedWithoutValue(written, noValue?.types);
+): boolean {
+  if (ifNode !== undefined) {
+    // An `if` no value can change the answer of needs no validator, whatever the data
+    const anyValue = decidedWithoutValue(graph, ifNode, undefined);
+    if (anyValue !== undefined || (depData === undefined && noValue !== undefined)) {
+      return anyValue ?? decidedWithoutValue(graph, ifNode, noValue?.types, true) === true;
+    }
   }
   if (typeof depData === 'object' && depData !== null) {
     const owned = ownedDecisions.get(depData);
     const check = () => context.validator.isValid(condition, depData, graph.rawRoot);
-    return owned
-      ? (owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], () => ({ satisfied: check() })))
-          .satisfied
-      : check();
+    return owned ? (owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], check)) : check();
   }
   const keys = [context.validator, graph, key];
   // A `null` default the field holds is checked as itself, where `null` data is checked as `{}`. Any other value is
@@ -358,37 +351,54 @@ function allowsType(types: readonly unknown[], type: string): boolean {
   return types.includes(type) || (type === 'integer' && types.includes('number'));
 }
 
-/** How `condition` decides for a field holding no value whose `type`s are `types` (any for `undefined`): only where
- * every value the field may hold gets the same answer. An `if` of nothing but annotations (`true` and `{}` among them)
- * accepts every value, a `not` of one rejects every value, and an `if` of nothing but a `type` accepts the field's every
- * value where its `type`s include every one the field allows and rejects it where they include none. Every other `if` is
- * undecided, since a value the field doesn't hold could take either branch
+/** Whether the `if` node `id` holds for every value of the `type`s `types` (any for `undefined`): `true` where it
+ * accepts each, `false` where it rejects each, and `undefined` where that depends on the value. An `if` of nothing but
+ * annotations (`true` and `{}` among them) accepts every value, a `not` the opposite of what it holds, a lone `$ref`
+ * what its target does, and an `if` of nothing but a `type` accepts each value where its `type`s include every one in
+ * `types` and rejects each where they include none. Any other `if` depends on the value, or with `empty`, which asks
+ * whether a field holding no value meets it, fails, so a `not` of it holds and `if: { not: X }` reads as `if: X` with
+ * its branches swapped
  *
- * @param condition - The `if`
+ * @param graph - The graph the `if` is a node of
+ * @param id - The `if`
  * @param types - The `type`s the field allows
+ * @param [empty=false] - Whether an `if` that depends on the value fails, rather than answering `undefined`
+ * @param seen - The nodes already followed, where a `$ref` cycle depends on the value
  * @returns - Whether the `if` holds for every value of the field, `undefined` where that depends on the value
  */
-export function decidedWithoutValue(condition: unknown, types: readonly string[] | undefined): Satisfied {
-  if (typeof condition === 'boolean') {
-    return condition;
+export function decidedWithoutValue<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId | undefined,
+  types: readonly string[] | undefined,
+  empty = false,
+  seen = new Set<NodeId>(),
+): boolean | undefined {
+  const node = id === undefined || seen.has(id) ? undefined : graph.node(id);
+  const depends = empty ? false : undefined;
+  if (node?.kind === 'boolean') {
+    return node.value;
   }
-  if (!isObject(condition)) {
-    return undefined;
+  if (node?.kind !== 'schema') {
+    return depends;
   }
-  const keys = Object.keys(condition).filter((key) => key === REF_KEY || !NON_CONSTRAINING_KEYS.has(key));
+  seen.add(node.id);
+  if (REF_KEY in node.raw) {
+    return node.pureRef ? decidedWithoutValue(graph, node.ref, types, empty, seen) : depends;
+  }
+  const keys = Object.keys(node.raw).filter((key) => !NON_CONSTRAINING_KEYS.has(key));
   if (keys.length === 0) {
     return true;
   }
   if (keys.length > 1) {
-    return undefined;
+    return depends;
   }
   if (keys[0] === NOT_KEY) {
-    const negated = decidedWithoutValue(condition[NOT_KEY], types);
+    const negated = decidedWithoutValue(graph, graph.child(node.id, NOT_KEY), types, empty, seen);
     return negated === undefined ? undefined : !negated;
   }
-  const ifType: unknown = condition.type;
+  const ifType: unknown = node.raw.type;
   if (keys[0] !== 'type' || (typeof ifType !== 'string' && !Array.isArray(ifType))) {
-    return undefined;
+    return depends;
   }
   const ifTypes: unknown[] = Array.isArray(ifType) ? ifType : [ifType];
   // A `number` field may hold integers
@@ -398,7 +408,7 @@ export function decidedWithoutValue(condition: unknown, types: readonly string[]
   if (allowed.every(accepts)) {
     return true;
   }
-  return allowed.some(overlaps) ? undefined : false;
+  return allowed.some(overlaps) ? depends : false;
 }
 
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
@@ -1088,16 +1098,17 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return isSchemaObject<S>(merged) && this.context.customMergeAllOf ? merged : schemaFrom(schema, merged);
   }
 
-  private holds(key: string, condition: S, site = key, written?: unknown): Satisfied {
+  private holds(key: string, condition: S, site = key, ifNode?: NodeId): boolean {
     this.readsData = true;
-    const checked = { key, site, condition, ...this.valueTypes, written };
+    const checked = { key, site, condition, ...this.valueTypes, ifNode };
     const satisfied = checkCondition(this.context, this.graph, checked, this.depData);
     this.checked.push({ ...checked, satisfied });
     return satisfied;
   }
 
-  /** Applies the `then` or `else` the `if` chooses on the data the field's dependencies qualify on, neither where it
-   * is undecided, see `NoValue`. Inside a dependency, the branch's own `oneOf` is applied, as the dependency's are.
+  /** Applies the `then` or `else` the `if` chooses on the data the field's dependencies qualify on, `{}` standing in
+   * for none unless the field holds no value, see `NoValue`, and neither under `RESOLVES_NO_CONDITIONS`. Inside a
+   * dependency, the branch's own `oneOf` is applied, as the dependency's are.
    */
   private applyCondition(
     part: Part<S>,
@@ -1110,7 +1121,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     const condition = this.graph.child(conditionProvider.node.id, IF_KEY);
     const without = { ...part, schema: withoutKeys(part.schema, IF_KEY, THEN_KEY, ELSE_KEY) };
-    if (condition === undefined) {
+    if (condition === undefined || isMarked(this.context, RESOLVES_NO_CONDITIONS)) {
       return without;
     }
     const conditionNode = this.graph.node(condition);
@@ -1118,16 +1129,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // function for the schema it reads as
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(
-            `if:${condition}`,
-            targetOf(this.graph, condition),
-            `if:${conditionProvider.node.id}`,
-            conditionNode.raw,
-          )
+        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), `if:${conditionProvider.node.id}`, condition)
         : conditionNode.kind !== 'boolean' || conditionNode.value;
-    if (satisfied === undefined) {
-      return without;
-    }
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);
     const branchNode = branchProvider && this.graph.child(branchProvider.node.id, branchKey);
@@ -1240,7 +1243,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       .map(([, option]) => option)
       .filter((option) => {
         const condition = dependencyCondition(this.graph, option, key);
-        return condition !== undefined && this.holds(`dependency:${option}:${key}`, condition) === true;
+        return condition !== undefined && this.holds(`dependency:${option}:${key}`, condition);
       });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);

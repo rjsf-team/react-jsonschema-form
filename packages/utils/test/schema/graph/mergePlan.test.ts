@@ -1003,13 +1003,23 @@ describe('refDefinition()', () => {
 });
 
 describe('decidedWithoutValue()', () => {
+  const $defs = {
+    Num: { type: 'number' },
+    Min: { minimum: 1 },
+    Loop: { not: { $ref: '#/$defs/Loop' } },
+  } as const;
   it.each<[string, unknown, readonly string[] | undefined, boolean | undefined]>([
     ['a boolean if', false, ['number'], false],
     ['a not of a boolean if', { not: true }, ['number'], false],
     ['a not of an if a value would decide', { not: { minimum: 1 } }, ['number'], undefined],
     ['a not beside another keyword', { not: {}, minimum: 1 }, ['number'], undefined],
     ['an if that is no schema', 1, ['number'], undefined],
-    ['a $ref', { $ref: '#/$defs/A' }, ['number'], undefined],
+    ['a $ref to a type-only if', { $ref: '#/$defs/Num' }, ['number'], true],
+    ['a $ref with an annotation beside it', { $ref: '#/$defs/Num', title: 'n' }, ['string'], false],
+    ['a $ref to an if a value would decide', { $ref: '#/$defs/Min' }, ['number'], undefined],
+    ['a $ref with a constraint beside it', { $ref: '#/$defs/Num', minimum: 1 }, ['number'], undefined],
+    ['a $ref that resolves to nothing', { $ref: '#/$defs/Missing' }, ['number'], undefined],
+    ['a $ref that leads back to itself', { $ref: '#/$defs/Loop' }, ['number'], undefined],
     ['a type that is no name', { type: 1 }, ['number'], undefined],
     ['an integer if for a number field', { type: 'integer' }, ['number'], undefined],
     ['a number if for an integer field', { type: 'number' }, ['integer'], true],
@@ -1021,6 +1031,21 @@ describe('decidedWithoutValue()', () => {
       true,
     ],
   ])('decides %s', (_name, condition, types, expected) => {
-    expect(decidedWithoutValue(condition, types)).toBe(expected);
+    // The `if` is read loosely, since a row holds one that is no schema
+    const graph = parseSchemaGraph(looseSchema({ $defs, if: condition }));
+    expect(decidedWithoutValue(graph, graph.byPointer('/if'), types)).toBe(expected);
+  });
+  it.each<[string, unknown, boolean]>([
+    ['an if a value would decide as failing', { const: 3 }, false],
+    ['a not of an if a value would decide as holding', { not: { const: 3 } }, true],
+    ['a not of a not of an if a value would decide as failing', { not: { not: { const: 3 } } }, false],
+    ['a $ref to an if a value would decide as failing', { $ref: '#/$defs/Min' }, false],
+    ['a not of a $ref with a constraint beside it as holding', { not: { $ref: '#/$defs/Num', minimum: 1 } }, true],
+    ['an if that is no schema as failing', 1, false],
+    ['a not of a type covering some values the field holds as holding', { not: { type: 'integer' } }, true],
+    ['a not of a type covering every value the field holds as failing', { not: { type: 'number' } }, false],
+  ])('decides, for a field holding no value, %s', (_name, condition, expected) => {
+    const graph = parseSchemaGraph(looseSchema({ $defs, if: condition }));
+    expect(decidedWithoutValue(graph, graph.byPointer('/if'), ['number'], true)).toBe(expected);
   });
 });

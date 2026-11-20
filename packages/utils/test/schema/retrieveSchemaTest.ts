@@ -2417,12 +2417,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { type: 'string', const: 'z' },
         ],
         [
-          'merges neither branch of an if a value would decide',
+          'merges the else of an if not every value it may hold meets',
           { type: 'string', if: { maxLength: 0 }, then: { title: 'empty' }, else: { const: 'z' } },
-          { type: 'string' },
+          { type: 'string', const: 'z' },
         ],
         [
-          'merges no then of the allOf members whose ifs test the value their then pins',
+          'merges no then of the allOf members whose ifs test the value their then pins, as no empty field meets them',
           {
             type: 'string',
             enum: ['a', 'b'],
@@ -2434,9 +2434,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { type: 'string', enum: ['a', 'b'] },
         ],
         [
-          'merges neither branch of an if testing the value its then pins',
+          'merges the else of an if testing the value its then pins',
           { type: 'string', enum: ['a', 'b'], if: { const: 'a' }, then: { const: 'a' }, else: { title: 'other' } },
-          { type: 'string', enum: ['a', 'b'] },
+          { type: 'string', enum: ['a', 'b'], title: 'other' },
         ],
       ])('for a primitive field with no data, %s (#5895)', (_name, schema, expected) => {
         // The mock validator cannot evaluate an `if`, so it answers each check as the real ones do
@@ -2458,11 +2458,42 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect(retrieveSchema(context, rejects, rejects).const).toBeUndefined();
         },
       );
-      it('leaves the if of a field with no data undecided where a value would decide it, and decides null data as {}, in either order', () => {
+      it.each<[string, RJSFSchema, RJSFSchema]>([
+        [
+          'merges the else of an if: { const } for a field with no data, as an empty field is not that value',
+          {
+            type: 'string',
+            enum: ['a', 'other'],
+            if: { const: 'other' },
+            then: { title: 'Other' },
+            else: { title: 'Pick' },
+          },
+          { type: 'string', enum: ['a', 'other'], title: 'Pick' },
+        ],
+        [
+          'merges the then of a not of an if: { const } for a field with no data, as an empty field is not that value',
+          {
+            type: 'string',
+            enum: ['a', 'other'],
+            if: { not: { const: 'other' } },
+            then: { title: 'Pick' },
+            else: { title: 'Other' },
+          },
+          { type: 'string', enum: ['a', 'other'], title: 'Pick' },
+        ],
+        [
+          'merges the then of a type-only if reached through a $ref, as of the same if written in place',
+          { type: 'number', $defs: { Num: { type: 'number' } }, if: { $ref: '#/$defs/Num' }, then: { const: 3 } },
+          { type: 'number', $defs: { Num: { type: 'number' } }, const: 3 },
+        ],
+      ])('%s (#5895)', (_name, schema, expected) => {
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);
+      });
+      it('merges the else of an if not every value of a field with no data meets, and decides null data as {}, in either order', () => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         const context = { validator: testValidator };
-        const unset: RJSFSchema = { type: ['string', 'null'] };
-        const nullData: RJSFSchema = { type: ['string', 'null'], const: 'a' };
+        const elseBranch: RJSFSchema = { type: ['string', 'null'], const: 'a' };
         for (const order of [
           [undefined, null],
           [null, undefined],
@@ -2474,7 +2505,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             else: { const: 'a' },
           };
           for (const data of order) {
-            expect(retrieveSchema(context, schema, schema, data)).toEqual(data === null ? nullData : unset);
+            expect(retrieveSchema(context, schema, schema, data)).toEqual(elseBranch);
           }
         }
       });
