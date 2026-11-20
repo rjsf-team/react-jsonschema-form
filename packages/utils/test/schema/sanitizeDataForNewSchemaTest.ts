@@ -2849,6 +2849,34 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           properties: { list: { type: 'array', default: ['s'], items: { type: 'string' } } },
         };
         expect(sanitize(strings, listOf(B), { list: [{ a: 'x', f: false }] })).toEqual({ list: ['s'] });
+        const yRow = { a: 'y', f: true };
+        const consts: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', default: [yRow], items: { ...rowOf(B), const: yRow } } },
+        };
+        expect(sanitize(consts, listOf(B), { list: [{ a: 'x', f: false }] })).toEqual({ list: [yRow] });
+      });
+      it('drops a rejected row judged key by key or item by item, as Form does, though it holds its old entry', () => {
+        const rows = [
+          { a: 'x', f: false },
+          { a: 'u', f: false },
+        ];
+        const narrowed: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: { type: 'array', default: [{ a: 'x' }], items: { ...rowOf(B), type: ['object', 'string'] } },
+          },
+        };
+        expect(sanitize(listOf(B, [{ a: 'y' }]), narrowed, { list: rows })).toEqual({ list: [] });
+        const nested: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', default: [[{ a: 'x' }]], items: { type: 'array', items: rowOf(B) } } },
+        };
+        const strings: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', default: ['s'], items: { type: 'string' } } },
+        };
+        expect(sanitize(strings, nested, { list: [[rows[0]], [rows[1]]] })).toEqual({ list: [] });
       });
       it('keeps a multi-select holding more than its old default, whose values take nothing at their positions', () => {
         const choiceOf = (d: RJSFSchema['default']): RJSFSchema => ({

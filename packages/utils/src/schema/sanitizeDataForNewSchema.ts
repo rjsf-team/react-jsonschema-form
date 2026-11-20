@@ -835,6 +835,40 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
       const listedTypes = getKnownTypes<S>(newItems);
       return { newRaw, oldRaw, newItems, schemaType, listedTypes, isWholeSelect: isWholeValueSelect<S>(newItems) };
     };
+    /** What `aValue` takes at `index`, a position whose types reject it: the new filled entry there where it holds the old
+     * one, as `Form` swaps a default in before it checks the type (#5826), and `NO_VALUE` otherwise. An object the new
+     * defaults fill key by key, or an array judged item by item, holds no old entry whole, as `sanitizeItem` reads it */
+    const rejectedItem = (index: number, aValue: unknown): unknown => {
+      const newRaw = itemSchemaAt<S>(newSchema, index);
+      const oldRaw = itemSchemaAt<S>(oldSchema, index);
+      if (isChoice || newRaw === false || oldRaw === false) {
+        return NO_VALUE;
+      }
+      const newItem = retrieveSchema<unknown, S, F>(context, newRaw, rootSchema, aValue);
+      const oldItem = retrieveSchema<unknown, S, F>(context, oldRaw, rootSchema, aValue);
+      const oldItemFill = childFillOf<S, F>(context, oldSchema, rootSchema, oldFill, index);
+      const newItemDefault = getFilledDefault<S, F>(
+        context,
+        newItem,
+        rootSchema,
+        childFillOf<S, F>(context, newSchema, rootSchema, newFill, index),
+      );
+      // A position rejects an item only by a type it declares, so the type alone says whether it fills an object by key
+      const isJudgedByPart = isPlainObject(aValue)
+        ? isPlainObject(newItemDefault) && getSchemaType<S>(newItem) === 'object'
+        : isJudgedByItem<S, F>(context, oldItem, newItem, rootSchema, oldItemFill, aValue);
+      if (isJudgedByPart && !isWholeValueSelect<S>(newItem)) {
+        return NO_VALUE;
+      }
+      return defaultReplacement<S>(
+        newItem,
+        newItemDefault,
+        getFilledDefault<S, F>(context, oldItem, rootSchema, oldItemFill),
+        aValue,
+        false,
+        false,
+      );
+    };
     /** What `aValue` is sanitized to at `position`, or `NO_VALUE` where it is dropped. A prefix item dropped would move
      * the items after it into positions that describe others, so where `isPrefix` it is `NO_VALUE` only where the array
      * is cleared instead: one its position's old schema constrained alike, as `constrainsAlike()` reads them, already
@@ -1003,9 +1037,12 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
           position = positionAt(at);
           positionIndex = at;
         }
-        // An item past the prefix whose position's types differ is dropped, as `Form` drops it, a hole included. One
-        // where no item is allowed clears the array, as any item there does
-        const itemValue = position === undefined ? NO_VALUE : sanitizeItem(position, data[index], isPrefix, index);
+        // An item past the prefix whose position's types differ is dropped, as `Form` drops it, a hole included, unless
+        // it holds the old filled entry there. One where no item is allowed clears the array, as any item there does
+        const itemValue =
+          position === undefined
+            ? rejectedItem(index, data[index])
+            : sanitizeItem(position, data[index], isPrefix, index);
         const clears = isPrefix || (position === undefined && itemSchemaAt<S>(newSchema, at) === false);
         if (itemValue !== NO_VALUE) {
           sanitizedItems.push(itemValue);

@@ -4525,6 +4525,84 @@ describe('judging a field by the value the fill writes for it (#5825)', () => {
     expect(utils).toEqual({ list: ['y', 'w', 'k'] });
   });
 
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; list: unknown[]; expected: unknown[] }>([
+    {
+      name: 'string item',
+      from: { type: 'array', default: ['x'], items: { type: 'string' } },
+      to: { type: 'array', default: [5], items: { type: 'number' } },
+      list: ['x', 'u'],
+      expected: [5],
+    },
+    {
+      name: 'prefix item',
+      from: { type: 'array', default: ['x'], prefixItems: [{ type: 'string' }], items: { type: 'string' } },
+      to: { type: 'array', default: [5], prefixItems: [{ type: 'number' }], items: { type: 'string' } },
+      list: ['x', 'u'],
+      expected: [5, 'u'],
+    },
+    {
+      name: 'object row',
+      from: {
+        type: 'array',
+        default: [{ a: 'x' }],
+        items: { type: 'object', required: ['f'], properties: { a: { type: 'string' }, f: { type: 'boolean' } } },
+      },
+      to: { type: 'array', default: ['s'], items: { type: 'string' } },
+      list: [
+        { a: 'x', f: false },
+        { a: 'u', f: false },
+      ],
+      expected: ['s'],
+    },
+  ])(
+    "swaps a $name holding its array's old default at its index for the new one where the new items reject it",
+    ({ from, to, list, expected }) => {
+      const { form, utils } = sanitizedBoth(
+        { type: 'object', properties: { list: from } },
+        { type: 'object', properties: { list: to } },
+        { list },
+      );
+      expect(form).toEqual({ list: expected });
+      expect(utils).toEqual({ list: expected });
+    },
+  );
+
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; list: unknown[] }>(
+    (() => {
+      const row: RJSFSchema = {
+        type: 'object',
+        required: ['f'],
+        properties: { a: { type: 'string' }, f: { type: 'boolean' } },
+      };
+      const rows = [
+        { a: 'x', f: false },
+        { a: 'u', f: false },
+      ];
+      return [
+        {
+          name: 'object row the new defaults fill key by key',
+          from: { type: 'array', default: [{ a: 'x' }], items: { ...row, type: ['object', 'string'] } },
+          to: { type: 'array', default: [{ a: 'y' }], items: row },
+          list: rows,
+        },
+        {
+          name: 'array row judged item by item',
+          from: { type: 'array', default: [[{ a: 'x' }]], items: { type: 'array', items: row } },
+          to: { type: 'array', default: ['s'], items: { type: 'string' } },
+          list: [[rows[0]], [rows[1]]],
+        },
+      ];
+    })(),
+  )('drops a rejected $name, though it holds its old entry at its index', ({ from, to, list }) => {
+    const { form, utils } = sanitizedBoth(
+      { type: 'object', properties: { list: from } },
+      { type: 'object', properties: { list: to } },
+      { list },
+    );
+    expect(form).toEqual({ list: [] });
+    expect(utils).toEqual({ list: [] });
+  });
+
   // The array still equals its old filled default as a whole, but no default reached the key the fill computed
   const B: RJSFSchema = { type: 'boolean' };
   const T: RJSFSchema = { type: 'array', items: { type: 'string' } };
