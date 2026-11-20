@@ -59,6 +59,16 @@ export function filterDuplicateErrors(
   }, []);
 }
 
+/** Returns the key a token of ata's `instancePath` or `schemaPath` names. ata writes it as a JSON Pointer token
+ * (`a/b` as `a~1b`) but, unlike Ajv, doesn't percent-encode it
+ *
+ * @param token - The token of the path
+ * @returns - The key it names
+ */
+function unescapePointerToken(token: string): string {
+  return token.replaceAll('~1', '/').replaceAll('~0', '~');
+}
+
 /** Transforms ata-validator errors into the RJSF-internal `RJSFValidationError`
  * shape. ata's error objects already use the same field names AJV does
  * (`instancePath`, `keyword`, `params`, `schemaPath`, `parentSchema`,
@@ -78,7 +88,7 @@ export function transformRJSFValidationErrors<
     const { instancePath, keyword, params, schemaPath, parentSchema } = e;
     // oxlint-disable-next-line typescript/no-useless-default-assignment -- ata's types say `message` is always set, but it can be missing at runtime
     let { message = '' } = e;
-    let property = instancePath.replace(/\//g, '.');
+    let property = instancePath.split('/').map(unescapePointerToken).join('.');
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
 
@@ -95,6 +105,7 @@ export function transformRJSFValidationErrors<
         quote: "'",
         property,
         schemaPath,
+        decodeSchemaPathKey: unescapePointerToken,
         uiSchema,
         parentSchema,
         schema,

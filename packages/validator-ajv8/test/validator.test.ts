@@ -1642,6 +1642,22 @@ describe('AJV8Validator', () => {
       const { errors } = validator.validateFormData({ 'a/b %': {} }, schema, undefined, undefined, uiSchema);
       expect(errors[0].message).toEqual("must have required property 'Full name'");
     });
+    it('should file and title the error for a missing property under a key holding `/` or `~` at that key', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'a/b~': {
+            type: 'object',
+            properties: { name: { type: 'string', title: 'Name' } },
+            allOf: [{ required: ['name'] }],
+          },
+        },
+      };
+      const { errors, errorSchema } = validator.validateFormData({ 'a/b~': {} }, schema);
+      expect(errors[0].property).toEqual('.a/b~.name');
+      expect(errors[0].message).toEqual("must have required property 'Name'");
+      expect(errorSchema).toEqual({ 'a/b~': { name: { __errors: ["must have required property 'Name'"] } } });
+    });
     describe('validating dependencies without a localizer', () => {
       const titles = { creditCard: 'Credit card', billingAddress: 'Billing address' };
       const titledMessage = "must have property 'Billing address' when property 'Credit card' is present";

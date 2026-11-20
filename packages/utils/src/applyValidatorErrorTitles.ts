@@ -62,10 +62,12 @@ export default function applyValidatorErrorTitles<
     .map(decodeSchemaPathKey);
   const titles = new Map<string, string>();
   for (const name of names) {
+    // A sub-field named `title` sits at the same path as a raw `title`
+    const rawUiTitle = getByPath(uiSchema, [...propParts, name, 'title']);
     const title =
       (getUiOptions<T, S, F>(getByPath(uiSchema, [...propParts, name])).title ??
         getUiOptions<T, S, F>(getByPath(uiSchema, [...schemaPathParts, name])).title ??
-        getByPath<string | undefined>(uiSchema, [...propParts, name, 'title'])) ||
+        (typeof rawUiTitle === 'string' ? rawUiTitle : undefined)) ||
       getByPath<string | undefined>(parentSchema, [PROPERTIES_KEY, name, 'title']) ||
       getByPath<string | undefined>(schema, [
         ...propParts.flatMap((part) => [PROPERTIES_KEY, part]),
@@ -80,9 +82,10 @@ export default function applyValidatorErrorTitles<
   if (titles.size === 0) {
     return { message, titles };
   }
-  const quotedNames = [...titles.keys()].map((name) =>
-    `${quote}${name}${quote}`.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-  );
+  // Longest first, so `'it'` doesn't match the start of `'it's'`
+  const quotedNames = [...titles.keys()]
+    .sort((a, b) => b.length - a.length)
+    .map((name) => `${quote}${name}${quote}`.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   const titled = message.replace(
     new RegExp(quotedNames.join('|'), 'g'),
     (quoted) => `'${titles.get(quoted.slice(quote.length, -quote.length))}'`,

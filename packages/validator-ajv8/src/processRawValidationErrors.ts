@@ -39,7 +39,16 @@ function decodeSchemaPathToken(token: string): string {
   } catch {
     // An inlined `$ref` puts its own URI in the path as written, which may escape a byte that isn't UTF-8, as `%E9`
   }
-  return decoded.replaceAll('~1', '/').replaceAll('~0', '~');
+  return unescapePointerToken(decoded);
+}
+
+/** Returns the key a JSON Pointer token names, such as a token of Ajv's `instancePath`, which isn't percent-encoded
+ *
+ * @param token - The token
+ * @returns - The key it names
+ */
+function unescapePointerToken(token: string): string {
+  return token.replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
 /** Returns the names a dependency error's `deps` lists. `deps` joins them with `, `, which a name may contain, so the
@@ -116,7 +125,7 @@ export function transformRJSFValidationErrors<
   const errorList = errors.map((e: ErrorObject) => {
     const { instancePath, keyword, params, schemaPath, parentSchema, ...rest } = e;
     let { message = '' } = rest;
-    let property = instancePath.replace(/\//g, '.');
+    let property = instancePath.split('/').map(unescapePointerToken).join('.');
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
     const depNames = dependencyNames(e);

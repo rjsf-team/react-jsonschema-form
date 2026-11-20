@@ -55,11 +55,11 @@ function instanceLocationToProperty(instanceLocation: string): string {
  */
 function extractPropertyNames(error: CFWorkerValidationError): [missingProperty?: string, presentProperty?: string] {
   if (error.keyword === 'required') {
-    return [error.error.match(/required property ["']([^"']+)["']/)?.[1]];
+    return [error.error.match(/^Instance does not have required property "(.+)"\.$/s)?.[1]];
   }
   if (error.keyword === 'dependentRequired' || error.keyword === 'dependencies') {
     const [, presentProperty, missingProperty] =
-      error.error.match(/^Instance has "(.+)" but does not have "(.+)"\.$/) ?? [];
+      error.error.match(/^Instance has "(.+)" but does not have "(.+)"\.$/s) ?? [];
     return [missingProperty, presentProperty];
   }
   return [];
