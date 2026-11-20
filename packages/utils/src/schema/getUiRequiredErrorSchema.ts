@@ -354,7 +354,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // uiSchema says.
   const xxxOf = getXxxOfOptions<S>(resolvedSchema);
   // The form keeps one pick per option list at a path, by the list's place (core's `optionListKey()`), so a list offered
-  // again below itself at the path shows the same option again, a `$ref` loop the form never finishes rendering
+  // again below itself at the path shows the same option again, a `$ref` loop the form never finishes rendering. The
+  // place of the list's first option with one stands in for the list's, which it lies within
   const listPlace = xxxOf?.options
     .map((offered) => (isObject(offered) ? getValidationTarget<S>(offered, rootSchema).$ref : undefined))
     .find(Boolean);
@@ -494,13 +495,13 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const optionProperties = option?.properties ?? {};
   // A property only the option declares is the option's field's, which an option offering options of its own walks, and
   // which hides it where it is an Optional Data Control of its own
+  const optionFieldShown = () =>
+    !nestsOptions && optionShownType === 'object' && !(hidesControlled && isOptionControl());
   const isKeyShown = (key: string) =>
-    key in optionProperties && !(key in ownProperties)
-      ? !nestsOptions && optionShownType === 'object' && !(hidesControlled && isOptionControl())
-      : shownType === 'object';
+    key in optionProperties && !(key in ownProperties) ? optionFieldShown() : shownType === 'object';
   // An option walked as a node of its own is rendered by the option field of the field showing it, whose `ObjectField`
   // renders the option's own properties with the uiSchema that field hands it, and the options it offers beside them
-  // with their own entries
+  // with their own entries, so a property both declare is rendered twice, once with each
   const ownPropertiesUiSchema = showingField && option ? uiSchema : branchUiSchema;
   if (shownType === 'object' || optionShownType === 'object') {
     // Matches computeDefaults()'s own `isObject(rawFormData)` handling: when the schema resolves to an object here
@@ -513,12 +514,17 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (typeof propertySchema === 'boolean' || !isKeyShown(key)) {
         return;
       }
-      const childUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
-        key in ownProperties ? ownPropertiesUiSchema : branchUiSchema,
-        hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG) ? ADDITIONAL_PROPERTIES_KEY : key,
-      );
+      const isOwn = key in ownProperties;
+      const keyUiSchemas = isOwn ? [ownPropertiesUiSchema] : [];
+      if (!isOwn || (key in optionProperties && optionFieldShown())) {
+        keyUiSchemas.push(branchUiSchema);
+      }
+      const uiKey = hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG) ? ADDITIONAL_PROPERTIES_KEY : key;
       const childRequired = Boolean(retrieved.required?.includes(key));
-      walk(ctx, propertySchema as S, childUiSchema, data[key], [...path, key], childRequired, childParentPresent);
+      new Set(keyUiSchemas.map((keyUiSchema) => getByPath<UiSchema<T, S, F> | undefined>(keyUiSchema, uiKey))).forEach(
+        (childUiSchema) =>
+          walk(ctx, propertySchema as S, childUiSchema, data[key], [...path, key], childRequired, childParentPresent),
+      );
     });
   } else if (Array.isArray(formData) && (!Array.isArray(retrieved.type) || shownType === 'array')) {
     // Only names the array in the error a throwing function-form `uiSchema.items` logs, so it isn't worth deriving for

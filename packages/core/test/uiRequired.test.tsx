@@ -954,6 +954,30 @@ describe('ui:required enforcement', () => {
       expect(await submitted(node, onSubmit)).toBe(false);
     });
 
+    it('blocks a submit with a property an option declares beside options of its own empty, as the entry of the option shown there, which declares it too, marks it', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          anyOf: [
+            {
+              type: 'object',
+              properties: { z: { type: 'string' } },
+              anyOf: [
+                { type: 'object', properties: { z: { type: 'string' }, w: { type: 'string' } } },
+                { type: 'object', properties: { y: { type: 'string' } } },
+              ],
+            },
+            { type: 'number' },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ anyOf: [{ z: { 'ui:required': true } }] }] } },
+        initialFormData: { p: {} },
+      });
+      // The object's own field and the option's both render z, the option's with its entry
+      const zLabels = [...node.querySelectorAll('label[for="root_p_z"]')].map((label) => label.textContent);
+      expect(zLabels).toEqual(['z', 'z*']);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
     it("blocks a submit with the field empty where an option offering options of its own marks it required and the option shown there doesn't", async () => {
       const { node, onSubmit } = createFormComponent({
         schema: p({ anyOf: [{ type: 'string', anyOf: [{ minLength: 1 }, { maxLength: 3 }] }, { type: 'number' }] }),

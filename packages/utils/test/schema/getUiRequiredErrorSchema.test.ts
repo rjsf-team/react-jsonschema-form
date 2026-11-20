@@ -2126,6 +2126,33 @@ describe('getUiRequiredErrorSchema()', () => {
       ]);
     });
 
+    it('reports an empty property an option declares beside options of its own from the entry of the option shown there where that option declares it too', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            anyOf: [
+              {
+                type: 'object',
+                properties: { z: { type: 'string' } },
+                anyOf: [
+                  { type: 'object', properties: { z: { type: 'string' }, w: { type: 'string' } } },
+                  { type: 'object', properties: { y: { type: 'string' } } },
+                ],
+              },
+              { type: 'number' },
+            ],
+          },
+        },
+      };
+      const missing = [".p.z must have required property 'z'"];
+      const byShown: UiSchema = { p: { anyOf: [{ anyOf: [{ z: { 'ui:required': true } }] }] } };
+      expect(errorsFor(schema, byShown, { p: {} }, undefined, showing('w'))).toEqual(missing);
+      const byOwn: UiSchema = { p: { anyOf: [{ z: { 'ui:required': true }, anyOf: [{ 'ui:title': 'W' }] }] } };
+      expect(errorsFor(schema, byOwn, { p: {} }, undefined, showing('w'))).toEqual(missing);
+      expect(errorsFor(schema, byShown, { p: {} }, undefined, showing('y'))).toEqual([]);
+    });
+
     it("reports an empty field from the `ui:required` of an option offering options of its own, which the option shown there doesn't override", () => {
       const schema: RJSFSchema = {
         type: 'object',
