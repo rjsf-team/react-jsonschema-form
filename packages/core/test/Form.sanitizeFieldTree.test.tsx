@@ -5099,3 +5099,37 @@ describe('judging a field by the value the fill writes for it (#5825)', () => {
     expect(utils).toStrictEqual({ w: 'k' });
   });
 });
+
+describe('judging the keys of an object no condition reads by one fill of the form without them (#5836)', () => {
+  // Only into an object holding no key does the fill seed the extra keys its `default` names, here through the
+  // `additionalProperties` uiSchema's `ui:initialValue`, so with `y` beside it `x` was the user's
+  it('keeps an extra key the fill seeds only into the object emptied of every key', () => {
+    const schemaWith = (additionalProperties: RJSFSchema['additionalProperties']): RJSFSchema => ({
+      type: 'object',
+      properties: { h: { type: 'object', additionalProperties, default: { x: 'dx' } } },
+    });
+    const uiSchema: UiSchema = { h: { additionalProperties: { 'ui:initialValue': 'iv' } } };
+    const initialFormData = { h: { x: 'iv', y: 'vy' } };
+    const ref = createRef<FormRef>();
+    const { rerender } = render(
+      <Form
+        ref={ref}
+        schema={schemaWith({ type: 'string' })}
+        uiSchema={uiSchema}
+        validator={validator}
+        initialFormData={initialFormData}
+      />,
+    );
+    rerender(
+      <Form
+        ref={ref}
+        schema={schemaWith(true)}
+        uiSchema={uiSchema}
+        validator={validator}
+        initialFormData={initialFormData}
+      />,
+    );
+
+    expect(handleOf(ref).getFormData()).toEqual(initialFormData);
+  });
+});

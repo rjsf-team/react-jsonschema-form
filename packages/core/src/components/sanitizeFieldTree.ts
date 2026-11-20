@@ -11,6 +11,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  ALL_OF_KEY,
   ANY_OF_KEY,
   CONST_KEY,
   constrainsAlikeAsideDefault,
@@ -34,15 +35,18 @@ import {
   guessType,
   GUESSED_TYPE_FLAG,
   hasSchemaMarker,
+  ID_KEY,
   isConstantOptionList,
   isObject,
   isPlainObject,
   isSchemaObject,
   isWholeValueSelect,
   ITEMS_KEY,
+  keywordShape,
   mergeSchemas,
   namesEveryType,
   ONE_OF_KEY,
+  REF_KEY,
   rendersOwnFieldBesideOption,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
@@ -53,7 +57,7 @@ import {
   withoutFieldOptions,
 } from '@rjsf/utils';
 
-import { copyAlongPath, isPathPrefix } from './dataPaths.ts';
+import { copyAlongPath, getAt, isPathPrefix } from './dataPaths.ts';
 import type { FieldEdit, SwitchedFrom } from './formState.ts';
 import { clearsIn, emptyValue } from './keepClears.ts';
 import type { ContainerKeyMove, KeyMove } from './keyMove.ts';
@@ -154,6 +158,126 @@ interface ShownAbove {
   oldPath: FieldPathList;
   shown: ReadonlyMap<string, number>;
   above: ShownAbove | undefined;
+  /** The field's schema in the previous tree */
+  oldRaw: unknown;
+  /** The field's layers in the previous tree, whose declarations of a child the fill merges, see `declarationsOf()` */
+  oldLayers: readonly StrictRJSFSchema[];
+  /** The form's old fill without any of this field's keys, shared by the keys judged against it, see `isOldFill()` */
+  fillWithoutKeys?: { value: unknown };
+}
+
+const readsKeysAnswers = new WeakMap<ShownAbove, boolean>();
+const declarations = new WeakMap<ShownAbove, readonly unknown[]>();
+
+/** Every declaration of the field `link` describes in the previous tree, which the fill merges, where the field is
+ * judged by the one `propertiesOf()` or `itemsLayerOf()` keeps: each of the field's own, and the child at its key of
+ * each layer and declaration of the field above it
+ */
+function declarationsOf(link: ShownAbove): readonly unknown[] {
+  let known = declarations.get(link);
+  if (known === undefined) {
+    const { above } = link;
+    const key = link.oldPath.at(-1);
+    const childOf = (schema: unknown): unknown => {
+      if (!isObject(schema)) {
+        return undefined;
+      }
+      if (typeof key === 'number') {
+        return ITEMS_KEYWORDS.some((keyword) => Object.hasOwn(schema, keyword))
+          ? getItemSchema(schema as StrictRJSFSchema, key)
+          : undefined;
+      }
+      return isObject(schema.properties) ? schema.properties[key as string] : undefined;
+    };
+    known = [link.oldRaw, ...(above ? [...above.oldLayers, ...declarationsOf(above)].map(childOf) : [])];
+    declarations.set(link, known);
+  }
+  return known;
+}
+
+/** Whether the field `link` describes, or one above it, holds an `if` or `dependencies`, which can read its keys'
+ * values. Worked out only once a key below it is judged against the form's fill
+ */
+function readsKeysAt(link: ShownAbove | undefined, rootSchema: object): boolean {
+  if (!link) {
+    return false;
+  }
+  let answer = readsKeysAnswers.get(link);
+  if (answer === undefined) {
+    answer =
+      readsKeysAt(link.above, rootSchema) ||
+      declarationsOf(link).some((declaration) => readsKeys(declaration, rootSchema));
+    readsKeysAnswers.set(link, answer);
+  }
+  return answer;
+}
+
+/** Whether `schema` holds an `if` or `dependencies`, itself or through its `$ref`s, its `allOf` and every option it
+ * offers, which can decide what the field's keys are filled with from the values of the others
+ */
+function readsKeys(schema: unknown, rootSchema: object, seen = new Set<object>()): boolean {
+  if (!isObject(schema) || seen.has(schema)) {
+    return false;
+  }
+  seen.add(schema);
+  if ('if' in schema || 'dependencies' in schema) {
+    return true;
+  }
+  const members = [schema[ALL_OF_KEY], schema[ANY_OF_KEY], schema[ONE_OF_KEY]].filter(Array.isArray).flat();
+  if (members.some((member) => readsKeys(member, rootSchema, seen))) {
+    return true;
+  }
+  const ref: unknown = schema[REF_KEY];
+  if (typeof ref !== 'string') {
+    return false;
+  }
+  // shortcut: only a `$ref` pointing into the root schema is followed, any other, and any below an `$id` that can
+  // rebase it, reads as reading keys, which keeps the fill per key; upgrade once utils exports a `$ref` resolver
+  if (!ref.startsWith('#/') || holdsNestedId(rootSchema)) {
+    return true;
+  }
+  let target: unknown;
+  try {
+    const tokens = ref
+      .slice(2)
+      .split('/')
+      .map((token) => decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~'));
+    target = getByPath(rootSchema, tokens);
+  } catch {
+    // A malformed escape names no definition, as utils reads it
+  }
+  return target === undefined || readsKeys(target, rootSchema, seen);
+}
+
+const nestedIdAnswers = new WeakMap<object, boolean>();
+
+/** Whether a schema below the root declares an `$id` (or a draft-04 `id`), which makes a `#/` pointer below it name its
+ * own resource's definitions rather than the root's. Only subschemas are read, as `keywordShape()` tells them, so an
+ * `id` in a `default`, `const`, `enum` or `examples` value is data, not a resource
+ */
+function holdsNestedId(rootSchema: object): boolean {
+  const known = nestedIdAnswers.get(rootSchema);
+  if (known !== undefined) {
+    return known;
+  }
+  const seen = new Set<object>([rootSchema]);
+  const below = (schema: object): boolean =>
+    Object.entries(schema).some(([key, value]) => {
+      const shape = keywordShape(key, value);
+      if (shape === undefined) {
+        return false;
+      }
+      return (shape === 'single' ? [value] : Object.values(value as object)).some((subschema) => {
+        if (!isObject(subschema) || seen.has(subschema)) {
+          return false;
+        }
+        seen.add(subschema);
+        return typeof subschema[ID_KEY] === 'string' || typeof subschema.id === 'string' || below(subschema);
+      });
+    });
+  const answer = below(rootSchema);
+  nestedIdAnswers.set(rootSchema, answer);
+  return answer;
 }
 
 /** A field tree's schema utilities, its data, and the root schema they retrieve for that data */
@@ -650,6 +774,12 @@ function oldFieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextTyp
  *
  * A field with no old path has only its own fill: there is no old data around it for the form's to read.
  *
+ * The form's fill is made with the field's siblings in place, since a condition above the field can read them. Where
+ * nothing at or above the object holding the field holds one, see `readsKeysAt()`, one fill without any of that
+ * object's keys is made for all of them first, and a key it doesn't fill as it holds is not the old fill. Emptied of
+ * every key, the object can be filled with more, so a key no old layer declares that it does fill so is judged by its
+ * own fill
+ *
  * Without its value the field holds no data, so the form's fill picks its own option by its `default`, as
  * `getDefaultFormState()` does for a field with no data whatever it is told it shows, and evaluates its
  * conditions without it, as for a field the user hasn't reached. What that fills in is what the defaults would put
@@ -666,7 +796,34 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (isOwnFill(ctx.oldSchemaUtils, oldLayers, oldDefault, value)) {
     return true;
   }
-  return oldPath !== undefined && deepEquals(getByPath(oldFormFillWithout(ctx, [oldPath], shownAbove), oldPath), value);
+  if (oldPath === undefined) {
+    return false;
+  }
+  const holder = shownAbove?.above;
+  if (holder && !readsKeysAt(holder, ctx.oldSchemaUtils.getRootSchema())) {
+    const shared = (holder.fillWithoutKeys ??= {
+      value: oldFormFillWithout(
+        ctx,
+        Object.keys(getAt<object>(ctx.oldData, holder.oldPath)).map((key) => [...holder.oldPath, key]),
+        holder,
+      ),
+    }).value;
+    const matches = deepEquals(getByPath(shared, oldPath), value);
+    // An object emptied of every key can be filled with more than one missing a key alone: the extra keys its `default`
+    // seeds only into an empty object. So an extra key, which no old layer declares but as the data's, that the shared
+    // fill fills as it holds is judged by its own fill
+    const key = oldPath.at(-1);
+    const isDeclared =
+      typeof key === 'string' &&
+      holder.oldLayers.some((layer) => {
+        const property = layer.properties?.[key];
+        return property !== undefined && !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG);
+      });
+    if (!matches || isDeclared) {
+      return matches;
+    }
+  }
+  return deepEquals(getByPath(oldFormFillWithout(ctx, [oldPath], shownAbove), oldPath), value);
 }
 
 /** The form's fill of the old data without the values at `oldPaths`, see `isOldFill()` */
@@ -927,7 +1084,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (newLayers.length === 0) {
     return newValue;
   }
-  const shownHere = oldPath === undefined ? shownAbove : { oldPath, shown, above: shownAbove };
+  const shownHere = oldPath === undefined ? shownAbove : { oldPath, shown, above: shownAbove, oldRaw, oldLayers };
   const { switchedFrom } = ctx;
   const isSwitched =
     switchedFrom !== undefined && path.length === switchedFrom.path.length && isPathPrefix(path, switchedFrom.path);
@@ -1082,7 +1239,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         keys: switchedFrom.heldKeys,
         properties: propertiesOf(heldLayers),
         fillSchema: fillSchemaOf(heldLayers),
-        shownHere: oldPath === undefined ? shownAbove : { oldPath, shown: heldShown, above: shownAbove },
+        shownHere:
+          oldPath === undefined
+            ? shownAbove
+            : { oldPath, shown: heldShown, above: shownAbove, oldRaw, oldLayers: heldLayers },
         ctx: heldCtx,
         optionUiSchema: shownOptionUiSchemaOf<T, S, F>(
           ctx.oldSchemaUtils,
