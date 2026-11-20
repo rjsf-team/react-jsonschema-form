@@ -40,7 +40,9 @@ export default function getFilledDefault<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S, rootSchema: S, fill: FieldFill = {}): unknown {
-  const written = writtenOf(fill);
+  // A child fill made under another context or root was written by that one's fill, so it is filled anew here
+  const origin = origins.get(fill);
+  const written = origin?.context === context && origin.rootSchema === rootSchema ? writtenOf(fill) : UNREAD;
   if (written !== UNREAD) {
     if (written.value === undefined) {
       return undefined;
@@ -98,10 +100,12 @@ interface FillOrigin {
 /** The origin of each fill `childFillOf()` made */
 const origins = new WeakMap<FieldFill, FillOrigin>();
 
-/** Each fill's children, by fill, the parent's schema and the child's key, so a child asked for twice is the same fill */
+/** Each fill's children, by context, root schema, fill, the parent's schema and the child's key, so a child asked for
+ * twice is the same fill, and a fill the caller reuses under another context or root has children of its own
+ */
 const children = new KeyedMemo<FieldFill>();
 
-/** What each field was filled with, by fill and by the schema it was filled through */
+/** What each field was filled with, by context, root schema, fill and the schema it was filled through */
 const filledFields = new KeyedMemo<FilledField>();
 
 /** Returns what the defaults hand the child at `key`, a property name or an item index, of the field `schema`
@@ -123,7 +127,7 @@ export function childFillOf<S extends StrictRJSFSchema = RJSFSchema, F extends F
   fill: FieldFill,
   key: string | number,
 ): FieldFill {
-  return children.get([fill, schema, key], () => {
+  return children.get([context, rootSchema, fill, schema, key], () => {
     const handedDown = () => filledFieldOf<S, F>(context, schema, rootSchema, fill);
     const isItem = typeof key === 'number';
     const child: FieldFill = {
@@ -149,14 +153,16 @@ export function childFillOf<S extends StrictRJSFSchema = RJSFSchema, F extends F
   });
 }
 
-/** What the field `schema` describes is filled with given `fill`, filled once per fill and schema */
+/** What the field `schema` describes is filled with given `fill`, filled once per context, root, fill and schema */
 function filledFieldOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S,
   fill: FieldFill,
 ): FilledField {
-  return filledFields.get([fill, schema], () => fieldFillOf<S, F>(context, schema, rootSchema, fill));
+  return filledFields.get([context, rootSchema, fill, schema], () =>
+    fieldFillOf<S, F>(context, schema, rootSchema, fill),
+  );
 }
 
 /** What `writtenOf()` returns for a field its parent's fill can't answer for */

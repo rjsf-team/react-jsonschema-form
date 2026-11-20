@@ -704,6 +704,24 @@ describe('getFilledDefault() reads what the fill writes', () => {
     expect(getFilledDefault(descendantWins, array, array, { isRequired: true })).toEqual(['x', 'z']);
   });
 
+  it('fills a reused fill anew under another root schema or context', () => {
+    const field: RJSFSchema = { type: 'object', properties: { a: { $ref: '#/definitions/a' } } };
+    const rootOf = (d: string): RJSFSchema => ({ definitions: { a: { type: 'string', default: d } }, ...field });
+    const ROOT: FieldFill = {};
+    expect(getFilledDefault(descendantWins, field, rootOf('one'), ROOT)).toEqual({ a: 'one' });
+    expect(getFilledDefault(descendantWins, field, rootOf('two'), ROOT)).toEqual({ a: 'two' });
+
+    const own: RJSFSchema = { type: 'object', properties: { a: { type: 'string', default: 'own' } } };
+    const inheriting: FieldFill = { inheritedDefault: { a: 'p' } };
+    expect(getFilledDefault(descendantWins, own, own, inheriting)).toEqual({ a: 'own' });
+    expect(getFilledDefault(ancestorWins, own, own, inheriting)).toEqual({ a: 'p' });
+
+    const parent: RJSFSchema = { type: 'object', default: { a: 'p' }, properties: own.properties };
+    const child = childFillOf(descendantWins, parent, parent, ROOT, 'a');
+    expect(getFilledDefault(descendantWins, { type: 'string', default: 'own' }, parent, child)).toBe('own');
+    expect(getFilledDefault(ancestorWins, { type: 'string', default: 'own' }, parent, child)).toBe('p');
+  });
+
   it('hands the same fill for the same child, so its parent is filled once', () => {
     const root: RJSFSchema = { type: 'object', properties: { a: { type: 'string', default: 'x' } } };
     const fill: FieldFill = {};

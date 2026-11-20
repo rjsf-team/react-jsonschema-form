@@ -225,7 +225,7 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
 
 /** What the defaults hand a field, which they fill it by, see `getFilledDefault()`. `{}` is the root's. A field's
  * children get theirs from `childFillOf()`, which reads what the field's own fill hands each of them only once one of
- * them asks, so a fill belongs to the one `SchemaContext` it was made under
+ * them asks
  */
 export interface FieldFill {
   /** The defaults the field holding this one hands it */
