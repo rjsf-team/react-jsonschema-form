@@ -928,8 +928,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       isItem &&
       oldUiSchema !== undefined &&
       getUiOptions<T, S, F>(oldUiSchema as UiSchema<T, S, F>).initialValue !== undefined;
-    const ownItemFill = (fill: FieldFill): FieldFill =>
-      isInitialItem ? { isRequired: fill.isRequired, isItem: true } : fill;
+    const ownItemFill = (fill: FieldFill): FieldFill => (isInitialItem ? { isRequired: fill.isRequired } : fill);
     const oldDefault = ctx.oldSchemaUtils.getFilledDefault(oldJudged, ownItemFill(oldFill));
     const newDefault = ctx.schemaUtils.getFilledDefault(newJudged, ownItemFill(newFill));
     // The default each side takes before the fill fills it out, which the old fills below fill out again as the form

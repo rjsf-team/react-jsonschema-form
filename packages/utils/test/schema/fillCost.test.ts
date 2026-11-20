@@ -21,14 +21,14 @@ vi.mock(import('../../src/schema/getDefaultFormState.ts'), async (importOriginal
   };
 });
 
-/** An object `depth` levels deep, `width` properties at each, its string leaves declaring a `default` */
-function nested(depth: number, width: number): RJSFSchema {
+/** An object `depth` levels deep, `width` properties at each, its string leaves declaring `leaf`'s `default` */
+function nested(depth: number, width: number, leaf: RJSFSchema = { type: 'string', default: 'x' }): RJSFSchema {
   if (depth === 0) {
-    return { type: 'string', default: 'x' };
+    return leaf;
   }
   const properties: Record<string, RJSFSchema> = {};
   for (let index = 0; index < width; index += 1) {
-    properties[`p${index}`] = nested(depth - 1, width);
+    properties[`p${index}`] = nested(depth - 1, width, leaf);
   }
   return { type: 'object', properties, default: {} };
 }
@@ -41,6 +41,25 @@ describe("the fills the sanitize reads a field's default by", () => {
     fieldFills.count = 0;
 
     expect(sanitizeDataForNewSchema(context, schema, structuredClone(schema), schema, data)).toEqual(data);
+    expect(fieldFills.count).toBeLessThanOrEqual(2);
+  });
+
+  it.each<{ name: string; context: SchemaContext; schema: RJSFSchema }>([
+    {
+      name: 'its leaves declaring no default',
+      context: { validator: miniValidator() },
+      schema: nested(6, 3, { type: 'string' }),
+    },
+    {
+      name: "emptyObjectFields: 'skipDefaults' leaving every property unwritten",
+      context: { validator: miniValidator(), defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' } },
+      schema: nested(6, 3),
+    },
+  ])('fills a deep form once per side with $name', ({ context, schema }) => {
+    const data = getDefaultFormState(context, { schema, rootSchema: schema });
+    fieldFills.count = 0;
+
+    sanitizeDataForNewSchema(context, schema, structuredClone(schema), schema, data);
     expect(fieldFills.count).toBeLessThanOrEqual(2);
   });
 

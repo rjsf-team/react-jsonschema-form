@@ -243,8 +243,6 @@ export interface FieldFill {
   isParentRequired?: boolean;
   /** Whether the field is a property, whose default is written only where `emptyObjectFields` lets it be */
   isProperty?: boolean;
-  /** Whether the field is an array item */
-  isItem?: boolean;
 }
 
 /** The props for the `getDefaultFormState()` schema function */

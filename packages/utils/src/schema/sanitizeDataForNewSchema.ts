@@ -309,16 +309,21 @@ function rendersProperties<S extends StrictRJSFSchema>(schema: S): boolean {
   );
 }
 
+/** What `formValue` is replaced with where the `enum` or constant options of `schema` reject it, or `NO_VALUE` where
+ * they accept it: the default `defaultOf()` gives, asked only once the value is rejected, where they offer it, else
+ * their one option, else nothing
+ */
 function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   formValue: unknown,
-  defaultValue: unknown = getByPath(schema, DEFAULT_KEY, NO_VALUE),
+  defaultOf: () => unknown = () => getByPath(schema, DEFAULT_KEY, NO_VALUE),
 ) {
   const enumValues = enumValuesForSchema(schema);
   if (!enumValues || enumValues.some((value) => deepEquals(value, formValue))) {
     return NO_VALUE;
   }
 
+  const defaultValue = defaultOf();
   if (defaultValue !== NO_VALUE && enumValues.some((value) => deepEquals(value, defaultValue))) {
     return defaultValue;
   }
@@ -456,8 +461,9 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
   }
   // By default, we will clear the form data
   let newFormData;
-  // The keys the data doesn't hold that the new schema's defaults are seeded into, which no `const` below judges
-  const seededKeys: string[] = [];
+  // What the data holds once sanitized, without the defaults seeded into keys it doesn't hold, which the new `const`
+  // below doesn't judge
+  let held: unknown;
   const newProperties = newSchema?.[PROPERTIES_KEY];
   // If the new schema is of type object and that object contains a list of properties. One whose types leave out
   // `object`, such as a nullable object's `null` option rendered with the object's `properties` (see
@@ -640,26 +646,26 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
             replacements[key] = deepEquals(oldOptionConst, formValue) ? ownValue(newOptionConst) : undefined;
           }
 
-          // A clear the same constraints held stays one, even where the enum offers a `default` or a single option.
-          // Only a value the enum rejects reads the default it takes, since reading it can fill the object holding it
-          const enumValues = enumValuesForSchema<S>(newKeyedSchema);
-          const isRejected = enumValues !== undefined && !enumValues.some((value) => deepEquals(value, formValue));
-          if (isRejected && hasByPath(data, key) && !keptClears.has(key)) {
+          // A clear the same constraints held stays one, even where the enum offers a `default` or a single option
+          if (hasByPath(data, key) && !keptClears.has(key)) {
             // A value the enum rejects takes the default the property computes, under any `emptyObjectFields`, as
             // `Form` replaces it. A clear takes only its own `default`, and only where the fill writes that one into
-            // it, leaving any other for the fill to write
-            const filledDefault =
-              formValue === undefined
-                ? newWrittenDefault()
-                : getFilledDefault<S, F>(context, newKeyedSchema, rootSchema, { ...newKeyFill, isProperty: false });
-            const isTaken =
-              filledDefault !== undefined &&
-              (formValue !== undefined || deepEquals(filledDefault, newKeyedSchema.default));
-            replacements[key] = replacementForInvalidEnumValue(
-              newKeyedSchema,
-              formValue,
-              isTaken ? filledDefault : NO_VALUE,
-            );
+            // it, leaving any other for the fill to write. It is read only for a rejected value, since reading it can
+            // fill the object holding the property
+            const takenDefault = () => {
+              const filledDefault =
+                formValue === undefined
+                  ? newWrittenDefault()
+                  : getFilledDefault<S, F>(context, newKeyedSchema, rootSchema, { ...newKeyFill, isProperty: false });
+              const isTaken =
+                filledDefault !== undefined &&
+                (formValue !== undefined || deepEquals(filledDefault, newKeyedSchema.default));
+              return isTaken ? filledDefault : NO_VALUE;
+            };
+            const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue, takenDefault);
+            if (enumReplacement !== NO_VALUE) {
+              replacements[key] = enumReplacement;
+            }
           }
         }
       }
@@ -678,8 +684,12 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
       }
     });
     discardedKeys.forEach((key) => delete sanitized[key]);
-    seededKeys.push(...Object.keys(replacements).filter((key) => !hasByPath(data, key)));
     newFormData = sanitized;
+    const seededKeys = Object.keys(replacements).filter((key) => !hasByPath(data, key));
+    held =
+      seededKeys.length === 0
+        ? sanitized
+        : Object.fromEntries(Object.entries(sanitized).filter(([key]) => !seededKeys.includes(key)));
   } else if (
     // Read through `getSchemaType()`, as the field rendering each schema is picked, so an array whose type list also
     // allows `null` keeps its items as a plain array does
@@ -944,15 +954,10 @@ function sanitizeWithFills<T, S extends StrictRJSFSchema, F extends FormContextT
   }
   // Checked once sanitized, since removing what only the old schema declared can leave the `const`. Data the new `const`
   // still rejects takes the new `const` where it holds the old one, as a scalar does above, and is otherwise cleared:
-  // below the top level, nothing refills a clear. What the data holds is checked, not the defaults seeded beside it,
-  // which take what the `const` gives them
-  const held =
-    seededKeys.length > 0 && isPlainObject(newFormData)
-      ? Object.fromEntries(Object.entries(newFormData).filter(([key]) => !seededKeys.includes(key)))
-      : newFormData;
+  // below the top level, nothing refills a clear
   const replacement =
     newSchema?.const !== undefined && isContainerValue(data)
-      ? constReplacement<S>(newSchema, oldSchema, held ?? data, data)
+      ? constReplacement<S>(newSchema, oldSchema, held ?? newFormData ?? data, data)
       : NO_VALUE;
   return (replacement === NO_VALUE ? newFormData : replacement) as T;
 }

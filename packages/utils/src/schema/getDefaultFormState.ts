@@ -4179,8 +4179,7 @@ function optionTakesValueOf<S extends StrictRJSFSchema, F extends FormContextTyp
 }
 
 /** Whether `schema` takes a value of the type `value` has, as its own types say them, see `typeAllows()`. It decides
- * whether an ancestor's default can win under `nestedDefaultsPrecedence: 'ancestorWins'`, here and in
- * `getFilledDefault()`
+ * whether an ancestor's default can win under `nestedDefaultsPrecedence: 'ancestorWins'`
  */
 function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
   return typeAllows(getSchemaOwnTypes<S>(schema), value);
