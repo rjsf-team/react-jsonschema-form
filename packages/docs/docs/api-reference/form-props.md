@@ -207,7 +207,7 @@ Optional enumerated flag controlling how empty object fields are populated, defa
 
 | Flag Value                 | Description                                                                                                                 |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `populateAllDefaults`      | Legacy behavior - set default when there is a primitive value, an non-empty object field, or the field itself is required   |
+| `populateAllDefaults`      | Legacy behavior - set default when there is a primitive value, a non-empty object field, or the field itself is required    |
 | `populateRequiredDefaults` | Only sets default when a value is an object and its parent field is required, or it is a primitive value and it is required |
 | `skipDefaults`             | Does not set defaults                                                                                                       |
 | `skipEmptyDefaults`        | Does not set an empty default. It will still apply the default value if a default property is defined in your schema        |
@@ -440,7 +440,7 @@ render(
 
 ## customMergeAllOf
 
-The `customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in case the where the default merge library ([@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/)) doesn't satisfy your functional or performance requirements.
+The `customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful when the default merge library ([@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/)) doesn't satisfy your functional or performance requirements.
 
 By providing your own implementation, you can potentially achieve significant performance improvements. For instance, if your use case only requires a subset of JSON Schema features, you can implement a faster, more tailored merging strategy.
 
