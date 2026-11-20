@@ -794,7 +794,7 @@ const uiSchema: UiSchema = {
 ### label
 
 Field labels are rendered by default.
-Labels may be omitted on a per-field by setting the `label` option to `false` in the `ui:options` uiSchema directive.
+Labels may be omitted on a per-field basis by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
 ```tsx
 import Form from '@rjsf/core';
@@ -1079,7 +1079,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-## `duplicateKeySuffixSeparator` option
+## `ui:duplicateKeySuffixSeparator` option
 
 When using `additionalProperties`, key collision is prevented by appending a unique integer suffix to the duplicate key.
 For example, when you add a key named `myKey` to a form where `myKey` is already defined, then your new key will become `myKey-1`.
