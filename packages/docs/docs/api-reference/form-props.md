@@ -207,7 +207,7 @@ Optional enumerated flag controlling how empty object fields are populated, defa
 
 | Flag Value                 | Description                                                                                                                 |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `populateAllDefaults`      | Legacy behavior - set default when there is a primitive value, a non-empty object field, or the field itself is required   |
+| `populateAllDefaults`      | Legacy behavior - set default when there is a primitive value, a non-empty object field, or the field itself is required    |
 | `populateRequiredDefaults` | Only sets default when a value is an object and its parent field is required, or it is a primitive value and it is required |
 | `skipDefaults`             | Does not set defaults                                                                                                       |
 | `skipEmptyDefaults`        | Does not set an empty default. It will still apply the default value if a default property is defined in your schema        |
