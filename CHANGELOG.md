@@ -7,6 +7,18 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 # 7.0.0-beta.2
 
+## @rjsf/utils
+
+- Add `getKeywordParentSchema()`, which the validator packages use to find the schema holding the keyword an error reports, following each `$ref` on the way ([#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+
+## @rjsf/validator-ata
+
+- Fix errors under a `$ref` not naming their property by its schema `title`, and the error for a `false` property taking the schema of a sibling property named `title` as its title ([#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+
+## @rjsf/validator-cfworker
+
+- Fix errors inside an array item, or under a `$ref`, `allOf`, `if`/`then` or `additionalProperties`, not naming their property by its schema `title` ([#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+
 # 7.0.0-beta.1 (2026-11-20)
 
 ## @rjsf/antd

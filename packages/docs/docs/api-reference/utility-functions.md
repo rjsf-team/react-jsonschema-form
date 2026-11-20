@@ -1501,6 +1501,22 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 
 - UiSchema&lt;T, S, F> | undefined: The uiSchema for the item at `index`, or undefined
 
+### getKeywordParentSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Used by the validator packages to find the schema object holding the keyword a validation error reports, when the engine doesn't hand over one that is resolved, to pass to [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) as its `parentSchema`.
+The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through: one written into the path as a `$ref` key, or one it skips, its next key being one the `$ref` schema doesn't hold itself.
+A `$ref` on the schema it ends at is resolved too, its own keywords kept over its target's.
+
+#### Parameters
+
+- rootSchema: S - The form's root schema
+- schemaPath: string - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/required`
+- [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
+
+#### Returns
+
+- S | undefined: The schema holding the keyword, or `undefined` when the path leads to no schema object or through a `$ref` that can't be resolved, such as one naming an `$anchor`
+
 ### getLabelId&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getlabelid}
 
 Gets the id of a field's label, for a widget or template that draws it or names a control by it: the id the field's plan gives the label, whoever draws it, which is `${id}__optionLabel`, numbered `__optionLabel2` and so on further down, beneath a label a field above draws under `fieldLabelId(id)`, or [fieldLabelId()](#fieldlabelid) for one rendered without a plan.

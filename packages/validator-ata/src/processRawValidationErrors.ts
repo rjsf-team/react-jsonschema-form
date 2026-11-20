@@ -15,6 +15,7 @@ import {
   createErrorHandler,
   getByPath,
   getDefaultFormState,
+  getKeywordParentSchema,
   getUiOptions,
   ONE_OF_KEY,
   toErrorSchema,
@@ -85,7 +86,10 @@ export function transformRJSFValidationErrors<
   schema?: S,
 ): RJSFValidationError[] {
   const errorList = errors.map((e: ValidationError) => {
-    const { instancePath, keyword, params, schemaPath, parentSchema } = e;
+    const { instancePath, keyword, params, schemaPath } = e;
+    // ata hands over a `$ref`'s own schema, unresolved, for a keyword under it, or no schema at all in a chain of them
+    const parentSchema =
+      (schema && getKeywordParentSchema<S>(schema, schemaPath, unescapePointerToken)) ?? e.parentSchema;
     // oxlint-disable-next-line typescript/no-useless-default-assignment -- ata's types say `message` is always set, but it can be missing at runtime
     let { message = '' } = e;
     let property = instancePath.split('/').map(unescapePointerToken).join('.');
@@ -123,9 +127,10 @@ export function transformRJSFValidationErrors<
         stack = `'${uiSchemaTitle}' ${message}`.trim();
         uiTitle = uiSchemaTitle;
       } else {
-        const parentSchemaTitle = getByPath<string | undefined>(parentSchema, 'title');
+        // A `false` property's error comes with the `properties` holding it, where `title` can name a property
+        const parentSchemaTitle = getByPath(parentSchema, 'title');
 
-        if (parentSchemaTitle) {
+        if (typeof parentSchemaTitle === 'string' && parentSchemaTitle) {
           stack = `'${parentSchemaTitle}' ${message}`.trim();
           uiTitle = parentSchemaTitle;
         }
