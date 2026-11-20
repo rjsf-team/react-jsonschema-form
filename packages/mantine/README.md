@@ -75,13 +75,13 @@
 - `@rjsf/validator-ajv8 >= 7`
 
 ```sh
-npm install @mantine/core @mantine/hooks @mantine/dates dayjs @rjsf/core @rjsf/utils @rjsf/validator-ajv8
+npm install @mantine/core @mantine/hooks @mantine/dates dayjs @rjsf/core@next @rjsf/utils@next @rjsf/validator-ajv8@next
 ```
 
 ### Installation
 
 ```sh
-npm install @rjsf/mantine
+npm install @rjsf/mantine@next
 ```
 
 <!-- USAGE EXAMPLES -->

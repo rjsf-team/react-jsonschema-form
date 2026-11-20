@@ -45,13 +45,13 @@ top margin core leaves to its optional stylesheet. Everything else is `@rjsf/cor
 - `@rjsf/validator-ajv8 >= 7`
 
 ```bash
-npm install @rjsf/core @rjsf/utils @rjsf/validator-ajv8
+npm install @rjsf/core@next @rjsf/utils@next @rjsf/validator-ajv8@next
 ```
 
 ### Installation
 
 ```bash
-npm install @rjsf/bootstrap3
+npm install @rjsf/bootstrap3@next
 ```
 
 Load the Bootstrap 3 stylesheet on the page yourself; this package ships none.

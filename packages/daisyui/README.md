@@ -42,7 +42,7 @@ This package integrates [DaisyUI](https://daisyui.com/), [Tailwind CSS](https://
 ### Installation
 
 ```bash
-npm install @rjsf/daisyui @rjsf/core @rjsf/utils @rjsf/validator-ajv8 tailwindcss daisyui
+npm install @rjsf/daisyui@next @rjsf/core@next @rjsf/utils@next @rjsf/validator-ajv8@next tailwindcss daisyui
 ```
 
 ## Usage
