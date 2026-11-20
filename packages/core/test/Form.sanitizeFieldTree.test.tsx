@@ -4565,6 +4565,104 @@ describe('judging a field by the value the fill writes for it (#5825)', () => {
     expect(sanitizedBoth(item(-5), item(-6), { l: [-5] }).form).toEqual({ l: [-6] });
   });
 
+  // A remove or a move pairs each item with its previous index, where the array's default hands it the entry it held,
+  // so the move itself is no change of its default
+  describe('keeps an item a remove or move pairs with its previous index, under an array default', () => {
+    const listWith = (items: RJSFSchema, d: RJSFSchema['default']): RJSFSchema => ({
+      type: 'object',
+      properties: { list: { type: 'array', items, default: d } },
+    });
+    const ref = () => createRef<FormRef<Record<string, unknown>>>();
+
+    it('removing the first of two string rows', async () => {
+      const form = ref();
+      const { container } = render(
+        <Form ref={form} schema={listWith({ type: 'string' }, ['x', 'w'])} validator={validator} />,
+      );
+      await user.click(elementOf(container, `#${buttonId('root_list_0', 'remove')}`));
+      expect(handleOf(form).getFormData()).toEqual({ list: ['w'] });
+    });
+
+    it('moving the first of two string rows down', async () => {
+      const form = ref();
+      const { container } = render(
+        <Form ref={form} schema={listWith({ type: 'string' }, ['x', 'w'])} validator={validator} />,
+      );
+      await user.click(elementOf(container, `#${buttonId('root_list_0', 'moveDown')}`));
+      expect(handleOf(form).getFormData()).toEqual({ list: ['w', 'x'] });
+    });
+
+    it('removing the first row after typing into the last', async () => {
+      const form = ref();
+      const { container } = render(
+        <Form ref={form} schema={listWith({ type: 'string' }, ['x', 'w', 'q'])} validator={validator} />,
+      );
+      await user.clear(elementOf(container, '#root_list_2'));
+      await user.type(elementOf(container, '#root_list_2'), 'k');
+      await user.click(elementOf(container, `#${buttonId('root_list_0', 'remove')}`));
+      expect(handleOf(form).getFormData()).toEqual({ list: ['w', 'k'] });
+    });
+
+    it('removing the first of two object rows', async () => {
+      const form = ref();
+      const items: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+      const { container } = render(
+        <Form ref={form} schema={listWith(items, [{ a: 'x' }, { a: 'w' }])} validator={validator} />,
+      );
+      await user.click(elementOf(container, `#${buttonId('root_list_0', 'remove')}`));
+      expect(handleOf(form).getFormData()).toEqual({ list: [{ a: 'w' }] });
+    });
+
+    // A remove or move that flips the branch giving the array its default swaps the rows still holding an entry of the
+    // old one for the new one's entry at the index they came from, so a move keeps its order; a typed row is kept
+    const branchy = (condition: RJSFSchema, thenDefault: string[], elseDefault: string[]): RJSFSchema => ({
+      type: 'object',
+      properties: { list: { type: 'array', items: { type: 'string' } } },
+      if: { properties: { list: condition } },
+      then: { properties: { list: { default: thenDefault } } },
+      else: { properties: { list: { default: elseDefault } } },
+    });
+    it.each<{ name: string; schema: RJSFSchema; typed?: string; button: 'remove' | 'moveDown'; expected: string[] }>([
+      {
+        name: 'a remove flipping minItems',
+        schema: branchy({ minItems: 2 }, ['x', 'w'], ['y', 'z']),
+        button: 'remove',
+        expected: ['z'],
+      },
+      {
+        name: 'a remove of one of three flipping minItems',
+        schema: branchy({ minItems: 3 }, ['x', 'w', 'q'], ['y', 'z', 'r']),
+        button: 'remove',
+        expected: ['z', 'r'],
+      },
+      {
+        name: 'a remove flipping minItems after typing into the last row',
+        schema: branchy({ minItems: 3 }, ['x', 'w', 'q'], ['y', 'z', 'r']),
+        typed: 'k',
+        button: 'remove',
+        expected: ['z', 'k'],
+      },
+      {
+        name: "a move flipping the first item's const",
+        schema: branchy({ items: [{ const: 'x' }] }, ['x', 'w'], ['y', 'z']),
+        button: 'moveDown',
+        expected: ['z', 'y'],
+      },
+    ])(
+      'swaps the held entries of the old branch default by index after $name',
+      async ({ schema, typed, button, expected }) => {
+        const form = ref();
+        const { container } = render(<Form ref={form} schema={schema} validator={validator} />);
+        if (typed !== undefined) {
+          await user.clear(elementOf(container, '#root_list_2'));
+          await user.type(elementOf(container, '#root_list_2'), typed);
+        }
+        await user.click(elementOf(container, `#${buttonId('root_list_0', button)}`));
+        expect(handleOf(form).getFormData()).toEqual({ list: expected });
+      },
+    );
+  });
+
   it("keeps a required array's computed [] where a default sits only in an option the fill didn't pick", () => {
     const wrap = (arr: RJSFSchema): RJSFSchema => ({ type: 'object', required: ['arr'], properties: { arr } });
     const arrWith = (extra: RJSFSchema): RJSFSchema => ({

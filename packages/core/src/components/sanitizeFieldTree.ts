@@ -1186,6 +1186,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       const previousIndex = previousKeyOf(String(index));
       const hasPrevious =
         Array.isArray(oldValue) && previousIndex !== undefined && Number(previousIndex) < oldValue.length;
+      const fillIndex = hasPrevious ? Number(previousIndex) : index;
       // An item no previous one moved to, such as a copy or a new row, is judged as holding what it holds now under
       // the old tree's item at its index, so a change that flips the constraints of the rows judges it as it judges them
       const itemMovesBefore = ctx.itemMoves.length;
@@ -1198,10 +1199,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           newRaw: newItem,
           oldValue: hasPrevious ? valueAt(oldValue, previousIndex) : item,
           newValue: item,
-          // An item inherits its array's default at its index, the old one at the index it held before
-          oldFill: ctx.oldSchemaUtils.childFillOf(oldFillSchema, oldFill, hasPrevious ? Number(previousIndex) : index),
-          newFill: ctx.schemaUtils.childFillOf(newFillSchema, newFill, index),
-          fillsAlike: () => hasPrevious && Number(previousIndex) === index && fillsAlikeBelow(),
+          // An item inherits its array's default at its index. One a remove or move pairs with the index it held
+          // before reads the default there on both sides, so a move by itself changes no item's default
+          oldFill: ctx.oldSchemaUtils.childFillOf(oldFillSchema, oldFill, fillIndex),
+          newFill: ctx.schemaUtils.childFillOf(newFillSchema, newFill, fillIndex),
+          fillsAlike: fillsAlikeBelow,
           isItem: true,
           hasOld: Array.isArray(oldValue),
           oldPath: oldPath && hasPrevious ? [...oldPath, Number(previousIndex)] : undefined,
