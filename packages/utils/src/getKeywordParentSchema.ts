@@ -14,14 +14,18 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  * @param schemaPath - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/required`
  * @param [decodeSchemaPathKey] - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as
  *        written without it
- * @returns - The schema holding the keyword, or `undefined` when the path leads to no schema object or through a
- *          `$ref` that can't be resolved
+ * @returns - The schema holding the keyword, or `undefined` when the path isn't a URI fragment, or leads to no schema
+ *          object or through a `$ref` that can't be resolved
  */
 export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSFSchema>(
   rootSchema: S,
   schemaPath: string,
   decodeSchemaPathKey: (key: string) => string = (key) => key,
 ): S | undefined {
+  // Ajv starts the path of a keyword in another resource with that resource's `$id`, which isn't read from the root
+  if (!schemaPath.startsWith('#')) {
+    return undefined;
+  }
   try {
     let node: unknown = rootSchema;
     for (const key of schemaPath.split('/').slice(1, -1).map(decodeSchemaPathKey)) {

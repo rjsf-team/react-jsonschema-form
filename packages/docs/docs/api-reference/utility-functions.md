@@ -171,7 +171,8 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 ### applyValidatorErrorTitles&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#applyvalidatorerrortitles}
 
 Used by the validator packages to name the properties an error's message names by their `ui:title` or `title`.
-A name's title is its `ui:title` at the error's `property`, then at the `schemaPath`, then the `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the root `schema`.
+A name's title is its `ui:title` at the error's `property`, then at the `schemaPath`, then at it with the branches the keyword sits in removed (see [`getFieldSchemaPath()`](#getfieldschemapath)), then the `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the schema of the field holding the branch the keyword sits in, then in the root `schema`.
+A schema that is a `$ref` is read resolved, its own `title` kept over its target's.
 Each name with a title is replaced, in one pass so a title that matches another name isn't replaced again, by its title in single quotes, written as it is, `$` patterns included.
 
 #### Parameters
@@ -1278,6 +1279,20 @@ A deprecated field's label is decorated with the `DeprecatedLabel` marker under 
 
 - string: The label, or `''` when the field has none
 
+### getFieldSchemaPath()
+
+Used by the validator packages to name a property by the field a failed keyword applies to.
+Returns the `schemaPath` with the branches the keyword sits in removed: each `allOf`, `anyOf` or `oneOf` option, `then`, `else`, and `dependentSchemas` or `dependencies` schema, along with any `$ref` written into the path after one.
+A branch's own `title` names that branch, not the field, and a branch that only lists `required` holds no `properties` to look one up in.
+
+#### Parameters
+
+- schemaPath: string - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/then/type`
+
+#### Returns
+
+- string: The path the keyword would have if the field held it, such as `#/properties/a/type`, or the `schemaPath` as it is when the keyword sits in no branch
+
 ### getFieldTypeForUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getfieldtypeforuischema}
 
 Gets the type of the field `SchemaField` renders a schema by, as [getFieldTypeForWidget()](#getfieldtypeforwidget) does for the field's own `ui:widget` in its `uiSchema`.
@@ -1504,8 +1519,8 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 ### getKeywordParentSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Used by the validator packages to find the schema object holding the keyword a validation error reports, when the engine doesn't hand over one that is resolved, to pass to [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) as its `parentSchema`.
-The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through: one written into the path as a `$ref` key, or one it skips, its next key being one the `$ref` schema doesn't hold itself.
-A `$ref` on the schema it ends at is resolved too, its own keywords kept over its target's.
+The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through, whether written into the path as a `$ref` key or skipped by it, and the one on the schema it ends at.
+A `$ref` schema's own keywords are kept over its target's.
 
 #### Parameters
 
@@ -1515,7 +1530,7 @@ A `$ref` on the schema it ends at is resolved too, its own keywords kept over it
 
 #### Returns
 
-- S | undefined: The schema holding the keyword, or `undefined` when the path leads to no schema object or through a `$ref` that can't be resolved, such as one naming an `$anchor`
+- S | undefined: The schema holding the keyword, or `undefined` when the path isn't a URI fragment, such as one Ajv starts with another resource's `$id`, or leads to no schema object or through a `$ref` that can't be resolved, such as one naming an `$anchor`
 
 ### getLabelId&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getlabelid}
 

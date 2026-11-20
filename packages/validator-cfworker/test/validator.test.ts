@@ -14,6 +14,7 @@ import pointerValidationTests, {
   absoluteRefValidationTests,
   sharedObjectValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
+import requiredTitleTests from '../../utils/test/testUtils/requiredTitleTests.ts';
 import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
@@ -484,6 +485,7 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
 });
 
 pointerValidationTests(() => customizeValidator());
+requiredTitleTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 sharedCopyScoringTests(() => customizeValidator());

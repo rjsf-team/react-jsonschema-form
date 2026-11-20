@@ -61,6 +61,7 @@ import getExampleSuggestions from './getExampleSuggestions.ts';
 import getFieldClassNames from './getFieldClassNames.ts';
 import type { FieldLabelSources } from './getFieldLabel.ts';
 import getFieldLabel from './getFieldLabel.ts';
+import getFieldSchemaPath from './getFieldSchemaPath.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
 import getGroupAttributes from './getGroupAttributes.ts';
 import type { GroupRole } from './getGroupAttributes.ts';
@@ -389,6 +390,7 @@ export {
   getExampleSuggestions,
   getFieldClassNames,
   getFieldLabel,
+  getFieldSchemaPath,
   getFieldTypeForUiSchema,
   getFieldTypeForWidget,
   getFreePropertyNames,

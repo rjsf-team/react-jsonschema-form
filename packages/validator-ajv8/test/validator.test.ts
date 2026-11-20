@@ -38,6 +38,7 @@ import pointerValidationTests, {
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
+import requiredTitleTests from '../../utils/test/testUtils/requiredTitleTests.ts';
 import sharedCopyScoringTests, {
   chainedDefinitions,
   draft04SharedCopyScoringTests,
@@ -4042,7 +4043,35 @@ describe('AJV8Validator validating a subschema by its place in the root', () => 
   });
 });
 
+describe('AJV8Validator naming a property a branch requires in a $ref target Ajv compiles on its own', () => {
+  it('takes no title from a root property of the same name', () => {
+    // `F` holds a `$ref` of its own, so Ajv doesn't inline it and starts its schema paths at `F`
+    const schema: RJSFSchema = {
+      $defs: {
+        N: { type: 'string' },
+        F: {
+          type: 'object',
+          properties: { flag: {}, name: { $ref: '#/$defs/N' } },
+          if: { required: ['flag'] },
+          then: { required: ['name'] },
+        },
+      },
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+    };
+    const { errors } = customizeValidator().validateFormData({ name: 'x', a: { flag: 1 } }, schema);
+    expect(errors.find((error) => error.name === 'required')).toEqual(
+      expect.objectContaining({
+        schemaPath: '#/then/required',
+        title: '',
+        message: "must have required property 'name'",
+      }),
+    );
+  });
+});
+
 pointerValidationTests(() => customizeValidator());
+requiredTitleTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());

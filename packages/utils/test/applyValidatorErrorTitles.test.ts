@@ -67,6 +67,70 @@ describe('applyValidatorErrorTitles()', () => {
     }
   });
 
+  it.each<[string, RJSFSchema, string | undefined]>([
+    ['resolved', { $ref: '#/$defs/N' }, 'Full name'],
+    ['keeping its own title over its target’s', { title: 'Own', $ref: '#/$defs/N' }, 'Own'],
+    ['keeping its own title when the $ref names an $anchor', { title: 'Own', $ref: '#n' }, 'Own'],
+    ['with no title when the $ref names an $anchor', { $ref: '#n' }, undefined],
+  ])('reads a property schema that is a $ref %s', (_, name, title) => {
+    const schema: RJSFSchema = {
+      $defs: { N: { type: 'string', title: 'Full name', $anchor: 'n' } },
+      type: 'object',
+      required: ['name'],
+      properties: { name },
+    };
+    const source = { message, names: ['name'], quote: "'" as const, property: '', schemaPath: '#/required', schema };
+    expect(applyValidatorErrorTitles({ ...source, parentSchema: schema }).titles.get('name')).toEqual(title);
+    expect(applyValidatorErrorTitles(source).titles.get('name')).toEqual(title);
+  });
+
+  it('reads the field holding the branch the failed keyword sits in', () => {
+    const item: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Full name' } },
+      then: { required: ['name'] },
+    };
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '.arr.0',
+      schemaPath: '#/properties/arr/items/then/required',
+      parentSchema: item.then,
+      schema: { type: 'object', properties: { arr: { type: 'array', items: item } } },
+    });
+    expect(titles).toEqual(new Map([['name', 'Full name']]));
+  });
+
+  it('reads no field of the root for a branch the root doesn’t lead along the schemaPath to', () => {
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '.a',
+      schemaPath: '#/then/required',
+      parentSchema: { required: ['name'] },
+      uiSchema: { name: { 'ui:title': 'Root UI name' } },
+      schema: {
+        type: 'object',
+        properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+      },
+    });
+    expect(titles).toEqual(new Map());
+  });
+
+  it('reads the ui:title at the schemaPath of the field holding the branch the failed keyword sits in', () => {
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '.arr.0',
+      schemaPath: '#/properties/arr/items/then/required',
+      uiSchema: { arr: { items: { name: { 'ui:title': 'UI name' } } } },
+    });
+    expect(titles).toEqual(new Map([['name', 'UI name']]));
+  });
+
   it('reads the root property at a top-level name', () => {
     const { message: titled } = applyValidatorErrorTitles({
       message,
