@@ -343,9 +343,9 @@ describe('ui:required enforcement', () => {
       );
     });
 
-    it("submits `[]` from a group a nested option shows, which the field's own `ui:required` doesn't reach", async () => {
-      const { node, onSubmit } = createFormComponent({
-        schema: {
+    it("blocks a submit with no box checked, on a group a nested option shows, under the field's own `ui:required` (#5894)", async () => {
+      await expectSubmitBlocked(
+        {
           type: 'object',
           properties: {
             c: {
@@ -362,11 +362,9 @@ describe('ui:required enforcement', () => {
             },
           },
         },
-        uiSchema: { c: { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] } },
-        initialFormData: { c: [] },
-      });
-      await submitForm(node, user);
-      expect(onSubmit).toHaveBeenCalled();
+        { c: { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] } },
+        { c: [] },
+      );
     });
 
     it('submits under an untyped option whose `ui:required` it has no control to answer', async () => {
@@ -610,5 +608,558 @@ describe('ui:required enforcement', () => {
       expect(errorSpy).not.toHaveBeenCalled();
       errorSpy.mockRestore();
     });
+  });
+
+  describe('the options an option offers in turn (#5894)', () => {
+    const shown: RJSFSchema = { type: 'object', properties: { x: { type: 'string' }, w: { type: 'string' } } };
+    const other: RJSFSchema = { type: 'object', properties: { y: { type: 'string' } } };
+    const nested: RJSFSchema = { anyOf: [{ type: 'number' }, { anyOf: [shown, other] }] };
+    const nestedFirst: RJSFSchema = { anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] };
+    const wReq: UiSchema = { w: { 'ui:required': true } };
+    const p = (field: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { p: field } });
+    const odc: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } };
+    const colors: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true };
+
+    /** Whether the label of the field `id` is marked required, or undefined where no such field renders */
+    function markedRequired(node: Element, id: string) {
+      const label = node.querySelector(`#${id}__label`)?.closest('label');
+      return label ? label.textContent.includes('*') : undefined;
+    }
+
+    // Submitted past the browser's own `required` check, which hides the gap only for a native input
+    async function submitted(node: Element, onSubmit: ReturnType<typeof createFormComponent>['onSubmit']) {
+      await submitForm(node, user, true);
+      return onSubmit.mock.calls.length > 0;
+    }
+
+    it.each<[string, RJSFSchema, UiSchema, unknown, string]>([
+      ['1: a single level', { anyOf: [shown, other] }, { anyOf: [wReq] }, { x: 'a' }, 'root_w'],
+      ["2: the nested option's own entry", nested, { anyOf: [{}, { anyOf: [wReq] }] }, { x: 'a' }, 'root_w'],
+      ["3: the field's uiSchema both levels fall back to", nested, wReq, { x: 'a' }, 'root_w'],
+      [
+        "3b: the field's uiSchema beside an outer list with no entry for the option",
+        nested,
+        { anyOf: [{}], ...wReq },
+        { x: 'a' },
+        'root_w',
+      ],
+      [
+        '5: a `oneOf` in a `oneOf`',
+        {
+          oneOf: [
+            { type: 'number' },
+            {
+              oneOf: [
+                { ...shown, required: ['x'] },
+                { ...other, required: ['y'] },
+              ],
+            },
+          ],
+        },
+        { oneOf: [{}, { oneOf: [wReq] }] },
+        { x: 'a' },
+        'root_w',
+      ],
+      [
+        '6: an `anyOf` in a `oneOf`',
+        { oneOf: [{ type: 'number' }, { anyOf: [shown, other] }] },
+        { oneOf: [{}, { anyOf: [wReq] }] },
+        { x: 'a' },
+        'root_w',
+      ],
+      [
+        '7: an inner `oneOf` picked by its discriminator',
+        {
+          anyOf: [
+            { type: 'number' },
+            {
+              type: 'object',
+              discriminator: { propertyName: 'kind' },
+              oneOf: [
+                { properties: { kind: { const: 'o' }, y: { type: 'string' } } },
+                { properties: { kind: { const: 's' }, w: { type: 'string' } } },
+              ],
+            },
+          ],
+        },
+        { anyOf: [{}, { oneOf: [{}, wReq] }] },
+        { kind: 's' },
+        'root_w',
+      ],
+      [
+        '8: three levels, each with an entry of its own',
+        { anyOf: [{ type: 'number' }, { anyOf: [{ type: 'boolean' }, nested] }] },
+        { anyOf: [{}, { anyOf: [{}, { anyOf: [{}, { anyOf: [wReq] }] }] }] },
+        { x: 'a' },
+        'root_w',
+      ],
+      [
+        '8b: three levels, falling back to the field',
+        { anyOf: [{ type: 'number' }, { anyOf: [{ type: 'boolean' }, nested] }] },
+        wReq,
+        { x: 'a' },
+        'root_w',
+      ],
+      [
+        '9b: an object option with a property of its own beside its options',
+        {
+          anyOf: [{ type: 'number' }, { type: 'object', properties: { z: { type: 'string' } }, anyOf: [shown, other] }],
+        },
+        { anyOf: [{}, { anyOf: [wReq] }] },
+        // Shown by its own property, or the number option is the closest match
+        { x: 'a', z: 'c' },
+        'root_w',
+      ],
+      [
+        '9c: an object field with a property of its own, whose option offers options',
+        {
+          type: 'object',
+          properties: { z: { type: 'string' } },
+          anyOf: [{ anyOf: [shown, other] }, { properties: { q: { type: 'number' } }, required: ['q'] }],
+        },
+        { anyOf: [{ anyOf: [wReq] }] },
+        { x: 'a' },
+        'root_w',
+      ],
+      [
+        '9d: an object field with a property of its own, whose object option has one too',
+        {
+          type: 'object',
+          properties: { z: { type: 'string' } },
+          anyOf: [
+            { type: 'object', properties: { z2: { type: 'string' } }, anyOf: [shown, other] },
+            { properties: { q: { type: 'number' } }, required: ['q'] },
+          ],
+        },
+        { anyOf: [{ anyOf: [wReq] }] },
+        { x: 'a' },
+        'root_w',
+      ],
+      [
+        "10: an option whose own `ui:required: false` leaves its field's fields as they are",
+        nested,
+        { anyOf: [{}, { 'ui:required': false, anyOf: [wReq] }] },
+        { x: 'a' },
+        'root_w',
+      ],
+      [
+        '12a: the nested option listed first, with no data',
+        nestedFirst,
+        { anyOf: [{ anyOf: [wReq] }] },
+        undefined,
+        'root_w',
+      ],
+      ['12b: the nested option listed first, with `{}`', nestedFirst, { anyOf: [{ anyOf: [wReq] }] }, {}, 'root_w'],
+      [
+        '13b: under Optional Data Controls, once the user has added the object',
+        p(nestedFirst),
+        { ...odc, p: { anyOf: [{ anyOf: [wReq] }] } },
+        { p: { x: 'a' } },
+        'root_p_w',
+      ],
+      ['13d: with Optional Data Controls off', p(nestedFirst), { p: { anyOf: [{ anyOf: [wReq] }] } }, {}, 'root_p_w'],
+      [
+        '13e: under Optional Data Controls, below an option whose `ui:required` keeps its fields on screen',
+        p(nestedFirst),
+        { ...odc, p: { anyOf: [{ 'ui:required': true, anyOf: [wReq] }] } },
+        {},
+        'root_p_w',
+      ],
+    ])('blocks a submit with an empty field marked required, %s', async (_, schema, uiSchema, formData, id) => {
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema, initialFormData: formData });
+      expect(markedRequired(node, id)).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it.each<[string, RJSFSchema, UiSchema, unknown, string]>([
+      [
+        "4: an outer list entry for another option, which the shown option's fallback leaves behind",
+        nested,
+        { anyOf: [wReq] },
+        { x: 'a' },
+        'root_w',
+      ],
+      ['11: the other inner option shown', nested, { anyOf: [{}, { anyOf: [wReq] }] }, { y: 'b' }, 'root_w'],
+      ['11b: the outer number option shown', nested, { anyOf: [{}, { anyOf: [wReq] }] }, 3, 'root_w'],
+      [
+        '13c: an object under Optional Data Controls the user has not added',
+        p(nestedFirst),
+        { ...odc, p: { anyOf: [{ anyOf: [wReq] }] } },
+        {},
+        'root_p_w',
+      ],
+    ])('lets a submit through with %s', async (_, schema, uiSchema, formData, id) => {
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema, initialFormData: formData });
+      expect(markedRequired(node, id)).not.toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(true);
+    });
+
+    it("14: marks a select over whole values a nested option shows required, from the field's `ui:required`", () => {
+      // The select seeds its first value, so there is no empty value to submit; the walk's error for one is tested in
+      // `@rjsf/utils`
+      const { node } = createFormComponent({
+        schema: p({ anyOf: [{ anyOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }, { type: 'number' }] }),
+        uiSchema: { p: { 'ui:required': true } },
+        initialFormData: {},
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      expect(elementOf(node, 'select#root_p')).toBeRequired();
+    });
+
+    it('11d: blocks a submit once the user switches the inner selector to the option marking the field required', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: nested,
+        uiSchema: { anyOf: [{}, { anyOf: [wReq] }] },
+        initialFormData: { y: 'b' },
+      });
+      expect(markedRequired(node, 'root_w')).toBeUndefined();
+      const [, inner] = node.querySelectorAll('select');
+      await user.selectOptions(inner, 'Option 1');
+      expect(markedRequired(node, 'root_w')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    describe('a type selector numbered below the ones above it at the path', () => {
+      const typed = (inner: RJSFSchema): RJSFSchema =>
+        p({
+          type: ['object', 'number'],
+          properties: { a: { type: 'string' } },
+          anyOf: [
+            {
+              type: ['object', 'number'],
+              properties: { q: { type: 'string' } },
+              anyOf: [
+                { title: 'i1', ...inner },
+                { title: 'i2', minimum: 2 },
+              ],
+            },
+            { minimum: 1 },
+          ],
+        });
+
+      it.each<[string, RJSFSchema, string, string]>([
+        ["the option's", {}, 'q', 'root_p__internalTypeSelector2'],
+        [
+          "the option's own option's, below it",
+          { type: ['object', 'number'], properties: { r: { type: 'string' } } },
+          'r',
+          'root_p__internalTypeSelector3',
+        ],
+      ])('submits once %s type selector is on number', async (_, inner, property, typeSelector) => {
+        const { node, onSubmit } = createFormComponent({
+          schema: typed(inner),
+          uiSchema: { p: { anyOf: [{ [property]: { 'ui:required': true } }] } },
+          initialFormData: { p: {} },
+          useFallbackUiForUnsupportedType: true,
+        });
+        await user.selectOptions(elementOf(node, '#root_p__anyof_select', HTMLSelectElement), 'Option 1');
+        await user.selectOptions(elementOf(node, '#root_p__anyof_select2', HTMLSelectElement), 'i1');
+        expect(markedRequired(node, `root_p_${property}`)).toBe(true);
+        await user.selectOptions(elementOf(node, `#${typeSelector}`, HTMLSelectElement), 'number');
+        expect(markedRequired(node, `root_p_${property}`)).toBeUndefined();
+        expect(await submitted(node, onSubmit)).toBe(true);
+      });
+    });
+
+    describe('a multiple select a nested option shows, holding `[]`', () => {
+      const field = (inner: RJSFSchema): RJSFSchema => p({ anyOf: [inner, { type: 'number' }] });
+      it.each<[string, RJSFSchema, UiSchema]>([
+        [
+          "15: falling back to the field's uiSchema",
+          field({ anyOf: [colors, { type: 'string' }] }),
+          { 'ui:required': true },
+        ],
+        ['15b: on a single level', field(colors), { 'ui:required': true }],
+        [
+          '15c: below an outer option with an entry of its own',
+          field({ anyOf: [colors, { type: 'string' }] }),
+          { 'ui:required': true, anyOf: [{}] },
+        ],
+      ])('is natively required and blocks a submit, %s', async (_, schema, uiSchema) => {
+        const { node, onSubmit } = createFormComponent({
+          schema,
+          uiSchema: { p: uiSchema },
+          initialFormData: { p: [] },
+        });
+        expect(markedRequired(node, 'root_p')).toBe(true);
+        expect(elementOf(node, 'select[multiple]')).toBeRequired();
+        expect(await submitted(node, onSubmit)).toBe(false);
+      });
+    });
+
+    it("blocks a submit of a cleared select of constants an option shows, from the option's `ui:required`, which no constant's entry overrides", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          anyOf: [
+            {
+              type: 'string',
+              oneOf: [
+                { const: 'a', title: 'A' },
+                { const: 'b', title: 'B' },
+              ],
+            },
+            { type: 'number' },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ 'ui:required': true, oneOf: [{ 'ui:required': false }] }] } },
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      // Cleared rather than left untouched, which the form's defaults would fill on submit
+      await user.selectOptions(elementOf(node, '#root_p'), 'A');
+      await user.selectOptions(elementOf(node, '#root_p'), '');
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it("blocks a submit of a cleared select of constants with no `type` an option shows, from the option's `ui:required`", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          anyOf: [
+            {
+              oneOf: [
+                { const: 'a', title: 'A' },
+                { const: 'b', title: 'B' },
+              ],
+            },
+            { type: 'number' },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ 'ui:required': true }] } },
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      // Cleared rather than left untouched, which the form's defaults would fill on submit
+      await user.selectOptions(elementOf(node, '#root_p'), 'A');
+      await user.selectOptions(elementOf(node, '#root_p'), '');
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it("blocks a submit with a property an option declares beside options of its own empty, as the option's entry marks it", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          anyOf: [
+            {
+              type: 'object',
+              properties: { z: { type: 'string' } },
+              anyOf: [
+                { type: 'object', properties: { w: { type: 'string' } } },
+                { type: 'object', properties: { y: { type: 'string' } } },
+              ],
+            },
+            { type: 'number' },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ z: { 'ui:required': true }, anyOf: [{ 'ui:title': 'W' }] }] } },
+        initialFormData: { p: {} },
+      });
+      expect(markedRequired(node, 'root_p_z')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it('blocks a submit with a property an option declares beside options of its own empty, as the entry of the option shown there, which declares it too, marks it', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          anyOf: [
+            {
+              type: 'object',
+              properties: { z: { type: 'string' } },
+              anyOf: [
+                { type: 'object', properties: { z: { type: 'string' }, w: { type: 'string' } } },
+                { type: 'object', properties: { y: { type: 'string' } } },
+              ],
+            },
+            { type: 'number' },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ anyOf: [{ z: { 'ui:required': true } }] }] } },
+        initialFormData: { p: {} },
+      });
+      // The object's own field and the option's both render z, the option's with its entry
+      const zLabels = [...node.querySelectorAll('label[for="root_p_z"]')].map((label) => label.textContent);
+      expect(zLabels).toEqual(['z', 'z*']);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it('blocks a submit with a field empty in a nested option list whose first option is the same schema object as the list above it', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({ anyOf: [shown, { anyOf: [shown, other] }] }),
+        uiSchema: { p: { anyOf: [{}, { anyOf: [{}, { y: { 'ui:required': true } }] }] } },
+        initialFormData: { p: {} },
+      });
+      await user.selectOptions(elementOf(node, '#root_p__anyof_select', HTMLSelectElement), 'Option 2');
+      await user.selectOptions(elementOf(node, '#root_p__anyof_select2', HTMLSelectElement), 'Option 2');
+      expect(markedRequired(node, 'root_p_y')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it("blocks a submit with a property both an option offering options of its own and the option shown there declare empty, as the shown option's entry marks it, while the option's own type selector is on number", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          type: ['object', 'number'],
+          anyOf: [
+            {
+              type: ['object', 'number'],
+              properties: { q: { type: 'string' } },
+              anyOf: [
+                { title: 'i1', type: ['object', 'number'], properties: { q: { type: 'string' } } },
+                { minimum: 2 },
+              ],
+            },
+            { minimum: 1 },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ anyOf: [{ q: { 'ui:required': true } }] }] } },
+        initialFormData: { p: {} },
+        useFallbackUiForUnsupportedType: true,
+      });
+      await user.selectOptions(elementOf(node, '#root_p__anyof_select', HTMLSelectElement), 'Option 1');
+      await user.selectOptions(elementOf(node, '#root_p__anyof_select2', HTMLSelectElement), 'i1');
+      await user.selectOptions(elementOf(node, '#root_p__internalTypeSelector2', HTMLSelectElement), 'number');
+      // Only the shown option's field renders q, on the object its own type selector is on
+      const qLabels = [...node.querySelectorAll('label[for="root_p_q"]')].map((label) => label.textContent);
+      expect(qLabels).toEqual(['q*']);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it("blocks a submit with the field empty where an option offering options of its own marks it required and the option shown there doesn't", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({ anyOf: [{ type: 'string', anyOf: [{ minLength: 1 }, { maxLength: 3 }] }, { type: 'number' }] }),
+        uiSchema: { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } },
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it("blocks a submit with the field empty where an option with no `type` offering options of its own marks it required and the option shown there doesn't", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({
+          anyOf: [
+            {
+              anyOf: [
+                { type: 'string', minLength: 1 },
+                { type: 'string', maxLength: 3 },
+              ],
+            },
+            { type: 'number' },
+          ],
+        }),
+        uiSchema: { p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } },
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it('blocks a submit with an empty field marked required, under Optional Data Controls, below an option whose own option keeps its fields on screen', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p(nestedFirst),
+        uiSchema: { ...odc, p: { anyOf: [{ anyOf: [{ 'ui:required': true, ...wReq }] }] } },
+      });
+      expect(markedRequired(node, 'root_p_w')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it('blocks a submit with the field empty where an option offering options of its own marks it required and the option shown there is an Optional Data Control', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p(nestedFirst),
+        uiSchema: { ...odc, p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false }] }] } },
+      });
+      expect(markedRequired(node, 'root_p')).toBe(true);
+      expect(node.querySelector('#root_p_w')).toBeNull();
+      expect(await submitted(node, onSubmit)).toBe(false);
+    });
+
+    it('blocks a submit with a field empty that an option of an option shows in an `additionalProperties` entry holding `null`, which renders its fields with no control', async () => {
+      const entry: RJSFSchema = { type: ['object', 'null'], properties: { a: { type: 'string' } } };
+      const { node, onSubmit } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { anyOf: [{ anyOf: [entry] }] } },
+        uiSchema: { ...odc, additionalProperties: { anyOf: [{ anyOf: [{ a: { 'ui:required': true } }] }] } },
+        initialFormData: { extra: null },
+      });
+      expect(markedRequired(node, 'root_extra_a')).toBe(true);
+      expect(await submitted(node, onSubmit)).toBe(false);
+      expect(errorListMessages(node)).toEqual([".extra.a must have required property 'a'"]);
+    });
+
+    it('reports no field of an option shown as an Optional Data Control below an option offering options of its own', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({ anyOf: [{ type: 'object', anyOf: [shown, other] }, { type: 'number' }] }),
+        uiSchema: { ...odc, p: { anyOf: [{ 'ui:required': true, anyOf: [{ 'ui:required': false, ...wReq }] }] } },
+      });
+      expect(node.querySelector('#root_p_w')).toBeNull();
+      expect(await submitted(node, onSubmit)).toBe(false);
+      expect(errorListMessages(node)).toEqual([".p must have required property 'p'"]);
+    });
+
+    it("submits with the field empty where only an option shown below the one marking the field's label sets `ui:required`", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p(nestedFirst),
+        uiSchema: { p: { anyOf: [{ anyOf: [{ 'ui:required': true }] }] } },
+      });
+      expect([...node.querySelectorAll('legend, label')].map(({ textContent }) => textContent)).not.toContain('p*');
+      expect(await submitted(node, onSubmit)).toBe(true);
+    });
+
+    it('submits past the options of an option that a `ui:field` renders in their place', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: p({ anyOf: [{ anyOf: [shown, other] }, { type: 'number' }] }),
+        uiSchema: {
+          p: { anyOf: [{ 'ui:field': 'MyField', 'ui:fieldReplacesAnyOrOneOf': true, anyOf: [wReq] }] },
+        },
+        initialFormData: { p: { x: 'a' } },
+        fields: { MyField: () => <div /> },
+      });
+      expect(node.querySelector('#root_p_w')).toBeNull();
+      expect(await submitted(node, onSubmit)).toBe(true);
+    });
+  });
+
+  describe("an object's own properties beside its options", () => {
+    const zBesideOption = (option: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { z: { type: 'string' } },
+      anyOf: [option],
+    });
+    const qOption: RJSFSchema = { properties: { q: { type: 'string' } } };
+    const zLabels = (node: Element) =>
+      [...node.querySelectorAll('label[for="root_z"]')].map(({ textContent }) => textContent);
+
+    it("blocks a submit with an own property empty that the object's uiSchema marks, beside an option with an entry of its own", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: zBesideOption(qOption),
+        uiSchema: { z: { 'ui:required': true }, anyOf: [{ q: {} }] },
+        initialFormData: {},
+      });
+      expect(zLabels(node)).toEqual(['z*']);
+      await submitForm(node, user, true);
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(errorListMessages(node)).toEqual([".z must have required property 'z'"]);
+    });
+
+    it("submits with an own property empty that only the option's entry marks, as the object renders it with its own uiSchema", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: zBesideOption(qOption),
+        uiSchema: { anyOf: [{ z: { 'ui:required': true } }] },
+        initialFormData: {},
+      });
+      expect(zLabels(node)).toEqual(['z']);
+      await submitForm(node, user, true);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+
+    it.each<[string, UiSchema, string[]]>([
+      ["the object's uiSchema", { z: { 'ui:required': true }, anyOf: [{ q: {} }] }, ['z*', 'z']],
+      ["the option's entry", { anyOf: [{ z: { 'ui:required': true } }] }, ['z', 'z*']],
+    ])(
+      'blocks a submit with a property the object and its option both declare empty, as %s marks it',
+      async (_label, uiSchema, labels) => {
+        const { node, onSubmit } = createFormComponent({
+          schema: zBesideOption({ properties: { z: { type: 'string' }, q: { type: 'string' } } }),
+          uiSchema,
+          initialFormData: {},
+        });
+        expect(zLabels(node)).toEqual(labels);
+        await submitForm(node, user, true);
+        expect(onSubmit).not.toHaveBeenCalled();
+        expect(errorListMessages(node)).toEqual([".z must have required property 'z'"]);
+      },
+    );
   });
 });

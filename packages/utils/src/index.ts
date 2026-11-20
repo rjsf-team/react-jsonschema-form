@@ -63,6 +63,7 @@ import getFreePropertyNames from './getFreePropertyNames.ts';
 import getGroupAttributes from './getGroupAttributes.ts';
 import type { GroupRole } from './getGroupAttributes.ts';
 import getGroupLabelling from './getGroupLabelling.ts';
+import getInheritedOptionUiSchema from './getInheritedOptionUiSchema.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getLabelId from './getLabelId.ts';
 import getOptionSelectorSchema from './getOptionSelectorSchema.ts';
@@ -386,6 +387,7 @@ export {
   getFreePropertyNames,
   getGroupAttributes,
   getGroupLabelling,
+  getInheritedOptionUiSchema,
   getItemUiSchemaForItem,
   getItemsUiSchemaKey,
   getLabelId,

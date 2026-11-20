@@ -228,7 +228,7 @@ The `ui:options` property cannot be nested inside itself and thus is the last ex
 
 All the properties that follow can be specified in the `uiSchema` in either of the two equivalent ways.
 
-> NOTE: The properties specific to array items can be found [here](../json-schema/arrays.md#array-item-uiSchema-options). For advanced dynamic UI schema capabilities for array items, see the [Dynamic UI Schema Examples](./dynamic-ui-schema-examples.md).
+> NOTE: The properties specific to array items can be found [here](../json-schema/arrays.md#array-item-uischema-options). For advanced dynamic UI schema capabilities for array items, see the [Dynamic UI Schema Examples](./dynamic-ui-schema-examples.md).
 
 ### widget
 
@@ -994,7 +994,7 @@ On an array rendered as one widget, such as a group of checkboxes, a multiple se
 
 On a checkbox, `ui:required: true` shows the indicator while the box holds no value yet, since nothing seeds the `false` a schema-required `boolean` gets and the form blocks that submit; once it holds `false`, that counts as an answer. A `CheckboxWidget` of your own marks its label where both the `required` it is handed and [`templateMarksRequired()`](./utility-functions.md#templatemarksrequired) hold (see [Custom Widgets](../advanced-customization/custom-widgets-fields.md)).
 
-On an `anyOf`/`oneOf` field, `ui:required: true` in the entry of `uiSchema.oneOf` or `uiSchema.anyOf` for the option shown requires the field while that option is shown, and shows the indicator on the field's label. An entry that leaves `ui:required` unset takes the field's own, so `ui:required: true` beside `oneOf` also has a group of checkboxes an option shows reject an empty array. An option that renders options of its own doesn't hand it on to them. A `null` option, or one with no `type` that renders the unsupported-field template, has no control to answer with, so its own `ui:required` doesn't require the field.
+On an `anyOf`/`oneOf` field, `ui:required: true` in the entry of `uiSchema.oneOf` or `uiSchema.anyOf` for the option shown requires the field while that option is shown, and shows the indicator on the field's label. An entry that leaves `ui:required` unset takes the field's own, so `ui:required: true` beside `oneOf` also has a group of checkboxes an option shows reject an empty array. An option that offers options of its own hands it on to them in the same way, at any depth, so a field marked required there is required on submit. The indicator on the field's label comes from the option the field shows, so an empty field is required by that option's `ui:required`, not by one only an option inside it sets. A `null` option, or one with no `type` that renders the unsupported-field template, has no control to answer with, so its own `ui:required` doesn't require the field.
 
 `ui:required` must be set per field, as it isn't one of the options read from [`ui:globalOptions`](#uiglobaloptions).
 
