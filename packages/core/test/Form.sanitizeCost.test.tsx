@@ -52,7 +52,8 @@ describe('the fills the sanitize of a deep form makes', () => {
 
     expect(handleOf(ref).getFormData()).toEqual(before);
     expect(fieldFills.count).toBeLessThanOrEqual(2);
-  });
+    // Under a second locally, but past 5 seconds on a loaded CI runner
+  }, 30_000);
 
   it('makes no fill as the user types into a leaf of a deep form', async () => {
     const { container } = render(<Form schema={nested(6, 3)} validator={validator} />);
