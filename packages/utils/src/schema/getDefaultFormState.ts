@@ -468,6 +468,25 @@ function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>
  */
 const skippingContexts = new KeyedMemo<object>();
 
+/** Marks a context under which no `if` is resolved, which the value a field starts from is folded under, see
+ * `foldField()`. A context spread from one keeps the mark
+ */
+const RESOLVES_NO_CONDITIONS = Symbol('resolvesNoConditions');
+
+/** `context` marked with `RESOLVES_NO_CONDITIONS`, per context it is built from, so it keeps its identity across the
+ * passes and calls whose memos compare the context first
+ */
+function unresolvedContext<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+): SchemaContext<S, F> {
+  // Only `context` spread with the mark is kept under `context`, but the memo can't carry its type parameters
+  return unresolvedContexts.get([context], () => ({ ...context, [RESOLVES_NO_CONDITIONS]: true })) as SchemaContext<
+    S,
+    F
+  >;
+}
+const unresolvedContexts = new KeyedMemo<object>();
+
 /** `context` marked with `HOLDS_NULL_DEFAULT` as `holds` says, per context it is built from, so it keeps its identity
  * across the passes and calls whose memos compare the context first
  */
@@ -478,12 +497,22 @@ function heldNullContext<S extends StrictRJSFSchema, F extends FormContextType>(
   if ((Reflect.get(context, HOLDS_NULL_DEFAULT) === true) === holds) {
     return context;
   }
-  const marked = heldNullContexts.get([context, holds], () => ({ ...context, [HOLDS_NULL_DEFAULT]: holds }));
-  // Only `context` spread with the mark is kept under `context` and `holds`, but the memo can't carry its type
-  // parameters
+  const marked =
+    copiedFrom.get(context) ??
+    heldNullContexts.get([context, holds], () => {
+      const copy = { ...context, [HOLDS_NULL_DEFAULT]: holds };
+      copiedFrom.set(copy, context);
+      return copy;
+    });
+  // Only `context` spread with the mark is kept under `context` and `holds`, or for a copy, the context it was spread
+  // from, but the memos can't carry its type parameters
   return marked as SchemaContext<S, F>;
 }
 const heldNullContexts = new KeyedMemo<object>();
+/** The context each copy `heldNullContext()` made was spread from, which marking the copy back gives, so the children
+ * of a field holding a `null` default are folded under the context its parent was
+ */
+const copiedFrom = new WeakMap<object, object>();
 
 /** The schema `foldView()` reads under `skippingDefaults()`, per schema it is read from, so it keeps its identity across
  * the passes and calls that read it, as the caches keyed on a schema need
@@ -1050,9 +1079,10 @@ interface PlanRequest<S extends StrictRJSFSchema> {
 function planWith<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   { graph, seeds, data, depData, selections, cutRecursion }: PlanRequest<S>,
-  { allOf, conditions }: OptionPolicy,
+  { allOf, conditions: asked }: OptionPolicy,
   optionPolicy?: OptionPolicy,
 ): PlannedField<S> {
+  const conditions = asked && !(RESOLVES_NO_CONDITIONS in context);
   const policy = policyFor(context, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
   return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions, optionPolicy };
 }
@@ -1268,10 +1298,6 @@ interface FieldPass<S extends StrictRJSFSchema> {
    * property as a `null` schema's field
    */
   readonly fills: NullFills | undefined;
-  /** The view the pass planned the field as, before its options were selected */
-  readonly view: DefaultsView<S>;
-  /** The `default` the field the pass computed holds before a branch is merged in, see `unconditionalDefault()` */
-  readonly ownDefault: unknown;
   readonly holdsNull: boolean;
   readonly objectConst: boolean;
 }
@@ -1298,10 +1324,11 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const plannedData = Number.isNaN(data) ? undefined : data;
   // Whether a `null` the field holds is its default is the field's own: its children hold no data of it
   const unmarked = heldNullContext<S, F>(outerContext, false);
-  let { value: held, nullDefault } = heldValue<T, S, F>(
-    unmarked,
-    props,
-    field.seeds.map(({ node }) => declaredDefault(field.graph, node)).find((value) => value !== undefined),
+  // The default the field's seeds declare, which it most often starts from, so its first pass is planned for it
+  let { value: held, nullDefault } = heldValue<T, S, F>(unmarked, props, () =>
+    SKIPS_DEFAULTS in unmarked
+      ? undefined
+      : field.seeds.map(({ node }) => declaredDefault(field.graph, node)).find((value) => value !== undefined),
   );
   let context = heldNullContext<S, F>(unmarked, nullDefault);
   let passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
@@ -1312,8 +1339,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const views: DefaultsView<S>[] = [];
     const reports = { holdsNull: false, objectConst: false };
     const fills = freshFills(props.nullFills);
-    const settled = settle(context, field, plannedData, depData);
-    let last = settled;
+    let last = settle(context, field, plannedData, depData);
     const folded = foldView(context, last, {
       ...props,
       memo,
@@ -1331,7 +1357,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       },
     });
     const readers = [last, ...views.flatMap(({ merged }) => merged.readers ?? []), ...passes.takeReaders()];
-    return { folded, depData, readers, fills, view: settled, ownDefault: unconditionalDefault(last), ...reports };
+    return { folded, depData, readers, fills, ...reports };
   };
   const kept = (pass: FieldPass<S>) => {
     if (pass.holdsNull) {
@@ -1443,9 +1469,14 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
   };
   let first = fold(held);
-  // The schema the field was merged into brings the `default` the field starts from, where an `allOf` member or the
-  // option it shows declares it
-  const ownHeld = heldValue<T, S, F>(unmarked, props, first.ownDefault, first.view);
+  // The field starts from the value its defaults give it before any of its conditions is resolved, as the fold gives it
+  // one: its own `default`, a merged `allOf` member's, the one of the option it shows, an inherited one or its
+  // `ui:initialValue`, by the precedence the fold gives them. Only a field that holds no object, whose pass decided
+  // something from its dependency data, is checked against it
+  const ownHeld =
+    (first.folded === null || typeof first.folded !== 'object') && decisionsOf(first.readers, held, false).size > 0
+      ? heldValue<T, S, F>(unmarked, props, () => startValue<T, S, F>(unresolvedContext<S, F>(unmarked), field, props))
+      : { value: held, nullDefault };
   if (!Object.is(ownHeld.value, held) || ownHeld.nullDefault !== nullDefault) {
     ({ value: held, nullDefault } = ownHeld);
     const marked = heldNullContext<S, F>(unmarked, nullDefault);
@@ -1504,72 +1535,44 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
 }
 
 /** The value a field holds before the defaults its conditions pick are filled in, which they are checked against: its
- * data, unless the defaults replace it, then the default that would, `ownDefault` or an inherited one by the precedence
- * `foldView()` gives them for the schema `view` planned, where that is no object or array, since an object field holds
- * its defaults filled in and is checked against them on the next pass. Before a pass planned the field, its type isn't
- * known, so an inherited default wins where the precedence says, and the pass that plans it checks that its type takes
- * it. `nullDefault` says the value is a `null` default, which its conditions are checked against as itself, where
- * `null` data is checked as `{}`, see `HOLDS_NULL_DEFAULT`
+ * data, unless the defaults replace it, then the value `startOf()` says they give it, where that is no object or array,
+ * since an object field holds its defaults filled in and is checked against them on the next pass.
+ * `nullDefault` says the value is a `null` default, which its conditions are checked against as itself, where `null`
+ * data is checked as `{}`, see `HOLDS_NULL_DEFAULT`
  */
 function heldValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  props: FoldProps<T, S, F>,
-  ownDefault: unknown,
-  view?: DefaultsView<S>,
+  { rawFormData, requiredAsRoot }: FoldProps<T, S, F>,
+  startOf: () => unknown,
 ): { readonly value: unknown; readonly nullDefault: boolean } {
-  const { rawFormData, requiredAsRoot } = props;
   if (!defaultsReplace(rawFormData, requiredAsRoot === true, context.defaultFormStateBehavior)) {
     return { value: rawFormData, nullDefault: false };
   }
-  const own = SKIPS_DEFAULTS in context ? undefined : ownDefault;
-  const { defaults: inherited, preferParentDefaults } = inheritedDefaults<T, S, F>(
-    context,
-    view?.schema,
-    view ? { ...props, uiSchema: fieldUiSchema<T, S, F>(view.schema, view.field.graph.rawRoot, props) } : props,
-  );
-  const value = own === undefined || preferParentDefaults ? inherited : own;
-  if (value !== undefined && (value === null || typeof value !== 'object')) {
-    return { value, nullDefault: value === null };
+  const start = startOf();
+  if (start !== undefined && (start === null || typeof start !== 'object')) {
+    return { value: start, nullDefault: start === null };
   }
   // A replaced `NaN` holds no value, so its conditions are checked as an empty field's, see `CheckedCondition.unset`. A
   // replaced `null` is a value an `if` may test, which it keeps
   return { value: Number.isNaN(rawFormData) ? undefined : rawFormData, nullDefault: false };
 }
 
-/** The uiSchema a field of `schema` renders with: `props.uiSchema`, with the `ui:definitions` entry for the `$ref` the
- * field's plan was resolved from applied, so defaults see the same uiSchema `SchemaField` renders with
- */
-function fieldUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schema: S,
-  rootSchema: S,
-  { uiSchema, uiSchemaDefinitions }: FoldProps<T, S, F>,
-): UiSchema<T, S, F> | undefined {
-  return uiSchemaDefinitions
-    ? resolveUiSchema<T, S, F>(schema, uiSchema, { rootSchema, uiSchemaDefinitions })
-    : uiSchema;
-}
-
-/** The defaults the ancestors of a field of `schema` give it, the ancestor `const` it reads, and whether they win over
- * its own `default`, as `foldView()` fills it and `heldValue()` checks it, the type unchecked where `schema` isn't
- * known. A value an ancestor's `const` gives the field stands in for inherited defaults that don't reach it, as for a
- * row of an array the data holds once the defaults were generated, whose defaults are read from the row. A
- * `ui:initialValue` takes the place of an ancestor's `const` on every pass, as it does of the field's own, so the
- * defaults beneath it aren't taken back by the `const` once the defaults were generated. An ancestor default wins only
- * where the field's type can hold it, so a `null` or `false` one gives way to the own default of a field whose type
- * allows neither. A value an ancestor's `const` gives wins whatever the setting says
- */
-function inheritedDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  { defaultFormStateBehavior }: SchemaContext<S, F>,
-  schema: S | undefined,
+/** The value the defaults give `field` before any of its conditions is resolved, under `context`, which resolves none */
+function startValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  field: DefaultsField<S>,
   props: FoldProps<T, S, F>,
-): { readonly defaults: unknown; readonly parentConst: unknown; readonly preferParentDefaults: boolean } {
-  const parentConst = getUiOptions<T, S, F>(props.uiSchema).initialValue === undefined ? props.parentConst : undefined;
-  const defaults = props.parentDefaults === undefined ? parentConst : props.parentDefaults;
-  const preferParentDefaults =
-    defaults !== undefined &&
-    (defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' || parentConst !== undefined) &&
-    (schema === undefined || takesValueOf<S>(schema, defaults));
-  return { defaults, parentConst, preferParentDefaults };
+): unknown {
+  return foldView(context, settle(context, field, undefined, undefined), {
+    ...props,
+    rawFormData: undefined,
+    memo: new Map(),
+    passes: fieldPasses<S, F>(context, field.graph.rawRoot, undefined),
+    nullFills: freshFills(props.nullFills),
+    track: () => undefined,
+    onNullFill: undefined,
+    onObjectConst: undefined,
+  });
 }
 
 /** The `default` a node declares, or the node its `$ref` names */
@@ -1579,22 +1582,6 @@ function declaredDefault<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: 
     return undefined;
   }
   return DEFAULT_KEY in node.raw ? node.raw[DEFAULT_KEY] : declaredDefault(graph, node.ref);
-}
-
-/** The `default` the schema of `view` takes from outside its `then`/`else` and `dependencies` branches: the first a
- * chain provides, which wins the merge as the option the field shows wins over its own keywords and those over its
- * `allOf` members
- */
-function unconditionalDefault<S extends StrictRJSFSchema>({ chains, field }: DefaultsView<S>): unknown {
-  // The branches the field's seeds sit in are its parent's, which declare the field rather than condition it
-  const declaring = new Set(field.seeds.flatMap(({ scope }) => scope ?? []));
-  for (const chain of chains) {
-    const provider = chain.get(DEFAULT_KEY);
-    if (provider && !provider.scope?.some((step) => step.startsWith('b') && !declaring.has(step))) {
-      return provider.node.raw[DEFAULT_KEY];
-    }
-  }
-  return undefined;
 }
 
 /** How the passes of a field's fixed point end: on the pass whose defaults decide what it was planned with, or in a
@@ -1734,13 +1721,25 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const rootSchema = view.field.graph.rawRoot;
   // Apply `ui:definitions` at every field, keyed by the `$ref` its plan was resolved from, so defaults see the same
   // uiSchema `SchemaField` renders with
-  const uiSchema = fieldUiSchema<T, S, F>(schema, rootSchema, inputProps);
+  const uiSchema = uiSchemaDefinitions
+    ? resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions })
+    : localUiSchema;
   const props = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const uiInitialValue = uiOptions.initialValue;
-  const { parentConst, preferParentDefaults } = inheritedDefaults<T, S, F>(context, schema, props);
-  // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins
+  // A `ui:initialValue` takes the place of an ancestor's `const` on every pass, as it does of the field's own below, so
+  // the defaults beneath it aren't taken back by the `const` once the defaults were generated
+  const parentConst = uiInitialValue === undefined ? props.parentConst : undefined;
+  // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
+  // A value an ancestor's `const` gives the field stands in for inherited defaults that don't reach it, as for a row of
+  // an array the data holds once the defaults were generated, whose defaults are read from the row
   let defaults: unknown = parentDefaults === undefined ? ownValue(parentConst) : parentDefaults;
+  // An ancestor default wins only where the field's type can hold it, so a `null` or `false` one gives way to the own
+  // default of a field whose type allows neither. A value an ancestor's `const` gives wins whatever the setting says
+  const preferParentDefaults =
+    defaults !== undefined &&
+    (defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins' || parentConst !== undefined) &&
+    takesValueOf<S>(schema, defaults);
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
   // A collapsed field keeps its own keywords, but selecting an option would plan it again past the collapse. A list the
@@ -3876,13 +3875,16 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Whether a merge of a field for its `data` resolves the field's `if`s: it does unless the field is empty and
  * `emptyObjectFields` is `skipEmptyDefaults`, which leaves an empty field's conditions unresolved wherever they sit, as
- * the plan of a field holding one itself does
+ * the plan of a field holding one itself does, or the context resolves none, see `RESOLVES_NO_CONDITIONS`
  */
 function resolvesConditions<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   data: unknown,
 ): boolean {
-  return data !== undefined || context.defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults';
+  return (
+    !(RESOLVES_NO_CONDITIONS in context) &&
+    (data !== undefined || context.defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults')
+  );
 }
 
 /** The schema of a field, `schema` as written, merged for its `data` by `merge`, where that brings in a `const`. A
@@ -4100,10 +4102,10 @@ function optionsMergedField<S extends StrictRJSFSchema, F extends FormContextTyp
   const { data, depData, merged } = view;
   const plan = buildPlan<S, F>({ context, ...field, data, depData, policy: { allOf: true, conditions } });
   // The fixed point of the field reads the conditions the merge checked and the dependencies it qualified, as it reads
-  // those of its own plan
+  // those of its own plan, but not the options of the lists those offer, which the merge leaves unchosen
   if (plan.readsData) {
     merged.readers ??= [];
-    merged.readers.push(plan);
+    merged.readers.push({ ...plan, choices: [] });
   }
   const { chosen, adopted } = view.options;
   const isClosed = ({ provider, list, dependencies }: OptionChoice) =>

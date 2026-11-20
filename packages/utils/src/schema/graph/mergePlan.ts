@@ -524,9 +524,9 @@ export function conjunctionOf<S extends StrictRJSFSchema>(
   return conjunction === node ? undefined : conjunction;
 }
 
-/** Whether the node `id` declares a `type` holding neither objects nor arrays: its own `type` where it has one, else any
- * its `$ref`s and `allOf` members declare, whatever order `retrieveSchema()` merges them in, since one such member
- * narrows the merged `type` to it. An `if` beside it may be checked before the merge, see `CheckedCondition.unset`
+/** Whether the node `id` declares a `type` holding neither objects nor arrays: its own `type`, or one any of its `$ref`s
+ * and `allOf` members declare, whatever order `retrieveSchema()` merges them in, since one such `type` narrows the
+ * merged `type` to it. An `if` beside it may be checked before the merge, see `CheckedCondition.unset`
  */
 function declaresValueType<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId, seen: Set<NodeId>): boolean {
   const node = graph.node(id);
@@ -536,8 +536,8 @@ function declaresValueType<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id
   seen.add(id);
   const target = asTarget(graph, node);
   const { type } = target.raw;
-  if (type !== undefined) {
-    return !/object|array/.test(String(type));
+  if (type !== undefined && !/object|array/.test(String(type))) {
+    return true;
   }
   return [target.ref, ...graph.subschemas(target.id, ALL_OF_KEY).map(([, member]) => member)].some(
     (member) => member !== undefined && declaresValueType(graph, member, seen),

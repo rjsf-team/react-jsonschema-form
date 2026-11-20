@@ -8463,6 +8463,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(skipping, { schema: rootOf(x) })).toStrictEqual({ x: { k: 'a' } });
           });
         });
+        it('keeps the default of an object field whose allOf member offers options beside dependencies under skipDefaults', () => {
+          const options = ['a', 'b'].map((k, index) => ({
+            properties: { k: { const: k }, z: { type: 'number' as const, default: index } },
+          }));
+          const member = {
+            dependencies: { k: { properties: { w: { type: 'number' as const, default: 7 } } } },
+            oneOf: options,
+            if: { properties: { k: { const: 'b' } } },
+            then: { properties: { q: { default: 'Q' } } },
+          };
+          const x = { type: 'object' as const, properties: { k: { type: 'string' as const, default: 'b' } } };
+          const schema = rootOf({ ...x, allOf: [member] });
+          const context = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
+          for (const formData of [undefined, { x: {} }]) {
+            expect(getDefaultFormState(context, { schema, formData })).toStrictEqual({ x: { k: 'b' } });
+          }
+        });
         describe.each(PLACEMENTS)(
           'decides the if of a primitive field by the default it holds, %s',
           (_placement, inAllOf) => {
@@ -8600,6 +8617,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }
         });
         describe.each(PLACEMENTS)(
+          'decides the if of an empty field by the const its branch gives where an allOf member narrows its type, %s',
+          (_placement, inAllOf) => {
+            it.each<[string, RJSFSchema['type']]>([
+              ['a type allowing an object', ['number', 'object']],
+              ['a type allowing an array', ['number', 'array']],
+            ])('%s', (_name, type) => {
+              const context = { validator: testValidator };
+              const narrowed = (conditional: RJSFSchema): RJSFSchema =>
+                rootOf(
+                  inAllOf
+                    ? { type, allOf: [{ type: 'number' }, conditional] }
+                    : { type, allOf: [{ type: 'number' }], ...conditional },
+                );
+              expect(
+                getDefaultFormState(context, { schema: narrowed({ if: { type: 'number' }, then: { const: 3 } }) }),
+              ).toStrictEqual({ x: 3 });
+              expect(
+                getDefaultFormState(context, { schema: narrowed({ if: { type: 'object' }, then: { const: 3 } }) }),
+              ).toStrictEqual({});
+            });
+          },
+        );
+        describe.each(PLACEMENTS)(
           'decides the if of an empty field by the const its branch reaches through a $ref or an allOf, %s',
           (_placement, inAllOf) => {
             const $defs = {
@@ -8703,6 +8743,39 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           expect(getDefaultFormState(context, { schema: rootOf(optionOne) })).toStrictEqual({ x: 3 });
         });
+        describe.each(PLACEMENTS)(
+          'decides the if of a field beside its options by the default of the option it shows, %s',
+          (_placement, inAllOf) => {
+            const beside = (field: RJSFSchema, conditional: RJSFSchema): RJSFSchema =>
+              inAllOf ? { ...field, allOf: [conditional] } : { ...field, ...conditional };
+            const nullOrTwo: RJSFSchema = { if: { type: 'null' }, then: { const: null }, else: { const: 2 } };
+            const showingTwo: RJSFSchema = { oneOf: [{ type: 'number', default: 2 }] };
+            it('checks it where the const of a branch would hide the option', () => {
+              const context = { validator: testValidator };
+              const nullable = beside({ type: ['number', 'null'], ...showingTwo }, nullOrTwo);
+              expect(getDefaultFormState(context, { schema: rootOf(nullable) })).toStrictEqual({ x: 2 });
+              expect(getDefaultFormState(context, { schema: nullable })).toBe(2);
+              const overOwn = beside(
+                { type: 'number', default: 1, oneOf: [{ default: 5 }, { minimum: 100 }] },
+                { if: { maximum: 3 }, then: { const: 3 } },
+              );
+              expect(getDefaultFormState(context, { schema: rootOf(overOwn) })).toStrictEqual({ x: 5 });
+            });
+            it("checks it where it wins over an inherited default its type can't hold", () => {
+              for (const nestedDefaultsPrecedence of ['ancestorWins', 'descendantWins'] as const) {
+                const context = { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence } };
+                const inheritingNull = (conditional: RJSFSchema): RJSFSchema => ({
+                  ...rootOf(beside(showingTwo, conditional), false),
+                  default: { x: null },
+                });
+                expect(getDefaultFormState(context, { schema: inheritingNull(nullOrTwo) })).toStrictEqual({ x: 2 });
+                expect(
+                  getDefaultFormState(context, { schema: inheritingNull({ if: { maximum: 1 }, else: { const: 1 } }) }),
+                ).toStrictEqual({ x: 1 });
+              }
+            });
+          },
+        );
         describe.each(PLACEMENTS)(
           'decides the if of a field with no type, or one allowing an object, by the primitive default it holds, %s',
           (_placement, inAllOf) => {
