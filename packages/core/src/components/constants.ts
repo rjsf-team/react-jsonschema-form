@@ -14,3 +14,6 @@ export function additionalPropertyRemoval(): unknown {
  * because every field that falls back to it shares this one object, so a write would leak into all of them.
  */
 export const EMPTY_UI_SCHEMA: Readonly<Record<string, never>> = Object.freeze({});
+
+/** Marks an array item's disclosure so the form can reveal its fields when focusing a validation error. */
+export const ARRAY_ITEM_DETAILS_CLASS = 'rjsf-array-item-details';

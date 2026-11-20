@@ -235,6 +235,26 @@ const uiSchema: UiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
+### Collapsing array items
+
+Set `showCollapseButton` in the array's `ui:options` to let users open and close each item's fields independently. Closing an item keeps its values in the form data. For example, a list of delivery addresses can show just the address names until someone opens an address to edit it.
+
+```tsx
+const uiSchema: UiSchema = {
+  addresses: {
+    'ui:options': {
+      showCollapseButton: true,
+      autoCollapse: true,
+      itemLabel: 'name',
+    },
+  },
+};
+```
+
+With this configuration, an address whose `name` is `'Home'` appears as **Home**. Without an [`itemLabel`](#itemlabel-option), the control identifies each item by its position. Set `autoCollapse` to start each item closed, including newly added items. Leave it off to start them open. Both options default to `false`.
+
+When an item first receives a validation error, it opens so the user can see which field needs attention.
+
 ### `itemLabel` option
 
 An item's buttons are titled `Move up`, `Move down`, `Copy` and `Remove` by default, and screen readers announce those titles as the buttons' names, so every item in the list has buttons with the same names. Set `itemLabel` to the property of each item that names it, and the item's buttons are titled after it instead, such as `Remove report.pdf`:
@@ -273,7 +293,7 @@ render(
 
 A dotted path, such as `'file.name'`, reads a nested property, and `'.'` names each item by its own value, for an array of strings or numbers. Since `.`, `[` and `]` always separate the parts of the path, a property whose own key contains one of them can't name the items, and a path of only separators other than `'.'`, such as `'[]'`, names nothing. An item whose value there isn't a non-empty string or a number keeps the default titles, such as one added to an array whose items have no default for that property.
 
-When more than one item has the same name, as when an item is copied, those items are numbered in the order they were added to the array, such as `Remove report.pdf (1)` and `Remove report.pdf (2)`, so their buttons can still be told apart. When the field first renders, its items are numbered in their order in the data. While the items change through the field's own buttons and inputs, a number stays with its item when items are moved or copied, and a copy takes the next number. The numbers stay consecutive, so removing one of those items renumbers the ones added after it. The order the items were added in isn't kept when the field renders again from scratch, as when a `oneOf` or `dependencies` switch brings it back, or when the array's data is replaced from outside the field, as by a form reset or `setFieldValue()`, so the numbers can change then: the items may be numbered in their order in the new data, or keep the order of the items they replaced. The numbers count only the items with that name, so adding, removing or moving an item with another name doesn't change them, and if a numbered name is already another item's name, the next free number is used. Items are named when their options give them buttons, so none are when `orderable` and `removable` are `false` and Copy can't show. Copy shows only while an item can be added, so it never does when `copyable` isn't set, when `addable` is `false`, or when `maxItems` leaves no room for another item. In an array with fixed `items`, the fixed items can't be moved or removed, so only the last of them can be named, when it can show Copy, which also needs `additionalItems`.
+When more than one item has the same name, as when an item is copied, those items are numbered in the order they were added to the array, such as `Remove report.pdf (1)` and `Remove report.pdf (2)`, so their buttons can still be told apart. When the field first renders, its items are numbered in their order in the data. While the items change through the field's own buttons and inputs, a number stays with its item when items are moved or copied, and a copy takes the next number. The numbers stay consecutive, so removing one of those items renumbers the ones added after it. The order the items were added in isn't kept when the field renders again from scratch, as when a `oneOf` or `dependencies` switch brings it back, or when the array's data is replaced from outside the field, as by a form reset or `setFieldValue()`, so the numbers can change then: the items may be numbered in their order in the new data, or keep the order of the items they replaced. The numbers count only the items with that name, so adding, removing or moving an item with another name doesn't change them, and if a numbered name is already another item's name, the next free number is used. With `showCollapseButton`, the item's name also appears on its expand and collapse control. Otherwise, items are named only when their options give them toolbar buttons. Copy shows only while an item can be added, so it never does when `copyable` isn't set, when `addable` is `false`, or when `maxItems` leaves no room for another item. In an array with fixed `items`, the fixed items can't be moved or removed, so a fixed item has a toolbar only if it is the last one and can show Copy, which also needs `additionalItems`.
 
 The titles come from translatable strings: `CopyItemButton`, `MoveDownItemButton`, `MoveUpItemButton` and `RemoveItemButton`, in which `%1` is the item's name, and `ItemNameWithNumber`, in which `%1` is a shared name and `%2` its number. If you translate RJSF's strings with a custom [`translateString`](../api-reference/form-props.md#translatestring), translate these as well. A title it returns empty is left off, so that button keeps its default title, and if it returns `ItemNameWithNumber` empty, shared names aren't numbered.
 

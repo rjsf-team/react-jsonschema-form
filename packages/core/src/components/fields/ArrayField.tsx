@@ -1,4 +1,5 @@
 import { memo, useCallback, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import type {
   ArrayFieldItemButtonProps,
   ArrayFieldTemplateProps,
@@ -30,6 +31,7 @@ import {
   resolveWidget,
   shouldRenderOptionalField,
   toFieldPath,
+  toErrorList,
   fieldPathToId,
   fieldPathToName,
   TranslatableString,
@@ -39,7 +41,7 @@ import {
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
 import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
-import { EMPTY_UI_SCHEMA } from '../constants.ts';
+import { ARRAY_ITEM_DETAILS_CLASS, EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../keyMove.ts';
 import type { KeyMove } from '../keyMove.ts';
 import { rendersTypeSelector } from './FallbackField.tsx';
@@ -494,6 +496,10 @@ function itemNameFrom(value: unknown): string | undefined {
   return typeof value === 'number' && Number.isFinite(value) ? String(value) : undefined;
 }
 
+function numberedItemLabel(translateString: Registry['translateString'], name: string, number: number) {
+  return translateString(TranslatableString.ItemNameWithNumber, [name, String(number)]);
+}
+
 /** Numbers the names that more than one item has, `a (1)` and `a (2)`, in the order the items sharing each name were
  * added to the array, given as each entry's `order`. A number then stays with its item when items are moved, copied or
  * edited, and a copy takes the next one. A numbered name already in use, as another item's own name or an earlier
@@ -516,8 +522,7 @@ function numberSharedNames(
     .flatMap(([name, order], index) => (name !== null && (counts.get(name) ?? 0) > 1 ? [{ name, order, index }] : []))
     .sort((a, b) => a.order - b.order || a.index - b.index);
   for (const { name, index } of shared) {
-    const numberedAs = (number: number) =>
-      translateString(TranslatableString.ItemNameWithNumber, [name, String(number)]);
+    const numberedAs = (number: number) => numberedItemLabel(translateString, name, number);
     let number = nextNumbers.get(name) ?? 1;
     let numbered = numberedAs(number);
     // With a working format at most `taken.size` numbers are in use, so a free one is found within the bound. A format
@@ -584,8 +589,8 @@ function useButtonTitle(
 /** The names `ui:options.itemLabel` gives the items of an array, read from each item's data at that path, or from the
  * item itself for `'.'`. Items are named when their options give them buttons, not when a button shows right now, as a
  * lone item can't move and an array at `maxItems` can't copy, so that reaching those limits doesn't renumber them. A
- * tuple passes its `fixedItemCount`: its fixed items can only show Copy, and only the last of them, so that one is named
- * only when Copy can ever show, which in a tuple also needs a schema for the items past it.
+ * tuple passes its `fixedItemCount`: its fixed items can only show Copy, and only the last of them. With disclosures,
+ * every item needs a name, including a fixed item with no toolbar.
  */
 function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
   keyedItems: readonly KeyedFormDataType<T>[],
@@ -594,7 +599,7 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiOptions: UIOptionsType<T[], S, F>,
   fixedItemCount?: number,
 ): (string | undefined)[] | undefined {
-  const { itemLabel } = uiOptions;
+  const { itemLabel, showCollapseButton } = uiOptions;
   // A uiSchema from JSON isn't type-checked, so a value other than a path leaves the items unnamed rather than throwing
   const labelled = typeof itemLabel === 'string' && itemLabel !== '';
   const isTuple = fixedItemCount !== undefined;
@@ -603,7 +608,7 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
     [labelled, isTuple, fixedItemCount, schema, uiOptions],
   );
   const { orderable, removable } = itemButtonOptions(uiOptions);
-  const hasButtons = orderable || removable || canCopy;
+  const hasButtons = orderable || removable || canCopy || showCollapseButton === true;
   const path = useMemo(() => {
     if (!labelled || !hasButtons) {
       return undefined;
@@ -615,8 +620,8 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const segments = toPath(itemLabel);
     return segments.length > 0 ? segments : undefined;
   }, [labelled, hasButtons, itemLabel]);
-  // Of a tuple's fixed items, only the last can show Copy, since a copy goes below its item
-  const firstNamedIndex = Math.max((fixedItemCount ?? 0) - (canCopy ? 1 : 0), 0);
+  // Without disclosures, only the last of a tuple's fixed items can need a name for Copy
+  const firstNamedIndex = showCollapseButton ? 0 : Math.max((fixedItemCount ?? 0) - (canCopy ? 1 : 0), 0);
   // Serialized, so that the numbering below reruns only when a name or the items' order changes, not on every edit to
   // another field
   const namesKey = useMemo(
@@ -637,6 +642,35 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
         ? undefined
         : numberSharedNames(JSON.parse(namesKey) as [string | null, number][], translateString),
     [namesKey, translateString],
+  );
+}
+
+function openItem(details: HTMLDetailsElement | null) {
+  details?.setAttribute('open', '');
+}
+
+/** Keeps fields mounted when collapsed and preserves open/closed state across moves and re-renders. */
+function ArrayItemDisclosure(props: {
+  autoCollapse?: boolean;
+  hasErrors: boolean;
+  label: string;
+  children: ReactNode;
+}) {
+  const { autoCollapse, hasErrors, label, children } = props;
+  // Keep the initial prop stable so the browser owns subsequent toggles.
+  // oxlint-disable-next-line react/hook-use-state
+  const [initiallyOpen] = useState(!autoCollapse || hasErrors);
+
+  return (
+    <details
+      className={ARRAY_ITEM_DETAILS_CLASS}
+      open={initiallyOpen}
+      ref={hasErrors ? openItem : undefined}
+      onInvalidCapture={(event) => openItem(event.currentTarget)}
+    >
+      <summary>{label}</summary>
+      {children}
+    </details>
   );
 }
 
@@ -834,8 +868,27 @@ function ArrayFieldItemInner<
   const onMoveUpItem = useButtonHandler(movesUp, handleReorderItems, index, index - 1);
   const onMoveDownItem = useButtonHandler(movesDown, handleReorderItems, index, index + 1);
 
+  let children = <ItemSchemaField {...itemFieldProps} />;
+  const hasDisclosure = uiOptions.showCollapseButton === true && !itemHidden;
+  if (hasDisclosure) {
+    let label = itemName;
+    if (label === undefined) {
+      const translatedItemTitle = translateString(TranslatableString.ArrayItemTitle);
+      const numberedLabel = numberedItemLabel(translateString, translatedItemTitle, index + 1);
+      label = numberedLabel || title || String(index + 1);
+    }
+    children = (
+      <ArrayItemDisclosure
+        autoCollapse={uiOptions.autoCollapse}
+        hasErrors={toErrorList(itemErrorSchema).length > 0}
+        label={label}
+      >
+        {children}
+      </ArrayItemDisclosure>
+    );
+  }
   const templateProps = {
-    children: <ItemSchemaField {...itemFieldProps} />,
+    children,
     buttonsProps: {
       id: fieldId,
       disabled: lockedDisabled,
@@ -868,8 +921,9 @@ function ArrayFieldItemInner<
     schema: itemSchema,
     uiSchema: itemUiSchema,
     parentUiSchema,
-    displayLabel,
-    hasDescription,
+    // Line the toolbar up with the summary, which has neither a label nor a description above it.
+    displayLabel: !hasDisclosure && displayLabel,
+    hasDescription: !hasDisclosure && hasDescription,
   };
   return <ArrayFieldItemTemplate {...templateProps} />;
 }
