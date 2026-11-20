@@ -177,7 +177,7 @@ Each name with a title is replaced, in one pass so a title that matches another 
 - source: object - The error's message and what its names' titles are looked up in:
   - message: string - The engine's message, which names each of the `names` between a pair of `quote`s
   - names: string[] - The names of the properties the message names
-  - quote: string - The quote the engine puts around a property name
+  - quote: "'" | '"' - The quote the engine puts around a property name, `'` or `"`
   - property: string - The error's property path, dot-separated as RJSF writes it, `''` for the root
   - schemaPath: string - The URI fragment of the JSON Pointer to the schema keyword that failed, such as `#/properties/a/required`
   - [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
@@ -187,7 +187,7 @@ Each name with a title is replaced, in one pass so a title that matches another 
 
 #### Returns
 
-- { message: string; titles: Map&lt;string, string> }: The `message` with each name that has a title replaced by it, and the title of each such name
+- \{ message: string, titles: Map&lt;string, string> }: The `message` with each name that has a title replaced by it, and the title of each such name
 
 ### asNumber()
 

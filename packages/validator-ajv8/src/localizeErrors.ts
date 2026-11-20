@@ -19,7 +19,6 @@ function quoteProperties(error: ErrorObject): ErrorObject['params'] {
     }
   }
   if (typeof params.deps === 'string') {
-    // Each dependency is quoted: `A, B` becomes `'A', 'B'`
     quoted.deps = dependencyNames(error)
       .map((v) => `'${v}'`)
       .join(', ');

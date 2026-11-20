@@ -14,7 +14,7 @@ interface ValidatorErrorTitleSource<
   /** The names of the properties the message names */
   names: string[];
   /** The quote the engine puts around a property name */
-  quote: string;
+  quote: "'" | '"';
   /** The error's property path, dot-separated as RJSF writes it, `''` for the root */
   property: string;
   /** The URI fragment of the JSON Pointer to the schema keyword that failed, such as `#/properties/a/required` */
