@@ -5,11 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { after, before, describe, it } = require('node:test');
 
-const {
-  DEFAULT_CONFIG: {
-    markdown: { parseFrontMatter },
-  },
-} = require('@docusaurus/core/lib/server/configValidation.js');
+const { DEFAULT_PARSE_FRONT_MATTER: parseFrontMatter } = require('@docusaurus/utils');
 
 const { loadVersions } = require('./entries.js');
 const { renderOutputs } = require('./outputs.js');

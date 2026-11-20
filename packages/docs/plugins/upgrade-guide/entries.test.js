@@ -5,12 +5,8 @@ const os = require('node:os');
 const path = require('node:path');
 const { after, before, describe, it } = require('node:test');
 
-// The site configures no `markdown.parseFrontMatter`, so in production the plugin gets this default.
-const {
-  DEFAULT_CONFIG: {
-    markdown: { parseFrontMatter },
-  },
-} = require('@docusaurus/core/lib/server/configValidation.js');
+// The plugin reads entries with Docusaurus's default parser, whatever the site configures.
+const { DEFAULT_PARSE_FRONT_MATTER: parseFrontMatter } = require('@docusaurus/utils');
 
 const { headingIds, loadVersions } = require('./entries.js');
 const upgradeGuidePlugin = require('./index.js');
@@ -428,7 +424,7 @@ describe('the page data', () => {
       /** @type {any} */ ({
         siteDir,
         baseUrl: '/',
-        siteConfig: { url: 'https://example.com', markdown: { parseFrontMatter } },
+        siteConfig: { url: 'https://example.com' },
       }),
     );
     const content = /** @type {any} */ (await plugin.loadContent?.());

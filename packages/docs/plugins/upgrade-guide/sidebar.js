@@ -1,9 +1,13 @@
 // @ts-check
 // Keeps upgrade guide entries out of the sidebar; the filtered page beside their directory stays in it. Entries are
-// still pages, so search and the sitemap still list them; `unlisted` would drop them from both. A version's
+// still pages, so search and the sitemap still list them; `unlisted` would drop them from both. Their pages still show
+// the sidebar, which `parseFrontMatter` sets for them, so a reader can get back to the guide. A version's
 // `whats-new-v<N>` page is listed under its filtered page rather than beside it.
 
-const { GUIDES_DIR, isUpgradeGuideDir } = require('./layout.js');
+const { GUIDES_DIR, VERSION_DIR, isUpgradeGuideDir } = require('./layout.js');
+
+/** The sidebar sidebars.js defines, which an entry's page shows. */
+const SIDEBAR = 'docs';
 
 /** @typedef {import('@docusaurus/plugin-content-docs').PluginOptions['sidebarItemsGenerator']} SidebarItemsGenerator */
 /** @typedef {Awaited<ReturnType<SidebarItemsGenerator>>} SidebarItems */
@@ -81,4 +85,18 @@ function withWhatsNewNested(items, titles) {
   });
 }
 
-module.exports = { sidebarItemsGenerator };
+/**
+ * The site's `markdown.parseFrontMatter`: an entry's page displays the sidebar it is left out of.
+ *
+ * @type {import('@docusaurus/types').ParseFrontMatter}
+ */
+async function parseFrontMatter(params) {
+  const result = await params.defaultParseFrontMatter(params);
+  const [file, version, guides] = params.filePath.split(/[\\/]/).reverse();
+  if (guides === GUIDES_DIR && VERSION_DIR.test(version) && file.endsWith('.md')) {
+    result.frontMatter.displayed_sidebar ??= SIDEBAR;
+  }
+  return result;
+}
+
+module.exports = { parseFrontMatter, sidebarItemsGenerator };

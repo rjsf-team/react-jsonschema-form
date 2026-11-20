@@ -10,6 +10,8 @@
 
 const path = require('node:path');
 
+const { DEFAULT_PARSE_FRONT_MATTER } = require('@docusaurus/utils');
+
 const { loadVersions } = require('./entries.js');
 const { GUIDES_DIR } = require('./layout.js');
 const { writeOutputs } = require('./outputs.js');
@@ -29,7 +31,6 @@ function upgradeGuidePlugin(context) {
   const docsDir = path.join(siteDir, 'docs');
   // The site is packages/docs; the changelogs are at the repository's root.
   const changelogDir = path.resolve(siteDir, '..', '..');
-  const { parseFrontMatter } = siteConfig.markdown;
 
   return {
     name: NAME,
@@ -42,10 +43,10 @@ function upgradeGuidePlugin(context) {
       ];
     },
 
-    // The site's own front matter parser, so an entry reads exactly as the docs plugin reads it. The site configures
-    // none, so this is Docusaurus's default, which never calls `defaultParseFrontMatter`.
+    // Docusaurus's own front matter parser rather than the site's, which adds `displayed_sidebar` to every entry (see
+    // sidebar.js): the plugin checks the fields an entry's file declares.
     loadContent() {
-      return loadVersions(siteDir, docsDir, parseFrontMatter, changelogDir);
+      return loadVersions(siteDir, docsDir, DEFAULT_PARSE_FRONT_MATTER, changelogDir);
     },
 
     // allContentLoaded rather than contentLoaded: the permalinks come from the docs plugin's content.
