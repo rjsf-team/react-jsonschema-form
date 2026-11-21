@@ -115,8 +115,15 @@ While these errors are retained during validation, it is still preferred for you
 :::
 
 ```tsx
-import { ChangeEvent } from 'react';
-import { ErrorSchema, RegistryWidgetsType, RJSFSchema, toInputValue, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { ChangeEvent } from 'react';
+import {
+  type ErrorSchema,
+  type RegistryWidgetsType,
+  type RJSFSchema,
+  toInputValue,
+  type UiSchema,
+  type WidgetProps,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -322,6 +329,7 @@ You can provide your own field components to a uiSchema for basically any json s
 For example, let's create and register a dumb `geo` component handling a _latitude_ and a _longitude_:
 
 ```tsx
+import { type ChangeEvent, Component } from 'react';
 import { RJSFSchema, UiSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -340,19 +348,19 @@ interface GeoData {
 }
 
 // Define a custom component for handling the root position object
-class GeoPosition extends React.Component<FieldProps<GeoData>, GeoData> {
+class GeoPosition extends Component<FieldProps<GeoData>, GeoData> {
   constructor(props: FieldProps<GeoData>) {
     super(props);
     this.state = { ...props.formData };
   }
 
-  onChange(name) {
-    return (event) => {
+  onChange(name: keyof GeoData) {
+    return (event: ChangeEvent<HTMLInputElement>) => {
       this.setState(
         {
           [name]: parseFloat(event.target.value),
         },
-        () => this.props.onChange(this.state),
+        () => this.props.onChange(this.state, this.props.fieldPath),
       );
     };
   }
@@ -439,6 +447,7 @@ A custom `AnyOfField` or `OneOfField` reads and writes it with `useOptionSelecti
 
 ```tsx
 import { useOptionSelection } from '@rjsf/core';
+import { FieldProps, getDiscriminatorFieldFromSchema, RJSFSchema } from '@rjsf/utils';
 
 function MyAnyOfField(props: FieldProps & { options: RJSFSchema[] }) {
   const { fieldPath, formData, options, registry, schema } = props;
@@ -540,7 +549,8 @@ const fields: RegistryFieldsType = {
 };
 
 const schema: RJSFSchema = {
-  type: 'string',
+  type: 'array',
+  items: { type: 'string' },
 };
 
 render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
@@ -590,7 +600,7 @@ Here is an example of wrapping the `ObjectField` to tweak the `onChange` handler
 
 ```tsx
 import { useCallback } from 'react';
-import { ErrorSchema, FieldPath, FieldProps } from '@rjsf/utils';
+import type { ErrorSchema, FieldPath, FieldProps } from '@rjsf/utils';
 import { ObjectField } from '@rjsf/core';
 
 import checkBadData from './checkBadData';
