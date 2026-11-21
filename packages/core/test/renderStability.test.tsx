@@ -140,7 +140,6 @@ describe('render stability across sibling fields', () => {
         <Form
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           templates={{ FieldTemplate: CountingFieldTemplate }}
           onChange={(event) => {
@@ -423,7 +422,7 @@ describe('render stability across sibling fields', () => {
   describe('under one owner', () => {
     const templates = { FieldTemplate: CountingFieldTemplate };
 
-    it('an edit a parent does not store back re-renders nothing outside its own branch', async () => {
+    it('an edit a parent declines re-renders nothing outside its own branch', async () => {
       const log = createParentLog<FormValue>();
       const { container } = render(
         <ListeningParent<FormValue> schema={schema} initialValue={initialFormData()} log={log} templates={templates} />,
@@ -434,8 +433,8 @@ describe('render stability across sibling fields', () => {
 
       await user.type(container.querySelector('#root_first')!, 'abc');
 
-      expect(log.reported.map((edit) => edit?.first)).toEqual(['a', 'ab', 'abc']);
-      expect(container.querySelector('#root_first')).toHaveValue('abc');
+      expect(log.reported.map((edit) => edit?.first)).toEqual(['a', 'b', 'c']);
+      expect(container.querySelector('#root_first')).toHaveValue('');
       expect(renderCount('root_second')).toBe(secondBefore);
       expect(renderCount('root_nested_inner')).toBe(innerBefore);
     });
@@ -450,7 +449,6 @@ describe('render stability across sibling fields', () => {
             schema={schema}
             validator={validator}
             templates={templates}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={value}
             onChange={(event) => {
               const upper = event.formData.first.toUpperCase();

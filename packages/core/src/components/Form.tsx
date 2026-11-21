@@ -50,7 +50,7 @@ import TemplateWarnEntryContext from './fields/TemplateWarnEntryContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
-import type { ClearedPaths, RevealedPaths, TouchedPaths } from './formState.ts';
+import type { ClearedPaths, FieldBlur, RevealedPaths, TouchedPaths } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState, UiStateReader } from './uiState.ts';
@@ -78,14 +78,9 @@ export interface FormProps<
   children?: ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<Uninferred<T>, S, F>;
-  /** Another name for `initialFormData`, taken over it when both are passed: the seed of the form's data, read when
-   * the form mounts and when `reset()` is called. It is only a seed: the form owns its data after that, so passing back
-   * what `onChange` reported changes nothing, and passing another value, such as a record that arrives after mount, is
-   * ignored, with a warning in development only. To show other data, remount the form with a `key`, or call
-   * `setFieldValue('', data)` on its ref.
-   *
-   * @deprecated Use `initialFormData`, which this is another name for. The form reads it only on mount and on
-   * `reset()`, which the name `formData` hides by reading as a controlled value.
+  /** The form's data, like `value` on an `<input>`: the form shows exactly this, filled in with the schema's defaults.
+   * An edit is a proposal reported through `onChange`, shown once it is passed back here, so a form given `formData`
+   * and no `onChange` that stores it shows no edit. Taken over `initialFormData` when both are passed.
    */
   formData?: T;
   /** The seed of the form's data, like `defaultValue` on an `<input>`: read when the form mounts and when `reset()` is
@@ -362,6 +357,18 @@ export interface FormState<
   retrievedSchema: S;
   /** The form's option selections and cycle expansions, see `createUiState()` */
   uiState: UiState;
+  /** The `formData` prop the data was last derived from, and the data that derivation gave. An
+   * operation leaves both alone, so data that is no longer `data` is a proposal the parent has yet to answer
+   */
+  controlled?: { from: T; data: T | undefined };
+  /** The state the first proposal still outstanding started from, in a form passed `formData`, which a parent that
+   * declines the proposals leaves the form in. Not the state last rendered: a blur alone renders nothing
+   */
+  proposedFrom?: FormState<T, S, F>;
+  /** The blurs since `proposedFrom`, in a form passed `formData`, as their fields reported them: a blur is no
+   * proposal, so a parent that declines the proposals made beside it leaves its field touched
+   */
+  proposedBlurs?: readonly FieldBlur[];
   /** Flag indicating whether the initial form defaults have been generated */
   initialDefaultsGenerated: boolean;
   /** The registry (re)computed only when props changed */
@@ -397,8 +404,9 @@ type ValidationProps<T, S extends StrictRJSFSchema, F extends FormContextType> =
  * besides this and the `Attachment` sits in a fragment after them, which adds nothing to the DOM. Hidden content
  * renders, and runs its insertion Effects, so the model keeps up while an `<Activity>` hides the form
  */
-function Handoff({ handOff }: { handOff: () => void }) {
+function Handoff({ handOff, afterHandOff }: { handOff: () => void; afterHandOff: () => void }) {
   useInsertionEffect(handOff);
+  useLayoutEffect(afterHandOff);
   return null;
 }
 
@@ -521,11 +529,9 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   // Each commit tells the model the props and the state it rendered, which operations start from, through the
   // `Handoff` rendered below; the attachment is the `Attachment` after it
   const handOff = () => model.committed(props, state, published);
-  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   const { formData: formDataProp, initialFormData } = props;
   useEffect(() => {
     if (isDevelopment) {
-      model.warnIfFormDataIgnored(formDataProp);
       model.warnIfBothSeedsPassed(formDataProp, initialFormData);
     }
   }, [model, formDataProp, initialFormData]);
@@ -613,7 +619,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         onSubmit={model.handleSubmit}
         ref={setFormElement}
       >
-        <Handoff handOff={handOff} />
+        <Handoff handOff={handOff} afterHandOff={model.afterCommit} />
         <Attachment attach={model.attached} />
         <>
           {showErrorList === 'top' && renderErrors()}

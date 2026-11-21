@@ -1954,20 +1954,26 @@ function markBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   { fieldPath, touches, dataAtBlur }: BlurAtData<T>,
 ): FormState<T, S, F> {
-  const { touchedPaths, revealed } = current;
   const isRevealed = props.liveErrors === 'field' && isBlurValidated(props);
+  // Recorded for a controlling parent that declines a proposal made beside the blur, see `withTouchesOf()`. As
+  // reported, since the field that reported it rendered before the proposal, whatever the proposal did to its path
+  const blurred =
+    props.formData === undefined || touches === 'nothing'
+      ? current
+      : { ...current, proposedBlurs: [...(current.proposedBlurs ?? []), { fieldPath, touches }] };
+  const { touchedPaths, revealed } = blurred;
   if (isPathDropped(fieldPath, dataAtBlur, current.formData)) {
-    return current;
+    return blurred;
   }
   if (touches === 'nothing') {
     return isRevealed
-      ? { ...current, revealed: { ...revealed, containers: withPaths(revealed.containers, fieldPath) } }
-      : current;
+      ? { ...blurred, revealed: { ...revealed, containers: withPaths(revealed.containers, fieldPath) } }
+      : blurred;
   }
   const touched =
     touches === 'leaves' ? leafPathsOf(getAt(current.formData, fieldPathToList(fieldPath)), fieldPath) : [fieldPath];
   return {
-    ...current,
+    ...blurred,
     touchedPaths: withPaths(touchedPaths, ...touched),
     revealed: isRevealed ? { ...revealed, fields: withPaths(revealed.fields, fieldPath) } : revealed,
   };
@@ -2122,9 +2128,9 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   };
 }
 
-/** The data the props seed the form with on mount and on `reset()`: `formData`, which is kept as another name for the
- * seed, or else `initialFormData`. Only `undefined` leaves a prop unpassed, so a `null` `formData` is the seed, and
- * seeds the same defaults an `undefined` does.
+/** The data the props seed the form with on mount and on `reset()`: `formData`, or else `initialFormData`. Only
+ * `undefined` leaves a prop unpassed, so a `null` `formData` is the seed, and seeds the same defaults an `undefined`
+ * does.
  *
  * @param props - The current props
  * @returns - The seed, or `undefined` when the props pass none
@@ -2132,12 +2138,33 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
 export function seedOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
 ): T | undefined {
-  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   const { formData } = props;
   if (formData === undefined) {
     return props.initialFormData;
   }
   return formData;
+}
+
+/** Records that `state`'s data is what the `formData` prop derives to */
+function asControlledBy<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  props: FormProps<T, S, F>,
+  state: FormState<T, S, F>,
+): FormState<T, S, F> {
+  const from = props.formData;
+  if (from === undefined) {
+    return state;
+  }
+  const isRecorded = !isProposedIn(state) && Object.is(state.controlled?.from, from);
+  if (isRecorded && !state.proposedFrom) {
+    return state;
+  }
+  // The parent has answered, so no proposal is outstanding
+  return {
+    ...state,
+    controlled: isRecorded ? state.controlled : { from, data: state.formData },
+    proposedFrom: undefined,
+    proposedBlurs: undefined,
+  };
 }
 
 export function initialState<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -2146,22 +2173,76 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
   if (!props.validator) {
     throw new Error('A validator is required for Form functionality to work');
   }
-  return deriveDataState(undefined, seedOf(props), props);
+  return asControlledBy(props, deriveDataState(undefined, seedOf(props), props));
 }
 
 /** Derives the state to render from the props and the committed `state`. Nothing is remembered about the previous
  * props: every derived member is shared against the committed state, so an unchanged input hands back the reference
  * the fields already hold and a changed one is recognized by the new reference; when nothing changed, `state` itself
- * is handed back. The data is the form's own after mount, so a `formData` or `initialFormData` passed later changes
- * nothing; it is re-derived only for a schema, `ui:emptyValue`, `defaultFormStateBehavior` or
- * `additionalPropertiesWhenAbsent` change, and any other
- * prop change re-derives the render context alone, since an unrelated re-render must not rerun value initialization.
+ * is handed back.
+ *
+ * A form passed `formData` shows that data. `state.controlled` records the prop the data was last derived from and
+ * the data that gave, which an operation leaves alone, so data that is no longer that is a proposal the parent has yet
+ * to answer. A form passed none owns its data, see `deriveOwnState()`.
  *
  * @param props - The current props
  * @param state - The committed state
  * @returns - The state to render, `state` itself when nothing changed
  */
 export function deriveState<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  props: FormProps<T, S, F>,
+  state: FormState<T, S, F>,
+): FormState<T, S, F> {
+  const { formData: passed } = props;
+  if (passed === undefined) {
+    return deriveOwnState(props, state);
+  }
+  const { controlled } = state;
+  const isProposed = isProposedIn(state);
+  // The data stands when the parent passed back what the form proposed, or passes what it passed before with no
+  // proposal outstanding
+  if (Object.is(passed, state.formData) || (!isProposed && Object.is(passed, controlled?.from))) {
+    return asControlledBy(props, deriveOwnState(props, state));
+  }
+  // Passing the same value over a proposal, or a copy of it, declines it, which leaves the form as it was before the
+  // proposal, its errors and marks included
+  const { proposedFrom } = state;
+  if (proposedFrom && controlled && (Object.is(passed, controlled.from) || deepEquals(passed, controlled.from))) {
+    return asControlledBy(props, deriveOwnState(props, withTouchesOf(proposedFrom, state)));
+  }
+  // Any other value is the parent's own. Over a proposal it is the parent's answer to it, and the form is as dirty as
+  // that leaves it. With none outstanding it is another record, as one that loaded or a Cancel put back, which the
+  // form is not dirty against: the baseline follows data that is its own
+  const from = isProposed ? state : { ...state, baseline: state.formData };
+  return asControlledBy(props, shareState(state, deriveDataState(from, passed, props)));
+}
+
+/** `before`, the state a declined proposal leaves the form in, with the fields blurred since then touched: a blur is
+ * no proposal, so a parent declining the edit made in the same event does not decline it. The blurs are applied as
+ * their fields reported them, to the data `before` holds: no render comes between a proposal and its answer, so each
+ * was reported by a field rendered for that data, at the path it has there, wherever the proposal moved its keys
+ */
+function withTouchesOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  before: FormState<T, S, F>,
+  proposed: FormState<T, S, F>,
+): FormState<T, S, F> {
+  const touched = (proposed.proposedBlurs ?? []).flatMap(({ fieldPath, touches }) =>
+    touches === 'leaves' ? leafPathsOf(getAt(before.formData, fieldPathToList(fieldPath)), fieldPath) : [fieldPath],
+  );
+  const touchedPaths = withPaths(before.touchedPaths, ...touched);
+  return touchedPaths === before.touchedPaths ? before : { ...before, touchedPaths };
+}
+
+/** Whether `state` holds a proposal a controlling parent has yet to answer: data other than its `formData` gave */
+export function isProposedIn<T, S extends StrictRJSFSchema, F extends FormContextType>(state: FormState<T, S, F>) {
+  return state.controlled === undefined || !Object.is(state.formData, state.controlled.data);
+}
+
+/** `deriveState()` for the data the form holds, which no prop replaces: it is re-derived only for a schema,
+ * `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent` change, and any other prop change
+ * re-derives the render context alone, since an unrelated re-render must not rerun value initialization.
+ */
+function deriveOwnState<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   state: FormState<T, S, F>,
 ): FormState<T, S, F> {

@@ -2985,7 +2985,6 @@ describe('ArrayField', () => {
             schema={{ type: 'array', items: { type: 'string' } }}
             uiSchema={{ 'ui:options': { itemLabel: '.', copyable: true } }}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => apply(() => setData(event.formData))}
           />
@@ -5949,7 +5948,7 @@ describe('ArrayField', () => {
       ]);
     });
 
-    it('should start a later event from the rows an earlier removal left when the parent stores nothing back', async () => {
+    it('should start a later event from the rows the parent holds when it stores nothing back', async () => {
       const log = createParentLog<string[]>();
       const { container } = render(
         <ListeningParent<string[]>
@@ -5964,11 +5963,15 @@ describe('ArrayField', () => {
       await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
       await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
 
-      // The form owns the first removal, so the second one starts from the rows it left, and the error on 'c' moves
-      // up with the item each time
-      expect(log.reported).toEqual([['bb', 'c'], ['c']]);
+      // The parent declined the first removal, so the second one proposes the same, and the error stays on 'c'
+      expect(log.reported).toEqual([
+        ['bb', 'c'],
+        ['bb', 'c'],
+      ]);
       const error = { __errors: ['must NOT have fewer than 2 characters'] };
-      expect(log.events.map((event) => event.errorSchema)).toEqual([{ 1: error }, { 0: error }]);
+      expect(log.events.map((event) => event.errorSchema)).toEqual([{ 1: error }, { 1: error }]);
+      expect(container.querySelectorAll('.rjsf-array-item-remove')).toHaveLength(3);
+      expect(fieldErrorsById(container)).toEqual({ root_2: ['must NOT have fewer than 2 characters'] });
     });
 
     it('should key the rows of a stored edit from the rendered rows after one the parent did not store', async () => {
@@ -5979,7 +5982,6 @@ describe('ArrayField', () => {
           <Form
             schema={schema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             templates={{ ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate }}
             onChange={(event) => {
@@ -5993,14 +5995,15 @@ describe('ArrayField', () => {
         );
       }
       const { container } = render(<RefuseOnceParent />);
+      const mounted = rowKeys(container);
 
       await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
       const afterRefusal = rowKeys(container);
       await user.click(container.querySelectorAll('.rjsf-array-item-remove')[1]);
 
-      // The form owns the removal the parent did not store, so the one it stores removes from the rows that left
-      expect(afterRefusal).toHaveLength(2);
-      expect(rowKeys(container)).toEqual(afterRefusal.slice(0, 1));
+      // The removal the parent did not store leaves every row its key, and the one it stores removes from those rows
+      expect(afterRefusal).toEqual(mounted);
+      expect(rowKeys(container)).toEqual([mounted[0], mounted[2]]);
     });
 
     it.each([

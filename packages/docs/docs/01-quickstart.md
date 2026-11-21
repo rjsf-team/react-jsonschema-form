@@ -140,7 +140,7 @@ You can use event handlers such as `onChange`, `onError`, `onSubmit`, `onFocus`,
 
 ### Keeping a copy of the data
 
-`<Form />` owns its data, as an [uncontrolled input](https://react.dev/reference/react-dom/components/input#providing-an-initial-value-for-an-input) does: `initialFormData` seeds it when the form mounts (the deprecated `formData` prop is another name for that seed). To keep a copy of the value in your own state, store what `onChange` reports, as in the below example. To show another record, remount the form under a `key`.
+`<Form />` owns its data, as an [uncontrolled input](https://react.dev/reference/react-dom/components/input#providing-an-initial-value-for-an-input) does, when you pass it `initialFormData`, which seeds it when the form mounts. Passed [`formData`](./api-reference/form-props.md#formdata) instead, it shows the data you hold, as a controlled input does. To keep a copy of the value in your own state, store what `onChange` reports, as in the below example. To show another record, remount the form under a `key`.
 
 ```tsx
 import Form from '@rjsf/core';
