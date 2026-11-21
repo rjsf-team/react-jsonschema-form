@@ -7,6 +7,14 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 # 7.0.0-beta.2
 
+## @rjsf/core
+
+- Add `showCollapseButton` to let users collapse individual array items while keeping their values. Set `autoCollapse` to start items closed ([#5929](https://github.com/rjsf-team/react-jsonschema-form/pull/5929), [#2193](https://github.com/rjsf-team/react-jsonschema-form/issues/2193))
+
+## @rjsf/utils
+
+- Add `showCollapseButton` and `autoCollapse` to the array options accepted by `UiSchema` ([#5929](https://github.com/rjsf-team/react-jsonschema-form/pull/5929), [#2193](https://github.com/rjsf-team/react-jsonschema-form/issues/2193))
+
 # 7.0.0-beta.1 (2026-11-20)
 
 ## @rjsf/antd

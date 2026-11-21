@@ -51,6 +51,8 @@ export const RESERVED_UI_OPTION_NAMES = Object.keys({
   optgroups: true,
   optionsSchemaSelector: true,
   itemLabel: true,
+  showCollapseButton: true,
+  autoCollapse: true,
   hideError: true,
   readonly: true,
   order: true,

@@ -26,6 +26,7 @@ import {
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
+import { ARRAY_ITEM_DETAILS_CLASS } from './constants.ts';
 import { copyAlongPath, getAt, isPathPrefix } from './dataPaths.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
@@ -113,6 +114,12 @@ function takesFocus(element: Node | null | undefined, view: Window & typeof glob
   const root = element.getRootNode();
   if (!(root instanceof view.Document || root instanceof view.ShadowRoot)) {
     return false;
+  }
+  // Reveal only the array item disclosures RJSF owns, including those around a nested array.
+  const closedItem = `details.${ARRAY_ITEM_DETAILS_CLASS}:not([open])`;
+  let item: HTMLDetailsElement | null;
+  while ((item = element.closest<HTMLDetailsElement>(closedItem))) {
+    item.open = true;
   }
   let received = false;
   const onFocus = () => {
