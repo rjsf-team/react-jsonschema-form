@@ -50,7 +50,7 @@ import TemplateWarnEntryContext from './fields/TemplateWarnEntryContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
-import type { ClearedPaths, RevealedPaths, TouchedPaths } from './formState.ts';
+import type { ClearedPaths, FieldBlur, RevealedPaths, TouchedPaths } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState, UiStateReader } from './uiState.ts';
@@ -365,6 +365,10 @@ export interface FormState<
    * declines the proposals leaves the form in. Not the state last rendered: a blur alone renders nothing
    */
   proposedFrom?: FormState<T, S, F>;
+  /** The blurs since `proposedFrom`, in a form passed `formData`, as their fields reported them: a blur is no
+   * proposal, so a parent that declines the proposals made beside it leaves its field touched
+   */
+  proposedBlurs?: readonly FieldBlur[];
   /** Flag indicating whether the initial form defaults have been generated */
   initialDefaultsGenerated: boolean;
   /** The registry (re)computed only when props changed */
