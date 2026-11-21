@@ -399,6 +399,8 @@ describe('buildPlan()', () => {
       expect(conditionReads({ properties: { a: {} }, not: {} })).toBeUndefined();
       expect(conditionReads({ $ref: D('T') })).toBeUndefined();
       expect(conditionReads(looseSchema({ properties: { a: { const: { $data: '1/b' } } } }))).toBeUndefined();
+      // The target of a reference may hold a `$data`
+      expect(conditionReads({ properties: { a: { $ref: D('T') } } })).toBeUndefined();
       expect(conditionReads(looseSchema({ properties: [] }))).toBeUndefined();
       expect(conditionReads(looseSchema({ required: true }))).toBeUndefined();
     });
