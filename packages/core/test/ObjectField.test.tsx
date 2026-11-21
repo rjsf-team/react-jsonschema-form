@@ -4888,6 +4888,24 @@ describe('ObjectField', () => {
       expect(addButtonOf(node)).toBeNull();
     });
 
+    it.each<[string, RJSFSchema['additionalProperties']]>([
+      ['true', true],
+      ['{}', {}],
+    ])(
+      'offers the add button and renders the extra keys of an object whose additionalProperties is %s beside an allOf (#5886)',
+      (_, additionalProperties) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties,
+          allOf: [{ properties: { a: { type: 'string' } } }],
+        };
+        const { node } = createFormComponent({ schema, initialFormData: { a: 'x', extra: 'y' } });
+
+        expect(addButtonOf(node)).not.toBeNull();
+        expect(node.querySelector('#root_extra')).toHaveValue('y');
+      },
+    );
+
     it('offers the add button once the setting changes to allow', () => {
       const schema: RJSFSchema = { type: 'object' };
       const { node, rerender } = createFormComponent({ schema });

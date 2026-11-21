@@ -7,7 +7,8 @@ import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } fro
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
-/** Finds the option of `schema['any/oneOf']` a field renders for `formData`. With a discriminator, it is the option whose
+/** Finds the option of `schema['any/oneOf']` a field renders for `formData`, among the options `schema` retrieved for
+ * the data hands out, each retrieved for that data. With a discriminator, it is the option whose
  * `properties[discriminator].default` or `.const` matches the `formData[discriminator]` value, making this faster than
  * `getFirstMatchingOption()` for the `LayoutGridField`, which works directly with schemas in a recursive manner, and no
  * matching value has nothing selected. With none, it is the option `getClosestMatchingOption()` picks for the data, as
@@ -34,8 +35,15 @@ export default function findSelectedOptionInXxxOf<
   xxx: 'anyOf' | 'oneOf',
   formData?: T,
 ): S | undefined {
-  if (Array.isArray(schema[xxx])) {
-    const xxxOfs = schema[xxx].map((xxxOf) => retrieveSchema<T, S, F>(context, xxxOf as S, rootSchema, formData));
+  const ownOptions = schema[xxx];
+  if (Array.isArray(ownOptions)) {
+    // The options as the field's retrieved schema hands them out, so one beside an object rendering its own field leaves
+    // the data's extra keys to that field, as the field renders it
+    const listed: unknown = retrieveSchema<T, S, F>(context, schema, rootSchema, formData)[xxx];
+    // A retrieval that merged one of the options in, as a `dependencies` option sharing the list does, offers none
+    const xxxOfs = (Array.isArray(listed) ? listed : ownOptions).map((xxxOf) =>
+      retrieveSchema<T, S, F>(context, xxxOf as S, rootSchema, formData),
+    );
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     if (!discriminator) {
       // A tie goes to the first option the data matches (the first option when it matches none), and each read picks

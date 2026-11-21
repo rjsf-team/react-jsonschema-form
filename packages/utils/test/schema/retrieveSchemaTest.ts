@@ -193,6 +193,85 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(resolved).toMatchObject({ type: 'string', title: 'A', description: 'D' });
     });
   });
+  describe('the extra-key keywords the merge of an allOf keeps (#5886)', () => {
+    // JSON Schema reads an absent keyword as `true`, where the form reads it as `additionalPropertiesWhenAbsent` says
+    it.each<[string, RJSFSchema]>([
+      ['additionalProperties: true', { additionalProperties: true }],
+      ['additionalProperties: {}', { additionalProperties: {} }],
+    ])('keeps %s through the merge, which it would drop as saying nothing', (_, keyword) => {
+      const schema: RJSFSchema = { type: 'object', ...keyword, allOf: [{ properties: { a: { type: 'string' } } }] };
+      expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual({
+        type: 'object',
+        ...keyword,
+        properties: { a: { type: 'string' } },
+      });
+    });
+    it("keeps an allOf entry's additionalProperties: true, which the merged object takes", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        allOf: [{ additionalProperties: true }],
+      };
+      expect(retrieveSchema({ validator: testValidator }, schema, schema).additionalProperties).toBe(true);
+    });
+    // `withOpenAdditionalProperties()` leaves it to the merge, so this catches a merge that starts dropping it
+    it('keeps an unevaluatedProperties: true, which the merge keeps as it stands', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        unevaluatedProperties: true,
+        allOf: [{ properties: { a: { type: 'string' } } }],
+      };
+      expect(retrieveSchema({ validator: testValidator }, schema, schema)).toHaveProperty(
+        'unevaluatedProperties',
+        true,
+      );
+    });
+    it('keeps the false or schema another entry names, which the merge keeps', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: true,
+        allOf: [{ additionalProperties: { type: 'number' } }],
+      };
+      expect(retrieveSchema({ validator: testValidator }, schema, schema).additionalProperties).toEqual({
+        type: 'number',
+      });
+    });
+  });
+
+  describe('the options an allOf holding options of its own rebuilds (#5886)', () => {
+    const retrieved = (schema: RJSFSchema) => retrieveSchema({ validator: testValidator }, schema, schema).oneOf;
+    it("keeps each option's additionalProperties: true, which merged with the allOf's option it would drop", () => {
+      expect(
+        retrieved({
+          type: 'object',
+          oneOf: [
+            { properties: { a: { type: 'number' } } },
+            { properties: { b: { type: 'number' } }, additionalProperties: true },
+          ],
+          allOf: [{ oneOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }] }],
+        }),
+      ).toEqual([
+        { properties: { a: { type: 'number' }, c: { type: 'string' } } },
+        { properties: { a: { type: 'number' }, d: { type: 'string' } } },
+        { properties: { b: { type: 'number' }, c: { type: 'string' } }, additionalProperties: true },
+        { properties: { b: { type: 'number' }, d: { type: 'string' } }, additionalProperties: true },
+      ]);
+    });
+    it('offers an option two pairs merge to once', () => {
+      const option: RJSFSchema = { properties: { a: { type: 'string' } } };
+      expect(retrieved({ type: 'object', oneOf: [option, { ...option }], allOf: [{ oneOf: [{}] }] })).toEqual([option]);
+    });
+    it('keeps an option merged to a boolean, which records nothing it was built from', () => {
+      const option: RJSFSchema = { properties: { a: { type: 'string' } } };
+      expect(retrieved({ type: 'object', oneOf: [false, option], allOf: [{ oneOf: [{}] }] })).toEqual([false, option]);
+    });
+    it('leaves lists no pair of which merges to the merge, which drops the allOf', () => {
+      expect(
+        retrieved({ type: 'object', oneOf: [{ type: 'string' }], allOf: [{ oneOf: [{ type: 'number' }] }] }),
+      ).toEqual([{ type: 'string' }]);
+    });
+  });
+
   describe('the options retrieveSchema() hands out for a list a merge rebuilt', () => {
     it("resolves the $refs an option holds in the resource of the lists merged into it, not the root's", () => {
       const s: RJSFSchema = { type: 'string', default: 's' };
