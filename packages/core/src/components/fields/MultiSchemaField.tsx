@@ -18,6 +18,8 @@ import {
   PATTERN_PROPERTIES_KEY,
   resolveWidget,
   RJSF_REF_KEY,
+  renderedOptionTitles,
+  renderedOptionsUiSchema,
   selectOptionUiSchema,
   shouldRenderOptionalField,
   TranslatableString,
@@ -151,13 +153,14 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     let given: UiSchema<T, S, F>[] = [];
     if (uiSchema && xxxOfKey in uiSchema) {
       if (Array.isArray(uiSchema[xxxOfKey])) {
-        given = uiSchema[xxxOfKey];
+        // Each option reads the entry of the option of the field's list as written that it was built from
+        given = renderedOptionsUiSchema<T, S, F>(uiSchema, schema, rootSchema) ?? [];
       } else {
         logOnce(`uiSchema.${xxxOfKey} is not an array for ${fieldLabelForLog(id, fieldPath)}`);
       }
     }
     return mergeOptionDefinitions<T, S, F>(JSON.parse(optionRefs), given, { rootSchema, uiSchemaDefinitions });
-  }, [xxxOfKey, uiSchema, id, fieldPath, optionRefs, rootSchema, uiSchemaDefinitions]);
+  }, [xxxOfKey, uiSchema, schema, id, fieldPath, optionRefs, rootSchema, uiSchemaDefinitions]);
 
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
@@ -341,7 +344,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // index isn't, renders the option, not this selector. Where every option has a `uiSchema` entry of its own none
   // inherits it, so such a widget is written for the selector
   const selectorSchema = { type: 'number' } as const;
-  const rendersOnOption = optionsUiSchema.length < options.length && VALUE_ENTRY_WIDGETS.has(widget);
+  const rendersOnOption =
+    options.some((_, index) => optionsUiSchema[index] === undefined) && VALUE_ENTRY_WIDGETS.has(widget);
   const { Widget } = resolveWidget<T, S, F>(
     selectorSchema,
     !rendersOnOption && hasWidget<T, S, F>(selectorSchema, widget, widgets) ? widget : 'select',
@@ -355,10 +359,18 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ? TranslatableString.TitleOptionPrefix
     : TranslatableString.OptionPrefix;
   const translateParams = title ? [title] : [];
+  // An option a merge of lists built is named by each option it was built from, so two built from the same option of
+  // the field's own list read apart
+  const optionTitles = useMemo(
+    () => renderedOptionTitles<T, S, F>(uiSchema, schema, rootSchema, translateString),
+    [uiSchema, schema, rootSchema, translateString],
+  );
   const enumOptions = options.map((opt, index) => {
     const { title: uiTitle } = getUiOptions<T, S, F>(optionsUiSchema[index]);
+    const merged = optionTitles?.[index];
     return {
-      label: (uiTitle ?? opt.title) || translateString(translateEnum, translateParams.concat(String(index + 1))),
+      label:
+        (merged ?? uiTitle ?? opt.title) || translateString(translateEnum, translateParams.concat(String(index + 1))),
       value: index,
     };
   });

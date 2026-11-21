@@ -4,6 +4,7 @@ import {
   RJSF_PROVENANCE_KEY,
   RJSF_REF_CYCLE_KEY,
   findSelectedOptionInXxxOf,
+  getClosestMatchingOption,
   getDefaultFormState,
   getPropertySchema,
   isObject,
@@ -329,5 +330,45 @@ describe('the cost of an edit to a wide object', () => {
     };
     const first = edit('x');
     expect([...edit('y')].filter((adopted) => !first.has(adopted))).toEqual([]);
+  });
+});
+
+describe("the cost of scoring options under additionalPropertiesWhenAbsent: 'allow' (#5930)", () => {
+  // Whether an option stubs the data's extra keys depends on the field offering the options, retrieved for the data,
+  // which checks its `if`; a pick made before for the same data needs none of it
+  it('checks no condition of the field offering the options to score the same data again', () => {
+    const validator = miniValidator();
+    const context = { validator, additionalPropertiesWhenAbsent: 'allow' as const };
+    const options: RJSFSchema[] = [
+      { properties: { a: { type: 'string' } } },
+      { properties: { b: { type: 'string' } } },
+    ];
+    const field: RJSFSchema = { if: { required: ['k'] }, then: { type: 'object' }, oneOf: options };
+    const rootSchema: RJSFSchema = { type: 'object', properties: { p: field } };
+    const data = { a: 'x', k: 1 };
+    expect(getClosestMatchingOption(context, rootSchema, data, options, 0)).toBe(0);
+    const { calls } = validator;
+    expect(calls).toBeGreaterThan(0);
+    expect(getClosestMatchingOption(context, rootSchema, data, options, 0)).toBe(0);
+    expect(validator.calls).toBe(calls);
+  });
+});
+
+describe("the options scored under additionalPropertiesWhenAbsent: 'allow' for data changed in place (#5930)", () => {
+  // Typed by its `then`, the field renders its own field beside the option, which takes the extra key `z` itself, so
+  // the two options tie and the first is picked; untyped once `k` is gone, it leaves `z` to the option, which only the
+  // second takes
+  it('reads the field offering the options again for data a caller changed since the last call', () => {
+    const context = { validator: miniValidator(), additionalPropertiesWhenAbsent: 'allow' as const };
+    const options: RJSFSchema[] = [
+      { properties: { a: { type: 'string' } }, additionalProperties: false },
+      { properties: { a: { type: 'string' } } },
+    ];
+    const field: RJSFSchema = { if: { required: ['k'] }, then: { type: 'object' }, oneOf: options };
+    const rootSchema: RJSFSchema = { type: 'object', properties: { p: field } };
+    const data: Record<string, unknown> = { a: 'x', z: 'y', k: 1 };
+    expect(getClosestMatchingOption(context, rootSchema, data, options, -1)).toBe(0);
+    delete data.k;
+    expect(getClosestMatchingOption(context, rootSchema, data, options, -1)).toBe(1);
   });
 });

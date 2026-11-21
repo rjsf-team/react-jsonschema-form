@@ -30,7 +30,6 @@ import {
   getFieldLabel,
   getFieldTypeForUiSchema,
   getFieldTypeForWidget,
-  getOptionUiSchema,
   getRenderedOptionSchema,
   getSchemaOwnTypes,
   getSchemaType,
@@ -53,10 +52,12 @@ import {
   omitConsumedStyling,
   ONE_OF_KEY,
   optionsList,
+  renderedOptionsUiSchema,
   rendersOwnFieldBesideOption,
   resolveUiSchema,
   resolveWidget,
   RJSF_REF_CYCLE_KEY,
+  selectOptionUiSchema,
   shouldRenderOptionalField,
   toConstant,
   UI_FIELD_KEY,
@@ -629,16 +630,7 @@ export function createSchemaFieldRenderedAs<
     // shortcut: plans the outer option only, so an option that is itself an untyped anyOf/oneOf reports none of its own
     // option; recurse while the option is withheld if nested unions need keying
     planShownOption ??= createShownOptionPlanner<T, S, F>();
-    const option = planShownOption(
-      shownSchema,
-      resolved.uiSchema,
-      xxxOfKey,
-      options[index],
-      index,
-      formData,
-      registry,
-      false,
-    );
+    const option = planShownOption(shownSchema, resolved.uiSchema, options[index], index, formData, registry, false);
     return option ? withOption(rendering, option.rendering) : rendering;
   };
 }
@@ -941,14 +933,7 @@ function renderingOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
 function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormContextType>() {
   const { resolve } = createFieldWidgetResolver<T, S, F>();
   const optionInput = memoizeLast(
-    (
-      schema: S,
-      uiSchema: UiSchema<T, S, F>,
-      xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY,
-      option: S,
-      index: number,
-      registry: Registry<T, S, F>,
-    ) => {
+    (schema: S, uiSchema: UiSchema<T, S, F>, option: S, index: number, registry: Registry<T, S, F>) => {
       const renderedOption = getRenderedOptionSchema<S>(schema, option);
       return {
         schema: renderedOption,
@@ -956,7 +941,11 @@ function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormC
           schema,
           option,
           uiSchema,
-          getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, index),
+          selectOptionUiSchema<T, S, F>(
+            renderedOptionsUiSchema<T, S, F>(uiSchema, schema, registry.rootSchema),
+            uiSchema,
+            index,
+          ),
           renderedOption,
           registry,
         ),
@@ -993,7 +982,6 @@ function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormC
   return (
     schema: S,
     uiSchema: UiSchema<T, S, F>,
-    xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY,
     option: S | undefined,
     index: number,
     formData: T | undefined,
@@ -1003,7 +991,7 @@ function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormC
     if (!option) {
       return null;
     }
-    const input = optionInput(schema, uiSchema, xxxOfKey, option, index, registry);
+    const input = optionInput(schema, uiSchema, option, index, registry);
     const isRefCycle = hasSchemaMarker(input.schema, RJSF_REF_CYCLE_KEY);
     const resolved = resolve(input.schema, input.uiSchema, formData, registry, isRefCycle, namedAbove);
     const { selectSchemaInfo, uiField, uiSchema: optionUiSchema, ownUiOptions, hidden } = resolved;
@@ -1447,7 +1435,6 @@ export function useSchemaFieldPlan<
             schema,
             // Below a named field the options render above, so the option shown and its uiSchema are read from there
             fieldShownOption.uiSchema as UiSchema<T, S, F>,
-            xxxOfKey,
             fieldShownOption.options[optionBeside] as S | undefined,
             optionBeside,
             formData,

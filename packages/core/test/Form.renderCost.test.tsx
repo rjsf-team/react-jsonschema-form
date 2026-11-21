@@ -302,3 +302,47 @@ describe('render cost of an edit in a long list (#3183)', () => {
     expect(Object.fromEntries(widgets)).toEqual(Object.fromEntries(shifted.map((index) => [`root_${index}_a`, 1])));
   });
 });
+
+describe('render cost of an edit inside an option a merge of lists rebuilt (#5930)', () => {
+  const optionA: RJSFSchema = { title: 'A', properties: { a: { type: 'string' } } };
+  const optionB: RJSFSchema = { title: 'B', properties: { bb: { type: 'string' } } };
+  const lists: RJSFSchema[] = [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }];
+  // Each option reads the uiSchema entry of the written option it was built from, which the field orders anew where the
+  // list is rebuilt; ordered anew on every edit, the entries would hand the option a new uiSchema, and each of its
+  // fields would render again
+  it.each<[string, RJSFSchema]>([
+    ['an allOf entry', { allOf: [{ oneOf: lists }] }],
+    ['a then', { if: true, then: { oneOf: lists } }],
+    ['a then the data decides', { if: { required: ['bb'] }, then: { oneOf: lists } }],
+  ])(
+    "renders no other field of the option shown again for a keystroke where the list of %s rebuilds the field's own",
+    async (_, rest) => {
+      const widgets = new Map<string, number>();
+      function CountingTextWidget({ id, value, onChange }: WidgetProps) {
+        widgets.set(id, (widgets.get(id) ?? 0) + 1);
+        return (
+          <input
+            id={id}
+            value={typeof value === 'string' ? value : ''}
+            onChange={(event) => onChange(event.target.value)}
+          />
+        );
+      }
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { p: { type: 'object', oneOf: [optionA, optionB], ...rest } } }}
+          uiSchema={{ p: { oneOf: [{ 'ui:title': 'UI-A' }, { 'ui:title': 'UI-B' }] } }}
+          validator={validator}
+          initialFormData={{ p: { bb: 'y', c: 'z' } }}
+          widgets={{ TextWidget: CountingTextWidget }}
+        />,
+      );
+      widgets.clear();
+
+      await user.type(elementOf(container, '#root_p_bb'), 'q');
+
+      expect(input(container, 'root_p_bb')).toHaveValue('yq');
+      expect(Object.fromEntries(widgets)).toEqual({ root_p_bb: 1 });
+    },
+  );
+});

@@ -1,3 +1,4 @@
+import { renderedOptionTitles, renderedOptionsUiSchema } from './fieldShownOption.ts';
 import findFieldInSchema from './findFieldInSchema.ts';
 import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
@@ -48,6 +49,8 @@ export {
   isTupleSchema,
   namesEveryType,
   omitExtraData,
+  renderedOptionTitles,
+  renderedOptionsUiSchema,
   retrieveSchema,
   sanitizeDataForNewSchema,
 };
