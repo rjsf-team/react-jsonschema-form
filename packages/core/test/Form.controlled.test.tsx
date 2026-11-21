@@ -14,7 +14,7 @@ type Answer<T> = (proposed: T, held: T) => T;
 const accept = <T,>(proposed: T) => proposed;
 const decline = <T,>(_: T, held: T) => held;
 
-type ParentProps<T> = Omit<FormProps<T>, 'validator' | 'controlledFormData' | 'onChange'> & {
+type ParentProps<T> = Omit<FormProps<T>, 'validator' | 'formData' | 'onChange'> & {
   initial: T;
   answer?: Answer<T>;
   reported?: T[];
@@ -26,7 +26,7 @@ function Parent<T>({ initial, answer = accept, reported, ...formProps }: ParentP
     <Form<T>
       {...formProps}
       validator={validator}
-      controlledFormData={value}
+      formData={value}
       onChange={(event) => {
         const proposed = event.formData as T;
         reported?.push(proposed);
@@ -55,7 +55,7 @@ function countingText(renders: Map<string, number>) {
   };
 }
 
-describe('EXPERIMENT: a form controlled through controlledFormData', () => {
+describe('a form controlled through formData', () => {
   it('shows an edit the parent stores, in one commit per keystroke', async () => {
     const onRender = vi.fn();
     const { container } = render(
@@ -127,7 +127,7 @@ describe('EXPERIMENT: a form controlled through controlledFormData', () => {
     const onRender = vi.fn();
     const element = (data: Pair) => (
       <Profiler id='form' onRender={onRender}>
-        <Form<Pair> schema={pair} validator={validator} controlledFormData={data} />
+        <Form<Pair> schema={pair} validator={validator} formData={data} />
       </Profiler>
     );
     const { container, rerender } = render(element({ a: 'one' }));

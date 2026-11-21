@@ -12,7 +12,6 @@ import {
   additionalKeyId,
   buttonId,
   callWithDeferredThrow,
-  deepEqualsUndefinedAsMissing,
   propertyToPath,
   ROOT_FIELD_PATH,
   replaceEqualDeep,
@@ -55,9 +54,6 @@ import type { RJSFFormStatus } from './IChangeEvent.ts';
 import { keyMoveOf, moveFateOf } from './keyMove.ts';
 import type { AnnouncedMove, MoveOutcome } from './keyMove.ts';
 import { asFieldValue, fieldStateOf, fieldsRendered, withSwitchUndone } from './uiState.ts';
-
-/** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
-const HELD_SCALARS_LIMIT = 100;
 
 /** How an operation that calls the consumer's functions runs: a handle method runs it directly, so a throw reaches the
  * method's caller, while a field, which may report from an Effect inside React's commit phase, where a throw from the
@@ -259,37 +255,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // stored as the data of whichever form replaced this one, or of a form the user cannot see. Detached until the first
   // attachment, since a form first rendered inside a hidden `<Activity>` runs no layout Effect until it is shown
   let isDetached = true;
-  // Development only, for the warning about a `formData` passed after mount, which the form ignores: the prop as the
-  // last commit passed it, and every object an operation made the form's data, since a parent that stores what
-  // `onChange` reported passes those back, later ones as well as the latest. The seed is not among them: a parent that
-  // puts its record back, as a Cancel button does, expects the form to show it
-  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
-  let lastFormDataProp = isDevelopment ? initialProps.formData : undefined;
-  const heldData = new WeakSet<object>();
-  // A scalar root's values are held by value, which a `WeakSet` cannot hold, so only the latest are kept: enough for a
-  // parent that stores `onChange` late or puts back a recent value, without an entry per keystroke for the form's life
-  const heldScalars = new Set<unknown>();
-  let isIgnoredFormDataWarned = false;
   let isBothSeedsWarned = false;
   let isEmptyTransformWarned = false;
-  const hold = (data: unknown) => {
-    // Once the warning has fired there is nothing left to hold values for
-    if (!isDevelopment || isIgnoredFormDataWarned) {
-      return;
-    }
-    if (typeof data === 'object' && data !== null) {
-      heldData.add(data);
-      return;
-    }
-    // Added again, so a value held before counts as the latest
-    heldScalars.delete(data);
-    heldScalars.add(data);
-    if (heldScalars.size > HELD_SCALARS_LIMIT) {
-      heldScalars.delete(heldScalars.values().next().value);
-    }
-  };
-  const isHeld = (data: unknown) =>
-    typeof data === 'object' && data !== null ? heldData.has(data) : heldScalars.has(data);
   // Development only, once per form: a handle call the form dropped because it was detached. A field's change, blur or
   // focus is dropped silently, since a widget flushing a draft from its Effect cleanup is expected to arrive then
   let isDroppedCallWarned = false;
@@ -350,7 +317,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       return published;
     }
     if (derivedCache?.props !== committedProps || derivedCache.from !== published) {
-      const derived = deriveState(committedProps, published);
+      const derived = deriveState(committedProps, published, rendered);
       derivedCache = {
         props: committedProps,
         from: published,
@@ -375,7 +342,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       if (isRenderedChange(committed, shown)) {
         shown = committed;
       }
-      hold(committed.formData);
       listeners.forEach((listener) => listener());
     }
     return committed;
@@ -1066,32 +1032,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         uiState.dropFallbackTypes((at) => at.length > 0 && !rendersField(at));
       }
     },
-    /** Warns, once, that the `formData` prop changed after mount to a value the form ignores: neither data it has held
-     * nor a copy of the data it holds. Called after the commit that passed it, in development only
-     */
-    warnIfFormDataIgnored: (formData: T | undefined) => {
-      if (isIgnoredFormDataWarned) {
-        return;
-      }
-      // A copy of the last prop, as an inline literal is on every render, changed nothing the parent meant. A key the
-      // form holds as `undefined` is one a JSON copy leaves out, so it counts as missing
-      if (Object.is(formData, lastFormDataProp) || deepEqualsUndefinedAsMissing(formData, lastFormDataProp)) {
-        lastFormDataProp = formData;
-        return;
-      }
-      if (formData === undefined || isHeld(formData) || deepEqualsUndefinedAsMissing(formData, current().formData)) {
-        lastFormDataProp = formData;
-        return;
-      }
-      logOnce(
-        `${formLabel()}: \`formData\` changed after the form mounted and was ignored. Like \`initialFormData\`, it seeds the form on mount and on \`reset()\` only, and the form owns its data after that. To show other data, remount the form with a \`key\`, or call \`setFieldValue('', data)\` on its ref. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#show-other-data-after-mount`,
-        { id: 'form-data-ignored', dedupe: false },
-      );
-      lastFormDataProp = formData;
-      isIgnoredFormDataWarned = true;
-      heldScalars.clear();
-    },
-    /** Warns, once, that both `formData` and `initialFormData` were passed, naming the one the form seeds from. Called
+    /** Warns, once, that both `formData` and `initialFormData` were passed, naming the one the form takes. Called
      * after the commit that passed them, in development only
      */
     warnIfBothSeedsPassed: (formData: T | undefined, initialFormData: T | undefined) => {
@@ -1099,7 +1040,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       logOnce(
-        `${formLabel()}: \`formData\` and \`initialFormData\` were both passed. \`formData\` seeds the form and \`initialFormData\` is ignored. Pass \`initialFormData\` alone.`,
+        `${formLabel()}: \`formData\` and \`initialFormData\` were both passed. \`formData\` is the form's data and \`initialFormData\` is ignored. Pass one of them.`,
         { id: 'form-data-both-seeds', dedupe: false },
       );
       isBothSeedsWarned = true;

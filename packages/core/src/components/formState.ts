@@ -2132,24 +2132,20 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
 export function seedOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
 ): T | undefined {
-  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   const { formData } = props;
-  if (props.controlledFormData !== undefined) {
-    return props.controlledFormData;
-  }
   if (formData === undefined) {
     return props.initialFormData;
   }
   return formData;
 }
 
-/** EXPERIMENT: records that `state`'s data is what the `controlledFormData` prop derives to */
+/** Records that `state`'s data is what the `formData` prop derives to */
 function asControlledBy<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   state: FormState<T, S, F>,
 ): FormState<T, S, F> {
-  const from = props.controlledFormData;
-  if (from === undefined || (state.controlled?.from === from && state.controlled.data === state.formData)) {
+  const from = props.formData;
+  if (from === undefined || (!isProposedIn(state) && Object.is(state.controlled?.from, from))) {
     return state;
   }
   return { ...state, controlled: { from, data: state.formData } };
@@ -2167,35 +2163,50 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
 /** Derives the state to render from the props and the committed `state`. Nothing is remembered about the previous
  * props: every derived member is shared against the committed state, so an unchanged input hands back the reference
  * the fields already hold and a changed one is recognized by the new reference; when nothing changed, `state` itself
- * is handed back. The data is the form's own after mount, so a `formData` or `initialFormData` passed later changes
- * nothing; it is re-derived only for a schema, `ui:emptyValue`, `defaultFormStateBehavior` or
- * `additionalPropertiesWhenAbsent` change, and any other
- * prop change re-derives the render context alone, since an unrelated re-render must not rerun value initialization.
+ * is handed back.
+ *
+ * A form passed `formData` shows that data. `state.controlled` records the prop the data was last derived from and
+ * the data that gave, which an operation leaves alone, so data that is no longer that is a proposal the parent has yet
+ * to answer. A form passed none owns its data, see `deriveOwnState()`.
  *
  * @param props - The current props
  * @param state - The committed state
+ * @param [shown] - The state last rendered, which a declined proposal leaves the form in
  * @returns - The state to render, `state` itself when nothing changed
  */
 export function deriveState<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   state: FormState<T, S, F>,
+  shown?: FormState<T, S, F>,
 ): FormState<T, S, F> {
-  const { controlledFormData } = props;
-  if (controlledFormData === undefined) {
+  const { formData: passed } = props;
+  if (passed === undefined) {
     return deriveOwnState(props, state);
   }
-  // The data on screen stands when the parent passed back what the form proposed, or passes what it passed before with
-  // no proposal outstanding. Anything else is the parent's answer: another value, or the same one, declining a proposal
   const { controlled } = state;
-  const isShown =
-    controlledFormData === state.formData ||
-    (controlledFormData === controlled?.from && state.formData === controlled?.data);
-  return asControlledBy(
-    props,
-    isShown ? deriveOwnState(props, state) : shareState(state, deriveDataState(state, controlledFormData, props)),
-  );
+  const isProposed = isProposedIn(state);
+  // The data stands when the parent passed back what the form proposed, or passes what it passed before with no
+  // proposal outstanding
+  if (Object.is(passed, state.formData) || (!isProposed && Object.is(passed, controlled?.from))) {
+    return asControlledBy(props, deriveOwnState(props, state));
+  }
+  // Passing the same value over a proposal declines it, which leaves the form as it was shown before the proposal, its
+  // errors and marks included
+  if (shown && shown.controlled === controlled && Object.is(passed, controlled?.from) && !isProposedIn(shown)) {
+    return asControlledBy(props, deriveOwnState(props, shown));
+  }
+  // Any other value is the parent's own
+  return asControlledBy(props, shareState(state, deriveDataState(state, passed, props)));
 }
 
+function isProposedIn<T, S extends StrictRJSFSchema, F extends FormContextType>(state: FormState<T, S, F>) {
+  return state.controlled === undefined || state.formData !== state.controlled.data;
+}
+
+/** `deriveState()` for the data the form holds, which no prop replaces: it is re-derived only for a schema,
+ * `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent` change, and any other prop change
+ * re-derives the render context alone, since an unrelated re-render must not rerun value initialization.
+ */
 function deriveOwnState<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   state: FormState<T, S, F>,

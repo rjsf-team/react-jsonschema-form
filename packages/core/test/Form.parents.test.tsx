@@ -57,18 +57,18 @@ describe('parent harnesses', () => {
     expect(log.reported.at(-1)).toEqual({ name: 'abc' });
   });
 
-  it('a listening parent records the edits while the form keeps showing them', async () => {
+  it('a listening parent records the edits, which the form does not show', async () => {
     const log = createParentLog<Data>();
     const { container } = render(<ListeningParent<Data> schema={schema} initialValue={{ name: 'a' }} log={log} />);
 
     await user.type(input(container, 'root_name'), 'b');
 
     expect(log.reported).toEqual([{ name: 'ab' }]);
-    // The form owns the edit: a parent that stores nothing back changes nothing
-    expect(input(container, 'root_name')).toHaveValue('ab');
+    // The parent owns the data: an edit it stores nothing back for is declined
+    expect(input(container, 'root_name')).toHaveValue('a');
   });
 
-  it('a transforming parent stores the transformed edit, which the form ignores with a warning', async () => {
+  it('a transforming parent stores the transformed edit, which the form shows', async () => {
     const log = createParentLog<Data>();
     const upper = (edit: Data | undefined) => edit && { ...edit, name: edit.name?.toUpperCase() };
     const { container } = render(
@@ -77,10 +77,10 @@ describe('parent harnesses', () => {
 
     await user.type(input(container, 'root_name'), 'ab');
 
-    expect(log.reported).toEqual([{ name: 'a' }, { name: 'ab' }]);
+    expect(log.reported).toEqual([{ name: 'a' }, { name: 'Ab' }]);
     expect(log.value).toEqual({ name: 'AB' });
-    expect(input(container, 'root_name')).toHaveValue('ab');
-    expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
+    expect(input(container, 'root_name')).toHaveValue('AB');
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
   });
 
   it('two same-tick changes from mount Effects both reach the parent', async () => {
@@ -146,7 +146,6 @@ describe('parent harnesses', () => {
           schema={schema}
           uiSchema={uiSchema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={data}
           formContext={{ name: data?.name }}
           onChange={(event) => setData(event.formData)}
@@ -310,14 +309,14 @@ describe('a blur in the same event as an edit, under onBlur validation, with a p
     expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
   });
 
-  it('shows the errors found for the edit whatever the parent stores', async () => {
+  it('shows neither the edit nor the errors found for it when the parent declines it', async () => {
     const { container } = render(<ListeningParent<Named> {...propsFor()} />);
 
     await user.click(screen.getByRole('button', { name: 'Set from abcd' }));
 
-    // The form shows 'ab', the data it holds, and the errors the blur found for it
-    expect(screen.getByRole('button', { name: 'Set from ab' })).toBeInTheDocument();
-    expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
+    // The form shows 'abcd', the data the parent holds, which the errors the blur found for 'ab' do not describe
+    expect(screen.getByRole('button', { name: 'Set from abcd' })).toBeInTheDocument();
+    expect(fieldErrorsById(container)).toEqual({});
   });
 
   it.each<[string, Partial<ParentProps<Named>>]>([
@@ -333,7 +332,7 @@ describe('a blur in the same event as an edit, under onBlur validation, with a p
     expect(fieldErrorsById(container)).toEqual({});
   });
 
-  it('validates the value at the blur, and keeps it over the one a transforming parent stores after it', async () => {
+  it('validates the value at the blur, and shows the one a transforming parent stores after it', async () => {
     const ref = createFormRef<Named>();
     const log = createParentLog<Named>();
     const { container } = render(
@@ -347,9 +346,10 @@ describe('a blur in the same event as an edit, under onBlur validation, with a p
 
     await user.click(screen.getByRole('button', { name: 'Set from abcd' }));
 
-    // The edit 'ab ' is long enough; the 'ab' the parent stored is its own copy, which the form ignores
-    expect(handleOf(ref).getFormData()).toEqual({ name: 'ab ' });
+    // The blur validated the edit 'ab ', which is long enough; the 'ab' the parent stored waits for the next blur
+    expect(handleOf(ref).getFormData()).toEqual({ name: 'ab' });
     expect(log.value).toEqual({ name: 'ab' });
+    expect(screen.getByRole('button', { name: 'Set from ab' })).toBeInTheDocument();
     expect(fieldErrorsById(container)).toEqual({});
   });
 
@@ -634,7 +634,6 @@ describe('typing in a custom widget under a parent that renders for every change
         <Form<Data>
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={data}
           uiSchema={{ name: { 'ui:widget': CustomTextarea } }}
           onChange={(event) => setData(event.formData)}

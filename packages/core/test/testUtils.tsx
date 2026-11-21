@@ -157,7 +157,6 @@ export function AcceptingParent<T>({ initialValue, log, ...formProps }: ParentPr
     <Form<T>
       {...formProps}
       validator={validator}
-      // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
       formData={value}
       onChange={(event) => {
         log?.reported.push(event.formData);
@@ -168,8 +167,8 @@ export function AcceptingParent<T>({ initialValue, log, ...formProps }: ParentPr
   );
 }
 
-/** Keeps passing its initial value whatever the form reports, the shape of a parent that only listens: the form owns
- * the edits and shows them, and since the value it passes never changes after mount, the form has nothing to warn about
+/** Keeps passing its initial value whatever the form reports, the shape of a parent that only listens: it declines
+ * every edit, so the form goes on showing that value
  */
 export function ListeningParent<T>({ initialValue, log, ...formProps }: ParentProps<T>) {
   Object.assign(log ?? {}, { value: initialValue });
@@ -177,7 +176,6 @@ export function ListeningParent<T>({ initialValue, log, ...formProps }: ParentPr
     <Form<T>
       {...formProps}
       validator={validator}
-      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       formData={initialValue}
       onChange={(event) => {
         log?.reported.push(event.formData);
@@ -200,7 +198,6 @@ export function TransformingParent<T>({
     <Form<T>
       {...formProps}
       validator={validator}
-      // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
       formData={value}
       onChange={(event) => {
         log?.reported.push(event.formData);
