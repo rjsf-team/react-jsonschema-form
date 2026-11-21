@@ -113,7 +113,7 @@ function MyForm(props: Omit<FormProps, 'validator' | 'schema'>) {
   return <Form {...props} schema={yourSchema} validator={validator} />;
 }
 
-render(<MyForm />, document.getElementById('app'));
+export default MyForm;
 ```
 
 Things to know about the generated file:
@@ -311,10 +311,9 @@ const schema: RJSFSchema = {
 
 const formData = 'a';
 
-render(
-  <Form schema={schema} initialFormData={formData} validator={validator} liveValidate='onChange' />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} initialFormData={formData} validator={validator} liveValidate='onChange' />;
+}
 ```
 
 ## Validate form programmatically
@@ -325,22 +324,32 @@ The `validateForm()` method returns true if the form is valid, false otherwise.
 If you have provided an `onError` callback it will be called with the list of errors when the `validatorForm()` method returns false.
 
 ```tsx
-import { createRef } from 'react';
+import { useRef } from 'react';
 import Form, { type FormRef } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-const formRef = createRef();
 const onError = (errors) => alert(errors);
 
 const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(<Form schema={schema} validator={validator} onError={onError} ref={formRef} />, document.getElementById('app'));
-
-if (formRef.current.validateForm()) {
-  alert('Form is valid');
+export default function App() {
+  const formRef = useRef<FormRef>(null);
+  const onValidate = () => {
+    if (formRef.current?.validateForm()) {
+      alert('Form is valid');
+    }
+  };
+  return (
+    <>
+      <Form schema={schema} validator={validator} onError={onError} ref={formRef} />
+      <button type='button' onClick={onValidate}>
+        Validate
+      </button>
+    </>
+  );
 }
 ```
 
@@ -363,7 +372,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} noHtml5Validate />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} noHtml5Validate />;
+}
 ```
 
 ## Custom validation rules
@@ -393,7 +404,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} customValidate={customValidate} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} customValidate={customValidate} />;
+}
 ```
 
 > Notes:
@@ -430,10 +443,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} transformErrors={transformErrors} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} transformErrors={transformErrors} />;
+}
 ```
 
 > Notes:
@@ -485,14 +497,16 @@ const schema: RJSFSchema = {
   const: "test"
 };
 
-render((
-  <Form schema={schema}
-        validator={validator}
-        showErrorList='top'
-        initialFormData={""}
-        liveValidate='onChange'
-        templates: {{ ErrorListTemplate }} />
-), document.getElementById("app"));
+export default function App() {
+  return (
+    <Form schema={schema}
+          validator={validator}
+          showErrorList='top'
+          initialFormData={""}
+          liveValidate='onChange'
+          templates: {{ ErrorListTemplate }} />
+  );
+}
 ```
 
 > Note: Your custom `ErrorList` template will only render when `showErrorList` is `top` or `botttom`.
@@ -552,7 +566,9 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 Ajv 8 doesn't ship a draft-04 meta schema to pass this way. For draft-04, build the validator with the Ajv class of `ajv-draft-04` instead:
@@ -597,7 +613,9 @@ const customFormats = {
 
 const validator = customizeValidator({ customFormats });
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 Format values can be anything AJV's [`addFormat` method](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
@@ -641,7 +659,9 @@ const extraErrors: ErrorSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} extraErrors={extraErrors} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} extraErrors={extraErrors} />;
+}
 ```
 
 By default, these errors also block the user from submitting the form, the same as JSON Schema validation errors.
@@ -668,7 +688,9 @@ const ajvOptionsOverrides = {
 
 const validator = customizeValidator({ ajvOptionsOverrides });
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 Ajv's `useDefaults`, `coerceTypes` and `removeAdditional` options change the data Ajv validates: it fills in defaults, converts values to the type the schema names and deletes properties the schema doesn't allow.
@@ -724,7 +746,9 @@ const schema: RJSFSchema = {
   format: 'email',
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 If you don't actually need any of the [ajv-formats](https://github.com/ajv-validator/ajv-formats#formats) and want to reduce the memory footprint, then you can turn it off as follows:
@@ -740,7 +764,9 @@ const schema: RJSFSchema = {
 
 const validator = customizeValidator({ ajvFormatOptions: false });
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 If you only need some of them, you can pass any of the [options](https://github.com/ajv-validator/ajv-formats#options) to the formatter:
@@ -759,7 +785,9 @@ const validator = customizeValidator({ ajvFormatOptions: ['date'] });
 // or
 // const validator = customizeValidator({ ajvFormatOptions: { mode: "fast", formats: ["date"], keywords: true } });
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ### AjvClass
@@ -783,7 +811,9 @@ const validator = customizeValidator({ AjvClass: Ajv2019 });
 // or
 // const validator = customizeValidator({ AjvClass: Ajv2020 });
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ### extenderFn
@@ -803,7 +833,9 @@ const schema: RJSFSchema = {
 
 const validator = customizeValidator({ extenderFn: ajvErrors });
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ### suppressDuplicateFiltering
@@ -865,7 +897,9 @@ const schema: RJSFSchema = {
 // Disable all duplicate filtering — show every error from every anyOf/oneOf branch
 const validator = customizeValidator({ suppressDuplicateFiltering: 'all' });
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 For a precompiled validator, pass the value in the options object `createPrecompiledValidator()` takes after the schema:
@@ -908,7 +942,9 @@ const schema: RJSFSchema = {
 
 const validator = customizeValidator({}, localizer.it);
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 Using a specific locale minimizing the bundle size
@@ -925,7 +961,9 @@ const schema: RJSFSchema = {
 
 const validator = customizeValidator({}, spanishLocalizer);
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 An example of a custom `Localizer` implementation:
@@ -964,7 +1002,9 @@ const schema: RJSFSchema = {
 
 const validator = customizeValidator({}, localize_ru);
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 NOTES:

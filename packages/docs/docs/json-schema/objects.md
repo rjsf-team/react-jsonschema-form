@@ -23,7 +23,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## Required properties
@@ -50,7 +52,9 @@ const schema: RJSFSchema = {
   required: ['name'],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## Specifying property order
@@ -74,7 +78,9 @@ const uiSchema: UiSchema = {
   'ui:order': ['bar', 'foo'],
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 If a guaranteed fixed order is only important for some fields, you can insert a wildcard `"*"` item in your `ui:order` definition. All fields that are not referenced explicitly anywhere in the list will be rendered at that point:
@@ -111,7 +117,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 In this way, an add button for new properties is shown by default.
@@ -141,7 +149,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 Also in this case, an add button for new properties is shown by default.
@@ -190,10 +200,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} additionalPropertiesWhenAbsent='allow' />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} additionalPropertiesWhenAbsent='allow' />;
+}
 ```
 
 The object then gets an add button, the extra keys of its data render with their key input and remove button, each as a field for the value it holds, and `omitExtraData` keeps them, exactly as under `additionalProperties: true`.
@@ -224,7 +233,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 A name another key already holds is left out of the dropdown, since two properties cannot share a name, and the add button creates the new property under the first allowed name that is still free.

@@ -38,7 +38,7 @@ function PersonForm() {
   );
 }
 
-render(<PersonForm />, document.getElementById('app'));
+export default PersonForm;
 ```
 
 The form does not handle a rejection for you. When the promise rejects, the form's own copy of it rejects with the same error and is reported as an unhandled rejection, even if you handle the promise you return, and it never reaches an Error Boundary. A transition is different, see [below](#with-useactionstate). Catch the error inside `onSubmit` and return a promise that resolves, as `save` does, and show the error, for example as above or as [`extraErrors`](#errors-from-the-server).
@@ -175,24 +175,25 @@ The action's state is a good place for errors the server reports. Return them as
     );
   }
 
-  render(
-    <Form
-      schema={schema}
-      validator={validator}
-      onSubmit={({ formData }) =>
-        startTransition(async () => {
-          try {
-            await save(formData);
-          } catch {
-            // Show the error, as the first example does
-          }
-        })
-      }
-    >
-      <SaveButton />
-    </Form>,
-    document.getElementById('app'),
-  );
+  export default function App() {
+    return (
+      <Form
+        schema={schema}
+        validator={validator}
+        onSubmit={({ formData }) =>
+          startTransition(async () => {
+            try {
+              await save(formData);
+            } catch {
+              // Show the error, as the first example does
+            }
+          })
+        }
+      >
+        <SaveButton />
+      </Form>
+    );
+  }
   ```
 
 - **A button outside the `<form>`**, such as one in a dialog's footer that submits the form through its `form` attribute, can't read `useFormStatus()`, which only reads the `<form>` a component is rendered inside. Get the pending state from the component that owns the submission instead: `isPending` from `useActionState`, or state you keep around your own promise.

@@ -34,7 +34,9 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## anyOf
@@ -67,7 +69,9 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## allOf
@@ -90,5 +94,7 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```

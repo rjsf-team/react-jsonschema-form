@@ -847,10 +847,9 @@ const formContext: FormContextType = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={formContext} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={formContext} />;
+}
 ```
 
 As you can see in the example, we've created a `FormContext` that has the named-lookup map containing the
@@ -996,10 +995,9 @@ const formContext: FormContextType = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={formContext} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={formContext} />;
+}
 ```
 
 As you can see in the example, we've created a `FormContext` that contains the named-lookup map containing the three
@@ -1141,10 +1139,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={formContext} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={formContext} />;
+}
 ```
 
 Let's assume that the `LineShape`, `CircleShape` and `PolygonShape` components configured above use the `dataPath[s]`
@@ -1183,10 +1180,9 @@ const formContext: FormContextType = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={formContext} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={formContext} />;
+}
 ```
 
 ## So much flexibility available

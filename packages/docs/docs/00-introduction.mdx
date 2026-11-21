@@ -58,16 +58,17 @@ const schema: RJSFSchema = {
 
 const log = (type) => console.log.bind(console, type);
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    onChange={log('changed')}
-    onSubmit={log('submitted')}
-    onError={log('errors')}
-  />,
-  document.getElementById('app')
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      validator={validator}
+      onChange={log('changed')}
+      onSubmit={log('submitted')}
+      onError={log('errors')}
+    />
+  );
+}
 ```
 
 ## Theming
