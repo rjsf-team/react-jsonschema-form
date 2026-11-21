@@ -431,6 +431,107 @@ describe('a form controlled through formData', () => {
     });
   });
 
+  describe('with transformChange', () => {
+    const upper = (next: Pair | undefined): Pair | undefined => next && { ...next, a: next.a?.toUpperCase() };
+
+    it('proposes the edit as rewritten, which the parent stores', async () => {
+      const reported: Pair[] = [];
+      const { container } = render(
+        <Parent<Pair> schema={pair} initial={{ a: '', b: '' }} reported={reported} transformChange={upper} />,
+      );
+
+      await user.type(input(container, 'root_a'), 'xy');
+
+      expect(reported).toEqual([
+        { a: 'X', b: '' },
+        { a: 'XY', b: '' },
+      ]);
+      expect(input(container, 'root_a')).toHaveValue('XY');
+    });
+
+    it('proposes the edit as rewritten, which a parent that declines leaves unshown', async () => {
+      const reported: Pair[] = [];
+      const ref = createFormRef<Pair>();
+      const { container } = render(
+        <Parent<Pair>
+          ref={ref}
+          schema={pair}
+          initial={{ a: '', b: '' }}
+          answer={decline}
+          reported={reported}
+          transformChange={upper}
+        />,
+      );
+
+      await user.type(input(container, 'root_a'), 'xy');
+
+      expect(reported).toEqual([
+        { a: 'X', b: '' },
+        { a: 'Y', b: '' },
+      ]);
+      expect(input(container, 'root_a')).toHaveValue('');
+      expect(handleOf(ref).getFormData()).toEqual({ a: '', b: '' });
+    });
+
+    it('shows nothing of an edit it refuses, and takes the next one from the data the parent holds', async () => {
+      const reported: Pair[] = [];
+      const { container } = render(
+        <Parent<Pair>
+          schema={pair}
+          initial={{ a: '', b: '' }}
+          reported={reported}
+          transformChange={(next, previous) => (next?.a === 'x' ? previous : next)}
+        />,
+      );
+
+      await user.type(input(container, 'root_a'), 'x');
+      expect(input(container, 'root_a')).toHaveValue('');
+      await user.type(input(container, 'root_b'), 'y');
+
+      expect(input(container, 'root_b')).toHaveValue('y');
+      expect(reported.at(-1)).toEqual({ a: '', b: 'y' });
+    });
+
+    it('keeps the rows, their errors and their options when the parent declines a removal it rewrote', async () => {
+      const either: RJSFSchema = {
+        anyOf: [
+          { title: 'A', type: 'object', properties: { x: { type: 'string', minLength: 2 } } },
+          { title: 'B', type: 'object', properties: { x: { type: 'string', minLength: 2 } } },
+        ],
+      };
+      interface Row {
+        x?: string;
+        seen?: boolean;
+      }
+      const answers = { declines: false };
+      const { container } = render(
+        <Parent<Row[]>
+          schema={{ type: 'array', items: either }}
+          initial={[{ x: 'aa' }, { x: 'b' }, { x: 'cc' }]}
+          answer={(proposed, held) => (answers.declines ? held : proposed)}
+          // Rewrites every change, a removal included, so the form settles the move key by key
+          transformChange={(next) => next?.map((row) => ({ ...row, seen: true }))}
+          onError={noop}
+        />,
+      );
+      await user.selectOptions(container.querySelectorAll('select')[1], 'B');
+      await submitForm(container, user);
+      const errors = fieldErrorsById(container);
+      expect(errors.root_1_x).toEqual(['must NOT have fewer than 2 characters']);
+      answers.declines = true;
+
+      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
+
+      expect(container.querySelectorAll('.rjsf-array-item-remove')).toHaveLength(3);
+      expect([...container.querySelectorAll('select')].map((select) => select.selectedOptions[0]?.text)).toEqual([
+        'A',
+        'B',
+        'A',
+      ]);
+      expect(fieldErrorsById(container)).toEqual(errors);
+    });
+  });
+
   describe('dirty', () => {
     function Records({ answer = accept, formRef }: { answer?: Answer<Pair>; formRef: FormProps<Pair>['ref'] }) {
       const [value, setValue] = useState<Pair>({ a: 'one' });
@@ -518,6 +619,82 @@ describe('a form controlled through formData', () => {
       await user.click(container.querySelectorAll('.rjsf-object-property-remove')[0]);
 
       expect(selected(container)).toEqual(['B']);
+    });
+
+    describe('of an option inside an option', () => {
+      const inner: RJSFSchema = {
+        anyOf: [
+          { title: 'Inner A', type: 'object', properties: { y: { type: 'string' } } },
+          {
+            title: 'Inner B',
+            type: 'object',
+            properties: { y: { type: 'string' }, tag: { type: 'string', default: 't' } },
+          },
+        ],
+      };
+      // Each second option declares one property more, so a switch changes the data and is a proposal, while the data
+      // fits both options, so only the selection says which is shown
+      const nested: RJSFSchema = {
+        anyOf: [
+          { title: 'Outer A', type: 'object', properties: { x: { type: 'string' }, in: inner } },
+          {
+            title: 'Outer B',
+            type: 'object',
+            properties: { x: { type: 'string' }, in: inner, extra: { type: 'string', default: 'e' } },
+          },
+        ],
+      };
+      /** A form on `Outer B` and `Inner B`, each picked by hand */
+      async function onSecondOptions() {
+        const view = setup(nested, { x: '0', in: { y: '1' } });
+        await user.selectOptions(view.container.querySelectorAll('select')[0], 'Outer B');
+        await user.selectOptions(view.container.querySelectorAll('select')[1], 'Inner B');
+        expect(selected(view.container)).toEqual(['Outer B', 'Inner B']);
+        return view;
+      }
+
+      it('stay as chosen when the parent declines an edit inside the inner one', async () => {
+        const { container, answers } = await onSecondOptions();
+        answers.declines = true;
+
+        await user.type(input(container, 'root_in_y'), 'z');
+
+        expect(input(container, 'root_in_y')).toHaveValue('1');
+        expect(selected(container)).toEqual(['Outer B', 'Inner B']);
+      });
+
+      it('stay as chosen when the parent declines a switch of the inner one', async () => {
+        const { container, answers } = await onSecondOptions();
+        answers.declines = true;
+
+        await user.selectOptions(container.querySelectorAll('select')[1], 'Inner A');
+
+        expect(selected(container)).toEqual(['Outer B', 'Inner B']);
+        expect(input(container, 'root_in_tag')).toHaveValue('t');
+      });
+
+      it('stay as chosen when the parent declines a switch of the outer one', async () => {
+        const { container, answers } = await onSecondOptions();
+        answers.declines = true;
+
+        await user.selectOptions(container.querySelectorAll('select')[0], 'Outer A');
+
+        expect(selected(container)).toEqual(['Outer B', 'Inner B']);
+        expect(input(container, 'root_in_y')).toHaveValue('1');
+        expect(input(container, 'root_extra')).toHaveValue('e');
+      });
+
+      it('follow an edit the parent stores after one it declined', async () => {
+        const { container, answers } = await onSecondOptions();
+        answers.declines = true;
+        await user.type(input(container, 'root_in_y'), 'z');
+        answers.declines = false;
+
+        await user.type(input(container, 'root_in_y'), 'z');
+
+        expect(input(container, 'root_in_y')).toHaveValue('1z');
+        expect(selected(container)).toEqual(['Outer B', 'Inner B']);
+      });
     });
 
     it('stays as chosen when the parent declines an edit inside the option', async () => {
