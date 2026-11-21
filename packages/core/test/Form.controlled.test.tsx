@@ -347,6 +347,60 @@ describe('a form controlled through formData', () => {
       expect(reported).toEqual([{ a: 'x' }, { a: 'x' }]);
       expect(handleOf(ref).getFormData()).toEqual({ a: 'x', extra: 1 });
       expect(input(container, 'root_a')).toHaveValue('x');
+      expect(handleOf(ref).getStatus().touchedFields).toEqual({ a: true });
+    });
+  });
+
+  describe('touched', () => {
+    function ChangeThenBlur({ id, value, onChange, onBlur }: WidgetProps) {
+      return (
+        <button
+          type='button'
+          onClick={() => {
+            onChange('edited');
+            onBlur(id, 'edited');
+          }}
+        >
+          {`${id} is ${String(value)}`}
+        </button>
+      );
+    }
+
+    it('marks a field blurred in the same event as an edit the parent declines', async () => {
+      const ref = createFormRef<Pair>();
+      render(
+        <Parent<Pair>
+          ref={ref}
+          schema={pair}
+          initial={{ a: 'held', b: '' }}
+          answer={decline}
+          uiSchema={{ a: { 'ui:widget': ChangeThenBlur } }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'root_a is held' }));
+
+      expect(screen.getByRole('button', { name: 'root_a is held' })).toBeInTheDocument();
+      expect(handleOf(ref).getStatus().touchedFields).toEqual({ a: true });
+    });
+
+    it('stays on the row that was blurred when the parent declines a reorder', async () => {
+      const ref = createFormRef<string[]>();
+      const { container } = render(
+        <Parent<string[]>
+          ref={ref}
+          schema={{ type: 'array', items: { type: 'string' } }}
+          initial={['a', 'b']}
+          answer={decline}
+        />,
+      );
+      await user.click(input(container, 'root_0'));
+      await user.tab();
+      expect(handleOf(ref).getStatus().touchedFields).toEqual([true, undefined]);
+
+      await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+      expect(handleOf(ref).getStatus().touchedFields).toEqual([true, undefined]);
     });
   });
 
