@@ -3170,7 +3170,7 @@ An ID names a kind of problem rather than one message, so excepting it lets thro
 import { setWarningOptions } from '@rjsf/utils';
 
 setWarningOptions({ throwOn: ['migration'] }); // every migration warning throws
-setWarningOptions({ throwOn: ['form-data-ignored'] }); // just this one, to fix one problem at a time
+setWarningOptions({ throwOn: ['form-data-both-seeds'] }); // just this one, to fix one problem at a time
 setWarningOptions({ throwOn: ['migration'], except: ['antd-span-twelfths'] }); // acknowledged: still logs
 setWarningOptions({}); // the default: every warning logs
 ```
@@ -3190,7 +3190,6 @@ setWarningOptions({}); // the default: every warning logs
 | `layout-grid-renders-nothing`       | `migration` | a `LayoutGridField` has no `ui:layoutGrid` object, or a cell or `ui:condition` names no field               |
 | `option-field-ignored`              | `migration` | an `anyOf`/`oneOf` option's `ui:field` is ignored, since a field is already named for that path             |
 | `form-data-not-passed-through`      | `migration` | a custom field wrapping `ArrayField` or `ObjectField` didn't pass `formData` through unchanged              |
-| `form-data-ignored`                 | `migration` | the `Form`'s `formData` changed after mount and was ignored                                                 |
 | `form-data-both-seeds`              | `migration` | the `Form` was passed both `formData` and `initialFormData`                                                 |
 | `global-ui-options-key-not-read`    | `config`    | `globalUiOptionsKeys` names a per-field or root-only key, so it isn't read from `ui:globalOptions`          |
 | `ui-widget-options-object`          | `config`    | `ui:widget` is a `{ component, options }` object                                                            |
