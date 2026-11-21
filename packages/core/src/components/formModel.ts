@@ -40,6 +40,7 @@ import {
   freezeFormData,
   isBlurValidated,
   isLiveValidated,
+  isProposedIn,
   omitExtraDataOf,
   seedOf,
   settledPaths,
@@ -322,7 +323,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       return published;
     }
     if (derivedCache?.props !== committedProps || derivedCache.from !== published) {
-      const derived = deriveState(committedProps, published, rendered);
+      const derived = deriveState(committedProps, published);
       derivedCache = {
         props: committedProps,
         from: published,
@@ -337,7 +338,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    */
   const commit = (next: FormState<T, S, F>) => {
     const start = current();
-    const committed = shareState(start, next);
+    let committed = shareState(start, next);
+    // The first proposal to a controlling parent records the state it started from, for a decline to go back to
+    if (committedProps.formData !== undefined) {
+      const proposedFrom = isProposedIn(committed)
+        ? (start.proposedFrom ?? (isProposedIn(start) ? undefined : start))
+        : undefined;
+      if (committed.proposedFrom !== proposedFrom) {
+        committed = { ...committed, proposedFrom };
+      }
+    }
     if (isDevelopment) {
       freezeFormData(committed.formData);
     }

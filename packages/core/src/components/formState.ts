@@ -2145,10 +2145,19 @@ function asControlledBy<T, S extends StrictRJSFSchema, F extends FormContextType
   state: FormState<T, S, F>,
 ): FormState<T, S, F> {
   const from = props.formData;
-  if (from === undefined || (!isProposedIn(state) && Object.is(state.controlled?.from, from))) {
+  if (from === undefined) {
     return state;
   }
-  return { ...state, controlled: { from, data: state.formData } };
+  const isRecorded = !isProposedIn(state) && Object.is(state.controlled?.from, from);
+  if (isRecorded && !state.proposedFrom) {
+    return state;
+  }
+  // The parent has answered, so no proposal is outstanding
+  return {
+    ...state,
+    controlled: isRecorded ? state.controlled : { from, data: state.formData },
+    proposedFrom: undefined,
+  };
 }
 
 export function initialState<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -2171,13 +2180,11 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
  *
  * @param props - The current props
  * @param state - The committed state
- * @param [shown] - The state last rendered, which a declined proposal leaves the form in
  * @returns - The state to render, `state` itself when nothing changed
  */
 export function deriveState<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   state: FormState<T, S, F>,
-  shown?: FormState<T, S, F>,
 ): FormState<T, S, F> {
   const { formData: passed } = props;
   if (passed === undefined) {
@@ -2190,16 +2197,11 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   if (Object.is(passed, state.formData) || (!isProposed && Object.is(passed, controlled?.from))) {
     return asControlledBy(props, deriveOwnState(props, state));
   }
-  // Passing the same value over a proposal, or a copy of it, declines it, which leaves the form as it was shown before
-  // the proposal, its errors and marks included
-  if (
-    shown &&
-    controlled &&
-    shown.controlled === controlled &&
-    !isProposedIn(shown) &&
-    (Object.is(passed, controlled.from) || deepEquals(passed, controlled.from))
-  ) {
-    return asControlledBy(props, deriveOwnState(props, shown));
+  // Passing the same value over a proposal, or a copy of it, declines it, which leaves the form as it was before the
+  // proposal, its errors and marks included
+  const { proposedFrom } = state;
+  if (proposedFrom && controlled && (Object.is(passed, controlled.from) || deepEquals(passed, controlled.from))) {
+    return asControlledBy(props, deriveOwnState(props, withTouchesOf(proposedFrom, state)));
   }
   // Any other value is the parent's own. Over a proposal it is the parent's answer to it, and the form is as dirty as
   // that leaves it. With none outstanding it is another record, as one that loaded or a Cancel put back, which the
@@ -2208,7 +2210,27 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   return asControlledBy(props, shareState(state, deriveDataState(from, passed, props)));
 }
 
-function isProposedIn<T, S extends StrictRJSFSchema, F extends FormContextType>(state: FormState<T, S, F>) {
+/** `before`, the state a declined proposal leaves the form in, with the fields blurred since then touched: a blur is
+ * no proposal, so a parent declining the edit made in the same event does not decline it. `proposed` holds those
+ * touches, and the ones `before` holds wherever the proposals left them.
+ *
+ * shortcut: a proposal that moved a touched field's keys, as a reorder does, leaves the touches as `before` holds
+ * them, so a blur in the same event as a declined move is lost; record the blurs apart from the moves if that matters
+ */
+function withTouchesOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  before: FormState<T, S, F>,
+  proposed: FormState<T, S, F>,
+): FormState<T, S, F> {
+  const { touchedPaths } = proposed;
+  const isMoved = [...before.touchedPaths].some((fieldPath) => !touchedPaths.has(fieldPath));
+  if (touchedPaths === before.touchedPaths || isMoved) {
+    return before;
+  }
+  return { ...before, touchedPaths: withoutDroppedPaths(touchedPaths, proposed.formData, before.formData) };
+}
+
+/** Whether `state` holds a proposal a controlling parent has yet to answer: data other than its `formData` gave */
+export function isProposedIn<T, S extends StrictRJSFSchema, F extends FormContextType>(state: FormState<T, S, F>) {
   return state.controlled === undefined || !Object.is(state.formData, state.controlled.data);
 }
 

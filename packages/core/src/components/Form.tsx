@@ -361,6 +361,10 @@ export interface FormState<
    * operation leaves both alone, so data that is no longer `data` is a proposal the parent has yet to answer
    */
   controlled?: { from: T; data: T | undefined };
+  /** The state the first proposal still outstanding started from, in a form passed `formData`, which a parent that
+   * declines the proposals leaves the form in. Not the state last rendered: a blur alone renders nothing
+   */
+  proposedFrom?: FormState<T, S, F>;
   /** Flag indicating whether the initial form defaults have been generated */
   initialDefaultsGenerated: boolean;
   /** The registry (re)computed only when props changed */
@@ -514,7 +518,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   const published = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
   // With no operation since the cached derivation, that derivation is the latest state
   const base = published === cache.published ? cache.state : published;
-  const state = props === cache.props && base === cache.state ? cache.state : deriveState(props, base, cache.state);
+  const state = props === cache.props && base === cache.state ? cache.state : deriveState(props, base);
   if (state !== cache.state) {
     setCache({ model, published, props, state });
   }
