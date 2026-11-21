@@ -18,19 +18,25 @@ function byId(container: ParentNode, id: string) {
   return element;
 }
 
-// Moved through the DOM rather than user-event, which isn't among this package's peer dependencies. Focusing the value
-// input is what tabbing out of the key input does: the blur names it as where focus is heading
+// Moved through the DOM rather than user-event, which isn't among this package's peer dependencies. The name is typed
+// through the prototype's setter and an `input` event, which is how React sees a user's edit, so an input component
+// that keeps the value in its own state holds the typed name as it would after typing. Focusing the value input is
+// what tabbing out of the key input does: the blur names it as where focus is heading
 function renameKey(container: ParentNode, from: string, to: string, valuePart = '') {
   const keyInput = byId(container, `root_${from}__key`);
   const value = byId(container, `root_${from}${valuePart}`);
   act(() => keyInput.focus());
-  keyInput.value = to;
+  act(() => {
+    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(keyInput), 'value')?.set?.call(keyInput, to);
+    keyInput.dispatchEvent(new Event('input', { bubbles: true }));
+  });
   act(() => value.focus());
 }
 
 /** Pins that renaming an additional property's key keeps its field's instance, through later renames of other keys as
  * well, so a template that keys what it wraps a property in by the property's name, or by its id, which a rename changes,
- * would remount it and lose what its widget holds (#5595)
+ * would remount it and lose what its widget holds (#5595), and that the key input of a rename a controlling parent
+ * declined shows the name the property kept, whatever input component the theme renders it with
  *
  * @param Form - The theme's `Form` component
  */
@@ -84,6 +90,18 @@ export function renamedKeyTests(Form: ComponentType<FormProps>) {
       renameKey(container, 'a', 'end');
 
       expect(byId(container, 'root_end')).toHaveFocus();
+    });
+
+    test('shows the name the property kept in its key input when a controlling parent declines the rename', () => {
+      // Passed `formData` and no `onChange` that stores the rename, which declines it
+      const { container } = render(<Form schema={schema} validator={validator} formData={{ a: 'one' }} />);
+      const keyInput = byId(container, 'root_a__key');
+
+      renameKey(container, 'a', 'b');
+
+      expect(byId(container, 'root_a__key')).toBe(keyInput);
+      expect(keyInput).toHaveValue('a');
+      expect(byId(container, 'root_a')).toHaveValue('one');
     });
   });
 }
