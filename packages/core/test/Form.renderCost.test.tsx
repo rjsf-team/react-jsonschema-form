@@ -323,6 +323,10 @@ describe('checks of a condition for an edit (#4051)', () => {
     })),
   };
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('checks no condition for a keystroke in a field no condition reads, and each once the field they read changes', async () => {
     const { container } = render(<Form schema={conditional} validator={validator} initialFormData={{ kind: 'b' }} />);
     const isValid = vi.spyOn(validator, 'isValid');
@@ -335,7 +339,6 @@ describe('checks of a condition for an edit (#4051)', () => {
     await user.type(input(container, 'root_kind'), 'c');
 
     expect(isValid).toHaveBeenCalledTimes(3);
-    isValid.mockRestore();
   });
 });
 

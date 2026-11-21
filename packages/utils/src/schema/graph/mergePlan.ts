@@ -244,12 +244,12 @@ const READS_ONLY_OWN_KEYS = new Set<string>([PROPERTIES_KEY, REQUIRED_KEY, 'type
 
 const conditionReadsMemo = new WeakMap<object, { readonly keys?: readonly string[] }>();
 
-/** Whether `properties` may hold Ajv's `$data`, as do those `JSON.stringify()` can't write: a schema holding itself, or
- * a BigInt
+/** Whether `properties` may hold Ajv's `$data`, as do those holding a reference, whose target may hold one, and those
+ * `JSON.stringify()` can't write: a schema holding itself, or a BigInt
  */
 function mayHoldDataRef(properties: object): boolean {
   try {
-    return JSON.stringify(properties).includes('"$data"');
+    return /"\$(data|ref|dynamicRef|recursiveRef)"/.test(JSON.stringify(properties));
   } catch {
     return true;
   }
