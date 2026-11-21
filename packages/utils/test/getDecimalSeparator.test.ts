@@ -1,8 +1,15 @@
 // @vitest-environment jsdom
 // jsdom provides the `navigator` global these tests spy on; Node 20 has none.
-import { getDecimalSeparator } from '../src/index.ts';
+import { getDecimalSeparator as cachedAcrossTests } from '../src/index.ts';
 
 describe('getDecimalSeparator()', () => {
+  // The separators it caches are module-wide, so each test gets a fresh module and reuses no locale an earlier one used
+  let getDecimalSeparator = cachedAcrossTests;
+  beforeEach(async () => {
+    vi.resetModules();
+    ({ default: getDecimalSeparator } = await import('../src/getDecimalSeparator.ts'));
+  });
+
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
@@ -44,13 +51,13 @@ describe('getDecimalSeparator()', () => {
 
   it('should return "." when formatToParts does not contain a decimal part', () => {
     vi.spyOn(Intl.NumberFormat.prototype, 'formatToParts').mockReturnValue([{ type: 'integer', value: '1' }]);
-    expect(getDecimalSeparator('de')).toEqual('.');
+    expect(getDecimalSeparator('fr')).toEqual('.');
   });
 
   it('builds the number format once per locale', () => {
     const NumberFormat = vi.spyOn(Intl, 'NumberFormat');
-    expect(getDecimalSeparator('es')).toEqual(',');
-    expect(getDecimalSeparator('es')).toEqual(',');
+    expect(getDecimalSeparator('fr')).toEqual(',');
+    expect(getDecimalSeparator('fr')).toEqual(',');
     expect(NumberFormat).toHaveBeenCalledTimes(1);
   });
 
