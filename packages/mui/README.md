@@ -74,13 +74,13 @@ NOTE: This theme requires React 19, so you will need to upgrade if you are on an
 - `@rjsf/validator-ajv8 >= 7`
 
 ```bash
-yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core @rjsf/utils @rjsf/validator-ajv8
+yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core@next @rjsf/utils@next @rjsf/validator-ajv8@next
 ```
 
 ### Installation
 
 ```bash
-yarn add @rjsf/mui
+yarn add @rjsf/mui@next
 ```
 
 <!-- USAGE EXAMPLES -->

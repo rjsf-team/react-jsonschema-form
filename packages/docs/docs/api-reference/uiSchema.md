@@ -794,7 +794,7 @@ const uiSchema: UiSchema = {
 ### label
 
 Field labels are rendered by default.
-Labels may be omitted on a per-field by setting the `label` option to `false` in the `ui:options` uiSchema directive.
+Labels may be omitted on a per-field basis by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
 ```tsx
 import Form from '@rjsf/core';

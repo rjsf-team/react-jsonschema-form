@@ -15,7 +15,7 @@ the uiSchema for that field the object contained under a `ui:layoutGrid` element
 }
 ```
 
-See the [LayoutGridField usage](../usage/layout-grid.md) for more detailed walk-through on how to use the component. This page is condensed
+See the [LayoutGridField usage](../usage/layout-grid.md) for more detailed walk-through on how to use the component. This page is a condensed
 version of the `uiSchema` APIs for faster reference.
 
 ## `ui:row`

@@ -52,7 +52,7 @@ Package with snapshot test suits for testing themes for `react-jsonschema-form`.
 ### Installation
 
 ```sh
-npm install @rjsf/snapshot-tests
+npm install @rjsf/snapshot-tests@next
 ```
 
 ## Usage

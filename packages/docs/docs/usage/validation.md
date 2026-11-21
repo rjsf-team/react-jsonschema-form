@@ -1,6 +1,6 @@
 # Validation
 
-When the form is submitted, the form data is validated to conform to the given JSON schema;
+When the form is submitted, the form data is validated to conform to the given JSON schema.
 
 As of version 5, as a result of decoupling the validation implementation from the `Form`, a `validator` implementation is required to be passed to all `Form`s.
 React Json Schema Form provides a default `@rjsf/validator-ajv8` implementation that uses version 8 of the [ajv](https://github.com/ajv-validator/ajv) validator.
