@@ -2134,10 +2134,25 @@ export function seedOf<T, S extends StrictRJSFSchema, F extends FormContextType>
 ): T | undefined {
   // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   const { formData } = props;
+  if (props.controlledFormData !== undefined) {
+    return props.controlledFormData;
+  }
   if (formData === undefined) {
     return props.initialFormData;
   }
   return formData;
+}
+
+/** EXPERIMENT: records that `state`'s data is what the `controlledFormData` prop derives to */
+function asControlledBy<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  props: FormProps<T, S, F>,
+  state: FormState<T, S, F>,
+): FormState<T, S, F> {
+  const from = props.controlledFormData;
+  if (from === undefined || (state.controlled?.from === from && state.controlled.data === state.formData)) {
+    return state;
+  }
+  return { ...state, controlled: { from, data: state.formData } };
 }
 
 export function initialState<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -2146,7 +2161,7 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
   if (!props.validator) {
     throw new Error('A validator is required for Form functionality to work');
   }
-  return deriveDataState(undefined, seedOf(props), props);
+  return asControlledBy(props, deriveDataState(undefined, seedOf(props), props));
 }
 
 /** Derives the state to render from the props and the committed `state`. Nothing is remembered about the previous
@@ -2162,6 +2177,26 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
  * @returns - The state to render, `state` itself when nothing changed
  */
 export function deriveState<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  props: FormProps<T, S, F>,
+  state: FormState<T, S, F>,
+): FormState<T, S, F> {
+  const { controlledFormData } = props;
+  if (controlledFormData === undefined) {
+    return deriveOwnState(props, state);
+  }
+  // The data on screen stands when the parent passed back what the form proposed, or passes what it passed before with
+  // no proposal outstanding. Anything else is the parent's answer: another value, or the same one, declining a proposal
+  const { controlled } = state;
+  const isShown =
+    controlledFormData === state.formData ||
+    (controlledFormData === controlled?.from && state.formData === controlled?.data);
+  return asControlledBy(
+    props,
+    isShown ? deriveOwnState(props, state) : shareState(state, deriveDataState(state, controlledFormData, props)),
+  );
+}
+
+function deriveOwnState<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   state: FormState<T, S, F>,
 ): FormState<T, S, F> {
