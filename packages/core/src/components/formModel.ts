@@ -255,6 +255,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // stored as the data of whichever form replaced this one, or of a form the user cannot see. Detached until the first
   // attachment, since a form first rendered inside a hidden `<Activity>` runs no layout Effect until it is shown
   let isDetached = true;
+  // The option selections and what the form showed when the first operation since the last commit began, for a form
+  // passed `formData`: every operation there is a proposal, and a parent that declines them leaves the selections the
+  // operations moved, see `committed()`. Whether that commit put them back, for `afterCommit()` to tell the fields
+  let proposal: { uiState: ReturnType<typeof uiState.save>; shown: FormState<T, S, F> } | undefined;
+  let isUiStateRestored = false;
   let isBothSeedsWarned = false;
   let isEmptyTransformWarned = false;
   // Development only, once per form: a handle call the form dropped because it was detached. A field's change, blur or
@@ -623,6 +628,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const uiMove = keyMoveOf(fieldChange);
     const containerPath = uiMove && fieldPathToList(uiMove.container);
     deliver(() => {
+      if (props.formData !== undefined) {
+        proposal ??= { uiState: uiState.save(), shown: current() };
+      }
       const before = containerPath && getAt<unknown>(current().formData, containerPath);
       const unmoved = uiMove && uiState.save();
       // The field tree before a switch is read under the selections from before it, which the move drops under the keys
@@ -648,6 +656,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
             return next;
           }),
         );
+        // A change that left the data shown is no proposal: there is nothing for a parent to decline, and no commit
+        // follows it to drop the selections saved, which the next proposal must not be declined back to
+        if (proposal && Object.is(committed.formData, proposal.shown.formData)) {
+          proposal = undefined;
+        }
         if (isFieldEdit && !edit.isRefused) {
           uiState.edited(fieldPath, (at) => getAt(committed.formData, at));
         }
@@ -766,19 +779,23 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       return;
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
+    // A submit is no edit, so it leaves a form passed `formData` the data its parent passes: `onSubmit` is handed the
+    // data without the extra data, which only a form that owns its data keeps as its own
+    const isOwned = props.formData === undefined;
     let from = current();
     const committed = commit(
       settled((base) => {
         from = base;
-        return applySubmit(base, props, isOmitted ? omitOnce(base) : undefined);
+        return applySubmit(base, props, isOmitted && isOwned ? omitOnce(base) : undefined);
       }),
     );
     followOmission(from, committed);
+    const submittedState = isOmitted && !isOwned ? { ...committed, formData: omitOnce(committed).formData } : committed;
     // Held from before `onSubmit` runs, so a submit it starts before it returns its promise is ignored too
     pendingSubmit = event;
     let submitted: unknown;
     try {
-      submitted = props.onSubmit?.(eventOf(committed, 'submitted'), event);
+      submitted = props.onSubmit?.(eventOf(submittedState, 'submitted'), event);
     } finally {
       // A `reset()` in `onSubmit` released this hold, and a submit it started since may hold the form now
       if (pendingSubmit === event) {
@@ -1020,6 +1037,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       rendered = derived;
       renderedFrom = from;
       derivedCache = undefined;
+      // A commit of the data from before the proposals, while the store holds other data, declined them. Put back
+      // quietly, since an insertion Effect may schedule no render
+      if (proposal && from === published) {
+        if (Object.is(derived.formData, proposal.shown.formData) && !Object.is(from.formData, derived.formData)) {
+          uiState.restore(proposal.uiState, true);
+          isUiStateRestored = true;
+        }
+        proposal = undefined;
+      }
       // Only a commit of the store's latest snapshot: an operation made since the render began has left data the
       // selections already hold for, which a render of the data before it would release
       if (from === shown) {
@@ -1032,6 +1058,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
           derived.formData,
         );
         uiState.dropFallbackTypes((at) => at.length > 0 && !rendersField(at));
+      }
+    },
+    /** Called from a layout Effect of every commit of the form, which may schedule a render where `committed()` may
+     * not: the fields are told of the selections that commit put back
+     */
+    afterCommit: () => {
+      if (isUiStateRestored) {
+        isUiStateRestored = false;
+        uiState.announce();
       }
     },
     /** Warns, once, that both `formData` and `initialFormData` were passed, naming the one the form takes. Called

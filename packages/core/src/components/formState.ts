@@ -2195,8 +2195,11 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   if (shown && shown.controlled === controlled && Object.is(passed, controlled?.from) && !isProposedIn(shown)) {
     return asControlledBy(props, deriveOwnState(props, shown));
   }
-  // Any other value is the parent's own
-  return asControlledBy(props, shareState(state, deriveDataState(state, passed, props)));
+  // Any other value is the parent's own. Over a proposal it is the parent's answer to it, and the form is as dirty as
+  // that leaves it. With none outstanding it is another record, as one that loaded or a Cancel put back, which the
+  // form is not dirty against: the baseline follows data that is its own
+  const from = isProposed ? state : { ...state, baseline: state.formData };
+  return asControlledBy(props, shareState(state, deriveDataState(from, passed, props)));
 }
 
 function isProposedIn<T, S extends StrictRJSFSchema, F extends FormContextType>(state: FormState<T, S, F>) {
