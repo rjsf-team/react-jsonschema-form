@@ -396,8 +396,9 @@ type ValidationProps<T, S extends StrictRJSFSchema, F extends FormContextType> =
  * besides this and the `Attachment` sits in a fragment after them, which adds nothing to the DOM. Hidden content
  * renders, and runs its insertion Effects, so the model keeps up while an `<Activity>` hides the form
  */
-function Handoff({ handOff }: { handOff: () => void }) {
+function Handoff({ handOff, afterHandOff }: { handOff: () => void; afterHandOff: () => void }) {
   useInsertionEffect(handOff);
+  useLayoutEffect(afterHandOff);
   return null;
 }
 
@@ -610,7 +611,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         onSubmit={model.handleSubmit}
         ref={setFormElement}
       >
-        <Handoff handOff={handOff} />
+        <Handoff handOff={handOff} afterHandOff={model.afterCommit} />
         <Attachment attach={model.attached} />
         <>
           {showErrorList === 'top' && renderErrors()}
