@@ -27,6 +27,7 @@ import {
   mergeThemePresentation,
   toFieldPath,
   toInputValue,
+  REUSES_DEFAULTS_FLAG,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
@@ -61,7 +62,8 @@ describe('SchemaField', () => {
           a: { type: 'string' },
         },
       };
-      const schemaUtils = createSchemaUtils({ validator }, schema);
+      // As `Form` builds its own, see `REUSES_DEFAULTS_FLAG`
+      const schemaUtils = createSchemaUtils({ validator, [REUSES_DEFAULTS_FLAG]: true }, schema);
 
       createFormComponent({
         schema,
@@ -104,7 +106,8 @@ describe('SchemaField', () => {
           a: { type: 'string' },
         },
       };
-      const schemaUtils = createSchemaUtils({ validator }, schema);
+      // As `Form` builds its own, see `REUSES_DEFAULTS_FLAG`
+      const schemaUtils = createSchemaUtils({ validator, [REUSES_DEFAULTS_FLAG]: true }, schema);
 
       createFormComponent({
         schema,

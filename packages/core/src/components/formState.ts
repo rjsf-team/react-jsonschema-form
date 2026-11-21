@@ -40,6 +40,7 @@ import {
   validationDataMerge,
   ERRORS_KEY,
   SCHEMA_KEY,
+  REUSES_DEFAULTS_FLAG,
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
@@ -753,6 +754,7 @@ function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContext
     customMergeAllOf,
     additionalPropertiesWhenAbsent,
     widgets,
+    [REUSES_DEFAULTS_FLAG]: true,
   };
   if (prev && !prev.schemaUtils.doesSchemaUtilsDiffer(schemaContext, schema)) {
     return prev.schemaUtils;

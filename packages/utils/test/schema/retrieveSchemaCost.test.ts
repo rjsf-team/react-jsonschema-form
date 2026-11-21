@@ -10,6 +10,7 @@ import {
   isObject,
   isSchemaObject,
   retrieveSchema,
+  REUSES_DEFAULTS_FLAG,
 } from '../../src/index.ts';
 import type { RJSFSchema, SchemaContext } from '../../src/index.ts';
 import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
@@ -364,9 +365,24 @@ describe('the cost of an edit to a wide object', () => {
     const fill = (context: SchemaContext, formData: unknown, more?: object, schema = list) =>
       getDefaultFormState(context, { schema, rootSchema: schema, formData, ...more });
 
-    it('folds only the row an edit changed', () => {
+    // As `Form` marks its context
+    const reusing = (validator: SchemaContext['validator']): SchemaContext => ({
+      validator,
+      [REUSES_DEFAULTS_FLAG]: true,
+    });
+
+    it('folds every row again, and takes no snapshot, for a caller that does not mark its context', () => {
       const validator = miniValidator();
       const context = { validator };
+      const state = fill(context, rowsOf(20));
+      const first = validator.calls;
+      const edited = Array.isArray(state) ? state.with(3, { k: 'edited' }) : [];
+      expect(fill(context, edited)).toEqual(edited);
+      expect(validator.calls - first).toBe(20);
+    });
+    it('folds only the row an edit changed', () => {
+      const validator = miniValidator();
+      const context = reusing(validator);
       const state = fill(context, rowsOf(20));
       expect(state).toHaveLength(20);
       const first = validator.calls;
@@ -378,9 +394,31 @@ describe('the cost of an edit to a wide object', () => {
       expect(Array.isArray(next) && next[1]).not.toBe(Array.isArray(state) && state[1]);
       expect(Array.isArray(next) && next[1]).toEqual({ k: 'k1', t: 'd' });
     });
+    it('hands back the defaults an earlier call computed for a row, called with the same data again', () => {
+      const validator = miniValidator();
+      const context = reusing(validator);
+      const rows = rowsOf(3);
+      const first = fill(context, rows);
+      const { calls } = validator;
+      const again = fill(context, rows);
+      expect(again).toEqual([{ k: 'k0' }, { k: 'k1', t: 'd' }, { k: 'k2' }]);
+      expect(again).toEqual(first);
+      expect(validator.calls).toBe(calls);
+    });
+    it('hands a row its fold kept as it stands back as the data a later call gives it', () => {
+      const context = reusing(miniValidator());
+      // An untyped item keeps its object data as it stands once the defaults are generated
+      const untyped: RJSFSchema = { type: 'array', items: {} };
+      const row = { a: 1 };
+      const more = { initialDefaultsGenerated: true };
+      fill(context, [row], more, untyped);
+      const again = fill(context, [row], more, untyped);
+      expect(again).toEqual([{ a: 1 }]);
+      expect(Array.isArray(again) && again[0]).not.toBe(row);
+    });
     it('folds a row changed in place again', () => {
       const validator = miniValidator();
-      const context = { validator };
+      const context = reusing(validator);
       const rows = rowsOf(5);
       fill(context, rows);
       rows[1].k = 'k9';
@@ -388,7 +426,7 @@ describe('the cost of an edit to a wide object', () => {
     });
     it('folds each row again under other global options, and one holding a `null` fill on every call', () => {
       const validator = miniValidator();
-      const context = { validator };
+      const context = reusing(validator);
       const nulls: RJSFSchema = { type: 'array', items: { ...row, properties: { k: {}, n: { type: 'null' } } } };
       const rows = [
         { k: 'k0', n: undefined },
@@ -408,7 +446,7 @@ describe('the cost of an edit to a wide object', () => {
     });
     it("folds a row offering options again, as the option it shows is the form's to say", () => {
       const validator = miniValidator();
-      const context = { validator };
+      const context = reusing(validator);
       const offering: RJSFSchema = {
         type: 'array',
         items: {
