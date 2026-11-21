@@ -725,6 +725,16 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         };
         expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, { t: 'x' })).toBe(0);
       });
+      it.each<[string, RJSFSchema]>([
+        ['an allOf entry', { allOf: [{ additionalProperties: true }] }],
+        ['a then', { if: { required: ['t'] }, then: { additionalProperties: true } }],
+      ])("scores the data's extra key the additionalProperties of %s takes, as retrieval merges it", (_, taking) => {
+        const options: RJSFSchema[] = [
+          { type: 'object', properties: { b: { type: 'number', default: 5 } } },
+          { type: 'object', properties: { a: { type: 'string' } }, ...taking },
+        ];
+        expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { t: 'x' }, options)).toBe(1);
+      });
       it("matches the options retrieved for the data by the keys each declares, not those stubbed for the data's extra keys", () => {
         const options: RJSFSchema[] = [
           { type: 'object', properties: { a: { type: 'number' } }, additionalProperties: true },

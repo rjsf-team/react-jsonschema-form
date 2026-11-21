@@ -4,6 +4,7 @@ import {
   ALL_OF_KEY,
   DEPENDENCIES_KEY,
   ELSE_KEY,
+  IF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
   THEN_KEY,
@@ -35,6 +36,7 @@ import retrieveSchema, {
   optionNode,
   stubExistingAdditionalProperties,
 } from './retrieveSchema.ts';
+import { EXTRA_KEY_KEYWORDS } from './schemaKeywords.ts';
 
 /** Where a schema scoring reads is declared: the graph and the seeds of the field it is the schema of */
 interface Where<S extends StrictRJSFSchema> {
@@ -489,9 +491,12 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
   const plan =
     isHandedOut(option) && typeof option[REF_KEY] !== 'string' ? undefined : planAt<S, F>(context, { graph, seeds });
   let retrieved: S | undefined;
-  const declaresForData = (key: string) => {
+  const retrievedOption = () => {
     retrieved ??= retrieveSchema<unknown, S, F>(context, option, rootSchema, formData);
-    const declared: unknown = getByPath(retrieved, [PROPERTIES_KEY, key]);
+    return retrieved;
+  };
+  const declaresForData = (key: string) => {
+    const declared: unknown = getByPath(retrievedOption(), [PROPERTIES_KEY, key]);
     return isObject(declared) && !hasSchemaMarker(declared, ADDITIONAL_PROPERTY_FLAG);
   };
   const declares = (key: string) =>
@@ -500,6 +505,19 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
       seeds.some(({ node }) => declaredProperties<S>(graph, node, key).length > 0) &&
       declaresForData(key));
   const schema = plan?.schema ?? option;
+  // An `allOf` entry, `then`, `else` or `dependencies` schema can name the extra-key keywords, which retrieval merges
+  // into the option the field shows, so the keys it takes are read off that option. One reaching a reference that
+  // resolves to nothing has no merge to read them off
+  const merges =
+    isObject(formData) &&
+    !seeds.some(({ node }) => reachesBrokenRef<S>(graph, node)) &&
+    plan?.chains.some((chain) => [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY].some((keyword) => chain.has(keyword))) === true;
+  const keyed = merges
+    ? EXTRA_KEY_KEYWORDS.reduce<S>((copy, keyword) => {
+        const value: unknown = Reflect.get(retrievedOption(), keyword);
+        return value === undefined ? withoutKeys<S>(copy, keyword) : { ...copy, [keyword]: value };
+      }, schema)
+    : schema;
   // shortcut: an option of a list the root declares nowhere, as one a direct `getClosestMatchingOption()` call builds
   // in code, reads an absent keyword as `'forbid'`, since only the field offering it says whether it stubs those keys
   // itself; upgrade if such callers need the form's pick
@@ -507,7 +525,7 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
     (readsAbsent && plan !== undefined) || !readsAbsentAsAllowed<S, F>(context)
       ? context
       : { ...context, additionalPropertiesWhenAbsent: 'forbid' };
-  if (!isObject(formData) || !allowsAdditionalProperties<S, F>(stubContext, schema)) {
+  if (!isObject(formData) || !allowsAdditionalProperties<S, F>(stubContext, keyed)) {
     return { schema, plan };
   }
   const keys = extraKeysOf<S>(schema, schema, undefined, formData).filter((key) => !declares(key));
@@ -517,7 +535,7 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
     return { schema, plan };
   }
   const extraData = Object.fromEntries(keys.map((key) => [key, formData[key]]));
-  return { schema: stubExistingAdditionalProperties<unknown, S, F>(stubContext, schema, rootSchema, extraData), plan };
+  return { schema: stubExistingAdditionalProperties<unknown, S, F>(stubContext, keyed, rootSchema, extraData), plan };
 }
 
 /** The option `bestOption()` picks, with the score it gets, computed once it is asked for */
