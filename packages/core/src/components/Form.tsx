@@ -93,6 +93,10 @@ export interface FormProps<
    * the current value with `getFormData()`.
    */
   initialFormData?: T;
+  /** EXPERIMENT: the form's data, like `value` on an `<input>`. The form shows exactly this, filled in with the
+   * schema's defaults; an edit is a proposal reported through `onChange`, shown only once it is passed back here.
+   */
+  controlledFormData?: T;
   // Form presentation and behavior modifiers
   /** You can provide a `formContext` object to the form, which is passed down to all fields and widgets. Useful for
    * implementing context aware fields and widgets.
@@ -362,6 +366,10 @@ export interface FormState<
   retrievedSchema: S;
   /** The form's option selections and cycle expansions, see `createUiState()` */
   uiState: UiState;
+  /** EXPERIMENT: the `controlledFormData` prop the data was last derived from, and the data that derivation gave. An
+   * operation leaves both alone, so data that is no longer `data` is a proposal the parent has yet to answer
+   */
+  controlled?: { from: T; data: T | undefined };
   /** Flag indicating whether the initial form defaults have been generated */
   initialDefaultsGenerated: boolean;
   /** The registry (re)computed only when props changed */
