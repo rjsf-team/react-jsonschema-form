@@ -733,6 +733,8 @@ interface MemoEntry {
   reachedDefault?: boolean;
   /** The `null` fills the fold of `value` recorded, which a hit records as its fold did */
   fills?: NullFills;
+  /** Whether the fold handed back the data it was given, which a hit hands back as the data its call gives */
+  echoesData?: boolean;
 }
 
 /** The props the fold hands each field: those of `computeDefaults()`, holding the data as it comes */
@@ -1537,27 +1539,19 @@ function leafOf<S extends StrictRJSFSchema>(field: DefaultsField<S>): object | u
  * `snapshotOf()`, and what they were computed from, the snapshot standing for the data: an edit leaves every other row
  * of a long list as it was, whose defaults are then not computed again (#3183). The state a call hands back is copied
  * off them, so no caller holds one. Only a fold that read nothing else of the call is kept: one that asked no
- * `fieldState` which option a field shows and recorded no `null` fill, which names the object of the data it is for
+ * `fieldState` which option a field shows, see `stateAsks`, and recorded no `null` fill, which names the object of the
+ * data it is for
  */
 const dataDefaults = new WeakMap<object, MemoEntry>();
 
-/** Where `foldChild()`'s inputs hold the child's data */
-const DATA_INPUT = 7;
+/** How many times the fold has asked a `fieldState` which option a field shows, which tells `foldChild()` whether the
+ * fold of a child asked
+ */
+let stateAsks = 0;
 
-/** Returns `fieldState` calling `onAsk` whenever anything of it is read */
-function askingState<S extends StrictRJSFSchema>(fieldState: FormFieldState<S>, onAsk: () => void): FormFieldState<S> {
-  return new Proxy(fieldState, {
-    get(target, key) {
-      onAsk();
-      const member: unknown = Reflect.get(target, key, target);
-      /* v8 ignore next 3 -- the fold reads only the methods of a `FormFieldState` */
-      if (typeof member !== 'function') {
-        return member;
-      }
-      // Called on the state itself, as a class holding private fields needs
-      return member.bind(target) as unknown;
-    },
-  });
+/** Whether `held` was computed from `inputs` */
+function isHeldFor(held: MemoEntry | undefined, inputs: readonly unknown[]): held is MemoEntry {
+  return held?.inputs.every((input, index) => Object.is(input, inputs[index])) ?? false;
 }
 
 /** Computes the defaults of the child `child` of a field, memoized across the passes of the field's fixed point, and
@@ -1570,7 +1564,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FoldProps<T, S, F>,
   memo: Map<string, MemoEntry> | undefined,
 ): unknown {
-  const inputs = [
+  const inputsOf = (data: unknown) => [
     context,
     child.graph,
     seedsKey(child.seeds),
@@ -1578,7 +1572,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     child.fallback,
     props.parentDefaults,
     props.parentConst,
-    props.rawFormData,
+    data,
     props.required,
     props.requiredAsRoot,
     props.includeUndefinedValues,
@@ -1591,37 +1585,30 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     props.leavesOutObjectConst,
     props.inheritsDeclared,
   ];
-  const leaf = leafOf(child);
-  let entry = [memo?.get(memoKey), leaf && leafDefaults.get(leaf)].find((held) =>
-    held?.inputs.every((input, index) => Object.is(input, inputs[index])),
-  );
   const data = props.rawFormData;
+  const inputs = inputsOf(data);
+  const leaf = leafOf(child);
+  let entry = [memo?.get(memoKey), leaf && leafDefaults.get(leaf)].find((held) => isHeldFor(held, inputs));
   // An option's fold reads the parent it is an option of through `optionOf`, which no input stands for
   const snapshot =
     entry === undefined && !props.optionOf && (Array.isArray(data) || isPlainObject(data))
       ? snapshotOf(data)
       : undefined;
   const dataInputs = snapshot && [
-    ...inputs.map((input, index) => (index === DATA_INPUT ? snapshot : input)),
+    ...inputsOf(snapshot),
     props.nullFills?.globalUiOptions,
     // A field offering options picks one by its data without a `fieldState`, which asks none
     props.fieldState !== undefined,
   ];
   const held = snapshot && dataDefaults.get(snapshot);
-  if (held?.inputs.every((input, index) => Object.is(input, dataInputs?.[index]))) {
+  if (dataInputs && isHeldFor(held, dataInputs)) {
     entry = held;
   }
   if (entry === undefined) {
     const computed: MemoEntry = { inputs, fills: freshFills(props.nullFills) };
-    let asksState = false;
+    const asksBefore = stateAsks;
     computed.value = foldField<T, S, F>(context, child, {
       ...props,
-      fieldState:
-        snapshot && props.fieldState
-          ? askingState(props.fieldState, () => {
-              asksState = true;
-            })
-          : props.fieldState,
       nullFills: computed.fills,
       memo: undefined,
       onNullFill: () => {
@@ -1638,13 +1625,13 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (leaf !== undefined && (typeof computed.value !== 'object' || computed.value === null)) {
       leafDefaults.set(leaf, computed);
     }
-    if (snapshot && dataInputs && !asksState && computed.fills?.overUndefined.isEmpty !== false) {
-      // A fold handing back the data it was given hands a later call the data that call gives it
-      dataDefaults.set(snapshot, {
-        ...computed,
-        inputs: dataInputs,
-        value: computed.value === data ? snapshot : computed.value,
-      });
+    if (snapshot && dataInputs) {
+      if (stateAsks === asksBefore && computed.fills?.overUndefined.isEmpty !== false) {
+        dataDefaults.set(snapshot, { ...computed, inputs: dataInputs, echoesData: computed.value === data });
+      } else {
+        // An entry for other inputs would only keep what it was computed from alive
+        dataDefaults.delete(snapshot);
+      }
     }
     entry = computed;
   }
@@ -1658,7 +1645,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (entry.reachedDefault) {
     props.onReachedDefault?.();
   }
-  return entry === held && entry.value === snapshot ? data : entry.value;
+  return entry === held && entry.echoesData === true ? data : entry.value;
 }
 
 /** Computes the defaults of a field from its view: the `const`, `default` and parent defaults that apply to it, the
@@ -2124,6 +2111,7 @@ function shownOptionIndex<T, S extends StrictRJSFSchema, F extends FormContextTy
   if (!fieldState || rendersOptionsAsSelect<S>(view.schema, options)) {
     return -1;
   }
+  stateAsks += 1;
   return fieldShownOption<S, F>(
     context,
     fieldState,

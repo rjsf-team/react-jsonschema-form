@@ -6,7 +6,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import type { FormRef } from '../src/index.ts';
 import Form from '../src/index.ts';
-import { handleOf } from './testUtils.tsx';
+import { handleOf, input } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -188,7 +188,7 @@ describe('the fills the sanitize of a deep form makes', () => {
         <Form schema={rows} validator={validator} initialFormData={initialFormData} />,
       );
       childFills.count = 0;
-      await user.type(container.querySelector<HTMLInputElement>('#root_1_a')!, 'x');
+      await user.type(input(container, 'root_1_a'), 'x');
       unmount();
       return childFills.count;
     };
@@ -197,5 +197,26 @@ describe('the fills the sanitize of a deep form makes', () => {
     // The edited row is still handed its fills, so the count is of fills the sanitize made
     expect(fillsInAShortList).toBeGreaterThan(0);
     expect(await fillsForAKeystrokeIn(40)).toBe(fillsInAShortList);
+  });
+
+  it('hands a fill to the keys of a wide object no more often for a wider one, as the user types into a key (#3183)', async () => {
+    const fillsForAKeystrokeIn = async (width: number) => {
+      const properties: Record<string, RJSFSchema> = {};
+      for (let index = 0; index < width; index += 1) {
+        properties[`k${index}`] = { type: 'string' };
+      }
+      const initialFormData = Object.fromEntries(Object.keys(properties).map((key) => [key, key]));
+      const { container, unmount } = render(
+        <Form schema={{ type: 'object', properties }} validator={validator} initialFormData={initialFormData} />,
+      );
+      childFills.count = 0;
+      await user.type(input(container, 'root_k1'), 'x');
+      unmount();
+      return childFills.count;
+    };
+
+    const narrow = await fillsForAKeystrokeIn(4);
+    expect(narrow).toBeGreaterThan(0);
+    expect(await fillsForAKeystrokeIn(40)).toBe(narrow);
   });
 });

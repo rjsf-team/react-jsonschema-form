@@ -106,7 +106,7 @@ describe('the cost of an edit to a wide object', () => {
     getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: { f0: 'b' } });
     expect(validator.calls).toBe(first);
   });
-  it('checks a condition once for the defaults of an edit whose data holds them', () => {
+  it('checks no condition again for the defaults of an edit that leaves the key it reads as it was', () => {
     const validator = miniValidator();
     const root: RJSFSchema = {
       type: 'object',
@@ -118,7 +118,7 @@ describe('the cost of an edit to a wide object', () => {
     const first = validator.calls;
     const edit = { ...(isObject(filled) ? filled : {}), other: 'v' };
     expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: edit })).toEqual(edit);
-    expect(validator.calls - first).toBe(1);
+    expect(validator.calls - first).toBe(0);
   });
   it('checks no condition again for an edit of a key no condition reads (#4051)', () => {
     const validator = miniValidator();
@@ -140,7 +140,7 @@ describe('the cost of an edit to a wide object', () => {
     expect(retrieveSchema(context, root, root, { kind: 'c', other: 'v' }).properties).toHaveProperty('c');
     expect(validator.calls).toBe(first + 3);
   });
-  it('checks a condition a default decides once against each data the first fill plans for', () => {
+  it('checks a condition a default decides once for each value of the key it reads the first fill plans for', () => {
     const validator = miniValidator();
     const root: RJSFSchema = {
       type: 'object',
@@ -149,10 +149,10 @@ describe('the cost of an edit to a wide object', () => {
       then: { properties: { t: { type: 'number', default: 2 } } },
     };
     expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root })).toEqual({ k: 'x', t: 2 });
-    // `{}`, the `{ k: 'x' }` its defaults fill it with and the `{ k: 'x', t: 2 }` the `then` adds
-    expect(validator.calls).toBe(3);
+    // `{}` and the `{ k: 'x' }` its defaults fill it with; the `{ k: 'x', t: 2 }` the `then` adds holds the same `k`
+    expect(validator.calls).toBe(2);
   });
-  it('checks an `if` several `allOf` entries share once against each data the fill copies', () => {
+  it('checks an `if` several `allOf` entries share once for each value of the key it reads', () => {
     const validator = miniValidator();
     const shared: RJSFSchema = { properties: { k: { const: 'x' } }, required: ['k'] };
     const entry = (key: string): RJSFSchema => ({
@@ -166,9 +166,8 @@ describe('the cost of an edit to a wide object', () => {
     };
     const filled = getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: {} });
     expect(filled).toEqual({ k: 'x', t: 1, u: 1 });
-    // The `{}` of the call once for both entries, as neither finds the `k` it reads changed, then once for both the
-    // `{ k: 'x' }` and `{ k: 'x', t: 1, u: 1 }` the fill copies
-    expect(validator.calls).toBe(3);
+    // The `{}` of the call, then the `{ k: 'x' }` the fill copies, whose `k` the `{ k: 'x', t: 1, u: 1 }` holds too
+    expect(validator.calls).toBe(2);
   });
   it('checks a condition the plans of a pass share once for the data they share', () => {
     const validator = miniValidator();
@@ -180,7 +179,7 @@ describe('the cost of an edit to a wide object', () => {
     };
     const root: RJSFSchema = { type: 'object', properties: { r } };
     expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root })).toEqual({ r: { k: 'x', c: 1 } });
-    expect(validator.calls).toBe(2);
+    expect(validator.calls).toBe(1);
   });
   it('parses no schema anew to find the option a selector picks among options that lack the selector', () => {
     const context = { validator: miniValidator() };
@@ -352,16 +351,15 @@ describe('the cost of an edit to a wide object', () => {
     expect([...edit('y')].filter((adopted) => !first.has(adopted))).toEqual([]);
   });
   describe('the defaults of a long list (#3183)', () => {
-    // Each row checks its `if` against its own data, so the validator's calls count the rows folded
-    const list: RJSFSchema = {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: { k: { type: 'string' } },
-        if: { properties: { k: { const: 'k1' } }, required: ['k'] },
-        then: { properties: { t: { type: 'string', default: 'd' } } },
-      },
+    // Each row checks its `if` against its own data, so the validator's calls count the rows folded. The `minProperties`
+    // makes the `if` read the whole row, so no check is spared for the value of `k` alone, see `conditionReads()`
+    const row: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string' } },
+      if: { properties: { k: { const: 'k1' } }, required: ['k'], minProperties: 1 },
+      then: { properties: { t: { type: 'string', default: 'd' } } },
     };
+    const list: RJSFSchema = { type: 'array', items: row };
     const rowsOf = (count: number) => Array.from({ length: count }, (_, index) => ({ k: `k${index}` }));
     const fill = (context: SchemaContext, formData: unknown, more?: object, schema = list) =>
       getDefaultFormState(context, { schema, rootSchema: schema, formData, ...more });
@@ -391,11 +389,7 @@ describe('the cost of an edit to a wide object', () => {
     it('folds each row again under other global options, and one holding a `null` fill on every call', () => {
       const validator = miniValidator();
       const context = { validator };
-      const items: RJSFSchema = {
-        ...(isObject(list.items) ? list.items : {}),
-        properties: { k: {}, n: { type: 'null' } },
-      };
-      const nulls: RJSFSchema = { type: 'array', items };
+      const nulls: RJSFSchema = { type: 'array', items: { ...row, properties: { k: {}, n: { type: 'null' } } } };
       const rows = [
         { k: 'k0', n: undefined },
         { k: 'k1', n: null },
