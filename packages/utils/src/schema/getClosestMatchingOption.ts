@@ -499,18 +499,20 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
     const declared: unknown = getByPath(retrievedOption(), [PROPERTIES_KEY, key]);
     return isObject(declared) && !hasSchemaMarker(declared, ADDITIONAL_PROPERTY_FLAG);
   };
+  // Retrieval throws on a reference that resolves to nothing, so such an option is never retrieved here
+  const broken = seeds.some(({ node }) => reachesBrokenRef<S>(graph, node));
   const declares = (key: string) =>
     seeds.some(({ node }) => declaresUnconditionally<S>(graph, node, key)) ||
     (plan !== undefined &&
       seeds.some(({ node }) => declaredProperties<S>(graph, node, key).length > 0) &&
-      declaresForData(key));
+      (broken || declaresForData(key)));
   const schema = plan?.schema ?? option;
   // An `allOf` entry, `then`, `else` or `dependencies` schema can name the extra-key keywords, which retrieval merges
   // into the option the field shows, so the keys it takes are read off that option. One reaching a reference that
   // resolves to nothing has no merge to read them off
   const merges =
     isObject(formData) &&
-    !seeds.some(({ node }) => reachesBrokenRef<S>(graph, node)) &&
+    !broken &&
     plan?.chains.some((chain) => [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY].some((keyword) => chain.has(keyword))) === true;
   const keyed = merges
     ? EXTRA_KEY_KEYWORDS.reduce<S>((copy, keyword) => {
@@ -604,8 +606,12 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     isObject(formData) && readsAbsentAsAllowed<S, F>(context)
       ? (listing ?? declaredListing<S>(options, rootSchema))
       : undefined;
+  const offeredAt = offering === undefined ? undefined : whereOf<S>(offering.offeredBy, rootSchema);
+  // A field reaching a reference that resolves to nothing, which retrieving it throws on, reads as no field offering them
   const field =
-    offering === undefined
+    offering === undefined ||
+    offeredAt === undefined ||
+    offeredAt.seeds.some(({ node }) => reachesBrokenRef<S>(offeredAt.graph, node))
       ? undefined
       : fieldTypeSchema<S, F>(context, withoutKeys<S>(offering.offeredBy, offering.keyword), rootSchema, formData);
   const readsAbsent = options.map((option) => field !== undefined && !rendersOwnFieldBesideOption<S>(field, option));
