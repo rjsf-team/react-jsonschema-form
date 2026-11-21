@@ -1889,6 +1889,32 @@ describe('ObjectField', () => {
       expect(value).toHaveFocus();
     });
 
+    it('should leave the typed name in the key input while a parent field has yet to store the rename', async () => {
+      const stored: (() => void)[] = [];
+      function DeferringField(props: FieldProps) {
+        const { ObjectField: Field } = props.registry.fields;
+        return (
+          <Field
+            {...props}
+            onChange={(...change: Parameters<FieldProps['onChange']>) => {
+              stored.push(() => props.onChange(...change));
+            }}
+          />
+        );
+      }
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:field': DeferringField },
+        initialFormData: { a: 'one' },
+      });
+
+      await renameKey(node, 'a', 'b');
+
+      expect(elementOf(node, '#root_a__key')).toHaveValue('b');
+      act(() => stored.forEach((store) => store()));
+      expect(elementOf(node, '#root_b__key')).toHaveValue('b');
+    });
+
     it('should not move focus for a key blurred unrenamed when a later move changes its path', async () => {
       const { node } = createFormComponent({
         schema: { type: 'array', items: { type: 'object', additionalProperties: { type: 'string' } } },

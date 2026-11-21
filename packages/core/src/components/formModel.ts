@@ -339,7 +339,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (committed !== start) {
       published = committed;
       publishedProps = committedProps;
-      if (isRenderedChange(committed, shown)) {
+      // What is on screen counts too: after a proposal a controlling parent declined, it is not the snapshot React
+      // read, and a proposal equal to that snapshot, as the same edit of a scalar root is, has yet to be declined
+      if (isRenderedChange(committed, shown) || isRenderedChange(committed, rendered)) {
         shown = committed;
       }
       listeners.forEach((listener) => listener());

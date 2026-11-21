@@ -88,6 +88,20 @@ describe('a form controlled through formData', () => {
     ]);
   });
 
+  it('holds the parent’s data after it declines the same edit of a scalar root twice', async () => {
+    const ref = createFormRef<string>();
+    const capped: Answer<string> = (proposed, held) => (proposed.length > 3 ? held : proposed);
+    const { container } = render(
+      <Parent<string> schema={{ type: 'string' }} initial='abc' answer={capped} ref={ref} />,
+    );
+
+    await user.type(input(container, 'root'), 'd');
+    await user.type(input(container, 'root'), 'd');
+
+    expect(input(container, 'root')).toHaveValue('abc');
+    expect(handleOf(ref).getFormData()).toBe('abc');
+  });
+
   it('shows what the parent made of an edit', async () => {
     const upper: Answer<Pair> = (proposed) => ({ ...proposed, a: proposed.a?.toUpperCase() });
     const { container } = render(

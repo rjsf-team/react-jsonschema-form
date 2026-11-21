@@ -1785,6 +1785,31 @@ describe('form data ownership', () => {
       expect(input(container, 'root_renamed')).toBe(renamed);
     });
 
+    it('a property keeps its instance when the parent answers its rename with both names', async () => {
+      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+      function Parent() {
+        const [data, setData] = useState<Record<string, string>>({ first: 'one', second: 'two' });
+        return (
+          <Form
+            schema={objectSchema}
+            validator={validator}
+            formData={data}
+            onChange={(event) => setData({ first: 'one', ...event.formData })}
+          />
+        );
+      }
+      const { container } = render(<Parent />);
+      const first = input(container, 'root_first');
+      const keyInput = input(container, 'root_first__key');
+
+      await user.clear(keyInput);
+      await user.type(keyInput, 'renamed');
+      await user.tab();
+
+      expect(input(container, 'root_renamed')).toHaveValue('one');
+      expect(input(container, 'root_first')).toBe(first);
+    });
+
     it.each([
       [
         'renamed',
