@@ -1,6 +1,6 @@
 import { deepEqualsUndefinedAsMissing } from './deepEquals.ts';
 import isPlainObject from './isPlainObject.ts';
-import { getByPath } from './pathUtils.ts';
+import { getByPath, pathToProperty } from './pathUtils.ts';
 import type { GenericObjectType } from './types.ts';
 
 /** The keys of `object` that hold a value, since a key holding `undefined` reads as one that is missing */
@@ -13,25 +13,57 @@ function keysHoldingValue(object: GenericObjectType): string[] {
  *
  * @param a - The first value, representing the original data to compare
  * @param b - The second value, representing the updated data to compare
- * @returns - An array of dotted paths, relative to `a`
+ * @returns - An array of paths, as lists of keys, relative to `a`
  */
-function getChangedDescendants(a: unknown, b: unknown): string[] {
+function getChangedDescendants(a: unknown, b: unknown): string[][] {
   if (isPlainObject(a) && isPlainObject(b)) {
-    return getChangedFields(a, b, true);
+    return getChangedFieldPaths(a, b, true);
   }
   // Arrays of a different length shift their items around, so nothing below them can be matched up by index.
   if (Array.isArray(a) && Array.isArray(b) && a.length === b.length) {
-    const changed: string[] = [];
+    const changed: string[][] = [];
     // By index, since an empty slot reads as `undefined` and iterating the array itself would skip it
     for (let index = 0; index < a.length; index++) {
       if (!deepEqualsUndefinedAsMissing(a[index], b[index])) {
         const descendants = getChangedDescendants(a[index], b[index]);
-        changed.push(...(descendants.length ? descendants.map((path) => `${index}.${path}`) : [String(index)]));
+        changed.push(...(descendants.length ? descendants.map((path) => [String(index), ...path]) : [[String(index)]]));
       }
     }
     return changed;
   }
   return [];
+}
+
+/** Does the work of `getChangedFields()`, returning each path as its list of keys
+ *
+ * @param a - The first object, representing the original data to compare
+ * @param b - The second object, representing the updated data to compare
+ * @param deep - Whether to descend into nested objects and same-length arrays
+ * @returns - An array of paths, as lists of keys, of the fields that have changed
+ */
+function getChangedFieldPaths(a: unknown, b: unknown, deep: boolean): string[][] {
+  if (a === b) {
+    return [];
+  }
+  // If only one of them is a plainObject all of its fields changed; if neither is, nothing did
+  if (!isPlainObject(a)) {
+    return isPlainObject(b) ? keysHoldingValue(b).map((key) => [key]) : [];
+  }
+  if (!isPlainObject(b)) {
+    return keysHoldingValue(a).map((key) => [key]);
+  }
+  const aKeys = Object.keys(a);
+  const aKeySet = new Set(aKeys);
+  const unequalFields = aKeys
+    .filter((key) => !deepEqualsUndefinedAsMissing(a[key], getByPath(b, key)))
+    .flatMap((key) => {
+      const descendants = deep ? getChangedDescendants(a[key], getByPath(b, key)) : [];
+      return descendants.length ? descendants.map((path) => [key, ...path]) : [[key]];
+    });
+  const diffFields = keysHoldingValue(b)
+    .filter((key) => !aKeySet.has(key))
+    .map((key) => [key]);
+  return [...unequalFields, ...diffFields];
 }
 
 /**
@@ -45,7 +77,9 @@ function getChangedDescendants(a: unknown, b: unknown): string[] {
  * @param a - The first object, representing the original data to compare.
  * @param b - The second object, representing the updated data to compare.
  * @param [deep=false] - Optional flag that, when true, descends into nested objects and same-length arrays and returns
- *          the dotted path of the deepest field that changed rather than the name of the top-level field holding it.
+ *          the dotted path of the deepest field that changed rather than the name of the top-level field holding it. A
+ *          key in the path that is empty or holds a `.`, `[` or `]` is written in brackets and single quotes, as
+ *          `pathToProperty()` writes it, so `propertyToPath()` reads the path back.
  * @returns - An array of field names that have changed.
  *
  * @example
@@ -61,30 +95,5 @@ function getChangedDescendants(a: unknown, b: unknown): string[] {
  * console.log(getChangedFields(a, b, true)); // Output: ['items.0.qux']
  */
 export default function getChangedFields(a: unknown, b: unknown, deep = false): string[] {
-  if (a === b) {
-    return [];
-  }
-  // If only one of them is a plainObject all of its fields changed; if neither is, nothing did
-  if (!isPlainObject(a)) {
-    return isPlainObject(b) ? keysHoldingValue(b) : [];
-  }
-  if (!isPlainObject(b)) {
-    return keysHoldingValue(a);
-  }
-  const aKeys = Object.keys(a);
-  const aKeySet = new Set(aKeys);
-  const unequalFields = aKeys
-    .filter((key) => !deepEqualsUndefinedAsMissing(a[key], getByPath(b, key)))
-    .flatMap((key) => {
-      if (!deep) {
-        return [key];
-      }
-      // A key holding a `.` or a `[` is descended into like any other. The path it produces cannot be told apart from
-      // a path through nested keys, but neither can the entry an `ErrorSchema` keeps for it, since `toErrorSchema()`
-      // spells such a name out as a path in the same way, so the two agree on where the field lives.
-      const descendants = getChangedDescendants(a[key], getByPath(b, key));
-      return descendants.length ? descendants.map((path) => `${key}.${path}`) : [key];
-    });
-  const diffFields = keysHoldingValue(b).filter((key) => !aKeySet.has(key));
-  return [...unequalFields, ...diffFields];
+  return getChangedFieldPaths(a, b, deep).map((path) => (deep ? pathToProperty(path).replace(/^\./, '') : path[0]));
 }

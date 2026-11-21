@@ -15,10 +15,10 @@ import {
   createErrorHandler,
   getByPath,
   getDefaultFormState,
-  getUiOptions,
+  getValidatorErrorUiTitle,
   ONE_OF_KEY,
+  pathToProperty,
   toErrorSchema,
-  toPath,
   unwrapErrorHandler,
   validationDataMerge,
 } from '@rjsf/utils';
@@ -125,7 +125,7 @@ export function transformRJSFValidationErrors<
   const errorList = errors.map((e: ErrorObject) => {
     const { instancePath, keyword, params, schemaPath, parentSchema, ...rest } = e;
     let { message = '' } = rest;
-    let property = instancePath.split('/').map(unescapePointerToken).join('.');
+    let property = pathToProperty(instancePath.split('/').slice(1).map(unescapePointerToken));
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
     const depNames = dependencyNames(e);
@@ -166,9 +166,13 @@ export function transformRJSFValidationErrors<
 
       stack = message;
     } else {
-      const uiSchemaTitle = getUiOptions<T, S, F>(
-        getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(property)),
-      ).title;
+      const uiSchemaTitle = getValidatorErrorUiTitle<T, S, F>({
+        property,
+        schemaPath,
+        decodeSchemaPathKey: decodeSchemaPathToken,
+        uiSchema,
+        schema,
+      });
 
       if (uiSchemaTitle) {
         stack = `'${uiSchemaTitle}' ${message}`.trim();
@@ -185,7 +189,9 @@ export function transformRJSFValidationErrors<
 
     const { missingProperty } = params;
     if (typeof missingProperty === 'string') {
-      property = property ? `${property}.${missingProperty}` : missingProperty;
+      const missing = pathToProperty([missingProperty]);
+      // A missing property of the root is filed under its bare name
+      property = property ? `${property}${missing}` : missing.replace(/^\./, '');
     }
 
     // put data in expected format

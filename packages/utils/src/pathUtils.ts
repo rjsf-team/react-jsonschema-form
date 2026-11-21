@@ -10,13 +10,13 @@ export type ObjectPath = string | number | FieldPathList;
 /** Matches unsigned integer strings that represent valid array indexes */
 const reIsIndex = /^(?:0|[1-9]\d*)$/;
 
-/** Converts a dotted path string, such as produced for validation error properties, into its list of
- * path segments. Array indexes may be written bracketed (`'a[0].b'`) or dotted (`'a.0.b'`), and empty
- * segments — from a leading `.`, a trailing `.` or a `..` run — are dropped.
+/** Converts a dotted path string into its list of path segments; read the `property` of a validation error with
+ * `propertyToPath()`, which reads a key written in brackets and single quotes whole. Array indexes may be written
+ * bracketed (`'a[0].b'`) or dotted (`'a.0.b'`), and empty segments — from a leading `.`, a trailing `.` or a `..` run —
+ * are dropped.
  *
- * Only the grammar RJSF itself produces is supported: dots and brackets are always separators, so
- * quoted keys are not recognized and keys containing dots must be addressed with a segment list
- * instead of a string.
+ * Dots and brackets are always separators, so quoted keys are not recognized and keys containing dots
+ * must be addressed with a segment list instead of a string.
  *
  * This is NOT the parser for a `FieldPath`, which looks similar but escapes reserved characters and
  * distinguishes an array index from a numeric key. Read one of those with `fieldPathToList` instead;
@@ -29,14 +29,36 @@ export function toPath(path: string): string[] {
   return path.split(/[.[\]]+/).filter(Boolean);
 }
 
+/** Matches a segment of an error's `property`: a bracketed, single-quoted key (group 1, its `\` and `'` escaped by a
+ * backslash) or a run of characters other than `.`, `[` and `]`
+ */
+const rePropertySegment = /\['((?:[^'\\]|\\.)*)'\]|[^.[\]]+/g;
+
 /** Converts the `property` of a validation error into its list of path segments, the way `toErrorSchema()` keys the
- * errors it builds. A missing `property`, or one naming the root element (`''` or `'.'`), gives an empty path
+ * errors it builds. A key written in brackets and single quotes, such as the `'a.b'` of `"['a.b'].name"`, is read whole.
+ * A missing `property`, or one naming the root element (`''` or `'.'`), gives an empty path
  *
  * @param [property] - The `property` of an `RJSFValidationError`, such as `'.level1.level2[2].level3'`
  * @returns - The list of path segments, such as `['level1', 'level2', '2', 'level3']`
  */
 export function propertyToPath(property?: string): string[] {
-  return property ? toPath(property) : [];
+  return property
+    ? Array.from(property.matchAll(rePropertySegment), ([segment, quoted]) =>
+        quoted === undefined ? segment : quoted.replace(/\\(.)/g, '$1'),
+      )
+    : [];
+}
+
+/** Writes a list of path segments as the `property` of a validation error, the reverse of `propertyToPath()`. Each key
+ * is written as `.key`, or in brackets and single quotes, such as `['a.b']`, when it is empty or holds a `.`, `[` or `]`
+ *
+ * @param path - The list of path segments, such as `['a.b', 'name']`
+ * @returns - The `property`, such as `"['a.b'].name"`, or `''` for an empty path
+ */
+export function pathToProperty(path: string[]): string {
+  return path
+    .map((key) => (key === '' || /[.[\]]/.test(key) ? `['${key.replace(/[\\']/g, '\\$&')}']` : `.${key}`))
+    .join('');
 }
 
 /** Normalizes an `ObjectPath` into a list of path segments, wrapping a single key into a one-element list */
@@ -45,7 +67,7 @@ function normalizePath(path: ObjectPath): FieldPathList {
 }
 
 /** Determines whether a path segment represents a valid array index */
-function isIndex(segment: string | number): boolean {
+export function isIndex(segment: string | number): boolean {
   return typeof segment === 'number' ? Number.isInteger(segment) && segment >= 0 : reIsIndex.test(segment);
 }
 

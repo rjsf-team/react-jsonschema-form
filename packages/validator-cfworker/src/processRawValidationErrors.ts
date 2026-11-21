@@ -17,11 +17,12 @@ import {
   getDefaultFormState,
   getFieldSchemaPath,
   getKeywordParentSchema,
-  getUiOptions,
+  getValidatorErrorUiTitle,
   ONE_OF_KEY,
+  pathToProperty,
   PROPERTIES_KEY,
+  propertyToPath,
   toErrorSchema,
-  toPath,
   unwrapErrorHandler,
   validationDataMerge,
 } from '@rjsf/utils';
@@ -38,7 +39,7 @@ function decodePointerToken(token: string): string {
   return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
-/** Converts a cfworker instance location into RJSF's dot-separated property path.
+/** Converts a cfworker instance location into RJSF's property path, as `pathToProperty()` writes it.
  *
  * @param instanceLocation - The instance location emitted by `@cfworker/json-schema`
  * @returns - The corresponding RJSF property path
@@ -47,7 +48,7 @@ function instanceLocationToProperty(instanceLocation: string): string {
   if (!instanceLocation || instanceLocation === '#') {
     return '';
   }
-  return instanceLocation.replace(/^#?/, '').split('/').map(decodePointerToken).join('.');
+  return pathToProperty(instanceLocation.replace(/^#?\//, '').split('/').map(decodePointerToken));
 }
 
 /** Extracts the property names a cfworker `required`, `dependentRequired` or `dependencies` error names.
@@ -146,22 +147,23 @@ export function transformRJSFValidationErrors<
       });
       message = applied.message;
       uiTitle = applied.titles.get(missingProperty) ?? '';
-      property = property ? `${property}.${missingProperty}` : missingProperty;
+      const missing = pathToProperty([missingProperty]);
+      // A missing property of the root is filed under its bare name
+      property = property ? `${property}${missing}` : missing.replace(/^\./, '');
       stack = message;
     } else {
-      const propertyPath = property.replace(/^\./, '');
-      const uiSchemaTitle = getUiOptions<T, S, F>(
-        getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(propertyPath)),
-      ).title;
+      const uiSchemaTitle = getValidatorErrorUiTitle<T, S, F>({
+        property,
+        schemaPath: keywordLocation,
+        decodeSchemaPathKey: decodePointerToken,
+        uiSchema,
+        schema,
+      });
       const schemaTitle = schema
-        ? getByPath<string | undefined>(
-            schema,
-            propertyPath
-              .split('.')
-              .filter(Boolean)
-              .flatMap((part) => [PROPERTIES_KEY, part])
-              .concat(['title']),
-          )
+        ? getByPath<string | undefined>(schema, [
+            ...propertyToPath(property).flatMap((part) => [PROPERTIES_KEY, part]),
+            'title',
+          ])
         : undefined;
       // A `false` schema's location is its instance's, whose keys name no branch
       const fieldLocation = keyword === 'false' ? keywordLocation : getFieldSchemaPath(keywordLocation);
