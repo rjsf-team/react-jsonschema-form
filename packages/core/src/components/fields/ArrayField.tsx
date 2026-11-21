@@ -554,23 +554,6 @@ function itemButtonOptions<T, S extends StrictRJSFSchema, F extends FormContextT
   return { orderable, removable, copyable };
 }
 
-/** Whether Copy can ever show on an array's items, whatever their number. Copy shows only while an item can be added,
- * so this asks the rule the array's own Add and Copy buttons follow, `isAddable` and `belowMaxItems`, about the fewest
- * items there can be with one to copy, `itemsBeforeCopy`
- */
-function canEverCopy<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schema: S,
-  uiOptions: UIOptionsType<T[], S, F>,
-  itemsBeforeCopy: number,
-  isTuple: boolean,
-) {
-  return (
-    itemButtonOptions(uiOptions).copyable &&
-    isAddable<T, S, F>(schema, uiOptions, isTuple) &&
-    belowMaxItems(schema, itemsBeforeCopy)
-  );
-}
-
 /** The title of one of an item's buttons, or undefined when the item has no name or the button can't show. Memoized per
  * button, so that a change to whether one button shows doesn't re-translate the others.
  */
@@ -600,40 +583,38 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
   fixedItemCount?: number,
 ): (string | undefined)[] | undefined {
   const { itemLabel, showCollapseButton } = uiOptions;
-  // A uiSchema from JSON isn't type-checked, so a value other than a path leaves the items unnamed rather than throwing
-  const labelled = typeof itemLabel === 'string' && itemLabel !== '';
-  const isTuple = fixedItemCount !== undefined;
-  const canCopy = useMemo(
-    () => labelled && canEverCopy<T, S, F>(schema, uiOptions, Math.max(fixedItemCount ?? 0, 1), isTuple),
-    [labelled, isTuple, fixedItemCount, schema, uiOptions],
-  );
-  const { orderable, removable } = itemButtonOptions(uiOptions);
-  const hasButtons = orderable || removable || canCopy || showCollapseButton === true;
   const path = useMemo(() => {
-    if (!labelled || !hasButtons) {
+    if (typeof itemLabel !== 'string' || !itemLabel) {
       return undefined;
     }
     if (itemLabel === '.') {
       return [];
     }
-    // Only `'.'` names an item by its own value, so a path of nothing but separators, such as `'[]'`, names nothing
     const segments = toPath(itemLabel);
-    return segments.length > 0 ? segments : undefined;
-  }, [labelled, hasButtons, itemLabel]);
-  // Without disclosures, only the last of a tuple's fixed items can need a name for Copy
+    return segments.length ? segments : undefined;
+  }, [itemLabel]);
+  const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
+  const canCopy =
+    path !== undefined &&
+    copyable &&
+    isAddable<T, S, F>(schema, uiOptions, fixedItemCount !== undefined) &&
+    belowMaxItems(schema, Math.max(1, fixedItemCount ?? 0));
+  const hasButtons = orderable || removable || canCopy || showCollapseButton === true;
+  // Without disclosures, only the last of a tuple's fixed items can need a name for Copy.
   const firstNamedIndex = showCollapseButton ? 0 : Math.max((fixedItemCount ?? 0) - (canCopy ? 1 : 0), 0);
   // Serialized, so that the numbering below reruns only when a name or the items' order changes, not on every edit to
   // another field
   const namesKey = useMemo(
     () =>
-      path &&
-      JSON.stringify(
-        keyedItems.map(({ order, item }, index) => [
-          index < firstNamedIndex ? null : (itemNameFrom(path.length === 0 ? item : getByPath(item, path)) ?? null),
-          order,
-        ]),
-      ),
-    [keyedItems, path, firstNamedIndex],
+      hasButtons && path
+        ? JSON.stringify(
+            keyedItems.map(({ order, item }, index) => [
+              index < firstNamedIndex ? null : (itemNameFrom(path.length === 0 ? item : getByPath(item, path)) ?? null),
+              order,
+            ]),
+          )
+        : undefined,
+    [keyedItems, path, hasButtons, firstNamedIndex],
   );
   const { translateString } = registry;
   return useMemo(
@@ -871,12 +852,12 @@ function ArrayFieldItemInner<
   let children = <ItemSchemaField {...itemFieldProps} />;
   const hasDisclosure = uiOptions.showCollapseButton === true && !itemHidden;
   if (hasDisclosure) {
-    let label = itemName;
-    if (label === undefined) {
-      const translatedItemTitle = translateString(TranslatableString.ArrayItemTitle);
-      const numberedLabel = numberedItemLabel(translateString, translatedItemTitle, index + 1);
-      label = numberedLabel || title || String(index + 1);
-    }
+    const position = index + 1;
+    const label =
+      itemName ??
+      (numberedItemLabel(translateString, translateString(TranslatableString.ArrayItemTitle), position) ||
+        title ||
+        String(position));
     children = (
       <ArrayItemDisclosure
         autoCollapse={uiOptions.autoCollapse}
