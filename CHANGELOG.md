@@ -7,6 +7,21 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 # 7.0.0-beta.2
 
+## @rjsf/core
+
+- **BREAKING CHANGE:** Change `formData` to be the form's data, as `value` is an `<input>`'s, and no longer deprecated: the form shows what you pass, and shows an edit once you pass it back, so a form that stores no edit shows none. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-passed-formdata-shows-only-what-you-pass-back) ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
+- **BREAKING CHANGE:** Change a submit with `omitExtraData` on a form passed `formData` to leave the form showing what you pass; `onSubmit` still gets the data without its extra fields. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-passed-formdata-shows-only-what-you-pass-back) ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
+- Remove the development warning for a `formData` that changes after mount, which the form now shows ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
+- Fix the key input of an additional property showing the name typed into it after `transformChange` refused the rename, or the form gave the property another free name ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
+
+## @rjsf/snapshot-tests
+
+- Add a test to `renamedKeyTests()` that a rename declined by a parent passing `formData` leaves the key input showing the property's name ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
+
+## @rjsf/utils
+
+- **BREAKING CHANGE:** Remove the `form-data-ignored` warning ID from `WarningId`, since `Form` no longer gives that warning; remove it from `setWarningOptions()`'s `throwOn` and `except`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-passed-formdata-shows-only-what-you-pass-back) ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
+
 # 7.0.0-beta.1 (2026-11-20)
 
 ## @rjsf/antd

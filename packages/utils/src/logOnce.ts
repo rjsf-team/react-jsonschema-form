@@ -35,7 +35,6 @@ const WARNING_CATEGORIES = {
   'layout-grid-renders-nothing': 'migration',
   'option-field-ignored': 'migration',
   'form-data-not-passed-through': 'migration',
-  'form-data-ignored': 'migration',
   'form-data-both-seeds': 'migration',
   'global-ui-options-key-not-read': 'config',
   'ui-widget-options-object': 'config',
