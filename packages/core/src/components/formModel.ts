@@ -344,8 +344,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       const proposedFrom = isProposedIn(committed)
         ? (start.proposedFrom ?? (isProposedIn(start) ? undefined : start))
         : undefined;
-      if (committed.proposedFrom !== proposedFrom) {
-        committed = { ...committed, proposedFrom };
+      // The blurs are kept only beside a proposal: with none outstanding, the touches they left stand
+      const proposedBlurs = proposedFrom ? committed.proposedBlurs : undefined;
+      if (committed.proposedFrom !== proposedFrom || committed.proposedBlurs !== proposedBlurs) {
+        committed = { ...committed, proposedFrom, proposedBlurs };
       }
     }
     if (isDevelopment) {

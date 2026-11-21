@@ -1954,20 +1954,26 @@ function markBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   { fieldPath, touches, dataAtBlur }: BlurAtData<T>,
 ): FormState<T, S, F> {
-  const { touchedPaths, revealed } = current;
   const isRevealed = props.liveErrors === 'field' && isBlurValidated(props);
+  // Recorded for a controlling parent that declines a proposal made beside the blur, see `withTouchesOf()`. As
+  // reported, since the field that reported it rendered before the proposal, whatever the proposal did to its path
+  const blurred =
+    props.formData === undefined || touches === 'nothing'
+      ? current
+      : { ...current, proposedBlurs: [...(current.proposedBlurs ?? []), { fieldPath, touches }] };
+  const { touchedPaths, revealed } = blurred;
   if (isPathDropped(fieldPath, dataAtBlur, current.formData)) {
-    return current;
+    return blurred;
   }
   if (touches === 'nothing') {
     return isRevealed
-      ? { ...current, revealed: { ...revealed, containers: withPaths(revealed.containers, fieldPath) } }
-      : current;
+      ? { ...blurred, revealed: { ...revealed, containers: withPaths(revealed.containers, fieldPath) } }
+      : blurred;
   }
   const touched =
     touches === 'leaves' ? leafPathsOf(getAt(current.formData, fieldPathToList(fieldPath)), fieldPath) : [fieldPath];
   return {
-    ...current,
+    ...blurred,
     touchedPaths: withPaths(touchedPaths, ...touched),
     revealed: isRevealed ? { ...revealed, fields: withPaths(revealed.fields, fieldPath) } : revealed,
   };
@@ -2157,6 +2163,7 @@ function asControlledBy<T, S extends StrictRJSFSchema, F extends FormContextType
     ...state,
     controlled: isRecorded ? state.controlled : { from, data: state.formData },
     proposedFrom: undefined,
+    proposedBlurs: undefined,
   };
 }
 
@@ -2211,22 +2218,19 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
 }
 
 /** `before`, the state a declined proposal leaves the form in, with the fields blurred since then touched: a blur is
- * no proposal, so a parent declining the edit made in the same event does not decline it. `proposed` holds those
- * touches, and the ones `before` holds wherever the proposals left them.
- *
- * shortcut: a proposal that moved a touched field's keys, as a reorder does, leaves the touches as `before` holds
- * them, so a blur in the same event as a declined move is lost; record the blurs apart from the moves if that matters
+ * no proposal, so a parent declining the edit made in the same event does not decline it. The blurs are applied as
+ * their fields reported them, to the data `before` holds: no render comes between a proposal and its answer, so each
+ * was reported by a field rendered for that data, at the path it has there, wherever the proposal moved its keys
  */
 function withTouchesOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   before: FormState<T, S, F>,
   proposed: FormState<T, S, F>,
 ): FormState<T, S, F> {
-  const { touchedPaths } = proposed;
-  const isMoved = [...before.touchedPaths].some((fieldPath) => !touchedPaths.has(fieldPath));
-  if (touchedPaths === before.touchedPaths || isMoved) {
-    return before;
-  }
-  return { ...before, touchedPaths: withoutDroppedPaths(touchedPaths, proposed.formData, before.formData) };
+  const touched = (proposed.proposedBlurs ?? []).flatMap(({ fieldPath, touches }) =>
+    touches === 'leaves' ? leafPathsOf(getAt(before.formData, fieldPathToList(fieldPath)), fieldPath) : [fieldPath],
+  );
+  const touchedPaths = withPaths(before.touchedPaths, ...touched);
+  return touchedPaths === before.touchedPaths ? before : { ...before, touchedPaths };
 }
 
 /** Whether `state` holds a proposal a controlling parent has yet to answer: data other than its `formData` gave */

@@ -384,6 +384,33 @@ describe('a form controlled through formData', () => {
       expect(handleOf(ref).getStatus().touchedFields).toEqual({ a: true });
     });
 
+    it('marks the row blurred in the same event as a reorder the parent declines, beside one touched before', async () => {
+      const ref = createFormRef<string[]>();
+      const { container } = render(
+        <Parent<string[]>
+          ref={ref}
+          schema={{ type: 'array', items: { type: 'string' } }}
+          initial={['a', 'b', 'c']}
+          answer={decline}
+        />,
+      );
+      await user.click(input(container, 'root_0'));
+      await user.tab();
+      const moveDown = container.querySelector<HTMLButtonElement>('.rjsf-array-item-move-down')!;
+      const third = input(container, 'root_2');
+
+      // In one `act()`, so the blur reaches the form before React renders the parent's answer to the reorder, as a
+      // widget that reorders and blurs in one handler does. user-event flushes React after each of its calls
+      act(() => {
+        moveDown.click();
+        third.focus();
+        third.blur();
+      });
+
+      expect(input(container, 'root_0')).toHaveValue('a');
+      expect(handleOf(ref).getStatus().touchedFields).toEqual([true, undefined, true]);
+    });
+
     it('stays on the row that was blurred when the parent declines a reorder', async () => {
       const ref = createFormRef<string[]>();
       const { container } = render(
