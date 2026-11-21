@@ -223,6 +223,20 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
 const conditionMemo = new KeyedMemo<boolean>();
 
+/** The checks of a condition against the values it reads of an object, see `conditionReads()` */
+const readsMemo = new KeyedMemo<boolean>();
+
+/** Returns what `memo` holds under `keys` for `values`, or else what `check` says, which it then holds */
+function latestCheck(memo: KeyedMemo<boolean>, keys: unknown[], values: unknown[], check: () => boolean): boolean {
+  const memoized = memo.peekLatest(keys, values);
+  if (memoized !== undefined) {
+    return memoized;
+  }
+  const holds = check();
+  memo.setLatest(keys, values, holds);
+  return holds;
+}
+
 /** Stands in the values a condition reads for a key the data doesn't hold, which `required` tells from `undefined` */
 const ABSENT = Symbol('absent');
 
@@ -306,10 +320,9 @@ export function ownedDepData<S extends StrictRJSFSchema>(
 }
 
 /** Returns whether `data` satisfies `checked.condition`, a condition of `graph`. A check of data that
- * is no object is memoized for the last data it was made on. One of an object is memoized only for a copy
- * `ownedDepData()` made, which also decides the conditions fixed for it; another object is checked on every call,
- * since a caller may mutate it in place between checks, unless the values the condition reads of it, see
- * `conditionReads()`, are the primitives it was last checked on
+ * is no object is memoized for the last data it was made on. One of an object is memoized for the primitives the
+ * condition reads of it last checked, see `conditionReads()`, and for a copy `ownedDepData()` made, which also decides
+ * the conditions fixed for it; any other is checked on every call, since a caller may mutate it in place between checks
  *
  * @param context - The `SchemaContext` whose validator checks the condition
  * @param graph - The graph the condition is a node of
@@ -323,37 +336,28 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
   { key, site, condition, reads }: Omit<CheckedCondition<S>, 'satisfied'>,
   data: unknown,
 ): boolean {
-  if (typeof data === 'object' && data !== null) {
-    const owned = ownedDecisions.get(data);
-    const check = () => context.validator.isValid(condition, data, graph.rawRoot);
-    if (owned) {
-      return owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], check);
-    }
-    if (reads === undefined || !isObject(data)) {
-      return check();
-    }
-    // Under a key of their own, apart from the checks of data that is no object
-    const readKeys = [context.validator, graph, key, ABSENT];
-    const values = reads.map((read) => (Object.hasOwn(data, read) ? data[read] : ABSENT));
-    const decided = conditionMemo.peekLatest(readKeys, values);
-    if (decided !== undefined) {
-      return decided;
-    }
-    const satisfied = check();
-    // Stored only where every value is a primitive, see `KeyedMemo.setLatest()`
-    conditionMemo.setLatest(readKeys, values, satisfied);
-    return satisfied;
-  }
   const keys = [context.validator, graph, key];
-  const memoized = conditionMemo.peekLatest(keys, [data]);
-  if (memoized !== undefined) {
-    return memoized;
+  if (typeof data === 'object' && data !== null) {
+    const isValid = () => context.validator.isValid(condition, data, graph.rawRoot);
+    // Held only where every value is a primitive, see `KeyedMemo.setLatest()`
+    const check =
+      reads && isObject(data)
+        ? () =>
+            latestCheck(
+              readsMemo,
+              keys,
+              reads.map((read) => (Object.hasOwn(data, read) ? data[read] : ABSENT)),
+              isValid,
+            )
+        : isValid;
+    const owned = ownedDecisions.get(data);
+    return owned ? (owned.peek([graph, site]) ?? owned.get(keys, check)) : check();
   }
   // A field with no data is checked as an empty object: `required` constrains only objects, so the missing data
   // itself would hold every `if` that requires a key
-  const holds = context.validator.isValid(condition, data ?? {}, graph.rawRoot);
-  conditionMemo.setLatest(keys, [data], holds);
-  return holds;
+  return latestCheck(conditionMemo, keys, [data], () =>
+    context.validator.isValid(condition, data ?? {}, graph.rawRoot),
+  );
 }
 
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
