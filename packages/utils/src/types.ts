@@ -1567,8 +1567,6 @@ export type ArrayFieldItemButtonsTemplateProps<
   hasRemove: boolean;
   /** A number stating the index the array item occurs in `items` */
   index: number;
-  /** A number stating the total number `items` in the array */
-  totalItems: number;
   /** Callback function that adds a new item below this item, or does nothing where its button can't act. React clears the event's `currentTarget` once dispatch ends, so it is `null` in a handler that reads it after an `await` */
   onAddItem: (event?: SyntheticEvent<HTMLElement>) => void;
   /** Callback function that copies this item below itself, or does nothing where its button can't act. Its event follows the same rule as `onAddItem`'s */
@@ -1614,8 +1612,6 @@ export type ArrayFieldItemTemplateProps<
   hasToolbar: boolean;
   /** A number stating the index the array item occurs in `items` */
   index: number;
-  /** A number stating the total number `items` in the array */
-  totalItems: number;
   /** Whether the array item's buttons are read-only, by the array's lock or the item's own; its inputs can stay editable, under an item's `ui:readonly: false` */
   readonly?: boolean;
   /** A stable, unique key for the array item */

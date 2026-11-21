@@ -15,6 +15,7 @@ import {
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
+  REQUIRED_KEY,
   REF_KEY,
   RJSF_REF_KEY,
   THEN_KEY,
@@ -90,6 +91,8 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
   readonly site: string;
   readonly condition: S;
   readonly satisfied: boolean;
+  /** The keys of the data whose values alone decide the condition, see `conditionReads()`; none where more may */
+  readonly reads?: readonly string[];
 }
 
 /** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
@@ -220,6 +223,45 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
 const conditionMemo = new KeyedMemo<boolean>();
 
+/** Stands in the values a condition reads for a key the data doesn't hold, which `required` tells from `undefined` */
+const ABSENT = Symbol('absent');
+
+const READS_ONLY_OWN_KEYS = new Set<string>([PROPERTIES_KEY, REQUIRED_KEY, 'type']);
+
+const conditionReadsMemo = new WeakMap<object, { readonly keys?: readonly string[] }>();
+
+/** Whether `properties` may hold Ajv's `$data`, as do those `JSON.stringify()` can't write: a schema holding itself, or
+ * a BigInt
+ */
+function mayHoldDataRef(properties: object): boolean {
+  try {
+    return JSON.stringify(properties).includes('"$data"');
+  } catch {
+    return true;
+  }
+}
+
+/** Returns the keys of an object whose values alone decide whether it satisfies `condition`: those its `properties`
+ * and `required` name, where it holds no other keyword but `type`. An edit of another key then leaves the condition
+ * as it was decided (#4051). None for a condition holding Ajv's `$data`, which reads a value beside the one it checks
+ *
+ * @param condition - The `if` as the schema declares it
+ * @returns - The keys, or undefined where the condition may read more of the data
+ */
+export function conditionReads<S extends StrictRJSFSchema>(condition: S): readonly string[] | undefined {
+  let reads = conditionReadsMemo.get(condition);
+  if (reads === undefined) {
+    const { properties, required } = condition;
+    const readsOwnKeys =
+      Object.keys(condition).every((keyword) => READS_ONLY_OWN_KEYS.has(keyword)) &&
+      (properties === undefined || (isObject(properties) && !mayHoldDataRef(properties))) &&
+      (required === undefined || Array.isArray(required));
+    reads = readsOwnKeys ? { keys: [...new Set([...Object.keys(properties ?? {}), ...(required ?? [])])] } : {};
+    conditionReadsMemo.set(condition, reads);
+  }
+  return reads.keys;
+}
+
 /** How the conditions checked against dependency data a fill of the defaults copied for itself are decided, by the
  * copy: each the fill fixed, under its graph and site, as fixed, and each other, under the validator too, as the
  * validator first checked it
@@ -266,7 +308,8 @@ export function ownedDepData<S extends StrictRJSFSchema>(
 /** Returns whether `data` satisfies `checked.condition`, a condition of `graph`. A check of data that
  * is no object is memoized for the last data it was made on. One of an object is memoized only for a copy
  * `ownedDepData()` made, which also decides the conditions fixed for it; another object is checked on every call,
- * since a caller may mutate it in place between checks
+ * since a caller may mutate it in place between checks, unless the values the condition reads of it, see
+ * `conditionReads()`, are the primitives it was last checked on
  *
  * @param context - The `SchemaContext` whose validator checks the condition
  * @param graph - The graph the condition is a node of
@@ -277,13 +320,29 @@ export function ownedDepData<S extends StrictRJSFSchema>(
 export function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
-  { key, site, condition }: Omit<CheckedCondition<S>, 'satisfied'>,
+  { key, site, condition, reads }: Omit<CheckedCondition<S>, 'satisfied'>,
   data: unknown,
 ): boolean {
   if (typeof data === 'object' && data !== null) {
     const owned = ownedDecisions.get(data);
     const check = () => context.validator.isValid(condition, data, graph.rawRoot);
-    return owned ? (owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], check)) : check();
+    if (owned) {
+      return owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], check);
+    }
+    if (reads === undefined || !isObject(data)) {
+      return check();
+    }
+    // Under a key of their own, apart from the checks of data that is no object
+    const readKeys = [context.validator, graph, key, ABSENT];
+    const values = reads.map((read) => (Object.hasOwn(data, read) ? data[read] : ABSENT));
+    const decided = conditionMemo.peekLatest(readKeys, values);
+    if (decided !== undefined) {
+      return decided;
+    }
+    const satisfied = check();
+    // Stored only where every value is a primitive, see `KeyedMemo.setLatest()`
+    conditionMemo.setLatest(readKeys, values, satisfied);
+    return satisfied;
   }
   const keys = [context.validator, graph, key];
   const memoized = conditionMemo.peekLatest(keys, [data]);
@@ -1121,10 +1180,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       : schemaFrom(schema, merged);
   }
 
-  private holds(key: string, condition: S, site = key): boolean {
+  private holds(key: string, condition: S, site = key, reads?: readonly string[]): boolean {
     this.readsData = true;
-    const satisfied = checkCondition(this.context, this.graph, { key, site, condition }, this.depData);
-    this.checked.push({ key, site, condition, satisfied });
+    const satisfied = checkCondition(this.context, this.graph, { key, site, condition, reads }, this.depData);
+    this.checked.push({ key, site, condition, satisfied, reads });
     return satisfied;
   }
 
@@ -1150,7 +1209,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // function for the schema it reads as
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), `if:${conditionProvider.node.id}`)
+        ? this.holds(
+            `if:${condition}`,
+            targetOf(this.graph, condition),
+            `if:${conditionProvider.node.id}`,
+            conditionReads(conditionNode.raw),
+          )
         : conditionNode.kind !== 'boolean' || conditionNode.value;
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);

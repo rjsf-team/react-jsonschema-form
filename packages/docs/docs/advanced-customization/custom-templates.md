@@ -241,7 +241,6 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `disabled`: Whether the array item's buttons are disabled, by the array's lock or the item's own. Its inputs can stay enabled, under an item's `ui:disabled: false`.
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
-- `totalItems`: A number stating the total number `items` in the array.
 - `itemKey`: A stable, unique key for the array item.
 - `readonly`: Whether the array item's buttons are read-only, by the array's lock or the item's own. Its inputs can stay editable, under an item's `ui:readonly: false`.
 - `schema`: The schema object for this array item.
@@ -303,7 +302,6 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 - `hasRemove`: A boolean value stating whether the array item can be removed.
 - `id`: The id of the field in the hierarchy.
 - `index`: A number stating the index the array item occurs in `items`.
-- `totalItems`: A number stating the total number `items` in the array.
 - `onAddItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that adds a new item below this item, or does nothing where its button can't act.
 - `onCopyItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that copies this item below itself, or does nothing where its button can't act.
 - `onRemoveItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that removes the item from the list, or does nothing where its button can't act, such as under `ui:removable: false` or on a disabled array.

@@ -120,6 +120,26 @@ describe('the cost of an edit to a wide object', () => {
     expect(getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: edit })).toEqual(edit);
     expect(validator.calls - first).toBe(1);
   });
+  it('checks no condition again for an edit of a key no condition reads (#4051)', () => {
+    const validator = miniValidator();
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string' }, other: { type: 'string' } },
+      allOf: ['a', 'b', 'c'].map((kind) => ({
+        if: { properties: { kind: { const: kind } }, required: ['kind'] },
+        then: { properties: { [kind]: { type: 'string' } } },
+      })),
+    };
+    const context = { validator };
+    getDefaultFormState(context, { schema: root, rootSchema: root, formData: { kind: 'b' } });
+    retrieveSchema(context, root, root, { kind: 'b' });
+    const first = validator.calls;
+    getDefaultFormState(context, { schema: root, rootSchema: root, formData: { kind: 'b', other: 'v' } });
+    expect(retrieveSchema(context, root, root, { kind: 'b', other: 'v' }).properties).toHaveProperty('b');
+    expect(validator.calls).toBe(first);
+    expect(retrieveSchema(context, root, root, { kind: 'c', other: 'v' }).properties).toHaveProperty('c');
+    expect(validator.calls).toBe(first + 3);
+  });
   it('checks a condition a default decides once against each data the first fill plans for', () => {
     const validator = miniValidator();
     const root: RJSFSchema = {
@@ -146,9 +166,9 @@ describe('the cost of an edit to a wide object', () => {
     };
     const filled = getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: {} });
     expect(filled).toEqual({ k: 'x', t: 1, u: 1 });
-    // The `{}` of the call for each entry, since the caller may mutate it between checks, then once for both the
+    // The `{}` of the call once for both entries, as neither finds the `k` it reads changed, then once for both the
     // `{ k: 'x' }` and `{ k: 'x', t: 1, u: 1 }` the fill copies
-    expect(validator.calls).toBe(4);
+    expect(validator.calls).toBe(3);
   });
   it('checks a condition the plans of a pass share once for the data they share', () => {
     const validator = miniValidator();
@@ -330,6 +350,103 @@ describe('the cost of an edit to a wide object', () => {
     };
     const first = edit('x');
     expect([...edit('y')].filter((adopted) => !first.has(adopted))).toEqual([]);
+  });
+  describe('the defaults of a long list (#3183)', () => {
+    // Each row checks its `if` against its own data, so the validator's calls count the rows folded
+    const list: RJSFSchema = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { k: { type: 'string' } },
+        if: { properties: { k: { const: 'k1' } }, required: ['k'] },
+        then: { properties: { t: { type: 'string', default: 'd' } } },
+      },
+    };
+    const rowsOf = (count: number) => Array.from({ length: count }, (_, index) => ({ k: `k${index}` }));
+    const fill = (context: SchemaContext, formData: unknown, more?: object, schema = list) =>
+      getDefaultFormState(context, { schema, rootSchema: schema, formData, ...more });
+
+    it('folds only the row an edit changed', () => {
+      const validator = miniValidator();
+      const context = { validator };
+      const state = fill(context, rowsOf(20));
+      expect(state).toHaveLength(20);
+      const first = validator.calls;
+      const edited = Array.isArray(state) ? state.with(3, { k: 'edited' }) : [];
+      const next = fill(context, edited);
+      expect(next).toEqual(edited);
+      expect(validator.calls - first).toBeLessThanOrEqual(2);
+      // The state is the caller's, so a row is no object another call handed out
+      expect(Array.isArray(next) && next[1]).not.toBe(Array.isArray(state) && state[1]);
+      expect(Array.isArray(next) && next[1]).toEqual({ k: 'k1', t: 'd' });
+    });
+    it('folds a row changed in place again', () => {
+      const validator = miniValidator();
+      const context = { validator };
+      const rows = rowsOf(5);
+      fill(context, rows);
+      rows[1].k = 'k9';
+      expect(fill(context, rows)).toEqual([{ k: 'k0' }, { k: 'k9' }, { k: 'k2' }, { k: 'k3' }, { k: 'k4' }]);
+    });
+    it('folds each row again under other global options, and one holding a `null` fill on every call', () => {
+      const validator = miniValidator();
+      const context = { validator };
+      const items: RJSFSchema = {
+        ...(isObject(list.items) ? list.items : {}),
+        properties: { k: {}, n: { type: 'null' } },
+      };
+      const nulls: RJSFSchema = { type: 'array', items };
+      const rows = [
+        { k: 'k0', n: undefined },
+        { k: 'k1', n: null },
+      ];
+      fill(context, rows, {}, nulls);
+      const first = validator.calls;
+      expect(fill(context, rows, {}, nulls)).toEqual([
+        { k: 'k0', n: null },
+        { k: 'k1', n: null, t: 'd' },
+      ]);
+      const again = validator.calls - first;
+      expect(again).toBeGreaterThan(0);
+      const uiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } };
+      fill(context, rows, { uiSchema }, nulls);
+      expect(validator.calls - first - again).toBeGreaterThan(again);
+    });
+    it("folds a row offering options again, as the option it shows is the form's to say", () => {
+      const validator = miniValidator();
+      const context = { validator };
+      const offering: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { a: { type: 'string', default: 'a' } } },
+            { title: 'B', properties: { b: { type: 'string', default: 'b' } } },
+          ],
+        },
+      };
+      const selectedOption = vi.fn(() => 1);
+      // A state of a class holding private fields, which its methods read only when called on the state itself
+      class State {
+        #selectedOption = selectedOption;
+        selectedOption() {
+          return this.#selectedOption();
+        }
+        isExpanded() {
+          return this.#selectedOption !== undefined;
+        }
+      }
+      const fieldState = new State();
+      const props = { schema: offering, rootSchema: offering, formData: [{}], fieldState };
+      expect(getDefaultFormState(context, props)).toEqual([{ b: 'b' }]);
+      selectedOption.mockReturnValue(0);
+      expect(getDefaultFormState(context, props)).toEqual([{ a: 'a' }]);
+      // Without a `fieldState` the data picks the option, which a call with one is not answered with
+      const formData = [{}];
+      expect(getDefaultFormState(context, { ...props, formData, fieldState: undefined })).toEqual([{ a: 'a' }]);
+      selectedOption.mockReturnValue(1);
+      expect(getDefaultFormState(context, { ...props, formData })).toEqual([{ b: 'b' }]);
+    });
   });
 });
 
