@@ -88,6 +88,7 @@ import getTemplates from './getTemplates.ts';
 import getTestIds from './getTestIds.ts';
 import getUiOptions from './getUiOptions.ts';
 import getUnionTypes from './getUnionTypes.ts';
+import getValidatorErrorUiTitle from './getValidatorErrorUiTitle.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import {
   DEFAULT_BOOLEAN_WIDGET,
@@ -164,7 +165,7 @@ import omitConsumedStyling from './omitConsumedStyling.ts';
 import optionsList from './optionsList.ts';
 import orderProperties from './orderProperties.ts';
 import padTimeSeconds from './padTimeSeconds.ts';
-import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
+import { getByPath, hasByPath, pathToProperty, propertyToPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
 import pickGlobalUiOptions from './pickGlobalUiOptions.ts';
 import rangeSpec from './rangeSpec.ts';
@@ -421,6 +422,7 @@ export {
   getTestIds,
   getUiOptions,
   getUnionTypes,
+  getValidatorErrorUiTitle,
   getWidgetDescription,
   getWidgetType,
   getXxxOfKey,
@@ -518,6 +520,7 @@ export {
   fieldPathToName,
   toPath,
   propertyToPath,
+  pathToProperty,
   uiBooleanOption,
   unsetByPath,
   unwrapErrorHandler,

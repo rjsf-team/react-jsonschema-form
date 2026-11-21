@@ -17,7 +17,6 @@ import {
   hasByPath,
   setByPath,
   propertyToPath,
-  toPath,
   toFieldPath,
   unsetByPath,
   createSchemaUtils,
@@ -1406,9 +1405,8 @@ interface ErrorOptions<S> {
 interface DataChange {
   /** The difference cannot be narrowed below the root: a primitive, an array of another length, or a change of type */
   isRootReplaced: boolean;
-  /** The path of each field that differs, split the way `toErrorSchema()` splits an error's property, so the two
-   * address the same entry. A key that splits to no segment at all, such as `''`, has its errors filed at the root, so
-   * its path is the empty one
+  /** The path of each field that differs, read the way `toErrorSchema()` reads an error's property, so the two address
+   * the same entry
    */
   paths: FieldPathList[];
 }
@@ -1422,7 +1420,7 @@ function dataChange(formData: unknown, previous: unknown): DataChange {
   // The wrapper below would name the same paths for an object root, after a deep comparison of the whole root that
   // comparing its fields one by one makes a second time, so an object root is spared that
   if (isPlainObject(formData) && isPlainObject(previous)) {
-    return { isRootReplaced: false, paths: getChangedFields(formData, previous, true).map((field) => toPath(field)) };
+    return { isRootReplaced: false, paths: getChangedFields(formData, previous, true).map(propertyToPath) };
   }
   // Any other root is compared as the one property of a wrapper, so a root array is narrowed to its items the way an
   // array under a property is, and a difference that can't be narrowed comes back as the wrapper's own key:
@@ -1431,7 +1429,7 @@ function dataChange(formData: unknown, previous: unknown): DataChange {
   const fields = getChangedFields({ [root]: formData }, { [root]: previous }, true);
   return {
     isRootReplaced: fields.includes(root),
-    paths: fields.map((field) => toPath(field).slice(1)),
+    paths: fields.map((field) => propertyToPath(field).slice(1)),
   };
 }
 

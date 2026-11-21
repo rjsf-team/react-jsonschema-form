@@ -399,8 +399,9 @@ export interface RJSFValidationError {
    * for more info)
    */
   params?: Record<string, unknown>;
-  /** A string in Javascript property accessor notation to the data path of the field with the error. For example,
-   * `.name` or `['first-name']`
+  /** A string in Javascript property accessor notation to the data path of the field with the error, as
+   * `pathToProperty()` writes it. For example, `.name`, `.list.0.name` or, for a key that is empty or holds a `.`, `[`
+   * or `]`, `['a.b'].name`; `propertyToPath()` reads it back
    */
   property?: string;
   /** JSON pointer to the schema of the keyword that failed validation. For example, `#/fields/firstName/required`.

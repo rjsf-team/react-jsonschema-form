@@ -16,6 +16,7 @@ import {
 } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
+import errorPropertyTests from '../../utils/test/testUtils/errorPropertyTests.ts';
 import nestedResourceTests, {
   handedResourceTests,
   mergedResourceViewTests,
@@ -866,6 +867,7 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
 
 pointerValidationTests(() => customizeValidator());
 requiredTitleTests(() => customizeValidator());
+errorPropertyTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 sharedCopyScoringTests(() => customizeValidator());

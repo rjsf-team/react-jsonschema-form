@@ -6,6 +6,7 @@ import {
   getByPath,
   isPlainObject,
   mergeObjects,
+  pathToProperty,
   propertyToPath,
   replaceEqualDeep,
   setByPath,
@@ -208,7 +209,11 @@ export function moveErrorKeys<T>(
     if (newKey === undefined) {
       return [];
     }
-    const property = `.${[...pathOfError.slice(0, path.length), newKey, ...pathOfError.slice(path.length + 1)].join('.')}`;
+    const property = pathToProperty([
+      ...pathOfError.slice(0, path.length),
+      newKey,
+      ...pathOfError.slice(path.length + 1),
+    ]);
     // A stack that names the field by its title instead of its `property` says nothing of the key
     const isStackOfProperty = error.stack === `${error.property} ${error.message}`;
     return [{ ...error, property, stack: isStackOfProperty ? `${property} ${error.message}` : error.stack }];

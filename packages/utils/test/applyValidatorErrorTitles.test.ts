@@ -20,21 +20,19 @@ describe('applyValidatorErrorTitles()', () => {
         names: ['name'],
         quote: "'",
         property: '.user',
-        schemaPath: '#/properties/account/required',
+        schemaPath: '#/properties/user/anyOf/0/required',
         ...source,
       }).titles.get('name');
 
     it('as the ui:title at the property first', () => {
       const uiSchema: UiSchema = {
-        user: { name: { 'ui:title': 'At property' } },
-        account: { name: { 'ui:title': 'At schema path' } },
+        user: { name: { 'ui:title': 'At property' }, anyOf: [{ name: { 'ui:title': 'At schema path' } }] },
       };
       expect(titleOf({ uiSchema })).toEqual('At property');
     });
     it('then as the ui:title at the schema path', () => {
       const uiSchema: UiSchema = {
-        account: { name: { 'ui:title': 'At schema path' } },
-        user: { name: { title: 'Raw' } },
+        user: { name: { title: 'Raw' }, anyOf: [{ name: { 'ui:title': 'At schema path' } }] },
       };
       expect(titleOf({ uiSchema })).toEqual('At schema path');
     });
@@ -153,6 +151,22 @@ describe('applyValidatorErrorTitles()', () => {
       uiSchema: { a: { b: { 'ui:title': 'Inner b' } }, 'a.b': { 'ui:title': 'Dotted' } },
     });
     expect(titles).toEqual(new Map([['a.b', 'Dotted']]));
+  });
+
+  it.each<[string, RJSFSchema]>([
+    ['the ui:title', { type: 'object' }],
+    ['the schema title', { type: 'object', properties: { 'a.b': { properties: { name: { title: 'Right' } } } } }],
+  ])('reads %s under a property key holding a dot, not under the key split at the dot', (_, schema) => {
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: "['a.b']",
+      schemaPath: '#/properties/a.b/allOf/0/required',
+      uiSchema: { a: { b: { name: { 'ui:title': 'Wrong' } } }, 'a.b': { name: { 'ui:title': 'Right' } } },
+      schema,
+    });
+    expect(titles).toEqual(new Map([['name', 'Right']]));
   });
 
   it('decodes the keys of the schema path with decodeSchemaPathKey', () => {

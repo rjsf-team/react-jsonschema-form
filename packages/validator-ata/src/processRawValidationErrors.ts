@@ -15,11 +15,11 @@ import {
   createErrorHandler,
   getByPath,
   getDefaultFormState,
+  getValidatorErrorUiTitle,
   getKeywordParentSchema,
-  getUiOptions,
   ONE_OF_KEY,
+  pathToProperty,
   toErrorSchema,
-  toPath,
   unwrapErrorHandler,
   validationDataMerge,
 } from '@rjsf/utils';
@@ -92,7 +92,7 @@ export function transformRJSFValidationErrors<
       (schema && getKeywordParentSchema<S>(schema, schemaPath, unescapePointerToken)) ?? e.parentSchema;
     // oxlint-disable-next-line typescript/no-useless-default-assignment -- ata's types say `message` is always set, but it can be missing at runtime
     let { message = '' } = e;
-    let property = instancePath.split('/').map(unescapePointerToken).join('.');
+    let property = pathToProperty(instancePath.split('/').slice(1).map(unescapePointerToken));
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
 
@@ -119,9 +119,13 @@ export function transformRJSFValidationErrors<
 
       stack = message;
     } else {
-      const uiSchemaTitle = getUiOptions<T, S, F>(
-        getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(property)),
-      ).title;
+      const uiSchemaTitle = getValidatorErrorUiTitle<T, S, F>({
+        property,
+        schemaPath,
+        decodeSchemaPathKey: unescapePointerToken,
+        uiSchema,
+        schema,
+      });
 
       if (uiSchemaTitle) {
         stack = `'${uiSchemaTitle}' ${message}`.trim();
@@ -139,7 +143,9 @@ export function transformRJSFValidationErrors<
 
     const missingProperty = params?.missingProperty;
     if (typeof missingProperty === 'string') {
-      property = property ? `${property}.${missingProperty}` : missingProperty;
+      const missing = pathToProperty([missingProperty]);
+      // A missing property of the root is filed under its bare name
+      property = property ? `${property}${missing}` : missing.replace(/^\./, '');
     }
 
     return {
