@@ -1021,6 +1021,22 @@ function fillsMatch<S>(pair: FieldPair<S>): boolean {
   );
 }
 
+/** Whether nothing the subtree of a field is built from differs, so neither does the subtree: its schema, its value
+ * and, as `fillsAgree` says, what the defaults hand it. Asked before a child's pair is built, as well as by `walk()`,
+ * so an unchanged child of a long list or a wide object costs no pair (#3183)
+ */
+function isUnchanged<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  edited: boolean,
+  oldRaw: unknown,
+  newRaw: unknown,
+  oldValue: unknown,
+  newValue: unknown,
+  fillsAgree: () => boolean,
+): boolean {
+  return !edited && !ctx.isDefaultsChanged && oldRaw === newRaw && oldValue === newValue && fillsAgree();
+}
+
 /** The innermost of `layers` with the keywords its default is cut down by read from them all, as the fill reads the
  * field: each layer's `properties` and `required`, and the innermost `type` and `additionalProperties` declared
  */
@@ -1077,8 +1093,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (oldRaw === undefined || (isClear ? edited : !hasOld)) {
     return newValue;
   }
-  // Nothing a field's subtree is built from differs, so neither does the subtree
-  if (!edited && !ctx.isDefaultsChanged && oldRaw === newRaw && oldValue === newValue && fillsMatch(pair)) {
+  if (isUnchanged(ctx, edited, oldRaw, newRaw, oldValue, newValue, () => fillsMatch(pair))) {
     return newValue;
   }
   const { oldFill, newFill, oldUiSchema } = pair;
@@ -1305,38 +1320,42 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (newSchema !== undefined) {
         const previousKey = from ? key : previousKeyOf(key);
         const previousValue = valueAt(oldValue, previousKey);
-        next = walk(
-          from?.ctx ?? ctx,
-          {
-            oldRaw: oldSchema,
-            newRaw: newSchema,
-            oldValue: previousValue,
-            newValue: newValue[key],
-            get oldFill() {
-              return ctx.oldSchemaUtils.childFillOf(from ? from.fillSchema : oldFillSchema, oldFill, key);
+        const fillsAlike = from ? () => false : fillsAlikeBelow;
+        const isChildEdited = edited && isEdited(ctx, childPath);
+        if (!isUnchanged(ctx, isChildEdited, oldSchema, newSchema, previousValue, newValue[key], fillsAlike)) {
+          next = walk(
+            from?.ctx ?? ctx,
+            {
+              oldRaw: oldSchema,
+              newRaw: newSchema,
+              oldValue: previousValue,
+              newValue: newValue[key],
+              get oldFill() {
+                return ctx.oldSchemaUtils.childFillOf(from ? from.fillSchema : oldFillSchema, oldFill, key);
+              },
+              get newFill() {
+                return ctx.schemaUtils.childFillOf(newFillSchema, newFill, key);
+              },
+              fillsAlike,
+              isItem: false,
+              hasOld: previousValue !== undefined,
+              oldPath: oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined,
+              shownAbove: from ? from.shownHere : shownHere,
+              // An extra key renders with the `additionalProperties` uiSchema, whatever entry its name has
+              get oldUiSchema() {
+                return previousKey === undefined || hasSchemaMarker(oldChild, ADDITIONAL_PROPERTY_FLAG)
+                  ? undefined
+                  : soleUiSchemaOf(
+                      ctx,
+                      (from ? from.optionUiSchema : oldOptionUiSchema) ?? oldUiSchema,
+                      oldChild,
+                      (uiSchema) => uiSchema[previousKey],
+                    );
+              },
             },
-            get newFill() {
-              return ctx.schemaUtils.childFillOf(newFillSchema, newFill, key);
-            },
-            fillsAlike: from ? () => false : fillsAlikeBelow,
-            isItem: false,
-            hasOld: previousValue !== undefined,
-            oldPath: oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined,
-            shownAbove: from ? from.shownHere : shownHere,
-            // An extra key renders with the `additionalProperties` uiSchema, whatever entry its name has
-            get oldUiSchema() {
-              return previousKey === undefined || hasSchemaMarker(oldChild, ADDITIONAL_PROPERTY_FLAG)
-                ? undefined
-                : soleUiSchemaOf(
-                    ctx,
-                    (from ? from.optionUiSchema : oldOptionUiSchema) ?? oldUiSchema,
-                    oldChild,
-                    (uiSchema) => uiSchema[previousKey],
-                  );
-            },
-          },
-          childPath,
-        );
+            childPath,
+          );
+        }
       } else if (
         newChild === undefined &&
         !isEdited(ctx, childPath) &&
@@ -1411,6 +1430,20 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
       // An item no previous one moved to, such as a copy or a new row, is judged as holding what it holds now under
       // the old tree's item at its index, so a change that flips the constraints of the rows judges it as it judges them
+      const oldItemValue = hasPrevious ? valueAt(oldValue, previousIndex) : item;
+      if (
+        isUnchanged(
+          ctx,
+          edited && isEdited(ctx, [...path, index]),
+          oldItem,
+          newItem,
+          oldItemValue,
+          item,
+          fillsAlikeBelow,
+        )
+      ) {
+        return item;
+      }
       const itemMovesBefore = ctx.itemMoves.length;
       const judged = walk(
         ctx,
@@ -1419,7 +1452,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           // `sanitizeDataForNewSchema()` judges it
           oldRaw: typeof oldItem === 'boolean' ? (UNCONSTRAINED as S) : oldItem,
           newRaw: newItem,
-          oldValue: hasPrevious ? valueAt(oldValue, previousIndex) : item,
+          oldValue: oldItemValue,
           newValue: item,
           // An item inherits its array's default at its index. One a remove or move pairs with the index it held
           // before reads the default there on both sides, so a move by itself changes no item's default
