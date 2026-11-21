@@ -298,14 +298,16 @@ function settledRecords(records: PropertyRecords, properties: object): PropertyR
   const waiting = [...renamedFrom].filter(([to, from]) => holds(from) && !holds(to));
   const isKept = (name: string) => holds(name) || waiting.some(([to]) => to === name);
   const heldUnderBoth = new Set([...renamedFrom].filter(([to, from]) => holds(from) && holds(to)).map(([to]) => to));
+  const keptKeys = new Map([...renamedKeys].filter(([name]) => isKept(name) && !heldUnderBoth.has(name)));
+  // Against the keys that are kept, so the old name of a rename held under both names is not taken for a variant of
+  // the key its new name gives up
   const variants = Object.keys(properties)
-    .filter((property) => !renamedKeys.has(property))
-    .map((property): [string, string] => [property, stableKeyOf(renamedKeys, property, properties)])
+    .filter((property) => !keptKeys.has(property))
+    .map((property): [string, string] => [property, stableKeyOf(keptKeys, property, properties)])
     .filter(([property, key]) => key !== property);
-  const keptKeys = [...renamedKeys].filter(([name]) => isKept(name) && !heldUnderBoth.has(name));
   if (
     variants.length === 0 &&
-    keptKeys.length === renamedKeys.size &&
+    keptKeys.size === renamedKeys.size &&
     waiting.length === renamedFrom.size &&
     order.every(isKept)
   ) {
@@ -353,9 +355,9 @@ interface ObjectFieldPropertyProps<
   /** Flag indicating whether this property was added by the additionalProperties UI */
   addedByAdditionalProperties: boolean;
   /** Callback that handles the rename of an additionalProperties-based property key, given the control focus is on its
-   * way to when the rename comes from a blur
+   * way to when the rename comes from a blur. Returns whether a form answered the rename as it was sent
    */
-  handleKeyRename: (oldKey: string, newKey: string, focusHeadedTo?: Element | null) => void;
+  handleKeyRename: (oldKey: string, newKey: string, focusHeadedTo?: Element | null) => boolean;
   /** Callback that handles the removal of an additionalProperties-based property with key */
   handleRemoveProperty: (keyName: string) => void;
   /** The key names this property may be renamed to, when the parent schema's `propertyNames` constrains them */
@@ -448,8 +450,8 @@ function ObjectFieldPropertyFn<
   const onKeyRenameBlur = useCallback(
     (event: FocusEvent<HTMLInputElement>) => {
       const { target, relatedTarget } = event;
-      handleKeyRename(propertyName, target.value, relatedTarget);
-      if (target.value !== propertyName) {
+      // A rename no form answered, as under a parent field that stores it later, has no answer to show yet
+      if (handleKeyRename(propertyName, target.value, relatedTarget)) {
         setRenamedIn({ input: target });
       }
     },
@@ -955,7 +957,7 @@ export default function ObjectField<
    * @param oldKey - The old key for the field
    * @param newKey - The new key for the field
    * @param [focusHeadedTo] - The control focus is on its way to, when the rename comes from a blur
-   * @returns - The key change callback function
+   * @returns - Whether a form answered the rename as it was sent
    */
   const handleKeyRename = useCallback(
     (oldKey: string, newKey: string, focusHeadedTo?: Element | null) => {
@@ -1021,7 +1023,9 @@ export default function ObjectField<
           setRenamedFrom((previous) => new Map(previous).set(actualNewKey, oldKey));
         }
         forgetChangedSeeds(oldKey, actualNewKey);
+        return outcome !== undefined;
       }
+      return false;
     },
     [sendMove, onChange, fieldPath, getAvailableKey, seedForKey, readData, forgetChangedSeeds],
   );
@@ -1034,9 +1038,7 @@ export default function ObjectField<
     (key: string) => {
       const removedPath = toFieldPath(key, fieldPath);
       const removal = additionalPropertyRemoval<T>();
-      // Announced, though it moves no key, for what became of it: a removal `transformChange` refused, or a rewrite
-      // that kept the property, leaves the property in its place. One no form answered as it was sent, as outside a
-      // `Form` or under a parent field that stores it later, is the field's own to make, so the property leaves the order
+      // Announced, though it moves no key, so the form takes the change as the property's removal
       sendMove({ fieldPath: removedPath, value: removal }, () => onChange(removal, removedPath));
       forgetChangedSeeds(key);
     },

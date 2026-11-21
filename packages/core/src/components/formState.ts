@@ -2122,9 +2122,9 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   };
 }
 
-/** The data the props seed the form with on mount and on `reset()`: `formData`, which is kept as another name for the
- * seed, or else `initialFormData`. Only `undefined` leaves a prop unpassed, so a `null` `formData` is the seed, and
- * seeds the same defaults an `undefined` does.
+/** The data the props seed the form with on mount and on `reset()`: `formData`, or else `initialFormData`. Only
+ * `undefined` leaves a prop unpassed, so a `null` `formData` is the seed, and seeds the same defaults an `undefined`
+ * does.
  *
  * @param props - The current props
  * @returns - The seed, or `undefined` when the props pass none
@@ -2200,7 +2200,7 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
 }
 
 function isProposedIn<T, S extends StrictRJSFSchema, F extends FormContextType>(state: FormState<T, S, F>) {
-  return state.controlled === undefined || state.formData !== state.controlled.data;
+  return state.controlled === undefined || !Object.is(state.formData, state.controlled.data);
 }
 
 /** `deriveState()` for the data the form holds, which no prop replaces: it is re-derived only for a schema,
