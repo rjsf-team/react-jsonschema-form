@@ -228,7 +228,7 @@ A `ui:condition` uses one of three `operators` when deciding if a condition pass
 3. the `none` operator will pass when the right-side and left-side do not contain any values in common. E.g. (as JSON objects):
 
 Here is how to render an if-then-else for `field2` which is an enum that has 3 known values and supports allowing
-any other value:
+any other value. It shows `field3` for `value1`, `field4` for `value2` or `value3`, and `field5` for any other value, or when `field2` is empty:
 
 ```json
 {
@@ -239,8 +239,8 @@ any other value:
         "operator": "all",
         "value": "value1",
         "children": [
-          { "ui:row": [...] }
-        ],
+          { "ui:row": [{ "ui:col": ["field3"] }] }
+        ]
       }
     },
     {
@@ -249,8 +249,8 @@ any other value:
         "operator": "some",
         "value": ["value2", "value3"],
         "children": [
-          { "ui:row": [...] }
-        ],
+          { "ui:row": [{ "ui:col": ["field4"] }] }
+        ]
       }
     },
     {
@@ -259,7 +259,7 @@ any other value:
         "operator": "none",
         "value": ["value1", "value2", "value3"],
         "children": [
-          { "ui:row": [...] }
+          { "ui:row": [{ "ui:col": ["field5"] }] }
         ]
       }
     }
