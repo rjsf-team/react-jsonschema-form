@@ -23,9 +23,11 @@ import {
 } from '../../constants.ts';
 import deepEquals from '../../deepEquals.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
+import isPlainObject from '../../isPlainObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
+import setOwn from '../../setOwn.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import shallowAllOfMerge, { mergedPair, mergeOptionLists } from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
@@ -223,8 +225,68 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
 const conditionMemo = new KeyedMemo<boolean>();
 
-/** The checks of a condition against the values it reads of an object, see `conditionReads()` */
-const readsMemo = new KeyedMemo<boolean>();
+/** The last check of a condition against the values it reads of an object, see `conditionReads()`, with a copy of
+ * those values, which a caller may mutate in place
+ */
+const readsMemo = new KeyedMemo<{ readonly values: unknown; readonly holds: boolean }>();
+
+/** The most array items and object values, at any depth, that the values a condition reads may hold to be copied and
+ * compared: past it, copying and comparing them costs more than the validator's check they would spare (#4051)
+ *
+ * @testSeam Exported for utils' own tests
+ */
+export const COMPARED_MEMBERS = 50;
+
+/** Stands in a copy `comparedCopy()` doesn't make */
+const UNCOPIED = Symbol('uncopied');
+
+/** Returns a copy of `value`, or `UNCOPIED` where it holds more than `limit` members at any depth, or anything but
+ * arrays, plain objects and primitives, whose copy would not stand for them
+ */
+function comparedCopy(value: unknown, limit: number): unknown {
+  let left = limit;
+  const copyOf = (held: unknown): unknown => {
+    if (typeof held !== 'object' || held === null) {
+      return held;
+    }
+    if (!Array.isArray(held) && !isPlainObject(held)) {
+      return UNCOPIED;
+    }
+    // Sized before its members are listed, which a large array would cost on every check
+    left -= Array.isArray(held) ? held.length : Object.keys(held).length;
+    if (left < 0) {
+      return UNCOPIED;
+    }
+    const members = Object.entries(held);
+    const copy: object = Array.isArray(held) ? new Array<unknown>(held.length) : {};
+    for (const [key, member] of members) {
+      const copied = copyOf(member);
+      if (copied === UNCOPIED) {
+        return UNCOPIED;
+      }
+      setOwn(copy, key, copied);
+    }
+    return copy;
+  };
+  return copyOf(value);
+}
+
+/** Returns whether the condition under `keys` holds for `values`, the values it reads of an object: what it held for
+ * the last values it was checked on where they are equal to these, or else what `check` says
+ */
+function readsCheck(keys: unknown[], values: unknown[], check: () => boolean): boolean {
+  const copy = comparedCopy(values, COMPARED_MEMBERS + values.length);
+  if (copy === UNCOPIED) {
+    return check();
+  }
+  const held = readsMemo.peek(keys);
+  if (held !== undefined && deepEquals(held.values, values)) {
+    return held.holds;
+  }
+  const holds = check();
+  readsMemo.set(keys, { values: copy, holds });
+  return holds;
+}
 
 /** Returns what `memo` holds under `keys` for `values`, or else what `check` says, which it then holds */
 function latestCheck(memo: KeyedMemo<boolean>, keys: unknown[], values: unknown[], check: () => boolean): boolean {
@@ -321,9 +383,10 @@ export function ownedDepData<S extends StrictRJSFSchema>(
 }
 
 /** Returns whether `data` satisfies `checked.condition`, a condition of `graph`. A check of data that
- * is no object is memoized for the last data it was made on. One of an object is memoized for the primitives the
- * condition reads of it last checked, see `conditionReads()`, and for a copy `ownedDepData()` made, which also decides
- * the conditions fixed for it; any other is checked on every call, since a caller may mutate it in place between checks
+ * is no object is memoized for the last data it was made on. One of an object is memoized for the values the condition
+ * reads of it last checked, see `conditionReads()`, compared with a copy of them where they hold no more than
+ * `COMPARED_MEMBERS` members, and for a copy `ownedDepData()` made, which also decides the conditions fixed for it; any
+ * other is checked on every call, since a caller may mutate it in place between checks
  *
  * @param context - The `SchemaContext` whose validator checks the condition
  * @param graph - The graph the condition is a node of
@@ -340,12 +403,10 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
   const keys = [context.validator, graph, key];
   if (typeof data === 'object' && data !== null) {
     const isValid = () => context.validator.isValid(condition, data, graph.rawRoot);
-    // Held only where every value is a primitive, see `KeyedMemo.setLatest()`
     const check =
       reads && isObject(data)
         ? () =>
-            latestCheck(
-              readsMemo,
+            readsCheck(
               keys,
               reads.map((read) => (Object.hasOwn(data, read) ? data[read] : ABSENT)),
               isValid,
