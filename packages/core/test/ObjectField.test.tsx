@@ -2517,6 +2517,7 @@ describe('ObjectField', () => {
         'root_first__key',
         'root_second__key',
       ]);
+      expect(elementOf(node, '#root_first__key')).toHaveValue('first');
     });
 
     it('should keep the instance of the last renamed property when transformChange refuses another rename', async () => {

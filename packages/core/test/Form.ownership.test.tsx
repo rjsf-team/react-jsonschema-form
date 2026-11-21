@@ -1740,6 +1740,95 @@ describe('form data ownership', () => {
       ]);
     });
 
+    it('the key input shows the name the property has once the parent declines its rename', async () => {
+      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+      const { container } = render(
+        <ListeningParent schema={objectSchema} initialValue={{ first: 'one', second: 'two' }} />,
+      );
+      const keyInput = input(container, 'root_first__key');
+
+      await user.clear(keyInput);
+      await user.type(keyInput, 'renamed');
+      await user.tab();
+
+      expect(input(container, 'root_first__key')).toHaveValue('first');
+    });
+
+    it('a property renamed before keeps its instance when the parent declines its removal', async () => {
+      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+      let declines = false;
+      function Parent() {
+        const [data, setData] = useState<Record<string, string>>({ first: 'one', second: 'two' });
+        return (
+          <Form
+            schema={objectSchema}
+            validator={validator}
+            formData={data}
+            onChange={(event) => {
+              if (!declines) {
+                setData(event.formData);
+              }
+            }}
+          />
+        );
+      }
+      const { container } = render(<Parent />);
+      const keyInput = input(container, 'root_first__key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'renamed');
+      await user.tab();
+      const renamed = input(container, 'root_renamed');
+      declines = true;
+
+      await user.click(elementOf(container, '.rjsf-object-property-remove'));
+
+      expect(input(container, 'root_renamed')).toBe(renamed);
+    });
+
+    it.each([
+      [
+        'renamed',
+        async (container: HTMLElement) => {
+          const keyInput = input(container, 'root_first__key');
+          await user.clear(keyInput);
+          await user.type(keyInput, 'renamed');
+          await user.tab();
+        },
+        ['root_renamed__key', 'root_second__key', 'root_first__key'],
+      ],
+      [
+        'removed',
+        async (container: HTMLElement) => {
+          await user.click(elementOf(container, '.rjsf-object-property-remove'));
+        },
+        ['root_second__key', 'root_first__key'],
+      ],
+    ] as const)('a name the parent puts back after its property was %s renders last', async (_, change, expected) => {
+      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+      function Parent() {
+        const [data, setData] = useState<Record<string, string>>({ first: 'one', second: 'two' });
+        return (
+          <>
+            <Form
+              schema={objectSchema}
+              validator={validator}
+              formData={data}
+              onChange={(event) => setData(event.formData)}
+            />
+            <button type='button' onClick={() => setData((held) => ({ first: 'back', ...held }))}>
+              put back
+            </button>
+          </>
+        );
+      }
+      const { container } = render(<Parent />);
+      await change(container);
+
+      await user.click(screen.getByRole('button', { name: 'put back' }));
+
+      expect([...container.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual(expected);
+    });
+
     it('an additional property the parent set back and the user adds again renders once', async () => {
       const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
       const ref = createFormRef<Record<string, string>>();
