@@ -2190,9 +2190,15 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   if (Object.is(passed, state.formData) || (!isProposed && Object.is(passed, controlled?.from))) {
     return asControlledBy(props, deriveOwnState(props, state));
   }
-  // Passing the same value over a proposal declines it, which leaves the form as it was shown before the proposal, its
-  // errors and marks included
-  if (shown && shown.controlled === controlled && Object.is(passed, controlled?.from) && !isProposedIn(shown)) {
+  // Passing the same value over a proposal, or a copy of it, declines it, which leaves the form as it was shown before
+  // the proposal, its errors and marks included
+  if (
+    shown &&
+    controlled &&
+    shown.controlled === controlled &&
+    !isProposedIn(shown) &&
+    (Object.is(passed, controlled.from) || deepEquals(passed, controlled.from))
+  ) {
     return asControlledBy(props, deriveOwnState(props, shown));
   }
   // Any other value is the parent's own. Over a proposal it is the parent's answer to it, and the form is as dirty as

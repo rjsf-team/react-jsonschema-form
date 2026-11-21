@@ -232,6 +232,124 @@ describe('a form controlled through formData', () => {
     expect(reported).toEqual([]);
   });
 
+  it('takes a copy of the data it held as the parent declining, and keeps the errors it showed', async () => {
+    const items: RJSFSchema = { type: 'array', items: { type: 'string', minLength: 2 } };
+    const { container } = render(
+      <Parent<string[]> schema={items} initial={['a', 'bb']} answer={(_, held) => [...held]} onError={noop} />,
+    );
+    await submitForm(container, user);
+    expect(fieldErrorsById(container)).toEqual({ root_0: ['must NOT have fewer than 2 characters'] });
+
+    await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+    expect(input(container, 'root_0')).toHaveValue('a');
+    expect(fieldErrorsById(container)).toEqual({ root_0: ['must NOT have fewer than 2 characters'] });
+  });
+
+  describe('reset()', () => {
+    const seeded: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', minLength: 3 }, b: { type: 'string', default: 'B' } },
+    };
+
+    it('proposes the data passed with its defaults, clears the errors, and shows what the parent stores', async () => {
+      const ref = createFormRef<Pair>();
+      const reported: Pair[] = [];
+      const { container } = render(
+        <Parent<Pair> ref={ref} schema={seeded} initial={{ a: 'x' }} reported={reported} onError={noop} />,
+      );
+      await submitForm(container, user);
+      expect(fieldErrorsById(container)).toEqual({ root_a: ['must NOT have fewer than 3 characters'] });
+
+      act(() => handleOf(ref).reset());
+
+      expect(reported).toEqual([{ a: 'x', b: 'B' }]);
+      expect(input(container, 'root_a')).toHaveValue('x');
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(handleOf(ref).getStatus().dirty).toBe(false);
+    });
+
+    it('proposes the seed it is passed, which a parent that declines leaves unshown', async () => {
+      const ref = createFormRef<Pair>();
+      const reported: Pair[] = [];
+      const { container } = render(
+        <Parent<Pair> ref={ref} schema={seeded} initial={{ a: 'held' }} answer={decline} reported={reported} />,
+      );
+
+      act(() => handleOf(ref).reset({ a: 'other' }));
+
+      expect(reported).toEqual([{ a: 'other', b: 'B' }]);
+      expect(input(container, 'root_a')).toHaveValue('held');
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'held', b: 'B' });
+    });
+
+    it('shows the seed it is passed once the parent stores it, and the form is not dirty', async () => {
+      const ref = createFormRef<Pair>();
+      const { container } = render(<Parent<Pair> ref={ref} schema={seeded} initial={{ a: 'held' }} />);
+      await user.type(input(container, 'root_a'), '!');
+      expect(handleOf(ref).getStatus().dirty).toBe(true);
+
+      act(() => handleOf(ref).reset({ a: 'other' }));
+
+      expect(input(container, 'root_a')).toHaveValue('other');
+      expect(handleOf(ref).getStatus().dirty).toBe(false);
+    });
+  });
+
+  describe('a blur under liveOmit onBlur', () => {
+    interface Extra {
+      a?: string;
+      extra?: number;
+    }
+    const described: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+
+    it('proposes the data without its extra fields, which the parent stores', async () => {
+      const reported: Extra[] = [];
+      const ref = createFormRef<Extra>();
+      const { container } = render(
+        <Parent<Extra>
+          ref={ref}
+          schema={described}
+          initial={{ a: 'x', extra: 1 }}
+          reported={reported}
+          omitExtraData
+          liveOmit='onBlur'
+        />,
+      );
+
+      await user.click(input(container, 'root_a'));
+      await user.tab();
+
+      expect(reported).toEqual([{ a: 'x' }]);
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'x' });
+    });
+
+    it('leaves the data the parent holds when it declines the omission, blur after blur', async () => {
+      const reported: Extra[] = [];
+      const ref = createFormRef<Extra>();
+      const { container } = render(
+        <Parent<Extra>
+          ref={ref}
+          schema={described}
+          initial={{ a: 'x', extra: 1 }}
+          answer={decline}
+          reported={reported}
+          omitExtraData
+          liveOmit='onBlur'
+        />,
+      );
+
+      await user.click(input(container, 'root_a'));
+      await user.tab();
+      await user.click(input(container, 'root_a'));
+      await user.tab();
+
+      expect(reported).toEqual([{ a: 'x' }, { a: 'x' }]);
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'x', extra: 1 });
+      expect(input(container, 'root_a')).toHaveValue('x');
+    });
+  });
+
   describe('dirty', () => {
     function Records({ answer = accept, formRef }: { answer?: Answer<Pair>; formRef: FormProps<Pair>['ref'] }) {
       const [value, setValue] = useState<Pair>({ a: 'one' });
