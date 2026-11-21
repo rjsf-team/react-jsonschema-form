@@ -181,7 +181,6 @@ describe('Live validation onBlur', () => {
           schema={schema}
           validator={validator}
           liveValidate='onBlur'
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => setValue(event.formData ?? null)}
           // Recreated on every render of the parent, which is what makes the form see a changed identity prop on
@@ -224,7 +223,6 @@ describe('Live validation onBlur', () => {
             validator={validator}
             liveValidate={liveValidate}
             extraErrors={extraErrors}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={value}
             onChange={(event) => setValue(event.formData)}
           />
@@ -1050,7 +1048,6 @@ describe('Async errors', () => {
         <Form
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={({ formData: next }: IChangeEvent) => setFormData((next as Record<string, unknown>) ?? {})}
           extraErrors={extraErrors}
@@ -1155,7 +1152,6 @@ describe('Deriving state from changed props', () => {
           schema={schema}
           validator={validator}
           liveValidate='onChange'
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={(event) => setFormData(event.formData)}
           {...steps[step]}
@@ -1497,7 +1493,6 @@ describe('Committing a handler result', () => {
           schema={schema}
           validator={validator}
           liveValidate='onBlur'
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={(e) => setFormData(e.formData)}
           onBlur={() => {
@@ -1533,7 +1528,6 @@ describe('Committing a handler result', () => {
           <Form
             schema={{ type: 'string' }}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={formData}
             className={`changes-${changeCount}`}
             widgets={{ TextWidget: RecordingWidget }}
@@ -3324,7 +3318,6 @@ describe('initialFormData feature to prevent form reset', () => {
 
     const props: NoValFormProps = {
       schema,
-      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias beside its `initialFormData` twin
       ...(formData !== undefined && { formData }),
     };
 
@@ -3338,8 +3331,8 @@ describe('initialFormData feature to prevent form reset', () => {
       />
     );
   };
-  it('show that a Form keeps the edits when the parent passes formData and stores nothing back', async () => {
-    // The form owns the edit; `formData` only seeds it on mount, so the parent passing it again leaves the edit in place
+  it('show that a Form shows no edit when the parent passes formData and stores nothing back', async () => {
+    // `formData` is the form's data, so an edit the parent does not pass back is declined
     const { container } = render(<FormWrapper formData={data} />);
     let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);
@@ -3347,12 +3340,12 @@ describe('initialFormData feature to prevent form reset', () => {
     await user.clear(input);
     await user.type(input, 'new value');
     input = container.querySelector('input')!;
-    expect(input).toHaveAttribute('value', 'new value');
+    expect(input).toHaveAttribute('value', data.name);
 
     await submitForm(container.querySelector('form')!, user);
 
     input = container.querySelector('input')!;
-    expect(input).toHaveAttribute('value', 'new value');
+    expect(input).toHaveAttribute('value', data.name);
   });
   it('show that Form does not reset with initialFormData', async () => {
     const { container } = render(<FormWrapper initialFormData={data} />);

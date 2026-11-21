@@ -447,20 +447,20 @@ describe('Form: a parent passing back a falsey formData from onChange', () => {
         },
       },
     };
-    // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
     return <Form onChange={handleChange} schema={schema} formData={formData} validator={validator} />;
   }
 
+  // An `undefined` passes nothing, which leaves the form its own data, the edit included
   const cases = [
-    { falseyValue: 0, warns: true },
-    { falseyValue: false, warns: true },
-    { falseyValue: null, warns: true },
-    { falseyValue: undefined, warns: false },
-    { falseyValue: NaN, warns: true },
+    { falseyValue: 0, shown: '' },
+    { falseyValue: false, shown: '' },
+    { falseyValue: null, shown: '' },
+    { falseyValue: undefined, shown: 'a' },
+    { falseyValue: NaN, shown: '' },
   ];
 
-  cases.forEach(({ falseyValue, warns }) => {
-    it(`keeps the edit and reports it once when the parent passes back ${String(falseyValue)}`, async () => {
+  cases.forEach(({ falseyValue, shown }) => {
+    it(`reports the edit once and shows the ${String(falseyValue)} the parent passes back`, async () => {
       const onChange = vi.fn();
       const { node } = renderNode(TestForm, { falseyValue, onChange });
       const input = node?.querySelector('#root_value');
@@ -470,14 +470,9 @@ describe('Form: a parent passing back a falsey formData from onChange', () => {
 
       await user.type(input, 'a');
 
-      expect(input).toHaveValue('a');
+      expect(node?.querySelector('#root_value')).toHaveValue(shown);
       expect(onChange).toHaveBeenCalledTimes(1);
-      if (warns) {
-        expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
-        expect(warnings.consoleSpy.mock.lastCall?.[0]).toMatch(/`formData` changed after the form mounted/);
-      } else {
-        expect(warnings.consoleSpy).not.toHaveBeenCalled();
-      }
+      expect(warnings.consoleSpy).not.toHaveBeenCalled();
     });
   });
 });

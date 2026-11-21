@@ -909,21 +909,19 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
       expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('x');
     });
-    it('should keep the edits, and warn, when a parent that ignores onChange passes another formData', async () => {
+    it('should show another formData that a parent ignoring onChange passes, over an edit it never stored', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: { name: { type: 'string' }, other: { type: 'string', default: 'defaulted' } },
       };
-      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       const { node, rerender } = createFormComponent({ schema, formData: { name: 'a' }, onChange: () => {} });
 
       await user.type(input(node, 'root_name'), 'x');
-      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       rerender({ schema, formData: { name: 'loaded' }, onChange: () => {} });
 
-      expect(input(node, 'root_name')).toHaveValue('ax');
-      expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
-      expect(warnings.consoleSpy.mock.lastCall?.[0]).toMatch(/`formData` changed after the form mounted/);
+      expect(input(node, 'root_name')).toHaveValue('loaded');
+      expect(input(node, 'root_other')).toHaveValue('defaulted');
+      expect(warnings.consoleSpy).not.toHaveBeenCalled();
     });
     it('should clear the errors when noValidate is turned on', () => {
       const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] };

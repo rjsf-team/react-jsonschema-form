@@ -78,14 +78,9 @@ export interface FormProps<
   children?: ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<Uninferred<T>, S, F>;
-  /** Another name for `initialFormData`, taken over it when both are passed: the seed of the form's data, read when
-   * the form mounts and when `reset()` is called. It is only a seed: the form owns its data after that, so passing back
-   * what `onChange` reported changes nothing, and passing another value, such as a record that arrives after mount, is
-   * ignored, with a warning in development only. To show other data, remount the form with a `key`, or call
-   * `setFieldValue('', data)` on its ref.
-   *
-   * @deprecated Use `initialFormData`, which this is another name for. The form reads it only on mount and on
-   * `reset()`, which the name `formData` hides by reading as a controlled value.
+  /** The form's data, like `value` on an `<input>`: the form shows exactly this, filled in with the schema's defaults.
+   * An edit is a proposal reported through `onChange`, shown once it is passed back here, so a form given `formData`
+   * and no `onChange` that stores it shows no edit. Taken over `initialFormData` when both are passed.
    */
   formData?: T;
   /** The seed of the form's data, like `defaultValue` on an `<input>`: read when the form mounts and when `reset()` is
@@ -93,10 +88,6 @@ export interface FormProps<
    * the current value with `getFormData()`.
    */
   initialFormData?: T;
-  /** EXPERIMENT: the form's data, like `value` on an `<input>`. The form shows exactly this, filled in with the
-   * schema's defaults; an edit is a proposal reported through `onChange`, shown only once it is passed back here.
-   */
-  controlledFormData?: T;
   // Form presentation and behavior modifiers
   /** You can provide a `formContext` object to the form, which is passed down to all fields and widgets. Useful for
    * implementing context aware fields and widgets.
@@ -366,7 +357,7 @@ export interface FormState<
   retrievedSchema: S;
   /** The form's option selections and cycle expansions, see `createUiState()` */
   uiState: UiState;
-  /** EXPERIMENT: the `controlledFormData` prop the data was last derived from, and the data that derivation gave. An
+  /** The `formData` prop the data was last derived from, and the data that derivation gave. An
    * operation leaves both alone, so data that is no longer `data` is a proposal the parent has yet to answer
    */
   controlled?: { from: T; data: T | undefined };
@@ -522,18 +513,16 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   const published = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
   // With no operation since the cached derivation, that derivation is the latest state
   const base = published === cache.published ? cache.state : published;
-  const state = props === cache.props && base === cache.state ? cache.state : deriveState(props, base);
+  const state = props === cache.props && base === cache.state ? cache.state : deriveState(props, base, cache.state);
   if (state !== cache.state) {
     setCache({ model, published, props, state });
   }
   // Each commit tells the model the props and the state it rendered, which operations start from, through the
   // `Handoff` rendered below; the attachment is the `Attachment` after it
   const handOff = () => model.committed(props, state, published);
-  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   const { formData: formDataProp, initialFormData } = props;
   useEffect(() => {
     if (isDevelopment) {
-      model.warnIfFormDataIgnored(formDataProp);
       model.warnIfBothSeedsPassed(formDataProp, initialFormData);
     }
   }, [model, formDataProp, initialFormData]);
