@@ -261,6 +261,7 @@ function mayHoldDataRef(properties: object): boolean {
  *
  * @param condition - The `if` as the schema declares it
  * @returns - The keys, or undefined where the condition may read more of the data
+ * @testSeam Exported for utils' own tests
  */
 export function conditionReads<S extends StrictRJSFSchema>(condition: S): readonly string[] | undefined {
   let reads = conditionReadsMemo.get(condition);
