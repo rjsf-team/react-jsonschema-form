@@ -23,7 +23,6 @@ import {
   getDiscriminatorFieldFromSchema,
   getItemSchema,
   getItemsUiSchemaKey,
-  getOptionUiSchema,
   getPrefixLength,
   getRenderedOptionSchema,
   getSchemaType,
@@ -43,9 +42,11 @@ import {
   mergeSchemas,
   namesEveryType,
   ONE_OF_KEY,
+  renderedOptionsUiSchema,
   rendersOwnFieldBesideOption,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
+  selectOptionUiSchema,
   setOwn,
   toConstant,
   UI_DEFINITIONS_KEY,
@@ -1038,8 +1039,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       | undefined;
     if (isSwitched && switchedFrom.heldKeys.size > 0) {
       // The option switched to renders the keys with its own entry of the switched field's uiSchema option list where
-      // that list holds one, and with the field's uiSchema otherwise, as `getOptionUiSchema()` picks it, so a key is
-      // filled out anew under the uiSchema that option renders it with
+      // that list holds one, as `renderedOptionsUiSchema()` orders the list, and with the field's uiSchema otherwise, so
+      // a key is filled out anew under the uiSchema that option renders it with
       const newOptions = retrievedOptionsOf<T, S, F>(ctx.schemaUtils, newLayers[0], asFieldValue<T>(newValue));
       const newIndex = newOptions
         ? shown.get(optionListKey<S>(newOptions, ctx.schemaUtils.getRootSchema()))
@@ -1054,7 +1055,13 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ).filter((uiSchema): uiSchema is GenericObjectType => isObject(uiSchema));
       const switchedTo = ownUiSchemas.flatMap((uiSchema) => {
         const optionUiSchema =
-          xxxOfKey && newIndex !== undefined ? getOptionUiSchema(uiSchema, xxxOfKey, newIndex) : uiSchema;
+          xxxOfKey && newIndex !== undefined
+            ? selectOptionUiSchema(
+                renderedOptionsUiSchema(uiSchema, newLayers[0], ctx.schemaUtils.getRootSchema()),
+                uiSchema,
+                newIndex,
+              )
+            : uiSchema;
         return optionUiSchema === uiSchema ? [uiSchema] : withOptionUiSchemas([optionUiSchema]);
       });
       // The form as it was before the switch: its selections, with the option switched away from at the switched field,
@@ -1381,9 +1388,9 @@ function soleUiSchemaOf<T, S extends StrictRJSFSchema, F extends FormContextType
 }
 
 /** Where `uiSchema`, the one the field with `layers` renders with, offers `anyOf`/`oneOf` ones, the one its shown
- * option renders every key of the field with, as `getOptionUiSchema()` picks it, so the field's own entry for a key is
- * never read, whether the field or the option declares it. shortcut: only one option level is read, since `shown` keys
- * inline lists alike; upgrade once the layers carry the option each one shows
+ * option renders every key of the field with, as `renderedOptionsUiSchema()` orders the list, so the field's own entry
+ * for a key is never read, whether the field or the option declares it. shortcut: only one option level is read, since
+ * `shown` keys inline lists alike; upgrade once the layers carry the option each one shows
  */
 function shownOptionUiSchemaOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schemaUtils: SchemaUtilsType<T, S, F>,
@@ -1403,7 +1410,11 @@ function shownOptionUiSchemaOf<T, S extends StrictRJSFSchema, F extends FormCont
   }
   // An option the list holds no entry for renders with the field's uiSchema, whose list it doesn't read, and one whose
   // entry is no uiSchema renders with none
-  const optionUiSchema = withoutFieldOptions(getOptionUiSchema(uiSchema, keyword, index), uiSchema, keyword);
+  const optionUiSchema = withoutFieldOptions(
+    selectOptionUiSchema(renderedOptionsUiSchema(uiSchema, layers[0], schemaUtils.getRootSchema()), uiSchema, index),
+    uiSchema,
+    keyword,
+  );
   return isObject(optionUiSchema) ? optionUiSchema : {};
 }
 

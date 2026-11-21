@@ -92,3 +92,9 @@ const schema: RJSFSchema = {
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
+
+A field with a `oneOf` or `anyOf` of its own beside one in an `allOf` entry, or in the `then` or `else` that applies, offers each of its own options merged with each of the other list's, since the data has to match both.
+A `then` or `else` option's keywords win over the field's option it is merged with, as the `then` or `else` wins over the field. A pair whose options name different `$ref`s, or `type`s no value meets both of, is left out, and where every pair is, the `then` or `else` list replaces the field's own, as it does under a `customMergeAllOf`.
+An entry of `uiSchema.oneOf` or `uiSchema.anyOf` describes the field's own option at its index, so each merged option takes the entry of the field's option it was built from.
+A field whose lists sit only in `allOf` entries has no list of its own for the entries to describe, so each entry describes the merged option at its position.
+Each merged option is labelled with the names of the options it was built from, as "B, C": the field's own option by its entry's `ui:title`, or else its `title`, and the other by its `title`.

@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import { EXTRA_KEYS_ELSEWHERE_FLAG } from '../../src/constants.ts';
-import type { RJSFMarkedSchema, RJSFSchema } from '../../src/index.ts';
+import type { CustomMergeAllOf, RJSFMarkedSchema, RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   EXTRA_KEY_OPTION_KEY,
@@ -28,6 +28,7 @@ import {
   resolveOwnRef,
   stubExistingAdditionalProperties,
 } from '../../src/schema/retrieveSchema.ts';
+import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
@@ -41,6 +42,7 @@ import {
   SCHEMA_WITH_SINGLE_CONDITION,
   SUPER_SCHEMA,
 } from '../testUtils/testData.ts';
+import { check } from './graph/miniValidator.ts';
 import type { TestValidatorType } from './types.ts';
 
 /** Reads a subschema handed out by `retrieveSchema()` as the schema it is, or the empty schema for any other value */
@@ -269,6 +271,166 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(
         retrieved({ type: 'object', oneOf: [{ type: 'string' }], allOf: [{ oneOf: [{ type: 'number' }] }] }),
       ).toEqual([{ type: 'string' }]);
+    });
+  });
+  describe("the options a then, else or dependencies schema holding a list beside the field's own offers (#5930)", () => {
+    const A: RJSFSchema = { properties: { a: { type: 'string' } } };
+    const B: RJSFSchema = { properties: { b: { type: 'string' } } };
+    const C: RJSFSchema = { properties: { c: { type: 'string' } } };
+    const D: RJSFSchema = { properties: { d: { type: 'string' } } };
+    const product = [
+      { properties: { a: { type: 'string' }, c: { type: 'string' } } },
+      { properties: { a: { type: 'string' }, d: { type: 'string' } } },
+      { properties: { b: { type: 'string' }, c: { type: 'string' } } },
+      { properties: { b: { type: 'string' }, d: { type: 'string' } } },
+    ];
+    const retrieved = (schema: RJSFSchema, formData?: unknown, customMergeAllOf?: CustomMergeAllOf) =>
+      retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, schema, formData);
+    // The data meets both lists, so the field offers each option of its own merged with each of the branch's, as for
+    // an `allOf` entry holding the second list
+    it.each<[string, RJSFSchema]>([
+      ['a then', { if: true, then: { oneOf: [C, D] } }],
+      ['an else', { if: false, else: { oneOf: [C, D] } }],
+    ])('offers the options of the field and of %s merged', (_, branch) => {
+      expect(retrieved({ type: 'object', oneOf: [A, B], ...branch }).oneOf).toEqual(product);
+    });
+    // A list beside `dependencies` is read as the validator reads it, so the option the data matches is merged in
+    it("offers a dependencies schema's list in place of the field's own, which the data chose an option of", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        anyOf: [A, B],
+        dependencies: { k: { if: true, then: { anyOf: [C, D] } } },
+      };
+      const { properties, anyOf } = retrieved(schema, { k: 1 });
+      expect(properties).toEqual(A.properties);
+      expect(anyOf).toEqual([C, D]);
+    });
+    // A `then` holding `dependencies` reads its own list as the validator reads it, so the option the data matches is
+    // merged in, rather than merged with each of the field's
+    it("merges in the option of a then's list the data chose, rather than merging the list with the field's own", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [A, B],
+        if: true,
+        then: { oneOf: [C, D], dependencies: { k: ['k'] } },
+      };
+      const view = retrieved(schema, { k: 1 });
+      expect(view.properties).toEqual(C.properties);
+      expect(view.oneOf).toBeUndefined();
+    });
+    // A `dependencies` entry's `oneOf` whose options declare no key of the data is read as the validator reads it: the
+    // option the data matches is merged in, and the list dropped before the entry merges into the field, so it never
+    // meets the field's own list as a list to merge each option with
+    it.each<[string, RJSFSchema, RJSFSchema['properties']]>([
+      [
+        "beside a list of the field's own, which the data also chose from",
+        { oneOf: [A, B] },
+        { ...B.properties, ...D.properties },
+      ],
+      [
+        'on a field offering no list of its own',
+        { properties: { k: { type: 'number' } } },
+        { k: { type: 'number' }, ...D.properties },
+      ],
+    ])("merges in the option the data matches of a dependencies entry's unkeyed oneOf %s", (_, field, properties) => {
+      testValidator.setReturnValues({ isValid: (schema, data, root) => check(schema, data, root) });
+      const schema: RJSFSchema = { type: 'object', ...field, dependencies: { k: { oneOf: [C, D] } } };
+      const view = retrieved(schema, { k: 1, b: 'x', d: 'x' });
+      expect(view.properties).toEqual(properties);
+      expect(view.oneOf).toBeUndefined();
+    });
+    it("leaves the branch's list in place of the field's under a customMergeAllOf, which reads its first entry as winning", () => {
+      const customMergeAllOf = vi.fn((schema: RJSFSchema) => shallowAllOfMerge(schema) as RJSFSchema);
+      expect(
+        retrieved({ type: 'object', oneOf: [A, B], if: true, then: { oneOf: [C, D] } }, undefined, customMergeAllOf)
+          .oneOf,
+      ).toEqual([C, D]);
+      expect(customMergeAllOf).not.toHaveBeenCalled();
+    });
+    // A `dependencies` entry's `oneOf` whose options declare the key is a dynamic dependency: the one option whose
+    // `properties[k]` the data satisfies is merged in, less that property
+    describe("a dependencies entry's keyed oneOf", () => {
+      beforeEach(() => {
+        testValidator.setReturnValues({ isValid: (schema, data, root) => check(schema, data, root) });
+      });
+      const keyed = (one: RJSFSchema): RJSFSchema => ({
+        oneOf: [
+          { ...one, properties: { k: { const: 1 }, ...one.properties } },
+          { properties: { k: { const: 2 }, ...D.properties } },
+        ],
+      });
+      it.each<[number, RJSFSchema['properties']]>([
+        [1, { ...B.properties, ...C.properties }],
+        [2, { ...B.properties, ...D.properties }],
+      ])(
+        "merges in the option k: %i names beside the option of the field's own list the data chose",
+        (k, properties) => {
+          const schema: RJSFSchema = { type: 'object', oneOf: [A, B], dependencies: { k: keyed(C) } };
+          const view = retrieved(schema, { k, b: 'x' });
+          expect(view.properties).toEqual(properties);
+          expect(view.oneOf).toBeUndefined();
+        },
+      );
+      // The field's own list is one the data chose an option of, B, so the option's list is offered as it stands rather
+      // than merged with the field's, which would offer A's options again
+      it("offers the list of the option it names in place of the field's own, which the data chose an option of", () => {
+        const schema: RJSFSchema = { type: 'object', oneOf: [A, B], dependencies: { k: keyed({ oneOf: [C, D] }) } };
+        const view = retrieved(schema, { k: 1, b: 'x' });
+        expect(view.properties).toEqual(B.properties);
+        expect(view.oneOf).toEqual([C, D]);
+      });
+      it('offers the list of the option it names on a field offering no list of its own', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'number' } },
+          dependencies: { k: keyed({ oneOf: [C, D] }) },
+        };
+        expect(retrieved(schema, { k: 1 }).oneOf).toEqual([C, D]);
+      });
+    });
+    // The branch merges over the field, so of a keyword both options of a pair hold, the branch's wins, and with it a
+    // `then` narrows or relabels the field's options as it does a field offering none
+    it.each<[string, RJSFSchema[], RJSFSchema[], RJSFSchema[]]>([
+      [
+        'relabels',
+        [
+          { const: 'a', title: 'A' },
+          { const: 'b', title: 'B' },
+        ],
+        [{ const: 'a', title: 'Only A' }],
+        [{ const: 'a', title: 'Only A' }],
+      ],
+      ['narrows', [{ const: 'a' }, { const: 'b' }], [{ const: 'c' }], [{ const: 'c' }]],
+      ['retypes', [{ type: 'string' }], [{ type: 'number' }], [{ type: 'number' }]],
+    ])("%s the field's options with the branch's, whose keywords win each pair", (_, own, then, expected) => {
+      expect(retrieved({ oneOf: own, if: true, then: { oneOf: then } }).oneOf).toEqual(expected);
+    });
+    it("keeps the keys of the field's option first, and the branch's default of a key both declare", () => {
+      const options = retrieved({
+        type: 'object',
+        oneOf: [{ properties: { a: { type: 'string', default: 'own' } } }, B],
+        if: true,
+        then: { oneOf: [{ properties: { a: { type: 'string', default: 'then' }, c: { type: 'string' } } }] },
+      }).oneOf;
+      expect(options).toEqual([
+        { properties: { a: { type: 'string', default: 'then' }, c: { type: 'string' } } },
+        { properties: { b: { type: 'string' }, a: { type: 'string', default: 'then' }, c: { type: 'string' } } },
+      ]);
+      expect(options?.map((option) => (isSchemaObject(option) ? Object.keys(option.properties ?? {}) : []))).toEqual([
+        ['a', 'c'],
+        ['b', 'a', 'c'],
+      ]);
+    });
+    it("leaves the branch's list in place of the field's where every pair holds a false option", () => {
+      expect(retrieved({ oneOf: [false], if: true, then: { oneOf: [C] } }).oneOf).toEqual([C]);
+    });
+    it('leaves out each pair holding a false option, and takes the other option of a pair holding a true one', () => {
+      expect(retrieved({ oneOf: [false, true, A], if: true, then: { oneOf: [C, true] } }).oneOf).toEqual([
+        C,
+        true,
+        { properties: { ...A.properties, ...C.properties } },
+        A,
+      ]);
     });
   });
 

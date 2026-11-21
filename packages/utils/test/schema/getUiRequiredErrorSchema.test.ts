@@ -593,6 +593,28 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(errors[0].property).toBe('.thing.aField');
   });
 
+  // An entry of `uiSchema.oneOf` describes the option as written, so B×C, at 2 of the rebuilt list, reads B's (#5930)
+  it('reads a ui:required in the entry of the option the shown option of a rebuilt list was built from', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          type: 'object',
+          oneOf: [
+            { properties: { a: { type: 'string' }, c: { type: 'string' } } },
+            { properties: { bb: { type: 'string' }, bz: { type: 'string' } } },
+          ],
+          allOf: [{ oneOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }] }],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { p: { oneOf: [{}, { bz: { 'ui:required': true } }] } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      p: { bb: 'y', c: 'z' },
+    });
+    expect(toErrorList(errorSchema).map(({ property }) => property)).toEqual(['.p.bz']);
+  });
+
   it('reports a ui:required field inside a selected oneOf branch that is itself a raw $ref', () => {
     // resolveSelectedBranch() must expand $ref options (resolveAnyOfOrOneOfRefs: true), the same way ObjectField
     // does when rendering, or the merged branch schema has no `properties` and aField is never visited.

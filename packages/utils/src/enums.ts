@@ -122,6 +122,11 @@ export const TranslatableString = {
    * MultiSchemaField
    */
   TitleOptionPrefix: '%1 option %2',
+  /** Title of an option a merge of option lists built, where %1 will be replaced by the title joined so far, starting
+   * with the name of the first option it was built from, the field's own, and %2 by the name of the next, as provided by
+   * `renderedOptionTitles()`
+   */
+  MergedOptionTitle: '%1, %2',
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
   KeyLabel: '%1 Key',
   /** Error for an additional property key the object's schema forbids, where %1 will be replaced by the key as

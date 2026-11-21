@@ -1382,7 +1382,7 @@ function readTypesFrom<S extends StrictRJSFSchema>(
 }
 
 /** Returns whether a value can be of a type both `types` and `others` allow */
-function typesOverlap(types: readonly string[] | undefined, others: readonly string[] | undefined): boolean {
+export function typesOverlap(types: readonly string[] | undefined, others: readonly string[] | undefined): boolean {
   return types === undefined || others === undefined || types.some((type) => others.includes(type));
 }
 
