@@ -44,6 +44,18 @@ describe('getDecimalSeparator()', () => {
 
   it('should return "." when formatToParts does not contain a decimal part', () => {
     vi.spyOn(Intl.NumberFormat.prototype, 'formatToParts').mockReturnValue([{ type: 'integer', value: '1' }]);
-    expect(getDecimalSeparator('fr')).toEqual('.');
+    expect(getDecimalSeparator('de')).toEqual('.');
+  });
+
+  it('builds the number format once per locale', () => {
+    const NumberFormat = vi.spyOn(Intl, 'NumberFormat');
+    expect(getDecimalSeparator('es')).toEqual(',');
+    expect(getDecimalSeparator('es')).toEqual(',');
+    expect(NumberFormat).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps a list of locales apart from the string that joins them, which names no locale', () => {
+    expect(getDecimalSeparator('nl,en')).toEqual('.');
+    expect(getDecimalSeparator(['nl', 'en'])).toEqual(',');
   });
 });

@@ -1533,8 +1533,35 @@ function leafOf<S extends StrictRJSFSchema>(field: DefaultsField<S>): object | u
   return node?.kind === 'schema' && isLeafSchema(node.raw) ? node.raw : undefined;
 }
 
+/** The defaults last computed for a child holding an object or an array, by the snapshot of that data, see
+ * `snapshotOf()`, and what they were computed from, the snapshot standing for the data: an edit leaves every other row
+ * of a long list as it was, whose defaults are then not computed again (#3183). The state a call hands back is copied
+ * off them, so no caller holds one. Only a fold that read nothing else of the call is kept: one that asked no
+ * `fieldState` which option a field shows and recorded no `null` fill, which names the object of the data it is for
+ */
+const dataDefaults = new WeakMap<object, MemoEntry>();
+
+/** Where `foldChild()`'s inputs hold the child's data */
+const DATA_INPUT = 7;
+
+/** Returns `fieldState` calling `onAsk` whenever anything of it is read */
+function askingState<S extends StrictRJSFSchema>(fieldState: FormFieldState<S>, onAsk: () => void): FormFieldState<S> {
+  return new Proxy(fieldState, {
+    get(target, key) {
+      onAsk();
+      const member: unknown = Reflect.get(target, key, target);
+      /* v8 ignore next 3 -- the fold reads only the methods of a `FormFieldState` */
+      if (typeof member !== 'function') {
+        return member;
+      }
+      // Called on the state itself, as a class holding private fields needs
+      return member.bind(target) as unknown;
+    },
+  });
+}
+
 /** Computes the defaults of the child `child` of a field, memoized across the passes of the field's fixed point, and
- * across calls for a child seeded by a leaf
+ * across calls for a child seeded by a leaf or holding data an earlier call computed it for, see `dataDefaults`
  */
 function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1568,10 +1595,33 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   let entry = [memo?.get(memoKey), leaf && leafDefaults.get(leaf)].find((held) =>
     held?.inputs.every((input, index) => Object.is(input, inputs[index])),
   );
+  const data = props.rawFormData;
+  // An option's fold reads the parent it is an option of through `optionOf`, which no input stands for
+  const snapshot =
+    entry === undefined && !props.optionOf && (Array.isArray(data) || isPlainObject(data))
+      ? snapshotOf(data)
+      : undefined;
+  const dataInputs = snapshot && [
+    ...inputs.map((input, index) => (index === DATA_INPUT ? snapshot : input)),
+    props.nullFills?.globalUiOptions,
+    // A field offering options picks one by its data without a `fieldState`, which asks none
+    props.fieldState !== undefined,
+  ];
+  const held = snapshot && dataDefaults.get(snapshot);
+  if (held?.inputs.every((input, index) => Object.is(input, dataInputs?.[index]))) {
+    entry = held;
+  }
   if (entry === undefined) {
     const computed: MemoEntry = { inputs, fills: freshFills(props.nullFills) };
+    let asksState = false;
     computed.value = foldField<T, S, F>(context, child, {
       ...props,
+      fieldState:
+        snapshot && props.fieldState
+          ? askingState(props.fieldState, () => {
+              asksState = true;
+            })
+          : props.fieldState,
       nullFills: computed.fills,
       memo: undefined,
       onNullFill: () => {
@@ -1588,6 +1638,14 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (leaf !== undefined && (typeof computed.value !== 'object' || computed.value === null)) {
       leafDefaults.set(leaf, computed);
     }
+    if (snapshot && dataInputs && !asksState && computed.fills?.overUndefined.isEmpty !== false) {
+      // A fold handing back the data it was given hands a later call the data that call gives it
+      dataDefaults.set(snapshot, {
+        ...computed,
+        inputs: dataInputs,
+        value: computed.value === data ? snapshot : computed.value,
+      });
+    }
     entry = computed;
   }
   if (entry.holdsNull) {
@@ -1600,7 +1658,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (entry.reachedDefault) {
     props.onReachedDefault?.();
   }
-  return entry.value;
+  return entry === held && entry.value === snapshot ? data : entry.value;
 }
 
 /** Computes the defaults of a field from its view: the `const`, `default` and parent defaults that apply to it, the

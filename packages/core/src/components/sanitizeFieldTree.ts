@@ -1410,6 +1410,18 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (newItem === true) {
         return item;
       }
+      // Nothing the item's subtree is built from differs, as `walk()` would find, which a long list is spared making
+      // each row's fills to find (#3183)
+      if (
+        !ctx.isDefaultsChanged &&
+        oldItem === newItem &&
+        hasPrevious &&
+        valueAt(oldValue, previousIndex) === item &&
+        !isEdited(ctx, [...path, index]) &&
+        fillsAlikeBelow()
+      ) {
+        return item;
+      }
       // An item no previous one moved to, such as a copy or a new row, is judged as holding what it holds now under
       // the old tree's item at its index, so a change that flips the constraints of the rows judges it as it judges them
       const itemMovesBefore = ctx.itemMoves.length;

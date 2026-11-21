@@ -35,6 +35,25 @@ vi.mock(import('../../utils/src/schema/getDefaultFormState.ts'), async (importOr
   };
 });
 
+// Counted, so a test can count the rows the sanitize hands a fill to judge
+const childFills = vi.hoisted(() => ({ count: 0 }));
+vi.mock(import('../../utils/src/schema/getFilledDefault.ts'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    childFillOf: <S extends StrictRJSFSchema, F extends FormContextType>(
+      context: SchemaContext<S, F>,
+      schema: S,
+      rootSchema: S,
+      fill: FieldFill,
+      key: string | number,
+    ) => {
+      childFills.count += 1;
+      return actual.childFillOf(context, schema, rootSchema, fill, key);
+    },
+  };
+});
+
 /** An object `depth` levels deep, `width` properties at each, its string leaves declaring `leafDefault` */
 function nested(depth: number, width: number, leafDefault = 'x'): RJSFSchema {
   if (depth === 0) {
@@ -159,5 +178,24 @@ describe('the fills the sanitize of a deep form makes', () => {
     await user.selectOptions(container.querySelector('select')!, 'T');
 
     expect(formFills.count).toBeLessThanOrEqual(3);
+  });
+
+  it('hands a fill to the rows of a long list no more often for a longer one, as the user types into a row (#3183)', async () => {
+    const rows: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
+    const fillsForAKeystrokeIn = async (length: number) => {
+      const initialFormData = Array.from({ length }, (_, index) => ({ a: `item ${index}` }));
+      const { container, unmount } = render(
+        <Form schema={rows} validator={validator} initialFormData={initialFormData} />,
+      );
+      childFills.count = 0;
+      await user.type(container.querySelector<HTMLInputElement>('#root_1_a')!, 'x');
+      unmount();
+      return childFills.count;
+    };
+
+    const fillsInAShortList = await fillsForAKeystrokeIn(4);
+    // The edited row is still handed its fills, so the count is of fills the sanitize made
+    expect(fillsInAShortList).toBeGreaterThan(0);
+    expect(await fillsForAKeystrokeIn(40)).toBe(fillsInAShortList);
   });
 });

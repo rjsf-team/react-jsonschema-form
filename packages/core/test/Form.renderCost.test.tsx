@@ -289,17 +289,53 @@ describe('render cost of an edit in a long list (#3183)', () => {
     expect(Object.fromEntries(widgets)).toEqual({ root_0_a: 1, root_1_a: 1 });
   });
 
-  it("re-renders every row's item template once for the new length, and only the shifted rows' widgets, for a remove", async () => {
+  it("re-renders only the shifted rows' item templates and widgets for a remove", async () => {
     const { container, items, widgets } = renderList();
 
     await user.click(elementOf(container, '#root_10__remove'));
 
     expect(input(container, 'root_10_a')).toHaveValue('item 11');
     expect(container.querySelector('#root_19_a')).toBeNull();
-    // An item template takes `totalItems`, so each remaining row's template renders again
-    expect(Object.fromEntries(items)).toEqual(Object.fromEntries(Array.from({ length: 19 }, (_, index) => [index, 1])));
     const shifted = Array.from({ length: 9 }, (_, index) => 10 + index);
+    expect(Object.fromEntries(items)).toEqual(Object.fromEntries(shifted.map((index) => [index, 1])));
     expect(Object.fromEntries(widgets)).toEqual(Object.fromEntries(shifted.map((index) => [`root_${index}_a`, 1])));
+  });
+
+  it('re-renders only the row that was last for an add', async () => {
+    const { container, items, widgets } = renderList();
+
+    await user.click(elementOf(container, 'button.rjsf-array-item-add'));
+
+    expect(container.querySelector('#root_20_a')).not.toBeNull();
+    // The row that was last can now move down, and the new row renders for the first time
+    expect(Object.fromEntries(items)).toEqual({ 19: 1, 20: 1 });
+    expect(Object.fromEntries(widgets)).toEqual({ root_20_a: 1 });
+  });
+});
+
+describe('checks of a condition for an edit (#4051)', () => {
+  const conditional: RJSFSchema = {
+    type: 'object',
+    properties: { kind: { type: 'string' }, other: { type: 'string' } },
+    allOf: ['a', 'b', 'c'].map((kind) => ({
+      if: { properties: { kind: { const: kind } }, required: ['kind'] },
+      then: { properties: { [kind]: { type: 'string' } } },
+    })),
+  };
+
+  it('checks no condition for a keystroke in a field no condition reads, and each once the field they read changes', async () => {
+    const { container } = render(<Form schema={conditional} validator={validator} initialFormData={{ kind: 'b' }} />);
+    const isValid = vi.spyOn(validator, 'isValid');
+
+    await user.type(input(container, 'root_other'), 'x');
+
+    expect(input(container, 'root_b')).toBeInTheDocument();
+    expect(isValid).not.toHaveBeenCalled();
+
+    await user.type(input(container, 'root_kind'), 'c');
+
+    expect(isValid).toHaveBeenCalledTimes(3);
+    isValid.mockRestore();
   });
 });
 
