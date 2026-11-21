@@ -12,6 +12,7 @@ import type {
 } from 'react';
 import type { JSONSchema7 } from 'json-schema';
 
+import type { REUSES_DEFAULTS_FLAG } from './constants.ts';
 import type { TranslatableString } from './enums.ts';
 import type { DateElementFormat } from './getDateElementProps.ts';
 import './jsonSchemaAugmentation.ts';
@@ -221,6 +222,10 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
    * list on the type it resolves to. Only the names are read.
    */
   readonly widgets?: Readonly<Record<string, unknown>>;
+  /** Set by `Form`, which hands `getDefaultFormState()` back the state it returned with an edit, so the defaults of
+   * what the edit left alone are reused, see `REUSES_DEFAULTS_FLAG`
+   */
+  readonly [REUSES_DEFAULTS_FLAG]?: true;
 }
 
 /** What the defaults hand a field, which they fill it by, see `getFilledDefault()`. `{}` is the root's. A field's

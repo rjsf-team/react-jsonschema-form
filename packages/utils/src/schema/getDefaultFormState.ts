@@ -23,6 +23,7 @@ import {
   THEN_KEY,
   UI_DEFINITIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
+  REUSES_DEFAULTS_FLAG,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
@@ -1536,7 +1537,8 @@ function leafOf<S extends StrictRJSFSchema>(field: DefaultsField<S>): object | u
 }
 
 /** The defaults last computed for a child holding an object or an array, by the snapshot of that data, see
- * `snapshotOf()`, and what they were computed from, the snapshot standing for the data: an edit leaves every other row
+ * `snapshotOf()`, and what they were computed from, the snapshot standing for the data, under a context marked
+ * `REUSES_DEFAULTS_FLAG`, as `Form`'s is: an edit leaves every other row
  * of a long list as it was, whose defaults are then not computed again (#3183). The state a call hands back is copied
  * off them, so no caller holds one. Only a fold that read nothing else of the call is kept: one that asked no
  * `fieldState` which option a field shows, see `stateAsks`, and recorded no `null` fill, which names the object of the
@@ -1591,7 +1593,10 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   let entry = [memo?.get(memoKey), leaf && leafDefaults.get(leaf)].find((held) => isHeldFor(held, inputs));
   // An option's fold reads the parent it is an option of through `optionOf`, which no input stands for
   const snapshot =
-    entry === undefined && !props.optionOf && (Array.isArray(data) || isPlainObject(data))
+    entry === undefined &&
+    REUSES_DEFAULTS_FLAG in context &&
+    !props.optionOf &&
+    (Array.isArray(data) || isPlainObject(data))
       ? snapshotOf(data)
       : undefined;
   const dataInputs = snapshot && [
