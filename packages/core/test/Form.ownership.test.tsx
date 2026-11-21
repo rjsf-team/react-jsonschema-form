@@ -1707,9 +1707,7 @@ describe('form data ownership', () => {
       expect(container.querySelector('#root_renamed')).toBeNull();
     });
 
-    // `ObjectField` moves the property in its own record of the order as it sends the rename, which the form took as
-    // a proposal, and never learns the parent declined it
-    it.fails('an additional property keeps its place when the parent declines its rename', async () => {
+    it('an additional property keeps its place when the parent declines its rename', async () => {
       const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
       const { container } = render(
         <ListeningParent schema={objectSchema} initialValue={{ first: 'one', second: 'two' }} />,
@@ -1720,6 +1718,22 @@ describe('form data ownership', () => {
       await user.type(keyInput, 'renamed');
       await user.tab();
 
+      expect([...container.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_first__key',
+        'root_second__key',
+      ]);
+    });
+
+    it('an additional property keeps its place when the parent declines its removal', async () => {
+      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+      const log = createParentLog<Record<string, string>>();
+      const { container } = render(
+        <ListeningParent schema={objectSchema} initialValue={{ first: 'one', second: 'two' }} log={log} />,
+      );
+
+      await user.click(elementOf(container, '.rjsf-object-property-remove'));
+
+      expect(log.reported).toEqual([{ second: 'two' }]);
       expect([...container.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual([
         'root_first__key',
         'root_second__key',

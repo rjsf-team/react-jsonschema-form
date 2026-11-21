@@ -845,9 +845,14 @@ export default function ObjectField<
 
     sentFormData.current = newFormData;
     const outcome = sendMove({ value: newFormData }, () => onChange(newFormData, fieldPath));
-    // A refused add leaves the order as it was
+    // A refused add leaves the order as it was. A name the data no longer holds leaves it here, see the render
     if (outcome?.kind !== 'refused') {
-      setAdditionalPropertyOrder((order) => [...order, newKey]);
+      setAdditionalPropertyOrder((order) => [
+        ...order.filter(
+          (property) => isObject(newFormData) && Object.hasOwn(newFormData, property) && property !== newKey,
+        ),
+        newKey,
+      ]);
     }
     forgetChangedSeeds(newKey);
   }, [
@@ -925,8 +930,12 @@ export default function ObjectField<
         if (rewrittenKeys) {
           setAdditionalPropertyOrder(rewrittenKeys);
         } else if (outcome?.kind !== 'refused') {
+          // Beside the old name rather than in its place, so the property keeps its place under whichever name the
+          // data comes to hold: a controlling parent may yet decline the rename
           setAdditionalPropertyOrder((order) =>
-            order.map((property) => (property === oldKey ? actualNewKey : property)),
+            order
+              .filter((property) => Object.hasOwn(newFormData, property) && property !== actualNewKey)
+              .flatMap((property) => (property === oldKey ? [oldKey, actualNewKey] : [property])),
           );
         }
         forgetChangedSeeds(oldKey, actualNewKey);
@@ -947,8 +956,8 @@ export default function ObjectField<
       // that kept the property, leaves the property in its place. One no form answered as it was sent, as outside a
       // `Form` or under a parent field that stores it later, is the field's own to make, so the property leaves the order
       const outcome = sendMove({ fieldPath: removedPath, value: removal }, () => onChange(removal, removedPath));
+      // The name stays in the order, which a controlling parent that declines the removal renders the property from
       if (outcome?.kind !== 'refused' && (outcome?.kind !== 'rewritten' || outcome.kept === undefined)) {
-        setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
         const properties = schemaRef.current.properties ?? {};
         // The key it held goes free, but a property that took a variant of it while it was held keeps that variant
         setRenamedKeys((previous) => {
@@ -972,8 +981,10 @@ export default function ObjectField<
 
   if (!renderOptionalField || hasFormData) {
     const definedPropertySet = new Set(definedPropertyOrder);
-    // A set, since an add that never reaches the data, as under a custom field that keeps the change to itself, leaves
-    // its key in the order, and the next add picks that key again
+    // The order holds more names than the data: a renamed property's old name beside its new one, and a removed one's,
+    // until the next add or rename drops those the data no longer holds, so a property keeps its place whatever a
+    // controlling parent answers. A set, since an add that never reaches the data, as under a custom field that keeps
+    // the change to itself, leaves its key in the order, and the next add picks that key again
     const orderedSet = new Set(additionalPropertyOrder);
     const currentAdditionalProperties = [...orderedSet].filter(
       (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),
