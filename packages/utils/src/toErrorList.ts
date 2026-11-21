@@ -1,5 +1,6 @@
 import { ERRORS_KEY } from './constants.ts';
 import errorSchemaChild from './errorSchemaChild.ts';
+import { pathToProperty } from './pathUtils.ts';
 import type { ErrorSchema, RJSFValidationError } from './types.ts';
 
 /** Converts an `errorSchema` into a list of `RJSFValidationErrors`. The errors of an array's items are listed whether
@@ -26,7 +27,8 @@ export default function toErrorList<T = unknown>(
  */
 function errorsFrom(errorSchema: Record<string, unknown> | unknown[], fieldPath: string[]): RJSFValidationError[] {
   const errors: unknown = Reflect.get(errorSchema, ERRORS_KEY);
-  const property = `.${fieldPath.join('.')}`;
+  // An error on the root itself is listed under `.`
+  const property = pathToProperty(fieldPath) || '.';
   const errorList: RJSFValidationError[] = Array.isArray(errors)
     ? errors.map((message: string) => ({ property, message, stack: `${property} ${message}` }))
     : [];

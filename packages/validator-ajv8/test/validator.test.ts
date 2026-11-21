@@ -28,6 +28,7 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
+import errorPropertyTests from '../../utils/test/testUtils/errorPropertyTests.ts';
 import nestedResourceTests, {
   handedResourceTests,
   mergedResourceViewTests,
@@ -4072,6 +4073,7 @@ describe('AJV8Validator naming a property a branch requires in a $ref target Ajv
 
 pointerValidationTests(() => customizeValidator());
 requiredTitleTests(() => customizeValidator());
+errorPropertyTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());

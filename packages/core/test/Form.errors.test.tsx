@@ -174,10 +174,9 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           const node = container.firstElementChild!;
 
           await submitForm(node, user);
-          // `toErrorSchema` runs the property name through `toPath`, so the error of a name holding a dot lands at
-          // the path that name spells out, not under the name itself
+          // The error of a name holding a dot is filed under the name itself, not the path it spells out
           expect(renderedErrorSchema()).toEqual({
-            foo: { bar: { __errors: ["must have required property 'foo.bar'"] } },
+            'foo.bar': { __errors: ["must have required property 'foo.bar'"] },
             baz: { __errors: ["must have required property 'baz'"] },
           });
 
@@ -214,23 +213,19 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           const node = container.firstElementChild!;
 
           await submitForm(node, user);
-          // The name is spelled out as a path here too, so the errors of the two fields it holds sit side by side
-          // under it and clearing one has to leave the other where it is
+          // The errors of the two fields the name holds sit side by side under it, and clearing one has to leave the
+          // other where it is
           expect(renderedErrorSchema()).toEqual({
-            has: {
-              dot: {
-                inner: { __errors: ["must have required property 'inner'"] },
-                other: { __errors: ["must have required property 'other'"] },
-              },
+            'has.dot': {
+              inner: { __errors: ["must have required property 'inner'"] },
+              other: { __errors: ["must have required property 'other'"] },
             },
           });
 
           await user.type(screen.getByLabelText(/^inner/), 'a');
           expect(renderedErrorSchema()).toEqual({
-            has: {
-              dot: {
-                other: { __errors: ["must have required property 'other'"] },
-              },
+            'has.dot': {
+              other: { __errors: ["must have required property 'other'"] },
             },
           });
         });
@@ -446,6 +441,40 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await submitForm(node, user);
 
         expect(screen.getByRole('slider')).toHaveFocus();
+      });
+
+      describe('an error under a key holding a `.`', () => {
+        const name = (title: string): RJSFSchema => ({
+          type: 'object',
+          properties: { name: { type: 'string', title, minLength: 3 } },
+        });
+        const dottedSchema: RJSFSchema = {
+          type: 'object',
+          properties: { 'a.b': name('Dotted name'), a: { type: 'object', properties: { b: name('Nested name') } } },
+        };
+
+        it.each<[string, Partial<FormProps>]>([
+          ['the validator reports', { initialFormData: { 'a.b': { name: 'x' }, a: { b: { name: 'long enough' } } } }],
+          [
+            'customValidate adds',
+            {
+              initialFormData: { 'a.b': { name: 'long enough' }, a: { b: { name: 'long enough' } } },
+              customValidate: (_: unknown, errors: FormValidation<{ 'a.b': { name: string } }>) => {
+                errors['a.b']?.name?.addError('bad');
+                return errors;
+              },
+            },
+          ],
+        ])('shows on and focuses its own field when %s it', async (_, props) => {
+          const { node } = createFormComponent({ schema: dottedSchema, focusOnFirstError: true, ...props });
+
+          await submitForm(node, user, true);
+
+          const dotted = screen.getByRole('textbox', { name: 'Dotted name' });
+          expect(dotted).toHaveFocus();
+          expect(dotted).toHaveAttribute('aria-invalid', 'true');
+          expect(screen.getByRole('textbox', { name: 'Nested name' })).not.toHaveAttribute('aria-invalid', 'true');
+        });
       });
 
       it("focuses nothing inside an empty array's fieldset for its own minItems error", async () => {
@@ -2337,6 +2366,32 @@ describe('the errors a field raises for the items of an array', () => {
     expect(event?.errors).toEqual([
       { property: '.obj.__proto__', message: 'proto', stack: '.obj.__proto__ proto' },
       { property: '.obj.c', message: 'renamed', stack: '.obj.c renamed' },
+    ]);
+  });
+
+  it('keep the validation error of a property renamed to a key holding a dot under that key', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { obj: { type: 'object', additionalProperties: { type: 'string', minLength: 3 } } },
+      },
+      initialFormData: { obj: { a: 'x' } },
+    });
+
+    await submitForm(node, user);
+    const keyInput = elementOf(node, '#root_obj_a__key');
+    await user.clear(keyInput);
+    await user.type(keyInput, 'c.d');
+    await user.tab();
+
+    const [event] = onChange.mock.lastCall ?? [];
+    expect(event?.errorSchema).toEqual({ obj: { 'c.d': { __errors: [expect.any(String)] } } });
+    expect(event?.errors).toEqual([
+      expect.objectContaining({
+        property: ".obj['c.d']",
+        name: 'minLength',
+        stack: expect.stringMatching(/^\.obj\['c\.d'\] /),
+      }),
     ]);
   });
 

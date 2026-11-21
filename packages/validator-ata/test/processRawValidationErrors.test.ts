@@ -123,12 +123,12 @@ describe('transformRJSFValidationErrors()', () => {
   it('falls back to schemaPath-derived uiSchema title', () => {
     const errors: ValidationError[] = [
       ataError({
-        instancePath: '',
-        schemaPath: '#/properties/user/required',
+        instancePath: '/user',
+        schemaPath: '#/properties/user/anyOf/0/required',
         params: { missingProperty: 'name' },
       }),
     ];
-    const uiSchema: UiSchema = { user: { name: { 'ui:title': 'User Name' } } };
+    const uiSchema: UiSchema = { user: { anyOf: [{ name: { 'ui:title': 'User Name' } }] } };
     const out = transformRJSFValidationErrors(errors, uiSchema);
     expect(out[0].title).toBe('User Name');
   });

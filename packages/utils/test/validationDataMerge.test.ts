@@ -125,7 +125,10 @@ describe('validationDataMerge()', () => {
       const validationData = validated(existingAt('.a.b'));
       const result = validationDataMerge(validationData, { 'a.b': { [ERRORS_KEY]: [message] } }, true);
       expect(result.errorSchema).toEqual({ a: { b: { [ERRORS_KEY]: [message] } }, 'a.b': { [ERRORS_KEY]: [message] } });
-      expect(result.errors).toEqual([existingAt('.a.b'), { property: '.a.b', message, stack: `.a.b ${message}` }]);
+      expect(result.errors).toEqual([
+        existingAt('.a.b'),
+        { property: "['a.b']", message, stack: `['a.b'] ${message}` },
+      ]);
     });
 
     it('lists a root error that the errorSchema keeps apart from an invalid-schema error', () => {
