@@ -4,7 +4,9 @@ import {
   getByPath,
   getDiscriminatorFieldFromSchema,
   setByPath,
-  getOptionUiSchema,
+  renderedOptionTitles,
+  renderedOptionsUiSchema,
+  selectOptionUiSchema,
   fieldPathToName,
   getUiOptions,
   toFieldPath,
@@ -85,7 +87,7 @@ export default function LayoutMultiSchemaField<
     presentation,
     title: parentTitle,
   } = props;
-  const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
+  const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions, translateString } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
   const options = useMemo(
     () => retrievedOptionListOf<T, S, F>(schemaUtils, schema, formData),
@@ -101,9 +103,30 @@ export default function LayoutMultiSchemaField<
   );
   const uiSchema = useMemo(() => omitFieldDirectives<T, S, F>(namingUiSchema), [namingUiSchema]);
   const keyword = optionsKeywordOf<S>(schema);
+  // Each option reads the entry of the option of the field's list as written that it was built from
+  const optionsUiSchema = useMemo(
+    () => renderedOptionsUiSchema<T, S, F>(uiSchema, schema, schemaUtils.getRootSchema()),
+    [uiSchema, schema, schemaUtils],
+  );
+  // An option a merge of lists built is named by each option it was built from, as `MultiSchemaField` names it. The
+  // name is its entry's `ui:title`, read at its position in the schema before a `ui:enumOrder` reorders the list
+  const labelledBy = useMemo(() => {
+    const titles = renderedOptionTitles<T, S, F>(uiSchema, schema, schemaUtils.getRootSchema(), translateString);
+    const entries = titles?.some((title) => title !== undefined)
+      ? titles.map((title, index): UiSchema<T, S, F> => {
+          const entry: UiSchema<T, S, F> = optionsUiSchema?.[index] ?? {};
+          return title === undefined ? entry : { ...entry, 'ui:title': title };
+        })
+      : optionsUiSchema;
+    if (!entries) {
+      return uiSchema;
+    }
+    const base: UiSchema<T, S, F> = uiSchema ?? {};
+    return { ...base, [keyword]: entries };
+  }, [uiSchema, schema, schemaUtils, translateString, optionsUiSchema, keyword]);
   const enumOptions = useMemo(
-    () => computeEnumOptions(schema, schemaUtils, uiSchema, formData),
-    [schema, schemaUtils, uiSchema, formData],
+    () => computeEnumOptions(schema, schemaUtils, labelledBy, formData),
+    [schema, schemaUtils, labelledBy, formData],
   );
   const disabled = fieldDisabled || enumOptions.length === 0;
   const allUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
@@ -152,8 +175,8 @@ export default function LayoutMultiSchemaField<
     // apply the same way here as they do when the same schema is rendered through plain SchemaField/AnyOfField.
     // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
     // never carries the root's `ui:definitions` itself.
-    const newOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex);
-    const oldOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex);
+    const newOptionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, newOptionIndex);
+    const oldOptionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, oldOptionIndex);
     const switched = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
       newOptionUiSchema: withoutFieldOptions<T, S, F>(newOptionUiSchema, uiSchema, keyword),
       oldOptionUiSchema: withoutFieldOptions<T, S, F>(oldOptionUiSchema, uiSchema, keyword),

@@ -8276,6 +8276,84 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
       });
+      describe("takes the const and keys of the option the field shows from a list a nested field's allOf member offers (#5930)", () => {
+        beforeEach(() => {
+          // The mock validator cannot tell which option a value matches, so it answers each check as the real ones do
+          testValidator.setReturnValues({ isValid: asRealValidator });
+        });
+        const A = { properties: { a: { type: 'string' }, c: { type: 'string' } } } as const;
+        const B = { properties: { b: { type: 'number', default: 5 }, bb: { type: 'string' } } } as const;
+        const C = { properties: { c: { type: 'string' }, cd: { type: 'string', default: 'CD' } } } as const;
+        const D = { properties: { d: { type: 'string' } } } as const;
+        const rootOf = (p: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { p: { type: 'object', ...p } } });
+        const context = { validator: testValidator };
+        /** Fills `schema` for `formData`, then fills it again for what that gave, as an edit and a `reset()` do */
+        const passes = (schema: RJSFSchema, formData?: unknown) => {
+          const first = getDefaultFormState(context, { schema, formData });
+          return [first, getDefaultFormState(context, { schema, formData: first })];
+        };
+        // The field renders A×C, A×D, B×C and B×D and shows B×C, which only the rebuilt list matches better than A
+        it("takes the const of the option it shows, not of the one its own list's options alone score best", () => {
+          const schema = rootOf({
+            allOf: [
+              {
+                oneOf: [
+                  { properties: { ...A.properties, k: { const: 'a' } } },
+                  { properties: { ...B.properties, k: { const: 'b' } } },
+                ],
+              },
+              { oneOf: [C, D] },
+            ],
+          });
+          const filled = { p: { bb: 'y', c: 'z', k: 'b' } };
+          expect(passes(schema, { p: { bb: 'y', c: 'z' } })).toStrictEqual([filled, filled]);
+        });
+        it('keeps a key of its default that only the option it shows declares, though no option holds a const', () => {
+          const schema = rootOf({ default: { c: 'z' }, allOf: [{ oneOf: [C, D] }] });
+          expect(passes(schema)).toStrictEqual([{ p: { c: 'z' } }, { p: { c: 'z' } }]);
+        });
+        it("keeps a key of its default that the rebuilt option it shows declares beside an option of the field's own list", () => {
+          const schema = rootOf({ default: { bb: 'y', c: 'z' }, oneOf: [A, B], allOf: [{ oneOf: [C, D] }] });
+          const filled = { p: { b: 5, bb: 'y', c: 'z' } };
+          expect(passes(schema)).toStrictEqual([filled, filled]);
+        });
+        // The form stores its pick for the options the field renders, the product of both lists, so the option the
+        // fieldState names, B×C at 2, is read among them as the option of each list it was built from
+        it('takes the const of the option the fieldState says it shows among the options it renders', () => {
+          const schema = rootOf({
+            allOf: [
+              {
+                oneOf: [
+                  { properties: { ...A.properties, k: { const: 'a' } } },
+                  { properties: { ...B.properties, k: { const: 'b' } } },
+                ],
+              },
+              { oneOf: [C, D] },
+            ],
+          });
+          const lists: number[] = [];
+          const fieldState: FormFieldState = {
+            selectedOption: (_fieldPath, options) => {
+              lists.push(options.length);
+              return 2;
+            },
+            isExpanded: () => false,
+          };
+          expect(
+            createSchemaUtils(context, schema).getDefaultFormState(
+              schema,
+              { p: { bb: 'y', c: 'z' } },
+              false,
+              undefined,
+              undefined,
+              undefined,
+              fieldState,
+            ),
+          ).toStrictEqual({ p: { bb: 'y', c: 'z', k: 'b' } });
+          expect(lists.length).toBeGreaterThan(0);
+          expect(lists.every((length) => length === 4)).toBe(true);
+        });
+      });
     });
     describe('default form state behavior: arrayMinItems.populate = "never"', () => {
       it('should not be filled if minItems defined and required', () => {
@@ -15442,6 +15520,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           );
 
+          it("reads an option a then's list rebuilds as the option of the field's own list it was built from", () => {
+            const { allOf, ...own } = rebuilt;
+            const conditional: RJSFSchema = { ...own, if: true, then: allOf?.[0] };
+            const { fieldState, declared } = showing(2);
+            expect(
+              fieldShownOption(
+                { validator: testValidator },
+                fieldState,
+                [],
+                conditional,
+                conditional.oneOf ?? [],
+                conditional,
+                {},
+              ),
+            ).toBe(1);
+            expect(declared).toEqual([
+              ['a', 'c'],
+              ['a', 'd'],
+              ['b', 'c'],
+              ['b', 'd'],
+            ]);
+          });
+
           it('reads an index past the rebuilt options as none shown', () => {
             const { fieldState } = showing(4);
             expect(
@@ -15542,6 +15643,66 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 { schema: split, rootSchema: split, formData: { p: { bb: 'y', c: 'z' } } },
               ),
             ).toEqual({ p: { b: 5, bb: 'y', c: 'z' } });
+          });
+
+          it("first fills the field from the option its data matches of those a then's list rebuilds with the field's own", () => {
+            const conditional: RJSFSchema = {
+              type: 'object',
+              properties: {
+                p: {
+                  type: 'object',
+                  oneOf: [
+                    { properties: { a: { type: 'string' }, c: { type: 'string' } } },
+                    { properties: { b: { type: 'number', default: 5 }, bb: { type: 'string' } } },
+                  ],
+                  if: true,
+                  then: {
+                    oneOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }],
+                  },
+                },
+              },
+            };
+            const context = { validator: testValidator };
+            const filled = { p: { b: 5, bb: 'y', c: 'z' } };
+            expect(
+              getDefaultFormState(context, {
+                schema: conditional,
+                rootSchema: conditional,
+                formData: { p: { bb: 'y', c: 'z' } },
+              }),
+            ).toEqual(filled);
+            expect(
+              getDefaultFormState(context, { schema: conditional, rootSchema: conditional, formData: filled }),
+            ).toEqual(filled);
+          });
+
+          // An entry of `uiSchema.oneOf` describes the option as written, so B×C, at 2 of the rebuilt list, reads B's
+          it("fills the option a then's list rebuilds with the field's own with the uiSchema entry of the option it was built from", () => {
+            const conditional: RJSFSchema = {
+              type: 'object',
+              properties: {
+                p: {
+                  type: 'object',
+                  oneOf: [
+                    { properties: { a: { type: 'string' }, c: { type: 'string' } } },
+                    { properties: { bb: { type: 'string' }, bz: { type: 'string' } } },
+                  ],
+                  if: true,
+                  then: {
+                    oneOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }],
+                  },
+                },
+              },
+            };
+            const uiSchema: UiSchema = {
+              p: { oneOf: [{ bz: { 'ui:initialValue': 'A' } }, { bz: { 'ui:initialValue': 'B' } }] },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema: conditional, rootSchema: conditional, formData: { p: { bb: 'y', c: 'z' } }, uiSchema },
+              ),
+            ).toEqual({ p: { bb: 'y', bz: 'B', c: 'z' } });
           });
 
           // The `then` holding the second list applies to the default, not to no data, so the list is rebuilt only for

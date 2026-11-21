@@ -121,18 +121,21 @@ function mergedPair(left: JSONSchema7Definition, right: JSONSchema7Definition): 
  *
  * @param first - The first list, in the order their schemas are merged
  * @param rest - The lists after it
+ * @param [pair] - Merges an option built so far with one of the next list, or rejects the pair; the shallow merge's
+ *        by default
  * @returns - The options, or undefined where no pair merges, which the merge rejects
  */
 export function mergeOptionLists(
   first: readonly JSONSchema7Definition[],
   rest: readonly (readonly JSONSchema7Definition[])[],
+  pair: (left: JSONSchema7Definition, right: JSONSchema7Definition) => JSONSchema7Definition | undefined = mergedPair,
 ): MergedOption[] | undefined {
   let merged: MergedOption[] = first.map((option) => ({ option, sources: [option] }));
   for (const list of rest) {
     const next: MergedOption[] = [];
     for (const left of merged) {
       for (const right of list) {
-        const option = mergedPair(left.option, right);
+        const option = pair(left.option, right);
         if (option !== undefined && !next.some((kept) => compareSchemaDefinitions(kept.option, option) === 0)) {
           next.push({ option, sources: [...left.sources, right] });
         }

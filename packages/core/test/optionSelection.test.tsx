@@ -1837,7 +1837,7 @@ describe('option selection as form state', () => {
         { schema, initialFormData: { p: { t: 2 } }, additionalPropertiesWhenAbsent: absent },
         'root_p__oneof_select',
         'root_x',
-        'B',
+        'B, C',
         { p: { b: 5, t: 2 } },
         { x: 'x', p: { b: 5, t: 2 } },
       );
@@ -1885,12 +1885,184 @@ describe('option selection as form state', () => {
         { schema, initialFormData: { p: { bb: 'y', c: 'z' } }, additionalPropertiesWhenAbsent: absent },
         'root_p__oneof_select',
         'root_x',
-        'B',
+        'B, C',
         { p: { b: 5, bb: 'y', c: 'z' } },
         { x: 'x', p: { b: 5, bb: 'y', c: 'z' } },
       );
     },
   );
+
+  // The data meets the `then`'s list and the field's own alike, so the field offers each option of its own merged
+  // with each of the `then`'s, as it does for an `allOf` entry holding the second list
+  it.each(['forbid', 'allow'] as const)(
+    'fills a typed object from the option it shows on every pass where a then holds a list beside its own, extra keys %s (#5930)',
+    async (additionalPropertiesWhenAbsent) => {
+      const schema = besideX({
+        p: {
+          type: 'object',
+          oneOf: [{ title: 'A', properties: { a: { type: 'string' }, c: { type: 'string' } } }, splitKeysB],
+          if: true,
+          then: { oneOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }] },
+        },
+      });
+      await expectShownOnEveryPass(
+        { schema, initialFormData: { p: { bb: 'y', c: 'z' } }, additionalPropertiesWhenAbsent },
+        'root_p__oneof_select',
+        'root_x',
+        // An option a merge built is named by each option it was built from
+        'B, C',
+        { p: { b: 5, bb: 'y', c: 'z' } },
+        { x: 'x', p: { b: 5, bb: 'y', c: 'z' } },
+      );
+    },
+  );
+
+  // An entry of `uiSchema.oneOf` describes the option as written, so each option a merge rebuilds reads the entry of
+  // the option of the field's own list it was built from
+  describe.each<[string, RJSFSchema]>([
+    ['an allOf entry', { allOf: [{ oneOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }] }] }],
+    ['a then', { if: true, then: { oneOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }] } }],
+  ])(
+    "reads the uiSchema entry of the written option each option %s's list rebuilds with the field's own was built from (#5930)",
+    (_, rest) => {
+      const schema = besideX({
+        p: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { a: { type: 'string' }, c: { type: 'string' } } },
+            { title: 'B', properties: { bb: { type: 'string' }, bz: { type: 'string' } } },
+          ],
+          ...rest,
+        },
+      });
+      const uiSchema = {
+        p: {
+          oneOf: [
+            { 'ui:title': 'UI-A' },
+            { 'ui:title': 'UI-B', bb: { 'ui:title': 'BB-B' }, bz: { 'ui:initialValue': 'init' } },
+          ],
+        },
+      };
+
+      it('labels each option and renders the one shown with it', () => {
+        const { node } = createFormComponent({ schema, uiSchema, initialFormData: { p: { bb: 'y', c: 'z' } } });
+        const select = selectOf(node, 'root_p__oneof_select');
+        expect([...select.options].map(({ text }) => text)).toEqual(['UI-A, C', 'UI-A, D', 'UI-B, C', 'UI-B, D']);
+        expect(getSelectedOptionValue(select)).toBe('UI-B, C');
+        expect(elementOf(node, 'label[for="root_p_bb"]')).toHaveTextContent('BB-B');
+      });
+
+      it('fills the option switched to with it', async () => {
+        const ref = createFormRef();
+        const { node } = createFormComponent({ ref, schema, uiSchema, initialFormData: { p: { a: 'q', c: 'z' } } });
+        await user.selectOptions(selectOf(node, 'root_p__oneof_select'), '3');
+        expect(handleOf(ref).getFormData()).toMatchObject({ p: { bz: 'init' } });
+      });
+    },
+  );
+
+  // The grid's selector writes the selector property, whose value each option of the rebuilt list built from the same
+  // written option shares, so switching to B picks B×C, which reads B's entry
+  it('labels and switches the options of a LayoutMultiSchemaField by the uiSchema entry of the written option each was built from (#5930)', async () => {
+    const schema = besideX({
+      p: {
+        type: 'object',
+        oneOf: [
+          { properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string' } } },
+          { properties: { kind: { type: 'string', const: 'b' }, bb: { type: 'string' }, bz: { type: 'string' } } },
+        ],
+        allOf: [{ oneOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }] }],
+      },
+    });
+    const uiSchema = {
+      p: {
+        'ui:field': 'LayoutMultiSchemaField',
+        'ui:optionsSchemaSelector': 'kind',
+        oneOf: [{ 'ui:title': 'UI-A' }, { 'ui:title': 'UI-B', bz: { 'ui:initialValue': 'init' } }],
+      },
+    };
+    const ref = createFormRef();
+    const { node } = createFormComponent({ ref, schema, uiSchema, initialFormData: { p: { kind: 'a', c: 'z' } } });
+    const select = node.querySelectorAll('select')[0];
+    expect([...select.options].map(({ text }) => text)).toEqual(['', 'UI-A, C', 'UI-A, D', 'UI-B, C', 'UI-B, D']);
+
+    await user.selectOptions(select, 'UI-B, C');
+
+    expect(handleOf(ref).getFormData()).toMatchObject({ p: { kind: 'b', bz: 'init' } });
+  });
+
+  // Under `allOf: 'skipDefaults'` the fill takes only the `const` of the option a nested field's `allOf` offers, B's,
+  // which only the rebuilt list matches better than A's. The form stores its pick for that list, so an edit and a reset
+  // pick B too
+  it('fills the const of the option it shows on every pass where its option lists sit only in allOf entries (#5930)', async () => {
+    const schema = besideX({
+      p: {
+        type: 'object',
+        allOf: [
+          {
+            oneOf: [
+              { title: 'A', properties: { a: { type: 'string' }, c: { type: 'string' }, k: { const: 'a' } } },
+              { ...splitKeysB, properties: { ...splitKeysB.properties, k: { const: 'b' } } },
+            ],
+          },
+          { oneOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }] },
+        ],
+      },
+    });
+    await expectShownOnEveryPass(
+      { schema, initialFormData: { p: { bb: 'y', c: 'z' } } },
+      'root_p__oneof_select',
+      'root_x',
+      'B, C',
+      { p: { bb: 'y', c: 'z', k: 'b' } },
+      { x: 'x', p: { bb: 'y', c: 'z', k: 'b' } },
+    );
+  });
+
+  // A `ui:widget` that enters a value renders the options that inherit it, not the selector, unless every option has
+  // an entry of its own; here only the options built from N have one
+  it('renders the selector as a select where some options a then rebuilds read no uiSchema entry (#5930)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          oneOf: [
+            { type: 'number', title: 'N' },
+            { type: 'number', title: 'M', minimum: 0 },
+          ],
+          if: true,
+          then: { oneOf: [{ maximum: 9 }, { maximum: 99 }] },
+        },
+      },
+    };
+    const { node } = createFormComponent({
+      schema,
+      uiSchema: { p: { 'ui:widget': 'updown', oneOf: [{}] } },
+      initialFormData: { p: 5 },
+    });
+    expect(elementOf(node, '#root_p__oneof_select').tagName).toBe('SELECT');
+  });
+
+  // A list of constants follows `ui:enumOrder`, so each name is read at its option's position in the schema, before
+  // the list is reordered
+  it("names each option of a LayoutMultiSchemaField's rebuilt list of constants where ui:enumOrder reorders it (#5930)", () => {
+    const schema = besideX({
+      p: {
+        oneOf: [
+          { const: 'a', title: 'A' },
+          { const: 'b', title: 'B' },
+        ],
+        allOf: [{ oneOf: [{ title: 'X' }] }],
+      },
+    });
+    const { node } = createFormComponent({
+      schema,
+      uiSchema: {
+        p: { 'ui:field': 'LayoutMultiSchemaField', 'ui:optionsSchemaSelector': 'kind', 'ui:enumOrder': ['b', '*'] },
+      },
+    });
+    expect([...node.querySelectorAll('select')[0].options].map(({ text }) => text)).toEqual(['', 'B, X', 'A, X']);
+  });
 
   // B's `then` declares `t` only for data holding `z`, so for this data `t` is an extra key B's own
   // `additionalProperties` takes

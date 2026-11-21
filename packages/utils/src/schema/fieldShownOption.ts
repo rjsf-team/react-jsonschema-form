@@ -1,5 +1,9 @@
+import { TranslatableString } from '../enums.ts';
 import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getUiOptions from '../getUiOptions.ts';
+import getXxxOfOptions from '../getXxxOfOptions.ts';
+import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import type {
@@ -8,11 +12,17 @@ import type {
   FormFieldState,
   RJSFSchema,
   SchemaContext,
+  Registry,
   StrictRJSFSchema,
+  UiSchema,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import { isHandedOut } from './graph/handedOut.ts';
 import { emptySchema, sourcesOfOption } from './graph/mergePlan.ts';
 import nodeOfSchema from './graph/nodeOfSchema.ts';
+import parseSchemaGraph from './graph/parseSchemaGraph.ts';
+import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
+import { readProvenance } from './graph/provenance.ts';
 import retrieveSchema, { OPTION_KEYWORDS } from './retrieveSchema.ts';
 
 /** Whether a field offering `options` renders them as one select rather than as an option field, as an `enum` beside
@@ -27,10 +37,12 @@ export function rendersOptionsAsSelect<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Returns the options a schema is read as built from: those a plan's merge of lists rebuilt it from, see
- * `sourcesOfOption()`, or else the schema itself
+ * `sourcesOfOption()`, each read the same way, as a `then` list merged over one an `allOf` rebuilt builds from rebuilt
+ * options, or else the schema itself
  */
 function sourcesOf(schema: unknown): readonly unknown[] {
-  return (isObject(schema) && sourcesOfOption(schema)) || [schema];
+  const sources = isObject(schema) ? sourcesOfOption(schema) : undefined;
+  return sources ? sources.flatMap(sourcesOf) : [schema];
 }
 
 /** Returns the options `entry`, an option `retrieveSchema()` handed out, was built from, one from each list a merge of
@@ -64,6 +76,195 @@ function writtenIndices(built: readonly (readonly unknown[])[], options: readonl
     }
   }
   return undefined;
+}
+
+/** Returns the list `keyword` holds where the node `id` declares a field, following a `$ref` that holds no list of its
+ * own, or undefined where none of them holds one, as a field whose lists sit only in `allOf` entries
+ *
+ * @param graph - The graph holding the field
+ * @param id - The node of the field's declaration
+ * @param keyword - The `anyOf` or `oneOf` keyword
+ * @returns - The list as written, or undefined
+ * @testSeam Exported for utils' own tests
+ */
+export function writtenListOf<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  keyword: string,
+): readonly unknown[] | undefined {
+  const seen = new Set<NodeId>();
+  for (let at: NodeId | undefined = id; at !== undefined && !seen.has(at);) {
+    seen.add(at);
+    const declared = graph.node(at);
+    if (declared.kind !== 'schema') {
+      return undefined;
+    }
+    const list: unknown = Reflect.get(declared.raw, keyword);
+    if (Array.isArray(list)) {
+      return list as readonly unknown[];
+    }
+    at = declared.ref;
+  }
+  return undefined;
+}
+
+/** Returns the list `keyword` holds where the field the seeds `seeds` of `graph` declare is declared, see
+ * `writtenListOf()`, read from the first declaring one. Every seed is read, since a field declared in two places is
+ * seeded by each
+ *
+ * @param graph - The graph holding the field
+ * @param seeds - The field's seeds
+ * @param keyword - The `anyOf` or `oneOf` keyword
+ * @returns - The list as written, or undefined
+ */
+export function seedsWrittenList<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  seeds: readonly { readonly node: NodeId }[],
+  keyword: string,
+): readonly unknown[] | undefined {
+  return seeds.map(({ node }) => writtenListOf<S>(graph, node, keyword)).find((list) => list !== undefined);
+}
+
+/** The options a field `retrieveSchema()` handed out offers, what each was built from, see `builtFrom()`, and the
+ * field's list as written with the index in it of the option each stands for, where they trace to it
+ */
+interface WrittenTrace {
+  readonly listed: XxxOfOptions;
+  readonly built: readonly (readonly unknown[])[];
+  readonly written: readonly unknown[] | undefined;
+  readonly indices: number[] | undefined;
+}
+
+/** Returns the options `view`, a field's schema `retrieveSchema()` handed out, offers traced to its list as written,
+ * see `WrittenTrace`, or undefined where it offers none
+ */
+function writtenTrace<S extends StrictRJSFSchema>(view: S, rootSchema: S): WrittenTrace | undefined {
+  const listed = getXxxOfOptions<S>(view);
+  if (!listed) {
+    return undefined;
+  }
+  const built = listed.options.map((option) => builtFrom<S>(option, rootSchema));
+  const stamped = isHandedOut(view) ? readProvenance<S>(view, parseSchemaGraph<S>(rootSchema)) : undefined;
+  const written = stamped && seedsWrittenList<S>(stamped.graph, stamped.seeds, listed.key);
+  return { listed, built, written, indices: written && writtenIndices(built, written) };
+}
+
+/** Returns the index in `written`, a field's list as written, of the option each of `options` stands for, as
+ * `writtenIndices()` traces it, or undefined where an option can't be traced to one of them
+ *
+ * @param options - The options the field renders, or a list a plan merged them into
+ * @param written - The field's list as written
+ * @param rootSchema - The root schema
+ * @returns - The index of each option in `written`, or undefined
+ */
+export function writtenOptionIndices<S extends StrictRJSFSchema>(
+  options: readonly unknown[],
+  written: readonly unknown[],
+  rootSchema: S,
+): number[] | undefined {
+  return writtenIndices(
+    options.map((option) => builtFrom<S>(option, rootSchema)),
+    written,
+  );
+}
+
+/** Returns the `anyOf`/`oneOf` entries of `uiSchema` in the order of the options `view`, a field's schema
+ * `retrieveSchema()` handed out, offers, for an option's entry to be looked up by its position among them, as with
+ * `selectOptionUiSchema()`. An entry describes the option of the field's list as written at its index, and an option
+ * a merge of lists rebuilt, as an `allOf` or a `then` holding a list beside the field's own rebuilds them, stands for
+ * the option of the field's own list it was built from, so each option the field renders reads that option's entry.
+ * The entries are returned as they stand where the order is the same, where the field declares no list of its own, as
+ * one whose lists sit only in `allOf` entries, or where its options can't be traced to that list, as under a
+ * `customMergeAllOf`; each option then reads the entry at its own position
+ *
+ * @param uiSchema - The field's uiSchema
+ * @param view - The field's schema as `retrieveSchema()` handed it out
+ * @param rootSchema - The root schema
+ * @returns - The entries in the order of the options the field renders, or undefined where `uiSchema` lists none
+ */
+export function renderedOptionsUiSchema<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(uiSchema: UiSchema<T, S, F> | undefined, view: S, rootSchema: S): UiSchema<T, S, F>[] | undefined {
+  const keyword = getXxxOfOptions<S>(view)?.key;
+  const entries: UiSchema<T, S, F>[] | undefined = keyword && uiSchema?.[keyword];
+  if (!Array.isArray(entries)) {
+    return undefined;
+  }
+  const indices = writtenTrace<S>(view, rootSchema)?.indices;
+  return !indices || indices.every((index, position) => index === position)
+    ? entries
+    : indices.map((index) => entries[index]);
+}
+
+/** Returns the name the option `source` is labelled with: its `title`, or the `title` its uiSchema entry `entry` gives
+ * it, `ui:title` or `ui:options.title`, as `MultiSchemaField` reads it. shortcut: an option written as a `$ref` is named
+ * by the `title` beside the `$ref` only; upgrade if merged options built from such options need their definitions'
+ * titles
+ */
+function optionName(source: unknown, entry?: unknown): string | undefined {
+  const uiTitle: unknown = isObject(entry) ? getUiOptions(entry).title : undefined;
+  const title: unknown = isObject(source) ? Reflect.get(source, 'title') : undefined;
+  const name = typeof uiTitle === 'string' ? uiTitle : title;
+  return typeof name === 'string' && name !== '' ? name : undefined;
+}
+
+/** Returns, for each option `view`, a field's schema `retrieveSchema()` handed out, offers, the title of an option a
+ * merge of lists built: the names of the options it was built from, each named once, in the order they were merged,
+ * joined pairwise by `translateString`'s `TranslatableString.MergedOptionTitle`, where at least two differ. The option
+ * of the field's own list it was built from is named by its uiSchema entry's title first, see
+ * `renderedOptionsUiSchema()`, and each other option by its `title`. An option built from one, or from options naming
+ * no two names, has none, and is labelled as any other option is, as is one whose entry names it where the entries
+ * describe the options at their positions, as for a field whose lists sit only in `allOf` entries
+ *
+ * @param uiSchema - The field's uiSchema
+ * @param view - The field's schema as `retrieveSchema()` handed it out
+ * @param rootSchema - The root schema
+ * @param translateString - The registry's string translator
+ * @returns - The title of each option, or undefined where `view` offers none
+ */
+export function renderedOptionTitles<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  uiSchema: UiSchema<T, S, F> | undefined,
+  view: S,
+  rootSchema: S,
+  translateString: Registry<T, S, F>['translateString'],
+): (string | undefined)[] | undefined {
+  const trace = writtenTrace<S>(view, rootSchema);
+  if (!trace) {
+    return undefined;
+  }
+  const { listed, built, written, indices } = trace;
+  if (built.every((sources) => sources.length < 2)) {
+    return listed.options.map(() => undefined);
+  }
+  const given: unknown = uiSchema?.[listed.key];
+  const entries = Array.isArray(given) ? given : [];
+  return built.map((sources, position) => {
+    const writtenAt = indices?.[position];
+    if (sources.length < 2 || (writtenAt === undefined && optionName(undefined, entries[position]) !== undefined)) {
+      return undefined;
+    }
+    const writtenOption = writtenAt === undefined ? undefined : written?.[writtenAt];
+    const names = [
+      ...new Set(
+        sources.flatMap((source) => {
+          const name =
+            writtenAt !== undefined && source === writtenOption
+              ? optionName(source, entries[writtenAt])
+              : optionName(source);
+          return name === undefined ? [] : [name];
+        }),
+      ),
+    ];
+    return names.length > 1
+      ? names.reduce((joined, next) => translateString(TranslatableString.MergedOptionTitle, [joined, next]))
+      : undefined;
+  });
 }
 
 /** The options a field offering `options` renders, each retrieved for its data once asked for, since a pick over a
@@ -166,6 +367,8 @@ export function rebuiltOptionPick<S extends StrictRJSFSchema = RJSFSchema, F ext
  * @param options - Its `anyOf` or `oneOf` list
  * @param rootSchema - The root schema, to resolve `$ref`s with
  * @param data - The field's data
+ * @param [retrieved] - The list the field retrieved for its data renders, where the caller has it, as for a list an
+ *        `allOf` entry offers a field holding no list of its own, whose product of the lists `schema` doesn't hold
  * @returns - The index of the option shown, or -1 for none
  */
 export default function fieldShownOption<
@@ -179,11 +382,16 @@ export default function fieldShownOption<
   options: readonly unknown[],
   rootSchema: S,
   data: unknown,
+  retrieved?: readonly unknown[],
 ): number {
   const keyword = OPTION_KEYWORDS.find((key) => schema[key] === options);
-  const retrieved: unknown[] | undefined =
-    keyword && retrieveSchema<unknown, S, F>(context, schema, rootSchema, data)[keyword];
-  const rendered = renderedOptions<S, F>(context, retrieved, options, rootSchema, data);
+  const rendered = renderedOptions<S, F>(
+    context,
+    retrieved ?? (keyword && retrieveSchema<unknown, S, F>(context, schema, rootSchema, data)[keyword]),
+    options,
+    rootSchema,
+    data,
+  );
   const index = fieldState.selectedOption(
     fieldPathFromList(path),
     rendered.views(),

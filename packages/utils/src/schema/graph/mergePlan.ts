@@ -27,7 +27,7 @@ import shallowAllOfMerge, { mergeOptionLists } from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
-import { declaredProperties, declaresNoKey, dependencyCondition, targetOf } from './validationTargets.ts';
+import { declaredProperties, declaresNoKey, dependencyCondition, targetOf, typesOverlap } from './validationTargets.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -601,7 +601,7 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(
     : schemaFrom(graph.rawRoot, {});
 }
 
-/** The options of the lists each option a merge of lists rebuilt was built from, see `rebuiltLists()` */
+/** The options of the lists each option a merge of lists rebuilt was built from, see `recorded()` */
 const optionSources = new WeakMap<object, readonly unknown[]>();
 
 /** Returns the options of the `anyOf`/`oneOf` lists the option `option` a plan's merge of lists rebuilt was built from,
@@ -628,17 +628,53 @@ function rebuiltLists(schemas: readonly object[]): [string, ReturnType<typeof me
       return Array.isArray(list) ? [list] : [];
     });
     const [first, ...rest] = lists;
-    const options = first !== undefined && rest.length > 0 ? mergeOptionLists(first, rest) : undefined;
-    if (options === undefined) {
-      return [];
-    }
-    for (const { option, sources } of options) {
-      if (isObject(option)) {
-        optionSources.set(option, sources);
-      }
-    }
-    return [[keyword, options]];
+    const options = first !== undefined && rest.length > 0 ? recorded(mergeOptionLists(first, rest)) : undefined;
+    return options === undefined ? [] : [[keyword, options]];
   });
+}
+
+/** Returns `options`, each recording the options it was built from, see `sourcesOfOption()` */
+function recorded(options: ReturnType<typeof mergeOptionLists>): ReturnType<typeof mergeOptionLists> {
+  for (const { option, sources } of options ?? []) {
+    if (isObject(option)) {
+      optionSources.set(option, sources);
+    }
+  }
+  return options;
+}
+
+/** Returns the option a field's `left` and a branch's `right` merge to, as the branch merges over the field: by
+ * `mergeSchemas()`, its keywords winning and the field's keys first, or undefined where either is `false`, or where
+ * they name different `$ref`s or no common `type`, which the branch's winning keyword would hide, collapsing pairs
+ * built from different options of the field's into one. An option of `true` takes any value, so the pair is the other
+ * option, copied to keep sources of its own
+ */
+function branchPair(left: JSONSchema7Definition, right: JSONSchema7Definition): JSONSchema7Definition | undefined {
+  if (left === false || right === false || (isObject(left) && isObject(right) && pairConflicts(left, right))) {
+    return undefined;
+  }
+  if (isObject(right)) {
+    return mergeSchemas(isObject(left) ? left : {}, right);
+  }
+  return isObject(left) ? { ...left } : left;
+}
+
+/** Returns whether `left` and `right` name different `$ref`s or `type`s no value meets both of, an `integer` read as a
+ * `number`. shortcut: two `$ref`s are compared by name, not by what they resolve to; upgrade if a branch's options
+ * reference definitions the field's own options also meet
+ */
+function pairConflicts(left: object, right: object): boolean {
+  const refs = [left, right].map((schema): unknown => Reflect.get(schema, REF_KEY));
+  if (refs.every((ref) => typeof ref === 'string') && refs[0] !== refs[1]) {
+    return true;
+  }
+  const [types, others] = [left, right].map((schema) => {
+    const type: unknown = Reflect.get(schema, 'type');
+    return type === undefined
+      ? undefined
+      : (Array.isArray(type) ? type : [type]).map((one) => (one === 'integer' ? 'number' : String(one)));
+  });
+  return !typesOverlap(types, others);
 }
 
 /** Returns the `allOf` entries `schemas` hold themselves, which merging the schemas as the `allOf` of them leaves as they
@@ -969,6 +1005,39 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     };
   }
 
+  /** Merges the `then`/`else` or `dependencies` schema declared at `node` into `part`, see `mergeBranch()`. The data
+   * meets a list the branch holds and one the part holds under the same keyword alike, so the field offers each option
+   * of the part's with each of the branch's merged over it, see `branchPair()`, where the branch's list would
+   * otherwise replace the part's. A list the plan chose an option of stays as the merge leaves it, since the fold tells
+   * the lists it chose from by the list. shortcut: under a `customMergeAllOf` the branch's list replaces the part's,
+   * since that merge reads its first entry as winning where the branch's keywords win; upgrade if such a field needs
+   * both lists offered
+   */
+  private mergeBranchOver(part: Part<S>, branch: Part<S>, node: NodeId): Part<S> {
+    const merged = mergeBranch(part, branch, 'b', node);
+    if (this.context.customMergeAllOf) {
+      return merged;
+    }
+    for (const keyword of [ANY_OF_KEY, ONE_OF_KEY]) {
+      const own: unknown = Reflect.get(part.schema, keyword);
+      const other: unknown = Reflect.get(branch.schema, keyword);
+      const options =
+        Array.isArray(own) &&
+        Array.isArray(other) &&
+        !this.choices.some(({ list, selected }) => selected !== undefined && (list === own || list === other))
+          ? recorded(mergeOptionLists(own, [other], branchPair))
+          : undefined;
+      if (options !== undefined) {
+        Reflect.set(
+          merged.schema,
+          keyword,
+          options.map(({ option }) => option),
+        );
+      }
+    }
+    return merged;
+  }
+
   private mergeAll(schema: S, unmerged: S): S {
     const merged = mergeAllOf(this.context, schema, unmerged);
     return merged === unmerged || (isSchemaObject<S>(merged) && this.context.customMergeAllOf)
@@ -1013,7 +1082,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const branchPart = this.branch(branchProvider, branchKey, dependencyKey);
     return branchPart === undefined || branchNode === undefined
       ? without
-      : mergeBranch(without, branchPart, 'b', branchNode);
+      : this.mergeBranchOver(without, branchPart, branchNode);
   }
 
   private branch(
@@ -1075,7 +1144,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         const dependent = this.expandBranch(dependency, provider.refPath, 'dependency', key);
         if (dependent !== undefined) {
           Object.keys(dependent.schema.properties ?? {}).forEach((name) => declared?.add(name));
-          next = mergeBranch(next, dependent, 'b', dependency);
+          next = this.mergeBranchOver(next, dependent, dependency);
         }
       }
     }
@@ -1126,7 +1195,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return part;
     }
     const chosen = this.expandBranch(valid[0], provider.refPath, 'dependency');
-    return chosen === undefined ? part : mergeBranch(part, withoutProperty(chosen, key), 'b', valid[0]);
+    return chosen === undefined ? part : this.mergeBranchOver(part, withoutProperty(chosen, key), valid[0]);
   }
 
   private applyOption(

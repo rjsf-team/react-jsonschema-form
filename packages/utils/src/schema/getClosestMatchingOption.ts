@@ -546,9 +546,9 @@ interface BestOption {
   readonly score: () => number;
 }
 
-/** A pick `bestOption()` made, with a copy of the data it was made for */
-interface Pick {
-  readonly pick: BestOption;
+/** A value worked out for some data, a pick `bestOption()` made among them, with a copy of the data */
+interface KeptForData<V> {
+  readonly value: V;
   readonly data: unknown;
   /** Whether the copy keeps an object of the data as it is */
   readonly keeps: boolean;
@@ -566,12 +566,18 @@ interface Pick {
  * changing in place: a pick whose copy keeps one is reused only during the outermost call that made it. Other data
  * scores no nested list and is not kept.
  */
-const picked = new KeyedMemo<Pick>();
+const picked = new KeyedMemo<KeptForData<BestOption>>();
 
-/** The picks made, or found to hold for their data, during the outermost `bestOption()` call running, undefined
- * between calls
+/** Which options of a list stub the data's extra keys an absent keyword takes, see `absentReadings()`, by the validator
+ * and merge of a context reading absent keywords as taking them, the root, the field offering the list and its
+ * keyword, the options and the data the field is retrieved for, with a copy of that data, as a pick keeps one
  */
-let checkedPicks: WeakSet<Pick> | undefined;
+const absentLists = new KeyedMemo<KeptForData<readonly boolean[]>>();
+
+/** The picks, and the readings `absentReadings()` keeps, made or found to hold for their data during the outermost
+ * `bestOption()` call running, undefined between calls
+ */
+let checkedPicks: WeakSet<object> | undefined;
 
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
  * with each option matched as `optionMatches()` matches it under `relax`, and that option's score
@@ -600,33 +606,10 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const optionNodes = options.map((option) => optionNodeOf<S>(option, rootSchema));
   const declaredAt = (index: number, option: S) =>
     listing === undefined ? undefined : listedAt<S>(listing, index, option);
-  // An object rendering its own field beside an option stubs the extra keys an absent keyword takes itself; with no
-  // absent keyword taking any, there are none to stub. A list no field names is read where the root declares it
-  const offering =
-    isObject(formData) && readsAbsentAsAllowed<S, F>(context)
-      ? (listing ?? declaredListing<S>(options, rootSchema))
-      : undefined;
-  const offeredAt = offering === undefined ? undefined : whereOf<S>(offering.offeredBy, rootSchema);
-  // A field reaching a reference that resolves to nothing, which retrieving it throws on, reads as no field offering
-  // them. A `$ref` beside the list is followed in the field's own resource, which a detached copy would lose
-  const field =
-    offering === undefined ||
-    offeredAt === undefined ||
-    offeredAt.seeds.some(({ node }) => reachesBrokenRef<S>(offeredAt.graph, node))
-      ? undefined
-      : fieldTypeSchema<S, F>(
-          context,
-          withoutKeys<S>(
-            typeof offering.offeredBy[REF_KEY] === 'string'
-              ? planAt<S, F>(context, offeredAt).schema
-              : offering.offeredBy,
-            offering.keyword,
-          ),
-          rootSchema,
-          formData,
-        );
-  const readsAbsent = options.map((option) => field !== undefined && !rendersOwnFieldBesideOption<S>(field, option));
-  const compute = (whereDeclared: (index: number, option: S) => Where<S> | undefined) =>
+  const compute = (
+    whereDeclared: (index: number, option: S) => Where<S> | undefined,
+    readsAbsent: readonly boolean[],
+  ) =>
     scoreOptions<T, S, F>(
       context,
       rootSchema,
@@ -640,46 +623,118 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       readsAbsent,
     );
   if (typeof formData !== 'object' || formData === null) {
-    return compute(declaredAt);
+    return compute(
+      declaredAt,
+      options.map(() => false),
+    );
   }
-  // What an option scores depends on where it is declared as well as on the option, since one object can sit in two
-  // resources, each resolving the `$ref`s it holds against its own
-  const declared = options.map((option, index) => (isSchemaObject<S>(option) ? declaredAt(index, option) : undefined));
-  const keys = [
-    context.validator,
-    context.customMergeAllOf,
-    // Decides whether an option whose `properties` name nothing matches the extra keys of the data
-    optionMatchKey(context),
-    rootSchema,
-    relax,
-    discriminatorField,
-    selectedOption,
-    ...readsAbsent,
-    ...declared.flatMap((where) =>
-      where === undefined ? [undefined] : [where.graph, ...where.seeds.map((seed) => seed.node)],
-    ),
-    ...options,
-    formData,
-  ];
   const isOutermost = checkedPicks === undefined;
-  const checked = checkedPicks ?? new WeakSet<Pick>();
+  const checked = checkedPicks ?? new WeakSet<object>();
   checkedPicks = checked;
   try {
-    const stored = picked.peek(keys);
-    if (stored && (checked.has(stored) || (!stored.keeps && holdsCopy(stored.data, formData)))) {
-      checked.add(stored);
-      return stored.pick;
-    }
-    const copy = copyOfData(formData);
-    const made = { pick: compute((index) => declared[index]), data: copy.data, keeps: copy.keeps };
-    picked.set(keys, made);
-    checked.add(made);
-    return made.pick;
+    // An object rendering its own field beside an option stubs the extra keys an absent keyword takes itself; with no
+    // absent keyword taking any, there are none to stub
+    const readsAbsent =
+      isObject(formData) && readsAbsentAsAllowed<S, F>(context)
+        ? absentReadings<S, F>(context, rootSchema, formData, options, listing, checked)
+        : options.map(() => false);
+    // What an option scores depends on where it is declared as well as on the option, since one object can sit in two
+    // resources, each resolving the `$ref`s it holds against its own
+    const declared = options.map((option, index) =>
+      isSchemaObject<S>(option) ? declaredAt(index, option) : undefined,
+    );
+    const keys = [
+      context.validator,
+      context.customMergeAllOf,
+      // Decides whether an option whose `properties` name nothing matches the extra keys of the data
+      optionMatchKey(context),
+      rootSchema,
+      relax,
+      discriminatorField,
+      selectedOption,
+      ...readsAbsent,
+      ...declared.flatMap((where) =>
+        where === undefined ? [undefined] : [where.graph, ...where.seeds.map((seed) => seed.node)],
+      ),
+      ...options,
+      formData,
+    ];
+    return keptForData(picked, keys, formData, checked, () => compute((index) => declared[index], readsAbsent));
   } finally {
     if (isOutermost) {
       checkedPicks = undefined;
     }
   }
+}
+
+/** Which of `options` stub the extra keys of `formData` an absent keyword takes, where the context reads one as taking
+ * them: each but one beside which an object renders its own field, the field the list `listing` names, or else the
+ * one the root declares it in, retrieved for the data. Kept as a pick is, see `picked`, since retrieving the field is
+ * what every pick asks for, a pick made before included
+ */
+function absentReadings<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  formData: object,
+  options: readonly unknown[],
+  listing: Listing<S> | undefined,
+  checked: WeakSet<object>,
+): readonly boolean[] {
+  const keys = [
+    context.validator,
+    context.customMergeAllOf,
+    rootSchema,
+    listing?.offeredBy,
+    listing?.keyword,
+    ...options,
+    formData,
+  ];
+  return keptForData(absentLists, keys, formData, checked, () => {
+    const offering = listing ?? declaredListing<S>(options, rootSchema);
+    const offeredAt = offering === undefined ? undefined : whereOf<S>(offering.offeredBy, rootSchema);
+    // A field reaching a reference that resolves to nothing, which retrieving it throws on, reads as no field offering
+    // them. A `$ref` beside the list is followed in the field's own resource, which a detached copy would lose
+    const field =
+      offering === undefined ||
+      offeredAt === undefined ||
+      offeredAt.seeds.some(({ node }) => reachesBrokenRef<S>(offeredAt.graph, node))
+        ? undefined
+        : fieldTypeSchema<S, F>(
+            context,
+            withoutKeys<S>(
+              typeof offering.offeredBy[REF_KEY] === 'string'
+                ? planAt<S, F>(context, offeredAt).schema
+                : offering.offeredBy,
+              offering.keyword,
+            ),
+            rootSchema,
+            formData,
+          );
+    return options.map((option) => field !== undefined && !rendersOwnFieldBesideOption<S>(field, option));
+  });
+}
+
+/** Returns the value `memo` keeps under `keys` for `formData` where it was worked out, or found to hold, during the
+ * outermost `bestOption()` call running, `checked`, or where the data still holds what its copy holds, as `picked`
+ * describes; else the one `compute` works out, kept with a copy of the data
+ */
+function keptForData<V>(
+  memo: KeyedMemo<KeptForData<V>>,
+  keys: readonly unknown[],
+  formData: unknown,
+  checked: WeakSet<object>,
+  compute: () => V,
+): V {
+  const stored = memo.peek(keys);
+  if (stored && (checked.has(stored) || (!stored.keeps && holdsCopy(stored.data, formData)))) {
+    checked.add(stored);
+    return stored.value;
+  }
+  const copy = copyOfData(formData);
+  const made = { value: compute(), data: copy.data, keeps: copy.keeps };
+  memo.set(keys, made);
+  checked.add(made);
+  return made.value;
 }
 
 /** A copy of some data, see `copyOfData()` */
