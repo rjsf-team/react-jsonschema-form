@@ -195,9 +195,10 @@ export interface DefaultFormStateBehavior {
   nestedDefaultsPrecedence?: 'descendantWins' | 'ancestorWins';
   /** Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default`
    * of its own, is populated with `false`, defaulting to `populateFalse`.
-   * - `populateFalse`: A required boolean with no `default` is set to `false`, unless its constant `anyOf`/`oneOf`
-   *        options render as a select, see `booleanOptionsRenderAsSelect()`, which shows an unanswered field as a
-   *        checkbox can't
+   * - `populateFalse`: A required boolean with no `default` is set to `false`, unless it is shown as a select or as
+   *        radios, which show an unanswered field as a checkbox can't: by a `ui:widget` of `select` or `radio`, or, with
+   *        a `ui:widget` that is neither of those nor `checkbox`, by constant `anyOf`/`oneOf` options that render as a
+   *        select, see `booleanOptionsRenderAsSelect()`
    * - `skip`: No value is synthesized; the property stays `undefined` until the user answers it, so `required` remains
    *        a validation concern
    */

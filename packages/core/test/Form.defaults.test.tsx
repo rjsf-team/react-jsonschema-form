@@ -1662,7 +1662,18 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         { const: true, title: 'Yes' },
         { const: false, title: 'No' },
       ];
-      it.each<[string, RJSFSchema, UiSchema | undefined, 'SELECT' | 'INPUT']>([
+      it.each<[string, RJSFSchema, UiSchema | undefined, 'SELECT' | 'INPUT' | 'RADIOS']>([
+        ['a plain boolean shown as radios', { type: 'boolean' }, { 'ui:widget': 'radio' }, 'RADIOS'],
+        ['a plain boolean shown as a select', { type: 'boolean' }, { 'ui:widget': 'select' }, 'SELECT'],
+        ['a plain boolean shown as a checkbox', { type: 'boolean' }, { 'ui:widget': 'checkbox' }, 'INPUT'],
+        ['an untitled oneOf shown as radios', { type: 'boolean', oneOf: untitled }, { 'ui:widget': 'radio' }, 'RADIOS'],
+        [
+          'a titled oneOf shown as a checkbox',
+          { type: 'boolean', oneOf: titled },
+          { 'ui:widget': 'checkbox' },
+          'INPUT',
+        ],
+        ['a titled oneOf shown as radios', { type: 'boolean', oneOf: titled }, { 'ui:widget': 'radio' }, 'RADIOS'],
         ['a plain boolean', { type: 'boolean' }, undefined, 'INPUT'],
         ['an untitled oneOf', { type: 'boolean', oneOf: untitled }, undefined, 'INPUT'],
         ['an untitled anyOf', { type: 'boolean', anyOf: untitled }, undefined, 'INPUT'],
@@ -1687,20 +1698,52 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
           'SELECT',
         ],
         ['a titled oneOf an allOf brings in', { type: 'boolean', allOf: [{ oneOf: titled }] }, undefined, 'SELECT'],
-      ])('%s', (_, v, uiSchema, tag) => {
+      ])('%s', (_, v, uiSchema, shown) => {
+        const ref = createFormRef();
         const { node, getFormData } = createFormComponent({
           schema: { type: 'object', required: ['v'], properties: { v } },
           uiSchema: uiSchema && { v: uiSchema },
+          ref,
         });
-        const control = elementOf(node, '#root_v');
+        const expected = shown === 'INPUT' ? { v: false } : {};
 
-        expect(control.tagName).toBe(tag);
-        expect(getFormData()).toEqual(tag === 'SELECT' ? {} : { v: false });
-        if (tag === 'SELECT') {
-          expect(control).toHaveValue('');
+        expect(getFormData()).toEqual(expected);
+        if (shown === 'RADIOS') {
+          const radios = [...node.querySelectorAll<HTMLInputElement>('input[type=radio]')];
+          expect(radios).toHaveLength(2);
+          expect(radios.filter((radio) => radio.checked)).toEqual([]);
         } else {
-          expect(control).not.toBeChecked();
+          const control = elementOf(node, '#root_v');
+          expect(control.tagName).toBe(shown);
+          if (shown === 'SELECT') {
+            expect(control).toHaveValue('');
+          } else {
+            expect(control).toHaveAttribute('type', 'checkbox');
+            expect(control).not.toBeChecked();
+          }
         }
+
+        act(() => handleOf(ref).reset());
+
+        expect(getFormData()).toEqual(expected);
+      });
+
+      it('leaves one shown as radios empty in an option the user switches to, as on mount', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { a: { type: 'string' } } },
+            { title: 'B', required: ['v', 'w'], properties: { v: { type: 'boolean' }, w: { type: 'boolean' } } },
+          ],
+        };
+        const { node, getFormData } = createFormComponent({
+          schema,
+          uiSchema: { oneOf: [{}, { v: { 'ui:widget': 'radio' } }] },
+        });
+
+        await user.selectOptions(elementOf(node, '#root__oneof_select'), 'B');
+
+        expect(getFormData()).toEqual({ w: false });
       });
     });
 

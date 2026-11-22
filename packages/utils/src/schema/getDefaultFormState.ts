@@ -2171,9 +2171,11 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     index,
     isWholeValue,
     offersConstants,
+    // A `ui:widget` naming the checkbox wins over the select the options would otherwise render as
     rendersBooleanSelect:
       listed !== undefined &&
       isConstantOptionList<S>(constants) &&
+      getUiOptions<T, S, F>(props.uiSchema).widget !== 'checkbox' &&
       booleanOptionsRenderAsSelect<T, S, F>(select, listed.key, constants, props.uiSchema),
     rendersAsSelect: rendersOptionsAsSelect<S>(select, constants),
     wholeOptions,
@@ -3665,12 +3667,17 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // present in the submitted data, and false is the natural zero-value.
       // `requiredBooleanDefault: 'skip'` opts out for forms that treat an
       // unanswered boolean as a distinct state and rely on `required` to flag it.
+      // A select or a radio group the `ui:widget` names shows a field nobody answered, as a checkbox can't, so the
+      // field is left for the user to answer
       const requiredBooleanDefault = context.defaultFormStateBehavior?.requiredBooleanDefault;
+      const { widget } = getUiOptions<T, S, F>(props.uiSchema);
       if (
         requiredBooleanDefault !== 'skip' &&
         !(SKIPS_DEFAULTS in context) &&
         props.required &&
-        defaults === undefined
+        defaults === undefined &&
+        widget !== 'radio' &&
+        widget !== 'select'
       ) {
         return false;
       }

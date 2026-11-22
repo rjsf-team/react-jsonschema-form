@@ -11782,6 +11782,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(fill(b, true, undefined, { b: { oneOf: [{ 'ui:title': 'Yes' }, { 'ui:title': 'No' }] } })).toEqual({});
         expect(fill(b, true, undefined, { b: { anyOf: [{ 'ui:title': 'Yes' }] } })).toEqual({ b: false });
       });
+      it.each<[string, RJSFSchema, string, unknown]>([
+        ['a plain boolean shown as radios', { type: 'boolean' }, 'radio', {}],
+        ['a plain boolean shown as a select', { type: 'boolean' }, 'select', {}],
+        ['a plain boolean shown as a checkbox', { type: 'boolean' }, 'checkbox', { b: false }],
+        ['a plain boolean that is hidden', { type: 'boolean' }, 'hidden', { b: false }],
+        ['a plain boolean shown by a widget of another name', { type: 'boolean' }, 'toggle', { b: false }],
+        ['an untitled oneOf shown as radios', { type: 'boolean', oneOf: untitled }, 'radio', {}],
+        ['an enum shown as a select', { type: 'boolean', enum: [true, false] }, 'select', {}],
+        ['a titled oneOf shown as a checkbox', { type: 'boolean', oneOf: yesNo }, 'checkbox', { b: false }],
+        ['a titled oneOf shown as radios', { type: 'boolean', oneOf: yesNo }, 'radio', {}],
+        ['a titled oneOf shown by a widget of another name', { type: 'boolean', oneOf: yesNo }, 'toggle', {}],
+        ['an untyped oneOf shown as a checkbox', { oneOf: untitled }, 'checkbox', { b: false }],
+      ])('fills a required one by the widget its uiSchema names: %s', (_, b, widget, expected) => {
+        expect(fill(b, true, undefined, { b: { 'ui:widget': widget } })).toEqual(expected);
+        expect(fill(b, true, undefined, { b: { 'ui:options': { widget } } })).toEqual(expected);
+        expect(fill(b, false, undefined, { b: { 'ui:widget': widget } })).toEqual({});
+      });
       it.each([...checkboxes, ...selects])('leaves an optional one offering %s empty', (_, b) => {
         expect(fill(b, false)).toEqual({});
       });
