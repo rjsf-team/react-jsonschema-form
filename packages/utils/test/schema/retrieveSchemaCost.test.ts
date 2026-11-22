@@ -447,6 +447,15 @@ describe('the cost of an edit to a wide object', () => {
         const changes = { when: () => new Date(0), list: () => [1, [2]], nested: () => ({ a: 1 }) };
         expect(checksAfter(changes)).toBe(0);
       });
+      it('is reused while it holds an invalid `Date`, whose time equals no time', () => {
+        const validator = miniValidator();
+        const context = reusing(validator);
+        const rows = [{ ...rowOf(), when: new Date(NaN) }];
+        fill(context, rows, {}, values);
+        const first = validator.calls;
+        fill(context, rows, {}, values);
+        expect(validator.calls).toBe(first);
+      });
       it.each<[string, Record<string, (current: unknown) => unknown>]>([
         [
           'a `Date` changes in place',
@@ -505,6 +514,24 @@ describe('the cost of an edit to a wide object', () => {
         // The row holding none is reused, so a call folds fewer rows than the first did
         expect(again).toBeLessThan(first);
       });
+    });
+    it('folds only the row a list grows by in place, and none for a key the object holding the list gains', () => {
+      const validator = miniValidator();
+      const context = reusing(validator);
+      const holder: RJSFSchema = {
+        type: 'object',
+        properties: { group: { type: 'object', properties: { rows: list } } },
+      };
+      const group: { rows: object[]; note?: string } = { rows: rowsOf(20) };
+      fill(context, { group }, {}, holder);
+      let before = validator.calls;
+      group.rows.push({ k: 'k20' });
+      fill(context, { group }, {}, holder);
+      expect(validator.calls - before).toBe(1);
+      before = validator.calls;
+      group.note = 'n';
+      fill(context, { group }, {}, holder);
+      expect(validator.calls).toBe(before);
     });
     it('folds a row changed in place again', () => {
       const validator = miniValidator();
