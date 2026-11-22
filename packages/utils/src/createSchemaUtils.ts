@@ -4,12 +4,14 @@ import deepEquals from './deepEquals.ts';
 import logOnce from './logOnce.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import {
+  childFillOf,
   findFieldInSchema,
   findSelectedOptionInXxxOf,
   getDefaultFormState,
   getDisplayLabel,
   constrainsAlike,
   getClosestMatchingOption,
+  getFieldDefault,
   getFilledDefault,
   getFirstMatchingOption,
   getFromSchema,
@@ -22,12 +24,12 @@ import {
   sanitizeDataForNewSchema,
 } from './schema/index.ts';
 import type {
+  FieldFill,
   FormContextType,
   FormFieldState,
   FoundFieldType,
   GenericObjectType,
   GlobalUISchemaOptions,
-  PropertyPlacement,
   RJSFSchema,
   SchemaContext,
   SchemaFieldPath,
@@ -153,30 +155,24 @@ class SchemaUtils<
    *
    * @param oldSchema - The field's schema before the change
    * @param newSchema - The field's schema after the change
-   * @param oldInheritedDefault - The default the field holding `oldSchema` was filled with for it
-   * @param newInheritedDefault - The default the field holding `newSchema` is filled with for it
-   * @param [oldPlacement] - Where the field sat as a property before the change, if it is one
-   * @param [newPlacement] - Where the field sits as a property after the change, if it is one
+   * @param [oldFill={}] - What the defaults handed the field before the change, see `FieldFill`
+   * @param [newFill={}] - What the defaults hand the field after the change
    * @returns - Whether both schemas constrain the field alike
    */
-  constrainsAlike(
-    oldSchema: S,
-    newSchema: S,
-    oldInheritedDefault: unknown,
-    newInheritedDefault: unknown,
-    oldPlacement?: PropertyPlacement,
-    newPlacement?: PropertyPlacement,
-  ): boolean {
-    return constrainsAlike<S, F>(
-      this.context,
-      oldSchema,
-      newSchema,
-      this.rootSchema,
-      oldInheritedDefault,
-      newInheritedDefault,
-      oldPlacement,
-      newPlacement,
-    );
+  constrainsAlike(oldSchema: S, newSchema: S, oldFill?: FieldFill, newFill?: FieldFill): boolean {
+    return constrainsAlike<S, F>(this.context, oldSchema, newSchema, this.rootSchema, oldFill, newFill);
+  }
+
+  /** Returns what the defaults hand the child of the field `schema` describes at `key`, a property name or an item's
+   * index, given `fill`, what they hand that field, see `childFillOf()`
+   *
+   * @param schema - The field's schema, already retrieved
+   * @param fill - What the defaults hand the field
+   * @param key - The property name or item index of the child
+   * @returns - What the defaults hand the child
+   */
+  childFillOf(schema: S, fill: FieldFill, key: string | number): FieldFill {
+    return childFillOf<S, F>(this.context, schema, this.rootSchema, fill, key);
   }
 
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
@@ -250,16 +246,26 @@ class SchemaUtils<
     });
   }
 
-  /** Returns the `default` the defaults fill the field `schema` describes with, given the one the field holding it was
-   * filled with for it, under the `context`'s `defaultFormStateBehavior`, see `getFilledDefault()`
+  /** Returns the value the defaults fill the field `schema` describes with when it holds no data, given `fill`, what
+   * they hand it, under the `context`'s `defaultFormStateBehavior`, see `getFilledDefault()`
    *
    * @param schema - The field's schema, already retrieved
-   * @param inheritedDefault - The default the field holding this one was filled with for it, if any
-   * @param [placement] - Where the field sits as a property, left out for the root or an array item
-   * @returns - The default the field is filled with, or `undefined` where there is none
+   * @param [fill={}] - What the defaults hand the field, see `FieldFill`
+   * @returns - The value the field is filled with, or `undefined` where there is none
    */
-  getFilledDefault(schema: S, inheritedDefault: unknown, placement?: PropertyPlacement): unknown {
-    return getFilledDefault<S, F>(this.context, schema, this.rootSchema, inheritedDefault, placement);
+  getFilledDefault(schema: S, fill?: FieldFill): unknown {
+    return getFilledDefault<S, F>(this.context, schema, this.rootSchema, fill);
+  }
+
+  /** Returns the default the field `schema` describes takes before the defaults fill it out, given `fill`, what they
+   * hand it, see `getFieldDefault()`
+   *
+   * @param schema - The field's schema, already retrieved
+   * @param [fill={}] - What the defaults hand the field, see `FieldFill`
+   * @returns - The field's default, or `undefined` where it has none
+   */
+  getFieldDefault(schema: S, fill?: FieldFill): unknown {
+    return getFieldDefault<S, F>(this.context, schema, this.rootSchema, fill);
   }
 
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`

@@ -5,6 +5,8 @@ const { themes } = require('prism-react-renderer');
 const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
+const currentProjectVersion = require('./package.json').version;
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'react-jsonschema-form',
@@ -46,7 +48,7 @@ const config = {
           lastVersion: 'current',
           versions: {
             current: {
-              label: 'Current (v7)',
+              label: `Current (v${currentProjectVersion})`,
               path: '',
             },
             '6.11.1': {

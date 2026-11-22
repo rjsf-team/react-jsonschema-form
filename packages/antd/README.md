@@ -69,13 +69,13 @@ Ant Design theme, fields and widgets for `react-jsonschema-form`.
 - `@rjsf/validator-ajv8 >= 7`
 
 ```sh
-npm install antd @ant-design/icons dayjs @rjsf/core @rjsf/utils @rjsf/validator-ajv8
+npm install antd @ant-design/icons dayjs @rjsf/core@next @rjsf/utils@next @rjsf/validator-ajv8@next
 ```
 
 ### Installation
 
 ```sh
-npm install @rjsf/antd
+npm install @rjsf/antd@next
 ```
 
 ## Usage

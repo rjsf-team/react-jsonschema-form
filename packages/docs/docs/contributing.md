@@ -208,16 +208,16 @@ If you make changes to those libraries, you will have to maintain that coverage,
 
 ## Releasing
 
-Each release starts by turning the upcoming release's section of the changelog into release notes. Commit them on the `rc` branch below before you run `pnpm exec nx release version --git-tag`, so that the tagged commit carries them. Date the section's heading with the day you plan to publish, as in `# 6.100.10 (2026-11-01)`, and if the rc PR merges on a later day, correct the date in that PR before merging it. Start the section with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
+Each release starts by turning the upcoming release's section of the changelog into release notes. Commit them on the `rc` branch below before you run `pnpm exec nx release version --git-tag`, so that the tagged commit carries them. Date the section's heading with the day you plan to publish, as in `# 7.100.10 (2026-11-01)`, and if the rc PR merges on a later day, correct the date in that PR before merging it. Start the section with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
 
 To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
-For instance if you are about to create the new `6.100.10` branch, then you would run the following commands:
+For instance if you are about to create the new `7.100.10` branch, then you would run the following commands:
 
 ```bash
-git checkout -b rc6.100.10
-git commit -m "Release notes for 6.100.10" CHANGELOG.md
+git checkout -b rc7.100.10
+git commit -m "Release notes for 7.100.10" CHANGELOG.md
 pnpm exec nx release version --git-tag
-git commit -m "Releasing 6.100.10"
+git commit -m "Releasing 7.100.10"
 git push
 pnpm run update-version-tags
 ```
@@ -250,11 +250,12 @@ Once a new major lands on `main`, freeze the outgoing major's docs:
 1. Check out the outgoing major's last release commit (e.g. `Releasing 6.11.1`), run `pnpm install`, then `pnpm --filter ./packages/docs docusaurus docs:version <x.y.z>` with that release's version.
    It writes `versioned_docs/version-<x.y.z>/`, `versioned_sidebars/version-<x.y.z>-sidebars.json` and the `versions.json` entry; copy those onto a branch from `main`.
    In the copy, point the `blob/main` and `tree/main` GitHub links at the release's tag (e.g. `blob/v6.11.1`), so they keep showing that release's code.
-2. Add the version to `versions` in `packages/docs/docusaurus.config.js` with `label: 'v<major>'` and `path: 'version-<x.y.z>'`, and change the `current` label to the new major (e.g. `Current (v7)`).
+2. Add the version to `versions` in `packages/docs/docusaurus.config.js` with `label: 'v<major>'` and `path: 'version-<x.y.z>'`. The `current` label reads `@rjsf/docs`'s version, so it names the outgoing major until the new major's first release, such as `7.0.0-beta.1`, is versioned.
    Until the new major's first stable release (e.g. `7.0.0`) is published, also give the frozen version `banner: 'none'`: until then, npm's `latest` tag still installs the frozen major, so its docs are the ones that match.
 3. Check that `pnpm --filter ./packages/docs build` passes and that the version dropdown links the frozen pages.
 
-When the new major's first stable release is published, remove that `banner: 'none'`, so the frozen docs show Docusaurus's "no longer actively maintained" banner.
+Until then, a prerelease is published under npm's `next` tag, so the install commands in `packages/docs/docs/00-introduction.mdx` and the package READMEs name each `@rjsf/*` package with `@next`.
+When the new major's first stable release is published, remove that `banner: 'none'`, so the frozen docs show Docusaurus's "no longer actively maintained" banner, and drop the `@next` from those install commands.
 
 After that, fix the outgoing major's docs in its `versioned_docs/version-<x.y.z>/` copy, not in `packages/docs/docs`.
 
@@ -274,7 +275,7 @@ pnpm run publish-to-gh-pages
 Publishing a new `@rjsf/*` package requires additional setup. The package must first be published locally, then in the NPM web app, you must set up "Trusted Publishing" so future releases can be published via GitHub Actions. The steps to accomplish this are:
 
 1. Create the new release as described above. Existing packages will be published, but the jobs to publish new package(s) will fail.
-2. Locally, check out the release tag (e.g. `git checkout v6.8.0`). You may need to `git fetch --tags`. Make sure your `git status` is clean.
+2. Locally, check out the release tag (e.g. `git checkout v7.100.10`). You may need to `git fetch --tags`. Make sure your `git status` is clean.
 3. `cd packages/new-package`
 4. `pnpm login` (login to an account with RJSF publishing privileges)
 5. `pnpm publish --no-git-checks`.

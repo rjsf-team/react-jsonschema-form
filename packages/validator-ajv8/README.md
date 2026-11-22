@@ -62,13 +62,13 @@ Exports `validator-ajv8` plugin for `react-jsonschema-form`.
 - `@rjsf/utils >= 7`
 
 ```bash
-yarn add @rjsf/utils
+yarn add @rjsf/utils@next
 ```
 
 ### Installation
 
 ```bash
-yarn add @rjsf/validator-ajv8
+yarn add @rjsf/validator-ajv8@next
 ```
 
 <!-- USAGE EXAMPLES -->

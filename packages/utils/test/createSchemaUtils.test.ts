@@ -61,19 +61,34 @@ describe('createSchemaUtils()', () => {
       rootSchema,
     );
     const field: RJSFSchema = { type: 'string', default: 'own' };
-    expect(schemaUtils.getFilledDefault(field, 'inherited')).toBe('own');
-    expect(ancestorWins.getFilledDefault(field, 'inherited')).toBe('inherited');
-    expect(schemaUtils.constrainsAlike(field, field, 'x', 'z')).toBe(true);
-    expect(ancestorWins.constrainsAlike(field, field, 'x', 'z')).toBe(false);
+    expect(schemaUtils.getFilledDefault(field, { inheritedDefault: 'inherited' })).toBe('own');
+    expect(ancestorWins.getFilledDefault(field, { inheritedDefault: 'inherited' })).toBe('inherited');
+    expect(schemaUtils.getFieldDefault(field, { inheritedDefault: 'inherited' })).toBe('own');
+    expect(schemaUtils.constrainsAlike(field, field, { inheritedDefault: 'x' }, { inheritedDefault: 'z' })).toBe(true);
+    expect(ancestorWins.constrainsAlike(field, field, { inheritedDefault: 'x' }, { inheritedDefault: 'z' })).toBe(
+      false,
+    );
     const skipDefaults = createSchemaUtils(
       { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' } },
       rootSchema,
     );
-    const placement = { isRequired: false };
-    expect(skipDefaults.getFilledDefault(field, 'inherited', placement)).toBeUndefined();
-    expect(skipDefaults.constrainsAlike(field, { ...field, default: 'other' }, 'x', 'z', placement, placement)).toBe(
-      true,
-    );
+    const property = { isProperty: true, isRequired: false };
+    expect(skipDefaults.getFilledDefault(field, { ...property, inheritedDefault: 'inherited' })).toBeUndefined();
+    expect(
+      skipDefaults.constrainsAlike(
+        field,
+        { ...field, default: 'other' },
+        { ...property, inheritedDefault: 'x' },
+        { ...property, inheritedDefault: 'z' },
+      ),
+    ).toBe(true);
+  });
+
+  it('childFillOf() hands a property what the object its fill fills hands it', () => {
+    const object: RJSFSchema = { type: 'object', default: { a: 'x' }, properties: { a: { type: 'string' } } };
+    const child = schemaUtils.childFillOf(object, {}, 'a');
+    expect(child).toMatchObject({ inheritedDefault: 'x', isProperty: true });
+    expect(schemaUtils.getFilledDefault({ type: 'string' }, child)).toBe('x');
   });
 
   it('getUiRequiredErrorSchema()', () => {

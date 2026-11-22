@@ -61,7 +61,7 @@ Exports `utils` functions for `react-jsonschema-form`.
 ### Installation
 
 ```bash
-yarn add @rjsf/utils
+yarn add @rjsf/utils@next
 ```
 
 <!-- USAGE EXAMPLES -->
