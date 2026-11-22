@@ -173,7 +173,7 @@ You can provide your own custom widgets to a uiSchema for the following json dat
 - `array`
 
 ```tsx
-import { RJSFSchema, toInputValue, UiSchema, WidgetProps } from '@rjsf/utils';
+import { type RJSFSchema, toInputValue, type UiSchema, type WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
