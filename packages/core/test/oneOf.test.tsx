@@ -6577,6 +6577,19 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
         ),
         a: { e: { kind: 'B', n: 1 } },
       },
+      {
+        held: "an `if` in the object's `patternProperties`",
+        schema: unionOf({}, { type: 'object', patternProperties: { '^e': conditionalA } }),
+        a: { e: { kind: 'B', n: 1 } },
+      },
+      {
+        held: "an `if` the `$ref` of the object's `patternProperties` reaches",
+        schema: unionOf(
+          { definitions: { c: conditionalA } },
+          { type: 'object', patternProperties: { '^e': { $ref: '#/definitions/c' } } },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      },
     ])(
       'judges a nested value by the fill made with its siblings in place, read through $held',
       async ({ schema, a }) => {

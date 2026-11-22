@@ -744,6 +744,18 @@ describe('getFilledDefault() reads what the fill writes', () => {
     expect(getFilledDefault(context, resolved, root, fill)).toBe('resolved');
   });
 
+  it("fills a child whose name a pattern reading data matches by itself, not off its parent's fill", () => {
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { c: { type: 'string' } },
+      patternProperties: { '^c': { if: { minLength: 1 }, then: { default: 'then' } } },
+      default: { c: 'object' },
+    };
+    const context: SchemaContext = { validator: answering() };
+    const fill = childFillOf(context, root, root, {}, 'c');
+    expect(getFilledDefault(context, { type: 'string', default: 'resolved' }, root, fill)).toBe('resolved');
+  });
+
   it("reads a child an ancestor's const or option default gives a value off its parent's fill", () => {
     const constRoot: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } }, const: { a: 'c' } };
     const constFill = childFillOf(descendantWins, constRoot, constRoot, {}, 'a');

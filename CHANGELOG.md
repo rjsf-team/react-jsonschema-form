@@ -16,6 +16,11 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `Form` filling an `anyOf`/`oneOf` field on its first render or `reset()` from another option than the one it shows, where under `additionalPropertiesWhenAbsent: 'allow'` an option naming neither `additionalProperties` nor `patternProperties` takes the data's extra keys, or where an `allOf` holding options of its own merges each option with its own, so its defaults were added or dropped ([#5926](https://github.com/rjsf-team/react-jsonschema-form/pull/5926), [#5886](https://github.com/rjsf-team/react-jsonschema-form/issues/5886))
 - Fix `Form` hiding the add button and the extra keys of an object, or of an `anyOf`/`oneOf` option an `allOf` holding options of its own merges with, whose `additionalProperties`, or an `allOf` entry's, is `true` or `{}` and no other `allOf` entry's `unevaluatedProperties` closes, the keywords beside a `$ref` reading as the object's own rather than as an entry ([#5926](https://github.com/rjsf-team/react-jsonschema-form/pull/5926), [#5886](https://github.com/rjsf-team/react-jsonschema-form/issues/5886))
 - Fix `Form` lagging on an `anyOf`/`oneOf` switch that leaves many keys in an object taking extra keys, which ran a fill of the whole form for each key ([#5924](https://github.com/rjsf-team/react-jsonschema-form/pull/5924), [#5836](https://github.com/rjsf-team/react-jsonschema-form/issues/5836))
+- Fix `Form` dropping a value the user entered, on an `anyOf`/`oneOf` switch, from an object a `patternProperties` subschema holding an `if` describes ([#5924](https://github.com/rjsf-team/react-jsonschema-form/pull/5924))
+
+## @rjsf/utils
+
+- Fix `getFilledDefault()` reading a property's default off its parent's fill, which a `patternProperties` subschema holding an `if` can change, rather than filling the property by itself ([#5924](https://github.com/rjsf-team/react-jsonschema-form/pull/5924))
 
 ## @rjsf/utils
 
