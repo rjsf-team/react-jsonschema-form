@@ -1513,10 +1513,11 @@ A `$ref` on the schema it ends at is resolved too, its own keywords kept over it
 - rootSchema: S - The form's root schema
 - schemaPath: string - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/required`
 - [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
+- [skipsRefs=false]: boolean - The engine leaves every `$ref` out of the path, as `@rjsf/validator-ata` does, so a key after a `$ref` schema can index either that schema or its target
 
 #### Returns
 
-- S | undefined: The schema holding the keyword, or `undefined` when the path leads to no schema object or through a `$ref` that can't be resolved, such as one naming an `$anchor`
+- S | null | undefined: The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two of whose schemas hold its next key, unless it is `properties`, `patternProperties`, `additionalProperties` or `propertyNames`, which merging combines, since the path can index either one's; or `undefined` when the path leads to no schema object or through a `$ref` that can't be resolved, such as one naming an `$anchor`
 
 ### getLabelId&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getlabelid}
 

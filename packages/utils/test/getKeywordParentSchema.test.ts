@@ -67,6 +67,73 @@ describe('getKeywordParentSchema()', () => {
     expect(getKeywordParentSchema(schema, '#/properties/a/properties/name/type')).toEqual(item.properties!.name);
     expect(getKeywordParentSchema(schema, '#/properties/a/properties/extra/type')?.title).toEqual('Extra');
   });
+  describe('with skipsRefs', () => {
+    const own = { properties: { name: { title: 'Own' } } };
+    const branched: RJSFSchema = { type: 'object', allOf: [item] };
+    it.each(['allOf', 'anyOf', 'oneOf', 'items', 'prefixItems'])(
+      'returns null where a skipped `$ref` and its target both hold %s',
+      (key) => {
+        const schema: RJSFSchema = {
+          $defs: { B: { [key]: [item] }, C: { $ref: '#/$defs/B' } },
+          type: 'object',
+          properties: { a: { $ref: '#/$defs/B', [key]: [own] }, chain: { $ref: '#/$defs/C', [key]: [own] } },
+        };
+        expect(
+          getKeywordParentSchema(schema, `#/properties/a/${key}/0/properties/name/type`, undefined, true),
+        ).toBeNull();
+        expect(
+          getKeywordParentSchema(schema, `#/properties/chain/${key}/0/properties/name/type`, undefined, true),
+        ).toBeNull();
+      },
+    );
+    it('stops at a chain of `$ref`s that loops back on itself', () => {
+      const schema: RJSFSchema = {
+        $defs: { A: { $ref: '#/$defs/B', allOf: [{}] }, B: { $ref: '#/$defs/A' } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/A' } },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/allOf/0/type', undefined, true)).toBeUndefined();
+    });
+    it('returns null where two schemas further along a skipped chain of `$ref`s, or both sides of a `then`, hold the key', () => {
+      const schema: RJSFSchema = {
+        $defs: { B: branched, C: { $ref: '#/$defs/B', allOf: [own] }, T: { if: {}, then: item } },
+        type: 'object',
+        properties: { mid: { $ref: '#/$defs/C' }, cond: { $ref: '#/$defs/T', if: {}, then: own } },
+      };
+      expect(
+        getKeywordParentSchema(schema, '#/properties/mid/allOf/0/properties/name/type', undefined, true),
+      ).toBeNull();
+      expect(getKeywordParentSchema(schema, '#/properties/cond/then/properties/name/type', undefined, true)).toBeNull();
+    });
+    it('reads the `properties` a skipped `$ref` and its target both hold, which merging combines', () => {
+      const schema: RJSFSchema = {
+        $defs: { I: item },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/I', properties: { extra: { title: 'Extra' } } } },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/properties/name/type', undefined, true)).toEqual(
+        item.properties!.name,
+      );
+    });
+    it('reads a list only the `$ref` schema or only its target holds', () => {
+      const schema: RJSFSchema = {
+        $defs: { B: branched, P: item },
+        type: 'object',
+        properties: { target: { $ref: '#/$defs/B' }, site: { $ref: '#/$defs/P', allOf: [own] } },
+      };
+      const path = (key: string) => `#/properties/${key}/allOf/0/properties/name/type`;
+      expect(getKeywordParentSchema(schema, path('target'), undefined, true)).toEqual(item.properties!.name);
+      expect(getKeywordParentSchema(schema, path('site'), undefined, true)?.title).toEqual('Own');
+    });
+    it('reads the merged lists where the path is written with its `$ref`s', () => {
+      const schema: RJSFSchema = {
+        $defs: { B: branched },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/B', allOf: [own] } },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/allOf/0/properties/name/type')?.title).toEqual('Own');
+    });
+  });
   it('follows a chain of `$ref`s', () => {
     const schema: RJSFSchema = {
       $defs: { N: { type: 'string', title: 'N' }, P: { type: 'object', properties: { n: { $ref: '#/$defs/N' } } } },

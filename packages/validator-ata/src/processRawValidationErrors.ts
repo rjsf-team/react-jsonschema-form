@@ -87,9 +87,10 @@ export function transformRJSFValidationErrors<
 ): RJSFValidationError[] {
   const errorList = errors.map((e: ValidationError) => {
     const { instancePath, keyword, params, schemaPath } = e;
-    // ata hands over a `$ref`'s own schema, unresolved, for a keyword under it, or no schema at all in a chain of them
-    const parentSchema =
-      (schema && getKeywordParentSchema<S>(schema, schemaPath, unescapePointerToken)) ?? e.parentSchema;
+    // ata hands over a `$ref`'s own schema, unresolved, for a keyword under it, or no schema at all in a chain of them.
+    // A `null` lookup is a path that can index either a `$ref` schema's branch or its target's, whose title is unknown
+    const found = schema && getKeywordParentSchema<S>(schema, schemaPath, unescapePointerToken, true);
+    const parentSchema = found === null ? undefined : (found ?? e.parentSchema);
     // oxlint-disable-next-line typescript/no-useless-default-assignment -- ata's types say `message` is always set, but it can be missing at runtime
     let { message = '' } = e;
     let property = instancePath.split('/').map(unescapePointerToken).join('.');

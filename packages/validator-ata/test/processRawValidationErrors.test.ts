@@ -349,6 +349,21 @@ describe('transformRJSFValidationErrors()', () => {
         expect.objectContaining({ property: '.a.name', title: '', message: "must have required property 'name'" }),
       );
     });
+
+    // ata leaves the `$ref` out of the path, so `/allOf/0` can name either list's first branch
+    it('gives no title to an error under a $ref whose schema and target both hold an allOf', () => {
+      const target: RJSFSchema = {
+        type: 'object',
+        allOf: [{ properties: { n: { type: 'string', title: 'Target' } } }],
+      };
+      const schema: RJSFSchema = {
+        $defs: { T: target },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', allOf: [{ properties: { n: { title: 'Own' } } }] } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { n: 5 } }, schema);
+      expect(errors).toEqual([expect.objectContaining({ property: '.a.n', title: '', stack: '.a.n must be string' })]);
+    });
   });
 
   it('gives no title to an error under a false property beside a property named title', () => {

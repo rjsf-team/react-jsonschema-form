@@ -1,9 +1,13 @@
-import { REF_KEY } from './constants.ts';
+import { ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, PROPERTIES_KEY, REF_KEY } from './constants.ts';
 import isObject from './isObject.ts';
 import { getByPath } from './pathUtils.ts';
 import { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
 import { requireOwnRef, resolveOwnRef } from './schema/retrieveSchema.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
+
+/** Keywords whose subschemas merging a `$ref` schema with its target combines into one, so a path reads the same
+ * schema whichever of the two it indexes. Merging reorders, replaces or moves into `allOf` every other one */
+const MERGE_COMBINED_KEYS = [PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, ADDITIONAL_PROPERTIES_KEY, 'propertyNames'];
 
 /** Used by the validator packages to find the schema object holding the keyword a validation error reports, when the
  * engine doesn't hand over one that is resolved. The `schemaPath` is read from the `rootSchema` down, following each
@@ -15,14 +19,19 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  * @param schemaPath - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/required`
  * @param [decodeSchemaPathKey] - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as
  *        written without it
- * @returns - The schema holding the keyword, or `undefined` when the path leads to no schema object or through a
- *          `$ref` that can't be resolved
+ * @param [skipsRefs=false] - The engine leaves every `$ref` out of the path, so a key after a `$ref` schema can index
+ *        either that schema or its target
+ * @returns - The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two
+ *          of whose schemas hold its next key, unless it is `properties`, `patternProperties`, `additionalProperties`
+ *          or `propertyNames`, so which of them the path indexes can't be told; or `undefined` when the path leads to
+ *          no schema object or through a `$ref` that can't be resolved
  */
 export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSFSchema>(
   rootSchema: S,
   schemaPath: string,
   decodeSchemaPathKey: (key: string) => string = (key) => key,
-): S | undefined {
+  skipsRefs = false,
+): S | null | undefined {
   try {
     let node: unknown = rootSchema;
     const keys = schemaPath.split('/').slice(1, -1).map(decodeSchemaPathKey);
@@ -33,6 +42,18 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
         // `allOf`, `oneOf` or `items` would shift
         node = requireOwnRef<S>(node as S, rootSchema).target;
       } else {
+        if (hasRef && skipsRefs && !MERGE_COMBINED_KEYS.includes(key)) {
+          // Any two schemas along the chain of `$ref`s holding the key make the path ambiguous
+          let holders = 0;
+          for (let link: unknown = node; link !== undefined;) {
+            holders += Number(Object.hasOwn(Object(link), key));
+            link =
+              stringKeyword(link, REF_KEY) === undefined ? undefined : requireOwnRef<S>(link as S, rootSchema).target;
+          }
+          if (holders > 1) {
+            return null;
+          }
+        }
         if (hasRef) {
           // The resolved schema holds the `$ref` schema's own keywords too, so a key it holds itself is still read
           node = resolveOwnRef<S>(node as S, rootSchema);
