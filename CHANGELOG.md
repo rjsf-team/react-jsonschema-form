@@ -47,7 +47,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 ## @rjsf/validator-ata
 
-- Fix errors under a `$ref` not naming their property by its schema `title`, and the error for a `false` property taking the schema of a sibling property named `title` as its title ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+- Fix errors under a `$ref` not naming their property by its schema `title` ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+- Fix the error for a `false` property taking the schema of a sibling property named `title` as its title ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
 
 ## @rjsf/validator-cfworker
 

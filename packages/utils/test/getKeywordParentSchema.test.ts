@@ -30,6 +30,34 @@ describe('getKeywordParentSchema()', () => {
     expect(getKeywordParentSchema(schema, '#/properties/a/$ref/properties/name/type')).toEqual(item.properties!.name);
     expect(getKeywordParentSchema(schema, '#/properties/a/properties/name/type')).toEqual(item.properties!.name);
   });
+  it('reads the keys after a `$ref` written into the path from its target alone', () => {
+    const branch: RJSFSchema = { properties: { name: item.properties!.name }, required: ['name'] };
+    const schema: RJSFSchema = {
+      $defs: { P: { type: 'object', allOf: [branch] } },
+      type: 'object',
+      properties: { a: { $ref: '#/$defs/P', allOf: [{ properties: { email: {} }, required: ['email'] }] } },
+    };
+    expect(getKeywordParentSchema(schema, '#/properties/a/$ref/allOf/0/required')).toBe(branch);
+    expect(getKeywordParentSchema(schema, '#/properties/a/$ref/allOf/0/properties/name/type')).toBe(
+      item.properties!.name,
+    );
+  });
+  it('follows a relative `$ref` inside an `$id` resource written into the path', () => {
+    const schema: RJSFSchema = {
+      $id: 'https://example.com/root',
+      $defs: {
+        R: {
+          $id: 'https://example.com/r',
+          $defs: { N: { type: 'string', title: 'N' } },
+          type: 'object',
+          properties: { n: { $ref: '#/$defs/N' } },
+        },
+      },
+      type: 'object',
+      properties: { a: { $ref: 'https://example.com/r' } },
+    };
+    expect(getKeywordParentSchema(schema, '#/properties/a/$ref/properties/n/$ref/type')?.title).toEqual('N');
+  });
   it('follows a `$ref` whose schema holds the next key too, reading both', () => {
     const schema: RJSFSchema = {
       $defs: { I: item },

@@ -1505,7 +1505,7 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 ### getKeywordParentSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Used by the validator packages to find the schema object holding the keyword a validation error reports, when the engine doesn't hand over one that is resolved, to pass to [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) as its `parentSchema`.
-The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through: one written into the path as a `$ref` key, or one it skips, its next key being one the `$ref` schema doesn't hold itself.
+The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through: one written into the path as a `$ref` key, whose next key is read from the `$ref`'s target alone, or one it skips, its next key being one the `$ref` schema doesn't hold itself.
 A `$ref` on the schema it ends at is resolved too, its own keywords kept over its target's.
 
 #### Parameters

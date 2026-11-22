@@ -361,6 +361,58 @@ describe('transformRJSFValidationErrors()', () => {
       expect(typeErrors.map((error) => error.title)).toEqual(typeErrors.map(() => title));
     });
 
+    it('reads the branches of a $ref beside branches of its own from the definition', () => {
+      const schema: RJSFSchema = {
+        $defs: { P: { type: 'object', allOf: [item] } },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/P', allOf: [{ properties: { email: { title: 'Email' } }, required: ['email'] }] },
+        },
+      };
+      const missing = customizeValidator().validateFormData({ a: { email: '' } }, schema).errors;
+      expect(missing.find((error) => error.property === '.a.name')).toEqual(
+        expect.objectContaining({
+          title: 'Full name',
+          message: "Instance does not have required property 'Full name'.",
+        }),
+      );
+      const typed = customizeValidator().validateFormData({ a: { email: '', name: 1 } }, schema).errors;
+      expect(typed.find((error) => error.property === '.a.name' && error.name === 'type')).toEqual(
+        expect.objectContaining({ title: 'Full name', stack: expect.stringMatching(/^'Full name' /) }),
+      );
+    });
+
+    it('reads a property named properties as a name, not as the keyword', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          arr: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: { properties: { title: 'Props', allOf: [{ title: 'Branch', type: 'string' }] } },
+            },
+          },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ arr: [{ properties: 1 }] }, schema);
+      const typeErrors = errors.filter((error) => error.name === 'type');
+      expect(typeErrors.length).toBeGreaterThan(0);
+      expect(typeErrors.map((error) => error.title)).toEqual(typeErrors.map(() => 'Props'));
+    });
+
+    it('gives no title to an error a false schema reports under a property named then', () => {
+      const schema: RJSFSchema = {
+        title: 'Root',
+        type: 'object',
+        properties: { then: { type: 'object', properties: { x: false } } },
+      };
+      const { errors } = customizeValidator().validateFormData({ then: { x: 1 } }, schema);
+      expect(errors.find((error) => error.name === 'false')).toEqual(
+        expect.objectContaining({ property: '.then.x', title: '', stack: '.then.x False boolean schema.' }),
+      );
+    });
+
     it('gives no title to an error a false schema reports', () => {
       const schema: RJSFSchema = {
         title: 'Root',
