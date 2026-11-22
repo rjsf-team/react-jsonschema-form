@@ -4,7 +4,6 @@ import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
 } from '../additionalPropertiesUtils.ts';
-import booleanOptionsRenderAsSelect from '../booleanOptionsRenderAsSelect.ts';
 import {
   ADDITIONAL_ITEMS_KEY,
   ADDITIONAL_PROPERTIES_KEY,
@@ -1791,9 +1790,6 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             parentConst,
             inheritsDeclared: reachesDefault,
             onHandDown: optionHandDown,
-            // A select shows a field nobody answered, as a checkbox can't, so the constant of a boolean it renders is
-            // no required boolean to start at `false`
-            required: choice.rendersBooleanSelect ? false : props.required,
           },
           initialValue,
           adopted?.choice,
@@ -2089,7 +2085,6 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   index: number;
   isWholeValue: boolean;
   offersConstants: boolean;
-  rendersBooleanSelect: boolean;
   rendersAsSelect: boolean;
   wholeOptions: S[] | undefined;
 } {
@@ -2102,8 +2097,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // taken whole
   const select = resolveDeclaredConstantOptions<S>(schema, () => view);
   const isWholeValue = isWholeValueSelect<S>(select);
-  const listed = getXxxOfOptions<S>(select);
-  const constants = listed?.options;
+  const constants = getXxxOfOptions<S>(select)?.options;
   const offersConstants = isConstantOptionList<S>(constants);
   const wholeOptions = isWholeValue && offersConstants ? constants : undefined;
   const picksWholeOption = wholeOptions !== undefined;
@@ -2117,14 +2111,10 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     defaultFormStateBehavior?.constAsDefaults === 'skipOneOf';
   // A list of several constants is a choice the user has yet to make, as an `enum` is, so none of them is the field's
   // default unless `constAsDefaults` is explicitly `'always'`. A list of one leaves nothing to choose, so its constant
-  // fills as a `const` does
-  const leavesConstantsUnpicked =
-    isConstantOptionList<S>(constants) &&
-    constants.length > 1 &&
-    defaultFormStateBehavior?.constAsDefaults !== 'always';
-  // The option is folded with `constAsDefaults: 'never'`, which takes none of its constants
+  // fills as a `const` does. The option is folded with `constAsDefaults: 'never'`, which takes none of its constants
   const optionContext: SchemaContext<S, F> =
-    skipsOneOfConstants || leavesConstantsUnpicked
+    skipsOneOfConstants ||
+    (defaultFormStateBehavior?.constAsDefaults !== 'always' && offersConstants && constants.length > 1)
       ? { ...context, defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' } }
       : context;
   // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick. An
@@ -2171,12 +2161,6 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     index,
     isWholeValue,
     offersConstants,
-    // A `ui:widget` naming the checkbox wins over the select the options would otherwise render as
-    rendersBooleanSelect:
-      listed !== undefined &&
-      isConstantOptionList<S>(constants) &&
-      getUiOptions<T, S, F>(props.uiSchema).widget !== 'checkbox' &&
-      booleanOptionsRenderAsSelect<T, S, F>(select, listed.key, constants, props.uiSchema),
     rendersAsSelect: rendersOptionsAsSelect<S>(select, constants),
     wholeOptions,
   };
@@ -3667,17 +3651,12 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // present in the submitted data, and false is the natural zero-value.
       // `requiredBooleanDefault: 'skip'` opts out for forms that treat an
       // unanswered boolean as a distinct state and rely on `required` to flag it.
-      // A select or a radio group the `ui:widget` names shows a field nobody answered, as a checkbox can't, so the
-      // field is left for the user to answer
       const requiredBooleanDefault = context.defaultFormStateBehavior?.requiredBooleanDefault;
-      const { widget } = getUiOptions<T, S, F>(props.uiSchema);
       if (
         requiredBooleanDefault !== 'skip' &&
         !(SKIPS_DEFAULTS in context) &&
         props.required &&
-        defaults === undefined &&
-        widget !== 'radio' &&
-        widget !== 'select'
+        defaults === undefined
       ) {
         return false;
       }

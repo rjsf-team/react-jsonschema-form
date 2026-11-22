@@ -220,24 +220,6 @@ Return a consistent `id` for the component a field renders beside its `anyOf`/`o
 
 - string: The consistent id for the component rendered beside the options from the given `id` and `depth`
 
-### booleanOptionsRenderAsSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#booleanoptionsrenderasselect}
-
-Determines whether a boolean field offering the constant options of its `anyOf`/`oneOf` renders them as a select where no `ui:widget` says otherwise, rather than as the checkbox a boolean defaults to.
-A boolean whose `type` is inferred from its constants is a select. A declared one keeps its checkbox unless it has several options and one of them is labelled, by a `title` or a `ui:title`, or is `null`, or its `type` list names `boolean` first among other non-null types.
-`SchemaField` picks the widget by it, and `getDefaultFormState()` leaves such a required boolean for the user to answer, where it starts one rendered as a checkbox at `false`.
-
-#### Parameters
-
-- schema: S - The retrieved schema of the field
-- keyword: 'anyOf' | 'oneOf' - The keyword the `options` came from
-- options: readonly S[] - The constant options of that keyword
-- [uiSchema]: UiSchema&lt;T, S, F> - The `uiSchema` for the field, which may label the options
-- [hasInferredType]: boolean - Whether the `type` of `schema` was inferred from its constants rather than declared, for a caller that wrote the inferred `type` into `schema`; worked out from a `schema` declaring none otherwise
-
-#### Returns
-
-- boolean: True when the field is a boolean that renders its options as a select
-
 ### bracketNameGenerator()
 
 Generates bracketed names for form fields.
@@ -2073,21 +2055,6 @@ Without a plan, as for a template rendered outside `SchemaField`, it follows `di
 #### Returns
 
 - boolean: True when the key input is labelled
-
-### hasOptionLabels&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#hasoptionlabels}
-
-Determines whether any option of an `anyOf`/`oneOf` list is labelled by something other than its value: its own `title`, or the `ui:title` of the matching `uiSchema.anyOf`/`uiSchema.oneOf` entry.
-`ui:enumNames` names only `enum` values, so it doesn't label these options.
-
-#### Parameters
-
-- options: readonly unknown[] - The options of the keyword, which needn't be constants
-- keyword: 'anyOf' | 'oneOf' - The keyword the `options` came from
-- [uiSchema]: UiSchema&lt;T, S, F> - The `uiSchema` for the field
-
-#### Returns
-
-- boolean: True when at least one option is labelled
 
 ### hasOwnContentBesideOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#hasowncontentbesideoptions}
 

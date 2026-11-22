@@ -6,7 +6,6 @@ import allowAdditionalItems from './allowAdditionalItems.ts';
 import applyValidatorErrorTitles from './applyValidatorErrorTitles.ts';
 import type { ValidatorErrorTitleSource } from './applyValidatorErrorTitles.ts';
 import asNumber from './asNumber.ts';
-import booleanOptionsRenderAsSelect from './booleanOptionsRenderAsSelect.ts';
 import callerInputProps from './callerInputProps.ts';
 import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import createErrorHandler from './createErrorHandler.ts';
@@ -102,7 +101,6 @@ import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hasAdditionalKeyLabel from './hasAdditionalKeyLabel.ts';
 import { hashObject, schemaKey } from './hashObject.ts';
-import hasOptionLabels from './hasOptionLabels.ts';
 import hasSchemaMarker from './hasSchemaMarker.ts';
 import type { SchemaFlagMarker } from './hasSchemaMarker.ts';
 import type { VisibleErrorsProps } from './hasVisibleErrors.ts';
@@ -336,7 +334,6 @@ export {
   applyValidatorErrorTitles,
   asNumber,
   besideOptionsId,
-  booleanOptionsRenderAsSelect,
   buttonId,
   callerInputProps,
   callWithDeferredThrow,
@@ -429,7 +426,6 @@ export {
   hasAdditionalKeyLabel,
   hasByPath,
   hasOwnContentBesideOptions,
-  hasOptionLabels,
   hasSchemaMarker,
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   hasVisibleErrors,

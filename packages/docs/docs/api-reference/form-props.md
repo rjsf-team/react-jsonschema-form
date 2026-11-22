@@ -405,9 +405,7 @@ render(
 
 Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default` of its own, is populated with `false`, defaulting to `populateFalse`.
 An explicit schema `default`, a parent default and an existing `formData` value always take precedence; this flag only decides what happens when none of them provides a value.
-The `false` is for a checkbox, which can't show an unanswered field. A boolean shown as a select or as radios, which can, is left unset whatever this flag is: one whose `ui:widget` is `select` or `radio`, and, where the `ui:widget` is neither of those nor `checkbox`, one whose constant `oneOf`/`anyOf` options render as a select, as [`booleanOptionsRenderAsSelect()`](./utility-functions.md#booleanoptionsrenderasselect) says.
-A boolean whose `oneOf`/`anyOf` lists several constants and renders as a checkbox is filled with `false` too, since [`constAsDefaults`](#constasdefaults) left unset picks none of them.
-`getDefaultFormState()` reads the widget from the `uiSchema` it is given, so a call without one fills a boolean as its default widget has it.
+A boolean whose `oneOf`/`anyOf` lists several constants is filled the same way, whatever control renders it, since [`constAsDefaults`](#constasdefaults) left unset picks none of them.
 
 | Flag Value      | Description                                                                                                                   |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
