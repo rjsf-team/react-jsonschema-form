@@ -10,6 +10,7 @@ import {
   setByPath,
 } from '../../src/index.ts';
 import { FIRST_ONE_OF, oneOfData, oneOfSchema, SECOND_ONE_OF } from '../testUtils/testData.ts';
+import { check } from './graph/miniValidator.ts';
 import type { TestValidatorType } from './types.ts';
 
 export default function sanitizeDataForNewSchemaTest(testValidator: TestValidatorType) {
@@ -40,11 +41,16 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, oldSchema, { p: 'a' }),
       ).toBeUndefined();
     });
-    it('returns input formData when the old schema is not an object', () => {
+    // A key the data lacks takes what the fill writes into it, the defaults an option's properties declare included
+    const oneOfDataSeeded = {
+      ...oneOfData,
+      inner_spec: { ...oneOfData.inner_spec, inner_one_of: { name: 'inner_first_choice' } },
+    };
+    it('returns input formData, a key it lacks seeded, when the old schema is not an object', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
       expect(
         sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, undefined, oneOfData),
-      ).toEqual(oneOfData);
+      ).toEqual(oneOfDataSeeded);
     });
     it('returns an array it leaves unchanged as it is', () => {
       const arraySchema: RJSFSchema = { type: 'array', items: { type: 'string' } };
@@ -78,10 +84,10 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         foo: 'x',
       });
     });
-    it('returns input formData when the old schema does not contain a "property" object', () => {
+    it('returns input formData, a key it lacks seeded, when the old schema does not contain a "property" object', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
       expect(sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, {}, oneOfData)).toEqual(
-        oneOfData,
+        oneOfDataSeeded,
       );
     });
     it('restores the default for an undefined property that is newly defined by the new schema', () => {
@@ -679,13 +685,11 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           },
         },
       };
-      expect(
-        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
-          enumField: 'oldData',
-        }),
-      ).toEqual({
-        enumField: 'otherData',
-      });
+      // The fill picks the option the default matches, which the stub validator answers as a real one does
+      testValidator.setReturnValues({ isValid: (schema, data, root) => check(schema, data, root) });
+      const sanitized = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { enumField: 'oldData' });
+      testValidator.setReturnValues({ isValid: [] });
+      expect(sanitized).toEqual({ enumField: 'otherData' });
     });
     it('keeps a value an option that is not a constant accepts', () => {
       const oldSchema: RJSFSchema = { type: 'object', properties: { k: { const: 'a' }, email: { type: 'string' } } };
@@ -1381,6 +1385,13 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         [null],
       ],
       [
+        'empties a null item whose new position declares a default through one of its options',
+        { type: 'array', items: { type: 'number' } },
+        { type: 'array', items: { type: 'string', oneOf: [{ default: 'x' }] } },
+        [undefined],
+        false,
+      ],
+      [
         'drops a null item whose new position declares no default',
         { type: 'array', items: { type: 'number' } },
         { type: 'array', items: { type: 'string' } },
@@ -1882,6 +1893,15 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         }),
       ).toStrictEqual({ value: { x: 1 } });
     });
+    it("swaps a value an object's anyOf/oneOf option default filled in for the option's new default", () => {
+      const holder = (b: string): RJSFSchema => ({
+        type: 'object',
+        properties: { a: { type: 'object', properties: { b: { type: 'string' } }, oneOf: [{ default: { b } }] } },
+      });
+      expect(schemaUtils.sanitizeDataForNewSchema(holder('y'), holder('x'), { a: { b: 'x' } })).toStrictEqual({
+        a: { b: 'y' },
+      });
+    });
     it('swaps the old default of a scalar, prefix or array item for the new one, and keeps a readOnly or object one', () => {
       const items = (extra: RJSFSchema): RJSFSchema => ({ type: 'array', items: { type: 'string', ...extra } });
       expect(
@@ -2314,7 +2334,6 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       it.each<[string, RJSFSchema, RJSFSchema]>([
         ['a type', { const: 'x' }, { type: 'string', const: 'x' }],
         ['a const', { type: 'string' }, { type: 'string', const: 'x' }],
-        ['a default', { type: 'string', const: 'x', default: 'o' }, { type: 'string', const: 'x', default: 'n' }],
         ['an enum', { type: 'string', enum: ['a', 'b'] }, { type: 'string', enum: ['c', 'd'] }],
         ['a default nothing rejects it by', { type: 'string', default: 'a' }, { type: 'string', default: 'b' }],
         [
@@ -2331,6 +2350,14 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         expect(
           schemaUtils.sanitizeDataForNewSchema(objectWith(newK), objectWith(oldK), { k: undefined }),
         ).toStrictEqual({});
+      });
+      it('is kept where the data holds it as undefined and the new schema changes only a default its const wins over', () => {
+        // The fill writes the `const` on both sides, so the clear's constraints are alike (#5819)
+        const oldK: RJSFSchema = { type: 'string', const: 'x', default: 'o' };
+        const newK: RJSFSchema = { type: 'string', const: 'x', default: 'n' };
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(objectWith(newK), objectWith(oldK), { k: undefined }),
+        ).toStrictEqual({ k: undefined });
       });
       it.each<[string, RJSFSchema, RJSFSchema]>([
         ['const', { type: 'string', const: 'x' }, { type: 'string', const: 'x' }],
@@ -2748,6 +2775,148 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       expect(sanitizeDataForNewSchema({ validator: testValidator }, newSchema, newSchema, oldSchema, data)).toEqual({
         pick: { k: 'b' },
         list: [{ k: 'a' }],
+      });
+    });
+    describe('an array of objects holding its old default', () => {
+      const rowOf = (f: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        required: ['f'],
+        properties: { a: { type: 'string' }, f },
+      });
+      const listOf = (f: RJSFSchema, d: RJSFSchema['default'] = [{ a: 'x' }]): RJSFSchema => ({
+        type: 'object',
+        properties: { list: { type: 'array', default: d, items: rowOf(f) } },
+      });
+      const sanitize = (newSchema: RJSFSchema, oldSchema: RJSFSchema, data: unknown) =>
+        sanitizeDataForNewSchema({ validator: testValidator }, newSchema, newSchema, oldSchema, data);
+      const B: RJSFSchema = { type: 'boolean' };
+      it('keeps a key the fill computed below it, which no default reached, item by item', () => {
+        const nestedOf = (f: RJSFSchema): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', default: [[{ a: 'x' }]], items: { type: 'array', items: rowOf(f) } } },
+        });
+        expect(sanitize(listOf({ ...B, default: true }), listOf(B), { list: [{ a: 'x', f: false }] })).toEqual({
+          list: [{ a: 'x', f: false }],
+        });
+        expect(sanitize(nestedOf({ ...B, default: true }), nestedOf(B), { list: [[{ a: 'x', f: false }]] })).toEqual({
+          list: [[{ a: 'x', f: false }]],
+        });
+      });
+      it("drops a row past the new default's length that still holds the old default's entry there", () => {
+        const xw = [{ a: 'x' }, { a: 'w' }];
+        const data = {
+          list: [
+            { a: 'x', f: false },
+            { a: 'w', f: false },
+          ],
+        };
+        expect(sanitize(listOf(B, [{ a: 'y' }]), listOf(B, xw), data)).toEqual({ list: [{ a: 'y', f: false }] });
+        expect(sanitize(listOf(B, []), listOf(B, xw), data)).toEqual({ list: [] });
+        const typed = { list: [data.list[0], { a: 'k', f: false }] };
+        expect(sanitize(listOf(B, [{ a: 'y' }]), listOf(B, xw), typed)).toEqual({
+          list: [{ a: 'y', f: false }, typed.list[1]],
+        });
+        // Once the user added or changed a row, every row is theirs
+        const added = { list: [...data.list, { a: 'u', f: false }] };
+        expect(sanitize(listOf(B, [{ a: 'y' }]), listOf(B, xw), added)).toEqual({
+          list: [{ a: 'y', f: false }, ...added.list.slice(1)],
+        });
+      });
+      it("adds the rows a longer new default holds past the array's end, up to a changed maxItems", () => {
+        const xw = [{ a: 'x' }, { a: 'w' }];
+        const data = { list: [{ a: 'y', f: false }] };
+        const grown = [
+          { a: 'x', f: false },
+          { a: 'w', f: false },
+        ];
+        expect(sanitize(listOf(B, xw), listOf(B, [{ a: 'y' }]), data)).toEqual({ list: grown });
+        const boundedOf: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', maxItems: 2, default: [...xw, { a: 'v' }], items: rowOf(B) } },
+        };
+        expect(sanitize(boundedOf, listOf(B, [{ a: 'y' }]), data)).toEqual({ list: grown });
+      });
+      it("pads a row past the new default's length to minItems, as the new default fills it", () => {
+        const paddedOf = (d: RJSFSchema['default']): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', minItems: 2, default: d, items: rowOf(B) } },
+        });
+        const data = {
+          list: [
+            { a: 'x', f: false },
+            { a: 'w', f: false },
+          ],
+        };
+        expect(sanitize(paddedOf([{ a: 'y' }]), paddedOf([{ a: 'x' }, { a: 'w' }]), data)).toEqual({
+          list: [{ a: 'y', f: false }, { f: false }],
+        });
+        // A tuple declaring no default of its own still has one, from its prefix items, past which no row is left
+        const tupleOf: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', prefixItems: [{ ...rowOf(B), default: { a: 'y' } }], items: rowOf(B) } },
+        };
+        expect(sanitize(tupleOf, listOf(B, [{ a: 'x' }, { a: 'w' }]), data)).toEqual({ list: [{ a: 'y', f: false }] });
+      });
+      it('gives a row the new items reject the new default at its index', () => {
+        const strings: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', default: ['s'], items: { type: 'string' } } },
+        };
+        expect(sanitize(strings, listOf(B), { list: [{ a: 'x', f: false }] })).toEqual({ list: ['s'] });
+        const yRow = { a: 'y', f: true };
+        const consts: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', default: [yRow], items: { ...rowOf(B), const: yRow } } },
+        };
+        expect(sanitize(consts, listOf(B), { list: [{ a: 'x', f: false }] })).toEqual({ list: [yRow] });
+      });
+      it('drops a rejected row judged key by key or item by item, as Form does, though it holds its old entry', () => {
+        const rows = [
+          { a: 'x', f: false },
+          { a: 'u', f: false },
+        ];
+        const narrowed: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: { type: 'array', default: [{ a: 'x' }], items: { ...rowOf(B), type: ['object', 'string'] } },
+          },
+        };
+        expect(sanitize(listOf(B, [{ a: 'y' }]), narrowed, { list: rows })).toEqual({ list: [] });
+        const nested: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', default: [[{ a: 'x' }]], items: { type: 'array', items: rowOf(B) } } },
+        };
+        const strings: RJSFSchema = {
+          type: 'object',
+          properties: { list: { type: 'array', default: ['s'], items: { type: 'string' } } },
+        };
+        expect(sanitize(strings, nested, { list: [[rows[0]], [rows[1]]] })).toEqual({ list: [] });
+      });
+      it('keeps a multi-select holding more than its old default, whose values take nothing at their positions', () => {
+        const choiceOf = (d: RJSFSchema['default']): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              uniqueItems: true,
+              default: d,
+              items: { type: 'object', enum: [{ k: 1 }, { k: 2 }, { k: 3 }] },
+            },
+          },
+        });
+        const data = { list: [{ k: 1 }, { k: 2 }, { k: 3 }] };
+        expect(sanitize(choiceOf([{ k: 3 }]), choiceOf([{ k: 1 }, { k: 2 }]), data)).toEqual(data);
+      });
+      it('takes the new default whole where it holds the very default its old schema declares', () => {
+        const plainOf = (d: RJSFSchema['default']): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: { type: 'array', default: d, items: { type: 'object', properties: { a: { type: 'string' } } } },
+          },
+        });
+        expect(sanitize(plainOf([{ a: 'y' }, { a: 'z' }]), plainOf([{ a: 'x' }]), { list: [{ a: 'x' }] })).toEqual({
+          list: [{ a: 'y' }, { a: 'z' }],
+        });
       });
     });
     describe('a select over whole arrays', () => {

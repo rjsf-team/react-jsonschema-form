@@ -1331,7 +1331,8 @@ describe('scoringTarget()', () => {
       // Every definition from the third level on is reached from each of the level above it, and the copies of one
       // level hold alike, so each level from the third but the last, which holds none reached twice, is written once
       expect(Object.keys(target.definitions ?? {})).toHaveLength(levels - 2);
-    });
+      // Under half a second locally, but past 5 seconds on a loaded CI runner
+    }, 30_000);
     it('tells apart the copies of two parts that hash alike', () => {
       // `Aa` and `BB` hash alike, so the copies of the two definitions, which differ only in naming them, do too. Each
       // holds `Inner` twice, so each is written once

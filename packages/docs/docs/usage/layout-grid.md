@@ -86,7 +86,7 @@ Person Info
 If you wanted to switch the order of the fields or remove middle name entirely, you could change the JSON schema, which
 is usually not desirable for most users. You could also use the `ui:order` feature and/or `ui:widget: "hidden"` in the
 `uiSchema` to accomplish this without changing the schema. And now you can also use the very flexible and powerful
-`LayoutGridField` field in the`uiSchema`.
+`LayoutGridField` field in the `uiSchema`.
 
 Now let's add a `uiSchema` that will allow us to change the order of the fields to be `Last Name`, `Middle Name` and `First Name`.
 This will highlight the first elements of the new "syntax"; `ui:layoutGrid` and `ui:row` :

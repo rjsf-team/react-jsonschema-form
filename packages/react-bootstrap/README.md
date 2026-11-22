@@ -61,13 +61,13 @@ Exports `react-bootstrap` theme, fields and widgets for `react-jsonschema-form`.
 - `@rjsf/validator-ajv8 >= 7`
 
 ```bash
-yarn add react-bootstrap @rjsf/core @rjsf/utils @rjsf/validator-ajv8
+yarn add react-bootstrap @rjsf/core@next @rjsf/utils@next @rjsf/validator-ajv8@next
 ```
 
 ### Installation
 
 ```bash
-yarn add @rjsf/react-bootstrap
+yarn add @rjsf/react-bootstrap@next
 ```
 
 ## Usage

@@ -1,4 +1,5 @@
 import type {
+  FieldFill,
   FormContextType,
   GenericObjectType,
   GlobalUISchemaOptions,
@@ -104,10 +105,19 @@ function givesKey(optionDefault: unknown, key: string): optionDefault is Generic
   return isPlainObject(optionDefault) && Object.hasOwn(optionDefault, key);
 }
 
-/** The default `option`'s own `default` object gives `key` */
-function optionDefaultFor<S extends StrictRJSFSchema>(option: S | undefined, key: string): unknown {
-  const optionDefault: unknown = option?.[DEFAULT_KEY];
-  return givesKey(optionDefault, key) ? optionDefault[key] : undefined;
+/** What `option`'s own fill hands its property `key`, read as the property computes it, whether or not it is written
+ * there, see `FieldFill`
+ */
+function optionFillOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  option: S | undefined,
+  key: string,
+): FieldFill {
+  if (option === undefined) {
+    return {};
+  }
+  const { inheritedDefault, inheritedConst, isRequired } = schemaUtils.childFillOf(option, {}, key);
+  return { inheritedDefault, inheritedConst, isRequired };
 }
 
 /** Whether two options' schemas for `key` describe the same field, so a clear of it carries over a switch. A `Form`
@@ -128,8 +138,8 @@ function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType
     schemaUtils.constrainsAlike(
       schemaUtils.retrieveSchema(oldProperty),
       schemaUtils.retrieveSchema(newProperty),
-      optionDefaultFor<S>(oldOption, key),
-      optionDefaultFor<S>(newOption, key),
+      optionFillOf<T, S, F>(schemaUtils, oldOption, key),
+      optionFillOf<T, S, F>(schemaUtils, newOption, key),
     )
   );
 }

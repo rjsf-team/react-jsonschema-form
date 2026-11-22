@@ -61,13 +61,13 @@ Exports `shadcn` theme, fields and widgets for `react-jsonschema-form`.
 - `@rjsf/validator-ajv8 >= 7`
 
 ```bash
-yarn add @rjsf/core @rjsf/utils @rjsf/validator-ajv8
+yarn add @rjsf/core@next @rjsf/utils@next @rjsf/validator-ajv8@next
 ```
 
 ### Installation
 
 ```bash
-yarn add @rjsf/shadcn
+yarn add @rjsf/shadcn@next
 ```
 
 ## Usage

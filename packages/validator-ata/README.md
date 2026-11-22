@@ -37,7 +37,7 @@ ata is a JSON Schema validator that targets Draft 2020-12 (98.5% spec compliance
 ## Installation
 
 ```bash
-npm install @rjsf/validator-ata
+npm install @rjsf/validator-ata@next
 ```
 
 `ata-validator` is a dependency of this package and is installed with it.
