@@ -4559,19 +4559,21 @@ function snapshotFrom(data: unknown, previous: unknown): unknown {
   }
   if (Array.isArray(data)) {
     const held = Array.isArray(previous) ? previous : undefined;
-    // Made at the first member `previous` doesn't hold, so an unchanged array costs no copy. Read index by index, as
-    // a hole reads as `undefined`
+    // Made at the first member `previous` doesn't hold, so an unchanged array costs no copy. Read index by index, which
+    // `every()` would skip a hole of. A hole stays a hole in the snapshot, apart from an item holding `undefined`: the
+    // fold leaves the one as it is and fills the other with its default
     let copy = held?.length === data.length ? undefined : new Array<unknown>(data.length);
     for (let index = 0; index < data.length; index++) {
       const member = snapshotFrom(data[index], held?.[index]);
       if (member === OPAQUE) {
         return OPAQUE;
       }
-      if (held && copy === undefined && !Object.is(member, held[index])) {
+      const isItem = index in data;
+      if (held && copy === undefined && !(Object.is(member, held[index]) && index in held === isItem)) {
         copy = held.slice(0, index);
         copy.length = data.length;
       }
-      if (copy) {
+      if (copy && isItem) {
         copy[index] = member;
       }
     }

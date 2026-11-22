@@ -502,6 +502,28 @@ describe('the cost of an edit to a wide object', () => {
       ])('is folded again once %s', (_label, changes) => {
         expect(checksAfter(changes)).toBeGreaterThan(0);
       });
+      it('fills the default of an item set to `undefined` where its array held a hole, and keeps a hole it still holds', () => {
+        const context = reusing(miniValidator());
+        const lists: RJSFSchema = {
+          type: 'array',
+          items: { type: 'object', properties: { list: { type: 'array', items: { type: 'string', default: 'x' } } } },
+        };
+        const list: unknown[] = ['a', 'b', 'c'];
+        const rows = [{ list }];
+        fill(context, rows, {}, lists);
+        Reflect.deleteProperty(list, 0);
+        Reflect.deleteProperty(list, 2);
+        const holed = fill(context, rows, {}, lists) as { list: unknown[] }[];
+        expect(0 in holed[0].list).toBe(false);
+        expect(fill(context, rows, {}, lists)).toEqual(holed);
+        list[0] = undefined;
+        const filled = fill(context, rows, {}, lists) as { list: unknown[] }[];
+        expect(filled[0].list[0]).toBe('x');
+        expect(2 in filled[0].list).toBe(false);
+        // And back to a hole, which the item holding `undefined` is not
+        Reflect.deleteProperty(list, 0);
+        expect(fill(context, rows, {}, lists)).toEqual(holed);
+      });
       it('is folded on every call while it holds another kind of object, which could change in place unseen', () => {
         const validator = miniValidator();
         const context = reusing(validator);
