@@ -515,14 +515,31 @@ describe('the cost of an edit to a wide object', () => {
         Reflect.deleteProperty(list, 2);
         const holed = fill(context, rows, {}, lists) as { list: unknown[] }[];
         expect(0 in holed[0].list).toBe(false);
-        expect(fill(context, rows, {}, lists)).toEqual(holed);
+        expect(fill(context, rows, {}, lists)).toStrictEqual(holed);
         list[0] = undefined;
         const filled = fill(context, rows, {}, lists) as { list: unknown[] }[];
         expect(filled[0].list[0]).toBe('x');
         expect(2 in filled[0].list).toBe(false);
         // And back to a hole, which the item holding `undefined` is not
         Reflect.deleteProperty(list, 0);
-        expect(fill(context, rows, {}, lists)).toEqual(holed);
+        expect(fill(context, rows, {}, lists)).toStrictEqual(holed);
+      });
+      it('hands back the keys of an object in the order its data holds them, once they change places in place', () => {
+        const frees: RJSFSchema = {
+          type: 'array',
+          items: { type: 'object', properties: { free: { type: 'object', additionalProperties: { type: 'string' } } } },
+        };
+        const keysAfterSwap = (context: SchemaContext) => {
+          const free: Record<string, string> = { x: '1', y: '2' };
+          const rows = [{ free }];
+          fill(context, rows, {}, frees);
+          Reflect.deleteProperty(free, 'x');
+          free.x = '1';
+          const swapped = fill(context, rows, {}, frees) as { free: object }[];
+          return Object.keys(swapped[0].free);
+        };
+        expect(keysAfterSwap({ validator: miniValidator() })).toEqual(['y', 'x']);
+        expect(keysAfterSwap(reusing(miniValidator()))).toEqual(['y', 'x']);
       });
       it('is folded on every call while it holds another kind of object, which could change in place unseen', () => {
         const validator = miniValidator();

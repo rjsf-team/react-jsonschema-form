@@ -4584,14 +4584,16 @@ function snapshotFrom(data: unknown, previous: unknown): unknown {
   }
   const keys = Object.keys(data);
   const held = isPlainObject(previous) ? previous : undefined;
-  let copy: GenericObjectType | undefined = held && Object.keys(held).length === keys.length ? undefined : {};
+  // Held key by key in the order of `data`, which the fold hands the keys of an object back in
+  const heldKeys = held && Object.keys(held);
+  let copy: GenericObjectType | undefined = heldKeys?.length === keys.length ? undefined : {};
   for (const [index, key] of keys.entries()) {
     const holdsKey = held !== undefined && Object.hasOwn(held, key);
     const member = snapshotFrom(data[key], holdsKey ? held[key] : undefined);
     if (member === OPAQUE) {
       return OPAQUE;
     }
-    if (held && copy === undefined && !(holdsKey && Object.is(member, held[key]))) {
+    if (held && copy === undefined && !(heldKeys?.[index] === key && Object.is(member, held[key]))) {
       copy = {};
       for (const earlier of keys.slice(0, index)) {
         setOwn(copy, earlier, held[earlier]);
