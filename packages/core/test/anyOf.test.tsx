@@ -2100,6 +2100,47 @@ describe('anyOf', () => {
       const select = node.querySelector('select#root__anyof_select');
       expect(select).toHaveValue('2');
     });
+    it('switches to the option picked in the selector', async () => {
+      const { node, getFormData } = createFormComponent({ schema });
+      const select = elementOf(node, 'select#root__anyof_select');
+
+      await user.selectOptions(select, 'Bar');
+
+      expect(getFormData()).toEqual({ code: 'bar_coding' });
+      expect(select).toHaveValue('1');
+
+      await user.selectOptions(select, 'Foo');
+
+      expect(getFormData()).toEqual({ code: 'foo_coding' });
+      expect(select).toHaveValue('0');
+    });
+    it('switches between options that pin the discriminator with a const, dropping the key only the old one declares', async () => {
+      const optionFor = (code: string, own: string): RJSFSchema => ({
+        title: code,
+        type: 'object',
+        properties: { code: { type: 'string', const: code }, [own]: { type: 'string' } },
+      });
+      const { node, getFormData } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            thing: {
+              discriminator: { propertyName: 'code' },
+              anyOf: [optionFor('foo', 'onlyFoo'), optionFor('bar', 'onlyBar')],
+            },
+          },
+        },
+        initialFormData: { thing: { code: 'foo', onlyFoo: 'x' } },
+      });
+      const select = elementOf(node, 'select#root_thing__anyof_select');
+
+      await user.selectOptions(select, 'bar');
+
+      expect(getFormData()).toEqual({ thing: { code: 'bar' } });
+      expect(select).toHaveValue('1');
+      expect(node.querySelector('#root_thing_onlyBar')).toBeInTheDocument();
+      expect(node.querySelector('#root_thing_onlyFoo')).not.toBeInTheDocument();
+    });
     it('warns when discriminator.propertyName is not a string', () => {
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
       const badSchema: RJSFSchema = {

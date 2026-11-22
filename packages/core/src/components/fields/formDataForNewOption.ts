@@ -14,6 +14,7 @@ import {
   deepEquals,
   DEFAULT_KEY,
   getByPath,
+  getDiscriminatorFieldFromSchema,
   getPropertySchema,
   getRenderedOptionSchema,
   getSchemaType,
@@ -258,7 +259,9 @@ function carriedData<T, S extends StrictRJSFSchema>(
 /** The keys `formData` held, with their values, for a form taking the switch to put back, see `OptionSwitchData`: none
  * where the switch carries no object, as where the new option's object `const` or `enum` replaced the data. A clear of
  * a key neither the new option nor the field declares leaves with the old option's field, as the sanitize drops it, and
- * so does a `null` the switch dropped, which the sanitize reads as holding no object
+ * so does a `null` the switch dropped, which the sanitize reads as holding no object. The `discriminator` property is
+ * left out: its value names the option, so the old one, put back, would have the form read the data under the option
+ * switched away from
  *
  * @param formData - The form data associated with the old option
  * @param carried - What the switch carries for the new option
@@ -279,7 +282,11 @@ function heldKeys<S extends StrictRJSFSchema>(
   const parentProperties = parentSchema?.properties ?? {};
   const isDeclared = (key: string) =>
     declaresProperty<S>(newProperties, key) || declaresProperty<S>(parentProperties, key);
+  const discriminator = parentSchema && getDiscriminatorFieldFromSchema<S>(parentSchema);
   const held = Object.entries(formData).filter(([key, value]) => {
+    if (key === discriminator) {
+      return false;
+    }
     if (value === undefined) {
       return isDeclared(key);
     }
