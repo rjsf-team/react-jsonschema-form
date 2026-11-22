@@ -7,6 +7,10 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 # 7.0.0-beta.2
 
+## @rjsf/core
+
+- Fix `AnyOfField` and `OneOfField` ignoring a pick in the option selector of a field that declares a `discriminator`, which left the data and the selector on the option shown before ([#5945](https://github.com/rjsf-team/react-jsonschema-form/pull/5945))
+
 # 7.0.0-beta.1 (2026-11-20)
 
 ## @rjsf/antd
