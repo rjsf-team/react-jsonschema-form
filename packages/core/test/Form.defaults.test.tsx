@@ -1654,17 +1654,6 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expect(getFormData()).toEqual({ choice: 'a' });
     });
 
-    it('starts a field whose enum lists one value on that value, as a const', () => {
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: { kind: { type: 'string', enum: ['a'] }, agree: { type: 'boolean', enum: [true] } },
-        required: ['agree'],
-      };
-      const { getFormData } = createFormComponent({ schema });
-
-      expect(getFormData()).toEqual({ kind: 'a', agree: true });
-    });
-
     describe('inside the option a field shows', () => {
       const schema: RJSFSchema = {
         type: 'object',

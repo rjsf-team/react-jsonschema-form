@@ -6092,9 +6092,8 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
     });
 
     // The sanitize clears data the new option's object `const` or `enum` rejects. The switch then defaults the object to
-    // the option's `const`, whose key is an extra key where the option doesn't declare it, or to the one value of its
-    // `enum`, which fixes the value as a `const` does (#5944), and leaves the clear of an `enum` of several values, which
-    // lists values for the user to pick from rather than one to default to
+    // the option's `const`, whose key is an extra key where the option doesn't declare it, and leaves an `enum`'s clear,
+    // since an `enum` lists values for the user to pick from rather than one to default to
     it.each<{ declares: string; option: RJSFSchema; expected: unknown; extraKey: boolean }>([
       {
         declares: 'a const beside properties',
@@ -6103,13 +6102,7 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
         extraKey: false,
       },
       { declares: 'a const alone', option: { const: { b: 1 } }, expected: { b: 1 }, extraKey: true },
-      { declares: 'an enum of one value alone', option: { enum: [{ b: 1 }] }, expected: { b: 1 }, extraKey: true },
-      {
-        declares: 'an enum of several values alone',
-        option: { enum: [{ b: 1 }, { b: 2 }] },
-        expected: undefined,
-        extraKey: false,
-      },
+      { declares: 'an enum alone', option: { enum: [{ b: 1 }] }, expected: undefined, extraKey: false },
     ])(
       "clears the key $declares rejects and defaults to the option's const, if any",
       async ({ option, expected, extraKey }) => {

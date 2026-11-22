@@ -193,39 +193,6 @@ function defaultsReplace(data: unknown, isRoot: boolean, defaultFormStateBehavio
   );
 }
 
-/** The values the `enum` of `schema` lists, where it lists any */
-function enumValuesOf<S extends StrictRJSFSchema>(schema: S): readonly unknown[] {
-  return Array.isArray(schema.enum) ? schema.enum : [];
-}
-
-/** Whether the `enum` of `schema` lists one value, which fixes the field's value as a `const` does rather than
- * offering a choice
- */
-function fixesEnumValue<S extends StrictRJSFSchema>(schema: S): boolean {
-  return enumValuesOf<S>(schema).length === 1;
-}
-
-/** The value `schema` fixes the field at: its `const`, see `constValueOf()`, or else the one value of its `enum` */
-function fixedValueOf<S extends StrictRJSFSchema>(schema: S): unknown {
-  return CONST_KEY in schema || !fixesEnumValue<S>(schema) ? constValueOf<S>(schema) : enumValuesOf<S>(schema)[0];
-}
-
-/** Whether `schema` fixes the field's value as a `const` does, through an `enum` of one value or an `anyOf`/`oneOf` of
- * one constant, which the deprecated `constAsDefaults: 'skipOneOf'` takes none of beside a `oneOf`
- */
-function fixesListedValue<S extends StrictRJSFSchema>(
-  schema: S,
-  defaultFormStateBehavior: DefaultFormStateBehavior | undefined,
-): boolean {
-  const options = getXxxOfOptions<S>(schema)?.options;
-  return (
-    fixesEnumValue<S>(schema) ||
-    (isConstantOptionList<S>(options) &&
-      options.length === 1 &&
-      !(defaultFormStateBehavior?.constAsDefaults === 'skipOneOf' && Boolean(schema[ONE_OF_KEY]?.length)))
-  );
-}
-
 /** Determines whether `value` holds anything: a non-empty string or array, or an object with at least one own key.
  * Everything else — including numbers, booleans, `null` and `undefined` — has no content.
  *
@@ -1681,7 +1648,8 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
   let isTupleBuilt = false;
-  let offersChoice = enumValuesOf<S>(schema).length > 1;
+  // An `enum` lists the field's values for the user to pick from, however many it lists
+  let offersChoice = Boolean(schema.enum?.length);
   // A collapsed field keeps its own keywords, but selecting an option would plan it again past the collapse. A list the
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
@@ -1914,16 +1882,6 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // No defaults defined for this node, fallback to generic typed ones.
   if (defaults === undefined) {
     defaults = ownValue(schema.default);
-  }
-  // An `enum` of one value leaves nothing to choose, so that value fills a field holding none, as a `const` does, while
-  // a `default` stands as it does for a longer list
-  if (
-    defaults === undefined &&
-    fixesEnumValue<S>(schema) &&
-    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-    defaultsReplace(rawFormData, props.requiredAsRoot === true, defaultFormStateBehavior)
-  ) {
-    defaults = ownValue(enumValuesOf<S>(schema)[0]);
   }
 
   // `ui:initialValue` takes priority over `schema.default`; `ui:emptyValue` is only used as a last resort, when
@@ -2158,9 +2116,9 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     !Array.isArray(type) &&
     (PRIMITIVE_TYPES.includes(type) || picksWholeOption) &&
     defaultFormStateBehavior?.constAsDefaults === 'skipOneOf';
-  // A list of several constants is a choice the user has yet to make, as an `enum` of several values is, so none of
-  // them is the field's default unless `constAsDefaults` is explicitly `'always'`. A list of one leaves nothing to
-  // choose, so its constant fills as a `const` does
+  // A list of several constants is a choice the user has yet to make, as an `enum` is, so none of them is the field's
+  // default unless `constAsDefaults` is explicitly `'always'`. A list of one leaves nothing to choose, so its constant
+  // fills as a `const` does
   const offersChoice = isConstantOptionList<S>(constants) && constants.length > 1;
   const leavesConstantsUnpicked = offersChoice && defaultFormStateBehavior?.constAsDefaults !== 'always';
   // The option is folded with `constAsDefaults: 'never'`, which takes none of its constants
@@ -2648,7 +2606,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         defaultFormStateBehavior?.constAsDefaults !== 'never' &&
         !constIsAjvDataReference(readProperty) &&
         ((isObject(readProperty) && CONST_KEY in readProperty) ||
-          (isSchemaObject<S>(readProperty) && fixesListedValue<S>(readProperty, defaultFormStateBehavior)) ||
           (!props.leavesOutObjectConst && getByPath(objectConst, key) !== undefined) ||
           (isSchemaObject<S>(readProperty) &&
             mergedConstSchemaOf<S, F>(
@@ -4444,7 +4401,7 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   }
 
   // Override the formData with the const if the constAsDefaults is set to always
-  const fieldConst = defaultFormStateBehavior?.constAsDefaults === 'always' ? fixedValueOf<S>(readSchema) : undefined;
+  const fieldConst = defaultFormStateBehavior?.constAsDefaults === 'always' ? constValueOf<S>(readSchema) : undefined;
   if (fieldConst !== undefined) {
     validFormData = fieldConst;
   } else if (isObject(validFormData)) {

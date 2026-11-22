@@ -1814,7 +1814,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           list: {
             type: 'array',
             minItems: 2,
-            items: { type: 'string', enum: ['a', 'b'] },
+            items: { type: 'string', enum: ['a'] },
           },
           name: { type: 'string' },
         },

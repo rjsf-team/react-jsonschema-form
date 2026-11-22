@@ -1994,9 +1994,9 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       });
 
       it.each([
-        // The defaults fill the cleared tuple, its position with the one value the new entry allows (#5944)
-        { data: ['b', 'a'], expected: { list: ['a'] }, outcome: 'drops the array holding' },
-        { data: [undefined, 'a'], expected: { list: ['a', 'a'] }, outcome: 'fills an unfilled' },
+        // The defaults fill the cleared tuple with a hole at each position
+        { data: ['b', 'a'], expected: { list: [undefined] }, outcome: 'drops the array holding' },
+        { data: [undefined, 'a'], expected: { list: [undefined, 'a'] }, outcome: 'keeps an unfilled' },
       ])('$outcome a prefix item the new entry rejects', ({ data, expected }) => {
         const ref = createRef<FormRef>();
         const props = { validator, initialFormData: { list: data } };
@@ -2271,8 +2271,7 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       to: prefix({ type: 'string', enum: ['a'] }),
       data: ['b'],
       expected: ['b'],
-      // The defaults fill the cleared tuple, its position with the one value the new entry allows (#5944)
-      formExpected: ['a'],
+      formExpected: [undefined],
     },
     {
       // `Form` judges no field whose constraints didn't change, and utils checks a scalar item as a scalar property is
@@ -2303,8 +2302,8 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       to: prefix({ enum: ['x'] }),
       data: ['y'],
       expected: ABSENT,
-      // The defaults fill the cleared tuple, its position with the one value the new entry allows (#5944)
-      formExpected: ['x'],
+      // The defaults fill the cleared tuple with a hole at each position
+      formExpected: [undefined],
     },
     {
       name: 'keeps a prefix item whose selected option changed, which neither looks inside',
@@ -2347,8 +2346,8 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       to: prefix({ type: 'string', enum: ['a'] }),
       data: ['b', 'c'],
       expected: ABSENT,
-      // The defaults fill the cleared tuple, its position with the one value the new entry allows (#5944)
-      formExpected: ['a'],
+      // The defaults fill the cleared tuple with a hole at each position
+      formExpected: [undefined],
     },
     {
       name: 'clears the array where the new schema rejects a tuple item an old true items held',
@@ -2356,8 +2355,8 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       to: { type: 'array', items: [{ enum: ['a'] }] },
       data: ['b'],
       expected: ABSENT,
-      // The defaults fill the cleared tuple, its position with the one value the new entry allows (#5944)
-      formExpected: ['a'],
+      // The defaults fill the cleared tuple with a hole at each position
+      formExpected: [undefined],
     },
     {
       name: 'drops an item past the prefix the new schema rejects where the old one declared no items',
@@ -2446,8 +2445,8 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     },
     {
       name: 'keeps a hole under enum items',
-      from: { type: 'array', title: 'Old', items: { type: 'string', enum: ['a', 'b'] } },
-      to: { type: 'array', title: 'New', items: { type: 'string', enum: ['a', 'b'] } },
+      from: { type: 'array', title: 'Old', items: { type: 'string', enum: ['a'] } },
+      to: { type: 'array', title: 'New', items: { type: 'string', enum: ['a'] } },
       data: ['a', undefined, 'a'],
       expected: ['a', undefined, 'a'],
     },
