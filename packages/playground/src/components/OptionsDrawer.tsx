@@ -138,7 +138,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
             },
             {
               type: 'string',
-              title: 'If const is in a `oneOf` it will NOT pick the first value as a default',
+              title: 'Deprecated: a `oneOf`/`anyOf` of const values is left unpicked, as it is with the flag unset',
               enum: ['skipOneOf'],
             },
             {

@@ -143,7 +143,7 @@ Define the behavior the callback needs from its `schema` and `rootSchema` argume
 
 ###### Parameters
 
-- context: SchemaContext&lt;S, F> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within a `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+- context: SchemaContext&lt;S, F> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within an option of a `oneOf`/`anyOf` of constants, unless `constAsDefaults` is `'always'`, and within a `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
 - schema: S - The array schema whose defaults are being computed
 - [rootSchema]: S - The root schema that will be forwarded to all the APIs
 
@@ -324,19 +324,25 @@ render(
 
 ### constAsDefaults
 
-Optional enumerated flag controlling how const values are merged into the form data as defaults when dealing with undefined values, defaulting to `always`.
+Optional enumerated flag controlling how const values are merged into the form data as defaults when dealing with undefined values.
 Unless the flag is `never`, a `const` wins over a `default` at any depth: an object `const` gives each key it names its value, over the key's own `default` and the `default` of any field between them, whatever `nestedDefaultsPrecedence` says.
 The one exception is a field whose `type` can't hold the value the `const` gives it, such as `"x"` for a `number`: that field keeps its own `default`. Form data still wins over a `const`.
 A field whose value a `const` gives, its own `const` or an ancestor's object `const` at any depth, is set whether or not it is required, whatever [`emptyObjectFields`](#emptyobjectfields) says.
 That flag still decides whether an object around it whose value no `const` gives is added: for instance, if `populateRequiredDefaults` is set, a `const` inside an object that isn't required is not set.
 
-| Flag Value  | Description                                                                                                                                                                                                                     |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `always`    | A const value will always be merged into the form as a default. If there is are const values in a `oneOf` (for instance to create an enumeration with title different from the values), the first const value will be defaulted |
-| `skipOneOf` | If const is in a `oneOf` it will NOT pick the first value as a default                                                                                                                                                          |
-| `never`     | A const value will never be used as a default                                                                                                                                                                                   |
+| Flag Value  | Description                                                                                                                                                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `always`    | A const value will always be merged into the form as a default. If there are const values in a `oneOf`/`anyOf` (for instance to create an enumeration with title different from the values), the first const value will be defaulted |
+| `skipOneOf` | Deprecated: leave the flag unset instead. A `oneOf`/`anyOf` of const values is left unpicked, as it is with the flag unset                                                                                                           |
+| `never`     | A const value will never be used as a default                                                                                                                                                                                        |
 
-Left unset, a `const` is used as a default as under `always`, but only an explicit `always` lets it take the place of a value the form data holds, such as `"b"` for `{ "const": "a" }`, or of a `default` that names none of the constants of a `oneOf`/`anyOf`: `{ "type": "string", "default": "blue", "oneOf": [{ "const": "red" }, { "const": "green" }] }` starts at `"blue"` unset and at `"red"` under `always`.
+Left unset, a field's own `const` is used as a default as under `always`, and so is the `const` of a property inside the `oneOf`/`anyOf` option a field shows, such as the `kind` of `{ "oneOf": [{ "properties": { "kind": { "const": "a" } } }, { "properties": { "kind": { "const": "b" } } }] }`.
+A `oneOf` or `anyOf` whose options are all constants, which renders as a select, is a choice rather than a value, so it is left unpicked, as an `enum` is: it starts on the value its `default` names, its own or one an ancestor's `default` gives it, and is otherwise left empty, a list of one constant included.
+`{ "type": "string", "oneOf": [{ "const": "red" }, { "const": "green" }] }` starts empty unset and at `"red"` under `always`.
+
+Only an explicit `always` picks the first constant of such a list, or lets a `const` take the place of a value the form data holds, such as `"b"` for `{ "const": "a" }`, or of a `default` that names none of the constants of a `oneOf`/`anyOf`: `{ "type": "string", "default": "blue", "oneOf": [{ "const": "red" }, { "const": "green" }] }` starts at `"blue"` unset and at `"red"` under `always`.
+
+`skipOneOf` is deprecated, since a list of constants is left unpicked without it. It still differs from the flag left unset in one case: for a non-empty `oneOf` on a field with a single primitive `type` or none, no `const` inside the option the field shows is used as a default, so the `kind` above stays empty too.
 
 ### mergeDefaultsIntoFormData
 

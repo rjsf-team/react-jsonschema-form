@@ -2101,18 +2101,22 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const offersConstants = isConstantOptionList<S>(constants);
   const wholeOptions = isWholeValue && offersConstants ? constants : undefined;
   const picksWholeOption = wholeOptions !== undefined;
-  // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips,
-  // unless it is empty, which counts as no option list here as it does for the keyword read
+  // The deprecated `skipOneOf` takes no `const` of any option of a `oneOf` on a primitive or untyped field, a list of
+  // constants or not. Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is
+  // read still skips, unless it is empty, which counts as no option list here as it does for the keyword read
   const skipsOneOfConstants =
     Boolean(schema[ONE_OF_KEY]?.length) &&
     !Array.isArray(type) &&
-    (PRIMITIVE_TYPES.includes(type) || picksWholeOption) &&
+    PRIMITIVE_TYPES.includes(type) &&
     defaultFormStateBehavior?.constAsDefaults === 'skipOneOf';
-  // If we are in a oneOf of a primitive type, or of whole object or array values, then we want to pass
-  // constAsDefaults as 'never' for the recursion
-  const optionContext: SchemaContext<S, F> = skipsOneOfConstants
-    ? { ...context, defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' } }
-    : context;
+  // A list of constants is a choice the user has yet to make, as an `enum` is, so none of them is the field's default
+  // unless `constAsDefaults` is explicitly `'always'`
+  const leavesConstantsUnpicked = offersConstants && defaultFormStateBehavior?.constAsDefaults !== 'always';
+  // The option is folded with `constAsDefaults: 'never'`, which takes none of its constants
+  const optionContext: SchemaContext<S, F> =
+    skipsOneOfConstants || leavesConstantsUnpicked
+      ? { ...context, defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' } }
+      : context;
   // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick. An
   // ancestor default that wins picks the option too, so the option it is checked against is one that can hold it; one
   // no option holds gives way, so the field's own default picks the option, as it does with no ancestor default. A list

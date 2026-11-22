@@ -1227,10 +1227,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { kind: 'k' },
             ],
             [
-              { type: 'object', properties: { a: { type: 'string', oneOf: [{ const: 'p' }, { const: 'q' }] } } },
-              { a: 'p' },
-            ],
-            [
               {
                 type: 'object',
                 properties: { o: { type: 'object', properties: { a: { type: 'string', const: 'k' } } } },
@@ -1244,13 +1240,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               x: expected,
             });
           }
-          // A select over object constants is filled from the option it shows, and collapses as its own `const` does
+          // A list of constants gives no value until one is picked (#5944), so it opens no object, as an `enum` opens
+          // none
+          for (const a of [{ oneOf: [{ const: 'p' }, { const: 'q' }] }, { enum: ['p', 'q'] }]) {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { x: { type: 'object', properties: { a: { type: 'string', ...a } } } },
+            };
+            expect(utils(schema).getDefaultFormState(schema, undefined, false, false, uiSchema)).toStrictEqual({});
+          }
+          // A select over object constants collapses as its own `const` does, and holds its first constant only under
+          // an explicit `constAsDefaults: 'always'`
           const select: RJSFSchema = {
             type: 'object',
             properties: { x: { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] } },
           };
           expect(utils(select).getDefaultFormState(select, undefined, false, false, uiSchema)).toStrictEqual({});
-          expect(utils(select).getDefaultFormState(select)).toStrictEqual({ x: { a: 1 } });
+          expect(utils(select).getDefaultFormState(select)).toStrictEqual({});
+          const picking = utils(select, { constAsDefaults: 'always' });
+          expect(picking.getDefaultFormState(select, undefined, false, false, uiSchema)).toStrictEqual({});
+          expect(picking.getDefaultFormState(select)).toStrictEqual({ x: { a: 1 } });
           // A field that may also be `null` and defaults to it still opens with its `const`
           const nullable: RJSFSchema = {
             type: 'object',
@@ -5521,7 +5530,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({});
       });
 
-      it("takes the constant default of a schema's anyOf under skipOneOf when the oneOf beside it is empty", () => {
+      it("leaves the constants of a schema's anyOf unpicked under skipOneOf when the oneOf beside it is empty (#5944)", () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: { field: { type: 'string', anyOf: [{ const: 'a' }, { const: 'b' }], oneOf: [] } },
@@ -5532,7 +5541,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'skipOneOf' } },
             { schema, rootSchema: schema },
           ),
-        ).toEqual({ field: 'a' });
+        ).toEqual({});
       });
 
       it('takes the constant default from the oneOf of a schema whose anyOf is empty', () => {
@@ -6004,7 +6013,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({});
       });
-      it('defaults a required oneOf select to its first constant as a whole, as a primitive one is', () => {
+      it('leaves a required oneOf select with no default unfilled, as a primitive one and an enum are (#5944)', () => {
         const schema: RJSFSchema = {
           type: 'object',
           required: ['s', 'o', 'e'],
@@ -6014,11 +6023,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             e: { type: 'array', anyOf: [{ const: [1] }, { const: [2] }] },
           },
         };
-        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
-          s: 'a',
-          o: { a: 1 },
-          e: [1],
-        });
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({});
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+            { schema, rootSchema: schema },
+          ),
+        ).toEqual({ s: 'a', o: { a: 1 }, e: [1] });
       });
       it('defaults a select over object constants written as $refs as one written in place', () => {
         const pick: RJSFSchema = { type: 'object', oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] };
@@ -6032,7 +6043,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(getDefaultFormState({ validator: testValidator }, { schema: withDefault })).toEqual({
           pick: { k: 'b' },
         });
-        expect(getDefaultFormState({ validator: testValidator }, { schema: required })).toEqual({ pick: { k: 'a' } });
+        expect(getDefaultFormState({ validator: testValidator }, { schema: required })).toEqual({});
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+            { schema: required },
+          ),
+        ).toEqual({ pick: { k: 'a' } });
       });
       it('defaults a oneOf select to the constant matching its own default', () => {
         const schema: RJSFSchema = {
@@ -6143,15 +6160,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           strs: [undefined],
         });
       });
-      it('defaults a typeless oneOf of object constants to its first constant, as a typed one is', () => {
+      it('leaves a typeless oneOf of object constants unfilled, as a typed one is (#5944)', () => {
         const schema: RJSFSchema = {
           type: 'object',
           required: ['p'],
           properties: { p: { oneOf: [{ const: { a: 1, b: 1 } }, { const: { a: 2 } }] } },
         };
-        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
-          p: { a: 1, b: 1 },
-        });
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({});
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+            { schema, rootSchema: schema },
+          ),
+        ).toEqual({ p: { a: 1, b: 1 } });
       });
       it('does not throw for an enum beside a oneOf of options that are not constants', () => {
         const schema: RJSFSchema = {
@@ -7531,26 +7552,37 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           properties: { x: { type: 'object', ...field } },
         });
         const skipping = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };
+        // A list of constants is left unpicked unless `constAsDefaults` is explicitly `'always'` (#5944)
+        const picking = {
+          validator: testValidator,
+          defaultFormStateBehavior: { allOf: 'skipDefaults' as const, constAsDefaults: 'always' as const },
+        };
         it.each<[string, RJSFSchema]>([
           ['a oneOf', { allOf: [{ oneOf: [{ const: C }] }] }],
           ['an anyOf', { allOf: [{ anyOf: [{ const: C }] }] }],
-        ])('in %s', (_, field) => {
-          expect(getDefaultFormState(skipping, { schema: rootOf(field) })).toStrictEqual({ x: C });
-        });
+        ])(
+          "in %s under constAsDefaults: 'always', and none otherwise, as of a list the field offers itself",
+          (_, field) => {
+            expect(getDefaultFormState(picking, { schema: rootOf(field) })).toStrictEqual({ x: C });
+            expect(getDefaultFormState(skipping, { schema: rootOf(field) })).toStrictEqual({});
+          },
+        );
         it('the option a primitive field shows being the one closest to its data', () => {
           const schema: RJSFSchema = {
             type: 'object',
             required: ['n'],
             properties: { n: { type: 'number', allOf: [{ oneOf: [{ const: 3 }, { const: 4 }] }] } },
           };
-          expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ n: 3 });
+          expect(getDefaultFormState(picking, { schema })).toStrictEqual({ n: 3 });
+          expect(getDefaultFormState(skipping, { schema })).toStrictEqual({});
           expect(getDefaultFormState(skipping, { schema, formData: { n: 4 } })).toStrictEqual({ n: 4 });
         });
         it('but skips a default beside the const in the same option', () => {
           const schema = rootOf({
             allOf: [{ oneOf: [{ const: C, properties: { c: { type: 'number', default: 5 } } }] }],
           });
-          expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ x: C });
+          expect(getDefaultFormState(picking, { schema })).toStrictEqual({ x: C });
+          expect(getDefaultFormState(skipping, { schema })).toStrictEqual({});
         });
         describe("the option a field's own default names, where it holds no data", () => {
           beforeEach(() => {
@@ -7598,7 +7630,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           expect(getDefaultFormState(skipping, { schema })).toStrictEqual({ x: { k: 'b', v: 2 } });
         });
-        it("but takes none of a oneOf option's under constAsDefaults: 'skipOneOf', as of the field's own oneOf", () => {
+        it("but takes none of a list's under constAsDefaults: 'skipOneOf', as of the field's own list", () => {
           const skipOneOf = {
             validator: testValidator,
             defaultFormStateBehavior: { constAsDefaults: 'skipOneOf' as const },
@@ -7611,7 +7643,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(getDefaultFormState(skipOneOf, { schema: nested })).toStrictEqual({});
           expect(
             getDefaultFormState(skipOneOf, { schema: rootOf({ allOf: [{ anyOf: [{ const: C }] }] }) }),
-          ).toStrictEqual({ x: C });
+          ).toStrictEqual({});
         });
         it('but takes none where the option the field shows holds none', () => {
           const schema = rootOf({
@@ -7637,7 +7669,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
         it("in an option's allOf, not the anyOf of the field's own that the option was chosen from", () => {
           const objects = rootOf({ anyOf: [{ title: 'A', allOf: [{ oneOf: [{ const: C }] }] }, { const: { a: 9 } }] });
-          expect(getDefaultFormState(skipping, { schema: objects })).toStrictEqual({ x: C });
+          expect(getDefaultFormState(picking, { schema: objects })).toStrictEqual({ x: C });
+          expect(getDefaultFormState(skipping, { schema: objects })).toStrictEqual({});
           const numbers: RJSFSchema = {
             type: 'object',
             required: ['n'],
@@ -7645,28 +7678,32 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               n: { type: 'number', anyOf: [{ title: 'A', allOf: [{ oneOf: [{ const: 3 }] }] }, { const: 9 }] },
             },
           };
-          expect(getDefaultFormState(skipping, { schema: numbers })).toStrictEqual({ n: 3 });
+          expect(getDefaultFormState(picking, { schema: numbers })).toStrictEqual({ n: 3 });
+          expect(getDefaultFormState(skipping, { schema: numbers })).toStrictEqual({});
           const only = (n: RJSFSchema): RJSFSchema => ({ type: 'object', required: ['n'], properties: { n } });
-          expect(
-            getDefaultFormState(skipping, {
-              schema: only({ type: 'number', anyOf: [{ allOf: [{ oneOf: [{ const: 3 }] }] }] }),
-            }),
-          ).toStrictEqual({ n: 3 });
-          expect(
-            getDefaultFormState(skipping, { schema: rootOf({ anyOf: [{ allOf: [{ oneOf: [{ const: C }] }] }] }) }),
-          ).toStrictEqual({ x: C });
+          const onlyNumber = only({ type: 'number', anyOf: [{ allOf: [{ oneOf: [{ const: 3 }] }] }] });
+          expect(getDefaultFormState(picking, { schema: onlyNumber })).toStrictEqual({ n: 3 });
+          expect(getDefaultFormState(skipping, { schema: onlyNumber })).toStrictEqual({});
+          const onlyObject = rootOf({ anyOf: [{ allOf: [{ oneOf: [{ const: C }] }] }] });
+          expect(getDefaultFormState(picking, { schema: onlyObject })).toStrictEqual({ x: C });
+          expect(getDefaultFormState(skipping, { schema: onlyObject })).toStrictEqual({});
         });
         it("in an option's allOf at the root, as in the same field as a property and under allOf: 'populateDefaults'", () => {
           const field: RJSFSchema = { type: 'number', anyOf: [{ allOf: [{ oneOf: [{ const: 3 }] }] }] };
           const populating = {
             validator: testValidator,
-            defaultFormStateBehavior: { allOf: 'populateDefaults' as const },
+            defaultFormStateBehavior: { allOf: 'populateDefaults' as const, constAsDefaults: 'always' as const },
           };
           const property: RJSFSchema = { type: 'object', properties: { n: field } };
-          expect(getDefaultFormState(skipping, { schema: field })).toBe(3);
-          expect(getDefaultFormState(skipping, { schema: property })).toStrictEqual({ n: 3 });
+          expect(getDefaultFormState(picking, { schema: field })).toBe(3);
+          expect(getDefaultFormState(picking, { schema: property })).toStrictEqual({ n: 3 });
           expect(getDefaultFormState(populating, { schema: field })).toBe(3);
           expect(getDefaultFormState(populating, { schema: property })).toStrictEqual({ n: 3 });
+          for (const allOf of ['skipDefaults', 'populateDefaults'] as const) {
+            const unpicked = { validator: testValidator, defaultFormStateBehavior: { allOf } };
+            expect(getDefaultFormState(unpicked, { schema: field })).toBeUndefined();
+            expect(getDefaultFormState(unpicked, { schema: property })).toStrictEqual({});
+          }
         });
         describe('as the option of a list the field offers itself is picked', () => {
           beforeEach(() => {
@@ -7898,7 +7935,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               expect(getDefaultFormState(context, { schema: nested })).toStrictEqual({});
             },
           );
-          it('the option scored closest to no data, where the field has no default', () => {
+          it('no option of a list of constants one of which is null, where the field has no default', () => {
             const { own, nested } = ownAndNested(
               {
                 oneOf: [
@@ -7911,7 +7948,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
               getDefaultFormState(skipping, { schema: own }),
             );
-            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ n: null });
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({});
           });
           it("a key only an allOf declares picking by no default, since the fold skips the allOf's", () => {
             const { own, nested } = ownAndNested({ oneOf: [{ type: 'string' }, { const: 4 }] }, (list) => ({
@@ -7930,12 +7967,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               });
             const own = field({ oneOf: [{ const: C }] });
             const nested = field({ allOf: [{ oneOf: [{ const: C }] }] });
-            for (const formData of [undefined, { x: C }]) {
-              expect(getDefaultFormState(skipping, { schema: nested, formData })).toStrictEqual(
-                getDefaultFormState(skipping, { schema: own, formData }),
+            for (const [context, formData] of [
+              [picking, undefined],
+              [picking, { x: C }],
+              [skipping, { x: C }],
+            ] as const) {
+              expect(getDefaultFormState(context, { schema: nested, formData })).toStrictEqual(
+                getDefaultFormState(context, { schema: own, formData }),
               );
-              expect(getDefaultFormState(skipping, { schema: nested, formData })).toStrictEqual({ x: C });
+              expect(getDefaultFormState(context, { schema: nested, formData })).toStrictEqual({ x: C });
             }
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
+              getDefaultFormState(skipping, { schema: own }),
+            );
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({});
           });
           it('no const where the option shown is a boolean schema', () => {
             const { own, nested } = ownAndNested({ oneOf: [true, { const: 3 }] }, (list) => ({
@@ -8003,7 +8048,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               null,
               { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
             ],
-          ])('the const replacing %s the field holds, as the defaults do', (_, n, behavior) => {
+          ])('%s the field holds kept where it has no default, as an enum keeps it', (_, n, behavior) => {
             const { own, nested } = ownAndNested({ oneOf: [{ const: 3 }, { const: 4 }] }, (list) => ({
               type: 'object',
               required: ['n'],
@@ -8016,7 +8061,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(context, { schema: nested, formData: { n } })).toStrictEqual(
               getDefaultFormState(context, { schema: own, formData: { n } }),
             );
-            expect(getDefaultFormState(context, { schema: nested, formData: { n } })).toStrictEqual({ n: 3 });
+            const enumField: RJSFSchema = {
+              type: 'object',
+              required: ['n'],
+              properties: { n: { type: 'number', enum: [3, 4] } },
+            };
+            expect(getDefaultFormState(context, { schema: own, formData: { n } })).toStrictEqual(
+              getDefaultFormState(context, { schema: enumField, formData: { n } }),
+            );
+            expect(getDefaultFormState(context, { schema: nested, formData: { n } })).toStrictEqual({ n });
             // A select over whole values keeps the value as it holds it
             const objects = ownAndNested({ oneOf: [{ const: C }] }, rootOf);
             expect(getDefaultFormState(context, { schema: objects.nested, formData: { x: n } })).toStrictEqual(
@@ -8035,15 +8088,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ x: { a: 1 } });
           });
           it.each<[string, RJSFSchema['type'], RJSFSchema, unknown]>([
-            ['a oneOf of the option', 'number', { oneOf: [{ oneOf: [{ const: 3 }, { const: 4 }] }] }, 3],
-            ["a oneOf in the option's allOf", 'number', { oneOf: [{ allOf: [{ oneOf: [{ const: 3 }] }] }] }, 3],
+            ['a oneOf of the option', 'number', { oneOf: [{ oneOf: [{ const: 3 }, { const: 4 }] }] }, {}],
+            ["a oneOf in the option's allOf", 'number', { oneOf: [{ allOf: [{ oneOf: [{ const: 3 }] }] }] }, {}],
             [
               'a oneOf of the option over objects',
               'object',
               { oneOf: [{ oneOf: [{ properties: { q: { const: 'q' } } }] }] },
-              { q: 'q' },
+              { n: { q: 'q' } },
             ],
-          ])('the const of the option shown from %s', (_, type, list, expected) => {
+          ])('the const of the option shown from %s, a list of constants left unpicked', (_, type, list, expected) => {
             const { own, nested } = ownAndNested(list, (field) => ({
               type: 'object',
               required: ['n'],
@@ -8052,7 +8105,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(
               getDefaultFormState(skipping, { schema: own }),
             );
-            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual({ n: expected });
+            expect(getDefaultFormState(skipping, { schema: nested })).toStrictEqual(expected);
           });
           it("the const of an anyOf an allOf offers beside the field's own oneOf", () => {
             const oneOf = [{ properties: { p: { const: 'p' } } }];
@@ -11575,6 +11628,130 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             );
             expect(getDefaults(noDefaultSchema, { allOf: 'skipDefaults' })).toEqual(formData);
           },
+        );
+      });
+    });
+    describe('a list of constants with no data (#5944)', () => {
+      const fill = (field: RJSFSchema, constAsDefaults?: DefaultFormStateBehavior['constAsDefaults']) =>
+        getDefaultFormState(
+          { validator: testValidator, defaultFormStateBehavior: constAsDefaults && { constAsDefaults } },
+          { schema: { type: 'object', properties: { field } } },
+        );
+      const lists: [string, RJSFSchema, unknown][] = [
+        ['a oneOf', { oneOf: [{ const: 'a' }, { const: 'b' }] }, 'a'],
+        ['an anyOf', { anyOf: [{ const: 'a' }, { const: 'b' }] }, 'a'],
+        ['a typed oneOf', { type: 'string', oneOf: [{ const: 'a' }, { const: 'b' }] }, 'a'],
+        ['a nullable oneOf', { type: ['string', 'null'], oneOf: [{ const: 'a' }, { const: null }] }, 'a'],
+        ['a one-entry oneOf', { oneOf: [{ const: 'a' }] }, 'a'],
+        ['a one-entry anyOf', { anyOf: [{ const: 'a' }] }, 'a'],
+        ['boolean constants', { oneOf: [{ const: true }, { const: false }] }, true],
+        ['object constants', { type: 'object', oneOf: [{ const: { x: 1 } }, { const: { x: 2 } }] }, { x: 1 }],
+        ['array constants', { type: 'array', anyOf: [{ const: [1] }, { const: [2] }] }, [1]],
+        ['a list an allOf brings in', { allOf: [{ oneOf: [{ const: 'a' }, { const: 'b' }] }] }, 'a'],
+      ];
+      it.each(lists)('leaves %s empty, as an enum is', (_, field) => {
+        expect(fill(field)).toEqual({});
+        expect(fill({ enum: ['a', 'b'] })).toEqual({});
+      });
+      it.each(lists)("leaves %s empty under the deprecated 'skipOneOf' and under 'never'", (_, field) => {
+        expect(fill(field, 'skipOneOf')).toEqual({});
+        expect(fill(field, 'never')).toEqual({});
+      });
+      it.each(lists)("starts %s on its first constant under an explicit 'always'", (_, field, first) => {
+        expect(fill(field, 'always')).toEqual({ field: first });
+      });
+      it.each<[string, RJSFSchema, unknown]>([
+        ['a oneOf', { default: 'b', oneOf: [{ const: 'a' }, { const: 'b' }] }, 'b'],
+        ['an anyOf', { default: 'b', anyOf: [{ const: 'a' }, { const: 'b' }] }, 'b'],
+        ['boolean constants', { default: false, oneOf: [{ const: true }, { const: false }] }, false],
+        [
+          'object constants',
+          { type: 'object', default: { x: 2 }, oneOf: [{ const: { x: 1 } }, { const: { x: 2 } }] },
+          { x: 2 },
+        ],
+      ])('starts %s on the value its default names', (_, field, named) => {
+        expect(fill(field)).toEqual({ field: named });
+        expect(fill(field, 'skipOneOf')).toEqual({ field: named });
+      });
+      it('starts on the default a parent declares for it', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { field: 'b' },
+          properties: { field: { oneOf: [{ const: 'a' }, { const: 'b' }] } },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual({ field: 'b' });
+      });
+      it('is left empty at the root', () => {
+        const schema: RJSFSchema = { type: 'string', oneOf: [{ const: 'a' }, { const: 'b' }] };
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toBeUndefined();
+      });
+      it('pads an array to minItems with empty rows, as for enum items', () => {
+        const items = (item: RJSFSchema): RJSFSchema => ({ type: 'array', minItems: 2, items: item });
+        const ofEnum = getDefaultFormState(
+          { validator: testValidator },
+          { schema: items({ type: 'string', enum: ['a', 'b'] }) },
+        );
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema: items({ type: 'string', oneOf: [{ const: 'a' }, { const: 'b' }] }) },
+          ),
+        ).toEqual(ofEnum);
+        expect(ofEnum).toEqual([undefined, undefined]);
+      });
+      it('leaves a tuple position and an additional property empty', () => {
+        const list: RJSFSchema = { type: 'string', oneOf: [{ const: 'a' }, { const: 'b' }] };
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            tuple: { type: 'array', items: [{ type: 'string', default: 'x' }, list] },
+            extras: { type: 'object', additionalProperties: list },
+          },
+        };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, formData: { extras: { key: undefined } } }),
+        ).toEqual({ tuple: ['x', undefined], extras: {} });
+      });
+      it("still fills a field's own const", () => {
+        expect(fill({ const: 'a' })).toEqual({ field: 'a' });
+        expect(fill({ const: 'a' }, 'skipOneOf')).toEqual({ field: 'a' });
+      });
+      it('still fills the const of a property inside the option a field shows', () => {
+        const tagged: RJSFSchema = {
+          oneOf: [
+            { type: 'object', properties: { kind: { const: 'a' }, n: { type: 'number' } } },
+            { type: 'object', properties: { kind: { const: 'b' } } },
+          ],
+        };
+        expect(fill(tagged)).toEqual({ field: { kind: 'a' } });
+        expect(fill({ ...tagged, type: 'object' }, 'skipOneOf')).toEqual({ field: { kind: 'a' } });
+      });
+      it("keeps skipping every const inside the option of an untyped oneOf under 'skipOneOf'", () => {
+        const tagged: RJSFSchema = {
+          oneOf: [{ type: 'object', properties: { kind: { const: 'a' } } }],
+        };
+        expect(fill(tagged)).toEqual({ field: { kind: 'a' } });
+        expect(fill(tagged, 'skipOneOf')).toEqual({});
+      });
+      it('keeps data the list names, and replaces data it does not name by a default only', () => {
+        const list: RJSFSchema = { type: 'string', oneOf: [{ const: 'a' }, { const: 'b' }] };
+        const withData = (field: RJSFSchema, value: unknown) =>
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema: { type: 'object', properties: { field } }, formData: { field: value } },
+          );
+        expect(withData(list, 'b')).toEqual({ field: 'b' });
+        expect(withData(list, 'zzz')).toEqual(withData({ type: 'string', enum: ['a', 'b'] }, 'zzz'));
+        expect(withData({ ...list, default: 'b' }, 'zzz')).toEqual({ field: 'b' });
+      });
+      it.each<[string, unknown]>([
+        ['NaN', NaN],
+        ['null', null],
+      ])('gives a root holding %s what an enum gives', (_, value) => {
+        const filled = (schema: RJSFSchema) =>
+          getDefaultFormState({ validator: testValidator }, { schema, formData: value });
+        expect(filled({ type: 'number', oneOf: [{ const: 1 }, { const: 2 }] })).toEqual(
+          filled({ type: 'number', enum: [1, 2] }),
         );
       });
     });

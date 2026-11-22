@@ -7,6 +7,15 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 # 7.0.0-beta.2
 
+## @rjsf/core
+
+- **BREAKING CHANGE:** Change `Form` to start a select over a `oneOf`/`anyOf` of constants empty, as an `enum`, unless a `default` names a constant, where it took the first constant. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-constant-oneof-or-anyof-with-no-default-starts-empty-breaking-change) ([#PR_NUMBER](https://github.com/rjsf-team/react-jsonschema-form/pull/PR_NUMBER), [#5944](https://github.com/rjsf-team/react-jsonschema-form/issues/5944))
+
+## @rjsf/utils
+
+- **BREAKING CHANGE:** Change `getDefaultFormState()` to leave a `oneOf`/`anyOf` of constants with no value and no `default` empty, as an `enum`, where it took the first constant; `constAsDefaults: 'always'` still picks it. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-constant-oneof-or-anyof-with-no-default-starts-empty-breaking-change) ([#PR_NUMBER](https://github.com/rjsf-team/react-jsonschema-form/pull/PR_NUMBER), [#5944](https://github.com/rjsf-team/react-jsonschema-form/issues/5944))
+- Deprecate the `'skipOneOf'` value of `DefaultFormStateBehavior`'s `constAsDefaults`, which now also leaves a constant `anyOf` empty: leave the option unset instead. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-constant-oneof-or-anyof-with-no-default-starts-empty-breaking-change) ([#PR_NUMBER](https://github.com/rjsf-team/react-jsonschema-form/pull/PR_NUMBER), [#5944](https://github.com/rjsf-team/react-jsonschema-form/issues/5944))
+
 # 7.0.0-beta.1 (2026-11-20)
 
 ## @rjsf/antd

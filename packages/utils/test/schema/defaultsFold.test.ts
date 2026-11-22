@@ -662,7 +662,9 @@ describe('getDefaultFormState() on recursive schemas', () => {
         node: {
           type: 'object',
           properties: { child: { $ref: D('node') } },
-          patternProperties: { '^c': { type: 'object', properties: { tag: { oneOf: [{ const: 'p' }] } } } },
+          patternProperties: {
+            '^c': { type: 'object', properties: { tag: { oneOf: [{ const: 'p' }], default: 'p' } } },
+          },
         },
       },
       $ref: D('node'),
@@ -1692,7 +1694,9 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
         },
       },
     };
-    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { a: 1 } });
+    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults', constAsDefaults: 'always' }, counting)).toEqual({
+      x: { a: 1 },
+    });
     // Read by the defaults the first pass hands the next, the `const` would be dropped on that pass, which then checks
     // the `dependencies` option once more
     expect(counting.calls).toBe(1);
