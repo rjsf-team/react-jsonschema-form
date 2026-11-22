@@ -416,15 +416,13 @@ describe('the cost of an edit to a wide object', () => {
       expect(again).toEqual([{ a: 1 }]);
       expect(Array.isArray(again) && again[0]).not.toBe(row);
     });
-    describe('a row holding arrays, objects, dates and other values', () => {
+    describe('a row holding arrays, objects and dates', () => {
       const values: RJSFSchema = { type: 'array', items: { ...row, properties: { k: { type: 'string' } } } };
-      const shared = new Map();
       const rowOf = (): Record<string, unknown> => ({
         k: 'k0',
         list: [1, [2]],
         when: new Date(0),
         nested: { a: 1 },
-        held: shared,
       });
       /** The validator calls a third call makes, after each key of `changes` takes what its function makes of its
        * value, which may change that value in place and hand it back
@@ -450,6 +448,15 @@ describe('the cost of an edit to a wide object', () => {
         expect(checksAfter(changes)).toBe(0);
       });
       it.each<[string, Record<string, (current: unknown) => unknown>]>([
+        [
+          'a `Date` changes in place',
+          {
+            when: (when) => {
+              (when as Date).setTime(1);
+              return when;
+            },
+          },
+        ],
         [
           'an array grows in place',
           {
@@ -483,9 +490,20 @@ describe('the cost of an edit to a wide object', () => {
         ['an object trades a key for another', { nested: () => ({ c: 1 }) }],
         ['an array turns into an object', { list: () => ({ 0: 1, 1: [2] }) }],
         ['an object turns into an array', { nested: () => [1] }],
-        ['another kind of object is replaced', { held: () => new Map() }],
       ])('is folded again once %s', (_label, changes) => {
         expect(checksAfter(changes)).toBeGreaterThan(0);
+      });
+      it('is folded on every call while it holds another kind of object, which could change in place unseen', () => {
+        const validator = miniValidator();
+        const context = reusing(validator);
+        const rows = [{ ...rowOf(), held: new Map() }, rowOf(), { ...rowOf(), nested: { deep: [new Set()] } }];
+        fill(context, rows, {}, values);
+        const first = validator.calls;
+        fill(context, rows, {}, values);
+        const again = validator.calls - first;
+        expect(again).toBeGreaterThan(0);
+        // The row holding none is reused, so a call folds fewer rows than the first did
+        expect(again).toBeLessThan(first);
       });
     });
     it('folds a row changed in place again', () => {
