@@ -468,6 +468,15 @@ describe('the cost of an edit to a wide object', () => {
             },
           },
         ],
+        [
+          'an array item is deleted in place, leaving a hole',
+          {
+            list: (list) => {
+              Reflect.deleteProperty(list as unknown[], 0);
+              return list;
+            },
+          },
+        ],
         ['a `Date` changes', { when: () => new Date(1) }],
         ['a `Date` turns into a string', { when: () => 'now' }],
         ['an object gains a key', { nested: () => ({ a: 1, b: 2 }) }],
