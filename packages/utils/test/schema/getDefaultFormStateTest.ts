@@ -15495,6 +15495,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(declared).toEqual([['c'], ['c', 'd'], ['b', 'c'], ['b', 'd']]);
           });
 
+          // Each option merges with the `false` to `false`, which records nothing it was built from and stands for
+          // none of the field's options
+          it.each<[string, RJSFSchema['oneOf'], number[]]>([
+            ['ending', [{ properties: { c: { type: 'string' } } }, false], [0, -1, 1]],
+            ['opening', [false, { properties: { c: { type: 'string' } } }], [-1, 0, 1]],
+          ])(
+            "reads the other rebuilt options as built from the field's own where a false option is %s the allOf entry's list",
+            (_, list, expected) => {
+              const withFalse: RJSFSchema = { ...rebuilt, allOf: [{ oneOf: list }] };
+              const shownAt = (shown: number) =>
+                fieldShownOption(
+                  { validator: testValidator },
+                  showing(shown).fieldState,
+                  [],
+                  withFalse,
+                  withFalse.oneOf ?? [],
+                  withFalse,
+                  {},
+                );
+              expect([0, 1, 2].map(shownAt)).toEqual(expected);
+            },
+          );
+
           // No option of the field's own list holds both keys, so only scoring the rebuilt list finds B×C, which an
           // edit then shows
           it('first fills the field from the rebuilt option its data matches, where the data splits its keys across both lists', () => {

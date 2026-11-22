@@ -31,16 +31,32 @@ function swapTupleKeys(schema: JSONSchema7Definition, toPrefixItems = false): JS
   return { ...others, [newTupleKey]: tuple, ...(rest !== undefined && { [newRestKey]: rest }) };
 }
 
+/** Whether an `unevaluatedProperties` of `entry` closes the object to keys an `additionalProperties` of another schema
+ * merged with it takes: one other than `true` or `{}`, beside no `additionalProperties` of the entry's own, since an
+ * entry's `unevaluatedProperties` sees only the annotations of the entry itself
+ */
+function closesSiblingKeys(entry: JSONSchema7): boolean {
+  const unevaluated: unknown = Reflect.get(entry, 'unevaluatedProperties');
+  return (
+    entry.additionalProperties === undefined &&
+    unevaluated !== undefined &&
+    unevaluated !== true &&
+    !(typeof unevaluated === 'object' && unevaluated !== null && Object.keys(unevaluated).length === 0)
+  );
+}
+
 /** Returns `merged` holding the `additionalProperties` of `true` or `{}` the merge dropped. JSON Schema reads an absent
  * keyword as `true`, so the merge drops one saying only that, where the form reads an absent one as
  * `additionalPropertiesWhenAbsent` says. The merge keeps a `false` or a schema in any entry, so a dropped keyword was
- * `true` or `{}` in every entry naming it
+ * `true` or `{}` in every entry naming it. It stays dropped where one of `siblings` closes the keys it takes (see
+ * `closesSiblingKeys()`)
  */
 function withOpenAdditionalProperties(
   merged: JSONSchema7Definition,
   objects: readonly JSONSchema7[],
+  siblings: readonly JSONSchema7[],
 ): JSONSchema7Definition {
-  if (typeof merged === 'boolean' || merged.additionalProperties !== undefined) {
+  if (typeof merged === 'boolean' || merged.additionalProperties !== undefined || siblings.some(closesSiblingKeys)) {
     return merged;
   }
   const open = objects.find((entry) => entry.additionalProperties !== undefined)?.additionalProperties;
@@ -72,7 +88,8 @@ export default function shallowAllOfMerge(schema: JSONSchema7Definition): JSONSc
   const merged = isPrefixTuple
     ? swapTupleKeys(mergeArrayOfSchemaDefinitions(schemas.map((entry) => swapTupleKeys(entry))), true)
     : mergeArrayOfSchemaDefinitions(schemas);
-  return withOpenAdditionalProperties(merged, objects);
+  // The object's own `unevaluatedProperties` sees the annotations of its entries
+  return withOpenAdditionalProperties(merged, objects, objects.slice(1));
 }
 
 /** An option the merge of option lists builds, with the options of the lists it was built from, in their order */
@@ -88,10 +105,8 @@ export interface MergedOption {
  */
 function mergedPair(left: JSONSchema7Definition, right: JSONSchema7Definition): JSONSchema7Definition | undefined {
   try {
-    const merged = withOpenAdditionalProperties(
-      mergeArrayOfSchemaDefinitions([left, right]),
-      [left, right].filter((entry) => typeof entry !== 'boolean'),
-    );
+    const objects = [left, right].filter((entry) => typeof entry !== 'boolean');
+    const merged = withOpenAdditionalProperties(mergeArrayOfSchemaDefinitions([left, right]), objects, objects);
     return typeof merged === 'boolean' ? merged : { ...merged };
   } catch {
     return undefined;

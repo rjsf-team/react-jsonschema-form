@@ -607,13 +607,24 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       ? (listing ?? declaredListing<S>(options, rootSchema))
       : undefined;
   const offeredAt = offering === undefined ? undefined : whereOf<S>(offering.offeredBy, rootSchema);
-  // A field reaching a reference that resolves to nothing, which retrieving it throws on, reads as no field offering them
+  // A field reaching a reference that resolves to nothing, which retrieving it throws on, reads as no field offering
+  // them. A `$ref` beside the list is followed in the field's own resource, which a detached copy would lose
   const field =
     offering === undefined ||
     offeredAt === undefined ||
     offeredAt.seeds.some(({ node }) => reachesBrokenRef<S>(offeredAt.graph, node))
       ? undefined
-      : fieldTypeSchema<S, F>(context, withoutKeys<S>(offering.offeredBy, offering.keyword), rootSchema, formData);
+      : fieldTypeSchema<S, F>(
+          context,
+          withoutKeys<S>(
+            typeof offering.offeredBy[REF_KEY] === 'string'
+              ? planAt<S, F>(context, offeredAt).schema
+              : offering.offeredBy,
+            offering.keyword,
+          ),
+          rootSchema,
+          formData,
+        );
   const readsAbsent = options.map((option) => field !== undefined && !rendersOwnFieldBesideOption<S>(field, option));
   const compute = (whereDeclared: (index: number, option: S) => Where<S> | undefined) =>
     scoreOptions<T, S, F>(

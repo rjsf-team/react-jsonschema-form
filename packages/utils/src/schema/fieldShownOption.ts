@@ -49,8 +49,9 @@ function builtFrom<S extends StrictRJSFSchema>(entry: unknown, rootSchema: S): r
 /** Returns the index in `options` of the option each option `retrieveSchema()` handed out stands for, given the
  * options each was `built` from: the option, or the one of `options` a merge of lists built it from, read at the same
  * position of each entry's sources, the position of the list `options` is. The position is what tells the field's own
- * list apart, since an option object can sit in more than one of the lists merged. Undefined where no position traces
- * every entry to an option
+ * list apart, since an option object can sit in more than one of the lists merged. A `false` entry, as a pair merged
+ * to `false` is, records nothing it was built from, so it stands for none of them, -1, rather than leaving the whole
+ * list untraced. Undefined where no position traces every other entry to an option
  */
 function writtenIndices(built: readonly (readonly unknown[])[], options: readonly unknown[]): number[] | undefined {
   const positions = Math.max(1, ...built.map((sources) => sources.length));
@@ -58,7 +59,7 @@ function writtenIndices(built: readonly (readonly unknown[])[], options: readonl
     const indices = built.map((sources) =>
       options.findIndex((option) => sourcesOf(option).every((source, i) => sources[at + i] === source)),
     );
-    if (indices.every((index) => index >= 0)) {
+    if (indices.every((index, entry) => index >= 0 || built[entry][0] === false)) {
       return indices;
     }
   }

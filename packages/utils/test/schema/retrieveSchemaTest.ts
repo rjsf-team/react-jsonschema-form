@@ -226,6 +226,59 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         true,
       );
     });
+    // An entry's `unevaluatedProperties` sees only that entry's annotations, where the object's own sees its entries'
+    it.each<[string, RJSFSchema, boolean | undefined]>([
+      [
+        "leaves out an additionalProperties: true a sibling entry's unevaluatedProperties: false closes",
+        {
+          allOf: [
+            { additionalProperties: true },
+            { properties: { a: { type: 'string' } }, unevaluatedProperties: false },
+          ],
+        },
+        undefined,
+      ],
+      [
+        "leaves out the object's own additionalProperties: true an entry's unevaluatedProperties: false closes",
+        {
+          additionalProperties: true,
+          allOf: [{ properties: { a: { type: 'string' } }, unevaluatedProperties: false }],
+        },
+        undefined,
+      ],
+      [
+        "keeps an entry's additionalProperties: true the object's own unevaluatedProperties: false sees",
+        {
+          properties: { a: { type: 'string' } },
+          unevaluatedProperties: false,
+          allOf: [{ additionalProperties: true }],
+        },
+        true,
+      ],
+      ...[true, {}].map((unevaluated): [string, RJSFSchema, boolean] => [
+        `keeps an additionalProperties: true beside a sibling entry's unevaluatedProperties: ${JSON.stringify(unevaluated)}`,
+        {
+          allOf: [
+            { additionalProperties: true },
+            { properties: { a: { type: 'string' } }, unevaluatedProperties: unevaluated },
+          ],
+        },
+        true,
+      ]),
+      [
+        "keeps an additionalProperties: true beside the entry's own unevaluatedProperties: false, which it opens",
+        {
+          allOf: [
+            { additionalProperties: true },
+            { properties: { a: { type: 'string' } }, additionalProperties: true, unevaluatedProperties: false },
+          ],
+        },
+        true,
+      ],
+    ])('%s', (_, keywords, expected) => {
+      const schema: RJSFSchema = { type: 'object', ...keywords };
+      expect(retrieveSchema({ validator: testValidator }, schema, schema).additionalProperties).toBe(expected);
+    });
     it('keeps the false or schema another entry names, which the merge keeps', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -264,6 +317,23 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     it('keeps an option merged to a boolean, which records nothing it was built from', () => {
       const option: RJSFSchema = { properties: { a: { type: 'string' } } };
       expect(retrieved({ type: 'object', oneOf: [false, option], allOf: [{ oneOf: [{}] }] })).toEqual([false, option]);
+    });
+    it("leaves out an option's additionalProperties: true the allOf option's unevaluatedProperties: false closes", () => {
+      expect(
+        retrieved({
+          type: 'object',
+          oneOf: [{ properties: { b: { type: 'number' } }, additionalProperties: true }],
+          allOf: [{ oneOf: [{ properties: { c: { type: 'string' } }, unevaluatedProperties: false }] }],
+        }),
+      ).toEqual([{ properties: { b: { type: 'number' }, c: { type: 'string' } }, unevaluatedProperties: false }]);
+    });
+    it("leaves the field's own list as written where the rest of the allOf fails to merge", () => {
+      const field: RJSFSchema = {
+        type: 'object',
+        oneOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'number', default: 5 } } }],
+        allOf: [{ type: 'string', oneOf: [{ properties: { c: { type: 'string' } } }] }],
+      };
+      expect(retrieveSchema({ validator: testValidator }, field, field, { b: 1 }).oneOf).toEqual(field.oneOf);
     });
     it('leaves lists no pair of which merges to the merge, which drops the allOf', () => {
       expect(

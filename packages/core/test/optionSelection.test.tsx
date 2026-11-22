@@ -1863,6 +1863,17 @@ describe('option selection as form state', () => {
         oneOf: [optionC, splitKeysB],
         allOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }],
       },
+      // A pair merged to `false` records nothing it was built from, and is never the option shown
+      {
+        name: "a false option ending the allOf's list",
+        oneOf: [{ title: 'A', properties: { a: { type: 'string' }, c: { type: 'string' } } }, splitKeysB],
+        allOf: [optionC, false],
+      },
+      {
+        name: "a false option opening the allOf's list",
+        oneOf: [{ title: 'A', properties: { a: { type: 'string' }, c: { type: 'string' } } }, splitKeysB],
+        allOf: [false, optionC],
+      },
     ].flatMap((lists) => (['forbid', 'allow'] as const).map((absent) => ({ ...lists, absent }))),
   )(
     'fills a typed object whose rebuilt options split the data keys, $name, from the option it shows on every pass, extra keys $absent (#5886)',

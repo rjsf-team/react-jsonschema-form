@@ -816,6 +816,31 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           const declaring: RJSFSchema = { type: 'object', properties: { p: typed(options) } };
           expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(1);
         });
+        it('reads a list beside a $ref as the field it resolves to reads it', () => {
+          const declaring: RJSFSchema = {
+            type: 'object',
+            definitions: { base: { type: 'object', properties: { k: { type: 'string' } } } },
+            properties: { p: { $ref: '#/definitions/base', oneOf: options } },
+          };
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(1);
+        });
+        // The root's own `base` is a string, which the `$ref` resolved against the root would read
+        it('reads a list beside a $ref in a nested resource as the field it resolves to in that resource reads it', () => {
+          const declaring: RJSFSchema = {
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            type: 'object',
+            $defs: {
+              base: { type: 'string' },
+              r: {
+                $id: 'https://example.com/r',
+                $defs: { base: { type: 'object' } },
+                properties: { p: { $ref: '#/$defs/base', oneOf: options } },
+              },
+            },
+            properties: { q: { $ref: 'https://example.com/r' } },
+          };
+          expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(1);
+        });
         // A definition is read with its own type, which a `$ref` naming it with no type of its own keeps
         it('reads a list a definition offers, named through a $ref, as the field naming it reads it', () => {
           const declaring: RJSFSchema = {
