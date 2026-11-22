@@ -9,7 +9,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 ## @rjsf/core
 
-- Fix `ArrayField` widget lookup errors omitting the path to the array field ([#4731](https://github.com/rjsf-team/react-jsonschema-form/issues/4731))
+- Fix `ArrayField` widget lookup errors omitting the path to the array field ([#5943](https://github.com/rjsf-team/react-jsonschema-form/pull/5943), [#4731](https://github.com/rjsf-team/react-jsonschema-form/issues/4731))
 
 # 7.0.0-beta.1 (2026-11-20)
 
