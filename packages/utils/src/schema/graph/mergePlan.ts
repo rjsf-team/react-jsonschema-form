@@ -275,16 +275,17 @@ function comparedCopy(value: unknown, limit: number): unknown {
  * the last values it was checked on where they are equal to these, or else what `check` says
  */
 function readsCheck(keys: unknown[], values: unknown[], check: () => boolean): boolean {
-  const copy = comparedCopy(values, COMPARED_MEMBERS + values.length);
-  if (copy === UNCOPIED) {
-    return check();
-  }
+  // Compared before any copy is made: values deep-equal to a held copy are themselves within what `comparedCopy()`
+  // copies, so a hit costs no copy
   const held = readsMemo.peek(keys);
   if (held !== undefined && deepEquals(held.values, values)) {
     return held.holds;
   }
   const holds = check();
-  readsMemo.set(keys, { values: copy, holds });
+  const copy = comparedCopy(values, COMPARED_MEMBERS + values.length);
+  if (copy !== UNCOPIED) {
+    readsMemo.set(keys, { values: copy, holds });
+  }
   return holds;
 }
 

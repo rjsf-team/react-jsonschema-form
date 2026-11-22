@@ -4547,11 +4547,16 @@ function holdsSnapshot(data: unknown, previous: unknown): boolean {
     return previous instanceof Date && previous.getTime() === data.getTime();
   }
   if (Array.isArray(data)) {
-    return (
-      Array.isArray(previous) &&
-      previous.length === data.length &&
-      data.every((member: unknown, index) => holdsSnapshot(member, previous[index]))
-    );
+    if (!Array.isArray(previous) || previous.length !== data.length) {
+      return false;
+    }
+    // Index by index rather than with `every()`, which skips a hole and so would miss an item deleted in place
+    for (let index = 0; index < data.length; index++) {
+      if (!holdsSnapshot(data[index], previous[index])) {
+        return false;
+      }
+    }
+    return true;
   }
   if (!isPlainObject(data)) {
     return Object.is(data, previous);
