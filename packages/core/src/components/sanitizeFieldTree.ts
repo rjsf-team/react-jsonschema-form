@@ -10,6 +10,7 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
   ANY_OF_KEY,
@@ -46,6 +47,7 @@ import {
   mergeSchemas,
   namesEveryType,
   ONE_OF_KEY,
+  PATTERN_PROPERTIES_KEY,
   REF_KEY,
   rendersOwnFieldBesideOption,
   resolveUiSchema,
@@ -178,18 +180,28 @@ function declarationsOf(link: ShownAbove): readonly unknown[] {
   if (known === undefined) {
     const { above } = link;
     const key = link.oldPath.at(-1);
-    const childOf = (schema: unknown): unknown => {
+    const childOf = (schema: unknown): unknown[] => {
       if (!isObject(schema)) {
-        return undefined;
+        return [];
       }
       if (typeof key === 'number') {
         return ITEMS_KEYWORDS.some((keyword) => Object.hasOwn(schema, keyword))
-          ? getItemSchema(schema as StrictRJSFSchema, key)
-          : undefined;
+          ? [getItemSchema(schema as StrictRJSFSchema, key)]
+          : [];
       }
-      return isObject(schema.properties) ? schema.properties[key as string] : undefined;
+      if (
+        isObject(schema.properties) &&
+        Object.hasOwn(schema.properties, key as string) &&
+        !hasSchemaMarker(schema.properties[key as string], ADDITIONAL_PROPERTY_FLAG)
+      ) {
+        return [schema.properties[key as string]];
+      }
+      // An extra key is filled by one of these, whose `$ref` its retrieved schema has resolved and its `if` evaluated
+      // away; taking every pattern's needs no regex
+      const patterns = isObject(schema[PATTERN_PROPERTIES_KEY]) ? Object.values(schema[PATTERN_PROPERTIES_KEY]) : [];
+      return [schema[ADDITIONAL_PROPERTIES_KEY], ...patterns];
     };
-    known = [link.oldRaw, ...(above ? [...above.oldLayers, ...declarationsOf(above)].map(childOf) : [])];
+    known = [link.oldRaw, ...(above ? [...above.oldLayers, ...declarationsOf(above)].flatMap(childOf) : [])];
     declarations.set(link, known);
   }
   return known;
@@ -815,10 +827,11 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const key = oldPath.at(-1);
     const isDeclared =
       typeof key === 'string' &&
-      holder.oldLayers.some((layer) => {
-        const property = layer.properties?.[key];
-        return property !== undefined && !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG);
-      });
+      holder.oldLayers.some(
+        (layer) =>
+          Object.hasOwn(layer.properties ?? {}, key) &&
+          !hasSchemaMarker(layer.properties?.[key], ADDITIONAL_PROPERTY_FLAG),
+      );
     if (!matches || isDeclared) {
       return matches;
     }

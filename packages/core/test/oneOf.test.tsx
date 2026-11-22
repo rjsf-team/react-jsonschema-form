@@ -6559,6 +6559,24 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
         ),
         a: { m: 's', n: 1 },
       },
+      {
+        // The retrieved extra key's schema has its `$ref` resolved and its `if` evaluated away
+        held: "an `if` the `$ref` of the object's `additionalProperties` reaches",
+        schema: unionOf(
+          { definitions: { c: conditionalA } },
+          { type: 'object', additionalProperties: { $ref: '#/definitions/c' } },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      },
+      {
+        // The shown option's retrieved layer holds the extra key as a property, resolved as above
+        held: "an `if` the `$ref` of the `additionalProperties` of the object's option reaches",
+        schema: unionOf(
+          { definitions: { c: conditionalA } },
+          { type: 'object', oneOf: [{ title: 'O', additionalProperties: { $ref: '#/definitions/c' } }] },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      },
     ])(
       'judges a nested value by the fill made with its siblings in place, read through $held',
       async ({ schema, a }) => {
