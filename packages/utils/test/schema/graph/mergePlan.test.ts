@@ -612,6 +612,7 @@ describe('buildPlan()', () => {
           list: schema.anyOf,
           dependencies: false,
           selected: undefined,
+          declared: { types: ['object'], inferred: false },
         },
         {
           keyword: 'oneOf',
@@ -621,6 +622,7 @@ describe('buildPlan()', () => {
           list: schema.oneOf,
           dependencies: false,
           selected: undefined,
+          declared: { types: ['object'], inferred: false },
         },
       ]);
       expect(plan.schema.anyOf).toBe(schema.anyOf);
@@ -1024,6 +1026,10 @@ describe('decidedWithoutValue()', () => {
     ['an integer if for a number field', { type: 'integer' }, ['number'], undefined],
     ['a number if for an integer field', { type: 'number' }, ['integer'], true],
     ['a string if for an integer field', { type: 'string' }, ['integer'], false],
+    ['a keyword constraining no value of the field', { minLength: 1 }, ['integer', 'null'], true],
+    ['a keyword constraining some value of the field', { minLength: 1 }, ['number', 'string'], undefined],
+    ['a type beside a keyword constraining no value of the field', { type: 'string', maxItems: 1 }, ['string'], true],
+    ['a keyword constraining a value of a field naming no type', { required: ['a'] }, undefined, undefined],
     [
       'a type of every JSON type for a field naming none',
       { type: ['array', 'boolean', 'null', 'number', 'object', 'string'] },

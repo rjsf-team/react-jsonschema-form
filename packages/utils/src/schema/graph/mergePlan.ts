@@ -20,11 +20,13 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
 import getSchemaType from '../../getSchemaType.ts';
+import guessType from '../../guessType.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
+import { KEYWORDS_BY_TYPE } from '../schemaKeywords.ts';
 import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { NON_CONSTRAINING_KEYS } from './parseSchemaGraph.ts';
@@ -93,7 +95,7 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
   /** Set where the field is one that holds no value while it has no data, see `NoValue` */
   readonly noValue?: NoValue;
   /** Whether the field may hold a value that is neither an object nor an array, such as a `default` it inherits:
-   * one that holds no value while it has no data, or one whose `type` allows one
+   * one whose `type`s allow one, or that names no `type` and doesn't read as an object
    */
   readonly holdsPrimitive: boolean;
   /** For an `if`, its node, which `decidedWithoutValue()` reads, where `condition` is what the validator checks */
@@ -101,14 +103,15 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
 }
 
 /** A field whose fill holds no value while it has no data, so an `if` is checked against no value, not `{}`: one whose
- * `type` allows neither an object nor an array, or that names no `type` and holds nothing the fill reads one from, see
- * `noValueOf()`. A field the fill reads as an object or an array holds `{}`, its defaults filled in, and one with a
+ * `type` allows neither an object nor an array, or that names no `type` but an `enum` or a `const` of such values, see
+ * `noValueOf()`. Any other field is checked against `{}`, its defaults filled in: one naming no `type` may get an
+ * object's or an array's shape from its branches, so a value it is given must not swap the branch. One with a
  * `default` holds that, which the defaults hand the plan as its data. With no value, the `then` applies where the `if`
  * accepts every value the field may hold, and a `not` where the `if` it negates doesn't apply, see
  * `decidedWithoutValue()`; the `else` otherwise
  */
 export interface NoValue {
-  /** The `type`s the field allows, `undefined` for any */
+  /** The `type`s the field allows */
   readonly types: readonly string[] | undefined;
 }
 
@@ -143,10 +146,15 @@ export interface OptionChoice {
   /** The `discriminator.propertyName` of the node holding the options */
   readonly discriminator?: string;
   readonly selected?: number;
+  /** What the field declares of its `type` where it offers the options, which an option planned alone is part of */
+  readonly declared?: DeclaredTypes;
 }
 
 /** What `PlanPolicy.selectOption` is asked to choose an option from */
-export interface OptionRequest<S extends StrictRJSFSchema = RJSFSchema> extends Omit<OptionChoice, 'selected'> {
+export interface OptionRequest<S extends StrictRJSFSchema = RJSFSchema> extends Omit<
+  OptionChoice,
+  'selected' | 'declared'
+> {
   readonly graph: SchemaGraph<S>;
   readonly data: unknown;
   /** The data the plan's `dependencies` qualify against and its `if`s are checked against, see `PlanInput.depData` */
@@ -187,6 +195,8 @@ export interface PlanPolicy<S extends StrictRJSFSchema = RJSFSchema> {
    * it is merged with, which `allOf: 'if'` merges only where the field's own keywords hold an `if`
    */
   readonly optionPolicy?: OptionPolicy;
+  /** For an option planned alone, what the field offering it declares of its `type`, see `OptionChoice.declared` */
+  readonly declared?: DeclaredTypes;
 }
 
 /** The `allOf` and `if` policies of `PlanPolicy.optionPolicy` */
@@ -196,8 +206,10 @@ export interface OptionPolicy {
 }
 
 /** A policy with its defaults filled in */
-type ResolvedPolicy<S extends StrictRJSFSchema> = Required<Omit<PlanPolicy<S>, 'selectOption' | 'optionPolicy'>> &
-  Pick<PlanPolicy<S>, 'selectOption' | 'optionPolicy'>;
+type ResolvedPolicy<S extends StrictRJSFSchema> = Required<
+  Omit<PlanPolicy<S>, 'selectOption' | 'optionPolicy' | 'declared'>
+> &
+  Pick<PlanPolicy<S>, 'selectOption' | 'optionPolicy' | 'declared'>;
 
 /** A field's merge plan: its ordered entries, their set, and the merged schema with its children's seeds */
 export interface MergePlan<S extends StrictRJSFSchema = RJSFSchema> {
@@ -385,7 +397,15 @@ export function decidedWithoutValue<S extends StrictRJSFSchema>(
   if (REF_KEY in node.raw) {
     return node.pureRef ? decidedWithoutValue(graph, node.ref, types, empty, seen) : depends;
   }
-  const keys = Object.keys(node.raw).filter((key) => !NON_CONSTRAINING_KEYS.has(key));
+  const allowed = types ?? ALL_TYPES;
+  // A keyword that constrains none of the field's types holds for every value of them
+  const keys = Object.keys(node.raw).filter(
+    (key) =>
+      !NON_CONSTRAINING_KEYS.has(key) &&
+      Object.entries(KEYWORDS_BY_TYPE).every(
+        ([only, keywords]) => !keywords.includes(key) || allowed.some((type) => allowsType([only], type)),
+      ),
+  );
   if (keys.length === 0) {
     return true;
   }
@@ -404,7 +424,6 @@ export function decidedWithoutValue<S extends StrictRJSFSchema>(
   // A `number` field may hold integers
   const accepts = (type: string) => allowsType(ifTypes, type);
   const overlaps = (type: string) => accepts(type) || (type === 'number' && ifTypes.includes('integer'));
-  const allowed = types ?? ALL_TYPES;
   if (allowed.every(accepts)) {
     return true;
   }
@@ -628,7 +647,10 @@ export function conjunctionOf<S extends StrictRJSFSchema>(
 interface DeclaredTypes {
   /** `undefined` where none declares a `type` */
   readonly types: readonly string[] | undefined;
+  /** Whether one naming no `type` reads as an object to `getSchemaType()`, e.g. by its `properties` */
   readonly inferred: boolean;
+  /** For a field naming no `type`, the types of the values its first `const` or `enum` allows */
+  readonly guessed?: readonly string[];
 }
 
 /** What `declared` and the nodes `ids` declare together, see `DeclaredTypes` */
@@ -660,8 +682,13 @@ function declaredTypes<S extends StrictRJSFSchema>(
             ];
       own = { ...soFar, types };
     } else {
-      const guessed = getSchemaType<S>(target.raw);
-      own = { ...soFar, inferred: soFar.inferred || guessed === 'object' || guessed === 'array' };
+      const { const: constant, enum: values } = target.raw;
+      const held = constant === undefined ? values : [constant];
+      own = {
+        ...soFar,
+        inferred: soFar.inferred || getSchemaType<S>(target.raw) === 'object',
+        guessed: soFar.guessed ?? (Array.isArray(held) ? held.map(guessType) : undefined),
+      };
     }
     const members = graph.subschemas(target.id, ALL_OF_KEY).map(([, member]) => member);
     return declaredTypes(graph, [target.ref, ...members], own, seen);
@@ -671,15 +698,15 @@ function declaredTypes<S extends StrictRJSFSchema>(
 /** What a field's `type`s say of the value it holds, which each `if` it checks is told, see `CheckedCondition` */
 type ValueTypes = Pick<CheckedCondition, 'noValue' | 'holdsPrimitive'>;
 
-/** For a field of the `type`s `declared`: `noValue`, the field `NoValue` describes, or `undefined` for one the fill
- * reads as an object or an array, as `getSchemaType()` reads a field naming no `type`, and `holdsPrimitive`, see
- * `CheckedCondition.holdsPrimitive`
+/** For a field of the `type`s `declared`: `noValue`, the field `NoValue` describes, or `undefined` for one whose
+ * `if` is checked against `{}`, and `holdsPrimitive`, see `CheckedCondition.holdsPrimitive`
  */
-function noValueOf({ types, inferred }: DeclaredTypes): ValueTypes {
+function noValueOf({ types, inferred, guessed }: DeclaredTypes): ValueTypes {
   const container = (type: string) => type === 'object' || type === 'array';
+  const known = types ?? guessed;
   return {
-    noValue: (types ? types.some(container) : inferred) ? undefined : { types },
-    holdsPrimitive: types ? !types.every(container) : !inferred,
+    noValue: known?.some(container) === false ? { types: known } : undefined,
+    holdsPrimitive: known ? !known.every(container) : !inferred,
   };
 }
 
@@ -884,8 +911,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   /** Whether the keywords of a seed hold an `if`, which `allOf: 'if'` merges the `allOf`s for */
   private seedHasCondition = false;
   private readsData = false;
-  /** What the seeds declare of the field's `type`, see `DeclaredTypes` */
-  private seedTypes: DeclaredTypes = { types: undefined, inferred: false };
+  /** What the seeds, and the options being expanded, declare of the field's `type`, see `DeclaredTypes` */
+  private declared: DeclaredTypes = { types: undefined, inferred: false };
   /** What the field's `type`s say of the value it holds, see `ValueTypes`, with the selected option being expanded
    * read as part of it: an option's `type` counts only for the `if`s the option brings, since the field's own are
    * checked whichever option it shows
@@ -922,12 +949,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       this.mergeAllOf ||= this.policy.allOf === 'if';
     }
     // Decided before any seed is expanded, so the `if` of one seed sees the `type` another declares
-    this.seedTypes = declaredTypes(
+    this.declared = declaredTypes(
       this.graph,
       seeds.map(({ node }) => node),
-      { types: undefined, inferred: false },
+      this.policy.declared ?? { types: undefined, inferred: false },
     );
-    this.valueTypes = noValueOf(this.seedTypes);
+    this.valueTypes = noValueOf(this.declared);
     const expanded = seeds.flatMap((seed) => {
       const part = this.expand(seed.node, seed.refPath, 'seed');
       if (part === undefined) {
@@ -1014,7 +1041,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     const keywords = this.flatten(asTarget(this.graph, node), refPath);
     if (edge === 'option') {
-      this.valueTypes = noValueOf(declaredTypes(this.graph, [id], this.seedTypes));
+      this.declared = declaredTypes(this.graph, [id], this.declared);
+      this.valueTypes = noValueOf(this.declared);
     }
     const schema = keywordSchema(node.raw, keywords);
     const ref: unknown = Reflect.get(node.raw, REF_KEY);
@@ -1286,7 +1314,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     this.readsData ||= selectOption !== undefined;
     const chosen = selectOption?.({ ...request, graph: this.graph, data: this.data, depData: this.depData });
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
-    this.choices.push({ ...request, selected });
+    this.choices.push({ ...request, selected, declared: this.declared });
     const optionRefPath = this.policy.optionsInheritRefPath ? provider.refPath : [];
     const option = selected === undefined ? undefined : this.expandOption(options[selected], optionRefPath);
     return option === undefined || selected === undefined ? undefined : { option, id: options[selected] };
@@ -1294,7 +1322,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   private expandOption(id: NodeId, refPath: RefPath): Part<S> | undefined {
     const { optionPolicy } = this.policy;
-    const outer = { mergeAllOf: this.mergeAllOf, conditions: this.conditions, valueTypes: this.valueTypes };
+    const outer = {
+      mergeAllOf: this.mergeAllOf,
+      conditions: this.conditions,
+      valueTypes: this.valueTypes,
+      declared: this.declared,
+    };
     if (optionPolicy !== undefined) {
       // The option is merged into the field, so an `if` of its own counts as the field's
       this.mergeAllOf =
@@ -1362,6 +1395,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     optionsInheritRefPath: policy?.optionsInheritRefPath ?? false,
     dependencyOptionsOnly: policy?.dependencyOptionsOnly ?? false,
     optionPolicy: policy?.optionPolicy,
+    declared: policy?.declared,
   };
   const keys = [
     context.validator,
@@ -1377,6 +1411,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     resolved.optionPolicy?.allOf,
     resolved.optionPolicy?.conditions,
     isMarked(context, RESOLVES_NO_CONDITIONS),
+    resolved.declared,
   ];
   const dataKeys = [data, depData, depData === null && isMarked(context, HOLDS_NULL_DEFAULT)];
   const memoized = plans.peekAny(keys, dataKeys);

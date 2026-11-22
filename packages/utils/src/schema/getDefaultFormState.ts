@@ -2423,23 +2423,24 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return foldView<T, S, F>(context, merged, branchProps);
   }
   // The option as rendered is planned from where the field's settled plan offers it, and cut where that plan was cut
+  const offered = merged.choices.filter(({ list }) => list === options).slice(0, 1);
   const optionAlone = buildPlan<S, F>({
     context,
     graph,
-    seeds: merged.choices
-      .filter(({ list }) => list === options)
-      .slice(0, 1)
-      .map(({ refPath }) => ({ node: optionNode, refPath })),
+    seeds: offered.map(({ refPath }) => ({ node: optionNode, refPath })),
     data: view.data,
     depData: view.depData,
-    policy: policyFor(
-      context,
-      graph,
-      inherited.optionPolicy?.allOf ?? view.allOf,
-      inherited.optionPolicy?.conditions ?? view.conditions,
-      NO_OPTIONS.selections,
-      merged.collapsed,
-    ),
+    policy: {
+      ...policyFor(
+        context,
+        graph,
+        inherited.optionPolicy?.allOf ?? view.allOf,
+        inherited.optionPolicy?.conditions ?? view.conditions,
+        NO_OPTIONS.selections,
+        merged.collapsed,
+      ),
+      declared: offered.map(({ declared }) => declared)[0],
+    },
   });
   const rendered = renderOption<S>(remaining, optionAlone.schema);
   return foldView<T, S, F>(

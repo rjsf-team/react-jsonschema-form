@@ -16,6 +16,7 @@ import {
   isObject,
   noop,
   resetLogOnce,
+  retrieveSchema,
 } from '../../src/index.ts';
 import {
   computeDefaultBasedOnSchemaTypeAndDefaults,
@@ -8756,9 +8757,76 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(context, { schema: rootOf(single, false) })).toStrictEqual({});
           }
         });
-        it('takes the else of the type-only if of an empty field with no type, so its then does not make it null', () => {
+        it('checks the type-only if of an empty field with no type against {}, so its then makes it null', () => {
           const x: RJSFSchema = { if: { type: 'object' }, then: { type: 'null' }, else: { minimum: 3 } };
-          expect(getDefaultFormState({ validator: testValidator }, { schema: rootOf(x, false) })).toStrictEqual({});
+          expect(getDefaultFormState({ validator: testValidator }, { schema: rootOf(x, false) })).toStrictEqual({
+            x: null,
+          });
+        });
+        it('checks the if of a field with no type against {} while it is empty, so a value does not swap the branch its object or array keywords gave it', () => {
+          const context = { validator: testValidator };
+          const byProperty: RJSFSchema = {
+            if: { properties: { a: { const: 1 } } },
+            then: { properties: { b: { type: 'string', default: 'B' } } },
+            else: { properties: { c: { type: 'string' } } },
+          };
+          expect(getDefaultFormState(context, { schema: byProperty })).toStrictEqual({ b: 'B' });
+          expect(Object.keys(retrieveSchema(context, byProperty, byProperty).properties ?? {})).toStrictEqual(['b']);
+          expect(
+            Object.keys(retrieveSchema(context, byProperty, byProperty, { c: 'z' }).properties ?? {}),
+          ).toStrictEqual(['b']);
+          const byLength: RJSFSchema = {
+            items: { type: 'string' },
+            if: { maxItems: 3 },
+            then: { title: 'Short' },
+            else: { title: 'Long' },
+          };
+          for (const data of [undefined, []]) {
+            expect(retrieveSchema(context, byLength, byLength, data).title).toBe('Short');
+          }
+        });
+        it('takes the then of an if whose keywords constrain no value of the type of the empty field, as it does once the field holds one', () => {
+          const context = { validator: testValidator };
+          const titled = (type: 'number' | 'string', condition: RJSFSchema): RJSFSchema => ({
+            type,
+            if: condition,
+            then: { title: 'A', default: type === 'number' ? 5 : 'x' },
+            else: { title: 'B' },
+          });
+          for (const schema of [
+            titled('number', { minLength: 1 }),
+            titled('string', { minimum: 10 }),
+            titled('string', { properties: { a: { const: 1 } } }),
+          ]) {
+            const held = schema.type === 'number' ? 5 : 'x';
+            expect(retrieveSchema(context, schema, schema).title).toBe('A');
+            expect(retrieveSchema(context, schema, schema, held).title).toBe('A');
+            expect(getDefaultFormState(context, { schema: rootOf(schema) })).toStrictEqual({ x: held });
+          }
+        });
+        it('reads the type of an empty field with no type off its enum or const, as of the same field with the type written', () => {
+          const context = { validator: testValidator };
+          const conditional: RJSFSchema = { if: { type: 'string' }, then: { default: 'b' } };
+          const fields: RJSFSchema[] = [{ enum: ['a', 'b'] }, { type: 'string', enum: ['a', 'b'] }, { const: 'b' }];
+          for (const field of fields) {
+            expect(getDefaultFormState(context, { schema: rootOf({ ...field, ...conditional }) })).toStrictEqual({
+              x: 'b',
+            });
+          }
+          const pinnedObject: RJSFSchema = { const: { a: 1 }, if: { required: ['a'] }, else: { title: 'unmet' } };
+          expect(retrieveSchema(context, pinnedObject, pinnedObject).title).toBe('unmet');
+        });
+        it('gives the type-only if of an option within an option the type the option around it declares', () => {
+          const context = { validator: testValidator };
+          const conditional: RJSFSchema = { if: { type: 'number' }, then: { const: 3 } };
+          const nestings: RJSFSchema[] = [
+            { oneOf: [{ type: 'number', ...conditional }] },
+            { oneOf: [{ type: 'number', oneOf: [conditional] }] },
+            { type: 'number', oneOf: [{ oneOf: [conditional] }] },
+          ];
+          for (const x of nestings) {
+            expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({ x: 3 });
+          }
         });
         it("takes the else of an empty string field's if: { const }, so the else's default fills it", () => {
           const x: RJSFSchema = {
@@ -8887,11 +8955,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             getDefaultFormState(context, { schema: withPattern({ if: { type: 'object' }, then: { const: 3 } }) }),
           ).toStrictEqual({});
         });
-        it("takes the else of the type-only if of an empty field with no type beside the options it shows, whose types count for their own if's only", () => {
+        it("checks the type-only if of an empty field with no type beside the options it shows against {}, whose types count for their own if's only", () => {
           const context = { validator: testValidator };
           const options: RJSFSchema[] = [{ type: 'number' }, { type: 'string' }];
           const besideOptions: RJSFSchema = { oneOf: options, if: { type: 'object' }, then: { const: 3 } };
-          expect(getDefaultFormState(context, { schema: rootOf(besideOptions) })).toStrictEqual({});
+          expect(getDefaultFormState(context, { schema: rootOf(besideOptions) })).toStrictEqual({ x: 3 });
           const inOption: RJSFSchema = {
             oneOf: [{ type: 'number', if: { type: 'object' }, else: { const: 3 } }, options[1]],
           };
