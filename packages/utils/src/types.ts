@@ -96,8 +96,8 @@ export interface ArrayMinItems {
    * If the function returns true, the array will not be populated with default values.
    * If the function returns false, the array will be populated with default values according to the `populate` option.
    * @param context - The `SchemaContext` in effect, to pass along to any schema function the callback calls. Within
-   *        an option of a `oneOf`/`anyOf` of const values, unless `constAsDefaults` is `'always'`, and within a `oneOf`
-   *        of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+   *        an option of a `oneOf`/`anyOf` of several const values, unless `constAsDefaults` is `'always'`, and within a
+   *        `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
    * @param schema - The array schema whose defaults are being computed
    * @param [rootSchema] - The root schema that will be forwarded to all the APIs
    * @returns A boolean indicating whether to skip populating the array with default values.
@@ -172,16 +172,18 @@ export interface DefaultFormStateBehavior {
    * - `always`: A const value will always be merged into the form as a default. If there are const values in a
    *        `oneOf`/`anyOf` (for instance to create an enumeration with title different from the values), the first
    *        const value will be defaulted
-   * - `skipOneOf`: Deprecated, leave the flag unset instead. A `oneOf`/`anyOf` of const values is left unpicked, as it
-   *        is with the flag unset. It differs from unset only for a non-empty `oneOf` on a field with a single primitive
-   *        `type` or none: no const inside the option that field shows, such as the const of a property the option
-   *        declares, is used as a default
-   * - `never`: A const value will never be used as a default
+   * - `skipOneOf`: Deprecated, leave the flag unset instead. A `oneOf`/`anyOf` of several const values is left unpicked,
+   *        as it is with the flag unset. It differs from unset only for a non-empty `oneOf` on a field with a single
+   *        primitive `type` or none: no const inside the option that field shows, such as the const of a property the
+   *        option declares or the one const value of the `oneOf`, is used as a default
+   * - `never`: A const value will never be used as a default, nor will the one value of an `enum`
    *
    * Left unset, a field's own const value, and the const of a property inside the `oneOf`/`anyOf` option a field
-   * shows, is used as a default as under `always`, while a `oneOf`/`anyOf` whose options are all const values is a
-   * choice left unpicked, as an `enum` is: it starts on the value its `default` names, and is otherwise left empty. Only
-   * an explicit `always` picks the first const value of such a list, lets a const value take the place of a value the
+   * shows, is used as a default as under `always`, while a `oneOf`/`anyOf` whose options are several const values is a
+   * choice left unpicked, as an `enum` of several values is: it starts on the value its `default` names, and is
+   * otherwise left empty. A `oneOf`/`anyOf` of one const value, and an `enum` of one value, leaves nothing to choose,
+   * so that value is used as a default as a const value is, except that a `default` wins over it. Only an explicit
+   * `always` picks the first const value of a list of several, lets a const value take the place of a value the
    * `formData` holds, or of a `default` that names none of the constants of a `oneOf`/`anyOf`.
    */
   constAsDefaults?: 'always' | 'skipOneOf' | 'never';
@@ -193,7 +195,9 @@ export interface DefaultFormStateBehavior {
   nestedDefaultsPrecedence?: 'descendantWins' | 'ancestorWins';
   /** Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default`
    * of its own, is populated with `false`, defaulting to `populateFalse`.
-   * - `populateFalse`: A required boolean with no `default` is set to `false`
+   * - `populateFalse`: A required boolean with no `default` is set to `false`, unless its `enum` or its
+   *        `oneOf`/`anyOf` of const values lists several values: that one renders as a select, which can show that it
+   *        is unanswered, so it is left unset
    * - `skip`: No value is synthesized; the property stays `undefined` until the user answers it, so `required` remains
    *        a validation concern
    */

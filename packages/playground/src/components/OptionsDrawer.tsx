@@ -138,7 +138,8 @@ const liveSettingsBooleanSchema: RJSFSchema = {
             },
             {
               type: 'string',
-              title: 'Deprecated: a `oneOf`/`anyOf` of const values is left unpicked, as it is with the flag unset',
+              title:
+                'Deprecated: a `oneOf`/`anyOf` of several const values is left unpicked, as it is with the flag unset',
               enum: ['skipOneOf'],
             },
             {

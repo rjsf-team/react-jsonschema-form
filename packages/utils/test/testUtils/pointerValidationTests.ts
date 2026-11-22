@@ -502,7 +502,7 @@ export function sharedObjectValidationTests(buildValidator: BuildValidatorFor) {
       });
       expect(schemaUtils.getDefaultFormState(rootSchema, { kind: 'work', sample: {} })).toEqual({
         kind: 'work',
-        sample: { ext: 'EXT' },
+        sample: { kind: 'work', ext: 'EXT' },
         ext: 'EXT',
       });
     });

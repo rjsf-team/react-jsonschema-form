@@ -662,9 +662,7 @@ describe('getDefaultFormState() on recursive schemas', () => {
         node: {
           type: 'object',
           properties: { child: { $ref: D('node') } },
-          patternProperties: {
-            '^c': { type: 'object', properties: { tag: { oneOf: [{ const: 'p' }], default: 'p' } } },
-          },
+          patternProperties: { '^c': { type: 'object', properties: { tag: { oneOf: [{ const: 'p' }] } } } },
         },
       },
       $ref: D('node'),

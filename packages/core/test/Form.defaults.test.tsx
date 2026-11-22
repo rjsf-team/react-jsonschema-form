@@ -1599,6 +1599,72 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onSubmit, { choice: 'b' }, true);
     });
 
+    it('mounts a required yes/no select empty, and reports it as missing on submit until one is picked', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['agree'],
+        properties: {
+          agree: {
+            type: 'boolean',
+            title: 'Agree',
+            oneOf: [
+              { const: true, title: 'Yes' },
+              { const: false, title: 'No' },
+            ],
+          },
+        },
+      };
+      // The browser's own constraint validation is turned off, since it would block the submit of an empty required
+      // select before the form validates it
+      const { node, onSubmit, onError, getFormData } = createFormComponent({ schema, noHtml5Validate: true });
+      const select = elementOf(node, '#root_agree');
+
+      expect(select).toHaveValue('');
+      expect(getFormData()).toEqual({});
+
+      await submitForm(node, user);
+
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(fieldErrorsById(node)).toEqual({ root_agree: ["must have required property 'Agree'"] });
+
+      await user.selectOptions(select, 'No');
+      await submitForm(node, user);
+
+      expectToHaveBeenCalledWithFormData(onSubmit, { agree: false }, true);
+    });
+
+    it.each([
+      ['an empty field', {}],
+      ['a field holding the value the list drops', { choice: 'b' }],
+    ])('starts %s on the one value a schema change narrows the list to', (_, initialFormData) => {
+      const schemaOf = (oneOf: RJSFSchema[]): RJSFSchema => ({
+        type: 'object',
+        properties: { choice: { type: 'string', title: 'Choice', oneOf } },
+      });
+      const both = [
+        { const: 'a', title: 'First' },
+        { const: 'b', title: 'Second' },
+      ];
+      const { getFormData, rerender } = createFormComponent({ schema: schemaOf(both), initialFormData });
+      expect(getFormData()).toEqual(initialFormData);
+
+      rerender({ schema: schemaOf(both.slice(0, 1)), initialFormData });
+
+      expect(getFormData()).toEqual({ choice: 'a' });
+    });
+
+    it('starts a field whose enum lists one value on that value, as a const', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { kind: { type: 'string', enum: ['a'] }, agree: { type: 'boolean', enum: [true] } },
+        required: ['agree'],
+      };
+      const { getFormData } = createFormComponent({ schema });
+
+      expect(getFormData()).toEqual({ kind: 'a', agree: true });
+    });
+
     describe('inside the option a field shows', () => {
       const schema: RJSFSchema = {
         type: 'object',
