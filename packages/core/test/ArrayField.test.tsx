@@ -2707,6 +2707,27 @@ describe('ArrayField', () => {
   });
 
   describe('Custom Widget', () => {
+    it('includes the field path when an array widget cannot be resolved', () => {
+      const colors: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['red', 'blue'] }, uniqueItems: true };
+
+      expect(() =>
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              palette: {
+                type: 'object',
+                properties: { primary: colors, secondary: colors },
+              },
+            },
+          },
+          uiSchema: { palette: { secondary: { 'ui:widget': 'radio' } } },
+        }),
+      ).toThrow(
+        /No widget 'radio' for type 'array' in schema: .* at field "root_palette_secondary" \(palette\.secondary\)$/,
+      );
+    });
+
     it('if it does not contain enums or uniqueItems=true, it should still render the custom widget.', () => {
       const schema: RJSFSchema = {
         type: 'array',
