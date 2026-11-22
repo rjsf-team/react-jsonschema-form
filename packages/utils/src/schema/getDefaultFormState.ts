@@ -4552,13 +4552,16 @@ function snapshotFrom(data: unknown, previous: unknown): unknown {
     return data;
   }
   if (data instanceof Date) {
-    return previous instanceof Date && previous.getTime() === data.getTime() ? previous : new Date(data.getTime());
+    // By `Object.is()`, as an invalid `Date` holds `NaN`
+    return previous instanceof Date && Object.is(previous.getTime(), data.getTime())
+      ? previous
+      : new Date(data.getTime());
   }
   if (Array.isArray(data)) {
-    const held = Array.isArray(previous) && previous.length === data.length ? previous : undefined;
+    const held = Array.isArray(previous) ? previous : undefined;
     // Made at the first member `previous` doesn't hold, so an unchanged array costs no copy. Read index by index, as
     // a hole reads as `undefined`
-    let copy = held ? undefined : new Array<unknown>(data.length);
+    let copy = held?.length === data.length ? undefined : new Array<unknown>(data.length);
     for (let index = 0; index < data.length; index++) {
       const member = snapshotFrom(data[index], held?.[index]);
       if (member === OPAQUE) {
@@ -4578,8 +4581,8 @@ function snapshotFrom(data: unknown, previous: unknown): unknown {
     return OPAQUE;
   }
   const keys = Object.keys(data);
-  const held = isPlainObject(previous) && Object.keys(previous).length === keys.length ? previous : undefined;
-  let copy: GenericObjectType | undefined = held ? undefined : {};
+  const held = isPlainObject(previous) ? previous : undefined;
+  let copy: GenericObjectType | undefined = held && Object.keys(held).length === keys.length ? undefined : {};
   for (const [index, key] of keys.entries()) {
     const holdsKey = held !== undefined && Object.hasOwn(held, key);
     const member = snapshotFrom(data[key], holdsKey ? held[key] : undefined);
