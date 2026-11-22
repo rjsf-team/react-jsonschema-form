@@ -4533,6 +4533,37 @@ function previousSnapshotOf(data: unknown, walked: WeakSet<object>): unknown {
     : Object.fromEntries(Object.entries(data).map(([key, entry]) => [key, previousSnapshotOf(entry, walked)]));
 }
 
+/** Whether `data` holds what the snapshot `previous` does, so that `replaceEqualDeep()` would hand `previous` back for a
+ * copy of `data`: arrays and plain objects member by member, a `Date` by its time and anything else by identity. It
+ * copies nothing, which spares the copy of each unchanged row of a long list on every edit (#3183). Form data holding
+ * itself is no concern here: the fold recurses through it without end before any snapshot is asked for
+ *
+ * @param data - The caller's data
+ * @param previous - The snapshot last taken of it
+ * @returns - Whether `previous` stands for `data` as it is
+ */
+function holdsSnapshot(data: unknown, previous: unknown): boolean {
+  if (data instanceof Date) {
+    return previous instanceof Date && previous.getTime() === data.getTime();
+  }
+  if (Array.isArray(data)) {
+    return (
+      Array.isArray(previous) &&
+      previous.length === data.length &&
+      data.every((member: unknown, index) => holdsSnapshot(member, previous[index]))
+    );
+  }
+  if (!isPlainObject(data)) {
+    return Object.is(data, previous);
+  }
+  const keys = Object.keys(data);
+  return (
+    isPlainObject(previous) &&
+    keys.length === Object.keys(previous).length &&
+    keys.every((key) => Object.hasOwn(previous, key) && holdsSnapshot(data[key], previous[key]))
+  );
+}
+
 /** Returns the snapshot of the object `data` of the call under way: a copy of it the fold owns, which shares every
  * subtree equal to the snapshot last taken of it, or of the state a call handed back for it, see
  * `previousSnapshotOf()`. A
@@ -4546,7 +4577,9 @@ function snapshotOf(data: object): object | undefined {
   }
   let snapshot = callSnapshots.get(data);
   if (snapshot === undefined) {
-    snapshot = replaceEqualDeep(previousSnapshotOf(data, new WeakSet()), ownValue(data));
+    const previous = previousSnapshotOf(data, new WeakSet());
+    snapshot =
+      isObjectData(previous) && holdsSnapshot(data, previous) ? previous : replaceEqualDeep(previous, ownValue(data));
     pairSnapshots(data, snapshot, callSnapshots);
   }
   return snapshot;
