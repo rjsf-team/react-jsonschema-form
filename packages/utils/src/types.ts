@@ -195,9 +195,7 @@ export interface DefaultFormStateBehavior {
   nestedDefaultsPrecedence?: 'descendantWins' | 'ancestorWins';
   /** Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default`
    * of its own, is populated with `false`, defaulting to `populateFalse`.
-   * - `populateFalse`: A required boolean with no `default` is set to `false`, unless it lists its values, as an
-   *        `enum` or as a `oneOf`/`anyOf` of several const values: that one is left unset, since a list of several
-   *        renders as a select, which can show that it is unanswered, and an `enum` of one value may not list `false`
+   * - `populateFalse`: A required boolean with no `default` is set to `false`
    * - `skip`: No value is synthesized; the property stays `undefined` until the user answers it, so `required` remains
    *        a validation concern
    */

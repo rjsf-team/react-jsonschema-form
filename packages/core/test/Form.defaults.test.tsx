@@ -1599,39 +1599,46 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onSubmit, { choice: 'b' }, true);
     });
 
-    it('mounts a required yes/no select empty, and reports it as missing on submit until one is picked', async () => {
+    it('mounts a required yes/no checkbox unticked, holding false, where it mounted ticked', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         required: ['agree'],
-        properties: {
-          agree: {
-            type: 'boolean',
-            title: 'Agree',
-            oneOf: [
-              { const: true, title: 'Yes' },
-              { const: false, title: 'No' },
-            ],
-          },
-        },
+        properties: { agree: { type: 'boolean', title: 'Agree', oneOf: [{ const: true }, { const: false }] } },
       };
-      // The browser's own constraint validation is turned off, since it would block the submit of an empty required
-      // select before the form validates it
-      const { node, onSubmit, onError, getFormData } = createFormComponent({ schema, noHtml5Validate: true });
-      const select = elementOf(node, '#root_agree');
+      const { node, onSubmit, getFormData } = createFormComponent({ schema });
+      const checkbox = elementOf(node, '#root_agree');
 
-      expect(select).toHaveValue('');
-      expect(getFormData()).toEqual({});
+      expect(checkbox).toHaveAttribute('type', 'checkbox');
+      expect(checkbox).not.toBeChecked();
+      expect(getFormData()).toEqual({ agree: false });
 
-      await submitForm(node, user);
-
-      expect(onSubmit).not.toHaveBeenCalled();
-      expect(onError).toHaveBeenCalledTimes(1);
-      expect(fieldErrorsById(node)).toEqual({ root_agree: ["must have required property 'Agree'"] });
-
-      await user.selectOptions(select, 'No');
       await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { agree: false }, true);
+    });
+
+    it('mounts a yes/no whose constants have titles, a select, on No where required and empty where optional', () => {
+      const agree: RJSFSchema = {
+        type: 'boolean',
+        title: 'Agree',
+        oneOf: [
+          { const: true, title: 'Yes' },
+          { const: false, title: 'No' },
+        ],
+      };
+      const mounted = (required: string[]) => {
+        const { node, getFormData } = createFormComponent({
+          schema: { type: 'object', required, properties: { agree } },
+        });
+        const select = elementOf(node, '#root_agree');
+        if (!(select instanceof HTMLSelectElement)) {
+          throw new Error('#root_agree is no select');
+        }
+        return { shown: getSelectedOptionValue(select), data: getFormData() };
+      };
+
+      expect(mounted(['agree'])).toEqual({ shown: 'No', data: { agree: false } });
+      expect(mounted([])).toEqual({ shown: '', data: {} });
     });
 
     it.each([

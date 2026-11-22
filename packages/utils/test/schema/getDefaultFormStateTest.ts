@@ -2276,13 +2276,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({});
         });
 
-        it('sets no false for a select over a nullable boolean, which can show no answer (#5944)', () => {
+        it('sets false for a select over a nullable boolean', () => {
           const schema: RJSFSchema = {
             type: 'object',
             properties: { agree: { type: ['null', 'boolean'], enum: [null, true, false] } },
             required: ['agree'],
           };
-          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({});
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+            agree: false,
+          });
         });
 
         it('sets false for a type list whose checkbox widget renders its boolean type', () => {
@@ -11733,40 +11735,35 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         );
       });
     });
-    describe('a required boolean offering a list of values (#5944)', () => {
-      const fill = (b: RJSFSchema, constAsDefaults?: DefaultFormStateBehavior['constAsDefaults']) =>
+    describe('a boolean offering a list of values (#5944)', () => {
+      const fill = (b: RJSFSchema, required: boolean, constAsDefaults?: DefaultFormStateBehavior['constAsDefaults']) =>
         getDefaultFormState(
           { validator: testValidator, defaultFormStateBehavior: constAsDefaults && { constAsDefaults } },
-          { schema: { type: 'object', required: ['b'], properties: { b } } },
+          { schema: { type: 'object', required: required ? ['b'] : [], properties: { b } } },
         );
-      const choices: [string, RJSFSchema][] = [
+      const lists: [string, RJSFSchema][] = [
         ['a oneOf', { type: 'boolean', oneOf: [{ const: true }, { const: false }] }],
         ['an anyOf', { type: 'boolean', anyOf: [{ const: true }, { const: false }] }],
         ['an enum', { type: 'boolean', enum: [true, false] }],
-        ['a oneOf an allOf brings in', { type: 'boolean', allOf: [{ oneOf: [{ const: true }, { const: false }] }] }],
+        ['an enum of one value', { type: 'boolean', enum: [true] }],
       ];
-      it.each(choices)('starts empty for %s, which can show no answer', (_, b) => {
-        expect(fill(b)).toEqual({});
-        expect(fill(b, 'skipOneOf')).toEqual({});
-        expect(fill(b, 'never')).toEqual({});
+      it.each(lists)('starts a required one offering %s at false, as a plain required boolean', (_, b) => {
+        expect(fill(b, true)).toEqual({ b: false });
+        expect(fill({ type: 'boolean' }, true)).toEqual({ b: false });
       });
-      it('still starts a plain boolean, a checkbox, at false', () => {
-        expect(fill({ type: 'boolean' })).toEqual({ b: false });
-        expect(fill({ type: 'boolean', enum: [] })).toEqual({ b: false });
+      it.each(lists)('leaves an optional one offering %s empty', (_, b) => {
+        expect(fill(b, false)).toEqual({});
       });
       it("starts on the first constant of a oneOf or anyOf under an explicit 'always'", () => {
-        expect(fill(choices[0][1], 'always')).toEqual({ b: true });
-        expect(fill(choices[1][1], 'always')).toEqual({ b: true });
-        expect(fill(choices[2][1], 'always')).toEqual({});
-      });
-      it('starts on the value its default names', () => {
-        for (const [, b] of choices) {
-          expect(fill({ ...b, default: true })).toEqual({ b: true });
+        for (const required of [true, false]) {
+          expect(fill(lists[0][1], required, 'always')).toEqual({ b: true });
+          expect(fill(lists[1][1], required, 'always')).toEqual({ b: true });
         }
       });
-      it('starts empty for an enum of one value, rather than at a false the enum rejects', () => {
-        expect(fill({ type: 'boolean', enum: [true] })).toEqual({});
-        expect(fill({ type: 'boolean', enum: [false] })).toEqual({});
+      it('starts on the value its default names', () => {
+        for (const [, b] of lists) {
+          expect(fill({ ...b, default: true }, true)).toEqual({ b: true });
+        }
       });
     });
     describe('a list of one constant leaves nothing to choose, so it fills (#5944)', () => {

@@ -1085,7 +1085,7 @@ describe('BooleanField', () => {
       expect(texts(node)).toEqual(['', 'Yes', 'No']);
     });
 
-    it('should show no option as selected, the constant options being a choice left unpicked (#5944)', () => {
+    it('should show the default the constant options give as selected', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'object',
@@ -1104,7 +1104,7 @@ describe('BooleanField', () => {
         uiSchema: { a: { 'ui:widget': 'select' } },
       });
 
-      expect(node.querySelector<HTMLSelectElement>('select#root_a')).toHaveValue('');
+      expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('select#root_a')!)).toBe('No way');
     });
 
     it('should keep a chosen option the enum excludes, and fail it on submit', async () => {

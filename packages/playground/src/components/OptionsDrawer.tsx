@@ -128,8 +128,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
         },
         constAsDefaults: {
           type: 'string',
-          title: 'const as default behavior',
-          default: 'always',
+          title: 'const as default behavior (unset by default)',
           oneOf: [
             {
               type: 'string',

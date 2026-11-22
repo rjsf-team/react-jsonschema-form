@@ -1648,8 +1648,6 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
   let isTupleBuilt = false;
-  // An `enum` lists the field's values for the user to pick from, however many it lists
-  let offersChoice = Boolean(schema.enum?.length);
   // A collapsed field keeps its own keywords, but selecting an option would plan it again past the collapse. A list the
   // field has chosen from already is reached again only through an option leading back to it, which ends the choice
   const offered = view.collapsed ? undefined : getXxxOfOptions<S>(schema);
@@ -1749,7 +1747,6 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         props,
       );
       isWholeValue = choice.isWholeValue;
-      offersChoice ||= choice.offersChoice;
       // A list of constants holds one of them whole, as an `enum` does, so a default naming none of them is the field's
       // value as it stands, as an `enum`'s is, rather than giving way to the constant of the option it picked. It is
       // the value out-of-list data is replaced by below, unless the constant wins over both under `constAsDefaults:
@@ -1793,8 +1790,6 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             parentConst,
             inheritsDeclared: reachesDefault,
             onHandDown: optionHandDown,
-            // The constant of a choice the user has yet to make is no required boolean to start at `false`
-            required: choice.offersChoice ? false : props.required,
           },
           initialValue,
           adopted?.choice,
@@ -1912,7 +1907,6 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     fieldConst,
     givenConst,
     reachesDefault,
-    offersChoice,
   );
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
@@ -2091,7 +2085,6 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   index: number;
   isWholeValue: boolean;
   offersConstants: boolean;
-  offersChoice: boolean;
   rendersAsSelect: boolean;
   wholeOptions: S[] | undefined;
 } {
@@ -2119,8 +2112,10 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // A list of several constants is a choice the user has yet to make, as an `enum` is, so none of them is the field's
   // default unless `constAsDefaults` is explicitly `'always'`. A list of one leaves nothing to choose, so its constant
   // fills as a `const` does
-  const offersChoice = isConstantOptionList<S>(constants) && constants.length > 1;
-  const leavesConstantsUnpicked = offersChoice && defaultFormStateBehavior?.constAsDefaults !== 'always';
+  const leavesConstantsUnpicked =
+    isConstantOptionList<S>(constants) &&
+    constants.length > 1 &&
+    defaultFormStateBehavior?.constAsDefaults !== 'always';
   // The option is folded with `constAsDefaults: 'never'`, which takes none of its constants
   const optionContext: SchemaContext<S, F> =
     skipsOneOfConstants || leavesConstantsUnpicked
@@ -2170,7 +2165,6 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     index,
     isWholeValue,
     offersConstants,
-    offersChoice,
     rendersAsSelect: rendersOptionsAsSelect<S>(select, constants),
     wholeOptions,
   };
@@ -3641,7 +3635,6 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
   fieldConst?: FieldConst<S>,
   givenConst?: unknown,
   reachesDefault = false,
-  offersChoice = false,
 ): unknown {
   switch (type) {
     // A value already picked is kept as it is, since the form data is merged over the defaults key by key, which would
@@ -3662,15 +3655,12 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // present in the submitted data, and false is the natural zero-value.
       // `requiredBooleanDefault: 'skip'` opts out for forms that treat an
       // unanswered boolean as a distinct state and rely on `required` to flag it.
-      // A boolean offering a list of values renders as a select, which shows an unanswered field as a checkbox can't,
-      // so it is left for the user to answer
       const requiredBooleanDefault = context.defaultFormStateBehavior?.requiredBooleanDefault;
       if (
         requiredBooleanDefault !== 'skip' &&
         !(SKIPS_DEFAULTS in context) &&
         props.required &&
-        defaults === undefined &&
-        !offersChoice
+        defaults === undefined
       ) {
         return false;
       }
