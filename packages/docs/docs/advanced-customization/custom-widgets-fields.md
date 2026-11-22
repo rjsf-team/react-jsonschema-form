@@ -358,7 +358,7 @@ class GeoPosition extends Component<FieldProps<GeoData>, GeoData> {
     return (event: ChangeEvent<HTMLInputElement>) => {
       this.setState(
         {
-          [name]: parseFloat(event.target.value),
+          [name]: event.target.value === '' ? undefined : parseFloat(event.target.value),
         },
         () => this.props.onChange(this.state, this.props.fieldPath),
       );
