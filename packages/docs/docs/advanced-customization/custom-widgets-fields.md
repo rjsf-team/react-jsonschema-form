@@ -330,7 +330,7 @@ For example, let's create and register a dumb `geo` component handling a _latitu
 
 ```tsx
 import { type ChangeEvent, Component } from 'react';
-import { RJSFSchema, UiSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -369,8 +369,8 @@ class GeoPosition extends Component<FieldProps<GeoData>, GeoData> {
     const { lat, lon } = this.state;
     return (
       <div>
-        <input type='number' value={lat} onChange={this.onChange('lat')} />
-        <input type='number' value={lon} onChange={this.onChange('lon')} />
+        <input type='number' value={lat ?? ''} onChange={this.onChange('lat')} />
+        <input type='number' value={lon ?? ''} onChange={this.onChange('lon')} />
       </div>
     );
   }
@@ -390,6 +390,9 @@ render(
   document.getElementById('app'),
 );
 ```
+
+`GeoPosition` copies `formData` into its state once, in its constructor, so it keeps showing the old values after a reset or when the parent sends new `formData`.
+A field that has to follow such changes syncs its state in `componentDidUpdate`.
 
 > Note: Registered fields can be reused across the entire schema.
 
@@ -447,10 +450,10 @@ A custom `AnyOfField` or `OneOfField` reads and writes it with `useOptionSelecti
 
 ```tsx
 import { useOptionSelection } from '@rjsf/core';
-import { FieldProps, getDiscriminatorFieldFromSchema, RJSFSchema } from '@rjsf/utils';
+import { type FieldProps, getDiscriminatorFieldFromSchema, type RJSFSchema } from '@rjsf/utils';
 
 function MyAnyOfField(props: FieldProps & { options: RJSFSchema[] }) {
-  const { fieldPath, formData, options, registry, schema } = props;
+  const { fieldPath, formData, onChange, options, registry, schema } = props;
   const { selectedOption, selectOption } = useOptionSelection(
     registry,
     fieldPath,
@@ -534,7 +537,7 @@ If you want to customize how the individual items for an array are rendered, pro
 An item's move, copy and remove buttons follow how `SchemaField` reads `ui:disabled`, `ui:readonly` and `readOnly`, so a field that treats them differently leaves its inputs and those buttons out of step.
 
 ```tsx
-import { RJSFSchema, UiSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
+import type { RJSFSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const CustomArraySchemaField = function (props: FieldProps) {
@@ -608,7 +611,7 @@ import checkBadData from './checkBadData';
 function MyObjectField<T = unknown>(props: FieldProps<T>) {
   const { onChange } = props;
   const onChangeHandler = useCallback(
-    (newFormData: T | undefined, path: FieldPath, es?: ErrorSchema<T>, id?: string) => {
+    (newFormData: unknown, path: FieldPath, es?: ErrorSchema, id?: string) => {
       let data = newFormData;
       let error = es;
       if (checkBadData(newFormData)) {
