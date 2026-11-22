@@ -21,6 +21,7 @@ import type {
 import {
   ANY_OF_KEY,
   besideOptionsId,
+  booleanOptionsRenderAsSelect,
   expandRefCycle,
   fieldPathToList,
   getDeprecatedHandling,
@@ -34,12 +35,12 @@ import {
   getRenderedOptionSchema,
   getSchemaOwnTypes,
   getSchemaType,
-  getSelectFieldType,
   getTemplates,
   getUiOptions,
   getUnionTypes,
   getXxxOfKey,
   GUESSED_TYPE_FLAG,
+  hasOptionLabels,
   hasOwnContentBesideOptions,
   hasSchemaMarker,
   hasWidget,
@@ -58,7 +59,6 @@ import {
   resolveWidget,
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
-  toConstant,
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
@@ -67,7 +67,6 @@ import {
 import type { JSONSchema7TypeName } from 'json-schema';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
-import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useUiState from '../../hooks/useUiState.ts';
@@ -130,22 +129,15 @@ function inferSelectWidget<
   F extends FormContextType = FormContextType,
 >(selectSchemaInfo: SelectSchemaInfo<S>, uiSchema: UiSchema<T, S, F>): string | undefined {
   const { schema, hasInferredType, xxxOfKey: keyword, constantOptions: options } = selectSchemaInfo;
-  if (!keyword || !options || getSchemaType<S>(schema) !== 'boolean') {
+  if (!keyword || !options) {
     return undefined;
   }
-  // An inferred boolean is a select, since nothing asked for a checkbox. A declared one keeps its checkbox unless a
-  // label would be dropped, since a single option is how a checkbox that must be checked is spelled, and unlabelled
-  // `true`/`false` options are exactly what a checkbox shows. A `null` option, which a nullable boolean can offer, is
-  // one a checkbox has no state for, so it gets the select too. So does a type list naming `boolean` first among other
-  // non-null types: `getFieldComponent()` renders it through StringField, and without a widget `getDisplayLabel()`
-  // would still hide the label the way it does for a checkbox
-  const needsSelect =
-    hasInferredType ||
-    (options.length > 1 &&
-      (hasOptionLabels<T, S, F>(options, keyword, uiSchema) ||
-        options.some((option) => toConstant<S>(option) === null) ||
-        (Array.isArray(schema.type) && getSelectFieldType(schema.type) !== 'boolean')));
-  return needsSelect ? 'select' : undefined;
+  // A type list naming `boolean` first among other non-null types is among them: `getFieldComponent()` renders it
+  // through StringField, and without a widget `getDisplayLabel()` would still hide the label the way it does for a
+  // checkbox
+  return booleanOptionsRenderAsSelect<T, S, F>(schema, keyword, options, uiSchema, hasInferredType)
+    ? 'select'
+    : undefined;
 }
 
 /** Whether a `oneOf` that labels its options sits behind a non-empty `anyOf`, which `getXxxOfKey()`, and so every reader of

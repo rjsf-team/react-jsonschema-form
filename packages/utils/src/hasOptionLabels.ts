@@ -1,5 +1,7 @@
-import type { ANY_OF_KEY, FormContextType, ONE_OF_KEY, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { getUiOptions, isObject } from '@rjsf/utils';
+import type { ANY_OF_KEY, ONE_OF_KEY } from './constants.ts';
+import getUiOptions from './getUiOptions.ts';
+import isObject from './isObject.ts';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Whether any option of an `anyOf`/`oneOf` list is labelled by something other than its value: its own `title`, or the
  * `ui:title` of the matching `uiSchema.anyOf`/`uiSchema.oneOf` entry. `ui:enumNames` names only `enum` values, so it

@@ -11736,32 +11736,65 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
     describe('a boolean offering a list of values (#5944)', () => {
-      const fill = (b: RJSFSchema, required: boolean, constAsDefaults?: DefaultFormStateBehavior['constAsDefaults']) =>
+      const fill = (
+        b: RJSFSchema,
+        required: boolean,
+        constAsDefaults?: DefaultFormStateBehavior['constAsDefaults'],
+        uiSchema?: UiSchema,
+      ) =>
         getDefaultFormState(
           { validator: testValidator, defaultFormStateBehavior: constAsDefaults && { constAsDefaults } },
-          { schema: { type: 'object', required: required ? ['b'] : [], properties: { b } } },
+          { schema: { type: 'object', required: required ? ['b'] : [], properties: { b } }, uiSchema },
         );
-      const lists: [string, RJSFSchema][] = [
-        ['a oneOf', { type: 'boolean', oneOf: [{ const: true }, { const: false }] }],
-        ['an anyOf', { type: 'boolean', anyOf: [{ const: true }, { const: false }] }],
+      const yesNo: RJSFSchema[] = [
+        { const: true, title: 'Yes' },
+        { const: false, title: 'No' },
+      ];
+      const untitled: RJSFSchema[] = [{ const: true }, { const: false }];
+      // Each renders as a checkbox, which can show no unanswered field
+      const checkboxes: [string, RJSFSchema][] = [
+        ['an untitled oneOf', { type: 'boolean', oneOf: untitled }],
+        ['an untitled anyOf', { type: 'boolean', anyOf: untitled }],
         ['an enum', { type: 'boolean', enum: [true, false] }],
         ['an enum of one value', { type: 'boolean', enum: [true] }],
+        ['a nullable enum', { type: ['null', 'boolean'], enum: [null, true, false] }],
       ];
-      it.each(lists)('starts a required one offering %s at false, as a plain required boolean', (_, b) => {
+      // Each renders as a select, whose empty option shows an unanswered field
+      const selects: [string, RJSFSchema][] = [
+        ['a titled oneOf', { type: 'boolean', oneOf: yesNo }],
+        ['a titled anyOf', { type: 'boolean', anyOf: yesNo }],
+        ['an untyped oneOf', { oneOf: untitled }],
+        ['an untyped anyOf', { anyOf: untitled }],
+        ['a oneOf offering null', { type: ['boolean', 'null'], oneOf: [...untitled, { const: null }] }],
+        ['a titled oneOf an allOf brings in', { type: 'boolean', allOf: [{ oneOf: yesNo }] }],
+      ];
+      it.each(checkboxes)('starts a required one offering %s at false, as a plain required boolean', (_, b) => {
         expect(fill(b, true)).toEqual({ b: false });
         expect(fill({ type: 'boolean' }, true)).toEqual({ b: false });
       });
-      it.each(lists)('leaves an optional one offering %s empty', (_, b) => {
+      it.each(selects)('leaves a required one offering %s empty, for its select to show as unanswered', (_, b) => {
+        expect(fill(b, true)).toEqual({});
+        expect(fill(b, true, 'skipOneOf')).toEqual({});
+        expect(fill(b, true, 'never')).toEqual({});
+      });
+      it('leaves a required one empty where the uiSchema titles its options, which makes it a select', () => {
+        const b: RJSFSchema = { type: 'boolean', oneOf: untitled };
+        expect(fill(b, true, undefined, { b: { oneOf: [{ 'ui:title': 'Yes' }, { 'ui:title': 'No' }] } })).toEqual({});
+        expect(fill(b, true, undefined, { b: { anyOf: [{ 'ui:title': 'Yes' }] } })).toEqual({ b: false });
+      });
+      it.each([...checkboxes, ...selects])('leaves an optional one offering %s empty', (_, b) => {
         expect(fill(b, false)).toEqual({});
       });
       it("starts on the first constant of a oneOf or anyOf under an explicit 'always'", () => {
         for (const required of [true, false]) {
-          expect(fill(lists[0][1], required, 'always')).toEqual({ b: true });
-          expect(fill(lists[1][1], required, 'always')).toEqual({ b: true });
+          expect(fill(checkboxes[0][1], required, 'always')).toEqual({ b: true });
+          expect(fill(checkboxes[1][1], required, 'always')).toEqual({ b: true });
+          expect(fill(selects[0][1], required, 'always')).toEqual({ b: true });
+          expect(fill(selects[2][1], required, 'always')).toEqual({ b: true });
         }
       });
       it('starts on the value its default names', () => {
-        for (const [, b] of lists) {
+        for (const [, b] of [...checkboxes, ...selects]) {
           expect(fill({ ...b, default: true }, true)).toEqual({ b: true });
         }
       });

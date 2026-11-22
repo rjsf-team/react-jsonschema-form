@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -1617,28 +1617,91 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onSubmit, { agree: false }, true);
     });
 
-    it('mounts a yes/no whose constants have titles, a select, on No where required and empty where optional', () => {
-      const agree: RJSFSchema = {
-        type: 'boolean',
-        title: 'Agree',
-        oneOf: [
-          { const: true, title: 'Yes' },
-          { const: false, title: 'No' },
-        ],
-      };
-      const mounted = (required: string[]) => {
-        const { node, getFormData } = createFormComponent({
-          schema: { type: 'object', required, properties: { agree } },
-        });
+    it.each<[string, RJSFSchema]>([
+      [
+        'whose constants have titles',
+        {
+          type: 'boolean',
+          title: 'Agree',
+          oneOf: [
+            { const: true, title: 'Yes' },
+            { const: false, title: 'No' },
+          ],
+        },
+      ],
+      ['with no type', { title: 'Agree', oneOf: [{ const: true }, { const: false }] }],
+    ])(
+      'mounts a required yes/no %s, a select, empty, and reports it as missing on submit until one is picked',
+      async (_, agree) => {
+        const schema: RJSFSchema = { type: 'object', required: ['agree'], properties: { agree } };
+        // The browser's own constraint validation is turned off, since it would block the submit of an empty required
+        // select before the form validates it
+        const { node, onSubmit, onError, getFormData } = createFormComponent({ schema, noHtml5Validate: true });
         const select = elementOf(node, '#root_agree');
-        if (!(select instanceof HTMLSelectElement)) {
-          throw new Error('#root_agree is no select');
-        }
-        return { shown: getSelectedOptionValue(select), data: getFormData() };
-      };
 
-      expect(mounted(['agree'])).toEqual({ shown: 'No', data: { agree: false } });
-      expect(mounted([])).toEqual({ shown: '', data: {} });
+        expect(select).toBeInstanceOf(HTMLSelectElement);
+        expect(select).toHaveValue('');
+        expect(getFormData()).toEqual({});
+
+        await submitForm(node, user);
+
+        expect(onSubmit).not.toHaveBeenCalled();
+        expect(onError).toHaveBeenCalledTimes(1);
+        expect(fieldErrorsById(node)).toEqual({ root_agree: ["must have required property 'Agree'"] });
+
+        await user.selectOptions(select, [...select.querySelectorAll('option')][2]);
+        await submitForm(node, user);
+
+        expectToHaveBeenCalledWithFormData(onSubmit, { agree: false }, true);
+      },
+    );
+
+    describe('a required boolean with constant options starts at false only where it renders as a checkbox', () => {
+      const untitled: RJSFSchema[] = [{ const: true }, { const: false }];
+      const titled: RJSFSchema[] = [
+        { const: true, title: 'Yes' },
+        { const: false, title: 'No' },
+      ];
+      it.each<[string, RJSFSchema, UiSchema | undefined, 'SELECT' | 'INPUT']>([
+        ['a plain boolean', { type: 'boolean' }, undefined, 'INPUT'],
+        ['an untitled oneOf', { type: 'boolean', oneOf: untitled }, undefined, 'INPUT'],
+        ['an untitled anyOf', { type: 'boolean', anyOf: untitled }, undefined, 'INPUT'],
+        ['an enum', { type: 'boolean', enum: [true, false] }, undefined, 'INPUT'],
+        ['an enum of one value', { type: 'boolean', enum: [true] }, undefined, 'INPUT'],
+        ['a nullable enum', { type: ['null', 'boolean'], enum: [null, true, false] }, undefined, 'INPUT'],
+        ['a nullable oneOf offering no null', { type: ['boolean', 'null'], oneOf: untitled }, undefined, 'INPUT'],
+        ['a titled oneOf', { type: 'boolean', oneOf: titled }, undefined, 'SELECT'],
+        ['a titled anyOf', { type: 'boolean', anyOf: titled }, undefined, 'SELECT'],
+        [
+          'a oneOf the uiSchema titles',
+          { type: 'boolean', oneOf: untitled },
+          { oneOf: [{ 'ui:title': 'Yes' }, { 'ui:title': 'No' }] },
+          'SELECT',
+        ],
+        ['an untyped oneOf', { oneOf: untitled }, undefined, 'SELECT'],
+        ['an untyped anyOf', { anyOf: untitled }, undefined, 'SELECT'],
+        [
+          'a oneOf offering null',
+          { type: ['boolean', 'null'], oneOf: [...untitled, { const: null }] },
+          undefined,
+          'SELECT',
+        ],
+        ['a titled oneOf an allOf brings in', { type: 'boolean', allOf: [{ oneOf: titled }] }, undefined, 'SELECT'],
+      ])('%s', (_, v, uiSchema, tag) => {
+        const { node, getFormData } = createFormComponent({
+          schema: { type: 'object', required: ['v'], properties: { v } },
+          uiSchema: uiSchema && { v: uiSchema },
+        });
+        const control = elementOf(node, '#root_v');
+
+        expect(control.tagName).toBe(tag);
+        expect(getFormData()).toEqual(tag === 'SELECT' ? {} : { v: false });
+        if (tag === 'SELECT') {
+          expect(control).toHaveValue('');
+        } else {
+          expect(control).not.toBeChecked();
+        }
+      });
     });
 
     it.each([

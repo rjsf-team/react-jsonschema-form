@@ -4,6 +4,7 @@ import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
 } from '../additionalPropertiesUtils.ts';
+import booleanOptionsRenderAsSelect from '../booleanOptionsRenderAsSelect.ts';
 import {
   ADDITIONAL_ITEMS_KEY,
   ADDITIONAL_PROPERTIES_KEY,
@@ -1790,6 +1791,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             parentConst,
             inheritsDeclared: reachesDefault,
             onHandDown: optionHandDown,
+            // A select shows a field nobody answered, as a checkbox can't, so the constant of a boolean it renders is
+            // no required boolean to start at `false`
+            required: choice.rendersBooleanSelect ? false : props.required,
           },
           initialValue,
           adopted?.choice,
@@ -2085,6 +2089,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   index: number;
   isWholeValue: boolean;
   offersConstants: boolean;
+  rendersBooleanSelect: boolean;
   rendersAsSelect: boolean;
   wholeOptions: S[] | undefined;
 } {
@@ -2097,7 +2102,8 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // taken whole
   const select = resolveDeclaredConstantOptions<S>(schema, () => view);
   const isWholeValue = isWholeValueSelect<S>(select);
-  const constants = getXxxOfOptions<S>(select)?.options;
+  const listed = getXxxOfOptions<S>(select);
+  const constants = listed?.options;
   const offersConstants = isConstantOptionList<S>(constants);
   const wholeOptions = isWholeValue && offersConstants ? constants : undefined;
   const picksWholeOption = wholeOptions !== undefined;
@@ -2165,6 +2171,10 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     index,
     isWholeValue,
     offersConstants,
+    rendersBooleanSelect:
+      listed !== undefined &&
+      isConstantOptionList<S>(constants) &&
+      booleanOptionsRenderAsSelect<T, S, F>(select, listed.key, constants, props.uiSchema),
     rendersAsSelect: rendersOptionsAsSelect<S>(select, constants),
     wholeOptions,
   };

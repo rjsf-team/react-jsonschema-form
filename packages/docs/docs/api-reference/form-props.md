@@ -405,7 +405,7 @@ render(
 
 Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default` of its own, is populated with `false`, defaulting to `populateFalse`.
 An explicit schema `default`, a parent default and an existing `formData` value always take precedence; this flag only decides what happens when none of them provides a value.
-A boolean whose `oneOf`/`anyOf` lists several constants is filled the same way, since [`constAsDefaults`](#constasdefaults) left unset picks none of them.
+A boolean whose `oneOf`/`anyOf` lists several constants is filled the same way where they render as a checkbox, since [`constAsDefaults`](#constasdefaults) left unset picks none of them. Where they render as a select, as [`booleanOptionsRenderAsSelect()`](./utility-functions.md#booleanoptionsrenderasselect) says, it is left unset whatever this flag is, since a select shows an unanswered field as a checkbox can't.
 
 | Flag Value      | Description                                                                                                                   |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
