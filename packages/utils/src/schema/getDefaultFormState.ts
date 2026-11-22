@@ -4533,48 +4533,79 @@ function previousSnapshotOf(data: unknown, walked: WeakSet<object>): unknown {
     : Object.fromEntries(Object.entries(data).map(([key, entry]) => [key, previousSnapshotOf(entry, walked)]));
 }
 
-/** Whether `data` holds what the snapshot `previous` does, so that `replaceEqualDeep()` would hand `previous` back for a
- * copy of `data`: arrays and plain objects member by member, a `Date` by its time and anything else by identity. It
- * copies nothing, which spares the copy of each unchanged row of a long list on every edit (#3183). Form data holding
- * itself is no concern here: the fold recurses through it without end before any snapshot is asked for
+/** Stands in the snapshot of data that holds an object no copy stands for, see `snapshotFrom()` */
+const OPAQUE = Symbol('opaque');
+
+/** Returns the snapshot of `data`: `previous`, the snapshot last taken of it, where that still holds what `data` does,
+ * and otherwise a copy of `data` that shares each member of `previous` still holding its own. So a long list is
+ * copied by the rows an edit changed, and one nothing changed is not copied at all (#3183). Arrays and plain objects
+ * are read member by member and a `Date` by its time, which the snapshot holds in a `Date` of its own. Any other
+ * object could be changed in place without a copy to show it, so data holding one has no snapshot: `OPAQUE`. Form data
+ * holding itself is no concern here, as the fold recurses through it without end before any snapshot is asked for
  *
  * @param data - The caller's data
- * @param previous - The snapshot last taken of it
- * @returns - Whether `previous` stands for `data` as it is
+ * @param previous - The snapshot last taken of it, if any
+ * @returns - The snapshot, or `OPAQUE`
  */
-function holdsSnapshot(data: unknown, previous: unknown): boolean {
+function snapshotFrom(data: unknown, previous: unknown): unknown {
+  if (typeof data !== 'object' || data === null) {
+    return data;
+  }
   if (data instanceof Date) {
-    return previous instanceof Date && previous.getTime() === data.getTime();
+    return previous instanceof Date && previous.getTime() === data.getTime() ? previous : new Date(data.getTime());
   }
   if (Array.isArray(data)) {
-    if (!Array.isArray(previous) || previous.length !== data.length) {
-      return false;
-    }
-    // Index by index rather than with `every()`, which skips a hole and so would miss an item deleted in place
+    const held = Array.isArray(previous) && previous.length === data.length ? previous : undefined;
+    // Made at the first member `previous` doesn't hold, so an unchanged array costs no copy. Read index by index, as
+    // a hole reads as `undefined`
+    let copy = held ? undefined : new Array<unknown>(data.length);
     for (let index = 0; index < data.length; index++) {
-      if (!holdsSnapshot(data[index], previous[index])) {
-        return false;
+      const member = snapshotFrom(data[index], held?.[index]);
+      if (member === OPAQUE) {
+        return OPAQUE;
+      }
+      if (held && copy === undefined && !Object.is(member, held[index])) {
+        copy = held.slice(0, index);
+        copy.length = data.length;
+      }
+      if (copy) {
+        copy[index] = member;
       }
     }
-    return true;
+    return copy ?? held;
   }
   if (!isPlainObject(data)) {
-    return Object.is(data, previous);
+    return OPAQUE;
   }
   const keys = Object.keys(data);
-  return (
-    isPlainObject(previous) &&
-    keys.length === Object.keys(previous).length &&
-    keys.every((key) => Object.hasOwn(previous, key) && holdsSnapshot(data[key], previous[key]))
-  );
+  const held = isPlainObject(previous) && Object.keys(previous).length === keys.length ? previous : undefined;
+  let copy: GenericObjectType | undefined = held ? undefined : {};
+  for (const [index, key] of keys.entries()) {
+    const holdsKey = held !== undefined && Object.hasOwn(held, key);
+    const member = snapshotFrom(data[key], holdsKey ? held[key] : undefined);
+    if (member === OPAQUE) {
+      return OPAQUE;
+    }
+    if (held && copy === undefined && !(holdsKey && Object.is(member, held[key]))) {
+      copy = {};
+      for (const earlier of keys.slice(0, index)) {
+        setOwn(copy, earlier, held[earlier]);
+      }
+    }
+    if (copy) {
+      setOwn(copy, key, member);
+    }
+  }
+  return copy ?? held;
 }
 
 /** Returns the snapshot of the object `data` of the call under way: a copy of it the fold owns, which shares every
  * subtree equal to the snapshot last taken of it, or of the state a call handed back for it, see
- * `previousSnapshotOf()`. A
- * match is keyed on the snapshot rather than on `data`, which the caller may change in place between calls, so an
- * object equal to one matched before is matched once. Only the object a match asks for is copied, with what it holds,
- * and the hint only says which snapshot to compare it with, so data changed in place gets a snapshot of its own
+ * `previousSnapshotOf()` and `snapshotFrom()`. A match is keyed on the snapshot rather than on `data`, which the caller
+ * may change in place between calls, so an object equal to one matched before is matched once. Only the object a match
+ * asks for is copied, with what it holds, and the hint only says which snapshot to compare it with, so data changed in
+ * place gets a snapshot of its own. None for data holding an object no copy stands for, which is then matched and
+ * folded on every call
  */
 function snapshotOf(data: object): object | undefined {
   if (callSnapshots === undefined) {
@@ -4582,9 +4613,11 @@ function snapshotOf(data: object): object | undefined {
   }
   let snapshot = callSnapshots.get(data);
   if (snapshot === undefined) {
-    const previous = previousSnapshotOf(data, new WeakSet());
-    snapshot =
-      isObjectData(previous) && holdsSnapshot(data, previous) ? previous : replaceEqualDeep(previous, ownValue(data));
+    const made = snapshotFrom(data, previousSnapshotOf(data, new WeakSet()));
+    if (typeof made !== 'object' || made === null) {
+      return undefined;
+    }
+    snapshot = made;
     pairSnapshots(data, snapshot, callSnapshots);
   }
   return snapshot;
