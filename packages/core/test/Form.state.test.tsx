@@ -450,16 +450,16 @@ describe('Form: a parent passing back a falsey formData from onChange', () => {
     return <Form onChange={handleChange} schema={schema} formData={formData} validator={validator} />;
   }
 
-  // An `undefined` passes nothing, which leaves the form its own data, the edit included
+  // An `undefined` passes nothing, which leaves the form its own data, the edit included, and warns of the change
   const cases = [
-    { falseyValue: 0, shown: '' },
-    { falseyValue: false, shown: '' },
-    { falseyValue: null, shown: '' },
-    { falseyValue: undefined, shown: 'a' },
-    { falseyValue: NaN, shown: '' },
+    { falseyValue: 0, shown: '', warned: 0 },
+    { falseyValue: false, shown: '', warned: 0 },
+    { falseyValue: null, shown: '', warned: 0 },
+    { falseyValue: undefined, shown: 'a', warned: 1 },
+    { falseyValue: NaN, shown: '', warned: 0 },
   ];
 
-  cases.forEach(({ falseyValue, shown }) => {
+  cases.forEach(({ falseyValue, shown, warned }) => {
     it(`reports the edit once and shows the ${String(falseyValue)} the parent passes back`, async () => {
       const onChange = vi.fn();
       const { node } = renderNode(TestForm, { falseyValue, onChange });
@@ -472,7 +472,7 @@ describe('Form: a parent passing back a falsey formData from onChange', () => {
 
       expect(node?.querySelector('#root_value')).toHaveValue(shown);
       expect(onChange).toHaveBeenCalledTimes(1);
-      expect(warnings.consoleSpy).not.toHaveBeenCalled();
+      expect(warnings.consoleSpy).toHaveBeenCalledTimes(warned);
     });
   });
 });

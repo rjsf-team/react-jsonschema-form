@@ -2427,6 +2427,33 @@ describe("the form's own development warnings", () => {
     ]);
   });
 
+  it.each([
+    ['is passed formData after none', undefined, { a: 'b' }, 'was passed after a render that passed none'],
+    ['is passed no formData after one', { a: 'a' }, undefined, 'became `undefined`'],
+  ])('warn once when a form %s, however often it changes again', (_, first, second, message) => {
+    const element = (formData: Data | undefined) => (
+      <Form<Data> schema={schema} validator={validator} formData={formData} />
+    );
+    const { rerender } = render(element(first));
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
+
+    rerender(element(second));
+    rerender(element(first));
+    rerender(element(second));
+
+    expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
+    expect(warnings.consoleSpy.mock.calls[0][0]).toContain(message);
+    expect(warnings.consoleSpy.mock.calls[0][0]).toContain('[form-data-ownership-changed]');
+  });
+
+  it('give no warning of a change when formData goes between null and a value', () => {
+    const { rerender } = render(<Form<Data | null> schema={schema} validator={validator} formData={null} />);
+
+    rerender(<Form<Data | null> schema={schema} validator={validator} formData={{ a: 'a' }} />);
+
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
+  });
+
   it('are given once for each form on the page, named by its id or else its idPrefix', () => {
     render(
       <>

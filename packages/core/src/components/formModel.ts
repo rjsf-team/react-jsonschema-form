@@ -263,6 +263,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // attachment, since a form first rendered inside a hidden `<Activity>` runs no layout Effect until it is shown
   let isDetached = true;
   let isBothSeedsWarned = false;
+  // Development only: whether the last commit passed `formData`, and whether the form has warned of a change in that
+  let wasFormDataPassed = initialProps.formData !== undefined;
+  let isOwnershipWarned = false;
   let isEmptyTransformWarned = false;
   // Development only, once per form: a handle call the form dropped because it was detached. A field's change, blur or
   // focus is dropped silently, since a widget flushing a draft from its Effect cleanup is expected to arrive then
@@ -1067,6 +1070,24 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         { id: 'form-data-both-seeds', dedupe: false },
       );
       isBothSeedsWarned = true;
+    },
+    /** Warns, once, that the form went from being passed `formData` to being passed none, or the reverse, as React
+     * warns of an input that changes between controlled and uncontrolled. Called after each commit, in development only
+     */
+    warnIfOwnershipChanged: (formData: T | undefined) => {
+      const isPassed = formData !== undefined;
+      if (isPassed === wasFormDataPassed) {
+        return;
+      }
+      wasFormDataPassed = isPassed;
+      if (isOwnershipWarned) {
+        return;
+      }
+      logOnce(
+        `${formLabel()}: \`formData\` ${isPassed ? 'was passed after a render that passed none, and replaced the data the form owned' : 'became `undefined`, so the form owns the data it has from here on'}. Pass it on every render, with \`null\` for no data, or pass \`initialFormData\` alone.`,
+        { id: 'form-data-ownership-changed', dedupe: false },
+      );
+      isOwnershipWarned = true;
     },
     handle,
     handleSubmit,

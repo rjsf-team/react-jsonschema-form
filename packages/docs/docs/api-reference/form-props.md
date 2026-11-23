@@ -563,7 +563,7 @@ So not storing an edit does not refuse it, and neither does storing a rewrite th
 
 Any other value passed after mount, such as a record that loads or the next record, is shown in the render that passes it, and the form is not dirty against the record it replaced, unless it held edits you had not passed back. The form keeps its errors for the fields whose data did not change; to start clean, remount it under a `key`.
 
-Only `undefined` means "not passed": a render that passes none leaves the form the data it has, which it owns until a render passes `formData` again. `null` shows the schema's defaults the way `undefined` does. `false`, `0` and `''` are values. When both this and `initialFormData` are passed, the form takes `formData`, and in development warns once that `initialFormData` is ignored.
+Only `undefined` means "not passed": a render that passes none leaves the form the data it has, which it owns until a render passes `formData` again. In development the form warns once when it changes between the two, with the ID `form-data-ownership-changed`: pass `formData` on every render, with `null` for no data, or `initialFormData` alone. `null` shows the schema's defaults the way `undefined` does. `false`, `0` and `''` are values. When both this and `initialFormData` are passed, the form takes `formData`, and in development warns once that `initialFormData` is ignored.
 
 ## globalUiOptionsKeys
 

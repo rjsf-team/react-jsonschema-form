@@ -3197,6 +3197,7 @@ setWarningOptions({}); // the default: every warning logs
 | `row-span-ignored`                  | `config`    | a `ui:row` has a `span`, which sizes only a `ui:col` or `ui:columns`                                        |
 | `layout-grid-cell-field-ignored`    | `config`    | a layout grid cell with discriminated `oneOf`/`anyOf` options names a `ui:field`, which it ignores          |
 | `ui-order-incomplete`               | `config`    | a `ui:order` with no `*` leaves out a declared property, which renders after the listed ones                |
+| `form-data-ownership-changed`       | `config`    | the `Form` went from being passed `formData` to being passed none, or the reverse                           |
 
 `WarningCategory` and `WarningId` are string-literal unions of the names above, so a typo fails type-checking. In a setup file in plain JavaScript, `setWarningOptions()` ignores a name it doesn't know and warns about it, and throws a `TypeError` for a `throwOn` or `except` that isn't an array.
 

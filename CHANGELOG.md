@@ -12,10 +12,12 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `AnyOfField` and `OneOfField` ignoring a pick in the option selector of a field that declares a `discriminator`, which left the data and the selector on the option shown before, including a pick of an option that sets no `discriminator` value where the field gives that property a `default` ([#5945](https://github.com/rjsf-team/react-jsonschema-form/pull/5945))
 - **BREAKING CHANGE:** Change `formData` to be the form's data once more, no longer deprecated: the form shows each new value you pass after mount, and keeps its edits when you pass the value you passed before. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-passed-formdata-shows-each-new-value-you-pass) ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
 - Remove the development warning for a `formData` that changes after mount, which the form now shows ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
+- Add a development warning, given once per form, when a form goes from being passed `formData` to being passed none, or the reverse ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
 
 ## @rjsf/utils
 
 - **BREAKING CHANGE:** Remove the `form-data-ignored` warning ID from `WarningId`, since `Form` no longer gives that warning; remove it from `setWarningOptions()`'s `throwOn` and `except`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-passed-formdata-shows-each-new-value-you-pass) ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
+- Add the `form-data-ownership-changed` warning ID to `WarningId`, in the `config` category, for the warning `Form` gives when it changes between being passed `formData` and being passed none ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
 
 # 7.0.0-beta.1 (2026-11-20)
 

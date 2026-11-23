@@ -533,6 +533,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   useEffect(() => {
     if (isDevelopment) {
       model.warnIfBothSeedsPassed(formDataProp, initialFormData);
+      model.warnIfOwnershipChanged(formDataProp);
     }
   }, [model, formDataProp, initialFormData]);
   useImperativeHandle(ref, () => model.handle, [model]);
