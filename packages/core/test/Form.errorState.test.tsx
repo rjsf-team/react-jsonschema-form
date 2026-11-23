@@ -649,17 +649,17 @@ describe('Error state consistency when deriving from new props', () => {
       expect(fieldErrorsById(container)).toEqual({ root_arr_1: ['must NOT have fewer than 3 characters'] });
     });
 
-    it('leaves the items and the error where they were when the parent stores nothing back, across its later renders', async () => {
-      // The parent never follows `onChange`, which declines the reorder
+    it('keeps the error on the moved item when the parent stores nothing back, across its later renders', async () => {
+      // The parent never follows `onChange`; the form owns the reorder and shows it
       const { container, rerender } = render(<Parent formData={arrayData} />);
 
       await submitAndMoveFirstItemDown(container);
-      expect(inputValues(container)).toEqual(['a', 'bbbb', 'cccc']);
-      expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
+      expect(inputValues(container)).toEqual(['bbbb', 'a', 'cccc']);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_1: ['must NOT have fewer than 3 characters'] });
       rerender(<Parent formData={arrayData} restyles={1} />);
 
-      expect(inputValues(container)).toEqual(['a', 'bbbb', 'cccc']);
-      expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
+      expect(inputValues(container)).toEqual(['bbbb', 'a', 'cccc']);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_1: ['must NOT have fewer than 3 characters'] });
     });
 
     it('keeps the error on the moved item when a parent answers the reorder with an edit', async () => {

@@ -1961,26 +1961,20 @@ function markBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   { fieldPath, touches, dataAtBlur }: BlurAtData<T>,
 ): FormState<T, S, F> {
+  const { touchedPaths, revealed } = current;
   const isRevealed = props.liveErrors === 'field' && isBlurValidated(props);
-  // Recorded for a controlling parent that declines a proposal made beside the blur, see `withTouchesOf()`. As
-  // reported, since the field that reported it rendered before the proposal, whatever the proposal did to its path
-  const blurred =
-    props.formData === undefined || touches === 'nothing'
-      ? current
-      : { ...current, proposedBlurs: [...(current.proposedBlurs ?? []), { fieldPath, touches }] };
-  const { touchedPaths, revealed } = blurred;
   if (isPathDropped(fieldPath, dataAtBlur, current.formData)) {
-    return blurred;
+    return current;
   }
   if (touches === 'nothing') {
     return isRevealed
-      ? { ...blurred, revealed: { ...revealed, containers: withPaths(revealed.containers, fieldPath) } }
-      : blurred;
+      ? { ...current, revealed: { ...revealed, containers: withPaths(revealed.containers, fieldPath) } }
+      : current;
   }
   const touched =
     touches === 'leaves' ? leafPathsOf(getAt(current.formData, fieldPathToList(fieldPath)), fieldPath) : [fieldPath];
   return {
-    ...blurred,
+    ...current,
     touchedPaths: withPaths(touchedPaths, ...touched),
     revealed: isRevealed ? { ...revealed, fields: withPaths(revealed.fields, fieldPath) } : revealed,
   };
@@ -2158,20 +2152,10 @@ function asControlledBy<T, S extends StrictRJSFSchema, F extends FormContextType
   state: FormState<T, S, F>,
 ): FormState<T, S, F> {
   const from = props.formData;
-  if (from === undefined) {
+  if (from === undefined || (!isEditedIn(state) && Object.is(state.controlled?.from, from))) {
     return state;
   }
-  const isRecorded = !isProposedIn(state) && Object.is(state.controlled?.from, from);
-  if (isRecorded && !state.proposedFrom) {
-    return state;
-  }
-  // The parent has answered, so no proposal is outstanding
-  return {
-    ...state,
-    controlled: isRecorded ? state.controlled : { from, data: state.formData },
-    proposedFrom: undefined,
-    proposedBlurs: undefined,
-  };
+  return { ...state, controlled: { from, data: state.formData, reported: [] } };
 }
 
 export function initialState<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -2188,9 +2172,10 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
  * the fields already hold and a changed one is recognized by the new reference; when nothing changed, `state` itself
  * is handed back.
  *
- * A form passed `formData` shows that data. `state.controlled` records the prop the data was last derived from and
- * the data that gave, which an operation leaves alone, so data that is no longer that is a proposal the parent has yet
- * to answer. A form passed none owns its data, see `deriveOwnState()`.
+ * A form passed `formData` shows that data whenever it is news: a value other than the one passed before. The value
+ * passed before, or a copy of it, as an inline literal is on every render, leaves the form its edits, and so does the
+ * data the form reported, now or before its latest edits, or a copy of that. `state.controlled` records the prop the
+ * data was last derived from and the data that gave, which an operation leaves alone. A form passed none owns its data, see `deriveOwnState()`.
  *
  * @param props - The current props
  * @param state - The committed state
@@ -2205,43 +2190,25 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
     return deriveOwnState(props, state);
   }
   const { controlled } = state;
-  const isProposed = isProposedIn(state);
-  // The data stands when the parent passed back what the form proposed, or passes what it passed before with no
-  // proposal outstanding
-  if (Object.is(passed, state.formData) || (!isProposed && Object.is(passed, controlled?.from))) {
+  const isEdited = isEditedIn(state);
+  // By value, since a parent may store a copy of what the form reported
+  if (Object.is(passed, state.formData) || deepEquals(passed, state.formData)) {
     return asControlledBy(props, deriveOwnState(props, state));
   }
-  // Passing the same value over a proposal, or a copy of it, declines it, which leaves the form as it was before the
-  // proposal, its errors and marks included
-  const { proposedFrom } = state;
-  if (proposedFrom && controlled && (Object.is(passed, controlled.from) || deepEquals(passed, controlled.from))) {
-    return asControlledBy(props, deriveOwnState(props, withTouchesOf(proposedFrom, state)));
+  const isStoredLate = controlled?.reported.some((held) => Object.is(held, passed) || deepEquals(held, passed));
+  if (controlled && (isStoredLate || Object.is(passed, controlled.from) || deepEquals(passed, controlled.from))) {
+    const own = deriveOwnState(props, state);
+    return isEdited ? own : asControlledBy(props, own);
   }
-  // Any other value is the parent's own. Over a proposal it is the parent's answer to it, and the form is as dirty as
-  // that leaves it. With none outstanding it is another record, as one that loaded or a Cancel put back, which the
-  // form is not dirty against: the baseline follows data that is its own
-  const from = isProposed ? state : { ...state, baseline: state.formData };
+  // Any other value is the parent's own. Over edits it has yet to pass back it is its answer to them, as an edit it
+  // transformed is, and the form is as dirty as that leaves it. With none it is another record, as one
+  // that loaded or a Cancel put back, which the form is not dirty against: the baseline follows data that is its own
+  const from = isEdited ? state : { ...state, baseline: state.formData };
   return asControlledBy(props, shareState(state, deriveDataState(from, passed, props)));
 }
 
-/** `before`, the state a declined proposal leaves the form in, with the fields blurred since then touched: a blur is
- * no proposal, so a parent declining the edit made in the same event does not decline it. The blurs are applied as
- * their fields reported them, to the data `before` holds: no render comes between a proposal and its answer, so each
- * was reported by a field rendered for that data, at the path it has there, wherever the proposal moved its keys
- */
-function withTouchesOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  before: FormState<T, S, F>,
-  proposed: FormState<T, S, F>,
-): FormState<T, S, F> {
-  const touched = (proposed.proposedBlurs ?? []).flatMap(({ fieldPath, touches }) =>
-    touches === 'leaves' ? leafPathsOf(getAt(before.formData, fieldPathToList(fieldPath)), fieldPath) : [fieldPath],
-  );
-  const touchedPaths = withPaths(before.touchedPaths, ...touched);
-  return touchedPaths === before.touchedPaths ? before : { ...before, touchedPaths };
-}
-
-/** Whether `state` holds a proposal a controlling parent has yet to answer: data other than its `formData` gave */
-export function isProposedIn<T, S extends StrictRJSFSchema, F extends FormContextType>(state: FormState<T, S, F>) {
+/** Whether `state` holds edits a parent passing `formData` has yet to pass back: data other than its `formData` gave */
+function isEditedIn<T, S extends StrictRJSFSchema, F extends FormContextType>(state: FormState<T, S, F>) {
   return state.controlled === undefined || !Object.is(state.formData, state.controlled.data);
 }
 

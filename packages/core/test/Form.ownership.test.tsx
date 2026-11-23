@@ -77,7 +77,7 @@ const withDefaults: RJSFSchema = {
 
 /** The ownership contract. `initialFormData` seeds the form on mount and on `reset()` only, like `defaultValue`, and
  * the form owns its data after that. `formData` is the form's data, like `value`: the form shows what is passed, and
- * an edit is a proposal reported through `onChange`, shown once the parent passes it back.
+ * an edit is shown as it is made and reported through `onChange`, and the form shows another value once it is passed.
  */
 describe('form data ownership', () => {
   const warnings = setupConsoleWarnSuppression();
@@ -86,7 +86,7 @@ describe('form data ownership', () => {
     warnings.consoleSpy.mock.calls.filter(([message]) => String(message).includes('and was dropped'));
 
   describe('edits are the form’s own', () => {
-    it('an edit is reported, and not shown under a parent that stores nothing', async () => {
+    it('an edit is reported, and shown under a parent that stores nothing', async () => {
       const log = createParentLog<Data>();
       const { container } = render(<ListeningParent<Data> schema={schema} initialValue={{ a: 'a' }} log={log} />);
 
@@ -94,7 +94,7 @@ describe('form data ownership', () => {
       await user.paste('b');
 
       expect(log.reported).toEqual([{ a: 'ab' }]);
-      expect(input(container, 'root_a')).toHaveValue('a');
+      expect(input(container, 'root_a')).toHaveValue('ab');
     });
 
     it('a spy handler sees each edit, and the form keeps showing it', async () => {
@@ -235,7 +235,7 @@ describe('form data ownership', () => {
       expect(input(container, 'root_a')).toHaveValue('saved');
     });
 
-    it('shows no edit of a form whose parent stores none, across the parent’s re-renders', async () => {
+    it('keeps the edits of a form whose parent stores none, across the parent’s re-renders', async () => {
       const record: Data = { a: 'record' };
       function Parent({ tick }: { tick: number }) {
         return (
@@ -247,10 +247,10 @@ describe('form data ownership', () => {
 
       rerender(<Parent tick={1} />);
 
-      expect(input(container, 'root_a')).toHaveValue('record');
+      expect(input(container, 'root_a')).toHaveValue('recordx');
     });
 
-    it('declines an edit under a parent that goes on passing its root NaN', () => {
+    it('keeps an edit under a parent that goes on passing its root NaN', () => {
       const ref = createFormRef<number>();
       render(
         <Form<number>
@@ -264,7 +264,7 @@ describe('form data ownership', () => {
 
       act(() => handleOf(ref).setFieldValue('', 5));
 
-      expect(handleOf(ref).getFormData()).toBeNaN();
+      expect(handleOf(ref).getFormData()).toBe(5);
     });
 
     it('takes the data it reported back as its own, not as a replacement', async () => {
@@ -305,8 +305,7 @@ describe('form data ownership', () => {
         });
       });
 
-      // An edit is shown once the parent stores it, so one made before then starts from the value the parent held, as
-      // a keystroke in an `<input value>` does
+      // A value stored late is shown over the edits made since, so a keystroke made before it arrives may be lost
       expect(log.value?.a).toMatch(/^[abc]+$/);
       expect(input(container, 'root_a')).toHaveValue(log.value?.a);
     });
@@ -387,7 +386,7 @@ describe('form data ownership', () => {
       expect(input(container, 'root')).toHaveValue('a');
     });
 
-    it('shows no edit under a formData written inline whose content never changes', async () => {
+    it('keeps the edits under a formData written inline whose content never changes', async () => {
       function Parent({ tick }: { tick: number }) {
         return (
           <Form
@@ -404,7 +403,7 @@ describe('form data ownership', () => {
 
       rerender(<Parent tick={1} />);
 
-      expect(input(container, 'root_a')).toHaveValue('seed');
+      expect(input(container, 'root_a')).toHaveValue('seedx');
     });
 
     it('takes a copy of its data a parent stores', async () => {
@@ -910,7 +909,7 @@ describe('form data ownership', () => {
       expect(log.value).toEqual({ a: 'FIRST', b: 'second' });
     });
 
-    it('an edit the parent does not store is not shown, and the next one starts from the parent’s data', async () => {
+    it('an edit the parent does not store stays shown, and the next one builds on it', async () => {
       const ref = createFormRef<Data>();
       const log = createParentLog<Data>();
       const { container } = render(<PolicyParent ref={ref} log={log} accept={(edit) => edit.a !== 'first'} />);
@@ -924,10 +923,10 @@ describe('form data ownership', () => {
 
       expect(log.reported).toEqual([
         { a: 'first', b: '' },
-        { a: '', b: 'second' },
+        { a: 'first', b: 'second' },
       ]);
-      expect(log.value).toEqual({ a: '', b: 'second' });
-      expect(input(container, 'root_a')).toHaveValue('');
+      expect(log.value).toEqual({ a: '', b: '' });
+      expect(input(container, 'root_a')).toHaveValue('first');
       expect(input(container, 'root_b')).toHaveValue('second');
     });
 
@@ -1392,14 +1391,14 @@ describe('form data ownership', () => {
       expect(input(container, 'root_b')).toHaveValue('derived');
     });
 
-    it('edits in one tick build on each other, and none is shown without a handler that stores them', async () => {
+    it('edits in one tick build on each other, with or without a handler', async () => {
       const ref = createFormRef();
       const { rerender } = render(<Form ref={ref} schema={schema} validator={validator} formData={{ a: '' }} />);
       await act(async () => {
         handleOf(ref).setFieldValue('a', 'x');
         handleOf(ref).setFieldValue('b', 'y');
       });
-      expect(handleOf(ref).getFormData()).toEqual({ a: '' });
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'x', b: 'y' });
       const onChange = vi.fn();
       rerender(<Form ref={ref} schema={schema} validator={validator} formData={{ a: '' }} onChange={onChange} />);
 
@@ -1408,7 +1407,7 @@ describe('form data ownership', () => {
       });
 
       expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onChange.mock.calls[0][0].formData).toEqual({ a: 'z' });
+      expect(onChange.mock.calls[0][0].formData).toEqual({ a: 'z', b: 'y' });
     });
 
     it('every operation in one tick calls onChange with its own value', async () => {
@@ -1596,7 +1595,7 @@ describe('form data ownership', () => {
       },
     };
 
-    it('a oneOf switch the parent declines is not shown', async () => {
+    it('a oneOf switch is shown under a parent that stores nothing', async () => {
       const log = createParentLog<{ status: { by?: string; reason?: string } }>();
       const { container } = render(
         <ListeningParent schema={oneOfSchema} initialValue={{ status: { by: 'me' } }} log={log} />,
@@ -1606,9 +1605,9 @@ describe('form data ownership', () => {
       await user.selectOptions(select, '1');
 
       expect(log.reported).toHaveLength(1);
-      expect(select).toHaveValue('0');
-      expect(input(container, 'root_status_by')).toHaveValue('me');
-      expect(container.querySelector('#root_status_reason')).toBeNull();
+      expect(select).toHaveValue('1');
+      expect(container.querySelector('#root_status_by')).toBeNull();
+      expect(container.querySelector('#root_status_reason')).toBeInTheDocument();
     });
 
     it('a oneOf switch that transformChange rewrites checks the chosen option without the stubs of its additional keys', async () => {
@@ -1672,24 +1671,24 @@ describe('form data ownership', () => {
       expect(select).toHaveValue('1');
     });
 
-    it('an array add and remove the parent declines are not shown', async () => {
+    it('an array add and remove are shown under a parent that stores nothing', async () => {
       const arraySchema: RJSFSchema = { type: 'array', items: { type: 'string' } };
       const log = createParentLog<string[]>();
       const { container } = render(<ListeningParent schema={arraySchema} initialValue={['one', 'two']} log={log} />);
 
       await user.click(elementOf(container, '.rjsf-array-item-add'));
       expect(log.reported).toEqual([['one', 'two', undefined]]);
-      expect(container.querySelectorAll('input[type=text]')).toHaveLength(2);
+      expect(container.querySelectorAll('input[type=text]')).toHaveLength(3);
 
       await user.click(elementOf(container, '.rjsf-array-item-remove'));
-      expect(log.reported.at(-1)).toEqual(['two']);
+      expect(log.reported.at(-1)).toEqual(['two', undefined]);
       expect([...container.querySelectorAll<HTMLInputElement>('input[type=text]')].map((el) => el.value)).toEqual([
-        'one',
         'two',
+        '',
       ]);
     });
 
-    it('an additional property rename the parent declines is not shown', async () => {
+    it('an additional property rename is shown under a parent that stores nothing', async () => {
       const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
       const log = createParentLog<Record<string, string>>();
       const { container } = render(
@@ -1702,112 +1701,9 @@ describe('form data ownership', () => {
       await user.tab();
 
       expect(log.reported.at(-1)).toEqual({ renamed: 'one', second: 'two' });
-      expect(container.querySelector('#root_first')).toHaveValue('one');
+      expect(container.querySelector('#root_renamed')).toHaveValue('one');
       expect(container.querySelector('#root_second')).toHaveValue('two');
-      expect(container.querySelector('#root_renamed')).toBeNull();
-    });
-
-    it('an additional property keeps its place when the parent declines its rename', async () => {
-      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
-      const { container } = render(
-        <ListeningParent schema={objectSchema} initialValue={{ first: 'one', second: 'two' }} />,
-      );
-      const keyInput = input(container, 'root_first__key');
-
-      await user.clear(keyInput);
-      await user.type(keyInput, 'renamed');
-      await user.tab();
-
-      expect([...container.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual([
-        'root_first__key',
-        'root_second__key',
-      ]);
-    });
-
-    it('an additional property keeps its place when the parent declines its removal', async () => {
-      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
-      const log = createParentLog<Record<string, string>>();
-      const { container } = render(
-        <ListeningParent schema={objectSchema} initialValue={{ first: 'one', second: 'two' }} log={log} />,
-      );
-
-      await user.click(elementOf(container, '.rjsf-object-property-remove'));
-
-      expect(log.reported).toEqual([{ second: 'two' }]);
-      expect([...container.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual([
-        'root_first__key',
-        'root_second__key',
-      ]);
-    });
-
-    it('the key input shows the name the property has once the parent declines its rename', async () => {
-      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
-      const { container } = render(
-        <ListeningParent schema={objectSchema} initialValue={{ first: 'one', second: 'two' }} />,
-      );
-      const keyInput = input(container, 'root_first__key');
-
-      await user.clear(keyInput);
-      await user.type(keyInput, 'renamed');
-      await user.tab();
-
-      expect(input(container, 'root_first__key')).toHaveValue('first');
-    });
-
-    it('a property renamed before keeps its instance when the parent declines its removal', async () => {
-      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
-      let declines = false;
-      function Parent() {
-        const [data, setData] = useState<Record<string, string>>({ first: 'one', second: 'two' });
-        return (
-          <Form
-            schema={objectSchema}
-            validator={validator}
-            formData={data}
-            onChange={(event) => {
-              if (!declines) {
-                setData(event.formData);
-              }
-            }}
-          />
-        );
-      }
-      const { container } = render(<Parent />);
-      const keyInput = input(container, 'root_first__key');
-      await user.clear(keyInput);
-      await user.type(keyInput, 'renamed');
-      await user.tab();
-      const renamed = input(container, 'root_renamed');
-      declines = true;
-
-      await user.click(elementOf(container, '.rjsf-object-property-remove'));
-
-      expect(input(container, 'root_renamed')).toBe(renamed);
-    });
-
-    it('a property keeps its instance when the parent answers its rename with both names', async () => {
-      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
-      function Parent() {
-        const [data, setData] = useState<Record<string, string>>({ first: 'one', second: 'two' });
-        return (
-          <Form
-            schema={objectSchema}
-            validator={validator}
-            formData={data}
-            onChange={(event) => setData({ first: 'one', ...event.formData })}
-          />
-        );
-      }
-      const { container } = render(<Parent />);
-      const first = input(container, 'root_first');
-      const keyInput = input(container, 'root_first__key');
-
-      await user.clear(keyInput);
-      await user.type(keyInput, 'renamed');
-      await user.tab();
-
-      expect(input(container, 'root_renamed')).toHaveValue('one');
-      expect(input(container, 'root_first')).toBe(first);
+      expect(container.querySelector('#root_first')).toBeNull();
     });
 
     it.each([

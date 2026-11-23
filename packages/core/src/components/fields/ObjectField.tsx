@@ -264,70 +264,6 @@ function stableKeyOf(renamedKeys: ReadonlyMap<string, string>, property: string,
   return key;
 }
 
-/** What `ObjectField` records of its additional properties between renders */
-interface PropertyRecords {
-  /** The names in the order they render in */
-  order: string[];
-  /** The React key each renamed property holds, by its name, see `stableKeyOf()` */
-  renamedKeys: ReadonlyMap<string, string>;
-  /** The name each rename was from, by the name it was to, for as long as the data holds the old name and not the new
-   * one: a rename the form took as a proposal, which a controlling parent has declined or has yet to store
-   */
-  renamedFrom: ReadonlyMap<string, string>;
-}
-
-/** Settles `records` against `properties`, the ones the data rendered holds, since a change the field sent is only a
- * proposal under a controlling parent: the records are written as it is sent, and the data rendered next is the
- * answer. A name the data does not hold leaves the records, unless it is the new name of a rename still waiting for
- * its answer, so a property a parent puts back later renders after the others, as one the field never held does. A
- * renamed property the data holds under both names keeps its key under the old one. A property showing a variant of
- * its name as its key, see `stableKeyOf()`, is recorded with it, so it keeps it once the property holding its name
- * as a key has left.
- *
- * @param records - The records as the last render or a change since left them
- * @param properties - The properties of the schema resolved for the data being rendered
- * @returns - The settled records, `records` itself when nothing in them changed
- */
-function settledRecords(records: PropertyRecords, properties: object): PropertyRecords {
-  const { order, renamedKeys, renamedFrom } = records;
-  // Checked first since most objects have no renamed property and this runs on every render
-  const holds = (name: string) => Object.hasOwn(properties, name);
-  if (renamedKeys.size === 0 && renamedFrom.size === 0 && order.every(holds)) {
-    return records;
-  }
-  const waiting = [...renamedFrom].filter(([to, from]) => holds(from) && !holds(to));
-  const isKept = (name: string) => holds(name) || waiting.some(([to]) => to === name);
-  const heldUnderBoth = new Set([...renamedFrom].filter(([to, from]) => holds(from) && holds(to)).map(([to]) => to));
-  const keptKeys = new Map([...renamedKeys].filter(([name]) => isKept(name) && !heldUnderBoth.has(name)));
-  // Against the keys that are kept, so the old name of a rename held under both names is not taken for a variant of
-  // the key its new name gives up
-  const variants = Object.keys(properties)
-    .filter((property) => !keptKeys.has(property))
-    .map((property): [string, string] => [property, stableKeyOf(keptKeys, property, properties)])
-    .filter(([property, key]) => key !== property);
-  if (
-    variants.length === 0 &&
-    keptKeys.size === renamedKeys.size &&
-    waiting.length === renamedFrom.size &&
-    order.every(isKept)
-  ) {
-    return records;
-  }
-  return {
-    order: order.filter(isKept),
-    renamedKeys: new Map([...keptKeys, ...variants]),
-    renamedFrom: new Map(waiting),
-  };
-}
-
-/** Sets the value an input shows the way a user's edit arrives, through the prototype's setter and an `input` event,
- * so a theme's input component that keeps the value in its own state takes it too
- */
-function showInInput(input: HTMLInputElement, value: string) {
-  Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), 'value')?.set?.call(input, value);
-  input.dispatchEvent(new Event('input', { bubbles: true }));
-}
-
 /** Props for the `ObjectFieldProperty` component */
 interface ObjectFieldPropertyProps<
   T = unknown,
@@ -355,9 +291,9 @@ interface ObjectFieldPropertyProps<
   /** Flag indicating whether this property was added by the additionalProperties UI */
   addedByAdditionalProperties: boolean;
   /** Callback that handles the rename of an additionalProperties-based property key, given the control focus is on its
-   * way to when the rename comes from a blur. Returns whether a form answered the rename as it was sent
+   * way to when the rename comes from a blur
    */
-  handleKeyRename: (oldKey: string, newKey: string, focusHeadedTo?: Element | null) => boolean;
+  handleKeyRename: (oldKey: string, newKey: string, focusHeadedTo?: Element | null) => void;
   /** Callback that handles the removal of an additionalProperties-based property with key */
   handleRemoveProperty: (keyName: string) => void;
   /** The key names this property may be renamed to, when the parent schema's `propertyNames` constrains them */
@@ -442,30 +378,19 @@ function ObjectFieldPropertyFn<
     [propertyName, handleKeyRename],
   );
 
-  // The key input a rename was last typed into, see the layout Effect below
-  const [renamedIn, setRenamedIn] = useState<{ input: HTMLInputElement }>();
   /** Returns a callback the handle the blur event, getting the value from the target and passing that along to the
    * `handleKeyChange` function
    */
   const onKeyRenameBlur = useCallback(
     (event: FocusEvent<HTMLInputElement>) => {
-      const { target, relatedTarget } = event;
-      // A rename no form answered, as under a parent field that stores it later, has no answer to show yet
-      if (handleKeyRename(propertyName, target.value, relatedTarget)) {
-        setRenamedIn({ input: target });
-      }
+      const {
+        target: { value },
+        relatedTarget,
+      } = event;
+      handleKeyRename(propertyName, value, relatedTarget);
     },
     [propertyName, handleKeyRename],
   );
-  // The key input shows what was typed into it, which is the property's name only if the rename is taken as typed. One
-  // `transformChange` refused, a controlling parent declined or the form gave another free name leaves the input
-  // showing a name the property does not have, so once the render that answers the rename commits, an input still in
-  // the document shows the name the property has
-  useLayoutEffect(() => {
-    if (renamedIn?.input.isConnected && renamedIn.input.value !== propertyName) {
-      showInInput(renamedIn.input, propertyName);
-    }
-  }, [renamedIn, propertyName]);
 
   /** The property drop/removal event handler; Called when a field is removed in an additionalProperty context
    */
@@ -565,7 +490,7 @@ export default function ObjectField<
   }, [schema, shownOption]);
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
-  const [heldRenamedKeys, setHeldRenamedKeys] = useState<ReadonlyMap<string, string>>(() => new Map());
+  const [renamedKeys, setRenamedKeys] = useState<ReadonlyMap<string, string>>(() => new Map());
   const formAccess = use(FormDataContext);
   // A rename can remount the field, as one onto a declared property or under a template that keys its rows by name does,
   // or hand it to the option that declares the name, so focus on its way to a control the rename's commit removed would
@@ -624,20 +549,7 @@ export default function ObjectField<
     [onChange, ownDepth, forgetChangedSeeds],
   );
   const schemaAdditionalProperties = useMemo(() => getAdditionalPropertyOrder<S>(schemaProperties), [schemaProperties]);
-  const [heldOrder, setHeldOrder] = useState(schemaAdditionalProperties);
-  const [renamedFrom, setRenamedFrom] = useState<ReadonlyMap<string, string>>(() => new Map());
-  const heldRecords = useMemo(
-    () => ({ order: heldOrder, renamedKeys: heldRenamedKeys, renamedFrom }),
-    [heldOrder, heldRenamedKeys, renamedFrom],
-  );
-  const records = useMemo(() => settledRecords(heldRecords, schemaProperties), [heldRecords, schemaProperties]);
-  const { order: additionalPropertyOrder, renamedKeys } = records;
-  // Stored as the render settles them, so a name dropped here stays dropped when the data holds it again
-  if (records !== heldRecords) {
-    setHeldOrder(records.order);
-    setHeldRenamedKeys(records.renamedKeys);
-    setRenamedFrom(records.renamedFrom);
-  }
+  const [additionalPropertyOrder, setAdditionalPropertyOrder] = useState(schemaAdditionalProperties);
   const definedPropertyOrder = useMemo(() => {
     const additionalPropertySet = new Set(schemaAdditionalProperties);
     return Object.keys(schemaProperties).filter((property) => !additionalPropertySet.has(property));
@@ -935,7 +847,7 @@ export default function ObjectField<
     const outcome = sendMove({ value: newFormData }, () => onChange(newFormData, fieldPath));
     // A refused add leaves the order as it was
     if (outcome?.kind !== 'refused') {
-      setHeldOrder((order) => [...order, newKey]);
+      setAdditionalPropertyOrder((order) => [...order, newKey]);
     }
     forgetChangedSeeds(newKey);
   }, [
@@ -957,7 +869,7 @@ export default function ObjectField<
    * @param oldKey - The old key for the field
    * @param newKey - The new key for the field
    * @param [focusHeadedTo] - The control focus is on its way to, when the rename comes from a blur
-   * @returns - Whether a form answered the rename as it was sent
+   * @returns - The key change callback function
    */
   const handleKeyRename = useCallback(
     (oldKey: string, newKey: string, focusHeadedTo?: Element | null) => {
@@ -1005,27 +917,20 @@ export default function ObjectField<
             renameFocus.current = { headedTo: focusHeadedTo, fieldPath: toFieldPath(actualNewKey, fieldPath) };
           }
           const properties = schemaRef.current.properties ?? {};
-          // The old name keeps its entry until the data rendered no longer holds it, see `settledRecords()`
-          setHeldRenamedKeys((previous) =>
-            new Map(previous).set(actualNewKey, stableKeyOf(previous, oldKey, properties)),
-          );
+          setRenamedKeys((previous) => {
+            const key = stableKeyOf(previous, oldKey, properties);
+            return new Map([...previous].filter(([, held]) => held !== key)).set(actualNewKey, key);
+          });
         }
         if (rewrittenKeys) {
-          setHeldOrder(rewrittenKeys);
+          setAdditionalPropertyOrder(rewrittenKeys);
         } else if (outcome?.kind !== 'refused') {
-          // Beside the old name rather than in its place, so the property keeps its place under whichever name the
-          // data comes to hold: a controlling parent may yet decline the rename
-          setHeldOrder((order) =>
-            order
-              .filter((property) => property !== actualNewKey)
-              .flatMap((property) => (property === oldKey ? [oldKey, actualNewKey] : [property])),
+          setAdditionalPropertyOrder((order) =>
+            order.map((property) => (property === oldKey ? actualNewKey : property)),
           );
-          setRenamedFrom((previous) => new Map(previous).set(actualNewKey, oldKey));
         }
         forgetChangedSeeds(oldKey, actualNewKey);
-        return outcome !== undefined;
       }
-      return false;
     },
     [sendMove, onChange, fieldPath, getAvailableKey, seedForKey, readData, forgetChangedSeeds],
   );
@@ -1038,8 +943,28 @@ export default function ObjectField<
     (key: string) => {
       const removedPath = toFieldPath(key, fieldPath);
       const removal = additionalPropertyRemoval<T>();
-      // Announced, though it moves no key, so the form takes the change as the property's removal
-      sendMove({ fieldPath: removedPath, value: removal }, () => onChange(removal, removedPath));
+      // Announced, though it moves no key, for what became of it: a removal `transformChange` refused, or a rewrite
+      // that kept the property, leaves the property in its place. One no form answered as it was sent, as outside a
+      // `Form` or under a parent field that stores it later, is the field's own to make, so the property leaves the order
+      const outcome = sendMove({ fieldPath: removedPath, value: removal }, () => onChange(removal, removedPath));
+      if (outcome?.kind !== 'refused' && (outcome?.kind !== 'rewritten' || outcome.kept === undefined)) {
+        setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
+        const properties = schemaRef.current.properties ?? {};
+        // The key it held goes free, but a property that took a variant of it while it was held keeps that variant
+        setRenamedKeys((previous) => {
+          if (!previous.has(key)) {
+            return previous;
+          }
+          const next = new Map([...previous].filter(([property]) => property !== key));
+          for (const property of Object.keys(properties)) {
+            const shown = stableKeyOf(previous, property, properties);
+            if (property !== key && shown !== stableKeyOf(next, property, properties)) {
+              next.set(property, shown);
+            }
+          }
+          return next;
+        });
+      }
       forgetChangedSeeds(key);
     },
     [sendMove, onChange, fieldPath, forgetChangedSeeds],
@@ -1047,8 +972,8 @@ export default function ObjectField<
 
   if (!renderOptionalField || hasFormData) {
     const definedPropertySet = new Set(definedPropertyOrder);
-    // A set, since an add or a rename sent again before the render that answers the first leaves its key in the
-    // order twice
+    // A set, since an add that never reaches the data, as under a custom field that keeps the change to itself, leaves
+    // its key in the order, and the next add picks that key again
     const orderedSet = new Set(additionalPropertyOrder);
     const currentAdditionalProperties = [...orderedSet].filter(
       (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),

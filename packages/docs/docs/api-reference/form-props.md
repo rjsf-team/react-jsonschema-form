@@ -546,26 +546,24 @@ See [AntD Customization](themes/antd/uiSchema.md#formcontext) for formContext cu
 
 ## formData
 
-The form's data, the way `value` works on an `<input>`. The form shows what you pass, filled in with the schema's defaults, on every render. An edit is a proposal: the form reports it through [`onChange`](#onchange) and shows it once you pass it back.
+The form's data. The form shows what you pass when it mounts, filled in with the schema's defaults, and again whenever you pass another value. An edit is shown as it is made and reported through [`onChange`](#onchange).
 
 ```tsx
 const [data, setData] = useState(record);
 <Form schema={schema} validator={validator} formData={data} onChange={(event) => setData(event.formData)} />;
 ```
 
-What you pass back decides what the form shows:
+What you pass after an edit decides what the form shows:
 
-- The `formData` the event reported: the edit is shown.
+- The `formData` the event reported: the form already shows it, so nothing changes.
 - Another value, such as the event's with a field upper-cased or a computed field added: that value is shown.
-- The value you passed before: the edit is declined, and the form goes on showing what it showed, with the errors it showed.
+- The value you passed before, or a copy with the same content, such as an object written inline: nothing changes, and the edit stays shown.
 
-So a form passed `formData` and no `onChange` that stores it shows no edit, and one that stores an edit late, after an `await` or a debounce, shows it late: an edit made before then starts from the value you still hold. To let the form hold the data, pass [`initialFormData`](#initialformdata) instead.
+So not storing an edit does not refuse it, and neither does storing a rewrite that leaves the value you passed before, such as a trim of the space just typed: refuse or rewrite one in [`transformChange`](#transformchange). Passing the value you passed before does not put the form back to it either: call [`reset()`](../usage/submitting.md#making-the-saved-data-the-baseline) or remount the form under a `key`. An edit stored late, after an `await` or a server round trip, leaves the edits made since in place: the form remembers the latest 100 values it reported since you last passed its current data, and one of those, or a copy of it, is not news. If you only read the data on submit, [`initialFormData`](#initialformdata) says so.
 
-Any other value passed after mount, such as a record that loads or the next record, is shown in the render that passes it, and the form is not dirty against the record it replaced. The form keeps its errors for the fields whose data did not change; to start clean, remount it under a `key`.
+Any other value passed after mount, such as a record that loads or the next record, is shown in the render that passes it, and the form is not dirty against the record it replaced, unless it held edits you had not passed back. The form keeps its errors for the fields whose data did not change; to start clean, remount it under a `key`.
 
 Only `undefined` means "not passed": a render that passes none leaves the form the data it has, which it owns until a render passes `formData` again. `null` shows the schema's defaults the way `undefined` does. `false`, `0` and `''` are values. When both this and `initialFormData` are passed, the form takes `formData`, and in development warns once that `initialFormData` is ignored.
-
-With [`omitExtraData`](#omitextradata), a submit hands `onSubmit` the data without its extra fields and leaves the form showing what you pass.
 
 ## globalUiOptionsKeys
 

@@ -529,17 +529,11 @@ export function createUiState() {
       fallbackTypes: copyOfLists(fallbackTypes),
       expanded: new Set(expanded),
     }),
-    /** Puts back what `save()` returned, as a change the form refused leaves it. With `isQuiet`, no field is told, for
-     * a caller where nothing may render, which calls `announce()` once something may
-     */
-    restore: (snapshot: UiStateSnapshot, isQuiet = false) => {
+    /** Puts back what `save()` returned, as a change the form refused leaves it */
+    restore: (snapshot: UiStateSnapshot) => {
       ({ selections, fallbackTypes, expanded } = snapshot);
-      if (!isQuiet) {
-        notify();
-      }
+      notify();
     },
-    /** Tells the fields of a quiet `restore()` */
-    announce: notify,
     /** Settles a move at `container` that `transformChange` rewrote, key by key, as `fateOf` says of each: one the
      * form holds the moved item under keeps the moved state, one holding the item it held before the move takes back
      * the state from before, `unmoved`, and any other key loses its state, so its data is matched again

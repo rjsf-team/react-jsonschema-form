@@ -11,9 +11,9 @@ import { createFormRef, fieldErrorsById, handleOf, input, submitForm } from './t
 
 const user = userEvent.setup();
 
-type Answer<T> = (proposed: T, held: T) => T;
-const accept = <T,>(proposed: T) => proposed;
-const decline = <T,>(_: T, held: T) => held;
+type Answer<T> = (reported: T, held: T) => T;
+const accept = <T,>(reported: T) => reported;
+const ignore = <T,>(_: T, held: T) => held;
 
 type ParentProps<T> = Omit<FormProps<T>, 'validator' | 'formData' | 'onChange'> & {
   initial: T;
@@ -72,35 +72,21 @@ describe('a form controlled through formData', () => {
     expect(onRender).toHaveBeenCalledTimes(3);
   });
 
-  it('does not show an edit the parent declines, and proposes each one from the data it holds', async () => {
+  it('keeps showing the edits a parent stores nothing for, and reports each one built on the last', async () => {
     const reported: Pair[] = [];
     const { container } = render(
       <StrictMode>
-        <Parent<Pair> schema={pair} initial={{ a: '', b: '' }} answer={decline} reported={reported} />
+        <Parent<Pair> schema={pair} initial={{ a: '', b: '' }} answer={ignore} reported={reported} />
       </StrictMode>,
     );
 
     await user.type(input(container, 'root_a'), 'xy');
 
-    expect(input(container, 'root_a')).toHaveValue('');
+    expect(input(container, 'root_a')).toHaveValue('xy');
     expect(reported).toEqual([
       { a: 'x', b: '' },
-      { a: 'y', b: '' },
+      { a: 'xy', b: '' },
     ]);
-  });
-
-  it('holds the parent’s data after it declines the same edit of a scalar root twice', async () => {
-    const ref = createFormRef<string>();
-    const capped: Answer<string> = (proposed, held) => (proposed.length > 3 ? held : proposed);
-    const { container } = render(
-      <Parent<string> schema={{ type: 'string' }} initial='abc' answer={capped} ref={ref} />,
-    );
-
-    await user.type(input(container, 'root'), 'd');
-    await user.type(input(container, 'root'), 'd');
-
-    expect(input(container, 'root')).toHaveValue('abc');
-    expect(handleOf(ref).getFormData()).toBe('abc');
   });
 
   it('shows what the parent made of an edit', async () => {
@@ -119,7 +105,7 @@ describe('a form controlled through formData', () => {
   it.each([
     ['stores', accept],
     ['copies', (proposed: Pair) => structuredClone(proposed)],
-    ['declines', decline],
+    ['ignores', ignore],
   ] satisfies [string, Answer<Pair>][])('renders no sibling field for a keystroke the parent %s', async (_, answer) => {
     const renders = new Map<string, number>();
     const { container } = render(
@@ -154,6 +140,34 @@ describe('a form controlled through formData', () => {
     expect(onRender).toHaveBeenCalledTimes(1);
   });
 
+  it('holds the record shown after a parent that stores nothing passes again one edited before', async () => {
+    const ref = createFormRef<Pair>();
+    const first: Pair = { a: 'one', b: '' };
+    function Records() {
+      const [value, setValue] = useState(first);
+      return (
+        <>
+          <Form<Pair> ref={ref} schema={pair} validator={validator} formData={value} />
+          <button type='button' onClick={() => setValue({ a: 'two', b: '' })}>
+            second
+          </button>
+          <button type='button' onClick={() => setValue(first)}>
+            first
+          </button>
+        </>
+      );
+    }
+    const { container } = render(<Records />);
+    await user.type(input(container, 'root_a'), 'x');
+
+    // Each click blurs the field first, which the form's store takes without a render
+    await user.click(screen.getByRole('button', { name: 'second' }));
+    await user.click(screen.getByRole('button', { name: 'first' }));
+
+    expect(input(container, 'root_a')).toHaveValue('one');
+    expect(handleOf(ref).getFormData()).toEqual({ a: 'one', b: '' });
+  });
+
   it('keeps both of two edits made in one tick', () => {
     const ref = createFormRef<Pair>();
     const { container } = render(
@@ -169,30 +183,6 @@ describe('a form controlled through formData', () => {
 
     expect(input(container, 'root_a')).toHaveValue('x');
     expect(input(container, 'root_b')).toHaveValue('y');
-  });
-
-  it('adds no array row the parent declines', async () => {
-    const list: RJSFSchema = { type: 'array', items: { type: 'string' } };
-    const { container } = render(<Parent<string[]> schema={list} initial={[]} answer={decline} />);
-
-    await user.click(container.querySelector('.rjsf-array-item-add')!);
-
-    expect(container.querySelectorAll('.rjsf-array-item')).toHaveLength(0);
-  });
-
-  it('keeps the option shown when the parent declines a switch', async () => {
-    const options: RJSFSchema = {
-      oneOf: [
-        { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
-        { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
-      ],
-    };
-    const { container } = render(<Parent<Pair> schema={options} initial={{ a: 'kept' }} answer={decline} />);
-
-    await user.selectOptions(container.querySelector('select')!, 'B');
-
-    expect(container.querySelector('#root_b')).toBeNull();
-    expect(input(container, 'root_a')).toHaveValue('kept');
   });
 
   it('submits without the extra data and clears the errors, leaving the data the parent holds as it is', async () => {
@@ -228,22 +218,18 @@ describe('a form controlled through formData', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit.mock.calls[0][0].formData).toEqual({ a: 'x' });
     expect(fieldErrorsById(container)).toEqual({});
-    // A submit is no edit, so it proposes nothing
     expect(reported).toEqual([]);
   });
 
-  it('takes a copy of the data it held as the parent declining, and keeps the errors it showed', async () => {
+  it('keeps an edit when the parent passes a copy of the data it passed before', async () => {
     const items: RJSFSchema = { type: 'array', items: { type: 'string', minLength: 2 } };
     const { container } = render(
       <Parent<string[]> schema={items} initial={['a', 'bb']} answer={(_, held) => [...held]} onError={noop} />,
     );
-    await submitForm(container, user);
-    expect(fieldErrorsById(container)).toEqual({ root_0: ['must NOT have fewer than 2 characters'] });
 
     await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
 
-    expect(input(container, 'root_0')).toHaveValue('a');
-    expect(fieldErrorsById(container)).toEqual({ root_0: ['must NOT have fewer than 2 characters'] });
+    expect(input(container, 'root_0')).toHaveValue('bb');
   });
 
   describe('reset()', () => {
@@ -252,7 +238,7 @@ describe('a form controlled through formData', () => {
       properties: { a: { type: 'string', minLength: 3 }, b: { type: 'string', default: 'B' } },
     };
 
-    it('proposes the data passed with its defaults, clears the errors, and shows what the parent stores', async () => {
+    it('reports the data passed with its defaults, clears the errors, and shows what the parent stores', async () => {
       const ref = createFormRef<Pair>();
       const reported: Pair[] = [];
       const { container } = render(
@@ -269,18 +255,18 @@ describe('a form controlled through formData', () => {
       expect(handleOf(ref).getStatus().dirty).toBe(false);
     });
 
-    it('proposes the seed it is passed, which a parent that declines leaves unshown', async () => {
+    it('shows the seed it is passed under a parent that stores nothing', async () => {
       const ref = createFormRef<Pair>();
       const reported: Pair[] = [];
       const { container } = render(
-        <Parent<Pair> ref={ref} schema={seeded} initial={{ a: 'held' }} answer={decline} reported={reported} />,
+        <Parent<Pair> ref={ref} schema={seeded} initial={{ a: 'held' }} answer={ignore} reported={reported} />,
       );
 
       act(() => handleOf(ref).reset({ a: 'other' }));
 
       expect(reported).toEqual([{ a: 'other', b: 'B' }]);
-      expect(input(container, 'root_a')).toHaveValue('held');
-      expect(handleOf(ref).getFormData()).toEqual({ a: 'held', b: 'B' });
+      expect(input(container, 'root_a')).toHaveValue('other');
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'other', b: 'B' });
     });
 
     it('shows the seed it is passed once the parent stores it, and the form is not dirty', async () => {
@@ -303,7 +289,7 @@ describe('a form controlled through formData', () => {
     }
     const described: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
 
-    it('proposes the data without its extra fields, which the parent stores', async () => {
+    it('reports the data without its extra fields, which the parent stores', async () => {
       const reported: Extra[] = [];
       const ref = createFormRef<Extra>();
       const { container } = render(
@@ -324,7 +310,7 @@ describe('a form controlled through formData', () => {
       expect(handleOf(ref).getFormData()).toEqual({ a: 'x' });
     });
 
-    it('leaves the data the parent holds when it declines the omission, blur after blur', async () => {
+    it('omits the extra fields once under a parent that stores nothing, blur after blur', async () => {
       const reported: Extra[] = [];
       const ref = createFormRef<Extra>();
       const { container } = render(
@@ -332,7 +318,7 @@ describe('a form controlled through formData', () => {
           ref={ref}
           schema={described}
           initial={{ a: 'x', extra: 1 }}
-          answer={decline}
+          answer={ignore}
           reported={reported}
           omitExtraData
           liveOmit='onBlur'
@@ -344,97 +330,17 @@ describe('a form controlled through formData', () => {
       await user.click(input(container, 'root_a'));
       await user.tab();
 
-      expect(reported).toEqual([{ a: 'x' }, { a: 'x' }]);
-      expect(handleOf(ref).getFormData()).toEqual({ a: 'x', extra: 1 });
+      expect(reported).toEqual([{ a: 'x' }]);
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'x' });
       expect(input(container, 'root_a')).toHaveValue('x');
       expect(handleOf(ref).getStatus().touchedFields).toEqual({ a: true });
-    });
-  });
-
-  describe('touched', () => {
-    function ChangeThenBlur({ id, value, onChange, onBlur }: WidgetProps) {
-      return (
-        <button
-          type='button'
-          onClick={() => {
-            onChange('edited');
-            onBlur(id, 'edited');
-          }}
-        >
-          {`${id} is ${String(value)}`}
-        </button>
-      );
-    }
-
-    it('marks a field blurred in the same event as an edit the parent declines', async () => {
-      const ref = createFormRef<Pair>();
-      render(
-        <Parent<Pair>
-          ref={ref}
-          schema={pair}
-          initial={{ a: 'held', b: '' }}
-          answer={decline}
-          uiSchema={{ a: { 'ui:widget': ChangeThenBlur } }}
-        />,
-      );
-
-      await user.click(screen.getByRole('button', { name: 'root_a is held' }));
-
-      expect(screen.getByRole('button', { name: 'root_a is held' })).toBeInTheDocument();
-      expect(handleOf(ref).getStatus().touchedFields).toEqual({ a: true });
-    });
-
-    it('marks the row blurred in the same event as a reorder the parent declines, beside one touched before', async () => {
-      const ref = createFormRef<string[]>();
-      const { container } = render(
-        <Parent<string[]>
-          ref={ref}
-          schema={{ type: 'array', items: { type: 'string' } }}
-          initial={['a', 'b', 'c']}
-          answer={decline}
-        />,
-      );
-      await user.click(input(container, 'root_0'));
-      await user.tab();
-      const moveDown = container.querySelector<HTMLButtonElement>('.rjsf-array-item-move-down')!;
-      const third = input(container, 'root_2');
-
-      // In one `act()`, so the blur reaches the form before React renders the parent's answer to the reorder, as a
-      // widget that reorders and blurs in one handler does. user-event flushes React after each of its calls
-      act(() => {
-        moveDown.click();
-        third.focus();
-        third.blur();
-      });
-
-      expect(input(container, 'root_0')).toHaveValue('a');
-      expect(handleOf(ref).getStatus().touchedFields).toEqual([true, undefined, true]);
-    });
-
-    it('stays on the row that was blurred when the parent declines a reorder', async () => {
-      const ref = createFormRef<string[]>();
-      const { container } = render(
-        <Parent<string[]>
-          ref={ref}
-          schema={{ type: 'array', items: { type: 'string' } }}
-          initial={['a', 'b']}
-          answer={decline}
-        />,
-      );
-      await user.click(input(container, 'root_0'));
-      await user.tab();
-      expect(handleOf(ref).getStatus().touchedFields).toEqual([true, undefined]);
-
-      await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
-
-      expect(handleOf(ref).getStatus().touchedFields).toEqual([true, undefined]);
     });
   });
 
   describe('with transformChange', () => {
     const upper = (next: Pair | undefined): Pair | undefined => next && { ...next, a: next.a?.toUpperCase() };
 
-    it('proposes the edit as rewritten, which the parent stores', async () => {
+    it('reports the edit as rewritten, which the parent stores', async () => {
       const reported: Pair[] = [];
       const { container } = render(
         <Parent<Pair> schema={pair} initial={{ a: '', b: '' }} reported={reported} transformChange={upper} />,
@@ -449,7 +355,7 @@ describe('a form controlled through formData', () => {
       expect(input(container, 'root_a')).toHaveValue('XY');
     });
 
-    it('proposes the edit as rewritten, which a parent that declines leaves unshown', async () => {
+    it('shows the edit as rewritten under a parent that stores nothing', async () => {
       const reported: Pair[] = [];
       const ref = createFormRef<Pair>();
       const { container } = render(
@@ -457,7 +363,7 @@ describe('a form controlled through formData', () => {
           ref={ref}
           schema={pair}
           initial={{ a: '', b: '' }}
-          answer={decline}
+          answer={ignore}
           reported={reported}
           transformChange={upper}
         />,
@@ -467,13 +373,13 @@ describe('a form controlled through formData', () => {
 
       expect(reported).toEqual([
         { a: 'X', b: '' },
-        { a: 'Y', b: '' },
+        { a: 'XY', b: '' },
       ]);
-      expect(input(container, 'root_a')).toHaveValue('');
-      expect(handleOf(ref).getFormData()).toEqual({ a: '', b: '' });
+      expect(input(container, 'root_a')).toHaveValue('XY');
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'XY', b: '' });
     });
 
-    it('shows nothing of an edit it refuses, and takes the next one from the data the parent holds', async () => {
+    it('shows nothing of an edit it refuses, and takes the next one from the data before it', async () => {
       const reported: Pair[] = [];
       const { container } = render(
         <Parent<Pair>
@@ -491,45 +397,150 @@ describe('a form controlled through formData', () => {
       expect(input(container, 'root_b')).toHaveValue('y');
       expect(reported.at(-1)).toEqual({ a: '', b: 'y' });
     });
+  });
 
-    it('keeps the rows, their errors and their options when the parent declines a removal it rewrote', async () => {
-      const either: RJSFSchema = {
-        anyOf: [
-          { title: 'A', type: 'object', properties: { x: { type: 'string', minLength: 2 } } },
-          { title: 'B', type: 'object', properties: { x: { type: 'string', minLength: 2 } } },
-        ],
-      };
-      interface Row {
-        x?: string;
-        seen?: boolean;
-      }
-      const answers = { declines: false };
-      const { container } = render(
-        <Parent<Row[]>
-          schema={{ type: 'array', items: either }}
-          initial={[{ x: 'aa' }, { x: 'b' }, { x: 'cc' }]}
-          answer={(proposed, held) => (answers.declines ? held : proposed)}
-          // Rewrites every change, a removal included, so the form settles the move key by key
-          transformChange={(next) => next?.map((row) => ({ ...row, seen: true }))}
-          onError={noop}
-        />,
+  it('keeps every keystroke, and stays dirty, under a parent that stores each edit late', async () => {
+    const ref = createFormRef<Pair>();
+    function LateParent() {
+      const [value, setValue] = useState<Pair>({ a: '', b: '' });
+      return (
+        <Form<Pair>
+          ref={ref}
+          schema={pair}
+          validator={validator}
+          formData={value}
+          onChange={(event) => setTimeout(() => setValue(event.formData), 30)}
+        />
       );
-      await user.selectOptions(container.querySelectorAll('select')[1], 'B');
-      await submitForm(container, user);
-      const errors = fieldErrorsById(container);
-      expect(errors.root_1_x).toEqual(['must NOT have fewer than 2 characters']);
-      answers.declines = true;
+    }
+    const { container } = render(<LateParent />);
 
-      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
+    await user.type(input(container, 'root_a'), 'xyz');
+    await act(
+      () =>
+        new Promise<void>((resolve) => {
+          setTimeout(resolve, 100);
+        }),
+    );
 
-      expect(container.querySelectorAll('.rjsf-array-item-remove')).toHaveLength(3);
-      expect([...container.querySelectorAll('select')].map((select) => select.selectedOptions[0]?.text)).toEqual([
-        'A',
-        'B',
-        'A',
-      ]);
-      expect(fieldErrorsById(container)).toEqual(errors);
+    expect(input(container, 'root_a')).toHaveValue('xyz');
+    expect(handleOf(ref).getStatus().dirty).toBe(true);
+  });
+
+  describe('under a parent that stores each edit late, in a commit of its own', () => {
+    function QueueingParent<T>({
+      formRef,
+      schema,
+      initial,
+      stored,
+      copy,
+    }: {
+      formRef?: FormProps<T>['ref'];
+      schema: RJSFSchema;
+      initial: T;
+      stored: T[];
+      copy?: (value: T) => T;
+    }) {
+      const [value, setValue] = useState(initial);
+      return (
+        <>
+          <Form<T>
+            ref={formRef}
+            schema={schema}
+            validator={validator}
+            formData={value}
+            onChange={(event) => stored.push(event.formData as T)}
+          />
+          <button type='button' onClick={() => setValue(copy ? copy(stored.shift()!) : stored.shift()!)}>
+            store next
+          </button>
+        </>
+      );
+    }
+    const storeNext = () => user.click(screen.getByRole('button', { name: 'store next' }));
+
+    it.each([
+      ['the object reported', undefined],
+      ['a copy of it', (value: Pair) => structuredClone(value)],
+    ])('keeps the later edits, and stays dirty, when it stores %s', async (_, copy) => {
+      const ref = createFormRef<Pair>();
+      const { container } = render(
+        <QueueingParent<Pair> formRef={ref} schema={pair} initial={{ a: '', b: '' }} stored={[]} copy={copy} />,
+      );
+      await user.type(input(container, 'root_a'), 'xy');
+
+      await storeNext();
+      expect(input(container, 'root_a')).toHaveValue('xy');
+      await storeNext();
+
+      expect(input(container, 'root_a')).toHaveValue('xy');
+      expect(handleOf(ref).getStatus().dirty).toBe(true);
     });
+
+    it('keeps the later edits of a scalar root, and stays dirty', async () => {
+      const ref = createFormRef<string>();
+      const { container } = render(
+        <QueueingParent<string> formRef={ref} schema={{ type: 'string' }} initial='' stored={[]} />,
+      );
+      await user.type(input(container, 'root'), 'xy');
+
+      await storeNext();
+      expect(input(container, 'root')).toHaveValue('xy');
+      await storeNext();
+
+      expect(input(container, 'root')).toHaveValue('xy');
+      expect(handleOf(ref).getStatus().dirty).toBe(true);
+    });
+
+    it('shows an older edit the parent puts back once it has stored the latest', async () => {
+      const stored: Pair[] = [];
+      const { container } = render(<QueueingParent<Pair> schema={pair} initial={{ a: '', b: '' }} stored={stored} />);
+      await user.type(input(container, 'root_a'), 'xy');
+      const [first] = stored;
+      await storeNext();
+      await storeNext();
+
+      stored.push(first);
+      await storeNext();
+
+      expect(input(container, 'root_a')).toHaveValue('x');
+    });
+  });
+
+  it('commits once for each record a parent that stores nothing passes over an edit', async () => {
+    const onRender = vi.fn();
+    const first: Pair = { a: 'one' };
+    const element = (data: Pair) => (
+      <Profiler id='form' onRender={onRender}>
+        <Form<Pair> schema={pair} validator={validator} formData={data} onChange={noop} />
+      </Profiler>
+    );
+    const { container, rerender } = render(element(first));
+    await user.type(input(container, 'root_a'), 'x');
+    await user.tab();
+    onRender.mockClear();
+
+    rerender(element({ a: 'two' }));
+    expect(onRender).toHaveBeenCalledTimes(1);
+    rerender(element(first));
+
+    expect(onRender).toHaveBeenCalledTimes(2);
+    expect(input(container, 'root_a')).toHaveValue('one');
+  });
+
+  it('commits no render for a blur after an edit the parent stored', async () => {
+    const onRender = vi.fn();
+    const { container } = render(
+      <Profiler id='form' onRender={onRender}>
+        <Parent<Pair> schema={pair} initial={{ a: '', b: '' }} />
+      </Profiler>,
+    );
+    await user.type(input(container, 'root_a'), 'x');
+    onRender.mockClear();
+
+    await user.tab();
+
+    expect(onRender).not.toHaveBeenCalled();
   });
 
   describe('dirty', () => {
@@ -578,134 +589,6 @@ describe('a form controlled through formData', () => {
 
       expect(input(container, 'root_a')).toHaveValue('ONEX');
       expect(handleOf(ref).getStatus().dirty).toBe(true);
-    });
-  });
-
-  describe('option selections', () => {
-    const either: RJSFSchema = {
-      oneOf: [
-        { title: 'A', type: 'object', properties: { x: { type: 'string' } } },
-        { title: 'B', type: 'object', properties: { x: { type: 'string' } } },
-      ],
-    };
-    const selected = (container: HTMLElement) =>
-      [...container.querySelectorAll('select')].map((select) => select.selectedOptions[0]?.text);
-    /** A parent that stores every edit until it is told to decline them */
-    function setup(schema: RJSFSchema, initial: unknown) {
-      const answers = { declines: false };
-      const view = render(
-        <Parent schema={schema} initial={initial} answer={(proposed, held) => (answers.declines ? held : proposed)} />,
-      );
-      return { ...view, answers };
-    }
-
-    it('stay on their rows when the parent declines a removal', async () => {
-      const { container, answers } = setup({ type: 'array', items: either }, [{ x: '0' }, { x: '1' }, { x: '2' }]);
-      await user.selectOptions(container.querySelectorAll('select')[1], 'B');
-      await user.selectOptions(container.querySelectorAll('select')[2], 'B');
-      expect(selected(container)).toEqual(['A', 'B', 'B']);
-      answers.declines = true;
-
-      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
-
-      expect(selected(container)).toEqual(['A', 'B', 'B']);
-    });
-
-    it('stays on a property when the parent declines its removal', async () => {
-      const { container, answers } = setup({ type: 'object', additionalProperties: either }, { first: { x: '0' } });
-      await user.selectOptions(container.querySelectorAll('select')[0], 'B');
-      answers.declines = true;
-
-      await user.click(container.querySelectorAll('.rjsf-object-property-remove')[0]);
-
-      expect(selected(container)).toEqual(['B']);
-    });
-
-    describe('of an option inside an option', () => {
-      const inner: RJSFSchema = {
-        anyOf: [
-          { title: 'Inner A', type: 'object', properties: { y: { type: 'string' } } },
-          {
-            title: 'Inner B',
-            type: 'object',
-            properties: { y: { type: 'string' }, tag: { type: 'string', default: 't' } },
-          },
-        ],
-      };
-      // Each second option declares one property more, so a switch changes the data and is a proposal, while the data
-      // fits both options, so only the selection says which is shown
-      const nested: RJSFSchema = {
-        anyOf: [
-          { title: 'Outer A', type: 'object', properties: { x: { type: 'string' }, in: inner } },
-          {
-            title: 'Outer B',
-            type: 'object',
-            properties: { x: { type: 'string' }, in: inner, extra: { type: 'string', default: 'e' } },
-          },
-        ],
-      };
-      /** A form on `Outer B` and `Inner B`, each picked by hand */
-      async function onSecondOptions() {
-        const view = setup(nested, { x: '0', in: { y: '1' } });
-        await user.selectOptions(view.container.querySelectorAll('select')[0], 'Outer B');
-        await user.selectOptions(view.container.querySelectorAll('select')[1], 'Inner B');
-        expect(selected(view.container)).toEqual(['Outer B', 'Inner B']);
-        return view;
-      }
-
-      it('stay as chosen when the parent declines an edit inside the inner one', async () => {
-        const { container, answers } = await onSecondOptions();
-        answers.declines = true;
-
-        await user.type(input(container, 'root_in_y'), 'z');
-
-        expect(input(container, 'root_in_y')).toHaveValue('1');
-        expect(selected(container)).toEqual(['Outer B', 'Inner B']);
-      });
-
-      it('stay as chosen when the parent declines a switch of the inner one', async () => {
-        const { container, answers } = await onSecondOptions();
-        answers.declines = true;
-
-        await user.selectOptions(container.querySelectorAll('select')[1], 'Inner A');
-
-        expect(selected(container)).toEqual(['Outer B', 'Inner B']);
-        expect(input(container, 'root_in_tag')).toHaveValue('t');
-      });
-
-      it('stay as chosen when the parent declines a switch of the outer one', async () => {
-        const { container, answers } = await onSecondOptions();
-        answers.declines = true;
-
-        await user.selectOptions(container.querySelectorAll('select')[0], 'Outer A');
-
-        expect(selected(container)).toEqual(['Outer B', 'Inner B']);
-        expect(input(container, 'root_in_y')).toHaveValue('1');
-        expect(input(container, 'root_extra')).toHaveValue('e');
-      });
-
-      it('follow an edit the parent stores after one it declined', async () => {
-        const { container, answers } = await onSecondOptions();
-        answers.declines = true;
-        await user.type(input(container, 'root_in_y'), 'z');
-        answers.declines = false;
-
-        await user.type(input(container, 'root_in_y'), 'z');
-
-        expect(input(container, 'root_in_y')).toHaveValue('1z');
-        expect(selected(container)).toEqual(['Outer B', 'Inner B']);
-      });
-    });
-
-    it('stays as chosen when the parent declines an edit inside the option', async () => {
-      const { container, answers } = setup(either, { x: '0' });
-      await user.selectOptions(container.querySelectorAll('select')[0], 'B');
-      answers.declines = true;
-
-      await user.type(input(container, 'root_x'), 'y');
-
-      expect(input(container, 'root_x')).toHaveValue('0');
-      expect(selected(container)).toEqual(['B']);
     });
   });
 });

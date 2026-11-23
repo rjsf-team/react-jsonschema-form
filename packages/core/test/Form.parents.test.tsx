@@ -57,15 +57,14 @@ describe('parent harnesses', () => {
     expect(log.reported.at(-1)).toEqual({ name: 'abc' });
   });
 
-  it('a listening parent records the edits, which the form does not show', async () => {
+  it('a listening parent records the edits, which the form shows', async () => {
     const log = createParentLog<Data>();
     const { container } = render(<ListeningParent<Data> schema={schema} initialValue={{ name: 'a' }} log={log} />);
 
     await user.type(input(container, 'root_name'), 'b');
 
     expect(log.reported).toEqual([{ name: 'ab' }]);
-    // The parent owns the data: an edit it stores nothing back for is declined
-    expect(input(container, 'root_name')).toHaveValue('a');
+    expect(input(container, 'root_name')).toHaveValue('ab');
   });
 
   it('a transforming parent stores the transformed edit, which the form shows', async () => {
@@ -309,14 +308,13 @@ describe('a blur in the same event as an edit, under onBlur validation, with a p
     expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
   });
 
-  it('shows neither the edit nor the errors found for it when the parent declines it', async () => {
+  it('shows the edit and the errors found for it when the parent stores nothing', async () => {
     const { container } = render(<ListeningParent<Named> {...propsFor()} />);
 
     await user.click(screen.getByRole('button', { name: 'Set from abcd' }));
 
-    // The form shows 'abcd', the data the parent holds, which the errors the blur found for 'ab' do not describe
-    expect(screen.getByRole('button', { name: 'Set from abcd' })).toBeInTheDocument();
-    expect(fieldErrorsById(container)).toEqual({});
+    expect(screen.getByRole('button', { name: 'Set from ab' })).toBeInTheDocument();
+    expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
   });
 
   it.each<[string, Partial<ParentProps<Named>>]>([

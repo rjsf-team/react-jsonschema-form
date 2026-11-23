@@ -3331,8 +3331,8 @@ describe('initialFormData feature to prevent form reset', () => {
       />
     );
   };
-  it('show that a Form shows no edit when the parent passes formData and stores nothing back', async () => {
-    // `formData` is the form's data, so an edit the parent does not pass back is declined
+  it('show that a Form keeps the edits when the parent passes formData and stores nothing back', async () => {
+    // The form owns the edit; `formData` only seeds it on mount, so the parent passing it again leaves the edit in place
     const { container } = render(<FormWrapper formData={data} />);
     let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);
@@ -3340,12 +3340,12 @@ describe('initialFormData feature to prevent form reset', () => {
     await user.clear(input);
     await user.type(input, 'new value');
     input = container.querySelector('input')!;
-    expect(input).toHaveAttribute('value', data.name);
+    expect(input).toHaveAttribute('value', 'new value');
 
     await submitForm(container.querySelector('form')!, user);
 
     input = container.querySelector('input')!;
-    expect(input).toHaveAttribute('value', data.name);
+    expect(input).toHaveAttribute('value', 'new value');
   });
   it('show that Form does not reset with initialFormData', async () => {
     const { container } = render(<FormWrapper initialFormData={data} />);
