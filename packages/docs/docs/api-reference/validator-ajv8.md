@@ -1,7 +1,6 @@
 # @rjsf/validator-ajv8 APIs
 
-In RJSF version 6, the original, embedded AJV 6 validator implementation from earlier versions was removed in favor of the `@rjsf/validator-ajv8` package.
-`@rjsf/validator-ajv8` uses the AJV 8 package, including adding support for using precompiled validators.
+`@rjsf/validator-ajv8` is the validator package for RJSF. It uses the AJV 8 package, and supports precompiled validators.
 Below are the exported API functions that are provided by this package.
 See the [Validation documentation](../usage/validation.md) for examples of using these APIs.
 

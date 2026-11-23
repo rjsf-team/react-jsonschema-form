@@ -736,8 +736,6 @@ If set to true, turns off HTML5 validation on the form. Set to `false` by defaul
 
 If set to true, turns off all validation. Set to `false` by default.
 
-> NOTE: In a future major release, this flag may be replaced by making `validator` prop optional
-
 ## omitExtraData
 
 If set to true, then extra form data values that are not in any form field will be removed whenever `onSubmit` is called. Set to `false` by default.
