@@ -6622,6 +6622,15 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
         ),
         a: { e: { kind: 'B', n: 1 } },
       },
+      // The object's `default` names the extra key, so the object's fill writes it
+      ...(['additionalProperties', 'unevaluatedProperties'] as const).map((keyword) => ({
+        held: `an \`if\` the \`$ref\` of the object's \`${keyword}\` reaches, the object's \`default\` naming the key`,
+        schema: unionOf(
+          { definitions: { c: conditionalA } },
+          { type: 'object', [keyword]: { $ref: '#/definitions/c' }, default: { e: {} } },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      })),
     ])(
       'judges a nested value by the fill made with its siblings in place, read through $held',
       async ({ schema, a }) => {

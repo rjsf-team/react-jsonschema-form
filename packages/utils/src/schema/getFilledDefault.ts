@@ -179,8 +179,9 @@ const writtenValues = new KeyedMemo<Written | typeof UNREAD>();
 
 /** What the parent's fill wrote for the field `fill` was made for, where the parent's fill read it as the schema it was
  * handed, `undefined` for a declared property the parent's fill left out. `UNREAD` where `fill` is no child's, the
- * field's subschema or one of the parent's `patternProperties` decides anything from data, or the parent wrote nothing
- * the field's value could be read from, as for an item past its array's default or an extra key
+ * field's subschema or one of the parent's `patternProperties`, `additionalProperties` or `unevaluatedProperties`
+ * decides anything from data, or the parent wrote nothing the field's value could be read from, as for an item past its
+ * array's default or an extra key its default doesn't name
  */
 function writtenOf(fill: FieldFill): Written | typeof UNREAD {
   const origin = origins.get(fill);
@@ -189,13 +190,15 @@ function writtenOf(fill: FieldFill): Written | typeof UNREAD {
   }
   return writtenValues.get([fill], () => {
     const { context, parentSchema, rootSchema, parentFill, key, childSchema } = origin;
-    // The parent's fill merges into a property each `patternProperties` subschema its name matches, whose `if` the
-    // property's retrieved stub holds evaluated away; taking every pattern's needs no regex
-    if (
-      [childSchema, ...Object.values(parentSchema.patternProperties ?? {})].some((schema) =>
-        readsData(schema, rootSchema),
-      )
-    ) {
+    // The parent's fill merges into a property each `patternProperties` subschema its name matches, and into an extra
+    // key its `additionalProperties` or `unevaluatedProperties`, whose `if` the property's retrieved stub holds
+    // evaluated away; taking every one needs no regex
+    const mergedIn = [
+      parentSchema.additionalProperties,
+      parentSchema.unevaluatedProperties,
+      ...Object.values(parentSchema.patternProperties ?? {}),
+    ];
+    if ([childSchema, ...mergedIn].some((schema) => readsData(schema, rootSchema))) {
       return UNREAD;
     }
     const parentWritten = writtenOf(parentFill);

@@ -1,5 +1,12 @@
 import type { FieldFill, RJSFSchema, SchemaContext } from '../src/index.ts';
-import { childFillOf, getDefaultFormState, getFieldDefault, getFilledDefault, retrieveSchema } from '../src/index.ts';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  childFillOf,
+  getDefaultFormState,
+  getFieldDefault,
+  getFilledDefault,
+  retrieveSchema,
+} from '../src/index.ts';
 import { check } from './schema/graph/miniValidator.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
@@ -755,6 +762,21 @@ describe('getFilledDefault() reads what the fill writes', () => {
     const fill = childFillOf(context, root, root, {}, 'c');
     expect(getFilledDefault(context, { type: 'string', default: 'resolved' }, root, fill)).toBe('resolved');
   });
+
+  it.each(['additionalProperties', 'unevaluatedProperties'] as const)(
+    "fills an extra key its parent's %s reading data fills by itself, not off its parent's fill",
+    (keyword) => {
+      const root: RJSFSchema = {
+        type: 'object',
+        properties: { c: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } as RJSFSchema },
+        [keyword]: { if: { minLength: 1 }, then: { default: 'then' } },
+        default: { c: 'object' },
+      };
+      const context: SchemaContext = { validator: answering() };
+      const fill = childFillOf(context, root, root, {}, 'c');
+      expect(getFilledDefault(context, { type: 'string', default: 'resolved' }, root, fill)).toBe('resolved');
+    },
+  );
 
   it("reads a child an ancestor's const or option default gives a value off its parent's fill", () => {
     const constRoot: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } }, const: { a: 'c' } };
