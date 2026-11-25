@@ -26,6 +26,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix an edit in a long array taking longer the more items it holds: `Form` computes the defaults and judges the values only of the items the edit changed ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
 - Fix `Form` checking every `if` of a schema against the validator on every edit: one whose `properties` and `required` read only values the edit left alone is not checked again ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#4051](https://github.com/rjsf-team/react-jsonschema-form/issues/4051))
 - Fix `Form` keeping, on an `anyOf`/`oneOf` switch, a value it filled for an extra key from the object's `default` as if the user had typed it, where the key's extra-key subschema (`additionalProperties`, `patternProperties` or `unevaluatedProperties`) holds an `allOf` with a `default` ([#5970](https://github.com/rjsf-team/react-jsonschema-form/pull/5970), [#5954](https://github.com/rjsf-team/react-jsonschema-form/issues/5954))
+- Fix `Form` hiding the add button and the extra keys of an object property whose `additionalProperties` is `true` or `{}`, in an `anyOf`/`oneOf` option an `allOf` holding options of its own merges with ([#5958](https://github.com/rjsf-team/react-jsonschema-form/issues/5958))
 
 ## @rjsf/utils
 
@@ -46,6 +47,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `getDecimalSeparator()` building an `Intl.NumberFormat` on every call, which every number field made on every render ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
 - Add `getKeywordParentSchema()`, which finds the schema holding the keyword a validation error reports ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
 - Fix `getFilledDefault()` reading an extra key of a schema `retrieveSchema()` returned by the `default` of an `allOf` its subschema holds, which the fill skips under `allOf: 'skipDefaults'`, rather than the value the fill writes ([#5970](https://github.com/rjsf-team/react-jsonschema-form/pull/5970), [#5954](https://github.com/rjsf-team/react-jsonschema-form/issues/5954))
+- Fix `retrieveSchema()` dropping a property's `additionalProperties` of `true` or `{}`, at any depth, when it merges an `allOf` or the options an `allOf` entry holds, unless another declaration of the property closes it with its `unevaluatedProperties` (updates `@x0k/json-schema-merge` to `^1.2.0`) ([#5958](https://github.com/rjsf-team/react-jsonschema-form/issues/5958))
 
 ## @rjsf/validator-ata
 

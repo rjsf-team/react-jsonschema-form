@@ -216,7 +216,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
       expect(retrieveSchema({ validator: testValidator }, schema, schema).additionalProperties).toBe(true);
     });
-    // `withOpenAdditionalProperties()` leaves it to the merge, so this catches a merge that starts dropping it
+    // The merge is told to keep only an allow-any `additionalProperties`, so this catches a merge that starts dropping it
     it('keeps an unevaluatedProperties: true, which the merge keeps as it stands', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -238,6 +238,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             { properties: { a: { type: 'string' } }, unevaluatedProperties: false },
           ],
         },
+        undefined,
+      ],
+      [
+        "leaves out an additionalProperties: true a sibling entry's unevaluatedProperties: false closes beside no properties",
+        { allOf: [{ additionalProperties: true }, { unevaluatedProperties: false }] },
         undefined,
       ],
       [
@@ -337,6 +342,76 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       resolveOwnRef(site, schema, customMergeAllOf);
       expect(handed()).toEqual([{ properties, allOf: [{ additionalProperties: true }] }]);
     });
+    describe('in a property merged from several declarations of it (#5958)', () => {
+      const a: RJSFSchema = { type: 'string' };
+      const merged = (...declarations: (RJSFSchema | boolean)[]) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          allOf: declarations.map((p) => ({ properties: { p } })),
+        };
+        return retrieveSchema({ validator: testValidator }, schema, schema).properties?.p;
+      };
+      it.each<[string, RJSFSchema]>([
+        ['additionalProperties: true', { additionalProperties: true }],
+        ['additionalProperties: {}', { additionalProperties: {} }],
+      ])('keeps %s, which the merge would drop as saying nothing', (_, keyword) => {
+        expect(merged({ type: 'object', ...keyword }, { properties: { a } })).toEqual({
+          type: 'object',
+          ...keyword,
+          properties: { a },
+        });
+      });
+      it('keeps it in a property of a property', () => {
+        expect(
+          merged(
+            { properties: { q: { type: 'object', additionalProperties: true } } },
+            { properties: { q: { properties: { a } } } },
+          ),
+        ).toEqual({ properties: { q: { type: 'object', additionalProperties: true, properties: { a } } } });
+      });
+      it.each<[string, (RJSFSchema | boolean)[], boolean | undefined]>([
+        [
+          "leaves it out where another declaration's unevaluatedProperties: false closes",
+          [{ additionalProperties: true }, { properties: { a }, unevaluatedProperties: false }],
+          undefined,
+        ],
+        [
+          "keeps it beside another declaration's unevaluatedProperties: false that its own additionalProperties opens",
+          [
+            { additionalProperties: true },
+            { properties: { a }, additionalProperties: true, unevaluatedProperties: false },
+          ],
+          true,
+        ],
+        [
+          'keeps it beside a declaration that is a boolean, which closes nothing',
+          [{ additionalProperties: true }, true, { properties: { a } }],
+          true,
+        ],
+      ])('%s', (_, declarations, expected) => {
+        const p = merged(...declarations);
+        expect(typeof p === 'object' ? p.additionalProperties : p).toBe(expected);
+      });
+      it("leaves it out where the object's own declaration of the property closes", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p: { properties: { a }, unevaluatedProperties: false } },
+          allOf: [{ properties: { p: { additionalProperties: true } } }],
+        };
+        expect(retrieveSchema({ validator: testValidator }, schema, schema).properties?.p).toEqual({
+          properties: { a },
+          unevaluatedProperties: false,
+        });
+      });
+      it('leaves it out of a property of a property another declaration closes', () => {
+        expect(
+          merged(
+            { properties: { q: { additionalProperties: true } } },
+            { properties: { q: { properties: { a }, unevaluatedProperties: false } } },
+          ),
+        ).toEqual({ properties: { q: { properties: { a }, unevaluatedProperties: false } } });
+      });
+    });
   });
 
   describe('the options an allOf holding options of its own rebuilds (#5886)', () => {
@@ -357,6 +432,28 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         { properties: { b: { type: 'number' }, c: { type: 'string' } }, additionalProperties: true },
         { properties: { b: { type: 'number' }, d: { type: 'string' } }, additionalProperties: true },
       ]);
+    });
+    it('keeps the additionalProperties: true of a property both options of a pair declare (#5958)', () => {
+      expect(
+        retrieved({
+          type: 'object',
+          oneOf: [{ properties: { p: { type: 'object', additionalProperties: true } } }],
+          allOf: [{ oneOf: [{ properties: { p: { properties: { a: { type: 'string' } } } } }] }],
+        }),
+      ).toEqual([
+        { properties: { p: { type: 'object', additionalProperties: true, properties: { a: { type: 'string' } } } } },
+      ]);
+    });
+    it("leaves out a property's additionalProperties: true the pair's other option closes (#5958)", () => {
+      expect(
+        retrieved({
+          type: 'object',
+          oneOf: [{ properties: { p: { additionalProperties: true } } }],
+          allOf: [
+            { oneOf: [{ properties: { p: { properties: { a: { type: 'string' } }, unevaluatedProperties: false } } }] },
+          ],
+        }),
+      ).toEqual([{ properties: { p: { properties: { a: { type: 'string' } }, unevaluatedProperties: false } } }]);
     });
     it('offers an option two pairs merge to once', () => {
       const option: RJSFSchema = { properties: { a: { type: 'string' } } };

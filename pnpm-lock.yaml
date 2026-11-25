@@ -782,8 +782,8 @@ importers:
         specifier: ^7.0.15
         version: 7.0.15
       '@x0k/json-schema-merge':
-        specifier: ^1.1.1
-        version: 1.1.1
+        specifier: ^1.2.0
+        version: 1.2.0
       fast-equals:
         specifier: ^6.2.2
         version: 6.2.2
@@ -6020,8 +6020,8 @@ packages:
   '@webassemblyjs/wast-printer@1.14.1':
     resolution: {integrity: sha512-kPSSXE6De1XOR820C90RIo2ogvZG+c3KiHzqUoO/F34Y2shGzesfqv7o57xrxovZJH/MetF5UjroJ/R/3isoiw==}
 
-  '@x0k/json-schema-merge@1.1.1':
-    resolution: {integrity: sha512-m/h+8EsppgHWI1gNhwCo2KsV1tmAPCnXkKUqxdWK/TrxIqPKhT6+zWkd14YNfUIyqJ6aORPPK6QjxXE2NiJdkA==}
+  '@x0k/json-schema-merge@1.2.0':
+    resolution: {integrity: sha512-PeMfO7U8RrH4NfyxRPh0E9DN32FSFl7JsyG/IOI87YgQomK6kfNat2ETHCEX3S41AsoEfRTxiScUNkrd0mgbyw==}
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -17498,7 +17498,7 @@ snapshots:
       '@webassemblyjs/ast': 1.14.1
       '@xtuc/long': 4.2.2
 
-  '@x0k/json-schema-merge@1.1.1':
+  '@x0k/json-schema-merge@1.2.0':
     dependencies:
       '@types/json-schema': 7.0.15
 
