@@ -20,14 +20,11 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 ## @rjsf/utils
 
-- Fix `getFilledDefault()` reading a property's default off its parent's fill, which a `patternProperties` subschema its name matches holding an `if`, or for an extra key no pattern matches an `additionalProperties` or `unevaluatedProperties` one, can change, rather than filling the property by itself ([#5924](https://github.com/rjsf-team/react-jsonschema-form/pull/5924))
-
-## @rjsf/utils
-
 - Remove the `form-data-ignored` warning ID from `WarningId`, since `Form` no longer gives that warning ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
 - Add the `form-data-ownership-changed` warning ID to `WarningId`, in the `migration` category, for the warning `Form` gives when it changes between being passed `formData` and being passed none ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
 - **BREAKING CHANGE:** Change `getClosestMatchingOption()` to score the data's keys an option's `additionalProperties` or `patternProperties` takes for an option `retrieveSchema()` handed out or one holding an `allOf`, `if` or `dependencies` too, so `getDefaultFormState()`, `findSelectedOptionInXxxOf()` and a call over options the root declares pick the option the field shows, under `additionalPropertiesWhenAbsent: 'allow'` too. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#getclosestmatchingoption-scores-the-extra-keys-an-options-additionalproperties-takes-breaking-change) ([#5926](https://github.com/rjsf-team/react-jsonschema-form/pull/5926), [#5886](https://github.com/rjsf-team/react-jsonschema-form/issues/5886))
 - Fix `retrieveSchema()` dropping an `additionalProperties` of `true` or `{}`, the object's own, an `allOf` entry's or an option's, when it merges the object's `allOf`, including the options it merges with those of an `allOf` entry, unless another entry's `unevaluatedProperties` other than `true` or `{}` closes the object to the keys it takes, the keywords beside a `$ref` reading as the object's own rather than as an entry ([#5926](https://github.com/rjsf-team/react-jsonschema-form/pull/5926), [#5886](https://github.com/rjsf-team/react-jsonschema-form/issues/5886))
+- Fix `getFilledDefault()` reading a property's default off its parent's fill, which a `patternProperties` subschema its name matches holding an `if`, or for an extra key no pattern matches an `additionalProperties` or `unevaluatedProperties` one, can change, rather than filling the property by itself ([#5924](https://github.com/rjsf-team/react-jsonschema-form/pull/5924))
 
 # 7.0.0-beta.1 (2026-11-20)
 
