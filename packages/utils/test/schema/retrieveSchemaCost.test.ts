@@ -8,6 +8,7 @@ import {
   getDefaultFormState,
   getPropertySchema,
   isObject,
+  isPlainObject,
   isSchemaObject,
   retrieveSchema,
   REUSES_DEFAULTS_FLAG,
@@ -393,6 +394,87 @@ describe('the cost of an edit to a wide object', () => {
       // The state is the caller's, so a row is no object another call handed out
       expect(Array.isArray(next) && next[1]).not.toBe(Array.isArray(state) && state[1]);
       expect(Array.isArray(next) && next[1]).toEqual({ k: 'k1', t: 'd' });
+    });
+    it.each<[string, (rows: unknown[]) => unknown[]]>([
+      ['a remove', (rows) => rows.slice(1)],
+      ['an insert', (rows) => [{ k: 'new' }, ...rows]],
+    ])('folds no row again that %s at the front of the list shifts', (_, edit) => {
+      const validator = miniValidator();
+      const context = reusing(validator);
+      const state = fill(context, rowsOf(20));
+      const first = validator.calls;
+      fill(context, edit(Array.isArray(state) ? state : []));
+      expect(validator.calls - first).toBeLessThanOrEqual(2);
+    });
+    it('folds every row again for a context whose flag is set to undefined', () => {
+      const validator = miniValidator();
+      const context: SchemaContext = { validator, [REUSES_DEFAULTS_FLAG]: undefined };
+      const state = fill(context, rowsOf(20));
+      const first = validator.calls;
+      fill(context, Array.isArray(state) ? state.with(3, { k: 'edited' }) : []);
+      expect(validator.calls - first).toBe(20);
+    });
+    // A declared `default` is copied afresh on every call, so the defaults a row inherits from it are matched by value,
+    // and a row and the item of the array's `default` fold the same data, each held apart
+    it.each<[string, RJSFSchema, (state: unknown) => unknown[]]>([
+      [
+        'the list',
+        { ...list, default: rowsOf(20) },
+        (state) => (Array.isArray(state) ? Array.from<unknown>(state) : []),
+      ],
+      [
+        'an object holding the list',
+        { type: 'object', properties: { rows: list }, default: { rows: rowsOf(20) } },
+        (state) => {
+          const rows: unknown = isPlainObject(state) ? state.rows : undefined;
+          return Array.isArray(rows) ? Array.from<unknown>(rows) : [];
+        },
+      ],
+    ])('folds only the row an edit changed, where the default of %s fills the rows', (_, schema, rowsIn) => {
+      const validator = miniValidator();
+      const context = reusing(validator);
+      // The first call has no rows of the data's to hold the defaults of, so the second, as the next edit's, holds them
+      const state = fill(context, fill(context, undefined, {}, schema), {}, schema);
+      expect(rowsIn(state)).toHaveLength(20);
+      const first = validator.calls;
+      const rows = rowsIn(state).with(3, { k: 'edited' });
+      const edited = Array.isArray(state) ? rows : { rows };
+      expect(fill(context, edited, {}, schema)).toEqual(edited);
+      expect(validator.calls - first).toBeLessThanOrEqual(2);
+    });
+    it('folds only the position an edit changed in a tuple whose positions its default fills', () => {
+      const validator = miniValidator();
+      const context = reusing(validator);
+      const tuple: RJSFSchema = {
+        type: 'array',
+        items: [row, row, row, row],
+        additionalItems: row,
+        default: rowsOf(6),
+      };
+      const state = fill(context, fill(context, undefined, {}, tuple), {}, tuple);
+      const first = validator.calls;
+      const edited = Array.isArray(state) ? state.with(1, { k: 'edited' }) : [];
+      expect(fill(context, edited, {}, tuple)).toEqual(edited);
+      expect(validator.calls - first).toBeLessThanOrEqual(2);
+    });
+    // The fold stops reading where the schema does, so data holding itself under a key the schema doesn't describe
+    // is folded as it stands, with no snapshot taken of it
+    it('fills an object holding itself under a key the schema does not describe, folding it on every call', () => {
+      const validator = miniValidator();
+      const context = reusing(validator);
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { ...row, properties: { k: { type: 'string' }, b: { type: 'string', default: 'x' } } } },
+      };
+      const inner: Record<string, unknown> = { k: 'k1' };
+      inner.self = inner;
+      const state = fill(context, { a: inner }, {}, schema);
+      expect(isPlainObject(state) && state.a).toMatchObject({ k: 'k1', b: 'x', t: 'd', self: inner });
+      const unmarked = miniValidator();
+      fill({ validator: unmarked }, { a: inner }, {}, schema);
+      const first = validator.calls;
+      fill(context, { a: inner }, {}, schema);
+      expect(validator.calls - first).toBe(unmarked.calls);
     });
     it('hands back the defaults an earlier call computed for a row, called with the same data again', () => {
       const validator = miniValidator();
