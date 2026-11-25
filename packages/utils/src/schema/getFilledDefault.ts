@@ -1,3 +1,4 @@
+import { additionalPropertiesKeyword, getMatchingPatternProperties } from '../additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
@@ -35,10 +36,10 @@ import nodeOfSchema from './graph/nodeOfSchema.ts';
  *
  * A field `childFillOf()` handed its fill is read off its parent's fill wherever the parent's fill read the field as
  * the schema it was handed: where its subschema decides nothing from data, with no `if`, `dependencies` or
- * `anyOf`/`oneOf` it reaches through its `$ref`s and `allOf`, nor does any of the parent's `patternProperties`, or for
- * an extra key the parent's `additionalProperties` or `unevaluatedProperties`, and the parent's fill wrote it. So one
- * fill of the root serves every field below it that decides nothing from data, and a field that does is filled by
- * itself, with what its parent's fill hands it.
+ * `anyOf`/`oneOf` it reaches through its `$ref`s and `allOf`, nor does any of the parent's `patternProperties` its name
+ * matches, or for an extra key no pattern matches the parent's `additionalProperties` or `unevaluatedProperties`, and
+ * the parent's fill wrote it. So one fill of the root serves every field below it that decides nothing from data, and a
+ * field that does is filled by itself, with what its parent's fill hands it.
  *
  * @param context - The `SchemaContext` whose `defaultFormStateBehavior` the defaults are computed under
  * @param schema - The field's schema, already retrieved
@@ -189,9 +190,10 @@ const writtenValues = new KeyedMemo<Written | typeof UNREAD>();
 
 /** What the parent's fill wrote for the field `fill` was made for, where the parent's fill read it as the schema it was
  * handed, `undefined` for a declared property the parent's fill left out. `UNREAD` where `fill` is no child's, the
- * field's subschema or one of the parent's `patternProperties`, or for an extra key its `additionalProperties` or
- * `unevaluatedProperties`, decides anything from data, or the parent wrote nothing the field's value could be read
- * from, as for an item past its array's default or an extra key its default doesn't name
+ * field's subschema or one of the parent's `patternProperties` its name matches, or for an extra key no pattern
+ * matches its `additionalProperties` or `unevaluatedProperties`, decides anything from data, or the parent wrote
+ * nothing the field's value could be read from, as for an item past its array's default or an extra key its default
+ * doesn't name
  */
 function writtenOf(fill: FieldFill): Written | typeof UNREAD {
   const origin = origins.get(fill);
@@ -200,15 +202,14 @@ function writtenOf(fill: FieldFill): Written | typeof UNREAD {
   }
   return writtenValues.get([fill], () => {
     const { context, parentSchema, rootSchema, parentFill, key, childSchema } = origin;
-    // The parent's fill merges into a property each `patternProperties` subschema its name matches, and into an extra
-    // key its `additionalProperties` or `unevaluatedProperties`, whose `if` the property's retrieved stub holds
-    // evaluated away; taking every pattern needs no regex. A declared property takes neither of the two
+    // The parent's fill merges into a property each `patternProperties` subschema its name matches, else into an extra
+    // key its `additionalProperties`, or its `unevaluatedProperties` where it names none, whose `if` the property's
+    // retrieved stub holds evaluated away. Taking one the fill doesn't merge would fill the property by itself through
+    // a stub that may read otherwise than the fill, as an `allOf` merged into it does
+    const patterns = typeof key === 'string' ? Object.values(getMatchingPatternProperties(parentSchema, key)) : [];
     const isExtraKey =
       typeof key === 'string' && (childSchema === undefined || hasSchemaMarker(childSchema, ADDITIONAL_PROPERTY_FLAG));
-    const mergedIn = [
-      ...(isExtraKey ? [parentSchema.additionalProperties, parentSchema.unevaluatedProperties] : []),
-      ...Object.values(parentSchema.patternProperties ?? {}),
-    ];
+    const mergedIn = isExtraKey && patterns.length === 0 ? [additionalPropertiesKeyword(parentSchema)] : patterns;
     if ([childSchema, ...mergedIn].some((schema) => readsData(schema, rootSchema))) {
       return UNREAD;
     }

@@ -796,6 +796,55 @@ describe('getFilledDefault() reads what the fill writes', () => {
     },
   );
 
+  it.each<{ name: string; root: RJSFSchema; key: string }>([
+    {
+      name: 'an extra key a pattern matches, beside an additionalProperties',
+      root: {
+        type: 'object',
+        patternProperties: { '^x': { allOf: [{ type: 'string' }, { default: 'a' }] } },
+        additionalProperties: { if: { minLength: 1 }, then: { default: 'then' } },
+        default: { x1: 'p' },
+      },
+      key: 'x1',
+    },
+    {
+      name: 'an extra key a pattern matches, beside an unevaluatedProperties',
+      root: {
+        type: 'object',
+        patternProperties: { '^x': { allOf: [{ type: 'string' }, { default: 'a' }] } },
+        unevaluatedProperties: { if: { minLength: 1 }, then: { default: 'then' } },
+        default: { x1: 'p' },
+      },
+      key: 'x1',
+    },
+    {
+      name: 'an extra key beside an additionalProperties, with an unevaluatedProperties',
+      root: {
+        type: 'object',
+        additionalProperties: { allOf: [{ type: 'string' }, { default: 'a' }] },
+        unevaluatedProperties: { if: { minLength: 1 }, then: { default: 'then' } },
+        default: { x1: 'p' },
+      },
+      key: 'x1',
+    },
+    {
+      name: 'a declared property beside a pattern its name does not match',
+      root: {
+        type: 'object',
+        properties: { c: { allOf: [{ type: 'string' }, { default: 'a' }] } },
+        patternProperties: { '^z': { if: { minLength: 1 }, then: { default: 'then' } } },
+        default: { c: 'p' },
+      },
+      key: 'c',
+    },
+  ])("reads $name reading data off its parent's fill", ({ root, key }) => {
+    const context: SchemaContext = { validator: answering() };
+    const fill = childFillOf(context, root, root, {}, key);
+    const child = (root.properties?.[key] ?? root.patternProperties?.['^x'] ?? root.additionalProperties) as RJSFSchema;
+    expect(getDefaultFormState(context, { schema: root, rootSchema: root })).toEqual({ [key]: 'p' });
+    expect(getFilledDefault(context, retrieveSchema(context, child, root), root, fill)).toBe('p');
+  });
+
   it("reads a child an ancestor's const or option default gives a value off its parent's fill", () => {
     const constRoot: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } }, const: { a: 'c' } };
     const constFill = childFillOf(descendantWins, constRoot, constRoot, {}, 'a');
