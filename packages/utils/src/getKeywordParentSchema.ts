@@ -26,11 +26,12 @@ const MERGE_COMBINED_KEYS = [PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, ADDITIONAL_
 const MERGE_JOINED_KEYS = [...MERGE_COMBINED_KEYS, ITEMS_KEY, PREFIX_ITEMS_KEY, ADDITIONAL_ITEMS_KEY];
 
 /** Returns whether every keyword along `keys` is one merging joins, so the merged schema holds the subschema they lead
- * to, joined with the other's, rather than a list merging reorders */
+ * to, joined with the other's, rather than a list merging reorders. A `$ref` along them is followed from that merged
+ * subschema */
 function readsJoined(keys: string[]): boolean {
   for (let index = 0; index < keys.length; index++) {
     const key = keys[index];
-    if (!MERGE_JOINED_KEYS.includes(key)) {
+    if (key !== REF_KEY && !MERGE_JOINED_KEYS.includes(key)) {
       return false;
     }
     // The key after one is a name, or a position in a tuple, never a keyword
@@ -66,10 +67,11 @@ const NAME_MAP_KEYS = [
  * @param [skipsRefs=false] - The engine leaves every `$ref` out of the path, so a key after a `$ref` schema can index
  *        either that schema or its target
  * @returns - The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two
- *          of whose schemas hold its next key, unless it is `properties`, `patternProperties`, `additionalProperties`
- *          or `propertyNames`, so which of them the path's next key indexes can't be told; or `undefined` when the
- *          path isn't a URI fragment, or leads to no schema object, such as the `properties` map holding the property a
- *          `false` schema's path ends at, or through a `$ref` that can't be resolved
+ *          of whose schemas hold its next key, unless it is `properties`, `patternProperties`, `additionalProperties`,
+ *          `propertyNames`, or an `items` or `additionalItems` merging joins into one schema with the rest of the path
+ *          running through keys merging joins, so which of them the path's next key indexes can't be told; or
+ *          `undefined` when the path isn't a URI fragment, or leads to no schema object, such as the `properties` map
+ *          holding the property a `false` schema's path ends at, or through a `$ref` that can't be resolved
  */
 export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSFSchema>(
   rootSchema: S,
@@ -99,14 +101,25 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
         }
         const rest = keys.slice(index + refs);
         const merged = readsJoined(rest) ? resolveOwnRef<S>(node as S, rootSchema) : undefined;
-        if (merged && Object.hasOwn(merged, rest[0])) {
+        if (merged && (rest.length === 0 || Object.hasOwn(merged, rest[0]))) {
           node = merged;
           index += refs - 1;
         } else {
           node = requireOwnRef<S>(node as S, rootSchema).target;
         }
       } else {
-        if (hasRef && skipsRefs && !MERGE_COMBINED_KEYS.includes(key)) {
+        if (
+          hasRef &&
+          skipsRefs &&
+          !MERGE_COMBINED_KEYS.includes(key) &&
+          // Merging joins a single schema under `items` or `additionalItems` too, but not a tuple's positions, nor a list
+          // keyword further down that both schemas hold
+          !(
+            (key === ITEMS_KEY || key === ADDITIONAL_ITEMS_KEY) &&
+            readsJoined(keys.slice(index)) &&
+            isObject(getByPath(resolveOwnRef<S>(node as S, rootSchema), key))
+          )
+        ) {
           // Any two schemas along the chain of `$ref`s holding the key make the path ambiguous
           let holders = 0;
           for (let link: unknown = node; link !== undefined;) {

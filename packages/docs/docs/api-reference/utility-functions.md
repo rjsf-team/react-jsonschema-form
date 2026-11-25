@@ -1506,7 +1506,7 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 
 Used by the validator packages to find the schema object holding the keyword a validation error reports, when the engine doesn't hand over one that is resolved, to pass to [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) as its `parentSchema`.
 The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through: one written into the path as a `$ref` key, whose next key is read from the `$ref`'s target alone, or one it skips, its next key being one the `$ref` schema doesn't hold itself.
-Either way a next key such as `properties` or `items`, which merging joins with its target's, is read from the two merged, unless the merge fails, or, after a `$ref` key, unless the path goes on through a key merging doesn't join, such as an `allOf`; a merged read after a chain of `$ref` keys starts from the first, for the titles of every schema along it.
+Either way a next key such as `properties` or `items`, which merging joins with its target's, is read from the two merged, unless the merge fails, or, after a `$ref` key, unless the path goes on through a key merging doesn't join, such as an `allOf`, other than a further `$ref`; a merged read after a chain of `$ref` keys starts from the first, for the titles of every schema along it.
 A `$ref` on the schema it ends at is resolved too, its own keywords kept over its target's.
 Below a skipped `$ref` read merged, a list keyword both schemas hold, such as an `allOf` inside a property both declare, indexes the merged list, so the entry it reads can be the other schema's.
 
@@ -1519,7 +1519,7 @@ Below a skipped `$ref` read merged, a list keyword both schemas hold, such as an
 
 #### Returns
 
-- S | null | undefined: The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two of whose schemas hold its next key, unless it is `properties`, `patternProperties`, `additionalProperties` or `propertyNames`, which merging combines, since the path can index either one's (a key further down is read from the merge); or `undefined` when the path isn't a URI fragment, such as one Ajv starts with another resource's `$id`, or leads to no schema object, such as the `properties` map holding the property a `false` schema's path ends at, or through a `$ref` that can't be resolved, such as one naming an `$anchor`
+- S | null | undefined: The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two of whose schemas hold its next key, since the path can index either one's, unless merging combines the two: the key is `properties`, `patternProperties`, `additionalProperties` or `propertyNames`, or an `items` or `additionalItems` that merges into one schema rather than a tuple, with no key merging doesn't join, such as an `allOf`, further along the path (a key further down is read from the merge); or `undefined` when the path isn't a URI fragment, such as one Ajv starts with another resource's `$id`, or leads to no schema object, such as the `properties` map holding the property a `false` schema's path ends at, or through a `$ref` that can't be resolved, such as one naming an `$anchor`
 
 ### getLabelId&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getlabelid}
 

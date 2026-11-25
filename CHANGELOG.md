@@ -53,7 +53,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 ## @rjsf/validator-cfworker
 
 - Fix errors inside an array item, or under a `$ref`, `allOf`, `if`/`then` or `additionalProperties`, not naming their property by its schema `title` ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
-- Change errors to name their property by the `title` of the schema holding the keyword that failed, as `@rjsf/validator-ajv8` does, before the one along `properties`, so a branch that redeclares the property names it by its own `title` ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+- Fix errors naming a property that a branch, `patternProperties` entry or `additionalProperties` schema redeclares with its own `title` by the `title` along `properties` rather than the redeclared one ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
 
 # 7.0.0-beta.1 (2026-11-20)
 

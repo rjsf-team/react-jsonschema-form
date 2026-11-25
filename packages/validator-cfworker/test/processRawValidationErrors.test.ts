@@ -438,6 +438,36 @@ describe('transformRJSFValidationErrors()', () => {
       ]);
     });
 
+    it('keeps the $ref schema’s titles where the path ends in a chain of $refs or reaches a $ref inside its target', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          N: { type: 'string', title: 'N' },
+          J: { $ref: '#/$defs/N' },
+          I: { type: 'object', properties: { name: { type: 'string', title: 'Full name' } }, required: ['name'] },
+          K: { $ref: '#/$defs/I' },
+          T: { type: 'object', properties: { n: { $ref: '#/$defs/N' } } },
+        },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/J', title: 'Wrapper' },
+          b: { $ref: '#/$defs/K', properties: { name: { title: 'Own' } } },
+          c: { $ref: '#/$defs/T', properties: { n: { title: 'Own N' } } },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: 1, b: {}, c: { n: 5 } }, schema);
+      expect(
+        errors
+          .filter((error) => error.name === 'type' || error.name === 'required')
+          .map(({ property, title }) => ({ property, title })),
+      ).toEqual(
+        expect.arrayContaining([
+          { property: '.a', title: 'Wrapper' },
+          { property: '.b.name', title: 'Own' },
+          { property: '.c.n', title: 'Own N' },
+        ]),
+      );
+    });
+
     it('reads a property named properties as a name, not as the keyword', () => {
       const schema: RJSFSchema = {
         type: 'object',

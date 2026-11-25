@@ -402,6 +402,26 @@ describe('transformRJSFValidationErrors()', () => {
       },
     );
 
+    it('names a property of an array item by the $ref schema’s title where it and its target both hold one items schema', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          I: { type: 'object', properties: { n: { title: 'Target N', type: 'string' } } },
+          T: { type: 'array', items: { type: 'object', properties: { n: { title: 'Target N', type: 'string' } } } },
+          R: { type: 'array', items: { $ref: '#/$defs/I' } },
+        },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/T', items: { properties: { n: { title: 'Own N' } } } },
+          b: { $ref: '#/$defs/R', items: { properties: { n: { title: 'Own N' } } } },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: [{ n: 5 }], b: [{ n: 5 }] }, schema);
+      expect(errors.map(({ property, title }) => ({ property, title }))).toEqual([
+        { property: '.a.0.n', title: 'Own N' },
+        { property: '.b.0.n', title: 'Own N' },
+      ]);
+    });
+
     it('names a missing property from the $ref schema’s own allOf branch where its target also holds one', () => {
       const schema: RJSFSchema = {
         $defs: { T: { type: 'object', allOf: [{ properties: { z: {} } }] } },

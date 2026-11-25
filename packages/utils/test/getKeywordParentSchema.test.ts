@@ -59,6 +59,26 @@ describe('getKeywordParentSchema()', () => {
       title: 'Own N',
     });
   });
+  it('reads a path ending in a chain of `$ref`s, or going on through a `$ref` inside `properties`, merged', () => {
+    const schema: RJSFSchema = {
+      $defs: {
+        N: { type: 'string', title: 'N' },
+        J: { $ref: '#/$defs/N' },
+        T: { type: 'object', properties: { n: { $ref: '#/$defs/N' } } },
+      },
+      type: 'object',
+      properties: {
+        a: { $ref: '#/$defs/J', title: 'Wrapper' },
+        b: { $ref: '#/$defs/T', properties: { n: { title: 'Own N' } } },
+      },
+    };
+    expect(getKeywordParentSchema(schema, '#/properties/a/$ref/$ref/type')).toEqual(
+      expect.objectContaining({ type: 'string', title: 'Wrapper' }),
+    );
+    expect(getKeywordParentSchema(schema, '#/properties/b/$ref/properties/n/$ref/type')).toEqual(
+      expect.objectContaining({ type: 'string', title: 'Own N' }),
+    );
+  });
   it('reads a list below `properties` after a `$ref` written into the path from its target alone', () => {
     const branch: RJSFSchema = { properties: { t: { title: 'Target T' } }, required: ['t'] };
     const schema: RJSFSchema = {
@@ -179,6 +199,28 @@ describe('getKeywordParentSchema()', () => {
         ).toBeNull();
       },
     );
+    it('reads a single-schema `items` a skipped `$ref` and its target both hold, which merging joins', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          I: { type: 'object', properties: { n: { type: 'string', title: 'Target N' } } },
+          T: { type: 'array', items: { $ref: '#/$defs/I' } },
+        },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', items: { properties: { n: { title: 'Own N' } } } } },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/items/properties/n/type', undefined, true)).toEqual({
+        type: 'string',
+        title: 'Own N',
+      });
+    });
+    it('returns null for a list keyword inside a single-schema `items` a skipped `$ref` and its target both hold', () => {
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'array', items: { allOf: [{ title: 'Target branch', minimum: 1 }] } } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', items: { allOf: [{ title: 'Own branch', maximum: 1 }] } } },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/items/allOf/0/minimum', undefined, true)).toBeNull();
+    });
     it('stops at a chain of `$ref`s that loops back on itself', () => {
       const schema: RJSFSchema = {
         $defs: { A: { $ref: '#/$defs/B', allOf: [{}] }, B: { $ref: '#/$defs/A' } },
