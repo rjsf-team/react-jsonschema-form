@@ -115,6 +115,7 @@ export function transformRJSFValidationErrors<
         property,
         schemaPath,
         decodeSchemaPathKey: unescapePointerToken,
+        skipsRefs: true,
         uiSchema,
         parentSchema,
         schema,

@@ -10,20 +10,16 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
-  ALL_OF_KEY,
   ANY_OF_KEY,
   applyValidatorErrorTitles,
   createErrorHandler,
-  ELSE_KEY,
   getByPath,
   getDefaultFormState,
+  getFieldSchemaPath,
   getKeywordParentSchema,
   getUiOptions,
   ONE_OF_KEY,
-  PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
-  REF_KEY,
-  THEN_KEY,
   toErrorSchema,
   toPath,
   unwrapErrorHandler,
@@ -40,35 +36,6 @@ import type { CFWorkerValidationError, SuppressDuplicateFilteringType } from './
  */
 function decodePointerToken(token: string): string {
   return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
-}
-
-const BRANCH_LIST_KEYS = new Set([ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY]);
-const BRANCH_MAP_KEYS = new Set(['dependentSchemas', 'dependencies']);
-const NAME_MAP_KEYS = new Set([PROPERTIES_KEY, PATTERN_PROPERTIES_KEY]);
-
-/** Returns a keyword location with the branches it ends in removed, so that it names the keyword on the schema holding
- * them: a branch's own title names that branch, not the field it applies to. A branch is an `allOf`/`anyOf`/`oneOf`
- * entry, a `then`/`else` or a `dependentSchemas`/`dependencies` schema, each with the `$ref`s after it. The path is
- * walked from the root so that a property or dependency named like a keyword is read as the name it is
- *
- * @param keywordLocation - The keyword location emitted by `@cfworker/json-schema`
- * @returns - The location of the keyword on the schema holding the branches, or `keywordLocation` when it ends in none
- */
-function branchHolderLocation(keywordLocation: string): string {
-  const segments = keywordLocation.split('/');
-  const last = segments.length - 1;
-  let branchStart: number | undefined;
-  for (let index = 1; index < last; index++) {
-    const segment = segments[index];
-    const isBranch =
-      BRANCH_LIST_KEYS.has(segment) || BRANCH_MAP_KEYS.has(segment) || segment === THEN_KEY || segment === ELSE_KEY;
-    branchStart = isBranch || (segment === REF_KEY && branchStart !== undefined) ? (branchStart ?? index) : undefined;
-    // The next segment is an index or a name, never a keyword
-    if (BRANCH_LIST_KEYS.has(segment) || BRANCH_MAP_KEYS.has(segment) || NAME_MAP_KEYS.has(segment)) {
-      index += 1;
-    }
-  }
-  return branchStart === undefined ? keywordLocation : [...segments.slice(0, branchStart), segments[last]].join('/');
 }
 
 /** Converts a cfworker instance location into RJSF's dot-separated property path.
@@ -197,7 +164,7 @@ export function transformRJSFValidationErrors<
           )
         : undefined;
       // A `false` schema's location is its instance's, whose keys name no branch
-      const fieldLocation = keyword === 'false' ? keywordLocation : branchHolderLocation(keywordLocation);
+      const fieldLocation = keyword === 'false' ? keywordLocation : getFieldSchemaPath(keywordLocation);
       const parentTitle = (
         schema && fieldLocation !== keywordLocation
           ? getKeywordParentSchema<S>(schema, fieldLocation, decodePointerToken)

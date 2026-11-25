@@ -580,6 +580,39 @@ describe('transformRJSFValidationErrors()', () => {
         );
       });
     });
+
+    it('gives no title to a missing property a branch under a $ref whose schema and target both hold an allOf requires', () => {
+      const target: RJSFSchema = {
+        type: 'object',
+        allOf: [{ properties: { b: { allOf: [{ required: ['n'] }], properties: { n: { title: 'Target' } } } } }],
+      };
+      const schema: RJSFSchema = {
+        $defs: { T: target },
+        type: 'object',
+        properties: {
+          a: {
+            $ref: '#/$defs/T',
+            allOf: [{ properties: { b: { allOf: [{}], properties: { n: { title: 'Own' } } } } }],
+          },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { b: {} } }, schema);
+      expect(errors).toEqual([
+        expect.objectContaining({ property: '.a.b.n', title: '', stack: "must have required property 'n'" }),
+      ]);
+    });
+
+    it('names a missing property by its field’s title where either allOf along a $ref can require it', () => {
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', properties: { n: { title: 'N' } }, allOf: [{}] } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', allOf: [{ required: ['n'] }] } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
+      expect(errors).toEqual([
+        expect.objectContaining({ property: '.a.n', title: 'N', stack: "must have required property 'N'" }),
+      ]);
+    });
   });
 
   it('gives no title to an error under a false property beside a property named title', () => {

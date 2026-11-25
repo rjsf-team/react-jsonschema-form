@@ -583,6 +583,18 @@ describe('transformRJSFValidationErrors()', () => {
         expect.objectContaining({ name: 'false', title: '', stack: '.x False boolean schema.' }),
       );
     });
+
+    it('gives no title to an error a false schema reports under a property named then', () => {
+      const schema: RJSFSchema = {
+        title: 'Root',
+        type: 'object',
+        properties: { then: { type: 'object', additionalProperties: false } },
+      };
+      const { errors } = customizeValidator().validateFormData({ then: { x: 1 } }, schema);
+      expect(errors.find((error) => error.name === 'false')).toEqual(
+        expect.objectContaining({ property: '.then.x', title: '', stack: '.then.x False boolean schema.' }),
+      );
+    });
   });
 });
 
