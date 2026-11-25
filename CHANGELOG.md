@@ -44,6 +44,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `retrieveSchema()` and `getDefaultFormState()` calling the validator for an `if` again when only a key its `properties` and `required` don't name changed ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#4051](https://github.com/rjsf-team/react-jsonschema-form/issues/4051))
 - Fix `getDecimalSeparator()` building an `Intl.NumberFormat` on every call, which every number field made on every render ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
 - Add `getKeywordParentSchema()`, which finds the schema holding the keyword a validation error reports ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+- Add an `offeredBy` argument to `getClosestMatchingOption()` and `SchemaUtils.getClosestMatchingOption()`, the field offering the options, so under `additionalPropertiesWhenAbsent: 'allow'` a call over copied options, options built in code, or a definition's options named through a typed `$ref` picks the option that field shows ([#5958](https://github.com/rjsf-team/react-jsonschema-form/issues/5958))
 
 ## @rjsf/validator-ata
 

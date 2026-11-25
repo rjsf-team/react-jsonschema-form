@@ -292,6 +292,8 @@ class SchemaUtils<
    * @param [selectedOption] - The index of the currently selected option, defaulted to -1 if not specified
    * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
    *          determine which option is selected
+   * @param [offeredBy] - The schema of the field offering the options, as written where it offers them, which says
+   *          whether an option takes the data's extra keys an absent keyword takes (see `getClosestMatchingOption()`)
    * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
    */
   getClosestMatchingOption(
@@ -299,6 +301,7 @@ class SchemaUtils<
     options: S[],
     selectedOption?: number,
     discriminatorField?: string,
+    offeredBy?: S,
   ): number {
     return getClosestMatchingOption<T, S, F>(
       this.context,
@@ -307,6 +310,7 @@ class SchemaUtils<
       options,
       selectedOption,
       discriminatorField,
+      offeredBy,
     );
   }
 

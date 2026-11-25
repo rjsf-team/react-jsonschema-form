@@ -2,9 +2,11 @@ import { allowsAdditionalProperties, readsAbsentAsAllowed } from '../additionalP
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
+  ANY_OF_KEY,
   DEPENDENCIES_KEY,
   ELSE_KEY,
   IF_KEY,
+  ONE_OF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
   REQUIRED_KEY,
@@ -180,8 +182,8 @@ function listHolderOf<S extends StrictRJSFSchema>(
 /** Returns the field the root declares `options` as the `anyOf`/`oneOf` list of, with the keyword holding them: the
  * schema holding the list, or the one it merges into where an `allOf` entry, `then`, `else` or `dependencies` schema
  * holds it. Undefined for a list the root holds nowhere, as one built in code, a copy or the options `retrieveSchema()`
- * handed out are. shortcut: a list a `definitions` or `$defs` entry offers is read with the entry's own type, not one a
- * `$ref` naming it adds, since several fields can name it; upgrade if typed `$ref` sites need the field's pick
+ * handed out are. A list a `definitions` or `$defs` entry offers is read with the entry's own type, not one a `$ref`
+ * naming it adds, since several fields can name it: a caller names the field as `offeredBy` to have it read as that one
  *
  * @param options - The options
  * @param rootSchema - The root schema
@@ -196,13 +198,31 @@ function declaredListing<S extends StrictRJSFSchema>(
   if (holder === undefined) {
     return undefined;
   }
-  let fieldId = holder.id;
+  const field = graph.node(fieldMergedInto<S>(graph, holder.id));
+  /* v8 ignore next -- the holder and each node it merges into are object nodes */
+  return field.kind === 'schema' ? { offeredBy: field.raw, keyword: holder.keyword } : undefined;
+}
+
+/** Returns the field schema node `id` merges into, through every `allOf` entry, `then`, `else` or `dependencies`
+ * schema holding it, or `id` itself where it merges into none
+ */
+function fieldMergedInto<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): NodeId {
+  let fieldId = id;
   for (let up = mergedInto<S>(graph, fieldId); up !== undefined; up = mergedInto<S>(graph, fieldId)) {
     fieldId = up;
   }
-  const field = graph.node(fieldId);
-  /* v8 ignore next -- the holder and each node it merges into are object nodes */
-  return field.kind === 'schema' ? { offeredBy: field.raw, keyword: holder.keyword } : undefined;
+  return fieldId;
+}
+
+/** Returns the field a caller's `offeredBy` stands for: where the root holds it, the field it merges into, as the
+ * field holding a list the root declares is found, so naming the `allOf` entry or `then` holding the list reads the
+ * same as naming the field; any other schema as it stands
+ */
+function offeringField<S extends StrictRJSFSchema>(offeredBy: S, rootSchema: S): S {
+  const graph = parseSchemaGraph<S>(rootSchema);
+  const id = graph.byObject(offeredBy);
+  const field = id === undefined ? undefined : graph.node(fieldMergedInto<S>(graph, id));
+  return field?.kind === 'schema' ? field.raw : offeredBy;
 }
 
 /** Returns where the option `option`, at `index` of the list `listing` names, is declared: where a declaration of the
@@ -521,9 +541,8 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
         return value === undefined ? withoutKeys<S>(copy, keyword) : { ...copy, [keyword]: value };
       }, schema)
     : schema;
-  // shortcut: an option of a list the root declares nowhere, as one a direct `getClosestMatchingOption()` call builds
-  // in code, reads an absent keyword as `'forbid'`, since only the field offering it says whether it stubs those keys
-  // itself; upgrade if such callers need the form's pick
+  // An option of a list no field is known to offer, as one built in code or a copy passed without its `offeredBy`,
+  // reads an absent keyword as `'forbid'`, since only the field offering it says whether it stubs those keys itself
   const stubContext: SchemaContext<S, F> =
     (readsAbsent && plan !== undefined) || !readsAbsentAsAllowed<S, F>(context)
       ? context
@@ -592,6 +611,8 @@ let checkedPicks: WeakSet<object> | undefined;
  * @param [discriminatorField] - The name of the property the options are told apart by
  * @param [listing] - The field and keyword listing the options, where each is scored as declared, or else each is
  *        scored where `retrieveSchema()` would read it
+ * @param [offeredBy] - The field offering the options, read in place of the one the root declares them in where no
+ *        `listing` names it
  * @returns - The index of the closest option, and the score a list nested under a property contributes with it
  */
 function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
@@ -603,6 +624,7 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   relax: boolean,
   discriminatorField?: string,
   listing?: Listing<S>,
+  offeredBy?: S,
 ): BestOption {
   const optionNodes = options.map((option) => optionNodeOf<S>(option, rootSchema));
   const declaredAt = (index: number, option: S) =>
@@ -637,7 +659,7 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     // absent keyword taking any, there are none to stub
     const readsAbsent =
       isObject(formData) && readsAbsentAsAllowed<S, F>(context)
-        ? absentReadings<S, F>(context, rootSchema, formData, options, listing, checked)
+        ? absentReadings<S, F>(context, rootSchema, formData, options, listing, offeredBy, checked)
         : options.map(() => false);
     // What an option scores depends on where it is declared as well as on the option, since one object can sit in two
     // resources, each resolving the `$ref`s it holds against its own
@@ -669,9 +691,9 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 }
 
 /** Which of `options` stub the extra keys of `formData` an absent keyword takes, where the context reads one as taking
- * them: each but one beside which an object renders its own field, the field the list `listing` names, or else the
- * one the root declares it in, retrieved for the data. Kept as a pick is, see `picked`, since retrieving the field is
- * what every pick asks for, a pick made before included
+ * them: each but one beside which an object renders its own field, the field the list `listing` names, or else
+ * `offeredBy`, or else the one the root declares it in, retrieved for the data. Kept as a pick is, see `picked`, since
+ * retrieving the field is what every pick asks for, a pick made before included
  */
 function absentReadings<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -679,19 +701,24 @@ function absentReadings<S extends StrictRJSFSchema, F extends FormContextType>(
   formData: object,
   options: readonly unknown[],
   listing: Listing<S> | undefined,
+  offeredBy: S | undefined,
   checked: WeakSet<object>,
 ): readonly boolean[] {
   const keys = [
     context.validator,
     context.customMergeAllOf,
     rootSchema,
-    listing?.offeredBy,
+    listing?.offeredBy ?? offeredBy,
     listing?.keyword,
     ...options,
     formData,
   ];
   return keptForData(absentLists, keys, formData, checked, () => {
-    const offering = listing ?? declaredListing<S>(options, rootSchema);
+    const offering =
+      listing ??
+      (offeredBy === undefined
+        ? declaredListing<S>(options, rootSchema)
+        : { offeredBy: offeringField<S>(offeredBy, rootSchema), keyword: undefined });
     const offeredAt = offering === undefined ? undefined : whereOf<S>(offering.offeredBy, rootSchema);
     // A field reaching a reference that resolves to nothing, which retrieving it throws on, reads as no field offering
     // them. A `$ref` beside the list is followed in the field's own resource, which a detached copy would lose
@@ -706,7 +733,8 @@ function absentReadings<S extends StrictRJSFSchema, F extends FormContextType>(
               typeof offering.offeredBy[REF_KEY] === 'string'
                 ? planAt<S, F>(context, offeredAt).schema
                 : offering.offeredBy,
-              offering.keyword,
+              // A field a caller names can hold the options under either keyword, or through its `$ref`
+              ...(offering.keyword === undefined ? [ANY_OF_KEY, ONE_OF_KEY] : [offering.keyword]),
             ),
             rootSchema,
             formData,
@@ -937,6 +965,7 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param relax - Whether an option's `additionalProperties: false` is relaxed for matching
  * @param [discriminatorField] - The name of the property the options are told apart by
  * @param [listing] - The field offering the options and the keyword holding them
+ * @param [offeredBy] - The field offering the options, where no `listing` names it
  * @returns - The index of the closest option, or the `selectedOption` when there is none to pick
  */
 export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
@@ -948,6 +977,7 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
   relax: boolean,
   discriminatorField?: string,
   listing?: Listing<S>,
+  offeredBy?: S,
 ): number {
   // Only a caller's own list can be empty: a nested one is read through `getXxxOfKey()`, which never returns one
   if (options.length === 0) {
@@ -962,6 +992,7 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
     relax,
     discriminatorField,
     listing,
+    offeredBy,
   ).index;
 }
 
@@ -984,6 +1015,10 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
  * @param [selectedOption=-1] - The index of the currently selected option, defaulted to -1 if not specified
  * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
  *          determine which option is selected
+ * @param [offeredBy] - The schema of the field offering the options, as written where it offers them, a `$ref` and the
+ *          keywords beside it included. Under `additionalPropertiesWhenAbsent: 'allow'` it says whether an option takes
+ *          the data's extra keys an absent keyword takes, or the field takes them beside it; without it, that is read
+ *          off the field the root declares the options in, and options it declares nowhere take none
  * @returns - The index of the option that is the closest match to the `formData`, or the `selectedOption` when there
  *          are no options
  */
@@ -998,6 +1033,17 @@ export default function getClosestMatchingOption<
   options: S[],
   selectedOption = -1,
   discriminatorField?: string,
+  offeredBy?: S,
 ): number {
-  return closestOption<S, F>(context, rootSchema, formData, options, selectedOption, false, discriminatorField);
+  return closestOption<S, F>(
+    context,
+    rootSchema,
+    formData,
+    options,
+    selectedOption,
+    false,
+    discriminatorField,
+    undefined,
+    offeredBy,
+  );
 }
