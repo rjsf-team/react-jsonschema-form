@@ -5,9 +5,11 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   ANY_OF_KEY,
+  CONST_KEY,
   DEPENDENCIES_KEY,
   DISCRIMINATOR_PATH,
   ELSE_KEY,
+  ENUM_KEY,
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
@@ -18,16 +20,17 @@ import {
   THEN_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
+import deepEquals from '../../deepEquals.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
-import shallowAllOfMerge, { mergeOptionLists } from '../shallowAllOfMerge.ts';
+import shallowAllOfMerge, { mergedPair, mergeOptionLists } from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
-import { declaredProperties, declaresNoKey, dependencyCondition, targetOf, typesOverlap } from './validationTargets.ts';
+import { declaredProperties, declaresNoKey, dependencyCondition, targetOf } from './validationTargets.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -643,38 +646,78 @@ function recorded(options: ReturnType<typeof mergeOptionLists>): ReturnType<type
   return options;
 }
 
-/** Returns the option a field's `left` and a branch's `right` merge to, as the branch merges over the field: by
- * `mergeSchemas()`, its keywords winning and the field's keys first, or undefined where either is `false`, or where
- * they name different `$ref`s or no common `type`, which the branch's winning keyword would hide, collapsing pairs
- * built from different options of the field's into one. An option of `true` takes any value, so the pair is the other
- * option, copied to keep sources of its own
+/** The meta-data keywords a branch's option relabels a field's option by, where the pair's constraints are both's */
+const ANNOTATION_KEYS = ['title', 'description', 'default', 'examples', 'deprecated', 'readOnly', 'writeOnly'];
+
+/** Returns the option a field's `left` and a branch's `right` merge to: the data meets both, so the pair keeps both's
+ * constraints, merged as an `allOf` pair is with the field's keys first, and the branch's annotations, so a `then`
+ * still relabels the field's options. A pair no data can meet, which the merge rejects or whose `$ref`s or `const`s
+ * differ, is undefined, as is one holding `false`
  */
 function branchPair(left: JSONSchema7Definition, right: JSONSchema7Definition): JSONSchema7Definition | undefined {
-  if (left === false || right === false || (isObject(left) && isObject(right) && pairConflicts(left, right))) {
+  if (isObject(left) && isObject(right) && pairConflicts(left, right)) {
     return undefined;
   }
-  if (isObject(right)) {
-    return mergeSchemas(isObject(left) ? left : {}, right);
-  }
-  return isObject(left) ? { ...left } : left;
+  const merged = mergedPair(left, right);
+  return merged === undefined || merged === false ? undefined : withAnnotationsOf(merged, right);
 }
 
-/** Returns whether `left` and `right` name different `$ref`s or `type`s no value meets both of, an `integer` read as a
- * `number`. shortcut: two `$ref`s are compared by name, not by what they resolve to; upgrade if a branch's options
- * reference definitions the field's own options also meet
+/** Returns whether `left` and `right`, or two properties they both declare, name different `$ref`s or `const`s, which
+ * the merge would keep the first of, or a `const` the other's `enum` leaves out, which it keeps beside it. shortcut:
+ * two `$ref`s are compared by name, not by what they resolve to; upgrade if a branch's options reference definitions
+ * the field's own options also meet
  */
 function pairConflicts(left: object, right: object): boolean {
-  const refs = [left, right].map((schema): unknown => Reflect.get(schema, REF_KEY));
-  if (refs.every((ref) => typeof ref === 'string') && refs[0] !== refs[1]) {
+  const [ref, otherRef] = [left, right].map((schema): unknown => Reflect.get(schema, REF_KEY));
+  const [value, other] = [left, right].map((schema): unknown => Reflect.get(schema, CONST_KEY));
+  const [values, otherValues] = [left, right].map((schema): unknown => Reflect.get(schema, ENUM_KEY));
+  if (
+    (typeof ref === 'string' && typeof otherRef === 'string' && ref !== otherRef) ||
+    (value !== undefined && other !== undefined && !deepEquals(value, other)) ||
+    outsideEnum(value, otherValues) ||
+    outsideEnum(other, values)
+  ) {
     return true;
   }
-  const [types, others] = [left, right].map((schema) => {
-    const type: unknown = Reflect.get(schema, 'type');
-    return type === undefined
-      ? undefined
-      : (Array.isArray(type) ? type : [type]).map((one) => (one === 'integer' ? 'number' : String(one)));
-  });
-  return !typesOverlap(types, others);
+  const [properties, others] = [left, right].map((schema): unknown => Reflect.get(schema, PROPERTIES_KEY));
+  return (
+    isObject(properties) &&
+    isObject(others) &&
+    Object.keys(others).some((key) => {
+      const [one, another]: unknown[] = [Reflect.get(properties, key), Reflect.get(others, key)];
+      return Object.hasOwn(properties, key) && isObject(one) && isObject(another) && pairConflicts(one, another);
+    })
+  );
+}
+
+/** Returns whether `values` is an `enum` leaving out `value`, a `const` */
+function outsideEnum(value: unknown, values: unknown): boolean {
+  return value !== undefined && Array.isArray(values) && !values.some((one) => deepEquals(one, value));
+}
+
+/** Returns `merged` with the annotations of `branch` laid over it, its properties' too. shortcut: annotations in the
+ * branch option's `$ref` definition or in its subschemas other than `properties`, such as `items`, don't win; upgrade
+ * if a `then` relabels those
+ */
+function withAnnotationsOf(merged: JSONSchema7Definition, branch: unknown): JSONSchema7Definition {
+  if (typeof merged === 'boolean' || !isObject(branch)) {
+    return merged;
+  }
+  const result: Record<string, unknown> = { ...merged };
+  for (const key of ANNOTATION_KEYS.filter((annotation) => Object.hasOwn(branch, annotation))) {
+    result[key] = Reflect.get(branch, key);
+  }
+  const { properties } = merged;
+  const others: unknown = Reflect.get(branch, PROPERTIES_KEY);
+  if (properties !== undefined && isObject(others)) {
+    result[PROPERTIES_KEY] = Object.fromEntries(
+      Object.entries(properties).map(([key, property]) => [
+        key,
+        Object.hasOwn(others, key) ? withAnnotationsOf(property, Reflect.get(others, key)) : property,
+      ]),
+    );
+  }
+  return result;
 }
 
 /** Returns the `allOf` entries `schemas` hold themselves, which merging the schemas as the `allOf` of them leaves as they
@@ -1007,11 +1050,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   /** Merges the `then`/`else` or `dependencies` schema declared at `node` into `part`, see `mergeBranch()`. The data
    * meets a list the branch holds and one the part holds under the same keyword alike, so the field offers each option
-   * of the part's with each of the branch's merged over it, see `branchPair()`, where the branch's list would
-   * otherwise replace the part's. A list the plan chose an option of stays as the merge leaves it, since the fold tells
-   * the lists it chose from by the list. shortcut: under a `customMergeAllOf` the branch's list replaces the part's,
-   * since that merge reads its first entry as winning where the branch's keywords win; upgrade if such a field needs
-   * both lists offered
+   * of the part's merged with each of the branch's, see `branchPair()`, where the branch's list would otherwise
+   * replace the part's. A pair equal to one already kept is kept too, since the branch's annotations can make pairs
+   * built from options differing only in theirs equal, which would leave one of them unoffered. A list the plan chose an option of stays as the merge leaves it, since the fold tells the lists
+   * it chose from by the list. shortcut: under a `customMergeAllOf` the branch's list replaces the part's, since that
+   * merge reads its first entry as winning where the branch's annotations win; upgrade if such a field needs both lists
+   * offered
    */
   private mergeBranchOver(part: Part<S>, branch: Part<S>, node: NodeId): Part<S> {
     const merged = mergeBranch(part, branch, 'b', node);
@@ -1025,7 +1069,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         Array.isArray(own) &&
         Array.isArray(other) &&
         !this.choices.some(({ list, selected }) => selected !== undefined && (list === own || list === other))
-          ? recorded(mergeOptionLists(own, [other], branchPair))
+          ? recorded(mergeOptionLists(own, [other], branchPair, false))
           : undefined;
       if (options !== undefined) {
         Reflect.set(

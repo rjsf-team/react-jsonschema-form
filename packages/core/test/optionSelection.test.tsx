@@ -1961,6 +1961,56 @@ describe('option selection as form state', () => {
     },
   );
 
+  // Each pair keeps both options' `required`, so pairs built from A and from B stay apart and B can be picked
+  it("offers and switches to each pair of a then's list with the field's own whose options differ only by required (#5930)", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' }, b: { type: 'string' }, c: { type: 'string' }, d: { type: 'string' } },
+      oneOf: [
+        { title: 'A', required: ['a'] },
+        { title: 'B', required: ['b'] },
+      ],
+      if: true,
+      then: {
+        oneOf: [
+          { title: 'C', required: ['c'] },
+          { title: 'D', required: ['d'] },
+        ],
+      },
+    };
+    const { node } = createFormComponent({ schema });
+    const select = selectOf(node, 'root__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual(['A, C', 'A, D', 'B, C', 'B, D']);
+    await user.selectOptions(select, '2');
+    expect(getSelectedOptionValue(select)).toBe('B, C');
+  });
+
+  // `MultiSchemaField` labels a lone option written as a `$ref` by its definition's title, and so a merged one too
+  it("labels each pair of a then's list with the field's own options written as $refs by their definitions' titles (#5930)", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: {
+        A: { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+        B: { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+      },
+      properties: {
+        p: {
+          oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }],
+          if: true,
+          then: {
+            oneOf: [
+              { title: 'C', properties: { c: { type: 'string' } } },
+              { title: 'D', properties: { d: { type: 'string' } } },
+            ],
+          },
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual(['A, C', 'A, D', 'B, C', 'B, D']);
+  });
+
   // The grid's selector writes the selector property, whose value each option of the rebuilt list built from the same
   // written option shares, so switching to B picks B×C, which reads B's entry
   it('labels and switches the options of a LayoutMultiSchemaField by the uiSchema entry of the written option each was built from (#5930)', async () => {

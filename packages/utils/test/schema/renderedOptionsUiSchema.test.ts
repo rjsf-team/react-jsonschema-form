@@ -181,6 +181,30 @@ describe('renderedOptionTitles()', () => {
     expect(titlesOf(field)).toEqual(['A, E, C']);
   });
 
+  // An option written as a `$ref` is commonly titled in its definition, which `MultiSchemaField` labels a lone one by
+  it.each<[string, RJSFSchema]>([
+    ['an allOf entry', { allOf: [{ oneOf: other }] }],
+    ['a then', { if: true, then: { oneOf: other } }],
+  ])("titles an option written as a $ref by its definition's title, where %s's list rebuilds it", (_, rest) => {
+    const field: RJSFSchema = {
+      type: 'object',
+      definitions: { A: titled('A', A), B: titled('B', B) },
+      oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B', title: 'Own B' }],
+      ...rest,
+    };
+    expect(titlesOf(field)).toEqual(['A, C', 'A, D', 'Own B, C', 'Own B, D']);
+  });
+
+  it('names no option by a $ref that resolves to nothing', () => {
+    const field: RJSFSchema = {
+      type: 'object',
+      definitions: { A: titled('A', A) },
+      oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/missing' }],
+      allOf: [{ oneOf: other }],
+    };
+    expect(titlesOf(field)).toEqual(['A, C', 'A, D', undefined, undefined]);
+  });
+
   it('titles none of an option built from options naming no two names', () => {
     const field: RJSFSchema = {
       type: 'object',

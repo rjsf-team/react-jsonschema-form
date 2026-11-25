@@ -504,8 +504,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieved(schema, { k: 1 }).oneOf).toEqual([C, D]);
       });
     });
-    // The branch merges over the field, so of a keyword both options of a pair hold, the branch's wins, and with it a
-    // `then` narrows or relabels the field's options as it does a field offering none
+    // The data meets both options of a pair, so a pair no data meets is left out, and the branch's annotations win,
+    // so a `then` narrows or relabels the field's options as it does a field offering none
     it.each<[string, RJSFSchema[], RJSFSchema[], RJSFSchema[]]>([
       [
         'relabels',
@@ -518,8 +518,72 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       ],
       ['narrows', [{ const: 'a' }, { const: 'b' }], [{ const: 'c' }], [{ const: 'c' }]],
       ['retypes', [{ type: 'string' }], [{ type: 'number' }], [{ type: 'number' }]],
-    ])("%s the field's options with the branch's, whose keywords win each pair", (_, own, then, expected) => {
+    ])("%s the field's options with the branch's, whose annotations win each pair", (_, own, then, expected) => {
       expect(retrieved({ oneOf: own, if: true, then: { oneOf: then } }).oneOf).toEqual(expected);
+    });
+    it.each<[string, RJSFSchema, RJSFSchema]>([
+      ["the field's const", { const: 'a' }, { enum: ['b'] }],
+      ["the branch's const", { enum: ['b'] }, { const: 'a' }],
+    ])("leaves out a pair whose other option's enum leaves out %s, which no data meets", (_, one, other) => {
+      const any: RJSFSchema = { title: 'Any' };
+      expect(retrieved({ oneOf: [one, any], if: true, then: { oneOf: [other] } }).oneOf).toEqual([
+        { ...any, ...other },
+      ]);
+    });
+    // The branch's annotations make the pairs equal, but each is built from a different option of the field's own
+    it("keeps each pair built from field options differing only in the annotations the branch's option replaces", () => {
+      const size = (title: string, value: number): RJSFSchema => ({ title, properties: { s: { default: value } } });
+      expect(
+        retrieved({
+          type: 'object',
+          anyOf: [size('Small', 1), size('Large', 10)],
+          if: true,
+          then: { anyOf: [size('M', 5)] },
+        }).anyOf,
+      ).toEqual([size('M', 5), size('M', 5)]);
+    });
+    it("keeps the required of the field's option beside the branch's, so pairs built from different options stay apart", () => {
+      expect(
+        retrieved({
+          type: 'object',
+          oneOf: [
+            { title: 'A', required: ['a'] },
+            { title: 'B', required: ['b'] },
+          ],
+          if: true,
+          then: {
+            oneOf: [
+              { title: 'C', required: ['c'] },
+              { title: 'D', required: ['d'] },
+            ],
+          },
+        }).oneOf,
+      ).toEqual([
+        { title: 'C', required: ['a', 'c'] },
+        { title: 'D', required: ['a', 'd'] },
+        { title: 'C', required: ['b', 'c'] },
+        { title: 'D', required: ['b', 'd'] },
+      ]);
+    });
+    it("keeps a key's constraints of both options, an integer among them", () => {
+      expect(
+        retrieved({
+          type: 'object',
+          oneOf: [{ properties: { n: { type: 'integer', minimum: 0 } } }],
+          if: true,
+          then: { oneOf: [{ properties: { n: { type: 'number', maximum: 10 } } }] },
+        }).oneOf,
+      ).toEqual([{ properties: { n: { type: 'integer', minimum: 0, maximum: 10 } } }]);
+    });
+    it('leaves out a pair whose options give a key different consts, which no data meets', () => {
+      const k = (value: string): RJSFSchema => ({ properties: { k: { const: value } } });
+      expect(
+        retrieved({ type: 'object', oneOf: [k('a'), k('b')], if: true, then: { oneOf: [k('c'), k('a'), D] } }).oneOf,
+      ).toEqual([
+        k('a'),
+        { properties: { k: { const: 'a' }, d: { type: 'string' } } },
+        { properties: { k: { const: 'b' }, d: { type: 'string' } } },
+      ]);
     });
     it("keeps the keys of the field's option first, and the branch's default of a key both declare", () => {
       const options = retrieved({

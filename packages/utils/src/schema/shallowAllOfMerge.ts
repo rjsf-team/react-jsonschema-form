@@ -103,7 +103,10 @@ export interface MergedOption {
  * result is a new object, since a pair holding an empty option merges to the other, whose recorded sources it would
  * otherwise overwrite
  */
-function mergedPair(left: JSONSchema7Definition, right: JSONSchema7Definition): JSONSchema7Definition | undefined {
+export function mergedPair(
+  left: JSONSchema7Definition,
+  right: JSONSchema7Definition,
+): JSONSchema7Definition | undefined {
   try {
     const objects = [left, right].filter((entry) => typeof entry !== 'boolean');
     const merged = withOpenAdditionalProperties(mergeArrayOfSchemaDefinitions([left, right]), objects, objects);
@@ -123,12 +126,14 @@ function mergedPair(left: JSONSchema7Definition, right: JSONSchema7Definition): 
  * @param rest - The lists after it
  * @param [pair] - Merges an option built so far with one of the next list, or rejects the pair; the shallow merge's
  *        by default
+ * @param [dropEqual=true] - Whether a pair equal to an option already kept is dropped, as the shallow merge drops it
  * @returns - The options, or undefined where no pair merges, which the merge rejects
  */
 export function mergeOptionLists(
   first: readonly JSONSchema7Definition[],
   rest: readonly (readonly JSONSchema7Definition[])[],
   pair: (left: JSONSchema7Definition, right: JSONSchema7Definition) => JSONSchema7Definition | undefined = mergedPair,
+  dropEqual = true,
 ): MergedOption[] | undefined {
   let merged: MergedOption[] = first.map((option) => ({ option, sources: [option] }));
   for (const list of rest) {
@@ -136,7 +141,10 @@ export function mergeOptionLists(
     for (const left of merged) {
       for (const right of list) {
         const option = pair(left.option, right);
-        if (option !== undefined && !next.some((kept) => compareSchemaDefinitions(kept.option, option) === 0)) {
+        if (
+          option !== undefined &&
+          !(dropEqual && next.some((kept) => compareSchemaDefinitions(kept.option, option) === 0))
+        ) {
           next.push({ option, sources: [...left.sources, right] });
         }
       }

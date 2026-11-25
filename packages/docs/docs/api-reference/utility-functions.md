@@ -2905,7 +2905,7 @@ Returns the values of the stars a rating widget draws: one for each whole number
 ### renderedOptionTitles&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns, for each option a field renders, the title of an option built by merging lists, as `MultiSchemaField` and `LayoutMultiSchemaField` label it.
-An option built by merging the field's own list with one an `allOf` entry, `then` or `else` holds is titled after each option it was built from, in the order they were merged, the names joined pairwise with `TranslatableString.MergedOptionTitle`: the field's own option by the `ui:title` of its `uiSchema.anyOf`/`uiSchema.oneOf` entry, or else its `title`, and each other option by its `title`.
+An option built by merging the field's own list with one an `allOf` entry, `then` or `else` holds is titled after each option it was built from, in the order they were merged, the names joined pairwise with `TranslatableString.MergedOptionTitle`: the field's own option by the `ui:title` of its `uiSchema.anyOf`/`uiSchema.oneOf` entry, or else its `title`, and each other option by its `title`, an option written as a `$ref` taking its definition's `title` where none is written beside it.
 An option built from a single option, or from options with no two different names, has no title and is labelled as any other option is.
 So is one whose entry has a `ui:title` where the field has no list of its own, as when its lists sit only in `allOf` entries, since the entries then describe the options at their positions.
 

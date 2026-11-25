@@ -1,3 +1,4 @@
+import { REF_KEY } from '../constants.ts';
 import { TranslatableString } from '../enums.ts';
 import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
@@ -18,7 +19,7 @@ import type {
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { isHandedOut } from './graph/handedOut.ts';
-import { emptySchema, sourcesOfOption } from './graph/mergePlan.ts';
+import { emptySchema, refDefinition, sourcesOfOption } from './graph/mergePlan.ts';
 import nodeOfSchema from './graph/nodeOfSchema.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
@@ -198,16 +199,31 @@ export function renderedOptionsUiSchema<
     : indices.map((index) => entries[index]);
 }
 
-/** Returns the name the option `source` is labelled with: its `title`, or the `title` its uiSchema entry `entry` gives
- * it, `ui:title` or `ui:options.title`, as `MultiSchemaField` reads it. shortcut: an option written as a `$ref` is named
- * by the `title` beside the `$ref` only; upgrade if merged options built from such options need their definitions'
- * titles
+/** Returns the name the option `source` is labelled with: its `title`, or that of the definition its `$ref` names, or
+ * the `title` its uiSchema entry `entry` gives it, `ui:title` or `ui:options.title`, as `MultiSchemaField` reads it
  */
-function optionName(source: unknown, entry?: unknown): string | undefined {
+function optionName<S extends StrictRJSFSchema>(source: unknown, rootSchema: S, entry?: unknown): string | undefined {
   const uiTitle: unknown = isObject(entry) ? getUiOptions(entry).title : undefined;
-  const title: unknown = isObject(source) ? Reflect.get(source, 'title') : undefined;
+  const title: unknown = isSchemaObject<S>(source)
+    ? (Reflect.get(source, 'title') ?? definitionTitle<S>(source, rootSchema))
+    : undefined;
   const name = typeof uiTitle === 'string' ? uiTitle : title;
   return typeof name === 'string' && name !== '' ? name : undefined;
+}
+
+/** Returns the `title` of the definition the `$ref` of `source` names, followed in the resource `source` sits in, or
+ * undefined for a reference that resolves to nothing
+ */
+function definitionTitle<S extends StrictRJSFSchema>(source: S, rootSchema: S): unknown {
+  if (typeof source[REF_KEY] !== 'string') {
+    return undefined;
+  }
+  const { graph, node } = nodeOfSchema<S>(source, rootSchema);
+  try {
+    return Reflect.get(refDefinition<S>(graph, node), 'title');
+  } catch {
+    return undefined;
+  }
 }
 
 /** Returns, for each option `view`, a field's schema `retrieveSchema()` handed out, offers, the title of an option a
@@ -246,7 +262,10 @@ export function renderedOptionTitles<
   const entries = Array.isArray(given) ? given : [];
   return built.map((sources, position) => {
     const writtenAt = indices?.[position];
-    if (sources.length < 2 || (writtenAt === undefined && optionName(undefined, entries[position]) !== undefined)) {
+    if (
+      sources.length < 2 ||
+      (writtenAt === undefined && optionName(undefined, rootSchema, entries[position]) !== undefined)
+    ) {
       return undefined;
     }
     const writtenOption = writtenAt === undefined ? undefined : written?.[writtenAt];
@@ -255,8 +274,8 @@ export function renderedOptionTitles<
         sources.flatMap((source) => {
           const name =
             writtenAt !== undefined && source === writtenOption
-              ? optionName(source, entries[writtenAt])
-              : optionName(source);
+              ? optionName(source, rootSchema, entries[writtenAt])
+              : optionName(source, rootSchema);
           return name === undefined ? [] : [name];
         }),
       ),
