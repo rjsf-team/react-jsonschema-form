@@ -2191,19 +2191,21 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   }
   const { controlled } = state;
   const isEdited = isEditedIn(state);
-  // By value, since a parent may store a copy of what the form reported
-  if (Object.is(passed, state.formData) || deepEquals(passed, state.formData)) {
+  // By value, since a parent may store a copy of what the form reported. A key the form holds as `undefined`, as a
+  // cleared field leaves, is one a JSON copy leaves out, so it counts as missing
+  const isSame = (held: unknown) => Object.is(held, passed) || deepEqualsUndefinedAsMissing(held, passed);
+  if (isSame(state.formData)) {
     return asControlledBy(props, deriveOwnState(props, state));
   }
-  const isStoredLate = controlled?.reported.some((held) => Object.is(held, passed) || deepEquals(held, passed));
-  if (controlled && (isStoredLate || Object.is(passed, controlled.from) || deepEquals(passed, controlled.from))) {
+  if (controlled && (isSame(controlled.from) || controlled.reported.some(isSame))) {
     const own = deriveOwnState(props, state);
     return isEdited ? own : asControlledBy(props, own);
   }
   // Any other value is the parent's own. Over edits it has yet to pass back it is its answer to them, as an edit it
   // transformed is, and the form is as dirty as that leaves it. With none it is another record, as one
   // that loaded or a Cancel put back, which the form is not dirty against: the baseline follows data that is its own
-  const from = isEdited ? state : { ...state, baseline: state.formData };
+  // Passed data is live-validated, as v6 validated any `formData` passed, even after a mount that passed none
+  const from = { ...state, isDataPassed: true, baseline: isEdited ? state.baseline : state.formData };
   return asControlledBy(props, shareState(state, deriveDataState(from, passed, props)));
 }
 

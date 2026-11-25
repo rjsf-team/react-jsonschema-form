@@ -16,8 +16,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 ## @rjsf/utils
 
-- **BREAKING CHANGE:** Remove the `form-data-ignored` warning ID from `WarningId`, since `Form` no longer gives that warning; remove it from `setWarningOptions()`'s `throwOn` and `except`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-passed-formdata-shows-each-new-value-you-pass) ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
-- Add the `form-data-ownership-changed` warning ID to `WarningId`, in the `config` category, for the warning `Form` gives when it changes between being passed `formData` and being passed none ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
+- Remove the `form-data-ignored` warning ID from `WarningId`, since `Form` no longer gives that warning ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
+- Add the `form-data-ownership-changed` warning ID to `WarningId`, in the `migration` category, for the warning `Form` gives when it changes between being passed `formData` and being passed none ([#5941](https://github.com/rjsf-team/react-jsonschema-form/pull/5941))
 
 # 7.0.0-beta.1 (2026-11-20)
 

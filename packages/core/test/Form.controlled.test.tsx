@@ -492,6 +492,24 @@ describe('a form controlled through formData', () => {
       expect(handleOf(ref).getStatus().dirty).toBe(true);
     });
 
+    it('keeps the later edits when it stores a JSON copy of an edit that cleared a field', async () => {
+      const { container } = render(
+        <QueueingParent<Pair>
+          schema={pair}
+          initial={{ a: 'q', b: '' }}
+          stored={[]}
+          copy={(value) => JSON.parse(JSON.stringify(value)) as Pair}
+        />,
+      );
+      await user.clear(input(container, 'root_a'));
+      await user.type(input(container, 'root_b'), 'xy');
+
+      await storeNext();
+
+      expect(input(container, 'root_a')).toHaveValue('');
+      expect(input(container, 'root_b')).toHaveValue('xy');
+    });
+
     it('shows an older edit the parent puts back once it has stored the latest', async () => {
       const stored: Pair[] = [];
       const { container } = render(<QueueingParent<Pair> schema={pair} initial={{ a: '', b: '' }} stored={stored} />);
@@ -526,6 +544,38 @@ describe('a form controlled through formData', () => {
 
     expect(onRender).toHaveBeenCalledTimes(2);
     expect(input(container, 'root_a')).toHaveValue('one');
+  });
+
+  it('leaves a field cleared under a parent that stores a JSON copy of each edit', async () => {
+    const defaulted: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', default: 'D' }, b: { type: 'string' } },
+    };
+    const { container } = render(
+      <Parent<Pair>
+        schema={defaulted}
+        initial={{}}
+        answer={(reported) => JSON.parse(JSON.stringify(reported)) as Pair}
+      />,
+    );
+    await user.clear(input(container, 'root_a'));
+
+    await user.type(input(container, 'root_b'), 'x');
+
+    expect(input(container, 'root_a')).toHaveValue('');
+    expect(input(container, 'root_b')).toHaveValue('x');
+  });
+
+  it('live-validates a record passed after a mount that passed none', () => {
+    const short: RJSFSchema = { type: 'object', properties: { a: { type: 'string', minLength: 3 } } };
+    const element = (data: Pair | undefined) => (
+      <Form<Pair> schema={short} validator={validator} formData={data} onChange={noop} liveValidate='onChange' />
+    );
+    const { container, rerender } = render(element(undefined));
+
+    rerender(element({ a: 'x' }));
+
+    expect(fieldErrorsById(container)).toEqual({ root_a: ['must NOT have fewer than 3 characters'] });
   });
 
   it('commits no render for a blur after an edit the parent stored', async () => {

@@ -36,13 +36,13 @@ const WARNING_CATEGORIES = {
   'option-field-ignored': 'migration',
   'form-data-not-passed-through': 'migration',
   'form-data-both-seeds': 'migration',
+  'form-data-ownership-changed': 'migration',
   'global-ui-options-key-not-read': 'config',
   'ui-widget-options-object': 'config',
   'ui-widget-element': 'config',
   'row-span-ignored': 'config',
   'layout-grid-cell-field-ignored': 'config',
   'ui-order-incomplete': 'config',
-  'form-data-ownership-changed': 'config',
 } as const satisfies Record<string, WarningCategory>;
 
 /** The ID of a warning `setWarningOptions()` can make throw */

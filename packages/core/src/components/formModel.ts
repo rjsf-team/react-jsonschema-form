@@ -1084,7 +1084,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       logOnce(
-        `${formLabel()}: \`formData\` ${isPassed ? 'was passed after a render that passed none, and replaced the data the form owned' : 'became `undefined`, so the form owns the data it has from here on'}. Pass it on every render, with \`null\` for no data, or pass \`initialFormData\` alone.`,
+        `${formLabel()}: \`formData\` ${isPassed ? 'was passed after a render that passed none, and replaced the data the form owned' : 'became `undefined`, so the form owns the data it has from here on'}. Pass it on every render, rendering the form once the data has loaded, or pass \`initialFormData\` alone.`,
         { id: 'form-data-ownership-changed', dedupe: false },
       );
       isOwnershipWarned = true;
