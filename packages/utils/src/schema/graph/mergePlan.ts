@@ -253,17 +253,12 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
 const conditionMemo = new KeyedMemo<boolean>();
 
-/** Marks, as `true`, a context under which `null` dependency data is the `default` the field holds rather than its
- * data, so its `if`s are checked against `null` itself, see `checkCondition()`. A context spread from one keeps the mark
- */
-export const HOLDS_NULL_DEFAULT = Symbol('holdsNullDefault');
-
 /** Marks, as `true`, a context under which no plan merges a `then` or an `else`, nor checks an `if`: the value a field
  * starts from is folded under it. A context spread from one keeps the mark
  */
 export const RESOLVES_NO_CONDITIONS = Symbol('resolvesNoConditions');
 
-/** Whether `context` carries `mark`, see `HOLDS_NULL_DEFAULT` and `RESOLVES_NO_CONDITIONS` */
+/** Whether `context` carries `mark`, see `RESOLVES_NO_CONDITIONS` */
 export function isMarked(context: object, mark: symbol): boolean {
   return Reflect.get(context, mark) === true;
 }
@@ -341,18 +336,15 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
     return owned ? (owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], check)) : check();
   }
   const keys = [context.validator, graph, key];
-  // A `null` default the field holds is checked as itself, where `null` data is checked as `{}`. Any other value is
-  // checked as itself either way
-  const asItself = depData === null && isMarked(context, HOLDS_NULL_DEFAULT);
-  const memoKey = [depData, asItself];
-  const memoized = conditionMemo.peekLatest(keys, memoKey);
+  const memoized = conditionMemo.peekLatest(keys, [depData]);
   if (memoized !== undefined) {
     return memoized;
   }
   // A field with no data that isn't one holding no value is checked as the empty object an object field holds:
-  // `required` constrains only objects, so the missing data itself would hold every `if` that requires a key
-  const holds = context.validator.isValid(condition, asItself ? depData : (depData ?? {}), graph.rawRoot);
-  conditionMemo.setLatest(keys, memoKey, holds);
+  // `required` constrains only objects, so the missing data itself would hold every `if` that requires a key. A `null`
+  // the field holds is checked as itself, as the validator checks the data
+  const holds = context.validator.isValid(condition, depData === undefined ? {} : depData, graph.rawRoot);
+  conditionMemo.setLatest(keys, [depData], holds);
   return holds;
 }
 
@@ -1505,14 +1497,13 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     isMarked(context, RESOLVES_NO_CONDITIONS),
     resolved.declared,
   ];
-  const dataKeys = [data, depData, depData === null && isMarked(context, HOLDS_NULL_DEFAULT)];
-  const memoized = plans.peekAny(keys, dataKeys);
+  const memoized = plans.peekAny(keys, [data, depData]);
   if (isPlanOf(memoized, graph)) {
     return memoized;
   }
   const plan = new PlanBuilder(context, graph, data, depData, resolved).build(seeds);
   if (plan.readsData) {
-    plans.setLatest(keys, dataKeys, plan);
+    plans.setLatest(keys, [data, depData], plan);
   } else {
     plans.set(keys, plan);
   }

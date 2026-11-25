@@ -2704,10 +2704,13 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);
       });
-      it('merges the else of an if not every value of a field with no data meets, and decides null data as {}, in either order', () => {
+      it('merges the else of an if not every value of a field with no data meets, and checks null data as null, in either order (#5916)', () => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         const context = { validator: testValidator };
-        const elseBranch: RJSFSchema = { type: ['string', 'null'], const: 'a' };
+        const branches: Record<string, RJSFSchema> = {
+          undefined: { type: ['string', 'null'], const: 'a' },
+          null: { type: ['string', 'null'], const: null },
+        };
         for (const order of [
           [undefined, null],
           [null, undefined],
@@ -2719,9 +2722,63 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             else: { const: 'a' },
           };
           for (const data of order) {
-            expect(retrieveSchema(context, schema, schema, data)).toEqual(elseBranch);
+            expect(retrieveSchema(context, schema, schema, data)).toEqual(branches[String(data)]);
           }
         }
+      });
+      describe('checks null data as null for the if (#5916)', () => {
+        const nullOrThree = {
+          if: { type: 'null' },
+          then: { const: null, title: 'Then' },
+          else: { const: 3, title: 'Else' },
+        } satisfies RJSFSchema;
+        const nullable = { type: ['number', 'null'], default: null } satisfies RJSFSchema;
+        it.each<[string, RJSFSchema]>([
+          ['its own if', { ...nullable, ...nullOrThree }],
+          ['the if of an allOf member', { ...nullable, allOf: [nullOrThree] }],
+          [
+            'the if of a $ref target',
+            { ...nullable, $ref: '#/$defs/NullOrThree', $defs: { NullOrThree: nullOrThree } },
+          ],
+        ])('%s, at the root and as a property', (_name, x) => {
+          testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+          const context = { validator: testValidator };
+          const asProperty: RJSFSchema = { type: 'object', properties: { x }, $defs: x.$defs };
+          expect(retrieveSchema(context, x, x, null)).toMatchObject({ const: null, title: 'Then' });
+          expect(retrieveSchema(context, x, asProperty, null)).toMatchObject({ const: null, title: 'Then' });
+          expect(retrieveSchema(context, x, x, 5)).toMatchObject({ const: 3, title: 'Else' });
+        });
+        it('a nullable string whose if takes null', () => {
+          testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+          const schema: RJSFSchema = {
+            type: ['string', 'null'],
+            default: null,
+            if: { const: null },
+            then: { title: 'Null' },
+            else: { title: 'Text' },
+          };
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, null).title).toBe('Null');
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, 'a').title).toBe('Text');
+        });
+        it('an object field, whose missing data is still checked as {} (#3706)', () => {
+          testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+          const context = { validator: testValidator };
+          const requiresA = (type: RJSFSchema['type']): RJSFSchema => ({
+            type,
+            properties: { a: { type: 'string' } },
+            if: { required: ['a'] },
+            then: { title: 'Has a' },
+            else: { title: 'No a' },
+          });
+          for (const type of ['object', ['object', 'null']] satisfies RJSFSchema['type'][]) {
+            const schema = requiresA(type);
+            expect(retrieveSchema(context, schema, schema).title).toBe('No a');
+            expect(retrieveSchema(context, schema, schema, {}).title).toBe('No a');
+            expect(retrieveSchema(context, schema, schema, { a: 'x' }).title).toBe('Has a');
+            // `required` constrains only objects, so `null` meets the `if`, as the validator checks it
+            expect(retrieveSchema(context, schema, schema, null).title).toBe('Has a');
+          }
+        });
       });
       it('should resolve if, then', () => {
         // Mock errors so that resolveCondition works as expected
@@ -3078,18 +3135,19 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         expect(retrieveSchema({ validator: testValidator }, schema, {}, value)).toEqual({ type, title: 'matched' });
       });
-      it('evaluates an object condition against a null value as against an empty object', () => {
+      it('evaluates an object condition against a null value as the validator does, against null (#5916)', () => {
         const schema: RJSFSchema = {
           type: ['object', 'null'],
           if: { required: ['a'] },
           then: { title: 'matched' },
           else: { title: 'unmatched' },
         };
-        // The real validators ignore this and evaluate the condition, which is what pins the fallback to `{}`
-        testValidator.setReturnValues({ isValid: [false] });
+        // The real validators ignore this and evaluate the condition: `required` constrains only objects, so `null`
+        // meets it
+        testValidator.setReturnValues({ isValid: (_condition, data) => data === null });
         expect(retrieveSchema({ validator: testValidator }, schema, {}, null)).toEqual({
           type: ['object', 'null'],
-          title: 'unmatched',
+          title: 'matched',
         });
       });
       it('overrides the base schema with a conditional branch when merged', () => {

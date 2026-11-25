@@ -1,4 +1,5 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
@@ -336,5 +337,64 @@ describe("an empty field's then/else const (#5895)", () => {
     await submitForm(node, user);
     expect(onError).not.toHaveBeenCalled();
     expectToHaveBeenCalledWithFormData(onSubmit, { x: filled }, true);
+  });
+});
+
+describe('null data checked as null for an if (#5916)', () => {
+  const x: RJSFSchema = {
+    type: ['number', 'null'],
+    default: null,
+    if: { type: 'null' },
+    then: { const: null, title: 'Then' },
+    else: { const: 3, title: 'Else' },
+  };
+  const label = (node: Element) => node.querySelector('label')?.textContent;
+
+  it.each<[string, RJSFSchema, unknown, unknown]>([
+    ['as a property starting from its null default', { type: 'object', properties: { x } }, undefined, { x: null }],
+    ['as a property holding null form data', { type: 'object', properties: { x } }, { x: null }, { x: null }],
+    ['at the root starting from its null default', x, undefined, null],
+    ['at the root holding null form data', x, null, null],
+  ])('renders and submits the then %s', async (_name, schema, formData, submitted) => {
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData });
+    expect(label(node)).toMatch(/^Then/);
+    await submitForm(node, user);
+    expect(onError).not.toHaveBeenCalled();
+    expectToHaveBeenCalledWithFormData(onSubmit, submitted, true);
+  });
+
+  it('renders the then once the user clears a field to null', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          x: { type: ['number', 'null'], if: { type: 'null' }, then: { title: 'Then' }, else: { title: 'Else' } },
+        },
+      },
+      uiSchema: { x: { 'ui:emptyValue': null } },
+      formData: { x: 5 },
+    });
+    expect(label(node)).toMatch(/^Else/);
+    await user.clear(screen.getByRole('textbox'));
+    expectToHaveBeenCalledWithFormData(onChange, { x: null }, 'root_x');
+    expect(label(node)).toMatch(/^Then/);
+  });
+
+  it('titles a nullable string by the if its null default meets', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          s: {
+            type: ['string', 'null'],
+            default: null,
+            if: { const: null },
+            then: { title: 'Null' },
+            else: { title: 'Text' },
+          },
+        },
+      },
+    });
+    expect(label(node)).toMatch(/^Null/);
   });
 });

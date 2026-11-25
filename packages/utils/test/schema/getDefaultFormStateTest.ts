@@ -8603,7 +8603,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               expect(getDefaultFormState(context, { schema: withDefault(thenTen, 5) })).toBe(10);
               expect(getDefaultFormState(context, { schema: withDefault(thenThree, 5) })).toBe(5);
             });
-            it('checks a null default as null, own or inherited, where null data is checked as {}', () => {
+            it('checks a null default as null, own or inherited', () => {
               const nullOrOne: RJSFSchema = { if: { type: 'null' }, then: { const: null }, else: { const: 1 } };
               const ownNull = (type: RJSFSchema['type']): RJSFSchema => ({
                 type,
@@ -8624,6 +8624,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 expect(getDefaultFormState(context, { schema: ownNull(['number', 'null']) })).toBeNull();
                 expect(getDefaultFormState(context, { schema: inheritedNull })).toStrictEqual({ x: null });
               }
+            });
+            it('checks null data as null, as the null default is checked (#5916)', () => {
+              const nullOrThree: RJSFSchema = { if: { type: 'null' }, then: { const: null }, else: { const: 3 } };
+              const x: RJSFSchema = {
+                type: ['number', 'null'],
+                default: null,
+                ...(inAllOf ? { allOf: [nullOrThree] } : nullOrThree),
+              };
+              const noDefault: RJSFSchema = { ...x, default: undefined };
+              const context = {
+                validator: testValidator,
+                defaultFormStateBehavior: { constAsDefaults: 'always' as const },
+              };
+              for (const field of [x, noDefault]) {
+                expect(getDefaultFormState(context, { schema: rootOf(field), formData: { x: null } })).toStrictEqual({
+                  x: null,
+                });
+                expect(getDefaultFormState(context, { schema: field, formData: null })).toBeNull();
+              }
+              expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({ x: null });
+              expect(getDefaultFormState(context, { schema: x })).toBeNull();
             });
             it("checks its own default where an ancestor's default wins but its type can't hold it", () => {
               const ancestor = {

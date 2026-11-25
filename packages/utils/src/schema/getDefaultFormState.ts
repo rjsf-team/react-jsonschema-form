@@ -87,7 +87,6 @@ import {
 import { isHandedOut } from './graph/handedOut.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
-  HOLDS_NULL_DEFAULT,
   RESOLVES_NO_CONDITIONS,
   checkCondition,
   decidedWithoutValue,
@@ -489,33 +488,6 @@ function unresolvedContext<S extends StrictRJSFSchema, F extends FormContextType
   >;
 }
 const unresolvedContexts = new KeyedMemo<object>();
-
-/** `context` marked with `HOLDS_NULL_DEFAULT` as `holds` says, per context it is built from, so it keeps its identity
- * across the passes and calls whose memos compare the context first
- */
-function heldNullContext<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  holds: boolean,
-): SchemaContext<S, F> {
-  if (isMarked(context, HOLDS_NULL_DEFAULT) === holds) {
-    return context;
-  }
-  const marked =
-    copiedFrom.get(context) ??
-    heldNullContexts.get([context, holds], () => {
-      const copy = { ...context, [HOLDS_NULL_DEFAULT]: holds };
-      copiedFrom.set(copy, context);
-      return copy;
-    });
-  // Only `context` spread with the mark is kept under `context` and `holds`, or for a copy, the context it was spread
-  // from, but the memos can't carry its type parameters
-  return marked as SchemaContext<S, F>;
-}
-const heldNullContexts = new KeyedMemo<object>();
-/** The context each copy `heldNullContext()` made was spread from, which marking the copy back gives, so the children
- * of a field holding a `null` default are folded under the context its parent was
- */
-const copiedFrom = new WeakMap<object, object>();
 
 /** The schema `foldView()` reads under `skippingDefaults()`, per schema it is read from, so it keeps its identity across
  * the passes and calls that read it, as the caches keyed on a schema need
@@ -1327,23 +1299,20 @@ interface HandedDown {
  * A child computed in an earlier pass from the same inputs is not computed again.
  */
 function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  outerContext: SchemaContext<S, F>,
+  context: SchemaContext<S, F>,
   field: DefaultsField<S>,
   props: FoldProps<T, S, F>,
 ): unknown {
   const data = props.rawFormData;
   // A `NaN` the defaults replace leaves the field as empty as no data does, so the field is planned for none
   const plannedData = Number.isNaN(data) ? undefined : data;
-  // Whether a `null` the field holds is its default is the field's own: its children hold no data of it
-  const unmarked = heldNullContext<S, F>(outerContext, false);
   // The default the field's seeds declare, which it most often starts from, so its first pass is planned for it
-  let { value: held, nullDefault } = heldValue<T, S, F>(unmarked, props, () =>
-    SKIPS_DEFAULTS in unmarked
+  let held = heldValue<T, S, F>(context, props, () =>
+    SKIPS_DEFAULTS in context
       ? undefined
       : field.seeds.map(({ node }) => declaredDefault(field.graph, node)).find((value) => value !== undefined),
   );
-  let context = heldNullContext<S, F>(unmarked, nullDefault);
-  let passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
+  const passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
   const memo = new Map<string, MemoEntry>();
   const fold = (depData: unknown): FieldPass<S> => {
     // The views the pass computed the field from, the last one with the options the field selected, which are planned
@@ -1509,7 +1478,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // holds no `default` and may hold no primitive: `heldValue()` drops an object or an array it starts from. It is
   // never read under a context that resolves no condition, as the read itself is folded under one
   const readsValue =
-    !isMarked(unmarked, RESOLVES_NO_CONDITIONS) &&
+    !isMarked(context, RESOLVES_NO_CONDITIONS) &&
     first.readers.some(
       ({ graph, checked, present }) =>
         (present === false && (held !== undefined || mayHoldPrimitive<S>(field.graph, field.seeds))) ||
@@ -1518,18 +1487,14 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
             (held !== undefined || holdsPrimitive) && decidedWithoutValue(graph, ifNode, noValue?.types) === undefined,
         ),
     );
-  const ownHeld =
-    readsValue &&
-    heldValue<T, S, F>(unmarked, props, () => startValue<T, S, F>(unresolvedContext<S, F>(unmarked), field, props));
-  if (ownHeld && (!Object.is(ownHeld.value, held) || ownHeld.nullDefault !== nullDefault)) {
-    ({ value: held, nullDefault } = ownHeld);
-    const marked = heldNullContext<S, F>(unmarked, nullDefault);
-    if (marked !== context) {
-      context = marked;
-      passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
-      matchContext = undefined;
+  if (readsValue) {
+    const ownHeld = heldValue<T, S, F>(context, props, () =>
+      startValue<T, S, F>(unresolvedContext<S, F>(context), field, props),
+    );
+    if (!Object.is(ownHeld, held)) {
+      held = ownHeld;
+      first = fold(held);
     }
-    first = fold(held);
   }
   // The conditions decided by the data alone, as the first pass decided them, whatever the defaults, by decision. The
   // data of a field that holds no object is the value `heldValue()` says it holds, its default in place of none
@@ -1580,25 +1545,23 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** The value a field holds before the defaults its conditions pick are filled in, which they are checked against: its
  * data, unless the defaults replace it, then the value `startOf()` says they give it, where that is no object or array,
- * since an object field holds its defaults filled in and is checked against them on the next pass.
- * `nullDefault` says the value is a `null` default, which its conditions are checked against as itself, where `null`
- * data is checked as `{}`, see `HOLDS_NULL_DEFAULT`
+ * since an object field holds its defaults filled in and is checked against them on the next pass
  */
 function heldValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   { rawFormData, requiredAsRoot }: FoldProps<T, S, F>,
   startOf: () => unknown,
-): { readonly value: unknown; readonly nullDefault: boolean } {
+): unknown {
   if (!defaultsReplace(rawFormData, requiredAsRoot === true, context.defaultFormStateBehavior)) {
-    return { value: rawFormData, nullDefault: false };
+    return rawFormData;
   }
   const start = startOf();
   if (start !== undefined && !Number.isNaN(start) && (start === null || typeof start !== 'object')) {
-    return { value: start, nullDefault: start === null };
+    return start;
   }
   // A replaced `NaN` holds no value, so its conditions are checked as an empty field's, see `NoValue`. A
   // replaced `null` is a value an `if` may test, which it keeps
-  return { value: Number.isNaN(rawFormData) ? undefined : rawFormData, nullDefault: false };
+  return Number.isNaN(rawFormData) ? undefined : rawFormData;
 }
 
 /** The value the defaults give `field` before any of its conditions is resolved, under `context`, which resolves none.
