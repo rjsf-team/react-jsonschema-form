@@ -36,6 +36,7 @@ import {
   templateMarksRequired,
 } from '@rjsf/utils';
 
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
 import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
@@ -268,6 +269,20 @@ interface ArrayAsFieldProps<
   htmlName?: string;
 }
 
+function resolveArrayWidget<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  { schema, registry, id, fieldPath }: ArrayAsFieldProps<T[], S, F>,
+  widget: UIOptionsType<T[], S, F>['widget'],
+) {
+  try {
+    return resolveWidget<T[], S, F>(schema, widget, registry.widgets);
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`${error.message} at field ${fieldLabelForLog(id, fieldPath)}`, { cause: error });
+    }
+    throw error;
+  }
+}
+
 /** Gets the label props an array rendered as one widget hands it: its `ui:title`, else its schema `title`, else its
  * name, shown as its plan says, or where `getDisplayLabel()` lets it without a plan
  *
@@ -315,7 +330,7 @@ function ArrayAsMultiSelect<
   // A `null` held by a `type` list naming `array` is no selection, where the widget would read it as one and keep it
   // beside the option checked. Any other value that isn't an array is the one selection it holds
   const items: T[] = props.formData ?? [];
-  const { widgets, schemaUtils, globalUiOptions } = registry;
+  const { schemaUtils, globalUiOptions } = registry;
   const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
   // For computing `enumOptions`, fallback to the array property's uiSchema if there is no `items` schema
   // Avoids a breaking change reported in https://github.com/rjsf-team/react-jsonschema-form/issues/4985
@@ -327,7 +342,7 @@ function ArrayAsMultiSelect<
     placeholder,
     ...options
   } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
-  const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
+  const { Widget } = resolveArrayWidget(props, widget);
   const labelProps = getArrayWidgetLabelProps<T, S, F>(props, uiTitle);
   return (
     <Widget
@@ -383,9 +398,9 @@ function ArrayAsCustomWidget<
     onSelectChange,
     htmlName,
   } = props;
-  const { widgets, globalUiOptions } = registry;
+  const { globalUiOptions } = registry;
   const { widget, title: uiTitle, placeholder, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
-  const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
+  const { Widget } = resolveArrayWidget(props, widget);
   const labelProps = getArrayWidgetLabelProps<T, S, F>(props, uiTitle);
   return (
     <Widget
@@ -441,14 +456,14 @@ function ArrayAsFiles<
     onSelectChange,
     htmlName,
   } = props;
-  const { widgets, globalUiOptions } = registry;
+  const { globalUiOptions } = registry;
   const {
     widget = ARRAY_MODE_DEFAULT_WIDGETS.files,
     title: uiTitle,
     placeholder,
     ...options
   } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
-  const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
+  const { Widget } = resolveArrayWidget(props, widget);
   const labelProps = getArrayWidgetLabelProps<T, S, F>(props, uiTitle);
   return (
     <Widget
