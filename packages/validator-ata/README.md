@@ -90,5 +90,9 @@ The `ValidatorType` contract is identical, and the shared `@rjsf/utils` schema t
 
 See the monorepo [CONTRIBUTING.md](../../CONTRIBUTING.md). Issues and PRs welcome on either the validator package or [ata-validator](https://github.com/ata-core/ata-validator) itself.
 
+## Sponsoring
+
+The maintainers of react-jsonschema-form use agentic coding tools for triage, reviews and fixes, and those tools have real monthly costs. If RJSF saves you or your team time, please consider sponsoring the project on [Open Collective](https://opencollective.com/react-jsonschema-form). Contributions of any size help cover those costs and keep releases coming.
+
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue
 [license-url]: https://github.com/rjsf-team/react-jsonschema-form/blob/main/LICENSE.md

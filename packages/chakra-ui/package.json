@@ -47,6 +47,10 @@
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
   "license": "Apache-2.0",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-jsonschema-form"
+  },
   "devDependencies": {
     "@chakra-ui/react": "^3.38.0",
     "@emotion/jest": "^11.14.2",

@@ -63,6 +63,10 @@
     "Heath Chiavettone <heath.chiavettone@freenome.com"
   ],
   "license": "MIT",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-jsonschema-form"
+  },
   "dependencies": {
     "@react-icons/all-files": "^4.1.0"
   }

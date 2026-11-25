@@ -53,6 +53,10 @@
     "json-schema"
   ],
   "license": "Apache-2.0",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-jsonschema-form"
+  },
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"

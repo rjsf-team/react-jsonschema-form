@@ -127,7 +127,7 @@ const schema: RJSFSchema = {
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-If you use `enum` in your JSON Schema, you may instead specify `ui:enumNames` in your `uiSchema`, which RJSF can use to label an enumeration. `ui:enumNames` can be an array (matched by index) or a map (matched by value):
+If you use `enum` in your JSON Schema, you may instead specify `ui:enumNames` in your `uiSchema`, which RJSF can use to label an enumeration. `ui:enumNames` can be an array, matched by index:
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -138,12 +138,24 @@ const schema: RJSFSchema = {
   enum: [1, 2, 3],
 };
 
-// Array form (matched by index)
 const uiSchema: UiSchema = {
   'ui:enumNames': ['one', 'two', 'three'],
 };
 
-// Map form (matched by value)
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
+Or a map, matched by value:
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'number',
+  enum: [1, 2, 3],
+};
+
 const uiSchema: UiSchema = {
   'ui:enumNames': { 1: 'one', 2: 'two', 3: 'three' },
 };
