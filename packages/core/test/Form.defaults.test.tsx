@@ -1628,6 +1628,21 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         expect(getFormData()).toEqual({});
       });
 
+      it('mounts an optional one whose constants have no titles, a checkbox, unticked, and submits it absent', async () => {
+        const { node, onSubmit, getFormData, control } = mount(
+          { type: 'boolean', title: 'Agree', oneOf: [{ const: true }, { const: false }] },
+          [],
+        );
+
+        expect(control).toHaveAttribute('type', 'checkbox');
+        expect(control).not.toBeChecked();
+        expect(getFormData()).toEqual({});
+
+        await submitForm(node, user);
+
+        expectToHaveBeenCalledWithFormData(onSubmit, {}, true);
+      });
+
       it('mounts a required one whose constants have no titles, a checkbox, unticked, holding false', async () => {
         const { node, onSubmit, getFormData, control } = mount(
           { type: 'boolean', title: 'Agree', oneOf: [{ const: true }, { const: false }] },
