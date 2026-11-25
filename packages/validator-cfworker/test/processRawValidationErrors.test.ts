@@ -468,6 +468,39 @@ describe('transformRJSFValidationErrors()', () => {
       );
     });
 
+    it('names a property in the $ref schema’s own anyOf branch, under a property its target declares too, by that branch', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          T: {
+            type: 'object',
+            properties: { n: { type: 'object', anyOf: [{ properties: { z: {} } }, { properties: { y: {} } }] } },
+          },
+        },
+        type: 'object',
+        properties: {
+          a: {
+            $ref: '#/$defs/T',
+            properties: {
+              n: {
+                anyOf: [
+                  { properties: { m: { title: 'M' }, q: { title: 'Wrong Q' } }, required: ['m'] },
+                  { properties: { q: { type: 'string', title: 'Right Q' } }, required: ['q'] },
+                ],
+              },
+            },
+          },
+        },
+      };
+      const validator = customizeValidator();
+      const titlesOfQ = (formData: object) =>
+        validator
+          .validateFormData(formData, schema)
+          .errors.filter((error) => error.property === '.a.n.q')
+          .map(({ name, title }) => ({ name, title }));
+      expect(titlesOfQ({ a: { n: {} } })).toEqual([{ name: 'required', title: 'Right Q' }]);
+      expect(titlesOfQ({ a: { n: { q: 5 } } })).toEqual([{ name: 'type', title: 'Right Q' }]);
+    });
+
     it('names a property by the definition its $ref names in the resource that writes it, under a $ref schema redeclaring it', () => {
       const schema: RJSFSchema = {
         $id: 'https://example.com/root',

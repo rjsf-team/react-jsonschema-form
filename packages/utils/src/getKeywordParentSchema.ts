@@ -90,8 +90,9 @@ const NAME_MAP_KEYS = [
  * `$ref` it passes through, whether written into the path as a `$ref` key, whose next key is read from the `$ref`'s
  * target alone unless the rest of the path runs through keys merging joins alone, such as `properties` or `items`, or
  * skipped by it, and the one on the schema it ends at. A `$ref` schema's own keywords are kept over its target's where
- * the two are read merged, so below a skipped `$ref` a list keyword both of them hold, such as an `allOf` inside a
- * property both declare, indexes the merged list.
+ * the two are read merged, so with `skipsRefs` set a list keyword both of them hold below a `$ref`, such as an `allOf`
+ * inside a property both declare, indexes the merged list. Without it, a key the `$ref` schema holds itself is read as
+ * written when the rest of the path runs through a key merging doesn't join.
  *
  * @param rootSchema - The form's root schema
  * @param schemaPath - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/required`
@@ -166,8 +167,14 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
         }
         // Merging reorders a key the `$ref` schema holds itself, such as `anyOf` crossed with its target's, or moves it
         // into an `allOf`, so the path's next key indexes the schema as written. One merging joins is read merged, for
-        // the target's titles, unless the merge failed and moved it into an `allOf` too
-        if (hasRef && (key === REF_KEY || MERGE_JOINED_KEYS.includes(key) || !Object.hasOwn(Object(node), key))) {
+        // the target's titles, where the rest of the path runs through keys merging joins too, or the engine skips the
+        // `$ref` and the path can index either side, unless the merge failed and moved it into an `allOf` too
+        if (
+          hasRef &&
+          (key === REF_KEY ||
+            (MERGE_JOINED_KEYS.includes(key) && (skipsRefs || readsJoined(keys.slice(index)))) ||
+            !Object.hasOwn(Object(node), key))
+        ) {
           const own = ownRef<S>(graph, seeds, node as S);
           if (key === REF_KEY || !Object.hasOwn(Object(node), key) || Object.hasOwn(own.resolved, key)) {
             node = own.resolved;

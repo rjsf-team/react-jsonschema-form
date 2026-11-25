@@ -79,6 +79,21 @@ describe('getKeywordParentSchema()', () => {
       expect.objectContaining({ type: 'string', title: 'Own N' }),
     );
   });
+  it.each(['anyOf', 'oneOf'])(
+    'reads %s under a key the `$ref` schema holds itself and merging joins as written',
+    (key) => {
+      const q: RJSFSchema = { type: 'string', title: 'Right Q' };
+      const own: RJSFSchema = { [key]: [{ properties: { m: { title: 'M' } } }, { properties: { q } }] };
+      const target: RJSFSchema = { [key]: [{ properties: { z: {} } }, { properties: { y: {} } }] };
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', properties: { n: target }, items: target } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', properties: { n: own }, items: own } },
+      };
+      expect(getKeywordParentSchema(schema, `#/properties/a/properties/n/${key}/1/properties/q/type`)).toBe(q);
+      expect(getKeywordParentSchema(schema, `#/properties/a/items/${key}/1/properties/q/type`)).toBe(q);
+    },
+  );
   it('resolves a `$ref` a merged schema holds in the resource that writes it', () => {
     const schema: RJSFSchema = {
       $id: 'https://example.com/root',
