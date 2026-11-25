@@ -1,4 +1,5 @@
 import type {
+  DefaultFormStateBehavior,
   FieldProps,
   FieldTemplateProps,
   FormValidation,
@@ -3199,6 +3200,50 @@ describe('oneOf', () => {
       expect(node.querySelector('#root_thing_onlyBar')).toBeInTheDocument();
       expect(node.querySelector('#root_thing_onlyFoo')).not.toBeInTheDocument();
     });
+    it.each<{ name: string; initialFormData?: GenericObjectType; defaultFormStateBehavior?: DefaultFormStateBehavior }>(
+      [
+        { name: 'seeded', initialFormData: { code: 'foo', a: 'x' } },
+        { name: 'unseeded' },
+        {
+          name: 'under useDefaultIfFormDataUndefined',
+          initialFormData: { code: 'foo', a: 'x' },
+          defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+        },
+      ],
+    )(
+      'switches ($name) to an option that writes no discriminator value, past a default the field declares for it',
+      async ({ initialFormData, defaultFormStateBehavior }) => {
+        const { node, getFormData } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { code: { type: 'string', default: 'foo' } },
+            discriminator: { propertyName: 'code' },
+            oneOf: [
+              { title: 'foo', properties: { code: { type: 'string', const: 'foo' }, a: { type: 'string' } } },
+              { title: 'other', properties: { b: { type: 'string' } } },
+            ],
+          },
+          initialFormData,
+          defaultFormStateBehavior,
+        });
+        const select = elementOf(node, 'select#root__oneof_select');
+
+        await user.selectOptions(select, 'other');
+
+        expect(getFormData()).toEqual({});
+        expect(select).toHaveValue('1');
+
+        await user.type(elementOf(node, '#root_b'), 'y');
+
+        expect(getFormData()).toEqual({ b: 'y' });
+        expect(select).toHaveValue('1');
+
+        await user.selectOptions(select, 'foo');
+
+        expect(getFormData()).toEqual({ code: 'foo' });
+        expect(select).toHaveValue('0');
+      },
+    );
     describe('a non-string discriminator.propertyName', () => {
       const consoleWarnSuppression = setupConsoleWarnSuppression();
 

@@ -679,6 +679,8 @@ export interface FieldChange<T> {
    * `AnnouncedMove`
    */
   sourceKeyOf?: KeyMove;
+  /** For a change that moved keys, the keys it leaves cleared that the form keeps cleared; see `AnnouncedMove` */
+  clearedKeys?: readonly string[];
   /** Whether a field announced the change as a move, as an added property is though it moves no key, so it reaches the
    * array or object at `fieldPath` rather than the fields inside it
    */
@@ -1712,8 +1714,9 @@ function clearsOfCopies<T>(
  * recorded before, moved with the keys the change moved, and the ones the change made. A field's edit that leaves its
  * field without a value, `undefined` or a `null` item, is a clear, and so is each key or item a field's write of an
  * array or object leaves without a value where the data held one. A key move drops the clear of the field it rewrites,
- * as an option switch leaving a scalar field without a value does, whose `undefined` is for the defaults to fill, and
- * gives each item it copies the clears of the item it copies. Data written from outside, as `setFieldValue()` writes
+ * as an option switch leaving a scalar field without a value does, whose `undefined` is for the defaults to fill,
+ * records a clear for each of its `clearedKeys` it leaves without a value, and gives each item it copies the clears of
+ * the item it copies. Data written from outside, as `setFieldValue()` writes
  * it, drops the clears at and under its path, so it is left to its defaults, while those elsewhere stay. A `transformChange` rewrite records none of its own: it keeps those of the edit it stands for, while
  * its data still holds them
  *
@@ -1732,7 +1735,7 @@ function clearsAfterChange<T>(
   path: FieldPathList,
 ): ReadonlySet<FieldPath> {
   const moved = withPathsMoved(recorded, dataMoveOf(change));
-  const { newValue, newKeyOf, isFieldEdit, editedPath } = change;
+  const { newValue, newKeyOf, clearedKeys = [], isFieldEdit, editedPath } = change;
   if (editedPath) {
     return moved;
   }
@@ -1742,7 +1745,11 @@ function clearsAfterChange<T>(
   const fieldPath = fieldPathFromList(path);
   if (newKeyOf) {
     const kept = filterPaths(moved, (at) => at !== fieldPath);
-    return withPaths(kept, ...clearsOfCopies(recorded, change, written, path));
+    const keptClears = clearedKeys
+      .map((key) => [...path, key])
+      .filter((at) => holdsClearAt(written, at))
+      .map(fieldPathFromList);
+    return withPaths(kept, ...clearsOfCopies(recorded, change, written, path), ...keptClears);
   }
   if (isObject(newValue) || Array.isArray(newValue)) {
     return withPaths(

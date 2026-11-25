@@ -1,5 +1,14 @@
 import { createRef, StrictMode, useEffect, useState } from 'react';
-import type { FieldProps, FieldTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  DefaultFormStateBehavior,
+  FieldProps,
+  FieldTemplateProps,
+  FormValidation,
+  GenericObjectType,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { descriptionId, noop, toFieldPath, toInputValue } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import validator, { createPrecompiledValidator } from '@rjsf/validator-ajv8';
@@ -2141,6 +2150,50 @@ describe('anyOf', () => {
       expect(node.querySelector('#root_thing_onlyBar')).toBeInTheDocument();
       expect(node.querySelector('#root_thing_onlyFoo')).not.toBeInTheDocument();
     });
+    it.each<{ name: string; initialFormData?: GenericObjectType; defaultFormStateBehavior?: DefaultFormStateBehavior }>(
+      [
+        { name: 'seeded', initialFormData: { code: 'foo', a: 'x' } },
+        { name: 'unseeded' },
+        {
+          name: 'under useDefaultIfFormDataUndefined',
+          initialFormData: { code: 'foo', a: 'x' },
+          defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+        },
+      ],
+    )(
+      'switches ($name) to an option that writes no discriminator value, past a default the field declares for it',
+      async ({ initialFormData, defaultFormStateBehavior }) => {
+        const { node, getFormData } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { code: { type: 'string', default: 'foo' } },
+            discriminator: { propertyName: 'code' },
+            anyOf: [
+              { title: 'foo', properties: { code: { type: 'string', const: 'foo' }, a: { type: 'string' } } },
+              { title: 'other', properties: { b: { type: 'string' } } },
+            ],
+          },
+          initialFormData,
+          defaultFormStateBehavior,
+        });
+        const select = elementOf(node, 'select#root__anyof_select');
+
+        await user.selectOptions(select, 'other');
+
+        expect(getFormData()).toEqual({});
+        expect(select).toHaveValue('1');
+
+        await user.type(elementOf(node, '#root_b'), 'y');
+
+        expect(getFormData()).toEqual({ b: 'y' });
+        expect(select).toHaveValue('1');
+
+        await user.selectOptions(select, 'foo');
+
+        expect(getFormData()).toEqual({ code: 'foo' });
+        expect(select).toHaveValue('0');
+      },
+    );
     it('warns when discriminator.propertyName is not a string', () => {
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
       const badSchema: RJSFSchema = {

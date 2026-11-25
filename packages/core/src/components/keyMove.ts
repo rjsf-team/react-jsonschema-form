@@ -75,6 +75,11 @@ export interface AnnouncedMove {
    * made there hold for the copy too. A key it added that copies nothing, as an added item, has none
    */
   sourceKeyOf?: KeyMove;
+  /** The keys of the container the move leaves cleared that the form keeps cleared, as it keeps a field the user
+   * cleared: an option switch's `discriminator` property, whose value named the option switched away from, so a
+   * `default` written back there would name that option again
+   */
+  clearedKeys?: readonly string[];
   /** Where the fields' own errors under each key went, when not where the validator's did: an option switch drops
    * what was raised under a key the new option declares too, since another widget renders for it, while the
    * validator's errors there describe a constraint the new option may well share
