@@ -252,6 +252,60 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         ),
       ).toEqual(2);
     });
+    describe('a tie among matching options whose properties have defaults (#5930)', () => {
+      const withDefault = (key: string): RJSFSchema => ({ type: 'string', default: `${key}-default` });
+      // A then×own pair each, as a `then` list merged with the field's own builds them: matching passes over the
+      // missing `required` key and the typed values differ from the defaults, so both score 0
+      const options: RJSFSchema[] = [
+        { properties: { a: withDefault('a'), d: withDefault('d') }, required: ['a', 'd'] },
+        { properties: { b: withDefault('b'), d: withDefault('d') }, required: ['b', 'd'] },
+      ];
+      const rootSchema: RJSFSchema = { oneOf: options };
+      it('goes to the first option holding each key it requires', () => {
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'typed b', d: 'typed d' }, options),
+        ).toEqual(1);
+      });
+      it('keeps the selected option', () => {
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            rootSchema,
+            { b: 'typed b', d: 'typed d' },
+            options,
+            0,
+          ),
+        ).toEqual(0);
+      });
+      it('goes to the first option where none holds each key it requires', () => {
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { d: 'typed d' }, options)).toEqual(
+          0,
+        );
+      });
+      it('reads the keys a definition an option names requires', () => {
+        const definitions = { AD: options[0], BD: options[1] };
+        const refs: RJSFSchema[] = [{ $ref: '#/definitions/AD' }, { $ref: '#/definitions/BD' }];
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            { definitions, oneOf: refs },
+            { b: 'typed b', d: 'typed d' },
+            refs,
+          ),
+        ).toEqual(1);
+      });
+      it('reads a boolean option as requiring nothing it rejects', () => {
+        const withBoolean = [options[0], true] as unknown as RJSFSchema[];
+        testValidator.setReturnValues({ isValid: [true] });
+        expect(
+          getClosestMatchingOption({ validator: testValidator }, { oneOf: withBoolean }, { d: 'typed d' }, withBoolean),
+        ).toEqual(1);
+      });
+    });
     it('returns the second option when data matches for oneOf', () => {
       // From https://github.com/rjsf-team/react-jsonschema-form/issues/2944
       const schema: RJSFSchema = {

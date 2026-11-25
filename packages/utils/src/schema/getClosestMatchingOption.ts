@@ -7,6 +7,7 @@ import {
   IF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  REQUIRED_KEY,
   THEN_KEY,
 } from '../constants.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
@@ -17,7 +18,7 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
-import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { optionMatches, optionNodeOf, simpleDiscriminatorMatch } from './getFirstMatchingOption.ts';
 import type { OptionNode } from './getFirstMatchingOption.ts';
 import { isHandedOut } from './graph/handedOut.ts';
@@ -27,7 +28,7 @@ import type { MergePlan, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { readProvenance } from './graph/provenance.ts';
-import { declaredProperties, declaresUnconditionally } from './graph/validationTargets.ts';
+import { declaredProperties, declaresUnconditionally, scopeOf } from './graph/validationTargets.ts';
 import retrieveSchema, {
   extraKeysOf,
   fieldOf,
@@ -799,6 +800,22 @@ function holdsCopy(copy: unknown, data: unknown): boolean {
   return Object.is(copy, data);
 }
 
+/** Returns whether `formData` holds each key the scope of `option` requires whatever the data, see `scopeOf()`: what
+ * matching and scoring pass over, read without the validator, whose check of a whole option grows with each recursive
+ * choice in it
+ */
+function holdsRequired<S extends StrictRJSFSchema>(formData: GenericObjectType, option: OptionNode<S>): boolean {
+  if (typeof option === 'boolean') {
+    return option;
+  }
+  return scopeOf(option.graph, option.node, 'unconditional').every(({ raw }) => {
+    const required: unknown = raw[REQUIRED_KEY];
+    return (
+      !Array.isArray(required) || required.every((key) => Object.hasOwn(formData, key) && formData[key] !== undefined)
+    );
+  });
+}
+
 /** Picks the option for `bestOption()`, see `getClosestMatchingOption()` */
 function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -849,15 +866,28 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // With no option matching, every option is a candidate, and the pick is always one of the candidates
   const candidates = validIndexes.length > 0 ? validIndexes : [...options.keys()];
-  // A tie keeps the selected option where it is a candidate, and the first candidate otherwise
+  // A tie keeps the selected option where it is a candidate
   const first = candidates.includes(selectedOption) ? selectedOption : candidates[0];
   let best = { index: first, score: optionScore(first) };
+  let tied = [first];
   for (const index of candidates) {
     if (index !== first) {
       const score = optionScore(index);
       if (score > best.score) {
         best = { index, score };
+        tied = [index];
+      } else if (score === best.score) {
+        tied.push(index);
       }
+    }
+  }
+  // Matching and scoring both pass over a missing `required` key, and a typed value differing from a `default` scores
+  // as a missing one, so options such as the pairs a `then` list merges with the field's own can tie where only one
+  // holds every key it requires
+  if (isObject(formData) && validIndexes.length > 0 && best.index !== selectedOption && tied.length > 1) {
+    const whole = tied.find((index) => holdsRequired<S>(formData, optionNodes[index]));
+    if (whole !== undefined) {
+      best = { index: whole, score: best.score };
     }
   }
   const score = (validIndexes.includes(best.index) ? 1 : 0) + best.score;
@@ -910,8 +940,9 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
  *
  * Otherwise the options that match, or all of them when none does, are the candidates: each is scored by how closely
  * its properties and type match the data, and the candidate with the best score is returned. A tie goes to the
- * `selectedOption` when it is a candidate and to the first candidate otherwise, so an option that does not match the
- * data is never returned while one does.
+ * `selectedOption` when it is a candidate, then, among options the data matches, to the first holding each key its scope
+ * requires, and to the first candidate otherwise, so an option that does not match the data is never
+ * returned while one does.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form

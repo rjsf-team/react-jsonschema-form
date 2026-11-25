@@ -2185,7 +2185,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
           rootSchema,
           valueToMatch,
           options,
-          0,
+          -1,
           false,
           getDiscriminatorFieldFromSchema<S>(schema),
           { seeding: view, keyword: key, offeredBy: view.schema },

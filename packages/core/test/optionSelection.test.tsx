@@ -2093,6 +2093,49 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#root_p_y')).toHaveValue('yy');
   });
 
+  // Matching passes over the pairs' missing `required` keys and the typed values differ from the defaults, so every
+  // pair holding `b` or `d` scores alike, and the first, A×D, would fill `a`'s default and hide `b`
+  it("shows the pair of a then's list with the field's own whose required keys saved data holds, where their properties have defaults (#5930)", async () => {
+    const option = (key: string): RJSFSchema => ({
+      title: key.toUpperCase(),
+      properties: { [key]: { type: 'string', default: `${key}-default` } },
+      required: [key],
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: { type: 'object', oneOf: [option('a'), option('b')], if: true, then: { oneOf: [option('c'), option('d')] } },
+      },
+    };
+    const ref = createFormRef();
+    const formData = { p: { b: 'typed b', d: 'typed d' } };
+    const { node, onSubmit } = createFormComponent({ ref, schema, formData });
+    expect(getSelectedOptionValue(selectOf(node, 'root_p__oneof_select'))).toBe('B, D');
+    expect(node.querySelector('#root_p_b')).toHaveValue('typed b');
+    expect(node.querySelector('#root_p_d')).toHaveValue('typed d');
+    expect(handleOf(ref).validateForm()).toBe(true);
+    await submitForm(node, user);
+    expectToHaveBeenCalledWithFormData(onSubmit, formData, true);
+  });
+
+  // The defaults pick for a written list ties the same way, so it must break the tie as the field does, or it fills A's
+  // default and A then outscores B
+  it('shows the option of a written list whose required keys saved data holds, where their properties have defaults (#5930)', () => {
+    const option = (key: string): RJSFSchema => ({
+      title: key.toUpperCase(),
+      properties: { [key]: { type: 'string', default: `${key}-default` }, d: { type: 'string', default: 'd-default' } },
+      required: [key, 'd'],
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { p: { type: 'object', oneOf: [option('a'), option('b')] } },
+    };
+    const { node } = createFormComponent({ schema, formData: { p: { b: 'typed b', d: 'typed d' } } });
+    expect(getSelectedOptionValue(selectOf(node, 'root_p__oneof_select'))).toBe('B');
+    expect(node.querySelector('#root_p_a')).toBeNull();
+    expect(node.querySelector('#root_p_b')).toHaveValue('typed b');
+  });
+
   // The grid's selector writes the selector property, whose value each option of the rebuilt list built from the same
   // written option shares, so switching to B picks B×C, which reads B's entry
   it('labels and switches the options of a LayoutMultiSchemaField by the uiSchema entry of the written option each was built from (#5930)', async () => {

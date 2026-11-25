@@ -3818,7 +3818,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 Determines which of the given `options` provided most closely matches the `formData`.
 An option whose discriminator property's `const` or `enum` holds the data's value wins outright; otherwise the one option the data matches is returned when exactly one does.
 Otherwise the options the data matches, or all of them when it matches none, are the candidates, and the one scoring best is returned.
-A tie goes to the `selectedOption` when it is a candidate and to the first candidate otherwise, so an option the data does not match is never returned while another matches it.
+A tie goes to the `selectedOption` when it is a candidate, then, among options the data matches, to the first holding each key its scope requires, and to the first candidate otherwise, so an option the data does not match is never returned while another matches it.
 
 The score is the number of matching properties, more heavily favoring options with matching default or const values.
 A property written as a `$ref` is scored as the definition it names, and each `$ref` scoring follows resolves in the resource of the declaration holding it, including one in a property declared both beside a `$ref` and in the definition it names.
