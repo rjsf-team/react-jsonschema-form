@@ -364,6 +364,54 @@ describe('transformRJSFValidationErrors()', () => {
       const { errors } = customizeValidator().validateFormData({ a: { n: 5 } }, schema);
       expect(errors).toEqual([expect.objectContaining({ property: '.a.n', title: '', stack: '.a.n must be string' })]);
     });
+
+    it.each<[string, RJSFSchema, unknown, string[]]>([
+      [
+        'an allOf',
+        {
+          $defs: { T: { type: 'object', allOf: [{ properties: { z: {} } }] } },
+          type: 'object',
+          properties: {
+            a: {
+              $ref: '#/$defs/T',
+              allOf: [{ properties: { n: { type: 'string', title: 'Own' } }, required: ['n'] }],
+            },
+          },
+        },
+        { a: { n: 5 } },
+        ['.a.n'],
+      ],
+      [
+        'items',
+        {
+          $defs: { T: { type: 'array', items: { type: 'object' } } },
+          type: 'object',
+          properties: {
+            a: { $ref: '#/$defs/T', items: { properties: { n: { type: 'string', title: 'Own' } }, required: ['n'] } },
+          },
+        },
+        { a: [{ n: 5 }, {}] },
+        ['.a.0.n', '.a.1.n'],
+      ],
+    ])(
+      'names an error from the $ref schema’s own branch where its target also holds %s',
+      (_, schema, formData, properties) => {
+        const { errors } = customizeValidator().validateFormData(formData, schema);
+        expect(errors.map((error) => [error.property, error.title])).toEqual(properties.map((p) => [p, 'Own']));
+      },
+    );
+
+    it('names a missing property from the $ref schema’s own allOf branch where its target also holds one', () => {
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', allOf: [{ properties: { z: {} } }] } },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/T', allOf: [{ properties: { n: { type: 'string', title: 'Own' } }, required: ['n'] }] },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
+      expect(errors).toEqual([expect.objectContaining({ property: '.a.n', title: 'Own' })]);
+    });
   });
 
   it('gives no title to an error under a false property beside a property named title', () => {

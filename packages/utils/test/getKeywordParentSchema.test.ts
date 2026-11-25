@@ -185,4 +185,20 @@ describe('getKeywordParentSchema()', () => {
     expect(getKeywordParentSchema(schema, '#/properties/x/type')).toBeUndefined();
     expect(getKeywordParentSchema(schema, '#/properties/x/y/type')).toBeUndefined();
   });
+  it('returns undefined for a path that ends at a name, rather than the map holding it', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { x: false, properties: item },
+      patternProperties: { '^p': false },
+      dependentSchemas: { d: false },
+    };
+    expect(getKeywordParentSchema(schema, '#/properties/x', undefined, true)).toBeUndefined();
+    expect(getKeywordParentSchema(schema, '#/patternProperties/^p')).toBeUndefined();
+    expect(getKeywordParentSchema(schema, '#/dependentSchemas/d')).toBeUndefined();
+    expect(getKeywordParentSchema(schema, '#/properties/properties/required')).toBe(item);
+  });
+  it('returns undefined for a path into another resource, which Ajv starts with that resource’s `$id`', () => {
+    const schema: RJSFSchema = { type: 'object', required: ['a'], $defs: { F: { $id: 'f', required: ['b'] } } };
+    expect(getKeywordParentSchema(schema, 'f/required')).toBeUndefined();
+  });
 });

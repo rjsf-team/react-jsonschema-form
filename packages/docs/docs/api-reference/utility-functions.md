@@ -1517,7 +1517,7 @@ A `$ref` on the schema it ends at is resolved too, its own keywords kept over it
 
 #### Returns
 
-- S | null | undefined: The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two of whose schemas hold its next key, unless it is `properties`, `patternProperties`, `additionalProperties` or `propertyNames`, which merging combines, since the path can index either one's; or `undefined` when the path leads to no schema object or through a `$ref` that can't be resolved, such as one naming an `$anchor`
+- S | null | undefined: The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two of whose schemas hold its next key, unless it is `properties`, `patternProperties`, `additionalProperties` or `propertyNames`, which merging combines, since the path can index either one's; or `undefined` when the path isn't a URI fragment, such as one Ajv starts with another resource's `$id`, or leads to no schema object, such as the `properties` map holding the property a `false` schema's path ends at, or through a `$ref` that can't be resolved, such as one naming an `$anchor`
 
 ### getLabelId&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getlabelid}
 
