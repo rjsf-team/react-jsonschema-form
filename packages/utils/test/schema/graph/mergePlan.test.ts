@@ -1030,6 +1030,8 @@ describe('decidedWithoutValue()', () => {
     ['a keyword constraining some value of the field', { minLength: 1 }, ['number', 'string'], undefined],
     ['a type beside a keyword constraining no value of the field', { type: 'string', maxItems: 1 }, ['string'], true],
     ['a keyword constraining a value of a field naming no type', { required: ['a'] }, undefined, undefined],
+    ['a custom keyword a validator may register', { isEven: true }, ['number'], undefined],
+    ['an x- extension or a discriminator', { 'x-note': 'n', discriminator: { propertyName: 'k' } }, ['number'], true],
     [
       'a type of every JSON type for a field naming none',
       { type: ['array', 'boolean', 'null', 'number', 'object', 'string'] },

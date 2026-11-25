@@ -4196,6 +4196,29 @@ describe('getDefaultFormState() for an option whose own fill is data it rejects 
   });
 });
 
+describe('an if a custom keyword decides', () => {
+  const validator = customizeValidator({
+    ajvOptionsOverrides: {
+      keywords: [{ keyword: 'isEven', type: 'number', validate: (_: unknown, data: number) => data % 2 === 0 }],
+    },
+  });
+  const isEven: RJSFSchema & { isEven: boolean } = { isEven: true };
+
+  it('merges the branch the validator picks for the data', () => {
+    const schema: RJSFSchema = { type: 'number', if: isEven, then: { title: 'Even' }, else: { title: 'Odd' } };
+    expect(retrieveSchema({ validator }, schema, schema, 3).title).toBe('Odd');
+    expect(retrieveSchema({ validator }, schema, schema, 4).title).toBe('Even');
+  });
+
+  it('fills the branch the validator picks for the default', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { n: { type: 'number', default: 3, if: isEven, then: { const: 100 } } },
+    };
+    expect(getDefaultFormState({ validator }, { schema })).toEqual({ n: 3 });
+  });
+});
+
 describe('package surface', () => {
   it('exports the validator classes as values', () => {
     const schema: RJSFSchema = { $id: 'surface', type: 'string' };

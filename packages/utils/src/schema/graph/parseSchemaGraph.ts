@@ -163,7 +163,7 @@ export function isRootPointer(pointer: string): boolean {
  * the annotations, which beside a `$ref` override the target's rather than combining with them. A `$ref` beside
  * nothing else has nothing to be the `allOf` of.
  */
-const NON_CONSTRAINING_KEYS = new Set([
+export const NON_CONSTRAINING_KEYS = new Set([
   REF_KEY,
   ID_KEY,
   '$anchor',

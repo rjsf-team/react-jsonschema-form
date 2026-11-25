@@ -27,9 +27,10 @@ import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
-import { constrainsValue, KEYWORDS_BY_TYPE } from '../schemaKeywords.ts';
+import { KEYWORDS_BY_TYPE } from '../schemaKeywords.ts';
 import shallowAllOfMerge, { mergeOptionLists } from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
+import { NON_CONSTRAINING_KEYS } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
 import { declaredProperties, declaresNoKey, dependencyCondition, targetOf } from './validationTargets.ts';
@@ -396,11 +397,14 @@ export function decidedWithoutValue<S extends StrictRJSFSchema>(
   }
   // A field naming no `type` allows every one
   const allowed = types ?? JSON_SCHEMA_TYPES;
-  // A keyword that constrains none of the field's types holds for every value of them, as does one that constrains no
-  // value at all, such as an annotation or an `x-` extension
+  // A keyword that constrains none of the field's types holds for every value of them, as does an annotation, an `x-`
+  // extension or a `discriminator`. Any other keyword may constrain the value, a custom one the validator knows among
+  // them
   const keys = Object.keys(node.raw).filter(
     (key) =>
-      (key === 'type' || constrainsValue(key)) &&
+      !NON_CONSTRAINING_KEYS.has(key) &&
+      !key.startsWith('x-') &&
+      key !== 'discriminator' &&
       Object.entries(KEYWORDS_BY_TYPE).every(
         ([only, keywords]) => !keywords.includes(key) || allowed.some((type) => allowsType([only], type)),
       ),
