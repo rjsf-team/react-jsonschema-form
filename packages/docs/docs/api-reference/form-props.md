@@ -343,7 +343,7 @@ A `oneOf` or `anyOf` of one constant leaves nothing to choose, so that constant 
 
 Only an explicit `always` picks the first constant of such a list, or lets a `const` take the place of a value the form data holds, such as `"b"` for `{ "const": "a" }`, or of a `default` that names none of the constants of a `oneOf`/`anyOf`: `{ "type": "string", "default": "blue", "oneOf": [{ "const": "red" }, { "const": "green" }] }` starts at `"blue"` unset and at `"red"` under `always`.
 
-`skipOneOf` is deprecated, since a list of several constants is left unpicked without it. It still differs from the flag left unset in one case: for a non-empty `oneOf` on a field with a single primitive `type` or none, no `const` inside the option the field shows is used as a default, so the `kind` above stays empty too, and so does a `oneOf` of one constant.
+`skipOneOf` is deprecated, since a list of several constants is left unpicked without it. It still differs from the flag left unset in one case: for a non-empty `oneOf` on a field with a single primitive `type` or none, or on a select over object or array constants, no `const` inside the option the field shows is used as a default, so the `kind` above stays empty too, and so does a `oneOf` of one constant, such as `{ "type": "object", "oneOf": [{ "const": { "a": 1 } }] }`, which starts at `{ "a": 1 }` with the flag unset.
 
 ### mergeDefaultsIntoFormData
 

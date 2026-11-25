@@ -469,6 +469,27 @@ function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>
  */
 const skippingContexts = new KeyedMemo<object>();
 
+/** `context` under `constAsDefaults: 'never'`, which an option of a list of constants is folded in so that none of
+ * them is picked
+ *
+ * @param context - The `SchemaContext` the defaults are computed in
+ * @returns - The context that takes no constant
+ */
+function takingNoConstants<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+): SchemaContext<S, F> {
+  // Only `context` with `constAsDefaults: 'never'` is kept under `context`, but the memo can't carry its type parameters
+  return noConstantContexts.get([context], () => ({
+    ...context,
+    defaultFormStateBehavior: { ...context.defaultFormStateBehavior, constAsDefaults: 'never' },
+  })) as SchemaContext<S, F>;
+}
+
+/** The context `takingNoConstants()` returns, per context it is built from, so it keeps its identity across the passes
+ * and calls whose memos compare the context first
+ */
+const noConstantContexts = new KeyedMemo<object>();
+
 /** The schema `foldView()` reads under `skippingDefaults()`, per schema it is read from, so it keeps its identity across
  * the passes and calls that read it, as the caches keyed on a schema need
  */
@@ -2102,8 +2123,9 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const wholeOptions = isWholeValue && offersConstants ? constants : undefined;
   const picksWholeOption = wholeOptions !== undefined;
   // The deprecated `skipOneOf` takes no `const` of any option of a `oneOf` on a primitive or untyped field, a list of
-  // constants or not. Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is
-  // read still skips, unless it is empty, which counts as no option list here as it does for the keyword read
+  // constants or not, nor any of a `oneOf` of object or array constants that a select picks whole. Checked on the
+  // schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips, unless it is
+  // empty, which counts as no option list here as it does for the keyword read
   const skipsOneOfConstants =
     Boolean(schema[ONE_OF_KEY]?.length) &&
     !Array.isArray(type) &&
@@ -2111,11 +2133,12 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     defaultFormStateBehavior?.constAsDefaults === 'skipOneOf';
   // A list of several constants is a choice the user has yet to make, as an `enum` is, so none of them is the field's
   // default unless `constAsDefaults` is explicitly `'always'`. A list of one leaves nothing to choose, so its constant
-  // fills as a `const` does. The option is folded with `constAsDefaults: 'never'`, which takes none of its constants
+  // fills as a `default` would, giving way to a declared one. The option is folded with `constAsDefaults: 'never'`,
+  // which takes none of its constants
   const optionContext: SchemaContext<S, F> =
     skipsOneOfConstants ||
     (defaultFormStateBehavior?.constAsDefaults !== 'always' && offersConstants && constants.length > 1)
-      ? { ...context, defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' } }
+      ? takingNoConstants(context)
       : context;
   // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick. An
   // ancestor default that wins picks the option too, so the option it is checked against is one that can hold it; one

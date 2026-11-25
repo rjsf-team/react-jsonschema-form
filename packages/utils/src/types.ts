@@ -174,8 +174,9 @@ export interface DefaultFormStateBehavior {
    *        const value will be defaulted
    * - `skipOneOf`: Deprecated, leave the flag unset instead. A `oneOf`/`anyOf` of several const values is left unpicked,
    *        as it is with the flag unset. It differs from unset only for a non-empty `oneOf` on a field with a single
-   *        primitive `type` or none: no const inside the option that field shows, such as the const of a property the
-   *        option declares or the one const value of the `oneOf`, is used as a default
+   *        primitive `type` or none, or on a select over object or array const values: no const inside the option that
+   *        field shows, such as the const of a property the option declares or the one const value of the `oneOf`, is
+   *        used as a default
    * - `never`: A const value will never be used as a default
    *
    * Left unset, a field's own const value, and the const of a property inside the `oneOf`/`anyOf` option a field

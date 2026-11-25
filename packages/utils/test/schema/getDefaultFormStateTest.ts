@@ -7695,6 +7695,31 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(getDefaultFormState(populating, { schema: field })).toBe(3);
           expect(getDefaultFormState(populating, { schema: property })).toStrictEqual({ n: 3 });
         });
+        describe("in an option of the field's anyOf, over a default naming none of the constants", () => {
+          beforeEach(() => {
+            testValidator.setReturnValues({ isValid: asRealValidator });
+          });
+          afterAll(() => {
+            testValidator.reset?.();
+          });
+          const only = (n: RJSFSchema): RJSFSchema => ({ type: 'object', required: ['n'], properties: { n } });
+          const shapes = (constants: RJSFSchema[]): [string, RJSFSchema][] => [
+            [
+              'beside an allOf of its own',
+              { type: 'number', default: 7, allOf: [{ minimum: 0 }], anyOf: [{ oneOf: constants }] },
+            ],
+            ["in the option's allOf", { type: 'number', default: 7, anyOf: [{ allOf: [{ oneOf: constants }] }] }],
+          ];
+          it.each(shapes([{ const: 3 }]))('starts from the one constant of a oneOf %s', (_, n) => {
+            expect(getDefaultFormState(skipping, { schema: only(n) })).toStrictEqual({ n: 3 });
+          });
+          it.each(shapes([{ const: 3 }, { const: 4 }]))(
+            'starts from the default where a oneOf %s lists several constants (#5944)',
+            (_, n) => {
+              expect(getDefaultFormState(skipping, { schema: only(n) })).toStrictEqual({ n: 7 });
+            },
+          );
+        });
         describe('as the option of a list the field offers itself is picked', () => {
           beforeEach(() => {
             testValidator.setReturnValues({ isValid: asRealValidator });
@@ -11800,6 +11825,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       it("leaves a one-entry oneOf empty under the deprecated 'skipOneOf', which takes no const of a oneOf option", () => {
         expect(fill(fixed[0][1], { constAsDefaults: 'skipOneOf' })).toEqual({});
         expect(fill(fixed[1][1], { constAsDefaults: 'skipOneOf' })).toEqual({ field: 'a' });
+      });
+      it.each<[string, RJSFSchema, unknown]>([
+        ['an object', { type: 'object', oneOf: [{ const: { a: 1 } }] }, { a: 1 }],
+        ['an array', { type: 'array', oneOf: [{ const: [1] }] }, [1]],
+      ])("leaves a one-entry oneOf select over %s constant empty under 'skipOneOf' too", (_, field, constant) => {
+        expect(fill(field)).toEqual({ field: constant });
+        expect(fill(field, { constAsDefaults: 'skipOneOf' })).toEqual({});
       });
       it.each(fixed)('starts %s on a default naming another value, as a list of several does', (_, field) => {
         expect(fill({ ...field, default: 'b' })).toEqual({ field: 'b' });
