@@ -1,7 +1,9 @@
 import { PROPERTIES_KEY, REF_KEY } from './constants.ts';
+import deepEquals from './deepEquals.ts';
 import getFieldSchemaPath from './getFieldSchemaPath.ts';
-import getKeywordParentSchema from './getKeywordParentSchema.ts';
+import getKeywordParentSchema, { keywordParentSchemaAt } from './getKeywordParentSchema.ts';
 import getUiOptions from './getUiOptions.ts';
+import isObject from './isObject.ts';
 import { getByPath } from './pathUtils.ts';
 import { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
 import { resolveOwnRef } from './schema/retrieveSchema.ts';
@@ -72,12 +74,17 @@ export default function applyValidatorErrorTitles<
       .map(decodeSchemaPathKey);
   const schemaPathParts = uiSchemaPathParts(schemaPath);
   // Ajv starts the path of a keyword in a `$ref` target it compiles on its own at that target, so a path the root
-  // doesn't lead along to the keyword names no field of the root. One `skipsRefs` reads as `null` does lead along it,
-  // to a branch of a field it names either way
-  const fieldSchemaPath =
-    !schema || getKeywordParentSchema<S>(schema, schemaPath, decodeSchemaPathKey, skipsRefs) !== undefined
-      ? getFieldSchemaPath(schemaPath)
-      : schemaPath;
+  // doesn't lead along to the engine's own schema names no field of the root. One `skipsRefs` reads as `null` does lead
+  // along it, to a branch of a field it names either way
+  const pathParent = schema && getKeywordParentSchema<S>(schema, schemaPath, decodeSchemaPathKey, skipsRefs);
+  // The path's schema is read resolved where it holds a `$ref`, which Ajv's `parentSchema`, as written, doesn't
+  const pathKeys = schemaPath.split('/').slice(1, -1).map(decodeSchemaPathKey);
+  const leadsToParent =
+    isObject(pathParent) &&
+    (parentSchema === undefined ||
+      deepEquals(pathParent, parentSchema) ||
+      deepEquals(pathKeys.length > 0 ? getByPath(schema, pathKeys) : schema, parentSchema));
+  const fieldSchemaPath = !schema || pathParent === null || leadsToParent ? getFieldSchemaPath(schemaPath) : schemaPath;
   const fieldSchemaPathParts = uiSchemaPathParts(fieldSchemaPath);
   const fieldSchema =
     schema && fieldSchemaPath !== schemaPath
@@ -94,6 +101,20 @@ export default function applyValidatorErrorTitles<
     }
     return getByPath<string | undefined>(resolved, 'title');
   };
+  // Read along the path, a property a merged schema holds resolves its `$ref` in the resource that writes it. The
+  // engine's schema is read as it is where the path doesn't lead to it
+  const propertyOf = (path: string | undefined, holder: unknown, name: string) =>
+    holder === undefined
+      ? undefined
+      : ((schema && path !== undefined
+          ? keywordParentSchemaAt<S>(
+              schema,
+              [...path.split('/').slice(1, -1).map(decodeSchemaPathKey), PROPERTIES_KEY, name],
+              'title',
+              skipsRefs,
+            )
+          : undefined) ?? getByPath(holder, [PROPERTIES_KEY, name]));
+  const parentSchemaPath = leadsToParent ? schemaPath : undefined;
   const titles = new Map<string, string>();
   for (const name of names) {
     // A sub-field named `title` sits at the same path as a raw `title`
@@ -103,8 +124,8 @@ export default function applyValidatorErrorTitles<
         getUiOptions<T, S, F>(getByPath(uiSchema, [...schemaPathParts, name])).title ??
         getUiOptions<T, S, F>(getByPath(uiSchema, [...fieldSchemaPathParts, name])).title ??
         (typeof rawUiTitle === 'string' ? rawUiTitle : undefined)) ||
-      titleOf(getByPath(parentSchema, [PROPERTIES_KEY, name])) ||
-      titleOf(getByPath(fieldSchema, [PROPERTIES_KEY, name])) ||
+      titleOf(propertyOf(parentSchemaPath, parentSchema, name)) ||
+      titleOf(propertyOf(fieldSchemaPath, fieldSchema, name)) ||
       titleOf(getByPath(schema, [...propParts.flatMap((part) => [PROPERTIES_KEY, part]), PROPERTIES_KEY, name]));
     if (title) {
       titles.set(name, title);

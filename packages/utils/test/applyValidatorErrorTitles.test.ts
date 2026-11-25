@@ -119,6 +119,40 @@ describe('applyValidatorErrorTitles()', () => {
     expect(titles).toEqual(new Map());
   });
 
+  it('reads the parentSchema as it is where the root leads along the schemaPath to another schema', () => {
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '.a',
+      schemaPath: '#/required',
+      parentSchema: { required: ['name'], properties: { name: { title: 'F name' } } },
+      schema: {
+        type: 'object',
+        properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+      },
+    });
+    expect(titles).toEqual(new Map([['name', 'F name']]));
+  });
+
+  it('names a property by the field holding the branch when the branch the parentSchema is holds a $ref', () => {
+    const branch = { $ref: '#/$defs/O', required: ['n'] };
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['n'],
+      quote: "'",
+      property: '.0',
+      schemaPath: '#/items/allOf/0/required',
+      parentSchema: branch,
+      schema: {
+        $defs: { O: { type: 'object' } },
+        type: 'array',
+        items: { type: 'object', properties: { n: { type: 'string', title: 'N' } }, allOf: [branch] },
+      },
+    });
+    expect(titles).toEqual(new Map([['n', 'N']]));
+  });
+
   it('reads the ui:title at the schemaPath of the field holding the branch the failed keyword sits in', () => {
     const { titles } = applyValidatorErrorTitles({
       message,

@@ -132,12 +132,35 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
   if (!schemaPath.startsWith('#')) {
     return undefined;
   }
+  const segments = schemaPath.split('/');
+  return keywordParentSchemaAt<S>(
+    rootSchema,
+    segments.slice(1, -1).map(decodeSchemaPathKey),
+    decodeSchemaPathKey(segments[segments.length - 1]),
+    skipsRefs,
+  );
+}
+
+/** Returns the schema holding `keyword` at the decoded `keys` of a path, as `getKeywordParentSchema()` reads one, for a
+ * caller that extends a path past the keyword of an error
+ *
+ * @param rootSchema - The form's root schema
+ * @param keys - The decoded keys of the path from the root to the schema holding the keyword
+ * @param keyword - The keyword the path ends at
+ * @param skipsRefs - The engine leaves every `$ref` out of the path
+ * @returns - What `getKeywordParentSchema()` returns for the path
+ */
+export function keywordParentSchemaAt<S extends StrictRJSFSchema = RJSFSchema>(
+  rootSchema: S,
+  keys: string[],
+  keyword: string,
+  skipsRefs: boolean,
+): S | null | undefined {
   try {
     const graph = parseSchemaGraph<S>(rootSchema);
     let node: unknown = rootSchema;
     let seeds: object[] = [];
     let endsAtNameMap = false;
-    const keys = schemaPath.split('/').slice(1, -1).map(decodeSchemaPathKey);
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index];
       const hasRef = stringKeyword(node, REF_KEY) !== undefined;

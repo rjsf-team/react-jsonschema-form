@@ -170,7 +170,23 @@ export function transformRJSFValidationErrors<
           ? getKeywordParentSchema<S>(schema, fieldLocation, decodePointerToken)
           : parentSchema
       )?.title;
-      const title = uiSchemaTitle ?? ((typeof parentTitle === 'string' ? parentTitle : undefined) || schemaTitle);
+      // A branch redeclaring a property, such as a `then`, leaves its title to the declaration beside the branch
+      const segments = fieldLocation.split('/');
+      const declarations = segments.slice(0, -2).join('/');
+      const declaration =
+        schema && keyword !== 'false' && segments.at(-3) === PROPERTIES_KEY
+          ? getFieldSchemaPath(declarations)
+          : undefined;
+      const declaredTitle =
+        declaration === undefined || declaration === declarations
+          ? undefined
+          : getKeywordParentSchema<S>(schema as S, `${declaration}/${segments.slice(-2).join('/')}`, decodePointerToken)
+              ?.title;
+      const title =
+        uiSchemaTitle ??
+        ((typeof parentTitle === 'string' ? parentTitle : undefined) ||
+          (typeof declaredTitle === 'string' ? declaredTitle : undefined) ||
+          schemaTitle);
       if (title) {
         stack = `'${title}' ${message}`.trim();
         uiTitle = title;

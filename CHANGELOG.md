@@ -73,7 +73,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 ## @rjsf/validator-cfworker
 
-- Fix errors inside an array item, or under a `$ref`, `allOf`, `if`/`then` or `additionalProperties`, not naming their property by its schema `title` ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+- Fix errors inside an array item, or under a `$ref`, `allOf`, `if`/`then` or `additionalProperties`, not naming their property by its schema `title` ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5934](https://github.com/rjsf-team/react-jsonschema-form/pull/5934), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
 - Fix errors naming a property that a branch, `patternProperties` entry or `additionalProperties` schema redeclares with its own `title` by the `title` along `properties` rather than the redeclared one ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
 - Fix the error for a missing property not naming it by its schema `title` when its schema is a `$ref`, or when an `allOf`, `if`/`then` or `dependencies` branch requires it inside an array item or under a `$ref`, nor by its `ui:title` when such a branch requires it inside an array item ([#5934](https://github.com/rjsf-team/react-jsonschema-form/pull/5934), [#5932](https://github.com/rjsf-team/react-jsonschema-form/issues/5932))
 

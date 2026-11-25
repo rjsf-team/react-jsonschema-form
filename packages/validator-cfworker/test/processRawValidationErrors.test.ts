@@ -519,6 +519,47 @@ describe('transformRJSFValidationErrors()', () => {
       ]);
     });
 
+    it('names a missing property by the definition its $ref names in the resource that writes it, under a $ref schema redeclaring it', () => {
+      const schema: RJSFSchema = {
+        $id: 'https://example.com/root',
+        $defs: {
+          N: { type: 'string', title: 'Root N' },
+          R: {
+            $id: 'https://example.com/r',
+            $defs: { N: { type: 'number', title: 'Res N' } },
+            type: 'object',
+            properties: { n: { $ref: '#/$defs/N' } },
+            required: ['n'],
+          },
+        },
+        type: 'object',
+        properties: { a: { $ref: 'https://example.com/r', properties: { n: { description: 'd' } } } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
+      expect(
+        errors.filter((error) => error.name === 'required').map(({ property, title }) => ({ property, title })),
+      ).toEqual([{ property: '.a.n', title: 'Res N' }]);
+    });
+
+    it('names a property a $ref target’s branch redeclares without a title by its declaration beside the branch', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          T: {
+            type: 'object',
+            properties: { k: {}, n: { title: 'N', type: 'string' } },
+            if: { required: ['k'] },
+            then: { properties: { n: { minLength: 3 } } },
+          },
+        },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T' } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { k: 1, n: 'a' } }, schema);
+      expect(
+        errors.filter((error) => error.name === 'minLength').map(({ property, title }) => ({ property, title })),
+      ).toEqual([{ property: '.a.n', title: 'N' }]);
+    });
+
     it('names a property by the definition its $ref names in the resource that writes it, under a $ref schema redeclaring it', () => {
       const schema: RJSFSchema = {
         $id: 'https://example.com/root',

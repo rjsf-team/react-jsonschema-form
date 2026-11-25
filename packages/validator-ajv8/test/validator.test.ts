@@ -4068,6 +4068,58 @@ describe('AJV8Validator naming a property a branch requires in a $ref target Ajv
       }),
     );
   });
+
+  it('takes no title from a root property of the same name where the root holds the same branch', () => {
+    const schema: RJSFSchema = {
+      $defs: {
+        N: { type: 'string' },
+        F: {
+          type: 'object',
+          properties: { flag: {}, name: { $ref: '#/$defs/N' } },
+          if: { required: ['flag'] },
+          then: { required: ['name'] },
+        },
+      },
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+      if: { required: ['other'] },
+      then: { properties: {} },
+    };
+    const { errors } = customizeValidator().validateFormData({ name: 'x', a: { flag: 1 } }, schema);
+    expect(errors.find((error) => error.name === 'required')).toEqual(
+      expect.objectContaining({ schemaPath: '#/then/required', title: '' }),
+    );
+  });
+
+  it('names a property the target requires itself by the target’s title, not a root property of the same name', () => {
+    const schema: RJSFSchema = {
+      $defs: {
+        N: { type: 'string' },
+        F: { type: 'object', properties: { name: { $ref: '#/$defs/N', title: 'F name' } }, required: ['name'] },
+      },
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+    };
+    const { errors } = customizeValidator().validateFormData({ name: 'x', a: {} }, schema);
+    expect(errors.find((error) => error.name === 'required')).toEqual(
+      expect.objectContaining({ schemaPath: '#/required', title: 'F name' }),
+    );
+  });
+
+  it('names a property an array item’s branch holding a $ref requires by the item’s title and ui:title', () => {
+    const schema: RJSFSchema = {
+      $defs: { O: { type: 'object' } },
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { n: { type: 'string', title: 'N' }, m: { type: 'string' } },
+        allOf: [{ $ref: '#/$defs/O', required: ['n', 'm'] }],
+      },
+    };
+    const uiSchema: UiSchema = { items: { m: { 'ui:title': 'UI M' } } };
+    const { errors } = customizeValidator().validateFormData([{}], schema, undefined, undefined, uiSchema);
+    expect(errors.filter((error) => error.name === 'required').map(({ title }) => title)).toEqual(['N', 'UI M']);
+  });
 });
 
 pointerValidationTests(() => customizeValidator());
