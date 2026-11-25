@@ -28,6 +28,7 @@ import {
   resolveOwnRef,
   stubExistingAdditionalProperties,
 } from '../../src/schema/retrieveSchema.ts';
+import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
@@ -288,6 +289,52 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(retrieveSchema({ validator: testValidator }, schema, schema).additionalProperties).toEqual({
         type: 'number',
       });
+    });
+    // A `$ref` applies its definition in place, so the keywords beside it are the object's own, not a sibling entry
+    it.each<[string, RJSFSchema, RJSFSchema, boolean | undefined]>([
+      [
+        "keeps a definition's additionalProperties: true the unevaluatedProperties: false beside its $ref sees",
+        { additionalProperties: true },
+        { properties: { a: { type: 'string' } }, unevaluatedProperties: false },
+        true,
+      ],
+      [
+        "leaves out an additionalProperties: true beside a $ref the definition's unevaluatedProperties: false closes",
+        { properties: { a: { type: 'string' } }, unevaluatedProperties: false },
+        { additionalProperties: true },
+        undefined,
+      ],
+    ])('%s', (_, definition, beside, expected) => {
+      const site: RJSFSchema = { $ref: '#/definitions/open', ...beside };
+      const schema: RJSFSchema = { type: 'object', definitions: { open: definition, site } };
+      const chained: RJSFSchema = { $ref: '#/definitions/site' };
+      expect(retrieveSchema({ validator: testValidator }, site, schema).additionalProperties).toBe(expected);
+      expect(retrieveSchema({ validator: testValidator }, chained, schema).additionalProperties).toBe(expected);
+      expect(resolveOwnRef(site, schema).additionalProperties).toBe(expected);
+      expect(resolveOwnRef(chained, schema).additionalProperties).toBe(expected);
+    });
+    it('keeps the keywords beside a $ref, as the object keeps its own, where the definition cannot be merged in', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      const site: RJSFSchema = { $ref: '#/definitions/str', type: 'number', title: 'P' };
+      const schema: RJSFSchema = { definitions: { str: { type: 'string', minLength: 2 } } };
+      const retrieved = retrieveSchema({ validator: testValidator }, site, schema);
+      expect(Object.fromEntries(Object.entries(retrieved))).toEqual({ type: 'number', title: 'P' });
+      expect(warn).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', expect.any(Error));
+      warn.mockRestore();
+    });
+    it('hands a customMergeAllOf the keywords beside a $ref as the object, the definition as its allOf entry', () => {
+      const site: RJSFSchema = { $ref: '#/definitions/open', properties: { a: { type: 'string' } } };
+      const schema: RJSFSchema = { definitions: { open: { additionalProperties: true } } };
+      const customMergeAllOf = vi.fn((merged: RJSFSchema) => shallowAllOfMerge(merged) as RJSFSchema);
+      const handed = () => customMergeAllOf.mock.calls.map(([merged]) => Object.fromEntries(Object.entries(merged)));
+      const properties = { a: { type: 'string' } };
+      retrieveSchema({ validator: testValidator, customMergeAllOf }, site, schema);
+      expect(handed()).toEqual([
+        { properties, allOf: [{ additionalProperties: true, [RJSF_REF_KEY]: '#/definitions/open' }] },
+      ]);
+      customMergeAllOf.mockClear();
+      resolveOwnRef(site, schema, customMergeAllOf);
+      expect(handed()).toEqual([{ properties, allOf: [{ additionalProperties: true }] }]);
     });
   });
 

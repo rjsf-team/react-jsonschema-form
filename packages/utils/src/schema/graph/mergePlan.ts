@@ -663,7 +663,7 @@ function mergedAllOf<S extends StrictRJSFSchema>(schema: S, customMergeAllOf?: C
   return customMergeAllOf ? customMergeAllOf(schema) : schemaFrom(schema, shallowAllOfMerge(schema));
 }
 
-/** Returns the keywords `beside` a `$ref` and the `definition` it names merged as the `allOf` of both, as the form
+/** Returns the keywords `beside` a `$ref` merged with the `definition` it names as their `allOf` entry, as the form
  * merges them, by the same `customMergeAllOf`. Two that cannot be merged, such as a `type` beside the `$ref` that the
  * definition's `type` shares no value with, stay the `allOf` of both, which a validator reads the same way, rather than
  * failing every reader.
@@ -685,8 +685,10 @@ export function conjoinDefinition<S extends StrictRJSFSchema>(
     const merged = schemaFrom(
       template,
       mergedAllOf(
+        // A `$ref` applies its definition in place, so an `unevaluatedProperties` beside it sees the definition's keys
         schemaFrom(template, {
-          [ALL_OF_KEY]: [withoutKeys(beside, ALL_OF_KEY), withoutKeys(definition, ALL_OF_KEY)],
+          ...withoutKeys(beside, ALL_OF_KEY),
+          [ALL_OF_KEY]: [withoutKeys(definition, ALL_OF_KEY)],
         }),
         customMergeAllOf,
       ),
@@ -905,11 +907,26 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     ) {
       return part;
     }
-    const members = this.graph.subschemas(provider.node.id, ALL_OF_KEY).flatMap(([, member]) => {
+    const entries = this.graph.subschemas(provider.node.id, ALL_OF_KEY).map(([, member]) => {
       const expanded = this.expand(member, provider.refPath, 'allOf', dependencyKey);
-      return expanded === undefined ? [] : [scopedPart(expanded, `a${member}`)];
+      return expanded === undefined ? undefined : scopedPart(expanded, `a${member}`);
     });
-    return this.conjoin({ ...part, schema: withoutKeys(part.schema, ALL_OF_KEY) }, members);
+    const own = { ...part, schema: withoutKeys(part.schema, ALL_OF_KEY) };
+    const [beside, ...rest] = entries;
+    // A `$ref` applies its definition in place, so the keywords beside it, its conjunction's first entry, are the
+    // object's own: an `unevaluatedProperties` among them sees the definition's keys
+    return provider.node.conjunctionOf === undefined || beside === undefined
+      ? this.conjoin(
+          own,
+          entries.filter((entry) => entry !== undefined),
+        )
+      : this.conjoin(
+          {
+            schema: schemaFrom(own.schema, { ...beside.schema, ...own.schema }),
+            chains: [...own.chains, ...beside.chains],
+          },
+          rest.filter((entry) => entry !== undefined),
+        );
   }
 
   /** Merges `members` into `part` as `allOf` merges them, first wins, and re-applies the symbols the merge drops, the
