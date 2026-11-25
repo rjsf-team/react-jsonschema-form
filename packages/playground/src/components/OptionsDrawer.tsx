@@ -218,7 +218,8 @@ const liveSettingsBooleanSchema: RJSFSchema = {
           oneOf: [
             {
               type: 'string',
-              title: 'A required boolean with no default is set to false',
+              title:
+                'A required boolean with no default is set to false, unless the values its schema lists leave false out',
               enum: ['populateFalse'],
             },
             {
