@@ -6255,11 +6255,35 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
     );
 
     // The keys an option's object `const` fills are a default, whether or not the option declares them, so switching
-    // back clears them rather than leaving a key no field renders
-    it.each<{ declares: string; option: RJSFSchema }>([
-      { declares: 'beside properties', option: { properties: { b: {} }, const: { b: 1 } } },
-      { declares: 'alone', option: { const: { b: 1 } } },
-    ])('clears the keys a const $declares filled on switching back', async ({ option }) => {
+    // back clears them rather than leaving a key no field renders. A key neither option declares is judged against one
+    // fill without all such keys (`undeclaredFillOf`), where the keys the switch leaves elsewhere share one fill without
+    // every key of the object (`fillWithoutKeys`, #5836). A probe of every shape below found the two agree, but they are
+    // kept apart, as an `if` or `dependencies` reading the object's keys turns the second off and not the first, so
+    // these pin what that judgement gives, should the two ever be merged
+    it.each<{ declares: string; option: RJSFSchema; filled: Record<string, unknown> }>([
+      { declares: 'beside properties', option: { properties: { b: {} }, const: { b: 1 } }, filled: { b: 1 } },
+      { declares: 'alone', option: { const: { b: 1 } }, filled: { b: 1 } },
+      {
+        declares: 'beside a declared key it fills',
+        option: { properties: { c: { type: 'string' } }, const: { b: 1, c: 'k' } },
+        filled: { b: 1, c: 'k' },
+      },
+      {
+        declares: "beside a declared key's own default",
+        option: { properties: { c: { type: 'string', default: 'd' } }, const: { b: 1, c: 'd' } },
+        filled: { b: 1, c: 'd' },
+      },
+      {
+        declares: 'beside a required boolean it leaves',
+        option: { properties: { c: { type: 'boolean' } }, required: ['c'], const: { b: 1 } },
+        filled: { b: 1, c: false },
+      },
+      {
+        declares: 'closing the object',
+        option: { properties: { c: { type: 'string' } }, additionalProperties: false, const: { b: 1, c: 'k' } },
+        filled: { b: 1, c: 'k' },
+      },
+    ])('clears the keys a const $declares filled on switching back', async ({ option, filled }) => {
       const schema: RJSFSchema = {
         type: 'object',
         [keyword]: [
@@ -6270,10 +6294,44 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x' } });
 
       await user.selectOptions(elementOf(node, selectorId), 'T');
-      expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 1 });
+      expect(onChange.mock.lastCall?.[0].formData).toEqual(filled);
       await user.selectOptions(elementOf(node, selectorId), 'S');
 
       expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+    });
+
+    // As above, for an object switched below the root, beside a sibling the switch doesn't reach
+    it.each<{ declares: string; option: RJSFSchema }>([
+      { declares: 'alone', option: { const: { b: 1 } } },
+      {
+        declares: 'beside a declared key it fills',
+        option: { properties: { c: { type: 'string' } }, const: { b: 1, c: 'k' } },
+      },
+      {
+        declares: 'closing the object',
+        option: { properties: { c: { type: 'string' } }, additionalProperties: false, const: { b: 1, c: 'k' } },
+      },
+    ])('clears the keys a const $declares filled in a nested object on switching back', async ({ option }) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          z: { type: 'string' },
+          o: {
+            type: 'object',
+            [keyword]: [
+              { title: 'S', properties: { a: { type: 'string' } }, required: ['a'] },
+              { title: 'T', ...option },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { z: 'zz', o: { a: 'x' } } });
+      const nestedSelectorId = `#root_o__${keyword.toLowerCase()}_select`;
+
+      await user.selectOptions(elementOf(node, nestedSelectorId), 'T');
+      await user.selectOptions(elementOf(node, nestedSelectorId), 'S');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ z: 'zz', o: {} });
     });
 
     it('fills the old data as many times on switching back for five keys a const filled as for one', async () => {
@@ -6394,6 +6452,193 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(formData).toEqual({ kind: 't', a: { kind: 'B', n: 1 } });
       expect(node.querySelector('#root_a_n__key')).not.toBeNull();
     });
+
+    // The keys of an object no condition reads share one fill without them all, so each place a condition can be
+    // read from has to keep the fill per key
+    const conditionalA: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string' }, n: { type: 'number' } },
+      if: { properties: { kind: { const: 'A' } } },
+      then: { properties: { n: { default: 1 } } },
+    };
+    it.each<{ held: string; schema: RJSFSchema; a: unknown }>([
+      {
+        held: "an `if` the object's `$ref` reaches",
+        schema: unionOf({ definitions: { a: conditionalA } }, { $ref: '#/definitions/a' }),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        // The root's definition of the same name holds no `if`
+        held: "an `if` the object's `$ref` reaches in the resource an `$id` above it names",
+        schema: unionOf(
+          { definitions: { a: { type: 'object' } } },
+          { $ref: '#/definitions/a' },
+          { $id: 'https://example.com/s', definitions: { a: conditionalA } },
+        ),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        held: 'an `if` above the object',
+        schema: unionOf(
+          {
+            if: { properties: { a: { properties: { kind: { const: 'A' } } } } },
+            then: { properties: { a: { properties: { n: { default: 1 } } } } },
+          },
+          { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } },
+        ),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        held: 'an `if` in the option the object shows',
+        schema: unionOf({}, { anyOf: [conditionalA] }),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        // With `m` beside it the dependency fills `n` with 2, and without it `n` takes its own 1
+        held: "the object's `dependencies`",
+        schema: unionOf(
+          {},
+          {
+            type: 'object',
+            properties: { m: { type: 'string' }, n: { type: 'number', default: 1 } },
+            dependencies: { m: { properties: { n: { default: 2 } } } },
+          },
+        ),
+        a: { m: 'x', n: 1 },
+      },
+      // The fill merges every declaration of `a`, where the field is judged by the option's alone
+      {
+        held: 'an `if` on the object the shown option declares again without one',
+        schema: unionOf(
+          { properties: { a: { type: 'object', if: conditionalA.if, then: conditionalA.then } } },
+          { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } },
+        ),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        held: 'an `if` on the object declaring a sibling, the shown option adding the key',
+        schema: unionOf(
+          {
+            properties: {
+              a: {
+                type: 'object',
+                properties: { kind: { type: 'string' } },
+                if: conditionalA.if,
+                then: conditionalA.then,
+              },
+            },
+          },
+          { type: 'object', properties: { n: { type: 'number' } } },
+        ),
+        a: { kind: 'B', n: 1 },
+      },
+      {
+        held: 'an `if` on the items the shown option declares again without one',
+        schema: unionOf(
+          {
+            properties: {
+              a: { type: 'array', items: { type: 'object', if: conditionalA.if, then: conditionalA.then } },
+            },
+          },
+          { type: 'array', items: { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } } },
+        ),
+        a: [{ kind: 'B', n: 1 }],
+      },
+      {
+        // The option `a` shows is matched by its data, and an inline list's isn't pinned to the one the old tree showed
+        held: "an inline option list the object's data matches",
+        schema: unionOf(
+          {},
+          {
+            type: 'object',
+            oneOf: [
+              { properties: { m: { type: 'number' }, n: { type: 'number', default: 1 } } },
+              { properties: { m: { type: 'string' }, n: { type: 'number' } } },
+            ],
+          },
+        ),
+        a: { m: 's', n: 1 },
+      },
+      {
+        // The retrieved extra key's schema has its `$ref` resolved and its `if` evaluated away
+        held: "an `if` the `$ref` of the object's `additionalProperties` reaches",
+        schema: unionOf(
+          { definitions: { c: conditionalA } },
+          { type: 'object', additionalProperties: { $ref: '#/definitions/c' } },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      },
+      {
+        // The shown option's retrieved layer holds the extra key as a property, resolved as above
+        held: "an `if` the `$ref` of the `additionalProperties` of the object's option reaches",
+        schema: unionOf(
+          { definitions: { c: conditionalA } },
+          { type: 'object', oneOf: [{ title: 'O', additionalProperties: { $ref: '#/definitions/c' } }] },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      },
+      {
+        held: "an `if` in the object's `patternProperties`",
+        schema: unionOf({}, { type: 'object', patternProperties: { '^e': conditionalA } }),
+        a: { e: { kind: 'B', n: 1 } },
+      },
+      {
+        held: "an `if` the `$ref` of the object's `patternProperties` reaches",
+        schema: unionOf(
+          { definitions: { c: conditionalA } },
+          { type: 'object', patternProperties: { '^e': { $ref: '#/definitions/c' } } },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      },
+      {
+        held: "an `if` in the object's `patternProperties` matching a declared property",
+        schema: unionOf(
+          {},
+          {
+            type: 'object',
+            properties: { e: { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } } },
+            patternProperties: { '^e': conditionalA },
+          },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      },
+      {
+        held: "an `if` the `$ref` of the object's `patternProperties` reaches, matching a declared property",
+        schema: unionOf(
+          { definitions: { c: conditionalA } },
+          {
+            type: 'object',
+            properties: { e: { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } } },
+            patternProperties: { '^e': { $ref: '#/definitions/c' } },
+          },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      },
+      {
+        held: "an `if` the `$ref` of the object's `unevaluatedProperties` reaches",
+        schema: unionOf(
+          { definitions: { c: conditionalA } },
+          { type: 'object', unevaluatedProperties: { $ref: '#/definitions/c' } },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      },
+      // The object's `default` names the extra key, so the object's fill writes it
+      ...(['additionalProperties', 'unevaluatedProperties'] as const).map((keyword) => ({
+        held: `an \`if\` the \`$ref\` of the object's \`${keyword}\` reaches, the object's \`default\` naming the key`,
+        schema: unionOf(
+          { definitions: { c: conditionalA } },
+          { type: 'object', [keyword]: { $ref: '#/definitions/c' }, default: { e: {} } },
+        ),
+        a: { e: { kind: 'B', n: 1 } },
+      })),
+    ])(
+      'judges a nested value by the fill made with its siblings in place, read through $held',
+      async ({ schema, a }) => {
+        const { formData } = await selectT(schema, { whenAbsent: 'allow', initialFormData: { kind: 's', a } });
+
+        expect(formData).toEqual({ kind: 't', a });
+      },
+    );
 
     it('keeps an object whose keys its extra key renders, as extra keys of their own', async () => {
       const schema = unionOf({}, { type: 'object', properties: { b: { type: 'string' } } });
