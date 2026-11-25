@@ -422,6 +422,49 @@ describe('transformRJSFValidationErrors()', () => {
       ]);
     });
 
+    it('names a property by the definition its $ref names in the resource that writes it, under a $ref schema redeclaring it', () => {
+      const schema: RJSFSchema = {
+        $id: 'https://example.com/root',
+        $defs: {
+          N: { type: 'string', title: 'Root N' },
+          R: {
+            $id: 'https://example.com/r',
+            $defs: { N: { type: 'number', title: 'Res N' } },
+            type: 'object',
+            properties: { n: { $ref: '#/$defs/N' } },
+          },
+        },
+        type: 'object',
+        properties: { a: { $ref: 'https://example.com/r', properties: { n: { description: 'd' } } } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { n: 'x' } }, schema);
+      expect(errors.map(({ property, title }) => ({ property, title }))).toEqual([
+        { property: '.a.n', title: 'Res N' },
+      ]);
+    });
+
+    it('names a tuple position by the $ref schema’s title where it and its target both hold prefixItems', () => {
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'array', prefixItems: [{ type: 'string', title: 'T0' }] } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', prefixItems: [{ title: 'Own 0' }] } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: [5] }, schema);
+      expect(errors.map(({ property, title }) => ({ property, title }))).toEqual([
+        { property: '.a.0', title: 'Own 0' },
+      ]);
+    });
+
+    it('keeps the $ref schema’s own title where merging it with its target fails', () => {
+      const schema: RJSFSchema = {
+        $defs: { N: { type: 'number', title: 'N' }, J: { $ref: '#/$defs/N' } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/J', type: 'string', title: 'Wrapper' } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: true }, schema);
+      expect(errors.map(({ title }) => title)).toEqual(['Wrapper', 'Wrapper']);
+    });
+
     it('names a missing property from the $ref schema’s own allOf branch where its target also holds one', () => {
       const schema: RJSFSchema = {
         $defs: { T: { type: 'object', allOf: [{ properties: { z: {} } }] } },

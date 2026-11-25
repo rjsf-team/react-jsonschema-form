@@ -12,8 +12,9 @@ import {
 } from './constants.ts';
 import isObject from './isObject.ts';
 import { getByPath } from './pathUtils.ts';
-import { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
-import { requireOwnRef, resolveOwnRef } from './schema/retrieveSchema.ts';
+import parseSchemaGraph, { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
+import type { NodeId, ObjectNode, SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
+import { requireOwnRef, resolveMergedOwnRef } from './schema/retrieveSchema.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Keywords whose subschemas merging a `$ref` schema with its target combines into one, so the subschema a path reads
@@ -42,6 +43,38 @@ function readsJoined(keys: string[]): boolean {
   return true;
 }
 
+/** Returns the own `$ref` of the walk's `schema` resolved, with the subschema it names and the schemas the graph holds
+ * that the resolved schema is merged from. A copy merging made from `seeds`, which no graph node holds, has its `$ref`
+ * resolved from the seed writing it, in that seed's resource, where read alone it would resolve against the root
+ */
+function ownRef<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds: object[], schema: S) {
+  const held = graph.byObject(schema) !== undefined;
+  // A copy's `$ref` is one of its seeds', unless the copy is an entry of a list merging crossed, whose position no
+  // seed's matches: that one is resolved against the root, as read alone
+  const writer = held
+    ? undefined
+    : (seeds.find((seed) => stringKeyword(seed, REF_KEY) === schema[REF_KEY]) as S | undefined);
+  const { resolved, target } = requireOwnRef<S>(writer ?? schema, graph.rawRoot);
+  const merged = writer === undefined ? [] : [...seeds];
+  if (held) {
+    merged.push(schema);
+  }
+  for (let link = target; link !== undefined;) {
+    merged.push(link);
+    link = stringKeyword(link, REF_KEY) === undefined ? undefined : requireOwnRef<S>(link as S, graph.rawRoot).target;
+  }
+  if (writer === undefined) {
+    return { resolved, target, seeds: merged };
+  }
+  // Parsed in the writer's resource, the copy's own keywords decide how its `$ref` joins them
+  const copy = graph.adopt(schema, (graph.node(graph.byObject(writer) as NodeId) as ObjectNode<S>).outerBase);
+  return {
+    resolved: resolveMergedOwnRef<S>(copy.graph, [{ node: copy.node, refPath: [] }], schema),
+    target,
+    seeds: merged,
+  };
+}
+
 /** Keywords whose value maps names to schemas, so the key after one is a name rather than a keyword */
 const NAME_MAP_KEYS = [
   PROPERTIES_KEY,
@@ -68,10 +101,11 @@ const NAME_MAP_KEYS = [
  *        either that schema or its target
  * @returns - The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two
  *          of whose schemas hold its next key, unless it is `properties`, `patternProperties`, `additionalProperties`,
- *          `propertyNames`, or an `items` or `additionalItems` merging joins into one schema with the rest of the path
- *          running through keys merging joins, so which of them the path's next key indexes can't be told; or
- *          `undefined` when the path isn't a URI fragment, or leads to no schema object, such as the `properties` map
- *          holding the property a `false` schema's path ends at, or through a `$ref` that can't be resolved
+ *          `propertyNames`, or an `items`, `prefixItems` or `additionalItems` merging joins, a whole schema or
+ *          position by position, with the rest of the path running through keys merging joins, so which of them the
+ *          path's next key indexes can't be told; or `undefined` when the path isn't a URI fragment, or leads to no
+ *          schema object, such as the `properties` map holding the property a `false` schema's path ends at, or
+ *          through a `$ref` that can't be resolved
  */
 export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSFSchema>(
   rootSchema: S,
@@ -84,9 +118,12 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
     return undefined;
   }
   try {
+    const graph = parseSchemaGraph<S>(rootSchema);
     let node: unknown = rootSchema;
+    let seeds: object[] = [];
     let endsAtNameMap = false;
     const keys = schemaPath.split('/').slice(1, -1).map(decodeSchemaPathKey);
+    const keyword = decodeSchemaPathKey(schemaPath.slice(schemaPath.lastIndexOf('/') + 1));
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index];
       const hasRef = stringKeyword(node, REF_KEY) !== undefined;
@@ -100,32 +137,28 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
           refs += 1;
         }
         const rest = keys.slice(index + refs);
-        const merged = readsJoined(rest) ? resolveOwnRef<S>(node as S, rootSchema) : undefined;
-        if (merged && (rest.length === 0 || Object.hasOwn(merged, rest[0]))) {
-          node = merged;
+        const own = ownRef<S>(graph, seeds, node as S);
+        if (readsJoined(rest) && (rest.length === 0 || Object.hasOwn(own.resolved, rest[0]))) {
+          node = own.resolved;
+          seeds = own.seeds;
           index += refs - 1;
         } else {
-          node = requireOwnRef<S>(node as S, rootSchema).target;
+          node = own.target;
         }
       } else {
         if (
           hasRef &&
           skipsRefs &&
           !MERGE_COMBINED_KEYS.includes(key) &&
-          // Merging joins a single schema under `items` or `additionalItems` too, but not a tuple's positions, nor a list
-          // keyword further down that both schemas hold
-          !(
-            (key === ITEMS_KEY || key === ADDITIONAL_ITEMS_KEY) &&
-            readsJoined(keys.slice(index)) &&
-            isObject(getByPath(resolveOwnRef<S>(node as S, rootSchema), key))
-          )
+          // Merging joins an `items`, `prefixItems` or `additionalItems` too, a whole schema or position by position, but
+          // not a list keyword further down that both schemas hold
+          !readsJoined(keys.slice(index))
         ) {
           // Any two schemas along the chain of `$ref`s holding the key make the path ambiguous
           let holders = 0;
           for (let link: unknown = node; link !== undefined;) {
             holders += Number(Object.hasOwn(Object(link), key));
-            link =
-              stringKeyword(link, REF_KEY) === undefined ? undefined : requireOwnRef<S>(link as S, rootSchema).target;
+            link = stringKeyword(link, REF_KEY) === undefined ? undefined : ownRef<S>(graph, seeds, link as S).target;
           }
           if (holders > 1) {
             return null;
@@ -135,19 +168,33 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
         // into an `allOf`, so the path's next key indexes the schema as written. One merging joins is read merged, for
         // the target's titles, unless the merge failed and moved it into an `allOf` too
         if (hasRef && (key === REF_KEY || MERGE_JOINED_KEYS.includes(key) || !Object.hasOwn(Object(node), key))) {
-          const resolved = resolveOwnRef<S>(node as S, rootSchema);
-          node = key !== REF_KEY && Object.hasOwn(Object(node), key) && !Object.hasOwn(resolved, key) ? node : resolved;
+          const own = ownRef<S>(graph, seeds, node as S);
+          if (key === REF_KEY || !Object.hasOwn(Object(node), key) || Object.hasOwn(own.resolved, key)) {
+            node = own.resolved;
+            seeds = own.seeds;
+          }
         }
         // `resolveOwnRef()` follows a whole chain of `$ref`s, each of which the path can name. A property named `$ref`
         // is still read, as a key the schema holds
         if (key !== REF_KEY || Object.hasOwn(Object(node), REF_KEY)) {
           node = getByPath(node, key);
+          // A list is kept, for the seeds at the position the next key names
+          seeds = seeds.flatMap((seed) => {
+            const sub: unknown = getByPath(seed, key);
+            return typeof sub === 'object' && sub !== null ? [sub] : [];
+          });
         }
       }
       endsAtNameMap = !endsAtNameMap && NAME_MAP_KEYS.includes(key);
     }
     if (stringKeyword(node, REF_KEY) !== undefined) {
-      node = resolveOwnRef<S>(node as S, rootSchema);
+      const { resolved } = ownRef<S>(graph, seeds, node as S);
+      // A merge that fails moves a keyword the `$ref` schema holds into an `allOf`, away from the schema's own title. The
+      // `$ref` itself is never kept by a merge
+      node =
+        keyword !== REF_KEY && Object.hasOwn(Object(node), keyword) && !Object.hasOwn(resolved, keyword)
+          ? node
+          : resolved;
     }
     return isObject(node) && !endsAtNameMap ? (node as S) : undefined;
   } catch {

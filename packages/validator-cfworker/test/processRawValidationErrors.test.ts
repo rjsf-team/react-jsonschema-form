@@ -468,6 +468,27 @@ describe('transformRJSFValidationErrors()', () => {
       );
     });
 
+    it('names a property by the definition its $ref names in the resource that writes it, under a $ref schema redeclaring it', () => {
+      const schema: RJSFSchema = {
+        $id: 'https://example.com/root',
+        $defs: {
+          N: { type: 'string', title: 'Root N' },
+          R: {
+            $id: 'https://example.com/r',
+            $defs: { N: { type: 'number', title: 'Res N' } },
+            type: 'object',
+            properties: { n: { $ref: '#/$defs/N' } },
+          },
+        },
+        type: 'object',
+        properties: { a: { $ref: 'https://example.com/r', properties: { n: { description: 'd' } } } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { n: 'x' } }, schema);
+      expect(
+        errors.filter((error) => error.name === 'type').map(({ property, title }) => ({ property, title })),
+      ).toEqual([{ property: '.a.n', title: 'Res N' }]);
+    });
+
     it('reads a property named properties as a name, not as the keyword', () => {
       const schema: RJSFSchema = {
         type: 'object',
