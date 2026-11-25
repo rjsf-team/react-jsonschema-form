@@ -8,6 +8,7 @@ import type {
 } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import processRawValidationErrors, {
   filterDuplicateErrors,
@@ -411,6 +412,29 @@ describe('transformRJSFValidationErrors()', () => {
       };
       const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
       expect(errors).toEqual([expect.objectContaining({ property: '.a.n', title: 'Own' })]);
+    });
+
+    describe('where the $ref schema cannot be merged with its target', () => {
+      // Merging warns that the two `n` schemas conflict, then falls back to an `allOf` of both
+      setupConsoleWarnSuppression();
+
+      it('names a missing property from the $ref schema’s own allOf branch', () => {
+        const schema: RJSFSchema = {
+          $defs: { T: { type: 'object', minProperties: 1, properties: { n: { type: 'number' } } } },
+          type: 'object',
+          properties: {
+            a: {
+              $ref: '#/$defs/T',
+              properties: { n: { type: 'string', title: 'WrapperN' } },
+              allOf: [{ properties: { n: { title: 'BranchN' } }, required: ['n'] }],
+            },
+          },
+        };
+        const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
+        expect(errors.find((error) => error.property === '.a.n')).toEqual(
+          expect.objectContaining({ title: 'BranchN' }),
+        );
+      });
     });
   });
 

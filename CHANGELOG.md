@@ -43,16 +43,17 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `REUSES_DEFAULTS_FLAG`, which `Form` sets on its `SchemaContext` so `getDefaultFormState()`, called with the state it returned and one item edited, computes the defaults of that item alone rather than of every item of an array ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
 - Fix `retrieveSchema()` and `getDefaultFormState()` calling the validator for an `if` again when only a key its `properties` and `required` don't name changed ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#4051](https://github.com/rjsf-team/react-jsonschema-form/issues/4051))
 - Fix `getDecimalSeparator()` building an `Intl.NumberFormat` on every call, which every number field made on every render ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
-- Add `getKeywordParentSchema()`, which the validator packages use to find the schema holding the keyword an error reports, following each `$ref` on the way ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+- Add `getKeywordParentSchema()`, which finds the schema holding the keyword a validation error reports ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
 
 ## @rjsf/validator-ata
 
-- Fix errors under a `$ref` not naming their property by its schema `title`, leaving one untitled where two schemas along the chain of `$ref`s both hold the `allOf`, `then`, `items` or other subschema keyword it fails under, other than `properties`, `patternProperties`, `additionalProperties` or `propertyNames`, since ata's path doesn't say which, unless the schema ata hands over with the error holds the keyword that failed ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+- Fix errors under a `$ref` not naming their property by its schema `title` ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
 - Fix the error for a `false` property taking the schema of a sibling property named `title` as its title ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
 
 ## @rjsf/validator-cfworker
 
 - Fix errors inside an array item, or under a `$ref`, `allOf`, `if`/`then` or `additionalProperties`, not naming their property by its schema `title` ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+- Change errors to name their property by the `title` of the schema holding the keyword that failed, as `@rjsf/validator-ajv8` does, before the one along `properties`, so a branch that redeclares the property names it by its own `title` ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
 
 # 7.0.0-beta.1 (2026-11-20)
 

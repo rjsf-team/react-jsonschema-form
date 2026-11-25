@@ -382,6 +382,43 @@ describe('transformRJSFValidationErrors()', () => {
       );
     });
 
+    it('names a field a then branch redeclares by the branch’s title for its required and other errors alike', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { k: {}, n: { type: 'string', title: 'N' } },
+        if: { required: ['k'] },
+        then: { properties: { n: { title: 'Then N', minLength: 3 } }, required: ['n'] },
+      };
+      const missing = customizeValidator().validateFormData({ k: 1 }, schema).errors;
+      expect(missing.find((error) => error.property === 'n')).toEqual(expect.objectContaining({ title: 'Then N' }));
+      const short = customizeValidator().validateFormData({ k: 1, n: 'a' }, schema).errors;
+      expect(short.find((error) => error.name === 'minLength')).toEqual(
+        expect.objectContaining({ title: 'Then N', stack: expect.stringMatching(/^'Then N' /) }),
+      );
+    });
+
+    it('reads the anyOf branch of a $ref schema whose definition holds anyOf too from the $ref schema', () => {
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', anyOf: [{ properties: { z: {} } }, { properties: { y: {} } }] } },
+        type: 'object',
+        properties: {
+          a: {
+            $ref: '#/$defs/T',
+            anyOf: [
+              { properties: { m: { title: 'W0' }, n: { title: 'Wrong' } }, required: ['m'] },
+              { properties: { n: { type: 'string', title: 'W1' } }, required: ['n'] },
+            ],
+          },
+        },
+      };
+      const missing = customizeValidator().validateFormData({ a: {} }, schema).errors;
+      expect(missing.find((error) => error.property === '.a.n')).toEqual(expect.objectContaining({ title: 'W1' }));
+      const typed = customizeValidator().validateFormData({ a: { n: 5 } }, schema).errors;
+      expect(typed.find((error) => error.property === '.a.n' && error.name === 'type')).toEqual(
+        expect.objectContaining({ title: 'W1' }),
+      );
+    });
+
     it('reads a property named properties as a name, not as the keyword', () => {
       const schema: RJSFSchema = {
         type: 'object',

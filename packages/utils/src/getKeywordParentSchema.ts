@@ -1,9 +1,12 @@
 import {
+  ADDITIONAL_ITEMS_KEY,
   ADDITIONAL_PROPERTIES_KEY,
   DEFINITIONS_KEY,
   DEPENDENCIES_KEY,
   DEPENDENT_SCHEMAS_KEY,
+  ITEMS_KEY,
   PATTERN_PROPERTIES_KEY,
+  PREFIX_ITEMS_KEY,
   PROPERTIES_KEY,
   REF_KEY,
 } from './constants.ts';
@@ -16,6 +19,10 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 /** Keywords whose subschemas merging a `$ref` schema with its target combines into one, so a path reads the same
  * schema whichever of the two it indexes. Merging reorders, replaces or moves into `allOf` every other one */
 const MERGE_COMBINED_KEYS = [PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, ADDITIONAL_PROPERTIES_KEY, 'propertyNames'];
+
+/** Keywords whose subschemas merging joins with the target's, a whole schema or position by position, so the merged
+ * schema holds the titles of both. An index after `prefixItems` or a tuple `items` reads the same position either way */
+const MERGE_JOINED_KEYS = [...MERGE_COMBINED_KEYS, ITEMS_KEY, PREFIX_ITEMS_KEY, ADDITIONAL_ITEMS_KEY];
 
 /** Keywords whose value maps names to schemas, so the key after one is a name rather than a keyword */
 const NAME_MAP_KEYS = [
@@ -78,9 +85,12 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
             return null;
           }
         }
-        if (hasRef) {
-          // The resolved schema holds the `$ref` schema's own keywords too, so a key it holds itself is still read
-          node = resolveOwnRef<S>(node as S, rootSchema);
+        // Merging reorders a key the `$ref` schema holds itself, such as `anyOf` crossed with its target's, or moves it
+        // into an `allOf`, so the path's next key indexes the schema as written. One merging joins is read merged, for
+        // the target's titles, unless the merge failed and moved it into an `allOf` too
+        if (hasRef && (key === REF_KEY || MERGE_JOINED_KEYS.includes(key) || !Object.hasOwn(Object(node), key))) {
+          const resolved = resolveOwnRef<S>(node as S, rootSchema);
+          node = key !== REF_KEY && Object.hasOwn(Object(node), key) && !Object.hasOwn(resolved, key) ? node : resolved;
         }
         // `resolveOwnRef()` follows a whole chain of `$ref`s, each of which the path can name. A property named `$ref`
         // is still read, as a key the schema holds

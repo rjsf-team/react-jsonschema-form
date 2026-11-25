@@ -203,7 +203,7 @@ export function transformRJSFValidationErrors<
           ? getKeywordParentSchema<S>(schema, fieldLocation, decodePointerToken)
           : parentSchema
       )?.title;
-      const title = uiSchemaTitle ?? (schemaTitle || (typeof parentTitle === 'string' ? parentTitle : undefined));
+      const title = uiSchemaTitle ?? ((typeof parentTitle === 'string' ? parentTitle : undefined) || schemaTitle);
       if (title) {
         stack = `'${title}' ${message}`.trim();
         uiTitle = title;

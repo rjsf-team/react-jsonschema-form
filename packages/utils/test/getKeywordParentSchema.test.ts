@@ -1,3 +1,4 @@
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import type { RJSFSchema } from '../src/index.ts';
 import { getKeywordParentSchema } from '../src/index.ts';
 
@@ -66,6 +67,40 @@ describe('getKeywordParentSchema()', () => {
     };
     expect(getKeywordParentSchema(schema, '#/properties/a/properties/name/type')).toEqual(item.properties!.name);
     expect(getKeywordParentSchema(schema, '#/properties/a/properties/extra/type')?.title).toEqual('Extra');
+  });
+  it('reads a list keyword the `$ref` schema holds itself from that schema, which merging crosses with its target’s', () => {
+    const own: RJSFSchema = { properties: { n: { title: 'W1' } }, required: ['n'] };
+    const schema: RJSFSchema = {
+      $defs: { T: { type: 'object', anyOf: [{ properties: { z: {} } }, { properties: { y: {} } }] } },
+      type: 'object',
+      properties: { a: { $ref: '#/$defs/T', anyOf: [{ properties: { m: {} } }, own] } },
+    };
+    expect(getKeywordParentSchema(schema, '#/properties/a/anyOf/1/required')).toBe(own);
+  });
+  it('reads `items` the `$ref` schema and its target both hold merged, with the target’s titles', () => {
+    const schema: RJSFSchema = {
+      $defs: { T: { type: 'array', items: { properties: { x: { title: 'X' } } } } },
+      type: 'object',
+      properties: { a: { $ref: '#/$defs/T', items: { required: ['x'] } } },
+    };
+    expect(getKeywordParentSchema(schema, '#/properties/a/items/required')).toEqual({
+      required: ['x'],
+      properties: { x: { title: 'X' } },
+    });
+  });
+  describe('where the `$ref` schema cannot be merged with its target', () => {
+    // Merging warns that the two `n` schemas conflict, then falls back to an `allOf` of both
+    setupConsoleWarnSuppression();
+
+    it('reads `properties` the `$ref` schema holds itself as written', () => {
+      const n: RJSFSchema = { type: 'string', title: 'WrapperN' };
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', properties: { n: { type: 'number' } } } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', properties: { n } } },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/properties/n/type')).toBe(n);
+    });
   });
   describe('with skipsRefs', () => {
     const own = { properties: { name: { title: 'Own' } } };
