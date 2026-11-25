@@ -157,5 +157,51 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
         schemaUtils.findSelectedOptionInXxxOf(testAnyOfDiscriminatorSchema, 'ignored_in_this_test', ANY_OF_KEY, {}),
       ).toBeUndefined();
     });
+    test("returns the option a typed object renders beside its own field, which leaves the data's extra keys to it (#5886)", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { title: 'A', type: 'object', properties: { a: { type: 'number' } } },
+          { title: 'B', type: 'object', properties: { b: { type: 'number' } }, additionalProperties: true },
+        ],
+      };
+      const allowing = createSchemaUtils({ validator: testValidator, additionalPropertiesWhenAbsent: 'allow' }, schema);
+      expect(allowing.findSelectedOptionInXxxOf(schema, 'b', ONE_OF_KEY, { t: 2 })?.title).toBe('B');
+    });
+    // Rebuilt with the `allOf`'s option, B keeps its `additionalProperties: true`, which takes `t`
+    test('returns the option an allOf holding options of its own rebuilds, as the field renders it (#5886)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { title: 'A', type: 'object', properties: { a: { type: 'number' } } },
+          { title: 'B', type: 'object', properties: { b: { type: 'number' } }, additionalProperties: true },
+        ],
+        allOf: [{ oneOf: [{ title: 'C', properties: { c: { type: 'string' } } }] }],
+      };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+      const selected = schemaUtils.findSelectedOptionInXxxOf(schema, 'b', ONE_OF_KEY, { t: 2 });
+      expect(selected?.title).toBe('B');
+      expect(selected?.properties).toHaveProperty('c');
+    });
+    test('reads the options as written where the retrieval merges one of them in, offering no list', () => {
+      const options: RJSFSchema[] = [
+        { properties: { x: { const: 'a' }, y: { type: 'string' } } },
+        { properties: { x: { const: 'b' }, z: { type: 'string' } } },
+      ];
+      // The `dependencies` option shares the field's own list, which the retrieval merges the option of in
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { x: { type: 'string' } },
+        oneOf: options,
+        dependencies: { x: { oneOf: options } },
+      };
+      const selected = createSchemaUtils({ validator: testValidator }, schema).findSelectedOptionInXxxOf(
+        schema,
+        'x',
+        ONE_OF_KEY,
+        { x: 'a' },
+      );
+      expect(selected?.properties).toHaveProperty('y');
+    });
   });
 }

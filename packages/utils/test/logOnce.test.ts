@@ -146,32 +146,34 @@ describe('logOnce()', () => {
   });
   describe('with a warning ID', () => {
     it('logs by default, ending the message with the ID', () => {
-      logOnce('a message.', { id: 'form-data-ignored' });
-      logOnce('a message.', { id: 'form-data-ignored' });
-      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message. [form-data-ignored]');
+      logOnce('a message.', { id: 'form-data-not-passed-through' });
+      logOnce('a message.', { id: 'form-data-not-passed-through' });
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message. [form-data-not-passed-through]');
     });
     it('throws an RJSFWarningError, on every repeat, for an ID selected by its category', () => {
       setWarningOptions({ throwOn: ['migration'] });
       const cause = new Error('boom');
       const thrown = expect.objectContaining({
         name: 'RJSFWarningError',
-        message: 'a message: [form-data-ignored]',
-        id: 'form-data-ignored',
+        message: 'a message: [form-data-not-passed-through]',
+        id: 'form-data-not-passed-through',
         cause,
       });
-      expect(() => logOnce('a message:', { level: 'error', error: cause, id: 'form-data-ignored' })).toThrow(
+      expect(() => logOnce('a message:', { level: 'error', error: cause, id: 'form-data-not-passed-through' })).toThrow(
         RJSFWarningError,
       );
-      expect(() => logOnce('a message:', { level: 'error', error: cause, id: 'form-data-ignored' })).toThrow(thrown);
+      expect(() => logOnce('a message:', { level: 'error', error: cause, id: 'form-data-not-passed-through' })).toThrow(
+        thrown,
+      );
       expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
     it('throws for an ID selected by itself, and logs one not selected', () => {
       setWarningOptions({ throwOn: ['ui-widget-element'] });
       expect(() => logOnce('a message', { level: 'error', id: 'ui-widget-element' })).toThrow(RJSFWarningError);
       logOnce('another message', { level: 'error', id: 'ui-widget-options-object' });
-      logOnce('a third message', { id: 'form-data-ignored' });
+      logOnce('a third message', { id: 'form-data-not-passed-through' });
       expect(consoleErrorSpy).toHaveBeenCalledExactlyOnceWith('another message [ui-widget-options-object]');
-      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a third message [form-data-ignored]');
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a third message [form-data-not-passed-through]');
     });
     it('logs an excepted ID, deduped, even where throwOn selects it', () => {
       setWarningOptions({ throwOn: ['migration'], except: ['antd-span-twelfths'] });
@@ -196,14 +198,14 @@ describe('logOnce()', () => {
       const throwOn: ('migration' | 'config')[] = [];
       setWarningOptions({ throwOn });
       throwOn.push('migration');
-      logOnce('a message', { id: 'form-data-ignored' });
-      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [form-data-ignored]');
+      logOnce('a message', { id: 'form-data-not-passed-through' });
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [form-data-not-passed-through]');
     });
     it('restores the default when called with no options', () => {
       setWarningOptions({ throwOn: ['migration'] });
       setWarningOptions();
-      logOnce('a message', { id: 'form-data-ignored' });
-      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [form-data-ignored]');
+      logOnce('a message', { id: 'form-data-not-passed-through' });
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [form-data-not-passed-through]');
     });
     it('warns about, and ignores, a name that is no category or ID, as from an untyped JS caller', () => {
       setWarningOptions({
@@ -214,7 +216,7 @@ describe('logOnce()', () => {
         ['setWarningOptions() ignores "form-data-ignore" in `throwOn`, since it isn\'t a warning category or ID'],
         ['setWarningOptions() ignores "config" in `except`, since it isn\'t a warning ID'],
       ]);
-      expect(() => logOnce('a message', { id: 'form-data-ignored' })).toThrow(RJSFWarningError);
+      expect(() => logOnce('a message', { id: 'form-data-not-passed-through' })).toThrow(RJSFWarningError);
       logOnce('a message', { id: 'antd-span-twelfths' });
       expect(consoleWarnSpy).toHaveBeenLastCalledWith('a message [antd-span-twelfths]');
     });
@@ -228,8 +230,8 @@ describe('logOnce()', () => {
       );
       expect(consoleWarnSpy).not.toHaveBeenCalled();
       expect(() => logOnce('a message', { level: 'error', id: 'ui-widget-element' })).toThrow(RJSFWarningError);
-      logOnce('a message', { id: 'form-data-ignored' });
-      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [form-data-ignored]');
+      logOnce('a message', { id: 'form-data-not-passed-through' });
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith('a message [form-data-not-passed-through]');
     });
     it('keeps the setting across resetLogOnce()', () => {
       setWarningOptions({ throwOn: ['config'] });

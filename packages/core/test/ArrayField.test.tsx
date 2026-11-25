@@ -2985,7 +2985,6 @@ describe('ArrayField', () => {
             schema={{ type: 'array', items: { type: 'string' } }}
             uiSchema={{ 'ui:options': { itemLabel: '.', copyable: true } }}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => apply(() => setData(event.formData))}
           />
@@ -5979,7 +5978,6 @@ describe('ArrayField', () => {
           <Form
             schema={schema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             templates={{ ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate }}
             onChange={(event) => {

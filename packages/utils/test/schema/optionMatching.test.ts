@@ -587,6 +587,43 @@ describe('matching options through the schema graph', () => {
       v: { b: 1 },
     });
   });
+  it('scores an option whose then declares an extra key of the data beside an allOf entry whose $ref resolves to nothing, without throwing', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { a: { type: 'string' } } },
+      {
+        allOf: [{ $ref: '#/definitions/missing' }],
+        if: { required: ['k'] },
+        then: { properties: { x: { type: 'string' } } },
+        additionalProperties: true,
+      },
+    ];
+    const rootSchema: RJSFSchema = { type: 'object', properties: { v: { anyOf: options } } };
+    const validator = { ...miniValidator(), isValid: () => false };
+    expect(() => getClosestMatchingOption({ validator }, rootSchema, { x: 'a', k: 1 }, options)).not.toThrow();
+  });
+  it("scores a property's options under 'allow' where the property holds an allOf entry whose $ref resolves to nothing, without throwing", () => {
+    const options: RJSFSchema[] = [
+      {
+        properties: {
+          p: {
+            allOf: [{ $ref: '#/definitions/missing' }],
+            anyOf: [{ properties: { a: {} } }, { properties: { b: {} } }],
+          },
+        },
+      },
+      { properties: { q: {} } },
+    ];
+    const rootSchema: RJSFSchema = { anyOf: options };
+    const validator = { ...miniValidator(), isValid: () => false };
+    expect(() =>
+      getClosestMatchingOption(
+        { validator, additionalPropertiesWhenAbsent: 'allow' },
+        rootSchema,
+        { p: { a: 1 } },
+        options,
+      ),
+    ).not.toThrow();
+  });
   it('scores options over a chain of definitions linked through properties too deep to walk by recursion', () => {
     const depth = 3000;
     const definitions: Record<string, RJSFSchema> = {};

@@ -115,7 +115,7 @@ function DraftEditor() {
 }
 ```
 
-`getFormData()` returns the form's current value: the seed your props handed it on mount or at the last `reset()`, filled in with the schema's defaults, and every edit made since, including one React has yet to show in the inputs.
+`getFormData()` returns the form's current value: the seed your props handed it on mount or at the last `reset()`, or the `formData` you last passed, filled in with the schema's defaults, and every edit made since, including one React has yet to show in the inputs.
 
 Inside `onChange`, use `event.formData` to read the edit being reported. Treat data from both the event and the handle as read-only.
 
@@ -168,11 +168,11 @@ formRef.current?.setFieldValue(['address', 'city'], 'Paris');
 formRef.current?.setFieldValue('', { address: { city: 'Paris', country: 'France' } });
 ```
 
-The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. A `formData` passed after mount does not replace the value: call `reset(data)` to show it as the form's clean baseline, `setFieldValue('', data)` to apply it as an edit, which leaves the form dirty, or remount the form under a `key`.
+The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. An `initialFormData` passed after mount does not replace the value, where a new [`formData`](../api-reference/form-props.md#formdata) does: call `reset(data)` to show it as the form's clean baseline, `setFieldValue('', data)` to apply it as an edit, which leaves the form dirty, or remount the form under a `key`.
 
 ## Command timing
 
-Use event handlers for actions such as saving, resetting and validating. Other data reaches the form through `reset(data)` where it arrives, or `setFieldValue('', data)` when it is an edit, or a remount under a `key`; a `formData` passed after mount is ignored.
+Use event handlers for actions such as saving, resetting and validating. Other data reaches the form through `reset(data)` where it arrives, or `setFieldValue('', data)` when it is an edit, or a remount under a `key`, or as a new [`formData`](../api-reference/form-props.md#formdata); an `initialFormData` passed after mount is ignored.
 
 An existing integration may need to issue a command when props change. Use a passive `useEffect` for that synchronization. For example, a descendant receiving a stable `formRef` can validate when its supplied schema changes:
 

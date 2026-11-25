@@ -679,6 +679,8 @@ export interface FieldChange<T> {
    * `AnnouncedMove`
    */
   sourceKeyOf?: KeyMove;
+  /** For a change that moved keys, the keys it leaves cleared that the form keeps cleared; see `AnnouncedMove` */
+  clearedKeys?: readonly string[];
   /** Whether a field announced the change as a move, as an added property is though it moves no key, so it reaches the
    * array or object at `fieldPath` rather than the fields inside it
    */
@@ -1712,8 +1714,9 @@ function clearsOfCopies<T>(
  * recorded before, moved with the keys the change moved, and the ones the change made. A field's edit that leaves its
  * field without a value, `undefined` or a `null` item, is a clear, and so is each key or item a field's write of an
  * array or object leaves without a value where the data held one. A key move drops the clear of the field it rewrites,
- * as an option switch leaving a scalar field without a value does, whose `undefined` is for the defaults to fill, and
- * gives each item it copies the clears of the item it copies. Data written from outside, as `setFieldValue()` writes
+ * as an option switch leaving a scalar field without a value does, whose `undefined` is for the defaults to fill,
+ * records a clear for each of its `clearedKeys` it leaves without a value, and gives each item it copies the clears of
+ * the item it copies. Data written from outside, as `setFieldValue()` writes
  * it, drops the clears at and under its path, so it is left to its defaults, while those elsewhere stay. A `transformChange` rewrite records none of its own: it keeps those of the edit it stands for, while
  * its data still holds them
  *
@@ -1732,7 +1735,7 @@ function clearsAfterChange<T>(
   path: FieldPathList,
 ): ReadonlySet<FieldPath> {
   const moved = withPathsMoved(recorded, dataMoveOf(change));
-  const { newValue, newKeyOf, isFieldEdit, editedPath } = change;
+  const { newValue, newKeyOf, clearedKeys = [], isFieldEdit, editedPath } = change;
   if (editedPath) {
     return moved;
   }
@@ -1742,7 +1745,11 @@ function clearsAfterChange<T>(
   const fieldPath = fieldPathFromList(path);
   if (newKeyOf) {
     const kept = filterPaths(moved, (at) => at !== fieldPath);
-    return withPaths(kept, ...clearsOfCopies(recorded, change, written, path));
+    const keptClears = clearedKeys
+      .map((key) => [...path, key])
+      .filter((at) => holdsClearAt(written, at))
+      .map(fieldPathFromList);
+    return withPaths(kept, ...clearsOfCopies(recorded, change, written, path), ...keptClears);
   }
   if (isObject(newValue) || Array.isArray(newValue)) {
     return withPaths(
@@ -2122,9 +2129,9 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   };
 }
 
-/** The data the props seed the form with on mount and on `reset()`: `formData`, which is kept as another name for the
- * seed, or else `initialFormData`. Only `undefined` leaves a prop unpassed, so a `null` `formData` is the seed, and
- * seeds the same defaults an `undefined` does.
+/** The data the props seed the form with on mount and on `reset()`: `formData`, or else `initialFormData`. Only
+ * `undefined` leaves a prop unpassed, so a `null` `formData` is the seed, and seeds the same defaults an `undefined`
+ * does.
  *
  * @param props - The current props
  * @returns - The seed, or `undefined` when the props pass none
@@ -2132,12 +2139,23 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
 export function seedOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
 ): T | undefined {
-  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   const { formData } = props;
   if (formData === undefined) {
     return props.initialFormData;
   }
   return formData;
+}
+
+/** Records that `state`'s data is what the `formData` prop derives to */
+function asControlledBy<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  props: FormProps<T, S, F>,
+  state: FormState<T, S, F>,
+): FormState<T, S, F> {
+  const from = props.formData;
+  if (from === undefined || (!isEditedIn(state) && Object.is(state.controlled?.from, from))) {
+    return state;
+  }
+  return { ...state, controlled: { from, data: state.formData, reported: [] } };
 }
 
 export function initialState<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -2146,22 +2164,61 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
   if (!props.validator) {
     throw new Error('A validator is required for Form functionality to work');
   }
-  return deriveDataState(undefined, seedOf(props), props);
+  return asControlledBy(props, deriveDataState(undefined, seedOf(props), props));
 }
 
 /** Derives the state to render from the props and the committed `state`. Nothing is remembered about the previous
  * props: every derived member is shared against the committed state, so an unchanged input hands back the reference
  * the fields already hold and a changed one is recognized by the new reference; when nothing changed, `state` itself
- * is handed back. The data is the form's own after mount, so a `formData` or `initialFormData` passed later changes
- * nothing; it is re-derived only for a schema, `ui:emptyValue`, `defaultFormStateBehavior` or
- * `additionalPropertiesWhenAbsent` change, and any other
- * prop change re-derives the render context alone, since an unrelated re-render must not rerun value initialization.
+ * is handed back.
+ *
+ * A form passed `formData` shows that data whenever it is news: a value other than the one passed before. The value
+ * passed before, or a copy of it, as an inline literal is on every render, leaves the form its edits, and so does the
+ * data the form reported, now or before its latest edits, or a copy of that. `state.controlled` records the prop the
+ * data was last derived from and the data that gave, which an operation leaves alone. A form passed none owns its data, see `deriveOwnState()`.
  *
  * @param props - The current props
  * @param state - The committed state
  * @returns - The state to render, `state` itself when nothing changed
  */
 export function deriveState<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  props: FormProps<T, S, F>,
+  state: FormState<T, S, F>,
+): FormState<T, S, F> {
+  const { formData: passed } = props;
+  if (passed === undefined) {
+    return deriveOwnState(props, state);
+  }
+  const { controlled } = state;
+  const isEdited = isEditedIn(state);
+  // By value, since a parent may store a copy of what the form reported. A key the form holds as `undefined`, as a
+  // cleared field leaves, is one a JSON copy leaves out, so it counts as missing
+  const isSame = (held: unknown) => Object.is(held, passed) || deepEqualsUndefinedAsMissing(held, passed);
+  if (isSame(state.formData)) {
+    return asControlledBy(props, deriveOwnState(props, state));
+  }
+  if (controlled && (isSame(controlled.from) || controlled.reported.some(isSame))) {
+    const own = deriveOwnState(props, state);
+    return isEdited ? own : asControlledBy(props, own);
+  }
+  // Any other value is the parent's own. Over edits it has yet to pass back it is its answer to them, as an edit it
+  // transformed is, and the form is as dirty as that leaves it. With none it is another record, as one
+  // that loaded or a Cancel put back, which the form is not dirty against: the baseline follows data that is its own
+  // Passed data is live-validated, as v6 validated any `formData` passed, even after a mount that passed none
+  const from = { ...state, isDataPassed: true, baseline: isEdited ? state.baseline : state.formData };
+  return asControlledBy(props, shareState(state, deriveDataState(from, passed, props)));
+}
+
+/** Whether `state` holds edits a parent passing `formData` has yet to pass back: data other than its `formData` gave */
+function isEditedIn<T, S extends StrictRJSFSchema, F extends FormContextType>(state: FormState<T, S, F>) {
+  return state.controlled === undefined || !Object.is(state.formData, state.controlled.data);
+}
+
+/** `deriveState()` for the data the form holds, which no prop replaces: it is re-derived only for a schema,
+ * `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent` change, and any other prop change
+ * re-derives the render context alone, since an unrelated re-render must not rerun value initialization.
+ */
+function deriveOwnState<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   state: FormState<T, S, F>,
 ): FormState<T, S, F> {

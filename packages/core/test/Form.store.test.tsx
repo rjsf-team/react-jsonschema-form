@@ -466,7 +466,6 @@ it('a draft a widget flushes as its form unmounts does not reach the form that r
           key={record.id}
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={record.data}
           uiSchema={{ name: { 'ui:widget': DraftWidget } }}
           onChange={(event) => setRecord((current) => ({ ...current, data: event.formData }))}
@@ -534,7 +533,7 @@ it('a form shown again after Activity hid it takes and shows an edit, with no re
 describe('a formData passed to a form hidden by Activity', () => {
   const warnings = setupConsoleWarnSuppression();
 
-  it('is ignored, and data set through the handle is taken once the form is shown', () => {
+  it('is taken while it is hidden, and an edit through the handle only once the form is shown', () => {
     interface Record {
       name?: string;
       other?: string;
@@ -547,7 +546,6 @@ describe('a formData passed to a form hidden by Activity', () => {
           ref={ref}
           schema={{ type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } }}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
           formData={formData}
           onChange={onChange}
         />
@@ -557,24 +555,20 @@ describe('a formData passed to a form hidden by Activity', () => {
     const handle = handleOf(ref);
     hide({ name: 'a', other: 'x' });
 
-    // The parent passes another record while the form is hidden, which the form ignores as it would when shown
+    // The parent passes another record while the form is hidden, which the form takes as it would when shown
     hide({ name: 'b', other: 'y' });
-    expect(handle.getFormData()).toEqual({ name: 'a', other: 'x' });
+    expect(handle.getFormData()).toEqual({ name: 'b', other: 'y' });
 
-    // So is the handle, while the form is hidden, as for an unmounted form
+    // The handle is dropped while the form is hidden, as for an unmounted form
     act(() => handle.setFieldValue('name', 'hidden'));
     show({ name: 'b', other: 'y' });
-    act(() => handle.setFieldValue('', { name: 'b', other: 'y' }));
     act(() => handle.setFieldValue('name', 'edited'));
 
-    expect(handle.getFormData()).toEqual({ name: 'edited', other: 'y' });
+    expect(onChange).toHaveBeenCalledTimes(1);
     expectToHaveBeenCalledWithFormData(onChange, { name: 'edited', other: 'y' }, 'root_name');
-    // The dropped handle call is warned about as it is made; the ignored `formData` warning is an Effect's, which
-    // waits for the form to be shown
     const messages = warnings.consoleSpy.mock.calls.map(([message]) => String(message));
-    expect(messages).toHaveLength(2);
+    expect(messages).toHaveLength(1);
     expect(messages[0]).toMatch(/`setFieldValue\(\)` was called on a form that is hidden/);
-    expect(messages[1]).toMatch(/`formData` changed after the form mounted/);
   });
 });
 
@@ -624,7 +618,6 @@ describe('validateForm() from a passive Effect after a prop change (#5034)', () 
           ref={ref}
           schema={activeSchema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={(event) => setFormData(event.formData ?? '')}
           onError={noop}

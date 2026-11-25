@@ -140,7 +140,6 @@ describe('render stability across sibling fields', () => {
         <Form
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           templates={{ FieldTemplate: CountingFieldTemplate }}
           onChange={(event) => {
@@ -450,7 +449,6 @@ describe('render stability across sibling fields', () => {
             schema={schema}
             validator={validator}
             templates={templates}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={value}
             onChange={(event) => {
               const upper = event.formData.first.toUpperCase();

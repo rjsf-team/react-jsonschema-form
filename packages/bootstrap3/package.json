@@ -58,5 +58,9 @@
   "contributors": [
     "Heath Chiavettone <heath.chiavettone@freenome.com>"
   ],
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-jsonschema-form"
+  }
 }
