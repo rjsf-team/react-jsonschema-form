@@ -1408,11 +1408,11 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // decision, which the passes may fix
   const graphs: SchemaGraph<S>[] = [];
   const conditions = new Map<string, { graph: SchemaGraph<S>; checked: CheckedCondition<S> }>();
-  // What `readers` qualify, decide and choose for `depData`, each as its plan did unless `redecides`, by decision: a
-  // condition, set of `dependencies` or option list several readers met is decided once
   // Checked under the context of the value the field holds now, which the first pass may change
   const recheck = (graph: SchemaGraph<S>, checked: CheckedCondition<S>, depData: unknown) =>
     checkCondition<S, F>(context, graph, checked, depData);
+  // What `readers` qualify, decide and choose for `depData`, each as its plan did unless `redecides`, by decision: a
+  // condition, set of `dependencies` or option list several readers met is decided once
   const decisionsOf = (readers: readonly Reader<S>[], depData: unknown, redecides: boolean): Decisions => {
     const decisions: Decisions = new Map();
     const decide = (graph: SchemaGraph<S>, id: string, decision: () => Decision) => {
@@ -1594,7 +1594,10 @@ function heldValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return { value: Number.isNaN(rawFormData) ? undefined : rawFormData, nullDefault: false };
 }
 
-/** The value the defaults give `field` before any of its conditions is resolved, under `context`, which resolves none */
+/** The value the defaults give `field` before any of its conditions is resolved, under `context`, which resolves none.
+ * The field is folded as optional: the `false` a required boolean is filled with is no value its defaults give it, so
+ * its conditions are checked as an empty field's, as where it is optional
+ */
 function startValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   field: DefaultsField<S>,
@@ -1603,12 +1606,15 @@ function startValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return foldView(context, settle(context, field, undefined, undefined), {
     ...props,
     rawFormData: undefined,
+    required: false,
     memo: new Map(),
     passes: fieldPasses<S, F>(context, field.graph.rawRoot, undefined),
     nullFills: freshFills(props.nullFills),
     track: () => undefined,
     onNullFill: undefined,
     onObjectConst: undefined,
+    onHandDown: undefined,
+    onReachedDefault: undefined,
   });
 }
 

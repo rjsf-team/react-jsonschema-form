@@ -8325,6 +8325,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ['in an allOf member', true],
           ['on the field', false],
         ] as const;
+        const OFF_OR_ON: RJSFSchema = { if: { const: false }, then: { const: false }, else: { const: true } };
         const OBJECT_CONDITIONALS: [string, RJSFSchema][] = [
           ['if: true', { if: true, then: { const: C } }],
           ['if: {}', { if: {}, then: { const: C } }],
@@ -9071,6 +9072,35 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
           },
         );
+        describe.each(PLACEMENTS)(
+          'decides the if of a required boolean with no default as an empty one, not by the false it is filled with, %s',
+          (_placement, inAllOf) => {
+            it('takes the else whether the field is required or not', () => {
+              const x: RJSFSchema = {
+                type: 'boolean',
+                ...(inAllOf ? { allOf: [OFF_OR_ON] } : OFF_OR_ON),
+              };
+              for (const required of [true, false]) {
+                expect(
+                  getDefaultFormState({ validator: testValidator }, { schema: rootOf(x, required) }),
+                ).toStrictEqual({ x: true });
+              }
+            });
+          },
+        );
+        it("fills a required boolean's else default rather than the false it is filled with", () => {
+          const x: RJSFSchema = {
+            type: 'boolean',
+            if: { const: false },
+            then: { title: 'off' },
+            else: { default: true },
+          };
+          for (const required of [true, false]) {
+            expect(getDefaultFormState({ validator: testValidator }, { schema: rootOf(x, required) })).toStrictEqual({
+              x: true,
+            });
+          }
+        });
       });
     });
     describe('default form state behavior: arrayMinItems.populate = "never"', () => {
