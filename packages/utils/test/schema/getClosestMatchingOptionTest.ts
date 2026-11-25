@@ -1063,6 +1063,60 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           const declaring: RJSFSchema = { type: 'object', properties: { [name]: { oneOf: options } } };
           expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(0);
         });
+        describe('named as offeredBy, the field offering them (#5958)', () => {
+          const copies = () => options.map((option) => ({ ...option }));
+          const fields: [string, RJSFSchema, number][] = [
+            ['with no type', {}, 0],
+            ['typed object', { type: 'object' }, 1],
+          ];
+          it.each(fields)('reads a copy of the list as a field %s offering it reads it', (_, type, expected) => {
+            const offeredBy: RJSFSchema = { ...type, oneOf: options };
+            const declaring: RJSFSchema = { type: 'object', properties: { p: offeredBy } };
+            expect(getClosestMatchingOption(context, declaring, { t: 2 }, copies(), -1, undefined, offeredBy)).toBe(
+              expected,
+            );
+          });
+          it.each(fields)('reads options built in code as a field %s offering them reads them', (_, type, expected) => {
+            const rootSchema: RJSFSchema = { type: 'object' };
+            const offeredBy: RJSFSchema = { ...type, oneOf: copies() };
+            expect(getClosestMatchingOption(context, rootSchema, { t: 2 }, copies(), -1, undefined, offeredBy)).toBe(
+              expected,
+            );
+          });
+          // Several fields can name one definition, each with a type of its own beside the `$ref`
+          it.each<[string, string, number]>([
+            ['typed', 'typed', 1],
+            ['untyped', 'untyped', 0],
+          ])('reads a list a definition offers as the %s $ref site naming it reads it', (_, site, expected) => {
+            const declaring: RJSFSchema = {
+              type: 'object',
+              definitions: { list: { oneOf: options } },
+              properties: {
+                typed: { type: 'object', properties: { z: { type: 'string' } }, $ref: '#/definitions/list' },
+                untyped: { $ref: '#/definitions/list' },
+              },
+            };
+            const offeredBy = getByPath<RJSFSchema>(declaring, ['properties', site]);
+            expect(getClosestMatchingOption(context, declaring, { t: 2 }, options, -1, undefined, offeredBy)).toBe(
+              expected,
+            );
+          });
+          it.each<[string, (list: RJSFSchema) => RJSFSchema]>([
+            ['an allOf entry', (list) => ({ type: 'object', allOf: [list] })],
+            ['a then', (list) => ({ type: 'object', if: { properties: {} }, then: list })],
+          ])('reads %s holding the list as the field it merges into reads it', (_, field) => {
+            const offeredBy: RJSFSchema = { oneOf: options };
+            const declaring: RJSFSchema = { type: 'object', properties: { p: field(offeredBy) } };
+            expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(1);
+            expect(getClosestMatchingOption(context, declaring, { t: 2 }, options, -1, undefined, offeredBy)).toBe(1);
+          });
+          it('reads a copy of the list as the field it names reads it through SchemaUtils', () => {
+            const offeredBy: RJSFSchema = { oneOf: options };
+            const declaring: RJSFSchema = { type: 'object', properties: { p: offeredBy } };
+            const utils = createSchemaUtils(context, declaring);
+            expect(utils.getClosestMatchingOption({ t: 2 }, copies(), -1, undefined, offeredBy)).toBe(0);
+          });
+        });
       });
       it('scores an option as it stands where the data holds no extra key', () => {
         const context = { validator: testValidator };
