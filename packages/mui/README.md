@@ -41,6 +41,7 @@
   - [Material UI version 9](#material-ui-version-9)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
+- [Sponsoring](#sponsoring)
 - [Contact](#contact)
 
 <!-- ABOUT THE PROJECT -->
@@ -139,6 +140,12 @@ See the [open issues](https://github.com/rjsf-team/react-jsonschema-form/issues)
 ## Contributing
 
 Read our [contributors' guide](https://rjsf-team.github.io/react-jsonschema-form/docs/contributing/) to get started.
+
+<!-- SPONSORING -->
+
+## Sponsoring
+
+The maintainers of react-jsonschema-form use agentic coding tools for triage, reviews and fixes, and those tools have real monthly costs. If RJSF saves you or your team time, please consider sponsoring the project on [Open Collective](https://opencollective.com/react-jsonschema-form). Contributions of any size help cover those costs and keep releases coming.
 
 <!-- CONTACT -->
 

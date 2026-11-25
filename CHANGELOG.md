@@ -9,6 +9,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 ## @rjsf/core
 
+- Fix `AnyOfField` and `OneOfField` ignoring a pick in the option selector of a field that declares a `discriminator`, which left the data and the selector on the option shown before, including a pick of an option that sets no `discriminator` value where the field gives that property a `default` ([#5945](https://github.com/rjsf-team/react-jsonschema-form/pull/5945))
 - Fix `Form` leaving out the `const` of the `then` or `else` an `if` in a field's `allOf` picks under `allOf: 'skipDefaults'`, so a required object field started as `{}` and failed validation ([#5916](https://github.com/rjsf-team/react-jsonschema-form/pull/5916), [#5895](https://github.com/rjsf-team/react-jsonschema-form/issues/5895))
 - **BREAKING CHANGE:** Change `Form` to check the `if` of an empty field against the `default` it starts from, where it was checked against `{}`, and to give a field that holds no value the `then` only where every value of its `type` meets the `if`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-fields-if-is-checked-against-the-value-it-starts-from-breaking-change) ([#5916](https://github.com/rjsf-team/react-jsonschema-form/pull/5916), [#5895](https://github.com/rjsf-team/react-jsonschema-form/issues/5895))
 

@@ -4,6 +4,7 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
   deepEqualsUndefinedAsMissing,
+  getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
   getValidationTarget,
   getXxxOfKey,
@@ -17,6 +18,7 @@ import {
 import AdditionalEntryContext from '../components/fields/AdditionalEntryContext.ts';
 import { declaresProperty, storedValue } from '../components/fields/fieldWidgetUtils.ts';
 import type { OptionSwitchData } from '../components/fields/formDataForNewOption.ts';
+import { holdsClear } from '../components/keepClears.ts';
 import type { MoveOutcome } from '../components/keyMove.ts';
 import type { OptionSelectionState } from './useOptionSelection.ts';
 import useSendMove from './useSendMove.ts';
@@ -147,11 +149,16 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
         isEntry && newFormData === undefined && isNullOption
           ? (null as V)
           : storedValue(newFormData, fieldPath, isEntry);
+      // The switch clears the discriminator where the option switched to writes no value for it, see
+      // `formDataForNewOption()`, and the form keeps that clear rather than fill a `default` naming another option
+      const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+      const clearedKeys = discriminator !== undefined && holdsClear(value, discriminator) ? [discriminator] : undefined;
       return sendMove(
         {
           value,
           newKeyOf: (key) => (gone.has(key) && !Object.hasOwn(declaredByNew, key) ? undefined : key),
           newOwnKeyOf: (key) => (gone.has(key) ? undefined : key),
+          clearedKeys,
           dropsOwnErrors: true,
           ...(oldIndex >= 0 && { switchedFrom: { index: oldIndex, held: heldBefore } }),
         },
