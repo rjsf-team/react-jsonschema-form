@@ -92,6 +92,7 @@ import buildPlan, {
   checkCondition,
   decidedWithoutValue,
   isMarked,
+  mayHoldPrimitive,
   mergeAllOf,
   asTarget,
   cachedPolicy,
@@ -1502,15 +1503,19 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // one: its own `default`, a merged `allOf` member's, the one of the option it shows, an inherited one or its
   // `ui:initialValue`, by the precedence the fold gives them. It is read only where the first pass checked a condition
   // whose answer depends on that value, against the `default` its seeds declare or, for a field that holds no value
-  // without one, against none, or left one unresolved for an empty field that a value would resolve
-  const readsValue = first.readers.some(
-    ({ graph, checked, present }) =>
-      present === false ||
-      checked.some(
-        ({ noValue, holdsPrimitive, ifNode }) =>
-          (held !== undefined || holdsPrimitive) && decidedWithoutValue(graph, ifNode, noValue?.types) === undefined,
-      ),
-  );
+  // without one, against none, or left one unresolved for an empty field that a value would resolve, unless the field
+  // holds no `default` and may hold no primitive: `heldValue()` drops an object or an array it starts from. It is
+  // never read under a context that resolves no condition, as the read itself is folded under one
+  const readsValue =
+    !isMarked(unmarked, RESOLVES_NO_CONDITIONS) &&
+    first.readers.some(
+      ({ graph, checked, present }) =>
+        (present === false && (held !== undefined || mayHoldPrimitive<S>(field.graph, field.seeds))) ||
+        checked.some(
+          ({ noValue, holdsPrimitive, ifNode }) =>
+            (held !== undefined || holdsPrimitive) && decidedWithoutValue(graph, ifNode, noValue?.types) === undefined,
+        ),
+    );
   const ownHeld =
     readsValue &&
     heldValue<T, S, F>(unmarked, props, () => startValue<T, S, F>(unresolvedContext<S, F>(unmarked), field, props));

@@ -2,7 +2,7 @@ import { ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTI
 
 /** The keywords that constrain values of one type only, by that type: a value of another type meets each */
 export const KEYWORDS_BY_TYPE = {
-  string: ['minLength', 'maxLength', 'pattern'],
+  string: ['minLength', 'maxLength', 'pattern', 'format'],
   number: ['minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum', 'multipleOf'],
   array: [
     'items',
@@ -35,7 +35,7 @@ export const KEYWORDS_BY_TYPE = {
  * subschema carrying any of them constrains the property it describes, so the property is not free to hold any type.
  * Those of `KEYWORDS_BY_TYPE` that `SUBSCHEMA_KEYWORDS` lists count as the latter
  */
-const VALUE_KEYWORDS: string[] = ['enum', 'const', 'format', ...Object.values(KEYWORDS_BY_TYPE).flat()];
+const VALUE_KEYWORDS: string[] = ['enum', 'const', ...Object.values(KEYWORDS_BY_TYPE).flat()];
 
 /** The keywords that constrain a value by way of other subschemas. They assert something about the value as surely as
  * the `VALUE_KEYWORDS` do, but they are left out of the guessed-type stub `retrieveSchema()` builds for an additional

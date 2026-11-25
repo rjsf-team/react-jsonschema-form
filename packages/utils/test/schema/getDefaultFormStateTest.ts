@@ -8867,6 +8867,32 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(fill(swapped)).toStrictEqual(fill(negated));
           },
         );
+        it.each(PLACEMENTS)(
+          'reads an if of only annotations, x- extensions or keywords of types the field leaves out as accepting every value of an empty field, %s',
+          (_placement, inAllOf) => {
+            const fill = (type: 'number' | 'string', conditional: RJSFSchema) =>
+              getDefaultFormState({ validator: testValidator }, { schema: rootOf(placed(type, conditional, inAllOf)) });
+            // The schema types declare no `x-` keys, so the schema is cast to one
+            const note = { 'x-note': 'n' } as RJSFSchema;
+            expect(fill('string', { if: note, then: { const: 'z' } })).toStrictEqual({ x: 'z' });
+            expect(fill('string', { if: { ...note, type: 'string' }, then: { const: 'z' } })).toStrictEqual({ x: 'z' });
+            expect(fill('number', { if: { format: 'email' }, then: { const: 3 } })).toStrictEqual({ x: 3 });
+          },
+        );
+        it.each(['skipDefaults', 'populateDefaults'] as const)(
+          "narrows only the ifs the option a field with no type shows brings by the option's type, the field's own wherever they sit, under allOf: '%s'",
+          (allOf) => {
+            const fill = (x: RJSFSchema) =>
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { allOf } },
+                { schema: rootOf(x) },
+              );
+            const conditional = { if: { type: 'string' }, then: { const: 'z' } } as const;
+            expect(fill({ oneOf: [{ type: 'string' }], allOf: [conditional] })).toStrictEqual({});
+            expect(fill({ oneOf: [{ type: 'string' }], ...conditional })).toStrictEqual({});
+            expect(fill({ oneOf: [{ type: 'string', ...conditional }] })).toStrictEqual({ x: 'z' });
+          },
+        );
         it('fills the option a dependency offers inside a field whose start value is read, with no warning that none matches', () => {
           const schema: RJSFSchema = {
             type: 'object',

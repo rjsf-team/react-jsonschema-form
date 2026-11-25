@@ -10,6 +10,7 @@ import {
   ELSE_KEY,
   IF_KEY,
   ITEMS_KEY,
+  JSON_SCHEMA_TYPES,
   NOT_KEY,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
@@ -26,10 +27,9 @@ import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
-import { KEYWORDS_BY_TYPE } from '../schemaKeywords.ts';
+import { constrainsValue, KEYWORDS_BY_TYPE } from '../schemaKeywords.ts';
 import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
-import { NON_CONSTRAINING_KEYS } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
 import { declaredProperties, declaresNoKey, dependencyCondition, targetOf } from './validationTargets.ts';
@@ -355,9 +355,6 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
   return holds;
 }
 
-/** The JSON Schema `type`s, which a field naming none allows */
-const ALL_TYPES = ['array', 'boolean', 'null', 'number', 'object', 'string'];
-
 /** Whether `types` allow `type`: an `integer` is a `number` */
 function allowsType(types: readonly unknown[], type: string): boolean {
   return types.includes(type) || (type === 'integer' && types.includes('number'));
@@ -397,11 +394,13 @@ export function decidedWithoutValue<S extends StrictRJSFSchema>(
   if (REF_KEY in node.raw) {
     return node.pureRef ? decidedWithoutValue(graph, node.ref, types, empty, seen) : depends;
   }
-  const allowed = types ?? ALL_TYPES;
-  // A keyword that constrains none of the field's types holds for every value of them
+  // A field naming no `type` allows every one
+  const allowed = types ?? JSON_SCHEMA_TYPES;
+  // A keyword that constrains none of the field's types holds for every value of them, as does one that constrains no
+  // value at all, such as an annotation or an `x-` extension
   const keys = Object.keys(node.raw).filter(
     (key) =>
-      !NON_CONSTRAINING_KEYS.has(key) &&
+      (key === 'type' || constrainsValue(key)) &&
       Object.entries(KEYWORDS_BY_TYPE).every(
         ([only, keywords]) => !keywords.includes(key) || allowed.some((type) => allowsType([only], type)),
       ),
@@ -710,6 +709,23 @@ function noValueOf({ types, inferred, guessed }: DeclaredTypes): ValueTypes {
   };
 }
 
+/** No `type` declared, which the `type`s of a field's seeds are read from, see `DeclaredTypes` */
+const NO_TYPES: DeclaredTypes = { types: undefined, inferred: false };
+
+/** The nodes of the seeds of a field but the options it shows, see `Scope`. An option is read as `expandOption()` reads
+ * one: its `type` counts only for the `if`s it brings, since the field's own are checked whichever option it shows
+ */
+function ownNodes(seeds: readonly Seed[]): NodeId[] {
+  return seeds.filter(({ node, scope }) => !scope?.includes(`o${node}`)).map(({ node }) => node);
+}
+
+/** Whether the field `seeds` seed may hold a value that is neither an object nor an array, as its own `if`s are told,
+ * see `CheckedCondition.holdsPrimitive`
+ */
+export function mayHoldPrimitive<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds: readonly Seed[]): boolean {
+  return noValueOf(declaredTypes(graph, ownNodes(seeds), NO_TYPES)).holdsPrimitive;
+}
+
 /** Returns the schema holding each of `keywords` as the node providing it holds it */
 function keywordSchema<S extends StrictRJSFSchema>(template: S, keywords: Keywords<S>): S {
   return schemaFrom(
@@ -949,13 +965,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       this.mergeAllOf ||= this.policy.allOf === 'if';
     }
     // Decided before any seed is expanded, so the `if` of one seed sees the `type` another declares
-    this.declared = declaredTypes(
-      this.graph,
-      seeds.map(({ node }) => node),
-      this.policy.declared ?? { types: undefined, inferred: false },
-    );
-    this.valueTypes = noValueOf(this.declared);
+    const own = ownNodes(seeds);
+    const declared = declaredTypes(this.graph, own, this.policy.declared ?? NO_TYPES);
     const expanded = seeds.flatMap((seed) => {
+      this.declared = own.includes(seed.node) ? declared : declaredTypes(this.graph, [seed.node], declared);
+      this.valueTypes = noValueOf(this.declared);
       const part = this.expand(seed.node, seed.refPath, 'seed');
       if (part === undefined) {
         return [];

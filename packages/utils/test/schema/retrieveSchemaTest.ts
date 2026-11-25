@@ -44,6 +44,9 @@ import {
 import { check } from './graph/miniValidator.ts';
 import type { TestValidatorType } from './types.ts';
 
+/** An `if` of only an `x-` extension. The schema types declare no `x-` keys, so the schema is cast to one */
+const NOTE = { 'x-note': 'n' } as RJSFSchema;
+
 /** Reads a subschema handed out by `retrieveSchema()` as the schema it is, or the empty schema for any other value */
 function schemaOf(value: unknown): RJSFSchema {
   return isObject(value) && !Array.isArray(value) ? value : {};
@@ -2485,6 +2488,21 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           'merges the then of a type-only if reached through a $ref, as of the same if written in place',
           { type: 'number', $defs: { Num: { type: 'number' } }, if: { $ref: '#/$defs/Num' }, then: { const: 3 } },
           { type: 'number', $defs: { Num: { type: 'number' } }, const: 3 },
+        ],
+        [
+          'merges the then of an if holding only an x- extension for a field with no data, as of an if of annotations only',
+          { type: 'string', if: NOTE, then: { title: 'Then' }, else: { title: 'Else' } },
+          { type: 'string', title: 'Then' },
+        ],
+        [
+          'merges the then of a type-only if with an x- extension beside it for a field with no data',
+          { type: 'string', if: { ...NOTE, type: 'string' }, then: { title: 'Then' }, else: { title: 'Else' } },
+          { type: 'string', title: 'Then' },
+        ],
+        [
+          'merges the then of an if: { format } for a number field with no data, as format constrains only strings',
+          { type: 'number', if: { format: 'email' }, then: { title: 'Then' }, else: { title: 'Else' } },
+          { type: 'number', title: 'Then' },
         ],
       ])('%s (#5895)', (_name, schema, expected) => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });

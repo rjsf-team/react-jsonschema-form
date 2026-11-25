@@ -16,18 +16,24 @@ import {
   mergeReachesConst,
   optionReachesConst,
 } from '../../src/schema/getDefaultFormState.ts';
+import type { PlanInput } from '../../src/schema/graph/mergePlan.ts';
 import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
 import type { Provenance } from '../../src/schema/graph/provenance.ts';
 import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
-// Recorded, so a test can count the schemas the fold copies
+// Recorded, so a test can count the schemas the fold copies and the plans it asks for
 const withoutKeysCalls = vi.hoisted((): [object, (string | symbol)[]][] => []);
+const buildPlanCalls = vi.hoisted(() => ({ count: 0 }));
 vi.mock(import('../../src/schema/graph/mergePlan.ts'), async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
+    default: <S extends StrictRJSFSchema, F extends FormContextType>(input: PlanInput<S, F>) => {
+      buildPlanCalls.count += 1;
+      return actual.default(input);
+    },
     withoutKeys: <S extends StrictRJSFSchema>(schema: S, ...keys: (string | symbol)[]) => {
       withoutKeysCalls.push([schema, keys]);
       return actual.withoutKeys(schema, ...keys);
@@ -1742,6 +1748,34 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     // the `dependencies` option once more
     expect(counting.calls).toBe(1);
   });
+
+  it.each<[string, RJSFSchema['type']]>([
+    ['object', 'object'],
+    ['with no type', undefined],
+  ])(
+    "reads no start value of an empty %s field whose allOf then gives it an object const under skipEmptyDefaults, nor of its children's (#5895)",
+    (_name, type) => {
+      // Each level's object const is left unresolved while it is empty, which the start value of a field that may hold
+      // a primitive would resolve; read for these, each read would read its children's again, at 2^depth plans
+      const plansAt = (depth: number) => {
+        let schema: RJSFSchema = { type: 'string' };
+        for (let level = 0; level < depth; level += 1) {
+          schema = {
+            type,
+            allOf: [{ if: { required: ['q'] }, then: { const: { q: 1 } } }],
+            properties: { a: schema, p: { type: 'string', default: 's' } },
+          };
+        }
+        buildPlanCalls.count = 0;
+        const defaults = defaultsOf(schema, undefined, { emptyObjectFields: 'skipEmptyDefaults' });
+        expect(JSON.stringify(defaults)).toBe(`${'{"a":'.repeat(depth - 1)}{"p":"s"}${',"p":"s"}'.repeat(depth - 1)}`);
+        return buildPlanCalls.count;
+      };
+      // Each level added costs the same number of plans, however deep the chain
+      const plans = [4, 8, 16].map(plansAt);
+      expect(plans[2] - plans[1]).toBe(2 * (plans[1] - plans[0]));
+    },
+  );
 
   it('retrieves no optional field the Optional Data Controls collapse unless it may reach an object const', () => {
     const counting = miniValidator();
