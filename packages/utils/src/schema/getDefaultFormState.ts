@@ -1542,9 +1542,10 @@ function leafOf<S extends StrictRJSFSchema>(field: DefaultsField<S>): object | u
  * of a long list as it was, whose defaults are then not computed again (#3183). The state a call hands back is copied
  * off them, so no caller holds one. Only a fold that read nothing else of the call is kept: one that asked no
  * `fieldState` which option a field shows, see `stateAsks`, and recorded no `null` fill, which names the object of the
- * data it is for
+ * data it is for. Held by the child's key too, as two children of a field can fold the same data, as an array's
+ * row and the item of its `default` do, but not by its index, so a row an insert or a remove shifts is still found
  */
-const dataDefaults = new WeakMap<object, MemoEntry>();
+const dataDefaults = new WeakMap<object, Map<string, MemoEntry>>();
 
 /** How many times the fold has asked a `fieldState` which option a field shows, which tells `foldChild()` whether the
  * fold of a child asked
@@ -1566,14 +1567,13 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FoldProps<T, S, F>,
   memo: Map<string, MemoEntry> | undefined,
 ): unknown {
-  const inputsOf = (data: unknown) => [
+  const inputsOf = (data: unknown, parents: readonly unknown[] = [props.parentDefaults, props.parentConst]) => [
+    ...parents,
     context,
     child.graph,
     seedsKey(child.seeds),
     child.expanded,
     child.fallback,
-    props.parentDefaults,
-    props.parentConst,
     data,
     props.required,
     props.requiredAsRoot,
@@ -1594,18 +1594,24 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // An option's fold reads the parent it is an option of through `optionOf`, which no input stands for
   const snapshot =
     entry === undefined &&
-    REUSES_DEFAULTS_FLAG in context &&
+    context[REUSES_DEFAULTS_FLAG] === true &&
     !props.optionOf &&
     (Array.isArray(data) || isPlainObject(data))
       ? snapshotOf(data)
       : undefined;
+  const dataKey = memoKey.replace(/:\d+$/, '');
+  const held = snapshot && dataDefaults.get(snapshot)?.get(dataKey);
+  // A declared `default` is copied afresh on every call, so the defaults and `const` a row inherits from one are
+  // matched by what they hold, the held entry's own standing in for equal ones
+  const parents = [props.parentDefaults, props.parentConst].map((parent, at) =>
+    held && deepEquals(parent, held.inputs[at]) ? held.inputs[at] : parent,
+  );
   const dataInputs = snapshot && [
-    ...inputsOf(snapshot),
+    ...inputsOf(snapshot, parents),
     props.nullFills?.globalUiOptions,
     // A field offering options picks one by its data without a `fieldState`, which asks none
     props.fieldState !== undefined,
   ];
-  const held = snapshot && dataDefaults.get(snapshot);
   if (dataInputs && isHeldFor(held, dataInputs)) {
     entry = held;
   }
@@ -1631,11 +1637,13 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
       leafDefaults.set(leaf, computed);
     }
     if (snapshot && dataInputs) {
+      const byChild = dataDefaults.get(snapshot) ?? new Map<string, MemoEntry>();
       if (stateAsks === asksBefore && computed.fills?.overUndefined.isEmpty !== false) {
-        dataDefaults.set(snapshot, { ...computed, inputs: dataInputs, echoesData: computed.value === data });
+        byChild.set(dataKey, { ...computed, inputs: dataInputs, echoesData: computed.value === data });
+        dataDefaults.set(snapshot, byChild);
       } else {
         // An entry for other inputs would only keep what it was computed from alive
-        dataDefaults.delete(snapshot);
+        byChild.delete(dataKey);
       }
     }
     entry = computed;
@@ -4540,16 +4548,20 @@ const OPAQUE = Symbol('opaque');
  * and otherwise a copy of `data` that shares each member of `previous` still holding its own. So a long list is
  * copied by the rows an edit changed, and one nothing changed is not copied at all (#3183). Arrays and plain objects
  * are read member by member and a `Date` by its time, which the snapshot holds in a `Date` of its own. Any other
- * object could be changed in place without a copy to show it, so data holding one has no snapshot: `OPAQUE`. Form data
- * holding itself is no concern here, as the fold recurses through it without end before any snapshot is asked for
+ * object could be changed in place without a copy to show it, so data holding one has no snapshot: `OPAQUE`. So has
+ * data holding itself, which the fold stops reading where the schema does, as under a key the schema doesn't describe
  *
  * @param data - The caller's data
  * @param previous - The snapshot last taken of it, if any
+ * @param [onPath] - The arrays and objects on the way down to `data`
  * @returns - The snapshot, or `OPAQUE`
  */
-function snapshotFrom(data: unknown, previous: unknown): unknown {
+function snapshotFrom(data: unknown, previous: unknown, onPath = new Set<object>()): unknown {
   if (typeof data !== 'object' || data === null) {
     return data;
+  }
+  if (onPath.has(data)) {
+    return OPAQUE;
   }
   if (data instanceof Date) {
     // By `Object.is()`, as an invalid `Date` holds `NaN`
@@ -4563,8 +4575,9 @@ function snapshotFrom(data: unknown, previous: unknown): unknown {
     // `every()` would skip a hole of. A hole stays a hole in the snapshot, apart from an item holding `undefined`: the
     // fold leaves the one as it is and fills the other with its default
     let copy = held?.length === data.length ? undefined : new Array<unknown>(data.length);
+    onPath.add(data);
     for (let index = 0; index < data.length; index++) {
-      const member = snapshotFrom(data[index], held?.[index]);
+      const member = snapshotFrom(data[index], held?.[index], onPath);
       if (member === OPAQUE) {
         return OPAQUE;
       }
@@ -4577,6 +4590,7 @@ function snapshotFrom(data: unknown, previous: unknown): unknown {
         copy[index] = member;
       }
     }
+    onPath.delete(data);
     return copy ?? held;
   }
   if (!isPlainObject(data)) {
@@ -4587,9 +4601,10 @@ function snapshotFrom(data: unknown, previous: unknown): unknown {
   // Held key by key in the order of `data`, which the fold hands the keys of an object back in
   const heldKeys = held && Object.keys(held);
   let copy: GenericObjectType | undefined = heldKeys?.length === keys.length ? undefined : {};
+  onPath.add(data);
   for (const [index, key] of keys.entries()) {
     const holdsKey = held !== undefined && Object.hasOwn(held, key);
-    const member = snapshotFrom(data[key], holdsKey ? held[key] : undefined);
+    const member = snapshotFrom(data[key], holdsKey ? held[key] : undefined, onPath);
     if (member === OPAQUE) {
       return OPAQUE;
     }
@@ -4603,6 +4618,7 @@ function snapshotFrom(data: unknown, previous: unknown): unknown {
       setOwn(copy, key, member);
     }
   }
+  onPath.delete(data);
   return copy ?? held;
 }
 
