@@ -11799,6 +11799,35 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(fill({ ...b, default: true }, true)).toEqual({ b: true });
         }
       });
+      const trueOrNull: RJSFSchema[] = [
+        { const: true, title: 'Yes' },
+        { const: null, title: 'N/A' },
+      ];
+      it.each<[string, RJSFSchema, Behavior?]>([
+        ['an enum of true', { type: 'boolean', enum: [true] }],
+        ['an enum of true and null', { type: ['boolean', 'null'], enum: [true, null] }],
+        ['a oneOf of true and null', { type: ['boolean', 'null'], oneOf: trueOrNull }],
+        ['an anyOf of true and null', { type: ['boolean', 'null'], anyOf: trueOrNull }],
+        ['an untyped oneOf of true and null', { oneOf: trueOrNull }],
+        ['a oneOf of true', { type: 'boolean', oneOf: [{ const: true }] }, { constAsDefaults: 'never' }],
+        ['a const of true', { type: 'boolean', const: true }, { constAsDefaults: 'never' }],
+        ['an enum of true beside a oneOf of false and true', { type: 'boolean', enum: [true], oneOf: untitled }],
+      ])('is left empty for %s, whose values leave out false', (_, b, behavior) => {
+        expect(fill(b, true, behavior)).toEqual({});
+      });
+      it.each<[string, RJSFSchema, Behavior?]>([
+        ['an enum of true and false', { type: 'boolean', enum: [true, false] }],
+        ['an enum of false', { type: 'boolean', enum: [false] }],
+        [
+          'a oneOf of true, false and null',
+          { type: ['boolean', 'null'], oneOf: [{ const: true }, { const: false }, { const: null }] },
+        ],
+        ['a const of false', { type: 'boolean', const: false }, { constAsDefaults: 'never' }],
+        ['a plain boolean', { type: 'boolean' }],
+        ['a boolean or null', { type: ['boolean', 'null'] }],
+      ])('starts at false for %s, whose values include it or are not listed', (_, b, behavior) => {
+        expect(fill(b, true, behavior)).toEqual({ b: false });
+      });
     });
     describe('a list of one constant leaves nothing to choose, so it fills (#5944)', () => {
       type Behavior = DefaultFormStateBehavior;

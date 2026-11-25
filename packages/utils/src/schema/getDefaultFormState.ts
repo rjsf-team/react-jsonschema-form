@@ -779,6 +779,10 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * doesn't call it
    */
   onHandDown?: (defaults: unknown, givenConst: unknown) => void;
+  /** Whether the list of constants the field is the option of offers `false`, see `listsFalse()`. The option holds one
+   * entry of the list merged in, so it is the list that says what a required boolean may start at
+   */
+  offersFalse?: boolean;
   /** Whether `parentDefaults` come from a `default` an ancestor declares, its `const` or one they inherit, rather than
    * from values the ancestor computed, as a tuple's items are
    */
@@ -1811,6 +1815,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             parentConst,
             inheritsDeclared: reachesDefault,
             onHandDown: optionHandDown,
+            offersFalse: choice.offersFalse,
           },
           initialValue,
           adopted?.choice,
@@ -2106,6 +2111,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   index: number;
   isWholeValue: boolean;
   offersConstants: boolean;
+  offersFalse: boolean | undefined;
   rendersAsSelect: boolean;
   wholeOptions: S[] | undefined;
 } {
@@ -2184,6 +2190,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     index,
     isWholeValue,
     offersConstants,
+    offersFalse: offersConstants ? listsFalse<S>(schema, constants) : undefined,
     rendersAsSelect: rendersOptionsAsSelect<S>(select, constants),
     wholeOptions,
   };
@@ -3674,12 +3681,15 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // present in the submitted data, and false is the natural zero-value.
       // `requiredBooleanDefault: 'skip'` opts out for forms that treat an
       // unanswered boolean as a distinct state and rely on `required` to flag it.
+      // A schema listing its values without `false` never holds it, so it is left
+      // for validation to report missing rather than started invalid.
       const requiredBooleanDefault = context.defaultFormStateBehavior?.requiredBooleanDefault;
       if (
         requiredBooleanDefault !== 'skip' &&
         !(SKIPS_DEFAULTS in context) &&
         props.required &&
-        defaults === undefined
+        defaults === undefined &&
+        (props.offersFalse ?? listsFalse<S>(view.schema))
       ) {
         return false;
       }
@@ -3688,6 +3698,18 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
     default:
       return undefined;
   }
+}
+
+/** Whether `false` is among the values `schema` lists, or it lists none: its `enum`, its `const` and the `constants` of
+ * the list of constant `anyOf`/`oneOf` options `chooseOption()` reads. Only listed values count, so an exclusion
+ * through another keyword, such as a `not`, is not looked for
+ */
+function listsFalse<S extends StrictRJSFSchema>(schema: S, constants: S[] = []): boolean {
+  return (
+    (!Array.isArray(schema.enum) || schema.enum.includes(false)) &&
+    (!(CONST_KEY in schema) || schema.const === false) &&
+    (!constants.length || constants.some((option) => toConstant<S>(option) === false))
+  );
 }
 
 /** Returns the field a call to one of the exported helpers starts from: `rawSchema` as a call root of the graph of

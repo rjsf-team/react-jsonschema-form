@@ -406,10 +406,11 @@ render(
 Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default` of its own, is populated with `false`, defaulting to `populateFalse`.
 An explicit schema `default`, a parent default and an existing `formData` value always take precedence; this flag only decides what happens when none of them provides a value.
 A boolean whose `oneOf`/`anyOf` lists several constants is filled the same way, whatever control renders it, since [`constAsDefaults`](#constasdefaults) left unset picks none of them.
+A boolean whose schema lists its values, by an `enum`, a `const` or a `oneOf`/`anyOf` of constants, is set to `false` only where they include `false`: a required `{ "type": "boolean", "enum": [true] }` is left unset, its checkbox unticked, and validation reports it missing until the user answers; a select over such constants starts on its placeholder. Only the listed values count, not a `not` or an `if` that would rule `false` out.
 
 | Flag Value      | Description                                                                                                                   |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `populateFalse` | A required boolean with no `default` is set to `false`                                                                        |
+| `populateFalse` | A required boolean with no `default` is set to `false`, unless the values its schema lists leave `false` out                  |
 | `skip`          | No value is synthesized; the property stays `undefined` until the user answers it, so `required` remains a validation concern |
 
 #### Example

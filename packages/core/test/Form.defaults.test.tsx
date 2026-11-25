@@ -1649,6 +1649,64 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
         expectToHaveBeenCalledWithFormData(onSubmit, { agree: false }, true);
       });
+
+      describe('a required one whose values leave out false', () => {
+        const mustBeTrue: RJSFSchema = { type: 'boolean', title: 'Agree', enum: [true] };
+        const yesOrNotApplicable: RJSFSchema = {
+          type: ['boolean', 'null'],
+          title: 'Agree',
+          oneOf: [
+            { const: true, title: 'Yes' },
+            { const: null, title: 'N/A' },
+          ],
+        };
+        const mountRequired = (agree: RJSFSchema, noHtml5Validate = false) => {
+          const { node, onSubmit, onError, getFormData } = createFormComponent({
+            schema: { type: 'object', required: ['agree'], properties: { agree } },
+            noHtml5Validate,
+          });
+          return { node, onSubmit, onError, getFormData, control: elementOf(node, '#root_agree') };
+        };
+
+        it('mounts an enum of true, a checkbox, unticked and natively required, holding nothing', async () => {
+          const { node, onSubmit, onError, getFormData, control } = mountRequired(mustBeTrue);
+
+          expect(control).toHaveAttribute('type', 'checkbox');
+          expect(control).not.toBeChecked();
+          expect(control).toBeRequired();
+          expect(getFormData()).toEqual({});
+
+          await submitForm(node, user);
+
+          expect(onSubmit).not.toHaveBeenCalled();
+          expect(onError).not.toHaveBeenCalled();
+        });
+
+        it('reports an enum of true as missing on submit without native validation', async () => {
+          const { node, onSubmit, onError } = mountRequired(mustBeTrue, true);
+
+          await submitForm(node, user);
+
+          expect(onSubmit).not.toHaveBeenCalled();
+          expect(onError).toHaveBeenCalledTimes(1);
+          expect(fieldErrorsById(node)).toEqual({ root_agree: ["must have required property 'Agree'"] });
+        });
+
+        it('mounts a oneOf of true and null, a select, on its placeholder, and reports it missing', async () => {
+          const { node, onSubmit, onError, getFormData, control } = mountRequired(yesOrNotApplicable, true);
+
+          expect(control).toBeInstanceOf(HTMLSelectElement);
+          expect(control).toHaveValue('');
+          expect([...control.querySelectorAll('option')].map((option) => option.text)).toEqual(['', 'Yes', 'N/A']);
+          expect(getFormData()).toEqual({});
+
+          await submitForm(node, user);
+
+          expect(onSubmit).not.toHaveBeenCalled();
+          expect(onError).toHaveBeenCalledTimes(1);
+          expect(fieldErrorsById(node)).toEqual({ root_agree: ["must have required property 'Agree'"] });
+        });
+      });
     });
 
     it.each([
