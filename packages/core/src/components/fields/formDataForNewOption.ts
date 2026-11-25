@@ -265,28 +265,21 @@ function carriedData<T, S extends StrictRJSFSchema>(
  *
  * @param formData - The form data associated with the old option
  * @param carried - What the switch carries for the new option
- * @param renderedNewOption - The option switched to, as it is rendered
- * @param parentSchema - The schema holding the options, its extra keys stubbed among its `properties`
- * @param selectorField - The key the field's selector writes the option picked to, if any
+ * @param isDeclared - Whether the option switched to, as it is rendered, or the field declares a key
+ * @param namesOption - Whether a key's value names the option: the `discriminator` property or the selector's key
  * @returns - The keys to put back with their values, if any
  */
-function heldKeys<S extends StrictRJSFSchema>(
+function heldKeys(
   formData: unknown,
   carried: unknown,
-  renderedNewOption: S | undefined,
-  parentSchema: S | undefined,
-  selectorField: string | undefined,
+  isDeclared: (key: string) => boolean,
+  namesOption: (key: string) => boolean,
 ): GenericObjectType | undefined {
   if (!isPlainObject(formData) || !isPlainObject(carried)) {
     return undefined;
   }
-  const newProperties = renderedNewOption?.properties ?? {};
-  const parentProperties = parentSchema?.properties ?? {};
-  const isDeclared = (key: string) =>
-    declaresProperty<S>(newProperties, key) || declaresProperty<S>(parentProperties, key);
-  const discriminator = parentSchema && getDiscriminatorFieldFromSchema<S>(parentSchema);
   const held = Object.entries(formData).filter(([key, value]) => {
-    if (key === discriminator || key === selectorField) {
+    if (namesOption(key)) {
       return false;
     }
     if (value === undefined) {
@@ -396,7 +389,16 @@ export default function formDataForNewOption<
     { renderedOldOption, renderedNewOption },
     parentSchema,
   );
-  const heldBefore = heldKeys<S>(formData, newFormData, renderedNewOption, parentSchema, selectorField);
+  const isDeclared = (key: string) =>
+    declaresProperty<S>(renderedNewOption?.properties ?? {}, key) ||
+    declaresProperty<S>(parentSchema?.properties ?? {}, key);
+  const discriminator = parentSchema && getDiscriminatorFieldFromSchema<S>(parentSchema);
+  const heldBefore = heldKeys(
+    formData,
+    newFormData,
+    isDeclared,
+    (key) => key === discriminator || key === selectorField,
+  );
   // A `null` option renders no field, so the switch leaves the data as the sanitize did, rather than the `null` the
   // option's defaults fill in for a field that renders one
   if (newOption?.type === 'null') {
@@ -576,41 +578,18 @@ export default function formDataForNewOption<
       );
     }
   }
-  return {
-    formData: withDiscriminatorCleared<T, S>(formData, newFormData, renderedNewOption, parentSchema),
-    held: heldBefore,
-  };
-}
-
-/** `carried` with the `discriminator` property cleared where the switch dropped the value `formData` held for it and
- * the option switched to or the field declares it, for `Form` to keep cleared rather than fill with a `default` that
- * names another option, see `useSendOptionSwitch()`
- *
- * @param formData - The form data associated with the old option
- * @param carried - What the switch carries for the new option
- * @param renderedNewOption - The option switched to, as it is rendered
- * @param parentSchema - The schema holding the options
- * @returns - `carried`, with the discriminator cleared where the switch dropped it
- */
-function withDiscriminatorCleared<T, S extends StrictRJSFSchema>(
-  formData: unknown,
-  carried: T | undefined,
-  renderedNewOption: S | undefined,
-  parentSchema: S | undefined,
-): T | undefined {
-  const discriminator = parentSchema && getDiscriminatorFieldFromSchema<S>(parentSchema);
+  // The switch clears the `discriminator` property where it dropped the value `formData` held there and the option
+  // switched to or the field declares it, for `Form` to keep cleared rather than fill with a `default` that names
+  // another option, see `useSendOptionSwitch()`
   if (
-    !discriminator ||
-    !isPlainObject(formData) ||
-    formData[discriminator] === undefined ||
-    !isPlainObject(carried) ||
-    Object.hasOwn(carried, discriminator) ||
-    !(
-      declaresProperty<S>(renderedNewOption?.properties ?? {}, discriminator) ||
-      declaresProperty<S>(parentSchema.properties ?? {}, discriminator)
-    )
+    discriminator &&
+    isPlainObject(formData) &&
+    formData[discriminator] !== undefined &&
+    isPlainObject(newFormData) &&
+    !Object.hasOwn(newFormData, discriminator) &&
+    isDeclared(discriminator)
   ) {
-    return carried;
+    newFormData = asFieldValue<T>({ ...newFormData, [discriminator]: undefined });
   }
-  return asFieldValue<T>({ ...carried, [discriminator]: undefined });
+  return { formData: newFormData, held: heldBefore };
 }
