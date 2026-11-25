@@ -3200,48 +3200,94 @@ describe('oneOf', () => {
       expect(node.querySelector('#root_thing_onlyBar')).toBeInTheDocument();
       expect(node.querySelector('#root_thing_onlyFoo')).not.toBeInTheDocument();
     });
-    it.each<{ name: string; initialFormData?: GenericObjectType; defaultFormStateBehavior?: DefaultFormStateBehavior }>(
-      [
-        { name: 'seeded', initialFormData: { code: 'foo', a: 'x' } },
-        { name: 'unseeded' },
-        {
-          name: 'under useDefaultIfFormDataUndefined',
-          initialFormData: { code: 'foo', a: 'x' },
-          defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
-        },
-      ],
+    it.each<{
+      name: string;
+      at?: string;
+      initialFormData?: GenericObjectType;
+      defaultFormStateBehavior?: DefaultFormStateBehavior;
+    }>(
+      [undefined, 'thing'].flatMap((at) => {
+        const under = (data: GenericObjectType) => (at ? { [at]: data } : data);
+        const where = at ? ` under ${at}` : '';
+        return [
+          { name: `seeded${where}`, at, initialFormData: under({ code: 'foo', a: 'x' }) },
+          { name: `unseeded${where}`, at },
+          {
+            name: `under useDefaultIfFormDataUndefined${where}`,
+            at,
+            initialFormData: under({ code: 'foo', a: 'x' }),
+            defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+          },
+        ];
+      }),
     )(
       'switches ($name) to an option that writes no discriminator value, past a default the field declares for it',
-      async ({ initialFormData, defaultFormStateBehavior }) => {
+      async ({ at, initialFormData, defaultFormStateBehavior }) => {
+        const field: RJSFSchema = {
+          type: 'object',
+          properties: { code: { type: 'string', default: 'foo' } },
+          discriminator: { propertyName: 'code' },
+          oneOf: [
+            { title: 'foo', properties: { code: { type: 'string', const: 'foo' }, a: { type: 'string' } } },
+            { title: 'other', properties: { b: { type: 'string' } } },
+          ],
+        };
+        const under = (data: GenericObjectType) => (at ? { [at]: data } : data);
+        const id = at ? `root_${at}` : 'root';
         const { node, getFormData } = createFormComponent({
-          schema: {
-            type: 'object',
-            properties: { code: { type: 'string', default: 'foo' } },
-            discriminator: { propertyName: 'code' },
-            oneOf: [
-              { title: 'foo', properties: { code: { type: 'string', const: 'foo' }, a: { type: 'string' } } },
-              { title: 'other', properties: { b: { type: 'string' } } },
-            ],
-          },
+          schema: at ? { type: 'object', properties: { [at]: field } } : field,
           initialFormData,
           defaultFormStateBehavior,
         });
-        const select = elementOf(node, 'select#root__oneof_select');
+        const select = elementOf(node, `select#${id}__oneof_select`);
 
         await user.selectOptions(select, 'other');
 
-        expect(getFormData()).toEqual({});
+        expect(getFormData()).toEqual(under({}));
         expect(select).toHaveValue('1');
 
-        await user.type(elementOf(node, '#root_b'), 'y');
+        await user.type(elementOf(node, `#${id}_b`), 'y');
 
-        expect(getFormData()).toEqual({ b: 'y' });
+        expect(getFormData()).toEqual(under({ b: 'y' }));
         expect(select).toHaveValue('1');
 
         await user.selectOptions(select, 'foo');
 
-        expect(getFormData()).toEqual({ code: 'foo' });
+        expect(getFormData()).toEqual(under({ code: 'foo' }));
         expect(select).toHaveValue('0');
+      },
+    );
+    // An object `default` fills a field only while it holds no data, so once the switch leaves an object it fills nothing
+    it.each<{ name: string; at?: string }>([{ name: 'the field' }, { name: 'an ancestor', at: 'thing' }])(
+      'switches to an option that writes no discriminator value where $name fills it from an object default',
+      async ({ at }) => {
+        const field: RJSFSchema = {
+          type: 'object',
+          discriminator: { propertyName: 'code' },
+          oneOf: [
+            { title: 'foo', properties: { code: { type: 'string', const: 'foo' }, a: { type: 'string' } } },
+            { title: 'other', properties: { b: { type: 'string' } } },
+          ],
+        };
+        const under = (data: GenericObjectType) => (at ? { [at]: data } : data);
+        const id = at ? `root_${at}` : 'root';
+        const { node, getFormData } = createFormComponent({
+          schema: at
+            ? { type: 'object', default: { [at]: { code: 'foo' } }, properties: { [at]: field } }
+            : { ...field, default: { code: 'foo' } },
+        });
+        const select = elementOf(node, `select#${id}__oneof_select`);
+        expect(getFormData()).toEqual(under({ code: 'foo' }));
+
+        await user.selectOptions(select, 'other');
+
+        expect(getFormData()).toEqual(under({}));
+        expect(select).toHaveValue('1');
+
+        await user.type(elementOf(node, `#${id}_b`), 'y');
+
+        expect(getFormData()).toEqual(under({ b: 'y' }));
+        expect(select).toHaveValue('1');
       },
     );
     describe('a non-string discriminator.propertyName', () => {
