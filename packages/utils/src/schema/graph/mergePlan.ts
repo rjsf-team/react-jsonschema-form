@@ -28,7 +28,7 @@ import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import { constrainsValue, KEYWORDS_BY_TYPE } from '../schemaKeywords.ts';
-import shallowAllOfMerge from '../shallowAllOfMerge.ts';
+import shallowAllOfMerge, { mergeOptionLists } from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
@@ -438,7 +438,7 @@ const plans = new KeyedMemo<MergePlan<StrictRJSFSchema>>();
 /** Merges an `allOf` schema into a single flat schema, delegating to the context's `customMergeAllOf` when it has one
  * and falling back to @x0k/json-schema-merge's shallow `allOf` merge otherwise, which merges an `allOf` holding a
  * `false` to that `false`. A `customMergeAllOf` may reject subschemas it considers irreconcilable, so this never
- * throws: it warns once and returns the schema without its `allOf`.
+ * throws: it warns once and returns `unmerged`, by default the schema without its `allOf`.
  *
  * The entries are expected to have their `$ref`s resolved already. The shallow merge hoists an entry's `$ref` onto the
  * merged schema rather than following it, so an unresolved entry loses the referenced schema's properties and hands a
@@ -447,12 +447,13 @@ const plans = new KeyedMemo<MergePlan<StrictRJSFSchema>>();
 export function mergeAllOf<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   schema: S,
+  unmerged?: S,
 ): S | JSONSchema7Definition {
   try {
     return context.customMergeAllOf ? context.customMergeAllOf(schema) : shallowAllOfMerge(schema);
   } catch (error) {
     logOnce('could not merge subschemas in allOf:\n', { error });
-    return withoutKeys(schema, ALL_OF_KEY);
+    return unmerged ?? withoutKeys(schema, ALL_OF_KEY);
   }
 }
 
@@ -822,6 +823,46 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(
     : schemaFrom(graph.rawRoot, {});
 }
 
+/** The options of the lists each option a merge of lists rebuilt was built from, see `rebuiltLists()` */
+const optionSources = new WeakMap<object, readonly unknown[]>();
+
+/** Returns the options of the `anyOf`/`oneOf` lists the option `option` a plan's merge of lists rebuilt was built from,
+ * one from each list in the order they were merged, or undefined for an option no such merge built
+ *
+ * @param option - The option
+ * @returns - The options it was built from
+ */
+export function sourcesOfOption(option: object): readonly unknown[] | undefined {
+  return optionSources.get(option);
+}
+
+/** Returns the lists `schemas` hold under a keyword two or more of them hold one under, by keyword, each rebuilt as the
+ * shallow merge rebuilds them, so that each option it builds keeps the options it was built from, see
+ * `sourcesOfOption()`. A keyword under which no pair of options merges is left to the merge, which rejects it
+ *
+ * @param schemas - The schemas a plan conjoins, in the order they are merged
+ * @returns - The keyword and its rebuilt options, for each such keyword
+ */
+function rebuiltLists(schemas: readonly object[]): [string, ReturnType<typeof mergeOptionLists> & object][] {
+  return [ANY_OF_KEY, ONE_OF_KEY].flatMap((keyword): [string, ReturnType<typeof mergeOptionLists> & object][] => {
+    const lists = schemas.flatMap((schema): JSONSchema7Definition[][] => {
+      const list: unknown = Reflect.get(schema, keyword);
+      return Array.isArray(list) ? [list] : [];
+    });
+    const [first, ...rest] = lists;
+    const options = first !== undefined && rest.length > 0 ? mergeOptionLists(first, rest) : undefined;
+    if (options === undefined) {
+      return [];
+    }
+    for (const { option, sources } of options) {
+      if (isObject(option)) {
+        optionSources.set(option, sources);
+      }
+    }
+    return [[keyword, options]];
+  });
+}
+
 /** Returns the `allOf` entries `schemas` hold themselves, which merging the schemas as the `allOf` of them leaves as they
  * stand: the shallow merge would flatten them into its result and hoist the `$ref` of an entry onto it, merging an
  * `allOf` that is not the one being merged and leaving a reference no reader of the result follows again
@@ -844,7 +885,7 @@ function mergedAllOf<S extends StrictRJSFSchema>(schema: S, customMergeAllOf?: C
   return customMergeAllOf ? customMergeAllOf(schema) : schemaFrom(schema, shallowAllOfMerge(schema));
 }
 
-/** Returns the keywords `beside` a `$ref` and the `definition` it names merged as the `allOf` of both, as the form
+/** Returns the keywords `beside` a `$ref` merged with the `definition` it names as their `allOf` entry, as the form
  * merges them, by the same `customMergeAllOf`. Two that cannot be merged, such as a `type` beside the `$ref` that the
  * definition's `type` shares no value with, stay the `allOf` of both, which a validator reads the same way, rather than
  * failing every reader.
@@ -866,8 +907,10 @@ export function conjoinDefinition<S extends StrictRJSFSchema>(
     const merged = schemaFrom(
       template,
       mergedAllOf(
+        // A `$ref` applies its definition in place, so an `unevaluatedProperties` beside it sees the definition's keys
         schemaFrom(template, {
-          [ALL_OF_KEY]: [withoutKeys(beside, ALL_OF_KEY), withoutKeys(definition, ALL_OF_KEY)],
+          ...withoutKeys(beside, ALL_OF_KEY),
+          [ALL_OF_KEY]: [withoutKeys(definition, ALL_OF_KEY)],
         }),
         customMergeAllOf,
       ),
@@ -1102,11 +1145,26 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     ) {
       return part;
     }
-    const members = this.graph.subschemas(provider.node.id, ALL_OF_KEY).flatMap(([, member]) => {
+    const entries = this.graph.subschemas(provider.node.id, ALL_OF_KEY).map(([, member]) => {
       const expanded = this.expand(member, provider.refPath, 'allOf', dependencyKey);
-      return expanded === undefined ? [] : [scopedPart(expanded, `a${member}`)];
+      return expanded === undefined ? undefined : scopedPart(expanded, `a${member}`);
     });
-    return this.conjoin({ ...part, schema: withoutKeys(part.schema, ALL_OF_KEY) }, members);
+    const own = { ...part, schema: withoutKeys(part.schema, ALL_OF_KEY) };
+    const [beside, ...rest] = entries;
+    // A `$ref` applies its definition in place, so the keywords beside it, its conjunction's first entry, are the
+    // object's own: an `unevaluatedProperties` among them sees the definition's keys
+    return provider.node.conjunctionOf === undefined || beside === undefined
+      ? this.conjoin(
+          own,
+          entries.filter((entry) => entry !== undefined),
+        )
+      : this.conjoin(
+          {
+            schema: schemaFrom(own.schema, { ...beside.schema, ...own.schema }),
+            chains: [...own.chains, ...beside.chains],
+          },
+          rest.filter((entry) => entry !== undefined),
+        );
   }
 
   /** Merges `members` into `part` as `allOf` merges them, first wins, and re-applies the symbols the merge drops, the
@@ -1119,10 +1177,24 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const schemas = [part.schema, ...members.map((member) => member.schema)];
     // An `allOf` a member still holds is one the policy left unmerged
     const nested = ownAllOf(schemas);
-    const merged = this.mergeAll({
-      ...withoutKeys(part.schema, ALL_OF_KEY),
-      [ALL_OF_KEY]: schemas.slice(1).map((schema) => withoutKeys(schema, ALL_OF_KEY)),
-    });
+    const rebuilt = this.context.customMergeAllOf ? [] : rebuiltLists(schemas);
+    const taken = rebuilt.map(([keyword]) => keyword);
+    // A merge that fails keeps the part's own lists rather than options built with the members it drops
+    const unmerged = withoutKeys(part.schema, ALL_OF_KEY);
+    const merged = this.mergeAll(
+      {
+        ...withoutKeys(part.schema, ALL_OF_KEY, ...taken),
+        [ALL_OF_KEY]: schemas.slice(1).map((schema) => withoutKeys(schema, ALL_OF_KEY, ...taken)),
+      },
+      unmerged,
+    );
+    for (const [keyword, options] of merged === unmerged ? [] : rebuilt) {
+      Reflect.set(
+        merged,
+        keyword,
+        options.map(({ option }) => option),
+      );
+    }
     if (nested.length > 0) {
       Reflect.set(merged, ALL_OF_KEY, nested);
     }
@@ -1135,9 +1207,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     };
   }
 
-  private mergeAll(schema: S): S {
-    const merged = mergeAllOf(this.context, schema);
-    return isSchemaObject<S>(merged) && this.context.customMergeAllOf ? merged : schemaFrom(schema, merged);
+  private mergeAll(schema: S, unmerged: S): S {
+    const merged = mergeAllOf(this.context, schema, unmerged);
+    return merged === unmerged || (isSchemaObject<S>(merged) && this.context.customMergeAllOf)
+      ? (merged as S)
+      : schemaFrom(schema, merged);
   }
 
   private holds(key: string, condition: S, site = key, ifNode?: NodeId): boolean {

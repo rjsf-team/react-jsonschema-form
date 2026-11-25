@@ -75,23 +75,18 @@ const withDefaults: RJSFSchema = {
   properties: { a: { type: 'string', default: 'A' }, b: { type: 'string', default: 'B' } },
 };
 
-/** The ownership contract: the form owns its data. `initialFormData`, and `formData` as another name for it, seed the
- * form on mount and on `reset()` only, like `defaultValue`; a value passed after mount is ignored, with a warning in
- * development. Edits are the form's own and are reported through `onChange`, whatever the parent does with them.
+/** The ownership contract. `initialFormData` seeds the form on mount and on `reset()` only, like `defaultValue`, and
+ * the form owns its data after that. `formData` is the form's data, like `value`: the form shows what is passed, and
+ * an edit is shown as it is made and reported through `onChange`, and the form shows another value once it is passed.
  */
 describe('form data ownership', () => {
   const warnings = setupConsoleWarnSuppression();
-  /** The warnings the form gave about a `formData` it ignored */
-  const ignoredFormDataWarnings = () =>
-    warnings.consoleSpy.mock.calls.filter(([message]) =>
-      String(message).includes('`formData` changed after the form mounted'),
-    );
   /** The warnings the form gave about a handle call it dropped while hidden or after unmounting */
   const droppedCallWarnings = () =>
     warnings.consoleSpy.mock.calls.filter(([message]) => String(message).includes('and was dropped'));
 
   describe('edits are the form’s own', () => {
-    it('an edit is shown and reported whatever its parent does with it', async () => {
+    it('an edit is reported, and shown under a parent that stores nothing', async () => {
       const log = createParentLog<Data>();
       const { container } = render(<ListeningParent<Data> schema={schema} initialValue={{ a: 'a' }} log={log} />);
 
@@ -123,7 +118,7 @@ describe('form data ownership', () => {
       expect(input(container, 'root_a')).toHaveValue('abc');
     });
 
-    it('a parent that transforms what it stores does not have its value rendered, and is warned once', async () => {
+    it('a parent that transforms what it stores has its value rendered', async () => {
       const log = createParentLog<Data>();
       const upper = (edit: Data | undefined) => edit && { ...edit, a: edit.a?.toUpperCase() };
       const { container } = render(
@@ -132,14 +127,13 @@ describe('form data ownership', () => {
 
       await user.type(input(container, 'root_a'), 'ab');
 
-      expect(log.reported).toEqual([{ a: 'a' }, { a: 'ab' }]);
+      expect(log.reported).toEqual([{ a: 'a' }, { a: 'Ab' }]);
       expect(log.value).toEqual({ a: 'AB' });
-      expect(input(container, 'root_a')).toHaveValue('ab');
-      expect(ignoredFormDataWarnings()).toHaveLength(1);
+      expect(input(container, 'root_a')).toHaveValue('AB');
     });
   });
 
-  describe('a formData passed after mount is ignored', () => {
+  describe('a formData passed after mount is the form’s data', () => {
     /** Records the value the `a` widget has at every commit, so a stale value committed before the parent's value
      * would show up in the sequence and not just be overwritten by the final DOM
      */
@@ -153,12 +147,11 @@ describe('form data ownership', () => {
       };
     }
 
-    it('keeps the data, calls no onChange and warns once, naming a key and setFieldValue', () => {
+    it('shows each value in the commit that passes it, and calls no onChange', () => {
       const seen: unknown[] = [];
       const uiSchema = { a: { 'ui:widget': recordingWidget(seen) } };
       const onChange = vi.fn();
       function Parent({ value }: { value: Data }) {
-        // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
         return <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={value} onChange={onChange} />;
       }
       const { rerender, container } = render(<Parent value={{ a: 'old' }} />);
@@ -166,13 +159,9 @@ describe('form data ownership', () => {
       rerender(<Parent value={{ a: 'new' }} />);
       rerender(<Parent value={{ a: 'newer' }} />);
 
-      expect(new Set(seen)).toEqual(new Set(['old']));
-      expect(input(container, 'root_a')).toHaveValue('old');
+      expect(seen).toEqual(['old', 'new', 'newer']);
+      expect(input(container, 'root_a')).toHaveValue('newer');
       expect(onChange).not.toHaveBeenCalled();
-      const ignored = ignoredFormDataWarnings();
-      expect(ignored).toHaveLength(1);
-      expect(String(ignored[0][0])).toContain('`key`');
-      expect(String(ignored[0][0])).toContain('setFieldValue');
     });
 
     it('an unrelated re-render neither resets the data nor commits anything', () => {
@@ -185,7 +174,6 @@ describe('form data ownership', () => {
             schema={schema}
             uiSchema={uiSchema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
             formData={value}
             className={`tick-${tick}`}
             onChange={noop}
@@ -206,7 +194,6 @@ describe('form data ownership', () => {
       function Parent({ schema: current, value }: { schema: RJSFSchema; value: Data }) {
         return (
           <StrictMode>
-            {/* oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning */}
             <Form ref={ref} schema={current} validator={validator} formData={value} onChange={onChange} />
           </StrictMode>
         );
@@ -220,10 +207,9 @@ describe('form data ownership', () => {
       expect(input(container, 'root_a')).toHaveValue('given');
       expect(input(container, 'root_b')).toHaveValue('B');
       expect(handleOf(ref).getFormData()).toEqual({ a: 'given', b: 'B' });
-      expect(ignoredFormDataWarnings()).toHaveLength(0);
     });
 
-    it('warns when a parent puts back the record it seeded the form with, as a Cancel button does', async () => {
+    it('shows the record a parent puts back, as a Cancel button does', async () => {
       const record: Data = { a: 'saved' };
       function Parent() {
         const [value, setValue] = useState<Data | undefined>(record);
@@ -232,7 +218,6 @@ describe('form data ownership', () => {
             <Form<Data>
               schema={schema}
               validator={validator}
-              // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
               formData={value}
               onChange={(event) => setValue(event.formData)}
             />
@@ -247,15 +232,13 @@ describe('form data ownership', () => {
       await user.type(input(container, 'root_a'), '!');
       await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
-      expect(input(container, 'root_a')).toHaveValue('saved!');
-      expect(ignoredFormDataWarnings()).toHaveLength(1);
+      expect(input(container, 'root_a')).toHaveValue('saved');
     });
 
-    it('keeps the edits of a form whose parent stores none across the parent’s re-renders', async () => {
+    it('keeps the edits of a form whose parent stores none, across the parent’s re-renders', async () => {
       const record: Data = { a: 'record' };
       function Parent({ tick }: { tick: number }) {
         return (
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
           <Form schema={schema} validator={validator} formData={record} className={`tick-${tick}`} onChange={noop} />
         );
       }
@@ -267,14 +250,13 @@ describe('form data ownership', () => {
       expect(input(container, 'root_a')).toHaveValue('recordx');
     });
 
-    it('keeps an edit under a parent that goes on passing its root NaN seed', () => {
+    it('keeps an edit under a parent that goes on passing its root NaN', () => {
       const ref = createFormRef<number>();
       render(
         <Form<number>
           ref={ref}
           schema={{ type: 'number' }}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
           formData={Number.NaN}
           onChange={noop}
         />,
@@ -285,7 +267,7 @@ describe('form data ownership', () => {
       expect(handleOf(ref).getFormData()).toBe(5);
     });
 
-    it('takes the data it reported back as its own, not as a replacement, without a warning', async () => {
+    it('takes the data it reported back as its own, not as a replacement', async () => {
       const ref = createFormRef<Data>();
       const log = createParentLog<Data>();
       const { container } = render(
@@ -295,20 +277,20 @@ describe('form data ownership', () => {
       await user.type(input(container, 'root_a'), 'abc');
 
       expect(handleOf(ref).getFormData()).toBe(log.value);
-      expect(ignoredFormDataWarnings()).toHaveLength(0);
     });
 
     it.each<[string, (update: () => void) => void]>([
       ['after a timeout', (update) => setTimeout(update, 0)],
       ['in a transition', (update) => startTransition(update)],
-    ])('keeps the later edits when a parent stores what it reported %s, without a warning', async (_, apply) => {
+    ])('shows what a parent holds when it stores what was reported %s', async (_, apply) => {
+      const log = createParentLog<Data>();
       function LateParent() {
         const [data, setData] = useState<Data>({ a: '' });
+        Object.assign(log, { value: data });
         return (
           <Form<Data>
             schema={schema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => apply(() => setData(event.formData))}
           />
@@ -323,18 +305,18 @@ describe('form data ownership', () => {
         });
       });
 
-      expect(input(container, 'root_a')).toHaveValue('abc');
-      expect(ignoredFormDataWarnings()).toHaveLength(0);
+      // A value stored late is shown over the edits made since, so a keystroke made before it arrives may be lost
+      expect(log.value?.a).toMatch(/^[abc]+$/);
+      expect(input(container, 'root_a')).toHaveValue(log.value?.a);
     });
 
-    it('does not warn for a parent that stores a JSON copy of each edit, once a field is cleared', async () => {
+    it('shows the edits of a parent that stores a JSON copy of each edit, once a field is cleared', async () => {
       function JsonParent() {
         const [data, setData] = useState<Data>({ a: 'seed' });
         return (
           <Form<Data>
             schema={schema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back a JSON copy of what onChange reported as `formData`
             formData={data}
             onChange={(event) => setData(JSON.parse(JSON.stringify(event.formData)))}
           />
@@ -345,20 +327,20 @@ describe('form data ownership', () => {
       await user.clear(input(container, 'root_a'));
 
       expect(input(container, 'root_a')).toHaveValue('');
-      expect(ignoredFormDataWarnings()).toHaveLength(0);
     });
 
     it.each<[string, (update: () => void) => void]>([
       ['at once', (update) => update()],
       ['after a timeout', (update) => setTimeout(update, 0)],
-    ])('does not warn for a scalar root whose parent stores what it reported %s', async (_, apply) => {
+    ])('shows what the parent of a scalar root holds when it stores what was reported %s', async (_, apply) => {
+      const log = createParentLog<string>();
       function ScalarParent() {
         const [data, setData] = useState<string | undefined>('');
+        Object.assign(log, { value: data });
         return (
           <Form<string>
             schema={{ type: 'string' }}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => apply(() => setData(event.formData))}
           />
@@ -373,11 +355,11 @@ describe('form data ownership', () => {
         });
       });
 
-      expect(input(container, 'root')).toHaveValue('abc');
-      expect(ignoredFormDataWarnings()).toHaveLength(0);
+      expect(log.value).toMatch(/^[abc]+$/);
+      expect(input(container, 'root')).toHaveValue(log.value);
     });
 
-    it('does not warn for a scalar root whose parent puts back a value it reported before', async () => {
+    it('shows the value a parent of a scalar root puts back, one it reported before', async () => {
       const ref = createFormRef<string>();
       function UndoParent() {
         const [history, setHistory] = useState<(string | undefined)[]>(['']);
@@ -387,7 +369,6 @@ describe('form data ownership', () => {
               ref={ref}
               schema={{ type: 'string' }}
               validator={validator}
-              // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern with an undo
               formData={history[history.length - 1]}
               onChange={(event) => setHistory((previous) => [...previous, event.formData])}
             />
@@ -402,16 +383,15 @@ describe('form data ownership', () => {
 
       await user.click(screen.getByRole('button', { name: 'undo' }));
 
-      expect(ignoredFormDataWarnings()).toHaveLength(0);
+      expect(input(container, 'root')).toHaveValue('a');
     });
 
-    it('does not warn for a formData written inline whose content never changed', async () => {
+    it('keeps the edits under a formData written inline whose content never changes', async () => {
       function Parent({ tick }: { tick: number }) {
         return (
           <Form
             schema={schema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: an inline literal re-created on every render
             formData={{ a: 'seed' }}
             className={`tick-${tick}`}
             onChange={noop}
@@ -424,10 +404,9 @@ describe('form data ownership', () => {
       rerender(<Parent tick={1} />);
 
       expect(input(container, 'root_a')).toHaveValue('seedx');
-      expect(ignoredFormDataWarnings()).toHaveLength(0);
     });
 
-    it('takes a copy of its data a parent stores without a warning', async () => {
+    it('takes a copy of its data a parent stores', async () => {
       const log = createParentLog<Data>();
       const { container } = render(
         <TransformingParent<Data>
@@ -442,10 +421,9 @@ describe('form data ownership', () => {
 
       expect(log.value).toEqual({ a: 'ab' });
       expect(input(container, 'root_a')).toHaveValue('ab');
-      expect(ignoredFormDataWarnings()).toHaveLength(0);
     });
 
-    it('passing the object the form mounted with again changes nothing, and reset() puts it back', async () => {
+    it('passing the object the form mounted with again puts it back', async () => {
       const record: Data = { a: 'record' };
       const ref = createFormRef<Data>();
       function Parent() {
@@ -459,7 +437,6 @@ describe('form data ownership', () => {
               ref={ref}
               schema={schema}
               validator={validator}
-              // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
               formData={data}
               onChange={(event) => setData(event.formData)}
             />
@@ -472,15 +449,12 @@ describe('form data ownership', () => {
 
       await user.click(screen.getByRole('button', { name: 'restore' }));
 
-      expect(input(container, 'root_a')).toHaveValue('recordx');
-      act(() => handleOf(ref).reset());
       expect(input(container, 'root_a')).toHaveValue('record');
     });
 
-    it('a formData that becomes undefined, or another value, leaves the data as it is', () => {
+    it('a formData that becomes undefined leaves the data as it is, and another value replaces it', () => {
       const onChange = vi.fn();
       function Parent({ value }: { value: Data | undefined }) {
-        // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
         return <Form schema={withDefaults} validator={validator} formData={value} onChange={onChange} />;
       }
       const { rerender, container } = render(<Parent value={{ a: 'x' }} />);
@@ -492,7 +466,7 @@ describe('form data ownership', () => {
 
       rerender(<Parent value={{ a: 'y' }} />);
 
-      expect(input(container, 'root_a')).toHaveValue('x');
+      expect(input(container, 'root_a')).toHaveValue('y');
       expect(onChange).not.toHaveBeenCalled();
     });
 
@@ -513,13 +487,7 @@ describe('form data ownership', () => {
 
     it('a null formData is passed, so it is the seed over initialFormData and seeds the schema defaults', () => {
       const { container } = render(
-        <Form
-          schema={withDefaults}
-          validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias winning over `initialFormData`
-          formData={null}
-          initialFormData={{ a: 'seed' }}
-        />,
+        <Form schema={withDefaults} validator={validator} formData={null} initialFormData={{ a: 'seed' }} />,
       );
 
       expect(input(container, 'root_a')).toHaveValue('A');
@@ -537,7 +505,6 @@ describe('form data ownership', () => {
       const ref = createFormRef();
       const onChange = vi.fn();
       const { container } = render(
-        // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: reset() re-reads the latest `formData`
         <Form ref={ref} schema={withDefault} validator={validator} formData={{ a: 'x' }} onChange={onChange} />,
       );
       await act(async () => {
@@ -626,7 +593,6 @@ describe('form data ownership', () => {
               ref={ref}
               schema={withDefault}
               validator={validator}
-              // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
               formData={data}
               onChange={(event) => {
                 reported.push(event.formData);
@@ -684,7 +650,6 @@ describe('form data ownership', () => {
 
       expect(input(container, 'root_a')).toHaveValue('two');
       expect(onChange).not.toHaveBeenCalled();
-      expect(ignoredFormDataWarnings()).toHaveLength(0);
     });
 
     it('takes a fallback value until the record arrives, remounting under a key when it does', () => {
@@ -815,16 +780,14 @@ describe('form data ownership', () => {
       expect(node.querySelector('#root_a')).toHaveValue('edited');
     });
 
-    it('a formData passed later is ignored like a new initialFormData', async () => {
+    it('a formData passed later replaces the data the form owned', async () => {
       const { node, rerender } = createFormComponent({ schema, initialFormData: { a: 'own' } });
       await user.clear(input(node, 'root_a'));
       await user.paste('edited');
 
-      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias passed beside `initialFormData`
       rerender({ schema, initialFormData: { a: 'own' }, formData: { a: 'late' } });
 
-      expect(node.querySelector('#root_a')).toHaveValue('edited');
-      expect(ignoredFormDataWarnings()).toHaveLength(1);
+      expect(node.querySelector('#root_a')).toHaveValue('late');
     });
 
     it('resets to the latest seed and the current schema, and reports it', async () => {
@@ -884,7 +847,6 @@ describe('form data ownership', () => {
           ref={ref}
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={data}
           onChange={(event) => {
             const edit = event.formData;
@@ -947,7 +909,7 @@ describe('form data ownership', () => {
       expect(log.value).toEqual({ a: 'FIRST', b: 'second' });
     });
 
-    it('an edit the parent does not store stays the form’s data, in the same tick and in later ones', async () => {
+    it('an edit the parent does not store stays shown, and the next one builds on it', async () => {
       const ref = createFormRef<Data>();
       const log = createParentLog<Data>();
       const { container } = render(<PolicyParent ref={ref} log={log} accept={(edit) => edit.a !== 'first'} />);
@@ -959,7 +921,6 @@ describe('form data ownership', () => {
         handleOf(ref).setFieldValue('b', 'second');
       });
 
-      // The form owns the edit; a parent that wants it undone sets the field back
       expect(log.reported).toEqual([
         { a: 'first', b: '' },
         { a: 'first', b: 'second' },
@@ -979,7 +940,6 @@ describe('form data ownership', () => {
             ref={ref}
             schema={schema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => {
               reported.push(event.formData);
@@ -1375,7 +1335,6 @@ describe('form data ownership', () => {
             ref={ref}
             schema={schema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => {
               const edit = event.formData;
@@ -1402,7 +1361,7 @@ describe('form data ownership', () => {
       expect(input(container, 'root_b')).toHaveValue('derived');
     });
 
-    it('a derived field a parent adds to the value it stores is not rendered, since the form keeps its data', async () => {
+    it('a derived field a parent adds to the value it stores is rendered', async () => {
       const ref = createFormRef<Data>();
       const reported: Data[] = [];
       function ComposingOnChangeParent() {
@@ -1412,7 +1371,6 @@ describe('form data ownership', () => {
             ref={ref}
             schema={schema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => {
               const edit = event.formData;
@@ -1430,13 +1388,11 @@ describe('form data ownership', () => {
 
       expect(reported).toEqual([{ a: 'first', b: '' }]);
       expect(input(container, 'root_a')).toHaveValue('first');
-      expect(input(container, 'root_b')).toHaveValue('');
-      expect(ignoredFormDataWarnings()).toHaveLength(1);
+      expect(input(container, 'root_b')).toHaveValue('derived');
     });
 
-    it('a new formData object leaves the edits a parent never stored, and a missing handler stops nothing', async () => {
+    it('edits in one tick build on each other, with or without a handler', async () => {
       const ref = createFormRef();
-      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       const { rerender } = render(<Form ref={ref} schema={schema} validator={validator} formData={{ a: '' }} />);
       await act(async () => {
         handleOf(ref).setFieldValue('a', 'x');
@@ -1444,7 +1400,6 @@ describe('form data ownership', () => {
       });
       expect(handleOf(ref).getFormData()).toEqual({ a: 'x', b: 'y' });
       const onChange = vi.fn();
-      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       rerender(<Form ref={ref} schema={schema} validator={validator} formData={{ a: '' }} onChange={onChange} />);
 
       await act(async () => {
@@ -1476,7 +1431,7 @@ describe('form data ownership', () => {
     const bothSeedsWarnings = () =>
       warnings.consoleSpy.mock.calls.filter(([message]) => String(message).includes('`initialFormData` is ignored'));
 
-    it('warns once, naming the seed that won, when both formData and initialFormData are passed', () => {
+    it('warns once, naming the prop that won, when both formData and initialFormData are passed', () => {
       const ref = createFormRef<Data>();
       function Parent({ tick }: { tick: number }) {
         return (
@@ -1484,7 +1439,6 @@ describe('form data ownership', () => {
             ref={ref}
             schema={schema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias taking over initialFormData
             formData={{ a: 'formData' }}
             initialFormData={{ a: 'initialFormData' }}
             className={`tick-${tick}`}
@@ -1641,7 +1595,7 @@ describe('form data ownership', () => {
       },
     };
 
-    it('a oneOf switch is shown whatever the parent stores', async () => {
+    it('a oneOf switch is shown under a parent that stores nothing', async () => {
       const log = createParentLog<{ status: { by?: string; reason?: string } }>();
       const { container } = render(
         <ListeningParent schema={oneOfSchema} initialValue={{ status: { by: 'me' } }} log={log} />,
@@ -1652,7 +1606,8 @@ describe('form data ownership', () => {
 
       expect(log.reported).toHaveLength(1);
       expect(select).toHaveValue('1');
-      expect(input(container, 'root_status_reason')).toHaveValue('');
+      expect(container.querySelector('#root_status_by')).toBeNull();
+      expect(container.querySelector('#root_status_reason')).toBeInTheDocument();
     });
 
     it('a oneOf switch that transformChange rewrites checks the chosen option without the stubs of its additional keys', async () => {
@@ -1716,7 +1671,7 @@ describe('form data ownership', () => {
       expect(select).toHaveValue('1');
     });
 
-    it('an array add and remove are shown whatever the parent stores', async () => {
+    it('an array add and remove are shown under a parent that stores nothing', async () => {
       const arraySchema: RJSFSchema = { type: 'array', items: { type: 'string' } };
       const log = createParentLog<string[]>();
       const { container } = render(<ListeningParent schema={arraySchema} initialValue={['one', 'two']} log={log} />);
@@ -1733,7 +1688,7 @@ describe('form data ownership', () => {
       ]);
     });
 
-    it('an additional property rename is shown whatever the parent stores', async () => {
+    it('an additional property rename is shown under a parent that stores nothing', async () => {
       const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
       const log = createParentLog<Record<string, string>>();
       const { container } = render(
@@ -1751,6 +1706,50 @@ describe('form data ownership', () => {
       expect(container.querySelector('#root_first')).toBeNull();
     });
 
+    it.each([
+      [
+        'renamed',
+        async (container: HTMLElement) => {
+          const keyInput = input(container, 'root_first__key');
+          await user.clear(keyInput);
+          await user.type(keyInput, 'renamed');
+          await user.tab();
+        },
+        ['root_renamed__key', 'root_second__key', 'root_first__key'],
+      ],
+      [
+        'removed',
+        async (container: HTMLElement) => {
+          await user.click(elementOf(container, '.rjsf-object-property-remove'));
+        },
+        ['root_second__key', 'root_first__key'],
+      ],
+    ] as const)('a name the parent puts back after its property was %s renders last', async (_, change, expected) => {
+      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+      function Parent() {
+        const [data, setData] = useState<Record<string, string>>({ first: 'one', second: 'two' });
+        return (
+          <>
+            <Form
+              schema={objectSchema}
+              validator={validator}
+              formData={data}
+              onChange={(event) => setData(event.formData)}
+            />
+            <button type='button' onClick={() => setData((held) => ({ first: 'back', ...held }))}>
+              put back
+            </button>
+          </>
+        );
+      }
+      const { container } = render(<Parent />);
+      await change(container);
+
+      await user.click(screen.getByRole('button', { name: 'put back' }));
+
+      expect([...container.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual(expected);
+    });
+
     it('an additional property the parent set back and the user adds again renders once', async () => {
       const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
       const ref = createFormRef<Record<string, string>>();
@@ -1762,7 +1761,6 @@ describe('form data ownership', () => {
             ref={ref}
             schema={objectSchema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => {
               if (isStoring) {
@@ -2412,7 +2410,6 @@ describe('a throwing callback a field reports from an Effect', () => {
   });
 });
 
-// oxlint-disable typescript/no-deprecated -- the warnings are about the deprecated `formData` alias
 describe("the form's own development warnings", () => {
   const warnings = setupConsoleWarnSuppression();
   // React reports each error a boundary catches through `console.error`
@@ -2423,12 +2420,38 @@ describe("the form's own development warnings", () => {
     rerender(<Form<Data> schema={schema} validator={validator} formData={{ a: 'b' }} initialFormData={{}} />);
 
     expect(warnings.consoleSpy.mock.calls).toEqual([
-      [expect.stringMatching(/^Form "root": `formData` changed after the form mounted.* \[form-data-ignored\]$/)],
       [
-        'Form "root": `formData` and `initialFormData` were both passed. `formData` seeds the form and ' +
-          '`initialFormData` is ignored. Pass `initialFormData` alone. [form-data-both-seeds]',
+        'Form "root": `formData` and `initialFormData` were both passed. `formData` is the form\'s data and ' +
+          '`initialFormData` is ignored. Pass one of them. [form-data-both-seeds]',
       ],
     ]);
+  });
+
+  it.each([
+    ['is passed formData after none', undefined, { a: 'b' }, 'was passed after a render that passed none'],
+    ['is passed no formData after one', { a: 'a' }, undefined, 'became `undefined`'],
+  ])('warn once when a form %s, however often it changes again', (_, first, second, message) => {
+    const element = (formData: Data | undefined) => (
+      <Form<Data> schema={schema} validator={validator} formData={formData} />
+    );
+    const { rerender } = render(element(first));
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
+
+    rerender(element(second));
+    rerender(element(first));
+    rerender(element(second));
+
+    expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
+    expect(warnings.consoleSpy.mock.calls[0][0]).toContain(message);
+    expect(warnings.consoleSpy.mock.calls[0][0]).toContain('[form-data-ownership-changed]');
+  });
+
+  it('give no warning of a change when formData goes between null and a value', () => {
+    const { rerender } = render(<Form<Data | null> schema={schema} validator={validator} formData={null} />);
+
+    rerender(<Form<Data | null> schema={schema} validator={validator} formData={{ a: 'a' }} />);
+
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
   });
 
   it('are given once for each form on the page, named by its id or else its idPrefix', () => {
@@ -2450,21 +2473,16 @@ describe("the form's own development warnings", () => {
   });
 
   it('are given again by a form remounted with a key, under the same name', () => {
-    const ignored = () =>
-      warnings.consoleSpy.mock.calls.filter(([message]) =>
-        String(message).includes('`formData` changed after the form mounted'),
-      );
     const view = (key: string, data: Data) => (
-      <Form<Data> key={key} schema={schema} validator={validator} formData={data} />
+      <Form<Data> key={key} schema={schema} validator={validator} formData={data} initialFormData={{}} />
     );
     const { rerender } = render(view('1', { a: 'a' }));
     rerender(view('1', { a: 'b' }));
-    rerender(view('1', { a: 'c' }));
-    expect(ignored()).toHaveLength(1);
+    expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
 
+    rerender(view('2', { a: 'c' }));
     rerender(view('2', { a: 'd' }));
-    rerender(view('2', { a: 'e' }));
-    expect(ignored()).toHaveLength(2);
+    expect(warnings.consoleSpy).toHaveBeenCalledTimes(2);
   });
 
   it('throw, for a boundary to catch, when throwOn selects migration warnings', () => {
@@ -2478,19 +2496,4 @@ describe("the form's own development warnings", () => {
     expect(screen.getByText('Fallback')).toBeInTheDocument();
     expect(warnings.consoleSpy).not.toHaveBeenCalled();
   });
-
-  it('throw for a formData ignored after mount when throwOn selects its ID', () => {
-    setWarningOptions({ throwOn: ['form-data-ignored'] });
-    const inBoundary = (data: Data) => (
-      <Boundary>
-        <Form<Data> schema={schema} validator={validator} formData={data} />
-      </Boundary>
-    );
-    const { rerender } = render(inBoundary({ a: 'a' }));
-    rerender(inBoundary({ a: 'b' }));
-
-    expect(screen.getByText('Fallback')).toBeInTheDocument();
-    expect(warnings.consoleSpy).not.toHaveBeenCalled();
-  });
 });
-// oxlint-enable typescript/no-deprecated

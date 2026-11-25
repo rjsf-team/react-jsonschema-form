@@ -78,14 +78,10 @@ export interface FormProps<
   children?: ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<Uninferred<T>, S, F>;
-  /** Another name for `initialFormData`, taken over it when both are passed: the seed of the form's data, read when
-   * the form mounts and when `reset()` is called. It is only a seed: the form owns its data after that, so passing back
-   * what `onChange` reported changes nothing, and passing another value, such as a record that arrives after mount, is
-   * ignored, with a warning in development only. To show other data, remount the form with a `key`, or call
-   * `setFieldValue('', data)` on its ref.
-   *
-   * @deprecated Use `initialFormData`, which this is another name for. The form reads it only on mount and on
-   * `reset()`, which the name `formData` hides by reading as a controlled value.
+  /** The form's data: whenever another value is passed, the form shows it, filled in with the schema's defaults. An
+   * edit is shown as it is made and reported through `onChange`, and passing the value passed before, or a copy of
+   * it, leaves the edit shown; `transformChange` is what refuses one. Taken over `initialFormData` when both are
+   * passed.
    */
   formData?: T;
   /** The seed of the form's data, like `defaultValue` on an `<input>`: read when the form mounts and when `reset()` is
@@ -362,6 +358,18 @@ export interface FormState<
   retrievedSchema: S;
   /** The form's option selections and cycle expansions, see `createUiState()` */
   uiState: UiState;
+  /** The `formData` prop the data was last derived from, and the data that derivation gave. An operation leaves both
+   * alone, so data that is no longer `data` holds edits the parent has yet to pass back
+   */
+  controlled?: {
+    from: T;
+    data: T | undefined;
+    /** The latest values the form has held as its data since, which the model adds as it commits each. One of them
+     * passed later, or a copy of it, is an edit the parent stored late, not news: the form holds the edits made
+     * after it
+     */
+    reported: unknown[];
+  };
   /** Flag indicating whether the initial form defaults have been generated */
   initialDefaultsGenerated: boolean;
   /** The registry (re)computed only when props changed */
@@ -521,12 +529,11 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   // Each commit tells the model the props and the state it rendered, which operations start from, through the
   // `Handoff` rendered below; the attachment is the `Attachment` after it
   const handOff = () => model.committed(props, state, published);
-  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   const { formData: formDataProp, initialFormData } = props;
   useEffect(() => {
     if (isDevelopment) {
-      model.warnIfFormDataIgnored(formDataProp);
       model.warnIfBothSeedsPassed(formDataProp, initialFormData);
+      model.warnIfOwnershipChanged(formDataProp);
     }
   }, [model, formDataProp, initialFormData]);
   useImperativeHandle(ref, () => model.handle, [model]);
