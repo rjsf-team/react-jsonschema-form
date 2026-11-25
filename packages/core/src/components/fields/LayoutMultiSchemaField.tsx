@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
+  enumOptionsIsDisabled,
   getByPath,
   getDiscriminatorFieldFromSchema,
   setByPath,
@@ -111,7 +112,13 @@ export default function LayoutMultiSchemaField<
   // An option a merge of lists built is named by each option it was built from, as `MultiSchemaField` names it. The
   // name is its entry's `ui:title`, read at its position in the schema before a `ui:enumOrder` reorders the list
   const labelledBy = useMemo(() => {
-    const titles = renderedOptionTitles<T, S, F>(uiSchema, schema, schemaUtils.getRootSchema(), translateString);
+    const titles = renderedOptionTitles<T, S, F>(
+      uiSchema,
+      schema,
+      schemaUtils.getRootSchema(),
+      translateString,
+      uiSchemaDefinitions,
+    );
     const entries = titles?.some((title) => title !== undefined)
       ? titles.map((title, index): UiSchema<T, S, F> => {
           const entry: UiSchema<T, S, F> = optionsUiSchema?.[index] ?? {};
@@ -123,7 +130,7 @@ export default function LayoutMultiSchemaField<
     }
     const base: UiSchema<T, S, F> = uiSchema ?? {};
     return { ...base, [keyword]: entries };
-  }, [uiSchema, schema, schemaUtils, translateString, optionsUiSchema, keyword]);
+  }, [uiSchema, schema, schemaUtils, translateString, uiSchemaDefinitions, optionsUiSchema, keyword]);
   const enumOptions = useMemo(
     () => computeEnumOptions(schema, schemaUtils, labelledBy, formData),
     [schema, schemaUtils, labelledBy, formData],
@@ -152,20 +159,37 @@ export default function LayoutMultiSchemaField<
     ...uiOptions
   } = allUiOptions;
   const selectedOption = getByPath(formData, selectorField);
+  // Where two options share a selector value, the widget offers each by its index, since the value can't tell which
+  // was picked
+  const selectorValues = enumOptions.map(({ value }) => value);
+  const byIndex = selectorValues.some((value, at) => selectorValues.indexOf(value) !== at);
+  // The option the selector value names, the form's pick where options a merge of lists built from the same option
+  // share that value. Offered by index, options that don't pin the selector are named by the form's pick alone
+  const named = getSelectedOptionIndex<S>(enumOptions, selectorField, selectedOption, (indices) =>
+    indices.includes(cellsOption) ? cellsOption : indices[0],
+  );
+  const shownOptionIndex = byIndex && named < 0 ? cellsOption : named;
   const { Widget } = resolveSelectorWidget<T, S, F>(schema, firstOption, selectorField, allUiOptions, widgets);
 
   /** Callback function that updates the selected option and adjusts the form data based on the structure of the new
    * option, calling the `onChange` callback with the adjusted formData.
    *
    * @param opt - If the option is undefined, we are going to clear the selection otherwise we
-   *      will use it as the index of the new option to select
+   *      will use it as the selector value of the new option to select, or as its index where the widget offers
+   *      options by index
    */
   const onOptionChange = (opt?: unknown) => {
     if (disabled || readonly) {
       return;
     }
-    const newOptionIndex = getSelectedOptionIndex<S>(enumOptions, selectorField, opt);
-    const oldOptionIndex = getSelectedOptionIndex<S>(enumOptions, selectorField, selectedOption);
+    let newOptionIndex = -1;
+    if (!byIndex) {
+      newOptionIndex = getSelectedOptionIndex<S>(enumOptions, selectorField, opt);
+    } else if (typeof opt === 'number') {
+      newOptionIndex = opt;
+    }
+    const selectorValue = byIndex ? enumOptions[newOptionIndex]?.value : opt;
+    const oldOptionIndex = shownOptionIndex;
     const newOption = enumOptions[newOptionIndex]?.schema;
     const oldOption = enumOptions[oldOptionIndex]?.schema;
 
@@ -185,7 +209,7 @@ export default function LayoutMultiSchemaField<
       selectorField,
     });
     if (switched.formData) {
-      setByPath(switched.formData, selectorField, opt);
+      setByPath(switched.formData, selectorField, selectorValue);
     }
     // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to
     selectOption(newOptionIndex);
@@ -219,7 +243,26 @@ export default function LayoutMultiSchemaField<
   };
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
-  const widgetOptions = { enumOptions, ...uiOptions };
+  const widgetOptions = byIndex
+    ? {
+        ...uiOptions,
+        enumOptions: enumOptions.map((option, index) => ({ ...option, value: index })),
+        // `ui:enumDisabled` names selector values, so each option holding one is disabled by its index.
+        // shortcut: `ui:optgroups` still names selector values, which match no index; map it too if one is used here
+        enumDisabled: selectorValues.flatMap((value, index) =>
+          enumOptionsIsDisabled(value, uiOptions.enumDisabled) ? [index] : [],
+        ),
+      }
+    : { enumOptions, ...uiOptions };
+  let widgetValue = selectedOption;
+  // The form's `onBlur`/`onFocus` are handed the selector value, as where the widget offers the values themselves
+  let handleWidgetBlur = handleBlur;
+  let handleWidgetFocus = onFocus;
+  if (byIndex) {
+    widgetValue = shownOptionIndex >= 0 ? shownOptionIndex : undefined;
+    handleWidgetBlur = (blurId, index) => handleBlur(blurId, enumOptions[Number(index)]?.value);
+    handleWidgetFocus = (focusId, index) => onFocus(focusId, enumOptions[Number(index)]?.value);
+  }
 
   return (
     <Widget
@@ -240,9 +283,9 @@ export default function LayoutMultiSchemaField<
       errorSchema={errorSchema}
       placeholder={placeholder}
       onChange={onOptionChange}
-      onBlur={handleBlur}
-      onFocus={onFocus}
-      value={selectedOption}
+      onBlur={handleWidgetBlur}
+      onFocus={handleWidgetFocus}
+      value={widgetValue}
       options={widgetOptions}
       htmlName={fieldPathToName(fieldPath, registry.globalFormOptions)}
     />

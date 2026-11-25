@@ -2011,6 +2011,88 @@ describe('option selection as form state', () => {
     expect([...select.options].map(({ text }) => text)).toEqual(['A, C', 'A, D', 'B, C', 'B, D']);
   });
 
+  it("labels each pair an allOf list merges with the field's own $ref options by their ui:definitions titles (#5930)", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: {
+        A: { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+        B: { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+      },
+      properties: {
+        p: {
+          oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }],
+          allOf: [
+            {
+              oneOf: [
+                { title: 'C', properties: { c: { type: 'string' } } },
+                { title: 'D', properties: { d: { type: 'string' } } },
+              ],
+            },
+          ],
+        },
+      },
+    };
+    const uiSchema = { 'ui:definitions': { '#/definitions/A': { 'ui:title': 'Alpha' } } };
+    const { node } = createFormComponent({ schema, uiSchema });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual(['Alpha, C', 'Alpha, D', 'B, C', 'B, D']);
+  });
+
+  // Otherwise every pair built from the titled option reads alike, as "A", "A", "B", "B"
+  it("labels each pair of a then's list with the field's own by an untitled option's place in its list (#5930)", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { a: { type: 'string' } } },
+            { title: 'B', properties: { b: { type: 'string' } } },
+          ],
+          if: true,
+          then: { oneOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }] },
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual([
+      'A, Option 1',
+      'A, Option 2',
+      'B, Option 1',
+      'B, Option 2',
+    ]);
+  });
+
+  // Merged, A×X and A×Y would both pin `kind: 'a'`, so the discriminator would always show A×X
+  it("offers a then's list in place of the field's own where a discriminator couldn't tell the pairs apart (#5930)", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          type: 'object',
+          discriminator: { propertyName: 'kind' },
+          oneOf: [
+            { title: 'A', properties: { kind: { const: 'a' }, aa: { type: 'string' } }, required: ['kind'] },
+            { title: 'B', properties: { kind: { const: 'b' }, bb: { type: 'string' } }, required: ['kind'] },
+          ],
+          if: true,
+          then: {
+            oneOf: [
+              { title: 'X', properties: { x: { type: 'string' } }, required: ['x'] },
+              { title: 'Y', properties: { y: { type: 'string' } }, required: ['y'] },
+            ],
+          },
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema, initialFormData: { p: { kind: 'a', y: 'yy' } } });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual(['X', 'Y']);
+    expect(getSelectedOptionValue(select)).toBe('Y');
+    expect(node.querySelector('#root_p_y')).toHaveValue('yy');
+  });
+
   // The grid's selector writes the selector property, whose value each option of the rebuilt list built from the same
   // written option shares, so switching to B picks B×C, which reads B's entry
   it('labels and switches the options of a LayoutMultiSchemaField by the uiSchema entry of the written option each was built from (#5930)', async () => {

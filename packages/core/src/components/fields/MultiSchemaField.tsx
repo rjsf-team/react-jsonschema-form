@@ -362,8 +362,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // An option a merge of lists built is named by each option it was built from, so two built from the same option of
   // the field's own list read apart
   const optionTitles = useMemo(
-    () => renderedOptionTitles<T, S, F>(uiSchema, schema, rootSchema, translateString),
-    [uiSchema, schema, rootSchema, translateString],
+    () => renderedOptionTitles<T, S, F>(uiSchema, schema, rootSchema, translateString, uiSchemaDefinitions),
+    [uiSchema, schema, rootSchema, translateString, uiSchemaDefinitions],
   );
   const enumOptions = options.map((opt, index) => {
     const { title: uiTitle } = getUiOptions<T, S, F>(optionsUiSchema[index]);

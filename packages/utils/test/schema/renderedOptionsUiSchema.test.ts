@@ -195,23 +195,88 @@ describe('renderedOptionTitles()', () => {
     expect(titlesOf(field)).toEqual(['A, C', 'A, D', 'Own B, C', 'Own B, D']);
   });
 
-  it('names no option by a $ref that resolves to nothing', () => {
+  // `resolveUiSchema()` doesn't merge the entry under a field whose lists a merge rebuilds, as `MultiSchemaField` does
+  it("titles the field's option written as a $ref by the ui:title its ui:definitions entry gives, under its entry's own", () => {
+    const field: RJSFSchema = {
+      type: 'object',
+      definitions: { A: titled('A', A), B: titled('B', B) },
+      oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }],
+      allOf: [{ oneOf: other }],
+    };
+    const definitions = {
+      '#/definitions/A': { 'ui:title': 'Alpha' },
+      '#/definitions/B': { 'ui:title': 'Beta' },
+    };
+    const ui: UiSchema = { oneOf: [{}, { 'ui:title': 'Own B' }] };
+    expect(
+      renderedOptionTitles(
+        ui,
+        retrieveSchema({ validator: testValidator }, field, field),
+        field,
+        englishStringTranslator,
+        definitions,
+      ),
+    ).toEqual(['Alpha, C', 'Alpha, D', 'Own B, C', 'Own B, D']);
+  });
+
+  it('names an option by its place in its list where its $ref resolves to nothing', () => {
     const field: RJSFSchema = {
       type: 'object',
       definitions: { A: titled('A', A) },
       oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/missing' }],
       allOf: [{ oneOf: other }],
     };
-    expect(titlesOf(field)).toEqual(['A, C', 'A, D', undefined, undefined]);
+    expect(titlesOf(field)).toEqual(['A, C', 'A, D', 'Option 2, C', 'Option 2, D']);
+  });
+
+  // Otherwise every pair built from the titled option reads alike, as "A", "A", "B", "B"
+  it.each<[string, (options: RJSFSchema[]) => RJSFSchema]>([
+    ['an allOf entry', (options) => ({ allOf: [{ oneOf: options }] })],
+    ['a then', (options) => ({ if: true, then: { oneOf: options } })],
+  ])("names an untitled option by its place in its list, where %s's list rebuilds it", (_, rest) => {
+    expect(titlesOf({ type: 'object', oneOf: own, ...rest([C, D]) })).toEqual([
+      'A, Option 1',
+      'A, Option 2',
+      'B, Option 1',
+      'B, Option 2',
+    ]);
+    expect(titlesOf({ type: 'object', oneOf: [A, B], ...rest(other) })).toEqual([
+      'Option 1, C',
+      'Option 1, D',
+      'Option 2, C',
+      'Option 2, D',
+    ]);
+  });
+
+  it('numbers a true option of a then by its place in the order the merge took it', () => {
+    const field: RJSFSchema = { type: 'object', oneOf: own, if: true, then: { oneOf: [true, D] } };
+    expect(titlesOf(field)).toEqual(['A, Option 1', 'A, Option 2', 'B, Option 1', 'B, Option 2']);
+  });
+
+  // A×C is left out, so the merge takes D before C, the order an option outside the root is still numbered in
+  it('numbers an untitled option by its place in its list where a pair built from it is left out, inside the root and outside it', () => {
+    const field: RJSFSchema = {
+      type: 'object',
+      oneOf: [titled('A', { properties: { k: { const: 1 } } }), titled('B', B)],
+      if: true,
+      then: { oneOf: [{ properties: { k: { const: 2 } } }, D] },
+    };
+    expect(titlesOf(field)).toEqual(['A, Option 2', 'B, Option 1', 'B, Option 2']);
+    const root: RJSFSchema = { type: 'object' };
+    const view = retrieveSchema({ validator: testValidator }, field, root);
+    expect(renderedOptionTitles(undefined, view, root, englishStringTranslator)).toEqual([
+      'A, Option 1',
+      'B, Option 2',
+      'B, Option 1',
+    ]);
   });
 
   it('titles none of an option built from options naming no two names', () => {
-    const field: RJSFSchema = {
-      type: 'object',
-      oneOf: [titled('A', A), B, titled('', { properties: { e: { type: 'string' } } })],
-      allOf: [{ oneOf: [titled('A', C), D] }],
-    };
-    expect(titlesOf(field)).toEqual([undefined, undefined, undefined, undefined, undefined, undefined]);
+    const untitled = titled('', { properties: { e: { type: 'string' } } });
+    expect(titlesOf({ type: 'object', oneOf: [titled('A', A)], allOf: [{ oneOf: [titled('A', C)] }] })).toEqual([
+      undefined,
+    ]);
+    expect(titlesOf({ type: 'object', oneOf: [B, untitled], allOf: [{ oneOf: [D] }] })).toEqual([undefined, undefined]);
   });
 
   it('titles none of an option no merge built', () => {

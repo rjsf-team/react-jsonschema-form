@@ -690,6 +690,30 @@ function pairConflicts(left: object, right: object): boolean {
   );
 }
 
+/** Returns whether two of the `options` a `schema` naming a `discriminator` offers pin its property to a value in
+ * common, its `const` or else one of its `enum`, or both by neither, so the discriminator, which picks the first option
+ * holding the data's value, can't tell them apart for that value. shortcut: two options pinning it by neither count as
+ * alike even where neither declares the property, which the validator tells apart, since a pin through a `$ref` or a
+ * `pattern` reads as neither too; upgrade by reading the declarations through `declaredProperties()` if such a field
+ * needs its merged options
+ */
+function sharesDiscriminator(schema: object, options: readonly unknown[]): boolean {
+  const name: unknown = getByPath(schema, DISCRIMINATOR_PATH);
+  if (typeof name !== 'string') {
+    return false;
+  }
+  const pins = options.map((option) => {
+    const [value, values] = [CONST_KEY, ENUM_KEY].map((keyword) => getByPath(option, [PROPERTIES_KEY, name, keyword]));
+    if (value !== undefined) {
+      return [value];
+    }
+    return Array.isArray(values) ? values : undefined;
+  });
+  return pins.some((pin, at) =>
+    pins.slice(0, at).some((other) => (pin && other ? pin.some((one) => !outsideEnum(one, other)) : pin === other)),
+  );
+}
+
 /** Returns whether `values` is an `enum` leaving out `value`, a `const` */
 function outsideEnum(value: unknown, values: unknown): boolean {
   return value !== undefined && Array.isArray(values) && !values.some((one) => deepEquals(one, value));
@@ -1052,7 +1076,9 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
    * meets a list the branch holds and one the part holds under the same keyword alike, so the field offers each option
    * of the part's merged with each of the branch's, see `branchPair()`, where the branch's list would otherwise
    * replace the part's. A pair equal to one already kept is kept too, since the branch's annotations can make pairs
-   * built from options differing only in theirs equal, which would leave one of them unoffered. A list the plan chose an option of stays as the merge leaves it, since the fold tells the lists
+   * built from options differing only in theirs equal, which would leave one of them unoffered. The branch's list
+   * replaces the part's where a `discriminator` couldn't tell two merged options apart, see `sharesDiscriminator()`, since
+   * the field would only ever show the first. A list the plan chose an option of stays as the merge leaves it, since the fold tells the lists
    * it chose from by the list. shortcut: under a `customMergeAllOf` the branch's list replaces the part's, since that
    * merge reads its first entry as winning where the branch's annotations win; upgrade if such a field needs both lists
    * offered
@@ -1071,7 +1097,13 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         !this.choices.some(({ list, selected }) => selected !== undefined && (list === own || list === other))
           ? recorded(mergeOptionLists(own, [other], branchPair, false))
           : undefined;
-      if (options !== undefined) {
+      if (
+        options !== undefined &&
+        !sharesDiscriminator(
+          merged.schema,
+          options.map(({ option }) => option),
+        )
+      ) {
         Reflect.set(
           merged.schema,
           keyword,

@@ -116,7 +116,9 @@ export const TranslatableString = {
   // Strings with replaceable parameters
   /** Unknown field type reason, where %1 will be replaced with the type as provided by SchemaField */
   UnknownFieldType: 'Unknown field type %1',
-  /** Option prefix, where %1 will be replaced with the option index as provided by MultiSchemaField */
+  /** Option prefix, where %1 will be replaced with the option index as provided by MultiSchemaField, or with an untitled
+   * option's place in its list as provided by `renderedOptionTitles()`
+   */
   OptionPrefix: 'Option %1',
   /** Option prefix, where %1 and %2 will be replaced by the schema title and option index, respectively as provided by
    * MultiSchemaField

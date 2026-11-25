@@ -7,6 +7,7 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
+import { definitionRef, mergeOptionDefinitions } from '../resolveUiSchema.ts';
 import type {
   FieldPathList,
   FormContextType,
@@ -230,14 +231,17 @@ function definitionTitle<S extends StrictRJSFSchema>(source: S, rootSchema: S): 
  * merge of lists built: the names of the options it was built from, each named once, in the order they were merged,
  * joined pairwise by `translateString`'s `TranslatableString.MergedOptionTitle`, where at least two differ. The option
  * of the field's own list it was built from is named by its uiSchema entry's title first, see
- * `renderedOptionsUiSchema()`, and each other option by its `title`. An option built from one, or from options naming
- * no two names, has none, and is labelled as any other option is, as is one whose entry names it where the entries
+ * `renderedOptionsUiSchema()`, and each other option by its `title`. Where one of them is named, an untitled one is
+ * named by its place in its list, as `TranslatableString.OptionPrefix` gives it. An option built from one, or from
+ * options naming no two names, has none, and is labelled as any other option is, as is one whose entry names it where the entries
  * describe the options at their positions, as for a field whose lists sit only in `allOf` entries
  *
  * @param uiSchema - The field's uiSchema
  * @param view - The field's schema as `retrieveSchema()` handed it out
  * @param rootSchema - The root schema
  * @param translateString - The registry's string translator
+ * @param [uiSchemaDefinitions] - The registry's `ui:definitions`, whose entry for an option of the field's own list
+ *   written as a `$ref` titles it where its `uiSchema` entry gives no title, as `mergeOptionDefinitions()` merges it
  * @returns - The title of each option, or undefined where `view` offers none
  */
 export function renderedOptionTitles<
@@ -249,6 +253,7 @@ export function renderedOptionTitles<
   view: S,
   rootSchema: S,
   translateString: Registry<T, S, F>['translateString'],
+  uiSchemaDefinitions?: Registry<T, S, F>['uiSchemaDefinitions'],
 ): (string | undefined)[] | undefined {
   const trace = writtenTrace<S>(view, rootSchema);
   if (!trace) {
@@ -269,17 +274,41 @@ export function renderedOptionTitles<
       return undefined;
     }
     const writtenOption = writtenAt === undefined ? undefined : written?.[writtenAt];
-    const names = [
-      ...new Set(
-        sources.flatMap((source) => {
-          const name =
-            writtenAt !== undefined && source === writtenOption
-              ? optionName(source, rootSchema, entries[writtenAt])
-              : optionName(source, rootSchema);
-          return name === undefined ? [] : [name];
-        }),
-      ),
-    ];
+    const own = sources.map((source) =>
+      writtenAt !== undefined && source === writtenOption
+        ? optionName(
+            source,
+            rootSchema,
+            mergeOptionDefinitions<T, S, F>([definitionRef(source)], [entries[writtenAt]], {
+              rootSchema,
+              uiSchemaDefinitions,
+            })[0],
+          )
+        : optionName(source, rootSchema),
+    );
+    // An untitled option is named by its place in its list where another names the pair, so pairs built from it and
+    // each option of the other list read apart
+    const named = own.some((name) => name !== undefined);
+    // An option is numbered by where the root lists it, since a pair the merge left out shifts the order it took the
+    // options in. shortcut: an option the root doesn't hold is numbered in that order; upgrade if one is mislabelled
+    const placeOf = (slot: number) => {
+      const source = sources[slot];
+      if (source === writtenOption && writtenAt !== undefined) {
+        return writtenAt;
+      }
+      const declared = isSchemaObject<S>(source) ? nodeOfSchema<S>(source, rootSchema) : undefined;
+      const node = declared?.graph.node(declared.node);
+      /* v8 ignore next -- an object the root holds, or adopts beside it, is an object node */
+      const place = /\/(?:any|one)Of\/(\d+)$/.exec(node?.kind === 'schema' ? node.pointer : '');
+      return place
+        ? Number(place[1])
+        : [...new Set<unknown>(built.map((each) => each[slot]).filter((each) => each !== undefined))].indexOf(source);
+    };
+    const nameAt = (name: string | undefined, slot: number) =>
+      name !== undefined || !named
+        ? name
+        : translateString(TranslatableString.OptionPrefix, [String(placeOf(slot) + 1)]);
+    const names = [...new Set(own.map(nameAt).filter((name) => name !== undefined))];
     return names.length > 1
       ? names.reduce((joined, next) => translateString(TranslatableString.MergedOptionTitle, [joined, next]))
       : undefined;

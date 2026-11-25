@@ -410,6 +410,42 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     ])('offers the options of the field and of %s merged', (_, branch) => {
       expect(retrieved({ type: 'object', oneOf: [A, B], ...branch }).oneOf).toEqual(product);
     });
+    // The discriminator picks the first option pinning the data's value, so it would only ever pick A×C of A×C and A×D
+    it("offers the branch's list in place of the field's own where two pairs would pin its discriminator alike", () => {
+      const kind = (value: string, option: RJSFSchema): RJSFSchema => ({
+        ...option,
+        properties: { kind: { const: value }, ...option.properties },
+      });
+      const discriminated = (then: RJSFSchema[]): RJSFSchema => ({
+        type: 'object',
+        discriminator: { propertyName: 'kind' },
+        oneOf: [kind('a', A), kind('b', B)],
+        if: true,
+        then: { oneOf: then },
+      });
+      expect(retrieved(discriminated([C, D])).oneOf).toEqual([C, D]);
+      // A×C's `enum` holds the `const` A×D pins, so 'a' still picks A×C
+      const sharing = { ...C, properties: { ...C.properties, kind: { enum: ['a', 'b'] } } };
+      expect(retrieved(discriminated([sharing, D])).oneOf).toEqual([sharing, D]);
+      // Each pair the branch's options pin apart keeps its own value, so they stay merged
+      const pinned = [kind('a', C), kind('b', D)];
+      expect(retrieved(discriminated(pinned)).oneOf).toEqual([
+        { properties: { kind: { const: 'a' }, a: { type: 'string' }, c: { type: 'string' } } },
+        { properties: { kind: { const: 'b' }, b: { type: 'string' }, d: { type: 'string' } } },
+      ]);
+      // B×C and A×C share C's `enum`
+      const enumerated = (value: string, option: RJSFSchema): RJSFSchema => ({
+        ...option,
+        properties: { kind: { enum: [value] }, ...option.properties },
+      });
+      const byEnum = [enumerated('a', C), enumerated('b', D)];
+      expect(retrieved({ ...discriminated(byEnum), oneOf: [A, B] }).oneOf).toEqual(byEnum);
+      // A pair pinning nothing is told apart by the rest of its schema, not by the discriminator
+      expect(retrieved({ ...discriminated([C]), oneOf: [kind('a', A), B] }).oneOf).toEqual([
+        { properties: { kind: { const: 'a' }, a: { type: 'string' }, c: { type: 'string' } } },
+        { properties: { b: { type: 'string' }, c: { type: 'string' } } },
+      ]);
+    });
     // A list beside `dependencies` is read as the validator reads it, so the option the data matches is merged in
     it("offers a dependencies schema's list in place of the field's own, which the data chose an option of", () => {
       const schema: RJSFSchema = {
