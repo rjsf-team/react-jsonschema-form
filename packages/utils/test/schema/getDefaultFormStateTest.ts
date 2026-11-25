@@ -11836,6 +11836,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ['a boolean or null', { type: ['boolean', 'null'] }],
         ['a const spelled out as undefined', { type: 'boolean', const: undefined }],
         ['options that are not constants', { type: 'boolean', anyOf: [{ enum: [true] }, { title: 'any' }] }],
+        [
+          'a list of constants inside an option of a list that is not one',
+          { type: ['boolean', 'null'], anyOf: [{ oneOf: [{ const: true }, { const: null }] }, { title: 'any' }] },
+        ],
         ['a not that rules false out', { type: 'boolean', not: { const: false } }],
       ])('starts at false for %s, whose values include it or are not listed', (_, b, behavior) => {
         expect(fill(b, true, behavior)).toEqual({ b: false });

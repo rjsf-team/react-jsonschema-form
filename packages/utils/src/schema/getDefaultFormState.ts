@@ -1821,7 +1821,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             parentConst,
             inheritsDeclared: reachesDefault,
             onHandDown: optionHandDown,
-            fieldListsFalse: () => viewListsFalse<S, F>(context, view, choice.listedConstants),
+            // A list inside an option is no list of the field's, so the field this is an option of keeps the say
+            fieldListsFalse:
+              props.fieldListsFalse ?? (() => viewListsFalse<S, F>(context, view, choice.listedConstants)),
           },
           initialValue,
           adopted?.choice,
