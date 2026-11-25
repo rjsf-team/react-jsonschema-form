@@ -206,7 +206,10 @@ function writtenOf(fill: FieldFill): Written | typeof UNREAD {
     // key its `additionalProperties`, or its `unevaluatedProperties` where it names none, whose `if` the property's
     // retrieved stub holds evaluated away. Taking one the fill doesn't merge would fill the property by itself through
     // a stub that may read otherwise than the fill, as an `allOf` merged into it does
-    const patterns = typeof key === 'string' ? Object.values(getMatchingPatternProperties(parentSchema, key)) : [];
+    const patterns =
+      typeof key === 'string'
+        ? Object.values(getMatchingPatternProperties(parentSchema, key) as Record<string, unknown>)
+        : [];
     const isExtraKey =
       typeof key === 'string' && (childSchema === undefined || hasSchemaMarker(childSchema, ADDITIONAL_PROPERTY_FLAG));
     const mergedIn = isExtraKey && patterns.length === 0 ? [additionalPropertiesKeyword(parentSchema)] : patterns;
