@@ -11812,6 +11812,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ['a oneOf of true', { type: 'boolean', oneOf: [{ const: true }] }, { constAsDefaults: 'never' }],
         ['a const of true', { type: 'boolean', const: true }, { constAsDefaults: 'never' }],
         ['an enum of true beside a oneOf of false and true', { type: 'boolean', enum: [true], oneOf: untitled }],
+        ['an enum of true through allOf', { type: 'boolean', allOf: [{ enum: [true] }] }],
+        ['a const of true through allOf', { type: 'boolean', allOf: [{ const: true }] }, { constAsDefaults: 'never' }],
+        ['a oneOf of true and null through allOf', { type: ['boolean', 'null'], allOf: [{ oneOf: trueOrNull }] }],
+        ['an enum of true in the branch its condition takes', { type: 'boolean', if: true, then: { enum: [true] } }],
+        [
+          'an enum of true beside options that are not constants',
+          { type: 'boolean', enum: [true], anyOf: [{ title: 'a' }, { title: 'b' }] },
+        ],
       ])('is left empty for %s, whose values leave out false', (_, b, behavior) => {
         expect(fill(b, true, behavior)).toEqual({});
       });
@@ -11825,8 +11833,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ['a const of false', { type: 'boolean', const: false }, { constAsDefaults: 'never' }],
         ['a plain boolean', { type: 'boolean' }],
         ['a boolean or null', { type: ['boolean', 'null'] }],
+        ['a const spelled out as undefined', { type: 'boolean', const: undefined }],
+        ['options that are not constants', { type: 'boolean', anyOf: [{ enum: [true] }, { title: 'any' }] }],
+        ['a not that rules false out', { type: 'boolean', not: { const: false } }],
       ])('starts at false for %s, whose values include it or are not listed', (_, b, behavior) => {
         expect(fill(b, true, behavior)).toEqual({ b: false });
+      });
+      it('starts at false for a const that is an Ajv $data reference, which lists no value', () => {
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            {
+              schema: {
+                type: 'object',
+                required: ['b'],
+                properties: { b: { type: 'boolean', const: { $data: '1/other' } }, other: { type: 'string' } },
+              },
+            },
+          ),
+        ).toEqual({ b: false });
       });
     });
     describe('a list of one constant leaves nothing to choose, so it fills (#5944)', () => {

@@ -1537,20 +1537,13 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         { const: 'b', title: 'Second' },
       ],
     };
-    const selectIn = (node: Element) => {
-      const select = elementOf(node, '#root_choice');
-      if (!(select instanceof HTMLSelectElement)) {
-        throw new Error('#root_choice is no select');
-      }
-      return select;
-    };
 
     it.each(['oneOf', 'anyOf'] as const)('mounts an optional %s empty, on its placeholder option', async (keyword) => {
       const { oneOf, ...field } = choice;
       const schema: RJSFSchema = { type: 'object', properties: { choice: { ...field, [keyword]: oneOf } } };
       const { node, onSubmit, getFormData } = createFormComponent({ schema });
 
-      const select = selectIn(node);
+      const select = elementOf(node, '#root_choice', HTMLSelectElement);
       expect(select).toHaveValue('');
       expect([...select.options].map((option) => option.text)).toEqual(['', 'First', 'Second']);
       expect(getFormData()).toEqual({});
@@ -1564,7 +1557,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       const schema: RJSFSchema = { type: 'object', properties: { choice: { ...choice, default: 'b' } } };
       const { node, getFormData } = createFormComponent({ schema });
 
-      const select = selectIn(node);
+      const select = elementOf(node, '#root_choice', HTMLSelectElement);
       expect(getSelectedOptionValue(select)).toBe('Second');
       expect([...select.options].map((option) => option.text)).toEqual(['First', 'Second']);
       expect(getFormData()).toEqual({ choice: 'b' });
@@ -1577,7 +1570,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         defaultFormStateBehavior: { constAsDefaults: 'always' },
       });
 
-      expect(getSelectedOptionValue(selectIn(node))).toBe('First');
+      expect(getSelectedOptionValue(elementOf(node, '#root_choice', HTMLSelectElement))).toBe('First');
       expect(getFormData()).toEqual({ choice: 'a' });
     });
 
@@ -1593,7 +1586,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expect(onError).toHaveBeenCalledTimes(1);
       expect(fieldErrorsById(node)).toEqual({ root_choice: ["must have required property 'Choice'"] });
 
-      await user.selectOptions(selectIn(node), 'Second');
+      await user.selectOptions(elementOf(node, '#root_choice', HTMLSelectElement), 'Second');
       await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { choice: 'b' }, true);
@@ -1737,46 +1730,39 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
           { title: 'B', properties: { kind: { const: 'b' }, other: { type: 'string' } } },
         ],
       };
-      const optionSelect = (node: Element) => {
-        const select = elementOf(node, '#root__oneof_select');
-        if (!(select instanceof HTMLSelectElement)) {
-          throw new Error('#root__oneof_select is no select');
-        }
-        return select;
-      };
 
       it('is empty on mount, after a switch away and back, and after a reset, beside the tag the option fills', async () => {
         const ref = createFormRef();
         const { node, getFormData } = createFormComponent({ schema, ref });
         const mounted = { kind: 'a' };
         expect(getFormData()).toEqual(mounted);
-        expect(selectIn(node)).toHaveValue('');
+        expect(elementOf(node, '#root_choice', HTMLSelectElement)).toHaveValue('');
 
-        await user.selectOptions(optionSelect(node), 'B');
+        await user.selectOptions(elementOf(node, '#root__oneof_select', HTMLSelectElement), 'B');
         expect(getFormData()).toEqual({ kind: 'b' });
-        await user.selectOptions(optionSelect(node), 'A');
+        await user.selectOptions(elementOf(node, '#root__oneof_select', HTMLSelectElement), 'A');
 
         expect(getFormData()).toEqual(mounted);
-        expect(selectIn(node)).toHaveValue('');
+        expect(elementOf(node, '#root_choice', HTMLSelectElement)).toHaveValue('');
 
-        await user.selectOptions(selectIn(node), 'Second');
+        await user.selectOptions(elementOf(node, '#root_choice', HTMLSelectElement), 'Second');
         expect(getFormData()).toEqual({ kind: 'a', choice: 'b' });
         act(() => handleOf(ref).reset());
 
         expect(getFormData()).toEqual(mounted);
-        expect(selectIn(node)).toHaveValue('');
+        expect(elementOf(node, '#root_choice', HTMLSelectElement)).toHaveValue('');
       });
 
       it('is empty after a switch back from an option the user edited', async () => {
         const { node, getFormData } = createFormComponent({ schema });
 
-        await user.selectOptions(optionSelect(node), 'B');
+        await user.selectOptions(elementOf(node, '#root__oneof_select', HTMLSelectElement), 'B');
         await user.type(elementOf(node, '#root_other'), 'v');
         expect(getFormData()).toEqual({ kind: 'b', other: 'v' });
-        await user.selectOptions(optionSelect(node), 'A');
+        await user.selectOptions(elementOf(node, '#root__oneof_select', HTMLSelectElement), 'A');
 
         expect(getFormData()).toEqual({ kind: 'a' });
-        expect(selectIn(node)).toHaveValue('');
+        expect(elementOf(node, '#root_choice', HTMLSelectElement)).toHaveValue('');
       });
     });
   });

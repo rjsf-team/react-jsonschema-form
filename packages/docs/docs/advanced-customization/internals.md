@@ -39,7 +39,7 @@ This are the rules which are used when injecting the defaults:
 - When the value is an object in the form data, the defaults are deeply merged into the form data, using the rules defined here for the deep merge.
 - Then the value is an array in the form data, defaults are only injected in existing array items. No new array items will be created, even if the schema has minItems or additional items defined.
 
-A boolean property that is listed in its parent's `required` array and has no `default` of its own is populated with `false`, unless the values its `enum`, `const` or `oneOf`/`anyOf` of constants lists leave `false` out. You can turn this off using the [`requiredBooleanDefault`](../api-reference/form-props.md#requiredbooleandefault) flag, so that the property stays `undefined` until the user answers it.
+A boolean property that is listed in its parent's `required` array and has no `default` of its own is populated with `false`, unless the values its schema lists leave `false` out, as [`requiredBooleanDefault`](../api-reference/form-props.md#requiredbooleandefault) describes. You can turn this off using the [`requiredBooleanDefault`](../api-reference/form-props.md#requiredbooleandefault) flag, so that the property stays `undefined` until the user answers it.
 
 ### Merging of defaults within the schema
 
