@@ -54,7 +54,6 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
             ref={ref}
             schema={steps[step].schema}
             validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={formData}
             onChange={(event, id) => {
               onChange(event, id);

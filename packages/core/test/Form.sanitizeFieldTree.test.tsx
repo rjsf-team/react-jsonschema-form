@@ -751,7 +751,6 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         <Form<PetData>
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             log.reported.push(event.formData);
@@ -1132,7 +1131,6 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         <Form<SwapData>
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             events.push(event);
@@ -1213,7 +1211,6 @@ describe('sanitize as a diff of the field trees before and after a change', () =
           ref={ref}
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             log?.reported.push(event.formData);
