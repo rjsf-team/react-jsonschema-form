@@ -55,6 +55,7 @@ import {
   setOwn,
   toConstant,
   UI_DEFINITIONS_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
   unsetByPath,
   withoutFieldOptions,
 } from '@rjsf/utils';
@@ -189,17 +190,17 @@ function declarationsOf(link: ShownAbove): readonly unknown[] {
           ? [getItemSchema(schema as StrictRJSFSchema, key)]
           : [];
       }
+      // The fill merges every pattern a key matches into it, declared or extra, and the key's retrieved schema has the
+      // pattern's `$ref` resolved and its `if` evaluated away; taking every pattern's needs no regex
+      const patterns = isObject(schema[PATTERN_PROPERTIES_KEY]) ? Object.values(schema[PATTERN_PROPERTIES_KEY]) : [];
       if (
         isObject(schema.properties) &&
         Object.hasOwn(schema.properties, key as string) &&
         !hasSchemaMarker(schema.properties[key as string], ADDITIONAL_PROPERTY_FLAG)
       ) {
-        return [schema.properties[key as string]];
+        return [schema.properties[key as string], ...patterns];
       }
-      // An extra key is filled by one of these, whose `$ref` its retrieved schema has resolved and its `if` evaluated
-      // away; taking every pattern's needs no regex
-      const patterns = isObject(schema[PATTERN_PROPERTIES_KEY]) ? Object.values(schema[PATTERN_PROPERTIES_KEY]) : [];
-      return [schema[ADDITIONAL_PROPERTIES_KEY], ...patterns];
+      return [schema[ADDITIONAL_PROPERTIES_KEY], schema[UNEVALUATED_PROPERTIES_KEY], ...patterns];
     };
     known = [link.oldRaw, ...(above ? [...above.oldLayers, ...declarationsOf(above)].flatMap(childOf) : [])];
     declarations.set(link, known);
