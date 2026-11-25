@@ -20,7 +20,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 ## @rjsf/utils
 
-- Fix `getFilledDefault()` reading a property's default off its parent's fill, which a `patternProperties`, `additionalProperties` or `unevaluatedProperties` subschema holding an `if` can change, rather than filling the property by itself ([#5924](https://github.com/rjsf-team/react-jsonschema-form/pull/5924))
+- Fix `getFilledDefault()` reading a property's default off its parent's fill, which a `patternProperties` subschema holding an `if`, or for an extra key an `additionalProperties` or `unevaluatedProperties` one, can change, rather than filling the property by itself ([#5924](https://github.com/rjsf-team/react-jsonschema-form/pull/5924))
 
 ## @rjsf/utils
 

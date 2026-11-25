@@ -1,4 +1,13 @@
-import { ALL_OF_KEY, ANY_OF_KEY, DEPENDENCIES_KEY, IF_KEY, ONE_OF_KEY, REF_KEY } from '../constants.ts';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  ALL_OF_KEY,
+  ANY_OF_KEY,
+  DEPENDENCIES_KEY,
+  IF_KEY,
+  ONE_OF_KEY,
+  REF_KEY,
+} from '../constants.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isObject from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import { getByPath } from '../pathUtils.ts';
@@ -26,9 +35,10 @@ import nodeOfSchema from './graph/nodeOfSchema.ts';
  *
  * A field `childFillOf()` handed its fill is read off its parent's fill wherever the parent's fill read the field as
  * the schema it was handed: where its subschema decides nothing from data, with no `if`, `dependencies` or
- * `anyOf`/`oneOf` it reaches through its `$ref`s and `allOf`, nor does any of the parent's `patternProperties`, and
- * the parent's fill wrote it. So one fill of the root serves every field below it that decides nothing from data, and a
- * field that does is filled by itself, with what its parent's fill hands it.
+ * `anyOf`/`oneOf` it reaches through its `$ref`s and `allOf`, nor does any of the parent's `patternProperties`, or for
+ * an extra key the parent's `additionalProperties` or `unevaluatedProperties`, and the parent's fill wrote it. So one
+ * fill of the root serves every field below it that decides nothing from data, and a field that does is filled by
+ * itself, with what its parent's fill hands it.
  *
  * @param context - The `SchemaContext` whose `defaultFormStateBehavior` the defaults are computed under
  * @param schema - The field's schema, already retrieved
@@ -179,9 +189,9 @@ const writtenValues = new KeyedMemo<Written | typeof UNREAD>();
 
 /** What the parent's fill wrote for the field `fill` was made for, where the parent's fill read it as the schema it was
  * handed, `undefined` for a declared property the parent's fill left out. `UNREAD` where `fill` is no child's, the
- * field's subschema or one of the parent's `patternProperties`, `additionalProperties` or `unevaluatedProperties`
- * decides anything from data, or the parent wrote nothing the field's value could be read from, as for an item past its
- * array's default or an extra key its default doesn't name
+ * field's subschema or one of the parent's `patternProperties`, or for an extra key its `additionalProperties` or
+ * `unevaluatedProperties`, decides anything from data, or the parent wrote nothing the field's value could be read
+ * from, as for an item past its array's default or an extra key its default doesn't name
  */
 function writtenOf(fill: FieldFill): Written | typeof UNREAD {
   const origin = origins.get(fill);
@@ -192,10 +202,11 @@ function writtenOf(fill: FieldFill): Written | typeof UNREAD {
     const { context, parentSchema, rootSchema, parentFill, key, childSchema } = origin;
     // The parent's fill merges into a property each `patternProperties` subschema its name matches, and into an extra
     // key its `additionalProperties` or `unevaluatedProperties`, whose `if` the property's retrieved stub holds
-    // evaluated away; taking every one needs no regex
+    // evaluated away; taking every pattern needs no regex. A declared property takes neither of the two
+    const isExtraKey =
+      typeof key === 'string' && (childSchema === undefined || hasSchemaMarker(childSchema, ADDITIONAL_PROPERTY_FLAG));
     const mergedIn = [
-      parentSchema.additionalProperties,
-      parentSchema.unevaluatedProperties,
+      ...(isExtraKey ? [parentSchema.additionalProperties, parentSchema.unevaluatedProperties] : []),
       ...Object.values(parentSchema.patternProperties ?? {}),
     ];
     if ([childSchema, ...mergedIn].some((schema) => readsData(schema, rootSchema))) {

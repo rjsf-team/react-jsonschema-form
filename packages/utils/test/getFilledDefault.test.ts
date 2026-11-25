@@ -778,6 +778,24 @@ describe('getFilledDefault() reads what the fill writes', () => {
     },
   );
 
+  it.each(['additionalProperties', 'unevaluatedProperties'] as const)(
+    "reads a declared property off its parent's fill though the parent's %s reads data",
+    (keyword) => {
+      const root: RJSFSchema = {
+        type: 'object',
+        properties: { c: { allOf: [{ type: 'string' }, { default: 'a' }] } },
+        [keyword]: { if: { minLength: 1 }, then: { default: 'then' } },
+        default: { c: 'p' },
+      };
+      const context: SchemaContext = { validator: answering() };
+      const fill = childFillOf(context, root, root, {}, 'c');
+      expect(getDefaultFormState(context, { schema: root, rootSchema: root })).toEqual({ c: 'p' });
+      expect(
+        getFilledDefault(context, retrieveSchema(context, root.properties!.c as RJSFSchema, root), root, fill),
+      ).toBe('p');
+    },
+  );
+
   it("reads a child an ancestor's const or option default gives a value off its parent's fill", () => {
     const constRoot: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } }, const: { a: 'c' } };
     const constFill = childFillOf(descendantWins, constRoot, constRoot, {}, 'a');
