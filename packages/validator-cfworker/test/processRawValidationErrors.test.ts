@@ -419,6 +419,25 @@ describe('transformRJSFValidationErrors()', () => {
       );
     });
 
+    it('names a property of a $ref target by the title the $ref schema gives it, as the form labels it', () => {
+      const n: RJSFSchema = { title: 'Target N', type: 'string' };
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', properties: { n } }, L: { type: 'array', items: { properties: { n } } } },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/T', properties: { n: { title: 'Own N' } } },
+          b: { $ref: '#/$defs/L', items: { properties: { n: { title: 'Own N' } } } },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { n: 5 }, b: [{ n: 5 }] }, schema);
+      expect(
+        errors.filter((error) => error.name === 'type').map(({ property, title }) => ({ property, title })),
+      ).toEqual([
+        { property: '.a.n', title: 'Own N' },
+        { property: '.b.0.n', title: 'Own N' },
+      ]);
+    });
+
     it('reads a property named properties as a name, not as the keyword', () => {
       const schema: RJSFSchema = {
         type: 'object',

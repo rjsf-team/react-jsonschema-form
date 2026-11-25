@@ -16,13 +16,30 @@ import { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
 import { requireOwnRef, resolveOwnRef } from './schema/retrieveSchema.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
-/** Keywords whose subschemas merging a `$ref` schema with its target combines into one, so a path reads the same
- * schema whichever of the two it indexes. Merging reorders, replaces or moves into `allOf` every other one */
+/** Keywords whose subschemas merging a `$ref` schema with its target combines into one, so the subschema a path reads
+ * under one is the same whichever of the two it indexes. Merging reorders, replaces or moves into `allOf` every other
+ * one, including a list keyword inside a subschema both of them hold */
 const MERGE_COMBINED_KEYS = [PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, ADDITIONAL_PROPERTIES_KEY, 'propertyNames'];
 
 /** Keywords whose subschemas merging joins with the target's, a whole schema or position by position, so the merged
  * schema holds the titles of both. An index after `prefixItems` or a tuple `items` reads the same position either way */
 const MERGE_JOINED_KEYS = [...MERGE_COMBINED_KEYS, ITEMS_KEY, PREFIX_ITEMS_KEY, ADDITIONAL_ITEMS_KEY];
+
+/** Returns whether every keyword along `keys` is one merging joins, so the merged schema holds the subschema they lead
+ * to, joined with the other's, rather than a list merging reorders */
+function readsJoined(keys: string[]): boolean {
+  for (let index = 0; index < keys.length; index++) {
+    const key = keys[index];
+    if (!MERGE_JOINED_KEYS.includes(key)) {
+      return false;
+    }
+    // The key after one is a name, or a position in a tuple, never a keyword
+    if (key === PROPERTIES_KEY || key === PATTERN_PROPERTIES_KEY || /^\d+$/.test(keys[index + 1])) {
+      index += 1;
+    }
+  }
+  return true;
+}
 
 /** Keywords whose value maps names to schemas, so the key after one is a name rather than a keyword */
 const NAME_MAP_KEYS = [
@@ -37,8 +54,10 @@ const NAME_MAP_KEYS = [
 /** Used by the validator packages to find the schema object holding the keyword a validation error reports, when the
  * engine doesn't hand over one that is resolved. The `schemaPath` is read from the `rootSchema` down, following each
  * `$ref` it passes through, whether written into the path as a `$ref` key, whose next key is read from the `$ref`'s
- * target alone, or skipped by it, and the one on the schema it ends at. A `$ref` schema's own keywords are kept over its
- * target's where the two are read merged.
+ * target alone unless the rest of the path runs through keys merging joins alone, such as `properties` or `items`, or
+ * skipped by it, and the one on the schema it ends at. A `$ref` schema's own keywords are kept over its target's where
+ * the two are read merged, so below a skipped `$ref` a list keyword both of them hold, such as an `allOf` inside a
+ * property both declare, indexes the merged list.
  *
  * @param rootSchema - The form's root schema
  * @param schemaPath - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/required`
@@ -48,9 +67,9 @@ const NAME_MAP_KEYS = [
  *        either that schema or its target
  * @returns - The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two
  *          of whose schemas hold its next key, unless it is `properties`, `patternProperties`, `additionalProperties`
- *          or `propertyNames`, so which of them the path indexes can't be told; or `undefined` when the path isn't a
- *          URI fragment, or leads to no schema object, such as the `properties` map holding the property a `false`
- *          schema's path ends at, or through a `$ref` that can't be resolved
+ *          or `propertyNames`, so which of them the path's next key indexes can't be told; or `undefined` when the
+ *          path isn't a URI fragment, or leads to no schema object, such as the `properties` map holding the property a
+ *          `false` schema's path ends at, or through a `$ref` that can't be resolved
  */
 export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSFSchema>(
   rootSchema: S,
@@ -66,12 +85,26 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
     let node: unknown = rootSchema;
     let endsAtNameMap = false;
     const keys = schemaPath.split('/').slice(1, -1).map(decodeSchemaPathKey);
-    for (const [index, key] of keys.entries()) {
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index];
       const hasRef = stringKeyword(node, REF_KEY) !== undefined;
       if (hasRef && key === REF_KEY && index < keys.length - 1) {
         // The keys after a `$ref` the path names index into its target, which merging in the `$ref` schema's own
-        // `allOf`, `oneOf` or `items` would shift
-        node = requireOwnRef<S>(node as S, rootSchema).target;
+        // `allOf` or `oneOf` would shift, there or further down. A path on through keys merging joins alone is read
+        // merged from the first `$ref` of the chain it names, for the titles of every schema along it, unless the merge
+        // failed and moved them into an `allOf`
+        let refs = 1;
+        while (keys[index + refs] === REF_KEY) {
+          refs += 1;
+        }
+        const rest = keys.slice(index + refs);
+        const merged = readsJoined(rest) ? resolveOwnRef<S>(node as S, rootSchema) : undefined;
+        if (merged && Object.hasOwn(merged, rest[0])) {
+          node = merged;
+          index += refs - 1;
+        } else {
+          node = requireOwnRef<S>(node as S, rootSchema).target;
+        }
       } else {
         if (hasRef && skipsRefs && !MERGE_COMBINED_KEYS.includes(key)) {
           // Any two schemas along the chain of `$ref`s holding the key make the path ambiguous

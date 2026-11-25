@@ -43,6 +43,55 @@ describe('getKeywordParentSchema()', () => {
       item.properties!.name,
     );
   });
+  it('reads `properties` or `items` after a `$ref` written into the path merged, with the `$ref` schema’s titles', () => {
+    const n: RJSFSchema = { type: 'string', title: 'Target N' };
+    const schema: RJSFSchema = {
+      $defs: { T: { type: 'object', properties: { n } }, L: { type: 'array', items: { properties: { n } } } },
+      type: 'object',
+      properties: {
+        a: { $ref: '#/$defs/T', properties: { n: { title: 'Own N' } } },
+        b: { $ref: '#/$defs/L', items: { properties: { n: { title: 'Own N' } } } },
+      },
+    };
+    expect(getKeywordParentSchema(schema, '#/properties/a/$ref/properties/n/type')).toEqual({ ...n, title: 'Own N' });
+    expect(getKeywordParentSchema(schema, '#/properties/b/$ref/items/properties/n/type')).toEqual({
+      ...n,
+      title: 'Own N',
+    });
+  });
+  it('reads a list below `properties` after a `$ref` written into the path from its target alone', () => {
+    const branch: RJSFSchema = { properties: { t: { title: 'Target T' } }, required: ['t'] };
+    const schema: RJSFSchema = {
+      $defs: { T: { type: 'object', properties: { n: { allOf: [branch] } } } },
+      type: 'object',
+      properties: {
+        a: { $ref: '#/$defs/T', properties: { n: { allOf: [{ properties: { t: { title: 'Own T' } } }] } } },
+      },
+    };
+    expect(getKeywordParentSchema(schema, '#/properties/a/$ref/properties/n/allOf/0/required')).toBe(branch);
+  });
+  it('reads a tuple position or a chain of `$ref`s written into the path merged, with the first `$ref` schema’s titles', () => {
+    const schema: RJSFSchema = {
+      $defs: {
+        B: { type: 'object', properties: { n: { type: 'string', title: 'B N' } } },
+        C: { $ref: '#/$defs/B', properties: { n: { title: 'C N' } } },
+        L: { type: 'array', items: [{ type: 'string', title: 'Target 0' }] },
+      },
+      type: 'object',
+      properties: {
+        a: { $ref: '#/$defs/C', properties: { n: { title: 'Own N' } } },
+        t: { $ref: '#/$defs/L', items: [{ title: 'Own 0' }] },
+      },
+    };
+    expect(getKeywordParentSchema(schema, '#/properties/a/$ref/$ref/properties/n/type')).toEqual({
+      type: 'string',
+      title: 'Own N',
+    });
+    expect(getKeywordParentSchema(schema, '#/properties/t/$ref/items/0/type')).toEqual({
+      type: 'string',
+      title: 'Own 0',
+    });
+  });
   it('follows a relative `$ref` inside an `$id` resource written into the path', () => {
     const schema: RJSFSchema = {
       $id: 'https://example.com/root',
@@ -100,6 +149,15 @@ describe('getKeywordParentSchema()', () => {
         properties: { a: { $ref: '#/$defs/T', properties: { n } } },
       };
       expect(getKeywordParentSchema(schema, '#/properties/a/properties/n/type')).toBe(n);
+    });
+    it('reads `properties` after a `$ref` written into the path from its target alone', () => {
+      const n: RJSFSchema = { type: 'number', title: 'TargetN' };
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', properties: { n } } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', properties: { n: { type: 'string' } } } },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/$ref/properties/n/type')).toBe(n);
     });
   });
   describe('with skipsRefs', () => {
