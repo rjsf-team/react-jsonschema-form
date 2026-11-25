@@ -5531,10 +5531,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({});
       });
 
-      it("leaves the constants of a schema's anyOf unpicked under skipOneOf when the oneOf beside it is empty (#5944)", () => {
+      it("takes the constant of a schema's one-entry anyOf under skipOneOf when the oneOf beside it is empty", () => {
         const schema: RJSFSchema = {
           type: 'object',
-          properties: { field: { type: 'string', anyOf: [{ const: 'a' }, { const: 'b' }], oneOf: [] } },
+          properties: { field: { type: 'string', anyOf: [{ const: 'a' }], oneOf: [] } },
           required: ['field'],
         };
         expect(
@@ -5542,7 +5542,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'skipOneOf' } },
             { schema, rootSchema: schema },
           ),
-        ).toEqual({});
+        ).toEqual({ field: 'a' });
       });
 
       it('takes the constant default from the oneOf of a schema whose anyOf is empty', () => {
@@ -11645,19 +11645,44 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           { validator: testValidator, defaultFormStateBehavior: constAsDefaults && { constAsDefaults } },
           { schema: { type: 'object', properties: { field } } },
         );
-      const lists: [string, RJSFSchema, unknown][] = [
-        ['a oneOf', { oneOf: [{ const: 'a' }, { const: 'b' }] }, 'a'],
-        ['an anyOf', { anyOf: [{ const: 'a' }, { const: 'b' }] }, 'a'],
-        ['a typed oneOf', { type: 'string', oneOf: [{ const: 'a' }, { const: 'b' }] }, 'a'],
-        ['a nullable oneOf', { type: ['string', 'null'], oneOf: [{ const: 'a' }, { const: null }] }, 'a'],
-        ['boolean constants', { oneOf: [{ const: true }, { const: false }] }, true],
-        ['object constants', { type: 'object', oneOf: [{ const: { x: 1 } }, { const: { x: 2 } }] }, { x: 1 }],
-        ['array constants', { type: 'array', anyOf: [{ const: [1] }, { const: [2] }] }, [1]],
-        ['a list an allOf brings in', { allOf: [{ oneOf: [{ const: 'a' }, { const: 'b' }] }] }, 'a'],
+      const lists: [string, RJSFSchema, unknown, RJSFSchema][] = [
+        ['a oneOf', { oneOf: [{ const: 'a' }, { const: 'b' }] }, 'a', { enum: ['a', 'b'] }],
+        ['an anyOf', { anyOf: [{ const: 'a' }, { const: 'b' }] }, 'a', { enum: ['a', 'b'] }],
+        [
+          'a typed oneOf',
+          { type: 'string', oneOf: [{ const: 'a' }, { const: 'b' }] },
+          'a',
+          { type: 'string', enum: ['a', 'b'] },
+        ],
+        [
+          'a nullable oneOf',
+          { type: ['string', 'null'], oneOf: [{ const: 'a' }, { const: null }] },
+          'a',
+          { type: ['string', 'null'], enum: ['a', null] },
+        ],
+        ['boolean constants', { oneOf: [{ const: true }, { const: false }] }, true, { enum: [true, false] }],
+        [
+          'object constants',
+          { type: 'object', oneOf: [{ const: { x: 1 } }, { const: { x: 2 } }] },
+          { x: 1 },
+          { type: 'object', enum: [{ x: 1 }, { x: 2 }] },
+        ],
+        [
+          'array constants',
+          { type: 'array', anyOf: [{ const: [1] }, { const: [2] }] },
+          [1],
+          { type: 'array', enum: [[1], [2]] },
+        ],
+        [
+          'a list an allOf brings in',
+          { allOf: [{ oneOf: [{ const: 'a' }, { const: 'b' }] }] },
+          'a',
+          { allOf: [{ enum: ['a', 'b'] }] },
+        ],
       ];
-      it.each(lists)('leaves %s empty, as an enum is', (_, field) => {
+      it.each(lists)('leaves %s empty, as an enum is', (_, field, _first, asEnum) => {
+        expect(fill(field)).toEqual(fill(asEnum));
         expect(fill(field)).toEqual({});
-        expect(fill({ enum: ['a', 'b'] })).toEqual({});
       });
       it.each(lists)("leaves %s empty under the deprecated 'skipOneOf' and under 'never'", (_, field) => {
         expect(fill(field, 'skipOneOf')).toEqual({});
