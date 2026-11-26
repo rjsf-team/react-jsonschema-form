@@ -1,4 +1,8 @@
-import { allowsAdditionalProperties, readsAbsentAsAllowed } from '../additionalPropertiesUtils.ts';
+import {
+  allowsAdditionalProperties,
+  getAdditionalPropertySchema,
+  readsAbsentAsAllowed,
+} from '../additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
@@ -845,17 +849,21 @@ function builtByMerge<S extends StrictRJSFSchema>(option: OptionNode<S>): boolea
 }
 
 /** Ranks a tied option first by whether `formData` holds each key the scope of `option` requires whatever the data, see
- * `scopeOf()`, then by how many of the data's keys it declares, there or in `schema`, the option as given, such as a
+ * `scopeOf()`, then by how many of the data's keys it takes, there or in `schema`, the option as given, such as a
  * view `retrieveSchema()` handed out with the branches the data applies: what matching and scoring pass over, read
- * without the validator, whose check of a whole option grows with each recursive choice in it
+ * without the validator, whose check of a whole option grows with each recursive choice in it. A key `properties`
+ * doesn't name is taken where `scoredOption()` would stub it with a schema allowing a value, reading an absent
+ * extra-key keyword only where `readsAbsent`
  */
-function tieRank<S extends StrictRJSFSchema>(
+function tieRank<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
   formData: GenericObjectType,
   option: OptionNode<S>,
   schema: unknown,
+  readsAbsent: boolean,
 ): number {
   const held = Object.keys(formData).filter((key) => formData[key] !== undefined);
-  // Holding every required key outranks any count of declared keys, which is at most `held.length`
+  // Holding every required key outranks any count of taken keys, which is at most `held.length`
   const whole = held.length + 1;
   // Only a `true` option ties: a `false` one matches no data
   if (typeof option === 'boolean') {
@@ -867,14 +875,18 @@ function tieRank<S extends StrictRJSFSchema>(
     const required: unknown = raw[REQUIRED_KEY];
     return !Array.isArray(required) || required.every((key) => held.includes(key));
   });
-  // shortcut: keys taken through `patternProperties` or `additionalProperties` don't count; upgrade per #5961
-  const declarers = [schema, ...scope.map(({ raw }) => raw)];
-  const declared = held.filter((key) =>
-    declarers.some(
-      (each) => isObject(each) && isObject(each[PROPERTIES_KEY]) && Object.hasOwn(each[PROPERTIES_KEY], key),
+  const takers = [schema, ...scope.map(({ raw }) => raw)].filter((each) => isSchemaObject<S>(each));
+  const stubContext: SchemaContext<S, F> = readsAbsent
+    ? context
+    : { ...context, additionalPropertiesWhenAbsent: 'forbid' };
+  const taken = held.filter((key) =>
+    takers.some(
+      (taker) =>
+        Object.hasOwn(taker.properties ?? {}, key) ||
+        (allowsAdditionalProperties<S, F>(stubContext, taker) && getAdditionalPropertySchema<S>(taker, key) !== false),
     ),
   ).length;
-  return (holdsRequired ? whole : 0) + declared;
+  return (holdsRequired ? whole : 0) + taken;
 }
 
 /** Picks the option for `bestOption()`, see `getClosestMatchingOption()` */
@@ -944,7 +956,7 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // Matching and scoring both pass over a missing `required` key, and a typed value differing from a `default` scores
   // as a missing one, so options such as the pairs a `then` list merges with the field's own can tie where only one
-  // holds every key it requires, or declares every key the data holds
+  // holds every key it requires, or takes every key the data holds
   // The selected option is the first tied one where it ties. A pair a merge of lists built keeps a tie only where it
   // ranks as well, while a written option keeps it, as an explicit pick stands
   if (
@@ -953,7 +965,9 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
     tied.length > 1 &&
     (tied[0] !== selectedOption || builtByMerge(optionNodes[selectedOption]))
   ) {
-    const ranks = tied.map((index) => tieRank<S>(formData, optionNodes[index], options[index]));
+    const ranks = tied.map((index) =>
+      tieRank<S, F>(context, formData, optionNodes[index], options[index], readsAbsent[index]),
+    );
     best = { index: tied[ranks.indexOf(Math.max(...ranks))], score: best.score };
   }
   const score = (validIndexes.includes(best.index) ? 1 : 0) + best.score;

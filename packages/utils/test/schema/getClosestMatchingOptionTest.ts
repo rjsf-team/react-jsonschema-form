@@ -433,6 +433,53 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           ),
         ).toEqual(1);
       });
+      describe('ranks an option by the keys it takes, not only those it names (#5961)', () => {
+        const named: RJSFSchema = { type: 'object', properties: { y: withDefault('y') } };
+        const pattern: RJSFSchema = { ...named, patternProperties: { '^x': withDefault('x') } };
+        const extra: RJSFSchema = { ...named, additionalProperties: withDefault('x') };
+        const open: RJSFSchema = { ...named, additionalProperties: true };
+        const data = { x1: 'typed x', y: 'typed y' };
+        const closest = (tied: RJSFSchema[], selectedOption?: number) => {
+          testValidator.setReturnValues({ isValid: [true, true] });
+          return getClosestMatchingOption({ validator: testValidator }, { anyOf: tied }, data, tied, selectedOption);
+        };
+        it('goes to the option a pattern of which takes a key the data holds', () => {
+          expect(closest([named, pattern])).toEqual(1);
+        });
+        it('goes to the option whose schema-valued additionalProperties takes a key the data holds', () => {
+          expect(closest([named, extra])).toEqual(1);
+        });
+        it('goes to the option whose additionalProperties: true takes a key the data holds', () => {
+          expect(closest([named, open])).toEqual(1);
+        });
+        it('reads an unevaluatedProperties standing in for an absent additionalProperties', () => {
+          expect(closest([named, { ...named, unevaluatedProperties: withDefault('x') }])).toEqual(1);
+        });
+        it('reads the extra-key keywords of an allOf entry the option holds', () => {
+          expect(closest([named, { ...named, allOf: [{ patternProperties: { '^x': withDefault('x') } }] }])).toEqual(1);
+        });
+        it('counts no key an option forbids', () => {
+          const forbidding: RJSFSchema = { ...named, patternProperties: { '^x': false }, additionalProperties: true };
+          expect(closest([forbidding, extra])).toEqual(1);
+          expect(closest([{ ...named, additionalProperties: false }, extra])).toEqual(1);
+        });
+        it('goes to the first option where both take the key', () => {
+          expect(closest([pattern, extra])).toEqual(0);
+          expect(closest([extra, pattern])).toEqual(0);
+        });
+        it("reads an absent keyword as taking the key where additionalPropertiesWhenAbsent is 'allow'", () => {
+          const tied = [named, open];
+          testValidator.setReturnValues({ isValid: [true, true] });
+          expect(
+            getClosestMatchingOption(
+              { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' },
+              { anyOf: tied },
+              data,
+              tied,
+            ),
+          ).toEqual(0);
+        });
+      });
       it('reads a boolean option as requiring nothing it rejects', () => {
         const withBoolean = [options[0], true] as unknown as RJSFSchema[];
         testValidator.setReturnValues({ isValid: [true] });
