@@ -569,6 +569,18 @@ function useButtonTitle(
   );
 }
 
+function getFirstNamedIndex(showCollapseButton: boolean, fixedItemCount: number | undefined, canCopy: boolean) {
+  if (showCollapseButton) {
+    return 0;
+  }
+
+  // Only the last fixed item can have a Copy button.
+  const baseFixedCount = fixedItemCount ?? 0;
+  const copySlotOffset = canCopy ? 1 : 0;
+
+  return Math.max(baseFixedCount - copySlotOffset, 0);
+}
+
 /** The names `ui:options.itemLabel` gives the items of an array, read from each item's data at that path, or from the
  * item itself for `'.'`. Items are named when their options give them buttons, not when a button shows right now, as a
  * lone item can't move and an array at `maxItems` can't copy, so that reaching those limits doesn't renumber them. A
@@ -582,7 +594,8 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiOptions: UIOptionsType<T[], S, F>,
   fixedItemCount?: number,
 ): (string | undefined)[] | undefined {
-  const { itemLabel, showCollapseButton } = uiOptions;
+  const { itemLabel } = uiOptions;
+  const showCollapseButton = uiOptions.showCollapseButton === true;
   const path = useMemo(() => {
     if (typeof itemLabel !== 'string' || !itemLabel) {
       return undefined;
@@ -599,9 +612,8 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
     copyable &&
     isAddable<T, S, F>(schema, uiOptions, fixedItemCount !== undefined) &&
     belowMaxItems(schema, Math.max(1, fixedItemCount ?? 0));
-  const hasButtons = orderable || removable || canCopy || showCollapseButton === true;
-  // Without disclosures, only the last of a tuple's fixed items can need a name for Copy.
-  const firstNamedIndex = showCollapseButton === true ? 0 : Math.max((fixedItemCount ?? 0) - (canCopy ? 1 : 0), 0);
+  const hasButtons = orderable || removable || canCopy || showCollapseButton;
+  const firstNamedIndex = getFirstNamedIndex(showCollapseButton, fixedItemCount, canCopy);
   // Serialized, so that the numbering below reruns only when a name or the items' order changes, not on every edit to
   // another field
   const namesKey = useMemo(

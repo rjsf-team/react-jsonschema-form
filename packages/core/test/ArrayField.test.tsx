@@ -1439,6 +1439,7 @@ describe('ArrayField', () => {
         initialFormData,
         uiSchema: { 'ui:options': { autoCollapse: true } },
       });
+
       expect(node.querySelector('summary')).toBeNull();
       expect(input(node, 'root_0')).toBeVisible();
     });
@@ -1451,8 +1452,10 @@ describe('ArrayField', () => {
       });
       const first = input(node, 'root_0');
       expect(first).toBeVisible();
+
       await user.type(first, ' edited');
       await user.click(elementOf(node, 'summary'));
+
       expect(first).not.toBeVisible();
       expect(input(node, 'root_1')).toBeVisible();
 
@@ -1466,8 +1469,10 @@ describe('ArrayField', () => {
         initialFormData,
         uiSchema: { 'ui:options': { showCollapseButton: true, autoCollapse: true, itemLabel: '.' } },
       });
+
       expect(input(node, 'root_0')).not.toBeVisible();
       expect(input(node, 'root_1')).not.toBeVisible();
+
       await user.click(screen.getByText('Alpha', { selector: 'summary' }));
       await user.click(elementOf(node, '.rjsf-array-item-move-down'));
 
@@ -1485,6 +1490,7 @@ describe('ArrayField', () => {
         uiSchema: { 'ui:options': { showCollapseButton: true, itemLabel: '.', orderable: false, removable: false } },
         translateString,
       });
+
       expect(Array.from(node.querySelectorAll('summary'), (summary) => summary.textContent)).toEqual(['Alpha', 'Beta']);
       expect(translateString.mock.calls.map(([key]) => key)).not.toContain(TranslatableString.ItemNameWithNumber);
     });
@@ -1497,7 +1503,9 @@ describe('ArrayField', () => {
         noHtml5Validate: true,
         focusOnFirstError: true,
       });
+
       expect(input(node, 'root_1')).not.toBeVisible();
+
       await submitForm(node, user);
 
       expect(onError).toHaveBeenCalledTimes(1);
@@ -1516,6 +1524,7 @@ describe('ArrayField', () => {
       });
       const [outer, inner] = node.querySelectorAll('details');
       outer.open = outerOpen;
+
       // jsdom has no layout. A control hidden by CSS would ignore focus() in a browser.
       const focus = vi.spyOn(input(node, 'root_0_0'), 'focus').mockImplementation(() => {
         expect(outer.open && inner.open).toBe(true);
@@ -1536,6 +1545,7 @@ describe('ArrayField', () => {
         uiSchema: { ...uiSchema, items: { 'ui:hideError': hideError } },
       });
       const [invalid, valid] = node.querySelectorAll('details');
+
       expect(invalid.open).toBe(!hideError);
       expect(valid.open).toBe(false);
     });
@@ -1548,6 +1558,7 @@ describe('ArrayField', () => {
         translateString: (key, params) =>
           key === TranslatableString.ArrayItemTitle ? '' : englishStringTranslator(key, params),
       });
+
       expect(Array.from(node.querySelectorAll('summary'), (summary) => summary.textContent)).toEqual(['1', '2']);
     });
 
@@ -1557,6 +1568,7 @@ describe('ArrayField', () => {
         initialFormData: ['Alpha', 'Alpha'],
         uiSchema: { 'ui:options': { itemLabel: '.', showCollapseButton: 'true' as unknown as boolean } },
       });
+
       expect(node.querySelector('summary')).toBeNull();
       expect(node.querySelector('.rjsf-array-item-remove')).toHaveAttribute('title', 'Remove Alpha');
     });
@@ -1565,11 +1577,14 @@ describe('ArrayField', () => {
       const props = { schema, initialFormData };
       const { node, rerender } = createFormComponent(props);
       const original = input(node, 'root_0');
+
       await user.type(original, ' edited');
       rerender({ ...props, uiSchema });
+
       const wrapped = input(node, 'root_0');
       expect(wrapped).not.toBe(original);
       expect(wrapped).toHaveValue('Alpha edited');
+
       rerender(props);
       expect(input(node, 'root_0')).toHaveValue('Alpha edited');
     });
@@ -1591,6 +1606,7 @@ describe('ArrayField', () => {
       };
       const { node, rerender } = createFormComponent(props);
       expect(input(node, 'root_1_name')).not.toBeVisible();
+
       await submitForm(node, user);
 
       const message = screen.getByText('must NOT have fewer than 2 properties');
@@ -1600,6 +1616,7 @@ describe('ArrayField', () => {
 
       await user.click(screen.getByText('Beta', { selector: 'summary' }));
       rerender({ ...props, uiSchema: { 'ui:options': { ...options, copyable: true } } });
+
       expect(message).toBeInTheDocument();
       expect(message).not.toBeVisible();
     });
@@ -1613,7 +1630,9 @@ describe('ArrayField', () => {
         initialFormData: [{ name: 'Alpha' }, {}],
         uiSchema,
       });
+
       expect(input(node, 'root_1_name')).not.toBeVisible();
+
       await submitForm(node, user);
 
       expect(onSubmit).not.toHaveBeenCalled();
@@ -1628,6 +1647,7 @@ describe('ArrayField', () => {
         initialFormData,
         uiSchema: { ...uiSchema, items: { 'ui:widget': 'hidden' } },
       });
+
       expect(node.querySelector('summary')).toBeNull();
       expect(node.querySelector('input[type=hidden]')).toHaveValue('Alpha');
     });
