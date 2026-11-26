@@ -823,7 +823,7 @@ function tieRank<S extends StrictRJSFSchema>(
     const required: unknown = raw[REQUIRED_KEY];
     return !Array.isArray(required) || required.every((key) => held.includes(key));
   });
-  // shortcut: keys taken through `patternProperties` or `additionalProperties` don't count; upgrade if such a tie misleads
+  // shortcut: keys taken through `patternProperties` or `additionalProperties` don't count; upgrade per #5961
   const declarers = [schema, ...scope.map(({ raw }) => raw)];
   const declared = held.filter((key) =>
     declarers.some(
