@@ -71,5 +71,9 @@
   "contributors": [
     "tuanphung2308 <tuanphung2308@gmail.com"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-jsonschema-form"
+  }
 }

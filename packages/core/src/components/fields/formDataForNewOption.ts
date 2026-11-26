@@ -14,6 +14,7 @@ import {
   deepEquals,
   DEFAULT_KEY,
   getByPath,
+  getDiscriminatorFieldFromSchema,
   getPropertySchema,
   getRenderedOptionSchema,
   getSchemaType,
@@ -258,28 +259,29 @@ function carriedData<T, S extends StrictRJSFSchema>(
 /** The keys `formData` held, with their values, for a form taking the switch to put back, see `OptionSwitchData`: none
  * where the switch carries no object, as where the new option's object `const` or `enum` replaced the data. A clear of
  * a key neither the new option nor the field declares leaves with the old option's field, as the sanitize drops it, and
- * so does a `null` the switch dropped, which the sanitize reads as holding no object
+ * so does a `null` the switch dropped, which the sanitize reads as holding no object. The `discriminator` property and
+ * the selector's key are left out: their values name the option, so the old one, put back, would have the form read
+ * the data under the option switched away from
  *
  * @param formData - The form data associated with the old option
  * @param carried - What the switch carries for the new option
- * @param renderedNewOption - The option switched to, as it is rendered
- * @param parentSchema - The schema holding the options, its extra keys stubbed among its `properties`
+ * @param isDeclared - Whether the option switched to, as it is rendered, or the field declares a key
+ * @param namesOption - Whether a key's value names the option: the `discriminator` property or the selector's key
  * @returns - The keys to put back with their values, if any
  */
-function heldKeys<S extends StrictRJSFSchema>(
+function heldKeys(
   formData: unknown,
   carried: unknown,
-  renderedNewOption: S | undefined,
-  parentSchema: S | undefined,
+  isDeclared: (key: string) => boolean,
+  namesOption: (key: string) => boolean,
 ): GenericObjectType | undefined {
   if (!isPlainObject(formData) || !isPlainObject(carried)) {
     return undefined;
   }
-  const newProperties = renderedNewOption?.properties ?? {};
-  const parentProperties = parentSchema?.properties ?? {};
-  const isDeclared = (key: string) =>
-    declaresProperty<S>(newProperties, key) || declaresProperty<S>(parentProperties, key);
   const held = Object.entries(formData).filter(([key, value]) => {
+    if (namesOption(key)) {
+      return false;
+    }
     if (value === undefined) {
       return isDeclared(key);
     }
@@ -288,14 +290,17 @@ function heldKeys<S extends StrictRJSFSchema>(
   return held.length > 0 ? Object.fromEntries(held) : undefined;
 }
 
-/** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped, and
- * the form's global UI options, which say where the Optional Data Controls leave an optional object out of the defaults
+/** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped, the
+ * form's global UI options, which say where the Optional Data Controls leave an optional object out of the defaults,
+ * and the key a selector writes the option picked to, as `ui:optionsSchemaSelector` names it for a
+ * `LayoutMultiSchemaField`
  */
 interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextType> {
   newOptionUiSchema?: UiSchema<T, S, F>;
   oldOptionUiSchema?: UiSchema<T, S, F>;
   uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
   globalUiOptions?: GlobalUISchemaOptions;
+  selectorField?: string;
 }
 
 /** What `formDataForNewOption()` makes of a switch: the data it carries, and the object the data held before it, whose
@@ -355,8 +360,8 @@ export interface OptionSwitchData<T> {
  *        before its defaults are computed, and which each option inherits from as it is rendered before the data is
  *        sanitized against it
  * @param [uiSchemas] - Each option's own uiSchema, so its `ui:initialValue`/`ui:emptyValue` apply to the defaults
- *        computed for it, and the registry's `ui:definitions` and global UI options, which an option's uiSchema never
- *        carries itself
+ *        computed for it, the registry's `ui:definitions` and global UI options, which an option's uiSchema never
+ *        carries itself, and the key the field's selector writes the option picked to, which the switch doesn't hold
  * @returns - The form data for `newOption`, undefined when it holds nothing, as when the selection is cleared, and the
  *   object `formData` held, see `OptionSwitchData`
  */
@@ -372,7 +377,7 @@ export default function formDataForNewOption<
   parentSchema?: S,
   uiSchemas: OptionUiSchemas<T, S, F> = {},
 ): OptionSwitchData<T> {
-  const { uiSchemaDefinitions, globalUiOptions } = uiSchemas;
+  const { uiSchemaDefinitions, globalUiOptions, selectorField } = uiSchemas;
   // The defaults leave out an optional object the Optional Data Controls show without its fields, as the form's own do
   const newOptionUiSchema = withGlobalUiOptions<T, S, F>(uiSchemas.newOptionUiSchema, globalUiOptions);
   const oldOptionUiSchema = withGlobalUiOptions<T, S, F>(uiSchemas.oldOptionUiSchema, globalUiOptions);
@@ -384,7 +389,16 @@ export default function formDataForNewOption<
     { renderedOldOption, renderedNewOption },
     parentSchema,
   );
-  const heldBefore = heldKeys<S>(formData, newFormData, renderedNewOption, parentSchema);
+  const isDeclared = (key: string) =>
+    declaresProperty<S>(renderedNewOption?.properties ?? {}, key) ||
+    declaresProperty<S>(parentSchema?.properties ?? {}, key);
+  const discriminator = parentSchema && getDiscriminatorFieldFromSchema<S>(parentSchema);
+  const heldBefore = heldKeys(
+    formData,
+    newFormData,
+    isDeclared,
+    (key) => key === discriminator || key === selectorField,
+  );
   // A `null` option renders no field, so the switch leaves the data as the sanitize did, rather than the `null` the
   // option's defaults fill in for a field that renders one
   if (newOption?.type === 'null') {
@@ -563,6 +577,19 @@ export default function formDataForNewOption<
         clearsIn(carriedOver, []),
       );
     }
+  }
+  // The switch clears the `discriminator` property where it dropped the value `formData` held there and the option
+  // switched to or the field declares it, for `Form` to keep cleared rather than fill with a `default` that names
+  // another option, see `useSendOptionSwitch()`
+  if (
+    discriminator &&
+    isPlainObject(formData) &&
+    formData[discriminator] !== undefined &&
+    isPlainObject(newFormData) &&
+    !Object.hasOwn(newFormData, discriminator) &&
+    isDeclared(discriminator)
+  ) {
+    newFormData = asFieldValue<T>({ ...newFormData, [discriminator]: undefined });
   }
   return { formData: newFormData, held: heldBefore };
 }

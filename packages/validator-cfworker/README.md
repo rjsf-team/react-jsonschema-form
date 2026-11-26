@@ -55,3 +55,7 @@ The original MIT copyright and license are preserved in [LICENSE](./LICENSE); th
 The underlying `@cfworker/json-schema` package's latest release is from January 2025. Its tracker includes open correctness reports for duplicate schema URIs ([#335](https://github.com/cfworker/cfworker/issues/335)) and `additionalProperties` behavior ([#336](https://github.com/cfworker/cfworker/issues/336)), as well as the `$dynamicRef` gap above.
 This wrapper's per-schema cache avoids repeat registration on RJSF's `isValid` path, but it does not change the upstream engine's other semantics.
 The package is therefore presented as an additional option for CSP-constrained users.
+
+## Sponsoring
+
+The maintainers of react-jsonschema-form use agentic coding tools for triage, reviews and fixes, and those tools have real monthly costs. If RJSF saves you or your team time, please consider sponsoring the project on [Open Collective](https://opencollective.com/react-jsonschema-form). Contributions of any size help cover those costs and keep releases coming.

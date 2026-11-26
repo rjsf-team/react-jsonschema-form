@@ -28,6 +28,7 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
+import getSchemaType from '../getSchemaType.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
@@ -130,6 +131,35 @@ export default function retrieveSchema<
     leafViews.set(schema, { graph, view });
   }
   return view;
+}
+
+/** Whether `schema` merges subschemas of its own into itself for the data, as an `allOf`, an `if`'s `then` or `else`, or
+ * a `dependencies` schema does
+ */
+export function mergesOwnSubschemas(schema: object): boolean {
+  return [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY].some((keyword) => Object.hasOwn(schema, keyword));
+}
+
+/** Returns the schema a field offering options is asked whether it renders a field of its own beside them with (see
+ * `rendersOwnFieldBesideOption()`): `field`, its options left out, with its `allOf`, `then`, `else` and `dependencies`
+ * schemas merged for `formData`, since its `type` can come through any of them. A field naming one type already has
+ * it, which none of them can change, so it is spared the merge and returned as it stands
+ *
+ * @param context - The `SchemaContext` to merge in
+ * @param field - The field's schema without its `anyOf`/`oneOf`
+ * @param rootSchema - The root schema
+ * @param formData - The field's data
+ * @returns - The schema to ask
+ */
+export function fieldTypeSchema<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  field: S,
+  rootSchema: S,
+  formData: unknown,
+): S {
+  return mergesOwnSubschemas(field) && typeof getSchemaType<S>(field) !== 'string'
+    ? retrieveSchema<unknown, S, F>(context, field, rootSchema, formData)
+    : field;
 }
 
 /** The views of the schemas that merge nothing and hold no subschemas, by schema: a call root, or a subschema
