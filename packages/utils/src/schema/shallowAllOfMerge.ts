@@ -1,26 +1,13 @@
-import {
-  assignSchemaDefinitionOrRecord,
-  createComparator,
-  createMerger,
-  isAllowAnySchema,
-} from '@x0k/json-schema-merge';
+import { createComparator, createMerger, isAllowAnySchema } from '@x0k/json-schema-merge';
 import { createDeduplicator, createIntersector } from '@x0k/json-schema-merge/lib/array';
 import type { JSONSchema7, JSONSchema7Definition } from 'json-schema';
+
+import { patternRegExp } from '../additionalPropertiesUtils.ts';
 
 const { compareSchemaDefinitions, compareSchemaValues } = createComparator();
 const { mergeArrayOfSchemaDefinitions } = createMerger({
   intersectJson: createIntersector(compareSchemaValues),
   deduplicateJsonSchemaDef: createDeduplicator(compareSchemaDefinitions),
-  // JSON Schema reads an absent `additionalProperties` as `true`, which the library drops, but the form reads an absent
-  // one as `additionalPropertiesWhenAbsent` says, so an explicit `true` or `{}` is kept
-  assignSchemaDefinitionOrRecord: (target, key, value) => {
-    if (key === 'additionalProperties' && value !== undefined) {
-      // oxlint-disable-next-line no-param-reassign -- the library's assigner sets the keyword on the schema it builds
-      target[key] = value;
-    } else {
-      assignSchemaDefinitionOrRecord(target, key, value);
-    }
-  },
 });
 
 /** Returns `schema` and the entries of its `allOf`, those of theirs included, in the order the merge takes them */
@@ -60,14 +47,35 @@ function closesSiblingKeys(entry: JSONSchema7): boolean {
   );
 }
 
-/** Returns `merged`, the merge of `objects`, without an `additionalProperties` of `true` or `{}` that one of `siblings`
- * closes the keys of (see `closesSiblingKeys()`), since the merge keeps it beside the sibling's
- * `unevaluatedProperties`, which then no longer sees only its own entry's annotations. Each property is read the same
- * way against the declarations of it that `objects` hold, every one of which is a sibling of the others.
- * shortcut: only `properties` are followed, not `patternProperties`, `items`, `dependencies` or the options of a list
- * merged below, upgrade if a schema closes the keys of a subschema merged there
+/** Returns the object subschemas of `objects` that describe the value of `key`: an entry's declaration of it, or, in an
+ * entry not declaring it, the `patternProperties` subschemas matching it, or else its `additionalProperties`
  */
-function withoutClosedAdditionalProperties(
+function subschemasOf(key: string, objects: readonly JSONSchema7[]): JSONSchema7[] {
+  return objects.flatMap((entry) => {
+    let reaching: (JSONSchema7Definition | undefined)[];
+    if (entry.properties !== undefined && Object.hasOwn(entry.properties, key)) {
+      reaching = [entry.properties[key]];
+    } else {
+      reaching = Object.entries(entry.patternProperties ?? {})
+        .filter(([pattern]) => patternRegExp(pattern).test(key))
+        .map(([, subschema]) => subschema);
+      if (reaching.length === 0) {
+        reaching = [entry.additionalProperties];
+      }
+    }
+    return reaching.filter((subschema) => typeof subschema === 'object');
+  });
+}
+
+/** Returns `merged`, the merge of `objects`, holding the `additionalProperties` of `true` or `{}` the merge dropped,
+ * unless one of `siblings` closes the keys it takes (see `closesSiblingKeys()`), where one the merge kept is left out.
+ * JSON Schema reads an absent keyword as `true`, so the merge drops one saying only that, where the form reads an
+ * absent one as `additionalPropertiesWhenAbsent` says. The merge keeps a `false` or a schema in any entry, so a dropped
+ * keyword was `true` or `{}` in every entry naming it. Each property is read the same way against the subschemas that
+ * describe it (see `subschemasOf()`), every one of which is a sibling of the others; a subschema anywhere else keeps
+ * what the merge made of it.
+ */
+function withOpenAdditionalProperties(
   merged: JSONSchema7Definition,
   objects: readonly JSONSchema7[],
   siblings: readonly JSONSchema7[],
@@ -76,13 +84,14 @@ function withoutClosedAdditionalProperties(
     return merged;
   }
   let result = merged;
-  if (
-    merged.additionalProperties !== undefined &&
-    isAllowAnySchema(merged.additionalProperties) &&
-    siblings.some(closesSiblingKeys)
-  ) {
-    const { additionalProperties: _open, ...rest } = merged;
-    result = rest;
+  if (siblings.some(closesSiblingKeys)) {
+    if (merged.additionalProperties !== undefined && isAllowAnySchema(merged.additionalProperties)) {
+      const { additionalProperties: _open, ...rest } = merged;
+      result = rest;
+    }
+  } else if (merged.additionalProperties === undefined) {
+    const open = objects.find((entry) => entry.additionalProperties !== undefined)?.additionalProperties;
+    result = open === undefined ? merged : { ...merged, additionalProperties: open };
   }
   const { properties } = result;
   if (properties === undefined) {
@@ -90,15 +99,12 @@ function withoutClosedAdditionalProperties(
   }
   let kept: Record<string, JSONSchema7Definition> | undefined;
   for (const [key, property] of Object.entries(properties)) {
-    const declared = objects.flatMap((entry) => {
-      const declaration = entry.properties?.[key];
-      return typeof declaration === 'object' ? [declaration] : [];
-    });
-    // A property only one of them declares is that declaration, which the merge left as it stands
-    const closed = declared.length > 1 ? withoutClosedAdditionalProperties(property, declared, declared) : property;
-    if (closed !== property) {
+    const declared = subschemasOf(key, objects);
+    // A property only one subschema describes is that declaration, which the merge left as it stands
+    const open = declared.length > 1 ? withOpenAdditionalProperties(property, declared, declared) : property;
+    if (open !== property) {
       kept ??= { ...properties };
-      kept[key] = closed;
+      kept[key] = open;
     }
   }
   return kept === undefined ? result : { ...result, properties: kept };
@@ -130,7 +136,7 @@ export default function shallowAllOfMerge(schema: JSONSchema7Definition): JSONSc
     ? swapTupleKeys(mergeArrayOfSchemaDefinitions(schemas.map((entry) => swapTupleKeys(entry))), true)
     : mergeArrayOfSchemaDefinitions(schemas);
   // The object's own `unevaluatedProperties` sees the annotations of its entries
-  return withoutClosedAdditionalProperties(merged, objects, objects.slice(1));
+  return withOpenAdditionalProperties(merged, objects, objects.slice(1));
 }
 
 /** An option the merge of option lists builds, with the options of the lists it was built from, in their order */
@@ -150,7 +156,7 @@ export function mergedPair(
 ): JSONSchema7Definition | undefined {
   try {
     const objects = [left, right].filter((entry) => typeof entry !== 'boolean');
-    const merged = withoutClosedAdditionalProperties(mergeArrayOfSchemaDefinitions([left, right]), objects, objects);
+    const merged = withOpenAdditionalProperties(mergeArrayOfSchemaDefinitions([left, right]), objects, objects);
     return typeof merged === 'boolean' ? merged : { ...merged };
   } catch {
     return undefined;
@@ -160,8 +166,8 @@ export function mergedPair(
 /** Returns the options the shallow merge offers for `first` and `rest`, the `anyOf` or `oneOf` lists its schemas hold
  * under one keyword: each option of the first merged with each of the next's, a list at a time and in their order, a
  * pair that can't merge left out and one equal to an option already kept dropped, as the merge combines them. Merged
- * here, each keeps the options it was built from, and each pair keeps an `additionalProperties: true`, as the shallow
- * merge keeps one.
+ * here, each keeps the options it was built from, and each pair keeps an `additionalProperties: true` the merge would
+ * drop.
  *
  * @param first - The first list, in the order their schemas are merged
  * @param rest - The lists after it

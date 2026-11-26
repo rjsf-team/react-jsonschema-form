@@ -216,7 +216,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
       expect(retrieveSchema({ validator: testValidator }, schema, schema).additionalProperties).toBe(true);
     });
-    // The merge is told to keep only an allow-any `additionalProperties`, so this catches a merge that starts dropping it
+    // `withOpenAdditionalProperties()` leaves it to the merge, so this catches a merge that starts dropping it
     it('keeps an unevaluatedProperties: true, which the merge keeps as it stands', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -410,6 +410,66 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             { properties: { q: { properties: { a }, unevaluatedProperties: false } } },
           ),
         ).toEqual({ properties: { q: { properties: { a }, unevaluatedProperties: false } } });
+      });
+      const closer: RJSFSchema = { properties: { a }, unevaluatedProperties: false };
+      it.each<[string, RJSFSchema, boolean | undefined]>([
+        [
+          "leaves it out where another entry's additionalProperties reaches the property",
+          { additionalProperties: closer },
+          undefined,
+        ],
+        [
+          "leaves it out where another entry's patternProperties may reach the property",
+          { patternProperties: { '^p': closer } },
+          undefined,
+        ],
+        ["keeps it beside another entry's additionalProperties: true", { additionalProperties: true }, true],
+        [
+          "keeps it beside another entry's additionalProperties that doesn't close",
+          { additionalProperties: { type: 'object' } },
+          true,
+        ],
+        [
+          "keeps it beside another entry's patternProperties that can't match the property",
+          { patternProperties: { '^q': closer } },
+          true,
+        ],
+      ])('%s', (_, other, expected) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          allOf: [
+            { properties: { p: { type: 'object', additionalProperties: true } } },
+            { properties: { p: { properties: { a } } } },
+            other,
+          ],
+        };
+        const p = retrieveSchema({ validator: testValidator }, schema, schema).properties?.p;
+        expect(typeof p === 'object' ? p.additionalProperties : p).toBe(expected);
+      });
+      it("leaves it out of a property named after an Object.prototype key that another entry's additionalProperties closes", () => {
+        const key = 'constructor' as string;
+        const schema: RJSFSchema = {
+          type: 'object',
+          allOf: [
+            { properties: { [key]: { type: 'object', additionalProperties: true } } },
+            { properties: { [key]: { properties: { a } } } },
+            { properties: { b: a }, additionalProperties: closer },
+          ],
+        };
+        const p = retrieveSchema({ validator: testValidator }, schema, schema).properties?.[key];
+        expect(typeof p === 'object' ? p.additionalProperties : p).toBeUndefined();
+      });
+      it('leaves out of a patternProperties subschema one another declaration of it closes, as the merge does', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          allOf: [
+            { patternProperties: { '^p': { type: 'object', additionalProperties: true } } },
+            { patternProperties: { '^p': closer } },
+          ],
+        };
+        expect(retrieveSchema({ validator: testValidator }, schema, schema).patternProperties).toEqual({
+          '^p': { type: 'object', ...closer },
+        });
       });
     });
   });
