@@ -25,6 +25,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Remove the `totalItems` prop of `ArrayFieldItemTemplate` and `ArrayFieldItemButtonsTemplate`, so adding or removing an array item no longer renders every other item's template again. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#totalitems-is-removed-from-the-array-item-templates-breaking-change) ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
 - Fix an edit in a long array taking longer the more items it holds: `Form` computes the defaults and judges the values only of the items the edit changed ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
 - Fix `Form` checking every `if` of a schema against the validator on every edit: one whose `properties` and `required` read only values the edit left alone is not checked again ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#4051](https://github.com/rjsf-team/react-jsonschema-form/issues/4051))
+- Fix `Form` keeping, on an `anyOf`/`oneOf` switch, a value it filled for an extra key from the object's `default` as if the user had typed it, where the key's `additionalProperties` or `patternProperties` subschema holds an `allOf` with a `default` ([#5965](https://github.com/rjsf-team/react-jsonschema-form/pull/5965), [#5954](https://github.com/rjsf-team/react-jsonschema-form/issues/5954))
 
 ## @rjsf/utils
 
@@ -43,6 +44,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `REUSES_DEFAULTS_FLAG`, which `Form` sets on its `SchemaContext` so `getDefaultFormState()`, called with the state it returned and one item edited, computes the defaults of that item alone rather than of every item of an array ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
 - Fix `retrieveSchema()` and `getDefaultFormState()` calling the validator for an `if` again when only a key its `properties` and `required` don't name changed ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#4051](https://github.com/rjsf-team/react-jsonschema-form/issues/4051))
 - Fix `getDecimalSeparator()` building an `Intl.NumberFormat` on every call, which every number field made on every render ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
+- Fix `getFilledDefault()` reading an extra key of a schema `retrieveSchema()` returned by the `default` of an `allOf` its subschema holds, which the fill skips under `allOf: 'skipDefaults'`, rather than the value the fill writes ([#5965](https://github.com/rjsf-team/react-jsonschema-form/pull/5965), [#5954](https://github.com/rjsf-team/react-jsonschema-form/issues/5954))
 
 # 7.0.0-beta.1 (2026-11-20)
 
