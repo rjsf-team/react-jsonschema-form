@@ -18,7 +18,6 @@ import {
   THEN_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
-import getSchemaType from '../../getSchemaType.ts';
 import guessType from '../../guessType.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
@@ -88,16 +87,16 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
    */
   readonly site: string;
   readonly condition: S;
-  readonly satisfied: boolean;
-  /** For an `if` of a field that holds no value while it has no data, see `ValueTypes`, whether such a field meets it.
-   * JSON Schema validates no absent value, so this is RJSF's choice, made without reading the `if`'s keywords: only an
-   * `if` of `{}` is met, as `true` is, and every other takes the `else`
+  /** Whether the data satisfied it, `undefined` where the field holds no value, see `noValue` */
+  readonly satisfied: boolean | undefined;
+  /** Whether the `if` is one of a field that holds no value while it has no data, see `ValueTypes`. JSON Schema applies
+   * neither branch to an absent value, so with no data such a field merges neither its `then` nor its `else`
    */
-  readonly metWithoutValue?: boolean;
-  /** Whether the field may hold a value that is neither an object nor an array, such as a `default` it inherits:
-   * one whose `type`s allow one, or that names no `type` and doesn't read as an object
+  readonly noValue?: boolean;
+  /** The value of a boolean `if`, which holds or fails whatever the data, so needs no validator to say, nor a
+   * precompiled one to have a function for the schema it reads as
    */
-  readonly holdsPrimitive: boolean;
+  readonly constant?: boolean;
 }
 
 /** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
@@ -237,28 +236,18 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
 const conditionMemo = new KeyedMemo<boolean>();
 
-/** Marks, as `true`, a context under which no plan merges a `then` or an `else`, nor checks an `if`: the value a field
- * starts from is folded under it. A context spread from one keeps the mark
- */
-export const RESOLVES_NO_CONDITIONS = Symbol('resolvesNoConditions');
-
-/** Whether `context` carries `mark`, see `RESOLVES_NO_CONDITIONS` */
-export function isMarked(context: object, mark: symbol): boolean {
-  return Reflect.get(context, mark) === true;
-}
-
 /** How the conditions checked against dependency data a fill of the defaults copied for itself are decided, by the
  * copy: each the fill fixed, under its graph and site, as fixed, and each other, under the validator too, as the
  * validator first checked it
  */
-const ownedDecisions = new WeakMap<object, KeyedMemo<boolean>>();
+const ownedDecisions = new WeakMap<object, KeyedMemo<boolean | undefined>>();
 
-/** A condition a fill decides as `satisfied`, whatever the data */
+/** A condition a fill decides as `satisfied`, whatever the data, see `CheckedCondition.satisfied` */
 export interface FixedCondition<S extends StrictRJSFSchema = RJSFSchema> {
   readonly graph: SchemaGraph<S>;
   /** See `CheckedCondition.site` */
   readonly site: string;
-  readonly satisfied: boolean;
+  readonly satisfied: boolean | undefined;
 }
 
 /** Returns a shallow copy of the object or array `depData`, against which each condition is checked once, and each of
@@ -282,7 +271,8 @@ export function ownedDepData<S extends StrictRJSFSchema>(
   } else {
     return depData;
   }
-  const decisions = new KeyedMemo<boolean>();
+  // A condition decided as neither branch is checked against the copy, as one not fixed is
+  const decisions = new KeyedMemo<boolean | undefined>();
   for (const { graph, site, satisfied } of fixed) {
     decisions.set([graph, site], satisfied);
   }
@@ -298,17 +288,20 @@ export function ownedDepData<S extends StrictRJSFSchema>(
  * @param context - The `SchemaContext` whose validator checks the condition
  * @param graph - The graph the condition is a node of
  * @param checked - The condition, with the keys its check and its decision are known by, see `CheckedCondition`
- * @param depData - The data to check it against; where there is none, see `CheckedCondition.metWithoutValue`
- * @returns - Whether the condition holds
+ * @param depData - The data to check it against; where there is none, see `CheckedCondition.noValue`
+ * @returns - Whether the condition holds, `undefined` for neither, see `CheckedCondition.satisfied`
  */
 export function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
-  { key, site, condition, metWithoutValue }: Omit<CheckedCondition<S>, 'satisfied'>,
+  { key, site, condition, noValue, constant }: Omit<CheckedCondition<S>, 'satisfied'>,
   depData: unknown,
-): boolean {
-  if (depData === undefined && metWithoutValue !== undefined) {
-    return metWithoutValue;
+): boolean | undefined {
+  if (depData === undefined && noValue === true) {
+    return undefined;
+  }
+  if (constant !== undefined) {
+    return constant;
   }
   if (typeof depData === 'object' && depData !== null) {
     const owned = ownedDecisions.get(depData);
@@ -544,15 +537,13 @@ export function conjunctionOf<S extends StrictRJSFSchema>(
   return conjunction === node ? undefined : conjunction;
 }
 
-/** The `type`s the nodes `ids` declare and whether the fill reads an object or an array off one naming none, each
- * read with its `$ref`s and `allOf` members, whatever order `retrieveSchema()` merges them in: the merged `type` allows
- * only what every one of them allows. An `if` beside them may be checked before the merge, see `ValueTypes`
+/** The `type`s the nodes `ids` declare, each read with its `$ref`s and `allOf` members, whatever order
+ * `retrieveSchema()` merges them in: the merged `type` allows only what every one of them allows. An `if` beside them
+ * may be checked before the merge, see `holdsNoValue()`
  */
 interface DeclaredTypes {
   /** `undefined` where none declares a `type` */
   readonly types: readonly string[] | undefined;
-  /** Whether one naming no `type` reads as an object to `getSchemaType()`, e.g. by its `properties` */
-  readonly inferred: boolean;
   /** For a field naming no `type`, the types of the values its first `const` or `enum` allows */
   readonly guessed?: readonly string[];
 }
@@ -590,7 +581,6 @@ function declaredTypes<S extends StrictRJSFSchema>(
       const held = constant === undefined ? values : [constant];
       own = {
         ...soFar,
-        inferred: soFar.inferred || getSchemaType<S>(target.raw) === 'object',
         guessed: soFar.guessed ?? (Array.isArray(held) ? held.map(guessType) : undefined),
       };
     }
@@ -599,43 +589,24 @@ function declaredTypes<S extends StrictRJSFSchema>(
   }, declared);
 }
 
-/** What a field's `type`s say of the value it holds, which each `if` it checks is told: `holdsPrimitive`, see
- * `CheckedCondition.holdsPrimitive`, and `noValue`, whether the field holds no value while it has no data, so an `if`
- * is decided as `CheckedCondition.metWithoutValue` says rather than checked against `{}`. That is a field whose `type`
- * allows neither an object nor an array, or that names no `type` but an `enum` or a `const` of such values. Any other
- * field is checked against `{}`, its defaults filled in: one naming no `type` may get an object's or an array's shape
- * from its branches, so a value it is given must not swap the branch
+/** Whether a field of the `type`s `declared` holds no value while it has no data, so its `if`s pick neither branch
+ * rather than being checked against `{}`, see `CheckedCondition.noValue`. That is a field whose `type` allows neither
+ * an object nor an array, or that names no `type` but an `enum` or a `const` of such values. Any other field is checked
+ * against `{}`, its defaults filled in: one naming no `type` may get an object's or an array's shape from its
+ * branches, so a value it is given must not swap the branch
  */
-interface ValueTypes {
-  readonly noValue: boolean;
-  readonly holdsPrimitive: boolean;
-}
-
-/** What a field of the `type`s `declared` holds, see `ValueTypes` */
-function noValueOf({ types, inferred, guessed }: DeclaredTypes): ValueTypes {
-  const container = (type: string) => type === 'object' || type === 'array';
-  const known = types ?? guessed;
-  return {
-    noValue: known?.some(container) === false,
-    holdsPrimitive: known ? !known.every(container) : !inferred,
-  };
+function holdsNoValue({ types, guessed }: DeclaredTypes): boolean {
+  return (types ?? guessed)?.some((type) => type === 'object' || type === 'array') === false;
 }
 
 /** No `type` declared, which the `type`s of a field's seeds are read from, see `DeclaredTypes` */
-const NO_TYPES: DeclaredTypes = { types: undefined, inferred: false };
+const NO_TYPES: DeclaredTypes = { types: undefined };
 
 /** The nodes of the seeds of a field but the options it shows, see `Scope`. An option is read as `expandOption()` reads
  * one: its `type` counts only for the `if`s it brings, since the field's own are checked whichever option it shows
  */
 function ownNodes(seeds: readonly Seed[]): NodeId[] {
   return seeds.filter(({ node, scope }) => !scope?.includes(`o${node}`)).map(({ node }) => node);
-}
-
-/** Whether the field `seeds` seed may hold a value that is neither an object nor an array, as its own `if`s are told,
- * see `CheckedCondition.holdsPrimitive`
- */
-export function mayHoldPrimitive<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds: readonly Seed[]): boolean {
-  return noValueOf(declaredTypes(graph, ownNodes(seeds), NO_TYPES)).holdsPrimitive;
 }
 
 /** Returns the schema holding each of `keywords` as the node providing it holds it */
@@ -882,12 +853,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private seedHasCondition = false;
   private readsData = false;
   /** What the seeds, and the options being expanded, declare of the field's `type`, see `DeclaredTypes` */
-  private declared: DeclaredTypes = { types: undefined, inferred: false };
-  /** What the field's `type`s say of the value it holds, see `ValueTypes`, with the selected option being expanded
-   * read as part of it: an option's `type` counts only for the `if`s the option brings, since the field's own are
-   * checked whichever option it shows
+  private declared: DeclaredTypes = NO_TYPES;
+  /** Whether the field holds no value while it has no data, see `holdsNoValue()`, with the selected option being
+   * expanded read as part of it: an option's `type` counts only for the `if`s the option brings, since the field's own
+   * are checked whichever option it shows
    */
-  private valueTypes: ValueTypes = { noValue: false, holdsPrimitive: false };
+  private noValue = false;
   /** How many `then`, `else` and `dependencies` branches are being expanded: a branch has its `allOf` merged whatever
    * the policy, as `retrieveSchema()` retrieves a branch whole before merging it
    */
@@ -923,7 +894,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const declared = declaredTypes(this.graph, own, this.policy.declared ?? NO_TYPES);
     const expanded = seeds.flatMap((seed) => {
       this.declared = own.includes(seed.node) ? declared : declaredTypes(this.graph, [seed.node], declared);
-      this.valueTypes = noValueOf(this.declared);
+      this.noValue = holdsNoValue(this.declared);
       const part = this.expand(seed.node, seed.refPath, 'seed');
       if (part === undefined) {
         return [];
@@ -1010,7 +981,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const keywords = this.flatten(asTarget(this.graph, node), refPath);
     if (edge === 'option') {
       this.declared = declaredTypes(this.graph, [id], this.declared);
-      this.valueTypes = noValueOf(this.declared);
+      this.noValue = holdsNoValue(this.declared);
     }
     const schema = keywordSchema(node.raw, keywords);
     const ref: unknown = Reflect.get(node.raw, REF_KEY);
@@ -1125,19 +1096,17 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       : schemaFrom(schema, merged);
   }
 
-  /** Checks `condition`, an `if` where `emptyIf` says whether it is `{}` */
-  private holds(key: string, condition: S, site = key, emptyIf?: boolean): boolean {
+  /** Checks `condition`, an `if` of the value `constant` where it is a boolean schema, see `CheckedCondition` */
+  private holds(key: string, condition: S, site = key, constant?: boolean): boolean | undefined {
     this.readsData = true;
-    const { noValue, holdsPrimitive } = this.valueTypes;
-    const metWithoutValue = noValue ? emptyIf : undefined;
-    const checked = { key, site, condition, holdsPrimitive, metWithoutValue };
+    const checked = { key, site, condition, noValue: this.noValue, constant };
     const satisfied = checkCondition(this.context, this.graph, checked, this.depData);
     this.checked.push({ ...checked, satisfied });
     return satisfied;
   }
 
   /** Applies the `then` or `else` the `if` chooses on the data the field's dependencies qualify on, `{}` standing in
-   * for none unless the field holds no value, see `ValueTypes`, and neither under `RESOLVES_NO_CONDITIONS`. Inside a
+   * for none unless the field holds no value, see `CheckedCondition.noValue`, which applies neither. Inside a
    * dependency, the branch's own `oneOf` is applied, as the dependency's are.
    */
   private applyCondition(
@@ -1151,21 +1120,20 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     const condition = this.graph.child(conditionProvider.node.id, IF_KEY);
     const without = { ...part, schema: withoutKeys(part.schema, IF_KEY, THEN_KEY, ELSE_KEY) };
-    if (condition === undefined || isMarked(this.context, RESOLVES_NO_CONDITIONS)) {
+    if (condition === undefined) {
       return without;
     }
     const conditionNode = this.graph.node(condition);
-    // A boolean `if` holds or fails whatever the data, which needs no validator to say, nor a precompiled one to have a
-    // function for the schema it reads as
+    const constant =
+      conditionNode.kind === 'schema' ? undefined : conditionNode.kind !== 'boolean' || conditionNode.value;
+    // A boolean `if` is checked only where the field holds no value, which a value it is filled with then decides
     const satisfied =
-      conditionNode.kind === 'schema'
-        ? this.holds(
-            `if:${condition}`,
-            targetOf(this.graph, condition),
-            `if:${conditionProvider.node.id}`,
-            Object.keys(conditionNode.raw).length === 0,
-          )
-        : conditionNode.kind !== 'boolean' || conditionNode.value;
+      constant === undefined || this.noValue
+        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), `if:${conditionProvider.node.id}`, constant)
+        : constant;
+    if (satisfied === undefined) {
+      return without;
+    }
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);
     const branchNode = branchProvider && this.graph.child(branchProvider.node.id, branchKey);
@@ -1332,7 +1300,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const outer = {
       mergeAllOf: this.mergeAllOf,
       conditions: this.conditions,
-      valueTypes: this.valueTypes,
+      noValue: this.noValue,
       declared: this.declared,
     };
     if (optionPolicy !== undefined) {
@@ -1417,7 +1385,6 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     resolved.dependencyOptionsOnly,
     resolved.optionPolicy?.allOf,
     resolved.optionPolicy?.conditions,
-    isMarked(context, RESOLVES_NO_CONDITIONS),
     // By content: each build of the plan offering an option reads its `type`s into a new object
     JSON.stringify(resolved.declared),
   ];

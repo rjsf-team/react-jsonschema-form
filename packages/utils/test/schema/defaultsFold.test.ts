@@ -1667,14 +1667,14 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     expect(counting.calls).toBe(1);
   });
 
-  it("decides the then offering an option const in an allOf member as a then of the field's own, at the same cost (#5895)", () => {
+  it("decides the then offering an option const in an allOf member as a then of the field's own, at the same cost, keeping the pass that validates (#5895)", () => {
     const conditional = { if: { required: ['t'] }, then: { oneOf: [{ const: { a: 1 } }] } };
     const fieldWith = (x: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { x } });
     const t = { t: { type: 'string' as const, default: 'a' } };
     const inAllOf = miniValidator();
     const own = miniValidator();
     const nested = fieldWith({ type: 'object', properties: t, allOf: [conditional] });
-    expect(defaultsOf(nested, undefined, { allOf: 'skipDefaults' }, inAllOf)).toEqual({ x: { t: 'a' } });
+    expect(defaultsOf(nested, undefined, { allOf: 'skipDefaults' }, inAllOf)).toEqual({ x: { a: 1 } });
     expect(
       defaultsOf(
         fieldWith({ type: 'object', properties: t, ...conditional }),
@@ -1682,21 +1682,21 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
         { allOf: 'skipDefaults' },
         own,
       ),
-    ).toEqual({ x: { t: 'a' } });
+    ).toEqual({ x: { a: 1 } });
     expect(inAllOf.calls).toBe(own.calls);
-    expect(inAllOf.calls).toBe(3);
+    expect(inAllOf.calls).toBe(5);
   });
 
   it.each<[string, RJSFSchema, RJSFSchema, unknown, number]>([
     [
-      'an empty primitive field, met with no value by an if of {} and checked against the const it took',
+      'an empty primitive field, which takes neither branch of an if of {} with no value',
       { type: 'number' },
       { if: {}, then: { const: 10 } },
-      10,
-      1,
+      undefined,
+      0,
     ],
     [
-      'an empty primitive field, which takes the else with no value',
+      'an empty primitive field, which takes neither branch with no value',
       { type: 'number' },
       { if: { minimum: 10 }, then: { const: 10 } },
       undefined,

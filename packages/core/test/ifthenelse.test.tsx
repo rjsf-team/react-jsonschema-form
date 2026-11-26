@@ -325,11 +325,6 @@ describe("an empty field's then/else const (#5895)", () => {
       { type: 'object', allOf: [{ if: { type: 'object' }, then: { const: { a: 1, b: 2 } } }] },
       { a: 1, b: 2 },
     ],
-    [
-      'fills a number field from the then of its allOf member whose if is {}, and submits it',
-      { type: 'number', allOf: [{ if: {}, then: { const: 3 } }] },
-      3,
-    ],
   ])('%s', async (_name, x, filled) => {
     const { node, onSubmit, onError } = createFormComponent({
       schema: { type: 'object', required: ['x'], properties: { x } },
@@ -337,6 +332,21 @@ describe("an empty field's then/else const (#5895)", () => {
     await submitForm(node, user);
     expect(onError).not.toHaveBeenCalled();
     expectToHaveBeenCalledWithFormData(onSubmit, { x: filled }, true);
+  });
+  it('leaves a required number field empty under the then of its allOf member whose if is {}, so submitting reports it missing', async () => {
+    // The browser's own check of the required input would block the submit before the schema's is reported
+    const { node, onSubmit, onError } = createFormComponent({
+      noHtml5Validate: true,
+      schema: {
+        type: 'object',
+        required: ['x'],
+        properties: { x: { type: 'number', allOf: [{ if: {}, then: { const: 3 } }] } },
+      },
+    });
+    expect(node.querySelector<HTMLInputElement>('#root_x')?.value).toBe('');
+    await submitForm(node, user);
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ name: 'required', property: 'x' })]);
   });
 });
 

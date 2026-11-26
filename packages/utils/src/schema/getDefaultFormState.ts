@@ -87,10 +87,7 @@ import {
 import { isHandedOut } from './graph/handedOut.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
-  RESOLVES_NO_CONDITIONS,
   checkCondition,
-  isMarked,
-  mayHoldPrimitive,
   mergeAllOf,
   asTarget,
   cachedPolicy,
@@ -125,7 +122,7 @@ import type { Provenance } from './graph/provenance.ts';
 import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
 import { schemaFrom } from './graph/schemaFrom.ts';
-import { declaresUnconditionally, scopeOf } from './graph/validationTargets.ts';
+import { declaresUnconditionally, scopeOf, targetOf } from './graph/validationTargets.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import { resolveDeclaredConstantOptions } from './resolveConstantOptions.ts';
 import {
@@ -473,20 +470,6 @@ function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>
  * and calls whose memos compare the context first
  */
 const skippingContexts = new KeyedMemo<object>();
-
-/** `context` marked with `RESOLVES_NO_CONDITIONS`, per context it is built from, so it keeps its identity across the
- * passes and calls whose memos compare the context first
- */
-function unresolvedContext<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-): SchemaContext<S, F> {
-  // Only `context` spread with the mark is kept under `context`, but the memo can't carry its type parameters
-  return unresolvedContexts.get([context], () => ({ ...context, [RESOLVES_NO_CONDITIONS]: true })) as SchemaContext<
-    S,
-    F
-  >;
-}
-const unresolvedContexts = new KeyedMemo<object>();
 
 /** The schema `foldView()` reads under `skippingDefaults()`, per schema it is read from, so it keeps its identity across
  * the passes and calls that read it, as the caches keyed on a schema need
@@ -1293,8 +1276,8 @@ interface HandedDown {
  * then no pass ends them: once a pass would decide as an earlier one did, each condition that flipped since is decided
  * by the data alone, and the passes go on to settle the others. Once they settle, each such condition but the last is
  * decided by the defaults again where the passes still settle, as one that flipped only because it reads the default
- * of another does. Where anything else flipped, the field's data is no object, or the passes outnumber the decisions
- * of the last one, the field is computed as its data alone decides it.
+ * of another does. Where anything else flipped, the field's data is no object, or the passes outnumber the decisions of
+ * the last one, not counting a first pass that only fills the value the field starts from, the field is computed as its data alone decides it.
  * A child computed in an earlier pass from the same inputs is not computed again.
  */
 function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -1305,12 +1288,6 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const data = props.rawFormData;
   // A `NaN` the defaults replace leaves the field as empty as no data does, so the field is planned for none
   const plannedData = Number.isNaN(data) ? undefined : data;
-  // The default the field's seeds declare, which it most often starts from, so its first pass is planned for it
-  let held = heldValue<T, S, F>(context, props, () =>
-    SKIPS_DEFAULTS in context
-      ? undefined
-      : field.seeds.map(({ node }) => declaredDefault(field.graph, node)).find((value) => value !== undefined),
-  );
   const passes = fieldPasses<S, F>(context, field.graph.rawRoot, data);
   const memo = new Map<string, MemoEntry>();
   const fold = (depData: unknown): FieldPass<S> => {
@@ -1418,7 +1395,12 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // it was planned with, or once a pass would decide as an earlier one did, with what each pass since decided and the
   // data the next would be planned for. Past the pass cap, no pass since is known to repeat
   const passesFrom = (start: FieldPass<S>, fixed: readonly FixedCondition<S>[]): PassesEnd<S> => {
-    const seen = new Map<string, Decisions>();
+    const seen = new Map<string, Cycled<S>>();
+    // A start pass that resolved neither branch of a condition, or left its conditions unresolved for an empty field,
+    // only fills the value the field starts from
+    const fillsStart = start.readers.some(
+      ({ checked, present }) => present === false || checked.some(({ satisfied }) => satisfied === undefined),
+    );
     const cycleFrom = (key: string, depData: unknown) => ({
       cycle: [...seen.values()].slice([...seen.keys()].indexOf(key)),
       depData,
@@ -1432,7 +1414,6 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (seen.has(plannedKey)) {
         return cycleFrom(plannedKey, pass.depData);
       }
-      seen.set(plannedKey, planned);
       // Merged into the data, the defaults are the data as the fill leaves it at every level, a nested default beside
       // the data of its object and one replacing data the field doesn't take included, which a fill of that data
       // reads again, with the `null`s it puts over the data's `undefined`; otherwise the data is merged over them, a
@@ -1442,8 +1423,9 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
         : mergeDefaultsWithFormData(pass.folded, data, false, true);
       // A `NaN` left in the field holds no value, as where the field is planned for it
       const filled = Number.isNaN(merged) ? undefined : merged;
+      seen.set(plannedKey, { decisions: planned, pass, filled });
       // The plans checked their conditions against their dependency data, `{}` standing in for none unless the field
-      // holds no value, see `CheckedCondition.metWithoutValue`, which a fill that leaves the field empty is checked as
+      // holds no value, see `CheckedCondition.noValue`, which a fill that leaves the field empty is checked as
       // again. A `null` was checked as itself, so a fill that puts `{}` over it is checked again. The plans decide
       // alike for data equal to it, as the data of an edit is once it holds the defaults. Data that differs is handed
       // to the next pass as a copy of the one the comparison built, which shares with this pass's data what the two
@@ -1460,45 +1442,29 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (seen.has(decisionsKey)) {
         return cycleFrom(decisionsKey, depData);
       }
-      if (count > planned.size) {
+      if (count > planned.size + (fillsStart ? 1 : 0)) {
         return { cycle: [], depData };
       }
       pass = fold(depData);
     }
   };
-  let first = fold(held);
-  // The field starts from the value its defaults give it before any of its conditions is resolved, as the fold gives it
-  // one: its own `default`, a merged `allOf` member's, the one of the option it shows, an inherited one or its
-  // `ui:initialValue`, by the precedence the fold gives them. It is read only where the first pass checked a
-  // condition, against the `default` its seeds declare or, for a field that holds no value without one, against none,
-  // or left one unresolved for an empty field that a value would resolve, unless the field holds no `default` and may
-  // hold no primitive: `heldValue()` drops an object or an array it starts from. It is never read under a context that
-  // resolves no condition, as the read itself is folded under one
-  const readsValue =
-    !isMarked(context, RESOLVES_NO_CONDITIONS) &&
-    first.readers.some(
-      ({ checked, present }) =>
-        (present === false && (held !== undefined || mayHoldPrimitive<S>(field.graph, field.seeds))) ||
-        checked.some(({ holdsPrimitive }) => held !== undefined || holdsPrimitive),
-    );
-  if (readsValue) {
-    const ownHeld = heldValue<T, S, F>(context, props, () =>
-      startValue<T, S, F>(unresolvedContext<S, F>(context), field, props),
-    );
-    if (!Object.is(ownHeld, held)) {
-      held = ownHeld;
-      first = fold(held);
-    }
-  }
-  // The conditions decided by the data alone, as the first pass decided them, whatever the defaults, by decision. The
-  // data of a field that holds no object is the value `heldValue()` says it holds, its default in place of none
+  // The first pass fills the value the field starts from, as a field holding no value resolves none of its conditions
+  // without data, and the next is planned for it
+  const first = fold(plannedData);
+  // The conditions decided by the data alone, as the first pass decided them, whatever the defaults, by decision
   const fixed = new Map<string, FixedCondition<S>>();
   let end = passesFrom(first, []);
-  // The passes since the one a pass would repeat decide alike but for what flips from pass to pass. Each condition
-  // that flips is fixed as the data alone decides it, for the passes to settle the rest. Should anything else flip, or
-  // nothing new, the field is computed as its data alone decides it
+  // The passes since the one a pass would repeat decide alike but for what flips from pass to pass. The one pass whose
+  // fill the validator accepts against the field's schema is kept. Otherwise each condition that flips is fixed as the
+  // data alone decides it, for the passes to settle the rest. Should anything else flip, or nothing new, the field is
+  // computed as its data alone decides it
   while (!('settled' in end)) {
-    const { cycle, depData } = end;
+    const valid = end.cycle.filter(({ filled }) => filled !== undefined && fillIsValid(context, field, filled));
+    if (valid.length === 1) {
+      return kept(valid[0].pass);
+    }
+    const { depData } = end;
+    const cycle = end.cycle.map(({ decisions }) => decisions);
     const flipping = [...new Set(cycle.flatMap((decisions) => [...decisions.keys()]))].filter(
       (key) =>
         !fixed.has(key) &&
@@ -1514,7 +1480,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
         return kept(first);
       }
       const { graph, checked } = condition;
-      fixed.set(key, { graph, site: checked.site, satisfied: checkCondition(context, graph, checked, held) });
+      fixed.set(key, { graph, site: checked.site, satisfied: checkCondition(context, graph, checked, plannedData) });
     }
     const all = [...fixed.values()];
     end = passesFrom(fold(ownedDepData(depData, all)), all);
@@ -1537,58 +1503,13 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return kept(settled);
 }
 
-/** The value a field holds before the defaults its conditions pick are filled in, which they are checked against: its
- * data, unless the defaults replace it, then the value `startOf()` says they give it, where that is no object or array,
- * since an object field holds its defaults filled in and is checked against them on the next pass
- */
-function heldValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
+/** Whether the validator accepts `filled` against the schema of `field`, each of its seeds */
+function fillIsValid<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  { rawFormData, requiredAsRoot }: FoldProps<T, S, F>,
-  startOf: () => unknown,
-): unknown {
-  if (!defaultsReplace(rawFormData, requiredAsRoot === true, context.defaultFormStateBehavior)) {
-    return rawFormData;
-  }
-  const start = startOf();
-  if (start !== undefined && !Number.isNaN(start) && (start === null || typeof start !== 'object')) {
-    return start;
-  }
-  // A replaced `NaN` holds no value, so its conditions are checked as an empty field's, see
-  // `CheckedCondition.metWithoutValue`. A replaced `null` is a value an `if` may test, which it keeps
-  return Number.isNaN(rawFormData) ? undefined : rawFormData;
-}
-
-/** The value the defaults give `field` before any of its conditions is resolved, under `context`, which resolves none.
- * The field is folded as optional: the `false` a required boolean is filled with is no value its defaults give it, so
- * its conditions are checked as an empty field's, as where it is optional
- */
-function startValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  field: DefaultsField<S>,
-  props: FoldProps<T, S, F>,
-): unknown {
-  return foldView(context, settle(context, field, undefined, undefined), {
-    ...props,
-    rawFormData: undefined,
-    required: false,
-    memo: new Map(),
-    passes: fieldPasses<S, F>(context, field.graph.rawRoot, undefined),
-    nullFills: freshFills(props.nullFills),
-    track: () => undefined,
-    onNullFill: undefined,
-    onObjectConst: undefined,
-    onHandDown: undefined,
-    onReachedDefault: undefined,
-  });
-}
-
-/** The `default` a node declares, or the node its `$ref` names */
-function declaredDefault<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId | undefined): unknown {
-  const node = id === undefined ? undefined : graph.node(id);
-  if (node?.kind !== 'schema') {
-    return undefined;
-  }
-  return DEFAULT_KEY in node.raw ? node.raw[DEFAULT_KEY] : declaredDefault(graph, node.ref);
+  { graph, seeds }: DefaultsField<S>,
+  filled: unknown,
+): boolean {
+  return seeds.every(({ node }) => context.validator.isValid(targetOf(graph, node), filled, graph.rawRoot));
 }
 
 /** How the passes of a field's fixed point end: on the pass whose defaults decide what it was planned with, or in a
@@ -1597,7 +1518,14 @@ function declaredDefault<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: 
  */
 type PassesEnd<S extends StrictRJSFSchema> =
   | { readonly settled: FieldPass<S> }
-  | { readonly cycle: readonly Decisions[]; readonly depData: unknown };
+  | { readonly cycle: readonly Cycled<S>[]; readonly depData: unknown };
+
+/** A pass of a cycle, what it was planned with, and the data its defaults leave the field with */
+interface Cycled<S extends StrictRJSFSchema> {
+  readonly decisions: Decisions;
+  readonly pass: FieldPass<S>;
+  readonly filled: unknown;
+}
 
 /** A decision a plan made from its dependency data: whether a condition held, a set of `dependencies` qualified or
  * there was data, or the option chosen of a list
@@ -4060,16 +3988,13 @@ function constSchemaOf<S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Whether a merge of a field for its `data` resolves the field's `if`s: it does unless the field is empty and
  * `emptyObjectFields` is `skipEmptyDefaults`, which leaves an empty field's conditions unresolved wherever they sit, as
- * the plan of a field holding one itself does, or the context resolves none, see `RESOLVES_NO_CONDITIONS`
+ * the plan of a field holding one itself does
  */
 function resolvesConditions<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   data: unknown,
 ): boolean {
-  return (
-    !isMarked(context, RESOLVES_NO_CONDITIONS) &&
-    (data !== undefined || context.defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults')
-  );
+  return data !== undefined || context.defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults';
 }
 
 /** The schema of a field, `schema` as written, merged for its `data` by `merge`, where that brings in a `const`. A

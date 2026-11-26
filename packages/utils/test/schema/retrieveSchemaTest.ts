@@ -2608,14 +2608,14 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { type: 'number' },
         ],
         [
-          'merges the else of an if: { not: {} }',
+          'merges neither branch of an if: { not: {} }',
           { type: 'string', if: { not: {} }, else: { const: 'z' } },
-          { type: 'string', const: 'z' },
+          { type: 'string' },
         ],
         [
-          'merges the else of an if not every value it may hold meets',
+          'merges neither branch of an if not every value it may hold meets',
           { type: 'string', if: { maxLength: 0 }, then: { title: 'empty' }, else: { const: 'z' } },
-          { type: 'string', const: 'z' },
+          { type: 'string' },
         ],
         [
           'merges no then of the allOf members whose ifs test the value their then pins, as no empty field meets them',
@@ -2630,9 +2630,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { type: 'string', enum: ['a', 'b'] },
         ],
         [
-          'merges the else of an if testing the value its then pins',
+          'merges neither branch of an if testing the value its then pins',
           { type: 'string', enum: ['a', 'b'], if: { const: 'a' }, then: { const: 'a' }, else: { title: 'other' } },
-          { type: 'string', enum: ['a', 'b'], title: 'other' },
+          { type: 'string', enum: ['a', 'b'] },
         ],
       ])('for a primitive field with no data, %s (#5895)', (_name, schema, expected) => {
         // The mock validator cannot evaluate an `if`, so it answers each check as the real ones do
@@ -2643,20 +2643,20 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ['a $ref', { $ref: '#/$defs/Three' }],
         ['an allOf', { allOf: [{ const: 3 }] }],
       ])(
-        'for a primitive field with no data, merges the const a branch reaches through %s where the field meets the if',
+        'for a primitive field with no data, merges neither branch, so not the const one reaches through %s',
         (_name, branch) => {
           testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
           const context = { validator: testValidator };
           const $defs = { Three: { const: 3 } };
           const takes: RJSFSchema = { type: 'number', if: {}, then: branch, $defs };
           const rejects: RJSFSchema = { type: 'number', if: { type: 'object' }, then: branch, $defs };
-          expect(retrieveSchema(context, takes, takes).const).toBe(3);
+          expect(retrieveSchema(context, takes, takes).const).toBeUndefined();
           expect(retrieveSchema(context, rejects, rejects).const).toBeUndefined();
         },
       );
       it.each<[string, RJSFSchema, RJSFSchema]>([
         [
-          'merges the else of an if: { const } for a field with no data, as an empty field is not that value',
+          'merges neither branch of an if: { const } for a field with no data',
           {
             type: 'string',
             enum: ['a', 'other'],
@@ -2664,10 +2664,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             then: { title: 'Other' },
             else: { title: 'Pick' },
           },
-          { type: 'string', enum: ['a', 'other'], title: 'Pick' },
+          { type: 'string', enum: ['a', 'other'] },
         ],
         [
-          'merges the else of a not of an if: { const } for a field with no data, as of every if but {}',
+          'merges neither branch of a not of an if: { const } for a field with no data, as of every if',
           {
             type: 'string',
             enum: ['a', 'other'],
@@ -2675,17 +2675,17 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             then: { title: 'Pick' },
             else: { title: 'Other' },
           },
-          { type: 'string', enum: ['a', 'other'], title: 'Other' },
+          { type: 'string', enum: ['a', 'other'] },
         ],
       ])('%s (#5895)', (_name, schema, expected) => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);
       });
-      it('merges the else of an if not every value of a field with no data meets, and checks null data as null, in either order (#5916)', () => {
+      it('merges neither branch for a field with no data, and checks null data as null, in either order (#5916)', () => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         const context = { validator: testValidator };
         const branches: Record<string, RJSFSchema> = {
-          undefined: { type: ['string', 'null'], const: 'a' },
+          undefined: { type: ['string', 'null'] },
           null: { type: ['string', 'null'], const: null },
         };
         for (const order of [

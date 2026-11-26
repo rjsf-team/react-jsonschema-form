@@ -611,7 +611,7 @@ describe('buildPlan()', () => {
           list: schema.anyOf,
           dependencies: false,
           selected: undefined,
-          declared: { types: ['object'], inferred: false },
+          declared: { types: ['object'] },
         },
         {
           keyword: 'oneOf',
@@ -621,7 +621,7 @@ describe('buildPlan()', () => {
           list: schema.oneOf,
           dependencies: false,
           selected: undefined,
-          declared: { types: ['object'], inferred: false },
+          declared: { types: ['object'] },
         },
       ]);
       expect(plan.schema.anyOf).toBe(schema.anyOf);
