@@ -800,20 +800,37 @@ function holdsCopy(copy: unknown, data: unknown): boolean {
   return Object.is(copy, data);
 }
 
-/** Returns whether `formData` holds each key the scope of `option` requires whatever the data, see `scopeOf()`: what
- * matching and scoring pass over, read without the validator, whose check of a whole option grows with each recursive
- * choice in it
+/** Ranks a tied option first by whether `formData` holds each key the scope of `option` requires whatever the data, see
+ * `scopeOf()`, then by how many of the data's keys it declares, there or in `schema`, the option as given, such as a
+ * view `retrieveSchema()` handed out with the branches the data applies: what matching and scoring pass over, read
+ * without the validator, whose check of a whole option grows with each recursive choice in it
  */
-function holdsRequired<S extends StrictRJSFSchema>(formData: GenericObjectType, option: OptionNode<S>): boolean {
+function tieRank<S extends StrictRJSFSchema>(
+  formData: GenericObjectType,
+  option: OptionNode<S>,
+  schema: unknown,
+): number {
+  const held = Object.keys(formData).filter((key) => formData[key] !== undefined);
+  // Holding every required key outranks any count of declared keys, which is at most `held.length`
+  const whole = held.length + 1;
+  // Only a `true` option ties: a `false` one matches no data
   if (typeof option === 'boolean') {
-    return option;
+    return whole;
   }
-  return scopeOf(option.graph, option.node, 'unconditional').every(({ raw }) => {
+  // A `then` that may not apply to the data declares nothing here, as it requires nothing
+  const scope = scopeOf(option.graph, option.node, 'unconditional');
+  const holdsRequired = scope.every(({ raw }) => {
     const required: unknown = raw[REQUIRED_KEY];
-    return (
-      !Array.isArray(required) || required.every((key) => Object.hasOwn(formData, key) && formData[key] !== undefined)
-    );
+    return !Array.isArray(required) || required.every((key) => held.includes(key));
   });
+  // shortcut: keys taken through `patternProperties` or `additionalProperties` don't count; upgrade if such a tie misleads
+  const declarers = [schema, ...scope.map(({ raw }) => raw)];
+  const declared = held.filter((key) =>
+    declarers.some(
+      (each) => isObject(each) && isObject(each[PROPERTIES_KEY]) && Object.hasOwn(each[PROPERTIES_KEY], key),
+    ),
+  ).length;
+  return (holdsRequired ? whole : 0) + declared;
 }
 
 /** Picks the option for `bestOption()`, see `getClosestMatchingOption()` */
@@ -883,12 +900,11 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // Matching and scoring both pass over a missing `required` key, and a typed value differing from a `default` scores
   // as a missing one, so options such as the pairs a `then` list merges with the field's own can tie where only one
-  // holds every key it requires
-  if (isObject(formData) && validIndexes.length > 0 && best.index !== selectedOption && tied.length > 1) {
-    const whole = tied.find((index) => holdsRequired<S>(formData, optionNodes[index]));
-    if (whole !== undefined) {
-      best = { index: whole, score: best.score };
-    }
+  // holds every key it requires, or declares every key the data holds
+  // The selected option is the first tied one where it ties, so it keeps a tie only where it ranks as well
+  if (isObject(formData) && validIndexes.length > 0 && tied.length > 1) {
+    const ranks = tied.map((index) => tieRank<S>(formData, optionNodes[index], options[index]));
+    best = { index: tied[ranks.indexOf(Math.max(...ranks))], score: best.score };
   }
   const score = (validIndexes.includes(best.index) ? 1 : 0) + best.score;
   return { index: best.index, score: () => score };
@@ -939,10 +955,10 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
  * that matches the data, as `getFirstMatchingOption()` matches an option, is returned when exactly one does.
  *
  * Otherwise the options that match, or all of them when none does, are the candidates: each is scored by how closely
- * its properties and type match the data, and the candidate with the best score is returned. A tie goes to the
- * `selectedOption` when it is a candidate, then, among options the data matches, to the first holding each key its scope
- * requires, and to the first candidate otherwise, so an option that does not match the data is never
- * returned while one does.
+ * its properties and type match the data, and the candidate with the best score is returned. A tie among options the
+ * data matches goes to the one holding each key its scope requires and declaring the most keys the data holds, the
+ * `selectedOption` first where it ranks as well. Any other tie goes to the `selectedOption` when it is a candidate and
+ * to the first candidate otherwise, so an option that does not match the data is never returned while one does.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form

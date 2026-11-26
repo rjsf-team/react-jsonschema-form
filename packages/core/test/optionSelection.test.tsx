@@ -2064,6 +2064,35 @@ describe('option selection as form state', () => {
     ]);
   });
 
+  // Without the field's title, the pairs no option names would fall back to "P option 3", numbered in the merged list
+  it("labels each pair of a then's list with the field's own alike where only some options are titled (#5930)", () => {
+    const option = (key: string, title?: string): RJSFSchema => ({
+      ...(title ? { title } : {}),
+      properties: { [key]: { type: 'string' } },
+      required: [key],
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          type: 'object',
+          title: 'P',
+          oneOf: [option('a', 'A'), option('b')],
+          if: true,
+          then: { oneOf: [option('c'), option('d')] },
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual([
+      'A, Option 1',
+      'A, Option 2',
+      'Option 2, Option 1',
+      'Option 2, Option 2',
+    ]);
+  });
+
   // Merged, A×X and A×Y would both pin `kind: 'a'`, so the discriminator would always show A×X
   it("offers a then's list in place of the field's own where a discriminator couldn't tell the pairs apart (#5930)", () => {
     const schema: RJSFSchema = {
@@ -2117,6 +2146,67 @@ describe('option selection as form state', () => {
     await submitForm(node, user);
     expectToHaveBeenCalledWithFormData(onSubmit, formData, true);
   });
+
+  // The switched-to pair ties with B×D for the restored data, so keeping it would fill `c`'s default and hide `d`
+  it("restores the pair of a then's list with the field's own the saved data fills on reset() after a switch (#5930)", async () => {
+    const option = (key: string): RJSFSchema => ({
+      title: key.toUpperCase(),
+      properties: { [key]: { type: 'string', default: `${key}-default` } },
+      required: [key],
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: { type: 'object', oneOf: [option('a'), option('b')], if: true, then: { oneOf: [option('c'), option('d')] } },
+      },
+    };
+    const ref = createFormRef();
+    const formData = { p: { b: 'typed b', d: 'typed d' } };
+    const { node } = createFormComponent({ ref, schema, formData });
+    const select = selectOf(node, 'root_p__oneof_select');
+    await user.selectOptions(select, 'B, C');
+    expect(getSelectedOptionValue(select)).toBe('B, C');
+
+    act(() => handleOf(ref).reset());
+
+    expect(getSelectedOptionValue(selectOf(node, 'root_p__oneof_select'))).toBe('B, D');
+    expect(handleOf(ref).getFormData()).toEqual(formData);
+    expect(handleOf(ref).validateForm()).toBe(true);
+  });
+
+  // The pairs still tie where `required` doesn't tell them apart, so only the keys each declares do
+  it.each([
+    { case: 'neither list requires its keys', own: false, then: false },
+    { case: "only the then's list requires its keys", own: false, then: true },
+    { case: "only the field's own list requires its keys", own: true, then: false },
+  ])(
+    "shows the pair of a then's list with the field's own declaring the keys saved data holds, where $case (#5930)",
+    async ({ own, then }) => {
+      const option = (key: string, required: boolean): RJSFSchema => ({
+        title: key.toUpperCase(),
+        properties: { [key]: { type: 'string', default: `${key}-default` } },
+        ...(required ? { required: [key] } : {}),
+      });
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            type: 'object',
+            anyOf: [option('a', own), option('b', own)],
+            if: true,
+            then: { anyOf: [option('c', then), option('d', then)] },
+          },
+        },
+      };
+      const formData = { p: { b: 'typed b', d: 'typed d' } };
+      const { node, onSubmit } = createFormComponent({ schema, formData });
+      expect(getSelectedOptionValue(selectOf(node, 'root_p__anyof_select'))).toBe('B, D');
+      expect(node.querySelector('#root_p_b')).toHaveValue('typed b');
+      expect(node.querySelector('#root_p_d')).toHaveValue('typed d');
+      await submitForm(node, user);
+      expectToHaveBeenCalledWithFormData(onSubmit, formData, true);
+    },
+  );
 
   // The defaults pick for a written list ties the same way, so it must break the tie as the field does, or it fills A's
   // default and A then outscores B

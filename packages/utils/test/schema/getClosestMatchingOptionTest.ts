@@ -267,7 +267,34 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'typed b', d: 'typed d' }, options),
         ).toEqual(1);
       });
-      it('keeps the selected option', () => {
+      it('goes to the option declaring the most keys the data holds where none requires any', () => {
+        const unrequired = options.map(({ properties }) => ({ properties }));
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            { oneOf: unrequired },
+            { b: 'typed b', d: 'typed d' },
+            unrequired,
+          ),
+        ).toEqual(1);
+      });
+      it('ranks holding each key an option requires over declaring more of the keys the data holds', () => {
+        const ranked: RJSFSchema[] = [
+          { properties: { a: withDefault('a'), b: withDefault('b'), d: withDefault('d') }, required: ['a'] },
+          { properties: { d: withDefault('d') }, required: ['d'] },
+        ];
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            { oneOf: ranked },
+            { b: 'typed b', d: 'typed d' },
+            ranked,
+          ),
+        ).toEqual(1);
+      });
+      it('passes over the selected option where another ranks above it', () => {
         testValidator.setReturnValues({ isValid: [true, true] });
         expect(
           getClosestMatchingOption(
@@ -277,7 +304,13 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
             options,
             0,
           ),
-        ).toEqual(0);
+        ).toEqual(1);
+      });
+      it('keeps the selected option where it ranks as well', () => {
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption({ validator: testValidator }, rootSchema, { d: 'typed d' }, options, 1),
+        ).toEqual(1);
       });
       it('goes to the first option where none holds each key it requires', () => {
         testValidator.setReturnValues({ isValid: [true, true] });

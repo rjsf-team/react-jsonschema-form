@@ -1213,7 +1213,7 @@ describe('a cell in options with no discriminator', () => {
         },
       },
     };
-    createFormComponent({ schema, uiSchema: selectorUiSchema, initialFormData: { thing: {} } });
+    const { onChange } = createFormComponent({ schema, uiSchema: selectorUiSchema, initialFormData: { thing: {} } });
     const select = screen.getByRole<HTMLSelectElement>('combobox');
 
     await user.selectOptions(select, 'Option B');
@@ -1221,6 +1221,8 @@ describe('a cell in options with no discriminator', () => {
     expect(getSelectedOptionValue(select)).toBe('Option B');
     expect(screen.getByLabelText('B')).toBeInTheDocument();
     expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+    // No option pins `kind`, so the switch has no value to write under it
+    expect(onChange.mock.lastCall?.[0].formData.thing).not.toHaveProperty('kind');
   });
 
   // The form's sanitize judges a key only the old option declares, as for the option selector (#5812)

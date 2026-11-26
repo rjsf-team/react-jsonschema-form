@@ -208,7 +208,8 @@ export default function LayoutMultiSchemaField<
       globalUiOptions,
       selectorField,
     });
-    if (switched.formData) {
+    // Options offered by index don't pin the selector, so there is no value to write
+    if (switched.formData && selectorValue !== undefined) {
       setByPath(switched.formData, selectorField, selectorValue);
     }
     // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to

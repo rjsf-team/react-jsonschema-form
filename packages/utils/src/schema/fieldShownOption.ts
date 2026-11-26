@@ -265,7 +265,7 @@ export function renderedOptionTitles<
   }
   const given: unknown = uiSchema?.[listed.key];
   const entries = Array.isArray(given) ? given : [];
-  return built.map((sources, position) => {
+  const owns = built.map((sources, position) => {
     const writtenAt = indices?.[position];
     if (
       sources.length < 2 ||
@@ -286,9 +286,16 @@ export function renderedOptionTitles<
           )
         : optionName(source, rootSchema),
     );
-    // An untitled option is named by its place in its list where another names the pair, so pairs built from it and
-    // each option of the other list read apart
-    const named = own.some((name) => name !== undefined);
+    return { own, sources, writtenAt, writtenOption };
+  });
+  // An untitled option is named by its place in its list wherever an option names a pair, so every pair in the list
+  // is numbered alike and pairs built from it and each option of the other list read apart
+  const named = owns.some((pair) => pair?.own.some((name) => name !== undefined));
+  return owns.map((pair) => {
+    if (!pair) {
+      return undefined;
+    }
+    const { own, sources, writtenAt, writtenOption } = pair;
     // An option is numbered by where the root lists it, since a pair the merge left out shifts the order it took the
     // options in. shortcut: an option the root doesn't hold is numbered in that order; upgrade if one is mislabelled
     const placeOf = (slot: number) => {
@@ -304,11 +311,13 @@ export function renderedOptionTitles<
         ? Number(place[1])
         : [...new Set<unknown>(built.map((each) => each[slot]).filter((each) => each !== undefined))].indexOf(source);
     };
-    const nameAt = (name: string | undefined, slot: number) =>
-      name !== undefined || !named
-        ? name
-        : translateString(TranslatableString.OptionPrefix, [String(placeOf(slot) + 1)]);
-    const names = [...new Set(own.map(nameAt).filter((name) => name !== undefined))];
+    // Only a repeated title is dropped: the same number names options of different lists
+    const names = own.flatMap((name, slot) => {
+      if (name === undefined) {
+        return named ? [translateString(TranslatableString.OptionPrefix, [String(placeOf(slot) + 1)])] : [];
+      }
+      return own.indexOf(name) < slot ? [] : [name];
+    });
     return names.length > 1
       ? names.reduce((joined, next) => translateString(TranslatableString.MergedOptionTitle, [joined, next]))
       : undefined;
