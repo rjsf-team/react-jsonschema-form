@@ -539,6 +539,25 @@ describe('transformRJSFValidationErrors()', () => {
       expect(errors).toEqual([expect.objectContaining({ property: '.a.n', title: 'Own' })]);
     });
 
+    it('names an error from the $ref schema’s own allOf branch whose keyword differs from the one its path ends at', () => {
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', allOf: [{ properties: { z: {} } }] }, U: { allOf: [{}] } },
+        type: 'object',
+        properties: {
+          a: {
+            $ref: '#/$defs/T',
+            allOf: [{ properties: { p: {}, q: { title: 'Q' } }, dependentRequired: { p: ['q'] } }],
+          },
+          b: { $ref: '#/$defs/U', allOf: [{ title: 'Own0', enum: [1], if: { const: 3 }, then: false }] },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { p: 1 }, b: 3 }, schema);
+      expect(errors.find(({ schemaPath }) => schemaPath?.endsWith('/dependentRequired'))).toEqual(
+        expect.objectContaining({ property: '.a.q', title: 'Q' }),
+      );
+      expect(errors.find(({ schemaPath }) => schemaPath?.endsWith('/then'))?.title).toBe('Own0');
+    });
+
     describe('where the $ref schema cannot be merged with its target', () => {
       // Merging warns that the two `n` schemas conflict, then falls back to an `allOf` of both
       setupConsoleWarnSuppression();

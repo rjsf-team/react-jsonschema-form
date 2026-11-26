@@ -244,6 +244,16 @@ describe('getKeywordParentSchema()', () => {
       };
       expect(getKeywordParentSchema(schema, '#/properties/a/$ref/properties/n/type')).toBe(n);
     });
+    it('keeps the `$ref` schema as written for a path ending in a `$ref` or a chain of them written into it', () => {
+      const a: RJSFSchema = { $ref: '#/$defs/T', type: 'string', title: 'W' };
+      const schema: RJSFSchema = {
+        $defs: { T: { $ref: '#/$defs/U' }, U: { type: 'object', required: ['q'] } },
+        type: 'object',
+        properties: { a },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/$ref/required')).toBe(a);
+      expect(getKeywordParentSchema(schema, '#/properties/a/$ref/$ref/required')).toBe(a);
+    });
   });
   describe('with skipsRefs', () => {
     const own = { properties: { name: { title: 'Own' } } };

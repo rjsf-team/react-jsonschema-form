@@ -89,10 +89,12 @@ export function transformRJSFValidationErrors<
     const { instancePath, keyword, params, schemaPath } = e;
     // ata hands over a `$ref`'s own schema, unresolved, for a keyword under it, or no schema at all in a chain of them.
     // A `null` lookup is a path that can index either a `$ref` schema's branch or its target's. ata's own schema is read
-    // through the `$ref` schema's, so it is the right one only when it holds the keyword that failed
+    // through the `$ref` schema's, so it is the right one only when it holds the keyword the path ends at. ata's
+    // `keyword` isn't always that one: a `dependentRequired` error is a `required` one, a `then: false` one a `not` one
     const found = schema && getKeywordParentSchema<S>(schema, schemaPath, unescapePointerToken, true);
+    const pathKeyword = unescapePointerToken(schemaPath.slice(schemaPath.lastIndexOf('/') + 1));
     const parentSchema =
-      found === null && !Object.hasOwn(Object(e.parentSchema), keyword) ? undefined : (found ?? e.parentSchema);
+      found === null && !Object.hasOwn(Object(e.parentSchema), pathKeyword) ? undefined : (found ?? e.parentSchema);
     // oxlint-disable-next-line typescript/no-useless-default-assignment -- ata's types say `message` is always set, but it can be missing at runtime
     let { message = '' } = e;
     let property = instancePath.split('/').map(unescapePointerToken).join('.');

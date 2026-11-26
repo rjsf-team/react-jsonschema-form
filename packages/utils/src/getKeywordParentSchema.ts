@@ -142,23 +142,27 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index];
       const hasRef = stringKeyword(node, REF_KEY) !== undefined;
-      if (hasRef && key === REF_KEY && index < keys.length - 1) {
+      if (hasRef && key === REF_KEY) {
         // The keys after a `$ref` the path names index into its target, which merging in the `$ref` schema's own
         // `allOf` or `oneOf` would shift, there or further down. A path on through keys merging joins alone is read
         // merged from the first `$ref` of the chain it names, for the titles of every schema along it, unless the merge
-        // failed and moved them into an `allOf`
+        // failed and moved them into an `allOf`. A path ending in the chain is resolved as the `$ref` it ends at, below
         let refs = 1;
         while (keys[index + refs] === REF_KEY) {
           refs += 1;
         }
         const rest = keys.slice(index + refs);
-        const own = ownRef<S>(graph, seeds, node as S);
-        if (readsJoined(rest) && (rest.length === 0 || Object.hasOwn(own.resolved, rest[0]))) {
-          node = own.resolved;
-          seeds = own.seeds;
+        if (rest.length === 0) {
           index += refs - 1;
         } else {
-          node = own.target;
+          const own = ownRef<S>(graph, seeds, node as S);
+          if (readsJoined(rest) && Object.hasOwn(own.resolved, rest[0])) {
+            node = own.resolved;
+            seeds = own.seeds;
+            index += refs - 1;
+          } else {
+            node = own.target;
+          }
         }
       } else {
         if (
@@ -186,32 +190,27 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
         for (let reading = hasRef; reading;) {
           reading = false;
           if (
-            key === REF_KEY ||
             (MERGE_JOINED_KEYS.includes(key) && (skipsRefs || readsJoined(keys.slice(index)))) ||
             !Object.hasOwn(Object(node), key)
           ) {
             const own = ownRef<S>(graph, seeds, node as S);
-            if (own.failed && key !== REF_KEY && !Object.hasOwn(Object(node), key)) {
+            if (own.failed && !Object.hasOwn(Object(node), key)) {
               // The failed merge's `allOf` isn't the target's, so a key only the target holds is read from the target,
               // the same way again where the target holds a `$ref` too
               node = own.target;
               reading = stringKeyword(node, REF_KEY) !== undefined;
-            } else if (key === REF_KEY || !Object.hasOwn(Object(node), key) || Object.hasOwn(own.resolved, key)) {
+            } else if (!Object.hasOwn(Object(node), key) || Object.hasOwn(own.resolved, key)) {
               node = own.resolved;
               seeds = own.seeds;
             }
           }
         }
-        // `resolveOwnRef()` follows a whole chain of `$ref`s, each of which the path can name. A property named `$ref`
-        // is still read, as a key the schema holds
-        if (key !== REF_KEY || Object.hasOwn(Object(node), REF_KEY)) {
-          node = getByPath(node, key);
-          // A list is kept, for the seeds at the position the next key names
-          seeds = seeds.flatMap((seed) => {
-            const sub: unknown = getByPath(seed, key);
-            return typeof sub === 'object' && sub !== null ? [sub] : [];
-          });
-        }
+        node = getByPath(node, key);
+        // A list is kept, for the seeds at the position the next key names
+        seeds = seeds.flatMap((seed) => {
+          const sub: unknown = getByPath(seed, key);
+          return typeof sub === 'object' && sub !== null ? [sub] : [];
+        });
       }
       endsAtNameMap = !endsAtNameMap && NAME_MAP_KEYS.includes(key);
     }
