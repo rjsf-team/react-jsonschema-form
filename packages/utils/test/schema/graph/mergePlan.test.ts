@@ -1033,6 +1033,12 @@ describe('decidedWithoutValue()', () => {
     ['a custom keyword a validator may register', { isEven: true }, ['number'], undefined],
     ['an x- extension or a discriminator', { 'x-note': 'n', discriminator: { propertyName: 'k' } }, ['number'], true],
     [
+      'a content annotation',
+      { contentMediaType: 'application/json', contentEncoding: 'base64', contentSchema: { type: 'number' } },
+      ['string'],
+      true,
+    ],
+    [
       'a type of every JSON type for a field naming none',
       { type: ['array', 'boolean', 'null', 'number', 'object', 'string'] },
       undefined,

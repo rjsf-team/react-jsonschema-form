@@ -2700,6 +2700,21 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { type: 'number', if: { format: 'email' }, then: { title: 'Then' }, else: { title: 'Else' } },
           { type: 'number', title: 'Then' },
         ],
+        [
+          'merges the then of an if holding only content annotations and a $comment for a field with no data',
+          {
+            type: 'string',
+            if: {
+              $comment: 'x',
+              contentMediaType: 'application/json',
+              contentEncoding: 'base64',
+              contentSchema: { type: 'number' },
+            },
+            then: { title: 'Then' },
+            else: { title: 'Else' },
+          },
+          { type: 'string', title: 'Then' },
+        ],
       ])('%s (#5895)', (_name, schema, expected) => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);

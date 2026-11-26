@@ -1444,12 +1444,13 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // A `NaN` left in the field holds no value, as where the field is planned for it
       const filled = Number.isNaN(merged) ? undefined : merged;
       // The plans checked their conditions against their dependency data, `{}` standing in for none unless the field
-      // holds no value, see `NoValue`, which a fill that leaves the field empty is checked as again, so they decide
-      // alike for data equal to it, as the data of an edit is once it holds the defaults. Data that differs is handed
-      // to the next pass as a copy of the one the comparison built, which shares with this pass's data what the two
-      // hold alike, and which the fill owns, so the next pass's plans reuse the checks made against it here
-      const plannedFor: unknown = pass.depData ?? {};
-      const shared = replaceEqualDeep(plannedFor, filled ?? {});
+      // holds no value, see `NoValue`, which a fill that leaves the field empty is checked as again. A `null` was
+      // checked as itself, so a fill that puts `{}` over it is checked again. The plans decide alike for data equal to
+      // it, as the data of an edit is once it holds the defaults. Data that differs is handed to the next pass as a
+      // copy of the one the comparison built, which shares with this pass's data what the two hold alike, and which
+      // the fill owns, so the next pass's plans reuse the checks made against it here
+      const plannedFor: unknown = pass.depData === undefined ? {} : pass.depData;
+      const shared = replaceEqualDeep(plannedFor, filled === undefined ? {} : filled);
       const redecides = shared !== plannedFor;
       const next = redecides ? ownedDepData(shared, fixed) : shared;
       const depData = filled === undefined || filled === null ? filled : next;

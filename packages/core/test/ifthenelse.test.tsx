@@ -393,6 +393,20 @@ describe('null data checked as null for an if (#5916)', () => {
     expectToHaveBeenCalledWithFormData(onSubmit, { a: 1 }, true);
   });
 
+  it('renders the else default on the first render once the fill puts {} over a root holding null form data', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      if: { required: ['a'] },
+      then: { properties: { a: { type: 'number', title: 'A' } } },
+      else: { properties: { c: { type: 'number', title: 'C', default: 2 } } },
+    };
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData: null });
+    expect(screen.getByRole('textbox', { name: 'C' })).toHaveValue('2');
+    await submitForm(node, user);
+    expect(onError).not.toHaveBeenCalled();
+    expectToHaveBeenCalledWithFormData(onSubmit, { c: 2 }, true);
+  });
+
   it('titles a nullable string by the if its null default meets', () => {
     const { node } = createFormComponent({
       schema: {

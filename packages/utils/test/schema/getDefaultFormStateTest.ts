@@ -8684,6 +8684,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(getDefaultFormState(context, { schema })).toStrictEqual({});
           expect(getDefaultFormState(context, { schema, formData: null })).toStrictEqual({ a: 1 });
         });
+        it('checks the {} a fill puts over a root null form data again, so the branch it takes fills on the first fill (#5916)', () => {
+          const context = { validator: testValidator };
+          const schema: RJSFSchema = {
+            type: 'object',
+            if: { required: ['a'] },
+            then: { properties: { a: { title: 'A' } } },
+            else: { properties: { c: { default: 2 } } },
+          };
+          const filled = getDefaultFormState(context, { schema, formData: null });
+          expect(filled).toStrictEqual({ c: 2 });
+          expect(getDefaultFormState(context, { schema, formData: filled })).toStrictEqual({ c: 2 });
+        });
         it('decides the if of an empty field by the const its branch gives where its type comes through a $ref or an allOf', () => {
           const context = { validator: testValidator };
           const $defs = { Num: { type: 'number' as const } };

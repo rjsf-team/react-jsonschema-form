@@ -348,6 +348,11 @@ export function checkCondition<S extends StrictRJSFSchema, F extends FormContext
   return holds;
 }
 
+/** The content keywords, annotations from draft 2019-09 on, and in draft 7 ones a validator may leave unasserted, as
+ * every validator RJSF ships does
+ */
+const CONTENT_ANNOTATION_KEYS = new Set(['contentMediaType', 'contentEncoding', 'contentSchema']);
+
 /** Whether `types` allow `type`: an `integer` is a `number` */
 function allowsType(types: readonly unknown[], type: string): boolean {
   return types.includes(type) || (type === 'integer' && types.includes('number'));
@@ -390,13 +395,14 @@ export function decidedWithoutValue<S extends StrictRJSFSchema>(
   // A field naming no `type` allows every one
   const allowed = types ?? JSON_SCHEMA_TYPES;
   // A keyword that constrains none of the field's types holds for every value of them, as does an annotation, an `x-`
-  // extension or a `discriminator`. Any other keyword may constrain the value, a custom one the validator knows among
-  // them
+  // extension, a `discriminator` or a content annotation, which the validators don't assert. Any other keyword may
+  // constrain the value, a custom one the validator knows among them
   const keys = Object.keys(node.raw).filter(
     (key) =>
       !NON_CONSTRAINING_KEYS.has(key) &&
       !key.startsWith('x-') &&
       key !== 'discriminator' &&
+      !CONTENT_ANNOTATION_KEYS.has(key) &&
       Object.entries(KEYWORDS_BY_TYPE).every(
         ([only, keywords]) => !keywords.includes(key) || allowed.some((type) => allowsType([only], type)),
       ),
