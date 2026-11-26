@@ -96,8 +96,10 @@ export interface ArrayMinItems {
    * If the function returns true, the array will not be populated with default values.
    * If the function returns false, the array will be populated with default values according to the `populate` option.
    * @param context - The `SchemaContext` in effect, to pass along to any schema function the callback calls. Within
-   *        an option of a `oneOf`/`anyOf` of several const values, unless `constAsDefaults` is `'always'`, and within a
-   *        `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+   *        an option of a `oneOf`/`anyOf` of several const values, unless `constAsDefaults` is `'always'`, and, under
+   *        `constAsDefaults: 'skipOneOf'`, within the option of a non-empty `oneOf` on a field with a single primitive
+   *        `type` or none, or on a select over object or array const values with a single `type` or none, its
+   *        `constAsDefaults` is `'never'`
    * @param schema - The array schema whose defaults are being computed
    * @param [rootSchema] - The root schema that will be forwarded to all the APIs
    * @returns A boolean indicating whether to skip populating the array with default values.

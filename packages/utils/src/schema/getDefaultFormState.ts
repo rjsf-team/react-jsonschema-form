@@ -1836,11 +1836,16 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           adopted?.choice,
         );
         // The option of a list left unpicked gives no value, so the field starts as its own type says, at the `false` a
-        // required boolean starts at or the `null` a `null` field holds, whichever constant comes first
-        const startedOption =
-          choice.leavesUnpicked && foldedOption === undefined
+        // required boolean starts at or the `null` a `null` field holds. Data the defaults replace, which the option
+        // hands back as it stands, is no value either, so the field's start replaces it, as an `enum`'s does
+        const unpickedValue =
+          choice.leavesUnpicked &&
+          (foldedOption === undefined ||
+            (Object.is(foldedOption, rawFormData) &&
+              defaultsReplace(rawFormData, props.requiredAsRoot === true, defaultFormStateBehavior)))
             ? unpickedStart<T, S, F>(context, view, props, fieldStartsFalse)
-            : foldedOption;
+            : undefined;
+        const startedOption = unpickedValue === undefined ? foldedOption : unpickedValue;
         // Under the object's own `const`, or the value an ancestor's gives it, a key only the option declares, which the
         // `const` doesn't name and the data doesn't hold, is left out: its default would make the object a value the
         // `const` rejects. A key the `ui:initialValue` names is kept, since that value stands in the `const`'s place, and

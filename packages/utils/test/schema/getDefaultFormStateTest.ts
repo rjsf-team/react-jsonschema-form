@@ -11959,6 +11959,79 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ),
         ).toEqual({ b: false });
       });
+      it.each<[string, RJSFSchema, RJSFSchema, unknown]>([
+        [
+          'a oneOf of true and false',
+          { type: 'boolean', oneOf: untitled },
+          { type: 'boolean', enum: [true, false] },
+          false,
+        ],
+        [
+          'an anyOf of true and false',
+          { type: 'boolean', anyOf: titled },
+          { type: 'boolean', enum: [true, false] },
+          false,
+        ],
+        ['an untyped oneOf of true and false', { oneOf: untitled }, { type: 'boolean', enum: [true, false] }, false],
+        [
+          'a oneOf of true and false through allOf',
+          { type: 'boolean', allOf: [{ oneOf: untitled }] },
+          { type: 'boolean', enum: [true, false] },
+          false,
+        ],
+        [
+          'a oneOf of null, true and false, null first',
+          { type: ['boolean', 'null'], oneOf: [{ const: null }, { const: true }, { const: false }] },
+          { type: ['boolean', 'null'], enum: [null, true, false] },
+          false,
+        ],
+        [
+          'a oneOf of true and null',
+          { type: ['boolean', 'null'], oneOf: trueOrNull },
+          { type: ['boolean', 'null'], enum: [true, null] },
+          null,
+        ],
+      ])('starts a null %s holds under useDefaultIfFormDataUndefined as its enum does', (_, b, asEnum, expected) => {
+        const behavior: Behavior = { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' };
+        const defaultsOf = (field: RJSFSchema) =>
+          [false, true].map((initialDefaultsGenerated) =>
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: behavior },
+              {
+                schema: { type: 'object', required: ['b'], properties: { b: field } },
+                formData: { b: null },
+                initialDefaultsGenerated,
+              },
+            ),
+          );
+        expect(defaultsOf(b)).toStrictEqual(defaultsOf(asEnum));
+        expect(defaultsOf(b)).toStrictEqual([{ b: expected }, { b: expected }]);
+      });
+      it('replaces a NaN it holds by false, as its enum does', () => {
+        const defaultsOf = (field: RJSFSchema) =>
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema: { type: 'object', required: ['b'], properties: { b: field } }, formData: { b: Number.NaN } },
+          );
+        expect(defaultsOf({ type: 'boolean', oneOf: untitled })).toStrictEqual(
+          defaultsOf({ type: 'boolean', enum: [true, false] }),
+        );
+        expect(defaultsOf({ type: 'boolean', oneOf: untitled })).toStrictEqual({ b: false });
+      });
+      it.each<[string, unknown, Behavior]>([
+        ['a NaN', Number.NaN, {}],
+        ['a null', null, { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' }],
+      ])('replaces %s it holds by its default rather than by false, as its enum does', (_, data, behavior) => {
+        const defaultsOf = (field: RJSFSchema) =>
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: behavior },
+            { schema: { type: 'object', required: ['b'], properties: { b: field } }, formData: { b: data } },
+          );
+        expect(defaultsOf({ type: 'boolean', default: true, oneOf: untitled })).toStrictEqual(
+          defaultsOf({ type: 'boolean', default: true, enum: [true, false] }),
+        );
+        expect(defaultsOf({ type: 'boolean', default: true, oneOf: untitled })).toStrictEqual({ b: true });
+      });
     });
     describe('a list of one constant leaves nothing to choose, so it fills (#5944)', () => {
       type Behavior = DefaultFormStateBehavior;

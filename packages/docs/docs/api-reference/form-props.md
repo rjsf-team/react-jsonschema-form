@@ -143,7 +143,7 @@ Define the behavior the callback needs from its `schema` and `rootSchema` argume
 
 ###### Parameters
 
-- context: SchemaContext&lt;S, F> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within an option of a `oneOf`/`anyOf` of several constants, unless `constAsDefaults` is `'always'`, and within a `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+- context: SchemaContext&lt;S, F> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within an option of a `oneOf`/`anyOf` of several constants, unless `constAsDefaults` is `'always'`, and, under `constAsDefaults: 'skipOneOf'`, within the option of a non-empty `oneOf` on a field with a single primitive `type` or none, or on a select over object or array constants with a single `type` or none, its `constAsDefaults` is `'never'`
 - schema: S - The array schema whose defaults are being computed
 - [rootSchema]: S - The root schema that will be forwarded to all the APIs
 
