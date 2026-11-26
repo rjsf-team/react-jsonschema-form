@@ -2,6 +2,7 @@ import type { FieldFill, RJSFSchema, SchemaContext } from '../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   childFillOf,
+  getByPath,
   getDefaultFormState,
   getFieldDefault,
   getFilledDefault,
@@ -904,4 +905,49 @@ describe('getFilledDefault() reads what the fill writes', () => {
       ),
     ).toBeUndefined();
   });
+
+  it.each(
+    (
+      [
+        {
+          name: 'additionalProperties',
+          keywords: { additionalProperties: { allOf: [{ type: 'string' }, { default: 'a' }] } },
+        },
+        {
+          name: 'patternProperties',
+          keywords: { patternProperties: { '^c': { allOf: [{ type: 'string' }, { default: 'a' }] } } },
+        },
+        {
+          name: 'unevaluatedProperties',
+          keywords: { unevaluatedProperties: { allOf: [{ type: 'string' }, { default: 'a' }] } },
+        },
+        {
+          name: 'additionalProperties naming a $ref to an allOf',
+          keywords: {
+            $defs: { Extra: { allOf: [{ type: 'string' }, { default: 'a' }] } },
+            additionalProperties: { $ref: '#/$defs/Extra' },
+          },
+        },
+      ] satisfies { name: string; keywords: RJSFSchema }[]
+    ).flatMap((entry) => (['skipDefaults', 'populateDefaults'] as const).map((allOf) => ({ ...entry, allOf }))),
+  )(
+    "reads an extra key its object's retrieved schema stubs as the fill writes it, its $name holding an allOf, under $allOf (#5954)",
+    ({ keywords, allOf }) => {
+      const root: RJSFSchema = { type: 'object', default: { c: 'p' }, ...keywords };
+      const context: SchemaContext = { validator: answering(), defaultFormStateBehavior: { allOf } };
+      const filled = getDefaultFormState(context, { schema: root, rootSchema: root });
+      // `populateDefaults` merges the key's own `default` over the object's, as for a property the object declares
+      expect(filled).toEqual({ c: allOf === 'populateDefaults' ? 'a' : 'p' });
+      const retrieved = retrieveSchema(context, root, root, filled);
+      const stub = retrieveSchema(
+        context,
+        getByPath<RJSFSchema>(retrieved, ['properties', 'c']),
+        root,
+        getByPath(filled, ['c']),
+      );
+      expect(getFilledDefault(context, stub, root, childFillOf(context, retrieved, root, {}, 'c'))).toBe(
+        getByPath(filled, ['c']),
+      );
+    },
+  );
 });

@@ -1038,14 +1038,15 @@ function isUnchanged<T, S extends StrictRJSFSchema, F extends FormContextType>(
 }
 
 /** The innermost of `layers` with the keywords its default is cut down by read from them all, as the fill reads the
- * field: each layer's `properties` and `required`, and the innermost `type` and `additionalProperties` declared
+ * field: each layer's `properties` and `required`, and the innermost `type` and extra-key keywords declared
+ * (`additionalProperties`, `patternProperties`, `unevaluatedProperties`), which describe the keys it takes beside them
  */
 function fieldSchemaOf<S extends StrictRJSFSchema>(layers: readonly S[]): S {
   if (layers.length === 1) {
     return layers[0];
   }
   const field: S = { ...layers[layers.length - 1] };
-  for (const keyword of ['type', 'additionalProperties']) {
+  for (const keyword of ['type', ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY]) {
     const value = keywordOf(layers, keyword);
     if (value !== undefined) {
       setOwn(field, keyword, value);

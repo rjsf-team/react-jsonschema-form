@@ -5154,3 +5154,53 @@ describe('judging the keys of an object no condition reads by one fill of the fo
     },
   );
 });
+
+describe('judging an extra key by the value the fill writes for it, an allOf in its subschema (#5954)', () => {
+  const extraKey: RJSFSchema = { allOf: [{ type: 'string' }, { default: 'a' }] };
+  const keywords = {
+    additionalProperties: { additionalProperties: extraKey },
+    patternProperties: { patternProperties: { '^c': extraKey } },
+    'a $ref to an allOf': {
+      $defs: { Extra: extraKey },
+      additionalProperties: { $ref: '#/$defs/Extra' },
+    },
+  } satisfies Record<string, RJSFSchema>;
+
+  it.each(
+    (['oneOf', 'anyOf'] as const).flatMap((list) =>
+      (Object.keys(keywords) as (keyof typeof keywords)[]).flatMap((keyword) =>
+        (['skipDefaults', 'populateDefaults'] as const).map((allOf) => ({ list, keyword, allOf })),
+      ),
+    ),
+  )(
+    'replaces the value it filled from the object default by the new option default, $keyword under $list, $allOf',
+    async ({ list, keyword, allOf }) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        default: { c: 'p' },
+        ...keywords[keyword],
+        [list]: [
+          { title: 'S', properties: { kind: { const: 's' } } },
+          { title: 'T', properties: { kind: { const: 't' }, c: { type: 'string', default: 't' } } },
+        ],
+      };
+      const ref = createRef<FormRef>();
+      const { container } = render(
+        <Form
+          ref={ref}
+          schema={schema}
+          validator={validator}
+          initialFormData={{ kind: 's' }}
+          defaultFormStateBehavior={{ allOf }}
+        />,
+      );
+      // `populateDefaults` merges the key's own `default` over the object's, as for a property the object declares
+      const filled = allOf === 'populateDefaults' ? 'a' : 'p';
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 's', c: filled });
+
+      await user.selectOptions(elementOf(container, `#root__${list.toLowerCase()}_select`), 'T');
+
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 't', c: 't' });
+    },
+  );
+});
