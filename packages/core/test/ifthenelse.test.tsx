@@ -326,8 +326,8 @@ describe("an empty field's then/else const (#5895)", () => {
       { a: 1, b: 2 },
     ],
     [
-      'fills a number field from a then whose if takes the const, and submits it',
-      { type: 'number', if: { type: 'number' }, then: { const: 3 } },
+      'fills a number field from the then of its allOf member whose if is {}, and submits it',
+      { type: 'number', allOf: [{ if: {}, then: { const: 3 } }] },
       3,
     ],
   ])('%s', async (_name, x, filled) => {

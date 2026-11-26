@@ -45,9 +45,6 @@ import {
 import { check } from './graph/miniValidator.ts';
 import type { TestValidatorType } from './types.ts';
 
-/** An `if` of only an `x-` extension, which the schema types declare no key for */
-const NOTE: RJSFSchema & { 'x-note': string } = { 'x-note': 'n' };
-
 /** Reads a subschema handed out by `retrieveSchema()` as the schema it is, or the empty schema for any other value */
 function schemaOf(value: unknown): RJSFSchema {
   return isObject(value) && !Array.isArray(value) ? value : {};
@@ -2601,9 +2598,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     describe('Conditional schemas (If, Then, Else)', () => {
       it.each<[string, RJSFSchema, RJSFSchema]>([
         [
-          'merges the then whose if takes every value it holds',
+          'leaves out the then whose if: { type } names its type',
           { type: 'number', if: { type: 'number' }, then: { const: 3 } },
-          { type: 'number', const: 3 },
+          { type: 'number' },
         ],
         [
           'leaves out the then whose if rejects every value it holds',
@@ -2646,12 +2643,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ['a $ref', { $ref: '#/$defs/Three' }],
         ['an allOf', { allOf: [{ const: 3 }] }],
       ])(
-        'for a primitive field with no data, merges the const a branch reaches through %s where no value could change the if',
+        'for a primitive field with no data, merges the const a branch reaches through %s where the field meets the if',
         (_name, branch) => {
           testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
           const context = { validator: testValidator };
           const $defs = { Three: { const: 3 } };
-          const takes: RJSFSchema = { type: 'number', if: { type: 'number' }, then: branch, $defs };
+          const takes: RJSFSchema = { type: 'number', if: {}, then: branch, $defs };
           const rejects: RJSFSchema = { type: 'number', if: { type: 'object' }, then: branch, $defs };
           expect(retrieveSchema(context, takes, takes).const).toBe(3);
           expect(retrieveSchema(context, rejects, rejects).const).toBeUndefined();
@@ -2670,7 +2667,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { type: 'string', enum: ['a', 'other'], title: 'Pick' },
         ],
         [
-          'merges the then of a not of an if: { const } for a field with no data, as an empty field is not that value',
+          'merges the else of a not of an if: { const } for a field with no data, as of every if but {}',
           {
             type: 'string',
             enum: ['a', 'other'],
@@ -2678,42 +2675,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             then: { title: 'Pick' },
             else: { title: 'Other' },
           },
-          { type: 'string', enum: ['a', 'other'], title: 'Pick' },
-        ],
-        [
-          'merges the then of a type-only if reached through a $ref, as of the same if written in place',
-          { type: 'number', $defs: { Num: { type: 'number' } }, if: { $ref: '#/$defs/Num' }, then: { const: 3 } },
-          { type: 'number', $defs: { Num: { type: 'number' } }, const: 3 },
-        ],
-        [
-          'merges the then of an if holding only an x- extension for a field with no data, as of an if of annotations only',
-          { type: 'string', if: NOTE, then: { title: 'Then' }, else: { title: 'Else' } },
-          { type: 'string', title: 'Then' },
-        ],
-        [
-          'merges the then of a type-only if with an x- extension beside it for a field with no data',
-          { type: 'string', if: { ...NOTE, type: 'string' }, then: { title: 'Then' }, else: { title: 'Else' } },
-          { type: 'string', title: 'Then' },
-        ],
-        [
-          'merges the then of an if: { format } for a number field with no data, as format constrains only strings',
-          { type: 'number', if: { format: 'email' }, then: { title: 'Then' }, else: { title: 'Else' } },
-          { type: 'number', title: 'Then' },
-        ],
-        [
-          'merges the then of an if holding only content annotations and a $comment for a field with no data',
-          {
-            type: 'string',
-            if: {
-              $comment: 'x',
-              contentMediaType: 'application/json',
-              contentEncoding: 'base64',
-              contentSchema: { type: 'number' },
-            },
-            then: { title: 'Then' },
-            else: { title: 'Else' },
-          },
-          { type: 'string', title: 'Then' },
+          { type: 'string', enum: ['a', 'other'], title: 'Other' },
         ],
       ])('%s (#5895)', (_name, schema, expected) => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });

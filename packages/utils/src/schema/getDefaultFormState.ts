@@ -89,7 +89,6 @@ import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
   RESOLVES_NO_CONDITIONS,
   checkCondition,
-  decidedWithoutValue,
   isMarked,
   mayHoldPrimitive,
   mergeAllOf,
@@ -1444,11 +1443,11 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // A `NaN` left in the field holds no value, as where the field is planned for it
       const filled = Number.isNaN(merged) ? undefined : merged;
       // The plans checked their conditions against their dependency data, `{}` standing in for none unless the field
-      // holds no value, see `NoValue`, which a fill that leaves the field empty is checked as again. A `null` was
-      // checked as itself, so a fill that puts `{}` over it is checked again. The plans decide alike for data equal to
-      // it, as the data of an edit is once it holds the defaults. Data that differs is handed to the next pass as a
-      // copy of the one the comparison built, which shares with this pass's data what the two hold alike, and which
-      // the fill owns, so the next pass's plans reuse the checks made against it here
+      // holds no value, see `CheckedCondition.metWithoutValue`, which a fill that leaves the field empty is checked as
+      // again. A `null` was checked as itself, so a fill that puts `{}` over it is checked again. The plans decide
+      // alike for data equal to it, as the data of an edit is once it holds the defaults. Data that differs is handed
+      // to the next pass as a copy of the one the comparison built, which shares with this pass's data what the two
+      // hold alike, and which the fill owns, so the next pass's plans reuse the checks made against it here
       const plannedFor: unknown = pass.depData === undefined ? {} : pass.depData;
       const shared = replaceEqualDeep(plannedFor, filled === undefined ? {} : filled);
       const redecides = shared !== plannedFor;
@@ -1470,20 +1469,17 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   let first = fold(held);
   // The field starts from the value its defaults give it before any of its conditions is resolved, as the fold gives it
   // one: its own `default`, a merged `allOf` member's, the one of the option it shows, an inherited one or its
-  // `ui:initialValue`, by the precedence the fold gives them. It is read only where the first pass checked a condition
-  // whose answer depends on that value, against the `default` its seeds declare or, for a field that holds no value
-  // without one, against none, or left one unresolved for an empty field that a value would resolve, unless the field
-  // holds no `default` and may hold no primitive: `heldValue()` drops an object or an array it starts from. It is
-  // never read under a context that resolves no condition, as the read itself is folded under one
+  // `ui:initialValue`, by the precedence the fold gives them. It is read only where the first pass checked a
+  // condition, against the `default` its seeds declare or, for a field that holds no value without one, against none,
+  // or left one unresolved for an empty field that a value would resolve, unless the field holds no `default` and may
+  // hold no primitive: `heldValue()` drops an object or an array it starts from. It is never read under a context that
+  // resolves no condition, as the read itself is folded under one
   const readsValue =
     !isMarked(context, RESOLVES_NO_CONDITIONS) &&
     first.readers.some(
-      ({ graph, checked, present }) =>
+      ({ checked, present }) =>
         (present === false && (held !== undefined || mayHoldPrimitive<S>(field.graph, field.seeds))) ||
-        checked.some(
-          ({ noValue, holdsPrimitive, ifNode }) =>
-            (held !== undefined || holdsPrimitive) && decidedWithoutValue(graph, ifNode, noValue?.types) === undefined,
-        ),
+        checked.some(({ holdsPrimitive }) => held !== undefined || holdsPrimitive),
     );
   if (readsValue) {
     const ownHeld = heldValue<T, S, F>(context, props, () =>
@@ -1557,8 +1553,8 @@ function heldValue<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (start !== undefined && !Number.isNaN(start) && (start === null || typeof start !== 'object')) {
     return start;
   }
-  // A replaced `NaN` holds no value, so its conditions are checked as an empty field's, see `NoValue`. A
-  // replaced `null` is a value an `if` may test, which it keeps
+  // A replaced `NaN` holds no value, so its conditions are checked as an empty field's, see
+  // `CheckedCondition.metWithoutValue`. A replaced `null` is a value an `if` may test, which it keeps
   return Number.isNaN(rawFormData) ? undefined : rawFormData;
 }
 

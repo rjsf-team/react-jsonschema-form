@@ -1689,9 +1689,9 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
 
   it.each<[string, RJSFSchema, RJSFSchema, unknown, number]>([
     [
-      'an empty primitive field, decided with no value and checked against the const it took',
+      'an empty primitive field, met with no value by an if of {} and checked against the const it took',
       { type: 'number' },
-      { if: { type: 'number' }, then: { const: 10 } },
+      { if: {}, then: { const: 10 } },
       10,
       1,
     ],

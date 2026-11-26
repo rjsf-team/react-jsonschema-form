@@ -5468,7 +5468,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
 
-        describe('decides the if of an empty field only where no value could change its answer, or leaves it under skipEmptyDefaults', () => {
+        describe('decides the if of an empty field as met only for {}, or leaves it under skipEmptyDefaults', () => {
           beforeEach(() => {
             // The mock validator cannot evaluate an `if`, so it answers each check as the real ones do
             testValidator.setReturnValues({ isValid: asRealValidator });
@@ -5484,10 +5484,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               {},
             ],
             [
-              'fills the const of a then in its allOf whose if takes every value the field holds (#5895)',
+              "leaves the const of a then in its allOf whose if: { type } names the field's type unfilled (#5916)",
               { type: 'number', allOf: [{ if: { type: 'number' }, then: { const: 10 } }] },
               {},
-              { n: 10 },
+              {},
             ],
             [
               'leaves the const of a then in its allOf unfilled under skipEmptyDefaults',
@@ -8376,7 +8376,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               validator: testValidator,
               defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' as const },
             };
-            const x = placed('number', { if: { type: 'number' }, then: { const: 3 } }, inAllOf);
+            const x = placed('number', { if: {}, then: { const: 3 } }, inAllOf);
             expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({});
             expect(getDefaultFormState(context, { schema: x })).toBe(3);
           });
@@ -8402,16 +8402,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ['fills the const of a then under if: {}', 'number', { if: {}, then: { const: 3 } }, { x: 3 }],
             ['fills the const of an else under if: false', 'number', { if: false, else: { const: 3 } }, { x: 3 }],
             [
-              "fills the const of a then whose if: { type: 'number' } takes it",
+              "leaves the const of a then whose if: { type: 'number' } names its type unfilled",
               'number',
               { if: { type: 'number' }, then: { const: 3 } },
-              { x: 3 },
+              {},
             ],
             [
-              'fills the const of a then whose if holds only annotations',
+              'leaves the const of a then whose if holds only annotations unfilled',
               'number',
               { if: { title: 'any', description: 'value', $comment: 'c', examples: [1] }, then: { const: 3 } },
-              { x: 3 },
+              {},
             ],
             [
               'fills the const of an else under if: { not: {} }',
@@ -8420,10 +8420,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { x: 3 },
             ],
             [
-              "fills the const of a then whose if: { type: ['number', 'string'] } takes every value it holds",
+              "leaves the const of a then whose if: { type: ['number', 'string'] } names its type unfilled",
               'number',
               { if: { type: ['number', 'string'] }, then: { const: 3 } },
-              { x: 3 },
+              {},
             ],
             [
               "leaves the const of a then whose if: { type: 'integer' } takes some values it holds unfilled",
@@ -8470,9 +8470,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
           it.each<[string, RJSFSchema, GenericObjectType]>([
             [
-              'fills the const of a then whose if takes every value it holds',
+              "keeps the NaN where only a then whose if: { type: 'number' } names its type gives a const",
               { if: { type: 'number' }, then: { const: 10 } },
-              { x: 10 },
+              { x: Number.NaN },
             ],
             [
               'keeps the NaN where only a then whose if a value would decide gives a const',
@@ -8705,20 +8705,47 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(filled).toStrictEqual({ c: 2 });
           expect(getDefaultFormState(context, { schema, formData: filled })).toStrictEqual({ c: 2 });
         });
-        it('decides the if of an empty field by the const its branch gives where its type comes through a $ref or an allOf', () => {
+        describe.each(PLACEMENTS)(
+          'meets no if of a field holding no value but true and {}, and lets the validator decide one holding a value, %s',
+          (_placement, inAllOf) => {
+            const IFS: [string, RJSFSchema['if'], boolean, boolean][] = [
+              ['true', true, true, true],
+              ['{}', {}, true, true],
+              ['false', false, false, false],
+              ["{ type: 'number' }", { type: 'number' }, false, true],
+              ['{ title }', { title: 'any' }, false, true],
+              ['{ not: { const: 3 } }', { not: { const: 3 } }, false, false],
+              ['{ const: 3 }', { const: 3 }, false, true],
+            ];
+            it.each(IFS)('if: %s', (_name, condition, metEmpty, metByThree) => {
+              const context = { validator: testValidator };
+              const filled = placed('number', { if: condition, then: { const: 1 } }, inAllOf);
+              expect(getDefaultFormState(context, { schema: rootOf(filled) })).toStrictEqual(metEmpty ? { x: 1 } : {});
+              expect(getDefaultFormState(context, { schema: filled })).toBe(metEmpty ? 1 : undefined);
+              const titled = placed(
+                'number',
+                { if: condition, then: { title: 'Then' }, else: { title: 'Else' } },
+                inAllOf,
+              );
+              expect(retrieveSchema(context, titled, titled).title).toBe(metEmpty ? 'Then' : 'Else');
+              expect(retrieveSchema(context, titled, titled, 3).title).toBe(metByThree ? 'Then' : 'Else');
+            });
+          },
+        );
+        it('decides the if of an empty field as one holding no value where its type comes through a $ref or an allOf', () => {
           const context = { validator: testValidator };
           const $defs = { Num: { type: 'number' as const } };
-          const typeNumber: RJSFSchema = { if: { type: 'number' }, then: { const: 3 } };
+          const elseOfObject: RJSFSchema = { if: { type: 'object' }, else: { const: 3 } };
           const typeObject: RJSFSchema = { if: { type: 'object' }, then: { const: 3 } };
           const viaRef = (conditional: RJSFSchema) => ({ ...rootOf({ $ref: '#/$defs/Num', ...conditional }), $defs });
           const viaAllOf = (conditional: RJSFSchema) => rootOf({ allOf: [conditional, { type: 'number' }] });
           for (const via of [viaRef, viaAllOf]) {
-            expect(getDefaultFormState(context, { schema: via(typeNumber) })).toStrictEqual({ x: 3 });
+            expect(getDefaultFormState(context, { schema: via(elseOfObject) })).toStrictEqual({ x: 3 });
             expect(getDefaultFormState(context, { schema: via(typeObject) })).toStrictEqual({});
           }
         });
         describe.each(PLACEMENTS)(
-          'decides the if of an empty field by the const its branch gives where an allOf member narrows its type, %s',
+          'decides the if of an empty field as one holding no value where an allOf member narrows its type, %s',
           (_placement, inAllOf) => {
             it.each<[string, RJSFSchema['type']]>([
               ['a type allowing an object', ['number', 'object']],
@@ -8732,7 +8759,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                     : { type, allOf: [{ type: 'number' }], ...conditional },
                 );
               expect(
-                getDefaultFormState(context, { schema: narrowed({ if: { type: 'number' }, then: { const: 3 } }) }),
+                getDefaultFormState(context, { schema: narrowed({ if: { type: 'object' }, else: { const: 3 } }) }),
               ).toStrictEqual({ x: 3 });
               expect(
                 getDefaultFormState(context, { schema: narrowed({ if: { type: 'object' }, then: { const: 3 } }) }),
@@ -8741,7 +8768,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         );
         describe.each(PLACEMENTS)(
-          'fills the const a branch reaches through a $ref or an allOf where no value could change the if of an empty field, %s',
+          'fills the const a branch reaches through a $ref or an allOf for the branch an empty field takes, %s',
           (_placement, inAllOf) => {
             const $defs = {
               Three: { const: 3 },
@@ -8760,22 +8787,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                   getDefaultFormState(context, {
                     schema: { ...rootOf(placed('number', conditional, inAllOf)), $defs },
                   });
-                expect(fill({ if: { type: 'number' }, then: branch })).toStrictEqual({ x: 3 });
+                expect(fill({ if: {}, then: branch })).toStrictEqual({ x: 3 });
                 expect(fill({ if: { type: 'object' }, then: branch })).toStrictEqual({});
                 expect(fill({ if: { maximum: 2 }, else: branch })).toStrictEqual({ x: 3 });
               }
             });
           },
         );
-        it('reads an integer field narrowed by a number one, or the other way round, as an integer one for a type-only if', () => {
+        it('checks the if of an integer field narrowed by a number one, or the other way round, against the default it inherits', () => {
           const context = { validator: testValidator };
-          const typeOnly = { if: { type: 'integer' }, then: { const: 3 } } as const;
           for (const [own, member] of [
             ['integer', 'number'],
             ['number', 'integer'],
           ] as const) {
-            const x: RJSFSchema = { type: own, allOf: [{ type: member }], ...typeOnly };
-            expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({ x: 3 });
+            const schema: RJSFSchema = {
+              type: 'object',
+              default: { x: 5 },
+              properties: { x: { type: own, allOf: [{ type: member }], if: { maximum: 7 }, then: { const: 10 } } },
+            };
+            expect(getDefaultFormState(context, { schema })).toStrictEqual({ x: 10 });
           }
         });
         it("takes the else of an empty number field's if: { type: 'number', minimum: 1 } under every constAsDefaults, so its default fills it", () => {
@@ -8839,7 +8869,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(retrieveSchema(context, byLength, byLength, data).title).toBe('Short');
           }
         });
-        it('takes the then of an if whose keywords constrain no value of the type of the empty field, as it does once the field holds one', () => {
+        it('takes the else of an if whose keywords constrain no value of the type of the empty field, and the then the validator gives once the field holds one', () => {
           const context = { validator: testValidator };
           const titled = (type: 'number' | 'string', condition: RJSFSchema): RJSFSchema => ({
             type,
@@ -8853,14 +8883,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             titled('string', { properties: { a: { const: 1 } } }),
           ]) {
             const held = schema.type === 'number' ? 5 : 'x';
-            expect(retrieveSchema(context, schema, schema).title).toBe('A');
+            expect(retrieveSchema(context, schema, schema).title).toBe('B');
             expect(retrieveSchema(context, schema, schema, held).title).toBe('A');
-            expect(getDefaultFormState(context, { schema: rootOf(schema) })).toStrictEqual({ x: held });
+            expect(getDefaultFormState(context, { schema: rootOf(schema) })).toStrictEqual({});
           }
         });
         it('reads the type of an empty field with no type off its enum or const, as of the same field with the type written', () => {
           const context = { validator: testValidator };
-          const conditional: RJSFSchema = { if: { type: 'string' }, then: { default: 'b' } };
+          const conditional: RJSFSchema = { if: { type: 'object' }, else: { default: 'b' } };
           const fields: RJSFSchema[] = [{ enum: ['a', 'b'] }, { type: 'string', enum: ['a', 'b'] }, { const: 'b' }];
           for (const field of fields) {
             expect(getDefaultFormState(context, { schema: rootOf({ ...field, ...conditional }) })).toStrictEqual({
@@ -8870,9 +8900,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const pinnedObject: RJSFSchema = { const: { a: 1 }, if: { required: ['a'] }, else: { title: 'unmet' } };
           expect(retrieveSchema(context, pinnedObject, pinnedObject).title).toBe('unmet');
         });
-        it('gives the type-only if of an option within an option the type the option around it declares', () => {
+        it('gives the if of an option within an option the type the option around it declares', () => {
           const context = { validator: testValidator };
-          const conditional: RJSFSchema = { if: { type: 'number' }, then: { const: 3 } };
+          const conditional: RJSFSchema = { if: { type: 'object' }, else: { const: 3 } };
           const nestings: RJSFSchema[] = [
             { oneOf: [{ type: 'number', ...conditional }] },
             { oneOf: [{ type: 'number', oneOf: [conditional] }] },
@@ -8894,43 +8924,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(context, { schema: rootOf(x, false) })).toStrictEqual({ x: 'fallback' });
           }
         });
-        it.each(PLACEMENTS)(
-          'decides a type-only if reached through a $ref as the same if written in place, %s',
-          (_placement, inAllOf) => {
-            const $defs = { Num: { type: 'number' }, Obj: { type: 'object' } } as const;
-            const fill = (conditional: RJSFSchema) =>
-              getDefaultFormState(
-                { validator: testValidator },
-                { schema: { ...rootOf(placed('number', conditional, inAllOf)), $defs } },
-              );
-            expect(fill({ if: { $ref: '#/$defs/Num' }, then: { const: 3 } })).toStrictEqual({ x: 3 });
-            expect(fill({ if: { $ref: '#/$defs/Obj' }, else: { const: 3 } })).toStrictEqual({ x: 3 });
-          },
-        );
-        it.each(PLACEMENTS)(
-          'reads the not of an if a value would decide as met by an empty field, as the if itself is not, %s',
-          (_placement, inAllOf) => {
-            const context = { validator: testValidator };
-            const fill = (conditional: RJSFSchema) =>
-              getDefaultFormState(context, { schema: rootOf(placed('number', conditional, inAllOf)) });
-            expect(fill({ if: { not: { const: 3 } }, then: { const: 5 } })).toStrictEqual({ x: 5 });
-            const negated = { if: { not: { minimum: 10 } }, then: { const: 1 }, else: { const: 20 } };
-            const swapped = { if: { minimum: 10 }, then: { const: 20 }, else: { const: 1 } };
-            expect(fill(negated)).toStrictEqual({ x: 1 });
-            expect(fill(swapped)).toStrictEqual(fill(negated));
-          },
-        );
-        it.each(PLACEMENTS)(
-          'reads an if of only annotations, x- extensions or keywords of types the field leaves out as accepting every value of an empty field, %s',
-          (_placement, inAllOf) => {
-            const fill = (type: 'number' | 'string', conditional: RJSFSchema) =>
-              getDefaultFormState({ validator: testValidator }, { schema: rootOf(placed(type, conditional, inAllOf)) });
-            const note: RJSFSchema & { 'x-note': string } = { 'x-note': 'n' };
-            expect(fill('string', { if: note, then: { const: 'z' } })).toStrictEqual({ x: 'z' });
-            expect(fill('string', { if: { ...note, type: 'string' }, then: { const: 'z' } })).toStrictEqual({ x: 'z' });
-            expect(fill('number', { if: { format: 'email' }, then: { const: 3 } })).toStrictEqual({ x: 3 });
-          },
-        );
         it.each(['skipDefaults', 'populateDefaults'] as const)(
           "narrows only the ifs the option a field with no type shows brings by the option's type, the field's own wherever they sit, under allOf: '%s'",
           (allOf) => {
@@ -8939,7 +8932,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 { validator: testValidator, defaultFormStateBehavior: { allOf } },
                 { schema: rootOf(x) },
               );
-            const conditional = { if: { type: 'string' }, then: { const: 'z' } } as const;
+            const conditional = { if: { type: 'object' }, else: { const: 'z' } } as const;
             expect(fill({ oneOf: [{ type: 'string' }], allOf: [conditional] })).toStrictEqual({});
             expect(fill({ oneOf: [{ type: 'string' }], ...conditional })).toStrictEqual({});
             expect(fill({ oneOf: [{ type: 'string', ...conditional }] })).toStrictEqual({ x: 'z' });
@@ -9019,7 +9012,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(context, { schema: options })).toStrictEqual({});
           }
         });
-        it('decides the if of an empty field by the const its branch gives where another seed of the field gives its type', () => {
+        it('decides the if of an empty field as one holding no value where another seed of the field gives its type', () => {
           const context = { validator: testValidator };
           const withPattern = (conditional: RJSFSchema): RJSFSchema => ({
             type: 'object',
@@ -9028,7 +9021,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             patternProperties: { '^x$': { type: 'number' } },
           });
           expect(
-            getDefaultFormState(context, { schema: withPattern({ if: { type: 'number' }, then: { const: 3 } }) }),
+            getDefaultFormState(context, { schema: withPattern({ if: { type: 'object' }, else: { const: 3 } }) }),
           ).toStrictEqual({ x: 3 });
           expect(
             getDefaultFormState(context, { schema: withPattern({ if: { type: 'object' }, then: { const: 3 } }) }),
