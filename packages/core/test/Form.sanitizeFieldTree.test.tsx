@@ -751,7 +751,6 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         <Form<PetData>
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             log.reported.push(event.formData);
@@ -1132,7 +1131,6 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         <Form<SwapData>
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             events.push(event);
@@ -1213,7 +1211,6 @@ describe('sanitize as a diff of the field trees before and after a change', () =
           ref={ref}
           schema={schema}
           validator={validator}
-          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             log?.reported.push(event.formData);
@@ -3667,37 +3664,47 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
   });
   // `LayoutMultiSchemaField` writes the selector, so a switch keeps it out of the keys put back. Here the old selector
   // value is what the defaults fill the new option's selector with too, so judging it would keep it
-  it('keeps the selector LayoutMultiSchemaField writes when switching to an option whose selector the defaults fill alike', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      default: { p: { kind: 'a' } },
-      properties: {
-        p: {
-          type: 'object',
-          discriminator: { propertyName: 'kind' },
-          oneOf: [
-            { title: 'A', properties: { kind: { type: 'string', default: 'a' } } },
-            { title: 'B', properties: { kind: { type: 'string', default: 'b' } } },
-          ],
+  it.each<{ name: string; selector: RJSFSchema; uiOptions: UiSchema }>([
+    { name: 'the discriminator', selector: { discriminator: { propertyName: 'kind' } }, uiOptions: {} },
+    {
+      name: 'a key the discriminator is not',
+      selector: {},
+      uiOptions: { 'ui:options': { optionsSchemaSelector: 'kind', widget: 'radio' } },
+    },
+  ])(
+    'keeps the selector LayoutMultiSchemaField writes, $name, when switching to an option whose selector the defaults fill alike',
+    async ({ selector, uiOptions }) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        default: { p: { kind: 'a' } },
+        properties: {
+          p: {
+            type: 'object',
+            ...selector,
+            oneOf: [
+              { title: 'A', properties: { kind: { type: 'string', default: 'a' } } },
+              { title: 'B', properties: { kind: { type: 'string', default: 'b' } } },
+            ],
+          },
         },
-      },
-    };
-    const ref = createRef<FormRef<Record<string, unknown>>>();
-    const { container } = render(
-      <Form
-        ref={ref}
-        schema={schema}
-        uiSchema={{ p: { 'ui:field': 'LayoutMultiSchemaField', 'ui:fieldReplacesAnyOrOneOf': true } }}
-        validator={validator}
-        defaultFormStateBehavior={{ nestedDefaultsPrecedence: 'ancestorWins' }}
-      />,
-    );
-    expect(handleOf(ref).getFormData()).toEqual({ p: { kind: 'a' } });
+      };
+      const ref = createRef<FormRef<Record<string, unknown>>>();
+      const { container } = render(
+        <Form
+          ref={ref}
+          schema={schema}
+          uiSchema={{ p: { 'ui:field': 'LayoutMultiSchemaField', 'ui:fieldReplacesAnyOrOneOf': true, ...uiOptions } }}
+          validator={validator}
+          defaultFormStateBehavior={{ nestedDefaultsPrecedence: 'ancestorWins' }}
+        />,
+      );
+      expect(handleOf(ref).getFormData()).toEqual({ p: { kind: 'a' } });
 
-    await user.click(input(container, 'root_p__1'));
+      await user.click(input(container, 'root_p__1'));
 
-    expect(handleOf(ref).getFormData()).toEqual({ p: { kind: 'b' } });
-  });
+      expect(handleOf(ref).getFormData()).toEqual({ p: { kind: 'b' } });
+    },
+  );
   // An item is filled out by its array's `required`, and written whatever `emptyObjectFields` says of a property
   it.each<{ name: string; behavior: DefaultFormStateBehavior; expected: unknown }>([
     {
@@ -5098,4 +5105,52 @@ describe('judging a field by the value the fill writes for it (#5825)', () => {
     const { utils } = sanitizedBoth(schemaWith(7), schemaWith(8), { o: undefined, w: 'k' });
     expect(utils).toStrictEqual({ w: 'k' });
   });
+});
+
+describe('judging the keys of an object no condition reads by one fill of the form without them (#5836)', () => {
+  // Only into an object holding no key does the fill seed the extra keys its `default` names, here through the
+  // `additionalProperties` uiSchema's `ui:initialValue`, so with `y` beside it `x` was the user's
+  // An option's layer declares properties, none of them the extra key, even one `Object.prototype` names
+  it.each([
+    { key: 'x', option: undefined },
+    ...['x', 'toString', 'constructor'].flatMap((key) => ['oneOf', 'anyOf'].map((option) => ({ key, option }))),
+  ])(
+    'keeps an extra key the fill seeds only into the object emptied of every key, $key under $option',
+    ({ key, option }) => {
+      const schemaWith = (additionalProperties: RJSFSchema['additionalProperties']): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          h: {
+            type: 'object',
+            additionalProperties,
+            default: { [key]: 'dx' },
+            ...(option && { [option]: [{ title: 'P', properties: { p: { type: 'string' } } }] }),
+          },
+        },
+      });
+      const uiSchema: UiSchema = { h: { additionalProperties: { 'ui:initialValue': 'iv' } } };
+      const initialFormData = { h: { [key]: 'iv', y: 'vy' } };
+      const ref = createRef<FormRef>();
+      const { rerender } = render(
+        <Form
+          ref={ref}
+          schema={schemaWith({ type: 'string' })}
+          uiSchema={uiSchema}
+          validator={validator}
+          initialFormData={initialFormData}
+        />,
+      );
+      rerender(
+        <Form
+          ref={ref}
+          schema={schemaWith(true)}
+          uiSchema={uiSchema}
+          validator={validator}
+          initialFormData={initialFormData}
+        />,
+      );
+
+      expect(handleOf(ref).getFormData()).toEqual(initialFormData);
+    },
+  );
 });

@@ -1,5 +1,14 @@
 import { createRef, StrictMode, useEffect, useState } from 'react';
-import type { FieldProps, FieldTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  DefaultFormStateBehavior,
+  FieldProps,
+  FieldTemplateProps,
+  FormValidation,
+  GenericObjectType,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { descriptionId, noop, toFieldPath, toInputValue } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import validator, { createPrecompiledValidator } from '@rjsf/validator-ajv8';
@@ -2100,6 +2109,137 @@ describe('anyOf', () => {
       const select = node.querySelector('select#root__anyof_select');
       expect(select).toHaveValue('2');
     });
+    it('switches to the option picked in the selector', async () => {
+      const { node, getFormData } = createFormComponent({ schema });
+      const select = elementOf(node, 'select#root__anyof_select');
+
+      await user.selectOptions(select, 'Bar');
+
+      expect(getFormData()).toEqual({ code: 'bar_coding' });
+      expect(select).toHaveValue('1');
+
+      await user.selectOptions(select, 'Foo');
+
+      expect(getFormData()).toEqual({ code: 'foo_coding' });
+      expect(select).toHaveValue('0');
+    });
+    it('switches between options that pin the discriminator with a const, dropping the key only the old one declares', async () => {
+      const optionFor = (code: string, own: string): RJSFSchema => ({
+        title: code,
+        type: 'object',
+        properties: { code: { type: 'string', const: code }, [own]: { type: 'string' } },
+      });
+      const { node, getFormData } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            thing: {
+              discriminator: { propertyName: 'code' },
+              anyOf: [optionFor('foo', 'onlyFoo'), optionFor('bar', 'onlyBar')],
+            },
+          },
+        },
+        initialFormData: { thing: { code: 'foo', onlyFoo: 'x' } },
+      });
+      const select = elementOf(node, 'select#root_thing__anyof_select');
+
+      await user.selectOptions(select, 'bar');
+
+      expect(getFormData()).toEqual({ thing: { code: 'bar' } });
+      expect(select).toHaveValue('1');
+      expect(node.querySelector('#root_thing_onlyBar')).toBeInTheDocument();
+      expect(node.querySelector('#root_thing_onlyFoo')).not.toBeInTheDocument();
+    });
+    it.each<{
+      name: string;
+      at?: string;
+      initialFormData?: GenericObjectType;
+      defaultFormStateBehavior?: DefaultFormStateBehavior;
+    }>(
+      [undefined, 'thing'].flatMap((at) => {
+        const under = (data: GenericObjectType) => (at ? { [at]: data } : data);
+        const where = at ? ` under ${at}` : '';
+        return [
+          { name: `seeded${where}`, at, initialFormData: under({ code: 'foo', a: 'x' }) },
+          { name: `unseeded${where}`, at },
+          {
+            name: `under useDefaultIfFormDataUndefined${where}`,
+            at,
+            initialFormData: under({ code: 'foo', a: 'x' }),
+            defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+          },
+        ];
+      }),
+    )(
+      'switches ($name) to an option that writes no discriminator value, past a default the field declares for it',
+      async ({ at, initialFormData, defaultFormStateBehavior }) => {
+        const field: RJSFSchema = {
+          type: 'object',
+          properties: { code: { type: 'string', default: 'foo' } },
+          discriminator: { propertyName: 'code' },
+          anyOf: [
+            { title: 'foo', properties: { code: { type: 'string', const: 'foo' }, a: { type: 'string' } } },
+            { title: 'other', properties: { b: { type: 'string' } } },
+          ],
+        };
+        const under = (data: GenericObjectType) => (at ? { [at]: data } : data);
+        const id = at ? `root_${at}` : 'root';
+        const { node, getFormData } = createFormComponent({
+          schema: at ? { type: 'object', properties: { [at]: field } } : field,
+          initialFormData,
+          defaultFormStateBehavior,
+        });
+        const select = elementOf(node, `select#${id}__anyof_select`);
+
+        await user.selectOptions(select, 'other');
+
+        expect(getFormData()).toEqual(under({}));
+        expect(select).toHaveValue('1');
+
+        await user.type(elementOf(node, `#${id}_b`), 'y');
+
+        expect(getFormData()).toEqual(under({ b: 'y' }));
+        expect(select).toHaveValue('1');
+
+        await user.selectOptions(select, 'foo');
+
+        expect(getFormData()).toEqual(under({ code: 'foo' }));
+        expect(select).toHaveValue('0');
+      },
+    );
+    // An object `default` fills a field only while it holds no data, so once the switch leaves an object it fills nothing
+    it.each<{ name: string; at?: string }>([{ name: 'the field' }, { name: 'an ancestor', at: 'thing' }])(
+      'switches to an option that writes no discriminator value where $name fills it from an object default',
+      async ({ at }) => {
+        const field: RJSFSchema = {
+          type: 'object',
+          discriminator: { propertyName: 'code' },
+          anyOf: [
+            { title: 'foo', properties: { code: { type: 'string', const: 'foo' }, a: { type: 'string' } } },
+            { title: 'other', properties: { b: { type: 'string' } } },
+          ],
+        };
+        const under = (data: GenericObjectType) => (at ? { [at]: data } : data);
+        const id = at ? `root_${at}` : 'root';
+        const { node, getFormData } = createFormComponent({
+          schema: at
+            ? { type: 'object', default: { [at]: { code: 'foo' } }, properties: { [at]: field } }
+            : { ...field, default: { code: 'foo' } },
+        });
+        const select = elementOf(node, `select#${id}__anyof_select`);
+        expect(getFormData()).toEqual(under({ code: 'foo' }));
+
+        await user.selectOptions(select, 'other');
+
+        expect(getFormData()).toEqual(under({}));
+        expect(select).toHaveValue('1');
+
+        await user.type(elementOf(node, `#${id}_b`), 'y');
+
+        expect(getFormData()).toEqual(under({ b: 'y' }));
+        expect(select).toHaveValue('1');
+      },
+    );
     it('warns when discriminator.propertyName is not a string', () => {
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
       const badSchema: RJSFSchema = {
