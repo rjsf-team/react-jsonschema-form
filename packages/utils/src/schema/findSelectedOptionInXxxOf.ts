@@ -35,6 +35,30 @@ export default function findSelectedOptionInXxxOf<
   xxx: 'anyOf' | 'oneOf',
   formData?: T,
 ): S | undefined {
+  return findSelectedOption<T, S, F>(context, rootSchema, schema, xxx, formData)?.option;
+}
+
+/** Returns the option `findSelectedOptionInXxxOf()` finds, with its index in the list, which picks the option's entry of
+ * a `uiSchema.anyOf`/`oneOf` list
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param schema - The schema element in which to search for the selected anyOf/oneOf option
+ * @param xxx - Either `anyOf` or `oneOf`, defines which value is being sought
+ * @param [formData] - The form data that is used to determine which anyOf/oneOf option to descend
+ * @returns - The option and its index, or undefined if nothing is selected
+ */
+export function findSelectedOption<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  schema: S,
+  xxx: 'anyOf' | 'oneOf',
+  formData?: T,
+): { option: S; index: number } | undefined {
   const ownOptions = schema[xxx];
   if (Array.isArray(ownOptions)) {
     // The options as the field's retrieved schema hands them out, so one beside an object rendering its own field leaves
@@ -44,26 +68,29 @@ export default function findSelectedOptionInXxxOf<
     const xxxOfs = (Array.isArray(listed) ? listed : ownOptions).map((xxxOf) =>
       retrieveSchema<T, S, F>(context, xxxOf as S, rootSchema, formData),
     );
+    const pick = (index: number) => (xxxOfs[index] === undefined ? undefined : { option: xxxOfs[index], index });
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     if (!discriminator) {
       // A tie goes to the first option the data matches (the first option when it matches none), and each read picks
       // afresh: the option a user picked is the form's state, which schemas alone can't see, so `LayoutGridField` reads
       // that itself
-      return xxxOfs[getClosestMatchingOption<T, S, F>(context, rootSchema, formData, xxxOfs)];
+      return pick(getClosestMatchingOption<T, S, F>(context, rootSchema, formData, xxxOfs));
     }
     const data = getByPath(formData, discriminator);
     if (data !== undefined) {
-      return xxxOfs.find((option) => {
-        // An option without a selector has no value to match
-        const selector = getOptionSelectorSchema<S>(option, discriminator, (written) =>
-          retrieveSchema<unknown, S, F>(context, written, rootSchema, data),
-        );
-        if (selector === undefined) {
-          return false;
-        }
-        const constValue = getByPath(selector, CONST_KEY);
-        return deepEquals(getByPath(selector, DEFAULT_KEY, constValue), data);
-      });
+      return pick(
+        xxxOfs.findIndex((option) => {
+          // An option without a selector has no value to match
+          const selector = getOptionSelectorSchema<S>(option, discriminator, (written) =>
+            retrieveSchema<unknown, S, F>(context, written, rootSchema, data),
+          );
+          if (selector === undefined) {
+            return false;
+          }
+          const constValue = getByPath(selector, CONST_KEY);
+          return deepEquals(getByPath(selector, DEFAULT_KEY, constValue), data);
+        }),
+      );
     }
   }
   return undefined;

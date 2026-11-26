@@ -4,7 +4,7 @@ import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import applyValidatorErrorTitles from './applyValidatorErrorTitles.ts';
-import type { ValidatorErrorTitleSource } from './applyValidatorErrorTitles.ts';
+import type { ValidatorErrorFieldSource, ValidatorErrorTitleSource } from './applyValidatorErrorTitles.ts';
 import asNumber from './asNumber.ts';
 import callerInputProps from './callerInputProps.ts';
 import callWithDeferredThrow from './callWithDeferredThrow.ts';
@@ -61,14 +61,13 @@ import getExampleSuggestions from './getExampleSuggestions.ts';
 import getFieldClassNames from './getFieldClassNames.ts';
 import type { FieldLabelSources } from './getFieldLabel.ts';
 import getFieldLabel from './getFieldLabel.ts';
-import getFieldSchemaPath from './getFieldSchemaPath.ts';
+import getFieldTitle from './getFieldTitle.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
 import getGroupAttributes from './getGroupAttributes.ts';
 import type { GroupRole } from './getGroupAttributes.ts';
 import getGroupLabelling from './getGroupLabelling.ts';
 import getInheritedOptionUiSchema from './getInheritedOptionUiSchema.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
-import getKeywordParentSchema from './getKeywordParentSchema.ts';
 import getLabelId from './getLabelId.ts';
 import getOptionSelectorSchema from './getOptionSelectorSchema.ts';
 import getOptionUiSchema, { selectOptionUiSchema, withoutFieldOptions } from './getOptionUiSchema.ts';
@@ -88,7 +87,6 @@ import getTemplates from './getTemplates.ts';
 import getTestIds from './getTestIds.ts';
 import getUiOptions from './getUiOptions.ts';
 import getUnionTypes from './getUnionTypes.ts';
-import getValidatorErrorUiTitle from './getValidatorErrorUiTitle.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import {
   DEFAULT_BOOLEAN_WIDGET,
@@ -323,6 +321,7 @@ export type {
   UseOptionFocusHandlersResult,
   UseSelectFocusHandlersResult,
   UseTimeWidgetPropsResult,
+  ValidatorErrorFieldSource,
   ValidatorErrorTitleSource,
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   VisibleErrorsProps,
@@ -394,7 +393,7 @@ export {
   getExampleSuggestions,
   getFieldClassNames,
   getFieldLabel,
-  getFieldSchemaPath,
+  getFieldTitle,
   getFieldTypeForUiSchema,
   getFieldTypeForWidget,
   getFreePropertyNames,
@@ -403,7 +402,6 @@ export {
   getInheritedOptionUiSchema,
   getItemUiSchemaForItem,
   getItemsUiSchemaKey,
-  getKeywordParentSchema,
   getLabelId,
   getMatchingPatternProperties,
   getOptionalDataControlsType,
@@ -425,7 +423,6 @@ export {
   getTestIds,
   getUiOptions,
   getUnionTypes,
-  getValidatorErrorUiTitle,
   getWidgetDescription,
   getWidgetType,
   getXxxOfKey,

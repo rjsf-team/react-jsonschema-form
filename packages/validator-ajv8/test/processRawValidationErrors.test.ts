@@ -1,6 +1,9 @@
 import type { RJSFValidationError } from '@rjsf/utils';
 
+import validator from '../src/index.ts';
 import { filterDuplicateErrors, transformRJSFValidationErrors } from '../src/processRawValidationErrors.ts';
+
+const context = { validator };
 
 describe('filterDuplicateErrors', () => {
   // Fixture: one anyOf duplicate pair + one oneOf duplicate pair
@@ -75,7 +78,7 @@ describe('transformRJSFValidationErrors', () => {
 
     expect(errors).toHaveLength(1);
   });
-  it("should title a missing property under a schema path holding an escape that isn't UTF-8", () => {
+  it("should title a missing property by its field whatever its schema path holds, such as an escape that isn't UTF-8", () => {
     const error = {
       instancePath: '/x',
       // Ajv writes an inlined `$ref`'s URI into the path as written
@@ -89,7 +92,7 @@ describe('transformRJSFValidationErrors', () => {
       properties: { x: { type: 'object' as const, properties: { name: { type: 'string' as const, title: 'Name' } } } },
     };
 
-    const [transformed] = transformRJSFValidationErrors([error], undefined, undefined, schema);
+    const [transformed] = transformRJSFValidationErrors([error], { context, schema });
 
     expect(transformed.message).toEqual("must have required property 'Name'");
   });
@@ -103,7 +106,7 @@ describe('transformRJSFValidationErrors', () => {
     };
     const schema = { type: 'object' as const, properties: { 5: { type: 'string' as const, title: 'Five' } } };
 
-    const [transformed] = transformRJSFValidationErrors([error], undefined, undefined, schema);
+    const [transformed] = transformRJSFValidationErrors([error], { context, schema });
 
     expect(transformed.message).toEqual("must not have property '5'");
   });
@@ -117,7 +120,7 @@ describe('transformRJSFValidationErrors', () => {
     };
     const schema = { type: 'object' as const, properties: { a: { type: 'string' as const, title: 'A' } } };
 
-    const [transformed] = transformRJSFValidationErrors([error], undefined, undefined, schema);
+    const [transformed] = transformRJSFValidationErrors([error], { context, schema });
 
     expect(transformed.title).toEqual('A');
     expect(transformed.message).toEqual("must not have property 'A'");

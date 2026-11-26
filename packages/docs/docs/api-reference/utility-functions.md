@@ -44,7 +44,9 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`ThemePresentation`**, **`PresentationDeclaration`** and **`FieldPresentation`** — A theme's record of which parts of a field (the label, description, errors and help) each of its components draws itself, rather than leaving them to the `FieldTemplate`. A `PresentationDeclaration` names the owner of each part, `'template'`, `'self'` or, for a field that renders a single widget, `'widget'`, `labelledBy`, whether a label the template draws reaches the control through its `for` or through the control's `aria-labelledby`, and `labelPlacement`, whether a label the component draws itself sits `'above'` or `'beside'` its control; a widget's is a `WidgetPresentationDeclaration`, which has no `'widget'` owner. A `ThemePresentation` holds them by registry key under `widgets` and `fields`, plus `default`, what every widget draws for a part the layer's own entry for it doesn't declare, custom and unregistered widgets included, which [mergeThemePresentation()](#mergethemepresentation) layers beneath the layer's own entry for every key, so it overrides the parts it declares in the layers beneath, even under a key one of them declares, and `fieldDefault`, what every field draws for a part its merged entry doesn't declare, custom fields included, and what a part a field leaves to its widget falls back to when it renders none; unlike `default`, it sits beneath the merged entries rather than each layer's own, so it can't override a part a lower layer declares under a key. The merged result is a `MergedThemePresentation`. Nothing is declared on a component itself: one given directly, as a `ui:field` or `ui:widget`, takes the declaration for the first key it is registered under that declares it, so a wrapper such as `memo()` can't lose it. [getPresentationDeclaration()](#getpresentationdeclaration) resolves a field's declaration and [resolveFieldPresentation()](#resolvefieldpresentation) builds its `FieldPresentation`, the plan of where each part is drawn, under which id, and the attributes its control carries, linked as `inherited` to the plan of the field above it that renders the same id.
 
-**`ValidatorErrorTitleSource`** — What [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) reads of an error a validator package reports: its `message`, the `names` it quotes, the `quote` around them, and the `property`, `schemaPath`, `uiSchema`, `parentSchema` and `schema` their titles are looked up in.
+**`ValidatorErrorFieldSource`** — What the validator packages name an error's fields from: the form's `context` and root `schema`, the `formData` that was validated and the `uiSchema`, as [`getFieldTitle()`](#getfieldtitle) reads them.
+
+**`ValidatorErrorTitleSource`** — What [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) reads of an error a validator package reports: its `message`, the `names` it quotes, the `quote` around them and the error's `property`, beside the `ValidatorErrorFieldSource` their fields are found in.
 
 ## Enums
 
@@ -171,9 +173,7 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 
 ### applyValidatorErrorTitles&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#applyvalidatorerrortitles}
 
-Used by the validator packages to name the properties an error's message names by their `ui:title` or `title`.
-A name's title is its `ui:title` (see [`getValidatorErrorUiTitle()`](#getvalidatorerroruititle)), then the `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the schema of the field holding the branch the keyword sits in, then in the root `schema`.
-A schema that is a `$ref` is read resolved, its own `title` kept over its target's and read where its `$ref` can't be merged.
+Used by the validator packages to name the properties an error's message names by the title the form labels their fields with (see [`getFieldTitle()`](#getfieldtitle)), each read at the error's `property` followed by the name.
 Each name with a title is replaced, in one pass so a title that matches another name isn't replaced again, by its title in single quotes, written as it is, `$` patterns included.
 
 #### Parameters
@@ -183,12 +183,10 @@ Each name with a title is replaced, in one pass so a title that matches another 
   - names: string[] - The names of the properties the message names
   - quote: "'" | '"' - The quote the engine puts around a property name, `'` or `"`
   - property: string - The error's property path, as [`pathToProperty()`](#pathtoproperty) writes it, `''` for the root
-  - schemaPath: string - The URI fragment of the JSON Pointer to the schema keyword that failed, such as `#/properties/a/required`
-  - [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
-  - [skipsRefs]: boolean - The engine leaves every `$ref` out of the `schemaPath`, as [`getKeywordParentSchema()`](#getkeywordparentschema)'s `skipsRefs` reads it
+  - context: SchemaContext&lt;S, F> - The `SchemaContext` of the form
+  - schema: S - The form's root schema
+  - [formData]: T - The form data that was validated
   - [uiSchema]: UiSchema&lt;T, S, F> - The form's uiSchema
-  - [parentSchema]: unknown - The schema object that holds the keyword that failed, when the engine hands it over
-  - [schema]: S - The form's root schema
 
 #### Returns
 
@@ -1281,20 +1279,24 @@ A deprecated field's label is decorated with the `DeprecatedLabel` marker under 
 
 - string: The label, or `''` when the field has none
 
-### getFieldSchemaPath()
+### getFieldTitle&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getfieldtitle}
 
-Used by the validator packages to name a property by the field a failed keyword applies to.
-Returns the `schemaPath` with the branches the keyword sits in removed: each `allOf`, `anyOf` or `oneOf` option, `then`, `else`, and `dependentSchemas` or `dependencies` schema, along with any `$ref` written into the path after one.
-A branch's own `title` names that branch, not the field, and a branch that only lists `required` holds no `properties` to look one up in.
-The path is walked from the root, so a property, definition or dependency named like a keyword, such as `then` or `properties`, is read as the name it is.
+Used by the validator packages to name an error by the field it is on.
+Returns the title the form labels the field at the data `path` with: its `ui:title`, then the `title` of its schema as its parent declares it, then the `title` of that schema retrieved for its data, as [`getFieldLabel()`](#getfieldlabel) reads them, without a deprecated field's marker.
+The schema and uiSchema are walked as the form renders the data, each level retrieved for its data, so a `$ref`, an `allOf` and the `if`/`then` the data meets are merged in, an `anyOf`/`oneOf` field's keys are read from the option shown for its data, under its `uiSchema.anyOf`/`oneOf` entry, and an array item's from `items`.
+An extra key the form renders through `additionalProperties` or `patternProperties` is labelled by its key, so it has no title, nor has the root, whose title titles the form, nor a field behind a `$ref` `retrieveSchema()` can't resolve.
 
 #### Parameters
 
-- schemaPath: string - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/then/type`
+- context: SchemaContext&lt;S, F> - The `SchemaContext` of the form
+- rootSchema: S - The form's root schema
+- path: string[] - The data path of the field, such as `['arr', '0', 'name']`
+- [formData]: T - The form's data, which picks the branches and options the form renders
+- [uiSchema]: UiSchema&lt;T, S, F> - The form's uiSchema
 
 #### Returns
 
-- string: The path the keyword would have if the field held it, such as `#/properties/a/type`, or the `schemaPath` as it is when the keyword sits in no branch
+- string | undefined: The field's title, or `undefined` when the form labels it with none or renders no field at the path
 
 ### getFieldTypeForUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getfieldtypeforuischema}
 
@@ -1518,26 +1520,6 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 #### Returns
 
 - UiSchema&lt;T, S, F> | undefined: The uiSchema for the item at `index`, or undefined
-
-### getKeywordParentSchema&lt;S extends StrictRJSFSchema = RJSFSchema>() {#getkeywordparentschema}
-
-Used by the validator packages to find the schema object holding the keyword a validation error reports, when the engine doesn't hand over one that is resolved, to pass to [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) as its `parentSchema`.
-The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through: one written into the path as a `$ref` key, whose next key is read from the `$ref`'s target alone, or one it skips, its next key being one the `$ref` schema doesn't hold itself.
-Either way a next key such as `properties` or `items`, which merging joins with its target's, is read from the two merged, unless the merge fails, or, after a `$ref` key or, without `skipsRefs`, at a key the `$ref` schema holds itself, unless the path goes on through a key merging doesn't join, such as an `allOf`, other than a further `$ref`; a merged read after a chain of `$ref` keys starts from the first, for the titles of every schema along it.
-Where the merge fails, there or further along the chain of `$ref`s, and leaves the `allOf` of the two, a next key the `$ref` schema doesn't hold itself is read from its target.
-A `$ref` on the schema it ends at is resolved too, its own keywords kept over its target's, unless the merge fails, there or further along the chain, which leaves the schema as written.
-With `skipsRefs` set, below a `$ref` read merged, a list keyword both schemas hold, such as an `allOf` inside a property both declare, indexes the merged list, so the entry it reads can be the other schema's.
-
-#### Parameters
-
-- rootSchema: S - The form's root schema
-- schemaPath: string - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/required`
-- [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
-- [skipsRefs=false]: boolean - The engine leaves every `$ref` out of the path, as `@rjsf/validator-ata` does, so a key after a `$ref` schema can index either that schema or its target
-
-#### Returns
-
-- S | null | undefined: The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two of whose schemas hold its next key, since the path can index either one's, unless merging combines the two: the key is `properties`, `patternProperties`, `additionalProperties` or `propertyNames`, or an `items`, `prefixItems` or `additionalItems`, which merging joins as a whole schema or position by position, with no key merging doesn't join, such as an `allOf`, further along the path (a key further down is read from the merge); or `undefined` when the path isn't a URI fragment, such as one Ajv starts with another resource's `$id`, or leads to no schema object, such as the `properties` map holding the property a `false` schema's path ends at, or through a `$ref` that can't be resolved, such as one naming an `$anchor`
 
 ### getLabelId&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getlabelid}
 
@@ -1946,33 +1928,6 @@ A schema [`retrieveSchema()`](#retrieveschemat--unknown-s-extends-strictrjsfsche
 #### Returns
 
 - S: The schema to hand the validator
-
-### getValidatorErrorUiTitle&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getvalidatorerroruititle}
-
-Used by the validator packages to find the `ui:title` of the field an error names: of the `name` under the error's `property`, or of the `property` itself when no `name` is given.
-It is read at that field's data path, an array item's field under its array's `items`, so `.arr.0.name` reads `uiSchema.arr.items.name`, though a key that looks like an index is read as the key when the uiSchema holds it or the schema at that point declares it or, when known, renders as no array (see [`getSchemaType()`](#getschematype)) and has no items, and a key the uiSchema doesn't hold and the known schema doesn't declare is read from `additionalProperties`, as the form renders an additional property. A schema holding a `$ref`, `allOf`, `anyOf`, `oneOf`, `if`, `dependencies` or `dependentSchemas` isn't known, since those can declare more keys and items. The `name` is read as the key it is, never as an item or an additional property.
-A `name` with none there has it read along the `schemaPath`, where `#/properties/a/properties/b/required` points into the uiSchema at `['a', 'b']`, which reaches one under `additionalProperties`, then along it with the branches the keyword sits in removed (see [`getFieldSchemaPath()`](#getfieldschemapath)).
-The branches are kept when the root `schema` doesn't lead along the `schemaPath` to the keyword, as for a keyword in a `$ref` target Ajv compiles on its own.
-A `schemaPath` that names another property than the data path at the same level, as Ajv's does for a keyword behind a `$ref` to another property, or that stops short of the data path, as for one behind a `$ref` to the root, isn't read; one into `definitions` or `$defs` is, since every `$ref` to that definition shares its uiSchema.
-An error other than `required` doesn't read the `schemaPath`, which a `$ref` can lead into another field's uiSchema.
-An empty `ui:title` is returned as found, and the root's own `ui:title` is never read.
-A tuple's item is read from the `prefixItems` or `additionalItems` uiSchema that describes it, as the form reads it, except past a schema that isn't known, where it is read from `items`. An item that a function form of `items` gives isn't found.
-
-#### Parameters
-
-- source: object - The error's `property` and `schemaPath`, the uiSchema they point into and the schemas the path is read in:
-  - property: string - The error's property path, as [`pathToProperty()`](#pathtoproperty) writes it, `''` for the root
-  - [name]: string - The name of a property under the `property`, such as one a `required` error names
-  - schemaPath: string - The URI fragment of the JSON Pointer to the schema keyword that failed, such as `#/properties/a/type`
-  - [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
-  - [skipsRefs]: boolean - The engine leaves every `$ref` out of the `schemaPath`, as `getKeywordParentSchema()`'s `skipsRefs` reads it
-  - [uiSchema]: UiSchema&lt;T, S, F> - The form's uiSchema
-  - [parentSchema]: unknown - The schema object that holds the keyword that failed, when the engine hands it over
-  - [schema]: S - The form's root schema
-
-#### Returns
-
-- string | undefined: The `ui:title` found, otherwise `undefined`
 
 ### getWidgetDescription()
 

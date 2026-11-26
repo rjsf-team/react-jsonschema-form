@@ -2170,7 +2170,7 @@ describe('AJV8Validator', () => {
             };
             const uiSchema: UiSchema = {
               animal: {
-                title: 'My animal uiSchema',
+                'ui:title': 'My animal uiSchema',
               },
             };
 
@@ -2212,7 +2212,7 @@ describe('AJV8Validator', () => {
             };
             const uiSchema: UiSchema = {
               animal: {
-                title: 'My animal uiSchema',
+                'ui:title': 'My animal uiSchema',
               },
             };
 
@@ -2502,7 +2502,7 @@ describe('AJV8Validator', () => {
             );
           });
         });
-        describe('ui:title is in validation message when it is defined in definitions', () => {
+        describe("ui:title under uiSchema.definitions isn't in validation message, as the form doesn't label a field with it", () => {
           beforeAll(() => {
             const schema: RJSFSchema = {
               definitions: {
@@ -2555,7 +2555,7 @@ describe('AJV8Validator', () => {
 
             const expected = [
               "must have required property 'uiSchema Billing Address'",
-              "must have required property 'uiSchema City'",
+              "must have required property 'city'",
             ];
 
             const messages = errors.map((e) => e.message);
@@ -2571,9 +2571,7 @@ describe('AJV8Validator', () => {
             );
 
             expect(errorSchema.shippingAddress!.city!.__errors).toHaveLength(1);
-            expect(errorSchema.shippingAddress!.city!.__errors![0]).toEqual(
-              "must have required property 'uiSchema City'",
-            );
+            expect(errorSchema.shippingAddress!.city!.__errors![0]).toEqual("must have required property 'city'");
           });
         });
         describe('uiSchema title in validation when defined in nested field', () => {

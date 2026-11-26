@@ -164,17 +164,17 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
       expect(itemErrors.map((error) => error.title)).toEqual(itemErrors.map(() => 'Item ui'));
     });
 
-    it("is named by the item field's raw uiSchema title", () => {
+    it("isn't named by a `title` the item field's uiSchema holds, which isn't a ui:title the form labels it with", () => {
       const uiSchema = { arr: { items: { name: { title: 'Raw name' } } } };
       const { errors } = buildValidator().validateFormData(
         { arr: [{}] },
-        inArray(nameHolder(requiredDirectly)),
+        inArray(nameHolder(requiredDirectly, 'Name')),
         undefined,
         undefined,
         uiSchema,
       );
       expect(errors.filter((error) => error.name === 'required')).toEqual([
-        expect.objectContaining({ property: '.arr.0.name', title: 'Raw name' }),
+        expect.objectContaining({ property: '.arr.0.name', title: 'Name' }),
       ]);
     });
   });
@@ -205,18 +205,13 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
       properties: { obj: { type: 'object', additionalProperties: { type: 'string', minLength: 3 } } },
     };
 
-    it.each<[string, UiSchema, string]>([
+    it.each<[string, UiSchema]>([
+      ['the ui:title additionalProperties gives it', { obj: { additionalProperties: { 'ui:title': 'Extra ui' } } }],
       [
-        'the ui:title additionalProperties gives it',
-        { obj: { additionalProperties: { 'ui:title': 'Extra ui' } } },
-        'Extra ui',
-      ],
-      [
-        'its own ui:title over the one additionalProperties gives it',
+        'a ui:title of its own',
         { obj: { extra: { 'ui:title': 'Own ui' }, additionalProperties: { 'ui:title': 'Extra ui' } } },
-        'Own ui',
       ],
-    ])('takes %s', (_, uiSchema, title) => {
+    ])('takes no title, as the form labels it by its key whatever %s', (_, uiSchema) => {
       const { errors } = buildValidator().validateFormData(
         { obj: { extra: 'x' } },
         schema,
@@ -225,7 +220,7 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
         uiSchema,
       );
       expect(errors.filter((error) => error.name === 'minLength')).toEqual([
-        expect.objectContaining({ property: '.obj.extra', title }),
+        expect.objectContaining({ property: '.obj.extra', title: '' }),
       ]);
     });
 
@@ -341,6 +336,106 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
       expect(errors.filter((error) => error.name === 'required')).toEqual([
         expect.objectContaining({ property: '.children.0.name', title: '' }),
       ]);
+    });
+  });
+
+  describe('an error is named by the label the form shows its field with', () => {
+    const p = (field: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { p: field } });
+
+    it.each<[string, RJSFSchema, unknown, string]>([
+      [
+        "its own title over an allOf entry's",
+        p({ title: 'Field', allOf: [{ title: 'Branch', type: 'string' }] }),
+        { p: 1 },
+        'Field',
+      ],
+      [
+        "an allOf entry's title where it has none",
+        p({ allOf: [{ title: 'Branch', type: 'string' }] }),
+        { p: 1 },
+        'Branch',
+      ],
+      [
+        "its own title over an anyOf option's",
+        p({ title: 'Field', anyOf: [{ title: 'Option', type: 'string' }] }),
+        { p: 1 },
+        'Field',
+      ],
+      [
+        "its own title over its oneOf options'",
+        p({
+          title: 'Field',
+          oneOf: [
+            { title: 'B1', type: 'string' },
+            { title: 'B2', type: 'boolean' },
+          ],
+        }),
+        { p: 1 },
+        'Field',
+      ],
+      [
+        "its own title over a then's",
+        p({ title: 'Field', type: 'number', if: { type: 'number' }, then: { title: 'Branch', minimum: 5 } }),
+        { p: 1 },
+        'Field',
+      ],
+      [
+        "a then's title where it has none",
+        p({ type: 'number', if: { type: 'number' }, then: { title: 'Branch', minimum: 5 } }),
+        { p: 1 },
+        'Branch',
+      ],
+      [
+        "its own title over its $ref target's",
+        { $defs: { D: { title: 'Definition', type: 'string' } }, ...p({ title: 'Field', $ref: '#/$defs/D' }) },
+        { p: 1 },
+        'Field',
+      ],
+      [
+        "its own title over the $ref target's of an allOf entry",
+        {
+          $defs: { D: { title: 'Definition', type: 'string' } },
+          ...p({ title: 'Field', allOf: [{ $ref: '#/$defs/D' }] }),
+        },
+        { p: 1 },
+        'Field',
+      ],
+      [
+        "the title a parent's then redeclares it with",
+        {
+          type: 'object',
+          properties: { x: { type: 'string' }, p: { title: 'Field', type: 'number' } },
+          if: { required: ['x'] },
+          then: { properties: { p: { title: 'Branch', minimum: 5 } } },
+        },
+        { x: 'on', p: 1 },
+        'Branch',
+      ],
+    ])('takes %s', (_, schema, formData, title) => {
+      const { errors } = buildValidator().validateFormData(formData, schema);
+      const fieldErrors = errors.filter((error) => error.property === '.p');
+      expect(fieldErrors).not.toEqual([]);
+      expect(fieldErrors.map((error) => error.title)).toEqual(fieldErrors.map(() => title));
+      for (const error of fieldErrors) {
+        expect(error.stack).toEqual(`'${title}' ${error.message}`);
+      }
+    });
+
+    it("takes no title for an option's property the option shown for the data doesn't declare", () => {
+      const schema = p({
+        type: 'object',
+        title: 'Field',
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string', title: 'Aa' } }, required: ['a'] },
+          { title: 'B', properties: { b: { type: 'string', title: 'Bb' } }, required: ['b'] },
+        ],
+      });
+      const { errors } = buildValidator().validateFormData({ p: {} }, schema);
+      const required = errors.filter((error) => error.name === 'required');
+      // ata reports only the `oneOf` error
+      expect(required.map((error) => [error.property, error.title])).toEqual(
+        required.map((error) => [error.property, error.property === '.p.a' ? 'Aa' : '']),
+      );
     });
   });
 }

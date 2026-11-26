@@ -13,13 +13,22 @@ import type {
   SchemaFieldPath,
   StrictRJSFSchema,
 } from '../types.ts';
-import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.ts';
+import { findSelectedOption } from './findSelectedOptionInXxxOf.ts';
 import getFromSchema from './getFromSchema.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
 import { getPrefixLength } from './getItemSchema.ts';
 import retrieveSchema, { joinOptionExtraKeys } from './retrieveSchema.ts';
 
 const NOT_FOUND = { field: undefined, isRequired: undefined };
+
+/** Where `findChildField()` found a key's field, which says where the form reads the field's uiSchema from: the
+ * parent's own `properties`, the `properties` of the `anyOf`/`oneOf` option at `index`, the item of `array`, or the
+ * parent's extra keys */
+type FieldOrigin<S extends StrictRJSFSchema = RJSFSchema> =
+  | { kind: 'property' }
+  | { kind: 'option'; xxxOf: 'anyOf' | 'oneOf'; index: number }
+  | { kind: 'item'; array: S }
+  | { kind: 'additional' };
 
 /** Returns the schema `holder` declares for `key`. A stub `retrieveSchema()` made for an extra key the data holds is no
  * declaration: it says what the data holds, so a key would otherwise be found differently with the data than without.
@@ -41,7 +50,7 @@ function declaredField<S extends StrictRJSFSchema, F extends FormContextType>(
   return hasSchemaMarker(field, ADDITIONAL_PROPERTY_FLAG) ? undefined : (field ?? undefined);
 }
 
-/** Finds the schema of `key` in `parent`. A property `parent` declares comes first, then the array item an index key
+/** Used by `findFieldInSchema()` and `getFieldTitle()` to find the schema of `key` in `parent`. A property `parent` declares comes first, then the array item an index key
  * names, then one of the option rendered for `data` when `parent` has an `anyOf` or `oneOf`, since a form renders both.
  * Only then is `key` an extra key, described by the `patternProperties` and `additionalProperties` of the two together,
  * as the form describes it. An option's field reads the `required` of its parent too, as `getRenderedOptionSchema()`
@@ -52,31 +61,33 @@ function declaredField<S extends StrictRJSFSchema, F extends FormContextType>(
  * @param rawParent - The schema in which to find `key`, if there is one
  * @param key - The key to find
  * @param data - The form data of `parent`, used to determine which anyOf/oneOf option is rendered
- * @returns - The schema of `key` and its required state, or `NOT_FOUND`
+ * @returns - The schema of `key`, its required state and where it was found, or `NOT_FOUND`
  */
-function findKey<T, S extends StrictRJSFSchema, F extends FormContextType>(
+export function findChildField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   rootSchema: S,
   rawParent: S | undefined,
   key: string,
   data: T | undefined,
-): FoundFieldType<S> {
+): FoundFieldType<S> & { origin?: FieldOrigin<S> } {
   // A boolean subschema has no keys to find, and an empty segment, as the `a.` path leaves, names none
   if (!isSchemaObject<S>(rawParent) || key === '') {
     return NOT_FOUND;
   }
   // Read as the form renders it, with its `$ref`, `allOf` and the `if`/`then` its data meets merged in
   const parent = retrieveSchema<T, S, F>(context, rawParent, rootSchema, data);
-  const foundIn = (field: S, ...holders: (S | undefined)[]) => ({
+  const foundIn = (field: S, origin: FieldOrigin<S>, ...holders: (S | undefined)[]) => ({
     field,
     isRequired: holders.some((holder) => Array.isArray(holder?.required) && holder.required.includes(key)),
+    origin,
   });
   const own = declaredField<S, F>(context, rootSchema, parent, key);
   if (own !== undefined) {
-    return foundIn(own, parent);
+    return foundIn(own, { kind: 'property' }, parent);
   }
   const xxxOfKey = getXxxOfKey<S>(parent);
-  const option = xxxOfKey && findSelectedOptionInXxxOf(context, rootSchema, parent, key, xxxOfKey, data);
+  const selected = xxxOfKey ? findSelectedOption<T, S, F>(context, rootSchema, parent, xxxOfKey, data) : undefined;
+  const option = selected?.option;
   // The item the array renders at the index, as the `ui:required` check walks it, its options' `items` met in; an item
   // is never required. Object data holds an extra key there, as a type list naming both `object` and `array` can
   const array = /^\d+$/.test(key) && !isObject(data) && (option ? renderOption<S>(parent, option) : parent);
@@ -86,16 +97,25 @@ function findKey<T, S extends StrictRJSFSchema, F extends FormContextType>(
       AdditionalItemsHandling.Fallback,
       getPrefixLength<S>(array) > 0 ? Number(key) : -1,
     );
-    return { field: getFromSchema<T, S, F>(context, rootSchema, item, [], item), isRequired: false };
+    return {
+      field: getFromSchema<T, S, F>(context, rootSchema, item, [], item),
+      isRequired: false,
+      origin: { kind: 'item', array },
+    };
   }
   const field = option && declaredField<S, F>(context, rootSchema, option, key);
-  if (field !== undefined) {
-    return foundIn(field, parent, option);
+  if (xxxOfKey && selected && field !== undefined) {
+    return foundIn(field, { kind: 'option', xxxOf: xxxOfKey, index: selected.index }, parent, option);
   }
   const keySchema = getAdditionalPropertySchema<S>(option ? joinOptionExtraKeys<S>(parent, option) : parent, key);
   // `true` is also the answer for a schema with no extra-key keywords, and describes no field either way
   return isSchemaObject<S>(keySchema)
-    ? foundIn(retrieveSchema<unknown, S, F>(context, keySchema, rootSchema, getByPath(data, key)), parent, option)
+    ? foundIn(
+        retrieveSchema<unknown, S, F>(context, keySchema, rootSchema, getByPath(data, key)),
+        { kind: 'additional' },
+        parent,
+        option,
+      )
     : NOT_FOUND;
 }
 
@@ -123,10 +143,10 @@ export default function findFieldInSchema<
   let found: FoundFieldType<S> = NOT_FOUND;
   let data = formData;
   for (const key of (Array.isArray(path) ? path : path.split('.')).map(String)) {
-    found = findKey<T, S, F>(context, rootSchema, parent, key, data);
+    found = findChildField<T, S, F>(context, rootSchema, parent, key, data);
     parent = found.field;
     data = getByPath<T>(data, key);
   }
   // A copy, since the caller owns its result and `NOT_FOUND` is shared
-  return { ...found };
+  return { field: found.field, isRequired: found.isRequired };
 }

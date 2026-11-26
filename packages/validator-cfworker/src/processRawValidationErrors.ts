@@ -8,19 +8,16 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
   UiSchema,
+  ValidatorErrorFieldSource,
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
   applyValidatorErrorTitles,
   createErrorHandler,
-  getByPath,
   getDefaultFormState,
-  getFieldSchemaPath,
-  getKeywordParentSchema,
-  getValidatorErrorUiTitle,
+  getFieldTitle,
   ONE_OF_KEY,
   pathToProperty,
-  PROPERTIES_KEY,
   propertyToPath,
   toErrorSchema,
   unwrapErrorHandler,
@@ -101,12 +98,13 @@ export function filterDuplicateErrors(
   }, []);
 }
 
-/** Converts `@cfworker/json-schema` output units into RJSF validation errors.
+/** Converts `@cfworker/json-schema` output units into RJSF validation errors, each named by the title the form labels
+ * its field with (see `getFieldTitle()`).
  *
  * @param errors - The cfworker errors to convert
- * @param [uiSchema] - The uiSchema used to resolve field titles
+ * @param [fields] - The form the data was validated in, which names each error's field; errors are left untitled
+ *        without it
  * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed
- * @param [schema] - The schema used to resolve field titles
  * @returns - The converted RJSF validation errors
  */
 export function transformRJSFValidationErrors<
@@ -115,9 +113,8 @@ export function transformRJSFValidationErrors<
   F extends FormContextType = FormContextType,
 >(
   errors: CFWorkerValidationError[] = [],
-  uiSchema?: UiSchema<T, S, F>,
+  fields?: ValidatorErrorFieldSource<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
-  schema?: S,
 ): RJSFValidationError[] {
   const errorList = errors.map((error) => {
     const { instanceLocation, keyword, keywordLocation } = error;
@@ -127,24 +124,17 @@ export function transformRJSFValidationErrors<
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
     const [missingProperty, presentProperty] = extractPropertyNames(error);
-    // cfworker reports a `false` schema at the location of the instance it rejects, which names no schema
-    const parentSchema =
-      schema && keyword !== 'false'
-        ? getKeywordParentSchema<S>(schema, keywordLocation, decodePointerToken)
-        : undefined;
 
     if (missingProperty) {
-      const applied = applyValidatorErrorTitles<T, S, F>({
-        message,
-        names: presentProperty ? [missingProperty, presentProperty] : [missingProperty],
-        quote: '"',
-        property,
-        schemaPath: keywordLocation,
-        decodeSchemaPathKey: decodePointerToken,
-        uiSchema,
-        parentSchema,
-        schema,
-      });
+      const applied = fields
+        ? applyValidatorErrorTitles<T, S, F>({
+            ...fields,
+            message,
+            names: presentProperty ? [missingProperty, presentProperty] : [missingProperty],
+            quote: '"',
+            property,
+          })
+        : { message, titles: new Map<string, string>() };
       message = applied.message;
       uiTitle = applied.titles.get(missingProperty) ?? '';
       const missing = pathToProperty([missingProperty]);
@@ -153,41 +143,15 @@ export function transformRJSFValidationErrors<
       property = property ? `${property}${missing}` : missing.replace(/^\./, '');
       stack = message;
     } else {
-      const uiSchemaTitle = getValidatorErrorUiTitle<T, S, F>({
-        property,
-        schemaPath: keywordLocation,
-        decodeSchemaPathKey: decodePointerToken,
-        uiSchema,
-        schema,
-      });
-      const schemaTitle = schema
-        ? getByPath<string | undefined>(schema, [
-            ...propertyToPath(property).flatMap((part) => [PROPERTIES_KEY, part]),
-            'title',
-          ])
-        : undefined;
-      // A `false` schema's location is its instance's, whose keys name no branch
-      const fieldLocation = keyword === 'false' ? keywordLocation : getFieldSchemaPath(keywordLocation);
-      const parentTitle = (
-        schema && fieldLocation !== keywordLocation
-          ? getKeywordParentSchema<S>(schema, fieldLocation, decodePointerToken)
-          : parentSchema
-      )?.title;
-      // A branch redeclaring a property, such as a `then`, leaves its title to the declaration beside the branch
-      const segments = fieldLocation.split('/');
-      const declarations = segments.slice(0, -2).join('/');
-      const declaration =
-        keyword !== 'false' && segments.at(-3) === PROPERTIES_KEY ? getFieldSchemaPath(declarations) : undefined;
-      const declaredTitle =
-        !schema || declaration === undefined || declaration === declarations
-          ? undefined
-          : getKeywordParentSchema<S>(schema, `${declaration}/${segments.slice(-2).join('/')}`, decodePointerToken)
-              ?.title;
       const title =
-        uiSchemaTitle ??
-        ((typeof parentTitle === 'string' ? parentTitle : undefined) ||
-          (typeof declaredTitle === 'string' ? declaredTitle : undefined) ||
-          schemaTitle);
+        fields &&
+        getFieldTitle<T, S, F>(
+          fields.context,
+          fields.schema,
+          propertyToPath(property),
+          fields.formData,
+          fields.uiSchema,
+        );
       if (title) {
         stack = `'${title}' ${message}`.trim();
         uiTitle = title;
@@ -238,7 +202,11 @@ export default function processRawValidationErrors<
   getCustomValidateFormData?: () => T,
 ) {
   const { validationError } = rawErrors;
-  let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
+  let errors = transformRJSFValidationErrors<T, S, F>(
+    rawErrors.errors,
+    { context, schema, formData, uiSchema },
+    suppressDuplicateFiltering,
+  );
   if (validationError) {
     errors = [...errors, { stack: validationError.message }];
   }

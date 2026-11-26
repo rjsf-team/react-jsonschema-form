@@ -8,17 +8,17 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
   UiSchema,
+  ValidatorErrorFieldSource,
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
   applyValidatorErrorTitles,
   createErrorHandler,
-  getByPath,
   getDefaultFormState,
-  getValidatorErrorUiTitle,
-  getKeywordParentSchema,
+  getFieldTitle,
   ONE_OF_KEY,
   pathToProperty,
+  propertyToPath,
   toErrorSchema,
   unwrapErrorHandler,
   validationDataMerge,
@@ -70,10 +70,15 @@ function unescapePointerToken(token: string): string {
   return token.replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
-/** Transforms ata-validator errors into the RJSF-internal `RJSFValidationError`
- * shape. ata's error objects already use the same field names AJV does
- * (`instancePath`, `keyword`, `params`, `schemaPath`, `parentSchema`,
- * `message`), so the conversion is structural only.
+/** Transforms ata-validator errors into the RJSF-internal `RJSFValidationError` shape. ata's error objects already use
+ * the same field names AJV does (`instancePath`, `keyword`, `params`, `schemaPath`, `message`), and each error is named
+ * by the title the form labels its field with (see `getFieldTitle()`).
+ *
+ * @param errors - The ata errors to convert
+ * @param [fields] - The form the data was validated in, which names each error's field; errors are left untitled
+ *        without it
+ * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed
+ * @returns - The converted RJSF validation errors
  */
 export function transformRJSFValidationErrors<
   T = unknown,
@@ -81,20 +86,11 @@ export function transformRJSFValidationErrors<
   F extends FormContextType = FormContextType,
 >(
   errors: ValidationError[] = [],
-  uiSchema?: UiSchema<T, S, F>,
+  fields?: ValidatorErrorFieldSource<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
-  schema?: S,
 ): RJSFValidationError[] {
   const errorList = errors.map((e: ValidationError) => {
     const { instancePath, keyword, params, schemaPath } = e;
-    // ata hands over a `$ref`'s own schema, unresolved, for a keyword under it, or no schema at all in a chain of them.
-    // A `null` lookup is a path that can index either a `$ref` schema's branch or its target's. ata's own schema is read
-    // through the `$ref` schema's, so it is the right one only when it holds the keyword the path ends at. ata's
-    // `keyword` isn't always that one: a `dependentRequired` error is a `required` one, a `then: false` one a `not` one
-    const found = schema && getKeywordParentSchema<S>(schema, schemaPath, unescapePointerToken, true);
-    const pathKeyword = unescapePointerToken(schemaPath.slice(schemaPath.lastIndexOf('/') + 1));
-    const parentSchema =
-      found === null && !Object.hasOwn(Object(e.parentSchema), pathKeyword) ? undefined : (found ?? e.parentSchema);
     // oxlint-disable-next-line typescript/no-useless-default-assignment -- ata's types say `message` is always set, but it can be missing at runtime
     let { message = '' } = e;
     let property = pathToProperty(instancePath.split('/').slice(1).map(unescapePointerToken));
@@ -108,42 +104,31 @@ export function transformRJSFValidationErrors<
     ].filter((item): item is string => typeof item === 'string' && item !== '');
 
     if (rawPropertyNames.length > 0) {
-      const applied = applyValidatorErrorTitles<T, S, F>({
-        message,
-        names: rawPropertyNames,
-        quote: "'",
-        property,
-        schemaPath,
-        decodeSchemaPathKey: unescapePointerToken,
-        skipsRefs: true,
-        uiSchema,
-        parentSchema,
-        schema,
-      });
+      const applied = fields
+        ? applyValidatorErrorTitles<T, S, F>({ ...fields, message, names: rawPropertyNames, quote: "'", property })
+        : { message, titles: new Map<string, string>() };
       message = applied.message;
-      uiTitle = [...applied.titles.values()].at(-1) ?? '';
+      const { titles } = applied;
+      // The error is placed on its missing property, so that is the one its `title` names
+      uiTitle =
+        (typeof params?.missingProperty === 'string'
+          ? titles.get(params.missingProperty)
+          : [...titles.values()].at(-1)) ?? '';
 
       stack = message;
     } else {
-      const uiSchemaTitle = getValidatorErrorUiTitle<T, S, F>({
-        property,
-        schemaPath,
-        decodeSchemaPathKey: unescapePointerToken,
-        uiSchema,
-        schema,
-      });
-
-      if (uiSchemaTitle) {
-        stack = `'${uiSchemaTitle}' ${message}`.trim();
-        uiTitle = uiSchemaTitle;
-      } else {
-        // A `false` property's error comes with the `properties` holding it, where `title` can name a property
-        const parentSchemaTitle = getByPath(parentSchema, 'title');
-
-        if (typeof parentSchemaTitle === 'string' && parentSchemaTitle) {
-          stack = `'${parentSchemaTitle}' ${message}`.trim();
-          uiTitle = parentSchemaTitle;
-        }
+      const title =
+        fields &&
+        getFieldTitle<T, S, F>(
+          fields.context,
+          fields.schema,
+          propertyToPath(property),
+          fields.formData,
+          fields.uiSchema,
+        );
+      if (title) {
+        stack = `'${title}' ${message}`.trim();
+        uiTitle = title;
       }
     }
 
@@ -188,7 +173,11 @@ export default function processRawValidationErrors<
   getCustomValidateFormData?: () => T,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
-  let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
+  let errors = transformRJSFValidationErrors<T, S, F>(
+    rawErrors.errors,
+    { context, schema, formData, uiSchema },
+    suppressDuplicateFiltering,
+  );
 
   if (invalidSchemaError) {
     errors = [...errors, { stack: invalidSchemaError.message }];

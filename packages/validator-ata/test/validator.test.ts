@@ -213,7 +213,7 @@ describe('ATAValidator', () => {
         properties: { animal: { title: 'My animal', enum: ['Cat', 'Fish'] } },
         allOf: [{ required: ['animal'] }],
       };
-      const uiSchema = { animal: { title: 'My animal uiSchema' } };
+      const uiSchema = { animal: { 'ui:title': 'My animal uiSchema' } };
       const { errors, errorSchema } = v.validateFormData<PetData>({}, schema, undefined, undefined, uiSchema);
       expect(errors).toHaveLength(1);
       expect(errors[0].stack).toBe("must have required property 'My animal uiSchema'");
@@ -231,7 +231,7 @@ describe('ATAValidator', () => {
         if: { properties: { hasPet: { const: true } }, required: ['hasPet'] },
         then: { required: ['animal'] },
       };
-      const uiSchema = { animal: { title: 'My animal uiSchema' } };
+      const uiSchema = { animal: { 'ui:title': 'My animal uiSchema' } };
       const { errors, errorSchema } = v.validateFormData<PetData>(
         { hasPet: true },
         schema,

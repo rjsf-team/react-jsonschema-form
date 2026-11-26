@@ -69,6 +69,13 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
         schemaUtils.findSelectedOptionInXxxOf(testOneOfDiscriminatorSchema, 'ignored_in_this_test', ONE_OF_KEY, {}),
       ).toBeUndefined();
     });
+    test('returns undefined when the discriminator holds a value no option names', () => {
+      expect(
+        schemaUtils.findSelectedOptionInXxxOf(testOneOfDiscriminatorSchema, 'ignored_in_this_test', ONE_OF_KEY, {
+          answer: 'none of them',
+        }),
+      ).toBeUndefined();
+    });
     test('returns the option whose selector property, written as a $ref, holds the value', () => {
       const rootSchema: RJSFSchema = {
         definitions: {
