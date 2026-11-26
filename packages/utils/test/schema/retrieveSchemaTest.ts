@@ -45,8 +45,8 @@ import {
 import { check } from './graph/miniValidator.ts';
 import type { TestValidatorType } from './types.ts';
 
-/** An `if` of only an `x-` extension. The schema types declare no `x-` keys, so the schema is cast to one */
-const NOTE = { 'x-note': 'n' } as RJSFSchema;
+/** An `if` of only an `x-` extension, which the schema types declare no key for */
+const NOTE: RJSFSchema & { 'x-note': string } = { 'x-note': 'n' };
 
 /** Reads a subschema handed out by `retrieveSchema()` as the schema it is, or the empty schema for any other value */
 function schemaOf(value: unknown): RJSFSchema {

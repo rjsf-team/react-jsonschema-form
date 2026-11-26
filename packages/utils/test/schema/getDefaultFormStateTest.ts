@@ -8916,8 +8916,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           (_placement, inAllOf) => {
             const fill = (type: 'number' | 'string', conditional: RJSFSchema) =>
               getDefaultFormState({ validator: testValidator }, { schema: rootOf(placed(type, conditional, inAllOf)) });
-            // The schema types declare no `x-` keys, so the schema is cast to one
-            const note = { 'x-note': 'n' } as RJSFSchema;
+            const note: RJSFSchema & { 'x-note': string } = { 'x-note': 'n' };
             expect(fill('string', { if: note, then: { const: 'z' } })).toStrictEqual({ x: 'z' });
             expect(fill('string', { if: { ...note, type: 'string' }, then: { const: 'z' } })).toStrictEqual({ x: 'z' });
             expect(fill('number', { if: { format: 'email' }, then: { const: 3 } })).toStrictEqual({ x: 3 });
