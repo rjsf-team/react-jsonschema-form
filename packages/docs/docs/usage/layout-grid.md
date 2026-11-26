@@ -1,7 +1,7 @@
 # Layout Grid
 
 The Layout Grid is a way of generating forms using the `UiSchema`.
-Unlike the original method of showing each field in the JSON Schema, in order, as they appear hierarchically within the
+Unlike the default rendering, which shows each field in the JSON Schema, in order, as they appear hierarchically within the
 nested object hierarchy, the Layout Grid lets you define where each field goes on a grid in any place/order you choose.
 It even adds the ability to pass additional props to the rendering widget for each element being displayed.
 
