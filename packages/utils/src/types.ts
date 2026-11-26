@@ -2159,7 +2159,9 @@ type UIOptionsDeclaredType<
     itemLabel?: string;
     /** On an array field, let users expand or collapse each item's fields. Defaults to false. */
     showCollapseButton?: boolean;
-    /** Start each new item collapsed when `showCollapseButton` is enabled. Defaults to false. */
+    /** Start existing and newly added items closed when `showCollapseButton` is enabled, unless the item already has
+     * errors to show. Defaults to false.
+     */
     autoCollapse?: boolean;
     /** Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the
      * hierarchy

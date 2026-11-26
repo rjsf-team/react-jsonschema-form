@@ -251,9 +251,11 @@ const uiSchema: UiSchema = {
 };
 ```
 
-With this configuration, an address whose `name` is `'Home'` appears as **Home**. Without an [`itemLabel`](#itemlabel-option), the control identifies each item by its position. Set `autoCollapse` to start each item closed, including newly added items. Leave it off to start them open. Both options default to `false`.
+With this configuration, an address whose `name` is `'Home'` appears as **Home**. Without an [`itemLabel`](#itemlabel-option), the control identifies each item by its position. Set `autoCollapse` to start both existing and newly added items closed. An item that already has errors to show starts open. Leave `autoCollapse` off to start every item open. Both options default to `false`.
 
-When an item first receives a validation error, it opens so the user can see which field needs attention.
+An item also opens when it first receives a validation error, unless the item hides its errors with `ui:hideError`. Opening and closing a disclosure keeps its widgets mounted. Changing `showCollapseButton` at runtime or switching an item to a hidden widget changes its markup and remounts the affected field. The form keeps its value, but a custom widget's local state can reset.
+
+To style the disclosure in a theme, target `.rjsf-array-item-details` and its direct `summary` child.
 
 ### `itemLabel` option
 

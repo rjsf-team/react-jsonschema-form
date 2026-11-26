@@ -36,10 +36,7 @@ export default function pickGlobalUiOptions(
     }
   }
   // One of RJSF's own is picked above already
-  extensionKeys.forEach((key) => {
-    if (GLOBAL_NAMES.has(key)) {
-      return;
-    }
+  for (const key of extensionKeys.filter((extensionKey) => !GLOBAL_NAMES.has(extensionKey))) {
     if (RESERVED_NAMES.has(key)) {
       logOnce(
         ROOT_ONLY_NAMES.has(key)
@@ -50,7 +47,7 @@ export default function pickGlobalUiOptions(
     } else if (Object.hasOwn(globals, key)) {
       picked[key] = globals[key];
     }
-  });
+  }
   for (const key of Object.keys(globals)) {
     if (RESERVED_NAMES.has(key) && !GLOBAL_NAMES.has(key) && !extensionKeys.includes(key)) {
       logOnce(

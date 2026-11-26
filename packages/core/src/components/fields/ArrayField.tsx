@@ -601,7 +601,7 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
     belowMaxItems(schema, Math.max(1, fixedItemCount ?? 0));
   const hasButtons = orderable || removable || canCopy || showCollapseButton === true;
   // Without disclosures, only the last of a tuple's fixed items can need a name for Copy.
-  const firstNamedIndex = showCollapseButton ? 0 : Math.max((fixedItemCount ?? 0) - (canCopy ? 1 : 0), 0);
+  const firstNamedIndex = showCollapseButton === true ? 0 : Math.max((fixedItemCount ?? 0) - (canCopy ? 1 : 0), 0);
   // Serialized, so that the numbering below reruns only when a name or the items' order changes, not on every edit to
   // another field
   const namesKey = useMemo(
@@ -782,6 +782,7 @@ function ArrayFieldItemInner<
     disabled: itemDisabled,
     readonly: itemReadonly,
     hidden: itemHidden,
+    hideError: itemHideError,
   } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
   const typeSelectorFirst =
     fieldToRender?.FieldComponent === registry.fields.FallbackField &&
@@ -853,15 +854,15 @@ function ArrayFieldItemInner<
   const hasDisclosure = uiOptions.showCollapseButton === true && !itemHidden;
   if (hasDisclosure) {
     const position = index + 1;
-    const label =
-      itemName ??
-      (numberedItemLabel(translateString, translateString(TranslatableString.ArrayItemTitle), position) ||
-        title ||
-        String(position));
+    let label = itemName;
+    if (label === undefined) {
+      const itemTitle = translateString(TranslatableString.ArrayItemTitle);
+      label = (itemTitle && numberedItemLabel(translateString, itemTitle, position)) || title || String(position);
+    }
     children = (
       <ArrayItemDisclosure
         autoCollapse={uiOptions.autoCollapse}
-        hasErrors={toErrorList(itemErrorSchema).length > 0}
+        hasErrors={!itemHideError && toErrorList(itemErrorSchema).length > 0}
         label={label}
       >
         {children}

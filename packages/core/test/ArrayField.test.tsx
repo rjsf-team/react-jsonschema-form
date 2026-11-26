@@ -1506,6 +1506,74 @@ describe('ArrayField', () => {
       expect(input(node, 'root_1')).toHaveFocus();
     });
 
+    it.each([false, true])('restores nested disclosures when focus fails with the outer item open: %s', (outerOpen) => {
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'array', items: schema },
+        initialFormData: [['Alpha']],
+        uiSchema: { ...uiSchema, items: uiSchema },
+      });
+      const [outer, inner] = node.querySelectorAll('details');
+      outer.open = outerOpen;
+      // jsdom has no layout. A control hidden by CSS would ignore focus() in a browser.
+      const focus = vi.spyOn(input(node, 'root_0_0'), 'focus').mockImplementation(() => {
+        expect(outer.open && inner.open).toBe(true);
+      });
+
+      act(() => handleOf(ref).focusOnError({ property: '[0][0]', stack: '' }));
+
+      expect(focus).toHaveBeenCalledOnce();
+      expect(outer.open).toBe(outerOpen);
+      expect(inner.open).toBe(false);
+    });
+
+    it.each([false, true])('starts an invalid item open only when it shows its errors (hideError: %s)', (hideError) => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData,
+        extraErrors: { 0: { __errors: ['Check this entry'] } },
+        uiSchema: { ...uiSchema, items: { 'ui:hideError': hideError } },
+      });
+      const [invalid, valid] = node.querySelectorAll('details');
+      expect(invalid.open).toBe(!hideError);
+      expect(valid.open).toBe(false);
+    });
+
+    it('uses the position when the translator supplies no item title', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData,
+        uiSchema,
+        translateString: (key, params) =>
+          key === TranslatableString.ArrayItemTitle ? '' : englishStringTranslator(key, params),
+      });
+      expect(Array.from(node.querySelectorAll('summary'), (summary) => summary.textContent)).toEqual(['1', '2']);
+    });
+
+    it('does not count a fixed item without buttons when JSON supplies a string for showCollapseButton', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: [{ type: 'string' }], additionalItems: { type: 'string' } },
+        initialFormData: ['Alpha', 'Alpha'],
+        uiSchema: { 'ui:options': { itemLabel: '.', showCollapseButton: 'true' as unknown as boolean } },
+      });
+      expect(node.querySelector('summary')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-remove')).toHaveAttribute('title', 'Remove Alpha');
+    });
+
+    it('preserves edited form data when the disclosure option changes', async () => {
+      const props = { schema, initialFormData };
+      const { node, rerender } = createFormComponent(props);
+      const original = input(node, 'root_0');
+      await user.type(original, ' edited');
+      rerender({ ...props, uiSchema });
+      const wrapped = input(node, 'root_0');
+      expect(wrapped).not.toBe(original);
+      expect(wrapped).toHaveValue('Alpha edited');
+      rerender(props);
+      expect(input(node, 'root_0')).toHaveValue('Alpha edited');
+    });
+
     it('shows an item-level error without moving focus and lets the user close the item again', async () => {
       const itemSchema: RJSFSchema = {
         type: 'object',

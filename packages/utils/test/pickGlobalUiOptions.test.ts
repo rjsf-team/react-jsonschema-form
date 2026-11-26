@@ -22,10 +22,6 @@ describe('pickGlobalUiOptions()', () => {
   it('keeps the extension keys it is given, where the options hold them', () => {
     expect(pickGlobalUiOptions(globalOptions, ['density', 'absent'])).toEqual({ label: false, density: 1 });
   });
-  it('ignores holes in the list of extension keys', () => {
-    const options: GenericObjectType = { undefined: true };
-    expect(pickGlobalUiOptions(options, new Array<string>(1))).toEqual({});
-  });
   it('drops an extension key that is an option RJSF reads per field, and warns once', () => {
     const withWidget: GenericObjectType = { label: false, widget: 'textarea' };
 

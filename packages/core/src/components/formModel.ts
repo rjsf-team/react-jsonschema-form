@@ -120,8 +120,10 @@ function takesFocus(element: Node | null | undefined, view: Window & typeof glob
   }
   // Reveal only the array item disclosures RJSF owns, including those around a nested array.
   const closedItem = `details.${ARRAY_ITEM_DETAILS_CLASS}:not([open])`;
+  const opened: HTMLDetailsElement[] = [];
   let item: HTMLDetailsElement | null;
   while ((item = element.closest<HTMLDetailsElement>(closedItem))) {
+    opened.push(item);
     item.open = true;
   }
   let received = false;
@@ -131,7 +133,14 @@ function takesFocus(element: Node | null | undefined, view: Window & typeof glob
   element.addEventListener('focus', onFocus, true);
   element.focus();
   element.removeEventListener('focus', onFocus, true);
-  return received || root.activeElement === element;
+  if (received || root.activeElement === element) {
+    return true;
+  }
+  // A candidate hidden by CSS or made inert can still ignore focus once its disclosures are open.
+  for (const disclosure of opened) {
+    disclosure.open = false;
+  }
+  return false;
 }
 
 /** The first of `elements` that `matches`, stopping there rather than copying the whole list to search it
