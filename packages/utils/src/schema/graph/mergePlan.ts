@@ -396,16 +396,19 @@ export function decidedWithoutValue<S extends StrictRJSFSchema>(
   const allowed = types ?? JSON_SCHEMA_TYPES;
   // A keyword that constrains none of the field's types holds for every value of them, as does an annotation, an `x-`
   // extension, a `discriminator` or a content annotation, which the validators don't assert. Any other keyword may
-  // constrain the value, a custom one the validator knows among them
+  // constrain the value, a custom one the validator knows among them. A `format` constrains whichever type the
+  // validator's format names, such as a number for `ajv-formats`' `int32`, so it reads as a string keyword only for a
+  // field holding no value
   const keys = Object.keys(node.raw).filter(
     (key) =>
       !NON_CONSTRAINING_KEYS.has(key) &&
       !key.startsWith('x-') &&
       key !== 'discriminator' &&
       !CONTENT_ANNOTATION_KEYS.has(key) &&
-      Object.entries(KEYWORDS_BY_TYPE).every(
-        ([only, keywords]) => !keywords.includes(key) || allowed.some((type) => allowsType([only], type)),
-      ),
+      ((!empty && key === 'format') ||
+        Object.entries(KEYWORDS_BY_TYPE).every(
+          ([only, keywords]) => !keywords.includes(key) || allowed.some((type) => allowsType([only], type)),
+        )),
   );
   if (keys.length === 0) {
     return true;
@@ -1501,7 +1504,8 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     resolved.optionPolicy?.allOf,
     resolved.optionPolicy?.conditions,
     isMarked(context, RESOLVES_NO_CONDITIONS),
-    resolved.declared,
+    // By content: each build of the plan offering an option reads its `type`s into a new object
+    JSON.stringify(resolved.declared),
   ];
   const memoized = plans.peekAny(keys, [data, depData]);
   if (isPlanOf(memoized, graph)) {

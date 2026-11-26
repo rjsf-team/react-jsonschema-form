@@ -1031,6 +1031,7 @@ describe('decidedWithoutValue()', () => {
     ['a type beside a keyword constraining no value of the field', { type: 'string', maxItems: 1 }, ['string'], true],
     ['a keyword constraining a value of a field naming no type', { required: ['a'] }, undefined, undefined],
     ['a custom keyword a validator may register', { isEven: true }, ['number'], undefined],
+    ['a format, which a validator may apply to numbers', { format: 'int32' }, ['number'], undefined],
     ['an x- extension or a discriminator', { 'x-note': 'n', discriminator: { propertyName: 'k' } }, ['number'], true],
     [
       'a content annotation',
@@ -1056,6 +1057,7 @@ describe('decidedWithoutValue()', () => {
     ['a $ref to an if a value would decide as failing', { $ref: '#/$defs/Min' }, false],
     ['a not of a $ref with a constraint beside it as holding', { not: { $ref: '#/$defs/Num', minimum: 1 } }, true],
     ['an if that is no schema as failing', 1, false],
+    ['a format as holding', { format: 'int32' }, true],
     ['a not of a type covering some values the field holds as holding', { not: { type: 'integer' } }, true],
     ['a not of a type covering every value the field holds as failing', { not: { type: 'number' } }, false],
   ])('decides, for a field holding no value, %s', (_name, condition, expected) => {

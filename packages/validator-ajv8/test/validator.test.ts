@@ -4219,6 +4219,19 @@ describe('an if a custom keyword decides', () => {
   });
 });
 
+describe('an if a number format decides', () => {
+  const validator = customizeValidator();
+  const x: RJSFSchema = { type: 'number', if: { format: 'int32' }, then: { const: 0 } };
+
+  it.each<[string, RJSFSchema]>([
+    ['its own default', { type: 'object', properties: { x: { ...x, default: 1e12 } } }],
+    ['an inherited default', { type: 'object', default: { x: 1e12 }, properties: { x } }],
+    ['the default of the option it shows', { type: 'object', properties: { x: { ...x, anyOf: [{ default: 1e12 }] } } }],
+  ])('checks it against %s', (_name, schema) => {
+    expect(getDefaultFormState({ validator }, { schema })).toEqual({ x: 1e12 });
+  });
+});
+
 describe('package surface', () => {
   it('exports the validator classes as values', () => {
     const schema: RJSFSchema = { $id: 'surface', type: 'string' };
