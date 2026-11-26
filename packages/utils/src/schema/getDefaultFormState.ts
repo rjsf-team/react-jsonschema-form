@@ -721,11 +721,11 @@ interface MergedSchema<S extends StrictRJSFSchema> {
   readers?: Reader<S>[];
 }
 
-/** The options selected for a field: the option chosen from each list, by the node holding it, and the lists chosen
- * from, which an option leading back to one of them does not offer again
+/** The options selected for a field: the option chosen from each list, by `selectionKey()`, and the lists chosen from,
+ * which an option leading back to one of them does not offer again
  */
 interface OptionState {
-  readonly selections: ReadonlyMap<NodeId, number>;
+  readonly selections: ReadonlyMap<string, number>;
   readonly chosen: ReadonlySet<unknown>;
   /** The option chosen from each list an `allOf` the field's plan left unmerged offers, by the node holding the list,
    * which seeds the field where that `allOf` sits, see `adoptableList()`. The last one chosen comes first: the plan
@@ -736,6 +736,13 @@ interface OptionState {
 }
 
 const NO_OPTIONS: OptionState = { selections: new Map(), chosen: new Set() };
+
+/** The key an option chosen from a list is selected under: the node holding the list and its keyword, since a node can
+ * hold an `anyOf` and a `oneOf` beside it, and the option chosen from one says nothing of the other
+ */
+function selectionKey({ provider, keyword }: Pick<OptionChoice, 'provider' | 'keyword'>): string {
+  return `${provider}:${keyword}`;
+}
 
 /** A child computed in an earlier pass of its object's dependency fixed point, and what it was computed from */
 interface MemoEntry {
@@ -940,13 +947,13 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   graph: SchemaGraph<S>,
   allOf: boolean | 'if',
   conditions: boolean,
-  selections: ReadonlyMap<NodeId, number>,
+  selections: ReadonlyMap<string, number>,
   cutRecursion = false,
   optionPolicy?: OptionPolicy,
 ): PlanPolicy<S> {
   let key = `defaults|${optionMatchKey(context)}|${allOf}|${conditions}|${cutRecursion}|${optionPolicy?.allOf}|${optionPolicy?.conditions}`;
-  for (const [provider, index] of selections) {
-    key += `|${provider}:${index}`;
+  for (const [list, index] of selections) {
+    key += `|${list}:${index}`;
   }
   return cachedPolicy<S>(context.validator, graph, key, () => {
     const matchContext = optionMatchContext(context);
@@ -955,7 +962,7 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
       conditions,
       cutRecursion,
       selectOption: (request) =>
-        selections.get(request.provider) ?? dependencyOption(matchContext, request, request.depData),
+        selections.get(selectionKey(request)) ?? dependencyOption(matchContext, request, request.depData),
       // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
       // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
       optionsInheritRefPath: true,
@@ -1074,7 +1081,7 @@ interface PlanRequest<S extends StrictRJSFSchema> {
   readonly seeds: readonly Seed[];
   readonly data: unknown;
   readonly depData: unknown;
-  readonly selections: ReadonlyMap<NodeId, number>;
+  readonly selections: ReadonlyMap<string, number>;
   readonly cutRecursion: boolean;
 }
 
@@ -1377,7 +1384,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const optionFor = (reader: Reader<S>, choice: OptionChoice, depData: unknown) => {
     matchContext ??= optionMatchContext(context);
     return (
-      reader.options?.selections.get(choice.provider) ??
+      reader.options?.selections.get(selectionKey(choice)) ??
       dependencyOption(matchContext, { ...choice, graph: reader.graph, data, depData }, depData)
     );
   };
@@ -1409,8 +1416,8 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
       for (const choice of reader.choices.filter(({ dependencies }) => dependencies)) {
         // A reader the fold selected the option for decides as selected, whatever another one matched
-        const selection = reader.options?.selections.get(choice.provider);
-        decide(reader.graph, `o${choice.provider}:${selection ?? ''}`, () =>
+        const selection = reader.options?.selections.get(selectionKey(choice));
+        decide(reader.graph, `o${selectionKey(choice)}:${selection ?? ''}`, () =>
           redecides ? optionFor(reader, choice, depData) : choice.selected,
         );
       }
@@ -2392,7 +2399,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return foldView<T, S, F>(context, { ...optionView, options: { ...optionView.options, chosen } }, branchProps);
   }
   const optionNode = choice.options[index];
-  const selections = new Map(view.options.selections).set(choice.provider, index);
+  const selections = new Map(view.options.selections).set(selectionKey(choice), index);
   // A field read whole merges its own `allOf` and `if`, but its option is read as the same option under a property is
   const optionPolicy = field.retrieves
     ? planUnretrieved(context, {
@@ -4380,8 +4387,9 @@ function constValueOf<S extends StrictRJSFSchema>(schema: S): unknown {
 function viewField<S extends StrictRJSFSchema>(view: DefaultsView<S>): Provenance<S> {
   return rootProvenance<S>(view.graph, [
     ...view.field.seeds,
-    ...view.choices.flatMap(({ provider, options, refPath }): Seed[] => {
-      const index = view.options.selections.get(provider);
+    ...view.choices.flatMap((choice): Seed[] => {
+      const { options, refPath } = choice;
+      const index = view.options.selections.get(selectionKey(choice));
       return index === undefined ? [] : [{ node: options[index], refPath, scope: [`o${options[index]}`] }];
     }),
     ...(view.options.adopted?.values() ?? []),

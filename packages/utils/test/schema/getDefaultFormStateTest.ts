@@ -11775,6 +11775,39 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(withData(list, 'zzz')).toEqual(withData({ type: 'string', enum: ['a', 'b'] }, 'zzz'));
         expect(withData({ ...list, default: 'b' }, 'zzz')).toEqual({ field: 'b' });
       });
+      it.each<[string, RJSFSchema]>([
+        ['an anyOf', { anyOf: [{ title: 'y' }] }],
+        ['an anyOf of two options', { anyOf: [{ title: 'y' }, { title: 'z' }] }],
+      ])('leaves a oneOf of object constants beside %s empty, as without it', (_, beside) => {
+        const list: RJSFSchema = { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] };
+        expect(fill({ ...list, ...beside })).toEqual(fill(list));
+        expect(fill({ ...list, ...beside })).toEqual({});
+        expect(fill({ ...list, ...beside }, 'always')).toEqual({ field: { a: 1 } });
+      });
+      it('picks the option of a oneOf beside an anyOf by its own list, not by the anyOf option the data picks', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            field: {
+              type: 'object',
+              anyOf: [
+                { properties: { k: { const: 'p' }, p: { default: 'p0' } }, required: ['k'] },
+                { properties: { k: { const: 'z' }, z: { default: 'z1' } }, required: ['k'] },
+              ],
+              oneOf: [{ properties: { q: { default: 'q0' } } }, { properties: { q: { default: 'q1' } } }],
+            },
+          },
+        };
+        // The mock validator can't tell the options apart, so it answers each check as the real ones do
+        testValidator.setReturnValues({ isValid: asRealValidator });
+        try {
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { field: { k: 'z' } } }),
+          ).toEqual({ field: { k: 'z', z: 'z1', q: 'q0' } });
+        } finally {
+          testValidator.reset?.();
+        }
+      });
       describe('whose first constant is null', () => {
         const nullFirst: [string, RJSFSchema, RJSFSchema, RJSFSchema][] = [
           [
@@ -12083,6 +12116,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             oneOf: [{ properties: { kind: { enum: ['a'] } } }, { properties: { kind: { enum: ['b'] } } }],
           }),
         ).toEqual({});
+      });
+      it('counts a constant listed twice as two options, so the list is left empty', () => {
+        const twice: RJSFSchema = { type: 'boolean', anyOf: [{ const: true }, { const: true, title: 'again' }] };
+        expect(fill(twice, undefined, undefined, ['field'])).toEqual({});
+        expect(fill(twice, { constAsDefaults: 'always' }, undefined, ['field'])).toEqual({ field: true });
       });
       it('leaves a list of several empty', () => {
         expect(fill({ type: 'string', enum: ['a', 'b'] })).toEqual({});
