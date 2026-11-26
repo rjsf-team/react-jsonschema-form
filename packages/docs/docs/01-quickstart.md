@@ -1,7 +1,7 @@
 # Quickstart
 
 Let's walk through setup of a form after installing the dependency properly.
-NOTE: As of version 5, the `Form` now requires you to provide a `validator` implementation. We recommend the one from `@rjsf/validator-ajv8`.
+NOTE: The `Form` requires you to provide a `validator` implementation. We recommend the one from `@rjsf/validator-ajv8`.
 
 ## Form schema
 

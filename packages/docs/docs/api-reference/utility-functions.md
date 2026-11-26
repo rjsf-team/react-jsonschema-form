@@ -1,6 +1,6 @@
 # RJSF utility functions, constants and types
 
-In version 5, the utility functions from `@rjsf/core/utils` were refactored into their own library called `@rjsf/utils`.
+The utility functions live in their own library called `@rjsf/utils`.
 These utility functions are separated into two distinct groups.
 The first, larger, group are the [functions](#non-validator-utility-functions) that do NOT require a `ValidatorType` interface be provided as one of their parameters.
 The second, smaller, group are the [functions](#validator-based-utility-functions) that DO require a `ValidatorType` interface, which they receive as part of a `SchemaContext`.

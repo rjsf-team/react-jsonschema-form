@@ -9,7 +9,7 @@ It is not an AJV replacement. See the package [README](https://github.com/rjsf-t
 - AJV-only options and extensions such as `AjvClass`, `$data`, `discriminator`, and `ajv-errors`'s `errorMessage` are not supported.
 - `$dynamicRef` and `$dynamicAnchor` are not currently supported by the underlying engine.
 - Error messages differ from AJV, and there is no `ajv-i18n` localizer equivalent. Use `transformErrors` to customize messages.
-- Precompiled-validator mode is not part of this initial package.
+- Precompiled-validator mode is not supported.
 - The wrapper normalizes `undefined` form-data values before validation and caches validators by schema id to make repeated RJSF `isValid()` calls safe.
 
 ## Types
