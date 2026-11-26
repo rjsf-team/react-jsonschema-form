@@ -380,6 +380,19 @@ describe('null data checked as null for an if (#5916)', () => {
     expect(label(node)).toMatch(/^Then/);
   });
 
+  it('renders and submits the then an if of only object keywords picks for a root holding null form data', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      if: { required: ['a'] },
+      then: { properties: { a: { type: 'number', title: 'A', default: 1 } } },
+    };
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData: null });
+    expect(screen.getByRole('textbox', { name: 'A' })).toHaveValue('1');
+    await submitForm(node, user);
+    expect(onError).not.toHaveBeenCalled();
+    expectToHaveBeenCalledWithFormData(onSubmit, { a: 1 }, true);
+  });
+
   it('titles a nullable string by the if its null default meets', () => {
     const { node } = createFormComponent({
       schema: {

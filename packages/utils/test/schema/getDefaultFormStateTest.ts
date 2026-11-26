@@ -8674,6 +8674,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
           },
         );
+        it('checks a root null form data as null, which an if of only object keywords accepts, and no data as {} (#5916)', () => {
+          const context = { validator: testValidator };
+          const schema: RJSFSchema = {
+            type: 'object',
+            if: { required: ['a'] },
+            then: { properties: { a: { default: 1 } } },
+          };
+          expect(getDefaultFormState(context, { schema })).toStrictEqual({});
+          expect(getDefaultFormState(context, { schema, formData: null })).toStrictEqual({ a: 1 });
+        });
         it('decides the if of an empty field by the const its branch gives where its type comes through a $ref or an allOf', () => {
           const context = { validator: testValidator };
           const $defs = { Num: { type: 'number' as const } };
