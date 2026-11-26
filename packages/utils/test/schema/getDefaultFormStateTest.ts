@@ -8371,6 +8371,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               expect(getDefaultFormState(context, { schema: rootOf(x, false) })).toStrictEqual({});
             },
           );
+          it('leaves the if of an empty primitive property unresolved under skipEmptyDefaults, but not of the root', () => {
+            const context = {
+              validator: testValidator,
+              defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' as const },
+            };
+            const x = placed('number', { if: { type: 'number' }, then: { const: 3 } }, inAllOf);
+            expect(getDefaultFormState(context, { schema: rootOf(x) })).toStrictEqual({});
+            expect(getDefaultFormState(context, { schema: x })).toBe(3);
+          });
           it('leaves an object field without the const of a then whose if rejects {}, the value the field holds', () => {
             const x = placed('object', { if: { required: ['a'] }, then: { const: C } }, inAllOf);
             const skipping = { validator: testValidator, defaultFormStateBehavior: { allOf: 'skipDefaults' as const } };

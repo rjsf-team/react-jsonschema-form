@@ -27,7 +27,7 @@ import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
-import { KEYWORDS_BY_TYPE } from '../schemaKeywords.ts';
+import { IDENTIFIER_KEYWORDS, KEYWORDS_BY_TYPE } from '../schemaKeywords.ts';
 import shallowAllOfMerge, { mergeOptionLists } from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { NON_CONSTRAINING_KEYS } from './parseSchemaGraph.ts';
@@ -394,14 +394,15 @@ export function decidedWithoutValue<S extends StrictRJSFSchema>(
   }
   // A field naming no `type` allows every one
   const allowed = types ?? JSON_SCHEMA_TYPES;
-  // A keyword that constrains none of the field's types holds for every value of them, as does an annotation, an `x-`
-  // extension, a `discriminator` or a content annotation, which the validators don't assert. Any other keyword may
-  // constrain the value, a custom one the validator knows among them. A `format` constrains whichever type the
-  // validator's format names, such as a number for `ajv-formats`' `int32`, so it reads as a string keyword only for a
-  // field holding no value
+  // A keyword that constrains none of the field's types holds for every value of them, as does an annotation, an
+  // identifier such as `$dynamicAnchor`, an `x-` extension, a `discriminator` or a content annotation, which the
+  // validators don't assert. Any other keyword may constrain the value, a custom one the validator knows among them. A
+  // `format` constrains whichever type the validator's format names, such as a number for `ajv-formats`' `int32`, so it
+  // reads as a string keyword only for a field holding no value
   const keys = Object.keys(node.raw).filter(
     (key) =>
       !NON_CONSTRAINING_KEYS.has(key) &&
+      !IDENTIFIER_KEYWORDS.includes(key) &&
       !key.startsWith('x-') &&
       key !== 'discriminator' &&
       !CONTENT_ANNOTATION_KEYS.has(key) &&

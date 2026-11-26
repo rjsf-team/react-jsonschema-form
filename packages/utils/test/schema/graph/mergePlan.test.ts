@@ -1018,6 +1018,7 @@ describe('decidedWithoutValue()', () => {
     ['an if that is no schema', 1, ['number'], undefined],
     ['a $ref to a type-only if', { $ref: '#/$defs/Num' }, ['number'], true],
     ['a $ref with an annotation beside it', { $ref: '#/$defs/Num', title: 'n' }, ['string'], false],
+    ['an identifier beside a type', { $dynamicAnchor: 'a', $vocabulary: {}, type: 'number' }, ['number'], true],
     ['a $ref to an if a value would decide', { $ref: '#/$defs/Min' }, ['number'], undefined],
     ['a $ref with a constraint beside it', { $ref: '#/$defs/Num', minimum: 1 }, ['number'], undefined],
     ['a $ref that resolves to nothing', { $ref: '#/$defs/Missing' }, ['number'], undefined],
