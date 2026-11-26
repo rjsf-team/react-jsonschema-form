@@ -1380,9 +1380,6 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // decision, which the passes may fix
   const graphs: SchemaGraph<S>[] = [];
   const conditions = new Map<string, { graph: SchemaGraph<S>; checked: CheckedCondition<S> }>();
-  // Checked under the context of the value the field holds now, which the first pass may change
-  const recheck = (graph: SchemaGraph<S>, checked: CheckedCondition<S>, depData: unknown) =>
-    checkCondition<S, F>(context, graph, checked, depData);
   // What `readers` qualify, decide and choose for `depData`, each as its plan did unless `redecides`, by decision: a
   // condition, set of `dependencies` or option list several readers met is decided once
   const decisionsOf = (readers: readonly Reader<S>[], depData: unknown, redecides: boolean): Decisions => {
@@ -1401,7 +1398,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
       for (const checked of reader.checked) {
         const key = decide(reader.graph, `c${checked.site}`, () =>
-          redecides ? recheck(reader.graph, checked, depData) : checked.satisfied,
+          redecides ? checkCondition<S, F>(context, reader.graph, checked, depData) : checked.satisfied,
         );
         conditions.set(key, { graph: reader.graph, checked });
       }
