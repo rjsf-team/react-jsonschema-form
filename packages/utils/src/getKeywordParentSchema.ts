@@ -1,6 +1,7 @@
 import {
   ADDITIONAL_ITEMS_KEY,
   ADDITIONAL_PROPERTIES_KEY,
+  ALL_OF_KEY,
   DEFINITIONS_KEY,
   DEPENDENCIES_KEY,
   DEPENDENT_SCHEMAS_KEY,
@@ -78,9 +79,13 @@ function ownRef<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds: object
 }
 
 /** Returns whether merging the `$ref` `schema` with its target failed, which, as for disjoint `type`s, leaves the
- * `allOf` of the two without the `$ref` schema's own keywords */
+ * `allOf` of the two without the `$ref` schema's own keywords. A merge that succeeds can drop one too, such as an empty
+ * `patternProperties`, so only a result holding nothing but that `allOf` counts */
 function mergeFailed(schema: object, resolved: object): boolean {
-  return Object.keys(schema).some((key) => key !== REF_KEY && !Object.hasOwn(resolved, key));
+  return (
+    Object.keys(resolved).every((key) => key === ALL_OF_KEY) &&
+    Object.keys(schema).some((key) => key !== REF_KEY && !Object.hasOwn(resolved, key))
+  );
 }
 
 /** Keywords whose value maps names to schemas, so the key after one is a name rather than a keyword */

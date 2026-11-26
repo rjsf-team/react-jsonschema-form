@@ -294,6 +294,23 @@ describe('getKeywordParentSchema()', () => {
       expect(getKeywordParentSchema(schema, '#/properties/a/allOf/0/minimum', undefined, true)).toBe(t0);
       expect(getKeywordParentSchema(schema, '#/properties/a/minLength', undefined, true)).toBe(schema.properties!.a);
     });
+    it('reads a `$ref` schema whose merge drops a key it holds merged, where merging succeeds', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          T: { type: 'object', title: 'T', properties: { n: { type: 'string', title: 'N' } }, required: ['n'] },
+          L: { type: 'array', title: 'List', items: { type: 'string' }, minItems: 2 },
+        },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/T', patternProperties: {} },
+          b: { $ref: '#/$defs/L', additionalItems: false },
+        },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/required', undefined, true)).toMatchObject({ title: 'T' });
+      expect(getKeywordParentSchema(schema, '#/properties/b/minItems', undefined, true)).toMatchObject({
+        title: 'List',
+      });
+    });
     it('reads a key only a schema further along the chain holds from it, where merging fails there', () => {
       const u0 = { title: 'U0', minimum: 5 };
       const schema: RJSFSchema = {

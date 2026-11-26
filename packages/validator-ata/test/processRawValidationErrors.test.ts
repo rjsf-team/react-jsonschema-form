@@ -486,6 +486,34 @@ describe('transformRJSFValidationErrors()', () => {
       );
     });
 
+    it('names errors by the target’s titles where merging drops a key the $ref schema holds', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          T: {
+            type: 'object',
+            title: 'T',
+            properties: { n: { type: 'string', title: 'N title' } },
+            required: ['n'],
+            minProperties: 2,
+          },
+          P: { type: 'array', title: 'Pair', prefixItems: [{ type: 'string' }], minItems: 2 },
+        },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/T', patternProperties: {} },
+          b: { $ref: '#/$defs/P', additionalItems: false },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: {}, b: ['x'] }, schema);
+      expect(errors.map(({ property, title }) => ({ property, title }))).toEqual(
+        expect.arrayContaining([
+          { property: '.a.n', title: 'N title' },
+          { property: '.a', title: 'T' },
+          { property: '.b', title: 'Pair' },
+        ]),
+      );
+    });
+
     it('names an error from an allOf branch further along a $ref chain whose merge fails there', () => {
       const schema: RJSFSchema = {
         $defs: {
