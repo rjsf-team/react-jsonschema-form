@@ -565,6 +565,8 @@ Any other value passed after mount, such as a record that loads or the next reco
 
 Only `undefined` means "not passed": a render that passes none leaves the form the data it has, which it owns until a render passes `formData` again. In development the form warns once when it changes between the two, with the ID `form-data-ownership-changed`: pass `formData` on every render, rendering the form once the data has loaded, or pass `initialFormData` alone. `null` shows the schema's defaults the way `undefined` does. `false`, `0` and `''` are values. When both this and `initialFormData` are passed, the form takes `formData`, and in development warns once that `initialFormData` is ignored.
 
+The data must not hold a reference to itself, such as an object with a key that points back at it, which JSON can't express either. The form hands the validator a JSON copy of the data and walks it to fill the defaults and work out [`dirtyFields`](#onchange), so validating such data throws, and a walk can overflow the stack. The same goes for [`initialFormData`](#initialformdata).
+
 ## globalUiOptionsKeys
 
 The keys of the extensions to [`ui:globalOptions`](uiSchema.md#uiglobaloptions) that your own widgets, fields and templates read, beyond the ones RJSF reads there.
