@@ -23,7 +23,7 @@ import { optionMatches, optionNodeOf, simpleDiscriminatorMatch } from './getFirs
 import type { OptionNode } from './getFirstMatchingOption.ts';
 import { isHandedOut } from './graph/handedOut.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
-import buildPlan, { seedsAt, withoutKeys } from './graph/mergePlan.ts';
+import buildPlan, { seedsAt, sourcesOfOption, withoutKeys } from './graph/mergePlan.ts';
 import type { MergePlan, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
@@ -800,6 +800,15 @@ function holdsCopy(copy: unknown, data: unknown): boolean {
   return Object.is(copy, data);
 }
 
+/** Whether the option `option` stands for is one a merge of lists built, see `sourcesOfOption()` */
+function builtByMerge<S extends StrictRJSFSchema>(option: OptionNode<S>): boolean {
+  if (typeof option === 'boolean') {
+    return false;
+  }
+  const declared = option.graph.node(option.node);
+  return declared.kind === 'schema' && isObject(declared.raw) && sourcesOfOption(declared.raw) !== undefined;
+}
+
 /** Ranks a tied option first by whether `formData` holds each key the scope of `option` requires whatever the data, see
  * `scopeOf()`, then by how many of the data's keys it declares, there or in `schema`, the option as given, such as a
  * view `retrieveSchema()` handed out with the branches the data applies: what matching and scoring pass over, read
@@ -901,8 +910,14 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // Matching and scoring both pass over a missing `required` key, and a typed value differing from a `default` scores
   // as a missing one, so options such as the pairs a `then` list merges with the field's own can tie where only one
   // holds every key it requires, or declares every key the data holds
-  // The selected option is the first tied one where it ties, so it keeps a tie only where it ranks as well
-  if (isObject(formData) && validIndexes.length > 0 && tied.length > 1) {
+  // The selected option is the first tied one where it ties. A pair a merge of lists built keeps a tie only where it
+  // ranks as well, while a written option keeps it, as an explicit pick stands
+  if (
+    isObject(formData) &&
+    validIndexes.length > 0 &&
+    tied.length > 1 &&
+    (tied[0] !== selectedOption || builtByMerge(optionNodes[selectedOption]))
+  ) {
     const ranks = tied.map((index) => tieRank<S>(formData, optionNodes[index], options[index]));
     best = { index: tied[ranks.indexOf(Math.max(...ranks))], score: best.score };
   }
@@ -956,9 +971,11 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
  *
  * Otherwise the options that match, or all of them when none does, are the candidates: each is scored by how closely
  * its properties and type match the data, and the candidate with the best score is returned. A tie among options the
- * data matches goes to the one holding each key its scope requires and declaring the most keys the data holds, the
- * `selectedOption` first where it ranks as well. Any other tie goes to the `selectedOption` when it is a candidate and
- * to the first candidate otherwise, so an option that does not match the data is never returned while one does.
+ * data matches goes to the one holding each key its scope requires and declaring the most keys the data holds. A tied
+ * `selectedOption` written in the list keeps the tie, and one a merge of lists built, as a `then` list merged with the
+ * field's own builds its pairs, keeps it only where it ranks as well. Any other tie goes to the `selectedOption` when it
+ * is a candidate and to the first candidate otherwise, so an option that does not match the data is never returned
+ * while one does.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form

@@ -1225,6 +1225,42 @@ describe('a cell in options with no discriminator', () => {
     expect(onChange.mock.lastCall?.[0].formData.thing).not.toHaveProperty('kind');
   });
 
+  // A and A2 share `kind: 'a'`, so the widget offers by index, and C declares `kind` without pinning it
+  it("drops the old option's selector value on a switch to an option that declares the selector without pinning it (#5930)", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          type: 'object',
+          anyOf: [
+            {
+              title: 'Option A',
+              properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string', title: 'A' } },
+            },
+            {
+              title: 'Option A2',
+              properties: { kind: { type: 'string', const: 'a' }, a2: { type: 'string', title: 'A2' } },
+            },
+            { title: 'Option C', properties: { kind: { type: 'string' }, c: { type: 'string', title: 'C' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      ...selectorUiSchema,
+      'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing', 'thing.a', 'thing.a2', 'thing.c'] }] },
+    };
+    const { onChange } = createFormComponent({ schema, uiSchema, initialFormData: { thing: { kind: 'a' } } });
+    const select = screen.getByRole<HTMLSelectElement>('combobox');
+
+    await user.selectOptions(select, 'Option C');
+
+    expect(getSelectedOptionValue(select)).toBe('Option C');
+    expect(screen.getByLabelText('C')).toBeInTheDocument();
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+    expect(onChange.mock.lastCall?.[0].formData.thing).not.toHaveProperty('kind');
+  });
+
   // The form's sanitize judges a key only the old option declares, as for the option selector (#5812)
   it.each([
     { case: 'drops what its default filled in', typed: '', expected: { kind: 'b' } },

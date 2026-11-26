@@ -11,6 +11,7 @@ import {
   fieldPathToName,
   getUiOptions,
   toFieldPath,
+  unsetByPath,
   withoutFieldOptions,
 } from '@rjsf/utils';
 
@@ -208,8 +209,11 @@ export default function LayoutMultiSchemaField<
       globalUiOptions,
       selectorField,
     });
-    // Options offered by index don't pin the selector, so there is no value to write
-    if (switched.formData && selectorValue !== undefined) {
+    // An option that pins no selector value gets none, so the old option's value, kept where the new option declares
+    // the selector, can't name the old option again
+    if (switched.formData && selectorValue === undefined) {
+      unsetByPath(switched.formData, selectorField);
+    } else if (switched.formData) {
       setByPath(switched.formData, selectorField, selectorValue);
     }
     // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to

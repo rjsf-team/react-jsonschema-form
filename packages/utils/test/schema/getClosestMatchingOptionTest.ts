@@ -294,17 +294,62 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           ),
         ).toEqual(1);
       });
-      it('passes over the selected option where another ranks above it', () => {
+      it('passes over a selected pair a merge of lists built where another ranks above it', () => {
+        const merged: RJSFSchema = {
+          type: 'object',
+          oneOf: [
+            { properties: { a: withDefault('a') }, required: ['a'] },
+            { properties: { b: withDefault('b') }, required: ['b'] },
+          ],
+          if: true,
+          then: { oneOf: [{ properties: { d: withDefault('d') }, required: ['d'] }] },
+        };
+        const formData = { b: 'typed b', d: 'typed d' };
+        const { oneOf = [] } = createSchemaUtils({ validator: testValidator }, merged).retrieveSchema(merged, formData);
+        const pairs = oneOf.filter(isSchemaObject);
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(pairs).toHaveLength(2);
+        expect(getClosestMatchingOption({ validator: testValidator }, merged, formData, pairs, 0)).toEqual(1);
+      });
+      it('keeps a selected `true` option where another ranks above it, as no merge builds one', () => {
+        const withTrue = [true, options[1]] as unknown as RJSFSchema[];
         testValidator.setReturnValues({ isValid: [true, true] });
         expect(
           getClosestMatchingOption(
             { validator: testValidator },
-            rootSchema,
+            { oneOf: withTrue },
             { b: 'typed b', d: 'typed d' },
-            options,
+            withTrue,
             0,
           ),
+        ).toEqual(0);
+      });
+      it('keeps a selected written option where another ranks above it, as an explicit pick', () => {
+        const written: RJSFSchema[] = [
+          { title: 'Card', properties: { name: { type: 'string' }, card: { type: 'string' } } },
+          { title: 'Bank', properties: { name: { type: 'string' }, iban: { type: 'string' } }, required: ['iban'] },
+        ];
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption({ validator: testValidator }, { oneOf: written }, { name: 'Jo' }, written, 1),
         ).toEqual(1);
+      });
+      it('ranks the tied options where a selected written option scores below them', () => {
+        const written: RJSFSchema[] = [
+          { properties: { name: { type: 'number' } } },
+          { properties: { name: { type: 'string' } } },
+          { properties: { name: { type: 'string' }, b: withDefault('b') }, required: ['b'] },
+        ];
+        testValidator.setReturnValues({ isValid: [true, true, true] });
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            { oneOf: written },
+            { name: 'Jo', b: 'x' },
+            written,
+            0,
+          ),
+        ).toEqual(2);
       });
       it('keeps the selected option where it ranks as well', () => {
         testValidator.setReturnValues({ isValid: [true, true] });
