@@ -1037,7 +1037,7 @@ Set to false by default.
 ## validator
 
 **Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work.
-`@rjsf/validator-ajv8` exports the implementation of this interface from RJSF version 4.
+`@rjsf/validator-ajv8` exports an implementation of this interface.
 
 ## widgets
 

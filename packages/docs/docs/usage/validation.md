@@ -648,8 +648,8 @@ Set the `extraErrorsAreWarnings` prop to `true` to make them "display only" inst
 
 ### ajvOptionsOverrides
 
-In version 5, with the advent of the decoupling of the validation implementation from the `Form`, it is now possible to provide additional options to the `ajv` instance used within `@rjsf/validator-ajv8`.
-For instance, if you need more information from `ajv` about errors via the `verbose` option, now you can turn it on!
+You can provide additional options to the `ajv` instance used within `@rjsf/validator-ajv8`.
+For instance, if you need more information from `ajv` about errors, you can turn on the `verbose` option.
 
 ```tsx
 import Form from '@rjsf/core';
@@ -704,9 +704,9 @@ A keyword that writes into the data, such as `transform`, needs `isValid()` to v
 Our implementation of `@rjsf/validator-ajv8` utilizes Ajv's internal cache to avoid unnecessarily re-compiling schemas, which can be an expensive operation. The cache key is the schema `$id`.
 
 The `ajvOptionsOverrides` for the Ajv 8 validator are the ones supported by that version.
-Second, the data formats previously provided in Ajv 6 now need to be added explicitly using the `ajv-formats` package.
-A new `ajvFormatOptions` option is available on the `customizeValidator()` API to be able to configure this.
-Additionally, a new `AjvClass` option is available on the `customizeValidator()` API to support using one of the other [JSON schema versions](https://ajv.js.org/json-schema.html#json-schema-versions) provided by Ajv 8 besides the `draft-07` default.
+Second, data formats need to be added explicitly using the `ajv-formats` package.
+The `ajvFormatOptions` option on the `customizeValidator()` API configures this.
+Additionally, the `AjvClass` option on the `customizeValidator()` API supports using one of the other [JSON schema versions](https://ajv.js.org/json-schema.html#json-schema-versions) provided by Ajv 8 besides the `draft-07` default.
 Finally, the Ajv 8 validator supports the localization of error messages.
 
 ### ajvFormatOptions
