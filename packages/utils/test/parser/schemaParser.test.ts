@@ -147,16 +147,22 @@ describe('getValidationSchemas()', () => {
     expect(Object.values(getValidationSchemas(rootSchema))).toContainEqual(expect.objectContaining({ $ref: pointer }));
   });
 
-  it('lists each if by pointer, whether or not it has an else (#5453)', () => {
+  it('lists each if and each branch by pointer, whether or not it has an else (#5453)', () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: { a: { type: 'string' }, nested: { if: { required: ['b'] }, then: { required: ['c'] } } },
       if: { properties: { a: { const: 'x' } }, required: ['a'] },
       then: { properties: { extra: { type: 'string' } } },
     };
-    expect(listed(schema)).toEqual([schema, { $ref: '#/if' }, { $ref: '#/properties/nested/if' }]);
+    expect(listed(schema)).toEqual([
+      schema,
+      { $ref: '#/if' },
+      { $ref: '#/then' },
+      { $ref: '#/properties/nested/if' },
+      { $ref: '#/properties/nested/then' },
+    ]);
   });
-  it('lists each if of a schema whose allOf, dependencies and condition multiply into 8192 forms once, without warning', () => {
+  it('lists each if and branch of a schema whose allOf, dependencies and condition multiply into 8192 forms once, without warning', () => {
     resetLogOnce();
     const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
     const oneSided = (key: string): RJSFSchema => ({
@@ -174,10 +180,11 @@ describe('getValidationSchemas()', () => {
       };
     };
     // 256 dependency paths, 16 allOf forms and 2 for the condition would give 8192 forms, but the graph lists a
-    // pointer to each `if` rather than the forms their combinations resolve to, so there is no limit to pass
-    const conditions = ['#/if', '#/allOf/0/if', '#/allOf/1/if', '#/allOf/2/if', '#/allOf/3/if'].map(($ref) => ({
-      $ref,
-    }));
+    // pointer to each `if` and branch rather than the forms their combinations resolve to, so there is no limit to pass
+    const conditions = ['#', '#/allOf/0', '#/allOf/1', '#/allOf/2', '#/allOf/3'].flatMap((at) => [
+      { $ref: `${at}/if` },
+      { $ref: `${at}/then` },
+    ]);
     expect(listed(schemaWith(8))).toEqual([schemaWith(8), ...conditions]);
     expect(listed(schemaWith(2))).toEqual([schemaWith(2), ...conditions]);
     expect(consoleWarnSpy).not.toHaveBeenCalled();

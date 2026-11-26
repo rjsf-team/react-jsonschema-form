@@ -97,7 +97,14 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
    * precompiled one to have a function for the schema it reads as
    */
   readonly constant?: boolean;
+  /** The `then` and the `else` an `if` selects between; `undefined` for the condition a `dependencies` `oneOf`
+   * option is matched on
+   */
+  readonly branches?: Branches;
 }
+
+/** The `then` and the `else` of an `if`, each `undefined` where there is none */
+export type Branches = readonly [NodeId | undefined, NodeId | undefined];
 
 /** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
 interface Provider<S extends StrictRJSFSchema = RJSFSchema> {
@@ -294,7 +301,7 @@ export function ownedDepData<S extends StrictRJSFSchema>(
 export function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
-  { key, site, condition, noValue, constant }: Omit<CheckedCondition<S>, 'satisfied'>,
+  { key, site, condition, noValue, constant }: Omit<CheckedCondition<S>, 'satisfied' | 'branches'>,
   depData: unknown,
 ): boolean | undefined {
   if (depData === undefined && noValue === true) {
@@ -561,63 +568,76 @@ function narrowedTypes(prior: readonly string[] | undefined, named: readonly str
       ];
 }
 
-/** The types the options of the `keyword` list of `id` allow between them, `undefined` where the node offers no such
- * list or an option allows a value of any type
+/** `prior` narrowed by what `next` declares, see `DeclaredTypes`: the `type`s both allow, and the first guess */
+function joinedTypes(prior: DeclaredTypes, next: DeclaredTypes): DeclaredTypes {
+  return {
+    types: next.types === undefined ? prior.types : narrowedTypes(prior.types, next.types),
+    guessed: prior.guessed ?? next.guessed,
+  };
+}
+
+/** What each node declares with its `$ref`s, `allOf` members and options, see `nodeTypes()`, per graph and node */
+const nodeTypesMemo = new KeyedMemo<DeclaredTypes>();
+
+/** What the node `id` declares, see `DeclaredTypes`, and the depth in `entered` of the shallowest node entered already
+ * that the walk met, `Infinity` for none. Such a node is being read further up, so it adds nothing here, and a result
+ * read without it is memoized only where that node is this one or below it: a revisit adds nothing to an
+ * intersection, so each node is read once per graph, however many paths reach it
  */
-function offeredTypes<S extends StrictRJSFSchema>(
+function nodeTypes<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   id: NodeId,
-  keyword: typeof ANY_OF_KEY | typeof ONE_OF_KEY,
-  seen: ReadonlySet<NodeId>,
-): readonly string[] | undefined {
-  const options = graph.subschemas(id, keyword);
-  const offered = new Set<string>();
-  for (const [, option] of options) {
-    const { types, guessed } = declaredTypes(graph, [option], NO_TYPES, new Set(seen));
-    const known = types ?? guessed;
-    if (known === undefined) {
-      return undefined;
-    }
-    known.forEach((type) => offered.add(type));
+  entered: NodeId[],
+): [DeclaredTypes, number] {
+  const memoized = nodeTypesMemo.peek([graph, id]);
+  const depth = entered.indexOf(id);
+  const node = graph.node(id);
+  if (memoized !== undefined || depth !== -1 || node.kind !== 'schema') {
+    return [memoized ?? NO_TYPES, depth === -1 ? Infinity : depth];
   }
-  return options.length === 0 ? undefined : [...offered];
+  let met = Infinity;
+  const read = (next: NodeId) => {
+    const [declared, reached] = nodeTypes(graph, next, entered);
+    met = Math.min(met, reached);
+    return declared;
+  };
+  entered.push(id);
+  const target = asTarget(graph, node);
+  const { type, const: constant, enum: values } = target.raw;
+  const held = constant === undefined ? values : [constant];
+  let own: DeclaredTypes =
+    typeof type === 'string' || Array.isArray(type)
+      ? { types: Array.isArray(type) ? type : [type] }
+      : { types: undefined, guessed: Array.isArray(held) ? held.map(guessType) : undefined };
+  for (const keyword of [ANY_OF_KEY, ONE_OF_KEY] as const) {
+    // A list of options allows only what one of its options allows, and anything where one names no type
+    const offered = graph.subschemas(target.id, keyword).map(([, option]) => {
+      const { types, guessed } = read(option);
+      return types ?? guessed;
+    });
+    if (offered.length > 0 && offered.every((types) => types !== undefined)) {
+      own = joinedTypes(own, { types: [...new Set(offered.flat())] });
+    }
+  }
+  for (const next of [target.ref, ...graph.subschemas(target.id, ALL_OF_KEY).map(([, member]) => member)]) {
+    if (next !== undefined) {
+      own = joinedTypes(own, read(next));
+    }
+  }
+  entered.pop();
+  if (met >= entered.length) {
+    nodeTypesMemo.set([graph, id], own);
+  }
+  return [own, met];
 }
 
 /** What `declared` and the nodes `ids` declare together, see `DeclaredTypes` */
 function declaredTypes<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
-  ids: readonly (NodeId | undefined)[],
+  ids: readonly NodeId[],
   declared: DeclaredTypes,
-  seen = new Set<NodeId>(),
 ): DeclaredTypes {
-  return ids.reduce<DeclaredTypes>((soFar, id) => {
-    const node = id === undefined || seen.has(id) ? undefined : graph.node(id);
-    if (id === undefined || node?.kind !== 'schema') {
-      return soFar;
-    }
-    seen.add(id);
-    const target = asTarget(graph, node);
-    const { type } = target.raw;
-    let own: DeclaredTypes;
-    if (typeof type === 'string' || Array.isArray(type)) {
-      own = { ...soFar, types: narrowedTypes(soFar.types, Array.isArray(type) ? type : [type]) };
-    } else {
-      const { const: constant, enum: values } = target.raw;
-      const held = constant === undefined ? values : [constant];
-      own = {
-        ...soFar,
-        guessed: soFar.guessed ?? (Array.isArray(held) ? held.map(guessType) : undefined),
-      };
-    }
-    for (const keyword of [ANY_OF_KEY, ONE_OF_KEY] as const) {
-      const offered = offeredTypes(graph, target.id, keyword, seen);
-      if (offered !== undefined) {
-        own = { ...own, types: narrowedTypes(own.types, offered) };
-      }
-    }
-    const members = graph.subschemas(target.id, ALL_OF_KEY).map(([, member]) => member);
-    return declaredTypes(graph, [target.ref, ...members], own, seen);
-  }, declared);
+  return ids.reduce((soFar, id) => joinedTypes(soFar, nodeTypes(graph, id, [])[0]), declared);
 }
 
 /** Whether a field of the `type`s `declared` holds no value while it has no data, so its `if`s pick neither branch
@@ -1130,9 +1150,15 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 
   /** Checks `condition`, an `if` of the value `constant` where it is a boolean schema, see `CheckedCondition` */
-  private holds(key: string, condition: S, site = key, constant?: boolean): boolean | undefined {
+  private holds(
+    key: string,
+    condition: S,
+    site = key,
+    constant?: boolean,
+    branches?: CheckedCondition<S>['branches'],
+  ): boolean | undefined {
     this.readsData = true;
-    const checked = { key, site, condition, noValue: this.noValue, constant };
+    const checked = { key, site, condition, noValue: this.noValue, constant, branches };
     const satisfied = checkCondition(this.context, this.graph, checked, this.depData);
     this.checked.push({ ...checked, satisfied });
     return satisfied;
@@ -1159,17 +1185,24 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const conditionNode = this.graph.node(condition);
     const constant =
       conditionNode.kind === 'schema' ? undefined : conditionNode.kind !== 'boolean' || conditionNode.value;
+    const [thenNode, elseNode] = [THEN_KEY, ELSE_KEY].map((key) => {
+      const provider = keywords.get(key);
+      return provider && this.graph.child(provider.node.id, key);
+    });
     // A boolean `if` is checked only where the field holds no value, which a value it is filled with then decides
     const satisfied =
       constant === undefined || this.noValue
-        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), `if:${conditionProvider.node.id}`, constant)
+        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), `if:${conditionProvider.node.id}`, constant, [
+            thenNode,
+            elseNode,
+          ])
         : constant;
     if (satisfied === undefined) {
       return without;
     }
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);
-    const branchNode = branchProvider && this.graph.child(branchProvider.node.id, branchKey);
+    const branchNode = satisfied ? thenNode : elseNode;
     const branchPart = this.branch(branchProvider, branchKey, dependencyKey);
     return branchPart === undefined || branchNode === undefined
       ? without

@@ -541,6 +541,35 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
     });
   });
 
+  describe('a field whose defaults cycle (#5916)', () => {
+    // The `else` fills the `'e'` that selects the `then`, whose `'d'` selects the `else` again; the `then` rejects the
+    // `{ a: 'e' }` the `else` fills where it requires `z`
+    const takesBack: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      if: { properties: { a: { const: 'e' } }, required: ['a'] },
+      then: { properties: { a: { default: 'd' }, t: { type: 'number', default: 1 } } },
+      else: { properties: { a: { default: 'e' } } },
+    };
+    const requiringZ: RJSFSchema = { ...takesBack, then: { ...(takesBack.then as RJSFSchema), required: ['z'] } };
+    const number = (conditional: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { x: { type: 'number', default: 5, ...conditional } },
+    });
+    it.each<[string, RJSFSchema, unknown]>([
+      ['whose passes both meet their if', takesBack, { a: 'e' }],
+      ['one of whose passes its then rejects', requiringZ, { a: 'd', t: 1 }],
+      ['of a number whose then rejects its default', number({ if: { maximum: 7 }, then: { const: 10 } }), { x: 10 }],
+      ['of a number whose else rejects its default', number({ if: { minimum: 7 }, else: { const: 10 } }), { x: 10 }],
+      ['on a property', { type: 'object', properties: { p: requiringZ } }, { p: { a: 'd', t: 1 } }],
+    ])('fills %s as the runtime validator does', (_, schema, expected) => {
+      const precompiled = createSchemaUtils({ validator: buildPrecompiledValidator(schema) }, schema);
+      const runtime = createSchemaUtils({ validator: customizeValidator() }, schema);
+      expect(precompiled.getDefaultFormState(schema, {})).toEqual(expected);
+      expect(runtime.getDefaultFormState(schema, {})).toEqual(expected);
+    });
+  });
+
   describe('a boolean if', () => {
     const branches: RJSFSchema = {
       then: { properties: { t: { type: 'string', default: 't' } } },

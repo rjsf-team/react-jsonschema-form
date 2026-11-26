@@ -1684,7 +1684,7 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
       ),
     ).toEqual({ x: { a: 1 } });
     expect(inAllOf.calls).toBe(own.calls);
-    expect(inAllOf.calls).toBe(5);
+    expect(inAllOf.calls).toBe(6);
   });
 
   it.each<[string, RJSFSchema, RJSFSchema, unknown, number]>([
@@ -1878,6 +1878,34 @@ describe('mergeReachesConst()', () => {
     // Each definition added costs the same number of reads, however many there are
     const reads = [12, 24, 48].map(subschemaReads);
     expect(reads[2] - reads[1]).toBe(2 * (reads[1] - reads[0]));
+  });
+
+  it('reads the types of a field each node of its nested options declares once, however many paths reach it (#5916)', () => {
+    // Each level offers the one below twice over, so a read that worked a node out again on every path to it would
+    // take 2^k steps
+    const subschemaReads = (k: number) => {
+      const definitions: Record<string, RJSFSchema> = {
+        L0: { type: 'string', if: { minLength: 1 }, then: { title: 'T' } },
+      };
+      for (let index = 1; index <= k; index += 1) {
+        const below = `#/definitions/L${index - 1}`;
+        definitions[`L${index}`] = { anyOf: [{ $ref: below }, { allOf: [{ $ref: below }] }] };
+      }
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions,
+        properties: { x: { $ref: `#/definitions/L${k}`, if: { minLength: 2 }, then: { title: 'U' } } },
+      };
+      const subschemas = vi.spyOn(parseSchemaGraph(schema), 'subschemas');
+      const context = { validator: miniValidator() };
+      for (const formData of [undefined, { x: 'ab' }]) {
+        getDefaultFormState(context, { schema, rootSchema: schema, formData });
+      }
+      return subschemas.mock.calls.length;
+    };
+    // Twice the levels cost about twice the reads, where a read along every path would cost 2^4 times as many
+    const [half, whole] = [4, 8].map(subschemaReads);
+    expect(whole).toBeLessThan(3 * half);
   });
 
   it('answers a node of a cycle the same whichever node of it is asked first', () => {

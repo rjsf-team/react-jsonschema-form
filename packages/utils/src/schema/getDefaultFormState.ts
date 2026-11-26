@@ -103,6 +103,7 @@ import buildPlan, {
   withoutKeys,
 } from './graph/mergePlan.ts';
 import type {
+  Branches,
   CheckedCondition,
   FixedCondition,
   Keywords,
@@ -1455,28 +1456,37 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The conditions decided by the data alone, as the first pass decided them, whatever the defaults, by decision
   const fixed = new Map<string, FixedCondition<S>>();
   let end = passesFrom(first, []);
-  // The passes since the one a pass would repeat decide alike but for what flips from pass to pass. The one pass whose
-  // fill the validator accepts against the field's schema is kept. Otherwise each condition that flips is fixed as the
-  // data alone decides it, for the passes to settle the rest. Should anything else flip, or nothing new, the field is
-  // computed as its data alone decides it
+  // The passes since the one a pass would repeat decide alike but for what flips from pass to pass. Where each that
+  // flips is an `if`, the one pass whose fill each of them accepts, as JSON Schema applies it, is kept: what the rest of
+  // the field holds has no say. Otherwise each condition that flips is fixed as the data alone decides it, for the
+  // passes to settle the rest. Should anything else flip, or nothing new, the field is computed as its data alone
+  // decides it
   while (!('settled' in end)) {
-    const valid = end.cycle.filter(({ filled }) => filled !== undefined && fillIsValid(context, field, filled));
+    const { depData } = end;
+    const cycle = end.cycle.map(({ decisions }) => decisions);
+    const flipping = [...new Set(cycle.flatMap((decisions) => [...decisions.keys()]))]
+      .filter(
+        (key) =>
+          !fixed.has(key) &&
+          cycle.every((decisions) => decisions.has(key)) &&
+          cycle.some((decisions) => decisions.get(key) !== cycle[0].get(key)),
+      )
+      .map((key) => [key, conditions.get(key)] as const);
+    const flips = flipping.flatMap(([, condition]) => {
+      const branches = condition?.checked.branches;
+      return branches ? [{ ...condition, branches }] : [];
+    });
+    const valid =
+      flips.length === flipping.length
+        ? end.cycle.filter(({ filled }) => filled !== undefined && flips.every((flip) => meets(context, flip, filled)))
+        : [];
     if (valid.length === 1) {
       return kept(valid[0].pass);
     }
-    const { depData } = end;
-    const cycle = end.cycle.map(({ decisions }) => decisions);
-    const flipping = [...new Set(cycle.flatMap((decisions) => [...decisions.keys()]))].filter(
-      (key) =>
-        !fixed.has(key) &&
-        cycle.every((decisions) => decisions.has(key)) &&
-        cycle.some((decisions) => decisions.get(key) !== cycle[0].get(key)),
-    );
     if (flipping.length === 0) {
       return kept(first);
     }
-    for (const key of flipping) {
-      const condition = conditions.get(key);
+    for (const [key, condition] of flipping) {
       if (condition === undefined) {
         return kept(first);
       }
@@ -1504,13 +1514,21 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return kept(settled);
 }
 
-/** Whether the validator accepts `filled` against the schema of `field`, each of its seeds */
-function fillIsValid<S extends StrictRJSFSchema, F extends FormContextType>(
+/** Whether `filled`, a value the field holds, meets the `if` of `checked`, a condition of `graph`, as JSON Schema
+ * applies one: the one of `branches` the `if` selects for it, if any, accepts it
+ */
+function meets<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  { graph, seeds }: DefaultsField<S>,
+  { graph, checked, branches }: { graph: SchemaGraph<S>; checked: CheckedCondition<S>; branches: Branches },
   filled: unknown,
 ): boolean {
-  return seeds.every(({ node }) => context.validator.isValid(targetOf(graph, node), filled, graph.rawRoot));
+  // A field holding a value is checked against it, so the `if` holds or fails
+  const branch = branches[checkCondition(context, graph, checked, filled) ? 0 : 1];
+  const node = branch === undefined ? undefined : graph.node(branch);
+  if (node?.kind === 'schema') {
+    return context.validator.isValid(targetOf(graph, node.id), filled, graph.rawRoot);
+  }
+  return node?.kind !== 'boolean' || node.value;
 }
 
 /** How the passes of a field's fixed point end: on the pass whose defaults decide what it was planned with, or in a

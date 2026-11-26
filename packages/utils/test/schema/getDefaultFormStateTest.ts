@@ -8578,6 +8578,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 expect(getDefaultFormState(context, { schema })).toStrictEqual({ x: expected });
               }
             });
+            it.each<[string, RJSFSchema['else'], number]>([
+              ['fills the const of a then whose if takes its own default beside an else of true', true, 10],
+              ['keeps its own default where a then takes it and an else of false rejects the const', false, 5],
+            ])('%s (#5916)', (_name, otherwise, expected) => {
+              const context = { validator: testValidator };
+              const schema = rootOf(withDefault({ ...thenTen, else: otherwise }, 5));
+              expect(getDefaultFormState(context, { schema })).toStrictEqual({ x: expected });
+            });
             it('checks the default that wins of its own and an inherited one', () => {
               const schema: RJSFSchema = { ...rootOf(withDefault(thenThree, 1)), default: { x: 5 } };
               const descendant = { validator: testValidator };
@@ -16911,6 +16919,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           };
           expect(fill(nested)).toEqual({ a: 'e' });
+        });
+
+        it('keeps the pass whose fill the branch its if selects accepts, whatever the rest of the data holds (#5916)', () => {
+          // The `then` rejects the `{ a: 'e' }` the `else` fills, which selects it, and the `else` accepts the
+          // `{ a: 'd', t: 1 }` the `then` fills; `b` is read by neither branch, valid or not
+          const rejecting: RJSFSchema = {
+            ...schema,
+            properties: { a: { type: 'string' }, b: { type: 'string', minLength: 5 } },
+            then: { ...(schema.then as RJSFSchema), required: ['z'] },
+          };
+          expect(fill(rejecting)).toEqual({ a: 'd', t: 1 });
+          expect(fill(rejecting, { b: 'ab' })).toEqual({ a: 'd', b: 'ab', t: 1 });
+          expect(fill(rejecting, { b: 'abcdef' })).toEqual({ a: 'd', b: 'abcdef', t: 1 });
         });
 
         it('fills the branch the filled data selects once the data holds it, and nothing more after that', () => {
