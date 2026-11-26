@@ -1083,9 +1083,8 @@ const uiSchema: UiSchema = {
 
 When using `additionalProperties`, key collision is prevented by appending a unique integer suffix to the duplicate key.
 For example, when you add a key named `myKey` to a form where `myKey` is already defined, then your new key will become `myKey-1`.
-You can use `ui:duplicateKeySuffixSeparator` to override the default separator, `"-"` with a string of your choice on a per-field basis.
-
-You can also set this in the `ui:globalOptions` to have the same separator used everywhere.
+You can override the default separator, `"-"`, with a string of your choice.
+Set `ui:globalOptions.duplicateKeySuffixSeparator` in the root `uiSchema` for a global default, or set `ui:duplicateKeySuffixSeparator` on the object field whose `additionalProperties` get the new keys.
 
 ```ts
 import { UiSchema } from '@rjsf/utils';
