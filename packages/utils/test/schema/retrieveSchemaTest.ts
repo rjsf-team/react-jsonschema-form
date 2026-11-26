@@ -515,6 +515,64 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         }),
       ).toEqual([{ properties: { p: { properties: { a: { type: 'string' } }, unevaluatedProperties: false } } }]);
     });
+    describe("leaves out a property's additionalProperties: true the pair's other option closes under a choice or condition (#5958)", () => {
+      const a: RJSFSchema = { type: 'string' };
+      const closed: RJSFSchema = { properties: { a }, unevaluatedProperties: false };
+      const p = (other: RJSFSchema) => {
+        const option = retrieved({
+          type: 'object',
+          oneOf: [{ properties: { p: { type: 'object', additionalProperties: true } } }],
+          allOf: [{ oneOf: [other] }],
+        })?.[0];
+        const property = typeof option === 'object' ? option.properties?.p : undefined;
+        return typeof property === 'object' ? property.additionalProperties : property;
+      };
+      it.each<[string, RJSFSchema]>([
+        ["the property's own then", { properties: { a }, if: { required: ['a'] }, then: closed }],
+        ["the property's own else", { properties: { a }, if: { required: ['b'] }, else: closed }],
+        ["the property's own dependencies", { properties: { a }, dependencies: { a: closed } }],
+        ["one of the property's own oneOf options", { properties: { a }, oneOf: [closed, { required: ['a'] }] }],
+      ])('in %s', (_, declaration) => {
+        expect(p({ properties: { p: declaration } })).toBeUndefined();
+      });
+      it.each<[string, RJSFSchema]>([
+        ["the option's then", { if: { required: ['p'] }, then: { properties: { p: closed } } }],
+        ["the option's dependencies", { dependencies: { p: { properties: { p: closed } } } }],
+        ["the option's dependentSchemas", { dependentSchemas: { p: { properties: { p: closed } } } }],
+        [
+          "the allOf of the option's then",
+          { if: { required: ['p'] }, then: { allOf: [{ properties: { p: closed } }] } },
+        ],
+        ["one of the option's anyOf options", { anyOf: [{ properties: { p: closed } }, { required: ['p'] }] }],
+      ])('in %s', (_, conditional) => {
+        expect(p({ properties: { p: { properties: { a } } }, ...conditional })).toBeUndefined();
+      });
+      it("keeps it beside a then that doesn't close it", () => {
+        expect(
+          p({ properties: { p: { properties: { a } } }, if: { required: ['p'] }, then: { required: ['p'] } }),
+        ).toBe(true);
+      });
+    });
+    it("leaves out a property's additionalProperties: true a pattern beside the other option's declaration closes (#5958)", () => {
+      const a: RJSFSchema = { type: 'string' };
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [{ properties: { p: { type: 'object', additionalProperties: true } } }],
+        allOf: [
+          {
+            oneOf: [
+              {
+                properties: { p: { properties: { a } } },
+                patternProperties: { '^p': { properties: { a }, unevaluatedProperties: false } },
+              },
+            ],
+          },
+        ],
+      };
+      const option = retrieveSchema({ validator: testValidator }, schema, schema, { p: { a: 'x', extra: 'y' } })
+        .oneOf?.[0];
+      expect(typeof option === 'object' && option.properties?.p).toEqual({ type: 'object', properties: { a } });
+    });
     it('offers an option two pairs merge to once', () => {
       const option: RJSFSchema = { properties: { a: { type: 'string' } } };
       expect(retrieved({ type: 'object', oneOf: [option, { ...option }], allOf: [{ oneOf: [{}] }] })).toEqual([option]);

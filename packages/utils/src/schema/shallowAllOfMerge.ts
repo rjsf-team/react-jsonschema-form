@@ -47,38 +47,54 @@ function closesSiblingKeys(entry: JSONSchema7): boolean {
   );
 }
 
-/** Returns the object subschemas of `objects` that describe the value of `key`: an entry's declaration of it, or, in an
- * entry not declaring it, the `patternProperties` subschemas matching it, or else its `additionalProperties`
+/** Returns the object subschemas of `objects` that describe the value of `key`: an entry's declaration of it and the
+ * `patternProperties` subschemas matching it, or, in an entry with neither, its `additionalProperties`
  */
 function subschemasOf(key: string, objects: readonly JSONSchema7[]): JSONSchema7[] {
   return objects.flatMap((entry) => {
-    let reaching: (JSONSchema7Definition | undefined)[];
+    const reaching: (JSONSchema7Definition | undefined)[] = Object.entries(entry.patternProperties ?? {})
+      .filter(([pattern]) => patternRegExp(pattern).test(key))
+      .map(([, subschema]) => subschema);
     if (entry.properties !== undefined && Object.hasOwn(entry.properties, key)) {
-      reaching = [entry.properties[key]];
-    } else {
-      reaching = Object.entries(entry.patternProperties ?? {})
-        .filter(([pattern]) => patternRegExp(pattern).test(key))
-        .map(([, subschema]) => subschema);
-      if (reaching.length === 0) {
-        reaching = [entry.additionalProperties];
-      }
+      reaching.push(entry.properties[key]);
+    }
+    if (reaching.length === 0) {
+      reaching.push(entry.additionalProperties);
     }
     return reaching.filter((subschema) => typeof subschema === 'object');
   });
+}
+
+/** Returns `entry` and the subschemas it applies to its own value, its `allOf`, `anyOf`, `oneOf`, `then`, `else`,
+ * `dependencies` and `dependentSchemas` ones, theirs included
+ */
+function withInPlaceSubschemas(entry: JSONSchema7): JSONSchema7[] {
+  const dependentSchemas: unknown = Reflect.get(entry, 'dependentSchemas');
+  const inPlace = [
+    ...(entry.allOf ?? []),
+    ...(entry.anyOf ?? []),
+    ...(entry.oneOf ?? []),
+    entry.then,
+    entry.else,
+    ...Object.values(entry.dependencies ?? {}),
+    ...(typeof dependentSchemas === 'object' && dependentSchemas !== null ? Object.values(dependentSchemas) : []),
+  ].filter((subschema): subschema is JSONSchema7 => typeof subschema === 'object' && !Array.isArray(subschema));
+  return [entry, ...inPlace.flatMap(withInPlaceSubschemas)];
 }
 
 /** Returns `merged`, the merge of `objects`, holding the `additionalProperties` of `true` or `{}` the merge dropped,
  * unless one of `siblings` closes the keys it takes (see `closesSiblingKeys()`), where one the merge kept is left out.
  * JSON Schema reads an absent keyword as `true`, so the merge drops one saying only that, where the form reads an
  * absent one as `additionalPropertiesWhenAbsent` says. The merge keeps a `false` or a schema in any entry, so a dropped
- * keyword was `true` or `{}` in every entry naming it. Each property is read the same way against the subschemas that
- * describe it (see `subschemasOf()`), every one of which is a sibling of the others; a subschema anywhere else keeps
- * what the merge made of it.
+ * keyword was `true` or `{}` in every entry naming it. Each property is read the same way against the subschemas of
+ * `scope` that describe it (see `subschemasOf()`), every one of which is a sibling of the others; a subschema anywhere
+ * else keeps what the merge made of it.
  */
 function withOpenAdditionalProperties(
   merged: JSONSchema7Definition,
   objects: readonly JSONSchema7[],
   siblings: readonly JSONSchema7[],
+  scope: readonly JSONSchema7[] = objects.flatMap(withInPlaceSubschemas),
 ): JSONSchema7Definition {
   if (typeof merged === 'boolean') {
     return merged;
@@ -101,10 +117,15 @@ function withOpenAdditionalProperties(
   for (const [key, property] of Object.entries(properties)) {
     const declared = subschemasOf(key, objects);
     // A property only one subschema describes is that declaration, which the merge left as it stands
-    const open = declared.length > 1 ? withOpenAdditionalProperties(property, declared, declared) : property;
-    if (open !== property) {
-      kept ??= { ...properties };
-      kept[key] = open;
+    if (declared.length > 1) {
+      // An option, or a `then`, `else`, `dependencies` or `dependentSchemas` subschema, describes the property only under
+      // a choice or condition the form resolves after reading this merge, so one that closes it is read as closing it
+      const describing = subschemasOf(key, scope).flatMap(withInPlaceSubschemas);
+      const open = withOpenAdditionalProperties(property, declared, describing, describing);
+      if (open !== property) {
+        kept ??= { ...properties };
+        kept[key] = open;
+      }
     }
   }
   return kept === undefined ? result : { ...result, properties: kept };
