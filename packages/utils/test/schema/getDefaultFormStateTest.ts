@@ -8986,16 +8986,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
             { nestedDefaultsPrecedence: 'ancestorWins' },
           ],
-          [
-            'the default of the option it shows',
-            rootOf({
-              default: 2,
-              if: { maximum: 3 },
-              then: { const: { a: 1 } },
-              oneOf: [{ type: 'number', default: 10 }],
-            }),
-            {},
-          ],
         ])(
           'checks the if of a field with no type against {} before %s, so the object const of the then {} meets fills it',
           (_name, schema, defaultFormStateBehavior) => {
@@ -9003,6 +8993,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(getDefaultFormState(context, { schema })).toStrictEqual({ x: { a: 1 } });
           },
         );
+        it("takes neither branch of the if of an empty field with no type whose options allow no object, so the option's default fills it", () => {
+          const schema = rootOf({
+            default: 2,
+            if: { maximum: 3 },
+            then: { const: { a: 1 } },
+            oneOf: [{ type: 'number', default: 10 }],
+          });
+          expect(getDefaultFormState({ validator: testValidator }, { schema })).toStrictEqual({ x: 10 });
+        });
         it('leaves a required primitive field empty where its own if rejects its then const, on the field or in the option it shows', () => {
           const context = { validator: testValidator };
           const rejected: RJSFSchema = { if: { maximum: 7 }, then: { const: 10 } };
@@ -9031,11 +9030,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             getDefaultFormState(context, { schema: withPattern({ if: { type: 'object' }, then: { const: 3 } }) }),
           ).toStrictEqual({});
         });
-        it("checks the type-only if of an empty field with no type beside the options it shows against {}, while the option's type makes its own if take neither branch", () => {
+        it('takes neither branch of the type-only if of an empty field with no type beside options of value types, nor of the one an option brings', () => {
           const context = { validator: testValidator };
           const options: RJSFSchema[] = [{ type: 'number' }, { type: 'string' }];
           const besideOptions: RJSFSchema = { oneOf: options, if: { type: 'object' }, then: { const: 3 } };
-          expect(getDefaultFormState(context, { schema: rootOf(besideOptions) })).toStrictEqual({ x: 3 });
+          expect(getDefaultFormState(context, { schema: rootOf(besideOptions) })).toStrictEqual({});
+          const besideMixed: RJSFSchema = { ...besideOptions, oneOf: [options[0], { type: 'object' }] };
+          expect(getDefaultFormState(context, { schema: rootOf(besideMixed) })).toStrictEqual({ x: 3 });
           const inOption: RJSFSchema = {
             oneOf: [{ type: 'number', if: { type: 'object' }, else: { const: 3 } }, options[1]],
           };

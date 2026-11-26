@@ -537,15 +537,50 @@ export function conjunctionOf<S extends StrictRJSFSchema>(
   return conjunction === node ? undefined : conjunction;
 }
 
-/** The `type`s the nodes `ids` declare, each read with its `$ref`s and `allOf` members, whatever order
- * `retrieveSchema()` merges them in: the merged `type` allows only what every one of them allows. An `if` beside them
- * may be checked before the merge, see `holdsNoValue()`
+/** The `type`s the nodes `ids` declare, each read with its `$ref`s, `allOf` members and `anyOf`/`oneOf` options,
+ * whatever order `retrieveSchema()` merges them in: the merged `type` allows only what every one of them allows, and a
+ * list of options only what one of its options allows. An `if` beside them may be checked before the merge, see
+ * `holdsNoValue()`
  */
 interface DeclaredTypes {
   /** `undefined` where none declares a `type` */
   readonly types: readonly string[] | undefined;
   /** For a field naming no `type`, the types of the values its first `const` or `enum` allows */
   readonly guessed?: readonly string[];
+}
+
+/** The types of `prior` that `named` allows too, `named` where `prior` is `undefined`. Either of `integer` and `number`
+ * narrows the other to `integer`
+ */
+function narrowedTypes(prior: readonly string[] | undefined, named: readonly string[]): readonly string[] {
+  return prior === undefined
+    ? named
+    : [
+        ...prior.filter((entry) => allowsType(named, entry)),
+        ...named.filter((entry) => !prior.includes(entry) && allowsType(prior, entry)),
+      ];
+}
+
+/** The types the options of the `keyword` list of `id` allow between them, `undefined` where the node offers no such
+ * list or an option allows a value of any type
+ */
+function offeredTypes<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  keyword: typeof ANY_OF_KEY | typeof ONE_OF_KEY,
+  seen: ReadonlySet<NodeId>,
+): readonly string[] | undefined {
+  const options = graph.subschemas(id, keyword);
+  const offered = new Set<string>();
+  for (const [, option] of options) {
+    const { types, guessed } = declaredTypes(graph, [option], NO_TYPES, new Set(seen));
+    const known = types ?? guessed;
+    if (known === undefined) {
+      return undefined;
+    }
+    known.forEach((type) => offered.add(type));
+  }
+  return options.length === 0 ? undefined : [...offered];
 }
 
 /** What `declared` and the nodes `ids` declare together, see `DeclaredTypes` */
@@ -565,17 +600,7 @@ function declaredTypes<S extends StrictRJSFSchema>(
     const { type } = target.raw;
     let own: DeclaredTypes;
     if (typeof type === 'string' || Array.isArray(type)) {
-      const named: readonly string[] = Array.isArray(type) ? type : [type];
-      // Either of `integer` and `number` narrows the other to `integer`
-      const prior = soFar.types;
-      const types =
-        prior === undefined
-          ? named
-          : [
-              ...prior.filter((entry) => allowsType(named, entry)),
-              ...named.filter((entry) => !prior.includes(entry) && allowsType(prior, entry)),
-            ];
-      own = { ...soFar, types };
+      own = { ...soFar, types: narrowedTypes(soFar.types, Array.isArray(type) ? type : [type]) };
     } else {
       const { const: constant, enum: values } = target.raw;
       const held = constant === undefined ? values : [constant];
@@ -584,14 +609,21 @@ function declaredTypes<S extends StrictRJSFSchema>(
         guessed: soFar.guessed ?? (Array.isArray(held) ? held.map(guessType) : undefined),
       };
     }
+    for (const keyword of [ANY_OF_KEY, ONE_OF_KEY] as const) {
+      const offered = offeredTypes(graph, target.id, keyword, seen);
+      if (offered !== undefined) {
+        own = { ...own, types: narrowedTypes(own.types, offered) };
+      }
+    }
     const members = graph.subschemas(target.id, ALL_OF_KEY).map(([, member]) => member);
     return declaredTypes(graph, [target.ref, ...members], own, seen);
   }, declared);
 }
 
 /** Whether a field of the `type`s `declared` holds no value while it has no data, so its `if`s pick neither branch
- * rather than being checked against `{}`, see `CheckedCondition.noValue`. That is a field whose `type` allows neither
- * an object nor an array, or that names no `type` but an `enum` or a `const` of such values. Any other field is checked
+ * rather than being checked against `{}`, see `CheckedCondition.noValue`. That is a field whose `type`, or the types its
+ * options allow between them, allow neither an object nor an array, or that names no `type` but an `enum` or a `const`
+ * of such values. Any other field is checked
  * against `{}`, its defaults filled in: one naming no `type` may get an object's or an array's shape from its
  * branches, so a value it is given must not swap the branch
  */
@@ -603,7 +635,8 @@ function holdsNoValue({ types, guessed }: DeclaredTypes): boolean {
 const NO_TYPES: DeclaredTypes = { types: undefined };
 
 /** The nodes of the seeds of a field but the options it shows, see `Scope`. An option is read as `expandOption()` reads
- * one: its `type` counts only for the `if`s it brings, since the field's own are checked whichever option it shows
+ * one: its `type` counts only for the `if`s it brings, since the field's own are checked whichever option it shows,
+ * against the types its options allow between them, see `DeclaredTypes`
  */
 function ownNodes(seeds: readonly Seed[]): NodeId[] {
   return seeds.filter(({ node, scope }) => !scope?.includes(`o${node}`)).map(({ node }) => node);

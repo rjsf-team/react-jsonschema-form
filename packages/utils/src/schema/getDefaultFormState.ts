@@ -1277,7 +1277,8 @@ interface HandedDown {
  * by the data alone, and the passes go on to settle the others. Once they settle, each such condition but the last is
  * decided by the defaults again where the passes still settle, as one that flipped only because it reads the default
  * of another does. Where anything else flipped, the field's data is no object, or the passes outnumber the decisions of
- * the last one, not counting a first pass that only fills the value the field starts from, the field is computed as its data alone decides it.
+ * the last one, not counting a first pass that only fills the value the field starts from, the field is computed as its
+ * data alone decides it.
  * A child computed in an earlier pass from the same inputs is not computed again.
  */
 function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
