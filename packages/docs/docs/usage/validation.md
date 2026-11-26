@@ -18,9 +18,9 @@ The documentation for the APIs associated with the AJV 8 validator package can b
 
 The `@rjsf/validator-ajv8` and `@rjsf/validator-ata` packages support precompiled validators.
 The main use case for this is to overcome issues with `unsafe-eval` warnings from the browser caused by strict Content Security Policy settings.
-See the [Standalone Validation Code](https://ajv.js.org/standalone.html) section of the AJV documentation for more details about precompiled validators.
+For `@rjsf/validator-ajv8`, see the [Standalone Validation Code](https://ajv.js.org/standalone.html) section of the AJV documentation for more details about precompiled validators. For `@rjsf/validator-ata`, see [Precompiled validators with `@rjsf/validator-ata`](#precompiled-validators-with-rjsfvalidator-ata).
 
-Due to how RJSF uses the AJV validator in determining `anyOf/oneOf` selections and how it resolves dependencies, if-then-else and references ($ref) in schemas via the `retrieveSchema()` utility method, RJSF provides its own schema compilation API built on-top-of the one provided by AJV 8.
+Due to how RJSF uses the AJV validator in determining `anyOf/oneOf` selections and how it resolves dependencies, if-then-else and references ($ref) in schemas via the `retrieveSchema()` utility method, `@rjsf/validator-ajv8` provides its own schema compilation API built on-top-of the one provided by AJV 8.
 If you are wanting to use a precompiled validator, two steps are required:
 
 1. Precompiling the schema into a set of validator functions
@@ -704,8 +704,8 @@ A keyword that writes into the data, such as `transform`, needs `isValid()` to v
 Our implementation of `@rjsf/validator-ajv8` utilizes Ajv's internal cache to avoid unnecessarily re-compiling schemas, which can be an expensive operation. The cache key is the schema `$id`.
 
 The `ajvOptionsOverrides` for the Ajv 8 validator are the ones supported by that version.
-Data formats need to be added explicitly using the `ajv-formats` package.
-The `ajvFormatOptions` option on the `customizeValidator()` API configures this.
+Ajv 8 doesn't include the JSON Schema data formats itself, so `@rjsf/validator-ajv8` adds all of them from the `ajv-formats` package by default.
+The `ajvFormatOptions` option on the `customizeValidator()` API configures this, or turns it off with `false`.
 Additionally, the `AjvClass` option on the `customizeValidator()` API supports using one of the other [JSON schema versions](https://ajv.js.org/json-schema.html#json-schema-versions) provided by Ajv 8 besides the `draft-07` default.
 Finally, the Ajv 8 validator supports the localization of error messages.
 
