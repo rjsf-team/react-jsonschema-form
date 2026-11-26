@@ -1507,7 +1507,8 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 Used by the validator packages to find the schema object holding the keyword a validation error reports, when the engine doesn't hand over one that is resolved, to pass to [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) as its `parentSchema`.
 The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through: one written into the path as a `$ref` key, whose next key is read from the `$ref`'s target alone, or one it skips, its next key being one the `$ref` schema doesn't hold itself.
 Either way a next key such as `properties` or `items`, which merging joins with its target's, is read from the two merged, unless the merge fails, or, after a `$ref` key or, without `skipsRefs`, at a key the `$ref` schema holds itself, unless the path goes on through a key merging doesn't join, such as an `allOf`, other than a further `$ref`; a merged read after a chain of `$ref` keys starts from the first, for the titles of every schema along it.
-A `$ref` on the schema it ends at is resolved too, its own keywords kept over its target's, unless the merge fails and moves the keyword that failed into an `allOf`, which leaves the schema as written.
+Where the merge fails, there or further along the chain of `$ref`s, and leaves the `allOf` of the two, a next key the `$ref` schema doesn't hold itself is read from its target.
+A `$ref` on the schema it ends at is resolved too, its own keywords kept over its target's, unless the merge fails, there or further along the chain, which leaves the schema as written.
 With `skipsRefs` set, below a `$ref` read merged, a list keyword both schemas hold, such as an `allOf` inside a property both declare, indexes the merged list, so the entry it reads can be the other schema's.
 
 #### Parameters

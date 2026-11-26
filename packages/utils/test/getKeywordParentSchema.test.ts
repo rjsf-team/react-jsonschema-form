@@ -284,6 +284,28 @@ describe('getKeywordParentSchema()', () => {
       };
       expect(getKeywordParentSchema(schema, '#/properties/a/type', undefined, true)).toBe(schema.properties!.a);
     });
+    it('reads a key only the target holds from the target, and keeps the `$ref` schema at its keyword, where merging fails', () => {
+      const t0 = { title: 'T0', minimum: 5 };
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'number', title: 'T', minLength: 2, allOf: [t0] } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', type: 'string', title: 'W' } },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/allOf/0/minimum', undefined, true)).toBe(t0);
+      expect(getKeywordParentSchema(schema, '#/properties/a/minLength', undefined, true)).toBe(schema.properties!.a);
+    });
+    it('reads a key only a schema further along the chain holds from it, where merging fails there', () => {
+      const u0 = { title: 'U0', minimum: 5 };
+      const schema: RJSFSchema = {
+        $defs: {
+          T: { $ref: '#/$defs/U', type: 'string', title: 'T' },
+          U: { type: 'number', title: 'U', allOf: [u0] },
+        },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', title: 'W' } },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/allOf/0/minimum', undefined, true)).toBe(u0);
+    });
     it('reads a single-schema `items` a skipped `$ref` and its target both hold, which merging joins', () => {
       const schema: RJSFSchema = {
         $defs: {

@@ -465,6 +465,40 @@ describe('transformRJSFValidationErrors()', () => {
       expect(errors.map(({ title }) => title)).toEqual(['Wrapper', 'Wrapper']);
     });
 
+    it('names an error from the target’s allOf branch, or of a keyword only the target holds, where merging fails', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          T: { type: 'number', title: 'T', allOf: [{ title: 'T0', minimum: 5 }] },
+          O: { type: 'object', title: 'O', additionalProperties: false },
+        },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/T', type: 'string', title: 'W' },
+          b: { $ref: '#/$defs/O', type: 'array', title: 'W' },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: 3, b: { z: 1 } }, schema);
+      expect(errors.map(({ name, title }) => [name, title])).toEqual(
+        expect.arrayContaining([
+          ['minimum', 'T0'],
+          ['additionalProperties', 'W'],
+        ]),
+      );
+    });
+
+    it('names an error from an allOf branch further along a $ref chain whose merge fails there', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          T: { $ref: '#/$defs/U', type: 'string', title: 'T' },
+          U: { type: 'number', title: 'U', allOf: [{ title: 'U0', minimum: 5 }] },
+        },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', title: 'W' } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: 3 }, schema);
+      expect(errors.find(({ name }) => name === 'minimum')?.title).toBe('U0');
+    });
+
     it('names a missing property from the $ref schema’s own allOf branch where its target also holds one', () => {
       const schema: RJSFSchema = {
         $defs: { T: { type: 'object', allOf: [{ properties: { z: {} } }] } },

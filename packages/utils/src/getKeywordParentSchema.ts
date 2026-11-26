@@ -43,9 +43,10 @@ function readsJoined(keys: string[]): boolean {
   return true;
 }
 
-/** Returns the own `$ref` of the walk's `schema` resolved, with the subschema it names and the schemas the graph holds
- * that the resolved schema is merged from. A copy merging made from `seeds`, which no graph node holds, has its `$ref`
- * resolved from the seed writing it, in that seed's resource, where read alone it would resolve against the root
+/** Returns the own `$ref` of the walk's `schema` resolved, with the subschema it names, the schemas the graph holds
+ * that the resolved schema is merged from and whether the merge failed, there or further along the chain of `$ref`s. A
+ * copy merging made from `seeds`, which no graph node holds, has its `$ref` resolved from the seed writing it, in that
+ * seed's resource, where read alone it would resolve against the root
  */
 function ownRef<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds: object[], schema: S) {
   const held = graph.byObject(schema) !== undefined;
@@ -59,20 +60,27 @@ function ownRef<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds: object
   if (held) {
     merged.push(schema);
   }
+  // A link whose merge fails leaves its `allOf` in every merge before it
+  let chainFailed = false;
   for (let link = target; link !== undefined;) {
     merged.push(link);
-    link = stringKeyword(link, REF_KEY) === undefined ? undefined : requireOwnRef<S>(link as S, graph.rawRoot).target;
+    const next = stringKeyword(link, REF_KEY) === undefined ? undefined : requireOwnRef<S>(link as S, graph.rawRoot);
+    chainFailed ||= next !== undefined && mergeFailed(link, next.resolved);
+    link = next?.target;
   }
   if (writer === undefined) {
-    return { resolved, target, seeds: merged };
+    return { resolved, target, seeds: merged, failed: chainFailed || mergeFailed(schema, resolved) };
   }
   // Parsed in the writer's resource, the copy's own keywords decide how its `$ref` joins them
   const copy = graph.adopt(schema, (graph.node(graph.byObject(writer) as NodeId) as ObjectNode<S>).outerBase);
-  return {
-    resolved: resolveMergedOwnRef<S>(copy.graph, [{ node: copy.node, refPath: [] }], schema),
-    target,
-    seeds: merged,
-  };
+  const copyResolved = resolveMergedOwnRef<S>(copy.graph, [{ node: copy.node, refPath: [] }], schema);
+  return { resolved: copyResolved, target, seeds: merged, failed: chainFailed || mergeFailed(schema, copyResolved) };
+}
+
+/** Returns whether merging the `$ref` `schema` with its target failed, which, as for disjoint `type`s, leaves the
+ * `allOf` of the two without the `$ref` schema's own keywords */
+function mergeFailed(schema: object, resolved: object): boolean {
+  return Object.keys(schema).some((key) => key !== REF_KEY && !Object.hasOwn(resolved, key));
 }
 
 /** Keywords whose value maps names to schemas, so the key after one is a name rather than a keyword */
@@ -92,7 +100,8 @@ const NAME_MAP_KEYS = [
  * skipped by it, and the one on the schema it ends at. A `$ref` schema's own keywords are kept over its target's where
  * the two are read merged, so with `skipsRefs` set a list keyword both of them hold below a `$ref`, such as an `allOf`
  * inside a property both declare, indexes the merged list. Without it, a key the `$ref` schema holds itself is read as
- * written when the rest of the path runs through a key merging doesn't join.
+ * written when the rest of the path runs through a key merging doesn't join. Where a merge along the chain fails, a key
+ * the `$ref` schema doesn't hold itself is read from its target, and the schema the path ends at is kept as written.
  *
  * @param rootSchema - The form's root schema
  * @param schemaPath - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/required`
@@ -169,16 +178,23 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
         // into an `allOf`, so the path's next key indexes the schema as written. One merging joins is read merged, for
         // the target's titles, where the rest of the path runs through keys merging joins too, or the engine skips the
         // `$ref` and the path can index either side, unless the merge failed and moved it into an `allOf` too
-        if (
-          hasRef &&
-          (key === REF_KEY ||
+        for (let reading = hasRef; reading;) {
+          reading = false;
+          if (
+            key === REF_KEY ||
             (MERGE_JOINED_KEYS.includes(key) && (skipsRefs || readsJoined(keys.slice(index)))) ||
-            !Object.hasOwn(Object(node), key))
-        ) {
-          const own = ownRef<S>(graph, seeds, node as S);
-          if (key === REF_KEY || !Object.hasOwn(Object(node), key) || Object.hasOwn(own.resolved, key)) {
-            node = own.resolved;
-            seeds = own.seeds;
+            !Object.hasOwn(Object(node), key)
+          ) {
+            const own = ownRef<S>(graph, seeds, node as S);
+            if (own.failed && key !== REF_KEY && !Object.hasOwn(Object(node), key)) {
+              // The failed merge's `allOf` isn't the target's, so a key only the target holds is read from the target,
+              // the same way again where the target holds a `$ref` too
+              node = own.target;
+              reading = stringKeyword(node, REF_KEY) !== undefined;
+            } else if (key === REF_KEY || !Object.hasOwn(Object(node), key) || Object.hasOwn(own.resolved, key)) {
+              node = own.resolved;
+              seeds = own.seeds;
+            }
           }
         }
         // `resolveOwnRef()` follows a whole chain of `$ref`s, each of which the path can name. A property named `$ref`
@@ -195,13 +211,10 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
       endsAtNameMap = !endsAtNameMap && NAME_MAP_KEYS.includes(key);
     }
     if (stringKeyword(node, REF_KEY) !== undefined) {
-      const { resolved } = ownRef<S>(graph, seeds, node as S);
-      // A merge that fails moves a keyword the `$ref` schema holds into an `allOf`, away from the schema's own title. The
-      // `$ref` itself is never kept by a merge
-      node =
-        keyword !== REF_KEY && Object.hasOwn(Object(node), keyword) && !Object.hasOwn(resolved, keyword)
-          ? node
-          : resolved;
+      const { resolved, failed } = ownRef<S>(graph, seeds, node as S);
+      // A merge that fails moves the keyword into an `allOf`, away from the `$ref` schema's own title, which a merge
+      // keeps over its target's. The `$ref` itself is never kept by a merge
+      node = keyword !== REF_KEY && failed ? node : resolved;
     }
     return isObject(node) && !endsAtNameMap ? (node as S) : undefined;
   } catch {
