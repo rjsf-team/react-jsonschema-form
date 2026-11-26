@@ -4262,12 +4262,12 @@ function isWholeValueField<S extends StrictRJSFSchema, F extends FormContextType
 
 /** The field of `view` with the `allOf` its plan left unmerged merged for its data, its conditions resolved as
  * `resolvesConditions()` says, where a subschema that merges in, not one of the field's own seeds, holds what `offers`
- * looks for, and the `anyOf`/`oneOf` lists the merge met that the
- * field may still choose from. A list the field has chosen from already, or chosen an option of where an `allOf`
- * offers it, is closed: the field's seeds bring it back, though `foldView()` doesn't offer it again, so a keyword only
- * such lists hold is left out of the merge, where it would hide the list of the other keyword. So is a list a
- * `dependencies` entry offers, or one beside `dependencies`, which the merge, given no `selectOption`, leaves unchosen
- * where the plan of a field holding it itself chooses its option by the data
+ * looks for, and the `anyOf`/`oneOf` lists the merge met that the field may still choose from. A list the field has
+ * chosen from already, or chosen an option of where an `allOf` offers it, is closed: the field's seeds bring it back,
+ * though `foldView()` doesn't offer it again, so a keyword only such lists hold is left out of the merge, where it would
+ * hide the list of the other keyword. So is a list a `dependencies` entry offers, or one beside `dependencies`, which
+ * the merge, given no `selectOption`, leaves unchosen where the plan of a field holding it itself chooses its option by
+ * the data
  */
 function optionsMergedField<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
