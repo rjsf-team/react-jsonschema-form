@@ -4,7 +4,7 @@ When the form is submitted, the form data is validated to conform to the given J
 
 The validation implementation is separate from the `Form`, so a `validator` implementation is required to be passed to all `Form`s.
 React Json Schema Form provides a default `@rjsf/validator-ajv8` implementation that uses version 8 of the [ajv](https://github.com/ajv-validator/ajv) validator.
-Its error messages are those of ajv 8. If you depend on specifically formatted messages, use the `transformErrors` prop to shape them.
+Its error messages are those of ajv 8. If you depend on specifically formatted messages, use the `transformErrors` prop, a [localizer](#localization-l10n-support) or [`ajv-errors`](#extenderfn) to shape them.
 
 It is also possible for you to provide your own implementation if you desire, as long as it fulfills the `ValidatorType` interface specified in `@rjsf/utils`.
 Its `isValid()` must not change the data it is handed, at any depth: the form checks the same data against many conditions and options, and reuses what it found for data it already checked without looking at the data again.

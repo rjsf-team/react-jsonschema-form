@@ -1,6 +1,6 @@
 # @rjsf/validator-ajv8 APIs
 
-`@rjsf/validator-ajv8` is the validator package for RJSF. It uses the AJV 8 package, and supports precompiled validators.
+`@rjsf/validator-ajv8` is the recommended validator package for RJSF; [`@rjsf/validator-cfworker`](./validator-cfworker.md) and [`@rjsf/validator-ata`](./validator-ata.md) are the alternatives. It uses the AJV 8 package, and supports precompiled validators.
 Below are the exported API functions that are provided by this package.
 See the [Validation documentation](../usage/validation.md) for examples of using these APIs.
 
