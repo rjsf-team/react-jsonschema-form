@@ -11775,6 +11775,48 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(withData(list, 'zzz')).toEqual(withData({ type: 'string', enum: ['a', 'b'] }, 'zzz'));
         expect(withData({ ...list, default: 'b' }, 'zzz')).toEqual({ field: 'b' });
       });
+      describe('whose first constant is null', () => {
+        const nullFirst: [string, RJSFSchema, RJSFSchema, RJSFSchema][] = [
+          [
+            'a nullable oneOf',
+            { type: ['string', 'null'], oneOf: [{ const: null }, { const: 'a' }] },
+            { type: ['string', 'null'], oneOf: [{ const: 'a' }, { const: null }] },
+            { type: ['string', 'null'], enum: [null, 'a'] },
+          ],
+          [
+            'a nullable anyOf',
+            { type: ['string', 'null'], anyOf: [{ const: null }, { const: 'a' }] },
+            { type: ['string', 'null'], anyOf: [{ const: 'a' }, { const: null }] },
+            { type: ['string', 'null'], enum: [null, 'a'] },
+          ],
+          [
+            'an untyped oneOf',
+            { oneOf: [{ const: null }, { const: 'a' }] },
+            { oneOf: [{ const: 'a' }, { const: null }] },
+            { enum: [null, 'a'] },
+          ],
+        ];
+        it.each(nullFirst)('leaves %s empty, as with null second and as an enum', (_, field, nullSecond, asEnum) => {
+          expect(fill(field)).toEqual(fill(nullSecond));
+          expect(fill(field)).toEqual(fill(asEnum));
+          expect(fill(field)).toEqual({});
+        });
+        it.each(nullFirst)("leaves %s empty under the deprecated 'skipOneOf' and under 'never'", (_, field) => {
+          expect(fill(field, 'skipOneOf')).toEqual({});
+          expect(fill(field, 'never')).toEqual({});
+        });
+        it.each(nullFirst)("starts %s on null under an explicit 'always'", (_, field) => {
+          expect(fill(field, 'always')).toEqual({ field: null });
+        });
+        it.each(nullFirst)('leaves %s empty at the root', (_, field) => {
+          expect(getDefaultFormState({ validator: testValidator }, { schema: field })).toBeUndefined();
+        });
+        it("still fills the null of a field whose own type is null, as an enum's", () => {
+          const field: RJSFSchema = { type: 'null', oneOf: [{ const: null }, { const: null, title: 'None' }] };
+          expect(fill(field)).toEqual(fill({ type: 'null', enum: [null] }));
+          expect(fill(field)).toEqual({ field: null });
+        });
+      });
       it.each<[string, unknown]>([
         ['NaN', NaN],
         ['null', null],
@@ -11835,6 +11877,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ['a oneOf of true and null', { type: ['boolean', 'null'], oneOf: trueOrNull }],
         ['an anyOf of true and null', { type: ['boolean', 'null'], anyOf: trueOrNull }],
         ['an untyped oneOf of true and null', { oneOf: trueOrNull }],
+        [
+          'a oneOf of null and true, null first',
+          { type: ['boolean', 'null'], oneOf: [{ const: null }, { const: true }] },
+        ],
         ['a oneOf of true', { type: 'boolean', oneOf: [{ const: true }] }, { constAsDefaults: 'never' }],
         ['a const of true', { type: 'boolean', const: true }, { constAsDefaults: 'never' }],
         ['an enum of true beside a oneOf of false and true', { type: 'boolean', enum: [true], oneOf: untitled }],
@@ -11856,6 +11902,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           'a oneOf of true, false and null',
           { type: ['boolean', 'null'], oneOf: [{ const: true }, { const: false }, { const: null }] },
         ],
+        [
+          'a oneOf of null, true and false, null first',
+          { type: ['boolean', 'null'], oneOf: [{ const: null }, { const: true }, { const: false }] },
+        ],
+        ['an untyped oneOf of null and false, null first', { oneOf: [{ const: null }, { const: false }] }],
+        [
+          'a boolean listing false beside a value of another type',
+          { type: 'boolean', oneOf: [{ const: false }, { const: 'x' }] },
+        ],
+        ['a boolean or string listing no values', { type: ['boolean', 'string'] }],
         ['a const of false', { type: 'boolean', const: false }, { constAsDefaults: 'never' }],
         ['a plain boolean', { type: 'boolean' }],
         ['a boolean or null', { type: ['boolean', 'null'] }],
@@ -11868,6 +11924,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ['a not that rules false out', { type: 'boolean', not: { const: false } }],
       ])('starts at false for %s, whose values include it or are not listed', (_, b, behavior) => {
         expect(fill(b, true, behavior)).toEqual({ b: false });
+      });
+      it.each<[string, RJSFSchema, RJSFSchema]>([
+        [
+          'an untyped anyOf of false, a number and a string',
+          { anyOf: [{ const: false, title: 'Never' }, { const: 1 }, { const: 'unlimited' }] },
+          { anyOf: [{ const: 1 }, { const: false, title: 'Never' }, { const: 'unlimited' }] },
+        ],
+        [
+          'a oneOf of false and a string on a boolean or string',
+          { type: ['boolean', 'string'], oneOf: [{ const: false }, { const: 'x' }] },
+          { type: ['boolean', 'string'], oneOf: [{ const: 'x' }, { const: false }] },
+        ],
+        [
+          'an enum of false and a string on a boolean or string',
+          { type: ['boolean', 'string'], enum: [false, 'x'] },
+          { type: ['string', 'boolean'], enum: [false, 'x'] },
+        ],
+      ])('is left empty for %s, which is no boolean, whichever value comes first', (_, b, reordered) => {
+        expect(fill(b, true)).toEqual(fill(reordered, true));
+        expect(fill(b, true)).toEqual({});
       });
       it('starts at false for a const that is an Ajv $data reference, which lists no value', () => {
         expect(

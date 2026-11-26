@@ -781,11 +781,16 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * doesn't call it
    */
   onHandDown?: (defaults: unknown, givenConst: unknown) => void;
-  /** Whether the field this is the option of lists `false` among its values, or lists none, see `listsFalse()`. The
-   * option holds one entry of the field's list, or a schema of its own, merged in, so it is the field that says what a
-   * required boolean may start at. Asked only where a required boolean has nothing else to start at
+  /** Whether a required boolean the field this is the option of starts at `false`, see `startsFalse()`. The option holds
+   * one entry of the field's list, or a schema of its own, merged in, so it is the field that says what a required
+   * boolean may start at. Asked only where a required boolean has nothing else to start at
    */
-  fieldListsFalse?: () => boolean;
+  fieldStartsFalse?: () => boolean;
+  /** Whether the field is the option of a list of several constants left unpicked, see `chooseOption()`. Its constant is
+   * not the field's value, so neither the `null` nor the boolean type the option takes from it fills the field, which
+   * fills itself from its own type, see `unpickedStart()`
+   */
+  isUnpickedOption?: boolean;
   /** Whether `parentDefaults` come from a `default` an ancestor declares, its `const` or one they inherit, rather than
    * from values the ancestor computed, as a tuple's items are
    */
@@ -1809,6 +1814,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         const { onHandDown } = props;
         const optionHandDown =
           onHandDown && constDefault ? (optionDefaults: unknown) => onHandDown(optionDefaults, givenConst) : onHandDown;
+        // A list inside an option is no list of the field's, so the field this is an option of keeps the say
+        const fieldStartsFalse =
+          props.fieldStartsFalse ?? (() => viewStartsFalse<S, F>(context, view, choice.listedConstants));
         const foldedOption = foldOption<T, S, F>(
           choice.context,
           view,
@@ -1821,13 +1829,18 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             parentConst,
             inheritsDeclared: reachesDefault,
             onHandDown: optionHandDown,
-            // A list inside an option is no list of the field's, so the field this is an option of keeps the say
-            fieldListsFalse:
-              props.fieldListsFalse ?? (() => viewListsFalse<S, F>(context, view, choice.listedConstants)),
+            fieldStartsFalse,
+            isUnpickedOption: choice.leavesUnpicked,
           },
           initialValue,
           adopted?.choice,
         );
+        // The option of a list left unpicked gives no value, so the field starts as its own type says, at the `false` a
+        // required boolean starts at or the `null` a `null` field holds, whichever constant comes first
+        const startedOption =
+          choice.leavesUnpicked && foldedOption === undefined
+            ? unpickedStart<T, S, F>(context, view, props, fieldStartsFalse)
+            : foldedOption;
         // Under the object's own `const`, or the value an ancestor's gives it, a key only the option declares, which the
         // `const` doesn't name and the data doesn't hold, is left out: its default would make the object a value the
         // `const` rejects. A key the `ui:initialValue` names is kept, since that value stands in the `const`'s place, and
@@ -1839,7 +1852,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           ? [constSchema[CONST_KEY], schema.properties, rawFormData, initialValue]
           : givenObjectConst && [givenObjectConst, schema.properties, rawFormData, defaults, schema.default];
         const optionValue =
-          keeping && isObjectData(foldedOption) ? withoutKeysOutside(foldedOption, keeping) : foldedOption;
+          keeping && isObjectData(startedOption) ? withoutKeysOutside(startedOption, keeping) : startedOption;
         // Data the field takes is its own even where the option it renders through holds none of it, as an option with
         // no value, or one that is no object or takes no object, holds none of object data. Its defaults are merged
         // beneath the data, as an object field's are
@@ -2021,9 +2034,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
 function rendersNull<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
-  { isRenderedOption, nullFills }: FoldProps<T, S, F>,
+  { isRenderedOption, isUnpickedOption, nullFills }: FoldProps<T, S, F>,
 ): boolean {
-  if (nullFills?.isCollapsed) {
+  if (nullFills?.isCollapsed || isUnpickedOption) {
     return false;
   }
   const { schema } = view;
@@ -2123,6 +2136,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   isWholeValue: boolean;
   offersConstants: boolean;
   listedConstants: S[] | undefined;
+  leavesUnpicked: boolean;
   rendersAsSelect: boolean;
   wholeOptions: S[] | undefined;
 } {
@@ -2152,11 +2166,10 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // default unless `constAsDefaults` is explicitly `'always'`. A list of one leaves nothing to choose, so its constant
   // fills as a `default` would, giving way to a declared one. The option is folded with `constAsDefaults: 'never'`,
   // which takes none of its constants
+  const leavesUnpicked =
+    defaultFormStateBehavior?.constAsDefaults !== 'always' && offersConstants && constants.length > 1;
   const optionContext: SchemaContext<S, F> =
-    skipsOneOfConstants ||
-    (defaultFormStateBehavior?.constAsDefaults !== 'always' && offersConstants && constants.length > 1)
-      ? takingNoConstants(context)
-      : context;
+    skipsOneOfConstants || leavesUnpicked ? takingNoConstants(context) : context;
   // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick. An
   // ancestor default that wins picks the option too, so the option it is checked against is one that can hold it; one
   // no option holds gives way, so the field's own default picks the option, as it does with no ancestor default. A list
@@ -2215,6 +2228,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     isWholeValue,
     offersConstants,
     listedConstants: offersConstants ? constants : undefined,
+    leavesUnpicked,
     rendersAsSelect: rendersOptionsAsSelect<S>(select, constants),
     wholeOptions,
   };
@@ -3697,19 +3711,15 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
       return arrayDefaults<T, S, F>(context, view, props, defaults, givenConst, reachesDefault);
     }
     case 'boolean': {
-      // A required boolean with no explicit default gets false — it must be
-      // present in the submitted data, and false is the natural zero-value.
-      // `requiredBooleanDefault: 'skip'` opts out for forms that treat an
-      // unanswered boolean as a distinct state and rely on `required` to flag it.
-      // A schema listing its values without `false` never holds it, so it is left
-      // for validation to report missing rather than started invalid.
-      const requiredBooleanDefault = context.defaultFormStateBehavior?.requiredBooleanDefault;
+      // The option of a list left unpicked is no value of the field, which fills itself, see `unpickedStart()`
       if (
-        requiredBooleanDefault !== 'skip' &&
-        !(SKIPS_DEFAULTS in context) &&
-        props.required &&
+        !props.isUnpickedOption &&
         defaults === undefined &&
-        (props.fieldListsFalse ? props.fieldListsFalse() : viewListsFalse<S, F>(context, view))
+        startsRequiredFalse<T, S, F>(
+          context,
+          props,
+          props.fieldStartsFalse ?? (() => viewStartsFalse<S, F>(context, view)),
+        )
       ) {
         return false;
       }
@@ -3720,31 +3730,88 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
 }
 
-/** Whether the field of `view` lists `false` among its values, or lists none, see `listsFalse()`: its `enum` and `const`
- * are read with its `allOf` and condition merged, as `rendersNull()` reads its type, so one an `allOf` or the branch
- * its condition takes brings counts as its own. `constants` are those of the list of constant `anyOf`/`oneOf` options
- * the field offers, as `chooseOption()` reads it
+/** Whether a required boolean with no explicit default starts at `false`: it must be present in the submitted data, and
+ * `false` is the natural zero-value. `requiredBooleanDefault: 'skip'` opts out for forms that treat an unanswered boolean
+ * as a distinct state and rely on `required` to flag it. A field that isn't a boolean, or lists its values without
+ * `false`, never holds it, so it is left for validation to report missing rather than started invalid, see
+ * `startsFalse()`
  */
-function viewListsFalse<S extends StrictRJSFSchema, F extends FormContextType>(
+function startsRequiredFalse<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  { required }: FoldProps<T, S, F>,
+  fieldStartsFalse: () => boolean,
+): boolean {
+  return (
+    context.defaultFormStateBehavior?.requiredBooleanDefault !== 'skip' &&
+    !(SKIPS_DEFAULTS in context) &&
+    required === true &&
+    fieldStartsFalse()
+  );
+}
+
+/** What a field offering a list of several constants left unpicked starts at, where its option gives nothing: `false`
+ * for a required boolean, see `startsRequiredFalse()`, or the `null` a field whose own type is `null` holds, see
+ * `rendersNull()`. The field decides, not the constant its option holds, so a list whose first constant is `null` or
+ * `false` starts as it would with that constant anywhere else in it, as an `enum` does
+ */
+function unpickedStart<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  props: FoldProps<T, S, F>,
+  fieldStartsFalse: () => boolean,
+): false | null | undefined {
+  if (startsRequiredFalse<T, S, F>(context, props, fieldStartsFalse)) {
+    return false;
+  }
+  if (rendersNull<T, S, F>(context, view, props)) {
+    props.onNullFill?.();
+    return null;
+  }
+  return undefined;
+}
+
+/** Whether a required boolean the field of `view` is starts at `false`, see `startsFalse()`: its `type`, `enum` and
+ * `const` are read with its `allOf` and condition merged, as `rendersNull()` reads its type, so one an `allOf` or the
+ * branch its condition takes brings counts as its own. `constants` are those of the list of constant `anyOf`/`oneOf`
+ * options the field offers, as `chooseOption()` reads it
+ */
+function viewStartsFalse<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   constants?: S[],
 ): boolean {
   const { schema } = view;
-  return listsFalse<S>(
+  return startsFalse<S>(
     ALL_OF_KEY in schema || IF_KEY in schema ? mergedSchemaOf<S, F>(context, view) : schema,
     constants,
   );
 }
 
-/** Whether `false` is among the values `schema` lists in its `enum` and `const` and among `constants`, where each lists
- * any. A `const` that is an Ajv `$data` reference, or spelled out as `undefined`, lists no value. Only listed values
- * count, so an exclusion through another keyword, such as a `not`, is not looked for, nor is the `enum` of an option of
- * a list that isn't one of constants, which offers a schema rather than a value
+/** Whether `schema` is a boolean that lists `false` among its values, or lists none. It is a boolean where its `type` is
+ * `boolean`, alone or beside `null`, or names `boolean` and every value it lists is a boolean or `null`, or, with no
+ * `type`, every value it lists is one, so a list mixing `false` with values of other types isn't one. Its values are
+ * those of its `enum` and `const` and `constants`, where each lists any. A `const` that is an Ajv `$data` reference, or
+ * spelled out as `undefined`, lists no value. Only listed values count, so an exclusion through another keyword, such
+ * as a `not`, is not looked for, nor is the `enum` of an option of a list that isn't one of constants, which offers a
+ * schema rather than a value
  */
-function listsFalse<S extends StrictRJSFSchema>(schema: S, constants: S[] = []): boolean {
+function startsFalse<S extends StrictRJSFSchema>(schema: S, constants: S[] = []): boolean {
   const listedConst = constValueOf<S>(schema);
+  const listed: unknown[] = constants.map((option) => toConstant<S>(option));
+  if (Array.isArray(schema.enum)) {
+    listed.push(...schema.enum);
+  }
+  if (listedConst !== undefined) {
+    listed.push(listedConst);
+  }
+  const listsBooleans = listed.every((value) => typeof value === 'boolean' || value === null);
+  const types: unknown[] = Array.isArray(schema.type) ? schema.type : [schema.type];
+  const isBoolean =
+    schema.type === undefined
+      ? listsBooleans
+      : types.includes('boolean') && (listsBooleans || types.every((type) => type === 'boolean' || type === 'null'));
   return (
+    isBoolean &&
     (!Array.isArray(schema.enum) || schema.enum.includes(false)) &&
     (listedConst === undefined || listedConst === false) &&
     (!constants.length || constants.some((option) => toConstant<S>(option) === false))
