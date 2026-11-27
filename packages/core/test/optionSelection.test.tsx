@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import type { CustomValidator, DefaultFormStateBehavior, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type {
+  CustomMergeAllOf,
+  CustomValidator,
+  DefaultFormStateBehavior,
+  FieldProps,
+  RJSFSchema,
+  UiSchema,
+} from '@rjsf/utils';
 import { isPlainObject, ROOT_FIELD_PATH } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -2172,6 +2179,51 @@ describe('option selection as form state', () => {
     expect(getSelectedOptionValue(selectOf(node, 'root_p__oneof_select'))).toBe('B, D');
     expect(handleOf(ref).getFormData()).toEqual(formData);
     expect(handleOf(ref).validateForm()).toBe(true);
+  });
+
+  // A custom merge's pairs record nothing of what they were built from, yet it merged two lists, so the switched-to pair
+  // still gives the tie up to the one the restored data fills
+  it("restores the pair a customMergeAllOf builds from an allOf entry's list and the field's own on reset() after a switch (#5930)", async () => {
+    const option = (key: string): RJSFSchema => ({
+      title: key.toUpperCase(),
+      properties: { [key]: { type: 'string', default: `${key}-default` } },
+      required: [key],
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: { type: 'object', oneOf: [option('a'), option('b')], allOf: [{ oneOf: [option('c'), option('d')] }] },
+      },
+    };
+    const customMergeAllOf: CustomMergeAllOf = (merged) => {
+      const { allOf, oneOf, ...rest } = merged;
+      const other = (allOf?.[0] as RJSFSchema | undefined)?.oneOf as RJSFSchema[] | undefined;
+      if (!other || !oneOf) {
+        return ((allOf ?? []) as RJSFSchema[]).reduce<RJSFSchema>((acc, entry) => ({ ...acc, ...entry }), rest);
+      }
+      return {
+        ...rest,
+        oneOf: (oneOf as RJSFSchema[]).flatMap((left) =>
+          other.map((right) => ({
+            title: `${left.title}${right.title}`,
+            properties: { ...left.properties, ...right.properties },
+            required: [...(left.required ?? []), ...(right.required ?? [])],
+          })),
+        ),
+      };
+    };
+    const ref = createFormRef();
+    const formData = { p: { b: 'typed b', d: 'typed d' } };
+    const { node } = createFormComponent({ ref, schema, formData, customMergeAllOf });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect(getSelectedOptionValue(select)).toBe('BD');
+    await user.selectOptions(select, 'BC');
+    expect(getSelectedOptionValue(select)).toBe('BC');
+
+    act(() => handleOf(ref).reset());
+
+    expect(getSelectedOptionValue(selectOf(node, 'root_p__oneof_select'))).toBe('BD');
+    expect(handleOf(ref).getFormData()).toEqual(formData);
   });
 
   // The pairs still tie where `required` doesn't tell them apart, so only the keys each declares do

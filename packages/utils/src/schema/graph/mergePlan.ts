@@ -318,7 +318,20 @@ export function mergeAllOf<S extends StrictRJSFSchema, F extends FormContextType
   unmerged?: S,
 ): S | JSONSchema7Definition {
   try {
-    return context.customMergeAllOf ? context.customMergeAllOf(schema) : shallowAllOfMerge(schema);
+    if (!context.customMergeAllOf) {
+      return shallowAllOfMerge(schema);
+    }
+    const merged = context.customMergeAllOf(schema);
+    const holders = ([] as unknown[]).concat(schema, schema[ALL_OF_KEY]);
+    for (const keyword of [ANY_OF_KEY, ONE_OF_KEY]) {
+      const list: unknown = getByPath(merged, keyword);
+      const lists = holders.map((holder): unknown => getByPath(holder, keyword)).filter(Array.isArray);
+      if (Array.isArray(list) && lists.length > 1) {
+        const written = new Set(lists.flat());
+        list.filter((option) => isObject(option) && !written.has(option)).forEach((option) => customBuilt.add(option));
+      }
+    }
+    return merged;
   } catch (error) {
     logOnce('could not merge subschemas in allOf:\n', { error });
     return unmerged ?? withoutKeys(schema, ALL_OF_KEY);
@@ -606,6 +619,22 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(
 
 /** The options of the lists each option a merge of lists rebuilt was built from, see `recorded()` */
 const optionSources = new WeakMap<object, readonly unknown[]>();
+
+/** The options a `customMergeAllOf` returned under a keyword two or more of the lists it merged hold, other than one
+ * of those lists' own options, which keep no record of what they were built from. The set is module-wide, so a
+ * written option handed back unchanged is never marked, or it would read as built in every form
+ */
+const customBuilt = new WeakSet<object>();
+
+/** Returns whether a merge of lists built the option `option`: one the form's merge rebuilt, see `sourcesOfOption()`,
+ * or one a `customMergeAllOf` returned for two or more lists under its keyword
+ *
+ * @param option - The option
+ * @returns - Whether a merge of lists built it
+ */
+export function isMergeBuilt(option: object): boolean {
+  return optionSources.has(option) || customBuilt.has(option);
+}
 
 /** Returns the options of the `anyOf`/`oneOf` lists the option `option` a plan's merge of lists rebuilt was built from,
  * one from each list in the order they were merged, or undefined for an option no such merge built
