@@ -99,4 +99,14 @@ describe('getFieldTitle()', () => {
       titleOf(options, ['p', 'a'], { p: { a: 'x' } }, { p: { oneOf: [{ a: { 'ui:title': 'Option UI a' } }] } }),
     ).toEqual('Option UI a');
   });
+
+  it("reads an item of an array option from the option's uiSchema entry", () => {
+    const options: RJSFSchema = {
+      type: 'object',
+      properties: { p: { oneOf: [{ type: 'array', items: { type: 'string', title: 'Item' } }, { type: 'number' }] } },
+    };
+    expect(
+      titleOf(options, ['p', '0'], { p: ['a'] }, { p: { oneOf: [{ items: { 'ui:title': 'Option UI item' } }] } }),
+    ).toEqual('Option UI item');
+  });
 });

@@ -22,12 +22,12 @@ import retrieveSchema, { joinOptionExtraKeys } from './retrieveSchema.ts';
 const NOT_FOUND = { field: undefined, isRequired: undefined };
 
 /** Where `findChildField()` found a key's field, which says where the form reads the field's uiSchema from: the
- * parent's own `properties`, the `properties` of the `anyOf`/`oneOf` option at `index`, the item of `array`, or the
- * parent's extra keys */
+ * parent's own `properties`, the `properties` of the `anyOf`/`oneOf` option at `index`, the item of `array`, under the
+ * uiSchema entry of the option at `option` when that option renders the array, or the parent's extra keys */
 type FieldOrigin<S extends StrictRJSFSchema = RJSFSchema> =
   | { kind: 'property' }
   | { kind: 'option'; xxxOf: 'anyOf' | 'oneOf'; index: number }
-  | { kind: 'item'; array: S }
+  | { kind: 'item'; array: S; option?: { xxxOf: 'anyOf' | 'oneOf'; index: number } }
   | { kind: 'additional' };
 
 /** Returns the schema `holder` declares for `key`. A stub `retrieveSchema()` made for an extra key the data holds is no
@@ -100,7 +100,11 @@ export function findChildField<T, S extends StrictRJSFSchema, F extends FormCont
     return {
       field: getFromSchema<T, S, F>(context, rootSchema, item, [], item),
       isRequired: false,
-      origin: { kind: 'item', array },
+      origin: {
+        kind: 'item',
+        array,
+        option: xxxOfKey && selected && option ? { xxxOf: xxxOfKey, index: selected.index } : undefined,
+      },
     };
   }
   const field = option && declaredField<S, F>(context, rootSchema, option, key);

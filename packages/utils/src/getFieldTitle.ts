@@ -14,9 +14,10 @@ import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema, UiSc
  * of that schema retrieved for its data, as `getFieldLabel()` reads them, without a deprecated field's marker. The
  * schema and uiSchema are walked as the form renders the data, each level retrieved for its data, so a `$ref`, an
  * `allOf` and the `if`/`then` the data meets are merged in, an `anyOf`/`oneOf` field's keys are read from the option
- * shown for its data, under its `uiSchema.anyOf`/`oneOf` entry, and an array item's from `items`. An extra key the form renders through `additionalProperties` or `patternProperties` is labelled
- * by its key, so it has no title, nor has the root, whose title titles the form, nor a field behind a `$ref`
- * `retrieveSchema()` can't resolve.
+ * shown for its data, under its `uiSchema.anyOf`/`oneOf` entry, and an array item's from `items`, under the option's
+ * entry when an option renders the array. An extra key the form renders through `additionalProperties` or
+ * `patternProperties` is labelled by its key, so it has no title, nor has the root, whose title titles the form, nor a
+ * field behind a `$ref` `retrieveSchema()` can't resolve.
  *
  * @param context - The `SchemaContext` of the form
  * @param rootSchema - The form's root schema
@@ -54,7 +55,10 @@ export default function getFieldTitle<
         return undefined;
       }
       if (origin.kind === 'item') {
-        fieldUiSchema = getStaticItemsUiSchema<T, S, F>(fieldUiSchema, Number(key), origin.array);
+        const arrayUiSchema: UiSchema<T, S, F> | undefined = origin.option
+          ? getOptionUiSchema<T, S, F>(fieldUiSchema, origin.option.xxxOf, origin.option.index)
+          : fieldUiSchema;
+        fieldUiSchema = getStaticItemsUiSchema<T, S, F>(arrayUiSchema, Number(key), origin.array);
       } else if (origin.kind === 'option') {
         fieldUiSchema = getByPath(getOptionUiSchema<T, S, F>(fieldUiSchema, origin.xxxOf, origin.index), [key]);
       } else {
