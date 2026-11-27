@@ -240,6 +240,30 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
         expect.objectContaining(missingBar),
       ]);
     });
+    it('names a missing declared property by the ui:title at its own key, not the one additionalProperties gives', () => {
+      const required: RJSFSchema = {
+        type: 'object',
+        properties: {
+          obj: {
+            type: 'object',
+            properties: { foo: { type: 'string' } },
+            required: ['foo'],
+            additionalProperties: { type: 'string' },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        obj: { foo: { 'ui:title': 'Foo ui' }, additionalProperties: { 'ui:title': 'Extra ui' } },
+      };
+      const { errors } = buildValidator().validateFormData({ obj: {} }, required, undefined, undefined, uiSchema);
+      expect(errors.filter((error) => error.name === 'required')).toEqual([
+        expect.objectContaining({
+          property: '.obj.foo',
+          title: 'Foo ui',
+          message: expect.stringContaining("'Foo ui'"),
+        }),
+      ]);
+    });
   });
 
   describe('an error under a $ref to another property', () => {
@@ -344,12 +368,6 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
 
     it.each<[string, RJSFSchema, unknown, string]>([
       [
-        "its own title over an allOf entry's",
-        p({ title: 'Field', allOf: [{ title: 'Branch', type: 'string' }] }),
-        { p: 1 },
-        'Field',
-      ],
-      [
         "an allOf entry's title where it has none",
         p({ allOf: [{ title: 'Branch', type: 'string' }] }),
         { p: 1 },
@@ -419,6 +437,88 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
       for (const error of fieldErrors) {
         expect(error.stack).toEqual(`'${title}' ${error.message}`);
       }
+    });
+
+    // The cases #5948 and its follow-ups report, each of which a lookup along the keyword's schema path got wrong
+    it.each<[string, RJSFSchema, unknown, string, string]>([
+      [
+        "its own title over an allOf entry's",
+        p({ title: 'Field', allOf: [{ title: 'Branch', type: 'string' }] }),
+        { p: 1 },
+        '.p',
+        'Field',
+      ],
+      [
+        "the $ref target's title for a draft-07 tuple item",
+        {
+          $schema: 'http://json-schema.org/draft-07/schema#',
+          definitions: { N: { title: 'Num', type: 'number' } },
+          type: 'object',
+          properties: { t: { type: 'array', items: [{ $ref: '#/definitions/N' }] } },
+        },
+        { t: ['x'] },
+        '.t.0',
+        'Num',
+      ],
+      [
+        'the title a draft-07 dependency under a $ref declares a property with',
+        {
+          $schema: 'http://json-schema.org/draft-07/schema#',
+          definitions: {
+            T: {
+              type: 'object',
+              properties: { n: {} },
+              dependencies: { n: { properties: { m: { title: 'M', type: 'string' } } } },
+            },
+          },
+          type: 'object',
+          properties: { a: { $ref: '#/definitions/T' } },
+        },
+        { a: { n: 'x', m: 1 } },
+        '.a.m',
+        'M',
+      ],
+      [
+        'its own title where a then redeclares it without one',
+        {
+          type: 'object',
+          properties: {
+            a: {
+              type: 'object',
+              properties: { k: {}, n: { type: 'string', title: 'N' } },
+              if: { required: ['k'] },
+              then: { properties: { n: { minLength: 3 } } },
+            },
+          },
+        },
+        { a: { k: 1, n: 'a' } },
+        '.a.n',
+        'N',
+      ],
+      [
+        "its own title where a $ref target's then redeclares it as an untitled $ref",
+        {
+          $defs: {
+            Short: { type: 'string', minLength: 3 },
+            T: {
+              type: 'object',
+              properties: { k: {}, n: { type: 'string', title: 'N' } },
+              if: { required: ['k'] },
+              then: { properties: { n: { $ref: '#/$defs/Short' } } },
+            },
+          },
+          type: 'object',
+          properties: { a: { $ref: '#/$defs/T' } },
+        },
+        { a: { k: 1, n: 'a' } },
+        '.a.n',
+        'N',
+      ],
+    ])('takes %s', (_, schema, formData, property, title) => {
+      const { errors } = buildValidator().validateFormData(formData, schema);
+      const fieldErrors = errors.filter((error) => error.property === property);
+      expect(fieldErrors).not.toEqual([]);
+      expect(fieldErrors.map((error) => error.title)).toEqual(fieldErrors.map(() => title));
     });
 
     it("takes no title for an option's property the option shown for the data doesn't declare", () => {
