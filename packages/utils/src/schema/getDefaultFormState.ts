@@ -477,6 +477,27 @@ function skippingDefaults<S extends StrictRJSFSchema, F extends FormContextType>
  */
 const skippingContexts = new KeyedMemo<object>();
 
+/** `context` under `constAsDefaults: 'never'`, which an option of a list of constants is folded in so that none of
+ * them is picked
+ *
+ * @param context - The `SchemaContext` the defaults are computed in
+ * @returns - The context that takes no constant
+ */
+function takingNoConstants<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+): SchemaContext<S, F> {
+  // Only `context` with `constAsDefaults: 'never'` is kept under `context`, but the memo can't carry its type parameters
+  return noConstantContexts.get([context], () => ({
+    ...context,
+    defaultFormStateBehavior: { ...context.defaultFormStateBehavior, constAsDefaults: 'never' },
+  })) as SchemaContext<S, F>;
+}
+
+/** The context `takingNoConstants()` returns, per context it is built from, so it keeps its identity across the passes
+ * and calls whose memos compare the context first
+ */
+const noConstantContexts = new KeyedMemo<object>();
+
 /** The schema `foldView()` reads under `skippingDefaults()`, per schema it is read from, so it keeps its identity across
  * the passes and calls that read it, as the caches keyed on a schema need
  */
@@ -706,11 +727,11 @@ interface MergedSchema<S extends StrictRJSFSchema> {
   readers?: Reader<S>[];
 }
 
-/** The options selected for a field: the option chosen from each list, by the node holding it, and the lists chosen
- * from, which an option leading back to one of them does not offer again
+/** The options selected for a field: the option chosen from each list, by `selectionKey()`, and the lists chosen from,
+ * which an option leading back to one of them does not offer again
  */
 interface OptionState {
-  readonly selections: ReadonlyMap<NodeId, number>;
+  readonly selections: ReadonlyMap<string, number>;
   readonly chosen: ReadonlySet<unknown>;
   /** The option chosen from each list an `allOf` the field's plan left unmerged offers, by the node holding the list,
    * which seeds the field where that `allOf` sits, see `adoptableList()`. The last one chosen comes first: the plan
@@ -721,6 +742,13 @@ interface OptionState {
 }
 
 const NO_OPTIONS: OptionState = { selections: new Map(), chosen: new Set() };
+
+/** The key an option chosen from a list is selected under: the node holding the list and its keyword, since a node can
+ * hold an `anyOf` and a `oneOf` beside it, and the option chosen from one says nothing of the other
+ */
+function selectionKey({ provider, keyword }: Pick<OptionChoice, 'provider' | 'keyword'>): string {
+  return `${provider}:${keyword}`;
+}
 
 /** A child computed in an earlier pass of its object's dependency fixed point, and what it was computed from */
 interface MemoEntry {
@@ -768,6 +796,16 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * doesn't call it
    */
   onHandDown?: (defaults: unknown, givenConst: unknown) => void;
+  /** Whether the field this is the option of, and each field that one is an option of, allows a required boolean to
+   * start at `false`, see `allowsFalse()`. Asked only where a required boolean has nothing else to start at, once the
+   * option has found its value is a boolean
+   */
+  fieldStartsFalse?: () => boolean;
+  /** Whether the field is the option of a list of several constants left unpicked, see `chooseOption()`. Its constant is
+   * not the field's value, so neither the `null` nor the boolean type the option takes from it fills the field, which
+   * fills itself from its own type, see `unpickedStart()`
+   */
+  isUnpickedOption?: boolean;
   /** Whether `parentDefaults` come from a `default` an ancestor declares, its `const` or one they inherit, rather than
    * from values the ancestor computed, as a tuple's items are
    */
@@ -917,13 +955,13 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   graph: SchemaGraph<S>,
   allOf: boolean | 'if',
   conditions: boolean,
-  selections: ReadonlyMap<NodeId, number>,
+  selections: ReadonlyMap<string, number>,
   cutRecursion = false,
   optionPolicy?: OptionPolicy,
 ): PlanPolicy<S> {
   let key = `defaults|${optionMatchKey(context)}|${allOf}|${conditions}|${cutRecursion}|${optionPolicy?.allOf}|${optionPolicy?.conditions}`;
-  for (const [provider, index] of selections) {
-    key += `|${provider}:${index}`;
+  for (const [list, index] of selections) {
+    key += `|${list}:${index}`;
   }
   return cachedPolicy<S>(context.validator, graph, key, () => {
     const matchContext = optionMatchContext(context);
@@ -932,7 +970,7 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
       conditions,
       cutRecursion,
       selectOption: (request) =>
-        selections.get(request.provider) ?? dependencyOption(matchContext, request, request.depData),
+        selections.get(selectionKey(request)) ?? dependencyOption(matchContext, request, request.depData),
       // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
       // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
       optionsInheritRefPath: true,
@@ -1051,7 +1089,7 @@ interface PlanRequest<S extends StrictRJSFSchema> {
   readonly seeds: readonly Seed[];
   readonly data: unknown;
   readonly depData: unknown;
-  readonly selections: ReadonlyMap<NodeId, number>;
+  readonly selections: ReadonlyMap<string, number>;
   readonly cutRecursion: boolean;
 }
 
@@ -1354,7 +1392,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const optionFor = (reader: Reader<S>, choice: OptionChoice, depData: unknown) => {
     matchContext ??= optionMatchContext(context);
     return (
-      reader.options?.selections.get(choice.provider) ??
+      reader.options?.selections.get(selectionKey(choice)) ??
       dependencyOption(matchContext, { ...choice, graph: reader.graph, data, depData }, depData)
     );
   };
@@ -1386,8 +1424,8 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
       for (const choice of reader.choices.filter(({ dependencies }) => dependencies)) {
         // A reader the fold selected the option for decides as selected, whatever another one matched
-        const selection = reader.options?.selections.get(choice.provider);
-        decide(reader.graph, `o${choice.provider}:${selection ?? ''}`, () =>
+        const selection = reader.options?.selections.get(selectionKey(choice));
+        decide(reader.graph, `o${selectionKey(choice)}:${selection ?? ''}`, () =>
           redecides ? optionFor(reader, choice, depData) : choice.selected,
         );
       }
@@ -1847,6 +1885,8 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         const { onHandDown } = props;
         const optionHandDown =
           onHandDown && constDefault ? (optionDefaults: unknown) => onHandDown(optionDefaults, givenConst) : onHandDown;
+        // The value the option starts at is the field's too, so the field keeps its say beside the option's own
+        const fieldStartsFalse = () => allowsFalse<T, S, F>(context, view, props, true, choice.listedConstants);
         const foldedOption = foldOption<T, S, F>(
           choice.context,
           view,
@@ -1859,10 +1899,23 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             parentConst,
             inheritsDeclared: reachesDefault,
             onHandDown: optionHandDown,
+            fieldStartsFalse,
+            isUnpickedOption: choice.leavesUnpicked,
           },
           initialValue,
           adopted?.choice,
         );
+        // The option of a list left unpicked gives no value, so the field starts as its own type says, at the `false` a
+        // required boolean starts at or the `null` a `null` field holds. Data the defaults replace, which the option
+        // hands back as it stands, is no value either, so the field's start replaces it, as an `enum`'s does
+        const unpickedValue =
+          choice.leavesUnpicked &&
+          (foldedOption === undefined ||
+            (Object.is(foldedOption, rawFormData) &&
+              defaultsReplace(rawFormData, props.requiredAsRoot === true, defaultFormStateBehavior)))
+            ? unpickedStart<T, S, F>(context, view, props, choice.listedConstants)
+            : undefined;
+        const startedOption = unpickedValue === undefined ? foldedOption : unpickedValue;
         // Under the object's own `const`, or the value an ancestor's gives it, a key only the option declares, which the
         // `const` doesn't name and the data doesn't hold, is left out: its default would make the object a value the
         // `const` rejects. A key the `ui:initialValue` names is kept, since that value stands in the `const`'s place, and
@@ -1874,7 +1927,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           ? [constSchema[CONST_KEY], schema.properties, rawFormData, initialValue]
           : givenObjectConst && [givenObjectConst, schema.properties, rawFormData, defaults, schema.default];
         const optionValue =
-          keeping && isObjectData(foldedOption) ? withoutKeysOutside(foldedOption, keeping) : foldedOption;
+          keeping && isObjectData(startedOption) ? withoutKeysOutside(startedOption, keeping) : startedOption;
         // Data the field takes is its own even where the option it renders through holds none of it, as an option with
         // no value, or one that is no object or takes no object, holds none of object data. Its defaults are merged
         // beneath the data, as an object field's are
@@ -2056,9 +2109,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
 function rendersNull<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
-  { isRenderedOption, nullFills }: FoldProps<T, S, F>,
+  { isRenderedOption, isUnpickedOption, nullFills }: FoldProps<T, S, F>,
 ): boolean {
-  if (nullFills?.isCollapsed) {
+  if (nullFills?.isCollapsed || isUnpickedOption) {
     return false;
   }
   const { schema } = view;
@@ -2165,6 +2218,8 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   index: number;
   isWholeValue: boolean;
   offersConstants: boolean;
+  listedConstants: S[] | undefined;
+  leavesUnpicked: boolean;
   rendersAsSelect: boolean;
   wholeOptions: S[] | undefined;
 } {
@@ -2181,18 +2236,23 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const offersConstants = isConstantOptionList<S>(constants);
   const wholeOptions = isWholeValue && offersConstants ? constants : undefined;
   const picksWholeOption = wholeOptions !== undefined;
-  // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips,
-  // unless it is empty, which counts as no option list here as it does for the keyword read
+  // The deprecated `skipOneOf` takes no `const` of any option of a `oneOf` on a primitive or untyped field, a list of
+  // constants or not, nor any of a `oneOf` of object or array constants that a select picks whole. Checked on the
+  // schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips, unless it is
+  // empty, which counts as no option list here as it does for the keyword read
   const skipsOneOfConstants =
     Boolean(schema[ONE_OF_KEY]?.length) &&
     !Array.isArray(type) &&
     (PRIMITIVE_TYPES.includes(type) || picksWholeOption) &&
     defaultFormStateBehavior?.constAsDefaults === 'skipOneOf';
-  // If we are in a oneOf of a primitive type, or of whole object or array values, then we want to pass
-  // constAsDefaults as 'never' for the recursion
-  const optionContext: SchemaContext<S, F> = skipsOneOfConstants
-    ? { ...context, defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' } }
-    : context;
+  // A list of several constants is a choice the user has yet to make, as an `enum` is, so none of them is the field's
+  // default unless `constAsDefaults` is explicitly `'always'`. A list of one leaves nothing to choose, so its constant
+  // fills as a `default` would, giving way to a declared one. The option is folded with `constAsDefaults: 'never'`,
+  // which takes none of its constants
+  const leavesUnpicked =
+    defaultFormStateBehavior?.constAsDefaults !== 'always' && offersConstants && constants.length > 1;
+  const optionContext: SchemaContext<S, F> =
+    skipsOneOfConstants || leavesUnpicked ? takingNoConstants(context) : context;
   // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick. An
   // ancestor default that wins picks the option too, so the option it is checked against is one that can hold it; one
   // no option holds gives way, so the field's own default picks the option, as it does with no ancestor default. A list
@@ -2254,6 +2314,8 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     index,
     isWholeValue,
     offersConstants,
+    listedConstants: offersConstants ? constants : undefined,
+    leavesUnpicked,
     rendersAsSelect: rendersOptionsAsSelect<S>(select, constants),
     wholeOptions,
   };
@@ -2419,7 +2481,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return foldView<T, S, F>(context, { ...optionView, options: { ...optionView.options, chosen } }, branchProps);
   }
   const optionNode = choice.options[index];
-  const selections = new Map(view.options.selections).set(choice.provider, index);
+  const selections = new Map(view.options.selections).set(selectionKey(choice), index);
   // A field read whole merges its own `allOf` and `if`, but its option is read as the same option under a property is
   const optionPolicy = field.retrieves
     ? planUnretrieved(context, {
@@ -3743,16 +3805,12 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
       return arrayDefaults<T, S, F>(context, view, props, defaults, givenConst, reachesDefault);
     }
     case 'boolean': {
-      // A required boolean with no explicit default gets false — it must be
-      // present in the submitted data, and false is the natural zero-value.
-      // `requiredBooleanDefault: 'skip'` opts out for forms that treat an
-      // unanswered boolean as a distinct state and rely on `required` to flag it.
-      const requiredBooleanDefault = context.defaultFormStateBehavior?.requiredBooleanDefault;
+      // The option of a list left unpicked is no value of the field, which fills itself, see `unpickedStart()`. The
+      // value folds as a boolean here, so a field that neither types nor lists it holds one
       if (
-        requiredBooleanDefault !== 'skip' &&
-        !(SKIPS_DEFAULTS in context) &&
-        props.required &&
-        defaults === undefined
+        !props.isUnpickedOption &&
+        defaults === undefined &&
+        startsRequiredFalse<T, S, F>(context, props, () => allowsFalse<T, S, F>(context, view, props, true))
       ) {
         return false;
       }
@@ -3761,6 +3819,129 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
     default:
       return undefined;
   }
+}
+
+/** Whether a required boolean with no explicit default starts at `false`: it must be present in the submitted data, and
+ * `false` is the natural zero-value. `requiredBooleanDefault: 'skip'` opts out for forms that treat an unanswered boolean
+ * as a distinct state and rely on `required` to flag it. A field that isn't a boolean, or lists its values without
+ * `false`, never holds it, so it is left for validation to report missing rather than started invalid, see
+ * `startsFalse()`
+ */
+function startsRequiredFalse<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  { required }: FoldProps<T, S, F>,
+  fieldAllowsFalse: () => boolean,
+): boolean {
+  return (
+    context.defaultFormStateBehavior?.requiredBooleanDefault !== 'skip' &&
+    !(SKIPS_DEFAULTS in context) &&
+    required === true &&
+    fieldAllowsFalse()
+  );
+}
+
+/** What a field offering a list of several constants left unpicked starts at, where its option gives nothing: `false`
+ * for a required boolean, see `startsRequiredFalse()`, or the `null` a field whose own type is `null` holds, see
+ * `rendersNull()`. The list decides, not the constant its option holds, so a list whose first constant is `null` or
+ * `false` starts as it would with that constant anywhere else in it, as an `enum` does. The list, `constants`, says
+ * whether the value is a boolean, so a list of strings in an option of a field that types and lists nothing is none
+ */
+function unpickedStart<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  props: FoldProps<T, S, F>,
+  constants: S[] | undefined,
+): false | null | undefined {
+  if (
+    startsRequiredFalse<T, S, F>(context, props, () => allowsFalse<T, S, F>(context, view, props, false, constants))
+  ) {
+    return false;
+  }
+  if (rendersNull<T, S, F>(context, view, props)) {
+    props.onNullFill?.();
+    return null;
+  }
+  return undefined;
+}
+
+/** Whether a required boolean the field of `view` may start at `false`: its own listed values allow it, see
+ * `viewStartsFalse()`, and so does each field it is the option of, see `FoldProps.fieldStartsFalse`. The value is one
+ * the option a field starts on holds, so a list the option makes, its `enum`, `const` or list of constants, counts as
+ * much as the field's own: `{ anyOf: [{ enum: [true, null] }, { const: true }] }` never holds `false`. `isBoolean`
+ * says whether the value is known to be a boolean where the field's own schema neither types nor lists it; once the
+ * field allows `false`, its value is one, so the fields above it are asked with that known
+ */
+function allowsFalse<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  props: FoldProps<T, S, F>,
+  isBoolean: boolean,
+  constants?: S[],
+): boolean {
+  return viewStartsFalse<S, F>(context, view, isBoolean, constants) && (props.fieldStartsFalse?.() ?? true);
+}
+
+/** Whether a required boolean the field of `view` is starts at `false`, see `startsFalse()`: its `type`, `enum` and
+ * `const` are read with its `allOf` and condition merged, as `rendersNull()` reads its type, so one an `allOf` or the
+ * branch its condition takes brings counts as its own. `constants` are those of the list of constant `anyOf`/`oneOf`
+ * options the field offers, as `chooseOption()` reads it
+ */
+function viewStartsFalse<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  isBoolean: boolean,
+  constants?: S[],
+): boolean {
+  const { schema } = view;
+  return startsFalse<S>(
+    ALL_OF_KEY in schema || IF_KEY in schema ? mergedSchemaOf<S, F>(context, view) : schema,
+    isBoolean,
+    constants,
+  );
+}
+
+/** The values `schema` lists: those of its `enum` and `const` and `constants`, where each lists any. A `const` that is
+ * an Ajv `$data` reference, or spelled out as `undefined`, lists no value
+ */
+function listedValues<S extends StrictRJSFSchema>(schema: S, constants: S[] = []): unknown[] {
+  const listedConst = constValueOf<S>(schema);
+  const listed: unknown[] = constants.map((option) => toConstant<S>(option));
+  if (Array.isArray(schema.enum)) {
+    listed.push(...schema.enum);
+  }
+  if (listedConst !== undefined) {
+    listed.push(listedConst);
+  }
+  return listed;
+}
+
+/** Whether `schema` holds a boolean: its `type` is `boolean`, alone or beside `null`, or names `boolean` and every value
+ * it lists, see `listedValues()`, is a boolean or `null`, or, with no `type`, it lists values and every one is, so a
+ * list mixing `false` with values of other types isn't one. With no `type` and nothing listed the schema doesn't say,
+ * so `isBoolean`, what the caller knows of the value from elsewhere, decides
+ */
+function isBooleanSchema<S extends StrictRJSFSchema>(schema: S, constants?: S[], isBoolean = false): boolean {
+  const listed = listedValues<S>(schema, constants);
+  const listsBooleans = listed.every((value) => typeof value === 'boolean' || value === null);
+  if (schema.type === undefined) {
+    return listed.length > 0 ? listsBooleans : isBoolean;
+  }
+  const types: unknown[] = Array.isArray(schema.type) ? schema.type : [schema.type];
+  return types.includes('boolean') && (listsBooleans || types.every((type) => type === 'boolean' || type === 'null'));
+}
+
+/** Whether `schema` is a boolean, see `isBooleanSchema()`, that lists `false` among its values, or lists none. Only
+ * listed values count, so an exclusion through another keyword, such as a `not`, is not looked for. The option a field
+ * starts on is asked on its own, see `allowsFalse()`
+ */
+function startsFalse<S extends StrictRJSFSchema>(schema: S, isBoolean: boolean, constants: S[] = []): boolean {
+  const listedConst = constValueOf<S>(schema);
+  return (
+    isBooleanSchema<S>(schema, constants, isBoolean) &&
+    (!Array.isArray(schema.enum) || schema.enum.includes(false)) &&
+    (listedConst === undefined || listedConst === false) &&
+    (!constants.length || constants.some((option) => toConstant<S>(option) === false))
+  );
 }
 
 /** Returns the field a call to one of the exported helpers starts from: `rawSchema` as a call root of the graph of
@@ -4295,8 +4476,9 @@ function constValueOf<S extends StrictRJSFSchema>(schema: S): unknown {
 function viewField<S extends StrictRJSFSchema>(view: DefaultsView<S>): Provenance<S> {
   return rootProvenance<S>(view.graph, [
     ...view.field.seeds,
-    ...view.choices.flatMap(({ provider, options, refPath }): Seed[] => {
-      const index = view.options.selections.get(provider);
+    ...view.choices.flatMap((choice): Seed[] => {
+      const { options, refPath } = choice;
+      const index = view.options.selections.get(selectionKey(choice));
       return index === undefined ? [] : [{ node: options[index], refPath, scope: [`o${options[index]}`] }];
     }),
     ...(view.options.adopted?.values() ?? []),

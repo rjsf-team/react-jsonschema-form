@@ -1691,7 +1691,9 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
         },
       },
     };
-    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { a: 1 } });
+    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults', constAsDefaults: 'always' }, counting)).toEqual({
+      x: { a: 1 },
+    });
     // Read by the defaults the first pass hands the next, the `const` would be dropped on that pass, which then checks
     // the `dependencies` option once more
     expect(counting.calls).toBe(1);

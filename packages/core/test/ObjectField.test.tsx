@@ -4942,6 +4942,24 @@ describe('ObjectField', () => {
       },
     );
 
+    it.each<[string, RJSFSchema['additionalProperties']]>([
+      ['true', true],
+      ['{}', {}],
+    ])(
+      'offers the add button and renders the extra keys of a property whose additionalProperties is %s in an option an allOf holding options of its own merges with (#5958)',
+      (_, additionalProperties) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          oneOf: [{ properties: { p: { type: 'object', additionalProperties } } }],
+          allOf: [{ oneOf: [{ properties: { p: { properties: { a: { type: 'string' } } } } }] }],
+        };
+        const { node } = createFormComponent({ schema, initialFormData: { p: { a: 'x', extra: 'y' } } });
+
+        expect(addButtonOf(node)).not.toBeNull();
+        expect(node.querySelector('#root_p_extra')).toHaveValue('y');
+      },
+    );
+
     it('offers the add button once the setting changes to allow', () => {
       const schema: RJSFSchema = { type: 'object' };
       const { node, rerender } = createFormComponent({ schema });
