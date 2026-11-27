@@ -2799,6 +2799,9 @@ export interface SchemaUtilsType<
    * @param [selectedOption] - The index of the currently selected option, defaulted to -1 if not specified
    * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
    *          determine which option is selected
+   * @param [offeredBy] - The schema of the field offering the options, as written where it offers them, which says
+   *          whether an option takes the data's extra keys an absent keyword takes (see `getClosestMatchingOption()`); it
+   *          has no effect on the options `retrieveSchema()` hands out, so pass copies of a retrieved field's options
    * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
    */
   getClosestMatchingOption(
@@ -2806,6 +2809,7 @@ export interface SchemaUtilsType<
     options: S[],
     selectedOption?: number,
     discriminatorField?: string,
+    offeredBy?: S,
   ): number;
   /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
    * Always returns the first option if there is nothing that matches.
